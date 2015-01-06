@@ -1,0 +1,63 @@
+{
+  "name": "resin-sdk",
+  "version": "0.0.1",
+  "description": "The Resin.io Nodejs SDK",
+  "main": "build/resin.js",
+  "homepage": "https://github.com/resin-io/resin-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/resin-io/resin-sdk.git"
+  },
+  "keywords": [
+    "cli",
+    "command",
+    "option",
+    "parser",
+    "git",
+    "prompt"
+  ],
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "prepublish": "gulp build"
+  },
+  "author": "Juan Cruz Viotti <juanchiviotti@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "~1.10.0",
+    "chai-as-promised": "~4.1.1",
+    "chai-string": "~1.1.0",
+    "coffee-script": "~1.8.0",
+    "gulp": "~3.8.10",
+    "gulp-coffee": "~2.2.0",
+    "gulp-coffeelint": "~0.4.0",
+    "gulp-jsdoc": "^0.1.4",
+    "gulp-mocha": "~2.0.0",
+    "gulp-util": "~3.0.1",
+    "mocha": "~2.0.1",
+    "mock-fs": "~2.3.2",
+    "nock": "~0.52.4",
+    "sinon": "~1.12.2",
+    "sinon-chai": "~2.6.0"
+  },
+  "dependencies": {
+    "pinejs-client-js": "git+ssh://git@bitbucket.org/rulemotion/pinejs-client-js.git",
+    "lodash": "~2.4.1",
+    "mkdirp": "~0.5.0",
+    "rimraf": "~2.2.8",
+    "bluebird": "~2.4.2",
+    "async": "~0.9.0",
+    "lodash-contrib": "~241.4.14",
+    "typed-error": "~0.1.0",
+    "fs-plus": "~2.4.0",
+    "underscore.string": "~2.4.0",
+    "git-cli": "~0.8.2",
+    "request-progress": "~0.3.1",
+    "request": "~2.51.0",
+    "conf.js": "~0.1.1",
+    "user-home": "~1.1.0",
+    "is-online": "~3.0.0"
+  }
+}
