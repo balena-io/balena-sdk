@@ -5,6 +5,7 @@ gutil = require('gulp-util')
 coffeelint = require('gulp-coffeelint')
 coffee = require('gulp-coffee')
 jsdoc = require('gulp-jsdoc')
+runSequence = require('run-sequence')
 
 OPTIONS =
 	config:
@@ -45,13 +46,8 @@ gulp.task 'lint', ->
 		}))
 		.pipe(coffeelint.reporter())
 
-gulp.task 'build', [
-	'lint'
-	'test'
-	'json'
-	'coffee'
-	'jsdoc'
-]
+gulp.task 'build', (callback) ->
+	runSequence([ 'lint', 'test' ], [ 'json', 'coffee' ], 'jsdoc', callback)
 
 gulp.task 'watch', [ 'build' ], ->
 	gulp.watch([ OPTIONS.files.coffee, OPTIONS.files.json ], [ 'build' ])

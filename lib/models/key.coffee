@@ -1,21 +1,37 @@
+###*
+# @module resin/models/key
+###
+
 _ = require('lodash-contrib')
 server = require('../server')
 settings = require('../settings')
 errors = require('../errors')
 
+###*
+# A Resin API key
+# @typedef {Object} Key
+###
+
 # TODO: Do this with pinejs once it's exposed as an OData API
 
-# Get all ssh keys
+###*
+# getAll callback
+# @callback module:resin/models/key~getAllCallback
+# @param {(Error|null)} error - error
+# @param {Key[]} keys - ssh keys
+###
+
+###*
+# @summary Get all ssh keys
+# @function
 #
-# @param {Function} callback callback(error, keys)
+# @param {module:resin/models/key~getAllCallback} callback - callback
 #
-# @throw {NotAny} Will throw if no keys were found
-#
-# @example Get all keys
-#		resin.models.key.getAll (error, keys) ->
-#			throw error if error?
-#			console.log(keys)
-#
+# @example
+#	resin.models.key.getAll (error, keys) ->
+#		throw error if error?
+#		console.log(keys)
+###
 exports.getAll = (callback) ->
 	url = settings.get('urls.keys')
 	server.get url, (error, response, keys) ->
@@ -26,18 +42,25 @@ exports.getAll = (callback) ->
 
 		return callback(null, keys)
 
-# Get a single ssh key
+###*
+# get callback
+# @callback module:resin/models/key~getCallback
+# @param {(Error|null)} error - error
+# @param {Key} key - ssh key
+###
+
+###*
+# @summary Get a single ssh key
+# @function
 #
-# @param {String, Number} id key id
-# @param {Function} callback callback(error, key)
+# @param {(String|Number)} id - key id
+# @param {module:resin/models/key~getCallback} callback - callback
 #
-# @throw {NotFound} Will throw if key was not found
-#
-# @example Find key
-#		resin.models.key.get 51, (error, key) ->
-#			throw error if error?
-#			console.log(key)
-#
+# @example
+#	resin.models.key.get 51, (error, key) ->
+#		throw error if error?
+#		console.log(key)
+###
 exports.get = (id, callback) ->
 	url = settings.get('urls.keys')
 	server.get url, (error, response, keys) ->
@@ -50,32 +73,48 @@ exports.get = (id, callback) ->
 
 		return callback(null, key)
 
-# Remove ssh key
+###*
+# remove callback
+# @callback module:resin/models/key~removeCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Remove ssh key
+# @function
 #
-# @param {String, Number} id key id
-# @param {Function} callback callback(error)
+# @param {(String|Number)} id - key id
+# @param {module:resin/models/key~removeCallback} callback - callback
 #
-# @example Remove key
-#		resin.models.key.remove 51, (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.key.remove 51, (error) ->
+#		throw error if error?
+###
 exports.remove = (id, callback) ->
 	url = settings.get('urls.sshKey')
 	url = _.template(url, { id })
 	server.delete(url, _.unary(callback))
 
-# Create a ssh key
+###*
+# create callback
+# @callback module:resin/models/key~createCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Create a ssh key
+# @function
 #
-# @param {String} title key title
-# @param {String} key the public ssh key
-# @param {Function} callback callback(error)
+# @param {String} title - key title
+# @param {String} key - the public ssh key
+# @param {module:resin/models/key~createCallback} callback - callback
 #
 # @todo We should return an id for consistency with the other models
 #
-# @example Create a key
-#		resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error) ->
+#		throw error if error?
+###
 exports.create = (title, key, callback) ->
 	url = settings.get('urls.keys')
 	data = { title, key }

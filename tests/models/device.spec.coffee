@@ -1,7 +1,7 @@
 _ = require('lodash')
 expect = require('chai').expect
-device = require('./device')
-DEVICES = require('../../data/device-data.json')
+device = require('../../lib/models/device')
+DEVICES = require('../../lib/models/device-data.json')
 
 describe 'Device:', ->
 

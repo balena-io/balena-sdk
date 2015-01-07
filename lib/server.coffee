@@ -1,3 +1,7 @@
+###*
+# @module resin/server
+###
+
 _ = require('lodash')
 request = require('request')
 progress = require('request-progress')
@@ -6,56 +10,68 @@ connection = require('./connection')
 settings = require('./settings')
 auth = require('./auth')
 
-# @nodoc
+###*
+# @ignore
+###
 urlResolve = require('url').resolve
 
-# Send an HTTP request to resin.io
+###*
+# request callback
+# @callback module:resin/server~requestCallback
+# @param {(Error|null)} error - error
+# @param {Object} response - response
+# @param {Object} body - body
+###
+
+###*
+# @summary Send an HTTP request to resin.io
+# @function
 #
-# @param {Object} options request options
-# @option options {String} url relative url
-# @option options {String} json request body
-# @option options {String} method HTTP method
-# @option options {Object} headers custom HTTP headers
-# @option options {Function} pipe define this function if you want to stream the response
+# @description If the user is logged in, the token gets automatically added to Authorization header
+# If the response is JSON, it will attempt to parse it
 #
-# @param {Function} callback callback(error, response, body)
-# @param {Function} onProgress on progress callback(state) (optional)
+# @param {Object} options -  request options
+# @option options {String} url - relative url
+# @option options {String} json - request body
+# @option options {String} method - http method
+# @option options {Object} headers - custom http headers
+# @option options {Function} pipe - define this function if you want to stream the response
 #
-# @note If the user is logged in, the token gets automatically added to Authorization header
-# @note If the response is JSON, it will attempt to parse it
+# @param {module:resin/server~requestCallback} callback - callback
+# @param {Function} [onProgress] - on progress callback
 #
-# @throw {Error} Will throw if you don't have internet connection
+# @throws {Error} Will throw if no URL
 #
-# @example GET request
-#		resin.server.request {
-#			method: 'GET'
-#			url: '/foobar'
-#		}, (error, response, body) ->
-#			throw error if error?
-#			console.log(body)
+# @example
+#	resin.server.request {
+#		method: 'GET'
+#		url: '/foobar'
+#	}, (error, response, body) ->
+#		throw error if error?
+#		console.log(body)
 #
-#	@example POST request with body
-#		resin.server.request {
-#			method: 'POST'
-#			url: '/foobar'
-#			json:
-#				name: 'My FooBar'
-#		}, (error, response, body) ->
-#			throw error if error?
-#			assert(response.statusCode is 201)
+#	@example
+#	resin.server.request {
+#		method: 'POST'
+#		url: '/foobar'
+#		json:
+#			name: 'My FooBar'
+#	}, (error, response, body) ->
+#		throw error if error?
+#		assert(response.statusCode is 201)
 #
-#	@example Stream download
-#		resin.server.request {
-#			method: 'GET'
-#			url: '/download'
-#			pipe: fs.createWriteStream('/tmp/download')
-#		}, (error) ->
-#			throw error if error?
-#		, (state) ->
-#			console.log("Received: #{state.received}")
-#			console.log("Total: #{state.total}")
-#			console.log("Is Complete? #{state.complete}")
-#
+#	@example
+#	resin.server.request {
+#		method: 'GET'
+#		url: '/download'
+#		pipe: fs.createWriteStream('/tmp/download')
+#	}, (error) ->
+#		throw error if error?
+#	, (state) ->
+#		console.log("Received: #{state.received}")
+#		console.log("Total: #{state.total}")
+#		console.log("Is Complete? #{state.complete}")
+###
 exports.request = (options = {}, outerCallback, onProgress) ->
 
 	onProgress ?= _.noop
@@ -111,7 +127,7 @@ exports.request = (options = {}, outerCallback, onProgress) ->
 
 	], outerCallback
 
-# Generate shorthand functions for every method
+# @summary Generate shorthand functions for every method
 #
 # @private
 #

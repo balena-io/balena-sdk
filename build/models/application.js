@@ -1,3 +1,8 @@
+
+/**
+ * @module resin/models/application
+ */
+
 (function() {
   var deviceModel, errors, pine, server, settings, _;
 
@@ -12,6 +17,33 @@
   server = require('../server');
 
   settings = require('../settings');
+
+
+  /**
+   * A Resin API application
+   * @typedef {Object} Application
+   */
+
+
+  /**
+   * getAll callback
+   * @callback module:resin/models/application~getAllCallback
+   * @param {(Error|null)} error - error
+   * @param {Application[]} applications - applications
+   */
+
+
+  /**
+   * @summary Get all applications
+   * @function
+   *
+   * @param {module:resin/models/application~getAllCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.getAll (error, applications) ->
+   *		throw error if error?
+   *		console.log(applications)
+   */
 
   exports.getAll = function(callback) {
     return pine.get({
@@ -39,6 +71,28 @@
     });
   };
 
+
+  /**
+   * get callback
+   * @callback module:resin/models/application~getCallback
+   * @param {(Error|null)} error - error
+   * @param {Application} application - application
+   */
+
+
+  /**
+   * @summary Get a single application
+   * @function
+   *
+   * @param {(String|Number)} id - application id
+   * @param {module:resin/models/application~getCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.get 51, (error, application) ->
+   *		throw error if error?
+   *		console.log(application)
+   */
+
   exports.get = function(id, callback) {
     return pine.get({
       resource: 'application',
@@ -53,6 +107,31 @@
       return callback(error);
     });
   };
+
+
+  /**
+   * create callback
+   * @callback module:resin/models/application~createCallback
+   * @param {(Error|null)} error - error
+   * @param {Number} id - application id
+   */
+
+
+  /**
+   * @summary Create an application
+   * @function
+   *
+   * @param {String} name - application name
+   * @param {String} deviceType - device type (slug form)
+   * @param {module:resin/models/application~createCallback} callback - callback
+   *
+   * @throw {NotFound} Will throw if the request doesn't returns an id
+   *
+   * @example
+   *	resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+   *		throw error if error?
+   *		console.log(id)
+   */
 
   exports.create = function(name, deviceType, callback) {
     return pine.post({
@@ -73,6 +152,26 @@
     });
   };
 
+
+  /**
+   * remove callback
+   * @callback module:resin/models/application~removeCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Remove application
+   * @function
+   *
+   * @param {(String|Number)} id - application id
+   * @param {module:resin/models/application~removeCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.remove 51, (error) ->
+   *		throw error if error?
+   */
+
   exports.remove = function(id, callback) {
     return pine["delete"]({
       resource: 'application',
@@ -83,6 +182,26 @@
       return callback(error);
     });
   };
+
+
+  /**
+   * restart callback
+   * @callback module:resin/models/application~restartCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Restart application
+   * @function
+   *
+   * @param {(String|Number)} id - application id
+   * @param {module:resin/models/application~restartCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.restart 51, (error) ->
+   *		throw error if error?
+   */
 
   exports.restart = function(id, callback) {
     var url;

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: data.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: data.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * @module resin/data
+ */
+
+(function() {
+  var constructPath, errors, fs, haltIfNoPrefix, path, rimraf, _;
+
+  _ = require('lodash');
+
+  fs = require('fs');
+
+  path = require('path');
+
+  rimraf = require('rimraf');
+
+  errors = require('./errors');
+
+
+  /**
+   * @namespace resin/data
+   */
+
+
+  /**
+   * @name prefix
+   * @memberof resin/data
+   * @see {@link module:resin/data/prefix}
+   */
+
+  exports.prefix = require('./data-prefix');
+
+
+  /**
+   * @ignore
+   */
+
+  haltIfNoPrefix = function(callback) {
+    return function() {
+      if (exports.prefix.get() == null) {
+        throw new Error('Did you forget to set a prefix?');
+      }
+      return callback.apply(null, arguments);
+    };
+  };
+
+
+  /**
+   * @ignore
+   */
+
+  constructPath = function(key) {
+    var prefix;
+    if (!_.isString(key)) {
+      throw new errors.InvalidKey();
+    }
+    prefix = exports.prefix.get();
+    return path.join(prefix, key);
+  };
+
+
+  /**
+   * get callback
+   * @callback module:resin/data~getCallback
+   * @param {(Error|null)} error - error
+   * @param {(String|Buffer)} value - key value
+   */
+
+
+  /**
+   * @summary Get data by key
+   * @function
+   *
+   * @description We call "data" to the information saved by the application in order to work properly.
+   * Examples of data are the token, cached downloads and much more.
+   *
+   * @param {String} key - path relative to dataPrefix
+   * @param {Object} options - node fs options for when reading the resource
+   * @param {module:resin/data~getCallback} callback - callback
+   *
+   * @example
+   *	resin.data.get 'token', encoding: 'utf8', (error, token) ->
+   *		throw error if error?
+   *		console.log(token)
+   *
+   *	@example
+   *	# Note: You should use the appropriate path.sep for your os
+   *	# http://nodejs.org/api/path.html#path_path_sep
+   *	resin.data.get 'my/nested/token', encoding: 'utf8', (error, token) ->
+   *		throw error if error?
+   *		console.log(token)
+   */
+
+  exports.get = haltIfNoPrefix(function(key, options, callback) {
+    return exports.has(key, function(hasKey) {
+      var keyPath;
+      if (!hasKey) {
+        return typeof callback === "function" ? callback(null, void 0) : void 0;
+      }
+      keyPath = constructPath(key);
+      return fs.readFile(keyPath, options, callback);
+    });
+  });
+
+
+  /**
+   * getText callback
+   * @callback module:resin/data~getTextCallback
+   * @param {(Error|null)} error - error
+   * @param {String} value - key value
+   */
+
+
+  /**
+   * @summary Get data by key as text
+   * @function
+   *
+   * @description This is the same as {@link module:resin/data.get}, however it assumes utf8 encoding.
+   *
+   * @param {String} key - path relative to dataPrefix
+   * @param {module:resin/data~getTextCallback} callback - callback
+   *
+   * @example
+   *	resin.data.getText 'myTextFile', (error, data) ->
+   *		throw error if error?
+   *		console.log(data)
+   */
+
+  exports.getText = haltIfNoPrefix(function(key, callback) {
+    return exports.get(key, {
+      encoding: 'utf8'
+    }, callback);
+  });
+
+
+  /**
+   * set callback
+   * @callback module:resin/data~setCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Set/Update a data resource
+   * @function
+   *
+   * @description You can save a buffer, but we strongly recommend saving plain text when possible
+   *
+   * @param {String} key - path relative to dataPrefix
+   * @param {(String|Buffer)} - value key value
+   * @param {Object} options - node fs options for when reading the resource
+   * @param {module:resin/data~setCallback} callback - callback
+   *
+   * @example
+   *	resin.data.set 'customValue', 'Hello World', encoding: 'utf8', (error) ->
+   *		throw error if error?
+   *		console.log("Value saved to #{resin.data.prefix.get()}/customValue")
+   */
+
+  exports.set = haltIfNoPrefix(function(key, value, options, callback) {
+    var keyPath;
+    keyPath = constructPath(key);
+    return fs.writeFile(keyPath, value, options, callback);
+  });
+
+
+  /**
+   * setText callback
+   * @callback module:resin/data~setTextCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Set/Update a data resource as text
+   * @function
+   *
+   * @description This is the same as {@link module:resin/data.set}, however it assumes utf8 encoding.
+   *
+   * @param {String} key - path relative to dataPrefix
+   * @param {(String|Buffer)} value - key value
+   * @param {module:resin/data~setTextCallback} callback - callback
+   *
+   * @throws {Error} Will throw if data prefix was not previously set
+   *
+   * @example
+   *	resin.data.setText 'greeting/en', 'Hello World!', (error) ->
+   *		throw error if error?
+   */
+
+  exports.setText = haltIfNoPrefix(function(key, value, callback) {
+    return exports.set(key, value, {
+      encoding: 'utf8'
+    }, callback);
+  });
+
+
+  /**
+   * has callback
+   * @callback module:resin/data~hasCallback
+   * @param {Boolean} hasKey - has key
+   */
+
+
+  /**
+   * @summary Check if value exists
+   * @function
+   *
+   * @param {String} key - path relative to dataPrefix
+   * @param {module:resin/data~hasCallback} callback - callback
+   *
+   * @throws {Error} Will throw if data prefix was not previously set
+   *
+   * @example
+   *	resin.data.has 'foo/bar', (hasFooBar) ->
+   *		if hasFooBar
+   *			console.log('It\'s there!')
+   *		else
+   *			console.log('It\'s not there!')
+   */
+
+  exports.has = haltIfNoPrefix(function(key, callback) {
+    var keyPath;
+    keyPath = constructPath(key);
+    return fs.exists(keyPath, callback);
+  });
+
+
+  /**
+   * remove callback
+   * @callback module:resin/data~removeCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Remove a key
+   * @function
+   *
+   * @param {String} key - path relative to dataPrefix
+   * @param {module:resin/data~removeCallback} [callback=_.noop] - callback
+   *
+   * @throws {Error} Will throw if data prefix was not previously set
+   *
+   * @example
+   *	resin.data.remove 'token', (error) ->
+   *		throw error if error?
+   */
+
+  exports.remove = haltIfNoPrefix(function(key, callback) {
+    var error, keyPath;
+    if (callback == null) {
+      callback = _.noop;
+    }
+    try {
+      keyPath = constructPath(key);
+    } catch (_error) {
+      error = _error;
+      return callback(error);
+    }
+    return rimraf(keyPath, callback);
+  });
+
+}).call(this);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="auth.html">resin/auth</a></li><li><a href="connection.html">resin/connection</a></li><li><a href="data.html">resin/data</a></li><li><a href="prefix.html">resin/data/prefix</a></li><li><a href="token.html">resin/data/token</a></li><li><a href="errors.html">resin/errors</a></li><li><a href="helpers.html">resin/helpers</a></li><li><a href="application.html">resin/models/application</a></li><li><a href="device.html">resin/models/device</a></li><li><a href="environment-variables.html">resin/models/environment-variables</a></li><li><a href="key.html">resin/models/key</a></li><li><a href="os.html">resin/models/os</a></li><li><a href="pine.html">resin/pine</a></li><li><a href="server.html">resin/server</a></li><li><a href="settings.html">resin/settings</a></li><li><a href="vcs.html">resin/vcs</a></li><li><a href="git.html">resin/vcs/git</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li><li><a href="data_.html">resin/data</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Jan 08 2015 08:21:43 GMT-0300 (ART)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

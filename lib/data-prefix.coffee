@@ -1,31 +1,45 @@
+###*
+# @module resin/data/prefix
+###
+
 _ = require('lodash')
 mkdirp = require('mkdirp')
 errors = require('./errors')
 
-# @nodoc
+###*
+# @ignore
+###
 prefix = null
 
-# Get current prefix
+###*
+# @summary Get current prefix
+# @function
 #
-# @return {String} prefix
+# @returns {String} prefix
 #
-# @example Get prefix
-#		prefix = resin.data.prefix.get()
-#
+# @example
+#	prefix = resin.data.prefix.get()
+###
 exports.get = ->
 	return prefix
 
-# Set prefix
+###*
+# set callback
+# @callback module:resin/data/prefix~setCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Set prefix
+# @function
 #
-# @param {String} newPrefix new prefix
-# @param {Function} callback callback (error)
+# @param {String} newPrefix - new prefix
+# @param {module:resin/data/prefix~setCallback} callback - callback
 #
-# @throw {Error} Will throw if prefix is not a valid path
-#
-# @example Set prefix
-#		resin.data.prefix.set '/opt/resin', (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.data.prefix.set '/opt/resin', (error) ->
+#		throw error if error?
+###
 exports.set = (newPrefix, callback) ->
 	if not _.isString(newPrefix)
 		return callback?(new errors.InvalidPath(newPrefix))
@@ -35,9 +49,12 @@ exports.set = (newPrefix, callback) ->
 		prefix = newPrefix
 		return callback?()
 
-# Clear prefix
+###*
+# @summary Clear prefix
+# @function
 #
-# @example Clear prefix
-#		resin.data.prefix.clear()
+# @example
+#	resin.data.prefix.clear()
+###
 exports.clear = ->
 	prefix = null

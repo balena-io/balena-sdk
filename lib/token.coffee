@@ -1,66 +1,105 @@
+###*
+# @module resin/data/token
+###
+
 data = require('./data')
 
-# @nodoc
 # TODO: Move to settings
+
+###*
+# @ignore
+###
 TOKEN_KEY = 'token'
 
-# Save token
+###*
+# saveToken callback
+# @callback module:resin/data/token~saveTokenCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Save token
+# @function
 #
-# The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin/token
+# @description The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin/token
+# The token is saved as plain text.
 #
-# @param {String} newToken the token
-# @param {Function} callback callback(error)
-#
-# @note The token is saved as plain text.
+# @param {String} newToken - the token
+# @param {resin/data/token~saveToken} callback - callback
 #
 # @todo We should make the token more secure
 #
-# @example Save Token
-#		resin.token.saveToken myToken, (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.token.saveToken myToken, (error) ->
+#		throw error if error?
+###
 exports.saveToken = (newToken, callback) ->
 	data.setText(TOKEN_KEY, newToken, callback)
 
-# Check if we have any token saved
+###*
+# hasToken callback
+# @callback module:resin/data/token~hasTokenCallback
+# @param {Boolean} hasToken - has token
+###
+
+###*
+# @summary Check if we have any token saved
+# @function
 #
-# @param {Function} callback callback(hasToken)
+# @param {module:resin/data/token~hasTokenCallback} callback - callback
 #
-# @example Has Token
-#		resin.token.hasToken (hasToken) ->
-#			if hasToken
-#				console.log('It\'s there!')
-#			else
-#				console.log('It\'s not there!')
-#
+# @example
+#	resin.token.hasToken (hasToken) ->
+#		if hasToken
+#			console.log('It\'s there!')
+#		else
+#			console.log('It\'s not there!')
+###
 exports.hasToken = (callback) ->
 	data.has(TOKEN_KEY, callback)
 
-# Get saved token value
+###*
+# getToken callback
+# @callback module:resin/data/token~getTokenCallback
+# @param {(Error|null)} error - error
+# @param {String} token - session token
+###
+
+###*
+# @summary Get saved token value
+# @function
 #
-# @param {Function} callback callback(error, token)
+# @description If the key doesn't exist, undefined and no error is returned
 #
-# @note If the key doesn't exist, undefined and no error is returned
+# @param {module:resin/data/token~getTokenCallback} callback - callback
 #
-# @example Get token
-#		resin.token.getToken (error, token) ->
-#			throw error if error?
-#			if token?
-#				console.log("My token is: #{token}")
-#
+# @example
+#	resin.token.getToken (error, token) ->
+#		throw error if error?
+#		if token?
+#			console.log("My token is: #{token}")
+###
 exports.getToken = (callback) ->
 	data.getText(TOKEN_KEY, callback)
 
-# Remove token from the filesystem
+###*
+# clearToken callback
+# @callback module:resin/data/token~clearTokenCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Remove token from the filesystem
+# @function
 #
-# @param {Function} callback callback(error)
+# @description If the token doesn't exist, no action is performed
 #
-# @note If the token doesn't exist, no action is performed
+# @param {module:resin/data/token~clearTokenCallback} callback - callback
 #
-# @example Clear Token
-#		resin.token.clearToken (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.token.clearToken (error) ->
+#		throw error if error?
+###
 exports.clearToken = (callback) ->
 	data.has TOKEN_KEY, (hasToken) ->
 		if hasToken

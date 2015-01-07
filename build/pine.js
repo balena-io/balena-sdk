@@ -1,3 +1,8 @@
+
+/**
+ * @module resin/pine
+ */
+
 (function() {
   var PinejsClientCore, PinejsClientRequest, Promise, promisifiedServerRequest, server, settings, _,
     __hasProp = {}.hasOwnProperty,
@@ -21,6 +26,18 @@
     function PinejsClientRequest() {
       return PinejsClientRequest.__super__.constructor.apply(this, arguments);
     }
+
+
+    /**
+    	 * @summary Trigger a request to the resin.io API
+    	 *
+    	 * @description Makes use of [pinejs-client-js](https://bitbucket.org/rulemotion/pinejs-client-js)
+    	 * You shouldn't make use of this method directly, but through models
+    	 *
+    	 * @protected
+    	 *
+    	 * @param {Object} params - request params (same as node-request params)
+     */
 
     PinejsClientRequest.prototype._request = function(params) {
       params.json = params.data;

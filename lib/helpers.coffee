@@ -1,23 +1,29 @@
+###*
+# @module resin/helpers
+###
+
 _ = require('lodash')
 fsPlus = require('fs-plus')
 path = require('path')
 
-# Prefix relative value paths with another path
+###*
+# @summary Prefix relative value paths with another path
+# @function
 #
-# @private
+# @description Absolute values will be omitted
 #
-# @param {String} prefix path prefix
-# @param {Object} object object containing relative paths as values
+# @protected
 #
-# @note Absolute values will be omitted
+# @param {String} prefix - path prefix
+# @param {Object} object - object containing relative paths as values
 #
-# @example Prefix object with path
-#		object =
-#			dataPrefix: 'resin'
+# @example
+#	object =
+#		dataPrefix: 'resin'
 #
-#		object = prefixObjectValuesWithPath('/opt', object)
-#		console.log(object.dataPrefix) # /opt/resin
-#
+#	object = prefixObjectValuesWithPath('/opt', object)
+#	console.log(object.dataPrefix) # /opt/resin
+###
 exports.prefixObjectValuesWithPath = (prefix, object) ->
 	return _.object _.map object, (value, key) ->
 		result = [ key ]

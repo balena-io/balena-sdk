@@ -1,3 +1,7 @@
+###*
+# @module resin/pine
+###
+
 _ = require('lodash')
 Promise = require('bluebird')
 PinejsClientCore = require('pinejs-client-js')(_, Promise)
@@ -7,16 +11,16 @@ promisifiedServerRequest = Promise.promisify(server.request, server)
 
 class PinejsClientRequest extends PinejsClientCore
 
-	# Trigger a request to the resin.io API
+	###*
+	# @summary Trigger a request to the resin.io API
 	#
-	# Makes use of [pinejs-client-js](https://bitbucket.org/rulemotion/pinejs-client-js)
+	# @description Makes use of [pinejs-client-js](https://bitbucket.org/rulemotion/pinejs-client-js)
+	# You shouldn't make use of this method directly, but through models
 	#
-	# @private
+	# @protected
 	#
-	# @param {Object} params request params (same as node-request params)
-	#
-	# @note You shouldn't make use of this method directly, but through models
-	#
+	# @param {Object} params - request params (same as node-request params)
+	###
 	_request: (params) ->
 		params.json = params.data
 		params.gzip ?= true

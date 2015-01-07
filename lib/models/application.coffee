@@ -1,3 +1,7 @@
+###*
+# @module resin/models/application
+###
+
 _ = require('lodash-contrib')
 pine = require('../pine')
 deviceModel = require('./device')
@@ -5,17 +9,29 @@ errors = require('../errors')
 server = require('../server')
 settings = require('../settings')
 
-# Get all applications
+###*
+# A Resin API application
+# @typedef {Object} Application
+###
+
+###*
+# getAll callback
+# @callback module:resin/models/application~getAllCallback
+# @param {(Error|null)} error - error
+# @param {Application[]} applications - applications
+###
+
+###*
+# @summary Get all applications
+# @function
 #
-# @param {Function} callback callback(error, applications)
+# @param {module:resin/models/application~getAllCallback} callback - callback
 #
-# @throw {NotAny} Will throw if no applications were found
-#
-# @example Get all applications
-#		resin.models.application.getAll (error, applications) ->
-#			throw error if error?
-#			console.log(applications)
-#
+# @example
+#	resin.models.application.getAll (error, applications) ->
+#		throw error if error?
+#		console.log(applications)
+###
 exports.getAll = (callback) ->
 	return pine.get
 		resource: 'application'
@@ -39,18 +55,25 @@ exports.getAll = (callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Get a single application
+###*
+# get callback
+# @callback module:resin/models/application~getCallback
+# @param {(Error|null)} error - error
+# @param {Application} application - application
+###
+
+###*
+# @summary Get a single application
+# @function
 #
-# @param {String, Number} id application id
-# @param {Function} callback callback(error, application)
+# @param {(String|Number)} id - application id
+# @param {module:resin/models/application~getCallback} callback - callback
 #
-# @throw {NotFound} Will throw if application was not found
-#
-# @example Find application
-#		resin.models.application.get 51, (error, application) ->
-#			throw error if error?
-#			console.log(application)
-#
+# @example
+#	resin.models.application.get 51, (error, application) ->
+#		throw error if error?
+#		console.log(application)
+###
 exports.get = (id, callback) ->
 	return pine.get
 		resource: 'application'
@@ -67,19 +90,28 @@ exports.get = (id, callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Create an application
+###*
+# create callback
+# @callback module:resin/models/application~createCallback
+# @param {(Error|null)} error - error
+# @param {Number} id - application id
+###
+
+###*
+# @summary Create an application
+# @function
 #
-# @param {String} name application name
-# @param {String} deviceType device type (slug form)
-# @param {Function} callback callback(error, id)
+# @param {String} name - application name
+# @param {String} deviceType - device type (slug form)
+# @param {module:resin/models/application~createCallback} callback - callback
 #
 # @throw {NotFound} Will throw if the request doesn't returns an id
 #
-# @example Create an application
-#		resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
-#			throw error if error?
-#			console.log(id)
-#
+# @example
+#	resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+#		throw error if error?
+#		console.log(id)
+###
 exports.create = (name, deviceType, callback) ->
 	return pine.post
 		resource: 'application'
@@ -98,15 +130,23 @@ exports.create = (name, deviceType, callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Remove application
+###*
+# remove callback
+# @callback module:resin/models/application~removeCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Remove application
+# @function
 #
-# @param {String, Number} id application id
-# @param {Function} callback callback(error)
+# @param {(String|Number)} id - application id
+# @param {module:resin/models/application~removeCallback} callback - callback
 #
-# @example Remove application
-#		resin.models.application.remove 51, (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.application.remove 51, (error) ->
+#		throw error if error?
+###
 exports.remove = (id, callback) ->
 	return pine.delete
 		resource: 'application'
@@ -116,15 +156,23 @@ exports.remove = (id, callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Restart application
+###*
+# restart callback
+# @callback module:resin/models/application~restartCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Restart application
+# @function
 #
-# @param {String, Number} id application id
-# @param {Function} callback callback(error)
+# @param {(String|Number)} id - application id
+# @param {module:resin/models/application~restartCallback} callback - callback
 #
-# @example Restart application
-#		resin.models.application.restart 51, (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.application.restart 51, (error) ->
+#		throw error if error?
+###
 exports.restart = (id, callback) ->
 	url = _.template(settings.get('urls.applicationRestart'), { id })
 	server.post(url, _.unary(callback))

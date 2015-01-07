@@ -1,18 +1,34 @@
+###*
+# @module resin/models/environment-variables
+###
+
 pine = require('../pine')
 errors = require('../errors')
 
-# Get all environment variables by application
+###*
+# A Resin API environment variable
+# @typedef {Object} EnvironmentVariable
+###
+
+###*
+# getAllByApplication callback
+# @callback module:resin/models/environment-variables~getAllByApplicationCallback
+# @param {(Error|null)} error - error
+# @param {EnvironmentVariable[]} environmentVariables - environment variables
+###
+
+###*
+# @summary Get all environment variables by application
+# @function
 #
-# @param {String, Number} applicationId application id
-# @param {Function} callback callback(error, environmentVariables)
+# @param {(String|Number)} applicationId - application id
+# @param {module:resin/models/environment-variables~getAllByApplicationCallback} callback - callback
 #
-# @throw {NotFound} Will throw if no environment variable was found
-#
-# @example Get all environment variables by application
-#		resin.models.environmentVariables.getAll (error, environmentVariables) ->
-#			throw error if error?
-#			console.log(environmentVariables)
-#
+# @example
+#	resin.models.environmentVariables.getAll (error, environmentVariables) ->
+#		throw error if error?
+#		console.log(environmentVariables)
+###
 exports.getAllByApplication = (applicationId, callback) ->
 	return pine.get
 		resource: 'environment_variable'
@@ -30,17 +46,25 @@ exports.getAllByApplication = (applicationId, callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Create an environment variable for an application
+###*
+# create callback
+# @callback module:resin/models/environment-variables~createCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Create an environment variable for an application
+# @function
 #
-# @param {String, Number} applicationId application id
-# @param {String} name environment variable name
-# @param {String} value environment variable value
-# @param {Function} callback callback(error)
+# @param {(String|Number)} applicationId - application id
+# @param {String} name - environment variable name
+# @param {String} value - environment variable value
+# @param {module:resin/models/environment-variables~createCallback} callback - callback
 #
-# @example Create an environment variable
-#		resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+#		throw error if error?
+###
 exports.create = (applicationId, name, value, callback) ->
 	return pine.post
 		resource: 'environment_variable'
@@ -55,16 +79,24 @@ exports.create = (applicationId, name, value, callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Update an environment variable value from an application
+###*
+# update callback
+# @callback module:resin/models/environment-variables~updateCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Update an environment variable value from an application
+# @function
 #
-# @param {String, Number} applicationId application id
-# @param {String} value environment variable value
-# @param {Function} callback callback(error)
+# @param {(String|Number)} applicationId - application id
+# @param {String} value - environment variable value
+# @param {module:resin/models/environment-variables~updateCallback} callback - callback
 #
-# @example Update an environment variable
-#		resin.models.environmentVariables.update 317, 'vim', (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.environmentVariables.update 317, 'vim', (error) ->
+#		throw error if error?
+###
 exports.update = (id, value, callback) ->
 	return pine.patch
 		resource: 'environment_variable'
@@ -78,15 +110,23 @@ exports.update = (id, value, callback) ->
 	.catch (error) ->
 		return callback(error)
 
-# Remove environment variable
+###*
+# remove callback
+# @callback module:resin/models/environment-variables~removeCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Remove environment variable
+# @function
 #
-# @param {String, Number} id environment variable id
-# @param {Function} callback callback(error)
+# @param {(String|Number)} id - environment variable id
+# @param {module:resin/models/environment-variables~removeCallback} callback - callback
 #
-# @example Remove environment variable
-#		resin.models.environmentVariables.remove 51, (error) ->
-#			throw error if error?
-#
+# @example
+#	resin.models.environmentVariables.remove 51, (error) ->
+#		throw error if error?
+###
 exports.remove = (id, callback) ->
 	return pine.delete
 		resource: 'environment_variable'
