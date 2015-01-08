@@ -173,6 +173,8 @@
    * @example
    * resin.models.environmentVariables.isSystemVariable('RESIN_SUPERVISOR')
    * > true
+   *
+   * @example
    * resin.models.environmentVariables.isSystemVariable('EDITOR')
    * > false
    */
