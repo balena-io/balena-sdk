@@ -4,9 +4,11 @@
  */
 
 (function() {
-  var isOnline;
+  var ConnectionParams, isOnline;
 
   isOnline = require('is-online');
+
+  ConnectionParams = require('./connection-params');
 
 
   /**
@@ -33,5 +35,7 @@
    */
 
   exports.isOnline = isOnline;
+
+  exports.ConnectionParams = ConnectionParams;
 
 }).call(this);

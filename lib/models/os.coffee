@@ -6,6 +6,7 @@ url = require('url')
 fs = require('fs')
 server = require('../server')
 settings = require('../settings')
+ConnectionParams = require('../connection-params')
 
 ###*
 # download callback
@@ -19,24 +20,29 @@ settings = require('../settings')
 # @summary Download an OS image
 # @function
 #
-# @param {Object} parameters - os parameters
+# @param {module:resin/connection.ConnectionParams} parameters - os parameters
 # @param {String} destination - destination path
 # @param {module:resin/models/os~downloadCallback} callback - callback
 # @param {Function} onProgress - on progress callback
 #
-# @todo We should formalise the definition of parameters object.
+# @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
 #
 # @example
-# resin.models.os.download {
+# parameters = new ConnectionParams
 #		network: 'ethernet'
 #		appId: 91
-# }, '/opt/os.zip', (error) ->
+#
+# resin.models.os.download parameters, '/opt/os.zip', (error) ->
 #		throw error if error?
 #	, (state) ->
 #		console.log "Total: #{state.total}"
 #		console.log "Received: #{state.received}"
 ###
 exports.download = (parameters, destination, callback, onProgress) ->
+
+	if parameters not instanceof ConnectionParams
+		throw new Error('Invalid connection params')
+
 	query = url.format(query: parameters)
 	downloadUrl = url.resolve(settings.get('urls.download'), query)
 

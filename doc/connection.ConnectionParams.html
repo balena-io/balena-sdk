@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: resin/connection</title>
+    <title>JSDoc: Class: ConnectionParams</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: resin/connection</h1>
+    <h1 class="page-title">Class: ConnectionParams</h1>
 
     
 
@@ -27,7 +27,9 @@
 
 <header>
     <h2>
-    resin/connection
+        <span class="ancestors"><a href="connection.html">resin/connection</a>.</span>
+    
+    ConnectionParams
     </h2>
     
 </header>
@@ -38,82 +40,16 @@
 
     
         
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="connection.js.html">connection.js</a>, <a href="connection.js.html#line2">line 2</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="connection.ConnectionParams.html">ConnectionParams</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
 <dt>
-    <h4 class="name" id="isOnline"><span class="type-signature">&lt;protected, static> </span>isOnline<span class="signature">(callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ConnectionParams"><span class="type-signature"></span>new ConnectionParams<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
-    
-    <p class="summary">Check network status</p>
     
 </dt>
 <dd>
 
     
     <div class="description">
-        A wrapper around isOnline in order to be able to stub it with Sinon
+        Create a set of connection parameters
     </div>
     
 
@@ -147,13 +83,13 @@
 
         <tr>
             
-                <td class="name"><code>callback</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="connection.html#isOnlineCallback">module:resin/connection~isOnlineCallback</a></span>
+<span class="param-type">Object</span>
 
 
             
@@ -163,7 +99,7 @@
 
             
 
-            <td class="description last">callback</td>
+            <td class="description last">connection parameter options</td>
         </tr>
 
     
@@ -194,7 +130,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="connection.js.html">connection.js</a>, <a href="connection.js.html#line37">line 37</a>
+        <a href="connection-params.js.html">connection-params.js</a>, <a href="connection-params.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -215,171 +151,206 @@
     
 
     
+    <h5>Throws:</h5>
+    <ul>
+            <li>
 
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>connection.isOnline (error, isOnline) ->
-		throw error if error?
-		console.log "Online? #{isOnline}"</code></pre>
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-
+<dl>
+    <dt>
+        <div class="param-desc">
+        If no appId option
+        </div>
+    </dt>
+    <dt>
         <dl>
-                
-<dt>
-    <h4 class="name" id="isOnlineCallback"><span class="type-signature"></span>isOnlineCallback<span class="signature">(error, isOnline)</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        isOnline callback
-    </div>
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>error</code></td>
-            
-
-            <td class="type">
-            
+            <dt>
+                Type
+            </dt>
+            <dd>
                 
 <span class="param-type"><a href="global.html#Error">Error</a></span>
-|
-
-<span class="param-type">null</span>
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">error</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>isOnline</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is online</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="connection.js.html">connection.js</a>, <a href="connection.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
+            </dd>
+        </dl>
+    </dt>
 </dl>
 
+</li>
+        
+            <li>
 
-    
+<dl>
+    <dt>
+        <div class="param-desc">
+        If invalid appId option (not a number or parseable string)
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
 
-    
 
-    
+            </dd>
+        </dl>
+    </dt>
+</dl>
 
-    
+</li>
+        
+            <li>
 
-    
+<dl>
+    <dt>
+        <div class="param-desc">
+        If no network option
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        
+            <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If network is not wifi or ethernet
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        
+            <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If network is wifi and wifiSsid is missing
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        
+            <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If network is wifi and wifiKey is missing
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        
+            <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If a non supported option is passed
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        </ul>
 
     
 
     
 </dd>
 
-            </dl>
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     

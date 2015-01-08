@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var fs, server, settings, url;
+  var ConnectionParams, fs, server, settings, url;
 
   url = require('url');
 
@@ -13,6 +13,8 @@
   server = require('../server');
 
   settings = require('../settings');
+
+  ConnectionParams = require('../connection-params');
 
 
   /**
@@ -28,18 +30,19 @@
    * @summary Download an OS image
    * @function
    *
-   * @param {Object} parameters - os parameters
+   * @param {module:resin/connection.ConnectionParams} parameters - os parameters
    * @param {String} destination - destination path
    * @param {module:resin/models/os~downloadCallback} callback - callback
    * @param {Function} onProgress - on progress callback
    *
-   * @todo We should formalise the definition of parameters object.
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
    *
    * @example
-   * resin.models.os.download {
+   * parameters = new ConnectionParams
    *		network: 'ethernet'
    *		appId: 91
-   * }, '/opt/os.zip', (error) ->
+   *
+   * resin.models.os.download parameters, '/opt/os.zip', (error) ->
    *		throw error if error?
    *	, (state) ->
    *		console.log "Total: #{state.total}"
@@ -48,6 +51,9 @@
 
   exports.download = function(parameters, destination, callback, onProgress) {
     var downloadUrl, query;
+    if (!(parameters instanceof ConnectionParams)) {
+      throw new Error('Invalid connection params');
+    }
     query = url.format({
       query: parameters
     });

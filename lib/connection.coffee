@@ -3,6 +3,7 @@
 ###
 
 isOnline = require('is-online')
+ConnectionParams = require('./connection-params')
 
 ###*
 # isOnline callback
@@ -26,3 +27,5 @@ isOnline = require('is-online')
 #		console.log "Online? #{isOnline}"
 ###
 exports.isOnline = isOnline
+
+exports.ConnectionParams = ConnectionParams

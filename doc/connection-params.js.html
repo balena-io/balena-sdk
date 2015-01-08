@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: resin.js</title>
+    <title>JSDoc: Source: connection-params.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: resin.js</h1>
+    <h1 class="page-title">Source: connection-params.js</h1>
 
     
 
@@ -25,50 +25,70 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
-/**
- * @namespace resin
- */
+            <pre class="prettyprint source linenums"><code>(function() {
+  var ConnectionParams, NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, VALID_OPTIONS, _;
 
-(function() {
-  module.exports = {
+  _ = require('lodash');
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link resin.models}
-     */
-    models: require('./models'),
+  NETWORK_WIFI = 'wifi';
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin/data}
-     */
-    data: require('./data'),
+  NETWORK_ETHERNET = 'ethernet';
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin/auth}
-     */
-    auth: require('./auth'),
+  NETWORK_TYPES = [NETWORK_WIFI, NETWORK_ETHERNET];
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin/vcs}
-     */
-    vcs: require('./vcs'),
+  VALID_OPTIONS = ['network', 'appId', 'wifiSsid', 'wifiKey'];
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin/settings}
-     */
-    settings: require('./settings'),
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin/connection}
-     */
-    connection: require('./connection')
-  };
+  /**
+   * Create a set of connection parameters
+   * @name ConnectionParams
+   * @memberof module:resin/connection
+   * @class
+   * @param {Object} options - connection parameter options
+   *
+   * @throws {Error} If no appId option
+   * @throws {Error} If invalid appId option (not a number or parseable string)
+   * @throws {Error} If no network option
+   * @throws {Error} If network is not wifi or ethernet
+   * @throws {Error} If network is wifi and wifiSsid is missing
+   * @throws {Error} If network is wifi and wifiKey is missing
+   * @throws {Error} If a non supported option is passed
+   */
+
+  module.exports = ConnectionParams = (function() {
+    function ConnectionParams(options) {
+      var invalidOptions;
+      if (options.appId == null) {
+        throw new Error('Missing appId');
+      }
+      options.appId = _.parseInt(options.appId);
+      if (_.isNaN(options.appId)) {
+        throw new Error('Invalid appId');
+      }
+      if (options.network == null) {
+        throw new Error('Missing network');
+      }
+      if (_.indexOf(NETWORK_TYPES, options.network) === -1) {
+        throw new Error("Invalid network type: " + options.network);
+      }
+      if (options.network === NETWORK_WIFI) {
+        if (options.wifiSsid == null) {
+          throw new Error('Missing wifiSsid');
+        }
+        if (options.wifiKey == null) {
+          throw new Error('Missing wifiKey');
+        }
+      }
+      invalidOptions = _.difference(_.keys(options), VALID_OPTIONS);
+      if (!_.isEmpty(invalidOptions)) {
+        throw new Error("Invalid option: " + (_.first(invalidOptions)));
+      }
+      _.extend(this, options);
+    }
+
+    return ConnectionParams;
+
+  })();
 
 }).call(this);
 </code></pre>
