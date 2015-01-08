@@ -2,6 +2,7 @@
 # @module resin/models/environment-variables
 ###
 
+_ = require('lodash')
 pine = require('../pine')
 errors = require('../errors')
 
@@ -38,7 +39,7 @@ exports.getAllByApplication = (applicationId, callback) ->
 			orderby: 'name asc'
 
 	.then (environmentVariables) ->
-		if not environmentVariables?
+		if _.isEmpty(environmentVariables)
 			return callback(new errors.NotFound('environment variables'))
 
 		return callback(null, environmentVariables)

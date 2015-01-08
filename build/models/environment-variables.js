@@ -4,7 +4,9 @@
  */
 
 (function() {
-  var errors, pine;
+  var errors, pine, _;
+
+  _ = require('lodash');
 
   pine = require('../pine');
 
@@ -48,7 +50,7 @@
         orderby: 'name asc'
       }
     }).then(function(environmentVariables) {
-      if (environmentVariables == null) {
+      if (_.isEmpty(environmentVariables)) {
         return callback(new errors.NotFound('environment variables'));
       }
       return callback(null, environmentVariables);
