@@ -32,3 +32,9 @@ module.exports =
 	# @see {@link module:resin/settings}
 	###
 	settings: require('./settings')
+
+	###*
+	# @memberof resin
+	# @see {@link module:resin/connection}
+	###
+	connection: require('./connection')
