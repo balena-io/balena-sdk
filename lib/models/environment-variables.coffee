@@ -135,3 +135,19 @@ exports.remove = (id, callback) ->
 		return callback()
 	.catch (error) ->
 		return callback(error)
+
+###*
+# @summary Check is a variable is system specific
+# @function
+#
+# @param {EnvironmentVariable} variable - environment variable
+# @returns {Boolean} Whether a variable is system specific or not
+#
+# @example
+# resin.models.environmentVariables.isSystemVariable('RESIN_SUPERVISOR')
+# > true
+# resin.models.environmentVariables.isSystemVariable('EDITOR')
+# > false
+####
+exports.isSystemVariable = (variable) ->
+	return /^RESIN_/.test(variable.name)
