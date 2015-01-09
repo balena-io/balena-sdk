@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: resin/settings</title>
+    <title>JSDoc: Module: resin/logs</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: resin/settings</h1>
+    <h1 class="page-title">Module: resin/logs</h1>
 
     
 
@@ -27,7 +27,7 @@
 
 <header>
     <h2>
-    resin/settings
+    resin/logs
     </h2>
     
 </header>
@@ -62,7 +62,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings.js.html">settings.js</a>, <a href="settings.js.html#line2">line 2</a>
+        <a href="logs.js.html">logs.js</a>, <a href="logs.js.html#line2">line 2</a>
     </li></ul></dd>
     
 
@@ -96,10 +96,10 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(key)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="subscribe"><span class="type-signature">&lt;static> </span>subscribe<span class="signature">(uuid, options, callback)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary">Get a setting value</p>
+    <p class="summary">Subscribe to device logs by their UUID</p>
     
 </dt>
 <dd>
@@ -136,7 +136,7 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>uuid</code></td>
             
 
             <td class="type">
@@ -152,7 +152,53 @@
 
             
 
-            <td class="description last">setting key</td>
+            <td class="description last">the device uuid</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">logs options (history=0, tail=false)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="logs.html#subscribeCallback">module:resin/logs~subscribeCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback</td>
         </tr>
 
     
@@ -183,21 +229,21 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings.js.html">settings.js</a>, <a href="settings.js.html#line217">line 217</a>
+        <a href="logs.js.html">logs.js</a>, <a href="logs.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
+
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
         <ul>
-            <li><a href="https://github.com/resin-io/conf.js">https://github.com/resin-io/conf.js</a></li>
+            <li>Find a way to test this</li>
         </ul>
     </dd>
-    
-
     
 </dl>
 
@@ -211,323 +257,52 @@
     
 
     
-
-    
-    <h5>Returns:</h5>
+    <h5>Throws:</h5>
     
             
-<div class="param-desc">
-    key value
-</div>
-
-
 
 <dl>
     <dt>
-        Type
+        <div class="param-desc">
+        Will throw if `options.history` is not a number or parseable string.
+        </div>
     </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-    </dd>
-</dl>
-
-        
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="has"><span class="type-signature">&lt;static> </span>has<span class="signature">(key)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
-
-    
-    <p class="summary">Has a setting value</p>
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">setting key</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings.js.html">settings.js</a>, <a href="settings.js.html#line230">line 230</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://github.com/resin-io/conf.js">https://github.com/resin-io/conf.js</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    has key value
-</div>
-
-
-
-<dl>
     <dt>
-        Type
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+
+
+            </dd>
+        </dl>
     </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-    </dd>
-</dl>
-
-        
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="set"><span class="type-signature">&lt;static> </span>set<span class="signature">(key, value)</span><span class="type-signature"></span></h4>
-
-    
-    <p class="summary">Set a setting value</p>
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">setting key</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">setting value</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings.js.html">settings.js</a>, <a href="settings.js.html#line204">line 204</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://github.com/resin-io/conf.js">https://github.com/resin-io/conf.js</a></li>
-        </ul>
-    </dd>
-    
-
-    
 </dl>
 
 
-    
+        
 
     
 
     
+        <h5>Examples</h5>
+        
+    <pre class="prettyprint"><code>uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
+resin.logs.subscribe uuid, {
+		history: 20
+}, (error, message) ->
+		throw error if error?
+		console.log(message)</code></pre>
 
-    
-
-    
-
-    
+    <pre class="prettyprint"><code>uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
+resin.logs.subscribe uuid, {
+		tail: true
+}, (error, message) ->
+		throw error if error?
+		console.log(message)</code></pre>
 
     
 </dd>
@@ -535,6 +310,155 @@
         </dl>
     
 
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+<dt>
+    <h4 class="name" id="subscribeCallback"><span class="type-signature"></span>subscribeCallback<span class="signature">(error, message)</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        subscribe callback
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Error">Error</a></span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">error</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">log message</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="logs.js.html">logs.js</a>, <a href="logs.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            </dl>
     
 
     
