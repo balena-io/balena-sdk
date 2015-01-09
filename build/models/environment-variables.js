@@ -29,6 +29,7 @@
 
   /**
    * @summary Get all environment variables by application
+   * @public
    * @function
    *
    * @param {(String|Number)} applicationId - application id
@@ -69,6 +70,7 @@
 
   /**
    * @summary Create an environment variable for an application
+   * @public
    * @function
    *
    * @param {(String|Number)} applicationId - application id
@@ -106,6 +108,7 @@
 
   /**
    * @summary Update an environment variable value from an application
+   * @public
    * @function
    *
    * @param {(String|Number)} applicationId - application id
@@ -141,6 +144,7 @@
 
   /**
    * @summary Remove environment variable
+   * @public
    * @function
    *
    * @param {(String|Number)} id - environment variable id
@@ -165,6 +169,7 @@
 
   /**
    * @summary Check is a variable is system specific
+   * @public
    * @function
    *
    * @param {EnvironmentVariable} variable - environment variable

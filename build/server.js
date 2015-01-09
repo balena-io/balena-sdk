@@ -39,6 +39,7 @@
 
   /**
    * @summary Send an HTTP request to resin.io
+   * @private
    * @function
    *
    * @description If the user is logged in, the token gets automatically added to Authorization header

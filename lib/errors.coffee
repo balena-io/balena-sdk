@@ -1,13 +1,10 @@
-###*
-# @module resin/errors
-###
-
 TypedError = require('typed-error')
 
 exports.NotFound = class NotFound extends TypedError
 
 	###*
 	# @summary Construct a Not Found error
+	# @private
 	# @constructor
 	#
 	# @param {String} name - name of the thing that was not found
@@ -28,6 +25,7 @@ exports.InvalidConfigFile = class InvalidConfigFile extends TypedError
 
 	###*
 	# @summary Construct an Invalid Config File error
+	# @private
 	# @constructor
 	#
 	# @param {String} file - the name of the invalid configuration file
@@ -48,6 +46,7 @@ exports.InvalidCredentials = class InvalidCredentials extends TypedError
 
 	###*
 	# @summary Construct an Invalid Credentials error
+	# @private
 	# @constructor
 	#
 	# @example
@@ -66,6 +65,7 @@ exports.InvalidKey = class InvalidKey extends TypedError
 
 	###*
 	# @summary Construct an Invalid Key error
+	# @private
 	# @constructor
 	#
 	# @example
@@ -84,6 +84,7 @@ exports.InvalidPath = class InvalidPath extends TypedError
 
 	###*
 	# @summary Construct an Invalid Path error
+	# @private
 	# @constructor
 	#
 	# @param {String} path - the name of the invalid path
@@ -104,6 +105,7 @@ exports.DirectoryDoesntExist = class DirectoryDoesntExist extends TypedError
 
 	###*
 	# @summary Construct a Directory Doesn't Exist error
+	# @private
 	# @constructor
 	#
 	# @param {String} directory - the name of the directory that doesn't exist
@@ -124,6 +126,7 @@ exports.NotAny = class NotAny extends TypedError
 
 	###*
 	# @summary Construct an Not Any error
+	# @private
 	# @constructor
 	#
 	# @param {String} name - name of the thing that the user doesn't have
@@ -144,6 +147,7 @@ exports.FileNotFound = class FileNotFound extends TypedError
 
 	###*
 	# @summary Construct an File Not Found error
+	# @private
 	# @constructor
 	#
 	# @param {String} filename - name of the file that was not found

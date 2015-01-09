@@ -1,8 +1,3 @@
-
-/**
- * @module resin/helpers
- */
-
 (function() {
   var fsPlus, path, _;
 
@@ -15,11 +10,10 @@
 
   /**
    * @summary Prefix relative value paths with another path
+   * @private
    * @function
    *
    * @description Absolute values will be omitted
-   *
-   * @protected
    *
    * @param {String} prefix - path prefix
    * @param {Object} object - object containing relative paths as values

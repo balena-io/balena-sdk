@@ -21,6 +21,7 @@
 
   /**
    * @summary Check network status
+   * @protected
    * @function
    * @protected
    *

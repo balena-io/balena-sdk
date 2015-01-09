@@ -23,6 +23,7 @@
 
   /**
    * @summary Subscribe to device logs by their UUID
+   * @public
    * @function
    *
    * @param {String} uuid - the device uuid

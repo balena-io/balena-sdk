@@ -28,6 +28,7 @@
 
   /**
    * @summary Download an OS image
+   * @public
    * @function
    *
    * @param {module:resin/connection.ConnectionParams} parameters - os parameters

@@ -31,6 +31,7 @@
 
   /**
    * @summary Get all ssh keys
+   * @public
    * @function
    *
    * @param {module:resin/models/key~getAllCallback} callback - callback
@@ -66,6 +67,7 @@
 
   /**
    * @summary Get a single ssh key
+   * @public
    * @function
    *
    * @param {(String|Number)} id - key id
@@ -105,6 +107,7 @@
 
   /**
    * @summary Remove ssh key
+   * @public
    * @function
    *
    * @param {(String|Number)} id - key id
@@ -134,6 +137,7 @@
 
   /**
    * @summary Create a ssh key
+   * @public
    * @function
    *
    * @param {String} title - key title

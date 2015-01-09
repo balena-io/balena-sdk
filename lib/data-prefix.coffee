@@ -13,6 +13,7 @@ prefix = null
 
 ###*
 # @summary Get current prefix
+# @public
 # @function
 #
 # @returns {String} prefix
@@ -31,6 +32,7 @@ exports.get = ->
 
 ###*
 # @summary Set prefix
+# @public
 # @function
 #
 # @param {String} newPrefix - new prefix
@@ -51,6 +53,7 @@ exports.set = (newPrefix, callback) ->
 
 ###*
 # @summary Clear prefix
+# @public
 # @function
 #
 # @example

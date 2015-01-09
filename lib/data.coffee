@@ -14,6 +14,7 @@ errors = require('./errors')
 
 ###*
 # @name prefix
+# @public
 # @memberof resin/data
 # @see {@link module:resin/data/prefix}
 ###
@@ -47,6 +48,7 @@ constructPath = (key) ->
 
 ###*
 # @summary Get data by key
+# @public
 # @function
 #
 # @description We call "data" to the information saved by the application in order to work properly.
@@ -88,6 +90,7 @@ exports.get = haltIfNoPrefix (key, options, callback) ->
 
 ###*
 # @summary Get data by key as text
+# @public
 # @function
 #
 # @description This is the same as {@link module:resin/data.get}, however it assumes utf8 encoding.
@@ -111,6 +114,7 @@ exports.getText = haltIfNoPrefix (key, callback) ->
 
 ###*
 # @summary Set/Update a data resource
+# @public
 # @function
 #
 # @description You can save a buffer, but we strongly recommend saving plain text when possible
@@ -137,6 +141,7 @@ exports.set = haltIfNoPrefix (key, value, options, callback) ->
 
 ###*
 # @summary Set/Update a data resource as text
+# @public
 # @function
 #
 # @description This is the same as {@link module:resin/data.set}, however it assumes utf8 encoding.
@@ -162,6 +167,7 @@ exports.setText = haltIfNoPrefix (key, value, callback) ->
 
 ###*
 # @summary Check if value exists
+# @public
 # @function
 #
 # @param {String} key - path relative to dataPrefix
@@ -188,6 +194,7 @@ exports.has = haltIfNoPrefix (key, callback) ->
 
 ###*
 # @summary Remove a key
+# @public
 # @function
 #
 # @param {String} key - path relative to dataPrefix

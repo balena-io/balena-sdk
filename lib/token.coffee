@@ -1,5 +1,6 @@
 ###*
 # @module resin/data/token
+# @private
 ###
 
 data = require('./data')
@@ -19,6 +20,7 @@ TOKEN_KEY = 'token'
 
 ###*
 # @summary Save token
+# @private
 # @function
 #
 # @description The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin/token
@@ -44,6 +46,7 @@ exports.saveToken = (newToken, callback) ->
 
 ###*
 # @summary Check if we have any token saved
+# @private
 # @function
 #
 # @param {module:resin/data/token~hasTokenCallback} callback - callback
@@ -67,6 +70,7 @@ exports.hasToken = (callback) ->
 
 ###*
 # @summary Get saved token value
+# @private
 # @function
 #
 # @description If the key doesn't exist, undefined and no error is returned
@@ -90,6 +94,7 @@ exports.getToken = (callback) ->
 
 ###*
 # @summary Remove token from the filesystem
+# @private
 # @function
 #
 # @description If the token doesn't exist, no action is performed

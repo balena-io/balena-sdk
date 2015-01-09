@@ -35,6 +35,7 @@
 
   /**
    * @summary Get all applications
+   * @public
    * @function
    *
    * @param {module:resin/models/application~getAllCallback} callback - callback
@@ -82,6 +83,7 @@
 
   /**
    * @summary Get a single application
+   * @public
    * @function
    *
    * @param {(String|Number)} id - application id
@@ -119,6 +121,7 @@
 
   /**
    * @summary Create an application
+   * @public
    * @function
    *
    * @param {String} name - application name
@@ -162,6 +165,7 @@
 
   /**
    * @summary Remove application
+   * @public
    * @function
    *
    * @param {(String|Number)} id - application id
@@ -193,6 +197,7 @@
 
   /**
    * @summary Restart application
+   * @public
    * @function
    *
    * @param {(String|Number)} id - application id

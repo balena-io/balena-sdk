@@ -18,6 +18,7 @@ ConnectionParams = require('../connection-params')
 
 ###*
 # @summary Download an OS image
+# @public
 # @function
 #
 # @param {module:resin/connection.ConnectionParams} parameters - os parameters

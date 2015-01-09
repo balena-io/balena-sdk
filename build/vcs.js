@@ -18,6 +18,7 @@
 
   /**
    * @summary Initialize an application project
+   * @public
    * @function
    *
    * @description Add the corresponding git remote.
@@ -50,6 +51,7 @@
 
   /**
    * @summary Check if an application was already initialized
+   * @public
    * @function
    *
    * @description It checks if we have a resin remote added already.

@@ -14,6 +14,7 @@ ConnectionParams = require('./connection-params')
 
 ###*
 # @summary Check network status
+# @protected
 # @function
 # @protected
 #

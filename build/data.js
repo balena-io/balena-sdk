@@ -24,6 +24,7 @@
 
   /**
    * @name prefix
+   * @public
    * @memberof resin/data
    * @see {@link module:resin/data/prefix}
    */
@@ -69,6 +70,7 @@
 
   /**
    * @summary Get data by key
+   * @public
    * @function
    *
    * @description We call "data" to the information saved by the application in order to work properly.
@@ -113,6 +115,7 @@
 
   /**
    * @summary Get data by key as text
+   * @public
    * @function
    *
    * @description This is the same as {@link module:resin/data.get}, however it assumes utf8 encoding.
@@ -142,6 +145,7 @@
 
   /**
    * @summary Set/Update a data resource
+   * @public
    * @function
    *
    * @description You can save a buffer, but we strongly recommend saving plain text when possible
@@ -173,6 +177,7 @@
 
   /**
    * @summary Set/Update a data resource as text
+   * @public
    * @function
    *
    * @description This is the same as {@link module:resin/data.set}, however it assumes utf8 encoding.
@@ -204,6 +209,7 @@
 
   /**
    * @summary Check if value exists
+   * @public
    * @function
    *
    * @param {String} key - path relative to dataPrefix
@@ -235,6 +241,7 @@
 
   /**
    * @summary Remove a key
+   * @public
    * @function
    *
    * @param {String} key - path relative to dataPrefix

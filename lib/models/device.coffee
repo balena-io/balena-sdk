@@ -23,6 +23,7 @@ DEVICES = require('./device-data.json')
 
 ###*
 # @summary Get all devices
+# @public
 # @function
 #
 # @param {module:resin/models/device~getAllCallback} callback - callback(error, devices)
@@ -56,6 +57,7 @@ exports.getAll = (callback) ->
 
 ###*
 # @summary Get all devices by application
+# @public
 # @function
 #
 # @param {(String|Number)} applicationId - application id
@@ -98,6 +100,7 @@ exports.getAllByApplication = (applicationId, callback) ->
 
 ###*
 # @summary Get a single device
+# @public
 # @function
 #
 # @param {(String|Number)} id - device id
@@ -136,6 +139,7 @@ exports.get = (deviceId, callback) ->
 
 ###*
 # @summary Remove device
+# @public
 # @function
 #
 # @param {(String|Number)} id - device id
@@ -162,6 +166,7 @@ exports.remove = (id, callback) ->
 
 ###*
 # @summary Identify device
+# @public
 # @function
 #
 # @param {String} uuid - device uuid
@@ -182,6 +187,7 @@ exports.identify = (uuid, callback) ->
 
 ###*
 # @summary Rename device
+# @public
 # @function
 #
 # @param {(String|Number)} id - device id
@@ -218,6 +224,7 @@ exports.rename = (id, name, callback) ->
 
 ###*
 # @summary Note a device
+# @public
 # @function
 #
 # @param {(String|Number)} id - device id
@@ -244,6 +251,7 @@ exports.note = (id, note, callback) ->
 
 ###*
 # @summary Get display name for a device
+# @public
 # @function
 #
 # @see {@link module:resin/models/device.getSupportedDeviceTypes} for a list of supported devices
@@ -266,6 +274,7 @@ exports.getDisplayName = (device) ->
 
 ###*
 # @summary Get device slug
+# @public
 # @function
 #
 # @param {String} device - device name
@@ -280,6 +289,7 @@ exports.getDeviceSlug = (device) ->
 
 ###*
 # @summary Get a list of supported device types
+# @public
 # @function
 #
 # @returns {String[]} a list of all supported devices, by their display names

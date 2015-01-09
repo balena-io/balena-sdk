@@ -22,6 +22,7 @@
 
   /**
    * @summary Get current prefix
+   * @public
    * @function
    *
    * @returns {String} prefix
@@ -44,6 +45,7 @@
 
   /**
    * @summary Set prefix
+   * @public
    * @function
    *
    * @param {String} newPrefix - new prefix
@@ -70,6 +72,7 @@
 
   /**
    * @summary Clear prefix
+   * @public
    * @function
    *
    * @example

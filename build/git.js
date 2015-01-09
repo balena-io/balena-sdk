@@ -1,6 +1,7 @@
 
 /**
  * @module resin/vcs/git
+ * @private
  */
 
 (function() {
@@ -37,12 +38,11 @@
 
   /**
    * @summary Get git directory for a certain path
+   * @private
    * @function
    *
    * @description By git directory, we mean the hidden .git folder that every git repository have
    * This function doesn't check if the path is valid, it only constructs it.
-   *
-   * @protected
    *
    * @param {String} directory - the directory path
    * @throws {Error} Will throw if directory is not a string
@@ -67,12 +67,11 @@
 
   /**
    * @summary Get current git directory
+   * @private
    * @function
    *
    * @description Get the path to the .git directory in the current directory
    * The current directory is determined by from where you ran the app
-   *
-   * @protected
    *
    * @returns {String} the absolute path to the current directory's .git folder
    *
@@ -100,9 +99,8 @@
 
   /**
    * @summary Check if a directory is a git repository
+   * @private
    * @function
-   *
-   * @protected
    *
    * @param {String} directory - the directory
    * @param {module:resin/vcs/git~isGitRepositoryCallback} callback - callback
@@ -152,11 +150,10 @@
 
   /**
    * @summary Get repository instance
+   * @private
    * @function
    *
    * @description An instance of a [gitCli](https://github.com/tuvistavie/node-git-cli) repository, for internal usage.
-   *
-   * @protected
    *
    * @param {String} directory - the directory
    * @param {module:resin/vcs/git~getRepositoryInstanceCallback} callback - callback
@@ -186,11 +183,10 @@
 
   /**
    * @summary Check if an application is a git app
+   * @private
    * @function
    *
    * @description All it does is check if the application object contains a valid git_repository field.
-   *
-   * @protected
    *
    * @param {Application} application - a resin application
    * @returns {Boolean} wheter is a valid git application or not
@@ -228,9 +224,8 @@
 
   /**
    * @summary Check if a repository has a certain remote
+   * @private
    * @function
-   *
-   * @protected
    *
    * @param {GitRepository} repository - a repository instance from getRepositoryInstance()
    * @param {String} name - the name of the remote to check for
@@ -269,9 +264,8 @@
 
   /**
    * @summary Add a remote to a git repository
+   * @private
    * @function
-   *
-   * @protected
    *
    * @param {GitRepository} repository - a repository instance from getRepositoryInstance()
    * @param {String} name - the name of the remote to add
@@ -310,6 +304,7 @@
 
   /**
    * @summary Initialize an application project
+   * @protected
    * @function
    *
    * @description Add the corresponding git remote.
@@ -360,6 +355,7 @@
 
   /**
    * @summary Check if an application was already initialized
+   * @protected
    * @function
    *
    * It checks if we have a resin remote added already.

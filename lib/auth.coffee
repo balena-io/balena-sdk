@@ -20,6 +20,7 @@ settings = require('./settings')
 
 ###*
 # @summary Return current logged in username
+# @public
 # @function
 #
 # @description This will only work if you used {@link module:resin/auth.login} to log in.
@@ -49,12 +50,11 @@ exports.whoami = (callback) ->
 
 ###*
 # @summary Authenticate with the server
+# @protected
 # @function
 #
 # @description You should use {@link module:resin/auth.login} when possible,
 # as it takes care of saving the token and username as well.
-#
-# @protected
 #
 # @param {Object} credentials - in the form of username, password
 # @option credentials {String} username - the username
@@ -81,6 +81,7 @@ exports.authenticate = (credentials, callback) ->
 
 ###*
 # @summary Login to Resin.io
+# @public
 # @function
 #
 # @description If the login is successful, the token is persisted between sessions.
@@ -119,6 +120,7 @@ exports.login = (credentials, callback) ->
 
 ###*
 # @summary Check if you're logged in
+# @public
 # @function
 #
 # @param {module:resin/auth~isLoggedInCallback} callback - callback
@@ -142,6 +144,7 @@ exports.isLoggedIn = (callback) ->
 
 ###*
 # @summary Get current logged in user's token
+# @public
 # @function
 # @borrows module:resin/data/token.getToken as getToken
 #
@@ -164,6 +167,7 @@ exports.getToken = token.getToken
 
 ###*
 # @summary Logout from Resin.io
+# @public
 # @function
 #
 # @param {module:resin/auth~logoutCallback} [callback=_.noop] - callback
@@ -196,6 +200,7 @@ exports.logout = (callback = _.noop) ->
 
 ###*
 # @summary Register to Resin.io
+# @public
 # @function
 #
 # @param {Object} [credentials={}] - in the form of username, password and email

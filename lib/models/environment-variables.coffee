@@ -20,6 +20,7 @@ errors = require('../errors')
 
 ###*
 # @summary Get all environment variables by application
+# @public
 # @function
 #
 # @param {(String|Number)} applicationId - application id
@@ -55,6 +56,7 @@ exports.getAllByApplication = (applicationId, callback) ->
 
 ###*
 # @summary Create an environment variable for an application
+# @public
 # @function
 #
 # @param {(String|Number)} applicationId - application id
@@ -88,6 +90,7 @@ exports.create = (applicationId, name, value, callback) ->
 
 ###*
 # @summary Update an environment variable value from an application
+# @public
 # @function
 #
 # @param {(String|Number)} applicationId - application id
@@ -119,6 +122,7 @@ exports.update = (id, value, callback) ->
 
 ###*
 # @summary Remove environment variable
+# @public
 # @function
 #
 # @param {(String|Number)} id - environment variable id
@@ -139,6 +143,7 @@ exports.remove = (id, callback) ->
 
 ###*
 # @summary Check is a variable is system specific
+# @public
 # @function
 #
 # @param {EnvironmentVariable} variable - environment variable

@@ -16,6 +16,7 @@
    * Create a set of connection parameters
    * @name ConnectionParams
    * @memberof module:resin/connection
+   * @public
    * @class
    * @param {Object} options - connection parameter options
    *

@@ -1,6 +1,7 @@
 
 /**
  * @module resin/data/token
+ * @private
  */
 
 (function() {
@@ -25,6 +26,7 @@
 
   /**
    * @summary Save token
+   * @private
    * @function
    *
    * @description The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin/token
@@ -54,6 +56,7 @@
 
   /**
    * @summary Check if we have any token saved
+   * @private
    * @function
    *
    * @param {module:resin/data/token~hasTokenCallback} callback - callback
@@ -81,6 +84,7 @@
 
   /**
    * @summary Get saved token value
+   * @private
    * @function
    *
    * @description If the key doesn't exist, undefined and no error is returned
@@ -108,6 +112,7 @@
 
   /**
    * @summary Remove token from the filesystem
+   * @private
    * @function
    *
    * @description If the token doesn't exist, no action is performed

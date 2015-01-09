@@ -1,18 +1,13 @@
-###*
-# @module resin/helpers
-###
-
 _ = require('lodash')
 fsPlus = require('fs-plus')
 path = require('path')
 
 ###*
 # @summary Prefix relative value paths with another path
+# @private
 # @function
 #
 # @description Absolute values will be omitted
-#
-# @protected
 #
 # @param {String} prefix - path prefix
 # @param {Object} object - object containing relative paths as values

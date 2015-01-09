@@ -186,6 +186,7 @@ settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, setting
 ###*
 # @name set
 # @summary Set a setting value
+# @public
 # @function
 # @static
 # @memberof module:resin/settings
@@ -198,6 +199,7 @@ settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, setting
 ###*
 # @name get
 # @summary Get a setting value
+# @public
 # @function
 # @static
 # @memberof module:resin/settings
@@ -210,6 +212,7 @@ settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, setting
 ###*
 # @name has
 # @summary Has a setting value
+# @public
 # @function
 # @static
 # @memberof module:resin/settings

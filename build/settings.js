@@ -204,6 +204,7 @@
   /**
    * @name set
    * @summary Set a setting value
+   * @public
    * @function
    * @static
    * @memberof module:resin/settings
@@ -217,6 +218,7 @@
   /**
    * @name get
    * @summary Get a setting value
+   * @public
    * @function
    * @static
    * @memberof module:resin/settings
@@ -230,6 +232,7 @@
   /**
    * @name has
    * @summary Has a setting value
+   * @public
    * @function
    * @static
    * @memberof module:resin/settings

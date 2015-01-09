@@ -1,8 +1,3 @@
-
-/**
- * @module resin/errors
- */
-
 (function() {
   var DirectoryDoesntExist, FileNotFound, InvalidConfigFile, InvalidCredentials, InvalidKey, InvalidPath, NotAny, NotFound, TypedError,
     __hasProp = {}.hasOwnProperty,
@@ -16,6 +11,7 @@
 
     /**
     	 * @summary Construct a Not Found error
+    	 * @private
     	 * @constructor
     	 *
     	 * @param {String} name - name of the thing that was not found
@@ -46,6 +42,7 @@
 
     /**
     	 * @summary Construct an Invalid Config File error
+    	 * @private
     	 * @constructor
     	 *
     	 * @param {String} file - the name of the invalid configuration file
@@ -76,6 +73,7 @@
 
     /**
     	 * @summary Construct an Invalid Credentials error
+    	 * @private
     	 * @constructor
     	 *
     	 * @example
@@ -104,6 +102,7 @@
 
     /**
     	 * @summary Construct an Invalid Key error
+    	 * @private
     	 * @constructor
     	 *
     	 * @example
@@ -132,6 +131,7 @@
 
     /**
     	 * @summary Construct an Invalid Path error
+    	 * @private
     	 * @constructor
     	 *
     	 * @param {String} path - the name of the invalid path
@@ -162,6 +162,7 @@
 
     /**
     	 * @summary Construct a Directory Doesn't Exist error
+    	 * @private
     	 * @constructor
     	 *
     	 * @param {String} directory - the name of the directory that doesn't exist
@@ -192,6 +193,7 @@
 
     /**
     	 * @summary Construct an Not Any error
+    	 * @private
     	 * @constructor
     	 *
     	 * @param {String} name - name of the thing that the user doesn't have
@@ -222,6 +224,7 @@
 
     /**
     	 * @summary Construct an File Not Found error
+    	 * @private
     	 * @constructor
     	 *
     	 * @param {String} filename - name of the file that was not found

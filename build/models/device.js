@@ -35,6 +35,7 @@
 
   /**
    * @summary Get all devices
+   * @public
    * @function
    *
    * @param {module:resin/models/device~getAllCallback} callback - callback(error, devices)
@@ -73,6 +74,7 @@
 
   /**
    * @summary Get all devices by application
+   * @public
    * @function
    *
    * @param {(String|Number)} applicationId - application id
@@ -120,6 +122,7 @@
 
   /**
    * @summary Get a single device
+   * @public
    * @function
    *
    * @param {(String|Number)} id - device id
@@ -160,6 +163,7 @@
 
   /**
    * @summary Remove device
+   * @public
    * @function
    *
    * @param {(String|Number)} id - device id
@@ -191,6 +195,7 @@
 
   /**
    * @summary Identify device
+   * @public
    * @function
    *
    * @param {String} uuid - device uuid
@@ -217,6 +222,7 @@
 
   /**
    * @summary Rename device
+   * @public
    * @function
    *
    * @param {(String|Number)} id - device id
@@ -257,6 +263,7 @@
 
   /**
    * @summary Note a device
+   * @public
    * @function
    *
    * @param {(String|Number)} id - device id
@@ -286,6 +293,7 @@
 
   /**
    * @summary Get display name for a device
+   * @public
    * @function
    *
    * @see {@link module:resin/models/device.getSupportedDeviceTypes} for a list of supported devices
@@ -315,6 +323,7 @@
 
   /**
    * @summary Get device slug
+   * @public
    * @function
    *
    * @param {String} device - device name
@@ -333,6 +342,7 @@
 
   /**
    * @summary Get a list of supported device types
+   * @public
    * @function
    *
    * @returns {String[]} a list of all supported devices, by their display names

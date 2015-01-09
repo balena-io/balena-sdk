@@ -23,6 +23,7 @@ errors = require('../errors')
 
 ###*
 # @summary Get all ssh keys
+# @public
 # @function
 #
 # @param {module:resin/models/key~getAllCallback} callback - callback
@@ -51,6 +52,7 @@ exports.getAll = (callback) ->
 
 ###*
 # @summary Get a single ssh key
+# @public
 # @function
 #
 # @param {(String|Number)} id - key id
@@ -81,6 +83,7 @@ exports.get = (id, callback) ->
 
 ###*
 # @summary Remove ssh key
+# @public
 # @function
 #
 # @param {(String|Number)} id - key id
@@ -103,6 +106,7 @@ exports.remove = (id, callback) ->
 
 ###*
 # @summary Create a ssh key
+# @public
 # @function
 #
 # @param {String} title - key title

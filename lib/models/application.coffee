@@ -23,6 +23,7 @@ settings = require('../settings')
 
 ###*
 # @summary Get all applications
+# @public
 # @function
 #
 # @param {module:resin/models/application~getAllCallback} callback - callback
@@ -64,6 +65,7 @@ exports.getAll = (callback) ->
 
 ###*
 # @summary Get a single application
+# @public
 # @function
 #
 # @param {(String|Number)} id - application id
@@ -99,6 +101,7 @@ exports.get = (id, callback) ->
 
 ###*
 # @summary Create an application
+# @public
 # @function
 #
 # @param {String} name - application name
@@ -138,6 +141,7 @@ exports.create = (name, deviceType, callback) ->
 
 ###*
 # @summary Remove application
+# @public
 # @function
 #
 # @param {(String|Number)} id - application id
@@ -164,6 +168,7 @@ exports.remove = (id, callback) ->
 
 ###*
 # @summary Restart application
+# @public
 # @function
 #
 # @param {(String|Number)} id - application id

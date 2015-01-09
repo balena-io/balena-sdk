@@ -1,8 +1,3 @@
-
-/**
- * @module resin/pine
- */
-
 (function() {
   var PinejsClientCore, PinejsClientRequest, Promise, promisifiedServerRequest, server, settings, _,
     __hasProp = {}.hasOwnProperty,
@@ -30,11 +25,10 @@
 
     /**
     	 * @summary Trigger a request to the resin.io API
+    	 * @private
     	 *
     	 * @description Makes use of [pinejs-client-js](https://bitbucket.org/rulemotion/pinejs-client-js)
     	 * You shouldn't make use of this method directly, but through models
-    	 *
-    	 * @protected
     	 *
     	 * @param {Object} params - request params (same as node-request params)
      */
