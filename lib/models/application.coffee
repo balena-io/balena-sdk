@@ -116,11 +116,19 @@ exports.get = (id, callback) ->
 #		console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
+	slugifiedType = deviceModel.getDeviceSlug(deviceType)
+
+	# TODO: Detecting an unknown device type by comparing
+	# to this string looks like a terrible approach. Fix.
+	if slugifiedType is 'unknown'
+		error = new Error("Unknown device type: #{deviceType}")
+		return callback(error)
+
 	return pine.post
 		resource: 'application'
 		data:
 			app_name: name
-			device_type: deviceType
+			device_type: slugifiedType
 
 	.then (res) ->
 		id = res?.id
