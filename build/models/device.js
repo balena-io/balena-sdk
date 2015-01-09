@@ -223,6 +223,10 @@
    * @param {String} name - the device new name
    * @param {module:resin/models/device~renameCallback} callback - callback
    *
+   * @todo This action doesn't return any error
+   * if trying to rename a device that does not
+   * exists. This should be fixed server side.
+   *
    * @example
    *	resin.models.device.rename 317, 'NewName', (error) ->
    *		throw error if error?
