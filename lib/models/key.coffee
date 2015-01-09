@@ -120,6 +120,10 @@ exports.remove = (id, callback) ->
 #		throw error if error?
 ###
 exports.create = (title, key, callback) ->
+
+	# Avoid ugly whitespaces
+	key = key.trim()
+
 	url = settings.get('urls.keys')
 	data = { title, key }
 	server.post(url, data, _.unary(callback))
