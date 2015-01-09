@@ -22,6 +22,9 @@ VALID_OPTIONS = [
 # with that object right afterwards (with errors being thrown)
 # and propagated to the client.
 
+# TODO: Evaluate if ConnectionParams is a good name for this object
+# as it includes an application id, which is not connection related
+
 ###*
 # Create a set of connection parameters
 # @name ConnectionParams
