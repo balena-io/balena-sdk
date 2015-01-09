@@ -53,3 +53,33 @@ exports.download = (parameters, destination, callback, onProgress) ->
 		pipe: fs.createWriteStream(destination)
 	, callback
 	, onProgress
+
+###*
+# @summary Generate OS cache name
+# @public
+# @function
+#
+# @param {module:resin/connection.ConnectionParams} parameters - os parameters
+#
+# @returns {String} generated os cache name
+#
+# @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+#
+# @example
+# parameters = new ConnectionParams
+#		network: 'ethernet'
+#		appId: 91
+#
+# cacheName = resin.models.os.generateCacheName(parameters)
+###
+exports.generateCacheName = (connectionParams) ->
+
+	if connectionParams not instanceof ConnectionParams
+		throw new Error('Invalid connection params')
+
+	result = "#{connectionParams.appId}-#{connectionParams.network}"
+
+	if connectionParams.wifiSsid?
+		result += "-#{connectionParams.wifiSsid}"
+
+	return "#{result}-#{Date.now()}"

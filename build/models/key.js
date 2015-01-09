@@ -153,6 +153,7 @@
 
   exports.create = function(title, key, callback) {
     var data, url;
+    key = key.trim();
     url = settings.get('urls.keys');
     data = {
       title: title,

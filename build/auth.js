@@ -72,6 +72,9 @@
    * @description You should use {@link module:resin/auth.login} when possible,
    * as it takes care of saving the token and username as well.
    *
+   * Notice that if `credentials` contains extra keys, they'll be discarted
+   * by the server automatically.
+   *
    * @param {Object} credentials - in the form of username, password
    * @option credentials {String} username - the username
    * @option credentials {String} password - user password

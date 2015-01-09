@@ -66,4 +66,36 @@
     }, callback, onProgress);
   };
 
+
+  /**
+   * @summary Generate OS cache name
+   * @public
+   * @function
+   *
+   * @param {module:resin/connection.ConnectionParams} parameters - os parameters
+   *
+   * @returns {String} generated os cache name
+   *
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+   *
+   * @example
+   * parameters = new ConnectionParams
+   *		network: 'ethernet'
+   *		appId: 91
+   *
+   * cacheName = resin.models.os.generateCacheName(parameters)
+   */
+
+  exports.generateCacheName = function(connectionParams) {
+    var result;
+    if (!(connectionParams instanceof ConnectionParams)) {
+      throw new Error('Invalid connection params');
+    }
+    result = "" + connectionParams.appId + "-" + connectionParams.network;
+    if (connectionParams.wifiSsid != null) {
+      result += "-" + connectionParams.wifiSsid;
+    }
+    return "" + result + "-" + (Date.now());
+  };
+
 }).call(this);

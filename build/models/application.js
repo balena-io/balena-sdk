@@ -137,11 +137,17 @@
    */
 
   exports.create = function(name, deviceType, callback) {
+    var error, slugifiedType;
+    slugifiedType = deviceModel.getDeviceSlug(deviceType);
+    if (slugifiedType === 'unknown') {
+      error = new Error("Unknown device type: " + deviceType);
+      return callback(error);
+    }
     return pine.post({
       resource: 'application',
       data: {
         app_name: name,
-        device_type: deviceType
+        device_type: slugifiedType
       }
     }).then(function(res) {
       var id;
