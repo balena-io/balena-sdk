@@ -15,6 +15,13 @@ VALID_OPTIONS = [
 	'wifiKey'
 ]
 
+# TODO: Evaluate if we can make this class private.
+# In that case we make the functions that currently
+# accept a ConnectionParams instance accept a plain object
+# and we attempt to instantiate a ConnectionParams instance
+# with that object right afterwards (with errors being thrown)
+# and propagated to the client.
+
 ###*
 # Create a set of connection parameters
 # @name ConnectionParams
