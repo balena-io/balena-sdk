@@ -10,7 +10,7 @@ settings = require('./settings')
 # subscribe callback
 # @callback module:resin/logs~subscribeCallback
 # @param {(Error|null)} error - error
-# @param {String} message - log message
+# @param {String|String[]} message - log message
 ###
 
 ###*
