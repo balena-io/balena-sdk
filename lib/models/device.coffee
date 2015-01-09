@@ -250,6 +250,38 @@ exports.note = (id, note, callback) ->
 		return callback(error)
 
 ###*
+# isValidUUID callback
+# @callback module:resin/models/device~isValidUUIDCallback
+# @param {(Error|null)} error - error
+# @param {Boolean} isValid - whether is valid or not
+###
+
+###*
+# @summary Checks if a UUID is valid
+# @public
+# @function
+#
+# @param {String} uuid - the device uuid
+# @param {module:resin/models/device~isValidUUIDCallback} callback - callback
+#
+# @todo We should get better server side support for this operation
+# to avoid having to get all devices list and check manually.
+#
+# @example
+# uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
+# resin.models.device.isValidUUID uuid, (error, valid) ->
+#		throw error if error?
+#
+#		if valid
+#			console.log('This is a valid UUID')
+###
+exports.isValidUUID = (uuid, callback = _.noop) ->
+	exports.getAll (error, devices) ->
+		return callback(error) if error?
+		uuidExists = _.findWhere(devices, { uuid })?
+		return callback(null, uuidExists)
+
+###*
 # @summary Get display name for a device
 # @public
 # @function
