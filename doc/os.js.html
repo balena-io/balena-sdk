@@ -31,7 +31,7 @@
  */
 
 (function() {
-  var ConnectionParams, fs, server, settings, url;
+  var OSParams, fs, server, settings, url;
 
   url = require('url');
 
@@ -41,7 +41,7 @@
 
   settings = require('../settings');
 
-  ConnectionParams = require('../connection-params');
+  OSParams = require('../os-params');
 
 
   /**
@@ -58,15 +58,17 @@
    * @public
    * @function
    *
-   * @param {module:resin/connection.ConnectionParams} parameters - os parameters
+   * @param {Object} parameters - os parameters
    * @param {String} destination - destination path
    * @param {module:resin/models/os~downloadCallback} callback - callback
    * @param {Function} onProgress - on progress callback
    *
-   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+   *
+   * @todo Find a way to test this
    *
    * @example
-   * parameters = new ConnectionParams
+   * parameters =
    *		network: 'ethernet'
    *		appId: 91
    *
@@ -79,9 +81,7 @@
 
   exports.download = function(parameters, destination, callback, onProgress) {
     var downloadUrl, query;
-    if (!(parameters instanceof ConnectionParams)) {
-      throw new Error('Invalid connection params');
-    }
+    parameters = new OSParams(parameters);
     query = url.format({
       query: parameters
     });
@@ -99,28 +99,24 @@
    * @public
    * @function
    *
-   * @param {module:resin/connection.ConnectionParams} parameters - os parameters
+   * @param {Object} parameters - os parameters
    *
    * @returns {String} generated os cache name
    *
-   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
    *
    * @example
-   * parameters = new ConnectionParams
+   * cacheName = resin.models.os.generateCacheName
    *		network: 'ethernet'
    *		appId: 91
-   *
-   * cacheName = resin.models.os.generateCacheName(parameters)
    */
 
-  exports.generateCacheName = function(connectionParams) {
+  exports.generateCacheName = function(osParams) {
     var result;
-    if (!(connectionParams instanceof ConnectionParams)) {
-      throw new Error('Invalid connection params');
-    }
-    result = "" + connectionParams.appId + "-" + connectionParams.network;
-    if (connectionParams.wifiSsid != null) {
-      result += "-" + connectionParams.wifiSsid;
+    osParams = new OSParams(osParams);
+    result = "" + osParams.appId + "-" + osParams.network;
+    if (osParams.wifiSsid != null) {
+      result += "-" + osParams.wifiSsid;
     }
     return "" + result + "-" + (Date.now());
   };
@@ -136,13 +132,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="auth.html">resin/auth</a></li><li><a href="connection.html">resin/connection</a></li><li><a href="data.html">resin/data</a></li><li><a href="prefix.html">resin/data/prefix</a></li><li><a href="logs.html">resin/logs</a></li><li><a href="application.html">resin/models/application</a></li><li><a href="device.html">resin/models/device</a></li><li><a href="environment-variables.html">resin/models/environment-variables</a></li><li><a href="key.html">resin/models/key</a></li><li><a href="os.html">resin/models/os</a></li><li><a href="server.html">resin/server</a></li><li><a href="settings.html">resin/settings</a></li><li><a href="vcs.html">resin/vcs</a></li></ul><h3>Classes</h3><ul><li><a href="connection.ConnectionParams.html">ConnectionParams</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li><li><a href="data_.html">resin/data</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="auth.html">resin/auth</a></li><li><a href="connection.html">resin/connection</a></li><li><a href="data.html">resin/data</a></li><li><a href="prefix.html">resin/data/prefix</a></li><li><a href="logs.html">resin/logs</a></li><li><a href="application.html">resin/models/application</a></li><li><a href="device.html">resin/models/device</a></li><li><a href="environment-variables.html">resin/models/environment-variables</a></li><li><a href="key.html">resin/models/key</a></li><li><a href="os.html">resin/models/os</a></li><li><a href="server.html">resin/server</a></li><li><a href="settings.html">resin/settings</a></li><li><a href="vcs.html">resin/vcs</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li><li><a href="data_.html">resin/data</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Fri Jan 09 2015 13:43:21 GMT-0300 (ART)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Jan 12 2015 08:36:43 GMT-0300 (ART)
 </footer>
 
 <script> prettyPrint(); </script>

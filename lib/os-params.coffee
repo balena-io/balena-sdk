@@ -15,21 +15,11 @@ VALID_OPTIONS = [
 	'wifiKey'
 ]
 
-# TODO: Evaluate if we can make this class private.
-# In that case we make the functions that currently
-# accept a ConnectionParams instance accept a plain object
-# and we attempt to instantiate a ConnectionParams instance
-# with that object right afterwards (with errors being thrown)
-# and propagated to the client.
-
-# TODO: Evaluate if ConnectionParams is a good name for this object
-# as it includes an application id, which is not connection related
-
 ###*
 # Create a set of connection parameters
-# @name ConnectionParams
+# @name OSParams
 # @memberof module:resin/connection
-# @public
+# @private
 # @class
 # @param {Object} options - connection parameter options
 #
@@ -41,7 +31,7 @@ VALID_OPTIONS = [
 # @throws {Error} If network is wifi and wifiKey is missing
 # @throws {Error} If a non supported option is passed
 ###
-module.exports = class ConnectionParams
+module.exports = class OSParams
 
 	constructor: (options) ->
 		if not options.appId?

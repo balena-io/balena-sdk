@@ -6,7 +6,7 @@ url = require('url')
 fs = require('fs')
 server = require('../server')
 settings = require('../settings')
-ConnectionParams = require('../connection-params')
+OSParams = require('../os-params')
 
 ###*
 # download callback
@@ -21,15 +21,17 @@ ConnectionParams = require('../connection-params')
 # @public
 # @function
 #
-# @param {module:resin/connection.ConnectionParams} parameters - os parameters
+# @param {Object} parameters - os parameters
 # @param {String} destination - destination path
 # @param {module:resin/models/os~downloadCallback} callback - callback
 # @param {Function} onProgress - on progress callback
 #
-# @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+# @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+#
+# @todo Find a way to test this
 #
 # @example
-# parameters = new ConnectionParams
+# parameters =
 #		network: 'ethernet'
 #		appId: 91
 #
@@ -41,8 +43,7 @@ ConnectionParams = require('../connection-params')
 ###
 exports.download = (parameters, destination, callback, onProgress) ->
 
-	if parameters not instanceof ConnectionParams
-		throw new Error('Invalid connection params')
+	parameters = new OSParams(parameters)
 
 	query = url.format(query: parameters)
 	downloadUrl = url.resolve(settings.get('urls.download'), query)
@@ -59,27 +60,24 @@ exports.download = (parameters, destination, callback, onProgress) ->
 # @public
 # @function
 #
-# @param {module:resin/connection.ConnectionParams} parameters - os parameters
+# @param {Object} parameters - os parameters
 #
 # @returns {String} generated os cache name
 #
-# @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+# @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
 #
 # @example
-# parameters = new ConnectionParams
+# cacheName = resin.models.os.generateCacheName
 #		network: 'ethernet'
 #		appId: 91
-#
-# cacheName = resin.models.os.generateCacheName(parameters)
 ###
-exports.generateCacheName = (connectionParams) ->
+exports.generateCacheName = (osParams) ->
 
-	if connectionParams not instanceof ConnectionParams
-		throw new Error('Invalid connection params')
+	osParams = new OSParams(osParams)
 
-	result = "#{connectionParams.appId}-#{connectionParams.network}"
+	result = "#{osParams.appId}-#{osParams.network}"
 
-	if connectionParams.wifiSsid?
-		result += "-#{connectionParams.wifiSsid}"
+	if osParams.wifiSsid?
+		result += "-#{osParams.wifiSsid}"
 
 	return "#{result}-#{Date.now()}"

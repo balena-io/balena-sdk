@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var ConnectionParams, fs, server, settings, url;
+  var OSParams, fs, server, settings, url;
 
   url = require('url');
 
@@ -14,7 +14,7 @@
 
   settings = require('../settings');
 
-  ConnectionParams = require('../connection-params');
+  OSParams = require('../os-params');
 
 
   /**
@@ -31,15 +31,17 @@
    * @public
    * @function
    *
-   * @param {module:resin/connection.ConnectionParams} parameters - os parameters
+   * @param {Object} parameters - os parameters
    * @param {String} destination - destination path
    * @param {module:resin/models/os~downloadCallback} callback - callback
    * @param {Function} onProgress - on progress callback
    *
-   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+   *
+   * @todo Find a way to test this
    *
    * @example
-   * parameters = new ConnectionParams
+   * parameters =
    *		network: 'ethernet'
    *		appId: 91
    *
@@ -52,9 +54,7 @@
 
   exports.download = function(parameters, destination, callback, onProgress) {
     var downloadUrl, query;
-    if (!(parameters instanceof ConnectionParams)) {
-      throw new Error('Invalid connection params');
-    }
+    parameters = new OSParams(parameters);
     query = url.format({
       query: parameters
     });
@@ -72,28 +72,24 @@
    * @public
    * @function
    *
-   * @param {module:resin/connection.ConnectionParams} parameters - os parameters
+   * @param {Object} parameters - os parameters
    *
    * @returns {String} generated os cache name
    *
-   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.ConnectionParams}
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
    *
    * @example
-   * parameters = new ConnectionParams
+   * cacheName = resin.models.os.generateCacheName
    *		network: 'ethernet'
    *		appId: 91
-   *
-   * cacheName = resin.models.os.generateCacheName(parameters)
    */
 
-  exports.generateCacheName = function(connectionParams) {
+  exports.generateCacheName = function(osParams) {
     var result;
-    if (!(connectionParams instanceof ConnectionParams)) {
-      throw new Error('Invalid connection params');
-    }
-    result = "" + connectionParams.appId + "-" + connectionParams.network;
-    if (connectionParams.wifiSsid != null) {
-      result += "-" + connectionParams.wifiSsid;
+    osParams = new OSParams(osParams);
+    result = "" + osParams.appId + "-" + osParams.network;
+    if (osParams.wifiSsid != null) {
+      result += "-" + osParams.wifiSsid;
     }
     return "" + result + "-" + (Date.now());
   };

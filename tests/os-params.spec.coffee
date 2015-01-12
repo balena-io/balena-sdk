@@ -1,32 +1,32 @@
 chai = require('chai')
 expect = chai.expect
-ConnectionParams = require('../lib/connection-params')
+OSParams = require('../lib/os-params')
 
-describe 'Connection Params:', ->
+describe 'OS Params:', ->
 
 	describe '#constructor()', ->
 
 		it 'should throw an error if no appId', ->
 			expect ->
-				new ConnectionParams(network: 'ethernet')
+				new OSParams(network: 'ethernet')
 			.to.throw('Missing appId')
 
 		it 'should throw an error if not a parseable string', ->
 			expect ->
-				new ConnectionParams
+				new OSParams
 					network: 'ethernet'
 					appId: 'myApp'
 			.to.throw('Invalid appId')
 
 		it 'should throw an error if no network', ->
 			expect ->
-				new ConnectionParams
+				new OSParams
 					appId: 91
 			.to.throw('Missing network')
 
 		it 'should throw an error if network is not wifi or ethernet', ->
 			expect ->
-				new ConnectionParams
+				new OSParams
 					network: 'hello'
 					appId: 91
 			.to.throw('Invalid network type: hello')
@@ -35,7 +35,7 @@ describe 'Connection Params:', ->
 
 			it 'should throw an error if missing wifiSsid', ->
 				expect ->
-					new ConnectionParams
+					new OSParams
 						network: 'wifi'
 						appId: 91
 						wifiKey: 'secret'
@@ -43,14 +43,14 @@ describe 'Connection Params:', ->
 
 			it 'should throw an error if missing wifiKey', ->
 				expect ->
-					new ConnectionParams
+					new OSParams
 						network: 'wifi'
 						appId: 91
 						wifiSsid: 'mySsid'
 				.to.throw('Missing wifiKey')
 
 		it 'should merge all options to the instance', ->
-			connectionParams = new ConnectionParams
+			connectionParams = new OSParams
 				network: 'wifi'
 				wifiSsid: 'mySsid'
 				wifiKey: 'secret'
@@ -62,7 +62,7 @@ describe 'Connection Params:', ->
 			expect(connectionParams.appId).to.equal(91)
 
 		it 'should parse a string appId', ->
-			connectionParams = new ConnectionParams
+			connectionParams = new OSParams
 				network: 'ethernet'
 				appId: '91'
 
@@ -70,7 +70,7 @@ describe 'Connection Params:', ->
 
 		it 'should throw an error if extra options', ->
 			expect ->
-				new ConnectionParams
+				new OSParams
 					network: 'ethernet'
 					appId: '91'
 					hello: 'world'
