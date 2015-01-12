@@ -151,7 +151,7 @@
    * @description You can save a buffer, but we strongly recommend saving plain text when possible
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {(String|Buffer)} - value key value
+   * @param {(String|Buffer)} value - value key value
    * @param {Object} options - node fs options for when reading the resource
    * @param {module:resin/data~setCallback} callback - callback
    *
