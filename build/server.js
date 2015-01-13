@@ -1,6 +1,7 @@
 
 /**
  * @module resin/server
+ * @private
  */
 
 (function() {

@@ -1,5 +1,6 @@
 ###*
 # @module resin/server
+# @private
 ###
 
 _ = require('lodash')
