@@ -38,12 +38,6 @@
 
     /**
     	 * @memberof resin
-    	 * @see {@link module:resin/connection}
-     */
-    connection: require('./connection'),
-
-    /**
-    	 * @memberof resin
     	 * @see {@link module:resin/logs}
      */
     logs: require('./logs')

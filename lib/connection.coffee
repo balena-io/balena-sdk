@@ -1,5 +1,6 @@
 ###*
 # @module resin/connection
+# @private
 ###
 
 isOnline = require('is-online')

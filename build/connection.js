@@ -1,6 +1,7 @@
 
 /**
  * @module resin/connection
+ * @private
  */
 
 (function() {
