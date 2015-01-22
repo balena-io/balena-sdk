@@ -49,7 +49,7 @@ $ gulp lint
 Support
 -------
 
-If you're having any problem, please [raise an issue](https://github.com/resin-io/resin-sdk/issues) on GitHub.
+If you're having any problem, please [raise an issue](https://github.com/resin-io/resin-sdk/issues/new) on GitHub.
 
 License
 -------
