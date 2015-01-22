@@ -1,7 +1,7 @@
 Resin SDK
 ---------
 
-The SDK to make Resin.io powered JavaScript applications.
+The SDK to make [Resin.io](https://resin.io/) powered JavaScript applications.
 
 Installation
 ------------
