@@ -83,7 +83,6 @@ exports.getAllByApplication = (applicationId, callback) ->
 		# TODO: Move to server
 		devices = _.map devices, (device) ->
 			device.application_name = device.application[0].app_name
-			device.device_display_name = exports.getDisplayName(device.device_type)
 			return device
 
 		return callback(null, devices)
@@ -124,7 +123,6 @@ exports.get = (deviceId, callback) ->
 
 		# TODO: Move to server
 		device.application_name = device.application[0].app_name
-		device.device_display_name = exports.getDisplayName(device.device_type)
 
 		return callback(null, device)
 

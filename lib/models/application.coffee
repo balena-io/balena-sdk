@@ -46,7 +46,6 @@ exports.getAll = (callback) ->
 		# TODO: It might be worth to do all these handy
 		# manipulations server side directly.
 		applications = _.map applications, (application) ->
-			application.device_display_name = deviceModel.getDisplayName(application.device_type)
 			application.online_devices = _.where(application.device, is_online: 1).length
 			application.devices_length = application.device?.length or 0
 			return application
@@ -84,8 +83,6 @@ exports.get = (id, callback) ->
 	.then (application) ->
 		if not application?
 			return callback(new errors.NotFound("application #{id}"))
-
-		application.device_display_name = deviceModel.getDisplayName(application.device_type)
 
 		return callback(null, application)
 
