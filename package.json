@@ -9,12 +9,11 @@
     "url": "git://github.com/resin-io/resin-sdk.git"
   },
   "keywords": [
-    "cli",
-    "command",
-    "option",
-    "parser",
-    "git",
-    "prompt"
+    "sdk",
+    "resin",
+    "resin.io",
+    "iot",
+    "devices"
   ],
   "directories": {
     "test": "tests"
