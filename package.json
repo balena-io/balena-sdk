@@ -22,7 +22,7 @@
     "test": "gulp test",
     "prepublish": "gulp build"
   },
-  "author": "Juan Cruz Viotti <juanchiviotti@gmail.com>",
+  "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "MIT",
   "devDependencies": {
     "chai": "~1.10.0",
