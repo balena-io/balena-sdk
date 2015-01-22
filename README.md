@@ -46,6 +46,12 @@ Before submitting a PR, please make sure that you include tests, and that [coffe
 $ gulp lint
 ```
 
+In order to get a nice development workflow where every asset is recompiled automatically on every change, the tests and the linter is ran and the documentation is regenerated, run:
+
+```sh
+$ gulp watch
+```
+
 Support
 -------
 
