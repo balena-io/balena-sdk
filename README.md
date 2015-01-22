@@ -20,7 +20,7 @@ We currently only support NodeJS, but there are plans to make the SDK available 
 Documentation
 -------------
 
-Open `doc/index.html` in a web browser to view a detailed documentation of the capabilities offered by the SDK. Notice this is a work in progress and we plan to host the documentation online soon.
+Open [doc/index.html](https://github.com/resin-io/resin-sdk/blob/master/doc/index.html) in a web browser to view a detailed documentation of the capabilities offered by the SDK. Notice this is a work in progress and we plan to host the documentation online soon.
 
 Tests
 -----
