@@ -48,6 +48,7 @@
    * resin.models.os.download parameters, '/opt/os.zip', (error) ->
    *		throw error if error?
    *	, (state) ->
+   *		return if not state?
    *		console.log "Total: #{state.total}"
    *		console.log "Received: #{state.received}"
    */

@@ -102,7 +102,6 @@
       }
       devices = _.map(devices, function(device) {
         device.application_name = device.application[0].app_name;
-        device.device_display_name = exports.getDisplayName(device.device_type);
         return device;
       });
       return callback(null, devices);
@@ -146,7 +145,6 @@
         return callback(new errors.NotFound("device " + id));
       }
       device.application_name = device.application[0].app_name;
-      device.device_display_name = exports.getDisplayName(device.device_type);
       return callback(null, device);
     })["catch"](function(error) {
       return callback(error);

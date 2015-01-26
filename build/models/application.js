@@ -59,7 +59,6 @@
       }
       applications = _.map(applications, function(application) {
         var _ref;
-        application.device_display_name = deviceModel.getDisplayName(application.device_type);
         application.online_devices = _.where(application.device, {
           is_online: 1
         }).length;
@@ -103,7 +102,6 @@
       if (application == null) {
         return callback(new errors.NotFound("application " + id));
       }
-      application.device_display_name = deviceModel.getDisplayName(application.device_type);
       return callback(null, application);
     })["catch"](function(error) {
       return callback(error);
