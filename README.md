@@ -3,6 +3,7 @@ Resin SDK
 
 [![npm version](https://badge.fury.io/js/resin-sdk.svg)](http://badge.fury.io/js/resin-sdk)
 [![dependencies](https://david-dm.org/resin-io/resin-sdk.png)](https://david-dm.org/resin-io/resin.sdk.png)
+[![Build Status](https://travis-ci.org/resin-io/resin-sdk.svg?branch=master)](https://travis-ci.org/resin-io/resin-sdk)
 
 The SDK to make [Resin.io](https://resin.io/) powered JavaScript applications.
 
