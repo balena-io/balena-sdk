@@ -77,6 +77,34 @@
     return new Date().getTime();
   };
 
+
+  /**
+   * createFromNodeRequestProgress callback
+   * @callback module:resin/auth~createFromNodeRequestProgressCallback
+   * @param {module:resin/progress-state~ProgressState} state - progress state
+   */
+
+
+  /**
+   * @summary Create a ProgressState listener from a node-request-progress state
+   * @protected
+   * @function
+   *
+   * @param {module:resin/auth~createFromNodeRequestProgressCallback} callback - callback
+   *
+   * @example
+   * request = require('request')
+   * progress = require('request-progress')
+   *
+   * onProgressCallback = (state) ->
+   *		console.log(state.percentage)
+   *
+   * progress(request(options))
+   *		.on('progress', ProgressState.createFromNodeRequestProgress(onProgressCallback))
+   *		.on('error', ...)
+   *		.on('close', ...)
+   */
+
   ProgressState.createFromNodeRequestProgress = function(callback) {
     var received, time;
     time = getCurrentTime();
