@@ -84,6 +84,8 @@ ProgressState.createFromNodeRequestProgress = (callback) ->
 	return (state) ->
 		newTime = getCurrentTime()
 
+		# TODO: Extract this logic and test it troughly
+
 		remaining = state.total - state.received
 		receivedDelta = state.received - received
 		remainingTicks = remaining / receivedDelta

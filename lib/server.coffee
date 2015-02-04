@@ -71,7 +71,10 @@ urlResolve = require('url').resolve
 #	, (state) ->
 #		console.log("Received: #{state.received}")
 #		console.log("Total: #{state.total}")
-#		console.log("Is Complete? #{state.complete}")
+#		console.log("Percentage: #{state.percentage}%")
+#		console.log("Delta: #{state.delta}")
+#		console.log("Eta: #{state.eta}s")
+#
 ###
 exports.request = (options = {}, callback, onProgress = _.noop) ->
 
