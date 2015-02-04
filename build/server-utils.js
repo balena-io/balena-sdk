@@ -5,13 +5,15 @@
  */
 
 (function() {
-  var auth, connection, progress;
+  var ProgressState, auth, connection, progress;
 
   progress = require('request-progress');
 
   connection = require('./connection');
 
   auth = require('./auth');
+
+  ProgressState = require('./progress-state');
 
 
   /**
@@ -76,7 +78,7 @@
    */
 
   exports.pipeRequest = function(options, callback, onProgress) {
-    return progress(connection.request(options)).on('progress', onProgress).on('error', callback).pipe(options.pipe).on('error', callback).on('close', callback);
+    return progress(connection.request(options)).on('progress', ProgressState.createFromNodeRequestProgress(onProgress)).on('error', callback).pipe(options.pipe).on('error', callback).on('close', callback);
   };
 
 

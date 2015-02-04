@@ -6,6 +6,7 @@
 progress = require('request-progress')
 connection = require('./connection')
 auth = require('./auth')
+ProgressState = require('./progress-state')
 
 ###*
 # @ignore
@@ -54,7 +55,7 @@ exports.authenticate = (options, callback) ->
 # TODO: Throw error if no options.pipe
 exports.pipeRequest = (options, callback, onProgress) ->
 	progress(connection.request(options))
-		.on('progress', onProgress)
+		.on('progress', ProgressState.createFromNodeRequestProgress(onProgress))
 		.on('error', callback)
 		.pipe(options.pipe)
 		.on('error', callback)
