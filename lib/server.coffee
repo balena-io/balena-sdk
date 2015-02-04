@@ -44,6 +44,8 @@ urlResolve = require('url').resolve
 #
 # @throws {Error} Will throw if no URL
 #
+# @todo This big function should be splitted to be better unit tested.
+#
 # @example
 #	resin.server.request {
 #		method: 'GET'
@@ -111,7 +113,6 @@ exports.request = (options = {}, outerCallback, onProgress) ->
 				progress(request(options))
 					.on('progress', onProgress)
 					.on('error', outerCallback)
-					.on('end', onProgress)
 					.pipe(options.pipe)
 					.on('error', outerCallback)
 					.on('close', outerCallback)

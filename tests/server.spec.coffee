@@ -1,3 +1,4 @@
+_ = require('lodash')
 expect = require('chai').expect
 fs = require('fs')
 nock = require('nock')
@@ -146,7 +147,6 @@ describe 'Server:', ->
 				done()
 
 		it 'should allow piping files', (done) ->
-			onProgressSpy = sinon.spy()
 			outputFile = '/hello'
 
 			server.request {
@@ -155,13 +155,11 @@ describe 'Server:', ->
 				pipe: fs.createWriteStream(outputFile)
 			}, (error) =>
 				expect(error).to.not.exist
-				expect(onProgressSpy).to.have.been.called
-
 				fs.readFile outputFile, { encoding: 'utf8' }, (error, contents) =>
 					expect(error).to.not.exist
 					expect(contents).to.equal(@responses.nojson)
 					done()
-			, onProgressSpy
+			, _.noop
 
 	checkRequestTypeWithoutBody = (type) ->
 		return (done) ->

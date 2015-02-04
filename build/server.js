@@ -58,6 +58,8 @@
    *
    * @throws {Error} Will throw if no URL
    *
+   * @todo This big function should be splitted to be better unit tested.
+   *
    * @example
    *	resin.server.request {
    *		method: 'GET'
@@ -125,7 +127,7 @@
           });
         }
         if (options.pipe != null) {
-          return progress(request(options)).on('progress', onProgress).on('error', outerCallback).on('end', onProgress).pipe(options.pipe).on('error', outerCallback).on('close', outerCallback);
+          return progress(request(options)).on('progress', onProgress).on('error', outerCallback).pipe(options.pipe).on('error', outerCallback).on('close', outerCallback);
         } else {
           return request(options, callback);
         }
