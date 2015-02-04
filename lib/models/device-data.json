@@ -6,5 +6,13 @@
 			"raspberrypi",
 			"rpi"
 		]
+	},
+	"Beaglebone Black": {
+		"slug": "beaglebone-black",
+		"names": [
+			"bbb",
+			"beagleboneblack",
+			"beagle-bone-black"
+		]
 	}
 }
