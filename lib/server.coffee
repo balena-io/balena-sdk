@@ -4,12 +4,9 @@
 ###
 
 _ = require('lodash')
-request = require('request')
-progress = require('request-progress')
 async = require('async')
-connection = require('./connection')
 settings = require('./settings')
-auth = require('./auth')
+serverUtils = require('./server-utils')
 
 ###*
 # @ignore
@@ -76,59 +73,33 @@ urlResolve = require('url').resolve
 #		console.log("Total: #{state.total}")
 #		console.log("Is Complete? #{state.complete}")
 ###
-exports.request = (options = {}, outerCallback, onProgress) ->
-
-	onProgress ?= _.noop
+exports.request = (options = {}, callback, onProgress = _.noop) ->
 
 	if not options.url?
 		throw new Error('Missing URL')
 
-	async.waterfall [
+	options.url = urlResolve(settings.get('remoteUrl'), options.url)
+	options.method = options.method.toUpperCase() if options.method?
+
+	_.defaults options,
+		method: 'GET'
+		gzip: true
+
+	async.waterfall([
 
 		(callback) ->
-			connection.isOnline(callback)
+			serverUtils.checkIfOnline(callback)
 
-		(isOnline, callback) ->
-			if not isOnline
-				return callback(new Error('You need internet connection to perform this task'))
+		(callback) ->
+			serverUtils.authenticate(options, callback)
 
-			auth.getToken(callback)
-
-		(savedToken, callback) ->
-			options.url = urlResolve(settings.get('remoteUrl'), options.url)
-
-			if options.method?
-				options.method = options.method.toUpperCase()
-
-			_.defaults options,
-				method: 'GET'
-				gzip: true
-
-			if savedToken?
-				options.headers ?= {}
-				_.extend options.headers,
-					'Authorization': "Bearer #{savedToken}"
-
+		(callback) ->
 			if options.pipe?
-				progress(request(options))
-					.on('progress', onProgress)
-					.on('error', outerCallback)
-					.pipe(options.pipe)
-					.on('error', outerCallback)
-					.on('close', outerCallback)
+				serverUtils.pipeRequest(options, callback, onProgress)
 			else
-				return request(options, callback)
+				serverUtils.sendRequest(options, callback)
 
-		(response, body, callback) ->
-			try
-				response.body = JSON.parse(response.body)
-
-			if response?.statusCode >= 400
-				error = new Error(response.body)
-
-			return callback(error, response, response.body)
-
-	], outerCallback
+	], callback)
 
 # @summary Generate shorthand functions for every method
 #

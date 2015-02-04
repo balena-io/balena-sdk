@@ -4,6 +4,7 @@
 ###
 
 isOnline = require('is-online')
+request = require('request')
 
 ###*
 # isOnline callback
@@ -28,3 +29,22 @@ isOnline = require('is-online')
 #		console.log "Online? #{isOnline}"
 ###
 exports.isOnline = isOnline
+#
+###*
+# request callback
+# @callback module:resin/connection~requestCallback
+# @param {(Error|null)} error - error
+# @param {Object} response - request response
+###
+
+###*
+# @summary Send an HTTP request
+# @protected
+# @function
+# @protected
+#
+# @description A wrapper around request in order to be able to stub it with Sinon
+#
+# @param {module:resin/connection~requestCallback} callback - callback
+###
+exports.request = request

@@ -5,21 +5,15 @@
  */
 
 (function() {
-  var async, auth, connection, createFacadeFunction, method, progress, request, settings, urlResolve, _, _i, _len, _ref;
+  var async, createFacadeFunction, method, serverUtils, settings, urlResolve, _, _i, _len, _ref;
 
   _ = require('lodash');
 
-  request = require('request');
-
-  progress = require('request-progress');
-
   async = require('async');
-
-  connection = require('./connection');
 
   settings = require('./settings');
 
-  auth = require('./auth');
+  serverUtils = require('./server-utils');
 
 
   /**
@@ -91,7 +85,7 @@
    *		console.log("Is Complete? #{state.complete}")
    */
 
-  exports.request = function(options, outerCallback, onProgress) {
+  exports.request = function(options, callback, onProgress) {
     if (options == null) {
       options = {};
     }
@@ -101,47 +95,27 @@
     if (options.url == null) {
       throw new Error('Missing URL');
     }
+    options.url = urlResolve(settings.get('remoteUrl'), options.url);
+    if (options.method != null) {
+      options.method = options.method.toUpperCase();
+    }
+    _.defaults(options, {
+      method: 'GET',
+      gzip: true
+    });
     return async.waterfall([
       function(callback) {
-        return connection.isOnline(callback);
-      }, function(isOnline, callback) {
-        if (!isOnline) {
-          return callback(new Error('You need internet connection to perform this task'));
-        }
-        return auth.getToken(callback);
-      }, function(savedToken, callback) {
-        options.url = urlResolve(settings.get('remoteUrl'), options.url);
-        if (options.method != null) {
-          options.method = options.method.toUpperCase();
-        }
-        _.defaults(options, {
-          method: 'GET',
-          gzip: true
-        });
-        if (savedToken != null) {
-          if (options.headers == null) {
-            options.headers = {};
-          }
-          _.extend(options.headers, {
-            'Authorization': "Bearer " + savedToken
-          });
-        }
+        return serverUtils.checkIfOnline(callback);
+      }, function(callback) {
+        return serverUtils.authenticate(options, callback);
+      }, function(callback) {
         if (options.pipe != null) {
-          return progress(request(options)).on('progress', onProgress).on('error', outerCallback).pipe(options.pipe).on('error', outerCallback).on('close', outerCallback);
+          return serverUtils.pipeRequest(options, callback, onProgress);
         } else {
-          return request(options, callback);
+          return serverUtils.sendRequest(options, callback);
         }
-      }, function(response, body, callback) {
-        var error;
-        try {
-          response.body = JSON.parse(response.body);
-        } catch (_error) {}
-        if ((response != null ? response.statusCode : void 0) >= 400) {
-          error = new Error(response.body);
-        }
-        return callback(error, response, response.body);
       }
-    ], outerCallback);
+    ], callback);
   };
 
   createFacadeFunction = function(method) {
