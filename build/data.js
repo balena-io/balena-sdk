@@ -1,6 +1,6 @@
 
 /**
- * @module resin/data
+ * @module resin.data
  */
 
 (function() {
@@ -18,15 +18,15 @@
 
 
   /**
-   * @namespace resin/data
+   * @namespace resin.data
    */
 
 
   /**
    * @name prefix
    * @public
-   * @memberof resin/data
-   * @see {@link module:resin/data/prefix}
+   * @memberof resin.data
+   * @see {@link module:resin.data.prefix}
    */
 
   exports.prefix = require('./data-prefix');
@@ -62,7 +62,7 @@
 
   /**
    * get callback
-   * @callback module:resin/data~getCallback
+   * @callback module:resin.data~getCallback
    * @param {(Error|null)} error - error
    * @param {(String|Buffer)} value - key value
    */
@@ -78,7 +78,7 @@
    *
    * @param {String} key - path relative to dataPrefix
    * @param {Object} options - node fs options for when reading the resource
-   * @param {module:resin/data~getCallback} callback - callback
+   * @param {module:resin.data~getCallback} callback - callback
    *
    * @example
    *	resin.data.get 'token', encoding: 'utf8', (error, token) ->
@@ -107,7 +107,7 @@
 
   /**
    * getText callback
-   * @callback module:resin/data~getTextCallback
+   * @callback module:resin.data~getTextCallback
    * @param {(Error|null)} error - error
    * @param {String} value - key value
    */
@@ -118,10 +118,10 @@
    * @public
    * @function
    *
-   * @description This is the same as {@link module:resin/data.get}, however it assumes utf8 encoding.
+   * @description This is the same as {@link module:resin.data.get}, however it assumes utf8 encoding.
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {module:resin/data~getTextCallback} callback - callback
+   * @param {module:resin.data~getTextCallback} callback - callback
    *
    * @example
    *	resin.data.getText 'myTextFile', (error, data) ->
@@ -138,7 +138,7 @@
 
   /**
    * set callback
-   * @callback module:resin/data~setCallback
+   * @callback module:resin.data~setCallback
    * @param {(Error|null)} error - error
    */
 
@@ -153,7 +153,7 @@
    * @param {String} key - path relative to dataPrefix
    * @param {(String|Buffer)} value - value key value
    * @param {Object} options - node fs options for when reading the resource
-   * @param {module:resin/data~setCallback} callback - callback
+   * @param {module:resin.data~setCallback} callback - callback
    *
    * @example
    *	resin.data.set 'customValue', 'Hello World', encoding: 'utf8', (error) ->
@@ -170,7 +170,7 @@
 
   /**
    * setText callback
-   * @callback module:resin/data~setTextCallback
+   * @callback module:resin.data~setTextCallback
    * @param {(Error|null)} error - error
    */
 
@@ -180,11 +180,11 @@
    * @public
    * @function
    *
-   * @description This is the same as {@link module:resin/data.set}, however it assumes utf8 encoding.
+   * @description This is the same as {@link module:resin.data.set}, however it assumes utf8 encoding.
    *
    * @param {String} key - path relative to dataPrefix
    * @param {(String|Buffer)} value - key value
-   * @param {module:resin/data~setTextCallback} callback - callback
+   * @param {module:resin.data~setTextCallback} callback - callback
    *
    * @throws {Error} Will throw if data prefix was not previously set
    *
@@ -202,7 +202,7 @@
 
   /**
    * has callback
-   * @callback module:resin/data~hasCallback
+   * @callback module:resin.data~hasCallback
    * @param {Boolean} hasKey - has key
    */
 
@@ -213,7 +213,7 @@
    * @function
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {module:resin/data~hasCallback} callback - callback
+   * @param {module:resin.data~hasCallback} callback - callback
    *
    * @throws {Error} Will throw if data prefix was not previously set
    *
@@ -234,7 +234,7 @@
 
   /**
    * remove callback
-   * @callback module:resin/data~removeCallback
+   * @callback module:resin.data~removeCallback
    * @param {(Error|null)} error - error
    */
 
@@ -245,7 +245,7 @@
    * @function
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {module:resin/data~removeCallback} [callback=_.noop] - callback
+   * @param {module:resin.data~removeCallback} [callback=_.noop] - callback
    *
    * @throws {Error} Will throw if data prefix was not previously set
    *

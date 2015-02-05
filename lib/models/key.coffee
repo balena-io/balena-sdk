@@ -1,5 +1,5 @@
 ###*
-# @module resin/models/key
+# @module resin.models.key
 ###
 
 _ = require('lodash-contrib')
@@ -16,7 +16,7 @@ errors = require('../errors')
 
 ###*
 # getAll callback
-# @callback module:resin/models/key~getAllCallback
+# @callback module:resin.models.key~getAllCallback
 # @param {(Error|null)} error - error
 # @param {Key[]} keys - ssh keys
 ###
@@ -26,7 +26,7 @@ errors = require('../errors')
 # @public
 # @function
 #
-# @param {module:resin/models/key~getAllCallback} callback - callback
+# @param {module:resin.models.key~getAllCallback} callback - callback
 #
 # @example
 #	resin.models.key.getAll (error, keys) ->
@@ -45,7 +45,7 @@ exports.getAll = (callback) ->
 
 ###*
 # get callback
-# @callback module:resin/models/key~getCallback
+# @callback module:resin.models.key~getCallback
 # @param {(Error|null)} error - error
 # @param {Key} key - ssh key
 ###
@@ -56,7 +56,7 @@ exports.getAll = (callback) ->
 # @function
 #
 # @param {(String|Number)} id - key id
-# @param {module:resin/models/key~getCallback} callback - callback
+# @param {module:resin.models.key~getCallback} callback - callback
 #
 # @example
 #	resin.models.key.get 51, (error, key) ->
@@ -77,7 +77,7 @@ exports.get = (id, callback) ->
 
 ###*
 # remove callback
-# @callback module:resin/models/key~removeCallback
+# @callback module:resin.models.key~removeCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -87,7 +87,7 @@ exports.get = (id, callback) ->
 # @function
 #
 # @param {(String|Number)} id - key id
-# @param {module:resin/models/key~removeCallback} callback - callback
+# @param {module:resin.models.key~removeCallback} callback - callback
 #
 # @example
 #	resin.models.key.remove 51, (error) ->
@@ -100,7 +100,7 @@ exports.remove = (id, callback) ->
 
 ###*
 # create callback
-# @callback module:resin/models/key~createCallback
+# @callback module:resin.models.key~createCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -111,7 +111,7 @@ exports.remove = (id, callback) ->
 #
 # @param {String} title - key title
 # @param {String} key - the public ssh key
-# @param {module:resin/models/key~createCallback} callback - callback
+# @param {module:resin.models.key~createCallback} callback - callback
 #
 # @todo We should return an id for consistency with the other models
 #

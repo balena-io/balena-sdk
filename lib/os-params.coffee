@@ -18,7 +18,7 @@ VALID_OPTIONS = [
 ###*
 # Create a set of connection parameters
 # @name OSParams
-# @memberof module:resin/connection
+# @memberof module:resin.connection
 # @private
 # @class
 # @param {Object} options - connection parameter options

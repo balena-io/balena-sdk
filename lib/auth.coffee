@@ -1,5 +1,5 @@
 ###*
-# @module resin/auth
+# @module resin.auth
 ###
 
 async = require('async')
@@ -13,7 +13,7 @@ settings = require('./settings')
 
 ###*
 # whoami callback
-# @callback module:resin/auth~whoamiCallback
+# @callback module:resin.auth~whoamiCallback
 # @param {Error} error - error
 # @param {String} username - username
 ###
@@ -23,9 +23,9 @@ settings = require('./settings')
 # @public
 # @function
 #
-# @description This will only work if you used {@link module:resin/auth.login} to log in.
+# @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
-# @param {module:resin/auth~whoamiCallback} callback - callback
+# @param {module:resin.auth~whoamiCallback} callback - callback
 #
 # @example
 #	resin.auth.whoami (error, username) ->
@@ -42,7 +42,7 @@ exports.whoami = (callback) ->
 
 ###*
 # authenticate callback
-# @callback module:resin/auth~authenticateCallback
+# @callback module:resin.auth~authenticateCallback
 # @param {(Error|null)} error - error
 # @param {String} token - session token
 # @param {String} username - username
@@ -53,7 +53,7 @@ exports.whoami = (callback) ->
 # @protected
 # @function
 #
-# @description You should use {@link module:resin/auth.login} when possible,
+# @description You should use {@link module:resin.auth.login} when possible,
 # as it takes care of saving the token and username as well.
 #
 # Notice that if `credentials` contains extra keys, they'll be discarted
@@ -62,7 +62,7 @@ exports.whoami = (callback) ->
 # @param {Object} credentials - in the form of username, password
 # @option credentials {String} username - the username
 # @option credentials {String} password - user password
-# @param {module:resin/auth~authenticateCallback} callback - callback
+# @param {module:resin.auth~authenticateCallback} callback - callback
 #
 # @example
 #	resin.auth.authenticate credentials, (error, token, username) ->
@@ -78,7 +78,7 @@ exports.authenticate = (credentials, callback) ->
 
 ###*
 # login callback
-# @callback module:resin/auth~loginCallback
+# @callback module:resin.auth~loginCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -93,7 +93,7 @@ exports.authenticate = (credentials, callback) ->
 # @param {Object} credentials - in the form of username, password
 # @option credentials {String} username - the username
 # @option credentials {String} password - user password
-# @param {module:resin/auth~loginCallback} callback - callback
+# @param {module:resin.auth~loginCallback} callback - callback
 #
 # @example
 #	resin.auth.login credentials, (error) ->
@@ -117,7 +117,7 @@ exports.login = (credentials, callback) ->
 
 ###*
 # isLoggedIn callback
-# @callback module:resin/auth~isLoggedInCallback
+# @callback module:resin.auth~isLoggedInCallback
 # @param {Boolean} isLoggedIn - is logged in
 ###
 
@@ -126,7 +126,7 @@ exports.login = (credentials, callback) ->
 # @public
 # @function
 #
-# @param {module:resin/auth~isLoggedInCallback} callback - callback
+# @param {module:resin.auth~isLoggedInCallback} callback - callback
 #
 # @example
 #	resin.auth.isLoggedIn (isLoggedIn) ->
@@ -140,7 +140,7 @@ exports.isLoggedIn = (callback) ->
 
 ###*
 # getToken callback
-# @callback module:resin/auth~getTokenCallback
+# @callback module:resin.auth~getTokenCallback
 # @param {(Error|null)} error - error
 # @param {String} token - session token
 ###
@@ -149,11 +149,11 @@ exports.isLoggedIn = (callback) ->
 # @summary Get current logged in user's token
 # @public
 # @function
-# @borrows module:resin/data/token.getToken as getToken
+# @borrows module:resin.data.token.getToken as getToken
 #
-# @param {module:resin/auth~getTokenCallback} callback - callback
+# @param {module:resin.auth~getTokenCallback} callback - callback
 #
-# @description This will only work if you used {@link module:resin/auth.login} to log in.
+# @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
 # @example
 #	resin.auth.getToken (error, token) ->
@@ -164,7 +164,7 @@ exports.getToken = token.getToken
 
 ###*
 # logout callback
-# @callback module:resin/auth~logoutCallback
+# @callback module:resin.auth~logoutCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -173,7 +173,7 @@ exports.getToken = token.getToken
 # @public
 # @function
 #
-# @param {module:resin/auth~logoutCallback} [callback=_.noop] - callback
+# @param {module:resin.auth~logoutCallback} [callback=_.noop] - callback
 #
 # @example
 #	resin.auth.logout (error) ->
@@ -196,7 +196,7 @@ exports.logout = (callback = _.noop) ->
 
 ###*
 # register callback
-# @callback module:resin/auth~registerCallback
+# @callback module:resin.auth~registerCallback
 # @param {(Error|null)} error - error
 # @param {String} token - session token
 ###
@@ -210,7 +210,7 @@ exports.logout = (callback = _.noop) ->
 # @option credentials {String} username - the username
 # @option credentials {String} password - user password
 # @option credentials {String} email - the user email
-# @param {module:resin/auth~registerCallback} callback - callback
+# @param {module:resin.auth~registerCallback} callback - callback
 #
 # @example
 #	resin.auth.register {

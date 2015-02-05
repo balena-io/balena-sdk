@@ -1,5 +1,5 @@
 ###*
-# @module resin/data/token
+# @module resin.data.token
 # @private
 ###
 
@@ -14,7 +14,7 @@ TOKEN_KEY = 'token'
 
 ###*
 # saveToken callback
-# @callback module:resin/data/token~saveTokenCallback
+# @callback module:resin.data.token~saveTokenCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -23,11 +23,11 @@ TOKEN_KEY = 'token'
 # @private
 # @function
 #
-# @description The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin/token
+# @description The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin.token
 # The token is saved as plain text.
 #
 # @param {String} newToken - the token
-# @param {resin/data/token~saveToken} callback - callback
+# @param {resin.data.token~saveToken} callback - callback
 #
 # @todo We should make the token more secure
 #
@@ -40,7 +40,7 @@ exports.saveToken = (newToken, callback) ->
 
 ###*
 # hasToken callback
-# @callback module:resin/data/token~hasTokenCallback
+# @callback module:resin.data.token~hasTokenCallback
 # @param {Boolean} hasToken - has token
 ###
 
@@ -49,7 +49,7 @@ exports.saveToken = (newToken, callback) ->
 # @private
 # @function
 #
-# @param {module:resin/data/token~hasTokenCallback} callback - callback
+# @param {module:resin.data.token~hasTokenCallback} callback - callback
 #
 # @example
 #	resin.token.hasToken (hasToken) ->
@@ -63,7 +63,7 @@ exports.hasToken = (callback) ->
 
 ###*
 # getToken callback
-# @callback module:resin/data/token~getTokenCallback
+# @callback module:resin.data.token~getTokenCallback
 # @param {(Error|null)} error - error
 # @param {String} token - session token
 ###
@@ -75,7 +75,7 @@ exports.hasToken = (callback) ->
 #
 # @description If the key doesn't exist, undefined and no error is returned
 #
-# @param {module:resin/data/token~getTokenCallback} callback - callback
+# @param {module:resin.data.token~getTokenCallback} callback - callback
 #
 # @example
 #	resin.token.getToken (error, token) ->
@@ -88,7 +88,7 @@ exports.getToken = (callback) ->
 
 ###*
 # clearToken callback
-# @callback module:resin/data/token~clearTokenCallback
+# @callback module:resin.data.token~clearTokenCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -99,7 +99,7 @@ exports.getToken = (callback) ->
 #
 # @description If the token doesn't exist, no action is performed
 #
-# @param {module:resin/data/token~clearTokenCallback} callback - callback
+# @param {module:resin.data.token~clearTokenCallback} callback - callback
 #
 # @example
 #	resin.token.clearToken (error) ->

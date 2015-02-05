@@ -1,5 +1,5 @@
 ###*
-# @module resin/models/environment-variables
+# @module resin.models.environment-variables
 ###
 
 _ = require('lodash')
@@ -13,7 +13,7 @@ errors = require('../errors')
 
 ###*
 # getAllByApplication callback
-# @callback module:resin/models/environment-variables~getAllByApplicationCallback
+# @callback module:resin.models.environment-variables~getAllByApplicationCallback
 # @param {(Error|null)} error - error
 # @param {EnvironmentVariable[]} environmentVariables - environment variables
 ###
@@ -24,7 +24,7 @@ errors = require('../errors')
 # @function
 #
 # @param {(String|Number)} applicationId - application id
-# @param {module:resin/models/environment-variables~getAllByApplicationCallback} callback - callback
+# @param {module:resin.models.environment-variables~getAllByApplicationCallback} callback - callback
 #
 # @example
 #	resin.models.environmentVariables.getAll (error, environmentVariables) ->
@@ -50,7 +50,7 @@ exports.getAllByApplication = (applicationId, callback) ->
 
 ###*
 # create callback
-# @callback module:resin/models/environment-variables~createCallback
+# @callback module:resin.models.environment-variables~createCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -62,7 +62,7 @@ exports.getAllByApplication = (applicationId, callback) ->
 # @param {(String|Number)} applicationId - application id
 # @param {String} name - environment variable name
 # @param {String} value - environment variable value
-# @param {module:resin/models/environment-variables~createCallback} callback - callback
+# @param {module:resin.models.environment-variables~createCallback} callback - callback
 #
 # @example
 #	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
@@ -84,7 +84,7 @@ exports.create = (applicationId, name, value, callback) ->
 
 ###*
 # update callback
-# @callback module:resin/models/environment-variables~updateCallback
+# @callback module:resin.models.environment-variables~updateCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -95,7 +95,7 @@ exports.create = (applicationId, name, value, callback) ->
 #
 # @param {(String|Number)} applicationId - application id
 # @param {String} value - environment variable value
-# @param {module:resin/models/environment-variables~updateCallback} callback - callback
+# @param {module:resin.models.environment-variables~updateCallback} callback - callback
 #
 # @example
 #	resin.models.environmentVariables.update 317, 'vim', (error) ->
@@ -116,7 +116,7 @@ exports.update = (id, value, callback) ->
 
 ###*
 # remove callback
-# @callback module:resin/models/environment-variables~removeCallback
+# @callback module:resin.models.environment-variables~removeCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -126,7 +126,7 @@ exports.update = (id, value, callback) ->
 # @function
 #
 # @param {(String|Number)} id - environment variable id
-# @param {module:resin/models/environment-variables~removeCallback} callback - callback
+# @param {module:resin.models.environment-variables~removeCallback} callback - callback
 #
 # @example
 #	resin.models.environmentVariables.remove 51, (error) ->

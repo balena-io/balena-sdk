@@ -27,7 +27,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>
 /**
- * @module resin/data
+ * @module resin.data
  */
 
 (function() {
@@ -45,15 +45,15 @@
 
 
   /**
-   * @namespace resin/data
+   * @namespace resin.data
    */
 
 
   /**
    * @name prefix
    * @public
-   * @memberof resin/data
-   * @see {@link module:resin/data/prefix}
+   * @memberof resin.data
+   * @see {@link module:resin.data.prefix}
    */
 
   exports.prefix = require('./data-prefix');
@@ -89,7 +89,7 @@
 
   /**
    * get callback
-   * @callback module:resin/data~getCallback
+   * @callback module:resin.data~getCallback
    * @param {(Error|null)} error - error
    * @param {(String|Buffer)} value - key value
    */
@@ -105,7 +105,7 @@
    *
    * @param {String} key - path relative to dataPrefix
    * @param {Object} options - node fs options for when reading the resource
-   * @param {module:resin/data~getCallback} callback - callback
+   * @param {module:resin.data~getCallback} callback - callback
    *
    * @example
    *	resin.data.get 'token', encoding: 'utf8', (error, token) ->
@@ -134,7 +134,7 @@
 
   /**
    * getText callback
-   * @callback module:resin/data~getTextCallback
+   * @callback module:resin.data~getTextCallback
    * @param {(Error|null)} error - error
    * @param {String} value - key value
    */
@@ -145,10 +145,10 @@
    * @public
    * @function
    *
-   * @description This is the same as {@link module:resin/data.get}, however it assumes utf8 encoding.
+   * @description This is the same as {@link module:resin.data.get}, however it assumes utf8 encoding.
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {module:resin/data~getTextCallback} callback - callback
+   * @param {module:resin.data~getTextCallback} callback - callback
    *
    * @example
    *	resin.data.getText 'myTextFile', (error, data) ->
@@ -165,7 +165,7 @@
 
   /**
    * set callback
-   * @callback module:resin/data~setCallback
+   * @callback module:resin.data~setCallback
    * @param {(Error|null)} error - error
    */
 
@@ -180,7 +180,7 @@
    * @param {String} key - path relative to dataPrefix
    * @param {(String|Buffer)} value - value key value
    * @param {Object} options - node fs options for when reading the resource
-   * @param {module:resin/data~setCallback} callback - callback
+   * @param {module:resin.data~setCallback} callback - callback
    *
    * @example
    *	resin.data.set 'customValue', 'Hello World', encoding: 'utf8', (error) ->
@@ -197,7 +197,7 @@
 
   /**
    * setText callback
-   * @callback module:resin/data~setTextCallback
+   * @callback module:resin.data~setTextCallback
    * @param {(Error|null)} error - error
    */
 
@@ -207,11 +207,11 @@
    * @public
    * @function
    *
-   * @description This is the same as {@link module:resin/data.set}, however it assumes utf8 encoding.
+   * @description This is the same as {@link module:resin.data.set}, however it assumes utf8 encoding.
    *
    * @param {String} key - path relative to dataPrefix
    * @param {(String|Buffer)} value - key value
-   * @param {module:resin/data~setTextCallback} callback - callback
+   * @param {module:resin.data~setTextCallback} callback - callback
    *
    * @throws {Error} Will throw if data prefix was not previously set
    *
@@ -229,7 +229,7 @@
 
   /**
    * has callback
-   * @callback module:resin/data~hasCallback
+   * @callback module:resin.data~hasCallback
    * @param {Boolean} hasKey - has key
    */
 
@@ -240,7 +240,7 @@
    * @function
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {module:resin/data~hasCallback} callback - callback
+   * @param {module:resin.data~hasCallback} callback - callback
    *
    * @throws {Error} Will throw if data prefix was not previously set
    *
@@ -261,7 +261,7 @@
 
   /**
    * remove callback
-   * @callback module:resin/data~removeCallback
+   * @callback module:resin.data~removeCallback
    * @param {(Error|null)} error - error
    */
 
@@ -272,7 +272,7 @@
    * @function
    *
    * @param {String} key - path relative to dataPrefix
-   * @param {module:resin/data~removeCallback} [callback=_.noop] - callback
+   * @param {module:resin.data~removeCallback} [callback=_.noop] - callback
    *
    * @throws {Error} Will throw if data prefix was not previously set
    *
@@ -306,13 +306,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="auth.html">resin/auth</a></li><li><a href="data.html">resin/data</a></li><li><a href="prefix.html">resin/data/prefix</a></li><li><a href="logs.html">resin/logs</a></li><li><a href="application.html">resin/models/application</a></li><li><a href="device.html">resin/models/device</a></li><li><a href="environment-variables.html">resin/models/environment-variables</a></li><li><a href="key.html">resin/models/key</a></li><li><a href="os.html">resin/models/os</a></li><li><a href="progress-state.html">resin/progress-state</a></li><li><a href="settings.html">resin/settings</a></li><li><a href="vcs.html">resin/vcs</a></li></ul><h3>Classes</h3><ul><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li><li><a href="data_.html">resin/data</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Feb 05 2015 10:17:18 GMT-0400 (BOT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Feb 05 2015 10:56:05 GMT-0400 (BOT)
 </footer>
 
 <script> prettyPrint(); </script>

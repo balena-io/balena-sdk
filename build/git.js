@@ -1,6 +1,6 @@
 
 /**
- * @module resin/vcs/git
+ * @module resin.vcs.git
  * @private
  */
 
@@ -91,7 +91,7 @@
 
   /**
    * isGitRepository callback
-   * @callback module:resin/vcs/git~isGitRepositoryCallback
+   * @callback module:resin.vcs.git~isGitRepositoryCallback
    * @param {(Error|null)} error - error
    * @param {Boolean} isGitRepository - is git repository
    */
@@ -103,7 +103,7 @@
    * @function
    *
    * @param {String} directory - the directory
-   * @param {module:resin/vcs/git~isGitRepositoryCallback} callback - callback
+   * @param {module:resin.vcs.git~isGitRepositoryCallback} callback - callback
    *
    * @example
    *	isGitRepository 'my/git/repo', (error, isGitRepository) ->
@@ -142,7 +142,7 @@
 
   /**
    * getRepositoryInstance callback
-   * @callback module:resin/vcs/git~getRepositoryInstanceCallback
+   * @callback module:resin.vcs.git~getRepositoryInstanceCallback
    * @param {(Error|null)} error - error
    * @param {GitRepository} gitRepository - git repository
    */
@@ -156,7 +156,7 @@
    * @description An instance of a [gitCli](https://github.com/tuvistavie/node-git-cli) repository, for internal usage.
    *
    * @param {String} directory - the directory
-   * @param {module:resin/vcs/git~getRepositoryInstanceCallback} callback - callback
+   * @param {module:resin.vcs.git~getRepositoryInstanceCallback} callback - callback
    *
    * @example
    *	getRepositoryInstance 'my/git/repo', (error, repository) ->
@@ -216,7 +216,7 @@
 
   /**
    * hasRemote callback
-   * @callback module:resin/vcs/git~hasRemoteCallback
+   * @callback module:resin.vcs.git~hasRemoteCallback
    * @param {(Error|null)} error - error
    * @param {Boolean} hasRemote - has remote
    */
@@ -229,7 +229,7 @@
    *
    * @param {GitRepository} repository - a repository instance from getRepositoryInstance()
    * @param {String} name - the name of the remote to check for
-   * @param {module:resin/vcs/git~hasRemoteCallback} callback - callback
+   * @param {module:resin.vcs.git~hasRemoteCallback} callback - callback
    *
    *	@todo We should extract the logic that lists all remotes into a separate function.
    *
@@ -257,7 +257,7 @@
 
   /**
    * addRemote callback
-   * @callback module:resin/vcs/git~addRemoteCallback
+   * @callback module:resin.vcs.git~addRemoteCallback
    * @param {(Error|null)} error - error
    */
 
@@ -270,7 +270,7 @@
    * @param {GitRepository} repository - a repository instance from getRepositoryInstance()
    * @param {String} name - the name of the remote to add
    * @param {String} url - url of the new remote
-   * @param {module:resin/vcs/git~addRemoteCallback} callback - callback(error)
+   * @param {module:resin.vcs.git~addRemoteCallback} callback - callback(error)
    *
    * @todo We should check the validity of all arguments.
    * @todo This function should be better tested
@@ -297,7 +297,7 @@
 
   /**
    * initProjectWithApplication callback
-   * @callback module:resin/vcs/git~initProjectWithApplicationCallback
+   * @callback module:resin.vcs.git~initProjectWithApplicationCallback
    * @param {(Error|null)} error - error
    */
 
@@ -312,7 +312,7 @@
    *
    * @param {Application} application - a resin application
    * @param {String} directory - the directory to initialize
-   * @param {module:resin/vcs/git~initProjectWithApplicationCallback} callback - callback
+   * @param {module:resin.vcs.git~initProjectWithApplicationCallback} callback - callback
    *
    * @todo This function should be better tested
    *
@@ -348,7 +348,7 @@
 
   /**
    * isResinProject callback
-   * @callback module:resin/vcs/git~isResinProjectCallback
+   * @callback module:resin.vcs.git~isResinProjectCallback
    * @param {(Error|null)} error - error
    */
 
@@ -361,12 +361,12 @@
    * It checks if we have a resin remote added already.
    *
    * @param {String} directory - the directory
-   * @param {module:resin/vcs/git~isResinProjectCallback} callback - callback
+   * @param {module:resin.vcs.git~isResinProjectCallback} callback - callback
    *
    * @todo Find a way to test this function
    *
    * @example
-   *	isResinProject 'my/resin/app', (error, initialized) ->
+   *	isResinProject 'my/resin.app', (error, initialized) ->
    *		if initialized
    *			console.log('It\'s already a resin app!')
    *		else

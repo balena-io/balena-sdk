@@ -1,5 +1,5 @@
 ###*
-# @module resin/server
+# @module resin.server
 # @private
 ###
 
@@ -15,7 +15,7 @@ urlResolve = require('url').resolve
 
 ###*
 # request callback
-# @callback module:resin/server~requestCallback
+# @callback module:resin.server~requestCallback
 # @param {(Error|null)} error - error
 # @param {Object} response - response
 # @param {Object} body - body
@@ -36,7 +36,7 @@ urlResolve = require('url').resolve
 # @option options {Object} headers - custom http headers
 # @option options {Function} pipe - define this function if you want to stream the response
 #
-# @param {module:resin/server~requestCallback} callback - callback
+# @param {module:resin.server~requestCallback} callback - callback
 # @param {Function} [onProgress] - on progress callback
 #
 # @throws {Error} Will throw if no URL

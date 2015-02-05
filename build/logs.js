@@ -1,6 +1,6 @@
 
 /**
- * @module resin/logs
+ * @module resin.logs
  */
 
 (function() {
@@ -15,7 +15,7 @@
 
   /**
    * subscribe callback
-   * @callback module:resin/logs~subscribeCallback
+   * @callback module:resin.logs~subscribeCallback
    * @param {(Error|null)} error - error
    * @param {String|String[]} message - log message
    */
@@ -28,7 +28,7 @@
    *
    * @param {String} uuid - the device uuid
    * @param {Object} options - logs options (history=0, tail=false)
-   * @param {module:resin/logs~subscribeCallback} callback - callback
+   * @param {module:resin.logs~subscribeCallback} callback - callback
    *
    * @throws {Error} Will throw if `options.history` is not a number or parseable string.
    *

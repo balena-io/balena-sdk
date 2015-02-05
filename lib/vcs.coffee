@@ -1,5 +1,5 @@
 ###*
-# @module resin/vcs
+# @module resin.vcs
 ###
 
 git = require('./git')
@@ -8,7 +8,7 @@ git = require('./git')
 
 ###*
 # initProjectWithApplication callback
-# @callback module:resin/vcs~initProjectWithApplicationCallback
+# @callback module:resin.vcs~initProjectWithApplicationCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -22,7 +22,7 @@ git = require('./git')
 #
 # @param {Object} application - an application from resin API
 # @param {String} directory - the directory to initialize
-# @param {module:resin/vcs~initProjectWithApplicationCallback} callback - callback
+# @param {module:resin.vcs~initProjectWithApplicationCallback} callback - callback
 #
 # @todo This function should be better tested
 #
@@ -37,7 +37,7 @@ exports.initProjectWithApplication = git.initProjectWithApplication
 
 ###*
 # isResinProject callback
-# @callback module:resin/vcs~isResinProjectCallback
+# @callback module:resin.vcs~isResinProjectCallback
 # @param {(Error|null)} error - error
 # @param {Boolean} isResinProject - is resin project
 ###
@@ -50,12 +50,12 @@ exports.initProjectWithApplication = git.initProjectWithApplication
 # @description It checks if we have a resin remote added already.
 #
 # @param {String} directory - the directory
-# @param {module:resin/vcs~isResinProjectCallback} callback - callback
+# @param {module:resin.vcs~isResinProjectCallback} callback - callback
 #
 # @todo Find a way to test this function
 #
 # @example
-#	resin.vcs.isResinProject 'my/resin/app', (error, initialized) ->
+#	resin.vcs.isResinProject 'my/resin.app', (error, initialized) ->
 #		if initialized
 #			console.log('It\'s already a resin app!')
 #		else

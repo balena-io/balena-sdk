@@ -1,6 +1,6 @@
 
 /**
- * @module resin/settings
+ * @module resin.settings
  */
 
 (function() {
@@ -207,7 +207,7 @@
    * @public
    * @function
    * @static
-   * @memberof module:resin/settings
+   * @memberof module:resin.settings
    * @see {@link https://github.com/resin-io/conf.js}
    *
    * @param {String} key - setting key
@@ -221,7 +221,7 @@
    * @public
    * @function
    * @static
-   * @memberof module:resin/settings
+   * @memberof module:resin.settings
    * @see {@link https://github.com/resin-io/conf.js}
    *
    * @param {String} key - setting key
@@ -235,7 +235,7 @@
    * @public
    * @function
    * @static
-   * @memberof module:resin/settings
+   * @memberof module:resin.settings
    * @see {@link https://github.com/resin-io/conf.js}
    *
    * @param {String} key - setting key

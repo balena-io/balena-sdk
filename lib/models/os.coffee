@@ -1,5 +1,5 @@
 ###*
-# @module resin/models/os
+# @module resin.models.os
 ###
 
 url = require('url')
@@ -10,7 +10,7 @@ OSParams = require('../os-params')
 
 ###*
 # download callback
-# @callback module:resin/models/os~downloadCallback
+# @callback module:resin.models.os~downloadCallback
 # @param {(Error|null)} error - error
 # @param {Object} response - response
 # @param {*} body - body
@@ -23,7 +23,7 @@ OSParams = require('../os-params')
 #
 # @param {Object} parameters - os parameters
 # @param {String} destination - destination path
-# @param {module:resin/models/os~downloadCallback} callback - callback
+# @param {module:resin.models.os~downloadCallback} callback - callback
 # @param {Function} onProgress - on progress callback
 #
 # @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}

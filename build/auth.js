@@ -1,6 +1,6 @@
 
 /**
- * @module resin/auth
+ * @module resin.auth
  */
 
 (function() {
@@ -23,7 +23,7 @@
 
   /**
    * whoami callback
-   * @callback module:resin/auth~whoamiCallback
+   * @callback module:resin.auth~whoamiCallback
    * @param {Error} error - error
    * @param {String} username - username
    */
@@ -34,9 +34,9 @@
    * @public
    * @function
    *
-   * @description This will only work if you used {@link module:resin/auth.login} to log in.
+   * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
-   * @param {module:resin/auth~whoamiCallback} callback - callback
+   * @param {module:resin.auth~whoamiCallback} callback - callback
    *
    * @example
    *	resin.auth.whoami (error, username) ->
@@ -57,7 +57,7 @@
 
   /**
    * authenticate callback
-   * @callback module:resin/auth~authenticateCallback
+   * @callback module:resin.auth~authenticateCallback
    * @param {(Error|null)} error - error
    * @param {String} token - session token
    * @param {String} username - username
@@ -69,7 +69,7 @@
    * @protected
    * @function
    *
-   * @description You should use {@link module:resin/auth.login} when possible,
+   * @description You should use {@link module:resin.auth.login} when possible,
    * as it takes care of saving the token and username as well.
    *
    * Notice that if `credentials` contains extra keys, they'll be discarted
@@ -78,7 +78,7 @@
    * @param {Object} credentials - in the form of username, password
    * @option credentials {String} username - the username
    * @option credentials {String} password - user password
-   * @param {module:resin/auth~authenticateCallback} callback - callback
+   * @param {module:resin.auth~authenticateCallback} callback - callback
    *
    * @example
    *	resin.auth.authenticate credentials, (error, token, username) ->
@@ -101,7 +101,7 @@
 
   /**
    * login callback
-   * @callback module:resin/auth~loginCallback
+   * @callback module:resin.auth~loginCallback
    * @param {(Error|null)} error - error
    */
 
@@ -117,7 +117,7 @@
    * @param {Object} credentials - in the form of username, password
    * @option credentials {String} username - the username
    * @option credentials {String} password - user password
-   * @param {module:resin/auth~loginCallback} callback - callback
+   * @param {module:resin.auth~loginCallback} callback - callback
    *
    * @example
    *	resin.auth.login credentials, (error) ->
@@ -142,7 +142,7 @@
 
   /**
    * isLoggedIn callback
-   * @callback module:resin/auth~isLoggedInCallback
+   * @callback module:resin.auth~isLoggedInCallback
    * @param {Boolean} isLoggedIn - is logged in
    */
 
@@ -152,7 +152,7 @@
    * @public
    * @function
    *
-   * @param {module:resin/auth~isLoggedInCallback} callback - callback
+   * @param {module:resin.auth~isLoggedInCallback} callback - callback
    *
    * @example
    *	resin.auth.isLoggedIn (isLoggedIn) ->
@@ -169,7 +169,7 @@
 
   /**
    * getToken callback
-   * @callback module:resin/auth~getTokenCallback
+   * @callback module:resin.auth~getTokenCallback
    * @param {(Error|null)} error - error
    * @param {String} token - session token
    */
@@ -179,11 +179,11 @@
    * @summary Get current logged in user's token
    * @public
    * @function
-   * @borrows module:resin/data/token.getToken as getToken
+   * @borrows module:resin.data.token.getToken as getToken
    *
-   * @param {module:resin/auth~getTokenCallback} callback - callback
+   * @param {module:resin.auth~getTokenCallback} callback - callback
    *
-   * @description This will only work if you used {@link module:resin/auth.login} to log in.
+   * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
    * @example
    *	resin.auth.getToken (error, token) ->
@@ -196,7 +196,7 @@
 
   /**
    * logout callback
-   * @callback module:resin/auth~logoutCallback
+   * @callback module:resin.auth~logoutCallback
    * @param {(Error|null)} error - error
    */
 
@@ -206,7 +206,7 @@
    * @public
    * @function
    *
-   * @param {module:resin/auth~logoutCallback} [callback=_.noop] - callback
+   * @param {module:resin.auth~logoutCallback} [callback=_.noop] - callback
    *
    * @example
    *	resin.auth.logout (error) ->
@@ -234,7 +234,7 @@
 
   /**
    * register callback
-   * @callback module:resin/auth~registerCallback
+   * @callback module:resin.auth~registerCallback
    * @param {(Error|null)} error - error
    * @param {String} token - session token
    */
@@ -249,7 +249,7 @@
    * @option credentials {String} username - the username
    * @option credentials {String} password - user password
    * @option credentials {String} email - the user email
-   * @param {module:resin/auth~registerCallback} callback - callback
+   * @param {module:resin.auth~registerCallback} callback - callback
    *
    * @example
    *	resin.auth.register {

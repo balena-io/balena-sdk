@@ -1,5 +1,5 @@
 ###*
-# @module resin/progress-state
+# @module resin.progress-state
 # @protected
 ###
 
@@ -79,8 +79,8 @@ getCurrentTime = ->
 
 ###*
 # createFromNodeRequestProgress callback
-# @callback module:resin/auth~createFromNodeRequestProgressCallback
-# @param {module:resin/progress-state~ProgressState} state - progress state
+# @callback module:resin.auth~createFromNodeRequestProgressCallback
+# @param {module:resin.progress-state~ProgressState} state - progress state
 ###
 
 ###*
@@ -88,7 +88,7 @@ getCurrentTime = ->
 # @protected
 # @function
 #
-# @param {module:resin/auth~createFromNodeRequestProgressCallback} callback - callback
+# @param {module:resin.auth~createFromNodeRequestProgressCallback} callback - callback
 #
 # @example
 # request = require('request')

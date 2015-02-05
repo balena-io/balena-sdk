@@ -1,6 +1,6 @@
 
 /**
- * @module resin/models/device
+ * @module resin.models.device
  */
 
 (function() {
@@ -27,7 +27,7 @@
 
   /**
    * getAll callback
-   * @callback module:resin/models/device~getAllCallback
+   * @callback module:resin.models.device~getAllCallback
    * @param {(Error|null)} error - error
    * @param {Device[]} devices - devices
    */
@@ -38,7 +38,7 @@
    * @public
    * @function
    *
-   * @param {module:resin/models/device~getAllCallback} callback - callback(error, devices)
+   * @param {module:resin.models.device~getAllCallback} callback - callback(error, devices)
    *
    * @example
    *	resin.models.devices.getAll (error, devices) ->
@@ -66,7 +66,7 @@
 
   /**
    * getAllByApplication callback
-   * @callback module:resin/models/device~getAllByApplicationCallback
+   * @callback module:resin.models.device~getAllByApplicationCallback
    * @param {(Error|null)} error - error
    * @param {Device[]} devices - devices
    */
@@ -78,7 +78,7 @@
    * @function
    *
    * @param {(String|Number)} applicationId - application id
-   * @param {module:resin/models/device~getAllByApplicationCallback} callback - callback
+   * @param {module:resin.models.device~getAllByApplicationCallback} callback - callback
    *
    * @example
    *	resin.models.devices.getAllByApplication (error, devices) ->
@@ -113,7 +113,7 @@
 
   /**
    * get callback
-   * @callback module:resin/models/device~getCallback
+   * @callback module:resin.models.device~getCallback
    * @param {(Error|null)} error - error
    * @param {Device} device - device
    */
@@ -125,7 +125,7 @@
    * @function
    *
    * @param {(String|Number)} id - device id
-   * @param {module:resin/models/device~getCallback} callback - callback
+   * @param {module:resin.models.device~getCallback} callback - callback
    *
    * @example
    *	resin.models.device.get 51, (error, device) ->
@@ -154,7 +154,7 @@
 
   /**
    * remove callback
-   * @callback module:resin/models/device~removeCallback
+   * @callback module:resin.models.device~removeCallback
    * @param {(Error|null)} error - error
    */
 
@@ -165,7 +165,7 @@
    * @function
    *
    * @param {(String|Number)} id - device id
-   * @param {module:resin/models/device~removeCallback} callback - callback
+   * @param {module:resin.models.device~removeCallback} callback - callback
    *
    * @example
    *	resin.models.device.remove 51, (error) ->
@@ -186,7 +186,7 @@
 
   /**
    * identify callback
-   * @callback module:resin/models/device~identifyCallback
+   * @callback module:resin.models.device~identifyCallback
    * @param {(Error|null)} error - error
    */
 
@@ -197,7 +197,7 @@
    * @function
    *
    * @param {String} uuid - device uuid
-   * @param {module:resin/models/device~identifyCallback} callback - callback
+   * @param {module:resin.models.device~identifyCallback} callback - callback
    *
    * @example
    *	resin.models.device.identify '23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a21369ac0f00db828', (error) ->
@@ -213,7 +213,7 @@
 
   /**
    * rename callback
-   * @callback module:resin/models/device~renameCallback
+   * @callback module:resin.models.device~renameCallback
    * @param {(Error|null)} error - error
    */
 
@@ -225,7 +225,7 @@
    *
    * @param {(String|Number)} id - device id
    * @param {String} name - the device new name
-   * @param {module:resin/models/device~renameCallback} callback - callback
+   * @param {module:resin.models.device~renameCallback} callback - callback
    *
    * @todo This action doesn't return any error
    * if trying to rename a device that does not
@@ -254,7 +254,7 @@
 
   /**
    * note callback
-   * @callback module:resin/models/device~noteCallback
+   * @callback module:resin.models.device~noteCallback
    * @param {(Error|null)} error - error
    */
 
@@ -266,7 +266,7 @@
    *
    * @param {(String|Number)} id - device id
    * @param {String} note - the note
-   * @param {module:resin/models/device~noteCallback} callback - callback
+   * @param {module:resin.models.device~noteCallback} callback - callback
    *
    * @example
    *	resin.models.device.note 317, 'My useful note', (error) ->
@@ -291,7 +291,7 @@
 
   /**
    * isValidUUID callback
-   * @callback module:resin/models/device~isValidUUIDCallback
+   * @callback module:resin.models.device~isValidUUIDCallback
    * @param {(Error|null)} error - error
    * @param {Boolean} isValid - whether is valid or not
    */
@@ -303,7 +303,7 @@
    * @function
    *
    * @param {String} uuid - the device uuid
-   * @param {module:resin/models/device~isValidUUIDCallback} callback - callback
+   * @param {module:resin.models.device~isValidUUIDCallback} callback - callback
    *
    * @todo We should get better server side support for this operation
    * to avoid having to get all devices list and check manually.
@@ -339,7 +339,7 @@
    * @public
    * @function
    *
-   * @see {@link module:resin/models/device.getSupportedDeviceTypes} for a list of supported devices
+   * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
    * @param {String} device - device name
    * @returns {String} device display name or 'Unknown'

@@ -1,5 +1,5 @@
 ###*
-# @module resin/connection
+# @module resin.connection
 # @private
 ###
 
@@ -8,7 +8,7 @@ request = require('request')
 
 ###*
 # isOnline callback
-# @callback module:resin/connection~isOnlineCallback
+# @callback module:resin.connection~isOnlineCallback
 # @param {(Error|null)} error - error
 # @param {Boolean} isOnline - is online
 ###
@@ -21,7 +21,7 @@ request = require('request')
 #
 # @description A wrapper around isOnline in order to be able to stub it with Sinon
 #
-# @param {module:resin/connection~isOnlineCallback} callback - callback
+# @param {module:resin.connection~isOnlineCallback} callback - callback
 #
 # @example
 # connection.isOnline (error, isOnline) ->
@@ -29,10 +29,10 @@ request = require('request')
 #		console.log "Online? #{isOnline}"
 ###
 exports.isOnline = isOnline
-#
+
 ###*
 # request callback
-# @callback module:resin/connection~requestCallback
+# @callback module:resin.connection~requestCallback
 # @param {(Error|null)} error - error
 # @param {Object} response - request response
 ###
@@ -45,6 +45,6 @@ exports.isOnline = isOnline
 #
 # @description A wrapper around request in order to be able to stub it with Sinon
 #
-# @param {module:resin/connection~requestCallback} callback - callback
+# @param {module:resin.connection~requestCallback} callback - callback
 ###
 exports.request = request

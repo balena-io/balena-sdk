@@ -1,5 +1,5 @@
 ###*
-# @module resin/data/prefix
+# @module resin.data.prefix
 ###
 
 _ = require('lodash')
@@ -26,7 +26,7 @@ exports.get = ->
 
 ###*
 # set callback
-# @callback module:resin/data/prefix~setCallback
+# @callback module:resin.data.prefix~setCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -36,7 +36,7 @@ exports.get = ->
 # @function
 #
 # @param {String} newPrefix - new prefix
-# @param {module:resin/data/prefix~setCallback} callback - callback
+# @param {module:resin.data.prefix~setCallback} callback - callback
 #
 # @example
 #	resin.data.prefix.set '/opt/resin', (error) ->

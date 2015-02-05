@@ -1,6 +1,6 @@
 
 /**
- * @module resin/models/environment-variables
+ * @module resin.models.environment-variables
  */
 
 (function() {
@@ -21,7 +21,7 @@
 
   /**
    * getAllByApplication callback
-   * @callback module:resin/models/environment-variables~getAllByApplicationCallback
+   * @callback module:resin.models.environment-variables~getAllByApplicationCallback
    * @param {(Error|null)} error - error
    * @param {EnvironmentVariable[]} environmentVariables - environment variables
    */
@@ -33,7 +33,7 @@
    * @function
    *
    * @param {(String|Number)} applicationId - application id
-   * @param {module:resin/models/environment-variables~getAllByApplicationCallback} callback - callback
+   * @param {module:resin.models.environment-variables~getAllByApplicationCallback} callback - callback
    *
    * @example
    *	resin.models.environmentVariables.getAll (error, environmentVariables) ->
@@ -63,7 +63,7 @@
 
   /**
    * create callback
-   * @callback module:resin/models/environment-variables~createCallback
+   * @callback module:resin.models.environment-variables~createCallback
    * @param {(Error|null)} error - error
    */
 
@@ -76,7 +76,7 @@
    * @param {(String|Number)} applicationId - application id
    * @param {String} name - environment variable name
    * @param {String} value - environment variable value
-   * @param {module:resin/models/environment-variables~createCallback} callback - callback
+   * @param {module:resin.models.environment-variables~createCallback} callback - callback
    *
    * @example
    *	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
@@ -101,7 +101,7 @@
 
   /**
    * update callback
-   * @callback module:resin/models/environment-variables~updateCallback
+   * @callback module:resin.models.environment-variables~updateCallback
    * @param {(Error|null)} error - error
    */
 
@@ -113,7 +113,7 @@
    *
    * @param {(String|Number)} applicationId - application id
    * @param {String} value - environment variable value
-   * @param {module:resin/models/environment-variables~updateCallback} callback - callback
+   * @param {module:resin.models.environment-variables~updateCallback} callback - callback
    *
    * @example
    *	resin.models.environmentVariables.update 317, 'vim', (error) ->
@@ -137,7 +137,7 @@
 
   /**
    * remove callback
-   * @callback module:resin/models/environment-variables~removeCallback
+   * @callback module:resin.models.environment-variables~removeCallback
    * @param {(Error|null)} error - error
    */
 
@@ -148,7 +148,7 @@
    * @function
    *
    * @param {(String|Number)} id - environment variable id
-   * @param {module:resin/models/environment-variables~removeCallback} callback - callback
+   * @param {module:resin.models.environment-variables~removeCallback} callback - callback
    *
    * @example
    *	resin.models.environmentVariables.remove 51, (error) ->

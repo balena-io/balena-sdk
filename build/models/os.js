@@ -1,6 +1,6 @@
 
 /**
- * @module resin/models/os
+ * @module resin.models.os
  */
 
 (function() {
@@ -19,7 +19,7 @@
 
   /**
    * download callback
-   * @callback module:resin/models/os~downloadCallback
+   * @callback module:resin.models.os~downloadCallback
    * @param {(Error|null)} error - error
    * @param {Object} response - response
    * @param {*} body - body
@@ -33,7 +33,7 @@
    *
    * @param {Object} parameters - os parameters
    * @param {String} destination - destination path
-   * @param {module:resin/models/os~downloadCallback} callback - callback
+   * @param {module:resin.models.os~downloadCallback} callback - callback
    * @param {Function} onProgress - on progress callback
    *
    * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}

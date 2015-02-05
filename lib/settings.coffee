@@ -1,5 +1,5 @@
 ###*
-# @module resin/settings
+# @module resin.settings
 ###
 
 ConfJS = require('conf.js')
@@ -189,7 +189,7 @@ settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, setting
 # @public
 # @function
 # @static
-# @memberof module:resin/settings
+# @memberof module:resin.settings
 # @see {@link https://github.com/resin-io/conf.js}
 #
 # @param {String} key - setting key
@@ -202,7 +202,7 @@ settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, setting
 # @public
 # @function
 # @static
-# @memberof module:resin/settings
+# @memberof module:resin.settings
 # @see {@link https://github.com/resin-io/conf.js}
 #
 # @param {String} key - setting key
@@ -215,7 +215,7 @@ settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, setting
 # @public
 # @function
 # @static
-# @memberof module:resin/settings
+# @memberof module:resin.settings
 # @see {@link https://github.com/resin-io/conf.js}
 #
 # @param {String} key - setting key

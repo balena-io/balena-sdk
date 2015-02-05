@@ -1,6 +1,6 @@
 
 /**
- * @module resin/progress-state
+ * @module resin.progress-state
  * @protected
  */
 
@@ -80,8 +80,8 @@
 
   /**
    * createFromNodeRequestProgress callback
-   * @callback module:resin/auth~createFromNodeRequestProgressCallback
-   * @param {module:resin/progress-state~ProgressState} state - progress state
+   * @callback module:resin.auth~createFromNodeRequestProgressCallback
+   * @param {module:resin.progress-state~ProgressState} state - progress state
    */
 
 
@@ -90,7 +90,7 @@
    * @protected
    * @function
    *
-   * @param {module:resin/auth~createFromNodeRequestProgressCallback} callback - callback
+   * @param {module:resin.auth~createFromNodeRequestProgressCallback} callback - callback
    *
    * @example
    * request = require('request')

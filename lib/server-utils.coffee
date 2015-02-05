@@ -1,5 +1,5 @@
 ###*
-# @module resin/server-utils
+# @module resin.server.utils
 # @private
 ###
 

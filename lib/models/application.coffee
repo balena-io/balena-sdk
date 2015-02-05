@@ -1,5 +1,5 @@
 ###*
-# @module resin/models/application
+# @module resin.models.application
 ###
 
 _ = require('lodash-contrib')
@@ -16,7 +16,7 @@ settings = require('../settings')
 
 ###*
 # getAll callback
-# @callback module:resin/models/application~getAllCallback
+# @callback module:resin.models.application~getAllCallback
 # @param {(Error|null)} error - error
 # @param {Application[]} applications - applications
 ###
@@ -26,7 +26,7 @@ settings = require('../settings')
 # @public
 # @function
 #
-# @param {module:resin/models/application~getAllCallback} callback - callback
+# @param {module:resin.models.application~getAllCallback} callback - callback
 #
 # @example
 #	resin.models.application.getAll (error, applications) ->
@@ -57,7 +57,7 @@ exports.getAll = (callback) ->
 
 ###*
 # get callback
-# @callback module:resin/models/application~getCallback
+# @callback module:resin.models.application~getCallback
 # @param {(Error|null)} error - error
 # @param {Application} application - application
 ###
@@ -68,7 +68,7 @@ exports.getAll = (callback) ->
 # @function
 #
 # @param {(String|Number)} id - application id
-# @param {module:resin/models/application~getCallback} callback - callback
+# @param {module:resin.models.application~getCallback} callback - callback
 #
 # @example
 #	resin.models.application.get 51, (error, application) ->
@@ -91,7 +91,7 @@ exports.get = (id, callback) ->
 
 ###*
 # create callback
-# @callback module:resin/models/application~createCallback
+# @callback module:resin.models.application~createCallback
 # @param {(Error|null)} error - error
 # @param {Number} id - application id
 ###
@@ -103,7 +103,7 @@ exports.get = (id, callback) ->
 #
 # @param {String} name - application name
 # @param {String} deviceType - device type (slug form)
-# @param {module:resin/models/application~createCallback} callback - callback
+# @param {module:resin.models.application~createCallback} callback - callback
 #
 # @throw {NotFound} Will throw if the request doesn't returns an id
 #
@@ -140,7 +140,7 @@ exports.create = (name, deviceType, callback) ->
 
 ###*
 # remove callback
-# @callback module:resin/models/application~removeCallback
+# @callback module:resin.models.application~removeCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -150,7 +150,7 @@ exports.create = (name, deviceType, callback) ->
 # @function
 #
 # @param {(String|Number)} id - application id
-# @param {module:resin/models/application~removeCallback} callback - callback
+# @param {module:resin.models.application~removeCallback} callback - callback
 #
 # @example
 #	resin.models.application.remove 51, (error) ->
@@ -167,7 +167,7 @@ exports.remove = (id, callback) ->
 
 ###*
 # restart callback
-# @callback module:resin/models/application~restartCallback
+# @callback module:resin.models.application~restartCallback
 # @param {(Error|null)} error - error
 ###
 
@@ -177,7 +177,7 @@ exports.remove = (id, callback) ->
 # @function
 #
 # @param {(String|Number)} id - application id
-# @param {module:resin/models/application~restartCallback} callback - callback
+# @param {module:resin.models.application~restartCallback} callback - callback
 #
 # @example
 #	resin.models.application.restart 51, (error) ->
