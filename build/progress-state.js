@@ -112,12 +112,12 @@
     return function(state) {
       var eta, newTime, progressState, receivedDelta, remaining, remainingTicks, timeDelta;
       newTime = getCurrentTime();
+      timeDelta = newTime - time;
+      time = newTime;
       remaining = state.total - state.received;
       receivedDelta = state.received - received;
       remainingTicks = remaining / receivedDelta;
-      timeDelta = newTime - time;
       eta = Math.floor(remainingTicks * timeDelta);
-      time = newTime;
       progressState = new ProgressState({
         percentage: state.percent,
         received: state.received,
