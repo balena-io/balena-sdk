@@ -26,7 +26,7 @@ exports.prefix = require('./data-prefix')
 haltIfNoPrefix = (callback) ->
 	return ->
 		if not exports.prefix.get()?
-			throw new Error('Did you forget to set a prefix?')
+			throw new errors.ResinMissingDataPrefix()
 		return callback.apply(null, arguments)
 
 ###*
@@ -34,7 +34,7 @@ haltIfNoPrefix = (callback) ->
 ###
 constructPath = (key) ->
 	if not _.isString(key)
-		throw new errors.InvalidKey()
+		throw new errors.ResinInvalidDataKey(key)
 
 	prefix = exports.prefix.get()
 	return path.join(prefix, key)

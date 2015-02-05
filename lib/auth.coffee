@@ -223,13 +223,13 @@ exports.logout = (callback = _.noop) ->
 ###
 exports.register = (credentials = {}, callback) ->
 	if not credentials.username?
-		return callback(new Error('Missing username'))
+		return callback(new errors.ResinMissingCredential('username'))
 
 	if not credentials.password?
-		return callback(new Error('Missing password'))
+		return callback(new errors.ResinMissingCredential('password'))
 
 	if not credentials.email?
-		return callback(new Error('Missing email'))
+		return callback(new errors.ResinMissingCredential('email'))
 
 	async.waterfall([
 

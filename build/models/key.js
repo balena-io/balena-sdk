@@ -50,7 +50,7 @@
         return callback(error);
       }
       if (_.isEmpty(keys)) {
-        return callback(new errors.NotAny('keys'));
+        return callback(new errors.ResinNotAny('keys'));
       }
       return callback(null, keys);
     });
@@ -91,7 +91,7 @@
         id: id
       });
       if (key == null) {
-        return callback(new errors.NotFound("key " + id));
+        return callback(new errors.ResinKeyNotFound(id));
       }
       return callback(null, key);
     });

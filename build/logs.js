@@ -4,13 +4,15 @@
  */
 
 (function() {
-  var PubNub, settings, _;
+  var PubNub, errors, settings, _;
 
   _ = require('lodash-contrib');
 
   PubNub = require('pubnub');
 
   settings = require('./settings');
+
+  errors = require('./errors');
 
 
   /**
@@ -52,7 +54,7 @@
    */
 
   exports.subscribe = function(uuid, options, callback) {
-    var channel, error, pubnub, pubnubOptions;
+    var channel, pubnub, pubnubOptions;
     if (options == null) {
       options = {};
     }
@@ -61,8 +63,7 @@
       tail: false
     });
     if (!_.isNumber(options.history)) {
-      error = new Error('Invalid history');
-      return callback(error);
+      return callback(new errors.ResinInvalidOption('history', options.history));
     }
     pubnubOptions = settings.get('pubnub');
     pubnub = PubNub.init(pubnubOptions);

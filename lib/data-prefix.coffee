@@ -44,7 +44,7 @@ exports.get = ->
 ###
 exports.set = (newPrefix, callback) ->
 	if not _.isString(newPrefix)
-		return callback?(new errors.InvalidPath(newPrefix))
+		return callback?(new errors.ResinInvalidPath(newPrefix))
 
 	mkdirp newPrefix, (error) ->
 		return callback?(error) if error?

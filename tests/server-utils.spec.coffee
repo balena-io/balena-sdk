@@ -60,7 +60,7 @@ describe 'serverUtils:', ->
 			it 'should throw error', ->
 				expect ->
 					serverUtils.addAuthorizationHeader({})
-				.to.throw('Missing token')
+				.to.throw('Missing parameter: token')
 
 		describe 'given a valid token', ->
 
@@ -99,7 +99,7 @@ describe 'serverUtils:', ->
 			it 'should throw an error', ->
 				expect ->
 					serverUtils.authenticate(null, _.noop)
-				.to.throw('Missing options')
+				.to.throw('Missing parameter: options')
 
 		describe 'given there is a saved token', ->
 
@@ -203,7 +203,7 @@ describe 'serverUtils:', ->
 			it 'should wrap the body as an error', (done) ->
 				serverUtils.sendRequest {}, (error, response, body) ->
 					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('Status Code Error')
+					expect(error.message).to.equal('Request error: Status Code Error')
 					expect(response).to.not.exist
 					expect(body).to.not.exist
 					done()
@@ -222,7 +222,7 @@ describe 'serverUtils:', ->
 			it 'should not parse the body and send it stringified as an error', (done) ->
 				serverUtils.sendRequest {}, (error, response, body) ->
 					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.deep.equal(JSON.stringify(hello: 'world'))
+					expect(error.message).to.deep.equal('Request error: ' + JSON.stringify(hello: 'world'))
 					expect(response).to.not.exist
 					expect(body).to.not.exist
 					done()

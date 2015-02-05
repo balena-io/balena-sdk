@@ -9,27 +9,27 @@ describe 'OS Params:', ->
 		it 'should throw an error if no appId', ->
 			expect ->
 				new OSParams(network: 'ethernet')
-			.to.throw('Missing appId')
+			.to.throw('Missing option: appId')
 
 		it 'should throw an error if not a parseable string', ->
 			expect ->
 				new OSParams
 					network: 'ethernet'
 					appId: 'myApp'
-			.to.throw('Invalid appId')
+			.to.throw('Invalid option appId')
 
 		it 'should throw an error if no network', ->
 			expect ->
 				new OSParams
 					appId: 91
-			.to.throw('Missing network')
+			.to.throw('Missing option: network')
 
 		it 'should throw an error if network is not wifi or ethernet', ->
 			expect ->
 				new OSParams
 					network: 'hello'
 					appId: 91
-			.to.throw('Invalid network type: hello')
+			.to.throw('Invalid option network: hello')
 
 		describe 'if network is wifi', ->
 
@@ -39,7 +39,7 @@ describe 'OS Params:', ->
 						network: 'wifi'
 						appId: 91
 						wifiKey: 'secret'
-				.to.throw('Missing wifiSsid')
+				.to.throw('Missing option: wifiSsid')
 
 			it 'should throw an error if missing wifiKey', ->
 				expect ->
@@ -47,7 +47,7 @@ describe 'OS Params:', ->
 						network: 'wifi'
 						appId: 91
 						wifiSsid: 'mySsid'
-				.to.throw('Missing wifiKey')
+				.to.throw('Missing option: wifiKey')
 
 		it 'should merge all options to the instance', ->
 			connectionParams = new OSParams
@@ -74,4 +74,4 @@ describe 'OS Params:', ->
 					network: 'ethernet'
 					appId: '91'
 					hello: 'world'
-			.to.throw('Invalid option: hello')
+			.to.throw('Non allowed option: hello')

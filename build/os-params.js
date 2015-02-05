@@ -1,7 +1,9 @@
 (function() {
-  var NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, OSParams, VALID_OPTIONS, _;
+  var NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, OSParams, VALID_OPTIONS, errors, _;
 
   _ = require('lodash');
+
+  errors = require('./errors');
 
   NETWORK_WIFI = 'wifi';
 
@@ -33,29 +35,29 @@
     function OSParams(options) {
       var invalidOptions;
       if (options.appId == null) {
-        throw new Error('Missing appId');
+        throw new errors.ResinMissingOption('appId');
       }
       options.appId = _.parseInt(options.appId);
       if (_.isNaN(options.appId)) {
-        throw new Error('Invalid appId');
+        throw new errors.ResinInvalidOption('appId', options.appId);
       }
       if (options.network == null) {
-        throw new Error('Missing network');
+        throw new errors.ResinMissingOption('network');
       }
       if (_.indexOf(NETWORK_TYPES, options.network) === -1) {
-        throw new Error("Invalid network type: " + options.network);
+        throw new errors.ResinInvalidOption('network', options.network);
       }
       if (options.network === NETWORK_WIFI) {
         if (options.wifiSsid == null) {
-          throw new Error('Missing wifiSsid');
+          throw new errors.ResinMissingOption('wifiSsid');
         }
         if (options.wifiKey == null) {
-          throw new Error('Missing wifiKey');
+          throw new errors.ResinMissingOption('wifiKey');
         }
       }
       invalidOptions = _.difference(_.keys(options), VALID_OPTIONS);
       if (!_.isEmpty(invalidOptions)) {
-        throw new Error("Invalid option: " + (_.first(invalidOptions)));
+        throw new errors.ResinNonAllowedOption(_.first(invalidOptions));
       }
       _.extend(this, options);
     }

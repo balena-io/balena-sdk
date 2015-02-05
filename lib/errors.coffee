@@ -1,165 +1,123 @@
 TypedError = require('typed-error')
 
-exports.NotFound = class NotFound extends TypedError
-
-	###*
-	# @summary Construct a Not Found error
-	# @private
-	# @constructor
-	#
-	# @param {String} name - name of the thing that was not found
-	#
-	# @example
-	#	throw new resin.errors.NotFound('application')
-	#	Error: Couldn't find application
-	###
-	constructor: (name) ->
-		@message = "Couldn't find #{name}"
-
-	###*
-	# @member {Number} Error exit code
-	###
+exports.ResinInvalidDeviceType = class ResinInvalidDeviceType extends TypedError
+	constructor: (@type) ->
+		@message = "Invalid device type: #{@type}"
+	code: 'ResinInvalidDeviceType'
 	exitCode: 1
 
-exports.InvalidConfigFile = class InvalidConfigFile extends TypedError
-
-	###*
-	# @summary Construct an Invalid Config File error
-	# @private
-	# @constructor
-	#
-	# @param {String} file - the name of the invalid configuration file
-	#
-	# @example
-	#	throw new resin.errors.InvalidConfigFile('/opt/resin.conf')
-	#	Error: Invalid configuration file: /opt/resin.conf
-	###
-	constructor: (file) ->
-		@message = "Invalid configuration file: #{file}"
-
-	###*
-	# @member {Number} Error exit code
-	###
+exports.ResinMissingCredential = class ResinMissingCredential extends TypedError
+	constructor: (@credential) ->
+		@message = "Missing credential: #{@credential}"
+	code: 'ResinMissingCredential'
 	exitCode: 1
 
-exports.InvalidCredentials = class InvalidCredentials extends TypedError
-
-	###*
-	# @summary Construct an Invalid Credentials error
-	# @private
-	# @constructor
-	#
-	# @example
-	#	throw new resin.errors.InvalidCredentials()
-	#	Error: Invalid credentials
-	###
+exports.ResinMissingDataPrefix = class ResinMissingDataPrefix extends TypedError
 	constructor: ->
-		@message = 'Invalid credentials'
-
-	###*
-	# @member {Number} Error exit code
-	###
+		@message = 'Did you forget to set a prefix?'
+	code: 'ResinMissingDataPrefix'
 	exitCode: 1
 
-exports.InvalidKey = class InvalidKey extends TypedError
-
-	###*
-	# @summary Construct an Invalid Key error
-	# @private
-	# @constructor
-	#
-	# @example
-	#	throw new resin.errors.InvalidKey()
-	#	Error: Invalid key
-	###
+exports.ResinNoInternetConnection = class ResinNoInternetConnection extends TypedError
 	constructor: ->
-		@message = 'Invalid key'
-
-	###*
-	# @member {Number} Error exit code
-	###
+		@message = 'You need internet connection to perform this task'
+	code: 'ResinNoInternetConnection'
 	exitCode: 1
 
-exports.InvalidPath = class InvalidPath extends TypedError
+exports.ResinInvalidOption = class ResinInvalidOption extends TypedError
+	constructor: (@name, @value, @explanation) ->
+		@message = "Invalid option #{@name}: #{@value}"
 
-	###*
-	# @summary Construct an Invalid Path error
-	# @private
-	# @constructor
-	#
-	# @param {String} path - the name of the invalid path
-	#
-	# @example
-	#	throw new resin.errors.InvalidPath('/tmp')
-	#	Error: Invalid path: /tmp
-	###
-	constructor: (path) ->
-		@message = "Invalid path: #{path}"
+		if @explanation?
+			@message += ". #{@explanation}."
 
-	###*
-	# @member {Number} Error exit code
-	###
+	code: 'ResinInvalidOption'
 	exitCode: 1
 
-exports.DirectoryDoesntExist = class DirectoryDoesntExist extends TypedError
-
-	###*
-	# @summary Construct a Directory Doesn't Exist error
-	# @private
-	# @constructor
-	#
-	# @param {String} directory - the name of the directory that doesn't exist
-	#
-	# @example
-	#	throw new resin.errors.DirectoryDoesntExist('/tmp')
-	#	Error: Directory doesn't exist: /tmp
-	###
-	constructor: (directory) ->
-		@message = "Directory doesn't exist: #{directory}"
-
-	###*
-	# @member {Number} Error exit code
-	###
+exports.ResinMissingOption = class ResinMissingOption extends TypedError
+	constructor: (@name) ->
+		@message = "Missing option: #{@name}"
+	code: 'ResinMissingOption'
 	exitCode: 1
 
-exports.NotAny = class NotAny extends TypedError
+exports.ResinNonAllowedOption = class ResinNonAllowedOption extends TypedError
+	constructor: (@name) ->
+		@message = "Non allowed option: #{@name}"
+	code: 'ResinNonAllowedOption'
+	exitCode: 1
 
-	###*
-	# @summary Construct an Not Any error
-	# @private
-	# @constructor
-	#
-	# @param {String} name - name of the thing that the user doesn't have
-	#
-	# @example
-	#	throw new resin.errors.NotAny('applications')
-	#	Error: You don't have any applications
-	###
-	constructor: (name) ->
-		@message = "You don't have any #{name}"
+exports.ResinInvalidParameter = class ResinInvalidParameter extends TypedError
+	constructor: (@name, @value, @explanation) ->
+		@message = "Invalid parameter #{@name}: #{@value}"
 
-	###*
-	# @member {Number} Error exit code
-	###
-	exitCode: 0
+		if @explanation?
+			@message += ". #{@explanation}."
 
-exports.FileNotFound = class FileNotFound extends TypedError
+	code: 'ResinInvalidParameter'
+	exitCode: 1
 
-	###*
-	# @summary Construct an File Not Found error
-	# @private
-	# @constructor
-	#
-	# @param {String} filename - name of the file that was not found
-	#
-	# @example
-	#	throw new resin.errors.FileNotFound('/foo')
-	#	Error: File not found: /foo
-	###
-	constructor: (filename) ->
-		@message = "File not found: #{filename}"
+exports.ResinMissingParameter = class ResinMissingParameter extends TypedError
+	constructor: (@name) ->
+		@message = "Missing parameter: #{@name}"
+	code: 'ResinMissingParameter'
+	exitCode: 1
 
-	###*
-	# @member {Number} Error exit code
-	###
+exports.ResinInvalidDataKey = class ResinInvalidDataKey extends TypedError
+	constructor: (@key) ->
+		@message = "Invalid data key: #{@key}"
+	code: 'ResinInvalidDataKey'
+	exitCode: 1
+
+exports.ResinInvalidPath = class ResinInvalidPath extends TypedError
+	constructor: (@path) ->
+		@message = "Invalid path: #{@path}"
+	code: 'ResinInvalidPath'
+	exitCode: 1
+
+exports.ResinNoSuchDirectory = class ResinNoSuchDirectory extends TypedError
+	constructor: (@path) ->
+		@message = "No such directory: #{@path}"
+	code: 'ResinNoSuchDirectory'
+	exitCode: 1
+
+exports.ResinApplicationNotFound = class ResinApplicationNotFound extends TypedError
+	constructor: (@id) ->
+		@message = "Application not found: #{@id}"
+	code: 'ResinApplicationNotFound'
+	exitCode: 1
+
+exports.ResinDeviceNotFound = class ResinDeviceNotFound extends TypedError
+	constructor: (@id) ->
+		@message = "Device not found: #{@id}"
+	code: 'ResinDeviceNotFound'
+	exitCode: 1
+
+exports.ResinKeyNotFound = class ResinKeyNotFound extends TypedError
+	constructor: (@id) ->
+		@message = "Key not found: #{@id}"
+	code: 'ResinKeyNotFound'
+	exitCode: 1
+
+exports.ResinRequestError = class ResinRequestError extends TypedError
+	constructor: (@body) ->
+		@message = "Request error: #{@body}"
+	code: 'ResinRequestError'
+	exitCode: 1
+
+exports.ResinInvalidApplication = class ResinInvalidApplication extends TypedError
+	constructor: (@application) ->
+		@message = "Invalid application: #{@application}"
+	code: 'ResinInvalidApplication'
+	exitCode: 1
+
+exports.ResinDirectoryNotGitRepository = class ResinDirectoryNotGitRepository extends TypedError
+	constructor: (@directory) ->
+		@message = "Directory is not a git repository: #{@directory}"
+	code: 'ResinDirectoryNotGitRepository'
+	exitCode: 1
+
+exports.ResinNotAny = class ResinNotAny extends TypedError
+	constructor: (@resource) ->
+		@message = "You don't have any #{@resource}"
+	code: 'ResinNotAny'
 	exitCode: 1

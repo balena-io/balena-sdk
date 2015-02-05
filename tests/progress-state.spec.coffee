@@ -33,7 +33,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Missing received option')
+				.to.throw('Missing option: received')
 
 			it 'should throw an error if not a number', ->
 				expect ->
@@ -44,7 +44,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid received option: 353')
+				.to.throw('Invalid option received: 353')
 
 			it 'should throw an error if negative', ->
 				expect ->
@@ -55,7 +55,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid received option: -1')
+				.to.throw('Invalid option received: -1')
 
 			it 'should throw an error if received > total', ->
 				expect ->
@@ -66,7 +66,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Received option can\'t be higher than total: 1001 > 1000')
+				.to.throw('Invalid option received: 1001. 1001 > 1000')
 
 		describe 'for delta option', ->
 
@@ -79,7 +79,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Missing delta option')
+				.to.throw('Missing option: delta')
 
 			it 'should throw an error if not a number', ->
 				expect ->
@@ -90,7 +90,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid delta option: 30')
+				.to.throw('Invalid option delta: 30')
 
 			it 'should throw an error if negative', ->
 				expect ->
@@ -101,7 +101,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid delta option: -1')
+				.to.throw('Invalid option delta: -1')
 
 			it 'should throw an error if delta > total', ->
 				expect ->
@@ -112,7 +112,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Delta option can\'t be higher than total: 1001 > 1000')
+				.to.throw('Invalid option delta: 1001. 1001 > 1000.')
 
 			it 'should throw an error if delta > received', ->
 				expect ->
@@ -123,7 +123,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Delta option can\'t be higher than received: 301 > 300')
+				.to.throw('Invalid option delta: 301. 301 > 300.')
 
 		describe 'for total option', ->
 
@@ -136,7 +136,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid total option: 1000')
+				.to.throw('Invalid option total: 1000')
 
 			it 'should throw an error if negative', ->
 				expect ->
@@ -147,7 +147,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid total option: -1')
+				.to.throw('Invalid option total: -1')
 
 		describe 'for percentage option', ->
 
@@ -160,7 +160,7 @@ describe 'ProgressState:', ->
 						percentage: '45'
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid percentage option: 45')
+				.to.throw('Invalid option percentage: 45')
 
 			it 'should throw an error if negative', ->
 				expect ->
@@ -171,7 +171,7 @@ describe 'ProgressState:', ->
 						percentage: -1
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid percentage option: -1')
+				.to.throw('Invalid option percentage: -1')
 
 			it 'should throw an error if higher than 100', ->
 				expect ->
@@ -182,7 +182,7 @@ describe 'ProgressState:', ->
 						percentage: 101
 						eta: 9172
 						speed: 45
-				.to.throw('Invalid percentage option: 101')
+				.to.throw('Invalid option percentage: 101')
 
 		describe 'for eta option', ->
 
@@ -195,7 +195,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: '9172'
 						speed: 45
-				.to.throw('Invalid eta option: 9172')
+				.to.throw('Invalid option eta: 9172')
 
 			it 'should throw an error if negative', ->
 				expect ->
@@ -206,7 +206,7 @@ describe 'ProgressState:', ->
 						percentage: 45
 						eta: -1
 						speed: 45
-				.to.throw('Invalid eta option: -1')
+				.to.throw('Invalid option eta: -1')
 
 	describe '.createFromNodeRequestProgress()', ->
 

@@ -5,9 +5,11 @@
  */
 
 (function() {
-  var ProgressState, getCurrentTime, _;
+  var ProgressState, errors, getCurrentTime, _;
 
   _ = require('lodash');
+
+  errors = require('./errors');
 
 
   /**
@@ -32,39 +34,39 @@
     function ProgressState(options) {
       if (options.total != null) {
         if (!_.isNumber(options.total) || options.total < 0) {
-          throw new Error("Invalid total option: " + options.total);
+          throw new errors.ResinInvalidOption('total', options.total);
         }
       }
       if (options.percentage != null) {
         if (!_.isNumber(options.percentage) || options.percentage < 0 || options.percentage > 100) {
-          throw new Error("Invalid percentage option: " + options.percentage);
+          throw new errors.ResinInvalidOption('percentage', options.percentage);
         }
       }
       if (options.eta != null) {
         if (!_.isNumber(options.eta) || options.eta < 0) {
-          throw new Error("Invalid eta option: " + options.eta);
+          throw new errors.ResinInvalidOption('eta', options.eta);
         }
       }
       if (options.received == null) {
-        throw new Error('Missing received option');
+        throw new errors.ResinMissingOption('received');
       }
       if (!_.isNumber(options.received) || options.received < 0) {
-        throw new Error("Invalid received option: " + options.received);
+        throw new errors.ResinInvalidOption('received', options.received);
       }
       if ((options.total != null) && options.received > options.total) {
-        throw new Error("Received option can't be higher than total: " + options.received + " > " + options.total);
+        throw new errors.ResinInvalidOption('received', options.received, "" + options.received + " > " + options.total);
       }
       if (options.delta == null) {
-        throw new Error('Missing delta option');
+        throw new errors.ResinMissingOption('delta');
       }
       if (!_.isNumber(options.delta) || options.delta < 0) {
-        throw new Error("Invalid delta option: " + options.delta);
+        throw new errors.ResinInvalidOption('delta', options.delta);
       }
       if ((options.total != null) && options.delta > options.total) {
-        throw new Error("Delta option can't be higher than total: " + options.delta + " > " + options.total);
+        throw new errors.ResinInvalidOption('delta', options.delta, "" + options.delta + " > " + options.total);
       }
       if (options.delta > options.received) {
-        throw new Error("Delta option can't be higher than received: " + options.delta + " > " + options.received);
+        throw new errors.ResinInvalidOption('delta', options.delta, "" + options.delta + " > " + options.received);
       }
       _.extend(this, options);
     }

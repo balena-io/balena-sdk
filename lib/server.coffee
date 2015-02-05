@@ -7,6 +7,7 @@ _ = require('lodash')
 async = require('async')
 settings = require('./settings')
 serverUtils = require('./server-utils')
+errors = require('./errors')
 
 ###*
 # @ignore
@@ -79,7 +80,7 @@ urlResolve = require('url').resolve
 exports.request = (options = {}, callback, onProgress = _.noop) ->
 
 	if not options.url?
-		throw new Error('Missing URL')
+		throw new errors.ResinMissingOption('url')
 
 	options.url = urlResolve(settings.get('remoteUrl'), options.url)
 	options.method = options.method.toUpperCase() if options.method?

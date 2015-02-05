@@ -41,7 +41,7 @@ exports.getAll = (callback) ->
 			orderby: 'name asc'
 	.then (devices) ->
 		if _.isEmpty(devices)
-			return callback(new errors.NotAny('devices'))
+			return callback(new errors.ResinNotAny('devices'))
 
 		return callback(null, devices)
 
@@ -78,7 +78,7 @@ exports.getAllByApplication = (applicationId, callback) ->
 			orderby: 'name asc'
 	.then (devices) ->
 		if _.isEmpty(devices)
-			return callback(new errors.NotAny('devices'))
+			return callback(new errors.ResinNotAny('devices'))
 
 		# TODO: Move to server
 		devices = _.map devices, (device) ->
@@ -119,7 +119,7 @@ exports.get = (deviceId, callback) ->
 
 	.then (device) ->
 		if not device?
-			return callback(new errors.NotFound("device #{id}"))
+			return callback(new errors.ResinDeviceNotFound(id))
 
 		# TODO: Move to server
 		device.application_name = device.application[0].app_name

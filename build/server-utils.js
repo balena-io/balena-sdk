@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var ProgressState, auth, connection, progress;
+  var ProgressState, auth, connection, errors, progress;
 
   progress = require('request-progress');
 
@@ -14,6 +14,8 @@
   auth = require('./auth');
 
   ProgressState = require('./progress-state');
+
+  errors = require('./errors');
 
 
   /**
@@ -29,7 +31,7 @@
       if (isOnline) {
         return callback();
       }
-      return callback(new Error('You need internet connection to perform this task'));
+      return callback(new errors.ResinNoInternetConnection());
     });
   };
 
@@ -44,7 +46,7 @@
       headers = {};
     }
     if (token == null) {
-      throw new Error('Missing token');
+      throw new errors.ResinMissingParameter('token');
     }
     headers.Authorization = "Bearer " + token;
     return headers;
@@ -58,7 +60,7 @@
 
   exports.authenticate = function(options, callback) {
     if (options == null) {
-      throw new Error('Missing options');
+      throw new errors.ResinMissingParameter('options');
     }
     return auth.getToken(function(error, token) {
       if (error != null) {
@@ -93,7 +95,7 @@
         return callback(error);
       }
       if (response.statusCode >= 400) {
-        return callback(new Error(response.body));
+        return callback(new errors.ResinRequestError(response.body));
       }
       try {
         response.body = JSON.parse(response.body);

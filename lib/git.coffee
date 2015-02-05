@@ -41,7 +41,7 @@ nodeify = (func) ->
 exports.getGitDirectory = (directory) ->
 	return if not directory?
 	if not _.isString(directory)
-		throw new Error('Invalid git directory')
+		throw new errors.ResinInvalidParameter('directory', directory)
 	return path.join(directory, '.git')
 
 ###*
@@ -97,7 +97,7 @@ exports.isGitRepository = (directory, callback) ->
 
 		(exists, callback) ->
 			return callback() if exists
-			error = new errors.DirectoryDoesntExist(directory)
+			error = new errors.ResinNoSuchDirectory(directory)
 			return callback(error)
 
 		(callback) ->
@@ -137,8 +137,7 @@ exports.getRepositoryInstance = (directory, callback) ->
 		return callback(error) if error?
 
 		if not isGitRepository
-			error = new Error("Not a git directory: #{directory}")
-			return callback(error)
+			return callback(new errors.ResinDirectoryNotGitRepository(directory))
 
 		gitDirectory = exports.getGitDirectory(directory)
 		repository = new gitCli.Repository(gitDirectory)
@@ -232,8 +231,7 @@ exports.hasRemote = (repository, name, callback) ->
 ###
 exports.addRemote = (repository, name, url, callback) ->
 	if not _.isString(name)
-		error = new Error("Invalid remote name: #{name}")
-		return callback(error)
+		return callback(new errors.ResinInvalidParameter('name', name))
 
 	repository.addRemote(name, url, callback)
 
@@ -271,8 +269,7 @@ exports.initProjectWithApplication = (application, directory, callback) ->
 		(callback) ->
 			isValid = exports.isValidGitApplication(application)
 			return callback() if isValid
-			error = new Error("Invalid application: #{application}")
-			return callback(error)
+			return callback(new errors.ResinInvalidApplication(application))
 
 		(callback) ->
 			exports.getRepositoryInstance(directory, callback)

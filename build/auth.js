@@ -266,13 +266,13 @@
       credentials = {};
     }
     if (credentials.username == null) {
-      return callback(new Error('Missing username'));
+      return callback(new errors.ResinMissingCredential('username'));
     }
     if (credentials.password == null) {
-      return callback(new Error('Missing password'));
+      return callback(new errors.ResinMissingCredential('password'));
     }
     if (credentials.email == null) {
-      return callback(new Error('Missing email'));
+      return callback(new errors.ResinMissingCredential('email'));
     }
     return async.waterfall([
       function(callback) {

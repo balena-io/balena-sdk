@@ -1,4 +1,5 @@
 _ = require('lodash')
+errors = require('./errors')
 
 NETWORK_WIFI = 'wifi'
 NETWORK_ETHERNET = 'ethernet'
@@ -35,30 +36,30 @@ module.exports = class OSParams
 
 	constructor: (options) ->
 		if not options.appId?
-			throw new Error('Missing appId')
+			throw new errors.ResinMissingOption('appId')
 
 		options.appId = _.parseInt(options.appId)
 
 		if _.isNaN(options.appId)
-			throw new Error('Invalid appId')
+			throw new errors.ResinInvalidOption('appId', options.appId)
 
 		if not options.network?
-			throw new Error('Missing network')
+			throw new errors.ResinMissingOption('network')
 
 		if _.indexOf(NETWORK_TYPES, options.network) is -1
-			throw new Error("Invalid network type: #{options.network}")
+			throw new errors.ResinInvalidOption('network', options.network)
 
 		if options.network == NETWORK_WIFI
 
 			if not options.wifiSsid?
-				throw new Error('Missing wifiSsid')
+				throw new errors.ResinMissingOption('wifiSsid')
 
 			if not options.wifiKey?
-				throw new Error('Missing wifiKey')
+				throw new errors.ResinMissingOption('wifiKey')
 
 		invalidOptions = _.difference(_.keys(options), VALID_OPTIONS)
 
 		if not _.isEmpty(invalidOptions)
-			throw new Error("Invalid option: #{_.first(invalidOptions)}")
+			throw new errors.ResinNonAllowedOption(_.first(invalidOptions))
 
 		_.extend(this, options)

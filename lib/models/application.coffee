@@ -41,7 +41,7 @@ exports.getAll = (callback) ->
 			expand: 'device'
 	.then (applications) ->
 		if _.isEmpty(applications)
-			return callback(new errors.NotAny('applications'))
+			return callback(new errors.ResinNotAny('applications'))
 
 		# TODO: It might be worth to do all these handy
 		# manipulations server side directly.
@@ -82,7 +82,7 @@ exports.get = (id, callback) ->
 
 	.then (application) ->
 		if not application?
-			return callback(new errors.NotFound("application #{id}"))
+			return callback(new errors.ResinApplicationNotFound(id))
 
 		return callback(null, application)
 
@@ -118,8 +118,7 @@ exports.create = (name, deviceType, callback) ->
 	# TODO: Detecting an unknown device type by comparing
 	# to this string looks like a terrible approach. Fix.
 	if slugifiedType is 'unknown'
-		error = new Error("Unknown device type: #{deviceType}")
-		return callback(error)
+		return callback(new errors.ResinInvalidDeviceType(deviceType))
 
 	return pine.post
 		resource: 'application'
@@ -128,12 +127,7 @@ exports.create = (name, deviceType, callback) ->
 			device_type: slugifiedType
 
 	.then (res) ->
-		id = res?.id
-
-		if not id?
-			return callback(new errors.NotFound('created application id'))
-
-		return callback(null, id)
+		return callback(null, res.id)
 
 	.catch (error) ->
 		return callback(error)

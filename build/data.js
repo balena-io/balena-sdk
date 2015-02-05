@@ -39,7 +39,7 @@
   haltIfNoPrefix = function(callback) {
     return function() {
       if (exports.prefix.get() == null) {
-        throw new Error('Did you forget to set a prefix?');
+        throw new errors.ResinMissingDataPrefix();
       }
       return callback.apply(null, arguments);
     };
@@ -53,7 +53,7 @@
   constructPath = function(key) {
     var prefix;
     if (!_.isString(key)) {
-      throw new errors.InvalidKey();
+      throw new errors.ResinInvalidDataKey(key);
     }
     prefix = exports.prefix.get();
     return path.join(prefix, key);
