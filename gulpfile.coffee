@@ -57,4 +57,4 @@ gulp.task 'build', (callback) ->
 	runSequence([ 'lint', 'test' ], [ 'json', 'coffee' ], 'jsdoc', callback)
 
 gulp.task 'watch', [ 'build' ], ->
-	gulp.watch([ OPTIONS.files.coffee, OPTIONS.files.json ], [ 'build' ])
+	gulp.watch([ OPTIONS.files.coffee, OPTIONS.files.json, 'README.md' ], [ 'build' ])
