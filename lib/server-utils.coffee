@@ -7,6 +7,7 @@ progress = require('request-progress')
 connection = require('./connection')
 auth = require('./auth')
 ProgressState = require('./progress-state')
+errors = require('./errors')
 
 ###*
 # @ignore
@@ -16,7 +17,7 @@ exports.checkIfOnline = (callback) ->
 	connection.isOnline (error, isOnline) ->
 		return callback(error) if error?
 		return callback() if isOnline
-		return callback(new Error('You need internet connection to perform this task'))
+		return callback(new errors.ResinNoInternetConnection())
 
 ###*
 # @ignore
@@ -24,7 +25,7 @@ exports.checkIfOnline = (callback) ->
 ###
 exports.addAuthorizationHeader = (headers = {}, token) ->
 	if not token?
-		throw new Error('Missing token')
+		throw new errors.ResinMissingParameter('token')
 
 	headers.Authorization = "Bearer #{token}"
 	return headers
@@ -36,7 +37,7 @@ exports.addAuthorizationHeader = (headers = {}, token) ->
 exports.authenticate = (options, callback) ->
 
 	if not options?
-		throw new Error('Missing options')
+		throw new errors.ResinMissingParameter('options')
 
 	auth.getToken (error, token) ->
 		return callback(error) if error?
@@ -70,7 +71,7 @@ exports.sendRequest = (options, callback) ->
 		return callback(error) if error?
 
 		if response.statusCode >= 400
-			return callback(new Error(response.body))
+			return callback(new errors.ResinRequestError(response.body))
 
 		try
 			response.body = JSON.parse(response.body)

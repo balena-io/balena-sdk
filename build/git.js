@@ -59,7 +59,7 @@
       return;
     }
     if (!_.isString(directory)) {
-      throw new Error('Invalid git directory');
+      throw new errors.ResinInvalidParameter('directory', directory);
     }
     return path.join(directory, '.git');
   };
@@ -125,7 +125,7 @@
         if (exists) {
           return callback();
         }
-        error = new errors.DirectoryDoesntExist(directory);
+        error = new errors.ResinNoSuchDirectory(directory);
         return callback(error);
       }, function(callback) {
         return fsPlus.isDirectory(gitDirectory, nodeify(callback));
@@ -171,8 +171,7 @@
         return callback(error);
       }
       if (!isGitRepository) {
-        error = new Error("Not a git directory: " + directory);
-        return callback(error);
+        return callback(new errors.ResinDirectoryNotGitRepository(directory));
       }
       gitDirectory = exports.getGitDirectory(directory);
       repository = new gitCli.Repository(gitDirectory);
@@ -286,10 +285,8 @@
    */
 
   exports.addRemote = function(repository, name, url, callback) {
-    var error;
     if (!_.isString(name)) {
-      error = new Error("Invalid remote name: " + name);
-      return callback(error);
+      return callback(new errors.ResinInvalidParameter('name', name));
     }
     return repository.addRemote(name, url, callback);
   };
@@ -327,13 +324,12 @@
   exports.initProjectWithApplication = function(application, directory, callback) {
     return async.waterfall([
       function(callback) {
-        var error, isValid;
+        var isValid;
         isValid = exports.isValidGitApplication(application);
         if (isValid) {
           return callback();
         }
-        error = new Error("Invalid application: " + application);
-        return callback(error);
+        return callback(new errors.ResinInvalidApplication(application));
       }, function(callback) {
         return exports.getRepositoryInstance(directory, callback);
       }, function(repository, callback) {

@@ -58,7 +58,7 @@
 
   exports.set = function(newPrefix, callback) {
     if (!_.isString(newPrefix)) {
-      return typeof callback === "function" ? callback(new errors.InvalidPath(newPrefix)) : void 0;
+      return typeof callback === "function" ? callback(new errors.ResinInvalidPath(newPrefix)) : void 0;
     }
     return mkdirp(newPrefix, function(error) {
       if (error != null) {

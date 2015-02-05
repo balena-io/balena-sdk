@@ -5,6 +5,7 @@
 _ = require('lodash-contrib')
 PubNub = require('pubnub')
 settings = require('./settings')
+errors = require('./errors')
 
 ###*
 # subscribe callback
@@ -49,8 +50,7 @@ exports.subscribe = (uuid, options = {}, callback) ->
 		tail: false
 
 	if not _.isNumber(options.history)
-		error = new Error('Invalid history')
-		return callback(error)
+		return callback(new errors.ResinInvalidOption('history', options.history))
 
 	pubnubOptions = settings.get('pubnub')
 	pubnub = PubNub.init(pubnubOptions)

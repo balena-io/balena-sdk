@@ -4,6 +4,7 @@
 ###
 
 _ = require('lodash')
+errors = require('./errors')
 
 ###*
 # Represent a progress state
@@ -31,46 +32,46 @@ class ProgressState
 		if options.total?
 
 			if not _.isNumber(options.total) or options.total < 0
-				throw new Error("Invalid total option: #{options.total}")
+				throw new errors.ResinInvalidOption('total', options.total)
 
 		# Percentage option
 
 		if options.percentage?
 
 			if not _.isNumber(options.percentage) or options.percentage < 0 or options.percentage > 100
-				throw new Error("Invalid percentage option: #{options.percentage}")
+				throw new errors.ResinInvalidOption('percentage', options.percentage)
 
 		# ETA option
 
 		if options.eta?
 
 			if not _.isNumber(options.eta) or options.eta < 0
-				throw new Error("Invalid eta option: #{options.eta}")
+				throw new errors.ResinInvalidOption('eta', options.eta)
 
 		# Received option
 
 		if not options.received?
-			throw new Error('Missing received option')
+			throw new errors.ResinMissingOption('received')
 
 		if not _.isNumber(options.received) or options.received < 0
-			throw new Error("Invalid received option: #{options.received}")
+			throw new errors.ResinInvalidOption('received', options.received)
 
 		if options.total? and options.received > options.total
-			throw new Error("Received option can't be higher than total: #{options.received} > #{options.total}")
+			throw new errors.ResinInvalidOption('received', options.received, "#{options.received} > #{options.total}")
 
 		# Delta option
 
 		if not options.delta?
-			throw new Error('Missing delta option')
+			throw new errors.ResinMissingOption('delta')
 
 		if not _.isNumber(options.delta) or options.delta < 0
-			throw new Error("Invalid delta option: #{options.delta}")
+			throw new errors.ResinInvalidOption('delta', options.delta)
 
 		if options.total? and options.delta > options.total
-			throw new Error("Delta option can't be higher than total: #{options.delta} > #{options.total}")
+			throw new errors.ResinInvalidOption('delta', options.delta, "#{options.delta} > #{options.total}")
 
 		if options.delta > options.received
-			throw new Error("Delta option can't be higher than received: #{options.delta} > #{options.received}")
+			throw new errors.ResinInvalidOption('delta', options.delta, "#{options.delta} > #{options.received}")
 
 		_.extend(this, options)
 

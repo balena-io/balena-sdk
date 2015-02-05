@@ -55,7 +55,7 @@
       }
     }).then(function(applications) {
       if (_.isEmpty(applications)) {
-        return callback(new errors.NotAny('applications'));
+        return callback(new errors.ResinNotAny('applications'));
       }
       applications = _.map(applications, function(application) {
         var _ref;
@@ -100,7 +100,7 @@
       id: id
     }).then(function(application) {
       if (application == null) {
-        return callback(new errors.NotFound("application " + id));
+        return callback(new errors.ResinApplicationNotFound(id));
       }
       return callback(null, application);
     })["catch"](function(error) {
@@ -135,11 +135,10 @@
    */
 
   exports.create = function(name, deviceType, callback) {
-    var error, slugifiedType;
+    var slugifiedType;
     slugifiedType = deviceModel.getDeviceSlug(deviceType);
     if (slugifiedType === 'unknown') {
-      error = new Error("Unknown device type: " + deviceType);
-      return callback(error);
+      return callback(new errors.ResinInvalidDeviceType(deviceType));
     }
     return pine.post({
       resource: 'application',
@@ -148,12 +147,7 @@
         device_type: slugifiedType
       }
     }).then(function(res) {
-      var id;
-      id = res != null ? res.id : void 0;
-      if (id == null) {
-        return callback(new errors.NotFound('created application id'));
-      }
-      return callback(null, id);
+      return callback(null, res.id);
     })["catch"](function(error) {
       return callback(error);
     });

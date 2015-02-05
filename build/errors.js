@@ -1,251 +1,1233 @@
+
+/**
+ * @namespace errors
+ */
+
 (function() {
-  var DirectoryDoesntExist, FileNotFound, InvalidConfigFile, InvalidCredentials, InvalidKey, InvalidPath, NotAny, NotFound, TypedError,
+  var ResinApplicationNotFound, ResinDeviceNotFound, ResinDirectoryNotGitRepository, ResinInvalidApplication, ResinInvalidDataKey, ResinInvalidDeviceType, ResinInvalidOption, ResinInvalidParameter, ResinInvalidPath, ResinKeyNotFound, ResinMissingCredential, ResinMissingDataPrefix, ResinMissingOption, ResinMissingParameter, ResinNoInternetConnection, ResinNoSuchDirectory, ResinNonAllowedOption, ResinNotAny, ResinRequestError, TypedError,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   TypedError = require('typed-error');
 
-  exports.NotFound = NotFound = (function(_super) {
-    __extends(NotFound, _super);
 
+  /**
+   * An invalid device type error
+   * @class ResinInvalidDeviceType
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} type - the invalid device type
+   */
 
-    /**
-    	 * @summary Construct a Not Found error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @param {String} name - name of the thing that was not found
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.NotFound('application')
-    	 *	Error: Couldn't find application
-     */
+  exports.ResinInvalidDeviceType = ResinInvalidDeviceType = (function(_super) {
+    __extends(ResinInvalidDeviceType, _super);
 
-    function NotFound(name) {
-      this.message = "Couldn't find " + name;
+    function ResinInvalidDeviceType(type) {
+      this.type = type;
+
+      /**
+      		 * @name type
+      		 * @type String
+      		 * @memberof errors.ResinInvalidDeviceType
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinInvalidDeviceType
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid device type: this.type
+       */
+      this.message = "Invalid device type: " + this.type;
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinInvalidDeviceType
+    	 * @instance
+    	 * @constant
+    	 * @default ResinInvalidDeviceType
      */
 
-    NotFound.prototype.exitCode = 1;
+    ResinInvalidDeviceType.prototype.code = 'ResinInvalidDeviceType';
 
-    return NotFound;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinInvalidDeviceType
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinInvalidDeviceType.prototype.exitCode = 1;
+
+    return ResinInvalidDeviceType;
 
   })(TypedError);
 
-  exports.InvalidConfigFile = InvalidConfigFile = (function(_super) {
-    __extends(InvalidConfigFile, _super);
 
+  /**
+   * A missing credential error
+   * @class ResinMissingCredential
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} credential - the missing credential name
+   */
 
-    /**
-    	 * @summary Construct an Invalid Config File error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @param {String} file - the name of the invalid configuration file
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.InvalidConfigFile('/opt/resin.conf')
-    	 *	Error: Invalid configuration file: /opt/resin.conf
-     */
+  exports.ResinMissingCredential = ResinMissingCredential = (function(_super) {
+    __extends(ResinMissingCredential, _super);
 
-    function InvalidConfigFile(file) {
-      this.message = "Invalid configuration file: " + file;
+    function ResinMissingCredential(credential) {
+      this.credential = credential;
+
+      /**
+      		 * @name credential
+      		 * @type String
+      		 * @memberof errors.ResinMissingCredential
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinMissingCredential
+      		 * @instance
+      		 * @constant
+      		 * @default Missing credential: this.credential
+       */
+      this.message = "Missing credential: " + this.credential;
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinMissingCredential
+    	 * @instance
+    	 * @constant
+    	 * @default ResinMissingCredential
      */
 
-    InvalidConfigFile.prototype.exitCode = 1;
+    ResinMissingCredential.prototype.code = 'ResinMissingCredential';
 
-    return InvalidConfigFile;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinMissingCredential
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinMissingCredential.prototype.exitCode = 1;
+
+    return ResinMissingCredential;
 
   })(TypedError);
 
-  exports.InvalidCredentials = InvalidCredentials = (function(_super) {
-    __extends(InvalidCredentials, _super);
 
+  /**
+   * A missing data prefix error
+   * @class ResinMissingDataPrefix
+   * @protected
+   * @memberof errors
+   */
 
-    /**
-    	 * @summary Construct an Invalid Credentials error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.InvalidCredentials()
-    	 *	Error: Invalid credentials
-     */
+  exports.ResinMissingDataPrefix = ResinMissingDataPrefix = (function(_super) {
+    __extends(ResinMissingDataPrefix, _super);
 
-    function InvalidCredentials() {
-      this.message = 'Invalid credentials';
+    function ResinMissingDataPrefix() {
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinMissingDataPrefix
+      		 * @instance
+      		 * @constant
+      		 * @default Did you forget to set a prefix?
+       */
+      this.message = 'Did you forget to set a prefix?';
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinMissingDataPrefix
+    	 * @instance
+    	 * @constant
+    	 * @default ResinMissingDataPrefix
      */
 
-    InvalidCredentials.prototype.exitCode = 1;
+    ResinMissingDataPrefix.prototype.code = 'ResinMissingDataPrefix';
 
-    return InvalidCredentials;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinMissingDataPrefix
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinMissingDataPrefix.prototype.exitCode = 1;
+
+    return ResinMissingDataPrefix;
 
   })(TypedError);
 
-  exports.InvalidKey = InvalidKey = (function(_super) {
-    __extends(InvalidKey, _super);
 
+  /**
+   * A no internet connection error
+   * @class ResinNoInternetConnection
+   * @protected
+   * @memberof errors
+   */
 
-    /**
-    	 * @summary Construct an Invalid Key error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.InvalidKey()
-    	 *	Error: Invalid key
-     */
+  exports.ResinNoInternetConnection = ResinNoInternetConnection = (function(_super) {
+    __extends(ResinNoInternetConnection, _super);
 
-    function InvalidKey() {
-      this.message = 'Invalid key';
+    function ResinNoInternetConnection() {
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinNoInternetConnection
+      		 * @instance
+      		 * @constant
+      		 * @default You need internet connection to perform this task
+       */
+      this.message = 'You need internet connection to perform this task';
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinNoInternetConnection
+    	 * @instance
+    	 * @constant
+    	 * @default ResinNoInternetConnection
      */
 
-    InvalidKey.prototype.exitCode = 1;
+    ResinNoInternetConnection.prototype.code = 'ResinNoInternetConnection';
 
-    return InvalidKey;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinNoInternetConnection
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinNoInternetConnection.prototype.exitCode = 1;
+
+    return ResinNoInternetConnection;
 
   })(TypedError);
 
-  exports.InvalidPath = InvalidPath = (function(_super) {
-    __extends(InvalidPath, _super);
 
+  /**
+   * An invalid option error
+   * @class ResinInvalidOption
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} name - the invalid option name
+   * @param {*} value - the invalid option value
+   * @param {String} [explanation] - an optional explanation
+   */
 
-    /**
-    	 * @summary Construct an Invalid Path error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @param {String} path - the name of the invalid path
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.InvalidPath('/tmp')
-    	 *	Error: Invalid path: /tmp
-     */
+  exports.ResinInvalidOption = ResinInvalidOption = (function(_super) {
+    __extends(ResinInvalidOption, _super);
 
-    function InvalidPath(path) {
-      this.message = "Invalid path: " + path;
+    function ResinInvalidOption(name, value, explanation) {
+      this.name = name;
+      this.value = value;
+      this.explanation = explanation;
+
+      /**
+      		 * @name name
+      		 * @type String
+      		 * @memberof errors.ResinInvalidOption
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name value
+      		 * @type *
+      		 * @memberof errors.ResinInvalidOption
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name explanation
+      		 * @type String
+      		 * @memberof errors.ResinInvalidOption
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinInvalidOption
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid option this.name: this.value. this.explanation.
+       */
+      this.message = "Invalid option " + this.name + ": " + this.value;
+      if (this.explanation != null) {
+        this.message += ". " + this.explanation + ".";
+      }
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinInvalidOption
+    	 * @instance
+    	 * @constant
+    	 * @default ResinInvalidOption
      */
 
-    InvalidPath.prototype.exitCode = 1;
+    ResinInvalidOption.prototype.code = 'ResinInvalidOption';
 
-    return InvalidPath;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinInvalidOption
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinInvalidOption.prototype.exitCode = 1;
+
+    return ResinInvalidOption;
 
   })(TypedError);
 
-  exports.DirectoryDoesntExist = DirectoryDoesntExist = (function(_super) {
-    __extends(DirectoryDoesntExist, _super);
 
+  /**
+   * A missing option error
+   * @class ResinMissingOption
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} name - the missing option name
+   */
 
-    /**
-    	 * @summary Construct a Directory Doesn't Exist error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @param {String} directory - the name of the directory that doesn't exist
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.DirectoryDoesntExist('/tmp')
-    	 *	Error: Directory doesn't exist: /tmp
-     */
+  exports.ResinMissingOption = ResinMissingOption = (function(_super) {
+    __extends(ResinMissingOption, _super);
 
-    function DirectoryDoesntExist(directory) {
-      this.message = "Directory doesn't exist: " + directory;
+    function ResinMissingOption(name) {
+      this.name = name;
+
+      /**
+      		 * @name name
+      		 * @type String
+      		 * @memberof errors.ResinMissingOption
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinMissingOption
+      		 * @instance
+      		 * @constant
+      		 * @default Missing option: this.name
+       */
+      this.message = "Missing option: " + this.name;
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinMissingOption
+    	 * @instance
+    	 * @constant
+    	 * @default ResinMissingOption
      */
 
-    DirectoryDoesntExist.prototype.exitCode = 1;
+    ResinMissingOption.prototype.code = 'ResinMissingOption';
 
-    return DirectoryDoesntExist;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinMissingOption
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinMissingOption.prototype.exitCode = 1;
+
+    return ResinMissingOption;
 
   })(TypedError);
 
-  exports.NotAny = NotAny = (function(_super) {
-    __extends(NotAny, _super);
 
+  /**
+   * A non allowed option error
+   * @class ResinNonAllowedOption
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} name - the non allowed option name
+   */
 
-    /**
-    	 * @summary Construct an Not Any error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @param {String} name - name of the thing that the user doesn't have
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.NotAny('applications')
-    	 *	Error: You don't have any applications
-     */
+  exports.ResinNonAllowedOption = ResinNonAllowedOption = (function(_super) {
+    __extends(ResinNonAllowedOption, _super);
 
-    function NotAny(name) {
-      this.message = "You don't have any " + name;
+    function ResinNonAllowedOption(name) {
+      this.name = name;
+
+      /**
+      		 * @name name
+      		 * @type String
+      		 * @memberof errors.ResinNonAllowedOption
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinNonAllowedOption
+      		 * @instance
+      		 * @constant
+      		 * @default Non allowed option: this.name
+       */
+      this.message = "Non allowed option: " + this.name;
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinNonAllowedOption
+    	 * @instance
+    	 * @constant
+    	 * @default ResinNonAllowedOption
      */
 
-    NotAny.prototype.exitCode = 0;
+    ResinNonAllowedOption.prototype.code = 'ResinNonAllowedOption';
 
-    return NotAny;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinNonAllowedOption
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinNonAllowedOption.prototype.exitCode = 1;
+
+    return ResinNonAllowedOption;
 
   })(TypedError);
 
-  exports.FileNotFound = FileNotFound = (function(_super) {
-    __extends(FileNotFound, _super);
 
+  /**
+   * An invalid parameter error
+   * @class ResinInvalidParameter
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} name - the invalid parameter name
+   * @param {*} value - the invalid parameter value
+   * @param {String} [explanation] - an optional explanation
+   */
 
-    /**
-    	 * @summary Construct an File Not Found error
-    	 * @private
-    	 * @constructor
-    	 *
-    	 * @param {String} filename - name of the file that was not found
-    	 *
-    	 * @example
-    	 *	throw new resin.errors.FileNotFound('/foo')
-    	 *	Error: File not found: /foo
-     */
+  exports.ResinInvalidParameter = ResinInvalidParameter = (function(_super) {
+    __extends(ResinInvalidParameter, _super);
 
-    function FileNotFound(filename) {
-      this.message = "File not found: " + filename;
+    function ResinInvalidParameter(name, value, explanation) {
+      this.name = name;
+      this.value = value;
+      this.explanation = explanation;
+
+      /**
+      		 * @name name
+      		 * @type String
+      		 * @memberof errors.ResinInvalidParameter
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name value
+      		 * @type *
+      		 * @memberof errors.ResinInvalidParameter
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name explanation
+      		 * @type String
+      		 * @memberof errors.ResinInvalidParameter
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinInvalidParameter
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid parameter this.name: this.value. this.explanation.
+       */
+      this.message = "Invalid parameter " + this.name + ": " + this.value;
+      if (this.explanation != null) {
+        this.message += ". " + this.explanation + ".";
+      }
     }
 
 
     /**
-    	 * @member {Number} Error exit code
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinInvalidParameter
+    	 * @instance
+    	 * @constant
+    	 * @default ResinInvalidParameter
      */
 
-    FileNotFound.prototype.exitCode = 1;
+    ResinInvalidParameter.prototype.code = 'ResinInvalidParameter';
 
-    return FileNotFound;
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinInvalidParameter
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinInvalidParameter.prototype.exitCode = 1;
+
+    return ResinInvalidParameter;
+
+  })(TypedError);
+
+
+  /**
+   * A missing parameter error
+   * @class ResinMissingParameter
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} name - the missing parameter name
+   */
+
+  exports.ResinMissingParameter = ResinMissingParameter = (function(_super) {
+    __extends(ResinMissingParameter, _super);
+
+    function ResinMissingParameter(name) {
+      this.name = name;
+
+      /**
+      		 * @name name
+      		 * @type String
+      		 * @memberof errors.ResinMissingParameter
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinMissingParameter
+      		 * @instance
+      		 * @constant
+      		 * @default Missing parameter: this.name
+       */
+      this.message = "Missing parameter: " + this.name;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinMissingParameter
+    	 * @instance
+    	 * @constant
+    	 * @default ResinMissingParameter
+     */
+
+    ResinMissingParameter.prototype.code = 'ResinMissingParameter';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinMissingParameter
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinMissingParameter.prototype.exitCode = 1;
+
+    return ResinMissingParameter;
+
+  })(TypedError);
+
+
+  /**
+   * An invalid data key error
+   * @class ResinInvalidDataKey
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} key - the invalid data key
+   */
+
+  exports.ResinInvalidDataKey = ResinInvalidDataKey = (function(_super) {
+    __extends(ResinInvalidDataKey, _super);
+
+    function ResinInvalidDataKey(key) {
+      this.key = key;
+
+      /**
+      		 * @name key
+      		 * @type String
+      		 * @memberof errors.ResinInvalidDataKey
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinInvalidDataKey
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid data key: this.key
+       */
+      this.message = "Invalid data key: " + this.key;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinInvalidDataKey
+    	 * @instance
+    	 * @constant
+    	 * @default ResinInvalidDataKey
+     */
+
+    ResinInvalidDataKey.prototype.code = 'ResinInvalidDataKey';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinInvalidDataKey
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinInvalidDataKey.prototype.exitCode = 1;
+
+    return ResinInvalidDataKey;
+
+  })(TypedError);
+
+
+  /**
+   * An invalid path error
+   * @class ResinInvalidPath
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} path - the invalid path
+   */
+
+  exports.ResinInvalidPath = ResinInvalidPath = (function(_super) {
+    __extends(ResinInvalidPath, _super);
+
+    function ResinInvalidPath(path) {
+      this.path = path;
+
+      /**
+      		 * @name path
+      		 * @type String
+      		 * @memberof errors.ResinInvalidPath
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinInvalidPath
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid path: this.path
+       */
+      this.message = "Invalid path: " + this.path;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinInvalidPath
+    	 * @instance
+    	 * @constant
+    	 * @default ResinInvalidPath
+     */
+
+    ResinInvalidPath.prototype.code = 'ResinInvalidPath';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinInvalidPath
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinInvalidPath.prototype.exitCode = 1;
+
+    return ResinInvalidPath;
+
+  })(TypedError);
+
+
+  /**
+   * A no such directory error
+   * @class ResinNoSuchDirectory
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} path - the path that is not a directory
+   */
+
+  exports.ResinNoSuchDirectory = ResinNoSuchDirectory = (function(_super) {
+    __extends(ResinNoSuchDirectory, _super);
+
+    function ResinNoSuchDirectory(path) {
+      this.path = path;
+
+      /**
+      		 * @name path
+      		 * @type String
+      		 * @memberof errors.ResinNoSuchDirectory
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinNoSuchDirectory
+      		 * @instance
+      		 * @constant
+      		 * @default No such directory: this.path
+       */
+      this.message = "No such directory: " + this.path;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinNoSuchDirectory
+    	 * @instance
+    	 * @constant
+    	 * @default ResinNoSuchDirectory
+     */
+
+    ResinNoSuchDirectory.prototype.code = 'ResinNoSuchDirectory';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinNoSuchDirectory
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinNoSuchDirectory.prototype.exitCode = 1;
+
+    return ResinNoSuchDirectory;
+
+  })(TypedError);
+
+
+  /**
+   * An application not found error
+   * @class ResinApplicationNotFound
+   * @protected
+   * @memberof errors
+   *
+   * @param {String|Number} id - the not found application id
+   */
+
+  exports.ResinApplicationNotFound = ResinApplicationNotFound = (function(_super) {
+    __extends(ResinApplicationNotFound, _super);
+
+    function ResinApplicationNotFound(id) {
+      this.id = id;
+
+      /**
+      		 * @name id
+      		 * @type String|Number
+      		 * @memberof errors.ResinApplicationNotFound
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinApplicationNotFound
+      		 * @instance
+      		 * @constant
+      		 * @default Application not found: this.id
+       */
+      this.message = "Application not found: " + this.id;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinApplicationNotFound
+    	 * @instance
+    	 * @constant
+    	 * @default ResinApplicationNotFound
+     */
+
+    ResinApplicationNotFound.prototype.code = 'ResinApplicationNotFound';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinApplicationNotFound
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinApplicationNotFound.prototype.exitCode = 1;
+
+    return ResinApplicationNotFound;
+
+  })(TypedError);
+
+
+  /**
+   * A device not found error
+   * @class ResinDeviceNotFound
+   * @protected
+   * @memberof errors
+   *
+   * @param {String|Number} id - the not found device id
+   */
+
+  exports.ResinDeviceNotFound = ResinDeviceNotFound = (function(_super) {
+    __extends(ResinDeviceNotFound, _super);
+
+    function ResinDeviceNotFound(id) {
+      this.id = id;
+
+      /**
+      		 * @name id
+      		 * @type String|Number
+      		 * @memberof errors.ResinDeviceNotFound
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinDeviceNotFound
+      		 * @instance
+      		 * @constant
+      		 * @default Device not found: this.id
+       */
+      this.message = "Device not found: " + this.id;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinDeviceNotFound
+    	 * @instance
+    	 * @constant
+    	 * @default ResinDeviceNotFound
+     */
+
+    ResinDeviceNotFound.prototype.code = 'ResinDeviceNotFound';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinDeviceNotFound
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinDeviceNotFound.prototype.exitCode = 1;
+
+    return ResinDeviceNotFound;
+
+  })(TypedError);
+
+
+  /**
+   * A key not found error
+   * @class ResinKeyNotFound
+   * @protected
+   * @memberof errors
+   *
+   * @param {String|Number} id - the not found key id
+   */
+
+  exports.ResinKeyNotFound = ResinKeyNotFound = (function(_super) {
+    __extends(ResinKeyNotFound, _super);
+
+    function ResinKeyNotFound(id) {
+      this.id = id;
+
+      /**
+      		 * @name id
+      		 * @type String|Number
+      		 * @memberof errors.ResinKeyNotFound
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinKeyNotFound
+      		 * @instance
+      		 * @constant
+      		 * @default Key not found: this.id
+       */
+      this.message = "Key not found: " + this.id;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinKeyNotFound
+    	 * @instance
+    	 * @constant
+    	 * @default ResinKeyNotFound
+     */
+
+    ResinKeyNotFound.prototype.code = 'ResinKeyNotFound';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinKeyNotFound
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinKeyNotFound.prototype.exitCode = 1;
+
+    return ResinKeyNotFound;
+
+  })(TypedError);
+
+
+  /**
+   * A request error
+   * @class ResinKeyNotFound
+   * @protected
+   * @memberof errors
+   *
+   * @param {String|Object} body - the response body
+   */
+
+  exports.ResinRequestError = ResinRequestError = (function(_super) {
+    __extends(ResinRequestError, _super);
+
+    function ResinRequestError(body) {
+      this.body = body;
+
+      /**
+      		 * @name body
+      		 * @type String|Object
+      		 * @memberof errors.ResinRequestError
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinRequestError
+      		 * @instance
+      		 * @constant
+      		 * @default Request error: this.body
+       */
+      this.message = "Request error: " + this.body;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinRequestError
+    	 * @instance
+    	 * @constant
+    	 * @default ResinRequestError
+     */
+
+    ResinRequestError.prototype.code = 'ResinRequestError';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinRequestError
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinRequestError.prototype.exitCode = 1;
+
+    return ResinRequestError;
+
+  })(TypedError);
+
+
+  /**
+   * An invalid application error
+   * @class ResinInvalidApplication
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} application - the invalid application name
+   */
+
+  exports.ResinInvalidApplication = ResinInvalidApplication = (function(_super) {
+    __extends(ResinInvalidApplication, _super);
+
+    function ResinInvalidApplication(application) {
+      this.application = application;
+
+      /**
+      		 * @name application
+      		 * @type String
+      		 * @memberof errors.ResinInvalidApplication
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinInvalidApplication
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid application: this.application
+       */
+      this.message = "Invalid application: " + this.application;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinInvalidApplication
+    	 * @instance
+    	 * @constant
+    	 * @default ResinInvalidApplication
+     */
+
+    ResinInvalidApplication.prototype.code = 'ResinInvalidApplication';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinInvalidApplication
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinInvalidApplication.prototype.exitCode = 1;
+
+    return ResinInvalidApplication;
+
+  })(TypedError);
+
+
+  /**
+   * A directory not git repository error
+   * @class ResinDirectoryNotGitRepository
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} directory - the directory path
+   */
+
+  exports.ResinDirectoryNotGitRepository = ResinDirectoryNotGitRepository = (function(_super) {
+    __extends(ResinDirectoryNotGitRepository, _super);
+
+    function ResinDirectoryNotGitRepository(directory) {
+      this.directory = directory;
+
+      /**
+      		 * @name directory
+      		 * @type String
+      		 * @memberof errors.ResinDirectoryNotGitRepository
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinDirectoryNotGitRepository
+      		 * @instance
+      		 * @constant
+      		 * @default Invalid application: this.application
+       */
+      this.message = "Directory is not a git repository: " + this.directory;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinDirectoryNotGitRepository
+    	 * @instance
+    	 * @constant
+    	 * @default ResinDirectoryNotGitRepository
+     */
+
+    ResinDirectoryNotGitRepository.prototype.code = 'ResinDirectoryNotGitRepository';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinDirectoryNotGitRepository
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinDirectoryNotGitRepository.prototype.exitCode = 1;
+
+    return ResinDirectoryNotGitRepository;
+
+  })(TypedError);
+
+
+  /**
+   * A not any error
+   * @class ResinNotAny
+   * @protected
+   * @memberof errors
+   *
+   * @param {String} resource - the resource name
+   */
+
+  exports.ResinNotAny = ResinNotAny = (function(_super) {
+    __extends(ResinNotAny, _super);
+
+    function ResinNotAny(resource) {
+      this.resource = resource;
+
+      /**
+      		 * @name resource
+      		 * @type String
+      		 * @memberof errors.ResinNotAny
+      		 * @instance
+      		 * @constant
+       */
+
+      /**
+      		 * @name message
+      		 * @type String
+      		 * @memberof errors.ResinNotAny
+      		 * @instance
+      		 * @constant
+      		 * @default You don't have any this.resource
+       */
+      this.message = "You don't have any " + this.resource;
+    }
+
+
+    /**
+    	 * @name code
+    	 * @type String
+    	 * @memberof errors.ResinNotAny
+    	 * @instance
+    	 * @constant
+    	 * @default ResinNotAny
+     */
+
+    ResinNotAny.prototype.code = 'ResinNotAny';
+
+
+    /**
+    	 * @name exitCode
+    	 * @type Number
+    	 * @memberof errors.ResinNotAny
+    	 * @instance
+    	 * @constant
+    	 * @default 1
+     */
+
+    ResinNotAny.prototype.exitCode = 1;
+
+    return ResinNotAny;
 
   })(TypedError);
 

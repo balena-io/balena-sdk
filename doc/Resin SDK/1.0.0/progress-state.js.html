@@ -32,9 +32,11 @@
  */
 
 (function() {
-  var ProgressState, getCurrentTime, _;
+  var ProgressState, errors, getCurrentTime, _;
 
   _ = require('lodash');
+
+  errors = require('./errors');
 
 
   /**
@@ -59,39 +61,39 @@
     function ProgressState(options) {
       if (options.total != null) {
         if (!_.isNumber(options.total) || options.total &lt; 0) {
-          throw new Error("Invalid total option: " + options.total);
+          throw new errors.ResinInvalidOption('total', options.total);
         }
       }
       if (options.percentage != null) {
         if (!_.isNumber(options.percentage) || options.percentage &lt; 0 || options.percentage > 100) {
-          throw new Error("Invalid percentage option: " + options.percentage);
+          throw new errors.ResinInvalidOption('percentage', options.percentage);
         }
       }
       if (options.eta != null) {
         if (!_.isNumber(options.eta) || options.eta &lt; 0) {
-          throw new Error("Invalid eta option: " + options.eta);
+          throw new errors.ResinInvalidOption('eta', options.eta);
         }
       }
       if (options.received == null) {
-        throw new Error('Missing received option');
+        throw new errors.ResinMissingOption('received');
       }
       if (!_.isNumber(options.received) || options.received &lt; 0) {
-        throw new Error("Invalid received option: " + options.received);
+        throw new errors.ResinInvalidOption('received', options.received);
       }
       if ((options.total != null) &amp;&amp; options.received > options.total) {
-        throw new Error("Received option can't be higher than total: " + options.received + " > " + options.total);
+        throw new errors.ResinInvalidOption('received', options.received, "" + options.received + " > " + options.total);
       }
       if (options.delta == null) {
-        throw new Error('Missing delta option');
+        throw new errors.ResinMissingOption('delta');
       }
       if (!_.isNumber(options.delta) || options.delta &lt; 0) {
-        throw new Error("Invalid delta option: " + options.delta);
+        throw new errors.ResinInvalidOption('delta', options.delta);
       }
       if ((options.total != null) &amp;&amp; options.delta > options.total) {
-        throw new Error("Delta option can't be higher than total: " + options.delta + " > " + options.total);
+        throw new errors.ResinInvalidOption('delta', options.delta, "" + options.delta + " > " + options.total);
       }
       if (options.delta > options.received) {
-        throw new Error("Delta option can't be higher than received: " + options.delta + " > " + options.received);
+        throw new errors.ResinInvalidOption('delta', options.delta, "" + options.delta + " > " + options.received);
       }
       _.extend(this, options);
     }
@@ -169,13 +171,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors.ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors.ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors.ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors.ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors.ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors.ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors.ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors.ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors.ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors.ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors.ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors.ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors.ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors.ResinNotAny.html">ResinNotAny</a></li><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Feb 05 2015 10:56:05 GMT-0400 (BOT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Feb 05 2015 14:57:56 GMT-0400 (BOT)
 </footer>
 
 <script> prettyPrint(); </script>

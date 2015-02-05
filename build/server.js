@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var async, createFacadeFunction, method, serverUtils, settings, urlResolve, _, _i, _len, _ref;
+  var async, createFacadeFunction, errors, method, serverUtils, settings, urlResolve, _, _i, _len, _ref;
 
   _ = require('lodash');
 
@@ -14,6 +14,8 @@
   settings = require('./settings');
 
   serverUtils = require('./server-utils');
+
+  errors = require('./errors');
 
 
   /**
@@ -96,7 +98,7 @@
       onProgress = _.noop;
     }
     if (options.url == null) {
-      throw new Error('Missing URL');
+      throw new errors.ResinMissingOption('url');
     }
     options.url = urlResolve(settings.get('remoteUrl'), options.url);
     if (options.method != null) {

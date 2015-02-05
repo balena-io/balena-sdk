@@ -52,7 +52,7 @@
       }
     }).then(function(environmentVariables) {
       if (_.isEmpty(environmentVariables)) {
-        return callback(new errors.NotFound('environment variables'));
+        return callback(new errors.ResinNotAny('environment variables'));
       }
       return callback(null, environmentVariables);
     })["catch"](function(error) {
