@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/environment-variables.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: models/environment-variables.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>
+/**
+ * @module resin.models.environment-variables
+ */
+
+(function() {
+  var errors, pine, _;
+
+  _ = require('lodash');
+
+  pine = require('../pine');
+
+  errors = require('../errors');
+
+
+  /**
+   * A Resin API environment variable
+   * @typedef {Object} EnvironmentVariable
+   */
+
+
+  /**
+   * getAllByApplication callback
+   * @callback module:resin.models.environment-variables~getAllByApplicationCallback
+   * @param {(Error|null)} error - error
+   * @param {EnvironmentVariable[]} environmentVariables - environment variables
+   */
+
+
+  /**
+   * @summary Get all environment variables by application
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} applicationId - application id
+   * @param {module:resin.models.environment-variables~getAllByApplicationCallback} callback - callback
+   *
+   * @example
+   *	resin.models.environmentVariables.getAll (error, environmentVariables) ->
+   *		throw error if error?
+   *		console.log(environmentVariables)
+   */
+
+  exports.getAllByApplication = function(applicationId, callback) {
+    return pine.get({
+      resource: 'environment_variable',
+      options: {
+        filter: {
+          application: applicationId
+        },
+        orderby: 'name asc'
+      }
+    }).then(function(environmentVariables) {
+      if (_.isEmpty(environmentVariables)) {
+        return callback(new errors.ResinNotAny('environment variables'));
+      }
+      return callback(null, environmentVariables);
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * create callback
+   * @callback module:resin.models.environment-variables~createCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Create an environment variable for an application
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} applicationId - application id
+   * @param {String} name - environment variable name
+   * @param {String} value - environment variable value
+   * @param {module:resin.models.environment-variables~createCallback} callback - callback
+   *
+   * @example
+   *	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+   *		throw error if error?
+   */
+
+  exports.create = function(applicationId, name, value, callback) {
+    return pine.post({
+      resource: 'environment_variable',
+      data: {
+        name: name,
+        value: value,
+        application: applicationId
+      }
+    }).then(function() {
+      return callback();
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * update callback
+   * @callback module:resin.models.environment-variables~updateCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Update an environment variable value from an application
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} applicationId - application id
+   * @param {String} value - environment variable value
+   * @param {module:resin.models.environment-variables~updateCallback} callback - callback
+   *
+   * @example
+   *	resin.models.environmentVariables.update 317, 'vim', (error) ->
+   *		throw error if error?
+   */
+
+  exports.update = function(id, value, callback) {
+    return pine.patch({
+      resource: 'environment_variable',
+      id: id,
+      data: {
+        value: value
+      }
+    }).then(function() {
+      return callback();
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * remove callback
+   * @callback module:resin.models.environment-variables~removeCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Remove environment variable
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} id - environment variable id
+   * @param {module:resin.models.environment-variables~removeCallback} callback - callback
+   *
+   * @example
+   *	resin.models.environmentVariables.remove 51, (error) ->
+   *		throw error if error?
+   */
+
+  exports.remove = function(id, callback) {
+    return pine["delete"]({
+      resource: 'environment_variable',
+      id: id
+    }).then(function() {
+      return callback();
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * @summary Check is a variable is system specific
+   * @public
+   * @function
+   *
+   * @param {EnvironmentVariable} variable - environment variable
+   * @returns {Boolean} Whether a variable is system specific or not
+   *
+   * @example
+   * resin.models.environmentVariables.isSystemVariable('RESIN_SUPERVISOR')
+   * > true
+   *
+   * @example
+   * resin.models.environmentVariables.isSystemVariable('EDITOR')
+   * > false
+   */
+
+  exports.isSystemVariable = function(variable) {
+    return /^RESIN_/.test(variable.name);
+  };
+
+}).call(this);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors.ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors.ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors.ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors.ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors.ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors.ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors.ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors.ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors.ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors.ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors.ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors.ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors.ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors.ResinNotAny.html">ResinNotAny</a></li><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Started.html">Getting Started</a></li></ul><h3>Global</h3><ul><li><a href="global.html#It checks if we have a resin remote added already.">It checks if we have a resin remote added already.</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Feb 06 2015 09:26:40 GMT-0400 (BOT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

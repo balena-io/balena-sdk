@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/application.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: models/application.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>
+/**
+ * @module resin.models.application
+ */
+
+(function() {
+  var deviceModel, errors, pine, server, settings, _;
+
+  _ = require('lodash-contrib');
+
+  pine = require('../pine');
+
+  deviceModel = require('./device');
+
+  errors = require('../errors');
+
+  server = require('../server');
+
+  settings = require('../settings');
+
+
+  /**
+   * A Resin API application
+   * @typedef {Object} Application
+   */
+
+
+  /**
+   * getAll callback
+   * @callback module:resin.models.application~getAllCallback
+   * @param {(Error|null)} error - error
+   * @param {Application[]} applications - applications
+   */
+
+
+  /**
+   * @summary Get all applications
+   * @public
+   * @function
+   *
+   * @param {module:resin.models.application~getAllCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.getAll (error, applications) ->
+   *		throw error if error?
+   *		console.log(applications)
+   */
+
+  exports.getAll = function(callback) {
+    return pine.get({
+      resource: 'application',
+      options: {
+        orderby: 'app_name asc',
+        expand: 'device'
+      }
+    }).then(function(applications) {
+      if (_.isEmpty(applications)) {
+        return callback(new errors.ResinNotAny('applications'));
+      }
+      applications = _.map(applications, function(application) {
+        var _ref;
+        application.online_devices = _.where(application.device, {
+          is_online: 1
+        }).length;
+        application.devices_length = ((_ref = application.device) != null ? _ref.length : void 0) || 0;
+        return application;
+      });
+      return callback(null, applications);
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * get callback
+   * @callback module:resin.models.application~getCallback
+   * @param {(Error|null)} error - error
+   * @param {Application} application - application
+   */
+
+
+  /**
+   * @summary Get a single application
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} id - application id
+   * @param {module:resin.models.application~getCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.get 51, (error, application) ->
+   *		throw error if error?
+   *		console.log(application)
+   */
+
+  exports.get = function(id, callback) {
+    return pine.get({
+      resource: 'application',
+      id: id
+    }).then(function(application) {
+      if (application == null) {
+        return callback(new errors.ResinApplicationNotFound(id));
+      }
+      return callback(null, application);
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * create callback
+   * @callback module:resin.models.application~createCallback
+   * @param {(Error|null)} error - error
+   * @param {Number} id - application id
+   */
+
+
+  /**
+   * @summary Create an application
+   * @public
+   * @function
+   *
+   * @param {String} name - application name
+   * @param {String} deviceType - device type (slug form)
+   * @param {module:resin.models.application~createCallback} callback - callback
+   *
+   * @throw {NotFound} Will throw if the request doesn't returns an id
+   *
+   * @example
+   *	resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+   *		throw error if error?
+   *		console.log(id)
+   */
+
+  exports.create = function(name, deviceType, callback) {
+    var slugifiedType;
+    slugifiedType = deviceModel.getDeviceSlug(deviceType);
+    if (slugifiedType === 'unknown') {
+      return callback(new errors.ResinInvalidDeviceType(deviceType));
+    }
+    return pine.post({
+      resource: 'application',
+      data: {
+        app_name: name,
+        device_type: slugifiedType
+      }
+    }).then(function(res) {
+      return callback(null, res.id);
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * remove callback
+   * @callback module:resin.models.application~removeCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Remove application
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} id - application id
+   * @param {module:resin.models.application~removeCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.remove 51, (error) ->
+   *		throw error if error?
+   */
+
+  exports.remove = function(id, callback) {
+    return pine["delete"]({
+      resource: 'application',
+      id: id
+    }).then(function() {
+      return callback();
+    })["catch"](function(error) {
+      return callback(error);
+    });
+  };
+
+
+  /**
+   * restart callback
+   * @callback module:resin.models.application~restartCallback
+   * @param {(Error|null)} error - error
+   */
+
+
+  /**
+   * @summary Restart application
+   * @public
+   * @function
+   *
+   * @param {(String|Number)} id - application id
+   * @param {module:resin.models.application~restartCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.restart 51, (error) ->
+   *		throw error if error?
+   */
+
+  exports.restart = function(id, callback) {
+    var url;
+    url = _.template(settings.get('urls.applicationRestart'), {
+      id: id
+    });
+    return server.post(url, _.unary(callback));
+  };
+
+}).call(this);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors.ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors.ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors.ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors.ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors.ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors.ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors.ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors.ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors.ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors.ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors.ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors.ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors.ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors.ResinNotAny.html">ResinNotAny</a></li><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Started.html">Getting Started</a></li></ul><h3>Global</h3><ul><li><a href="global.html#It checks if we have a resin remote added already.">It checks if we have a resin remote added already.</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Feb 06 2015 09:26:40 GMT-0400 (BOT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
