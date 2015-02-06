@@ -12,15 +12,6 @@ gitCli = require('git-cli')
 errors = require('./errors')
 settings = require('./settings')
 
-# TODO: Refactor somewhere else and reuse trough all modules
-
-###*
-# @ignore
-###
-nodeify = (func) ->
-	return ->
-		return func.call(null, null, arguments...)
-
 ###*
 # @summary Get git directory for a certain path
 # @private
@@ -93,15 +84,13 @@ exports.isGitRepository = (directory, callback) ->
 	async.waterfall([
 
 		(callback) ->
-			fs.exists(directory, nodeify(callback))
-
-		(exists, callback) ->
-			return callback() if exists
-			error = new errors.ResinNoSuchDirectory(directory)
-			return callback(error)
+			fs.exists directory, (exists) ->
+				return callback() if exists
+				return callback(new errors.ResinNoSuchDirectory(directory))
 
 		(callback) ->
-			fsPlus.isDirectory(gitDirectory, nodeify(callback))
+			fsPlus.isDirectory gitDirectory, (isDirectory) ->
+				return callback(null, isDirectory)
 
 	], callback)
 

@@ -5,8 +5,7 @@
  */
 
 (function() {
-  var async, errors, fs, fsPlus, gitCli, nodeify, path, settings, _,
-    __slice = [].slice;
+  var async, errors, fs, fsPlus, gitCli, path, settings, _;
 
   fs = require('fs');
 
@@ -23,17 +22,6 @@
   errors = require('./errors');
 
   settings = require('./settings');
-
-
-  /**
-   * @ignore
-   */
-
-  nodeify = function(func) {
-    return function() {
-      return func.call.apply(func, [null, null].concat(__slice.call(arguments)));
-    };
-  };
 
 
   /**
@@ -119,16 +107,16 @@
     gitDirectory = exports.getGitDirectory(directory);
     return async.waterfall([
       function(callback) {
-        return fs.exists(directory, nodeify(callback));
-      }, function(exists, callback) {
-        var error;
-        if (exists) {
-          return callback();
-        }
-        error = new errors.ResinNoSuchDirectory(directory);
-        return callback(error);
+        return fs.exists(directory, function(exists) {
+          if (exists) {
+            return callback();
+          }
+          return callback(new errors.ResinNoSuchDirectory(directory));
+        });
       }, function(callback) {
-        return fsPlus.isDirectory(gitDirectory, nodeify(callback));
+        return fsPlus.isDirectory(gitDirectory, function(isDirectory) {
+          return callback(null, isDirectory);
+        });
       }
     ], callback);
   };
