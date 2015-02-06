@@ -76,8 +76,8 @@
    * by the server automatically.
    *
    * @param {Object} credentials - in the form of username, password
-   * @option credentials {String} username - the username
-   * @option credentials {String} password - user password
+   * @param {String} credentials.username - the username
+   * @param {String} credentials.password - the password
    * @param {module:resin.auth~authenticateCallback} callback - callback
    *
    * @example
@@ -115,8 +115,8 @@
    * This function saves the token to the directory configured in dataPrefix
    *
    * @param {Object} credentials - in the form of username, password
-   * @option credentials {String} username - the username
-   * @option credentials {String} password - user password
+   * @param {String} credentials.username - the username
+   * @param {String} credentials.password - the password
    * @param {module:resin.auth~loginCallback} callback - callback
    *
    * @example
@@ -246,9 +246,9 @@
    * @function
    *
    * @param {Object} [credentials={}] - in the form of username, password and email
-   * @option credentials {String} username - the username
-   * @option credentials {String} password - user password
-   * @option credentials {String} email - the user email
+   * @param {String} credentials.username - the username
+   * @param {String} credentials.password - the password
+   * @param {String} credentials.email - the email
    * @param {module:resin.auth~registerCallback} callback - callback
    *
    * @example
