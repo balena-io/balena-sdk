@@ -42,8 +42,6 @@ urlResolve = require('url').resolve
 #
 # @throws {Error} Will throw if no URL
 #
-# @todo This big function should be splitted to be better unit tested.
-#
 # @example
 #	resin.server.request {
 #		method: 'GET'
