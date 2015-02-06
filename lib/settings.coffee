@@ -28,6 +28,12 @@ settings =
 	# @member {String}
 	# @memberof resin.settings
 	###
+	tokenKey: 'token'
+
+	###*
+	# @member {String}
+	# @memberof resin.settings
+	###
 	dataPrefix: path.join(userHome, '.resin')
 
 	###*

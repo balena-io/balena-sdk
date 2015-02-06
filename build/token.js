@@ -5,16 +5,18 @@
  */
 
 (function() {
-  var TOKEN_KEY, data;
+  var TOKEN_KEY, data, settings;
 
   data = require('./data');
+
+  settings = require('./settings');
 
 
   /**
    * @ignore
    */
 
-  TOKEN_KEY = 'token';
+  TOKEN_KEY = settings.get('tokenKey');
 
 
   /**

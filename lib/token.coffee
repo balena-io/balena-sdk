@@ -4,13 +4,12 @@
 ###
 
 data = require('./data')
-
-# TODO: Move to settings
+settings = require('./settings')
 
 ###*
 # @ignore
 ###
-TOKEN_KEY = 'token'
+TOKEN_KEY = settings.get('tokenKey')
 
 ###*
 # saveToken callback
