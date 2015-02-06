@@ -26,6 +26,12 @@ Documentation
 
 Open [doc/](https://github.com/resin-io/resin-sdk/blob/master/doc) in a web browser to view a detailed documentation of the capabilities offered by the SDK. Notice this is a work in progress and we plan to host the documentation online soon.
 
+You can regenerate the documentation with:
+
+```sh
+$ gulp jsdoc
+```
+
 Tests
 -----
 
@@ -47,11 +53,13 @@ Before submitting a PR, please make sure that you include tests, and that [coffe
 $ gulp lint
 ```
 
-In order to get a nice development workflow where every asset is recompiled automatically on every change, the tests and the linter is ran and the documentation is regenerated, run:
+In order to get a nice development workflow where every asset is recompiled automatically on every change, the tests and the linter is ran, run:
 
 ```sh
 $ gulp watch
 ```
+
+Documentation is regenerated when releasing a new version, so if you decide to contribute, you don't need to worry about regenerating the documentation.
 
 Support
 -------
