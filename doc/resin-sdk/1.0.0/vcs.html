@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: vcs</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Module: vcs</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+        <span class="ancestors"><a href="resin.html">resin</a>.</span>
+    
+    vcs
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcs.js.html">vcs.js</a>, <a href="vcs.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="initProjectWithApplication"><span class="type-signature">&lt;static> </span>initProjectWithApplication<span class="signature">(application, directory, callback)</span><span class="type-signature"></span></h4>
+    
+    
+    <p class="summary">Initialize an application project</p>
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add the corresponding git remote.
+The directory should already be a git repo (maybe we should take care of git init as well here if necessary?)
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>application</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">an application from resin API</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>directory</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the directory to initialize</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.vcs.html#initProjectWithApplicationCallback">module:resin.vcs~initProjectWithApplicationCallback</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">callback</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcs.js.html">vcs.js</a>, <a href="vcs.js.html#line41">line 41</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>This function should be better tested</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>	resin.models.application.get 91, (error, application) ->
+		throw error if error?
+
+		resin.vcs.initProjectWithApplication application, 'my/new/project', (error) ->
+			throw error if error?</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isResinProject"><span class="type-signature">&lt;static> </span>isResinProject<span class="signature">(directory, callback)</span><span class="type-signature"></span></h4>
+    
+    
+    <p class="summary">Check if an application was already initialized</p>
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        It checks if we have a resin remote added already.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>directory</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the directory</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.vcs.html#isResinProjectCallback">module:resin.vcs~isResinProjectCallback</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">callback</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcs.js.html">vcs.js</a>, <a href="vcs.js.html#line72">line 72</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Find a way to test this function</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>	resin.vcs.isResinProject 'my/resin.app', (error, initialized) ->
+		if initialized
+			console.log('It\'s already a resin app!')
+		else
+			console.log('It\'s just a boring project! It should be resinified!')</code></pre>
+
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors.ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors.ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors.ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors.ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors.ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors.ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors.ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors.ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors.ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors.ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors.ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors.ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors.ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors.ResinNotAny.html">ResinNotAny</a></li><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Started.html">Getting Started</a></li></ul><h3>Global</h3><ul><li><a href="global.html#It checks if we have a resin remote added already.">It checks if we have a resin remote added already.</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Feb 06 2015 09:26:42 GMT-0400 (BOT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

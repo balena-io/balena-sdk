@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/os.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: models/os.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>
+/**
+ * @module resin.models.os
+ */
+
+(function() {
+  var OSParams, fs, server, settings, url;
+
+  url = require('url');
+
+  fs = require('fs');
+
+  server = require('../server');
+
+  settings = require('../settings');
+
+  OSParams = require('../os-params');
+
+
+  /**
+   * download callback
+   * @callback module:resin.models.os~downloadCallback
+   * @param {(Error|null)} error - error
+   * @param {Object} response - response
+   * @param {*} body - body
+   */
+
+
+  /**
+   * @summary Download an OS image
+   * @public
+   * @function
+   *
+   * @param {Object} parameters - os parameters
+   * @param {String} destination - destination path
+   * @param {module:resin.models.os~downloadCallback} callback - callback
+   * @param {Function} onProgress - on progress callback
+   *
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+   *
+   * @todo Find a way to test this
+   *
+   * @example
+   * parameters =
+   *		network: 'ethernet'
+   *		appId: 91
+   *
+   * resin.models.os.download parameters, '/opt/os.zip', (error) ->
+   *		throw error if error?
+   *	, (state) ->
+   *		return if not state?
+   *		console.log "Total: #{state.total}"
+   *		console.log "Received: #{state.received}"
+   */
+
+  exports.download = function(parameters, destination, callback, onProgress) {
+    var downloadUrl, query;
+    parameters = new OSParams(parameters);
+    query = url.format({
+      query: parameters
+    });
+    downloadUrl = url.resolve(settings.get('urls.download'), query);
+    return server.request({
+      method: 'GET',
+      url: downloadUrl,
+      pipe: fs.createWriteStream(destination)
+    }, callback, onProgress);
+  };
+
+
+  /**
+   * @summary Generate OS cache name
+   * @public
+   * @function
+   *
+   * @param {Object} parameters - os parameters
+   *
+   * @returns {String} generated os cache name
+   *
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+   *
+   * @example
+   * cacheName = resin.models.os.generateCacheName
+   *		network: 'ethernet'
+   *		appId: 91
+   */
+
+  exports.generateCacheName = function(osParams) {
+    var result;
+    osParams = new OSParams(osParams);
+    result = "" + osParams.appId + "-" + osParams.network;
+    if (osParams.wifiSsid != null) {
+      result += "-" + osParams.wifiSsid;
+    }
+    return "" + result + "-" + (Date.now());
+  };
+
+}).call(this);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="prefix.html">prefix</a></li><li><a href="application.html">application</a></li><li><a href="device.html">device</a></li><li><a href="environment-variables.html">environment-variables</a></li><li><a href="key.html">key</a></li><li><a href="os.html">os</a></li><li><a href="auth.html">auth</a></li><li><a href="data.html">data</a></li><li><a href="logs.html">logs</a></li><li><a href="progress-state.html">progress-state</a></li><li><a href="settings.html">settings</a></li><li><a href="vcs.html">vcs</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors.ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors.ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors.ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors.ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors.ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors.ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors.ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors.ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors.ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors.ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors.ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors.ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors.ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors.ResinNotAny.html">ResinNotAny</a></li><li><a href="ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#data">data</a></li><li><a href="resin.html#models">models</a></li><li><a href="resin.html#settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.keys.html">keys</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Started.html">Getting Started</a></li></ul><h3>Global</h3><ul><li><a href="global.html#It checks if we have a resin remote added already.">It checks if we have a resin remote added already.</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Feb 06 2015 09:26:40 GMT-0400 (BOT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

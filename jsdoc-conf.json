@@ -1,0 +1,26 @@
+{
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": [
+					"jsdoc",
+					"closure"
+				]
+    },
+    "source": {
+			"include": [
+				"./build",
+				"./package.json",
+				"README.md"
+			]
+    },
+    "plugins": [],
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+		"opts": {
+			"destination": "./doc",
+			"recurse": true,
+			"tutorials": "./tutorials"
+		}
+}

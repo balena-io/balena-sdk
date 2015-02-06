@@ -4,7 +4,7 @@ mocha = require('gulp-mocha')
 gutil = require('gulp-util')
 coffeelint = require('gulp-coffeelint')
 coffee = require('gulp-coffee')
-jsdoc = require('gulp-jsdoc')
+shell = require('gulp-shell')
 runSequence = require('run-sequence')
 packageJSON = require('./package.json')
 
@@ -17,6 +17,11 @@ OPTIONS =
 		app: 'lib/**/*.coffee'
 		tests: 'tests/**/*.spec.coffee'
 		javascript: 'build/**/*.js'
+		documentation: [
+			'build/**/*.js'
+			'README.md'
+			'tutorials/**/*.markdown'
+		]
 	directories:
 		doc: 'doc/'
 		build: 'build/'
@@ -27,14 +32,10 @@ gulp.task 'coffee', ->
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'jsdoc', [ 'coffee' ], ->
-	gulp.src([ OPTIONS.files.javascript, 'README.md' ])
-		.pipe(jsdoc.parser({
-			name: 'Resin SDK'
-			description: 'The SDK to make Resin.io powered JavaScript applications'
-			version: packageJSON.version
-			licenses: [ 'MIT' ]
-		}))
-		.pipe(jsdoc.generator(OPTIONS.directories.doc))
+	gulp.src(OPTIONS.files.documentation, read: false)
+		.pipe(shell([
+			'jsdoc -c jsdoc-conf.json'
+		]))
 
 gulp.task 'json', ->
 	gulp.src(OPTIONS.files.json)
