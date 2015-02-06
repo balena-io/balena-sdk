@@ -30,7 +30,7 @@ exports.ResinInvalidDeviceType = class ResinInvalidDeviceType extends TypedError
 		# @constant
 		# @default Invalid device type: this.type
 		###
-		@message = "Invalid device type: #{@type}"
+		super("Invalid device type: #{@type}")
 
 	###*
 	# @name code
@@ -78,7 +78,7 @@ exports.ResinMissingCredential = class ResinMissingCredential extends TypedError
 		# @constant
 		# @default Missing credential: this.credential
 		###
-		@message = "Missing credential: #{@credential}"
+		super("Missing credential: #{@credential}")
 
 	###*
 	# @name code
@@ -117,7 +117,7 @@ exports.ResinMissingDataPrefix = class ResinMissingDataPrefix extends TypedError
 		# @constant
 		# @default Did you forget to set a prefix?
 		###
-		@message = 'Did you forget to set a prefix?'
+		super('Did you forget to set a prefix?')
 
 	###*
 	# @name code
@@ -156,7 +156,7 @@ exports.ResinNoInternetConnection = class ResinNoInternetConnection extends Type
 		# @constant
 		# @default You need internet connection to perform this task
 		###
-		@message = 'You need internet connection to perform this task'
+		super('You need internet connection to perform this task')
 
 	###*
 	# @name code
@@ -223,10 +223,12 @@ exports.ResinInvalidOption = class ResinInvalidOption extends TypedError
 		# @constant
 		# @default Invalid option this.name: this.value. this.explanation.
 		###
-		@message = "Invalid option #{@name}: #{@value}"
+		message = "Invalid option #{@name}: #{@value}"
 
 		if @explanation?
-			@message += ". #{@explanation}."
+			message += ". #{@explanation}."
+
+		super(message)
 
 	###*
 	# @name code
@@ -275,7 +277,7 @@ exports.ResinMissingOption = class ResinMissingOption extends TypedError
 		# @constant
 		# @default Missing option: this.name
 		###
-		@message = "Missing option: #{@name}"
+		super("Missing option: #{@name}")
 
 	###*
 	# @name code
@@ -324,7 +326,7 @@ exports.ResinNonAllowedOption = class ResinNonAllowedOption extends TypedError
 		# @constant
 		# @default Non allowed option: this.name
 		###
-		@message = "Non allowed option: #{@name}"
+		super("Non allowed option: #{@name}")
 
 	###*
 	# @name code
@@ -391,10 +393,12 @@ exports.ResinInvalidParameter = class ResinInvalidParameter extends TypedError
 		# @constant
 		# @default Invalid parameter this.name: this.value. this.explanation.
 		###
-		@message = "Invalid parameter #{@name}: #{@value}"
+		message = "Invalid parameter #{@name}: #{@value}"
 
 		if @explanation?
-			@message += ". #{@explanation}."
+			message += ". #{@explanation}."
+
+		super(message)
 
 	###*
 	# @name code
@@ -443,7 +447,7 @@ exports.ResinMissingParameter = class ResinMissingParameter extends TypedError
 		# @constant
 		# @default Missing parameter: this.name
 		###
-		@message = "Missing parameter: #{@name}"
+		super("Missing parameter: #{@name}")
 
 	###*
 	# @name code
@@ -492,7 +496,7 @@ exports.ResinInvalidDataKey = class ResinInvalidDataKey extends TypedError
 		# @constant
 		# @default Invalid data key: this.key
 		###
-		@message = "Invalid data key: #{@key}"
+		super("Invalid data key: #{@key}")
 
 	###*
 	# @name code
@@ -541,7 +545,7 @@ exports.ResinInvalidPath = class ResinInvalidPath extends TypedError
 		# @constant
 		# @default Invalid path: this.path
 		###
-		@message = "Invalid path: #{@path}"
+		super("Invalid path: #{@path}")
 
 	###*
 	# @name code
@@ -590,7 +594,7 @@ exports.ResinNoSuchDirectory = class ResinNoSuchDirectory extends TypedError
 		# @constant
 		# @default No such directory: this.path
 		###
-		@message = "No such directory: #{@path}"
+		super("No such directory: #{@path}")
 
 	###*
 	# @name code
@@ -639,7 +643,7 @@ exports.ResinApplicationNotFound = class ResinApplicationNotFound extends TypedE
 		# @constant
 		# @default Application not found: this.id
 		###
-		@message = "Application not found: #{@id}"
+		super("Application not found: #{@id}")
 
 	###*
 	# @name code
@@ -688,7 +692,7 @@ exports.ResinDeviceNotFound = class ResinDeviceNotFound extends TypedError
 		# @constant
 		# @default Device not found: this.id
 		###
-		@message = "Device not found: #{@id}"
+		super("Device not found: #{@id}")
 
 	###*
 	# @name code
@@ -737,7 +741,7 @@ exports.ResinKeyNotFound = class ResinKeyNotFound extends TypedError
 		# @constant
 		# @default Key not found: this.id
 		###
-		@message = "Key not found: #{@id}"
+		super("Key not found: #{@id}")
 
 	###*
 	# @name code
@@ -786,7 +790,7 @@ exports.ResinRequestError = class ResinRequestError extends TypedError
 		# @constant
 		# @default Request error: this.body
 		###
-		@message = "Request error: #{@body}"
+		super("Request error: #{@body}")
 
 	###*
 	# @name code
@@ -835,7 +839,7 @@ exports.ResinInvalidApplication = class ResinInvalidApplication extends TypedErr
 		# @constant
 		# @default Invalid application: this.application
 		###
-		@message = "Invalid application: #{@application}"
+		super("Invalid application: #{@application}")
 
 	###*
 	# @name code
@@ -884,7 +888,7 @@ exports.ResinDirectoryNotGitRepository = class ResinDirectoryNotGitRepository ex
 		# @constant
 		# @default Invalid application: this.application
 		###
-		@message = "Directory is not a git repository: #{@directory}"
+		super("Directory is not a git repository: #{@directory}")
 
 	###*
 	# @name code
@@ -933,7 +937,7 @@ exports.ResinNotAny = class ResinNotAny extends TypedError
 		# @constant
 		# @default You don't have any this.resource
 		###
-		@message = "You don't have any #{@resource}"
+		super("You don't have any #{@resource}")
 
 	###*
 	# @name code

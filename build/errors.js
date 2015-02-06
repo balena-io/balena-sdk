@@ -42,7 +42,7 @@
       		 * @constant
       		 * @default Invalid device type: this.type
        */
-      this.message = "Invalid device type: " + this.type;
+      ResinInvalidDeviceType.__super__.constructor.call(this, "Invalid device type: " + this.type);
     }
 
 
@@ -105,7 +105,7 @@
       		 * @constant
       		 * @default Missing credential: this.credential
        */
-      this.message = "Missing credential: " + this.credential;
+      ResinMissingCredential.__super__.constructor.call(this, "Missing credential: " + this.credential);
     }
 
 
@@ -157,7 +157,7 @@
       		 * @constant
       		 * @default Did you forget to set a prefix?
        */
-      this.message = 'Did you forget to set a prefix?';
+      ResinMissingDataPrefix.__super__.constructor.call(this, 'Did you forget to set a prefix?');
     }
 
 
@@ -209,7 +209,7 @@
       		 * @constant
       		 * @default You need internet connection to perform this task
        */
-      this.message = 'You need internet connection to perform this task';
+      ResinNoInternetConnection.__super__.constructor.call(this, 'You need internet connection to perform this task');
     }
 
 
@@ -256,6 +256,7 @@
     __extends(ResinInvalidOption, _super);
 
     function ResinInvalidOption(name, value, explanation) {
+      var message;
       this.name = name;
       this.value = value;
       this.explanation = explanation;
@@ -292,10 +293,11 @@
       		 * @constant
       		 * @default Invalid option this.name: this.value. this.explanation.
        */
-      this.message = "Invalid option " + this.name + ": " + this.value;
+      message = "Invalid option " + this.name + ": " + this.value;
       if (this.explanation != null) {
-        this.message += ". " + this.explanation + ".";
+        message += ". " + this.explanation + ".";
       }
+      ResinInvalidOption.__super__.constructor.call(this, message);
     }
 
 
@@ -358,7 +360,7 @@
       		 * @constant
       		 * @default Missing option: this.name
        */
-      this.message = "Missing option: " + this.name;
+      ResinMissingOption.__super__.constructor.call(this, "Missing option: " + this.name);
     }
 
 
@@ -421,7 +423,7 @@
       		 * @constant
       		 * @default Non allowed option: this.name
        */
-      this.message = "Non allowed option: " + this.name;
+      ResinNonAllowedOption.__super__.constructor.call(this, "Non allowed option: " + this.name);
     }
 
 
@@ -468,6 +470,7 @@
     __extends(ResinInvalidParameter, _super);
 
     function ResinInvalidParameter(name, value, explanation) {
+      var message;
       this.name = name;
       this.value = value;
       this.explanation = explanation;
@@ -504,10 +507,11 @@
       		 * @constant
       		 * @default Invalid parameter this.name: this.value. this.explanation.
        */
-      this.message = "Invalid parameter " + this.name + ": " + this.value;
+      message = "Invalid parameter " + this.name + ": " + this.value;
       if (this.explanation != null) {
-        this.message += ". " + this.explanation + ".";
+        message += ". " + this.explanation + ".";
       }
+      ResinInvalidParameter.__super__.constructor.call(this, message);
     }
 
 
@@ -570,7 +574,7 @@
       		 * @constant
       		 * @default Missing parameter: this.name
        */
-      this.message = "Missing parameter: " + this.name;
+      ResinMissingParameter.__super__.constructor.call(this, "Missing parameter: " + this.name);
     }
 
 
@@ -633,7 +637,7 @@
       		 * @constant
       		 * @default Invalid data key: this.key
        */
-      this.message = "Invalid data key: " + this.key;
+      ResinInvalidDataKey.__super__.constructor.call(this, "Invalid data key: " + this.key);
     }
 
 
@@ -696,7 +700,7 @@
       		 * @constant
       		 * @default Invalid path: this.path
        */
-      this.message = "Invalid path: " + this.path;
+      ResinInvalidPath.__super__.constructor.call(this, "Invalid path: " + this.path);
     }
 
 
@@ -759,7 +763,7 @@
       		 * @constant
       		 * @default No such directory: this.path
        */
-      this.message = "No such directory: " + this.path;
+      ResinNoSuchDirectory.__super__.constructor.call(this, "No such directory: " + this.path);
     }
 
 
@@ -822,7 +826,7 @@
       		 * @constant
       		 * @default Application not found: this.id
        */
-      this.message = "Application not found: " + this.id;
+      ResinApplicationNotFound.__super__.constructor.call(this, "Application not found: " + this.id);
     }
 
 
@@ -885,7 +889,7 @@
       		 * @constant
       		 * @default Device not found: this.id
        */
-      this.message = "Device not found: " + this.id;
+      ResinDeviceNotFound.__super__.constructor.call(this, "Device not found: " + this.id);
     }
 
 
@@ -948,7 +952,7 @@
       		 * @constant
       		 * @default Key not found: this.id
        */
-      this.message = "Key not found: " + this.id;
+      ResinKeyNotFound.__super__.constructor.call(this, "Key not found: " + this.id);
     }
 
 
@@ -1011,7 +1015,7 @@
       		 * @constant
       		 * @default Request error: this.body
        */
-      this.message = "Request error: " + this.body;
+      ResinRequestError.__super__.constructor.call(this, "Request error: " + this.body);
     }
 
 
@@ -1074,7 +1078,7 @@
       		 * @constant
       		 * @default Invalid application: this.application
        */
-      this.message = "Invalid application: " + this.application;
+      ResinInvalidApplication.__super__.constructor.call(this, "Invalid application: " + this.application);
     }
 
 
@@ -1137,7 +1141,7 @@
       		 * @constant
       		 * @default Invalid application: this.application
        */
-      this.message = "Directory is not a git repository: " + this.directory;
+      ResinDirectoryNotGitRepository.__super__.constructor.call(this, "Directory is not a git repository: " + this.directory);
     }
 
 
@@ -1200,7 +1204,7 @@
       		 * @constant
       		 * @default You don't have any this.resource
        */
-      this.message = "You don't have any " + this.resource;
+      ResinNotAny.__super__.constructor.call(this, "You don't have any " + this.resource);
     }
 
 
