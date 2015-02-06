@@ -52,9 +52,15 @@ exports.authenticate = (options, callback) ->
 # @private
 ###
 
-# TODO: Find a way to test this
-# TODO: Throw error if no options.pipe
 exports.pipeRequest = (options, callback, onProgress) ->
+
+	if not options?
+		throw new errors.ResinMissingParameter('options')
+
+	if not options.pipe?
+		throw new errors.ResinMissingOption('pipe')
+
+	# TODO: Find a way to test this
 	progress(connection.request(options))
 		.on('progress', ProgressState.createFromNodeRequestProgress(onProgress))
 		.on('error', callback)

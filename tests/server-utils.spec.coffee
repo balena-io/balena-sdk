@@ -152,6 +152,22 @@ describe 'serverUtils:', ->
 					expect(error.message).to.equal('An Error')
 					done()
 
+	describe '.pipeRequest()', ->
+
+		describe 'if no options object', ->
+
+			it 'should throw an error', ->
+				expect ->
+					serverUtils.pipeRequest(null, _.noop, _.noop)
+				.to.throw('Missing parameter: options')
+
+		describe 'if no pipe option', ->
+
+			it 'should throw an error', ->
+				expect ->
+					serverUtils.pipeRequest({}, _.noop, _.noop)
+				.to.throw('Missing option: pipe')
+
 	describe '.sendRequest()', ->
 
 		describe 'if request threw error', ->

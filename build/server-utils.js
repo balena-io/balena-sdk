@@ -80,6 +80,12 @@
    */
 
   exports.pipeRequest = function(options, callback, onProgress) {
+    if (options == null) {
+      throw new errors.ResinMissingParameter('options');
+    }
+    if (options.pipe == null) {
+      throw new errors.ResinMissingOption('pipe');
+    }
     return progress(connection.request(options)).on('progress', ProgressState.createFromNodeRequestProgress(onProgress)).on('error', callback).pipe(options.pipe).on('error', callback).on('close', callback);
   };
 
