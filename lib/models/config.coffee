@@ -54,3 +54,27 @@ exports.getPubNubKeys = (callback) ->
 	exports.getAll (error, config) ->
 		return callback(error) if error?
 		return callback(null, config.pubnub)
+
+###*
+# getDeviceTypes callback
+# @callback module:resin.models.config~getDeviceTypes
+# @param {(Error|null)} error - error
+# @param {Object[]} deviceTypes - the device types
+###
+
+###*
+# @summary Get device types
+# @public
+# @function
+#
+# @param {module:resin.models.config~getDeviceTypes} callback - callback
+#
+# @example
+#	resin.models.config.getDeviceTypes (error, deviceTypes) ->
+#		throw error if error?
+#		console.log(deviceTypes)
+###
+exports.getDeviceTypes = (callback) ->
+	exports.getAll (error, config) ->
+		return callback(error) if error?
+		return callback(null, config.deviceTypes)

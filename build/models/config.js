@@ -75,4 +75,35 @@
     });
   };
 
+
+  /**
+   * getDeviceTypes callback
+   * @callback module:resin.models.config~getDeviceTypes
+   * @param {(Error|null)} error - error
+   * @param {Object[]} deviceTypes - the device types
+   */
+
+
+  /**
+   * @summary Get device types
+   * @public
+   * @function
+   *
+   * @param {module:resin.models.config~getDeviceTypes} callback - callback
+   *
+   * @example
+   *	resin.models.config.getDeviceTypes (error, deviceTypes) ->
+   *		throw error if error?
+   *		console.log(deviceTypes)
+   */
+
+  exports.getDeviceTypes = function(callback) {
+    return exports.getAll(function(error, config) {
+      if (error != null) {
+        return callback(error);
+      }
+      return callback(null, config.deviceTypes);
+    });
+  };
+
 }).call(this);
