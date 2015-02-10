@@ -43,4 +43,36 @@
     });
   };
 
+
+  /**
+   * getPubNubKeys callback
+   * @callback module:resin.models.config~getPubNubKeys
+   * @param {(Error|null)} error - error
+   * @param {Object} pubnubKeys - pubnub keys
+   */
+
+
+  /**
+   * @summary Get PubNub keys
+   * @public
+   * @function
+   *
+   * @param {module:resin.models.config~getPubNubKeys} callback - callback
+   *
+   * @example
+   *	resin.models.config.getPubNubKeys (error, pubnubKeys) ->
+   *		throw error if error?
+   *		console.log(pubnubKeys.subscribe_key)
+   *		console.log(pubnubKeys.publish_key)
+   */
+
+  exports.getPubNubKeys = function(callback) {
+    return exports.getAll(function(error, config) {
+      if (error != null) {
+        return callback(error);
+      }
+      return callback(null, config.pubnub);
+    });
+  };
+
 }).call(this);
