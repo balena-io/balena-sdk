@@ -1,0 +1,46 @@
+
+/**
+ * @module resin.models.config
+ */
+
+(function() {
+  var server, settings;
+
+  server = require('../server');
+
+  settings = require('../settings');
+
+
+  /**
+   * getAll callback
+   * @callback module:resin.models.config~getAllCallback
+   * @param {(Error|null)} error - error
+   * @param {Object} config - the configuration
+   */
+
+
+  /**
+   * @summary Get all configuration
+   * @public
+   * @function
+   *
+   * @param {module:resin.models.config~getAllCallback} callback - callback
+   *
+   * @example
+   *	resin.models.config.getAll (error, config) ->
+   *		throw error if error?
+   *		console.log(config)
+   */
+
+  exports.getAll = function(callback) {
+    var url;
+    url = settings.get('urls.config');
+    return server.get(url, function(error, response, config) {
+      if (error != null) {
+        return callback(error);
+      }
+      return callback(null, config);
+    });
+  };
+
+}).call(this);

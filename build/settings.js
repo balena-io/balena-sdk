@@ -150,6 +150,12 @@
       		 * @member {String}
       		 * @memberof resin.settings.urls
        */
+      config: '/config',
+
+      /**
+      		 * @member {String}
+      		 * @memberof resin.settings.urls
+       */
       signup: '/signup',
 
       /**

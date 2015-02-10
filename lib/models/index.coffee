@@ -32,3 +32,9 @@ module.exports =
 	# @see {@link module:resin.models.os}
 	###
 	os: require('./os')
+
+	###*
+	# @memberof resin.models
+	# @see {@link module:resin.models.config}
+	###
+	config: require('./config')
