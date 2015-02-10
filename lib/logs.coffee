@@ -6,6 +6,7 @@ _ = require('lodash-contrib')
 PubNub = require('pubnub')
 settings = require('./settings')
 errors = require('./errors')
+configModel = require('./models/config')
 
 ###*
 # subscribe callback
@@ -53,28 +54,33 @@ exports.subscribe = (uuid, options = {}, callback) ->
 		return callback(new errors.ResinInvalidOption('history', options.history))
 
 	pubnubOptions = settings.get('pubnub')
-	pubnub = PubNub.init(pubnubOptions)
 	channel = _.template(settings.get('events.deviceLogs'), { uuid })
 
-	# TODO: PubNub doesn't close the connection if using only history().
-	# Not even by using pubnub.unsubscribe(). The solution is to subscribe
-	# to the channel and fetch history + unsubscribe right afterwards.
-	# The following question might led to a response:
-	# http://stackoverflow.com/questions/25806223/how-to-close-a-pubnub-connection
+	configModel.getPubNubKeys (error, pubnubKeys) ->
+		return callback(error) if error?
 
-	return pubnub.subscribe
-		channel: channel
-		callback: (message) ->
-			return if not options.tail
-			callback(null, message)
-		error: _.unary(callback)
-		connect: ->
-			pubnub.history
-				count: options.history
-				channel: channel
-				error: _.unary(callback)
-				callback: (message) ->
-					if options.tail
-						return callback(null, _.first(message))
-					pubnub.unsubscribe { channel }, ->
-						return callback(null, _.first(message))
+		_.extend(pubnubKeys, pubnubOptions)
+		pubnub = PubNub.init(pubnubKeys)
+
+		# TODO: PubNub doesn't close the connection if using only history().
+		# Not even by using pubnub.unsubscribe(). The solution is to subscribe
+		# to the channel and fetch history + unsubscribe right afterwards.
+		# The following question might led to a response:
+		# http://stackoverflow.com/questions/25806223/how-to-close-a-pubnub-connection
+
+		return pubnub.subscribe
+			channel: channel
+			callback: (message) ->
+				return if not options.tail
+				callback(null, message)
+			error: _.unary(callback)
+			connect: ->
+				pubnub.history
+					count: options.history
+					channel: channel
+					error: _.unary(callback)
+					callback: (message) ->
+						if options.tail
+							return callback(null, _.first(message))
+						pubnub.unsubscribe { channel }, ->
+							return callback(null, _.first(message))

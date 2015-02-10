@@ -111,18 +111,6 @@
     pubnub: {
 
       /**
-      		 * @member {String}
-      		 * @memberof resin.settings.pubnub
-       */
-      subscribe_key: 'sub-c-bbc12eba-ce4a-11e3-9782-02ee2ddab7fe',
-
-      /**
-      		 * @member {String}
-      		 * @memberof resin.settings.pubnub
-       */
-      publish_key: 'pub-c-6cbce8db-bfd1-4fdf-a8c8-53671ae2b226',
-
-      /**
       		 * @member {Boolean}
       		 * @memberof resin.settings.pubnub
        */

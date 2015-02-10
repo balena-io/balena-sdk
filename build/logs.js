@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var PubNub, errors, settings, _;
+  var PubNub, configModel, errors, settings, _;
 
   _ = require('lodash-contrib');
 
@@ -13,6 +13,8 @@
   settings = require('./settings');
 
   errors = require('./errors');
+
+  configModel = require('./models/config');
 
 
   /**
@@ -54,7 +56,7 @@
    */
 
   exports.subscribe = function(uuid, options, callback) {
-    var channel, pubnub, pubnubOptions;
+    var channel, pubnubOptions;
     if (options == null) {
       options = {};
     }
@@ -66,36 +68,43 @@
       return callback(new errors.ResinInvalidOption('history', options.history));
     }
     pubnubOptions = settings.get('pubnub');
-    pubnub = PubNub.init(pubnubOptions);
     channel = _.template(settings.get('events.deviceLogs'), {
       uuid: uuid
     });
-    return pubnub.subscribe({
-      channel: channel,
-      callback: function(message) {
-        if (!options.tail) {
-          return;
-        }
-        return callback(null, message);
-      },
-      error: _.unary(callback),
-      connect: function() {
-        return pubnub.history({
-          count: options.history,
-          channel: channel,
-          error: _.unary(callback),
-          callback: function(message) {
-            if (options.tail) {
-              return callback(null, _.first(message));
-            }
-            return pubnub.unsubscribe({
-              channel: channel
-            }, function() {
-              return callback(null, _.first(message));
-            });
-          }
-        });
+    return configModel.getPubNubKeys(function(error, pubnubKeys) {
+      var pubnub;
+      if (error != null) {
+        return callback(error);
       }
+      _.extend(pubnubKeys, pubnubOptions);
+      pubnub = PubNub.init(pubnubKeys);
+      return pubnub.subscribe({
+        channel: channel,
+        callback: function(message) {
+          if (!options.tail) {
+            return;
+          }
+          return callback(null, message);
+        },
+        error: _.unary(callback),
+        connect: function() {
+          return pubnub.history({
+            count: options.history,
+            channel: channel,
+            error: _.unary(callback),
+            callback: function(message) {
+              if (options.tail) {
+                return callback(null, _.first(message));
+              }
+              return pubnub.unsubscribe({
+                channel: channel
+              }, function() {
+                return callback(null, _.first(message));
+              });
+            }
+          });
+        }
+      });
     });
   };
 
