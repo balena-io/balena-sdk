@@ -59,7 +59,7 @@ In order to get a nice development workflow where every asset is recompiled auto
 $ gulp watch
 ```
 
-Documentation is regenerated when releasing a new version, so if you decide to contribute, you don't need to worry about regenerating the documentation.
+Documentation is regenerated when releasing a new version, so if you decide to contribute, you don't need to worry about that.
 
 Support
 -------

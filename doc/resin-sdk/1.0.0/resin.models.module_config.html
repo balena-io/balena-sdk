@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ResinInvalidDataKey</title>
+    <title>JSDoc: Module: config</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: ResinInvalidDataKey</h1>
+    <h1 class="page-title">Module: config</h1>
 
     
 
@@ -28,13 +28,6 @@
 
 <header>
     
-        <h2>
-            <span class="ancestors"><a href="errors.html">errors</a>.</span>
-        
-        ResinInvalidDataKey
-        </h2>
-        
-    
 </header>
 
 <article>
@@ -42,17 +35,81 @@
     
         
 
+        
+
+
+<dl class="details">
+
     
 
-    <h4 class="name" id="ResinInvalidDataKey"><span class="type-signature">(protected) </span>new ResinInvalidDataKey<span class="signature">(key)</span><span class="type-signature"></span></h4>
+    
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_config.js.html">models/config.js</a>, <a href="models_config.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
-<div class="description">
-    An invalid data key error
-</div>
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getAll"><span class="type-signature">(static) </span>getAll<span class="signature">(callback)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Get all configuration</p>
+    
+
+
 
 
 
@@ -87,13 +144,13 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>callback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="module-resin.models.config.html#~getAllCallback">module:resin.models.config~getAllCallback</a></span>
 
 
             
@@ -103,7 +160,7 @@
 
             
 
-            <td class="description last">the invalid data key</td>
+            <td class="description last">callback</td>
         </tr>
 
     
@@ -144,7 +201,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="errors.js.html">errors.js</a>, <a href="errors.js.html#line609">line 609</a>
+        <a href="models_config.js.html">models/config.js</a>, <a href="models_config.js.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -169,187 +226,83 @@
 
 
 
-
+    <h5>Example</h5>
     
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="code"><span class="type-signature">(constant) </span>code<span class="type-signature"> :String</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">String</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>ResinInvalidDataKey</li>
-        </ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="errors.js.html">errors.js</a>, <a href="errors.js.html#line644">line 644</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
+    <pre class="prettyprint"><code>resin.models.config.getAll (error, config) ->
+		throw error if error?
+		console.log(config)</code></pre>
 
 
 
         
             
-<h4 class="name" id="exitCode"><span class="type-signature">(constant) </span>exitCode<span class="type-signature"> :Number</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
 
     
 
-    
+    <h4 class="name" id=".getDeviceTypes"><span class="type-signature">(static) </span>getDeviceTypes<span class="signature">(callback)</span><span class="type-signature"></span></h4>
 
     
-
+    <p class="summary">Get device types</p>
     
 
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
     
 
-    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>1</li>
-        </ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="errors.js.html">errors.js</a>, <a href="errors.js.html#line656">line 656</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<h4 class="name" id="key"><span class="type-signature">(constant) </span>key<span class="type-signature"> :String</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
+                <td class="name"><code>callback</code></td>
             
-<span class="param-type">String</span>
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.models.config.html#~getDeviceTypes">module:resin.models.config~getDeviceTypes</a></span>
 
 
-        </li>
-    </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -384,7 +337,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="errors.js.html">errors.js</a>, <a href="errors.js.html#line624">line 624</a>
+        <a href="models_config.js.html">models/config.js</a>, <a href="models_config.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -400,24 +353,92 @@
 
 
 
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>resin.models.config.getDeviceTypes (error, deviceTypes) ->
+		throw error if error?
+		console.log(deviceTypes)</code></pre>
+
+
+
         
             
-<h4 class="name" id="message"><span class="type-signature">(constant) </span>message<span class="type-signature"> :String</span></h4>
+
+    
+
+    <h4 class="name" id=".getPubNubKeys"><span class="type-signature">(static) </span>getPubNubKeys<span class="signature">(callback)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Get PubNub keys</p>
+    
 
 
 
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<span class="param-type">String</span>
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.models.config.html#~getPubNubKeys">module:resin.models.config~getPubNubKeys</a></span>
 
 
-        </li>
-    </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -448,16 +469,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>Invalid data key: this.key</li>
-        </ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="errors.js.html">errors.js</a>, <a href="errors.js.html#line632">line 632</a>
+        <a href="models_config.js.html">models/config.js</a>, <a href="models_config.js.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -473,9 +489,25 @@
 
 
 
-        
-    
 
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>resin.models.config.getPubNubKeys (error, pubnubKeys) ->
+		throw error if error?
+		console.log(pubnubKeys.subscribe_key)
+		console.log(pubnubKeys.publish_key)</code></pre>
+
+
+
+        
     
 
     

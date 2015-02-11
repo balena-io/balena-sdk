@@ -35,7 +35,7 @@
     "gulp-mocha": "~2.0.0",
     "gulp-shell": "^0.2.11",
     "gulp-util": "~3.0.1",
-    "jsdoc": "^3.3.0-beta1",
+    "jsdoc": "git+https://git@github.com/jsdoc3/jsdoc.git#releases/3.3",
     "mocha": "~2.0.1",
     "mock-fs": "~2.3.2",
     "nock": "~0.52.4",
