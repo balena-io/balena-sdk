@@ -163,21 +163,24 @@
    */
 
   exports.create = function(name, deviceType, callback) {
-    var slugifiedType;
-    slugifiedType = deviceModel.getDeviceSlug(deviceType);
-    if (slugifiedType === 'unknown') {
-      return callback(new errors.ResinInvalidDeviceType(deviceType));
-    }
-    return pine.post({
-      resource: 'application',
-      data: {
-        app_name: name,
-        device_type: slugifiedType
+    return deviceModel.getDeviceSlug(deviceType, function(error, deviceSlug) {
+      if (error != null) {
+        return callback(error);
       }
-    }).then(function(res) {
-      return callback(null, res.id);
-    })["catch"](function(error) {
-      return callback(error);
+      if (deviceSlug === 'unknown') {
+        return callback(new errors.ResinInvalidDeviceType(deviceType));
+      }
+      return pine.post({
+        resource: 'application',
+        data: {
+          app_name: name,
+          device_type: deviceSlug
+        }
+      }).then(function(res) {
+        return callback(null, res.id);
+      })["catch"](function(error) {
+        return callback(error);
+      });
     });
   };
 

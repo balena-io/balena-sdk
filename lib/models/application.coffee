@@ -113,24 +113,25 @@ exports.get = (id, callback) ->
 #		console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
-	slugifiedType = deviceModel.getDeviceSlug(deviceType)
+	deviceModel.getDeviceSlug deviceType, (error, deviceSlug) ->
+		return callback(error) if error?
 
-	# TODO: Detecting an unknown device type by comparing
-	# to this string looks like a terrible approach. Fix.
-	if slugifiedType is 'unknown'
-		return callback(new errors.ResinInvalidDeviceType(deviceType))
+		# TODO: Detecting an unknown device type by comparing
+		# to this string looks like a terrible approach. Fix.
+		if deviceSlug is 'unknown'
+			return callback(new errors.ResinInvalidDeviceType(deviceType))
 
-	return pine.post
-		resource: 'application'
-		data:
-			app_name: name
-			device_type: slugifiedType
+		return pine.post
+			resource: 'application'
+			data:
+				app_name: name
+				device_type: deviceSlug
 
-	.then (res) ->
-		return callback(null, res.id)
+		.then (res) ->
+			return callback(null, res.id)
 
-	.catch (error) ->
-		return callback(error)
+		.catch (error) ->
+			return callback(error)
 
 ###*
 # remove callback

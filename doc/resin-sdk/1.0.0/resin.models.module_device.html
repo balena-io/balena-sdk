@@ -563,7 +563,7 @@
 
     
 
-    <h4 class="name" id=".getDeviceSlug"><span class="type-signature">(static) </span>getDeviceSlug<span class="signature">(device)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    <h4 class="name" id=".getDeviceSlug"><span class="type-signature">(static) </span>getDeviceSlug<span class="signature">(deviceTypeName, callback)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary">Get device slug</p>
@@ -604,7 +604,7 @@
 
         <tr>
             
-                <td class="name"><code>device</code></td>
+                <td class="name"><code>deviceTypeName</code></td>
             
 
             <td class="type">
@@ -620,7 +620,30 @@
 
             
 
-            <td class="description last">device name</td>
+            <td class="description last">device type name</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.models.device.html#~getDeviceSlug">module:resin.models.device~getDeviceSlug</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback</td>
         </tr>
 
     
@@ -661,56 +684,44 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_device.js.html">models/device.js</a>, <a href="models_device.js.html#line379">line 379</a>
+        <a href="models_device.js.html">models/device.js</a>, <a href="models_device.js.html#line401">line 401</a>
     </li></ul></dd>
     
 
     
 
     
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    device slug or 'unknown'
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">String</span>
-
-
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:resin.models.device.getSupportedDeviceTypes for a list of supported devices</li>
+        </ul>
     </dd>
-</dl>
+    
 
     
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>console.log resin.models.device.getDeviceSlug('Raspberry Pi') # raspberry-pi</code></pre>
+    <pre class="prettyprint"><code>resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
+		throw error if error?
+		console.log(deviceTypeSlug)
+		# raspberry-pi</code></pre>
 
 
 
@@ -719,7 +730,7 @@
 
     
 
-    <h4 class="name" id=".getDisplayName"><span class="type-signature">(static) </span>getDisplayName<span class="signature">(device)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    <h4 class="name" id=".getDisplayName"><span class="type-signature">(static) </span>getDisplayName<span class="signature">(deviceTypeSlug, callback)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary">Get display name for a device</p>
@@ -760,7 +771,7 @@
 
         <tr>
             
-                <td class="name"><code>device</code></td>
+                <td class="name"><code>deviceTypeSlug</code></td>
             
 
             <td class="type">
@@ -776,7 +787,30 @@
 
             
 
-            <td class="description last">device name</td>
+            <td class="description last">device type slug</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.models.device.html#~getDisplayName">module:resin.models.device~getDisplayName</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback</td>
         </tr>
 
     
@@ -817,7 +851,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_device.js.html">models/device.js</a>, <a href="models_device.js.html#line352">line 352</a>
+        <a href="models_device.js.html">models/device.js</a>, <a href="models_device.js.html#line362">line 362</a>
     </li></ul></dd>
     
 
@@ -847,34 +881,14 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    device display name or 'Unknown'
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">String</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>console.log resin.models.device.getDisplayName('raspberry-pi') # Raspberry Pi
-	console.log resin.models.device.getDisplayName('rpi') # Raspberry Pi</code></pre>
+    <pre class="prettyprint"><code>resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
+		throw error if error?
+		console.log(deviceTypeName)
+		# Raspberry Pi</code></pre>
 
 
 
@@ -883,10 +897,10 @@
 
     
 
-    <h4 class="name" id=".getSupportedDeviceTypes"><span class="type-signature">(static) </span>getSupportedDeviceTypes<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;String>}</span></h4>
+    <h4 class="name" id=".getSupportedDeviceTypes"><span class="type-signature">(static) </span>getSupportedDeviceTypes<span class="signature">(callback)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary">Get a list of supported device types</p>
+    <p class="summary">Get supported device types</p>
     
 
 
@@ -897,6 +911,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-resin.models.device.html#~getSupportedDeviceTypes">module:resin.models.device~getSupportedDeviceTypes</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -932,7 +995,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_device.js.html">models/device.js</a>, <a href="models_device.js.html#line398">line 398</a>
+        <a href="models_device.js.html">models/device.js</a>, <a href="models_device.js.html#line438">line 438</a>
     </li></ul></dd>
     
 
@@ -955,34 +1018,15 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    a list of all supported devices, by their display names
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;String></span>
-
-
-    </dd>
-</dl>
-
-    
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>devices = resin.models.device.getSupportedDevicesTypes()
-	console.log(devices)</code></pre>
+    <pre class="prettyprint"><code>resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
+		throw error if error?
+
+		for supportedDeviceType in supportedDeviceTypes
+			console.log("Resin supports: #{supportedDeviceType}")</code></pre>
 
 
 

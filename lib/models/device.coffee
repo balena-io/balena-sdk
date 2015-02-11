@@ -7,7 +7,7 @@ _ = require('lodash-contrib')
 errors = require('../errors')
 server = require('../server')
 settings = require('../settings')
-DEVICES = require('./device-data.json')
+configModel = require('./config')
 
 ###*
 # A Resin API device
@@ -280,53 +280,87 @@ exports.isValidUUID = (uuid, callback = _.noop) ->
 		return callback(null, uuidExists)
 
 ###*
+# getDisplayName callback
+# @callback module:resin.models.device~getDisplayName
+# @param {(Error|null)} error - error
+# @param {String} deviceTypeName - the device type display name or 'Unknown'
+###
+
+###*
 # @summary Get display name for a device
 # @public
 # @function
 #
 # @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
 #
-# @param {String} device - device name
-# @returns {String} device display name or 'Unknown'
+# @param {String} deviceTypeSlug - device type slug
+# @param {module:resin.models.device~getDisplayName} callback - callback
 #
 # @example
-#	console.log resin.models.device.getDisplayName('raspberry-pi') # Raspberry Pi
-#	console.log resin.models.device.getDisplayName('rpi') # Raspberry Pi
+# resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
+#		throw error if error?
+#		console.log(deviceTypeName)
+#		# Raspberry Pi
 ###
-exports.getDisplayName = (device) ->
-	if _.indexOf(exports.getSupportedDeviceTypes(), device) isnt -1
-		return device
+exports.getDisplayName = (deviceTypeSlug, callback) ->
+	configModel.getDeviceTypes (error, deviceTypes) ->
+		return callback(error) if error?
 
-	for key, value of DEVICES
-		if _.indexOf(value.names, device) isnt -1
-			return key
-	return 'Unknown'
+		deviceTypeFound = _.findWhere(deviceTypes, slug: deviceTypeSlug)
+		return callback(null, deviceTypeFound?.name or 'Unknown')
+
+###*
+# getDeviceSlug callback
+# @callback module:resin.models.device~getDeviceSlug
+# @param {(Error|null)} error - error
+# @param {String} deviceTypeSlug - the device type slug or 'unknown'
+###
 
 ###*
 # @summary Get device slug
 # @public
 # @function
 #
-# @param {String} device - device name
-# @returns {String} device slug or 'unknown'
+# @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
+#
+# @param {String} deviceTypeName - device type name
+# @param {module:resin.models.device~getDeviceSlug} callback - callback
 #
 # @example
-#	console.log resin.models.device.getDeviceSlug('Raspberry Pi') # raspberry-pi
+# resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
+#		throw error if error?
+#		console.log(deviceTypeSlug)
+#		# raspberry-pi
 ###
-exports.getDeviceSlug = (device) ->
-	displayName = exports.getDisplayName(device)
-	return DEVICES[displayName]?.slug or 'unknown'
+exports.getDeviceSlug = (deviceTypeName, callback) ->
+	configModel.getDeviceTypes (error, deviceTypes) ->
+		return callback(error) if error?
+
+		deviceFound = _.findWhere(deviceTypes, name: deviceTypeName)
+		return callback(null, deviceFound?.slug or 'unknown')
 
 ###*
-# @summary Get a list of supported device types
+# getSupportedDeviceTypes callback
+# @callback module:resin.models.device~getSupportedDeviceTypes
+# @param {(Error|null)} error - error
+# @param {String[]} supportedDeviceTypes - a list of supported device types by name
+###
+
+###*
+# @summary Get supported device types
 # @public
 # @function
 #
-# @returns {String[]} a list of all supported devices, by their display names
+# @param {module:resin.models.device~getSupportedDeviceTypes} callback - callback
 #
 # @example
-#	devices = resin.models.device.getSupportedDevicesTypes()
-#	console.log(devices)
+# resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
+#		throw error if error?
+#
+#		for supportedDeviceType in supportedDeviceTypes
+#			console.log("Resin supports: #{supportedDeviceType}")
 ###
-exports.getSupportedDeviceTypes = ->
-	return _.keys(DEVICES)
+exports.getSupportedDeviceTypes = (callback) ->
+	configModel.getDeviceTypes (error, deviceTypes) ->
+		return callback(error) if error?
+		return callback(null, _.pluck(deviceTypes, 'name'))
