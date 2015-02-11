@@ -139,7 +139,7 @@
       if (error != null) {
         return callback(error);
       }
-      if (deviceSlug === 'unknown') {
+      if (deviceSlug == null) {
         return callback(new errors.ResinInvalidDeviceType(deviceType));
       }
       return pine.post({

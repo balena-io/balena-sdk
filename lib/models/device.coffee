@@ -283,7 +283,7 @@ exports.isValidUUID = (uuid, callback = _.noop) ->
 # getDisplayName callback
 # @callback module:resin.models.device~getDisplayName
 # @param {(Error|null)} error - error
-# @param {String} deviceTypeName - the device type display name or 'Unknown'
+# @param {String|Undefined} deviceTypeName - the device type display name or undefined
 ###
 
 ###*
@@ -307,13 +307,13 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 		return callback(error) if error?
 
 		deviceTypeFound = _.findWhere(deviceTypes, slug: deviceTypeSlug)
-		return callback(null, deviceTypeFound?.name or 'Unknown')
+		return callback(null, deviceTypeFound?.name)
 
 ###*
 # getDeviceSlug callback
 # @callback module:resin.models.device~getDeviceSlug
 # @param {(Error|null)} error - error
-# @param {String} deviceTypeSlug - the device type slug or 'unknown'
+# @param {String|Undefined} deviceTypeSlug - the device type slug or undefined
 ###
 
 ###*
@@ -337,7 +337,7 @@ exports.getDeviceSlug = (deviceTypeName, callback) ->
 		return callback(error) if error?
 
 		deviceFound = _.findWhere(deviceTypes, name: deviceTypeName)
-		return callback(null, deviceFound?.slug or 'unknown')
+		return callback(null, deviceFound?.slug)
 
 ###*
 # getSupportedDeviceTypes callback

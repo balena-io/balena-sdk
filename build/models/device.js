@@ -338,7 +338,7 @@
    * getDisplayName callback
    * @callback module:resin.models.device~getDisplayName
    * @param {(Error|null)} error - error
-   * @param {String} deviceTypeName - the device type display name or 'Unknown'
+   * @param {String|Undefined} deviceTypeName - the device type display name or undefined
    */
 
 
@@ -368,7 +368,7 @@
       deviceTypeFound = _.findWhere(deviceTypes, {
         slug: deviceTypeSlug
       });
-      return callback(null, (deviceTypeFound != null ? deviceTypeFound.name : void 0) || 'Unknown');
+      return callback(null, deviceTypeFound != null ? deviceTypeFound.name : void 0);
     });
   };
 
@@ -377,7 +377,7 @@
    * getDeviceSlug callback
    * @callback module:resin.models.device~getDeviceSlug
    * @param {(Error|null)} error - error
-   * @param {String} deviceTypeSlug - the device type slug or 'unknown'
+   * @param {String|Undefined} deviceTypeSlug - the device type slug or undefined
    */
 
 
@@ -407,7 +407,7 @@
       deviceFound = _.findWhere(deviceTypes, {
         name: deviceTypeName
       });
-      return callback(null, (deviceFound != null ? deviceFound.slug : void 0) || 'unknown');
+      return callback(null, deviceFound != null ? deviceFound.slug : void 0);
     });
   };
 
