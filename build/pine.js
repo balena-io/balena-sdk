@@ -7,7 +7,7 @@
 
   Promise = require('bluebird');
 
-  PinejsClientCore = require('pinejs-client-js')(_, Promise);
+  PinejsClientCore = require('pinejs-client/core')(_, Promise);
 
   settings = require('./settings');
 
@@ -27,14 +27,14 @@
     	 * @summary Trigger a request to the resin.io API
     	 * @private
     	 *
-    	 * @description Makes use of [pinejs-client-js](https://bitbucket.org/rulemotion/pinejs-client-js)
+    	 * @description Makes use of [pinejs-client-js](https://github.com/resin-io/pinejs-client-js)
     	 * You shouldn't make use of this method directly, but through models
     	 *
     	 * @param {Object} params - request params (same as node-request params)
      */
 
     PinejsClientRequest.prototype._request = function(params) {
-      params.json = params.data;
+      params.json = true;
       if (params.gzip == null) {
         params.gzip = true;
       }

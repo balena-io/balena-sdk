@@ -71,16 +71,11 @@ exports.getAllByApplication = (applicationId, callback) ->
 exports.create = (applicationId, name, value, callback) ->
 	return pine.post
 		resource: 'environment_variable'
-		data:
+		body:
 			name: name
 			value: value
 			application: applicationId
-
-	.then ->
-		return callback()
-
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # update callback
@@ -105,14 +100,9 @@ exports.update = (id, value, callback) ->
 	return pine.patch
 		resource: 'environment_variable'
 		id: id
-		data:
+		body:
 			value: value
-
-	.then ->
-		return callback()
-
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # remove callback
@@ -136,10 +126,7 @@ exports.remove = (id, callback) ->
 	return pine.delete
 		resource: 'environment_variable'
 		id: id
-	.then ->
-		return callback()
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # @summary Check is a variable is system specific

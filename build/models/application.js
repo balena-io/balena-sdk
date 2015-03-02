@@ -55,20 +55,17 @@
       }
     }).then(function(applications) {
       if (_.isEmpty(applications)) {
-        return callback(new errors.ResinNotAny('applications'));
+        throw new errors.ResinNotAny('applications');
       }
-      applications = _.map(applications, function(application) {
-        var _ref;
-        application.online_devices = _.where(application.device, {
-          is_online: 1
-        }).length;
-        application.devices_length = ((_ref = application.device) != null ? _ref.length : void 0) || 0;
-        return application;
-      });
-      return callback(null, applications);
-    })["catch"](function(error) {
-      return callback(error);
-    });
+      return applications;
+    }).map(function(application) {
+      var _ref;
+      application.online_devices = _.where(application.device, {
+        is_online: 1
+      }).length;
+      application.devices_length = ((_ref = application.device) != null ? _ref.length : void 0) || 0;
+      return application;
+    }).nodeify(callback);
   };
 
 
@@ -98,13 +95,14 @@
     return pine.get({
       resource: 'application',
       id: id
-    }).then(function(application) {
+    }).nodeify(function(error, application) {
+      if (error != null) {
+        return callback(error);
+      }
       if (application == null) {
         return callback(new errors.ResinApplicationNotFound(id));
       }
       return callback(null, application);
-    })["catch"](function(error) {
-      return callback(error);
     });
   };
 
@@ -144,15 +142,11 @@
       }
       return pine.post({
         resource: 'application',
-        data: {
+        body: {
           app_name: name,
           device_type: deviceSlug
         }
-      }).then(function(res) {
-        return callback(null, res.id);
-      })["catch"](function(error) {
-        return callback(error);
-      });
+      }).get('id').nodeify(callback);
     });
   };
 
@@ -181,11 +175,7 @@
     return pine["delete"]({
       resource: 'application',
       id: id
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 

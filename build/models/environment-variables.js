@@ -86,16 +86,12 @@
   exports.create = function(applicationId, name, value, callback) {
     return pine.post({
       resource: 'environment_variable',
-      data: {
+      body: {
         name: name,
         value: value,
         application: applicationId
       }
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 
@@ -124,14 +120,10 @@
     return pine.patch({
       resource: 'environment_variable',
       id: id,
-      data: {
+      body: {
         value: value
       }
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 
@@ -159,11 +151,7 @@
     return pine["delete"]({
       resource: 'environment_variable',
       id: id
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 

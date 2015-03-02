@@ -53,7 +53,7 @@
     "lodash": "~2.4.1",
     "lodash-contrib": "~241.4.14",
     "mkdirp": "~0.5.0",
-    "pinejs-client-js": "git+ssh://git@bitbucket.org/rulemotion/pinejs-client-js.git",
+    "pinejs-client": "^1.0.0",
     "pubnub": "^3.7.7",
     "request": "~2.51.0",
     "request-progress": "~0.3.1",
