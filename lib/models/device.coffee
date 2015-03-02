@@ -39,14 +39,13 @@ exports.getAll = (callback) ->
 		options:
 			expand: 'application'
 			orderby: 'name asc'
-	.then (devices) ->
+	.nodeify (error, devices) ->
+		return callback(error) if error?
+
 		if _.isEmpty(devices)
 			return callback(new errors.ResinNotAny('devices'))
 
 		return callback(null, devices)
-
-	.catch (error) ->
-		return callback(error)
 
 ###*
 # getAllByApplication callback
@@ -76,7 +75,9 @@ exports.getAllByApplication = (applicationId, callback) ->
 				application: applicationId
 			expand: 'application'
 			orderby: 'name asc'
-	.then (devices) ->
+	.nodeify (error, devices) ->
+		return callback(error) if error?
+
 		if _.isEmpty(devices)
 			return callback(new errors.ResinNotAny('devices'))
 
@@ -86,9 +87,6 @@ exports.getAllByApplication = (applicationId, callback) ->
 			return device
 
 		return callback(null, devices)
-
-	.catch (error) ->
-		return callback(error)
 
 ###*
 # get callback
@@ -116,8 +114,9 @@ exports.get = (deviceId, callback) ->
 		id: deviceId
 		options:
 			expand: 'application'
+	.nodeify (error, device) ->
+		return callback(error) if error?
 
-	.then (device) ->
 		if not device?
 			return callback(new errors.ResinDeviceNotFound(id))
 
@@ -125,9 +124,6 @@ exports.get = (deviceId, callback) ->
 		device.application_name = device.application[0].app_name
 
 		return callback(null, device)
-
-	.catch (error) ->
-		return callback(error)
 
 ###*
 # remove callback
@@ -151,10 +147,7 @@ exports.remove = (id, callback) ->
 	return pine.delete
 		resource: 'device'
 		id: id
-	.then ->
-		return callback()
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # identify callback
@@ -205,14 +198,9 @@ exports.rename = (id, name, callback) ->
 	return pine.patch
 		resource: 'device'
 		id: id
-		data:
+		body:
 			name: name
-
-	.then ->
-		return callback()
-
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # note callback
@@ -238,14 +226,9 @@ exports.note = (id, note, callback) ->
 	return pine.patch
 		resource: 'device'
 		id: id
-		data:
+		body:
 			note: note
-
-	.then ->
-		return callback()
-
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # isValidUUID callback

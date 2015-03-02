@@ -53,13 +53,14 @@
         expand: 'application',
         orderby: 'name asc'
       }
-    }).then(function(devices) {
+    }).nodeify(function(error, devices) {
+      if (error != null) {
+        return callback(error);
+      }
       if (_.isEmpty(devices)) {
         return callback(new errors.ResinNotAny('devices'));
       }
       return callback(null, devices);
-    })["catch"](function(error) {
-      return callback(error);
     });
   };
 
@@ -96,7 +97,10 @@
         expand: 'application',
         orderby: 'name asc'
       }
-    }).then(function(devices) {
+    }).nodeify(function(error, devices) {
+      if (error != null) {
+        return callback(error);
+      }
       if (_.isEmpty(devices)) {
         return callback(new errors.ResinNotAny('devices'));
       }
@@ -105,8 +109,6 @@
         return device;
       });
       return callback(null, devices);
-    })["catch"](function(error) {
-      return callback(error);
     });
   };
 
@@ -140,14 +142,15 @@
       options: {
         expand: 'application'
       }
-    }).then(function(device) {
+    }).nodeify(function(error, device) {
+      if (error != null) {
+        return callback(error);
+      }
       if (device == null) {
         return callback(new errors.ResinDeviceNotFound(id));
       }
       device.application_name = device.application[0].app_name;
       return callback(null, device);
-    })["catch"](function(error) {
-      return callback(error);
     });
   };
 
@@ -176,11 +179,7 @@
     return pine["delete"]({
       resource: 'device',
       id: id
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 
@@ -241,14 +240,10 @@
     return pine.patch({
       resource: 'device',
       id: id,
-      data: {
+      body: {
         name: name
       }
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 
@@ -278,14 +273,10 @@
     return pine.patch({
       resource: 'device',
       id: id,
-      data: {
+      body: {
         note: note
       }
-    }).then(function() {
-      return callback();
-    })["catch"](function(error) {
-      return callback(error);
-    });
+    }).nodeify(callback);
   };
 
 

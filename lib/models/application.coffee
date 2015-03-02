@@ -39,21 +39,20 @@ exports.getAll = (callback) ->
 		options:
 			orderby: 'app_name asc'
 			expand: 'device'
+
 	.then (applications) ->
 		if _.isEmpty(applications)
-			return callback(new errors.ResinNotAny('applications'))
+			throw new errors.ResinNotAny('applications')
+		return applications
 
-		# TODO: It might be worth to do all these handy
-		# manipulations server side directly.
-		applications = _.map applications, (application) ->
-			application.online_devices = _.where(application.device, is_online: 1).length
-			application.devices_length = application.device?.length or 0
-			return application
+	# TODO: It might be worth to do all these handy
+	# manipulations server side directly.
+	.map (application) ->
+		application.online_devices = _.where(application.device, is_online: 1).length
+		application.devices_length = application.device?.length or 0
+		return application
 
-		return callback(null, applications)
-
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # get callback
@@ -79,15 +78,13 @@ exports.get = (id, callback) ->
 	return pine.get
 		resource: 'application'
 		id: id
+	.nodeify (error, application) ->
+		return callback(error) if error?
 
-	.then (application) ->
 		if not application?
 			return callback(new errors.ResinApplicationNotFound(id))
 
 		return callback(null, application)
-
-	.catch (error) ->
-		return callback(error)
 
 ###*
 # create callback
@@ -121,15 +118,11 @@ exports.create = (name, deviceType, callback) ->
 
 		return pine.post
 			resource: 'application'
-			data:
+			body:
 				app_name: name
 				device_type: deviceSlug
-
-		.then (res) ->
-			return callback(null, res.id)
-
-		.catch (error) ->
-			return callback(error)
+		.get('id')
+		.nodeify(callback)
 
 ###*
 # remove callback
@@ -153,10 +146,7 @@ exports.remove = (id, callback) ->
 	return pine.delete
 		resource: 'application'
 		id: id
-	.then ->
-		return callback()
-	.catch (error) ->
-		return callback(error)
+	.nodeify(callback)
 
 ###*
 # restart callback
