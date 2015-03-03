@@ -16,7 +16,7 @@ settings =
 	# @member {String}
 	# @memberof resin.settings
 	###
-	remoteUrl: 'https://staging.resin.io'
+	remoteUrl: 'https://dashboard.resin.io'
 
 	###*
 	# @member {String}
