@@ -41,12 +41,9 @@ exports.getAllByApplication = (applicationId, callback) ->
 
 	.then (environmentVariables) ->
 		if _.isEmpty(environmentVariables)
-			return callback(new errors.ResinNotAny('environment variables'))
-
-		return callback(null, environmentVariables)
-
-	.catch (error) ->
-		return callback(error)
+			throw new errors.ResinNotAny('environment variables')
+		return environmentVariables
+	.nodeify(callback)
 
 ###*
 # create callback

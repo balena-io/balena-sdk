@@ -39,13 +39,11 @@ exports.getAll = (callback) ->
 		options:
 			expand: 'application'
 			orderby: 'name asc'
-	.nodeify (error, devices) ->
-		return callback(error) if error?
-
+	.then (devices) ->
 		if _.isEmpty(devices)
-			return callback(new errors.ResinNotAny('devices'))
-
-		return callback(null, devices)
+			throw new errors.ResinNotAny('devices')
+		return devices
+	.nodeify(callback)
 
 ###*
 # getAllByApplication callback
@@ -75,18 +73,17 @@ exports.getAllByApplication = (applicationId, callback) ->
 				application: applicationId
 			expand: 'application'
 			orderby: 'name asc'
-	.nodeify (error, devices) ->
-		return callback(error) if error?
-
+	.then (devices) ->
 		if _.isEmpty(devices)
-			return callback(new errors.ResinNotAny('devices'))
+			throw new errors.ResinNotAny('devices')
+		return devices
 
-		# TODO: Move to server
-		devices = _.map devices, (device) ->
-			device.application_name = device.application[0].app_name
-			return device
+	# TODO: Move to server
+	.map (device) ->
+		device.application_name = device.application[0].app_name
+		return device
 
-		return callback(null, devices)
+	.nodeify(callback)
 
 ###*
 # get callback
@@ -114,16 +111,15 @@ exports.get = (deviceId, callback) ->
 		id: deviceId
 		options:
 			expand: 'application'
-	.nodeify (error, device) ->
-		return callback(error) if error?
-
+	.then (device) ->
 		if not device?
-			return callback(new errors.ResinDeviceNotFound(id))
+			throw new errors.ResinDeviceNotFound(deviceId)
 
 		# TODO: Move to server
 		device.application_name = device.application[0].app_name
 
-		return callback(null, device)
+		return device
+	.nodeify(callback)
 
 ###*
 # remove callback

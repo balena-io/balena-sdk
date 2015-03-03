@@ -53,15 +53,12 @@
         expand: 'application',
         orderby: 'name asc'
       }
-    }).nodeify(function(error, devices) {
-      if (error != null) {
-        return callback(error);
-      }
+    }).then(function(devices) {
       if (_.isEmpty(devices)) {
-        return callback(new errors.ResinNotAny('devices'));
+        throw new errors.ResinNotAny('devices');
       }
-      return callback(null, devices);
-    });
+      return devices;
+    }).nodeify(callback);
   };
 
 
@@ -97,19 +94,15 @@
         expand: 'application',
         orderby: 'name asc'
       }
-    }).nodeify(function(error, devices) {
-      if (error != null) {
-        return callback(error);
-      }
+    }).then(function(devices) {
       if (_.isEmpty(devices)) {
-        return callback(new errors.ResinNotAny('devices'));
+        throw new errors.ResinNotAny('devices');
       }
-      devices = _.map(devices, function(device) {
-        device.application_name = device.application[0].app_name;
-        return device;
-      });
-      return callback(null, devices);
-    });
+      return devices;
+    }).map(function(device) {
+      device.application_name = device.application[0].app_name;
+      return device;
+    }).nodeify(callback);
   };
 
 
@@ -142,16 +135,13 @@
       options: {
         expand: 'application'
       }
-    }).nodeify(function(error, device) {
-      if (error != null) {
-        return callback(error);
-      }
+    }).then(function(device) {
       if (device == null) {
-        return callback(new errors.ResinDeviceNotFound(id));
+        throw new errors.ResinDeviceNotFound(deviceId);
       }
       device.application_name = device.application[0].app_name;
-      return callback(null, device);
-    });
+      return device;
+    }).nodeify(callback);
   };
 
 

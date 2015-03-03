@@ -95,15 +95,12 @@
     return pine.get({
       resource: 'application',
       id: id
-    }).nodeify(function(error, application) {
-      if (error != null) {
-        return callback(error);
-      }
+    }).then(function(application) {
       if (application == null) {
-        return callback(new errors.ResinApplicationNotFound(id));
+        throw new errors.ResinApplicationNotFound(id);
       }
-      return callback(null, application);
-    });
+      return application;
+    }).nodeify(callback);
   };
 
 

@@ -78,13 +78,11 @@ exports.get = (id, callback) ->
 	return pine.get
 		resource: 'application'
 		id: id
-	.nodeify (error, application) ->
-		return callback(error) if error?
-
+	.then (application) ->
 		if not application?
-			return callback(new errors.ResinApplicationNotFound(id))
-
-		return callback(null, application)
+			throw new errors.ResinApplicationNotFound(id)
+		return application
+	.nodeify(callback)
 
 ###*
 # create callback
