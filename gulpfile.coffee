@@ -57,10 +57,7 @@ gulp.task 'lint', ->
 gulp.task 'build', (callback) ->
 	runSequence([
 		'lint'
-
-		# Disable test on build until _stream_duplex issue is fixed:
-		# https://github.com/iojs/readable-stream/issues/119
-		# 'test'
+		'test'
 	], [ 'json', 'coffee' ], callback)
 
 gulp.task 'watch', [ 'build' ], ->
