@@ -25,15 +25,15 @@
    * @protected
    * @function
    * @protected
-   *
+  #
    * @description A wrapper around isOnline in order to be able to stub it with Sinon
-   *
+  #
    * @param {module:resin.connection~isOnlineCallback} callback - callback
-   *
+  #
    * @example
    * connection.isOnline (error, isOnline) ->
-   *		throw error if error?
-   *		console.log "Online? #{isOnline}"
+  #		throw error if error?
+  #		console.log "Online? #{isOnline}"
    */
 
   exports.isOnline = isOnline;
@@ -52,9 +52,9 @@
    * @protected
    * @function
    * @protected
-   *
+  #
    * @description A wrapper around request in order to be able to stub it with Sinon
-   *
+  #
    * @param {module:resin.connection~requestCallback} callback - callback
    */
 

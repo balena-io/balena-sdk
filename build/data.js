@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var constructPath, errors, fs, haltIfNoPrefix, path, rimraf, _;
+  var _, constructPath, errors, fs, haltIfNoPrefix, path, rimraf;
 
   _ = require('lodash');
 
@@ -72,25 +72,25 @@
    * @summary Get data by key
    * @public
    * @function
-   *
+  #
    * @description We call "data" to the information saved by the application in order to work properly.
    * Examples of data are the token, cached downloads and much more.
-   *
+  #
    * @param {String} key - path relative to dataPrefix
    * @param {Object} options - node fs options for when reading the resource
    * @param {module:resin.data~getCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.data.get 'token', encoding: 'utf8', (error, token) ->
-   *		throw error if error?
-   *		console.log(token)
-   *
-   *	@example
-   *	# Note: You should use the appropriate path.sep for your os
-   *	# http://nodejs.org/api/path.html#path_path_sep
-   *	resin.data.get 'my/nested/token', encoding: 'utf8', (error, token) ->
-   *		throw error if error?
-   *		console.log(token)
+  #	resin.data.get 'token', encoding: 'utf8', (error, token) ->
+  #		throw error if error?
+  #		console.log(token)
+  #
+  #	@example
+  #	# Note: You should use the appropriate path.sep for your os
+  #	# http://nodejs.org/api/path.html#path_path_sep
+  #	resin.data.get 'my/nested/token', encoding: 'utf8', (error, token) ->
+  #		throw error if error?
+  #		console.log(token)
    */
 
   exports.get = haltIfNoPrefix(function(key, options, callback) {
@@ -117,16 +117,16 @@
    * @summary Get data by key as text
    * @public
    * @function
-   *
+  #
    * @description This is the same as {@link module:resin.data.get}, however it assumes utf8 encoding.
-   *
+  #
    * @param {String} key - path relative to dataPrefix
    * @param {module:resin.data~getTextCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.data.getText 'myTextFile', (error, data) ->
-   *		throw error if error?
-   *		console.log(data)
+  #	resin.data.getText 'myTextFile', (error, data) ->
+  #		throw error if error?
+  #		console.log(data)
    */
 
   exports.getText = haltIfNoPrefix(function(key, callback) {
@@ -147,18 +147,18 @@
    * @summary Set/Update a data resource
    * @public
    * @function
-   *
+  #
    * @description You can save a buffer, but we strongly recommend saving plain text when possible
-   *
+  #
    * @param {String} key - path relative to dataPrefix
    * @param {(String|Buffer)} value - value key value
    * @param {Object} options - node fs options for when reading the resource
    * @param {module:resin.data~setCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.data.set 'customValue', 'Hello World', encoding: 'utf8', (error) ->
-   *		throw error if error?
-   *		console.log("Value saved to #{resin.data.prefix.get()}/customValue")
+  #	resin.data.set 'customValue', 'Hello World', encoding: 'utf8', (error) ->
+  #		throw error if error?
+  #		console.log("Value saved to #{resin.data.prefix.get()}/customValue")
    */
 
   exports.set = haltIfNoPrefix(function(key, value, options, callback) {
@@ -179,18 +179,18 @@
    * @summary Set/Update a data resource as text
    * @public
    * @function
-   *
+  #
    * @description This is the same as {@link module:resin.data.set}, however it assumes utf8 encoding.
-   *
+  #
    * @param {String} key - path relative to dataPrefix
    * @param {(String|Buffer)} value - key value
    * @param {module:resin.data~setTextCallback} callback - callback
-   *
+  #
    * @throws {Error} Will throw if data prefix was not previously set
-   *
+  #
    * @example
-   *	resin.data.setText 'greeting/en', 'Hello World!', (error) ->
-   *		throw error if error?
+  #	resin.data.setText 'greeting/en', 'Hello World!', (error) ->
+  #		throw error if error?
    */
 
   exports.setText = haltIfNoPrefix(function(key, value, callback) {
@@ -211,18 +211,18 @@
    * @summary Check if value exists
    * @public
    * @function
-   *
+  #
    * @param {String} key - path relative to dataPrefix
    * @param {module:resin.data~hasCallback} callback - callback
-   *
+  #
    * @throws {Error} Will throw if data prefix was not previously set
-   *
+  #
    * @example
-   *	resin.data.has 'foo/bar', (hasFooBar) ->
-   *		if hasFooBar
-   *			console.log('It\'s there!')
-   *		else
-   *			console.log('It\'s not there!')
+  #	resin.data.has 'foo/bar', (hasFooBar) ->
+  #		if hasFooBar
+  #			console.log('It\'s there!')
+  #		else
+  #			console.log('It\'s not there!')
    */
 
   exports.has = haltIfNoPrefix(function(key, callback) {
@@ -243,15 +243,15 @@
    * @summary Remove a key
    * @public
    * @function
-   *
+  #
    * @param {String} key - path relative to dataPrefix
    * @param {module:resin.data~removeCallback} [callback=_.noop] - callback
-   *
+  #
    * @throws {Error} Will throw if data prefix was not previously set
-   *
+  #
    * @example
-   *	resin.data.remove 'token', (error) ->
-   *		throw error if error?
+  #	resin.data.remove 'token', (error) ->
+  #		throw error if error?
    */
 
   exports.remove = haltIfNoPrefix(function(key, callback) {

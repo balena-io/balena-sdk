@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var async, createFacadeFunction, errors, method, serverUtils, settings, urlResolve, _, _i, _len, _ref;
+  var _, async, createFacadeFunction, errors, i, len, method, ref, serverUtils, settings, urlResolve;
 
   _ = require('lodash');
 
@@ -38,54 +38,54 @@
    * @summary Send an HTTP request to resin.io
    * @private
    * @function
-   *
+  #
    * @description If the user is logged in, the token gets automatically added to Authorization header
    * If the response is JSON, it will attempt to parse it
-   *
+  #
    * @param {Object} options -  request options
    * @param {String} options.url - relative url
    * @param {String} options.json - request body
    * @param {String} options.method - http method
    * @param {Object} options.headers - custom http headers
    * @param {Function} options.pipe - define this function if you want to stream the response
-   *
+  #
    * @param {module:resin.server~requestCallback} callback - callback
    * @param {Function} [onProgress] - on progress callback
-   *
+  #
    * @throws {Error} Will throw if no URL
-   *
+  #
    * @example
-   *	resin.server.request {
-   *		method: 'GET'
-   *		url: '/foobar'
-   *	}, (error, response, body) ->
-   *		throw error if error?
-   *		console.log(body)
-   *
-   *	@example
-   *	resin.server.request {
-   *		method: 'POST'
-   *		url: '/foobar'
-   *		json:
-   *			name: 'My FooBar'
-   *	}, (error, response, body) ->
-   *		throw error if error?
-   *		assert(response.statusCode is 201)
-   *
-   *	@example
-   *	resin.server.request {
-   *		method: 'GET'
-   *		url: '/download'
-   *		pipe: fs.createWriteStream('/tmp/download')
-   *	}, (error) ->
-   *		throw error if error?
-   *	, (state) ->
-   *		console.log("Received: #{state.received}")
-   *		console.log("Total: #{state.total}")
-   *		console.log("Percentage: #{state.percentage}%")
-   *		console.log("Delta: #{state.delta}")
-   *		console.log("Eta: #{state.eta}s")
-   *
+  #	resin.server.request {
+  #		method: 'GET'
+  #		url: '/foobar'
+  #	}, (error, response, body) ->
+  #		throw error if error?
+  #		console.log(body)
+  #
+  #	@example
+  #	resin.server.request {
+  #		method: 'POST'
+  #		url: '/foobar'
+  #		json:
+  #			name: 'My FooBar'
+  #	}, (error, response, body) ->
+  #		throw error if error?
+  #		assert(response.statusCode is 201)
+  #
+  #	@example
+  #	resin.server.request {
+  #		method: 'GET'
+  #		url: '/download'
+  #		pipe: fs.createWriteStream('/tmp/download')
+  #	}, (error) ->
+  #		throw error if error?
+  #	, (state) ->
+  #		console.log("Received: #{state.received}")
+  #		console.log("Total: #{state.total}")
+  #		console.log("Percentage: #{state.percentage}%")
+  #		console.log("Delta: #{state.delta}")
+  #		console.log("Eta: #{state.eta}s")
+  #
    */
 
   exports.request = function(options, callback, onProgress) {
@@ -140,9 +140,9 @@
     };
   };
 
-  _ref = ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE'];
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    method = _ref[_i];
+  ref = ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE'];
+  for (i = 0, len = ref.length; i < len; i++) {
+    method = ref[i];
     createFacadeFunction(method);
   }
 

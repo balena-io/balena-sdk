@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var errors, mkdirp, prefix, _;
+  var _, errors, mkdirp, prefix;
 
   _ = require('lodash');
 
@@ -24,11 +24,11 @@
    * @summary Get current prefix
    * @public
    * @function
-   *
+  #
    * @returns {String} prefix
-   *
+  #
    * @example
-   *	prefix = resin.data.prefix.get()
+  #	prefix = resin.data.prefix.get()
    */
 
   exports.get = function() {
@@ -47,13 +47,13 @@
    * @summary Set prefix
    * @public
    * @function
-   *
+  #
    * @param {String} newPrefix - new prefix
    * @param {module:resin.data.prefix~setCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.data.prefix.set '/opt/resin', (error) ->
-   *		throw error if error?
+  #	resin.data.prefix.set '/opt/resin', (error) ->
+  #		throw error if error?
    */
 
   exports.set = function(newPrefix, callback) {
@@ -74,9 +74,9 @@
    * @summary Clear prefix
    * @public
    * @function
-   *
+  #
    * @example
-   *	resin.data.prefix.clear()
+  #	resin.data.prefix.clear()
    */
 
   exports.clear = function() {

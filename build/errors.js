@@ -5,8 +5,8 @@
 
 (function() {
   var ResinApplicationNotFound, ResinDeviceNotFound, ResinDirectoryNotGitRepository, ResinInvalidApplication, ResinInvalidDataKey, ResinInvalidDeviceType, ResinInvalidOption, ResinInvalidParameter, ResinInvalidPath, ResinKeyNotFound, ResinMissingCredential, ResinMissingDataPrefix, ResinMissingOption, ResinMissingParameter, ResinNoInternetConnection, ResinNoSuchDirectory, ResinNonAllowedOption, ResinNotAny, ResinRequestError, TypedError,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
   TypedError = require('typed-error');
 
@@ -16,12 +16,12 @@
    * @class ResinInvalidDeviceType
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} type - the invalid device type
    */
 
-  exports.ResinInvalidDeviceType = ResinInvalidDeviceType = (function(_super) {
-    __extends(ResinInvalidDeviceType, _super);
+  exports.ResinInvalidDeviceType = ResinInvalidDeviceType = (function(superClass) {
+    extend(ResinInvalidDeviceType, superClass);
 
     function ResinInvalidDeviceType(type) {
       this.type = type;
@@ -79,12 +79,12 @@
    * @class ResinMissingCredential
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} credential - the missing credential name
    */
 
-  exports.ResinMissingCredential = ResinMissingCredential = (function(_super) {
-    __extends(ResinMissingCredential, _super);
+  exports.ResinMissingCredential = ResinMissingCredential = (function(superClass) {
+    extend(ResinMissingCredential, superClass);
 
     function ResinMissingCredential(credential) {
       this.credential = credential;
@@ -144,8 +144,8 @@
    * @memberof errors
    */
 
-  exports.ResinMissingDataPrefix = ResinMissingDataPrefix = (function(_super) {
-    __extends(ResinMissingDataPrefix, _super);
+  exports.ResinMissingDataPrefix = ResinMissingDataPrefix = (function(superClass) {
+    extend(ResinMissingDataPrefix, superClass);
 
     function ResinMissingDataPrefix() {
 
@@ -196,8 +196,8 @@
    * @memberof errors
    */
 
-  exports.ResinNoInternetConnection = ResinNoInternetConnection = (function(_super) {
-    __extends(ResinNoInternetConnection, _super);
+  exports.ResinNoInternetConnection = ResinNoInternetConnection = (function(superClass) {
+    extend(ResinNoInternetConnection, superClass);
 
     function ResinNoInternetConnection() {
 
@@ -246,14 +246,14 @@
    * @class ResinInvalidOption
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} name - the invalid option name
    * @param {*} value - the invalid option value
    * @param {String} [explanation] - an optional explanation
    */
 
-  exports.ResinInvalidOption = ResinInvalidOption = (function(_super) {
-    __extends(ResinInvalidOption, _super);
+  exports.ResinInvalidOption = ResinInvalidOption = (function(superClass) {
+    extend(ResinInvalidOption, superClass);
 
     function ResinInvalidOption(name, value, explanation) {
       var message;
@@ -334,12 +334,12 @@
    * @class ResinMissingOption
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} name - the missing option name
    */
 
-  exports.ResinMissingOption = ResinMissingOption = (function(_super) {
-    __extends(ResinMissingOption, _super);
+  exports.ResinMissingOption = ResinMissingOption = (function(superClass) {
+    extend(ResinMissingOption, superClass);
 
     function ResinMissingOption(name) {
       this.name = name;
@@ -397,12 +397,12 @@
    * @class ResinNonAllowedOption
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} name - the non allowed option name
    */
 
-  exports.ResinNonAllowedOption = ResinNonAllowedOption = (function(_super) {
-    __extends(ResinNonAllowedOption, _super);
+  exports.ResinNonAllowedOption = ResinNonAllowedOption = (function(superClass) {
+    extend(ResinNonAllowedOption, superClass);
 
     function ResinNonAllowedOption(name) {
       this.name = name;
@@ -460,14 +460,14 @@
    * @class ResinInvalidParameter
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} name - the invalid parameter name
    * @param {*} value - the invalid parameter value
    * @param {String} [explanation] - an optional explanation
    */
 
-  exports.ResinInvalidParameter = ResinInvalidParameter = (function(_super) {
-    __extends(ResinInvalidParameter, _super);
+  exports.ResinInvalidParameter = ResinInvalidParameter = (function(superClass) {
+    extend(ResinInvalidParameter, superClass);
 
     function ResinInvalidParameter(name, value, explanation) {
       var message;
@@ -548,12 +548,12 @@
    * @class ResinMissingParameter
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} name - the missing parameter name
    */
 
-  exports.ResinMissingParameter = ResinMissingParameter = (function(_super) {
-    __extends(ResinMissingParameter, _super);
+  exports.ResinMissingParameter = ResinMissingParameter = (function(superClass) {
+    extend(ResinMissingParameter, superClass);
 
     function ResinMissingParameter(name) {
       this.name = name;
@@ -611,12 +611,12 @@
    * @class ResinInvalidDataKey
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} key - the invalid data key
    */
 
-  exports.ResinInvalidDataKey = ResinInvalidDataKey = (function(_super) {
-    __extends(ResinInvalidDataKey, _super);
+  exports.ResinInvalidDataKey = ResinInvalidDataKey = (function(superClass) {
+    extend(ResinInvalidDataKey, superClass);
 
     function ResinInvalidDataKey(key) {
       this.key = key;
@@ -674,12 +674,12 @@
    * @class ResinInvalidPath
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} path - the invalid path
    */
 
-  exports.ResinInvalidPath = ResinInvalidPath = (function(_super) {
-    __extends(ResinInvalidPath, _super);
+  exports.ResinInvalidPath = ResinInvalidPath = (function(superClass) {
+    extend(ResinInvalidPath, superClass);
 
     function ResinInvalidPath(path) {
       this.path = path;
@@ -737,12 +737,12 @@
    * @class ResinNoSuchDirectory
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} path - the path that is not a directory
    */
 
-  exports.ResinNoSuchDirectory = ResinNoSuchDirectory = (function(_super) {
-    __extends(ResinNoSuchDirectory, _super);
+  exports.ResinNoSuchDirectory = ResinNoSuchDirectory = (function(superClass) {
+    extend(ResinNoSuchDirectory, superClass);
 
     function ResinNoSuchDirectory(path) {
       this.path = path;
@@ -800,12 +800,12 @@
    * @class ResinApplicationNotFound
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String|Number} id - the not found application id
    */
 
-  exports.ResinApplicationNotFound = ResinApplicationNotFound = (function(_super) {
-    __extends(ResinApplicationNotFound, _super);
+  exports.ResinApplicationNotFound = ResinApplicationNotFound = (function(superClass) {
+    extend(ResinApplicationNotFound, superClass);
 
     function ResinApplicationNotFound(id) {
       this.id = id;
@@ -863,12 +863,12 @@
    * @class ResinDeviceNotFound
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String|Number} id - the not found device id
    */
 
-  exports.ResinDeviceNotFound = ResinDeviceNotFound = (function(_super) {
-    __extends(ResinDeviceNotFound, _super);
+  exports.ResinDeviceNotFound = ResinDeviceNotFound = (function(superClass) {
+    extend(ResinDeviceNotFound, superClass);
 
     function ResinDeviceNotFound(id) {
       this.id = id;
@@ -926,12 +926,12 @@
    * @class ResinKeyNotFound
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String|Number} id - the not found key id
    */
 
-  exports.ResinKeyNotFound = ResinKeyNotFound = (function(_super) {
-    __extends(ResinKeyNotFound, _super);
+  exports.ResinKeyNotFound = ResinKeyNotFound = (function(superClass) {
+    extend(ResinKeyNotFound, superClass);
 
     function ResinKeyNotFound(id) {
       this.id = id;
@@ -989,12 +989,12 @@
    * @class ResinKeyNotFound
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String|Object} body - the response body
    */
 
-  exports.ResinRequestError = ResinRequestError = (function(_super) {
-    __extends(ResinRequestError, _super);
+  exports.ResinRequestError = ResinRequestError = (function(superClass) {
+    extend(ResinRequestError, superClass);
 
     function ResinRequestError(body) {
       this.body = body;
@@ -1052,12 +1052,12 @@
    * @class ResinInvalidApplication
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} application - the invalid application name
    */
 
-  exports.ResinInvalidApplication = ResinInvalidApplication = (function(_super) {
-    __extends(ResinInvalidApplication, _super);
+  exports.ResinInvalidApplication = ResinInvalidApplication = (function(superClass) {
+    extend(ResinInvalidApplication, superClass);
 
     function ResinInvalidApplication(application) {
       this.application = application;
@@ -1115,12 +1115,12 @@
    * @class ResinDirectoryNotGitRepository
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} directory - the directory path
    */
 
-  exports.ResinDirectoryNotGitRepository = ResinDirectoryNotGitRepository = (function(_super) {
-    __extends(ResinDirectoryNotGitRepository, _super);
+  exports.ResinDirectoryNotGitRepository = ResinDirectoryNotGitRepository = (function(superClass) {
+    extend(ResinDirectoryNotGitRepository, superClass);
 
     function ResinDirectoryNotGitRepository(directory) {
       this.directory = directory;
@@ -1178,12 +1178,12 @@
    * @class ResinNotAny
    * @protected
    * @memberof errors
-   *
+  #
    * @param {String} resource - the resource name
    */
 
-  exports.ResinNotAny = ResinNotAny = (function(_super) {
-    __extends(ResinNotAny, _super);
+  exports.ResinNotAny = ResinNotAny = (function(superClass) {
+    extend(ResinNotAny, superClass);
 
     function ResinNotAny(resource) {
       this.resource = resource;

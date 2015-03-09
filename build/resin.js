@@ -26,12 +26,6 @@
 
     /**
     	 * @memberof resin
-    	 * @see {@link module:resin.vcs}
-     */
-    vcs: require('./vcs'),
-
-    /**
-    	 * @memberof resin
     	 * @see {@link module:resin.settings}
      */
     settings: require('./settings'),

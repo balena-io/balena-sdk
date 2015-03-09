@@ -23,13 +23,13 @@
    * @summary Get all configuration
    * @public
    * @function
-   *
+  #
    * @param {module:resin.models.config~getAllCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.models.config.getAll (error, config) ->
-   *		throw error if error?
-   *		console.log(config)
+  #	resin.models.config.getAll (error, config) ->
+  #		throw error if error?
+  #		console.log(config)
    */
 
   exports.getAll = function(callback) {
@@ -56,14 +56,14 @@
    * @summary Get PubNub keys
    * @public
    * @function
-   *
+  #
    * @param {module:resin.models.config~getPubNubKeys} callback - callback
-   *
+  #
    * @example
-   *	resin.models.config.getPubNubKeys (error, pubnubKeys) ->
-   *		throw error if error?
-   *		console.log(pubnubKeys.subscribe_key)
-   *		console.log(pubnubKeys.publish_key)
+  #	resin.models.config.getPubNubKeys (error, pubnubKeys) ->
+  #		throw error if error?
+  #		console.log(pubnubKeys.subscribe_key)
+  #		console.log(pubnubKeys.publish_key)
    */
 
   exports.getPubNubKeys = function(callback) {
@@ -88,13 +88,13 @@
    * @summary Get device types
    * @public
    * @function
-   *
+  #
    * @param {module:resin.models.config~getDeviceTypes} callback - callback
-   *
+  #
    * @example
-   *	resin.models.config.getDeviceTypes (error, deviceTypes) ->
-   *		throw error if error?
-   *		console.log(deviceTypes)
+  #	resin.models.config.getDeviceTypes (error, deviceTypes) ->
+  #		throw error if error?
+  #		console.log(deviceTypes)
    */
 
   exports.getDeviceTypes = function(callback) {

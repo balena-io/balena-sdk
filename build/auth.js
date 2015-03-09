@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var async, data, errors, server, settings, token, _;
+  var _, async, data, errors, server, settings, token;
 
   async = require('async');
 
@@ -33,19 +33,19 @@
    * @summary Return current logged in username
    * @public
    * @function
-   *
+  #
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
-   *
+  #
    * @param {module:resin.auth~whoamiCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.auth.whoami (error, username) ->
-   *		throw error if error?
-   *
-   *		if not username?
-   *			console.log('I\'m not logged in!')
-   *		else
-   *			console.log("My username is: #{username}")
+  #	resin.auth.whoami (error, username) ->
+  #		throw error if error?
+  #
+  #		if not username?
+  #			console.log('I\'m not logged in!')
+  #		else
+  #			console.log("My username is: #{username}")
    */
 
   exports.whoami = function(callback) {
@@ -68,23 +68,23 @@
    * @summary Authenticate with the server
    * @protected
    * @function
-   *
+  #
    * @description You should use {@link module:resin.auth.login} when possible,
    * as it takes care of saving the token and username as well.
-   *
+  #
    * Notice that if `credentials` contains extra keys, they'll be discarted
    * by the server automatically.
-   *
+  #
    * @param {Object} credentials - in the form of username, password
    * @param {String} credentials.username - the username
    * @param {String} credentials.password - the password
    * @param {module:resin.auth~authenticateCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.auth.authenticate credentials, (error, token, username) ->
-   *		throw error if error?
-   *		console.log("My username is: #{username}")
-   *		console.log("My token is: #{token}")
+  #	resin.auth.authenticate credentials, (error, token, username) ->
+  #		throw error if error?
+  #		console.log("My username is: #{username}")
+  #		console.log("My token is: #{token}")
    */
 
   exports.authenticate = function(credentials, callback) {
@@ -110,19 +110,19 @@
    * @summary Login to Resin.io
    * @public
    * @function
-   *
+  #
    * @description If the login is successful, the token is persisted between sessions.
    * This function saves the token to the directory configured in dataPrefix
-   *
+  #
    * @param {Object} credentials - in the form of username, password
    * @param {String} credentials.username - the username
    * @param {String} credentials.password - the password
    * @param {module:resin.auth~loginCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.auth.login credentials, (error) ->
-   *		throw error if error?
-   *		console.log('I\'m logged in!')
+  #	resin.auth.login credentials, (error) ->
+  #		throw error if error?
+  #		console.log('I\'m logged in!')
    */
 
   exports.login = function(credentials, callback) {
@@ -151,15 +151,15 @@
    * @summary Check if you're logged in
    * @public
    * @function
-   *
+  #
    * @param {module:resin.auth~isLoggedInCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.auth.isLoggedIn (isLoggedIn) ->
-   *		if isLoggedIn
-   *			console.log('I\'m in!')
-   *		else
-   *			console.log('Too bad!')
+  #	resin.auth.isLoggedIn (isLoggedIn) ->
+  #		if isLoggedIn
+  #			console.log('I\'m in!')
+  #		else
+  #			console.log('Too bad!')
    */
 
   exports.isLoggedIn = function(callback) {
@@ -180,15 +180,15 @@
    * @public
    * @function
    * @borrows module:resin.data.token.getToken as getToken
-   *
+  #
    * @param {module:resin.auth~getTokenCallback} callback - callback
-   *
+  #
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
-   *
+  #
    * @example
-   *	resin.auth.getToken (error, token) ->
-   *		throw error if error?
-   *		console.log(token)
+  #	resin.auth.getToken (error, token) ->
+  #		throw error if error?
+  #		console.log(token)
    */
 
   exports.getToken = token.getToken;
@@ -205,14 +205,14 @@
    * @summary Logout from Resin.io
    * @public
    * @function
-   *
+  #
    * @param {module:resin.auth~logoutCallback} [callback=_.noop] - callback
-   *
+  #
    * @example
-   *	resin.auth.logout (error) ->
-   *		throw error if error?
-   *		console.log('I\'m out!')
-   *
+  #	resin.auth.logout (error) ->
+  #		throw error if error?
+  #		console.log('I\'m out!')
+  #
    * @todo Maybe we should post to /logout or something to invalidate the token on the server?
    */
 
@@ -244,21 +244,21 @@
    * @summary Register to Resin.io
    * @public
    * @function
-   *
+  #
    * @param {Object} [credentials={}] - in the form of username, password and email
    * @param {String} credentials.username - the username
    * @param {String} credentials.password - the password
    * @param {String} credentials.email - the email
    * @param {module:resin.auth~registerCallback} callback - callback
-   *
+  #
    * @example
-   *	resin.auth.register {
-   *		username: 'johndoe'
-   *		password: 'secret'
-   *		email: 'johndoe@gmail.com'
-   *	}, (error, token) ->
-   *		throw error if error?
-   *		console.log(token)
+  #	resin.auth.register {
+  #		username: 'johndoe'
+  #		password: 'secret'
+  #		email: 'johndoe@gmail.com'
+  #	}, (error, token) ->
+  #		throw error if error?
+  #		console.log(token)
    */
 
   exports.register = function(credentials, callback) {

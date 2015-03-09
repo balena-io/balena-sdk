@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var ProgressState, errors, getCurrentTime, _;
+  var ProgressState, _, errors, getCurrentTime;
 
   _ = require('lodash');
 
@@ -18,15 +18,15 @@
    * @protected
    * @class
    * @param {Object} options - progress state options
-   *
+  #
    * A ProgressState instance consists of the following fields:
-   *
+  #
    * - total.
    * - percentage.
    * - eta.
    * - received.
    * - delta.
-   *
+  #
    * @throws {Error} If the state options are invalid
    */
 
@@ -54,7 +54,7 @@
         throw new errors.ResinInvalidOption('received', options.received);
       }
       if ((options.total != null) && options.received > options.total) {
-        throw new errors.ResinInvalidOption('received', options.received, "" + options.received + " > " + options.total);
+        throw new errors.ResinInvalidOption('received', options.received, options.received + " > " + options.total);
       }
       if (options.delta == null) {
         throw new errors.ResinMissingOption('delta');
@@ -63,10 +63,10 @@
         throw new errors.ResinInvalidOption('delta', options.delta);
       }
       if ((options.total != null) && options.delta > options.total) {
-        throw new errors.ResinInvalidOption('delta', options.delta, "" + options.delta + " > " + options.total);
+        throw new errors.ResinInvalidOption('delta', options.delta, options.delta + " > " + options.total);
       }
       if (options.delta > options.received) {
-        throw new errors.ResinInvalidOption('delta', options.delta, "" + options.delta + " > " + options.received);
+        throw new errors.ResinInvalidOption('delta', options.delta, options.delta + " > " + options.received);
       }
       _.extend(this, options);
     }
@@ -91,20 +91,20 @@
    * @summary Create a ProgressState listener from a node-request-progress state
    * @protected
    * @function
-   *
+  #
    * @param {module:resin.auth~createFromNodeRequestProgressCallback} callback - callback
-   *
+  #
    * @example
    * request = require('request')
    * progress = require('request-progress')
-   *
+  #
    * onProgressCallback = (state) ->
-   *		console.log(state.percentage)
-   *
+  #		console.log(state.percentage)
+  #
    * progress(request(options))
-   *		.on('progress', ProgressState.createFromNodeRequestProgress(onProgressCallback))
-   *		.on('error', ...)
-   *		.on('close', ...)
+  #		.on('progress', ProgressState.createFromNodeRequestProgress(onProgressCallback))
+  #		.on('error', ...)
+  #		.on('close', ...)
    */
 
   ProgressState.createFromNodeRequestProgress = function(callback) {
