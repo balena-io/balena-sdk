@@ -8,6 +8,7 @@ deviceModel = require('./device')
 errors = require('../errors')
 server = require('../server')
 settings = require('../settings')
+auth = require('../auth')
 
 ###*
 # A Resin API application
@@ -34,25 +35,30 @@ settings = require('../settings')
 #		console.log(applications)
 ###
 exports.getAll = (callback) ->
-	return pine.get
-		resource: 'application'
-		options:
-			orderby: 'app_name asc'
-			expand: 'device'
+	auth.whoami (error, username) ->
+		return callback(error) if error?
 
-	.then (applications) ->
-		if _.isEmpty(applications)
-			throw new errors.ResinNotAny('applications')
-		return applications
+		return pine.get
+			resource: 'application'
+			options:
+				orderby: 'app_name asc'
+				expand: 'device'
+				filter:
+					user: { username }
 
-	# TODO: It might be worth to do all these handy
-	# manipulations server side directly.
-	.map (application) ->
-		application.online_devices = _.where(application.device, is_online: 1).length
-		application.devices_length = application.device?.length or 0
-		return application
+		.then (applications) ->
+			if _.isEmpty(applications)
+				throw new errors.ResinNotAny('applications')
+			return applications
 
-	.nodeify(callback)
+		# TODO: It might be worth to do all these handy
+		# manipulations server side directly.
+		.map (application) ->
+			application.online_devices = _.where(application.device, is_online: 1).length
+			application.devices_length = application.device?.length or 0
+			return application
+
+		.nodeify(callback)
 
 ###*
 # get callback
