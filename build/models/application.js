@@ -49,35 +49,25 @@
    */
 
   exports.getAll = function(callback) {
-    return auth.whoami(function(error, username) {
-      if (error != null) {
-        return callback(error);
+    return pine.get({
+      resource: 'application',
+      options: {
+        orderby: 'app_name asc',
+        expand: 'device'
       }
-      return pine.get({
-        resource: 'application',
-        options: {
-          orderby: 'app_name asc',
-          expand: 'device',
-          filter: {
-            user: {
-              username: username
-            }
-          }
-        }
-      }).then(function(applications) {
-        if (_.isEmpty(applications)) {
-          throw new errors.ResinNotAny('applications');
-        }
-        return applications;
-      }).map(function(application) {
-        var ref;
-        application.online_devices = _.where(application.device, {
-          is_online: 1
-        }).length;
-        application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
-        return application;
-      }).nodeify(callback);
-    });
+    }).then(function(applications) {
+      if (_.isEmpty(applications)) {
+        throw new errors.ResinNotAny('applications');
+      }
+      return applications;
+    }).map(function(application) {
+      var ref;
+      application.online_devices = _.where(application.device, {
+        is_online: 1
+      }).length;
+      application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
+      return application;
+    }).nodeify(callback);
   };
 
 

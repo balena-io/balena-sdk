@@ -82,18 +82,6 @@
     localConfig: '.resinconf',
 
     /**
-    	 * @namespace resin.settings.keys
-     */
-    keys: {
-
-      /**
-      		 * @member {String}
-      		 * @memberof resin.settings.keys
-       */
-      username: 'username'
-    },
-
-    /**
     	 * @namespace resin.settings.files
      */
     files: {

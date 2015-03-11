@@ -64,6 +64,29 @@ describe 'Auth:', ->
 					expect(token).to.equal(johnDoeFixture.token)
 					done()
 
+	describe.only '#loginWithToken()', ->
+
+		it 'should save the token', (done) ->
+			async.waterfall [
+
+				(callback) ->
+					auth.getToken(callback)
+
+				(token, callback) ->
+					expect(token).to.not.exist
+					auth.loginWithToken('asdf1234', callback)
+
+				(callback) ->
+					auth.getToken(callback)
+
+				(token, callback) ->
+					expect(token).to.equal('asdf1234')
+					return callback(null)
+
+			], (error) ->
+				expect(error).to.not.exist
+				done()
+
 	describe 'given valid credentials', ->
 
 		beforeEach ->

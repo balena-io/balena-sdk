@@ -35,30 +35,25 @@ auth = require('../auth')
 #		console.log(applications)
 ###
 exports.getAll = (callback) ->
-	auth.whoami (error, username) ->
-		return callback(error) if error?
+	return pine.get
+		resource: 'application'
+		options:
+			orderby: 'app_name asc'
+			expand: 'device'
 
-		return pine.get
-			resource: 'application'
-			options:
-				orderby: 'app_name asc'
-				expand: 'device'
-				filter:
-					user: { username }
+	.then (applications) ->
+		if _.isEmpty(applications)
+			throw new errors.ResinNotAny('applications')
+		return applications
 
-		.then (applications) ->
-			if _.isEmpty(applications)
-				throw new errors.ResinNotAny('applications')
-			return applications
+	# TODO: It might be worth to do all these handy
+	# manipulations server side directly.
+	.map (application) ->
+		application.online_devices = _.where(application.device, is_online: 1).length
+		application.devices_length = application.device?.length or 0
+		return application
 
-		# TODO: It might be worth to do all these handy
-		# manipulations server side directly.
-		.map (application) ->
-			application.online_devices = _.where(application.device, is_online: 1).length
-			application.devices_length = application.device?.length or 0
-			return application
-
-		.nodeify(callback)
+	.nodeify(callback)
 
 ###*
 # get callback

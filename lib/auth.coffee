@@ -12,35 +12,6 @@ errors = require('./errors')
 settings = require('./settings')
 
 ###*
-# whoami callback
-# @callback module:resin.auth~whoamiCallback
-# @param {Error} error - error
-# @param {String} username - username
-###
-
-###*
-# @summary Return current logged in username
-# @public
-# @function
-#
-# @description This will only work if you used {@link module:resin.auth.login} to log in.
-#
-# @param {module:resin.auth~whoamiCallback} callback - callback
-#
-# @example
-#	resin.auth.whoami (error, username) ->
-#		throw error if error?
-#
-#		if not username?
-#			console.log('I\'m not logged in!')
-#		else
-#			console.log("My username is: #{username}")
-###
-exports.whoami = (callback) ->
-	usernameKey = settings.get('keys.username')
-	data.getText(usernameKey, callback)
-
-###*
 # authenticate callback
 # @callback module:resin.auth~authenticateCallback
 # @param {(Error|null)} error - error
@@ -109,11 +80,32 @@ exports.login = (credentials, callback) ->
 		(authToken, username, callback) ->
 			token.saveToken(authToken, callback)
 
-		(callback) ->
-			usernameKey = settings.get('keys.username')
-			data.setText(usernameKey, credentials.username, callback)
-
 	], callback)
+
+###*
+# login callback
+# @callback module:resin.auth~loginWithTokenCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Login to Resin.io with a token
+# @public
+# @function
+#
+# @description
+#
+# This function saves the token to the directory configured in dataPrefix
+#
+# @param {String} token - the auth token
+# @param {module:resin.auth~loginWithTokenCallback} callback - callback
+#
+# @example
+#	resin.auth.loginWithToken token, (error) ->
+#		throw error if error?
+#		console.log('I\'m logged in!')
+###
+exports.loginWithToken = token.saveToken
 
 ###*
 # isLoggedIn callback
@@ -183,16 +175,7 @@ exports.getToken = token.getToken
 # @todo Maybe we should post to /logout or something to invalidate the token on the server?
 ###
 exports.logout = (callback = _.noop) ->
-	async.parallel([
-
-		(callback) ->
-			token.clearToken(callback)
-
-		(callback) ->
-			usernameKey = settings.get('keys.username')
-			data.remove(usernameKey, callback)
-
-	], _.unary(callback))
+	token.clearToken(callback)
 
 ###*
 # register callback
