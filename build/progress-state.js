@@ -113,6 +113,9 @@
     received = 0;
     return function(state) {
       var eta, newTime, progressState, receivedDelta, remaining, remainingTicks, timeDelta;
+      if (state.total == null) {
+        return callback();
+      }
       newTime = getCurrentTime();
       timeDelta = newTime - time;
       time = newTime;

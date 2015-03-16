@@ -111,6 +111,10 @@ ProgressState.createFromNodeRequestProgress = (callback) ->
 
 		# TODO: Extract this logic and test it troughly
 
+		# Return no state if the resource doesn't provides
+		# us with enough information.
+		return callback() if not state.total?
+
 		newTime = getCurrentTime()
 		timeDelta = newTime - time
 		time = newTime
