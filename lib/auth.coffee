@@ -4,11 +4,11 @@
 
 async = require('async')
 _ = require('lodash-contrib')
+errors = require('resin-errors')
 
 token = require('./token')
 server = require('./server')
 data = require('./data')
-errors = require('./errors')
 settings = require('./settings')
 
 ###*

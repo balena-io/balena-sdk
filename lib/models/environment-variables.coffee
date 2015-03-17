@@ -3,8 +3,8 @@
 ###
 
 _ = require('lodash')
+errors = require('resin-errors')
 pine = require('../pine')
-errors = require('../errors')
 
 ###*
 # A Resin API environment variable

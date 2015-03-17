@@ -197,7 +197,7 @@
    * @static
    * @memberof module:resin.settings
    * @see {@link https://github.com/resin-io/conf.js}
-  #
+   *
    * @param {String} key - setting key
    * @param {*} value - setting value
    */
@@ -211,7 +211,7 @@
    * @static
    * @memberof module:resin.settings
    * @see {@link https://github.com/resin-io/conf.js}
-  #
+   *
    * @param {String} key - setting key
    * @returns {*} key value
    */
@@ -225,7 +225,7 @@
    * @static
    * @memberof module:resin.settings
    * @see {@link https://github.com/resin-io/conf.js}
-  #
+   *
    * @param {String} key - setting key
    * @returns {Boolean} has key value
    */

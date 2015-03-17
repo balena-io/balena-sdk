@@ -4,15 +4,15 @@
  */
 
 (function() {
-  var _, auth, deviceModel, errors, pine, server, settings;
+  var auth, deviceModel, errors, pine, server, settings, _;
 
   _ = require('lodash-contrib');
+
+  errors = require('resin-errors');
 
   pine = require('../pine');
 
   deviceModel = require('./device');
-
-  errors = require('../errors');
 
   server = require('../server');
 
@@ -39,13 +39,13 @@
    * @summary Get all applications
    * @public
    * @function
-  #
+   *
    * @param {module:resin.models.application~getAllCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.application.getAll (error, applications) ->
-  #		throw error if error?
-  #		console.log(applications)
+   *	resin.models.application.getAll (error, applications) ->
+   *		throw error if error?
+   *		console.log(applications)
    */
 
   exports.getAll = function(callback) {
@@ -61,11 +61,11 @@
       }
       return applications;
     }).map(function(application) {
-      var ref;
+      var _ref;
       application.online_devices = _.where(application.device, {
         is_online: 1
       }).length;
-      application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
+      application.devices_length = ((_ref = application.device) != null ? _ref.length : void 0) || 0;
       return application;
     }).nodeify(callback);
   };
@@ -83,14 +83,14 @@
    * @summary Get a single application
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} id - application id
    * @param {module:resin.models.application~getCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.application.get 51, (error, application) ->
-  #		throw error if error?
-  #		console.log(application)
+   *	resin.models.application.get 51, (error, application) ->
+   *		throw error if error?
+   *		console.log(application)
    */
 
   exports.get = function(id, callback) {
@@ -118,17 +118,17 @@
    * @summary Create an application
    * @public
    * @function
-  #
+   *
    * @param {String} name - application name
    * @param {String} deviceType - device type (slug form)
    * @param {module:resin.models.application~createCallback} callback - callback
-  #
+   *
    * @throw {NotFound} Will throw if the request doesn't returns an id
-  #
+   *
    * @example
-  #	resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
-  #		throw error if error?
-  #		console.log(id)
+   *	resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+   *		throw error if error?
+   *		console.log(id)
    */
 
   exports.create = function(name, deviceType, callback) {
@@ -161,13 +161,13 @@
    * @summary Remove application
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} id - application id
    * @param {module:resin.models.application~removeCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.application.remove 51, (error) ->
-  #		throw error if error?
+   *	resin.models.application.remove 51, (error) ->
+   *		throw error if error?
    */
 
   exports.remove = function(id, callback) {
@@ -189,13 +189,13 @@
    * @summary Restart application
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} id - application id
    * @param {module:resin.models.application~restartCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.application.restart 51, (error) ->
-  #		throw error if error?
+   *	resin.models.application.restart 51, (error) ->
+   *		throw error if error?
    */
 
   exports.restart = function(id, callback) {

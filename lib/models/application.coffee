@@ -3,9 +3,9 @@
 ###
 
 _ = require('lodash-contrib')
+errors = require('resin-errors')
 pine = require('../pine')
 deviceModel = require('./device')
-errors = require('../errors')
 server = require('../server')
 settings = require('../settings')
 auth = require('../auth')

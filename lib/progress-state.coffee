@@ -4,7 +4,7 @@
 ###
 
 _ = require('lodash')
-errors = require('./errors')
+errors = require('resin-errors')
 
 ###*
 # Represent a progress state

@@ -4,7 +4,7 @@
 
 _ = require('lodash')
 mkdirp = require('mkdirp')
-errors = require('./errors')
+errors = require('resin-errors')
 
 ###*
 # @ignore

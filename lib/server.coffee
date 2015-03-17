@@ -5,9 +5,9 @@
 
 _ = require('lodash')
 async = require('async')
+errors = require('resin-errors')
 settings = require('./settings')
 serverUtils = require('./server-utils')
-errors = require('./errors')
 
 ###*
 # @ignore

@@ -4,13 +4,13 @@
  */
 
 (function() {
-  var _, errors, pine;
+  var errors, pine, _;
 
   _ = require('lodash');
 
-  pine = require('../pine');
+  errors = require('resin-errors');
 
-  errors = require('../errors');
+  pine = require('../pine');
 
 
   /**
@@ -31,14 +31,14 @@
    * @summary Get all environment variables by application
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} applicationId - application id
    * @param {module:resin.models.environment-variables~getAllByApplicationCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.environmentVariables.getAll (error, environmentVariables) ->
-  #		throw error if error?
-  #		console.log(environmentVariables)
+   *	resin.models.environmentVariables.getAll (error, environmentVariables) ->
+   *		throw error if error?
+   *		console.log(environmentVariables)
    */
 
   exports.getAllByApplication = function(applicationId, callback) {
@@ -70,15 +70,15 @@
    * @summary Create an environment variable for an application
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} applicationId - application id
    * @param {String} name - environment variable name
    * @param {String} value - environment variable value
    * @param {module:resin.models.environment-variables~createCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
-  #		throw error if error?
+   *	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+   *		throw error if error?
    */
 
   exports.create = function(applicationId, name, value, callback) {
@@ -104,14 +104,14 @@
    * @summary Update an environment variable value from an application
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} applicationId - application id
    * @param {String} value - environment variable value
    * @param {module:resin.models.environment-variables~updateCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.environmentVariables.update 317, 'vim', (error) ->
-  #		throw error if error?
+   *	resin.models.environmentVariables.update 317, 'vim', (error) ->
+   *		throw error if error?
    */
 
   exports.update = function(id, value, callback) {
@@ -136,13 +136,13 @@
    * @summary Remove environment variable
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} id - environment variable id
    * @param {module:resin.models.environment-variables~removeCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.environmentVariables.remove 51, (error) ->
-  #		throw error if error?
+   *	resin.models.environmentVariables.remove 51, (error) ->
+   *		throw error if error?
    */
 
   exports.remove = function(id, callback) {
@@ -157,14 +157,14 @@
    * @summary Check is a variable is system specific
    * @public
    * @function
-  #
+   *
    * @param {EnvironmentVariable} variable - environment variable
    * @returns {Boolean} Whether a variable is system specific or not
-  #
+   *
    * @example
    * resin.models.environmentVariables.isSystemVariable('RESIN_SUPERVISOR')
    * > true
-  #
+   *
    * @example
    * resin.models.environmentVariables.isSystemVariable('EDITOR')
    * > false

@@ -9,13 +9,13 @@
 
   progress = require('request-progress');
 
+  errors = require('resin-errors');
+
   connection = require('./connection');
 
   auth = require('./auth');
 
   ProgressState = require('./progress-state');
-
-  errors = require('./errors');
 
 
   /**

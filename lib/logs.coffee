@@ -4,8 +4,8 @@
 
 _ = require('lodash-contrib')
 PubNub = require('pubnub')
+errors = require('resin-errors')
 settings = require('./settings')
-errors = require('./errors')
 configModel = require('./models/config')
 
 ###*

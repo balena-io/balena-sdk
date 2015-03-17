@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * @module resin.server
+ * @private
+ */
+
+(function() {
+  var async, createFacadeFunction, errors, method, serverUtils, settings, urlResolve, _, _i, _len, _ref;
+
+  _ = require('lodash');
+
+  async = require('async');
+
+  errors = require('resin-errors');
+
+  settings = require('./settings');
+
+  serverUtils = require('./server-utils');
+
+
+  /**
+   * @ignore
+   */
+
+  urlResolve = require('url').resolve;
+
+
+  /**
+   * request callback
+   * @callback module:resin.server~requestCallback
+   * @param {(Error|null)} error - error
+   * @param {Object} response - response
+   * @param {Object} body - body
+   */
+
+
+  /**
+   * @summary Send an HTTP request to resin.io
+   * @private
+   * @function
+   *
+   * @description If the user is logged in, the token gets automatically added to Authorization header
+   * If the response is JSON, it will attempt to parse it
+   *
+   * @param {Object} options -  request options
+   * @param {String} options.url - relative url
+   * @param {String} options.json - request body
+   * @param {String} options.method - http method
+   * @param {Object} options.headers - custom http headers
+   * @param {Function} options.pipe - define this function if you want to stream the response
+   *
+   * @param {module:resin.server~requestCallback} callback - callback
+   * @param {Function} [onProgress] - on progress callback
+   *
+   * @throws {Error} Will throw if no URL
+   *
+   * @example
+   *	resin.server.request {
+   *		method: 'GET'
+   *		url: '/foobar'
+   *	}, (error, response, body) ->
+   *		throw error if error?
+   *		console.log(body)
+   *
+   *	@example
+   *	resin.server.request {
+   *		method: 'POST'
+   *		url: '/foobar'
+   *		json:
+   *			name: 'My FooBar'
+   *	}, (error, response, body) ->
+   *		throw error if error?
+   *		assert(response.statusCode is 201)
+   *
+   *	@example
+   *	resin.server.request {
+   *		method: 'GET'
+   *		url: '/download'
+   *		pipe: fs.createWriteStream('/tmp/download')
+   *	}, (error) ->
+   *		throw error if error?
+   *	, (state) ->
+   *		console.log("Received: #{state.received}")
+   *		console.log("Total: #{state.total}")
+   *		console.log("Percentage: #{state.percentage}%")
+   *		console.log("Delta: #{state.delta}")
+   *		console.log("Eta: #{state.eta}s")
+   *
+   */
+
+  exports.request = function(options, callback, onProgress) {
+    if (options == null) {
+      options = {};
+    }
+    if (onProgress == null) {
+      onProgress = _.noop;
+    }
+    if (options.url == null) {
+      throw new errors.ResinMissingOption('url');
+    }
+    options.url = urlResolve(settings.get('remoteUrl'), options.url);
+    if (options.method != null) {
+      options.method = options.method.toUpperCase();
+    }
+    _.defaults(options, {
+      method: 'GET',
+      gzip: true
+    });
+    return async.waterfall([
+      function(callback) {
+        return serverUtils.checkIfOnline(callback);
+      }, function(callback) {
+        return serverUtils.authenticate(options, callback);
+      }, function(callback) {
+        if (options.pipe != null) {
+          return serverUtils.pipeRequest(options, callback, onProgress);
+        } else {
+          return serverUtils.sendRequest(options, callback);
+        }
+      }
+    ], callback);
+  };
+
+  createFacadeFunction = function(method) {
+    var lowerCaseMethod;
+    lowerCaseMethod = method.toLowerCase();
+    return exports[lowerCaseMethod] = function(url, body, callback, onProgress) {
+      var options;
+      options = {
+        method: method,
+        url: url
+      };
+      if (_.isFunction(body)) {
+        onProgress = callback;
+        callback = body;
+      } else {
+        options.json = body;
+      }
+      return exports.request(options, callback, onProgress);
+    };
+  };
+
+  _ref = ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE'];
+  for (_i = 0, _len = _ref.length; _i &lt; _len; _i++) {
+    method = _ref[_i];
+    createFacadeFunction(method);
+  }
+
+}).call(this);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="resin.data.module_prefix.html">prefix</a></li><li><a href="resin.models.module_application.html">application</a></li><li><a href="resin.models.module_config.html">config</a></li><li><a href="resin.models.module_device.html">device</a></li><li><a href="resin.models.module_environment-variables.html">environment-variables</a></li><li><a href="resin.models.module_key.html">key</a></li><li><a href="resin.models.module_os.html">os</a></li><li><a href="resin.module_auth.html">auth</a></li><li><a href="resin.module_data.html">data</a></li><li><a href="resin.module_logs.html">logs</a></li><li><a href="resin.module_progress-state.html">progress-state</a></li><li><a href="resin.module_settings.html">settings</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors%250A%2520%2520_ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors%250A%2520%2520_ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors%250A%2520%2520_ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors%250A%2520%2520_ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors%250A%2520%2520_ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors%250A%2520%2520_ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors%250A%2520%2520_ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors%250A%2520%2520_ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors%250A%2520%2520_ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors%25250A%252520%252520_ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors%250A%2520%2520_ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors%250A%2520%2520_ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors%250A%2520%2520_ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors%250A%2520%2520_ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors%250A%2520%2520_ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors%250A%2520%2520_ResinNotAny.html">ResinNotAny</a></li><li><a href="resin.module_progress-state-ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#.data">data</a></li><li><a href="resin.html#.models">models</a></li><li><a href="resin.html#.settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Getting Started.html">Getting Started</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

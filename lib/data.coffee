@@ -6,7 +6,7 @@ _ = require('lodash')
 fs = require('fs')
 path = require('path')
 rimraf = require('rimraf')
-errors = require('./errors')
+errors = require('resin-errors')
 
 ###*
 # @namespace resin.data

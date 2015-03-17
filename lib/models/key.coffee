@@ -3,9 +3,9 @@
 ###
 
 _ = require('lodash-contrib')
+errors = require('resin-errors')
 server = require('../server')
 settings = require('../settings')
-errors = require('../errors')
 
 ###*
 # A Resin API key

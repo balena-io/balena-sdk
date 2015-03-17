@@ -4,7 +4,7 @@
 
 pine = require('../pine')
 _ = require('lodash-contrib')
-errors = require('../errors')
+errors = require('resin-errors')
 server = require('../server')
 settings = require('../settings')
 configModel = require('./config')

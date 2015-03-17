@@ -1,5 +1,5 @@
 _ = require('lodash')
-errors = require('./errors')
+errors = require('resin-errors')
 
 NETWORK_WIFI = 'wifi'
 NETWORK_ETHERNET = 'ethernet'

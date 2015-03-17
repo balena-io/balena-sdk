@@ -30,18 +30,18 @@
    * @summary Save token
    * @private
    * @function
-  #
+   *
    * @description The token is saved to $(dataPrefix)/token, which usually equals to $HOME/.resin.token
    * The token is saved as plain text.
-  #
+   *
    * @param {String} newToken - the token
    * @param {resin.data.token~saveToken} callback - callback
-  #
+   *
    * @todo We should make the token more secure
-  #
+   *
    * @example
-  #	resin.token.saveToken myToken, (error) ->
-  #		throw error if error?
+   *	resin.token.saveToken myToken, (error) ->
+   *		throw error if error?
    */
 
   exports.saveToken = function(newToken, callback) {
@@ -60,15 +60,15 @@
    * @summary Check if we have any token saved
    * @private
    * @function
-  #
+   *
    * @param {module:resin.data.token~hasTokenCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.token.hasToken (hasToken) ->
-  #		if hasToken
-  #			console.log('It\'s there!')
-  #		else
-  #			console.log('It\'s not there!')
+   *	resin.token.hasToken (hasToken) ->
+   *		if hasToken
+   *			console.log('It\'s there!')
+   *		else
+   *			console.log('It\'s not there!')
    */
 
   exports.hasToken = function(callback) {
@@ -88,16 +88,16 @@
    * @summary Get saved token value
    * @private
    * @function
-  #
+   *
    * @description If the key doesn't exist, undefined and no error is returned
-  #
+   *
    * @param {module:resin.data.token~getTokenCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.token.getToken (error, token) ->
-  #		throw error if error?
-  #		if token?
-  #			console.log("My token is: #{token}")
+   *	resin.token.getToken (error, token) ->
+   *		throw error if error?
+   *		if token?
+   *			console.log("My token is: #{token}")
    */
 
   exports.getToken = function(callback) {
@@ -116,14 +116,14 @@
    * @summary Remove token from the filesystem
    * @private
    * @function
-  #
+   *
    * @description If the token doesn't exist, no action is performed
-  #
+   *
    * @param {module:resin.data.token~clearTokenCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.token.clearToken (error) ->
-  #		throw error if error?
+   *	resin.token.clearToken (error) ->
+   *		throw error if error?
    */
 
   exports.clearToken = function(callback) {

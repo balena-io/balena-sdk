@@ -1,5 +1,5 @@
 (function() {
-  var _, fsPlus, path;
+  var fsPlus, path, _;
 
   _ = require('lodash');
 
@@ -12,18 +12,18 @@
    * @summary Prefix relative value paths with another path
    * @private
    * @function
-  #
+   *
    * @description Absolute values will be omitted
-  #
+   *
    * @param {String} prefix - path prefix
    * @param {Object} object - object containing relative paths as values
-  #
+   *
    * @example
-  #	object =
-  #		dataPrefix: 'resin'
-  #
-  #	object = prefixObjectValuesWithPath('/opt', object)
-  #	console.log(object.dataPrefix) # /opt/resin
+   *	object =
+   *		dataPrefix: 'resin'
+   *
+   *	object = prefixObjectValuesWithPath('/opt', object)
+   *	console.log(object.dataPrefix) # /opt/resin
    */
 
   exports.prefixObjectValuesWithPath = function(prefix, object) {
