@@ -1,9 +1,10 @@
 _ = require('lodash')
 Promise = require('bluebird')
 PinejsClientCore = require('pinejs-client/core')(_, Promise)
+resinRequest = require('resin-request')
 settings = require('./settings')
-server = require('./server')
-promisifiedServerRequest = Promise.promisify(server.request, server)
+auth = require('./auth')
+promisifiedServerRequest = Promise.promisify(resinRequest.request, resinRequest)
 
 class PinejsClientRequest extends PinejsClientCore
 
@@ -19,10 +20,17 @@ class PinejsClientRequest extends PinejsClientCore
 	_request: (params) ->
 		params.json = true
 		params.gzip ?= true
-		promisifiedServerRequest(params).spread (response, body) ->
-			if 200 <= response.statusCode < 300
-				return body
-			throw new Error(body)
+		params.remoteUrl = settings.get('remoteUrl')
+
+		auth.getToken (error, token) ->
+			throw error if error?
+
+			params.token = token
+
+			promisifiedServerRequest(params).spread (response, body) ->
+				if 200 <= response.statusCode < 300
+					return body
+				throw new Error(body)
 
 module.exports = new PinejsClientRequest
 	apiPrefix: settings.get('apiPrefix')

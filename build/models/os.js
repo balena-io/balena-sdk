@@ -4,17 +4,19 @@
  */
 
 (function() {
-  var OSParams, fs, server, settings, url;
+  var OSParams, auth, fs, resinRequest, settings, url;
 
   url = require('url');
 
   fs = require('fs');
 
-  server = require('../server');
+  resinRequest = require('resin-request');
 
   settings = require('../settings');
 
   OSParams = require('../os-params');
+
+  auth = require('../auth');
 
 
   /**
@@ -60,11 +62,18 @@
       query: parameters
     });
     downloadUrl = url.resolve(settings.get('urls.download'), query);
-    return server.request({
-      method: 'GET',
-      url: downloadUrl,
-      pipe: fs.createWriteStream(destination)
-    }, callback, onProgress);
+    return auth.getToken(function(error, token) {
+      if (error != null) {
+        return callback(error);
+      }
+      return resinRequest.request({
+        method: 'GET',
+        url: downloadUrl,
+        remoteUrl: settings.get('remoteUrl'),
+        token: token,
+        pipe: fs.createWriteStream(destination)
+      }, callback, onProgress);
+    });
   };
 
 

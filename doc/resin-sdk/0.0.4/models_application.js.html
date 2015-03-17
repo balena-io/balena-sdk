@@ -32,17 +32,17 @@
  */
 
 (function() {
-  var auth, deviceModel, errors, pine, server, settings, _;
+  var auth, deviceModel, errors, pine, resinRequest, settings, _;
 
   _ = require('lodash-contrib');
 
   errors = require('resin-errors');
 
+  resinRequest = require('resin-request');
+
   pine = require('../pine');
 
   deviceModel = require('./device');
-
-  server = require('../server');
 
   settings = require('../settings');
 
@@ -231,7 +231,17 @@
     url = _.template(settings.get('urls.applicationRestart'), {
       id: id
     });
-    return server.post(url, _.unary(callback));
+    return auth.getToken(function(error, token) {
+      if (error != null) {
+        return callback(error);
+      }
+      return resinRequest.request({
+        method: 'POST',
+        url: url,
+        remoteUrl: settings.get('remoteUrl'),
+        token: token
+      }, _.unary(callback));
+    });
   };
 
 }).call(this);
@@ -245,7 +255,7 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="resin.data.module_prefix.html">prefix</a></li><li><a href="resin.models.module_application.html">application</a></li><li><a href="resin.models.module_config.html">config</a></li><li><a href="resin.models.module_device.html">device</a></li><li><a href="resin.models.module_environment-variables.html">environment-variables</a></li><li><a href="resin.models.module_key.html">key</a></li><li><a href="resin.models.module_os.html">os</a></li><li><a href="resin.module_auth.html">auth</a></li><li><a href="resin.module_data.html">data</a></li><li><a href="resin.module_logs.html">logs</a></li><li><a href="resin.module_progress-state.html">progress-state</a></li><li><a href="resin.module_settings.html">settings</a></li></ul><h3>Classes</h3><ul><li><a href="errors.ResinMissingDataPrefix.html">ResinMissingDataPrefix</a></li><li><a href="errors.ResinNoInternetConnection.html">ResinNoInternetConnection</a></li><li><a href="errors%250A%2520%2520_ResinApplicationNotFound.html">ResinApplicationNotFound</a></li><li><a href="errors%250A%2520%2520_ResinDeviceNotFound.html">ResinDeviceNotFound</a></li><li><a href="errors%250A%2520%2520_ResinDirectoryNotGitRepository.html">ResinDirectoryNotGitRepository</a></li><li><a href="errors%250A%2520%2520_ResinInvalidApplication.html">ResinInvalidApplication</a></li><li><a href="errors%250A%2520%2520_ResinInvalidDataKey.html">ResinInvalidDataKey</a></li><li><a href="errors%250A%2520%2520_ResinInvalidDeviceType.html">ResinInvalidDeviceType</a></li><li><a href="errors%250A%2520%2520_ResinInvalidOption.html">ResinInvalidOption</a></li><li><a href="errors%250A%2520%2520_ResinInvalidParameter.html">ResinInvalidParameter</a></li><li><a href="errors%250A%2520%2520_ResinInvalidPath.html">ResinInvalidPath</a></li><li><a href="errors%25250A%252520%252520_ResinKeyNotFound.html">ResinKeyNotFound</a></li><li><a href="errors%250A%2520%2520_ResinMissingCredential.html">ResinMissingCredential</a></li><li><a href="errors%250A%2520%2520_ResinMissingOption.html">ResinMissingOption</a></li><li><a href="errors%250A%2520%2520_ResinMissingParameter.html">ResinMissingParameter</a></li><li><a href="errors%250A%2520%2520_ResinNonAllowedOption.html">ResinNonAllowedOption</a></li><li><a href="errors%250A%2520%2520_ResinNoSuchDirectory.html">ResinNoSuchDirectory</a></li><li><a href="errors%250A%2520%2520_ResinNotAny.html">ResinNotAny</a></li><li><a href="resin.module_progress-state-ProgressState.html">ProgressState</a></li></ul><h3>Namespaces</h3><ul><li><a href="errors.html">errors</a></li><li><a href="resin.html">resin</a></li><li><a href="resin.html#.data">data</a></li><li><a href="resin.html#.models">models</a></li><li><a href="resin.html#.settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Getting Started.html">Getting Started</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="resin.data.module_prefix.html">prefix</a></li><li><a href="resin.models.module_application.html">application</a></li><li><a href="resin.models.module_config.html">config</a></li><li><a href="resin.models.module_device.html">device</a></li><li><a href="resin.models.module_environment-variables.html">environment-variables</a></li><li><a href="resin.models.module_key.html">key</a></li><li><a href="resin.models.module_os.html">os</a></li><li><a href="resin.module_auth.html">auth</a></li><li><a href="resin.module_data.html">data</a></li><li><a href="resin.module_logs.html">logs</a></li><li><a href="resin.module_settings.html">settings</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#.data">data</a></li><li><a href="resin.html#.models">models</a></li><li><a href="resin.html#.settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Getting Started.html">Getting Started</a></li></ul>
 </nav>
 
 <br class="clear">

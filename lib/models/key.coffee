@@ -4,8 +4,9 @@
 
 _ = require('lodash-contrib')
 errors = require('resin-errors')
-server = require('../server')
+resinRequest = require('resin-request')
 settings = require('../settings')
+auth = require('../auth')
 
 ###*
 # A Resin API key
@@ -34,14 +35,21 @@ settings = require('../settings')
 #		console.log(keys)
 ###
 exports.getAll = (callback) ->
-	url = settings.get('urls.keys')
-	server.get url, (error, response, keys) ->
+	auth.getToken (error, token) ->
 		return callback(error) if error?
 
-		if _.isEmpty(keys)
-			return callback(new errors.ResinNotAny('keys'))
+		resinRequest.request
+			method: 'GET'
+			url: settings.get('urls.keys')
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+		, (error, response, keys) ->
+			return callback(error) if error?
 
-		return callback(null, keys)
+			if _.isEmpty(keys)
+				return callback(new errors.ResinNotAny('keys'))
+
+			return callback(null, keys)
 
 ###*
 # get callback
@@ -64,16 +72,23 @@ exports.getAll = (callback) ->
 #		console.log(key)
 ###
 exports.get = (id, callback) ->
-	url = settings.get('urls.keys')
-	server.get url, (error, response, keys) ->
+	auth.getToken (error, token) ->
 		return callback(error) if error?
 
-		key = _.findWhere(keys, { id })
+		resinRequest.request
+			method: 'GET'
+			url: settings.get('urls.keys')
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+		, (error, response, keys) ->
+			return callback(error) if error?
 
-		if not key?
-			return callback(new errors.ResinKeyNotFound(id))
+			key = _.findWhere(keys, { id })
 
-		return callback(null, key)
+			if not key?
+				return callback(new errors.ResinKeyNotFound(id))
+
+			return callback(null, key)
 
 ###*
 # remove callback
@@ -96,7 +111,16 @@ exports.get = (id, callback) ->
 exports.remove = (id, callback) ->
 	url = settings.get('urls.sshKey')
 	url = _.template(url, { id })
-	server.delete(url, _.unary(callback))
+
+	auth.getToken (error, token) ->
+		return callback(error) if error?
+
+		resinRequest.request
+			method: 'DELETE'
+			url: url
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+		, _.unary(callback)
 
 ###*
 # create callback
@@ -124,6 +148,13 @@ exports.create = (title, key, callback) ->
 	# Avoid ugly whitespaces
 	key = key.trim()
 
-	url = settings.get('urls.keys')
-	data = { title, key }
-	server.post(url, data, _.unary(callback))
+	auth.getToken (error, token) ->
+		return callback(error) if error?
+
+		resinRequest.request
+			method: 'POST'
+			url: settings.get('urls.keys')
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+			json: { title, key }
+		, _.unary(callback)

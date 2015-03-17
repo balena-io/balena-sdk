@@ -5,8 +5,9 @@
 pine = require('../pine')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
-server = require('../server')
+resinRequest = require('resin-request')
 settings = require('../settings')
+auth = require('../auth')
 configModel = require('./config')
 
 ###*
@@ -164,7 +165,16 @@ exports.remove = (id, callback) ->
 #		throw error if error?
 ###
 exports.identify = (uuid, callback) ->
-	server.post(settings.get('urls.identify'), { uuid }, _.unary(callback))
+	auth.getToken (error, token) ->
+		return callback(error) if error?
+
+		resinRequest.request
+			method: 'POST'
+			url: settings.get('urls.identify')
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+			json: { uuid }
+		, _.unary(callback)
 
 ###*
 # rename callback

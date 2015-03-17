@@ -6,8 +6,8 @@ async = require('async')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 
+resinRequest = require('resin-request')
 token = require('./token')
-server = require('./server')
 data = require('./data')
 settings = require('./settings')
 
@@ -42,10 +42,19 @@ settings = require('./settings')
 #		console.log("My token is: #{token}")
 ###
 exports.authenticate = (credentials, callback) ->
-	server.post settings.get('urls.authenticate'), credentials, (error, response) ->
+	exports.getToken (error, token) ->
 		return callback(error) if error?
-		savedToken = response?.body
-		return callback(null, savedToken, credentials.username)
+
+		resinRequest.request
+			method: 'POST'
+			url: settings.get('urls.authenticate')
+			remoteUrl: settings.get('remoteUrl')
+			json: credentials
+			token: token
+		, (error, response) ->
+			return callback(error) if error?
+			savedToken = response?.body
+			return callback(null, savedToken, credentials.username)
 
 ###*
 # login callback
@@ -217,8 +226,16 @@ exports.register = (credentials = {}, callback) ->
 	async.waterfall([
 
 		(callback) ->
-			url = settings.get('urls.register')
-			server.post(url, credentials, callback)
+			exports.getToken(callback)
+
+		(token, callback) ->
+			resinRequest.request
+				method: 'POST'
+				url: settings.get('urls.register')
+				remoteUrl: settings.get('remoteUrl')
+				token: token
+				json: credentials
+			, callback
 
 		(response, body, callback) ->
 			return callback(null, body)

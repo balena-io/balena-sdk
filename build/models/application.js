@@ -4,17 +4,17 @@
  */
 
 (function() {
-  var auth, deviceModel, errors, pine, server, settings, _;
+  var auth, deviceModel, errors, pine, resinRequest, settings, _;
 
   _ = require('lodash-contrib');
 
   errors = require('resin-errors');
 
+  resinRequest = require('resin-request');
+
   pine = require('../pine');
 
   deviceModel = require('./device');
-
-  server = require('../server');
 
   settings = require('../settings');
 
@@ -203,7 +203,17 @@
     url = _.template(settings.get('urls.applicationRestart'), {
       id: id
     });
-    return server.post(url, _.unary(callback));
+    return auth.getToken(function(error, token) {
+      if (error != null) {
+        return callback(error);
+      }
+      return resinRequest.request({
+        method: 'POST',
+        url: url,
+        remoteUrl: settings.get('remoteUrl'),
+        token: token
+      }, _.unary(callback));
+    });
   };
 
 }).call(this);

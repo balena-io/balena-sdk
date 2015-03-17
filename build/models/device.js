@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var configModel, errors, pine, server, settings, _;
+  var auth, configModel, errors, pine, resinRequest, settings, _;
 
   pine = require('../pine');
 
@@ -12,9 +12,11 @@
 
   errors = require('resin-errors');
 
-  server = require('../server');
+  resinRequest = require('resin-request');
 
   settings = require('../settings');
+
+  auth = require('../auth');
 
   configModel = require('./config');
 
@@ -194,9 +196,20 @@
    */
 
   exports.identify = function(uuid, callback) {
-    return server.post(settings.get('urls.identify'), {
-      uuid: uuid
-    }, _.unary(callback));
+    return auth.getToken(function(error, token) {
+      if (error != null) {
+        return callback(error);
+      }
+      return resinRequest.request({
+        method: 'POST',
+        url: settings.get('urls.identify'),
+        remoteUrl: settings.get('remoteUrl'),
+        token: token,
+        json: {
+          uuid: uuid
+        }
+      }, _.unary(callback));
+    });
   };
 
 

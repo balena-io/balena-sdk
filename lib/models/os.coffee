@@ -4,9 +4,10 @@
 
 url = require('url')
 fs = require('fs')
-server = require('../server')
+resinRequest = require('resin-request')
 settings = require('../settings')
 OSParams = require('../os-params')
+auth = require('../auth')
 
 ###*
 # download callback
@@ -49,12 +50,16 @@ exports.download = (parameters, destination, callback, onProgress) ->
 	query = url.format(query: parameters)
 	downloadUrl = url.resolve(settings.get('urls.download'), query)
 
-	server.request
-		method: 'GET'
-		url: downloadUrl
-		pipe: fs.createWriteStream(destination)
-	, callback
-	, onProgress
+	auth.getToken (error, token) ->
+		return callback(error) if error?
+
+		resinRequest.request
+			method: 'GET'
+			url: downloadUrl
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+			pipe: fs.createWriteStream(destination)
+		, callback, onProgress
 
 ###*
 # @summary Generate OS cache name

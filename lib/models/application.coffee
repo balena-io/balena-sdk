@@ -4,9 +4,9 @@
 
 _ = require('lodash-contrib')
 errors = require('resin-errors')
+resinRequest = require('resin-request')
 pine = require('../pine')
 deviceModel = require('./device')
-server = require('../server')
 settings = require('../settings')
 auth = require('../auth')
 
@@ -167,4 +167,13 @@ exports.remove = (id, callback) ->
 ###
 exports.restart = (id, callback) ->
 	url = _.template(settings.get('urls.applicationRestart'), { id })
-	server.post(url, _.unary(callback))
+
+	auth.getToken (error, token) ->
+		return callback(error) if error?
+
+		resinRequest.request
+			method: 'POST'
+			url: url
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+		, _.unary(callback)

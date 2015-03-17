@@ -4,11 +4,13 @@
  */
 
 (function() {
-  var server, settings;
+  var auth, resinRequest, settings;
 
-  server = require('../server');
+  resinRequest = require('resin-request');
 
   settings = require('../settings');
+
+  auth = require('../auth');
 
 
   /**
@@ -33,13 +35,21 @@
    */
 
   exports.getAll = function(callback) {
-    var url;
-    url = settings.get('urls.config');
-    return server.get(url, function(error, response, config) {
+    return auth.getToken(function(error, token) {
       if (error != null) {
         return callback(error);
       }
-      return callback(null, config);
+      return resinRequest.request({
+        method: 'GET',
+        url: settings.get('urls.config'),
+        remoteUrl: settings.get('remoteUrl'),
+        token: token
+      }, function(error, response, config) {
+        if (error != null) {
+          return callback(error);
+        }
+        return callback(null, config);
+      });
     });
   };
 

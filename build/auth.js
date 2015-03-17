@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var async, data, errors, server, settings, token, _;
+  var async, data, errors, resinRequest, settings, token, _;
 
   async = require('async');
 
@@ -12,9 +12,9 @@
 
   errors = require('resin-errors');
 
-  token = require('./token');
+  resinRequest = require('resin-request');
 
-  server = require('./server');
+  token = require('./token');
 
   data = require('./data');
 
@@ -54,13 +54,24 @@
    */
 
   exports.authenticate = function(credentials, callback) {
-    return server.post(settings.get('urls.authenticate'), credentials, function(error, response) {
-      var savedToken;
+    return exports.getToken(function(error, token) {
       if (error != null) {
         return callback(error);
       }
-      savedToken = response != null ? response.body : void 0;
-      return callback(null, savedToken, credentials.username);
+      return resinRequest.request({
+        method: 'POST',
+        url: settings.get('urls.authenticate'),
+        remoteUrl: settings.get('remoteUrl'),
+        json: credentials,
+        token: token
+      }, function(error, response) {
+        var savedToken;
+        if (error != null) {
+          return callback(error);
+        }
+        savedToken = response != null ? response.body : void 0;
+        return callback(null, savedToken, credentials.username);
+      });
     });
   };
 
@@ -258,9 +269,15 @@
     }
     return async.waterfall([
       function(callback) {
-        var url;
-        url = settings.get('urls.register');
-        return server.post(url, credentials, callback);
+        return exports.getToken(callback);
+      }, function(token, callback) {
+        return resinRequest.request({
+          method: 'POST',
+          url: settings.get('urls.register'),
+          remoteUrl: settings.get('remoteUrl'),
+          token: token,
+          json: credentials
+        }, callback);
       }, function(response, body, callback) {
         return callback(null, body);
       }

@@ -2,8 +2,9 @@
 # @module resin.models.config
 ###
 
-server = require('../server')
+resinRequest = require('resin-request')
 settings = require('../settings')
+auth = require('../auth')
 
 ###*
 # getAll callback
@@ -25,10 +26,17 @@ settings = require('../settings')
 #		console.log(config)
 ###
 exports.getAll = (callback) ->
-	url = settings.get('urls.config')
-	server.get url, (error, response, config) ->
+	auth.getToken (error, token) ->
 		return callback(error) if error?
-		return callback(null, config)
+
+		resinRequest.request
+			method: 'GET'
+			url: settings.get('urls.config')
+			remoteUrl: settings.get('remoteUrl')
+			token: token
+		, (error, response, config) ->
+			return callback(error) if error?
+			return callback(null, config)
 
 ###*
 # getPubNubKeys callback

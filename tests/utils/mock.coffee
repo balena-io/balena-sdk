@@ -1,7 +1,6 @@
 mockFs = require('mock-fs')
 sinon = require('sinon')
 settings = require('../../lib/settings')
-connection = require('../../lib/connection')
 
 exports.fs =
 
@@ -18,14 +17,3 @@ exports.fs =
 
 	restore: ->
 		mockFs.restore()
-
-isOnlineStub = null
-
-exports.connection =
-
-	init: ->
-		isOnlineStub = sinon.stub(connection, 'isOnline')
-		isOnlineStub.yields(null, true)
-
-	restore: ->
-		isOnlineStub.restore()

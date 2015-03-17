@@ -4,15 +4,17 @@
  */
 
 (function() {
-  var errors, server, settings, _;
+  var auth, errors, resinRequest, settings, _;
 
   _ = require('lodash-contrib');
 
   errors = require('resin-errors');
 
-  server = require('../server');
+  resinRequest = require('resin-request');
 
   settings = require('../settings');
+
+  auth = require('../auth');
 
 
   /**
@@ -43,16 +45,24 @@
    */
 
   exports.getAll = function(callback) {
-    var url;
-    url = settings.get('urls.keys');
-    return server.get(url, function(error, response, keys) {
+    return auth.getToken(function(error, token) {
       if (error != null) {
         return callback(error);
       }
-      if (_.isEmpty(keys)) {
-        return callback(new errors.ResinNotAny('keys'));
-      }
-      return callback(null, keys);
+      return resinRequest.request({
+        method: 'GET',
+        url: settings.get('urls.keys'),
+        remoteUrl: settings.get('remoteUrl'),
+        token: token
+      }, function(error, response, keys) {
+        if (error != null) {
+          return callback(error);
+        }
+        if (_.isEmpty(keys)) {
+          return callback(new errors.ResinNotAny('keys'));
+        }
+        return callback(null, keys);
+      });
     });
   };
 
@@ -80,20 +90,28 @@
    */
 
   exports.get = function(id, callback) {
-    var url;
-    url = settings.get('urls.keys');
-    return server.get(url, function(error, response, keys) {
-      var key;
+    return auth.getToken(function(error, token) {
       if (error != null) {
         return callback(error);
       }
-      key = _.findWhere(keys, {
-        id: id
+      return resinRequest.request({
+        method: 'GET',
+        url: settings.get('urls.keys'),
+        remoteUrl: settings.get('remoteUrl'),
+        token: token
+      }, function(error, response, keys) {
+        var key;
+        if (error != null) {
+          return callback(error);
+        }
+        key = _.findWhere(keys, {
+          id: id
+        });
+        if (key == null) {
+          return callback(new errors.ResinKeyNotFound(id));
+        }
+        return callback(null, key);
       });
-      if (key == null) {
-        return callback(new errors.ResinKeyNotFound(id));
-      }
-      return callback(null, key);
     });
   };
 
@@ -124,7 +142,17 @@
     url = _.template(url, {
       id: id
     });
-    return server["delete"](url, _.unary(callback));
+    return auth.getToken(function(error, token) {
+      if (error != null) {
+        return callback(error);
+      }
+      return resinRequest.request({
+        method: 'DELETE',
+        url: url,
+        remoteUrl: settings.get('remoteUrl'),
+        token: token
+      }, _.unary(callback));
+    });
   };
 
 
@@ -152,14 +180,22 @@
    */
 
   exports.create = function(title, key, callback) {
-    var data, url;
     key = key.trim();
-    url = settings.get('urls.keys');
-    data = {
-      title: title,
-      key: key
-    };
-    return server.post(url, data, _.unary(callback));
+    return auth.getToken(function(error, token) {
+      if (error != null) {
+        return callback(error);
+      }
+      return resinRequest.request({
+        method: 'POST',
+        url: settings.get('urls.keys'),
+        remoteUrl: settings.get('remoteUrl'),
+        token: token,
+        json: {
+          title: title,
+          key: key
+        }
+      }, _.unary(callback));
+    });
   };
 
 }).call(this);
