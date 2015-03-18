@@ -1,8 +1,8 @@
 _ = require('lodash')
 Promise = require('bluebird')
-PinejsClientCore = require('pinejs-client/core')(_, Promise)
 request = require('resin-request')
-settings = require('../settings')
+settings = require('resin-settings-client')
+PinejsClientCore = require('pinejs-client/core')(_, Promise)
 promisifiedRequest = Promise.promisify(request.request, request)
 
 class PinejsClientRequest extends PinejsClientCore

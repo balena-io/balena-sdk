@@ -8,7 +8,7 @@
 
   request = require('resin-request');
 
-  settings = require('../../settings');
+  settings = require('resin-settings-client');
 
 
   /**

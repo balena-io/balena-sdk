@@ -12,11 +12,11 @@
 
   request = require('resin-request');
 
+  settings = require('resin-settings-client');
+
   pine = require('../pine');
 
   deviceModel = require('./device');
-
-  settings = require('../../settings');
 
 
   /**

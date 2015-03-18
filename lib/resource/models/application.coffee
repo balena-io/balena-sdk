@@ -5,9 +5,9 @@
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
+settings = require('resin-settings-client')
 pine = require('../pine')
 deviceModel = require('./device')
-settings = require('../../settings')
 
 ###*
 # A Resin API application

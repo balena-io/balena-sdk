@@ -12,7 +12,7 @@
 
   token = require('resin-token');
 
-  settings = require('./settings');
+  settings = require('resin-settings-client');
 
 
   /**

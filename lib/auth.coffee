@@ -5,8 +5,7 @@
 errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
-
-settings = require('./settings')
+settings = require('resin-settings-client')
 
 ###*
 # authenticate callback
