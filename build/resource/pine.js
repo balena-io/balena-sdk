@@ -56,7 +56,7 @@
   })(PinejsClientCore);
 
   module.exports = new PinejsClientRequest({
-    apiPrefix: settings.get('apiPrefix')
+    apiPrefix: '/ewa/'
   });
 
 }).call(this);
