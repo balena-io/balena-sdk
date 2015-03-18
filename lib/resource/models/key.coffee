@@ -5,7 +5,7 @@
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
-settings = require('../../settings')
+settings = require('resin-settings-client')
 
 ###*
 # A Resin API key
