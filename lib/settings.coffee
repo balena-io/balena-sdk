@@ -5,7 +5,7 @@
 ConfJS = require('conf.js')
 path = require('path')
 userHome = require('user-home')
-helpers = require('./helpers')
+DATA_PREFIX = path.join(userHome, '.resin')
 
 ###*
 # @namespace resin.settings
@@ -19,12 +19,6 @@ settings =
 	remoteUrl: 'https://dashboard.resin.io'
 
 	###*
-	# @member {String}
-	# @memberof resin.settings
-	###
-	dataPrefix: path.join(userHome, '.resin')
-
-	###*
 	# @namespace resin.settings.directories
 	###
 	directories:
@@ -33,13 +27,13 @@ settings =
 		# @member {String}
 		# @memberof resin.settings.directories
 		###
-		plugins: 'plugins'
+		plugins: path.join(DATA_PREFIX, 'plugins')
 
 		###*
 		# @member {String}
 		# @memberof resin.settings.directories
 		###
-		os: 'os'
+		os: path.join(DATA_PREFIX, 'os')
 
 	###*
 	# @member {String}
@@ -56,10 +50,7 @@ settings =
 		# @member {String}
 		# @memberof resin.settings.files
 		###
-		config: 'config'
-
-settings.directories = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.directories)
-settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.files)
+		config: path.join(DATA_PREFIX, 'config')
 
 ###*
 # @name set
