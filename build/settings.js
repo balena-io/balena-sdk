@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var ConfJS, helpers, path, settings, userHome;
+  var ConfJS, DATA_PREFIX, path, settings, userHome;
 
   ConfJS = require('conf.js');
 
@@ -12,7 +12,7 @@
 
   userHome = require('user-home');
 
-  helpers = require('./helpers');
+  DATA_PREFIX = path.join(userHome, '.resin');
 
 
   /**
@@ -28,12 +28,6 @@
     remoteUrl: 'https://dashboard.resin.io',
 
     /**
-    	 * @member {String}
-    	 * @memberof resin.settings
-     */
-    dataPrefix: path.join(userHome, '.resin'),
-
-    /**
     	 * @namespace resin.settings.directories
      */
     directories: {
@@ -42,13 +36,13 @@
       		 * @member {String}
       		 * @memberof resin.settings.directories
        */
-      plugins: 'plugins',
+      plugins: path.join(DATA_PREFIX, 'plugins'),
 
       /**
       		 * @member {String}
       		 * @memberof resin.settings.directories
        */
-      os: 'os'
+      os: path.join(DATA_PREFIX, 'os')
     },
 
     /**
@@ -66,13 +60,9 @@
       		 * @member {String}
       		 * @memberof resin.settings.files
        */
-      config: 'config'
+      config: path.join(DATA_PREFIX, 'config')
     }
   };
-
-  settings.directories = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.directories);
-
-  settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.files);
 
 
   /**
