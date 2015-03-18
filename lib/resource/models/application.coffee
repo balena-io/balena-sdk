@@ -5,7 +5,6 @@
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
-token = require('resin-token')
 pine = require('../pine')
 deviceModel = require('./device')
 settings = require('../../settings')
@@ -170,5 +169,4 @@ exports.restart = (id, callback) ->
 		method: 'POST'
 		url: "/application/#{id}/restart"
 		remoteUrl: settings.get('remoteUrl')
-		token: token.get()
 	, _.unary(callback)

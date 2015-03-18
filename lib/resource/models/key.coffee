@@ -5,7 +5,6 @@
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
-token = require('resin-token')
 settings = require('../../settings')
 
 ###*
@@ -39,7 +38,6 @@ exports.getAll = (callback) ->
 		method: 'GET'
 		url: '/user/keys'
 		remoteUrl: settings.get('remoteUrl')
-		token: token.get()
 	, (error, response, keys) ->
 		return callback(error) if error?
 
@@ -102,7 +100,6 @@ exports.remove = (id, callback) ->
 		method: 'DELETE'
 		url: "/user/keys/#{id}"
 		remoteUrl: settings.get('remoteUrl')
-		token: token.get()
 	, _.unary(callback)
 
 ###*
@@ -135,6 +132,5 @@ exports.create = (title, key, callback) ->
 		method: 'POST'
 		url: '/user/keys'
 		remoteUrl: settings.get('remoteUrl')
-		token: token.get()
 		json: { title, key }
 	, _.unary(callback)

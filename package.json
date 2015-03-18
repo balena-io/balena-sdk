@@ -59,7 +59,7 @@
     "request": "~2.53.0",
     "request-progress": "~0.3.1",
     "resin-errors": "^1.0.0",
-    "resin-request": "^1.0.0",
+    "resin-request": "^1.1.0",
     "resin-token": "^1.0.0",
     "rimraf": "~2.2.8",
     "typed-error": "~0.1.0",

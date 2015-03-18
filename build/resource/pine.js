@@ -1,5 +1,5 @@
 (function() {
-  var PinejsClientCore, PinejsClientRequest, Promise, promisifiedServerRequest, resinRequest, settings, token, _,
+  var PinejsClientCore, PinejsClientRequest, Promise, promisifiedServerRequest, resinRequest, settings, _,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -10,8 +10,6 @@
   PinejsClientCore = require('pinejs-client/core')(_, Promise);
 
   resinRequest = require('resin-request');
-
-  token = require('resin-token');
 
   settings = require('../settings');
 
@@ -41,7 +39,6 @@
         params.gzip = true;
       }
       params.remoteUrl = settings.get('remoteUrl');
-      params.token = token.get();
       return promisifiedServerRequest(params).spread(function(response, body) {
         var _ref;
         if ((200 <= (_ref = response.statusCode) && _ref < 300)) {

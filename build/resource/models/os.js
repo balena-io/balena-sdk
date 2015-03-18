@@ -4,15 +4,13 @@
  */
 
 (function() {
-  var OSParams, fs, request, settings, token, url;
+  var OSParams, fs, request, settings, url;
 
   url = require('url');
 
   fs = require('fs');
 
   request = require('resin-request');
-
-  token = require('resin-token');
 
   settings = require('../../settings');
 
@@ -66,7 +64,6 @@
       method: 'GET',
       url: downloadUrl,
       remoteUrl: settings.get('remoteUrl'),
-      token: token.get(),
       pipe: fs.createWriteStream(destination)
     }, callback, onProgress);
   };

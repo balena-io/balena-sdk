@@ -44,7 +44,6 @@ exports.authenticate = (credentials, callback) ->
 		url: '/login_'
 		remoteUrl: settings.get('remoteUrl')
 		json: credentials
-		token: token.get()
 	, (error, response) ->
 		return callback(error) if error?
 		savedToken = response?.body
@@ -206,7 +205,6 @@ exports.register = (credentials = {}, callback) ->
 		method: 'POST'
 		url: '/user/register'
 		remoteUrl: settings.get('remoteUrl')
-		token: token.get()
 		json: credentials
 	, (error, response, body) ->
 		return callback(error) if error?
