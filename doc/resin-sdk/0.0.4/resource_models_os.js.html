@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: resin.js</title>
+    <title>JSDoc: Source: resource/models/os.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: resin.js</h1>
+    <h1 class="page-title">Source: resource/models/os.js</h1>
 
     
 
@@ -28,35 +28,75 @@
         <article>
             <pre class="prettyprint source linenums"><code>
 /**
- * @namespace resin
+ * @module resin.models.os
  */
 
 (function() {
-  module.exports = {
+  var OSParams, fs, request, settings, token, url;
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link resin.models}
-     */
-    models: require('./resource'),
+  url = require('url');
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin.auth}
-     */
-    auth: require('./auth'),
+  fs = require('fs');
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin.settings}
-     */
-    settings: require('./settings'),
+  request = require('resin-request');
 
-    /**
-    	 * @memberof resin
-    	 * @see {@link module:resin.logs}
-     */
-    logs: require('./logs')
+  token = require('resin-token');
+
+  settings = require('../../settings');
+
+  OSParams = require('../os-params');
+
+
+  /**
+   * download callback
+   * @callback module:resin.models.os~downloadCallback
+   * @param {(Error|null)} error - error
+   * @param {Object} response - response
+   * @param {*} body - body
+   */
+
+
+  /**
+   * @summary Download an OS image
+   * @public
+   * @function
+   *
+   * @param {Object} parameters - os parameters
+   * @param {String} destination - destination path
+   * @param {module:resin.models.os~downloadCallback} callback - callback
+   * @param {Function} onProgress - on progress callback
+   *
+   * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+   *
+   * @todo Find a way to test this
+   *
+   * @example
+   * parameters =
+   *		network: 'ethernet'
+   *		appId: 91
+   *
+   * resin.models.os.download parameters, '/opt/os.zip', (error) ->
+   *		throw error if error?
+   *	, (state) ->
+   *		return if not state?
+   *		console.log "Total: #{state.total}"
+   *		console.log "Received: #{state.received}"
+   */
+
+  exports.download = function(parameters, destination, callback, onProgress) {
+    var downloadUrl, query;
+    parameters = new OSParams(parameters);
+    query = url.format({
+      query: parameters
+    });
+    downloadUrl = url.resolve('/download', query);
+    return request.request({
+      method: 'GET',
+      url: downloadUrl,
+      remoteUrl: settings.get('remoteUrl'),
+      token: token.get(),
+      pipe: fs.createWriteStream(destination)
+    }, callback, onProgress);
   };
 
 }).call(this);

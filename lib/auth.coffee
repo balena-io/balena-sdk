@@ -2,13 +2,10 @@
 # @module resin.auth
 ###
 
-async = require('async')
-_ = require('lodash-contrib')
 errors = require('resin-errors')
+request = require('resin-request')
+token = require('resin-token')
 
-resinRequest = require('resin-request')
-token = require('./token')
-data = require('./data')
 settings = require('./settings')
 
 ###*
@@ -42,19 +39,16 @@ settings = require('./settings')
 #		console.log("My token is: #{token}")
 ###
 exports.authenticate = (credentials, callback) ->
-	exports.getToken (error, token) ->
+	request.request
+		method: 'POST'
+		url: '/login_'
+		remoteUrl: settings.get('remoteUrl')
+		json: credentials
+		token: token.get()
+	, (error, response) ->
 		return callback(error) if error?
-
-		resinRequest.request
-			method: 'POST'
-			url: settings.get('urls.authenticate')
-			remoteUrl: settings.get('remoteUrl')
-			json: credentials
-			token: token
-		, (error, response) ->
-			return callback(error) if error?
-			savedToken = response?.body
-			return callback(null, savedToken, credentials.username)
+		savedToken = response?.body
+		return callback(null, savedToken, credentials.username)
 
 ###*
 # login callback
@@ -68,7 +62,6 @@ exports.authenticate = (credentials, callback) ->
 # @function
 #
 # @description If the login is successful, the token is persisted between sessions.
-# This function saves the token to the directory configured in dataPrefix
 #
 # @param {Object} credentials - in the form of username, password
 # @param {String} credentials.username - the username
@@ -81,15 +74,10 @@ exports.authenticate = (credentials, callback) ->
 #		console.log('I\'m logged in!')
 ###
 exports.login = (credentials, callback) ->
-	async.waterfall([
-
-		(callback) ->
-			exports.authenticate(credentials, callback)
-
-		(authToken, username, callback) ->
-			token.saveToken(authToken, callback)
-
-	], callback)
+	exports.authenticate credentials, (error, authToken, username) ->
+		return callback(error) if error?
+		token.set(authToken)
+		return callback()
 
 ###*
 # login callback
@@ -102,9 +90,7 @@ exports.login = (credentials, callback) ->
 # @public
 # @function
 #
-# @description
-#
-# This function saves the token to the directory configured in dataPrefix
+# @description Login to resin with a session token instead of with credentials.
 #
 # @param {String} token - the auth token
 # @param {module:resin.auth~loginWithTokenCallback} callback - callback
@@ -114,7 +100,9 @@ exports.login = (credentials, callback) ->
 #		throw error if error?
 #		console.log('I\'m logged in!')
 ###
-exports.loginWithToken = token.saveToken
+exports.loginWithToken = (authToken, callback) ->
+	token.set(authToken)
+	return callback()
 
 ###*
 # isLoggedIn callback
@@ -137,31 +125,20 @@ exports.loginWithToken = token.saveToken
 #			console.log('Too bad!')
 ###
 exports.isLoggedIn = (callback) ->
-	token.hasToken(callback)
-
-###*
-# getToken callback
-# @callback module:resin.auth~getTokenCallback
-# @param {(Error|null)} error - error
-# @param {String} token - session token
-###
+	return callback(token.has())
 
 ###*
 # @summary Get current logged in user's token
 # @public
 # @function
-# @borrows module:resin.data.token.getToken as getToken
-#
-# @param {module:resin.auth~getTokenCallback} callback - callback
 #
 # @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
 # @example
-#	resin.auth.getToken (error, token) ->
-#		throw error if error?
-#		console.log(token)
+#	token = resin.auth.getToken()
+#	console.log(token)
 ###
-exports.getToken = token.getToken
+exports.getToken = token.get
 
 ###*
 # logout callback
@@ -183,8 +160,9 @@ exports.getToken = token.getToken
 #
 # @todo Maybe we should post to /logout or something to invalidate the token on the server?
 ###
-exports.logout = (callback = _.noop) ->
-	token.clearToken(callback)
+exports.logout = (callback) ->
+	token.remove()
+	return callback?()
 
 ###*
 # register callback
@@ -214,30 +192,22 @@ exports.logout = (callback = _.noop) ->
 #		console.log(token)
 ###
 exports.register = (credentials = {}, callback) ->
+
+	if not credentials.email?
+		return callback(new errors.ResinMissingCredential('email'))
+
 	if not credentials.username?
 		return callback(new errors.ResinMissingCredential('username'))
 
 	if not credentials.password?
 		return callback(new errors.ResinMissingCredential('password'))
 
-	if not credentials.email?
-		return callback(new errors.ResinMissingCredential('email'))
-
-	async.waterfall([
-
-		(callback) ->
-			exports.getToken(callback)
-
-		(token, callback) ->
-			resinRequest.request
-				method: 'POST'
-				url: settings.get('urls.register')
-				remoteUrl: settings.get('remoteUrl')
-				token: token
-				json: credentials
-			, callback
-
-		(response, body, callback) ->
-			return callback(null, body)
-
-	], callback)
+	request.request
+		method: 'POST'
+		url: '/user/register'
+		remoteUrl: settings.get('remoteUrl')
+		token: token.get()
+		json: credentials
+	, (error, response, body) ->
+		return callback(error) if error?
+		return callback(null, body)

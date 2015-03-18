@@ -4,19 +4,13 @@
  */
 
 (function() {
-  var async, data, errors, resinRequest, settings, token, _;
-
-  async = require('async');
-
-  _ = require('lodash-contrib');
+  var errors, request, settings, token;
 
   errors = require('resin-errors');
 
-  resinRequest = require('resin-request');
+  request = require('resin-request');
 
-  token = require('./token');
-
-  data = require('./data');
+  token = require('resin-token');
 
   settings = require('./settings');
 
@@ -54,24 +48,19 @@
    */
 
   exports.authenticate = function(credentials, callback) {
-    return exports.getToken(function(error, token) {
+    return request.request({
+      method: 'POST',
+      url: '/login_',
+      remoteUrl: settings.get('remoteUrl'),
+      json: credentials,
+      token: token.get()
+    }, function(error, response) {
+      var savedToken;
       if (error != null) {
         return callback(error);
       }
-      return resinRequest.request({
-        method: 'POST',
-        url: settings.get('urls.authenticate'),
-        remoteUrl: settings.get('remoteUrl'),
-        json: credentials,
-        token: token
-      }, function(error, response) {
-        var savedToken;
-        if (error != null) {
-          return callback(error);
-        }
-        savedToken = response != null ? response.body : void 0;
-        return callback(null, savedToken, credentials.username);
-      });
+      savedToken = response != null ? response.body : void 0;
+      return callback(null, savedToken, credentials.username);
     });
   };
 
@@ -89,7 +78,6 @@
    * @function
    *
    * @description If the login is successful, the token is persisted between sessions.
-   * This function saves the token to the directory configured in dataPrefix
    *
    * @param {Object} credentials - in the form of username, password
    * @param {String} credentials.username - the username
@@ -103,13 +91,13 @@
    */
 
   exports.login = function(credentials, callback) {
-    return async.waterfall([
-      function(callback) {
-        return exports.authenticate(credentials, callback);
-      }, function(authToken, username, callback) {
-        return token.saveToken(authToken, callback);
+    return exports.authenticate(credentials, function(error, authToken, username) {
+      if (error != null) {
+        return callback(error);
       }
-    ], callback);
+      token.set(authToken);
+      return callback();
+    });
   };
 
 
@@ -125,9 +113,7 @@
    * @public
    * @function
    *
-   * @description
-   *
-   * This function saves the token to the directory configured in dataPrefix
+   * @description Login to resin with a session token instead of with credentials.
    *
    * @param {String} token - the auth token
    * @param {module:resin.auth~loginWithTokenCallback} callback - callback
@@ -138,7 +124,10 @@
    *		console.log('I\'m logged in!')
    */
 
-  exports.loginWithToken = token.saveToken;
+  exports.loginWithToken = function(authToken, callback) {
+    token.set(authToken);
+    return callback();
+  };
 
 
   /**
@@ -164,35 +153,23 @@
    */
 
   exports.isLoggedIn = function(callback) {
-    return token.hasToken(callback);
+    return callback(token.has());
   };
-
-
-  /**
-   * getToken callback
-   * @callback module:resin.auth~getTokenCallback
-   * @param {(Error|null)} error - error
-   * @param {String} token - session token
-   */
 
 
   /**
    * @summary Get current logged in user's token
    * @public
    * @function
-   * @borrows module:resin.data.token.getToken as getToken
-   *
-   * @param {module:resin.auth~getTokenCallback} callback - callback
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
    * @example
-   *	resin.auth.getToken (error, token) ->
-   *		throw error if error?
-   *		console.log(token)
+   *	token = resin.auth.getToken()
+   *	console.log(token)
    */
 
-  exports.getToken = token.getToken;
+  exports.getToken = token.get;
 
 
   /**
@@ -218,10 +195,8 @@
    */
 
   exports.logout = function(callback) {
-    if (callback == null) {
-      callback = _.noop;
-    }
-    return token.clearToken(callback);
+    token.remove();
+    return typeof callback === "function" ? callback() : void 0;
   };
 
 
@@ -258,30 +233,27 @@
     if (credentials == null) {
       credentials = {};
     }
+    if (credentials.email == null) {
+      return callback(new errors.ResinMissingCredential('email'));
+    }
     if (credentials.username == null) {
       return callback(new errors.ResinMissingCredential('username'));
     }
     if (credentials.password == null) {
       return callback(new errors.ResinMissingCredential('password'));
     }
-    if (credentials.email == null) {
-      return callback(new errors.ResinMissingCredential('email'));
-    }
-    return async.waterfall([
-      function(callback) {
-        return exports.getToken(callback);
-      }, function(token, callback) {
-        return resinRequest.request({
-          method: 'POST',
-          url: settings.get('urls.register'),
-          remoteUrl: settings.get('remoteUrl'),
-          token: token,
-          json: credentials
-        }, callback);
-      }, function(response, body, callback) {
-        return callback(null, body);
+    return request.request({
+      method: 'POST',
+      url: '/user/register',
+      remoteUrl: settings.get('remoteUrl'),
+      token: token.get(),
+      json: credentials
+    }, function(error, response, body) {
+      if (error != null) {
+        return callback(error);
       }
-    ], callback);
+      return callback(null, body);
+    });
   };
 
 }).call(this);

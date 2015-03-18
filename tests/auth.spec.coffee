@@ -1,316 +1,255 @@
-expect = require('chai').expect
-nock = require('nock')
-_ = require('lodash')
-async = require('async')
+chai = require('chai')
+expect = chai.expect
+sinon = require('sinon')
+chai.use(require('sinon-chai'))
+request = require('resin-request')
+token = require('resin-token')
 auth = require('../lib/auth')
-data = require('../lib/data')
-settings = require('../lib/settings')
-mock = require('./utils/mock')
-johnDoeFixture = require('./utils/fixtures/johndoe')
-janeDoeFixture = require('./utils/fixtures/janedoe')
 
 describe 'Auth:', ->
 
-	before ->
-		mock.connection.init()
-
-	after ->
-		mock.connection.restore()
-
-	beforeEach (done) ->
-		mock.fs.init()
-		data.prefix.set(settings.get('dataPrefix'), done)
-
-	afterEach ->
-		mock.fs.restore()
-
-	describe '#register()', ->
-
-		beforeEach ->
-			@credentials =
-				username: johnDoeFixture.credentials.username
-				password: johnDoeFixture.credentials.password
-				email: 'johndoe@gmail.com'
-
-			nock(settings.get('remoteUrl'))
-				.post(settings.get('urls.register'), @credentials)
-				.reply(201, johnDoeFixture.token)
+	describe '.register()', ->
 
 		describe 'given invalid credentials', ->
 
 			it 'should fail if no email', (done) ->
-				auth.register _.omit(@credentials, 'email'), (error, token) ->
+				auth.register
+					username: 'johndoe'
+					password: 'secret'
+				, (error, token) ->
 					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('Missing credential: email')
 					expect(token).to.not.exist
 					done()
 
 			it 'should fail if no username', (done) ->
-				auth.register _.omit(@credentials, 'username'), (error, token) ->
+				auth.register
+					password: 'secret'
+					email: 'john@doe.com'
+				, (error, token) ->
 					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('Missing credential: username')
 					expect(token).to.not.exist
 					done()
 
 			it 'should fail if no password', (done) ->
-				auth.register _.omit(@credentials, 'password'), (error, token) ->
+				auth.register
+					username: 'johndoe'
+					email: 'john@doe.com'
+				, (error, token) ->
 					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('Missing credential: password')
 					expect(token).to.not.exist
 					done()
 
 		describe 'given valid credentials', ->
 
+			beforeEach ->
+				@requestStub = sinon.stub(request, 'request')
+				@requestStub.yields(null, {}, '1234')
+
+			afterEach ->
+				@requestStub.restore()
+
 			it 'should be able to register a username', (done) ->
-				auth.register @credentials, (error, token) ->
+				auth.register
+					username: 'johndoe'
+					password: 'secret'
+					email: 'john@doe.com'
+				, (error, token) ->
 					expect(error).to.not.exist
-					expect(token).to.equal(johnDoeFixture.token)
+					expect(token).to.equal('1234')
 					done()
 
-	describe.only '#loginWithToken()', ->
+	describe '.loginWithToken()', ->
 
-		it 'should save the token', (done) ->
-			async.waterfall [
+		describe 'given a not logged in user', ->
 
-				(callback) ->
-					auth.getToken(callback)
-
-				(token, callback) ->
-					expect(token).to.not.exist
-					auth.loginWithToken('asdf1234', callback)
-
-				(callback) ->
-					auth.getToken(callback)
-
-				(token, callback) ->
-					expect(token).to.equal('asdf1234')
-					return callback(null)
-
-			], (error) ->
-				expect(error).to.not.exist
-				done()
-
-	describe 'given valid credentials', ->
-
-		beforeEach ->
-			nock(settings.get('remoteUrl'))
-				.post('/login_', johnDoeFixture.credentials)
-				.reply(200, johnDoeFixture.token)
-
-		describe '#authenticate()', ->
-
-			it 'should return a token string', (done) ->
-				auth.authenticate johnDoeFixture.credentials, (error, token, username) ->
-					return done(error) if error?
-					expect(token).to.be.a('string')
-					expect(token).to.equal(johnDoeFixture.token)
-					expect(username).to.equal(johnDoeFixture.credentials.username)
-					done()
-
-		describe '#login()', ->
+			beforeEach (done) ->
+				auth.logout(done)
 
 			it 'should save the token', (done) ->
-				async.waterfall [
-
-					(callback) ->
-						auth.isLoggedIn (isLoggedIn) ->
-							return callback(null, isLoggedIn)
-
-					(isLoggedIn, callback) ->
-						expect(isLoggedIn).to.be.false
-						auth.login(johnDoeFixture.credentials, callback)
-
-					(callback) ->
-						auth.isLoggedIn (isLoggedIn) ->
-							return callback(null, isLoggedIn)
-
-					(isLoggedIn, callback) ->
-						expect(isLoggedIn).to.be.true
-						return callback(null)
-
-				], (error) ->
+				expect(auth.getToken()).to.not.exist
+				auth.loginWithToken '1234', (error) ->
 					expect(error).to.not.exist
+					expect(auth.getToken()).to.equal('1234')
 					done()
 
-			it 'should save the username', (done) ->
-				async.waterfall [
+	describe '.authenticate()', ->
 
-					(callback) ->
-						auth.whoami(callback)
+		describe 'given valid credentials', ->
 
-					(username, callback) ->
-						expect(username).to.be.undefined
-						auth.login(johnDoeFixture.credentials, callback)
+			beforeEach ->
+				@requestStub = sinon.stub(request, 'request')
+				@requestStub.yields(null, body: '1234')
 
-					(callback) ->
-						auth.whoami(callback)
+			afterEach ->
+				@requestStub.restore()
 
-					(username, callback) ->
-						expect(username).to.equal(johnDoeFixture.credentials.username)
-						return callback()
-
-				], (error) ->
+			it 'should return a token string', (done) ->
+				auth.authenticate
+					username: 'johndoe'
+					password: 'secret'
+				, (error, token, username) ->
 					expect(error).to.not.exist
+					expect(token).to.equal('1234')
 					done()
-
-	describe 'given invalid credentials', ->
-
-		beforeEach ->
-			nock(settings.get('remoteUrl'))
-				.post('/login_')
-				.reply(401)
-
-		describe '#authenticate()', ->
-
-			it 'should return an error', (done) ->
-				auth.authenticate johnDoeFixture.credentials, (error, token, username) ->
-					expect(error).to.exist
-					expect(error).to.be.an.instanceof(Error)
-					expect(token).to.be.undefined
-					expect(username).to.be.undefined
-					done()
-
-		describe '#login()', ->
-
-			it 'should return an error', (done) ->
-				auth.login johnDoeFixture.credentials, (error, token) ->
-					expect(error).to.exist
-					expect(error).to.be.an.instanceof(Error)
-					expect(token).to.be.undefined
-					done()
-
-	describe 'given a not logged in user', ->
-
-		describe '#whoami()', ->
-
-			it 'should return undefined', (done) ->
-				auth.whoami (error, username) ->
-					expect(error).to.not.exist
-					expect(username).to.be.undefined
-					done()
-
-	describe 'given a logged in user', ->
-
-		beforeEach (done) ->
-			nock(settings.get('remoteUrl'))
-				.post('/login_', johnDoeFixture.credentials)
-				.reply(200, johnDoeFixture.token)
-
-			nock(settings.get('remoteUrl'))
-				.post('/login_', janeDoeFixture.credentials)
-				.reply(200, janeDoeFixture.token)
-
-			auth.login(johnDoeFixture.credentials, done)
-
-		describe '#whoami()', ->
 
 			it 'should return the username', (done) ->
-				auth.whoami (error, username) ->
+				auth.authenticate
+					username: 'johndoe'
+					password: 'secret'
+				, (error, token, username) ->
 					expect(error).to.not.exist
-					expect(username).to.equal(johnDoeFixture.credentials.username)
+					expect(username).to.equal('johndoe')
 					done()
 
-		describe '#login()', ->
+		describe 'given invalid credentials', ->
+
+			beforeEach ->
+				@requestStub = sinon.stub(request, 'request')
+				@requestStub.yields(new Error('auth error'))
+
+			afterEach ->
+				@requestStub.restore()
+
+			it 'should return an error', (done) ->
+				auth.authenticate
+					username: 'johndoe'
+					password: 'secret'
+				, (error, token, username) ->
+					expect(error).to.exist
+					expect(error).to.be.an.instanceof(Error)
+					expect(token).to.be.undefined
+					expect(username).to.be.undefined
+					done()
+
+	describe '.login()', ->
+
+		describe 'given a not logged in user', ->
+
+			beforeEach (done) ->
+				@requestStub = sinon.stub(request, 'request')
+				@requestStub.yields(null, body: '1234')
+				auth.logout(done)
+
+			afterEach ->
+				@requestStub.restore()
+
+			it 'should save the token', (done) ->
+				expect(auth.getToken()).to.not.exist
+				auth.login
+					username: 'johndoe'
+					password: 'secret'
+				, (error) ->
+					expect(error).to.not.exist
+					expect(auth.getToken()).to.exist
+					done()
+
+		describe 'given invalid credentials', ->
+
+			beforeEach ->
+				@requestStub = sinon.stub(request, 'request')
+				@requestStub.yields(new Error('auth error'))
+
+			afterEach ->
+				@requestStub.restore()
+
+			it 'should return an error', (done) ->
+				auth.login
+					username: 'johndoe'
+					password: 'secret'
+				, (error, token) ->
+					expect(error).to.be.an.instanceof(Error)
+					expect(token).to.be.undefined
+					done()
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				token.set('1234')
+
+				@requestStub = sinon.stub(request, 'request')
+				@requestStub.yields(null, body: '5678')
+
+			afterEach ->
+				@requestStub.restore()
 
 			it 'should override the old user', (done) ->
-				async.waterfall [
-
-					(callback) ->
-						auth.getToken(callback)
-
-					(token, callback) ->
-						expect(token).to.equal(johnDoeFixture.token)
-						auth.login(janeDoeFixture.credentials, callback)
-
-					(callback) ->
-						auth.getToken(callback)
-
-					(token, callback) ->
-						expect(token).to.equal(janeDoeFixture.token)
-						return callback(null)
-
-				], (error) ->
+				expect(token.get()).to.equal('1234')
+				auth.login
+					username: 'johndoe'
+					password: 'secret'
+				, (error) ->
 					expect(error).to.not.exist
+					expect(token.get()).to.equal('5678')
 					done()
 
-		describe '#isLoggedIn()', ->
+	describe '.isLoggedIn()', ->
 
-			it 'should return true', (done) ->
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				token.set('1234')
+
+			it 'should return true', ->
+				expect(token.has()).to.be.true
+
+		describe 'given a not logged in user', ->
+
+			beforeEach (done) ->
+				auth.logout(done)
+
+			it 'should return false', (done) ->
 				auth.isLoggedIn (isLoggedIn) ->
-					expect(isLoggedIn).to.be.true
+					expect(isLoggedIn).to.be.false
 					done()
 
-		describe '#getToken()', ->
+	describe '.getToken()', ->
 
-			it 'should return the saved token', (done) ->
-				auth.getToken (error, token) ->
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				token.set('1234')
+
+			it 'should return the token', ->
+				expect(auth.getToken()).to.equal('1234')
+
+		describe 'given a not logged in user', ->
+
+			beforeEach (done) ->
+				auth.logout(done)
+
+			it 'should return null', ->
+				expect(auth.getToken()).to.not.exist
+
+	describe '#logout()', ->
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				token.set('1234')
+
+			it 'should remove the token', (done) ->
+				expect(token.has()).to.be.true
+				auth.logout (error) ->
 					expect(error).to.not.exist
-					expect(token).to.equal(johnDoeFixture.token)
+					expect(token.has()).to.be.false
 					done()
 
-		describe '#logout()', ->
+		describe 'given a not logged in user', ->
 
-			it 'should effectively logout the user', (done) ->
-				async.waterfall [
+			beforeEach (done) ->
+				auth.logout(done)
 
-					(callback) ->
-						auth.isLoggedIn (isLoggedIn) ->
-							return callback(null, isLoggedIn)
+			it 'should not return any error', (done) ->
+				auth.logout (error) ->
+					expect(error).to.not.exist
+					done()
 
-					(isLoggedIn, callback) ->
-						expect(isLoggedIn).to.be.true
-						auth.logout(callback)
-
-					(callback) ->
-						auth.isLoggedIn (isLoggedIn) ->
-							return callback(null, isLoggedIn)
-
-					(isLoggedIn, callback) ->
+			it 'should keep the token undefined', (done) ->
+				auth.logout (error) ->
+					expect(error).to.not.exist
+					auth.isLoggedIn (isLoggedIn) ->
 						expect(isLoggedIn).to.be.false
-						return callback()
-
-				], (error) ->
-					expect(error).to.not.exist
-					done()
-
-			it 'should clear the token', (done) ->
-				async.waterfall [
-
-					(callback) ->
-						auth.getToken(callback)
-
-					(savedToken, callback) ->
-						expect(savedToken).to.be.a.string
-						auth.logout(callback)
-
-					(callback) ->
-						auth.getToken(callback)
-
-					(savedToken, callback) ->
-						expect(savedToken).to.be.undefined
-						return callback()
-
-				], (error) ->
-					expect(error).to.not.exist
-					done()
-
-			it 'should clear the username', (done) ->
-				async.waterfall [
-
-					(callback) ->
-						auth.whoami(callback)
-
-					(username, callback) ->
-						expect(username).to.be.a.string
-						auth.logout(callback)
-
-					(callback) ->
-						auth.whoami(callback)
-
-					(username, callback) ->
-						expect(username).to.be.undefined
-						return callback()
-
-				], (error) ->
-					expect(error).to.not.exist
-					done()
-
-			it 'should not throw an error if callback is not passed', ->
-				expect(auth.logout).to.not.throw(Error)
+						done()

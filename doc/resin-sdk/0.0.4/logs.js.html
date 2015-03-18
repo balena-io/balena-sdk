@@ -32,7 +32,7 @@
  */
 
 (function() {
-  var PubNub, configModel, errors, settings, _;
+  var PubNub, configModel, errors, _;
 
   _ = require('lodash-contrib');
 
@@ -40,9 +40,7 @@
 
   errors = require('resin-errors');
 
-  settings = require('./settings');
-
-  configModel = require('./models/config');
+  configModel = require('./resource/models/config');
 
 
   /**
@@ -84,7 +82,6 @@
    */
 
   exports.subscribe = function(uuid, options, callback) {
-    var channel, pubnubOptions;
     if (options == null) {
       options = {};
     }
@@ -95,17 +92,14 @@
     if (!_.isNumber(options.history)) {
       return callback(new errors.ResinInvalidOption('history', options.history));
     }
-    pubnubOptions = settings.get('pubnub');
-    channel = _.template(settings.get('events.deviceLogs'), {
-      uuid: uuid
-    });
     return configModel.getPubNubKeys(function(error, pubnubKeys) {
-      var pubnub;
+      var channel, pubnub;
       if (error != null) {
         return callback(error);
       }
-      _.extend(pubnubKeys, pubnubOptions);
+      pubnubKeys.ssl = true;
       pubnub = PubNub.init(pubnubKeys);
+      channel = "device-" + uuid + "-logs";
       return pubnub.subscribe({
         channel: channel,
         callback: function(message) {
@@ -147,7 +141,7 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="resin.data.module_prefix.html">prefix</a></li><li><a href="resin.models.module_application.html">application</a></li><li><a href="resin.models.module_config.html">config</a></li><li><a href="resin.models.module_device.html">device</a></li><li><a href="resin.models.module_environment-variables.html">environment-variables</a></li><li><a href="resin.models.module_key.html">key</a></li><li><a href="resin.models.module_os.html">os</a></li><li><a href="resin.module_auth.html">auth</a></li><li><a href="resin.module_data.html">data</a></li><li><a href="resin.module_logs.html">logs</a></li><li><a href="resin.module_settings.html">settings</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#.data">data</a></li><li><a href="resin.html#.models">models</a></li><li><a href="resin.html#.settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.events.html">events</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.pubnub.html">pubnub</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Getting Started.html">Getting Started</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="resin.models.module_application.html">application</a></li><li><a href="resin.models.module_config.html">config</a></li><li><a href="resin.models.module_device.html">device</a></li><li><a href="resin.models.module_environment-variables.html">environment-variables</a></li><li><a href="resin.models.module_key.html">key</a></li><li><a href="resin.models.module_os.html">os</a></li><li><a href="resin.module_auth.html">auth</a></li><li><a href="resin.module_logs.html">logs</a></li><li><a href="resin.module_settings.html">settings</a></li></ul><h3>Namespaces</h3><ul><li><a href="resin.html">resin</a></li><li><a href="resin.html#.models">models</a></li><li><a href="resin.html#.settings">settings</a></li><li><a href="resin.settings.directories.html">directories</a></li><li><a href="resin.settings.files.html">files</a></li><li><a href="resin.settings.urls.html">urls</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Getting Started.html">Getting Started</a></li></ul>
 </nav>
 
 <br class="clear">

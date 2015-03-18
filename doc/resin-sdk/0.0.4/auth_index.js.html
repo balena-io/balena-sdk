@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: auth.js</title>
+    <title>JSDoc: Source: auth/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: auth.js</h1>
+    <h1 class="page-title">Source: auth/index.js</h1>
 
     
 
@@ -32,15 +32,15 @@
  */
 
 (function() {
-  var errors, request, settings, token;
+  var errors, resinRequest, settings, token;
 
   errors = require('resin-errors');
 
-  request = require('resin-request');
+  resinRequest = require('resin-request');
 
-  token = require('resin-token');
+  token = require('./token');
 
-  settings = require('./settings');
+  settings = require('../settings');
 
 
   /**
@@ -76,7 +76,7 @@
    */
 
   exports.authenticate = function(credentials, callback) {
-    return request.request({
+    return resinRequest.request({
       method: 'POST',
       url: '/login_',
       remoteUrl: settings.get('remoteUrl'),
@@ -106,6 +106,7 @@
    * @function
    *
    * @description If the login is successful, the token is persisted between sessions.
+   * This function saves the token to the directory configured in dataPrefix
    *
    * @param {Object} credentials - in the form of username, password
    * @param {String} credentials.username - the username
@@ -141,7 +142,9 @@
    * @public
    * @function
    *
-   * @description Login to resin with a session token instead of with credentials.
+   * @description
+   *
+   * This function saves the token to the directory configured in dataPrefix
    *
    * @param {String} token - the auth token
    * @param {module:resin.auth~loginWithTokenCallback} callback - callback
@@ -181,20 +184,32 @@
    */
 
   exports.isLoggedIn = function(callback) {
-    return callback(token.has());
+    return callback(null, token.has());
   };
+
+
+  /**
+   * getToken callback
+   * @callback module:resin.auth~getTokenCallback
+   * @param {(Error|null)} error - error
+   * @param {String} token - session token
+   */
 
 
   /**
    * @summary Get current logged in user's token
    * @public
    * @function
+   * @borrows module:resin.data.token.getToken as getToken
+   *
+   * @param {module:resin.auth~getTokenCallback} callback - callback
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
    * @example
-   *	token = resin.auth.getToken()
-   *	console.log(token)
+   *	resin.auth.getToken (error, token) ->
+   *		throw error if error?
+   *		console.log(token)
    */
 
   exports.getToken = token.get;
@@ -270,7 +285,7 @@
     if (credentials.password == null) {
       return callback(new errors.ResinMissingCredential('password'));
     }
-    return request.request({
+    return resinRequest.request({
       method: 'POST',
       url: '/user/register',
       remoteUrl: settings.get('remoteUrl'),

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: files</title>
+    <title>JSDoc: Source: resource/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,171 +17,64 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: files</h1>
+    <h1 class="page-title">Source: resource/index.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-            <span class="ancestors"><a href="resin.html">resin</a><a href="resin.html#.settings">.settings</a>.</span>
-        
-        files
-        </h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings.js.html">settings.js</a>, <a href="settings.js.html#line72">line 72</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".config"><span class="type-signature">(static) </span>config<span class="type-signature"> :String</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">String</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="settings.js.html">settings.js</a>, <a href="settings.js.html#line81">line 81</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * @namespace resin.models
+ */
+
+(function() {
+  module.exports = {
+
+    /**
+    	 * @memberof resin.models
+    	 * @see {@link module:resin.models.application}
+     */
+    application: require('./models/application'),
+
+    /**
+    	 * @memberof resin.models
+    	 * @see {@link module:resin.models.device}
+     */
+    device: require('./models/device'),
+
+    /**
+    	 * @memberof resin.models
+    	 * @see {@link module:resin.models.key}
+     */
+    key: require('./models/key'),
+
+    /**
+    	 * @memberof resin.models
+    	 * @see {@link module:resin.models.environment-variables}
+     */
+    environmentVariables: require('./models/environment-variables'),
+
+    /**
+    	 * @memberof resin.models
+    	 * @see {@link module:resin.models.os}
+     */
+    os: require('./models/os'),
+
+    /**
+    	 * @memberof resin.models
+    	 * @see {@link module:resin.models.config}
+     */
+    config: require('./models/config')
+  };
+
+}).call(this);
+</code></pre>
+        </article>
+    </section>
 
 
 

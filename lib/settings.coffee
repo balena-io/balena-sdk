@@ -28,12 +28,6 @@ settings =
 	# @member {String}
 	# @memberof resin.settings
 	###
-	tokenKey: 'token'
-
-	###*
-	# @member {String}
-	# @memberof resin.settings
-	###
 	dataPrefix: path.join(userHome, '.resin')
 
 	###*
@@ -41,12 +35,6 @@ settings =
 	# @memberof resin.settings
 	###
 	sshKeyWidth: 43
-
-	###*
-	# @member {String}
-	# @memberof resin.settings
-	###
-	gitRemote: 'resin'
 
 	###*
 	# @namespace resin.settings.directories
@@ -83,37 +71,9 @@ settings =
 		config: 'config'
 
 	###*
-	# @namespace resin.settings.pubnub
-	###
-	pubnub:
-
-		###*
-		# @member {Boolean}
-		# @memberof resin.settings.pubnub
-		###
-		ssl: true
-
-	###*
-	# @namespace resin.settings.events
-	###
-	events:
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.events
-		###
-		deviceLogs: 'device-<%= uuid %>-logs'
-
-	###*
 	# @namespace resin.settings.urls
 	###
 	urls:
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		config: '/config'
 
 		###*
 		# @member {String}
@@ -126,48 +86,6 @@ settings =
 		# @memberof resin.settings.urls
 		###
 		preferences: '/preferences'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		register: '/user/register'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		keys: '/user/keys'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		identify: '/blink'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		authenticate: '/login_'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		applicationRestart: '/application/<%= id %>/restart'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		sshKey: '/user/keys/<%= id %>'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		download: '/download'
 
 settings.directories = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.directories)
 settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.files)

@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var PubNub, configModel, errors, settings, _;
+  var PubNub, configModel, errors, _;
 
   _ = require('lodash-contrib');
 
@@ -12,9 +12,7 @@
 
   errors = require('resin-errors');
 
-  settings = require('./settings');
-
-  configModel = require('./models/config');
+  configModel = require('./resource/models/config');
 
 
   /**
@@ -56,7 +54,6 @@
    */
 
   exports.subscribe = function(uuid, options, callback) {
-    var channel, pubnubOptions;
     if (options == null) {
       options = {};
     }
@@ -67,17 +64,14 @@
     if (!_.isNumber(options.history)) {
       return callback(new errors.ResinInvalidOption('history', options.history));
     }
-    pubnubOptions = settings.get('pubnub');
-    channel = _.template(settings.get('events.deviceLogs'), {
-      uuid: uuid
-    });
     return configModel.getPubNubKeys(function(error, pubnubKeys) {
-      var pubnub;
+      var channel, pubnub;
       if (error != null) {
         return callback(error);
       }
-      _.extend(pubnubKeys, pubnubOptions);
+      pubnubKeys.ssl = true;
       pubnub = PubNub.init(pubnubKeys);
+      channel = "device-" + uuid + "-logs";
       return pubnub.subscribe({
         channel: channel,
         callback: function(message) {

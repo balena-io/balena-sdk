@@ -5,8 +5,7 @@
 _ = require('lodash-contrib')
 PubNub = require('pubnub')
 errors = require('resin-errors')
-settings = require('./settings')
-configModel = require('./models/config')
+configModel = require('./resource/models/config')
 
 ###*
 # subscribe callback
@@ -53,14 +52,13 @@ exports.subscribe = (uuid, options = {}, callback) ->
 	if not _.isNumber(options.history)
 		return callback(new errors.ResinInvalidOption('history', options.history))
 
-	pubnubOptions = settings.get('pubnub')
-	channel = _.template(settings.get('events.deviceLogs'), { uuid })
-
 	configModel.getPubNubKeys (error, pubnubKeys) ->
 		return callback(error) if error?
 
-		_.extend(pubnubKeys, pubnubOptions)
+		pubnubKeys.ssl = true
 		pubnub = PubNub.init(pubnubKeys)
+
+		channel = "device-#{ uuid }-logs"
 
 		# TODO: PubNub doesn't close the connection if using only history().
 		# Not even by using pubnub.unsubscribe(). The solution is to subscribe

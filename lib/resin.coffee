@@ -7,13 +7,7 @@ module.exports =
 	# @memberof resin
 	# @see {@link resin.models}
 	###
-	models: require('./models')
-
-	###*
-	# @memberof resin
-	# @see {@link module:resin.data}
-	###
-	data: require('./data')
+	models: require('./resource')
 
 	###*
 	# @memberof resin
