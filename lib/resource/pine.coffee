@@ -27,4 +27,4 @@ class PinejsClientRequest extends PinejsClientCore
 			throw new Error(body)
 
 module.exports = new PinejsClientRequest
-	apiPrefix: settings.get('apiPrefix')
+	apiPrefix: '/ewa/'

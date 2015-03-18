@@ -31,12 +31,6 @@
     	 * @member {String}
     	 * @memberof resin.settings
      */
-    apiPrefix: '/ewa/',
-
-    /**
-    	 * @member {String}
-    	 * @memberof resin.settings
-     */
     dataPrefix: path.join(userHome, '.resin'),
 
     /**
