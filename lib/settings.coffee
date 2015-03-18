@@ -31,12 +31,6 @@ settings =
 	dataPrefix: path.join(userHome, '.resin')
 
 	###*
-	# @member {Number}
-	# @memberof resin.settings
-	###
-	sshKeyWidth: 43
-
-	###*
 	# @namespace resin.settings.directories
 	###
 	directories:
@@ -69,23 +63,6 @@ settings =
 		# @memberof resin.settings.files
 		###
 		config: 'config'
-
-	###*
-	# @namespace resin.settings.urls
-	###
-	urls:
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		signup: '/signup'
-
-		###*
-		# @member {String}
-		# @memberof resin.settings.urls
-		###
-		preferences: '/preferences'
 
 settings.directories = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.directories)
 settings.files = helpers.prefixObjectValuesWithPath(settings.dataPrefix, settings.files)
