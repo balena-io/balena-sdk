@@ -28,24 +28,6 @@
     remoteUrl: 'https://dashboard.resin.io',
 
     /**
-    	 * @namespace resin.settings.directories
-     */
-    directories: {
-
-      /**
-      		 * @member {String}
-      		 * @memberof resin.settings.directories
-       */
-      plugins: path.join(DATA_PREFIX, 'plugins'),
-
-      /**
-      		 * @member {String}
-      		 * @memberof resin.settings.directories
-       */
-      os: path.join(DATA_PREFIX, 'os')
-    },
-
-    /**
     	 * @member {String}
     	 * @memberof resin.settings
      */
