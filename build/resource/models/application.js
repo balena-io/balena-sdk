@@ -4,15 +4,13 @@
  */
 
 (function() {
-  var deviceModel, errors, pine, request, settings, token, _;
+  var deviceModel, errors, pine, request, settings, _;
 
   _ = require('lodash-contrib');
 
   errors = require('resin-errors');
 
   request = require('resin-request');
-
-  token = require('resin-token');
 
   pine = require('../pine');
 
@@ -202,8 +200,7 @@
     return request.request({
       method: 'POST',
       url: "/application/" + id + "/restart",
-      remoteUrl: settings.get('remoteUrl'),
-      token: token.get()
+      remoteUrl: settings.get('remoteUrl')
     }, _.unary(callback));
   };
 

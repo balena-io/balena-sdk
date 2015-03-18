@@ -4,11 +4,9 @@
  */
 
 (function() {
-  var request, settings, token;
+  var request, settings;
 
   request = require('resin-request');
-
-  token = require('resin-token');
 
   settings = require('../../settings');
 
@@ -38,8 +36,7 @@
     return request.request({
       method: 'GET',
       url: '/config',
-      remoteUrl: settings.get('remoteUrl'),
-      token: token.get()
+      remoteUrl: settings.get('remoteUrl')
     }, function(error, response, config) {
       if (error != null) {
         return callback(error);

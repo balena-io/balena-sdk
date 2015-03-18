@@ -52,8 +52,7 @@
       method: 'POST',
       url: '/login_',
       remoteUrl: settings.get('remoteUrl'),
-      json: credentials,
-      token: token.get()
+      json: credentials
     }, function(error, response) {
       var savedToken;
       if (error != null) {
@@ -246,7 +245,6 @@
       method: 'POST',
       url: '/user/register',
       remoteUrl: settings.get('remoteUrl'),
-      token: token.get(),
       json: credentials
     }, function(error, response, body) {
       if (error != null) {
