@@ -44,7 +44,7 @@
     "lodash-contrib": "~241.4.14",
     "pubnub": "^3.7.7",
     "resin-errors": "^1.0.0",
-    "resin-pine": "^1.0.0",
+    "resin-pine": "^1.1.0",
     "resin-request": "^1.2.0",
     "resin-token": "^1.2.0"
   }
