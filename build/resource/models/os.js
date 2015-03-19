@@ -4,15 +4,13 @@
  */
 
 (function() {
-  var OSParams, fs, request, settings, url;
+  var OSParams, fs, request, url;
 
   url = require('url');
 
   fs = require('fs');
 
   request = require('resin-request');
-
-  settings = require('resin-settings-client');
 
   OSParams = require('../os-params');
 
@@ -63,7 +61,6 @@
     return request.request({
       method: 'GET',
       url: downloadUrl,
-      remoteUrl: settings.get('remoteUrl'),
       pipe: fs.createWriteStream(destination)
     }, callback, onProgress);
   };

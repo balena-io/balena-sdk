@@ -4,15 +4,13 @@
  */
 
 (function() {
-  var errors, request, settings, token;
+  var errors, request, token;
 
   errors = require('resin-errors');
 
   request = require('resin-request');
 
   token = require('resin-token');
-
-  settings = require('resin-settings-client');
 
 
   /**
@@ -51,7 +49,6 @@
     return request.request({
       method: 'POST',
       url: '/login_',
-      remoteUrl: settings.get('remoteUrl'),
       json: credentials
     }, function(error, response) {
       var savedToken;
@@ -244,7 +241,6 @@
     return request.request({
       method: 'POST',
       url: '/user/register',
-      remoteUrl: settings.get('remoteUrl'),
       json: credentials
     }, function(error, response, body) {
       if (error != null) {

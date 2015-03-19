@@ -1,5 +1,5 @@
 (function() {
-  var PinejsClientCore, PinejsClientRequest, Promise, promisifiedRequest, request, settings, _,
+  var PinejsClientCore, PinejsClientRequest, Promise, promisifiedRequest, request, _,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -8,8 +8,6 @@
   Promise = require('bluebird');
 
   request = require('resin-request');
-
-  settings = require('resin-settings-client');
 
   PinejsClientCore = require('pinejs-client/core')(_, Promise);
 
@@ -38,7 +36,6 @@
       if (params.gzip == null) {
         params.gzip = true;
       }
-      params.remoteUrl = settings.get('remoteUrl');
       return promisifiedRequest(params).spread(function(response, body) {
         var _ref;
         if ((200 <= (_ref = response.statusCode) && _ref < 300)) {

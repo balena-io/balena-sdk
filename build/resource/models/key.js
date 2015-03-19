@@ -4,15 +4,13 @@
  */
 
 (function() {
-  var errors, request, settings, _;
+  var errors, request, _;
 
   _ = require('lodash-contrib');
 
   errors = require('resin-errors');
 
   request = require('resin-request');
-
-  settings = require('resin-settings-client');
 
 
   /**
@@ -45,8 +43,7 @@
   exports.getAll = function(callback) {
     return request.request({
       method: 'GET',
-      url: '/user/keys',
-      remoteUrl: settings.get('remoteUrl')
+      url: '/user/keys'
     }, function(error, response, keys) {
       if (error != null) {
         return callback(error);
@@ -121,8 +118,7 @@
   exports.remove = function(id, callback) {
     return request.request({
       method: 'DELETE',
-      url: "/user/keys/" + id,
-      remoteUrl: settings.get('remoteUrl')
+      url: "/user/keys/" + id
     }, _.unary(callback));
   };
 
@@ -155,7 +151,6 @@
     return request.request({
       method: 'POST',
       url: '/user/keys',
-      remoteUrl: settings.get('remoteUrl'),
       json: {
         title: title,
         key: key

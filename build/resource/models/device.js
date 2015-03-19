@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var configModel, errors, pine, request, settings, _;
+  var configModel, errors, pine, request, _;
 
   pine = require('../pine');
 
@@ -13,8 +13,6 @@
   errors = require('resin-errors');
 
   request = require('resin-request');
-
-  settings = require('resin-settings-client');
 
   configModel = require('./config');
 
@@ -197,7 +195,6 @@
     return request.request({
       method: 'POST',
       url: '/blink',
-      remoteUrl: settings.get('remoteUrl'),
       json: {
         uuid: uuid
       }

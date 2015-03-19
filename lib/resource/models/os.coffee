@@ -5,7 +5,6 @@
 url = require('url')
 fs = require('fs')
 request = require('resin-request')
-settings = require('resin-settings-client')
 OSParams = require('../os-params')
 
 ###*
@@ -52,6 +51,5 @@ exports.download = (parameters, destination, callback, onProgress) ->
 	request.request
 		method: 'GET'
 		url: downloadUrl
-		remoteUrl: settings.get('remoteUrl')
 		pipe: fs.createWriteStream(destination)
 	, callback, onProgress

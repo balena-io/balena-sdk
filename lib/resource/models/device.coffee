@@ -6,7 +6,6 @@ pine = require('../pine')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
-settings = require('resin-settings-client')
 configModel = require('./config')
 
 ###*
@@ -167,7 +166,6 @@ exports.identify = (uuid, callback) ->
 	request.request
 		method: 'POST'
 		url: '/blink'
-		remoteUrl: settings.get('remoteUrl')
 		json: { uuid }
 	, _.unary(callback)
 

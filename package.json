@@ -48,8 +48,7 @@
     "pinejs-client": "^1.0.0",
     "pubnub": "^3.7.7",
     "resin-errors": "^1.0.0",
-    "resin-request": "^1.1.0",
-    "resin-settings-client": "^1.0.0",
+    "resin-request": "^1.2.0",
     "resin-token": "^1.0.0"
   }
 }
