@@ -1,6 +1,6 @@
 chai = require('chai')
 expect = chai.expect
-OSParams = require('../../lib/resource/os-params')
+OSParams = require('../../lib/models/os-params')
 
 describe 'OS Params:', ->
 

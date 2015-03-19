@@ -5,7 +5,7 @@
 url = require('url')
 fs = require('fs')
 request = require('resin-request')
-OSParams = require('../os-params')
+OSParams = require('./os-params')
 
 ###*
 # download callback

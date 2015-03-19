@@ -7,7 +7,7 @@ module.exports =
 	# @memberof resin
 	# @see {@link resin.models}
 	###
-	models: require('./resource')
+	models: require('./models')
 
 	###*
 	# @memberof resin
