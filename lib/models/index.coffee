@@ -7,34 +7,34 @@ module.exports =
 	# @memberof resin.models
 	# @see {@link module:resin.models.application}
 	###
-	application: require('./models/application')
+	application: require('./application')
 
 	###*
 	# @memberof resin.models
 	# @see {@link module:resin.models.device}
 	###
-	device: require('./models/device')
+	device: require('./device')
 
 	###*
 	# @memberof resin.models
 	# @see {@link module:resin.models.key}
 	###
-	key: require('./models/key')
+	key: require('./key')
 
 	###*
 	# @memberof resin.models
 	# @see {@link module:resin.models.environment-variables}
 	###
-	environmentVariables: require('./models/environment-variables')
+	environmentVariables: require('./environment-variables')
 
 	###*
 	# @memberof resin.models
 	# @see {@link module:resin.models.os}
 	###
-	os: require('./models/os')
+	os: require('./os')
 
 	###*
 	# @memberof resin.models
 	# @see {@link module:resin.models.config}
 	###
-	config: require('./models/config')
+	config: require('./config')
