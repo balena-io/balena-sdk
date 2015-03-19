@@ -2,8 +2,8 @@
 # @module resin.models.device
 ###
 
-pine = require('../pine')
 _ = require('lodash-contrib')
+pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
 configModel = require('./config')

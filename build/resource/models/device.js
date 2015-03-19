@@ -6,9 +6,9 @@
 (function() {
   var configModel, errors, pine, request, _;
 
-  pine = require('../pine');
-
   _ = require('lodash-contrib');
+
+  pine = require('resin-pine');
 
   errors = require('resin-errors');
 

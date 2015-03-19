@@ -4,7 +4,7 @@
 
 _ = require('lodash')
 errors = require('resin-errors')
-pine = require('../pine')
+pine = require('resin-pine')
 
 ###*
 # A Resin API environment variable

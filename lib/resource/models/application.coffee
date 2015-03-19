@@ -5,7 +5,7 @@
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
-pine = require('../pine')
+pine = require('resin-pine')
 deviceModel = require('./device')
 
 ###*
