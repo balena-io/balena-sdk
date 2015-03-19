@@ -4,11 +4,9 @@
  */
 
 (function() {
-  var request, settings;
+  var request;
 
   request = require('resin-request');
-
-  settings = require('resin-settings-client');
 
 
   /**
@@ -35,8 +33,7 @@
   exports.getAll = function(callback) {
     return request.request({
       method: 'GET',
-      url: '/config',
-      remoteUrl: settings.get('remoteUrl')
+      url: '/config'
     }, function(error, response, config) {
       if (error != null) {
         return callback(error);

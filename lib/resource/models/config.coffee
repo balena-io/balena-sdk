@@ -3,7 +3,6 @@
 ###
 
 request = require('resin-request')
-settings = require('resin-settings-client')
 
 ###*
 # getAll callback
@@ -28,7 +27,6 @@ exports.getAll = (callback) ->
 	request.request
 		method: 'GET'
 		url: '/config'
-		remoteUrl: settings.get('remoteUrl')
 	, (error, response, config) ->
 		return callback(error) if error?
 		return callback(null, config)

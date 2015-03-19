@@ -5,7 +5,6 @@
 errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
-settings = require('resin-settings-client')
 
 ###*
 # authenticate callback
@@ -41,7 +40,6 @@ exports.authenticate = (credentials, callback) ->
 	request.request
 		method: 'POST'
 		url: '/login_'
-		remoteUrl: settings.get('remoteUrl')
 		json: credentials
 	, (error, response) ->
 		return callback(error) if error?
@@ -203,7 +201,6 @@ exports.register = (credentials = {}, callback) ->
 	request.request
 		method: 'POST'
 		url: '/user/register'
-		remoteUrl: settings.get('remoteUrl')
 		json: credentials
 	, (error, response, body) ->
 		return callback(error) if error?

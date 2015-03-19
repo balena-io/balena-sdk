@@ -1,7 +1,6 @@
 _ = require('lodash')
 Promise = require('bluebird')
 request = require('resin-request')
-settings = require('resin-settings-client')
 PinejsClientCore = require('pinejs-client/core')(_, Promise)
 promisifiedRequest = Promise.promisify(request.request, request)
 
@@ -19,7 +18,6 @@ class PinejsClientRequest extends PinejsClientCore
 	_request: (params) ->
 		params.json = true
 		params.gzip ?= true
-		params.remoteUrl = settings.get('remoteUrl')
 
 		promisifiedRequest(params).spread (response, body) ->
 			if 200 <= response.statusCode < 300
