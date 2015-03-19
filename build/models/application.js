@@ -4,13 +4,15 @@
  */
 
 (function() {
-  var deviceModel, errors, pine, request, _;
+  var deviceModel, errors, pine, request, token, _;
 
   _ = require('lodash-contrib');
 
   errors = require('resin-errors');
 
   request = require('resin-request');
+
+  token = require('resin-token');
 
   pine = require('resin-pine');
 
@@ -49,7 +51,12 @@
       resource: 'application',
       options: {
         orderby: 'app_name asc',
-        expand: 'device'
+        expand: 'device',
+        filter: {
+          user: {
+            username: token.getUsername()
+          }
+        }
       }
     }).then(function(applications) {
       if (_.isEmpty(applications)) {

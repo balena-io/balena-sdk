@@ -5,6 +5,7 @@
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
+token = require('resin-token')
 pine = require('resin-pine')
 deviceModel = require('./device')
 
@@ -38,6 +39,10 @@ exports.getAll = (callback) ->
 		options:
 			orderby: 'app_name asc'
 			expand: 'device'
+
+			filter:
+				user:
+					username: token.getUsername()
 
 	.then (applications) ->
 		if _.isEmpty(applications)
