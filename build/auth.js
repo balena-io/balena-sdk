@@ -14,6 +14,45 @@
 
 
   /**
+   * whoami callback
+   * @callback module:resin.auth~whoamiCallback
+   * @param {Error} error - error
+   * @param {String} username - username
+   */
+
+
+  /**
+   * @summary Return current logged in username
+   * @public
+   * @function
+   *
+   * @description This will only work if you used {@link module:resin.auth.login} to log in.
+   *
+   * @param {module:resin.auth~whoamiCallback} callback - callback
+   *
+   * @example
+   * resin.auth.whoami (error, username) ->
+   *		throw error if error?
+   *
+   *		if not username?
+   *			console.log('I\'m not logged in!')
+   *		else
+   *			console.log("My username is: #{username}")
+   */
+
+  exports.whoami = function(callback) {
+    var error, username;
+    try {
+      username = token.getUsername();
+    } catch (_error) {
+      error = _error;
+      return callback(error);
+    }
+    return callback(null, username);
+  };
+
+
+  /**
    * authenticate callback
    * @callback module:resin.auth~authenticateCallback
    * @param {(Error|null)} error - error

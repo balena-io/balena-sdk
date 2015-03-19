@@ -5,8 +5,45 @@ chai.use(require('sinon-chai'))
 request = require('resin-request')
 token = require('resin-token')
 auth = require('../lib/auth')
+johnDoeFixture = require('./tokens.json').johndoe
 
 describe 'Auth:', ->
+
+	describe '.whoami()', ->
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				token.set(johnDoeFixture.token)
+
+			it 'should return the username', (done) ->
+				auth.whoami (error, username) ->
+					expect(error).to.not.exist
+					expect(username).to.equal(johnDoeFixture.data.username)
+					done()
+
+		describe 'given a not logged in user', ->
+
+			beforeEach ->
+				token.remove()
+
+			it 'should undefined', (done) ->
+				auth.whoami (error, username) ->
+					expect(error).to.not.exist
+					expect(username).to.be.undefined
+					done()
+
+		describe 'given an invalid token', ->
+
+			beforeEach ->
+				token.set('1234')
+
+			it 'should throw an error', (done) ->
+				auth.whoami (error, username) ->
+					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('Malformed token: 1234')
+					expect(username).to.not.exist
+					done()
 
 	describe '.register()', ->
 
