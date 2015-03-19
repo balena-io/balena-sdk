@@ -10,7 +10,7 @@
 
   errors = require('resin-errors');
 
-  pine = require('../pine');
+  pine = require('resin-pine');
 
 
   /**
