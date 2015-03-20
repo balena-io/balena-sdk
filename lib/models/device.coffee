@@ -159,10 +159,10 @@ exports.get = (name, callback) ->
 
 	return pine.get
 		resource: 'device'
-		name: name
 		options:
 			expand: 'application'
 			filter:
+				name: name
 				user: { username }
 
 	.then (device) ->
@@ -209,12 +209,17 @@ exports.remove = (name, callback) ->
 	if not _.isFunction(callback)
 		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
 
-	if not token.getUsername()?
+	username = token.getUsername()
+
+	if not username?
 		return callback(new errors.ResinNotLoggedIn())
 
 	return pine.delete
 		resource: 'device'
-		name: name
+		options:
+			filter:
+				name: name
+				user: { username }
 	.nodeify(callback)
 
 ###*
@@ -302,14 +307,19 @@ exports.rename = (name, newName, callback) ->
 	if not _.isFunction(callback)
 		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
 
-	if not token.getUsername()?
+	username = token.getUsername()
+
+	if not username?
 		return callback(new errors.ResinNotLoggedIn())
 
 	return pine.patch
 		resource: 'device'
-		name: name
 		body:
 			name: newName
+		options:
+			filter:
+				name: name
+				user: { username }
 	.nodeify(callback)
 
 ###*
@@ -352,14 +362,19 @@ exports.note = (name, note, callback) ->
 	if not _.isFunction(callback)
 		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
 
-	if not token.getUsername()?
+	username = token.getUsername()
+
+	if not username?
 		return callback(new errors.ResinNotLoggedIn())
 
 	return pine.patch
 		resource: 'device'
-		name: name
 		body:
 			note: note
+		options:
+			filter:
+				name: name
+				user: { username }
 	.nodeify(callback)
 
 ###*

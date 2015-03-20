@@ -181,10 +181,10 @@
     }
     return pine.get({
       resource: 'device',
-      name: name,
       options: {
         expand: 'application',
         filter: {
+          name: name,
           user: {
             username: username
           }
@@ -222,6 +222,7 @@
    */
 
   exports.remove = function(name, callback) {
+    var username;
     if (name == null) {
       throw new errors.ResinMissingParameter('name');
     }
@@ -234,12 +235,20 @@
     if (!_.isFunction(callback)) {
       throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
     }
-    if (token.getUsername() == null) {
+    username = token.getUsername();
+    if (username == null) {
       return callback(new errors.ResinNotLoggedIn());
     }
     return pine["delete"]({
       resource: 'device',
-      name: name
+      options: {
+        filter: {
+          name: name,
+          user: {
+            username: username
+          }
+        }
+      }
     }).nodeify(callback);
   };
 
@@ -317,6 +326,7 @@
    */
 
   exports.rename = function(name, newName, callback) {
+    var username;
     if (name == null) {
       throw new errors.ResinMissingParameter('name');
     }
@@ -335,14 +345,22 @@
     if (!_.isFunction(callback)) {
       throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
     }
-    if (token.getUsername() == null) {
+    username = token.getUsername();
+    if (username == null) {
       return callback(new errors.ResinNotLoggedIn());
     }
     return pine.patch({
       resource: 'device',
-      name: name,
       body: {
         name: newName
+      },
+      options: {
+        filter: {
+          name: name,
+          user: {
+            username: username
+          }
+        }
       }
     }).nodeify(callback);
   };
@@ -371,6 +389,7 @@
    */
 
   exports.note = function(name, note, callback) {
+    var username;
     if (name == null) {
       throw new errors.ResinMissingParameter('name');
     }
@@ -389,14 +408,22 @@
     if (!_.isFunction(callback)) {
       throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
     }
-    if (token.getUsername() == null) {
+    username = token.getUsername();
+    if (username == null) {
       return callback(new errors.ResinNotLoggedIn());
     }
     return pine.patch({
       resource: 'device',
-      name: name,
       body: {
         note: note
+      },
+      options: {
+        filter: {
+          name: name,
+          user: {
+            username: username
+          }
+        }
       }
     }).nodeify(callback);
   };
