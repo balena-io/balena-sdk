@@ -46,7 +46,7 @@
     "pubnub": "^3.7.7",
     "resin-errors": "^1.0.2",
     "resin-pine": "^1.1.0",
-    "resin-request": "^1.2.1",
+    "resin-request": "^1.2.2",
     "resin-token": "^1.2.0"
   }
 }
