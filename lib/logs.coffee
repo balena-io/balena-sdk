@@ -5,7 +5,7 @@
 _ = require('lodash-contrib')
 PubNub = require('pubnub')
 errors = require('resin-errors')
-configModel = require('./resource/models/config')
+configModel = require('./models/config')
 
 ###*
 # subscribe callback

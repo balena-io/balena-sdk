@@ -12,7 +12,7 @@
 
   errors = require('resin-errors');
 
-  configModel = require('./resource/models/config');
+  configModel = require('./models/config');
 
 
   /**
