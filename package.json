@@ -25,6 +25,7 @@
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "MIT",
   "devDependencies": {
+    "bluebird": "^2.9.14",
     "chai": "~1.10.0",
     "coffee-script": "~1.8.0",
     "gulp": "~3.8.10",
@@ -43,9 +44,9 @@
     "lodash": "~2.4.1",
     "lodash-contrib": "~241.4.14",
     "pubnub": "^3.7.7",
-    "resin-errors": "^1.0.0",
+    "resin-errors": "^1.0.2",
     "resin-pine": "^1.1.0",
-    "resin-request": "^1.2.0",
+    "resin-request": "^1.2.1",
     "resin-token": "^1.2.0"
   }
 }

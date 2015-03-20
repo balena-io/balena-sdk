@@ -47,6 +47,17 @@
    */
 
   exports.getAll = function(callback) {
+    var username;
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    username = token.getUsername();
+    if (username == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
     return pine.get({
       resource: 'application',
       options: {
@@ -54,7 +65,7 @@
         expand: 'device',
         filter: {
           user: {
-            username: token.getUsername()
+            username: username
           }
         }
       }
@@ -87,16 +98,90 @@
    * @public
    * @function
    *
-   * @param {(String|Number)} id - application id
+   * @param {String} name - application name
    * @param {module:resin.models.application~getCallback} callback - callback
    *
    * @example
-   *	resin.models.application.get 51, (error, application) ->
+   *	resin.models.application.get 'MyApp', (error, application) ->
    *		throw error if error?
    *		console.log(application)
    */
 
-  exports.get = function(id, callback) {
+  exports.get = function(name, callback) {
+    var username;
+    if (name == null) {
+      throw new errors.ResinMissingParameter('name');
+    }
+    if (!_.isString(name)) {
+      throw new errors.ResinInvalidParameter('name', name, 'not a string');
+    }
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    username = token.getUsername();
+    if (username == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
+    return pine.get({
+      resource: 'application',
+      options: {
+        filter: {
+          app_name: name,
+          user: {
+            username: username
+          }
+        }
+      }
+    }).then(function(application) {
+      if (_.isEmpty(application)) {
+        throw new errors.ResinApplicationNotFound(name);
+      }
+      return _.first(application);
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * getById callback
+   * @callback module:resin.models.application~getByIdCallback
+   * @param {(Error|null)} error - error
+   * @param {Application} application - application
+   */
+
+
+  /**
+   * @summary Get a single application by id
+   * @public
+   * @function
+   *
+   * @param {(Number|String)} id - application id
+   * @param {module:resin.models.application~getByIdCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.getById 89, (error, application) ->
+   *		throw error if error?
+   *		console.log(application)
+   */
+
+  exports.getById = function(id, callback) {
+    if (id == null) {
+      throw new errors.ResinMissingParameter('id');
+    }
+    if (!_.isString(id) && !_.isNumber(id)) {
+      throw new errors.ResinInvalidParameter('id', id, 'not a string not number');
+    }
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    if (token.getUsername() == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
     return pine.get({
       resource: 'application',
       id: id
@@ -135,6 +220,27 @@
    */
 
   exports.create = function(name, deviceType, callback) {
+    if (name == null) {
+      throw new errors.ResinMissingParameter('name');
+    }
+    if (!_.isString(name)) {
+      throw new errors.ResinInvalidParameter('name', name, 'not a string');
+    }
+    if (deviceType == null) {
+      throw new errors.ResinMissingParameter('deviceType');
+    }
+    if (!_.isString(deviceType)) {
+      throw new errors.ResinInvalidParameter('deviceType', deviceType, 'not a string');
+    }
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    if (token.getUsername() == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
     return deviceModel.getDeviceSlug(deviceType, function(error, deviceSlug) {
       if (error != null) {
         return callback(error);
@@ -165,18 +271,42 @@
    * @public
    * @function
    *
-   * @param {(String|Number)} id - application id
+   * @param {String} name - application name
    * @param {module:resin.models.application~removeCallback} callback - callback
    *
    * @example
-   *	resin.models.application.remove 51, (error) ->
+   *	resin.models.application.remove 'MyApp', (error) ->
    *		throw error if error?
    */
 
-  exports.remove = function(id, callback) {
+  exports.remove = function(name, callback) {
+    var username;
+    if (name == null) {
+      throw new errors.ResinMissingParameter('name');
+    }
+    if (!_.isString(name)) {
+      throw new errors.ResinInvalidParameter('name', name, 'not a string');
+    }
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    username = token.getUsername();
+    if (username == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
     return pine["delete"]({
       resource: 'application',
-      id: id
+      options: {
+        filter: {
+          app_name: name,
+          user: {
+            username: username
+          }
+        }
+      }
     }).nodeify(callback);
   };
 
@@ -193,19 +323,30 @@
    * @public
    * @function
    *
-   * @param {(String|Number)} id - application id
+   * @param {String} name - application name
    * @param {module:resin.models.application~restartCallback} callback - callback
    *
    * @example
-   *	resin.models.application.restart 51, (error) ->
+   *	resin.models.application.restart 'MyApp', (error) ->
    *		throw error if error?
    */
 
-  exports.restart = function(id, callback) {
-    return request.request({
-      method: 'POST',
-      url: "/application/" + id + "/restart"
-    }, _.unary(callback));
+  exports.restart = function(name, callback) {
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    return exports.get(name, function(error, application) {
+      if (error != null) {
+        return callback(error);
+      }
+      return request.request({
+        method: 'POST',
+        url: "/application/" + application.id + "/restart"
+      }, _.unary(callback));
+    });
   };
 
 }).call(this);
