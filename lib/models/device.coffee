@@ -6,6 +6,7 @@ _ = require('lodash-contrib')
 pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
+token = require('resin-token')
 configModel = require('./config')
 
 ###*
@@ -33,11 +34,26 @@ configModel = require('./config')
 #		console.log(devices)
 ###
 exports.getAll = (callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	username = token.getUsername()
+
+	if not username?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.get
 		resource: 'device'
 		options:
 			expand: 'application'
 			orderby: 'name asc'
+			filter:
+				user: { username }
+
 	.then (devices) ->
 		if _.isEmpty(devices)
 			throw new errors.ResinNotAny('devices')
@@ -56,22 +72,40 @@ exports.getAll = (callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} applicationId - application id
+# @param {String} name - application name
 # @param {module:resin.models.device~getAllByApplicationCallback} callback - callback
 #
 # @example
-#	resin.models.devices.getAllByApplication (error, devices) ->
+#	resin.models.devices.getAllByApplication 'MyApp', (error, devices) ->
 #		throw error if error?
 #		console.log(devices)
 ###
-exports.getAllByApplication = (applicationId, callback) ->
+exports.getAllByApplication = (name, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.get
 		resource: 'device'
 		options:
 			filter:
-				application: applicationId
+				application:
+					app_name: name
 			expand: 'application'
 			orderby: 'name asc'
+
 	.then (devices) ->
 		if _.isEmpty(devices)
 			throw new errors.ResinNotAny('devices')
@@ -96,23 +130,46 @@ exports.getAllByApplication = (applicationId, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - device id
+# @param {String} name - device name
 # @param {module:resin.models.device~getCallback} callback - callback
 #
 # @example
-#	resin.models.device.get 51, (error, device) ->
+#	resin.models.device.get 'MyDevice', (error, device) ->
 #		throw error if error?
 #		console.log(device)
 ###
-exports.get = (deviceId, callback) ->
+exports.get = (name, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	username = token.getUsername()
+
+	if not username?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.get
 		resource: 'device'
-		id: deviceId
+		name: name
 		options:
 			expand: 'application'
+			filter:
+				user: { username }
+
 	.then (device) ->
-		if not device?
-			throw new errors.ResinDeviceNotFound(deviceId)
+		if _.isEmpty(device)
+			throw new errors.ResinDeviceNotFound(name)
+
+		device = _.first(device)
 
 		# TODO: Move to server
 		device.application_name = device.application[0].app_name
@@ -131,17 +188,33 @@ exports.get = (deviceId, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - device id
+# @param {String} name - device name
 # @param {module:resin.models.device~removeCallback} callback - callback
 #
 # @example
-#	resin.models.device.remove 51, (error) ->
+#	resin.models.device.remove 'DeviceName', (error) ->
 #		throw error if error?
 ###
-exports.remove = (id, callback) ->
+exports.remove = (name, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.delete
 		resource: 'device'
-		id: id
+		name: name
 	.nodeify(callback)
 
 ###*
@@ -163,6 +236,22 @@ exports.remove = (id, callback) ->
 #		throw error if error?
 ###
 exports.identify = (uuid, callback) ->
+
+	if not uuid?
+		throw new errors.ResinMissingParameter('uuid')
+
+	if not _.isString(uuid)
+		throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	request.request
 		method: 'POST'
 		url: '/blink'
@@ -180,8 +269,8 @@ exports.identify = (uuid, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - device id
-# @param {String} name - the device new name
+# @param {String} name - device name
+# @param {String} newName - the device new name
 # @param {module:resin.models.device~renameCallback} callback - callback
 #
 # @todo This action doesn't return any error
@@ -193,12 +282,34 @@ exports.identify = (uuid, callback) ->
 #		throw error if error?
 #		console.log("Device has been renamed!")
 ###
-exports.rename = (id, name, callback) ->
+exports.rename = (name, newName, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not newName?
+		throw new errors.ResinMissingParameter('newName')
+
+	if not _.isString(newName)
+		throw new errors.ResinInvalidParameter('newName', newName, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.patch
 		resource: 'device'
-		id: id
+		name: name
 		body:
-			name: name
+			name: newName
 	.nodeify(callback)
 
 ###*
@@ -212,19 +323,41 @@ exports.rename = (id, name, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - device id
+# @param {String} name - device name
 # @param {String} note - the note
 # @param {module:resin.models.device~noteCallback} callback - callback
 #
 # @example
-#	resin.models.device.note 317, 'My useful note', (error) ->
+#	resin.models.device.note 'MyDevice', 'My useful note', (error) ->
 #		throw error if error?
 #		console.log("Device has been noted!")
 ###
-exports.note = (id, note, callback) ->
+exports.note = (name, note, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not note?
+		throw new errors.ResinMissingParameter('note')
+
+	if not _.isString(note)
+		throw new errors.ResinInvalidParameter('note', note, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.patch
 		resource: 'device'
-		id: id
+		name: name
 		body:
 			note: note
 	.nodeify(callback)
@@ -255,7 +388,23 @@ exports.note = (id, note, callback) ->
 #		if valid
 #			console.log('This is a valid UUID')
 ###
-exports.isValidUUID = (uuid, callback = _.noop) ->
+exports.isValidUUID = (uuid, callback) ->
+
+	if not uuid?
+		throw new errors.ResinMissingParameter('uuid')
+
+	if not _.isString(uuid)
+		throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	exports.getAll (error, devices) ->
 		return callback(error) if error?
 		uuidExists = _.findWhere(devices, { uuid })?
@@ -277,6 +426,8 @@ exports.isValidUUID = (uuid, callback = _.noop) ->
 #
 # @param {String} deviceTypeSlug - device type slug
 # @param {module:resin.models.device~getDisplayName} callback - callback
+#
+# @todo Test this.
 #
 # @example
 # resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
@@ -308,6 +459,8 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 # @param {String} deviceTypeName - device type name
 # @param {module:resin.models.device~getDeviceSlug} callback - callback
 #
+# @todo Test this.
+#
 # @example
 # resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
 #		throw error if error?
@@ -334,6 +487,8 @@ exports.getDeviceSlug = (deviceTypeName, callback) ->
 # @function
 #
 # @param {module:resin.models.device~getSupportedDeviceTypes} callback - callback
+#
+# @todo Test this.
 #
 # @example
 # resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
