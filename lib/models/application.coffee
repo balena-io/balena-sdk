@@ -34,6 +34,18 @@ deviceModel = require('./device')
 #		console.log(applications)
 ###
 exports.getAll = (callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	username = token.getUsername()
+
+	if not username?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.get
 		resource: 'application'
 		options:
@@ -41,8 +53,7 @@ exports.getAll = (callback) ->
 			expand: 'device'
 
 			filter:
-				user:
-					username: token.getUsername()
+				user: { username }
 
 	.then (applications) ->
 		if _.isEmpty(applications)
@@ -70,15 +81,83 @@ exports.getAll = (callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - application id
+# @param {String} name - application name
 # @param {module:resin.models.application~getCallback} callback - callback
 #
 # @example
-#	resin.models.application.get 51, (error, application) ->
+#	resin.models.application.get 'MyApp', (error, application) ->
 #		throw error if error?
 #		console.log(application)
 ###
-exports.get = (id, callback) ->
+exports.get = (name, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	username = token.getUsername()
+
+	if not username?
+		return callback(new errors.ResinNotLoggedIn())
+
+	return pine.get
+		resource: 'application'
+		options:
+			filter:
+				app_name: name
+				user: { username }
+
+	.then (application) ->
+		if _.isEmpty(application)
+			throw new errors.ResinApplicationNotFound(name)
+		return _.first(application)
+	.nodeify(callback)
+
+###*
+# getById callback
+# @callback module:resin.models.application~getByIdCallback
+# @param {(Error|null)} error - error
+# @param {Application} application - application
+###
+
+###*
+# @summary Get a single application by id
+# @public
+# @function
+#
+# @param {(Number|String)} id - application id
+# @param {module:resin.models.application~getByIdCallback} callback - callback
+#
+# @example
+#	resin.models.application.getById 89, (error, application) ->
+#		throw error if error?
+#		console.log(application)
+###
+exports.getById = (id, callback) ->
+
+	if not id?
+		throw new errors.ResinMissingParameter('id')
+
+	if not _.isString(id) and not _.isNumber(id)
+		throw new errors.ResinInvalidParameter('id', id, 'not a string not number')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.get
 		resource: 'application'
 		id: id
@@ -112,6 +191,28 @@ exports.get = (id, callback) ->
 #		console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not deviceType?
+		throw new errors.ResinMissingParameter('deviceType')
+
+	if not _.isString(deviceType)
+		throw new errors.ResinInvalidParameter('deviceType', deviceType, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
+
 	deviceModel.getDeviceSlug deviceType, (error, deviceSlug) ->
 		return callback(error) if error?
 
@@ -137,17 +238,38 @@ exports.create = (name, deviceType, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - application id
+# @param {String} name - application name
 # @param {module:resin.models.application~removeCallback} callback - callback
 #
 # @example
-#	resin.models.application.remove 51, (error) ->
+#	resin.models.application.remove 'MyApp', (error) ->
 #		throw error if error?
 ###
-exports.remove = (id, callback) ->
+exports.remove = (name, callback) ->
+
+	if not name?
+		throw new errors.ResinMissingParameter('name')
+
+	if not _.isString(name)
+		throw new errors.ResinInvalidParameter('name', name, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	username = token.getUsername()
+
+	if not username?
+		return callback(new errors.ResinNotLoggedIn())
+
 	return pine.delete
 		resource: 'application'
-		id: id
+		options:
+			filter:
+				app_name: name
+				user: { username }
 	.nodeify(callback)
 
 ###*
@@ -161,15 +283,25 @@ exports.remove = (id, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} id - application id
+# @param {String} name - application name
 # @param {module:resin.models.application~restartCallback} callback - callback
 #
 # @example
-#	resin.models.application.restart 51, (error) ->
+#	resin.models.application.restart 'MyApp', (error) ->
 #		throw error if error?
 ###
-exports.restart = (id, callback) ->
-	request.request
-		method: 'POST'
-		url: "/application/#{id}/restart"
-	, _.unary(callback)
+exports.restart = (name, callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	exports.get name, (error, application) ->
+		return callback(error) if error?
+
+		request.request
+			method: 'POST'
+			url: "/application/#{application.id}/restart"
+		, _.unary(callback)
