@@ -122,6 +122,41 @@ exports.get = (name, callback) ->
 	.nodeify(callback)
 
 ###*
+# has callback
+# @callback module:resin.models.application~hasCallback
+# @param {(Error|null)} error - error
+# @param {Boolean} has - has application
+###
+
+###*
+# @summary Check if an application exist
+# @public
+# @function
+#
+# @param {String} name - application name
+# @param {module:resin.models.application~hasCallback} callback - callback
+#
+# @example
+#	resin.models.application.has 'MyApp', (error, hasApp) ->
+#		throw error if error?
+#		console.log(hasApp)
+###
+exports.has = (name, callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	exports.get name, (error) ->
+		if error instanceof errors.ResinApplicationNotFound
+			return callback(null, false)
+
+		return callback(error) if error?
+		return callback(null, true)
+
+###*
 # getById callback
 # @callback module:resin.models.application~getByIdCallback
 # @param {(Error|null)} error - error

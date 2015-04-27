@@ -192,6 +192,92 @@ describe 'Application Model:', ->
 					expect(application).to.not.exist
 					done()
 
+	describe '.has()', ->
+
+		it 'should throw if no name', ->
+			expect ->
+				application.has(null, _.noop)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if name is not a string', ->
+			expect ->
+				application.has([ 'MyApp' ], _.noop)
+			.to.throw(errors.ResinInvalidParameter)
+
+		it 'should throw if not callback', ->
+			expect ->
+				application.has('MyApp', null)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if callback is not a function', ->
+			expect ->
+				application.has('MyApp', [ _.noop ])
+			.to.throw(errors.ResinInvalidParameter)
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
+				@tokenGetUsernameStub.returns('johndoe')
+
+			afterEach ->
+				@tokenGetUsernameStub.restore()
+
+			describe 'given no application', ->
+
+				beforeEach ->
+					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should return false', (done) ->
+					application.has 'MyApp', (error, has) ->
+						expect(error).to.not.exist
+						expect(has).to.be.false
+						done()
+
+			describe 'given an application', ->
+
+				beforeEach ->
+					applicationMock =
+						device: null
+						id: 999
+						user: { __deferred: [Object], __id: 555 }
+						app_name: 'App1'
+						git_repository: 'git@git.resin.io:johndoe/device1.git'
+						commit: null,
+						device_type: 'raspberry-pi'
+						__metadata: { uri: '/ewa/application(999)', type: '' }
+
+					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([ applicationMock ]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should return true', (done) ->
+					application.has 'MyApp', (error, has) ->
+						expect(error).to.not.exist
+						expect(has).to.be.true
+						done()
+
+		describe 'given no logged in user', ->
+
+			beforeEach ->
+				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
+				@tokenGetUsernameStub.returns(undefined)
+
+			afterEach ->
+				@tokenGetUsernameStub.restore()
+
+			it 'should return an error', (done) ->
+				application.has 'MyApp', (error, has) ->
+					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+					expect(has).to.not.exist
+					done()
+
 	describe '.getById()', ->
 
 		it 'should throw if no id', ->
