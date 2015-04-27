@@ -4,7 +4,9 @@
  */
 
 (function() {
-  var PubNub, configModel, errors, _;
+  var PubNub, async, configModel, deviceModel, errors, _;
+
+  async = require('async');
 
   _ = require('lodash-contrib');
 
@@ -13,6 +15,8 @@
   errors = require('resin-errors');
 
   configModel = require('./models/config');
+
+  deviceModel = require('./models/device');
 
 
   /**
@@ -64,40 +68,48 @@
     if (!_.isNumber(options.history)) {
       return callback(new errors.ResinInvalidOption('history', options.history));
     }
-    return configModel.getPubNubKeys(function(error, pubnubKeys) {
-      var channel, pubnub;
+    return deviceModel.isValidUUID(uuid, function(error, isValidUUID) {
       if (error != null) {
         return callback(error);
       }
-      pubnubKeys.ssl = true;
-      pubnub = PubNub.init(pubnubKeys);
-      channel = "device-" + uuid + "-logs";
-      return pubnub.subscribe({
-        channel: channel,
-        callback: function(message) {
-          if (!options.tail) {
-            return;
-          }
-          return callback(null, message);
-        },
-        error: _.unary(callback),
-        connect: function() {
-          return pubnub.history({
-            count: options.history,
-            channel: channel,
-            error: _.unary(callback),
-            callback: function(message) {
-              if (options.tail) {
-                return callback(null, _.first(message));
-              }
-              return pubnub.unsubscribe({
-                channel: channel
-              }, function() {
-                return callback(null, _.first(message));
-              });
-            }
-          });
+      if (!isValidUUID) {
+        return callback(new Error("Invalid uuid: " + uuid));
+      }
+      return configModel.getPubNubKeys(function(error, pubnubKeys) {
+        var channel, pubnub;
+        if (error != null) {
+          return callback(error);
         }
+        pubnubKeys.ssl = true;
+        pubnub = PubNub.init(pubnubKeys);
+        channel = "device-" + uuid + "-logs";
+        return pubnub.subscribe({
+          channel: channel,
+          callback: function(message) {
+            if (!options.tail) {
+              return;
+            }
+            return callback(null, message);
+          },
+          error: _.unary(callback),
+          connect: function() {
+            return pubnub.history({
+              count: options.history,
+              channel: channel,
+              error: _.unary(callback),
+              callback: function(message) {
+                if (options.tail) {
+                  return callback(null, _.first(message));
+                }
+                return pubnub.unsubscribe({
+                  channel: channel
+                }, function() {
+                  return callback(null, _.first(message));
+                });
+              }
+            });
+          }
+        });
       });
     });
   };
