@@ -57,8 +57,8 @@ describe 'Application Model:', ->
 						@pineGetStub.returns Promise.resolve [
 							{
 								device: [
-									{ is_online: 0 }
-									{ is_online: 1 }
+									{ is_online: false }
+									{ is_online: true }
 								]
 								id: 999
 								user: { __deferred: [Object], __id: 555 }

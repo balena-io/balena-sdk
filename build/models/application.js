@@ -77,7 +77,7 @@
     }).map(function(application) {
       var _ref;
       application.online_devices = _.where(application.device, {
-        is_online: 1
+        is_online: true
       }).length;
       application.devices_length = ((_ref = application.device) != null ? _ref.length : void 0) || 0;
       return application;
