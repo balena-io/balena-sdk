@@ -2,10 +2,12 @@
 # @module resin.logs
 ###
 
+async = require('async')
 _ = require('lodash-contrib')
 PubNub = require('pubnub')
 errors = require('resin-errors')
 configModel = require('./models/config')
+deviceModel = require('./models/device')
 
 ###*
 # subscribe callback
@@ -52,33 +54,39 @@ exports.subscribe = (uuid, options = {}, callback) ->
 	if not _.isNumber(options.history)
 		return callback(new errors.ResinInvalidOption('history', options.history))
 
-	configModel.getPubNubKeys (error, pubnubKeys) ->
+	deviceModel.isValidUUID uuid, (error, isValidUUID) ->
 		return callback(error) if error?
 
-		pubnubKeys.ssl = true
-		pubnub = PubNub.init(pubnubKeys)
+		if not isValidUUID
+			return callback(new Error("Invalid uuid: #{uuid}"))
 
-		channel = "device-#{ uuid }-logs"
+		configModel.getPubNubKeys (error, pubnubKeys) ->
+			return callback(error) if error?
 
-		# TODO: PubNub doesn't close the connection if using only history().
-		# Not even by using pubnub.unsubscribe(). The solution is to subscribe
-		# to the channel and fetch history + unsubscribe right afterwards.
-		# The following question might led to a response:
-		# http://stackoverflow.com/questions/25806223/how-to-close-a-pubnub-connection
+			pubnubKeys.ssl = true
+			pubnub = PubNub.init(pubnubKeys)
 
-		return pubnub.subscribe
-			channel: channel
-			callback: (message) ->
-				return if not options.tail
-				callback(null, message)
-			error: _.unary(callback)
-			connect: ->
-				pubnub.history
-					count: options.history
-					channel: channel
-					error: _.unary(callback)
-					callback: (message) ->
-						if options.tail
-							return callback(null, _.first(message))
-						pubnub.unsubscribe { channel }, ->
-							return callback(null, _.first(message))
+			channel = "device-#{ uuid }-logs"
+
+			# TODO: PubNub doesn't close the connection if using only history().
+			# Not even by using pubnub.unsubscribe(). The solution is to subscribe
+			# to the channel and fetch history + unsubscribe right afterwards.
+			# The following question might led to a response:
+			# http://stackoverflow.com/questions/25806223/how-to-close-a-pubnub-connection
+
+			return pubnub.subscribe
+				channel: channel
+				callback: (message) ->
+					return if not options.tail
+					callback(null, message)
+				error: _.unary(callback)
+				connect: ->
+					pubnub.history
+						count: options.history
+						channel: channel
+						error: _.unary(callback)
+						callback: (message) ->
+							if options.tail
+								return callback(null, _.first(message))
+							pubnub.unsubscribe { channel }, ->
+								return callback(null, _.first(message))
