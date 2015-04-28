@@ -145,6 +145,47 @@
 
 
   /**
+   * has callback
+   * @callback module:resin.models.application~hasCallback
+   * @param {(Error|null)} error - error
+   * @param {Boolean} has - has application
+   */
+
+
+  /**
+   * @summary Check if an application exist
+   * @public
+   * @function
+   *
+   * @param {String} name - application name
+   * @param {module:resin.models.application~hasCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.has 'MyApp', (error, hasApp) ->
+   *		throw error if error?
+   *		console.log(hasApp)
+   */
+
+  exports.has = function(name, callback) {
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    return exports.get(name, function(error) {
+      if (error instanceof errors.ResinApplicationNotFound) {
+        return callback(null, false);
+      }
+      if (error != null) {
+        return callback(error);
+      }
+      return callback(null, true);
+    });
+  };
+
+
+  /**
    * getById callback
    * @callback module:resin.models.application~getByIdCallback
    * @param {(Error|null)} error - error
