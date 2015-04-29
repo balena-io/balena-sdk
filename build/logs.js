@@ -4,26 +4,23 @@
  */
 
 (function() {
-  var PubNub, async, configModel, deviceModel, errors, _;
+  var PubNub, async, deviceModel, errors, _;
 
   async = require('async');
 
   _ = require('lodash-contrib');
 
-  PubNub = require('pubnub');
-
   errors = require('resin-errors');
 
-  configModel = require('./models/config');
-
   deviceModel = require('./models/device');
+
+  PubNub = require('./pubnub');
 
 
   /**
    * subscribe callback
    * @callback module:resin.logs~subscribeCallback
    * @param {(Error|null)} error - error
-   * @param {String|String[]} message - log message
    */
 
 
@@ -44,17 +41,19 @@
    * uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
    * resin.logs.subscribe uuid, {
    *		history: 20
-   * }, (error, message) ->
+   *		message: (message) ->
+   *			console.log(message)
+   * }, (error) ->
    *		throw error if error?
-   *		console.log(message)
    *
    * @example
    * uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
    * resin.logs.subscribe uuid, {
    *		tail: true
-   * }, (error, message) ->
+   *		message: (message) ->
+   *			console.log(message)
+   * }, (error) ->
    *		throw error if error?
-   *		console.log(message)
    */
 
   exports.subscribe = function(uuid, options, callback) {
@@ -63,55 +62,40 @@
     }
     _.defaults(options, {
       history: 0,
-      tail: false
+      tail: false,
+      message: _.noop
     });
     if (!_.isNumber(options.history)) {
-      return callback(new errors.ResinInvalidOption('history', options.history));
+      throw new errors.ResinInvalidOption('history', options.history);
     }
-    return deviceModel.isValidUUID(uuid, function(error, isValidUUID) {
-      if (error != null) {
-        return callback(error);
-      }
-      if (!isValidUUID) {
-        return callback(new Error("Invalid uuid: " + uuid));
-      }
-      return configModel.getPubNubKeys(function(error, pubnubKeys) {
-        var channel, pubnub;
-        if (error != null) {
-          return callback(error);
+    return async.waterfall([
+      function(callback) {
+        return deviceModel.isValidUUID(uuid, callback);
+      }, function(isValidUUID, callback) {
+        if (!isValidUUID) {
+          return callback(new Error("Invalid uuid: " + uuid));
         }
-        pubnubKeys.ssl = true;
-        pubnub = PubNub.init(pubnubKeys);
-        channel = "device-" + uuid + "-logs";
-        return pubnub.subscribe({
-          channel: channel,
-          callback: function(message) {
-            if (!options.tail) {
-              return;
+        return PubNub.getInstance(callback);
+      }, function(pubnub, callback) {
+        var channel;
+        channel = PubNub.getDeviceChannel(uuid);
+        if (!options.tail) {
+          return PubNub.getChannelHistory(pubnub, channel, {
+            count: options.history
+          }, function(error, messages) {
+            if (error != null) {
+              return callback(error);
             }
-            return callback(null, message);
-          },
-          error: _.unary(callback),
-          connect: function() {
-            return pubnub.history({
-              count: options.history,
-              channel: channel,
-              error: _.unary(callback),
-              callback: function(message) {
-                if (options.tail) {
-                  return callback(null, _.first(message));
-                }
-                return pubnub.unsubscribe({
-                  channel: channel
-                }, function() {
-                  return callback(null, _.first(message));
-                });
-              }
-            });
-          }
-        });
-      });
-    });
+            _.each(messages, _.unary(options.message));
+            return PubNub.unsubscribe(pubnub, channel, callback);
+          });
+        } else {
+          return PubNub.subscribe(pubnub, channel, {
+            message: options.message
+          }, callback);
+        }
+      }
+    ], callback);
   };
 
 }).call(this);

@@ -4,16 +4,14 @@
 
 async = require('async')
 _ = require('lodash-contrib')
-PubNub = require('pubnub')
 errors = require('resin-errors')
-configModel = require('./models/config')
 deviceModel = require('./models/device')
+PubNub = require('./pubnub')
 
 ###*
 # subscribe callback
 # @callback module:resin.logs~subscribeCallback
 # @param {(Error|null)} error - error
-# @param {String|String[]} message - log message
 ###
 
 ###*
@@ -33,60 +31,54 @@ deviceModel = require('./models/device')
 # uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
 # resin.logs.subscribe uuid, {
 #		history: 20
-# }, (error, message) ->
+#		message: (message) ->
+#			console.log(message)
+# }, (error) ->
 #		throw error if error?
-#		console.log(message)
 #
 # @example
 # uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
 # resin.logs.subscribe uuid, {
 #		tail: true
-# }, (error, message) ->
+#		message: (message) ->
+#			console.log(message)
+# }, (error) ->
 #		throw error if error?
-#		console.log(message)
 ###
 exports.subscribe = (uuid, options = {}, callback) ->
 
 	_.defaults options,
 		history: 0
 		tail: false
+		message: _.noop
 
 	if not _.isNumber(options.history)
-		return callback(new errors.ResinInvalidOption('history', options.history))
+		throw new errors.ResinInvalidOption('history', options.history)
 
-	deviceModel.isValidUUID uuid, (error, isValidUUID) ->
-		return callback(error) if error?
+	async.waterfall([
 
-		if not isValidUUID
-			return callback(new Error("Invalid uuid: #{uuid}"))
+		(callback) ->
+			deviceModel.isValidUUID(uuid, callback)
 
-		configModel.getPubNubKeys (error, pubnubKeys) ->
-			return callback(error) if error?
+		(isValidUUID, callback) ->
+			if not isValidUUID
+				return callback(new Error("Invalid uuid: #{uuid}"))
 
-			pubnubKeys.ssl = true
-			pubnub = PubNub.init(pubnubKeys)
+			PubNub.getInstance(callback)
 
-			channel = "device-#{ uuid }-logs"
+		(pubnub, callback) ->
+			channel = PubNub.getDeviceChannel(uuid)
 
-			# TODO: PubNub doesn't close the connection if using only history().
-			# Not even by using pubnub.unsubscribe(). The solution is to subscribe
-			# to the channel and fetch history + unsubscribe right afterwards.
-			# The following question might led to a response:
-			# http://stackoverflow.com/questions/25806223/how-to-close-a-pubnub-connection
+			if not options.tail
+				PubNub.getChannelHistory pubnub, channel,
+					count: options.history
+				, (error, messages) ->
+					return callback(error) if error?
+					_.each(messages, _.unary(options.message))
+					PubNub.unsubscribe(pubnub, channel, callback)
+			else
+				PubNub.subscribe pubnub, channel,
+					message: options.message
+				, callback
 
-			return pubnub.subscribe
-				channel: channel
-				callback: (message) ->
-					return if not options.tail
-					callback(null, message)
-				error: _.unary(callback)
-				connect: ->
-					pubnub.history
-						count: options.history
-						channel: channel
-						error: _.unary(callback)
-						callback: (message) ->
-							if options.tail
-								return callback(null, _.first(message))
-							pubnub.unsubscribe { channel }, ->
-								return callback(null, _.first(message))
+	], callback)
