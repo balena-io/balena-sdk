@@ -183,6 +183,41 @@ exports.get = (name, callback) ->
 	.nodeify(callback)
 
 ###*
+# has callback
+# @callback module:resin.models.device~hasCallback
+# @param {(Error|null)} error - error
+# @param {Boolean} has - has device
+###
+
+###*
+# @summary Check if a device exists
+# @public
+# @function
+#
+# @param {String} name - device name
+# @param {module:resin.models.device~hasCallback} callback - callback
+#
+# @example
+#	resin.models.device.has 'MyDevice', (error, hasDevice) ->
+#		throw error if error?
+#		console.log(hasDevice)
+###
+exports.has = (name, callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	exports.get name, (error) ->
+		if error instanceof errors.ResinDeviceNotFound
+			return callback(null, false)
+
+		return callback(error) if error?
+		return callback(null, true)
+
+###*
 # remove callback
 # @callback module:resin.models.device~removeCallback
 # @param {(Error|null)} error - error
