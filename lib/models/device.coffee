@@ -407,15 +407,21 @@ exports.note = (name, note, callback) ->
 	if not username?
 		return callback(new errors.ResinNotLoggedIn())
 
-	return pine.patch
-		resource: 'device'
-		body:
-			note: note
-		options:
-			filter:
-				name: name
-				user: { username }
-	.nodeify(callback)
+	exports.has name, (error, hasDevice) ->
+		return callback(error) if error?
+
+		if not hasDevice
+			return callback(new errors.ResinDeviceNotFound(name))
+
+		return pine.patch
+			resource: 'device'
+			body:
+				note: note
+			options:
+				filter:
+					name: name
+					user: { username }
+		.nodeify(callback)
 
 ###*
 # isValidUUID callback

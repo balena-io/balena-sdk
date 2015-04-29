@@ -521,6 +521,29 @@ describe 'Device Model:', ->
 					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
 					done()
 
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
+				@tokenGetUsernameStub.returns('johndoe')
+
+			afterEach ->
+				@tokenGetUsernameStub.restore()
+
+			describe 'given the device was not found', ->
+
+				beforeEach ->
+					@deviceHasStub = sinon.stub(device, 'has')
+					@deviceHasStub.yields(null, false)
+
+				afterEach ->
+					@deviceHasStub.restore()
+
+				it 'should return an error', (done) ->
+					device.note 'MyDevice', 'Hello World', (error) ->
+						expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+						done()
+
 	describe 'isValidUUID()', ->
 
 		it 'should throw if no uuid', ->

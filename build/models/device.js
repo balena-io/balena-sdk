@@ -456,20 +456,28 @@
     if (username == null) {
       return callback(new errors.ResinNotLoggedIn());
     }
-    return pine.patch({
-      resource: 'device',
-      body: {
-        note: note
-      },
-      options: {
-        filter: {
-          name: name,
-          user: {
-            username: username
+    return exports.has(name, function(error, hasDevice) {
+      if (error != null) {
+        return callback(error);
+      }
+      if (!hasDevice) {
+        return callback(new errors.ResinDeviceNotFound(name));
+      }
+      return pine.patch({
+        resource: 'device',
+        body: {
+          note: note
+        },
+        options: {
+          filter: {
+            name: name,
+            user: {
+              username: username
+            }
           }
         }
-      }
-    }).nodeify(callback);
+      }).nodeify(callback);
+    });
   };
 
 
