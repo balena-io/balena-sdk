@@ -58,6 +58,11 @@ exports.getAll = (callback) ->
 		if _.isEmpty(devices)
 			throw new errors.ResinNotAny('devices')
 		return devices
+
+	.map (device) ->
+		device.application_name = device.application[0].app_name
+		return device
+
 	.nodeify(callback)
 
 ###*

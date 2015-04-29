@@ -74,6 +74,9 @@
         throw new errors.ResinNotAny('devices');
       }
       return devices;
+    }).map(function(device) {
+      device.application_name = device.application[0].app_name;
+      return device;
     }).nodeify(callback);
   };
 
