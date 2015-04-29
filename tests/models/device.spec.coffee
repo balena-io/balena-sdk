@@ -272,6 +272,89 @@ describe 'Device Model:', ->
 					expect(devices).to.not.exist
 					done()
 
+	describe '.has()', ->
+
+		it 'should throw if no name', ->
+			expect ->
+				device.has(null, _.noop)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if name is not a string', ->
+			expect ->
+				device.has([ 'MyDevice' ], _.noop)
+			.to.throw(errors.ResinInvalidParameter)
+
+		it 'should throw if not callback', ->
+			expect ->
+				device.has('MyDevice', null)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if callback is not a function', ->
+			expect ->
+				device.has('MyDevice', [ _.noop ])
+			.to.throw(errors.ResinInvalidParameter)
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
+				@tokenGetUsernameStub.returns('johndoe')
+
+			afterEach ->
+				@tokenGetUsernameStub.restore()
+
+			describe 'given no devices', ->
+
+				beforeEach ->
+					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should return false', (done) ->
+					device.has 'MyDevice', (error, hasDevice) ->
+						expect(error).to.not.exist
+						expect(hasDevice).to.be.false
+						done()
+
+			describe 'given a device', ->
+
+				beforeEach ->
+					@device =
+						id: 1
+						name: 'Device1'
+						application: [
+							app_name: 'App1'
+						]
+
+					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([ @device ]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should return true', (done) ->
+					device.has 'Device1', (error, hasDevice) ->
+						expect(error).to.not.exist
+						expect(hasDevice).to.be.true
+						done()
+
+		describe 'given no logged in user', ->
+
+			beforeEach ->
+				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
+				@tokenGetUsernameStub.returns(undefined)
+
+			afterEach ->
+				@tokenGetUsernameStub.restore()
+
+			it 'should return an error', (done) ->
+				device.has 'Device1', (error, hasDevice) ->
+					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+					expect(hasDevice).to.not.exist
+					done()
+
 	describe '.remove()', ->
 
 		it 'should throw if no name', ->
