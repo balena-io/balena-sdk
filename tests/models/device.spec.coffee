@@ -55,11 +55,17 @@ describe 'Device Model:', ->
 							is_online: 0
 							id: 1
 							name: 'Device1'
+							application: [
+								{ app_name: 'MyApp' }
+							]
 						}
 						{
 							is_online: 0
 							id: 1
 							name: 'Device1'
+							application: [
+								{ app_name: 'MyApp' }
+							]
 						}
 					]
 
