@@ -223,8 +223,8 @@
     if (uuid == null) {
       throw new errors.ResinMissingParameter('uuid');
     }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('uuid', name, 'not a string');
+    if (!_.isString(uuid)) {
+      throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string');
     }
     if (callback == null) {
       throw new errors.ResinMissingParameter('callback');

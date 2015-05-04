@@ -200,8 +200,8 @@ exports.getByUUID = (uuid, callback) ->
 	if not uuid?
 		throw new errors.ResinMissingParameter('uuid')
 
-	if not _.isString(name)
-		throw new errors.ResinInvalidParameter('uuid', name, 'not a string')
+	if not _.isString(uuid)
+		throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string')
 
 	if not callback?
 		throw new errors.ResinMissingParameter('callback')
