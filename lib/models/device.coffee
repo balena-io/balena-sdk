@@ -218,6 +218,38 @@ exports.has = (name, callback) ->
 		return callback(null, true)
 
 ###*
+# isOnline callback
+# @callback module:resin.models.device~isOnlineCallback
+# @param {(Error|null)} error - error
+# @param {Boolean} isOnline - is online
+###
+
+###*
+# @summary Check if a device is online
+# @public
+# @function
+#
+# @param {String} name - device name
+# @param {module:resin.models.device~isOnlineCallback} callback - callback
+#
+# @example
+#	resin.models.device.isOnline 'MyDevice', (error, isOnline) ->
+#		throw error if error?
+#		console.log("Is device online? #{isOnline}")
+###
+exports.isOnline = (name, callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	exports.get name, (error, device) ->
+		return callback(error) if error?
+		return callback(null, !!device.is_online)
+
+###*
 # remove callback
 # @callback module:resin.models.device~removeCallback
 # @param {(Error|null)} error - error
