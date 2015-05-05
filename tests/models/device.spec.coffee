@@ -355,6 +355,123 @@ describe 'Device Model:', ->
 					expect(hasDevice).to.not.exist
 					done()
 
+	describe '.isOnline()', ->
+
+		it 'should throw if no name', ->
+			expect ->
+				device.isOnline(null, _.noop)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if name is not a string', ->
+			expect ->
+				device.isOnline([ 'MyDevice' ], _.noop)
+			.to.throw(errors.ResinInvalidParameter)
+
+		it 'should throw if not callback', ->
+			expect ->
+				device.isOnline('MyDevice', null)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if callback is not a function', ->
+			expect ->
+				device.isOnline('MyDevice', [ _.noop ])
+			.to.throw(errors.ResinInvalidParameter)
+
+		describe 'given the device does not exist', ->
+
+			beforeEach ->
+				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub.yields(new errors.ResinDeviceNotFound('device'))
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should return an error', (done) ->
+				device.isOnline 'MyDevice', (error, isOnline) ->
+					expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+					expect(isOnline).to.not.exist
+					done()
+
+		describe 'given the device is online', ->
+
+			beforeEach ->
+				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub.yields null,
+					is_online: true
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should return true', (done) ->
+				device.isOnline 'MyDevice', (error, isOnline) ->
+					expect(error).to.not.exist
+					expect(isOnline).to.be.true
+					done()
+
+		describe 'given the device is not online', ->
+
+			beforeEach ->
+				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub.yields null,
+					is_online: false
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should return false', (done) ->
+				device.isOnline 'MyDevice', (error, isOnline) ->
+					expect(error).to.not.exist
+					expect(isOnline).to.be.false
+					done()
+
+		describe 'given the device is_online is 1', ->
+
+			beforeEach ->
+				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub.yields null,
+					is_online: 1
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should return true', (done) ->
+				device.isOnline 'MyDevice', (error, isOnline) ->
+					expect(error).to.not.exist
+					expect(isOnline).to.be.true
+					done()
+
+		describe 'given the device is_online is 0', ->
+
+			beforeEach ->
+				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub.yields null,
+					is_online: 0
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should return false', (done) ->
+				device.isOnline 'MyDevice', (error, isOnline) ->
+					expect(error).to.not.exist
+					expect(isOnline).to.be.false
+					done()
+
+		describe 'given the device is_online is undefined', ->
+
+			beforeEach ->
+				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub.yields null,
+					is_online: undefined
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should return false', (done) ->
+				device.isOnline 'MyDevice', (error, isOnline) ->
+					expect(error).to.not.exist
+					expect(isOnline).to.be.false
+					done()
+
 	describe '.remove()', ->
 
 		it 'should throw if no name', ->
