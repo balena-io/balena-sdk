@@ -183,12 +183,19 @@ exports.get = (name, callback) ->
 	.nodeify(callback)
 
 ###*
+# getByUUID callback
+# @callback module:resin.models.device~getByUUIDCallback
+# @param {(Error|null)} error - error
+# @param {Device} device - device
+###
+
+###*
 # @summary Get a single device by UUID
 # @public
 # @function
 #
 # @param {String} uuid - device UUID
-# @param {module:resin.models.device~getCallback} callback - callback
+# @param {module:resin.models.device~getByUUIDCallback} callback - callback
 #
 # @example
 #	resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
