@@ -183,6 +183,65 @@ exports.get = (name, callback) ->
 	.nodeify(callback)
 
 ###*
+# getByUUID callback
+# @callback module:resin.models.device~getByUUIDCallback
+# @param {(Error|null)} error - error
+# @param {Device} device - device
+###
+
+###*
+# @summary Get a single device by UUID
+# @public
+# @function
+#
+# @param {String} uuid - device UUID
+# @param {module:resin.models.device~getByUUIDCallback} callback - callback
+#
+# @example
+#	resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
+#		throw error if error?
+#		console.log(device)
+###
+exports.getByUUID = (uuid, callback) ->
+
+	if not uuid?
+		throw new errors.ResinMissingParameter('uuid')
+
+	if not _.isString(uuid)
+		throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string')
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	username = token.getUsername()
+
+	if not username?
+		return callback(new errors.ResinNotLoggedIn())
+
+	return pine.get
+		resource: 'device'
+		options:
+			expand: 'application'
+			filter:
+				uuid: uuid
+				user: { username }
+
+	.then (device) ->
+		if _.isEmpty(device)
+			throw new errors.ResinDeviceNotFound(uuid)
+
+		device = _.first(device)
+
+		# TODO: Move to server
+		device.application_name = device.application[0].app_name
+
+		return device
+	.nodeify(callback)
+
+###*
 # has callback
 # @callback module:resin.models.device~hasCallback
 # @param {(Error|null)} error - error
