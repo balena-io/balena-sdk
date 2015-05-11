@@ -69,7 +69,12 @@
       method: 'GET',
       url: downloadUrl,
       pipe: fs.createWriteStream(destination)
-    }, callback, onProgress);
+    }, function(error) {
+      if (error != null) {
+        return callback(error);
+      }
+      return callback(null, destination);
+    }, onProgress);
   };
 
 }).call(this);

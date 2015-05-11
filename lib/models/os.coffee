@@ -57,4 +57,7 @@ exports.download = (parameters, destination, callback, onProgress) ->
 		method: 'GET'
 		url: downloadUrl
 		pipe: fs.createWriteStream(destination)
-	, callback, onProgress
+	, (error) ->
+		return callback(error) if error?
+		return callback(null, destination)
+	, onProgress
