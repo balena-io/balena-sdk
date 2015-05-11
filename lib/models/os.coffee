@@ -5,6 +5,8 @@
 url = require('url')
 fs = require('fs')
 request = require('resin-request')
+token = require('resin-token')
+errors = require('resin-errors')
 OSParams = require('./os-params')
 
 ###*
@@ -42,6 +44,9 @@ OSParams = require('./os-params')
 #		console.log "Received: #{state.received}"
 ###
 exports.download = (parameters, destination, callback, onProgress) ->
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
 
 	parameters = new OSParams(parameters)
 
