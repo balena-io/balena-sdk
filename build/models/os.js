@@ -4,13 +4,17 @@
  */
 
 (function() {
-  var OSParams, fs, request, url;
+  var OSParams, errors, fs, request, token, url;
 
   url = require('url');
 
   fs = require('fs');
 
   request = require('resin-request');
+
+  token = require('resin-token');
+
+  errors = require('resin-errors');
 
   OSParams = require('./os-params');
 
@@ -53,6 +57,9 @@
 
   exports.download = function(parameters, destination, callback, onProgress) {
     var downloadUrl, query;
+    if (token.getUsername() == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
     parameters = new OSParams(parameters);
     query = url.format({
       query: parameters
