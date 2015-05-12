@@ -4,13 +4,17 @@
  */
 
 (function() {
-  var _, errors, request;
+  var _, auth, errors, pine, token;
 
-  _ = require('lodash-contrib');
+  _ = require('lodash');
 
   errors = require('resin-errors');
 
-  request = require('resin-request');
+  token = require('resin-token');
+
+  pine = require('resin-pine');
+
+  auth = require('../auth');
 
 
   /**
@@ -31,27 +35,34 @@
    * @summary Get all ssh keys
    * @public
    * @function
-  #
+   *
    * @param {module:resin.models.key~getAllCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.key.getAll (error, keys) ->
-  #		throw error if error?
-  #		console.log(keys)
+   *	resin.models.key.getAll (error, keys) ->
+   *		throw error if error?
+   *		console.log(keys)
    */
 
   exports.getAll = function(callback) {
-    return request.request({
-      method: 'GET',
-      url: '/user/keys'
-    }, function(error, response, keys) {
+    return auth.getUserId(function(error, id) {
       if (error != null) {
         return callback(error);
       }
-      if (_.isEmpty(keys)) {
-        return callback(new errors.ResinNotAny('keys'));
-      }
-      return callback(null, keys);
+      return pine.get({
+        resource: 'user__has__public_key',
+        options: {
+          filter: {
+            user: {
+              id: id
+            }
+          }
+        }
+      }).tap(function(keys) {
+        if (_.isEmpty(keys)) {
+          throw new errors.ResinNotAny('keys');
+        }
+      }).nodeify(callback);
     });
   };
 
@@ -68,29 +79,36 @@
    * @summary Get a single ssh key
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} id - key id
    * @param {module:resin.models.key~getCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.key.get 51, (error, key) ->
-  #		throw error if error?
-  #		console.log(key)
+   *	resin.models.key.get 51, (error, key) ->
+   *		throw error if error?
+   *		console.log(key)
    */
 
   exports.get = function(id, callback) {
-    return exports.getAll(function(error, keys) {
-      var key;
+    return auth.getUserId(function(error, userId) {
       if (error != null) {
         return callback(error);
       }
-      key = _.findWhere(keys, {
-        id: id
-      });
-      if (key == null) {
-        return callback(new errors.ResinKeyNotFound(id));
-      }
-      return callback(null, key);
+      return pine.get({
+        resource: 'user__has__public_key',
+        id: id,
+        options: {
+          filter: {
+            user: {
+              id: userId
+            }
+          }
+        }
+      }).tap(function(key) {
+        if (_.isEmpty(key)) {
+          throw new errors.ResinKeyNotFound(id);
+        }
+      }).nodeify(callback);
     });
   };
 
@@ -106,20 +124,32 @@
    * @summary Remove ssh key
    * @public
    * @function
-  #
+   *
    * @param {(String|Number)} id - key id
    * @param {module:resin.models.key~removeCallback} callback - callback
-  #
+   *
    * @example
-  #	resin.models.key.remove 51, (error) ->
-  #		throw error if error?
+   *	resin.models.key.remove 51, (error) ->
+   *		throw error if error?
    */
 
   exports.remove = function(id, callback) {
-    return request.request({
-      method: 'DELETE',
-      url: "/user/keys/" + id
-    }, _.unary(callback));
+    return auth.getUserId(function(error, userId) {
+      if (error != null) {
+        return callback(error);
+      }
+      return pine["delete"]({
+        resource: 'user__has__public_key',
+        id: id,
+        options: {
+          filter: {
+            user: {
+              id: userId
+            }
+          }
+        }
+      }).nodeify(callback);
+    });
   };
 
 
@@ -127,6 +157,7 @@
    * create callback
    * @callback module:resin.models.key~createCallback
    * @param {(Error|null)} error - error
+   * @param {Number} id - id
    */
 
 
@@ -134,28 +165,31 @@
    * @summary Create a ssh key
    * @public
    * @function
-  #
+   *
    * @param {String} title - key title
    * @param {String} key - the public ssh key
    * @param {module:resin.models.key~createCallback} callback - callback
-  #
+   *
    * @todo We should return an id for consistency with the other models
-  #
+   *
    * @example
-  #	resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error) ->
-  #		throw error if error?
+   *	resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
+   *		throw error if error?
+   *		console.log(id)
    */
 
   exports.create = function(title, key, callback) {
+    if (token.getUsername() == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
     key = key.trim();
-    return request.request({
-      method: 'POST',
-      url: '/user/keys',
-      json: {
+    return pine.post({
+      resource: 'user__has__public_key',
+      body: {
         title: title,
         key: key
       }
-    }, _.unary(callback));
+    }).get('id').nodeify(callback);
   };
 
 }).call(this);

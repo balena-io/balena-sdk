@@ -31,30 +31,30 @@
    * @summary Subscribe to device logs by their UUID
    * @public
    * @function
-  #
+   *
    * @param {String} uuid - the device uuid
    * @param {Object} options - logs options (history=0, tail=false)
    * @param {module:resin.logs~subscribeCallback} callback - callback
-  #
+   *
    * @throws {Error} Will throw if `options.history` is not a number or parseable string.
-  #
+   *
    * @todo Find a way to test this
-  #
+   *
    * @example
    * uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
    * resin.logs.subscribe uuid, {
-  #		history: 20
+   *		history: 20
    * }, (error, message) ->
-  #		throw error if error?
-  #		console.log(message)
-  #
+   *		throw error if error?
+   *		console.log(message)
+   *
    * @example
    * uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
    * resin.logs.subscribe uuid, {
-  #		tail: true
+   *		tail: true
    * }, (error, message) ->
-  #		throw error if error?
-  #		console.log(message)
+   *		throw error if error?
+   *		console.log(message)
    */
 
   exports.subscribe = function(uuid, options, callback) {

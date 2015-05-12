@@ -2,16 +2,16 @@
 # @module resin.models.key
 ###
 
-_ = require('lodash-contrib')
+_ = require('lodash')
 errors = require('resin-errors')
-request = require('resin-request')
+token = require('resin-token')
+pine = require('resin-pine')
+auth = require('../auth')
 
 ###*
 # A Resin API key
 # @typedef {Object} Key
 ###
-
-# TODO: Do this with pinejs once it's exposed as an OData API
 
 ###*
 # getAll callback
@@ -33,16 +33,19 @@ request = require('resin-request')
 #		console.log(keys)
 ###
 exports.getAll = (callback) ->
-	request.request
-		method: 'GET'
-		url: '/user/keys'
-	, (error, response, keys) ->
+
+	auth.getUserId (error, id) ->
 		return callback(error) if error?
 
-		if _.isEmpty(keys)
-			return callback(new errors.ResinNotAny('keys'))
-
-		return callback(null, keys)
+		return pine.get
+			resource: 'user__has__public_key'
+			options:
+				filter:
+					user: { id }
+		.tap (keys) ->
+			if _.isEmpty(keys)
+				throw new errors.ResinNotAny('keys')
+		.nodeify(callback)
 
 ###*
 # get callback
@@ -65,15 +68,20 @@ exports.getAll = (callback) ->
 #		console.log(key)
 ###
 exports.get = (id, callback) ->
-	exports.getAll (error, keys) ->
+
+	auth.getUserId (error, userId) ->
 		return callback(error) if error?
 
-		key = _.findWhere(keys, { id })
-
-		if not key?
-			return callback(new errors.ResinKeyNotFound(id))
-
-		return callback(null, key)
+		return pine.get
+			resource: 'user__has__public_key'
+			id: id
+			options:
+				filter:
+					user: { id: userId }
+		.tap (key) ->
+			if _.isEmpty(key)
+				throw new errors.ResinKeyNotFound(id)
+		.nodeify(callback)
 
 ###*
 # remove callback
@@ -94,15 +102,23 @@ exports.get = (id, callback) ->
 #		throw error if error?
 ###
 exports.remove = (id, callback) ->
-	request.request
-		method: 'DELETE'
-		url: "/user/keys/#{id}"
-	, _.unary(callback)
+
+	auth.getUserId (error, userId) ->
+		return callback(error) if error?
+
+		return pine.delete
+			resource: 'user__has__public_key'
+			id: id
+			options:
+				filter:
+					user: { id: userId }
+		.nodeify(callback)
 
 ###*
 # create callback
 # @callback module:resin.models.key~createCallback
 # @param {(Error|null)} error - error
+# @param {Number} id - id
 ###
 
 ###*
@@ -117,16 +133,20 @@ exports.remove = (id, callback) ->
 # @todo We should return an id for consistency with the other models
 #
 # @example
-#	resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error) ->
+#	resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
 #		throw error if error?
+#		console.log(id)
 ###
 exports.create = (title, key, callback) ->
+
+	if not token.getUsername()?
+		return callback(new errors.ResinNotLoggedIn())
 
 	# Avoid ugly whitespaces
 	key = key.trim()
 
-	request.request
-		method: 'POST'
-		url: '/user/keys'
-		json: { title, key }
-	, _.unary(callback)
+	return pine.post
+		resource: 'user__has__public_key'
+		body: { title, key }
+	.get('id')
+	.nodeify(callback)
