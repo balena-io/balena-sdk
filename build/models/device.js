@@ -754,4 +754,45 @@
     });
   };
 
+
+  /**
+   * getManifestBySlug callback
+   * @callback module:resin.models.device~getManifestBySlug
+   * @param {(Error|null)} error - error
+   * @param {Object} manifest - the device manifest
+   */
+
+
+  /**
+   * @summary Get a device manifest by slug
+   * @public
+   * @function
+   *
+   * @param {String} slug - device slug
+   * @param {module:resin.models.device~getManifestBySlug} callback - callback
+   *
+   * @todo Test this.
+   *
+   * @example
+   * resin.models.device.getManifestBySlug 'raspberry-pi' (error, manifest) ->
+   *		throw error if error?
+   *		console.log(manifest)
+   */
+
+  exports.getManifestBySlug = function(slug, callback) {
+    return configModel.getDeviceTypes(function(error, deviceTypes) {
+      var deviceManifest;
+      if (error != null) {
+        return callback(error);
+      }
+      deviceManifest = _.find(deviceTypes, {
+        slug: slug
+      });
+      if (deviceManifest == null) {
+        return callback(new Error("Unsupported device: " + slug));
+      }
+      return callback(null, deviceManifest);
+    });
+  };
+
 }).call(this);
