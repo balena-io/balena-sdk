@@ -653,3 +653,36 @@ exports.getSupportedDeviceTypes = (callback) ->
 	configModel.getDeviceTypes (error, deviceTypes) ->
 		return callback(error) if error?
 		return callback(null, _.pluck(deviceTypes, 'name'))
+
+###*
+# getManifestBySlug callback
+# @callback module:resin.models.device~getManifestBySlug
+# @param {(Error|null)} error - error
+# @param {Object} manifest - the device manifest
+###
+
+###*
+# @summary Get a device manifest by slug
+# @public
+# @function
+#
+# @param {String} slug - device slug
+# @param {module:resin.models.device~getManifestBySlug} callback - callback
+#
+# @todo Test this.
+#
+# @example
+# resin.models.device.getManifestBySlug 'raspberry-pi' (error, manifest) ->
+#		throw error if error?
+#		console.log(manifest)
+###
+exports.getManifestBySlug = (slug, callback) ->
+	configModel.getDeviceTypes (error, deviceTypes) ->
+		return callback(error) if error?
+
+		deviceManifest = _.find(deviceTypes, { slug })
+
+		if not deviceManifest?
+			return callback(new Error("Unsupported device: #{slug}"))
+
+		return callback(null, deviceManifest)
