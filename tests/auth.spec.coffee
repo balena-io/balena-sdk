@@ -4,6 +4,7 @@ sinon = require('sinon')
 chai.use(require('sinon-chai'))
 request = require('resin-request')
 token = require('resin-token')
+errors = require('resin-errors')
 auth = require('../lib/auth')
 johnDoeFixture = require('./tokens.json').johndoe
 
@@ -259,6 +260,54 @@ describe 'Auth:', ->
 
 			it 'should return null', ->
 				expect(auth.getToken()).to.not.exist
+
+	describe '.getUserId()', ->
+
+		describe 'given there was an error getting the user id', ->
+
+			beforeEach ->
+				@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
+				@tokenGetUserIdStub.throws(new Error('token error'))
+
+			afterEach ->
+				@tokenGetUserIdStub.restore()
+
+			it 'should return the error', (done) ->
+				auth.getUserId (error, id) ->
+					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('token error')
+					expect(id).to.not.exist
+					done()
+
+		describe 'given no user id could not be retrieved', ->
+
+			beforeEach ->
+				@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
+				@tokenGetUserIdStub.returns(undefined)
+
+			afterEach ->
+				@tokenGetUserIdStub.restore()
+
+			it 'should return a ResinNotLoggedIn error', (done) ->
+				auth.getUserId (error, id) ->
+					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+					expect(id).to.not.exist
+					done()
+
+		describe 'given the user id could be retrieved', ->
+
+			beforeEach ->
+				@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
+				@tokenGetUserIdStub.returns(123)
+
+			afterEach ->
+				@tokenGetUserIdStub.restore()
+
+			it 'should return the id', (done) ->
+				auth.getUserId (error, id) ->
+					expect(error).to.not.exist
+					expect(id).to.equal(123)
+					done()
 
 	describe '#logout()', ->
 

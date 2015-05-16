@@ -208,6 +208,44 @@
 
 
   /**
+   * get user id callback
+   * @callback module:resin.auth~getUserIdCallback
+   * @param {(Error|null)} error - error
+   * @param {Number} id - user id
+   */
+
+
+  /**
+   * @summary Get current logged in user's id
+   * @public
+   * @function
+   *
+   * @description This will only work if you used {@link module:resin.auth.login} to log in.
+   *
+   * @param {module:resin.auth~getUserIdCallback} callback - callback
+   *
+   * @example
+   *	resin.auth.getUserId (error, id) ->
+   *		throw error if error?
+   *		console.log(id)
+   */
+
+  exports.getUserId = function(callback) {
+    var error, id;
+    try {
+      id = token.getUserId();
+    } catch (_error) {
+      error = _error;
+      return callback(error);
+    }
+    if (id == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
+    return callback(null, id);
+  };
+
+
+  /**
    * logout callback
    * @callback module:resin.auth~logoutCallback
    * @param {(Error|null)} error - error
