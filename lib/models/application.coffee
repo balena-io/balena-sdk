@@ -7,7 +7,9 @@ errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
 pine = require('resin-pine')
+network = require('resin-network-config')
 deviceModel = require('./device')
+auth = require('../auth')
 
 ###*
 # A Resin API application
@@ -340,3 +342,98 @@ exports.restart = (name, callback) ->
 			method: 'POST'
 			url: "/application/#{application.id}/restart"
 		, _.unary(callback)
+
+###*
+# getApiKey callback
+# @callback module:resin.models.application~getApiKeyCallback
+# @param {(Error|null)} error - error
+# @param {String} apiKey - the api key
+###
+
+###*
+# @summary Get the API key for a specific application
+# @public
+# @function
+#
+# @param {String} name - application name
+# @param {module:resin.models.application~getApiKeyCallback} callback - callback
+#
+# @example
+#	resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
+#		throw error if error?
+#		console.log(apiKey)
+###
+exports.getApiKey = (name, callback) ->
+
+	if not callback?
+		throw new errors.ResinMissingParameter('callback')
+
+	if not _.isFunction(callback)
+		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
+
+	exports.get name, (error, application) ->
+		return callback(error) if error?
+
+		request.request
+			method: 'POST'
+			url: "/application/#{application.id}/generate-api-key"
+		, _.unary(callback)
+
+###*
+# getConfiguration callback
+# @callback module:resin.models.application~getConfigurationCallback
+# @param {(Error|null)} error - error
+# @param {Object} configuration - application configuration
+###
+
+###*
+# @summary Get an application device configuration
+# @public
+# @function
+#
+# @param {String} name - application name
+# @param {Object} options - options
+# @param {String} [options.wifiSsid] - wifi ssid
+# @param {String} [options.wifiKey] - wifi key
+# @param {module:resin.models.application~getConfigurationCallback} callback - callback
+#
+# @example
+#	resin.models.application.getConfiguration 'MyApp',
+#		wifiSsid: 'foobar'
+#		wifiKey: 'hello'
+#	, (error, configuration) ->
+#		throw error if error?
+#		console.log(configuration)
+###
+exports.getConfiguration = (name, options, callback) ->
+	async.parallel
+
+		application: (callback) ->
+			exports.get(name, callback)
+
+		apiKey: (callback) ->
+			exports.getApiKey(name, callback)
+
+		userId: (callback) ->
+			auth.getUserId(callback)
+
+		username: (callback) ->
+			auth.whoami(callback)
+
+	, (error, results) ->
+		return callback(error) if error?
+
+		if not results.username?
+			return callback(new errors.ResinNotLoggedIn())
+
+		configuration =
+			applicationId: String(results.application.id)
+			apiKey: results.apiKey
+			deviceType: results.application.device_type
+			userId: String(results.userId)
+			username: results.username
+			wifiSsid: options.wifiSsid
+			wifiKey: options.wifiKey
+			files: network.getFiles(options)
+
+		return callback(null, configuration)
