@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var deviceModel, errors, pine, request, token, _;
+  var auth, deviceModel, errors, network, pine, request, token, _;
 
   _ = require('lodash-contrib');
 
@@ -16,7 +16,11 @@
 
   pine = require('resin-pine');
 
+  network = require('resin-network-config');
+
   deviceModel = require('./device');
+
+  auth = require('../auth');
 
 
   /**
@@ -387,6 +391,112 @@
         method: 'POST',
         url: "/application/" + application.id + "/restart"
       }, _.unary(callback));
+    });
+  };
+
+
+  /**
+   * getApiKey callback
+   * @callback module:resin.models.application~getApiKeyCallback
+   * @param {(Error|null)} error - error
+   * @param {String} apiKey - the api key
+   */
+
+
+  /**
+   * @summary Get the API key for a specific application
+   * @public
+   * @function
+   *
+   * @param {String} name - application name
+   * @param {module:resin.models.application~getApiKeyCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
+   *		throw error if error?
+   *		console.log(apiKey)
+   */
+
+  exports.getApiKey = function(name, callback) {
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    return exports.get(name, function(error, application) {
+      if (error != null) {
+        return callback(error);
+      }
+      return request.request({
+        method: 'POST',
+        url: "/application/" + application.id + "/generate-api-key"
+      }, _.unary(callback));
+    });
+  };
+
+
+  /**
+   * getConfiguration callback
+   * @callback module:resin.models.application~getConfigurationCallback
+   * @param {(Error|null)} error - error
+   * @param {Object} configuration - application configuration
+   */
+
+
+  /**
+   * @summary Get an application device configuration
+   * @public
+   * @function
+   *
+   * @param {String} name - application name
+   * @param {Object} options - options
+   * @param {String} [options.wifiSsid] - wifi ssid
+   * @param {String} [options.wifiKey] - wifi key
+   * @param {module:resin.models.application~getConfigurationCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.getConfiguration 'MyApp',
+   *		wifiSsid: 'foobar'
+   *		wifiKey: 'hello'
+   *	, (error, configuration) ->
+   *		throw error if error?
+   *		console.log(configuration)
+   */
+
+  exports.getConfiguration = function(name, options, callback) {
+    return async.parallel({
+      application: function(callback) {
+        return exports.get(name, callback);
+      },
+      apiKey: function(callback) {
+        return exports.getApiKey(name, callback);
+      },
+      userId: function(callback) {
+        return auth.getUserId(callback);
+      },
+      username: function(callback) {
+        return auth.whoami(callback);
+      }
+    }, function(error, results) {
+      var configuration;
+      if (error != null) {
+        return callback(error);
+      }
+      if (results.username == null) {
+        return callback(new errors.ResinNotLoggedIn());
+      }
+      configuration = {
+        applicationId: String(results.application.id),
+        apiKey: results.apiKey,
+        deviceType: results.application.device_type,
+        userId: String(results.userId),
+        username: results.username,
+        wifiSsid: options.wifiSsid,
+        wifiKey: options.wifiKey,
+        files: network.getFiles(options)
+      };
+      return callback(null, configuration);
     });
   };
 
