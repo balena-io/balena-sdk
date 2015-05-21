@@ -107,11 +107,17 @@ describe 'Auth:', ->
 				auth.logout(done)
 
 			it 'should save the token', (done) ->
-				expect(auth.getToken()).to.not.exist
-				auth.loginWithToken '1234', (error) ->
-					expect(error).to.not.exist
-					expect(auth.getToken()).to.equal('1234')
-					done()
+				auth.getToken (error, token) ->
+					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+					expect(token).to.not.exist
+
+					auth.loginWithToken '1234', (error) ->
+						expect(error).to.not.exist
+
+						auth.getToken (error, token) ->
+							expect(error).to.not.exist
+							expect(token).to.equal('1234')
+							done()
 
 	describe '.authenticate()', ->
 
@@ -175,14 +181,20 @@ describe 'Auth:', ->
 				@requestStub.restore()
 
 			it 'should save the token', (done) ->
-				expect(auth.getToken()).to.not.exist
-				auth.login
-					username: 'johndoe'
-					password: 'secret'
-				, (error) ->
-					expect(error).to.not.exist
-					expect(auth.getToken()).to.exist
-					done()
+				auth.getToken (error, token) ->
+					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+					expect(token).to.not.exist
+
+					auth.login
+						username: 'johndoe'
+						password: 'secret'
+					, (error) ->
+						expect(error).to.not.exist
+
+						auth.getToken (error, token) ->
+							expect(error).to.not.exist
+							expect(token).to.exist
+							done()
 
 		describe 'given invalid credentials', ->
 
@@ -250,16 +262,22 @@ describe 'Auth:', ->
 			beforeEach ->
 				token.set('1234')
 
-			it 'should return the token', ->
-				expect(auth.getToken()).to.equal('1234')
+			it 'should return the token', (done) ->
+				auth.getToken (error, token) ->
+					expect(error).to.not.exist
+					expect(token).to.equal('1234')
+					done()
 
 		describe 'given a not logged in user', ->
 
 			beforeEach (done) ->
 				auth.logout(done)
 
-			it 'should return null', ->
-				expect(auth.getToken()).to.not.exist
+			it 'should return an error', (done) ->
+				auth.getToken (error, token) ->
+					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+					expect(token).to.not.exist
+					done()
 
 	describe '.getUserId()', ->
 

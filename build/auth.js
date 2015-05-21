@@ -193,18 +193,36 @@
 
 
   /**
+   * getTokenCallback callback
+   * @callback module:resin.auth~getTokenCallback
+   * @param {(Error|null)} error - error
+   * @param {String} token - token
+   */
+
+
+  /**
    * @summary Get current logged in user's token
    * @public
    * @function
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
+   * @param {module:resin.auth~getTokenCallback} callback - callback
+   *
    * @example
-   *	token = resin.auth.getToken()
-   *	console.log(token)
+   *	resin.auth.getToken (error, token) ->
+   *		throw error if error?
+   *		console.log(token)
    */
 
-  exports.getToken = token.get;
+  exports.getToken = function(callback) {
+    var savedToken;
+    savedToken = token.get();
+    if (savedToken == null) {
+      return callback(new errors.ResinNotLoggedIn());
+    }
+    return callback(null, savedToken);
+  };
 
 
   /**
