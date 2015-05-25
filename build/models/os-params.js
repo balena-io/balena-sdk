@@ -1,5 +1,5 @@
 (function() {
-  var NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, OSParams, VALID_OPTIONS, errors, _;
+  var NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, OSParams, VALID_OPTIONS, _, errors;
 
   _ = require('lodash');
 
@@ -20,7 +20,7 @@
    * @private
    * @class
    * @param {Object} options - connection parameter options
-   *
+  #
    * @throws {Error} If no appId option
    * @throws {Error} If invalid appId option (not a number or parseable string)
    * @throws {Error} If no network option
