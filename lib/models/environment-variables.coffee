@@ -5,6 +5,7 @@
 _ = require('lodash')
 errors = require('resin-errors')
 pine = require('resin-pine')
+deviceModel = require('./device')
 
 ###*
 # A Resin API environment variable
@@ -158,22 +159,23 @@ exports.device = {}
 # @public
 # @function
 #
-# @param {(String|Number)} deviceId - device id
+# @param {String} deviceName - device name
 # @param {module:resin.models.environment-variables.device~getAllCallback} callback - callback
 #
 # @example
-#	resin.models.environmentVariables.device.getAll 51, (error, environmentVariables) ->
+#	resin.models.environmentVariables.device.getAll 'MyDevice', (error, environmentVariables) ->
 #		throw error if error?
 #		console.log(environmentVariables)
 ###
-exports.device.getAll = (deviceId, callback) ->
-	return pine.get
-		resource: 'device_environment_variable'
-		options:
-			filter:
-				device: deviceId
-			expand: 'device'
-			orderby: 'env_var_name asc'
+exports.device.getAll = (deviceName, callback) ->
+	deviceModel.get(deviceName).then (device) ->
+		return pine.get
+			resource: 'device_environment_variable'
+			options:
+				filter:
+					device: device.id
+				expand: 'device'
+				orderby: 'env_var_name asc'
 	.tap (environmentVariables) ->
 		if _.isEmpty(environmentVariables)
 			throw new errors.ResinNotAny('device environment variables')
@@ -190,22 +192,23 @@ exports.device.getAll = (deviceId, callback) ->
 # @public
 # @function
 #
-# @param {(String|Number)} deviceId - device id
+# @param {String} deviceName - device name
 # @param {String} name - environment variable name
 # @param {String} value - environment variable value
 # @param {module:resin.models.environment-variables.device~createCallback} callback - callback
 #
 # @example
-#	resin.models.environmentVariables.device.create 51, 'EDITOR', 'vim', (error) ->
+#	resin.models.environmentVariables.device.create 'MyDevice', 'EDITOR', 'vim', (error) ->
 #		throw error if error?
 ###
-exports.device.create = (deviceId, name, value, callback) ->
-	return pine.post
-		resource: 'device_environment_variable'
-		body:
-			device: deviceId
-			env_var_name: name
-			value: value
+exports.device.create = (deviceName, name, value, callback) ->
+	deviceModel.get(deviceName).then (device) ->
+		return pine.post
+			resource: 'device_environment_variable'
+			body:
+				device: device.id
+				env_var_name: name
+				value: value
 	.nodeify(callback)
 
 ###*
