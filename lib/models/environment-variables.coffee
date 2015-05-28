@@ -143,3 +143,118 @@ exports.remove = (id, callback) ->
 ####
 exports.isSystemVariable = (variable) ->
 	return /^RESIN_/.test(variable.name)
+
+exports.device = {}
+
+###*
+# device.getAll callback
+# @callback module:resin.models.environment-variables.device~getAllCallback
+# @param {(Error|null)} error - error
+# @param {EnvironmentVariable[]} environmentVariables - environment variables
+###
+
+###*
+# @summary Get all device environment variables
+# @public
+# @function
+#
+# @param {(String|Number)} deviceId - device id
+# @param {module:resin.models.environment-variables.device~getAllCallback} callback - callback
+#
+# @example
+#	resin.models.environmentVariables.device.getAll 51, (error, environmentVariables) ->
+#		throw error if error?
+#		console.log(environmentVariables)
+###
+exports.device.getAll = (deviceId, callback) ->
+	return pine.get
+		resource: 'device_environment_variable'
+		options:
+			filter:
+				device: deviceId
+			expand: 'device'
+			orderby: 'env_var_name asc'
+	.tap (environmentVariables) ->
+		if _.isEmpty(environmentVariables)
+			throw new errors.ResinNotAny('device environment variables')
+	.nodeify(callback)
+
+###*
+# device.create callback
+# @callback module:resin.models.environment-variables.device~createCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Create a device environment variable
+# @public
+# @function
+#
+# @param {(String|Number)} deviceId - device id
+# @param {String} name - environment variable name
+# @param {String} value - environment variable value
+# @param {module:resin.models.environment-variables.device~createCallback} callback - callback
+#
+# @example
+#	resin.models.environmentVariables.device.create 51, 'EDITOR', 'vim', (error) ->
+#		throw error if error?
+###
+exports.device.create = (deviceId, name, value, callback) ->
+	return pine.post
+		resource: 'device_environment_variable'
+		body:
+			device: deviceId
+			env_var_name: name
+			value: value
+	.nodeify(callback)
+
+###*
+# device.update callback
+# @callback module:resin.models.environment-variables.device~updateCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Update a device environment variable
+# @public
+# @function
+#
+# @param {(String|Number)} id - environment variable id
+# @param {String} value - environment variable value
+# @param {module:resin.models.environment-variables.device~updateCallback} callback - callback
+#
+# @example
+#	resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
+#		throw error if error?
+###
+exports.device.update = (id, value, callback) ->
+	return pine.patch
+		resource: 'device_environment_variable'
+		id: id
+		body:
+			value: value
+	.nodeify(callback)
+
+###*
+# device.remove callback
+# @callback module:resin.models.environment-variables.device~removeCallback
+# @param {(Error|null)} error - error
+###
+
+###*
+# @summary Remove a device environment variable
+# @public
+# @function
+#
+# @param {(String|Number)} id - environment variable id
+# @param {module:resin.models.environment-variables.device~removeCallback} callback - callback
+#
+# @example
+#	resin.models.environmentVariables.device.remove 2, (error) ->
+#		throw error if error?
+###
+exports.device.remove = (id, callback) ->
+	return pine.delete
+		resource: 'device_environment_variable'
+		id: id
+	.nodeify(callback)
