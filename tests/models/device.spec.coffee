@@ -196,16 +196,6 @@ describe 'Device Model:', ->
 				device.get([ 'MyDevice' ], _.noop)
 			.to.throw(errors.ResinInvalidParameter)
 
-		it 'should throw if not callback', ->
-			expect ->
-				device.get('MyDevice', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.get('MyDevice', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given a logged in user', ->
 
 			beforeEach ->

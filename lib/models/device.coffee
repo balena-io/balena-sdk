@@ -151,12 +151,6 @@ exports.get = (name, callback) ->
 	if not _.isString(name)
 		throw new errors.ResinInvalidParameter('name', name, 'not a string')
 
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
 	username = token.getUsername()
 
 	if not username?

@@ -172,12 +172,6 @@
     if (!_.isString(name)) {
       throw new errors.ResinInvalidParameter('name', name, 'not a string');
     }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
     username = token.getUsername();
     if (username == null) {
       return callback(new errors.ResinNotLoggedIn());
