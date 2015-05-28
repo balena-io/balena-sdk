@@ -179,6 +179,11 @@ exports.device.getAll = (deviceName, callback) ->
 	.tap (environmentVariables) ->
 		if _.isEmpty(environmentVariables)
 			throw new errors.ResinNotAny('device environment variables')
+
+	.map (environmentVariable) ->
+		environmentVariable.name = environmentVariable.env_var_name
+		return environmentVariable
+
 	.nodeify(callback)
 
 ###*

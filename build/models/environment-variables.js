@@ -217,6 +217,9 @@
       if (_.isEmpty(environmentVariables)) {
         throw new errors.ResinNotAny('device environment variables');
       }
+    }).map(function(environmentVariable) {
+      environmentVariable.name = environmentVariable.env_var_name;
+      return environmentVariable;
     }).nodeify(callback);
   };
 
