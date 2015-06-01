@@ -2,8 +2,9 @@
 # @module resin.auth
 ###
 
+Promise = require('bluebird')
 errors = require('resin-errors')
-request = require('resin-request')
+request = Promise.promisifyAll(require('resin-request'))
 token = require('resin-token')
 
 ###*
@@ -32,19 +33,13 @@ token = require('resin-token')
 #			console.log("My username is: #{username}")
 ###
 exports.whoami = (callback) ->
-	try
-		username = token.getUsername()
-	catch error
-		return callback(error)
-
-	return callback(null, username)
+	Promise.try(token.getUsername).nodeify(callback)
 
 ###*
 # authenticate callback
 # @callback module:resin.auth~authenticateCallback
 # @param {(Error|null)} error - error
 # @param {String} token - session token
-# @param {String} username - username
 ###
 
 ###*
@@ -64,20 +59,17 @@ exports.whoami = (callback) ->
 # @param {module:resin.auth~authenticateCallback} callback - callback
 #
 # @example
-#	resin.auth.authenticate credentials, (error, token, username) ->
+#	resin.auth.authenticate credentials, (error, token) ->
 #		throw error if error?
-#		console.log("My username is: #{username}")
 #		console.log("My token is: #{token}")
 ###
 exports.authenticate = (credentials, callback) ->
-	request.request
+	request.requestAsync
 		method: 'POST'
 		url: '/login_'
 		json: credentials
-	, (error, response) ->
-		return callback(error) if error?
-		savedToken = response?.body
-		return callback(null, savedToken, credentials.username)
+	.get('body')
+	.nodeify(callback)
 
 ###*
 # login callback
@@ -103,10 +95,9 @@ exports.authenticate = (credentials, callback) ->
 #		console.log('I\'m logged in!')
 ###
 exports.login = (credentials, callback) ->
-	exports.authenticate credentials, (error, authToken, username) ->
-		return callback(error) if error?
-		token.set(authToken)
-		return callback()
+	exports.authenticate(credentials)
+		.then(token.set)
+		.nodeify(callback)
 
 ###*
 # login callback
@@ -130,8 +121,9 @@ exports.login = (credentials, callback) ->
 #		console.log('I\'m logged in!')
 ###
 exports.loginWithToken = (authToken, callback) ->
-	token.set(authToken)
-	return callback()
+	Promise.try ->
+		return token.set(authToken)
+	.nodeify(callback)
 
 ###*
 # isLoggedIn callback
@@ -147,14 +139,16 @@ exports.loginWithToken = (authToken, callback) ->
 # @param {module:resin.auth~isLoggedInCallback} callback - callback
 #
 # @example
-#	resin.auth.isLoggedIn (isLoggedIn) ->
+#	resin.auth.isLoggedIn (error, isLoggedIn) ->
+#		throw error if error?
+#
 #		if isLoggedIn
 #			console.log('I\'m in!')
 #		else
 #			console.log('Too bad!')
 ###
 exports.isLoggedIn = (callback) ->
-	return callback(token.has())
+	Promise.try(token.has).nodeify(callback)
 
 ###*
 # getTokenCallback callback
@@ -178,12 +172,11 @@ exports.isLoggedIn = (callback) ->
 #		console.log(token)
 ###
 exports.getToken = (callback) ->
-	savedToken = token.get()
-
-	if not savedToken?
-		return callback(new errors.ResinNotLoggedIn())
-
-	return callback(null, savedToken)
+	Promise.try ->
+		savedToken = token.get()
+		throw new errors.ResinNotLoggedIn() if not savedToken?
+		return savedToken
+	.nodeify(callback)
 
 ###*
 # get user id callback
@@ -207,15 +200,11 @@ exports.getToken = (callback) ->
 #		console.log(id)
 ###
 exports.getUserId = (callback) ->
-	try
+	Promise.try ->
 		id = token.getUserId()
-	catch error
-		return callback(error)
-
-	if not id?
-		return callback(new errors.ResinNotLoggedIn())
-
-	return callback(null, id)
+		throw new errors.ResinNotLoggedIn() if not id?
+		return id
+	.nodeify(callback)
 
 ###*
 # logout callback
@@ -238,8 +227,7 @@ exports.getUserId = (callback) ->
 # @todo Maybe we should post to /logout or something to invalidate the token on the server?
 ###
 exports.logout = (callback) ->
-	token.remove()
-	return callback?()
+	Promise.try(token.remove).nodeify(callback)
 
 ###*
 # register callback
@@ -269,20 +257,9 @@ exports.logout = (callback) ->
 #		console.log(token)
 ###
 exports.register = (credentials = {}, callback) ->
-
-	if not credentials.email?
-		return callback(new errors.ResinMissingCredential('email'))
-
-	if not credentials.username?
-		return callback(new errors.ResinMissingCredential('username'))
-
-	if not credentials.password?
-		return callback(new errors.ResinMissingCredential('password'))
-
-	request.request
+	request.requestAsync
 		method: 'POST'
 		url: '/user/register'
 		json: credentials
-	, (error, response, body) ->
-		return callback(error) if error?
-		return callback(null, body)
+	.get(1)
+	.nodeify(callback)

@@ -25,7 +25,6 @@
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "MIT",
   "devDependencies": {
-    "bluebird": "^2.9.25",
     "chai": "~2.3.0",
     "coffee-script": "~1.9.2",
     "gulp": "~3.8.11",
@@ -42,6 +41,7 @@
   },
   "dependencies": {
     "async": "^1.0.0",
+    "bluebird": "^2.9.27",
     "lodash": "~3.9.1",
     "lodash-contrib": "~241.4.14",
     "pubnub": "^3.7.11",

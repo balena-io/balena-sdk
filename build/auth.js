@@ -4,11 +4,13 @@
  */
 
 (function() {
-  var errors, request, token;
+  var Promise, errors, request, token;
+
+  Promise = require('bluebird');
 
   errors = require('resin-errors');
 
-  request = require('resin-request');
+  request = Promise.promisifyAll(require('resin-request'));
 
   token = require('resin-token');
 
@@ -41,14 +43,7 @@
    */
 
   exports.whoami = function(callback) {
-    var error, username;
-    try {
-      username = token.getUsername();
-    } catch (_error) {
-      error = _error;
-      return callback(error);
-    }
-    return callback(null, username);
+    return Promise["try"](token.getUsername).nodeify(callback);
   };
 
 
@@ -57,7 +52,6 @@
    * @callback module:resin.auth~authenticateCallback
    * @param {(Error|null)} error - error
    * @param {String} token - session token
-   * @param {String} username - username
    */
 
 
@@ -78,25 +72,17 @@
    * @param {module:resin.auth~authenticateCallback} callback - callback
    *
    * @example
-   *	resin.auth.authenticate credentials, (error, token, username) ->
+   *	resin.auth.authenticate credentials, (error, token) ->
    *		throw error if error?
-   *		console.log("My username is: #{username}")
    *		console.log("My token is: #{token}")
    */
 
   exports.authenticate = function(credentials, callback) {
-    return request.request({
+    return request.requestAsync({
       method: 'POST',
       url: '/login_',
       json: credentials
-    }, function(error, response) {
-      var savedToken;
-      if (error != null) {
-        return callback(error);
-      }
-      savedToken = response != null ? response.body : void 0;
-      return callback(null, savedToken, credentials.username);
-    });
+    }).get('body').nodeify(callback);
   };
 
 
@@ -126,13 +112,7 @@
    */
 
   exports.login = function(credentials, callback) {
-    return exports.authenticate(credentials, function(error, authToken, username) {
-      if (error != null) {
-        return callback(error);
-      }
-      token.set(authToken);
-      return callback();
-    });
+    return exports.authenticate(credentials).then(token.set).nodeify(callback);
   };
 
 
@@ -160,8 +140,9 @@
    */
 
   exports.loginWithToken = function(authToken, callback) {
-    token.set(authToken);
-    return callback();
+    return Promise["try"](function() {
+      return token.set(authToken);
+    }).nodeify(callback);
   };
 
 
@@ -180,7 +161,9 @@
    * @param {module:resin.auth~isLoggedInCallback} callback - callback
    *
    * @example
-   *	resin.auth.isLoggedIn (isLoggedIn) ->
+   *	resin.auth.isLoggedIn (error, isLoggedIn) ->
+   *		throw error if error?
+   *
    *		if isLoggedIn
    *			console.log('I\'m in!')
    *		else
@@ -188,7 +171,7 @@
    */
 
   exports.isLoggedIn = function(callback) {
-    return callback(token.has());
+    return Promise["try"](token.has).nodeify(callback);
   };
 
 
@@ -216,12 +199,14 @@
    */
 
   exports.getToken = function(callback) {
-    var savedToken;
-    savedToken = token.get();
-    if (savedToken == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return callback(null, savedToken);
+    return Promise["try"](function() {
+      var savedToken;
+      savedToken = token.get();
+      if (savedToken == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return savedToken;
+    }).nodeify(callback);
   };
 
 
@@ -249,17 +234,14 @@
    */
 
   exports.getUserId = function(callback) {
-    var error, id;
-    try {
+    return Promise["try"](function() {
+      var id;
       id = token.getUserId();
-    } catch (_error) {
-      error = _error;
-      return callback(error);
-    }
-    if (id == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return callback(null, id);
+      if (id == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return id;
+    }).nodeify(callback);
   };
 
 
@@ -286,8 +268,7 @@
    */
 
   exports.logout = function(callback) {
-    token.remove();
-    return typeof callback === "function" ? callback() : void 0;
+    return Promise["try"](token.remove).nodeify(callback);
   };
 
 
@@ -324,25 +305,11 @@
     if (credentials == null) {
       credentials = {};
     }
-    if (credentials.email == null) {
-      return callback(new errors.ResinMissingCredential('email'));
-    }
-    if (credentials.username == null) {
-      return callback(new errors.ResinMissingCredential('username'));
-    }
-    if (credentials.password == null) {
-      return callback(new errors.ResinMissingCredential('password'));
-    }
-    return request.request({
+    return request.requestAsync({
       method: 'POST',
       url: '/user/register',
       json: credentials
-    }, function(error, response, body) {
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, body);
-    });
+    }).get(1).nodeify(callback);
   };
 
 }).call(this);
