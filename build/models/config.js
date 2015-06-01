@@ -4,9 +4,11 @@
  */
 
 (function() {
-  var request;
+  var Promise, request;
 
-  request = require('resin-request');
+  Promise = require('bluebird');
+
+  request = Promise.promisifyAll(require('resin-request'));
 
 
   /**
@@ -31,15 +33,10 @@
    */
 
   exports.getAll = function(callback) {
-    return request.request({
+    return request.requestAsync({
       method: 'GET',
       url: '/config'
-    }, function(error, response, config) {
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, config);
-    });
+    }).get(1).nodeify(callback);
   };
 
 
@@ -66,12 +63,7 @@
    */
 
   exports.getPubNubKeys = function(callback) {
-    return exports.getAll(function(error, config) {
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, config.pubnub);
-    });
+    return exports.getAll().get('pubnub').nodeify(callback);
   };
 
 
@@ -97,12 +89,7 @@
    */
 
   exports.getDeviceTypes = function(callback) {
-    return exports.getAll(function(error, config) {
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, config.deviceTypes);
-    });
+    return exports.getAll().get('deviceTypes').nodeify(callback);
   };
 
 }).call(this);

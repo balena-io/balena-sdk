@@ -2,7 +2,8 @@
 # @module resin.models.config
 ###
 
-request = require('resin-request')
+Promise = require('bluebird')
+request = Promise.promisifyAll(require('resin-request'))
 
 ###*
 # getAll callback
@@ -24,12 +25,11 @@ request = require('resin-request')
 #		console.log(config)
 ###
 exports.getAll = (callback) ->
-	request.request
+	request.requestAsync
 		method: 'GET'
 		url: '/config'
-	, (error, response, config) ->
-		return callback(error) if error?
-		return callback(null, config)
+	.get(1)
+	.nodeify(callback)
 
 ###*
 # getPubNubKeys callback
@@ -52,9 +52,7 @@ exports.getAll = (callback) ->
 #		console.log(pubnubKeys.publish_key)
 ###
 exports.getPubNubKeys = (callback) ->
-	exports.getAll (error, config) ->
-		return callback(error) if error?
-		return callback(null, config.pubnub)
+	exports.getAll().get('pubnub').nodeify(callback)
 
 ###*
 # getDeviceTypes callback
@@ -76,6 +74,4 @@ exports.getPubNubKeys = (callback) ->
 #		console.log(deviceTypes)
 ###
 exports.getDeviceTypes = (callback) ->
-	exports.getAll (error, config) ->
-		return callback(error) if error?
-		return callback(null, config.deviceTypes)
+	exports.getAll().get('deviceTypes').nodeify(callback)
