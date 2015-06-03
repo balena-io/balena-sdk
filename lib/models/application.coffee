@@ -2,6 +2,7 @@
 # @module resin.models.application
 ###
 
+async = require('async')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
@@ -377,7 +378,9 @@ exports.getApiKey = (name, callback) ->
 		request.request
 			method: 'POST'
 			url: "/application/#{application.id}/generate-api-key"
-		, _.unary(callback)
+		, (error, response, body) ->
+			return callback(error) if error?
+			return callback(null, body)
 
 ###*
 # getConfiguration callback
@@ -392,7 +395,7 @@ exports.getApiKey = (name, callback) ->
 # @function
 #
 # @param {String} name - application name
-# @param {Object} options - options
+# @param {Object} [options={}] - options
 # @param {String} [options.wifiSsid] - wifi ssid
 # @param {String} [options.wifiKey] - wifi key
 # @param {module:resin.models.application~getConfigurationCallback} callback - callback
@@ -405,7 +408,7 @@ exports.getApiKey = (name, callback) ->
 #		throw error if error?
 #		console.log(configuration)
 ###
-exports.getConfiguration = (name, options, callback) ->
+exports.getConfiguration = (name, options = {}, callback) ->
 	async.parallel
 
 		application: (callback) ->
