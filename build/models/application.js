@@ -4,7 +4,9 @@
  */
 
 (function() {
-  var _, auth, deviceModel, errors, network, pine, request, token;
+  var _, async, auth, deviceModel, errors, network, pine, request, token;
+
+  async = require('async');
 
   _ = require('lodash-contrib');
 
@@ -431,7 +433,12 @@
       return request.request({
         method: 'POST',
         url: "/application/" + application.id + "/generate-api-key"
-      }, _.unary(callback));
+      }, function(error, response, body) {
+        if (error != null) {
+          return callback(error);
+        }
+        return callback(null, body);
+      });
     });
   };
 
@@ -450,7 +457,7 @@
    * @function
    *
    * @param {String} name - application name
-   * @param {Object} options - options
+   * @param {Object} [options={}] - options
    * @param {String} [options.wifiSsid] - wifi ssid
    * @param {String} [options.wifiKey] - wifi key
    * @param {module:resin.models.application~getConfigurationCallback} callback - callback
@@ -465,6 +472,9 @@
    */
 
   exports.getConfiguration = function(name, options, callback) {
+    if (options == null) {
+      options = {};
+    }
     return async.parallel({
       application: function(callback) {
         return exports.get(name, callback);
