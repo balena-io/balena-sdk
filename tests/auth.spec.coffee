@@ -48,38 +48,6 @@ describe 'Auth:', ->
 
 	describe '.register()', ->
 
-		describe 'given invalid credentials', ->
-
-			it 'should fail if no email', (done) ->
-				auth.register
-					username: 'johndoe'
-					password: 'secret'
-				, (error, token) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('Missing credential: email')
-					expect(token).to.not.exist
-					done()
-
-			it 'should fail if no username', (done) ->
-				auth.register
-					password: 'secret'
-					email: 'john@doe.com'
-				, (error, token) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('Missing credential: username')
-					expect(token).to.not.exist
-					done()
-
-			it 'should fail if no password', (done) ->
-				auth.register
-					username: 'johndoe'
-					email: 'john@doe.com'
-				, (error, token) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('Missing credential: password')
-					expect(token).to.not.exist
-					done()
-
 		describe 'given valid credentials', ->
 
 			beforeEach ->
@@ -134,18 +102,9 @@ describe 'Auth:', ->
 				auth.authenticate
 					username: 'johndoe'
 					password: 'secret'
-				, (error, token, username) ->
+				, (error, token) ->
 					expect(error).to.not.exist
 					expect(token).to.equal('1234')
-					done()
-
-			it 'should return the username', (done) ->
-				auth.authenticate
-					username: 'johndoe'
-					password: 'secret'
-				, (error, token, username) ->
-					expect(error).to.not.exist
-					expect(username).to.equal('johndoe')
 					done()
 
 		describe 'given invalid credentials', ->
@@ -161,11 +120,10 @@ describe 'Auth:', ->
 				auth.authenticate
 					username: 'johndoe'
 					password: 'secret'
-				, (error, token, username) ->
+				, (error, token) ->
 					expect(error).to.exist
 					expect(error).to.be.an.instanceof(Error)
 					expect(token).to.be.undefined
-					expect(username).to.be.undefined
 					done()
 
 	describe '.login()', ->
@@ -251,7 +209,8 @@ describe 'Auth:', ->
 				auth.logout(done)
 
 			it 'should return false', (done) ->
-				auth.isLoggedIn (isLoggedIn) ->
+				auth.isLoggedIn (error, isLoggedIn) ->
+					expect(error).to.not.exist
 					expect(isLoggedIn).to.be.false
 					done()
 
@@ -354,6 +313,7 @@ describe 'Auth:', ->
 			it 'should keep the token undefined', (done) ->
 				auth.logout (error) ->
 					expect(error).to.not.exist
-					auth.isLoggedIn (isLoggedIn) ->
+					auth.isLoggedIn (error, isLoggedIn) ->
+						expect(error).to.not.exist
 						expect(isLoggedIn).to.be.false
 						done()
