@@ -4,7 +4,9 @@
  */
 
 (function() {
-  var _, configModel, errors, pine, request, token;
+  var Promise, _, configModel, errors, pine, request, token;
+
+  Promise = require('bluebird');
 
   _ = require('lodash-contrib');
 
@@ -12,7 +14,7 @@
 
   errors = require('resin-errors');
 
-  request = require('resin-request');
+  request = Promise.promisifyAll(require('resin-request'));
 
   token = require('resin-token');
 
@@ -47,33 +49,24 @@
    */
 
   exports.getAll = function(callback) {
-    var username;
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'device',
-      options: {
-        expand: 'application',
-        orderby: 'name asc',
-        filter: {
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.get({
+        resource: 'device',
+        options: {
+          expand: 'application',
+          orderby: 'name asc',
+          filter: {
+            user: {
+              username: username
+            }
           }
         }
-      }
-    }).then(function(devices) {
-      if (_.isEmpty(devices)) {
-        throw new errors.ResinNotAny('devices');
-      }
-      return devices;
+      });
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
       return device;
@@ -104,37 +97,22 @@
    */
 
   exports.getAllByApplication = function(name, callback) {
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'device',
-      options: {
-        filter: {
-          application: {
-            app_name: name
-          }
-        },
-        expand: 'application',
-        orderby: 'name asc'
+    return Promise["try"](function() {
+      if (token.getUsername() == null) {
+        throw new errors.ResinNotLoggedIn();
       }
-    }).then(function(devices) {
-      if (_.isEmpty(devices)) {
-        throw new errors.ResinNotAny('devices');
-      }
-      return devices;
+      return pine.get({
+        resource: 'device',
+        options: {
+          filter: {
+            application: {
+              app_name: name
+            }
+          },
+          expand: 'application',
+          orderby: 'name asc'
+        }
+      });
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
       return device;
@@ -165,35 +143,30 @@
    */
 
   exports.get = function(name, callback) {
-    var username;
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'device',
-      options: {
-        expand: 'application',
-        filter: {
-          name: name,
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.get({
+        resource: 'device',
+        options: {
+          expand: 'application',
+          filter: {
+            name: name,
+            user: {
+              username: username
+            }
           }
         }
-      }
-    }).then(function(device) {
+      });
+    }).tap(function(device) {
       if (_.isEmpty(device)) {
         throw new errors.ResinDeviceNotFound(name);
       }
-      device = _.first(device);
-      device.application_name = device.application[0].app_name;
-      return device;
+    }).get(0).tap(function(device) {
+      return device.application_name = device.application[0].app_name;
     }).nodeify(callback);
   };
 
@@ -221,41 +194,30 @@
    */
 
   exports.getByUUID = function(uuid, callback) {
-    var username;
-    if (uuid == null) {
-      throw new errors.ResinMissingParameter('uuid');
-    }
-    if (!_.isString(uuid)) {
-      throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'device',
-      options: {
-        expand: 'application',
-        filter: {
-          uuid: uuid,
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.get({
+        resource: 'device',
+        options: {
+          expand: 'application',
+          filter: {
+            uuid: uuid,
+            user: {
+              username: username
+            }
           }
         }
-      }
-    }).then(function(device) {
+      });
+    }).tap(function(device) {
       if (_.isEmpty(device)) {
         throw new errors.ResinDeviceNotFound(uuid);
       }
-      device = _.first(device);
-      device.application_name = device.application[0].app_name;
-      return device;
+    }).get(0).tap(function(device) {
+      return device.application_name = device.application[0].app_name;
     }).nodeify(callback);
   };
 
@@ -283,21 +245,9 @@
    */
 
   exports.has = function(name, callback) {
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    return exports.get(name, function(error) {
-      if (error instanceof errors.ResinDeviceNotFound) {
-        return callback(null, false);
-      }
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, true);
-    });
+    return exports.get(name)["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
+      return false;
+    }).nodeify(callback);
   };
 
 
@@ -324,18 +274,7 @@
    */
 
   exports.isOnline = function(name, callback) {
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    return exports.get(name, function(error, device) {
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, !!device.is_online);
-    });
+    return exports.get(name).get('is_online').nodeify(callback);
   };
 
 
@@ -360,33 +299,23 @@
    */
 
   exports.remove = function(name, callback) {
-    var username;
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine["delete"]({
-      resource: 'device',
-      options: {
-        filter: {
-          name: name,
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine["delete"]({
+        resource: 'device',
+        options: {
+          filter: {
+            name: name,
+            user: {
+              username: username
+            }
           }
         }
-      }
+      });
     }).nodeify(callback);
   };
 
@@ -412,28 +341,18 @@
    */
 
   exports.identify = function(uuid, callback) {
-    if (uuid == null) {
-      throw new errors.ResinMissingParameter('uuid');
-    }
-    if (!_.isString(uuid)) {
-      throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return request.request({
-      method: 'POST',
-      url: '/blink',
-      json: {
-        uuid: uuid
+    return Promise["try"](function() {
+      if (token.getUsername() == null) {
+        throw new errors.ResinNotLoggedIn();
       }
-    }, _.unary(callback));
+      return request.requestAsync({
+        method: 'POST',
+        url: '/blink',
+        json: {
+          uuid: uuid
+        }
+      });
+    }).nodeify(_.unary(callback));
   };
 
 
@@ -464,42 +383,26 @@
    */
 
   exports.rename = function(name, newName, callback) {
-    var username;
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (newName == null) {
-      throw new errors.ResinMissingParameter('newName');
-    }
-    if (!_.isString(newName)) {
-      throw new errors.ResinInvalidParameter('newName', newName, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.patch({
-      resource: 'device',
-      body: {
-        name: newName
-      },
-      options: {
-        filter: {
-          name: name,
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.patch({
+        resource: 'device',
+        body: {
+          name: newName
+        },
+        options: {
+          filter: {
+            name: name,
+            user: {
+              username: username
+            }
           }
         }
-      }
+      });
     }).nodeify(callback);
   };
 
@@ -527,51 +430,32 @@
    */
 
   exports.note = function(name, note, callback) {
-    var username;
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (note == null) {
-      throw new errors.ResinMissingParameter('note');
-    }
-    if (!_.isString(note)) {
-      throw new errors.ResinInvalidParameter('note', note, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return exports.has(name, function(error, hasDevice) {
-      if (error != null) {
-        return callback(error);
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
       }
-      if (!hasDevice) {
-        return callback(new errors.ResinDeviceNotFound(name));
-      }
-      return pine.patch({
-        resource: 'device',
-        body: {
-          note: note
-        },
-        options: {
-          filter: {
-            name: name,
-            user: {
-              username: username
+      return exports.has(name).then(function(hasDevice) {
+        if (!hasDevice) {
+          throw new errors.ResinDeviceNotFound(name);
+        }
+        return pine.patch({
+          resource: 'device',
+          body: {
+            note: note
+          },
+          options: {
+            filter: {
+              name: name,
+              user: {
+                username: username
+              }
             }
           }
-        }
-      }).nodeify(callback);
-    });
+        });
+      });
+    }).nodeify(callback);
   };
 
 
@@ -604,31 +488,11 @@
    */
 
   exports.isValidUUID = function(uuid, callback) {
-    if (uuid == null) {
-      throw new errors.ResinMissingParameter('uuid');
-    }
-    if (!_.isString(uuid)) {
-      throw new errors.ResinInvalidParameter('uuid', uuid, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return exports.getAll(function(error, devices) {
-      var uuidExists;
-      if (error != null) {
-        return callback(error);
-      }
-      uuidExists = _.findWhere(devices, {
+    return exports.getAll().then(function(devices) {
+      return _.findWhere(devices, {
         uuid: uuid
       }) != null;
-      return callback(null, uuidExists);
-    });
+    }).nodeify(callback);
   };
 
 
@@ -650,8 +514,6 @@
    * @param {String} deviceTypeSlug - device type slug
    * @param {module:resin.models.device~getDisplayName} callback - callback
    *
-   * @todo Test this.
-   *
    * @example
    * resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
    *		throw error if error?
@@ -660,16 +522,13 @@
    */
 
   exports.getDisplayName = function(deviceTypeSlug, callback) {
-    return configModel.getDeviceTypes(function(error, deviceTypes) {
+    return configModel.getDeviceTypes().then(function(deviceTypes) {
       var deviceTypeFound;
-      if (error != null) {
-        return callback(error);
-      }
       deviceTypeFound = _.findWhere(deviceTypes, {
         slug: deviceTypeSlug
       });
-      return callback(null, deviceTypeFound != null ? deviceTypeFound.name : void 0);
-    });
+      return deviceTypeFound != null ? deviceTypeFound.name : void 0;
+    }).nodeify(callback);
   };
 
 
@@ -691,8 +550,6 @@
    * @param {String} deviceTypeName - device type name
    * @param {module:resin.models.device~getDeviceSlug} callback - callback
    *
-   * @todo Test this.
-   *
    * @example
    * resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
    *		throw error if error?
@@ -701,16 +558,13 @@
    */
 
   exports.getDeviceSlug = function(deviceTypeName, callback) {
-    return configModel.getDeviceTypes(function(error, deviceTypes) {
-      var deviceFound;
-      if (error != null) {
-        return callback(error);
-      }
-      deviceFound = _.findWhere(deviceTypes, {
+    return configModel.getDeviceTypes().then(function(deviceTypes) {
+      var deviceTypeFound;
+      deviceTypeFound = _.findWhere(deviceTypes, {
         name: deviceTypeName
       });
-      return callback(null, deviceFound != null ? deviceFound.slug : void 0);
-    });
+      return deviceTypeFound != null ? deviceTypeFound.slug : void 0;
+    }).nodeify(callback);
   };
 
 
@@ -729,8 +583,6 @@
    *
    * @param {module:resin.models.device~getSupportedDeviceTypes} callback - callback
    *
-   * @todo Test this.
-   *
    * @example
    * resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
    *		throw error if error?
@@ -740,12 +592,9 @@
    */
 
   exports.getSupportedDeviceTypes = function(callback) {
-    return configModel.getDeviceTypes(function(error, deviceTypes) {
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, _.pluck(deviceTypes, 'name'));
-    });
+    return configModel.getDeviceTypes().then(function(deviceTypes) {
+      return _.pluck(deviceTypes, 'name');
+    }).nodeify(callback);
   };
 
 
@@ -765,8 +614,6 @@
    * @param {String} slug - device slug
    * @param {module:resin.models.device~getManifestBySlug} callback - callback
    *
-   * @todo Test this.
-   *
    * @example
    * resin.models.device.getManifestBySlug 'raspberry-pi' (error, manifest) ->
    *		throw error if error?
@@ -774,19 +621,16 @@
    */
 
   exports.getManifestBySlug = function(slug, callback) {
-    return configModel.getDeviceTypes(function(error, deviceTypes) {
+    return configModel.getDeviceTypes().then(function(deviceTypes) {
       var deviceManifest;
-      if (error != null) {
-        return callback(error);
-      }
       deviceManifest = _.find(deviceTypes, {
         slug: slug
       });
       if (deviceManifest == null) {
-        return callback(new Error("Unsupported device: " + slug));
+        throw new Error("Unsupported device: " + slug);
       }
-      return callback(null, deviceManifest);
-    });
+      return deviceManifest;
+    }).nodeify(callback);
   };
 
 }).call(this);

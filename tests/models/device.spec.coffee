@@ -8,20 +8,11 @@ errors = require('resin-errors')
 pine = require('resin-pine')
 token = require('resin-token')
 device = require('../../lib/models/device')
+config = require('../../lib/models/config')
 
 describe 'Device Model:', ->
 
 	describe '.getAll()', ->
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.getAll(null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.getAll([ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given a logged in user', ->
 
@@ -41,10 +32,10 @@ describe 'Device Model:', ->
 				afterEach ->
 					@pineGetStub.restore()
 
-				it 'should return an error', (done) ->
+				it 'should return an empty array', (done) ->
 					device.getAll (error, devices) ->
-						expect(error).to.be.an.instanceof(errors.ResinNotAny)
-						expect(devices).to.not.exist
+						expect(error).to.not.exist
+						expect(devices).to.deep.equal([])
 						done()
 
 			describe 'given devices', ->
@@ -98,26 +89,6 @@ describe 'Device Model:', ->
 
 	describe '.getAllByApplication()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				device.getAllByApplication(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.getAllByApplication([ 'MyApp' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.getAllByApplication('MyApp', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.getAllByApplication('MyApp', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given a logged in user', ->
 
 			beforeEach ->
@@ -138,8 +109,8 @@ describe 'Device Model:', ->
 
 				it 'should return an error', (done) ->
 					device.getAllByApplication 'MyApp', (error, devices) ->
-						expect(error).to.be.an.instanceof(errors.ResinNotAny)
-						expect(devices).to.not.exist
+						expect(error).to.not.exist
+						expect(devices).to.deep.equal([])
 						done()
 
 			describe 'given a device', ->
@@ -185,16 +156,6 @@ describe 'Device Model:', ->
 					done()
 
 	describe '.get()', ->
-
-		it 'should throw if no name', ->
-			expect ->
-				device.get(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.get([ 'MyDevice' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given a logged in user', ->
 
@@ -264,26 +225,6 @@ describe 'Device Model:', ->
 
 	describe '.has()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				device.has(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.has([ 'MyDevice' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.has('MyDevice', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.has('MyDevice', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given a logged in user', ->
 
 			beforeEach ->
@@ -347,31 +288,11 @@ describe 'Device Model:', ->
 
 	describe '.isOnline()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				device.isOnline(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.isOnline([ 'MyDevice' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.isOnline('MyDevice', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.isOnline('MyDevice', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given the device does not exist', ->
 
 			beforeEach ->
 				@deviceGetStub = sinon.stub(device, 'get')
-				@deviceGetStub.yields(new errors.ResinDeviceNotFound('device'))
+				@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('device')))
 
 			afterEach ->
 				@deviceGetStub.restore()
@@ -386,8 +307,7 @@ describe 'Device Model:', ->
 
 			beforeEach ->
 				@deviceGetStub = sinon.stub(device, 'get')
-				@deviceGetStub.yields null,
-					is_online: true
+				@deviceGetStub.returns(Promise.resolve(is_online: true))
 
 			afterEach ->
 				@deviceGetStub.restore()
@@ -402,56 +322,7 @@ describe 'Device Model:', ->
 
 			beforeEach ->
 				@deviceGetStub = sinon.stub(device, 'get')
-				@deviceGetStub.yields null,
-					is_online: false
-
-			afterEach ->
-				@deviceGetStub.restore()
-
-			it 'should return false', (done) ->
-				device.isOnline 'MyDevice', (error, isOnline) ->
-					expect(error).to.not.exist
-					expect(isOnline).to.be.false
-					done()
-
-		describe 'given the device is_online is 1', ->
-
-			beforeEach ->
-				@deviceGetStub = sinon.stub(device, 'get')
-				@deviceGetStub.yields null,
-					is_online: 1
-
-			afterEach ->
-				@deviceGetStub.restore()
-
-			it 'should return true', (done) ->
-				device.isOnline 'MyDevice', (error, isOnline) ->
-					expect(error).to.not.exist
-					expect(isOnline).to.be.true
-					done()
-
-		describe 'given the device is_online is 0', ->
-
-			beforeEach ->
-				@deviceGetStub = sinon.stub(device, 'get')
-				@deviceGetStub.yields null,
-					is_online: 0
-
-			afterEach ->
-				@deviceGetStub.restore()
-
-			it 'should return false', (done) ->
-				device.isOnline 'MyDevice', (error, isOnline) ->
-					expect(error).to.not.exist
-					expect(isOnline).to.be.false
-					done()
-
-		describe 'given the device is_online is undefined', ->
-
-			beforeEach ->
-				@deviceGetStub = sinon.stub(device, 'get')
-				@deviceGetStub.yields null,
-					is_online: undefined
+				@deviceGetStub.returns(Promise.resolve(is_online: false))
 
 			afterEach ->
 				@deviceGetStub.restore()
@@ -463,26 +334,6 @@ describe 'Device Model:', ->
 					done()
 
 	describe '.remove()', ->
-
-		it 'should throw if no name', ->
-			expect ->
-				device.remove(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.remove([ 'MyDevice' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.remove('MyDevice', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.remove('MyDevice', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given no logged in user', ->
 
@@ -501,26 +352,6 @@ describe 'Device Model:', ->
 
 	describe '.identify()', ->
 
-		it 'should throw if no uuid', ->
-			expect ->
-				device.identify(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if uuid is not a string', ->
-			expect ->
-				device.identify([ 'uuid' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.identify('uuid', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.identify('uuid', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given no logged in user', ->
 
 			beforeEach ->
@@ -538,36 +369,6 @@ describe 'Device Model:', ->
 
 	describe '.rename()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				device.rename(null, 'NewDevice', _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.rename([ 'MyDevice' ], 'NewDevice', _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if no new name', ->
-			expect ->
-				device.rename('MyDevice', null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if new name is not a string', ->
-			expect ->
-				device.rename('MyDevice', [ 'NewDevice' ],  _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.rename('MyDevice', 'NewDevice', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.rename('MyDevice', 'NewDevice', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given no logged in user', ->
 
 			beforeEach ->
@@ -583,36 +384,6 @@ describe 'Device Model:', ->
 					done()
 
 	describe '.note()', ->
-
-		it 'should throw if no name', ->
-			expect ->
-				device.rename(null, 'Note', _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				device.rename([ 'MyDevice' ], 'Note', _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if no note', ->
-			expect ->
-				device.rename('MyDevice', null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if note is not a string', ->
-			expect ->
-				device.rename('MyDevice', [ 'Note' ],  _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.rename('MyDevice', 'Note', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.rename('MyDevice', 'Note', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given no logged in user', ->
 
@@ -641,7 +412,7 @@ describe 'Device Model:', ->
 
 				beforeEach ->
 					@deviceHasStub = sinon.stub(device, 'has')
-					@deviceHasStub.yields(null, false)
+					@deviceHasStub.returns(Promise.resolve(false))
 
 				afterEach ->
 					@deviceHasStub.restore()
@@ -652,26 +423,6 @@ describe 'Device Model:', ->
 						done()
 
 	describe 'isValidUUID()', ->
-
-		it 'should throw if no uuid', ->
-			expect ->
-				device.isValidUUID(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if uuid is not a string', ->
-			expect ->
-				device.isValidUUID([ 'uuid' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				device.isValidUUID('uuid', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				device.isValidUUID('uuid', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given a logged in user', ->
 
@@ -686,9 +437,7 @@ describe 'Device Model:', ->
 
 				beforeEach ->
 					@deviceGetAllStub = sinon.stub(device, 'getAll')
-					@deviceGetAllStub.yields null, [
-						{ uuid: '1234' }
-					]
+					@deviceGetAllStub.returns(Promise.resolve([ uuid: '1234' ]))
 
 				afterEach ->
 					@deviceGetAllStub.restore()
@@ -703,9 +452,7 @@ describe 'Device Model:', ->
 
 				beforeEach ->
 					@deviceGetAllStub = sinon.stub(device, 'getAll')
-					@deviceGetAllStub.yields null, [
-						{ uuid: '5678' }
-					]
+					@deviceGetAllStub.returns(Promise.resolve([ uuid: '5678' ]))
 
 				afterEach ->
 					@deviceGetAllStub.restore()
@@ -729,4 +476,117 @@ describe 'Device Model:', ->
 				device.isValidUUID 'uuid', (error, devices) ->
 					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
 					expect(devices).to.not.exist
+					done()
+
+	describe '.getDisplayName()', ->
+
+		describe 'given device types', ->
+
+			beforeEach ->
+				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub.returns Promise.resolve [
+					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
+					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
+				]
+
+			afterEach ->
+				@configGetDeviceTypesStub.restore()
+
+			describe 'given the device slug is valid', ->
+
+				it 'should return the display name', (done) ->
+
+					device.getDisplayName 'raspberry-pi', (error, displayName) ->
+						expect(error).to.not.exist
+						expect(displayName).to.equal('Raspberry Pi')
+						done()
+
+			describe 'given the device slug is not valid', ->
+
+				it 'should return undefined', (done) ->
+
+					device.getDisplayName 'foo-bar', (error, displayName) ->
+						expect(error).to.not.exist
+						expect(displayName).to.be.undefined
+						done()
+
+	describe '.getDeviceSlug()', ->
+
+		describe 'given device types', ->
+
+			beforeEach ->
+				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub.returns Promise.resolve [
+					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
+					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
+				]
+
+			afterEach ->
+				@configGetDeviceTypesStub.restore()
+
+			describe 'given the device name is valid', ->
+
+				it 'should return the device slug', (done) ->
+
+					device.getDeviceSlug 'Raspberry Pi', (error, slug) ->
+						expect(error).to.not.exist
+						expect(slug).to.equal('raspberry-pi')
+						done()
+
+			describe 'given the device name is not valid', ->
+
+				it 'should return undefined', (done) ->
+
+					device.getDeviceSlug 'Foo Bar', (error, slug) ->
+						expect(error).to.not.exist
+						expect(slug).to.be.undefined
+						done()
+
+	describe '.getSupportedDeviceTypes()', ->
+
+		describe 'given device types', ->
+
+			beforeEach ->
+				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub.returns Promise.resolve [
+					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
+					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
+				]
+
+			afterEach ->
+				@configGetDeviceTypesStub.restore()
+
+			it 'should return an array of names', (done) ->
+				device.getSupportedDeviceTypes (error, deviceTypes) ->
+					expect(error).to.not.exist
+					expect(deviceTypes).to.deep.equal([ 'Raspberry Pi', 'BeagleBone Black' ])
+					done()
+
+	describe '.getManifestBySlug()', ->
+
+		describe 'given device types', ->
+
+			beforeEach ->
+				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub.returns Promise.resolve [
+					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
+					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
+				]
+
+			afterEach ->
+				@configGetDeviceTypesStub.restore()
+
+			it 'should return an error if no slug', (done) ->
+				device.getManifestBySlug 'foo-bar', (error, manifest) ->
+					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('Unsupported device: foo-bar')
+					expect(manifest).to.not.exist
+					done()
+
+			it 'should return the manifest if slug is valid', (done) ->
+				device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
+					expect(error).to.not.exist
+					expect(manifest).to.deep.equal
+						name: 'Raspberry Pi'
+						slug: 'raspberry-pi'
 					done()
