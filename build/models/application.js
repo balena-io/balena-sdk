@@ -192,6 +192,46 @@
 
 
   /**
+   * hasAny callback
+   * @callback module:resin.models.application~hasAnyCallback
+   * @param {(Error|null)} error - error
+   * @param {Boolean} hasAny - has any application
+   */
+
+
+  /**
+   * @summary Check if the user has any applications
+   * @public
+   * @function
+   *
+   * @param {module:resin.models.application~hasAnyCallback} callback - callback
+   *
+   * @example
+   *	resin.models.application.hasAny (error, hasAny) ->
+   *		throw error if error?
+   *		console.log("Has any? #{hasAny}")
+   */
+
+  exports.hasAny = function(callback) {
+    if (callback == null) {
+      throw new errors.ResinMissingParameter('callback');
+    }
+    if (!_.isFunction(callback)) {
+      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
+    }
+    return exports.getAll(function(error) {
+      if (error == null) {
+        return callback(null, true);
+      }
+      if (error instanceof errors.ResinNotAny) {
+        return callback(null, false);
+      }
+      return callback(error);
+    });
+  };
+
+
+  /**
    * getById callback
    * @callback module:resin.models.application~getByIdCallback
    * @param {(Error|null)} error - error

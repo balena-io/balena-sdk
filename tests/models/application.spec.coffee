@@ -278,6 +278,67 @@ describe 'Application Model:', ->
 					expect(has).to.not.exist
 					done()
 
+	describe '.has()', ->
+
+		it 'should throw if no callback', ->
+			expect ->
+				application.hasAny(null)
+			.to.throw(errors.ResinMissingParameter)
+
+		it 'should throw if callback is not a function', ->
+			expect ->
+				application.hasAny([ _.noop ])
+			.to.throw(errors.ResinInvalidParameter)
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
+				@tokenGetUsernameStub.returns('johndoe')
+
+			afterEach ->
+				@tokenGetUsernameStub.restore()
+
+			describe 'given no application', ->
+
+				beforeEach ->
+					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should return false', (done) ->
+					application.hasAny (error, hasAny) ->
+						expect(error).to.not.exist
+						expect(hasAny).to.be.false
+						done()
+
+			describe 'given an application', ->
+
+				beforeEach ->
+					applicationMock =
+						device: null
+						id: 999
+						user: { __deferred: [Object], __id: 555 }
+						app_name: 'App1'
+						git_repository: 'git@git.resin.io:johndoe/device1.git'
+						commit: null,
+						device_type: 'raspberry-pi'
+						__metadata: { uri: '/ewa/application(999)', type: '' }
+
+					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([ applicationMock ]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should return true', (done) ->
+					application.hasAny (error, hasAny) ->
+						expect(error).to.not.exist
+						expect(hasAny).to.be.true
+						done()
+
 	describe '.getById()', ->
 
 		it 'should throw if no id', ->
