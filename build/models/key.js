@@ -45,10 +45,7 @@
    */
 
   exports.getAll = function(callback) {
-    return auth.getUserId(function(error, id) {
-      if (error != null) {
-        return callback(error);
-      }
+    return auth.getUserId().then(function(id) {
       return pine.get({
         resource: 'user__has__public_key',
         options: {
@@ -58,12 +55,8 @@
             }
           }
         }
-      }).tap(function(keys) {
-        if (_.isEmpty(keys)) {
-          throw new errors.ResinNotAny('keys');
-        }
-      }).nodeify(callback);
-    });
+      });
+    }).nodeify(callback);
   };
 
 
@@ -90,10 +83,7 @@
    */
 
   exports.get = function(id, callback) {
-    return auth.getUserId(function(error, userId) {
-      if (error != null) {
-        return callback(error);
-      }
+    return auth.getUserId().then(function(userId) {
       return pine.get({
         resource: 'user__has__public_key',
         id: id,
@@ -104,12 +94,12 @@
             }
           }
         }
-      }).tap(function(key) {
-        if (_.isEmpty(key)) {
-          throw new errors.ResinKeyNotFound(id);
-        }
-      }).nodeify(callback);
-    });
+      });
+    }).tap(function(key) {
+      if (_.isEmpty(key)) {
+        throw new errors.ResinKeyNotFound(id);
+      }
+    }).nodeify(callback);
   };
 
 
@@ -134,10 +124,7 @@
    */
 
   exports.remove = function(id, callback) {
-    return auth.getUserId(function(error, userId) {
-      if (error != null) {
-        return callback(error);
-      }
+    return auth.getUserId().then(function(userId) {
       return pine["delete"]({
         resource: 'user__has__public_key',
         id: id,
@@ -148,8 +135,8 @@
             }
           }
         }
-      }).nodeify(callback);
-    });
+      });
+    }).nodeify(callback);
   };
 
 
@@ -179,16 +166,18 @@
    */
 
   exports.create = function(title, key, callback) {
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    key = key.trim();
-    return pine.post({
-      resource: 'user__has__public_key',
-      body: {
-        title: title,
-        key: key
+    return Promise["try"](function() {
+      if (token.getUsername() == null) {
+        throw new errors.ResinNotLoggedIn();
       }
+      key = key.trim();
+      return pine.post({
+        resource: 'user__has__public_key',
+        body: {
+          title: title,
+          key: key
+        }
+      });
     }).get('id').nodeify(callback);
   };
 
