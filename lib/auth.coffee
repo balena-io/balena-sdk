@@ -128,6 +128,7 @@ exports.loginWithToken = (authToken, callback) ->
 ###*
 # isLoggedIn callback
 # @callback module:resin.auth~isLoggedInCallback
+# @param {(Error|null)} error - error
 # @param {Boolean} isLoggedIn - is logged in
 ###
 
