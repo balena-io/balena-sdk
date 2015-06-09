@@ -2,10 +2,11 @@
 # @module resin.models.application
 ###
 
+Promise = require('bluebird')
 async = require('async')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
-request = require('resin-request')
+request = Promise.promisifyAll(require('resin-request'))
 token = require('resin-token')
 pine = require('resin-pine')
 network = require('resin-network-config')
@@ -37,31 +38,18 @@ auth = require('../auth')
 #		console.log(applications)
 ###
 exports.getAll = (callback) ->
+	Promise.try ->
+		username = token.getUsername()
+		throw new errors.ResinNotLoggedIn() if not username?
 
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
+		return pine.get
+			resource: 'application'
+			options:
+				orderby: 'app_name asc'
+				expand: 'device'
 
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	username = token.getUsername()
-
-	if not username?
-		return callback(new errors.ResinNotLoggedIn())
-
-	return pine.get
-		resource: 'application'
-		options:
-			orderby: 'app_name asc'
-			expand: 'device'
-
-			filter:
-				user: { username }
-
-	.then (applications) ->
-		if _.isEmpty(applications)
-			throw new errors.ResinNotAny('applications')
-		return applications
+				filter:
+					user: { username }
 
 	# TODO: It might be worth to do all these handy
 	# manipulations server side directly.
@@ -93,35 +81,21 @@ exports.getAll = (callback) ->
 #		console.log(application)
 ###
 exports.get = (name, callback) ->
+	Promise.try ->
+		username = token.getUsername()
+		throw new errors.ResinNotLoggedIn() if not username?
 
-	if not name?
-		throw new errors.ResinMissingParameter('name')
+		return pine.get
+			resource: 'application'
+			options:
+				filter:
+					app_name: name
+					user: { username }
 
-	if not _.isString(name)
-		throw new errors.ResinInvalidParameter('name', name, 'not a string')
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	username = token.getUsername()
-
-	if not username?
-		return callback(new errors.ResinNotLoggedIn())
-
-	return pine.get
-		resource: 'application'
-		options:
-			filter:
-				app_name: name
-				user: { username }
-
-	.then (application) ->
+	.tap (application) ->
 		if _.isEmpty(application)
 			throw new errors.ResinApplicationNotFound(name)
-		return _.first(application)
+	.get(0)
 	.nodeify(callback)
 
 ###*
@@ -145,19 +119,10 @@ exports.get = (name, callback) ->
 #		console.log(hasApp)
 ###
 exports.has = (name, callback) ->
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	exports.get name, (error) ->
-		if error instanceof errors.ResinApplicationNotFound
-			return callback(null, false)
-
-		return callback(error) if error?
-		return callback(null, true)
+	exports.get(name).return(true)
+	.catch errors.ResinApplicationNotFound, ->
+		return false
+	.nodeify(callback)
 
 ###*
 # hasAny callback
@@ -179,19 +144,9 @@ exports.has = (name, callback) ->
 #		console.log("Has any? #{hasAny}")
 ###
 exports.hasAny = (callback) ->
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	exports.getAll (error) ->
-		return callback(null, true) if not error?
-
-		if error instanceof errors.ResinNotAny
-			return callback(null, false)
-		return callback(error)
+	exports.getAll().then (applications) ->
+		return not _.isEmpty(applications)
+	.nodeify(callback)
 
 ###*
 # getById callback
@@ -214,29 +169,16 @@ exports.hasAny = (callback) ->
 #		console.log(application)
 ###
 exports.getById = (id, callback) ->
+	Promise.try ->
+		if not token.getUsername()?
+			throw new errors.ResinNotLoggedIn()
 
-	if not id?
-		throw new errors.ResinMissingParameter('id')
-
-	if not _.isString(id) and not _.isNumber(id)
-		throw new errors.ResinInvalidParameter('id', id, 'not a string not number')
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	if not token.getUsername()?
-		return callback(new errors.ResinNotLoggedIn())
-
-	return pine.get
-		resource: 'application'
-		id: id
-	.then (application) ->
+		return pine.get
+			resource: 'application'
+			id: id
+	.tap (application) ->
 		if not application?
 			throw new errors.ResinApplicationNotFound(id)
-		return application
 	.nodeify(callback)
 
 ###*
@@ -263,41 +205,23 @@ exports.getById = (id, callback) ->
 #		console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
+	Promise.try ->
+		if not token.getUsername()?
+			throw new errors.ResinNotLoggedIn()
 
-	if not name?
-		throw new errors.ResinMissingParameter('name')
+		return deviceModel.getDeviceSlug(deviceType)
 
-	if not _.isString(name)
-		throw new errors.ResinInvalidParameter('name', name, 'not a string')
-
-	if not deviceType?
-		throw new errors.ResinMissingParameter('deviceType')
-
-	if not _.isString(deviceType)
-		throw new errors.ResinInvalidParameter('deviceType', deviceType, 'not a string')
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	if not token.getUsername()?
-		return callback(new errors.ResinNotLoggedIn())
-
-	deviceModel.getDeviceSlug deviceType, (error, deviceSlug) ->
-		return callback(error) if error?
-
+	.tap (deviceSlug) ->
 		if not deviceSlug?
-			return callback(new errors.ResinInvalidDeviceType(deviceType))
+			throw new errors.ResinInvalidDeviceType(deviceType)
 
+	.then (deviceSlug) ->
 		return pine.post
 			resource: 'application'
 			body:
 				app_name: name
 				device_type: deviceSlug
-		.get('id')
-		.nodeify(callback)
+	.nodeify(callback)
 
 ###*
 # remove callback
@@ -318,30 +242,16 @@ exports.create = (name, deviceType, callback) ->
 #		throw error if error?
 ###
 exports.remove = (name, callback) ->
+	Promise.try ->
+		username = token.getUsername()
+		throw new errors.ResinNotLoggedIn() if not username?
 
-	if not name?
-		throw new errors.ResinMissingParameter('name')
-
-	if not _.isString(name)
-		throw new errors.ResinInvalidParameter('name', name, 'not a string')
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	username = token.getUsername()
-
-	if not username?
-		return callback(new errors.ResinNotLoggedIn())
-
-	return pine.delete
-		resource: 'application'
-		options:
-			filter:
-				app_name: name
-				user: { username }
+		return pine.delete
+			resource: 'application'
+			options:
+				filter:
+					app_name: name
+					user: { username }
 	.nodeify(callback)
 
 ###*
@@ -363,20 +273,11 @@ exports.remove = (name, callback) ->
 #		throw error if error?
 ###
 exports.restart = (name, callback) ->
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	exports.get name, (error, application) ->
-		return callback(error) if error?
-
-		request.request
+	exports.get(name).then (application) ->
+		return request.requestAsync
 			method: 'POST'
 			url: "/application/#{application.id}/restart"
-		, _.unary(callback)
+	.nodeify(_.unary(callback))
 
 ###*
 # getApiKey callback
@@ -399,22 +300,12 @@ exports.restart = (name, callback) ->
 #		console.log(apiKey)
 ###
 exports.getApiKey = (name, callback) ->
-
-	if not callback?
-		throw new errors.ResinMissingParameter('callback')
-
-	if not _.isFunction(callback)
-		throw new errors.ResinInvalidParameter('callback', callback, 'not a function')
-
-	exports.get name, (error, application) ->
-		return callback(error) if error?
-
-		request.request
+	exports.get(name).then (application) ->
+		return request.requestAsync
 			method: 'POST'
 			url: "/application/#{application.id}/generate-api-key"
-		, (error, response, body) ->
-			return callback(error) if error?
-			return callback(null, body)
+	.get('body')
+	.nodeify(callback)
 
 ###*
 # getConfiguration callback
@@ -443,34 +334,22 @@ exports.getApiKey = (name, callback) ->
 #		console.log(configuration)
 ###
 exports.getConfiguration = (name, options = {}, callback) ->
-	async.parallel
+	Promise.all([
+		exports.gek(name)
+		exports.getApiKey(name)
+		auth.getUserId()
+		auth.whoami()
+	]).spread (application, apiKey, userId, username) ->
+		throw new errors.ResinNotLoggedIn() if not username?
 
-		application: (callback) ->
-			exports.get(name, callback)
-
-		apiKey: (callback) ->
-			exports.getApiKey(name, callback)
-
-		userId: (callback) ->
-			auth.getUserId(callback)
-
-		username: (callback) ->
-			auth.whoami(callback)
-
-	, (error, results) ->
-		return callback(error) if error?
-
-		if not results.username?
-			return callback(new errors.ResinNotLoggedIn())
-
-		configuration =
-			applicationId: String(results.application.id)
-			apiKey: results.apiKey
-			deviceType: results.application.device_type
-			userId: String(results.userId)
-			username: results.username
+		return {
+			applicationId: String(application.id)
+			apiKey: apiKey
+			deviceType: application.device_type
+			userId: String(userId)
+			username: username
 			wifiSsid: options.wifiSsid
 			wifiKey: options.wifiKey
 			files: network.getFiles(options)
-
-		return callback(null, configuration)
+		}
+	.nodeify(callback)
