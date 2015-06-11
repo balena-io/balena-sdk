@@ -14,16 +14,6 @@ describe 'Application Model:', ->
 
 	describe '.getAll()', ->
 
-		it 'should throw if not callback', ->
-			expect ->
-				application.getAll(null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.getAll([ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given a logged in user', ->
 
 			beforeEach ->
@@ -42,10 +32,10 @@ describe 'Application Model:', ->
 				afterEach ->
 					@pineGetStub.restore()
 
-				it 'should return an error', (done) ->
+				it 'should return an empty array', (done) ->
 					application.getAll (error, applications) ->
-						expect(error).to.be.an.instanceof(errors.ResinNotAny)
-						expect(applications).to.not.exist
+						expect(error).to.not.exist
+						expect(applications).to.deep.equal([])
 						done()
 
 			describe 'given applications', ->
@@ -107,26 +97,6 @@ describe 'Application Model:', ->
 					done()
 
 	describe '.get()', ->
-
-		it 'should throw if no name', ->
-			expect ->
-				application.get(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				application.get([ 'MyApp' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				application.get('MyApp', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.get('MyApp', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given a logged in user', ->
 
@@ -194,26 +164,6 @@ describe 'Application Model:', ->
 
 	describe '.has()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				application.has(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				application.has([ 'MyApp' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				application.has('MyApp', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.has('MyApp', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given a logged in user', ->
 
 			beforeEach ->
@@ -278,17 +228,7 @@ describe 'Application Model:', ->
 					expect(has).to.not.exist
 					done()
 
-	describe '.has()', ->
-
-		it 'should throw if no callback', ->
-			expect ->
-				application.hasAny(null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.hasAny([ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
+	describe '.hasAny()', ->
 
 		describe 'given a logged in user', ->
 
@@ -340,26 +280,6 @@ describe 'Application Model:', ->
 						done()
 
 	describe '.getById()', ->
-
-		it 'should throw if no id', ->
-			expect ->
-				application.get(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if id is not a string not a number', ->
-			expect ->
-				application.get([ 999 ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				application.getById('999', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.getById('999', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given a logged in user', ->
 
@@ -427,36 +347,6 @@ describe 'Application Model:', ->
 
 	describe '.create()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				application.create(null, 'Raspberry Pi', _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				application.create([ 'MyApp' ], 'Raspberry Pi', _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if no device type', ->
-			expect ->
-				application.create('MyApp', null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if device type is not a string', ->
-			expect ->
-				application.create('MyApp', [ 'Raspberry Pi' ],  _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				application.create('MyApp', 'Raspberry Pi', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.create('MyApp', 'Raspberry Pi', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given a logged in user', ->
 
 			beforeEach ->
@@ -470,7 +360,7 @@ describe 'Application Model:', ->
 
 				beforeEach ->
 					@deviceGetDeviceSlugStub = sinon.stub(device, 'getDeviceSlug')
-					@deviceGetDeviceSlugStub.yields(null, undefined)
+					@deviceGetDeviceSlugStub.returns(Promise.resolve(undefined))
 
 				afterEach ->
 					@deviceGetDeviceSlugStub.restore()
@@ -485,7 +375,7 @@ describe 'Application Model:', ->
 
 				beforeEach ->
 					@deviceGetDeviceSlugStub = sinon.stub(device, 'getDeviceSlug')
-					@deviceGetDeviceSlugStub.yields(null, 'raspberry-pi')
+					@deviceGetDeviceSlugStub.returns(Promise.resolve('raspberry-pi'))
 
 					@application =
 						device: null
@@ -504,10 +394,10 @@ describe 'Application Model:', ->
 					@deviceGetDeviceSlugStub.restore()
 					@pinePostStub.restore()
 
-				it 'should return the application id', (done) ->
-					application.create 'MyApp', 'Raspberry Pi', (error, id) ->
+				it 'should return the application', (done) ->
+					application.create 'MyApp', 'Raspberry Pi', (error, createdApplication) =>
 						expect(error).to.not.exist
-						expect(id).to.equal(999)
+						expect(createdApplication).to.deep.equal(@application)
 						done()
 
 		describe 'given no logged in user', ->
@@ -527,26 +417,6 @@ describe 'Application Model:', ->
 
 	describe '.remove()', ->
 
-		it 'should throw if no name', ->
-			expect ->
-				application.remove(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				application.remove([ 'MyApp' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				application.remove('MyApp', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.remove('MyApp', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
-
 		describe 'given no logged in user', ->
 
 			beforeEach ->
@@ -562,26 +432,6 @@ describe 'Application Model:', ->
 					done()
 
 	describe '.restart()', ->
-
-		it 'should throw if no name', ->
-			expect ->
-				application.remove(null, _.noop)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if name is not a string', ->
-			expect ->
-				application.remove([ 'MyApp' ], _.noop)
-			.to.throw(errors.ResinInvalidParameter)
-
-		it 'should throw if not callback', ->
-			expect ->
-				application.remove('MyApp', null)
-			.to.throw(errors.ResinMissingParameter)
-
-		it 'should throw if callback is not a function', ->
-			expect ->
-				application.remove('MyApp', [ _.noop ])
-			.to.throw(errors.ResinInvalidParameter)
 
 		describe 'given no logged in user', ->
 

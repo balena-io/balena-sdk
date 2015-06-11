@@ -4,7 +4,9 @@
  */
 
 (function() {
-  var _, async, auth, deviceModel, errors, network, pine, request, token;
+  var Promise, _, async, auth, deviceModel, errors, network, pine, request, token;
+
+  Promise = require('bluebird');
 
   async = require('async');
 
@@ -12,7 +14,7 @@
 
   errors = require('resin-errors');
 
-  request = require('resin-request');
+  request = Promise.promisifyAll(require('resin-request'));
 
   token = require('resin-token');
 
@@ -53,33 +55,24 @@
    */
 
   exports.getAll = function(callback) {
-    var username;
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'application',
-      options: {
-        orderby: 'app_name asc',
-        expand: 'device',
-        filter: {
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.get({
+        resource: 'application',
+        options: {
+          orderby: 'app_name asc',
+          expand: 'device',
+          filter: {
+            user: {
+              username: username
+            }
           }
         }
-      }
-    }).then(function(applications) {
-      if (_.isEmpty(applications)) {
-        throw new errors.ResinNotAny('applications');
-      }
-      return applications;
+      });
     }).map(function(application) {
       var ref;
       application.online_devices = _.where(application.device, {
@@ -114,39 +107,28 @@
    */
 
   exports.get = function(name, callback) {
-    var username;
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'application',
-      options: {
-        filter: {
-          app_name: name,
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.get({
+        resource: 'application',
+        options: {
+          filter: {
+            app_name: name,
+            user: {
+              username: username
+            }
           }
         }
-      }
-    }).then(function(application) {
+      });
+    }).tap(function(application) {
       if (_.isEmpty(application)) {
         throw new errors.ResinApplicationNotFound(name);
       }
-      return _.first(application);
-    }).nodeify(callback);
+    }).get(0).nodeify(callback);
   };
 
 
@@ -173,21 +155,9 @@
    */
 
   exports.has = function(name, callback) {
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    return exports.get(name, function(error) {
-      if (error instanceof errors.ResinApplicationNotFound) {
-        return callback(null, false);
-      }
-      if (error != null) {
-        return callback(error);
-      }
-      return callback(null, true);
-    });
+    return exports.get(name)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
+      return false;
+    }).nodeify(callback);
   };
 
 
@@ -213,21 +183,9 @@
    */
 
   exports.hasAny = function(callback) {
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    return exports.getAll(function(error) {
-      if (error == null) {
-        return callback(null, true);
-      }
-      if (error instanceof errors.ResinNotAny) {
-        return callback(null, false);
-      }
-      return callback(error);
-    });
+    return exports.getAll().then(function(applications) {
+      return !_.isEmpty(applications);
+    }).nodeify(callback);
   };
 
 
@@ -254,29 +212,18 @@
    */
 
   exports.getById = function(id, callback) {
-    if (id == null) {
-      throw new errors.ResinMissingParameter('id');
-    }
-    if (!_.isString(id) && !_.isNumber(id)) {
-      throw new errors.ResinInvalidParameter('id', id, 'not a string not number');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine.get({
-      resource: 'application',
-      id: id
-    }).then(function(application) {
+    return Promise["try"](function() {
+      if (token.getUsername() == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine.get({
+        resource: 'application',
+        id: id
+      });
+    }).tap(function(application) {
       if (application == null) {
         throw new errors.ResinApplicationNotFound(id);
       }
-      return application;
     }).nodeify(callback);
   };
 
@@ -307,42 +254,24 @@
    */
 
   exports.create = function(name, deviceType, callback) {
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (deviceType == null) {
-      throw new errors.ResinMissingParameter('deviceType');
-    }
-    if (!_.isString(deviceType)) {
-      throw new errors.ResinInvalidParameter('deviceType', deviceType, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return deviceModel.getDeviceSlug(deviceType, function(error, deviceSlug) {
-      if (error != null) {
-        return callback(error);
+    return Promise["try"](function() {
+      if (token.getUsername() == null) {
+        throw new errors.ResinNotLoggedIn();
       }
+      return deviceModel.getDeviceSlug(deviceType);
+    }).tap(function(deviceSlug) {
       if (deviceSlug == null) {
-        return callback(new errors.ResinInvalidDeviceType(deviceType));
+        throw new errors.ResinInvalidDeviceType(deviceType);
       }
+    }).then(function(deviceSlug) {
       return pine.post({
         resource: 'application',
         body: {
           app_name: name,
           device_type: deviceSlug
         }
-      }).get('id').nodeify(callback);
-    });
+      });
+    }).nodeify(callback);
   };
 
 
@@ -367,33 +296,23 @@
    */
 
   exports.remove = function(name, callback) {
-    var username;
-    if (name == null) {
-      throw new errors.ResinMissingParameter('name');
-    }
-    if (!_.isString(name)) {
-      throw new errors.ResinInvalidParameter('name', name, 'not a string');
-    }
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    username = token.getUsername();
-    if (username == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    return pine["delete"]({
-      resource: 'application',
-      options: {
-        filter: {
-          app_name: name,
-          user: {
-            username: username
+    return Promise["try"](function() {
+      var username;
+      username = token.getUsername();
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return pine["delete"]({
+        resource: 'application',
+        options: {
+          filter: {
+            app_name: name,
+            user: {
+              username: username
+            }
           }
         }
-      }
+      });
     }).nodeify(callback);
   };
 
@@ -419,21 +338,12 @@
    */
 
   exports.restart = function(name, callback) {
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    return exports.get(name, function(error, application) {
-      if (error != null) {
-        return callback(error);
-      }
-      return request.request({
+    return exports.get(name).then(function(application) {
+      return request.requestAsync({
         method: 'POST',
         url: "/application/" + application.id + "/restart"
-      }, _.unary(callback));
-    });
+      });
+    }).nodeify(_.unary(callback));
   };
 
 
@@ -460,26 +370,12 @@
    */
 
   exports.getApiKey = function(name, callback) {
-    if (callback == null) {
-      throw new errors.ResinMissingParameter('callback');
-    }
-    if (!_.isFunction(callback)) {
-      throw new errors.ResinInvalidParameter('callback', callback, 'not a function');
-    }
-    return exports.get(name, function(error, application) {
-      if (error != null) {
-        return callback(error);
-      }
-      return request.request({
+    return exports.get(name).then(function(application) {
+      return request.requestAsync({
         method: 'POST',
         url: "/application/" + application.id + "/generate-api-key"
-      }, function(error, response, body) {
-        if (error != null) {
-          return callback(error);
-        }
-        return callback(null, body);
       });
-    });
+    }).get('body').nodeify(callback);
   };
 
 
@@ -515,39 +411,21 @@
     if (options == null) {
       options = {};
     }
-    return async.parallel({
-      application: function(callback) {
-        return exports.get(name, callback);
-      },
-      apiKey: function(callback) {
-        return exports.getApiKey(name, callback);
-      },
-      userId: function(callback) {
-        return auth.getUserId(callback);
-      },
-      username: function(callback) {
-        return auth.whoami(callback);
+    return Promise.all([exports.gek(name), exports.getApiKey(name), auth.getUserId(), auth.whoami()]).spread(function(application, apiKey, userId, username) {
+      if (username == null) {
+        throw new errors.ResinNotLoggedIn();
       }
-    }, function(error, results) {
-      var configuration;
-      if (error != null) {
-        return callback(error);
-      }
-      if (results.username == null) {
-        return callback(new errors.ResinNotLoggedIn());
-      }
-      configuration = {
-        applicationId: String(results.application.id),
-        apiKey: results.apiKey,
-        deviceType: results.application.device_type,
-        userId: String(results.userId),
-        username: results.username,
+      return {
+        applicationId: String(application.id),
+        apiKey: apiKey,
+        deviceType: application.device_type,
+        userId: String(userId),
+        username: username,
         wifiSsid: options.wifiSsid,
         wifiKey: options.wifiKey,
         files: network.getFiles(options)
       };
-      return callback(null, configuration);
-    });
+    }).nodeify(callback);
   };
 
 }).call(this);
