@@ -52,11 +52,6 @@
         },
         orderby: 'name asc'
       }
-    }).then(function(environmentVariables) {
-      if (_.isEmpty(environmentVariables)) {
-        throw new errors.ResinNotAny('environment variables');
-      }
-      return environmentVariables;
     }).nodeify(callback);
   };
 
