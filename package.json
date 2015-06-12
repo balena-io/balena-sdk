@@ -48,7 +48,7 @@
     "resin-errors": "^1.0.2",
     "resin-network-config": "^1.0.0",
     "resin-pine": "^1.1.1",
-    "resin-request": "^1.2.5",
+    "resin-request": "^1.3.0",
     "resin-token": "^1.3.0"
   }
 }

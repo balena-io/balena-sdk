@@ -68,13 +68,14 @@
     return request.request({
       method: 'GET',
       url: downloadUrl,
-      pipe: fs.createWriteStream(destination)
+      pipe: fs.createWriteStream(destination),
+      onProgress: onProgress
     }, function(error) {
       if (error != null) {
         return callback(error);
       }
       return callback(null, destination);
-    }, onProgress);
+    });
   };
 
 }).call(this);
