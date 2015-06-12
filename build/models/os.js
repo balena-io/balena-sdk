@@ -4,13 +4,17 @@
  */
 
 (function() {
-  var OSParams, errors, fs, request, token, url;
+  var OSParams, Promise, _, errors, fs, request, token, url;
+
+  _ = require('lodash');
+
+  Promise = require('bluebird');
 
   url = require('url');
 
   fs = require('fs');
 
-  request = require('resin-request');
+  request = Promise.promisifyAll(require('resin-request'));
 
   token = require('resin-token');
 
@@ -34,9 +38,13 @@
    * @function
    *
    * @param {Object} parameters - os parameters
+   * @param {String} parameters.network - network type
+   * @param {Number} parameters.appId - application id
+   * @param {String} [parameters.wifiSsid] - wifi ssid, if network is wifi
+   * @param {String} [parameters.wifiKey] - wifi key, if network is wifi
+   * @param {Function} [parameters.onProgress] - on progress callback
    * @param {String} destination - destination path
    * @param {module:resin.models.os~downloadCallback} callback - callback
-   * @param {Function} onProgress - on progress callback
    *
    * @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
    *
@@ -46,36 +54,32 @@
    * parameters =
    *		network: 'ethernet'
    *		appId: 91
+   *		onProgress: (state) ->
+   *			return if not state?
+   *			console.log "Total: #{state.total}"
+   *			console.log "Received: #{state.received}"
    *
    * resin.models.os.download parameters, '/opt/os.zip', (error) ->
    *		throw error if error?
-   *	, (state) ->
-   *		return if not state?
-   *		console.log "Total: #{state.total}"
-   *		console.log "Received: #{state.received}"
    */
 
-  exports.download = function(parameters, destination, callback, onProgress) {
-    var downloadUrl, query;
-    if (token.getUsername() == null) {
-      return callback(new errors.ResinNotLoggedIn());
-    }
-    parameters = new OSParams(parameters);
-    query = url.format({
-      query: parameters
-    });
-    downloadUrl = url.resolve('/download', query);
-    return request.request({
-      method: 'GET',
-      url: downloadUrl,
-      pipe: fs.createWriteStream(destination),
-      onProgress: onProgress
-    }, function(error) {
-      if (error != null) {
-        return callback(error);
+  exports.download = function(options, destination, callback) {
+    return Promise["try"](function() {
+      var osParams, query;
+      if (token.getUsername() == null) {
+        throw new errors.ResinNotLoggedIn();
       }
-      return callback(null, destination);
-    });
+      osParams = _.omit(options, 'onProgress');
+      query = url.format({
+        query: new OSParams(osParams)
+      });
+      return request.requestAsync({
+        method: 'GET',
+        url: url.resolve('/download', query),
+        pipe: fs.createWriteStream(destination),
+        onProgress: options.onProgress
+      });
+    })["return"](destination).nodeify(callback);
   };
 
 }).call(this);
