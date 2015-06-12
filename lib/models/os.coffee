@@ -2,9 +2,11 @@
 # @module resin.models.os
 ###
 
+_ = require('lodash')
+Promise = require('bluebird')
 url = require('url')
 fs = require('fs')
-request = require('resin-request')
+request = Promise.promisifyAll(require('resin-request'))
 token = require('resin-token')
 errors = require('resin-errors')
 OSParams = require('./os-params')
@@ -23,9 +25,13 @@ OSParams = require('./os-params')
 # @function
 #
 # @param {Object} parameters - os parameters
+# @param {String} parameters.network - network type
+# @param {Number} parameters.appId - application id
+# @param {String} [parameters.wifiSsid] - wifi ssid, if network is wifi
+# @param {String} [parameters.wifiKey] - wifi key, if network is wifi
+# @param {Function} [parameters.onProgress] - on progress callback
 # @param {String} destination - destination path
 # @param {module:resin.models.os~downloadCallback} callback - callback
-# @param {Function} onProgress - on progress callback
 #
 # @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
 #
@@ -35,29 +41,27 @@ OSParams = require('./os-params')
 # parameters =
 #		network: 'ethernet'
 #		appId: 91
+#		onProgress: (state) ->
+#			return if not state?
+#			console.log "Total: #{state.total}"
+#			console.log "Received: #{state.received}"
 #
 # resin.models.os.download parameters, '/opt/os.zip', (error) ->
 #		throw error if error?
-#	, (state) ->
-#		return if not state?
-#		console.log "Total: #{state.total}"
-#		console.log "Received: #{state.received}"
 ###
-exports.download = (parameters, destination, callback, onProgress) ->
+exports.download = (options, destination, callback) ->
+	Promise.try ->
+		if not token.getUsername()?
+			throw new errors.ResinNotLoggedIn()
 
-	if not token.getUsername()?
-		return callback(new errors.ResinNotLoggedIn())
+		osParams = _.omit(options, 'onProgress')
+		query = url.format(query: new OSParams(osParams))
 
-	parameters = new OSParams(parameters)
+		return request.requestAsync
+			method: 'GET'
+			url: url.resolve('/download', query)
+			pipe: fs.createWriteStream(destination)
+			onProgress: options.onProgress
 
-	query = url.format(query: parameters)
-	downloadUrl = url.resolve('/download', query)
-
-	request.request
-		method: 'GET'
-		url: downloadUrl
-		pipe: fs.createWriteStream(destination)
-		onProgress: onProgress
-	, (error) ->
-		return callback(error) if error?
-		return callback(null, destination)
+	.return(destination)
+	.nodeify(callback)
