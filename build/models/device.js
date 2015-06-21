@@ -4,9 +4,11 @@
  */
 
 (function() {
-  var Promise, _, configModel, errors, pine, request, token;
+  var Promise, _, configModel, crypto, errors, pine, request, token;
 
   Promise = require('bluebird');
+
+  crypto = require('crypto');
 
   _ = require('lodash-contrib');
 
@@ -631,6 +633,22 @@
       }
       return deviceManifest;
     }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Generate a random device UUID
+   * @function
+   * @public
+   *
+   * @returns {String} A generated UUID
+   *
+   * @example
+   * uuid = resin.models.device.generateUUID()
+   */
+
+  exports.generateUUID = function() {
+    return crypto.pseudoRandomBytes(31).toString('hex');
   };
 
 }).call(this);
