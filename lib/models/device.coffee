@@ -10,6 +10,7 @@ errors = require('resin-errors')
 request = Promise.promisifyAll(require('resin-request'))
 token = require('resin-token')
 configModel = require('./config')
+applicationModel = require('./application')
 
 ###*
 # A Resin API device
@@ -362,6 +363,40 @@ exports.note = (name, note, callback) ->
 						name: name
 						user: { username }
 
+	.nodeify(callback)
+
+###*
+# @summary Register a device with Resin.io
+# @function
+# @public
+#
+# @param {String} applicationName - application name
+# @param {Object} [options={}] - options
+# @param {String} [options.wifiSsid] - wifi ssid
+# @param {String} [options.wifiKey] - wifi key
+# @param {Function} callback - callback (error, device)
+#
+# @example
+# resin.models.device.register 'MyApp',
+#		wifiSsid: 'foobar'
+#		wifiKey: 'hello'
+#	, (error, device) ->
+#		throw error if error?
+#		console.log(device)
+###
+exports.register = (applicationName, options = {}, callback) ->
+	return applicationModel.getConfiguration(applicationName, options).then (config) ->
+		return pine.post
+			resource: 'device'
+			body:
+				user: config.userId
+				application: config.applicationId
+				uuid: exports.generateUUID()
+				device_type: config.deviceType
+			customOptions:
+				apikey: config.apiKey
+
+	# Allow promise based and callback based styles
 	.nodeify(callback)
 
 ###*

@@ -8,6 +8,7 @@ errors = require('resin-errors')
 pine = require('resin-pine')
 token = require('resin-token')
 device = require('../../lib/models/device')
+application = require('../../lib/models/application')
 config = require('../../lib/models/config')
 
 describe 'Device Model:', ->
@@ -420,6 +421,76 @@ describe 'Device Model:', ->
 				it 'should return an error', (done) ->
 					device.note 'MyDevice', 'Hello World', (error) ->
 						expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+						done()
+
+	describe '.register()', ->
+
+		describe 'given there was an error getting the application configuration', ->
+
+			beforeEach ->
+				@applicationGetConfigurationStub = sinon.stub(application, 'getConfiguration')
+				@applicationGetConfigurationStub.returns(Promise.reject(new Error('pine error')))
+
+			afterEach ->
+				@applicationGetConfigurationStub.restore()
+
+			it 'should yield an error to the callback', (done) ->
+				device.register 'MyApp', null, (error, device) ->
+					expect(error).to.be.an.instanceof(Error)
+					expect(error.message).to.equal('pine error')
+					expect(device).to.not.exist
+					done()
+
+		describe 'given we got valid application configuration', ->
+
+			beforeEach ->
+				@applicationGetConfigurationStub = sinon.stub(application, 'getConfiguration')
+				@applicationGetConfigurationStub.returns Promise.resolve
+					userId: 199
+					applicationId: 10350
+					deviceType: 'raspberry-pi'
+					uuid: 'asdf'
+					apiKey: 'asdf'
+
+			afterEach ->
+				@applicationGetConfigurationStub.restore()
+
+			describe 'given the post operation is unsuccessful', ->
+
+				beforeEach ->
+					@pinePostStub = sinon.stub(pine, 'post')
+					@pinePostStub.returns(Promise.reject(new Error('pine error')))
+
+				afterEach ->
+					@pinePostStub.restore()
+
+				it 'should yield an error to the callback', (done) ->
+					device.register 'MyApp', null, (error, device) ->
+						expect(error).to.be.an.instanceof(Error)
+						expect(error.message).to.equal('pine error')
+						expect(device).to.not.exist
+						done()
+
+			describe 'given the post operation is successful', ->
+
+				beforeEach ->
+					@pinePostStub = sinon.stub(pine, 'post')
+					@pinePostStub.returns Promise.resolve
+						id: 999
+						userId: 199
+						applicationId: 10350
+						deviceType: 'raspberry-pi'
+						uuid: 'asdf'
+						apiKey: 'asdf'
+
+				afterEach ->
+					@pinePostStub.restore()
+
+				it 'should return the resulting uuid and id', (done) ->
+					device.register 'MyApp', null, (error, device) ->
+						expect(error).to.not.exist
+						expect(device.id).to.equal(999)
+						expect(device.uuid).to.equal('asdf')
 						done()
 
 	describe 'isValidUUID()', ->

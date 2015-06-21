@@ -411,7 +411,7 @@
     if (options == null) {
       options = {};
     }
-    return Promise.all([exports.gek(name), exports.getApiKey(name), auth.getUserId(), auth.whoami()]).spread(function(application, apiKey, userId, username) {
+    return Promise.all([exports.get(name), exports.getApiKey(name), auth.getUserId(), auth.whoami()]).spread(function(application, apiKey, userId, username) {
       if (username == null) {
         throw new errors.ResinNotLoggedIn();
       }

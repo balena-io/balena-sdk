@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var Promise, _, configModel, crypto, errors, pine, request, token;
+  var Promise, _, applicationModel, configModel, crypto, errors, pine, request, token;
 
   Promise = require('bluebird');
 
@@ -21,6 +21,8 @@
   token = require('resin-token');
 
   configModel = require('./config');
+
+  applicationModel = require('./application');
 
 
   /**
@@ -456,6 +458,47 @@
             }
           }
         });
+      });
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Register a device with Resin.io
+   * @function
+   * @public
+   *
+   * @param {String} applicationName - application name
+   * @param {Object} [options={}] - options
+   * @param {String} [options.wifiSsid] - wifi ssid
+   * @param {String} [options.wifiKey] - wifi key
+   * @param {Function} callback - callback (error, device)
+   *
+   * @example
+   * resin.models.device.register 'MyApp',
+   *		wifiSsid: 'foobar'
+   *		wifiKey: 'hello'
+   *	, (error, device) ->
+   *		throw error if error?
+   *		console.log(device)
+   */
+
+  exports.register = function(applicationName, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    return applicationModel.getConfiguration(applicationName, options).then(function(config) {
+      return pine.post({
+        resource: 'device',
+        body: {
+          user: config.userId,
+          application: config.applicationId,
+          uuid: exports.generateUUID(),
+          device_type: config.deviceType
+        },
+        customOptions: {
+          apikey: config.apiKey
+        }
       });
     }).nodeify(callback);
   };
