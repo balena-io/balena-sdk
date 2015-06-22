@@ -1,7 +1,9 @@
+Promise = require('bluebird')
 chai = require('chai')
 expect = chai.expect
 sinon = require('sinon')
 chai.use(require('sinon-chai'))
+chai.use(require('chai-as-promised'))
 request = require('resin-request')
 token = require('resin-token')
 errors = require('resin-errors')
@@ -10,310 +12,325 @@ johnDoeFixture = require('./tokens.json').johndoe
 
 describe 'Auth:', ->
 
-	describe '.whoami()', ->
+	describe 'given all tokens are valid', ->
 
-		describe 'given a logged in user', ->
+		beforeEach ->
+			@tokenIsValidStub = sinon.stub(token, 'isValid')
+			@tokenIsValidStub.returns(Promise.resolve(true))
 
-			beforeEach ->
-				token.set(johnDoeFixture.token)
+		afterEach ->
+			@tokenIsValidStub.restore()
 
-			it 'should return the username', (done) ->
-				auth.whoami (error, username) ->
-					expect(error).to.not.exist
-					expect(username).to.equal(johnDoeFixture.data.username)
-					done()
+		describe '.whoami()', ->
 
-		describe 'given a not logged in user', ->
+			describe 'given a logged in user', ->
 
-			beforeEach ->
-				token.remove()
+				beforeEach ->
+					token.set(johnDoeFixture.token)
 
-			it 'should undefined', (done) ->
-				auth.whoami (error, username) ->
-					expect(error).to.not.exist
-					expect(username).to.be.undefined
-					done()
-
-		describe 'given an invalid token', ->
-
-			beforeEach ->
-				token.set('1234')
-
-			it 'should throw an error', (done) ->
-				auth.whoami (error, username) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('Malformed token: 1234')
-					expect(username).to.not.exist
-					done()
-
-	describe '.register()', ->
-
-		describe 'given valid credentials', ->
-
-			beforeEach ->
-				@requestStub = sinon.stub(request, 'request')
-				@requestStub.yields(null, {}, '1234')
-
-			afterEach ->
-				@requestStub.restore()
-
-			it 'should be able to register a username', (done) ->
-				auth.register
-					username: 'johndoe'
-					password: 'secret'
-					email: 'john@doe.com'
-				, (error, token) ->
-					expect(error).to.not.exist
-					expect(token).to.equal('1234')
-					done()
-
-	describe '.loginWithToken()', ->
-
-		describe 'given a not logged in user', ->
-
-			beforeEach (done) ->
-				auth.logout(done)
-
-			it 'should save the token', (done) ->
-				auth.getToken (error, token) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(token).to.not.exist
-
-					auth.loginWithToken '1234', (error) ->
+				it 'should return the username', (done) ->
+					auth.whoami (error, username) ->
 						expect(error).to.not.exist
+						expect(username).to.equal(johnDoeFixture.data.username)
+						done()
 
-						auth.getToken (error, token) ->
+			describe 'given a not logged in user', ->
+
+				beforeEach ->
+					token.remove()
+
+				it 'should undefined', (done) ->
+					auth.whoami (error, username) ->
+						expect(error).to.not.exist
+						expect(username).to.be.undefined
+						done()
+
+			describe 'given an invalid token', ->
+
+				beforeEach ->
+					token.set('1234')
+
+				it 'should throw an error', (done) ->
+					auth.whoami (error, username) ->
+						expect(error).to.be.an.instanceof(Error)
+						expect(error.message).to.equal('Malformed token: 1234')
+						expect(username).to.not.exist
+						done()
+
+		describe '.register()', ->
+
+			describe 'given valid credentials', ->
+
+				beforeEach ->
+					@requestStub = sinon.stub(request, 'send')
+					@requestStub.returns(Promise.resolve(body: '1234'))
+
+				afterEach ->
+					@requestStub.restore()
+
+				it 'should be able to register a username', (done) ->
+					auth.register
+						username: 'johndoe'
+						password: 'secret'
+						email: 'john@doe.com'
+					, (error, token) ->
+						expect(error).to.not.exist
+						expect(token).to.equal('1234')
+						done()
+
+		describe '.loginWithToken()', ->
+
+			describe 'given a not logged in user', ->
+
+				beforeEach (done) ->
+					auth.logout(done)
+
+				it 'should save the token', (done) ->
+					auth.getToken (error, token) ->
+						expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+						expect(token).to.not.exist
+
+						auth.loginWithToken '1234', (error) ->
 							expect(error).to.not.exist
-							expect(token).to.equal('1234')
-							done()
 
-	describe '.authenticate()', ->
+							auth.getToken (error, token) ->
+								expect(error).to.not.exist
+								expect(token).to.equal('1234')
+								done()
 
-		describe 'given valid credentials', ->
+		describe '.authenticate()', ->
 
-			beforeEach ->
-				@requestStub = sinon.stub(request, 'request')
-				@requestStub.yields(null, body: '1234')
+			describe 'given valid credentials', ->
 
-			afterEach ->
-				@requestStub.restore()
+				beforeEach ->
+					@requestStub = sinon.stub(request, 'send')
+					@requestStub.returns(Promise.resolve(body: '1234'))
 
-			it 'should return a token string', (done) ->
-				auth.authenticate
-					username: 'johndoe'
-					password: 'secret'
-				, (error, token) ->
-					expect(error).to.not.exist
-					expect(token).to.equal('1234')
-					done()
+				afterEach ->
+					@requestStub.restore()
 
-		describe 'given invalid credentials', ->
+				it 'should return a token string', (done) ->
+					auth.authenticate
+						username: 'johndoe'
+						password: 'secret'
+					, (error, token) ->
+						expect(error).to.not.exist
+						expect(token).to.equal('1234')
+						done()
 
-			beforeEach ->
-				@requestStub = sinon.stub(request, 'request')
-				@requestStub.yields(new Error('auth error'))
+			describe 'given invalid credentials', ->
 
-			afterEach ->
-				@requestStub.restore()
+				beforeEach ->
+					@requestStub = sinon.stub(request, 'send')
+					@requestStub.returns(Promise.reject(new Error('auth error')))
 
-			it 'should return an error', (done) ->
-				auth.authenticate
-					username: 'johndoe'
-					password: 'secret'
-				, (error, token) ->
-					expect(error).to.exist
-					expect(error).to.be.an.instanceof(Error)
-					expect(token).to.be.undefined
-					done()
+				afterEach ->
+					@requestStub.restore()
 
-	describe '.login()', ->
+				it 'should return an error', (done) ->
+					auth.authenticate
+						username: 'johndoe'
+						password: 'secret'
+					, (error, token) ->
+						expect(error).to.exist
+						expect(error).to.be.an.instanceof(Error)
+						expect(token).to.be.undefined
+						done()
 
-		describe 'given a not logged in user', ->
+		describe '.login()', ->
 
-			beforeEach (done) ->
-				@requestStub = sinon.stub(request, 'request')
-				@requestStub.yields(null, body: '1234')
-				auth.logout(done)
+			describe 'given a not logged in user', ->
 
-			afterEach ->
-				@requestStub.restore()
+				beforeEach (done) ->
+					@requestStub = sinon.stub(request, 'send')
+					@requestStub.returns(Promise.resolve(body: '1234'))
+					auth.logout(done)
 
-			it 'should save the token', (done) ->
-				auth.getToken (error, token) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(token).to.not.exist
+				afterEach ->
+					@requestStub.restore()
 
+				it 'should save the token', (done) ->
+					auth.getToken (error, token) ->
+						expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+						expect(token).to.not.exist
+
+						auth.login
+							username: 'johndoe'
+							password: 'secret'
+						, (error) ->
+							expect(error).to.not.exist
+
+							auth.getToken (error, token) ->
+								expect(error).to.not.exist
+								expect(token).to.exist
+								done()
+
+			describe 'given invalid credentials', ->
+
+				beforeEach ->
+					@requestStub = sinon.stub(request, 'send')
+					@requestStub.returns(Promise.reject(new Error('auth error')))
+
+				afterEach ->
+					@requestStub.restore()
+
+				it 'should return an error', (done) ->
 					auth.login
 						username: 'johndoe'
 						password: 'secret'
-					, (error) ->
-						expect(error).to.not.exist
+					, (error, token) ->
+						expect(error).to.be.an.instanceof(Error)
+						expect(token).to.be.undefined
+						done()
 
-						auth.getToken (error, token) ->
+			describe 'given a logged in user', ->
+
+				beforeEach ->
+					token.set('1234')
+
+					@requestStub = sinon.stub(request, 'send')
+					@requestStub.returns(Promise.resolve(body: '5678'))
+
+				afterEach ->
+					@requestStub.restore()
+
+				it 'should override the old user', (done) ->
+					token.get().then (savedToken) ->
+						expect(savedToken).to.equal('1234')
+
+						auth.login
+							username: 'johndoe'
+							password: 'secret'
+						, (error) ->
 							expect(error).to.not.exist
-							expect(token).to.exist
-							done()
 
-		describe 'given invalid credentials', ->
+							token.get().then (savedToken) ->
+								expect(savedToken).to.equal('5678')
+								done()
 
-			beforeEach ->
-				@requestStub = sinon.stub(request, 'request')
-				@requestStub.yields(new Error('auth error'))
+		describe '.isLoggedIn()', ->
 
-			afterEach ->
-				@requestStub.restore()
+			describe 'given a logged in user', ->
 
-			it 'should return an error', (done) ->
-				auth.login
-					username: 'johndoe'
-					password: 'secret'
-				, (error, token) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(token).to.be.undefined
-					done()
+				beforeEach ->
+					token.set('1234')
 
-		describe 'given a logged in user', ->
+				it 'should return true', ->
+					expect(token.has()).to.eventually.be.true
 
-			beforeEach ->
-				token.set('1234')
+			describe 'given a not logged in user', ->
 
-				@requestStub = sinon.stub(request, 'request')
-				@requestStub.yields(null, body: '5678')
+				beforeEach (done) ->
+					auth.logout(done)
 
-			afterEach ->
-				@requestStub.restore()
-
-			it 'should override the old user', (done) ->
-				expect(token.get()).to.equal('1234')
-				auth.login
-					username: 'johndoe'
-					password: 'secret'
-				, (error) ->
-					expect(error).to.not.exist
-					expect(token.get()).to.equal('5678')
-					done()
-
-	describe '.isLoggedIn()', ->
-
-		describe 'given a logged in user', ->
-
-			beforeEach ->
-				token.set('1234')
-
-			it 'should return true', ->
-				expect(token.has()).to.be.true
-
-		describe 'given a not logged in user', ->
-
-			beforeEach (done) ->
-				auth.logout(done)
-
-			it 'should return false', (done) ->
-				auth.isLoggedIn (error, isLoggedIn) ->
-					expect(error).to.not.exist
-					expect(isLoggedIn).to.be.false
-					done()
-
-	describe '.getToken()', ->
-
-		describe 'given a logged in user', ->
-
-			beforeEach ->
-				token.set('1234')
-
-			it 'should return the token', (done) ->
-				auth.getToken (error, token) ->
-					expect(error).to.not.exist
-					expect(token).to.equal('1234')
-					done()
-
-		describe 'given a not logged in user', ->
-
-			beforeEach (done) ->
-				auth.logout(done)
-
-			it 'should return an error', (done) ->
-				auth.getToken (error, token) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(token).to.not.exist
-					done()
-
-	describe '.getUserId()', ->
-
-		describe 'given there was an error getting the user id', ->
-
-			beforeEach ->
-				@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
-				@tokenGetUserIdStub.throws(new Error('token error'))
-
-			afterEach ->
-				@tokenGetUserIdStub.restore()
-
-			it 'should return the error', (done) ->
-				auth.getUserId (error, id) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('token error')
-					expect(id).to.not.exist
-					done()
-
-		describe 'given no user id could not be retrieved', ->
-
-			beforeEach ->
-				@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
-				@tokenGetUserIdStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUserIdStub.restore()
-
-			it 'should return a ResinNotLoggedIn error', (done) ->
-				auth.getUserId (error, id) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(id).to.not.exist
-					done()
-
-		describe 'given the user id could be retrieved', ->
-
-			beforeEach ->
-				@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
-				@tokenGetUserIdStub.returns(123)
-
-			afterEach ->
-				@tokenGetUserIdStub.restore()
-
-			it 'should return the id', (done) ->
-				auth.getUserId (error, id) ->
-					expect(error).to.not.exist
-					expect(id).to.equal(123)
-					done()
-
-	describe '#logout()', ->
-
-		describe 'given a logged in user', ->
-
-			beforeEach ->
-				token.set('1234')
-
-			it 'should remove the token', (done) ->
-				expect(token.has()).to.be.true
-				auth.logout (error) ->
-					expect(error).to.not.exist
-					expect(token.has()).to.be.false
-					done()
-
-		describe 'given a not logged in user', ->
-
-			beforeEach (done) ->
-				auth.logout(done)
-
-			it 'should not return any error', (done) ->
-				auth.logout (error) ->
-					expect(error).to.not.exist
-					done()
-
-			it 'should keep the token undefined', (done) ->
-				auth.logout (error) ->
-					expect(error).to.not.exist
+				it 'should return false', (done) ->
 					auth.isLoggedIn (error, isLoggedIn) ->
 						expect(error).to.not.exist
 						expect(isLoggedIn).to.be.false
 						done()
+
+		describe '.getToken()', ->
+
+			describe 'given a logged in user', ->
+
+				beforeEach ->
+					token.set('1234')
+
+				it 'should return the token', (done) ->
+					auth.getToken (error, token) ->
+						expect(error).to.not.exist
+						expect(token).to.equal('1234')
+						done()
+
+			describe 'given a not logged in user', ->
+
+				beforeEach (done) ->
+					auth.logout(done)
+
+				it 'should return an error', (done) ->
+					auth.getToken (error, token) ->
+						expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+						expect(token).to.not.exist
+						done()
+
+		describe '.getUserId()', ->
+
+			describe 'given there was an error getting the user id', ->
+
+				beforeEach ->
+					@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
+					@tokenGetUserIdStub.returns(Promise.reject(new Error('token error')))
+
+				afterEach ->
+					@tokenGetUserIdStub.restore()
+
+				it 'should return the error', (done) ->
+					auth.getUserId (error, id) ->
+						expect(error).to.be.an.instanceof(Error)
+						expect(error.message).to.equal('token error')
+						expect(id).to.not.exist
+						done()
+
+			describe 'given no user id could not be retrieved', ->
+
+				beforeEach ->
+					@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
+					@tokenGetUserIdStub.returns(Promise.resolve(undefined))
+
+				afterEach ->
+					@tokenGetUserIdStub.restore()
+
+				it 'should return a ResinNotLoggedIn error', (done) ->
+					auth.getUserId (error, id) ->
+						expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+						expect(id).to.not.exist
+						done()
+
+			describe 'given the user id could be retrieved', ->
+
+				beforeEach ->
+					@tokenGetUserIdStub = sinon.stub(token, 'getUserId')
+					@tokenGetUserIdStub.returns(Promise.resolve(123))
+
+				afterEach ->
+					@tokenGetUserIdStub.restore()
+
+				it 'should return the id', (done) ->
+					auth.getUserId (error, id) ->
+						expect(error).to.not.exist
+						expect(id).to.equal(123)
+						done()
+
+		describe '#logout()', ->
+
+			describe 'given a logged in user', ->
+
+				beforeEach ->
+					token.set('1234')
+
+				it 'should remove the token', (done) ->
+					token.has().then (hasToken) ->
+						expect(hasToken).to.be.true
+						auth.logout (error) ->
+							expect(error).to.not.exist
+							token.has().then (hasToken) ->
+								expect(hasToken).to.be.false
+								done()
+
+			describe 'given a not logged in user', ->
+
+				beforeEach (done) ->
+					auth.logout(done)
+
+				it 'should not return any error', (done) ->
+					auth.logout (error) ->
+						expect(error).to.not.exist
+						done()
+
+				it 'should keep the token undefined', (done) ->
+					auth.logout (error) ->
+						expect(error).to.not.exist
+						auth.isLoggedIn (error, isLoggedIn) ->
+							expect(error).to.not.exist
+							expect(isLoggedIn).to.be.false
+							done()

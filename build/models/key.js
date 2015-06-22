@@ -4,13 +4,11 @@
  */
 
 (function() {
-  var _, auth, errors, pine, token;
+  var _, auth, errors, pine;
 
   _ = require('lodash');
 
   errors = require('resin-errors');
-
-  token = require('resin-token');
 
   pine = require('resin-pine');
 
@@ -45,17 +43,8 @@
    */
 
   exports.getAll = function(callback) {
-    return auth.getUserId().then(function(id) {
-      return pine.get({
-        resource: 'user__has__public_key',
-        options: {
-          filter: {
-            user: {
-              id: id
-            }
-          }
-        }
-      });
+    return pine.get({
+      resource: 'user__has__public_key'
     }).nodeify(callback);
   };
 
@@ -83,18 +72,9 @@
    */
 
   exports.get = function(id, callback) {
-    return auth.getUserId().then(function(userId) {
-      return pine.get({
-        resource: 'user__has__public_key',
-        id: id,
-        options: {
-          filter: {
-            user: {
-              id: userId
-            }
-          }
-        }
-      });
+    return pine.get({
+      resource: 'user__has__public_key',
+      id: id
     }).tap(function(key) {
       if (_.isEmpty(key)) {
         throw new errors.ResinKeyNotFound(id);
@@ -124,18 +104,9 @@
    */
 
   exports.remove = function(id, callback) {
-    return auth.getUserId().then(function(userId) {
-      return pine["delete"]({
-        resource: 'user__has__public_key',
-        id: id,
-        options: {
-          filter: {
-            user: {
-              id: userId
-            }
-          }
-        }
-      });
+    return pine["delete"]({
+      resource: 'user__has__public_key',
+      id: id
     }).nodeify(callback);
   };
 
@@ -166,18 +137,13 @@
    */
 
   exports.create = function(title, key, callback) {
-    return Promise["try"](function() {
-      if (token.getUsername() == null) {
-        throw new errors.ResinNotLoggedIn();
+    key = key.trim();
+    return pine.post({
+      resource: 'user__has__public_key',
+      body: {
+        title: title,
+        key: key
       }
-      key = key.trim();
-      return pine.post({
-        resource: 'user__has__public_key',
-        body: {
-          title: title,
-          key: key
-        }
-      });
     }).get('id').nodeify(callback);
   };
 

@@ -4,7 +4,7 @@
  */
 
 (function() {
-  var Promise, _, async, auth, deviceModel, errors, network, pine, request, token;
+  var Promise, _, async, auth, deviceModel, errors, network, pine, request;
 
   Promise = require('bluebird');
 
@@ -14,9 +14,7 @@
 
   errors = require('resin-errors');
 
-  request = Promise.promisifyAll(require('resin-request'));
-
-  token = require('resin-token');
+  request = require('resin-request');
 
   pine = require('resin-pine');
 
@@ -55,24 +53,12 @@
    */
 
   exports.getAll = function(callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
+    return pine.get({
+      resource: 'application',
+      options: {
+        orderby: 'app_name asc',
+        expand: 'device'
       }
-      return pine.get({
-        resource: 'application',
-        options: {
-          orderby: 'app_name asc',
-          expand: 'device',
-          filter: {
-            user: {
-              username: username
-            }
-          }
-        }
-      });
     }).map(function(application) {
       var ref;
       application.online_devices = _.where(application.device, {
@@ -107,23 +93,13 @@
    */
 
   exports.get = function(name, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine.get({
-        resource: 'application',
-        options: {
-          filter: {
-            app_name: name,
-            user: {
-              username: username
-            }
-          }
+    return pine.get({
+      resource: 'application',
+      options: {
+        filter: {
+          app_name: name
         }
-      });
+      }
     }).tap(function(application) {
       if (_.isEmpty(application)) {
         throw new errors.ResinApplicationNotFound(name);
@@ -212,14 +188,9 @@
    */
 
   exports.getById = function(id, callback) {
-    return Promise["try"](function() {
-      if (token.getUsername() == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine.get({
-        resource: 'application',
-        id: id
-      });
+    return pine.get({
+      resource: 'application',
+      id: id
     }).tap(function(application) {
       if (application == null) {
         throw new errors.ResinApplicationNotFound(id);
@@ -254,12 +225,7 @@
    */
 
   exports.create = function(name, deviceType, callback) {
-    return Promise["try"](function() {
-      if (token.getUsername() == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return deviceModel.getDeviceSlug(deviceType);
-    }).tap(function(deviceSlug) {
+    return deviceModel.getDeviceSlug(deviceType).tap(function(deviceSlug) {
       if (deviceSlug == null) {
         throw new errors.ResinInvalidDeviceType(deviceType);
       }
@@ -296,23 +262,13 @@
    */
 
   exports.remove = function(name, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine["delete"]({
-        resource: 'application',
-        options: {
-          filter: {
-            app_name: name,
-            user: {
-              username: username
-            }
-          }
+    return pine["delete"]({
+      resource: 'application',
+      options: {
+        filter: {
+          app_name: name
         }
-      });
+      }
     }).nodeify(callback);
   };
 
@@ -339,11 +295,11 @@
 
   exports.restart = function(name, callback) {
     return exports.get(name).then(function(application) {
-      return request.requestAsync({
+      return request.send({
         method: 'POST',
         url: "/application/" + application.id + "/restart"
       });
-    }).nodeify(_.unary(callback));
+    })["return"](void 0).nodeify(callback);
   };
 
 
@@ -371,7 +327,7 @@
 
   exports.getApiKey = function(name, callback) {
     return exports.get(name).then(function(application) {
-      return request.requestAsync({
+      return request.send({
         method: 'POST',
         url: "/application/" + application.id + "/generate-api-key"
       });

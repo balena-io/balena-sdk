@@ -4,19 +4,17 @@
  */
 
 (function() {
-  var Promise, _, applicationModel, configModel, crypto, errors, pine, request, token;
-
-  Promise = require('bluebird');
+  var _, applicationModel, configModel, crypto, errors, pine, request, token;
 
   crypto = require('crypto');
 
-  _ = require('lodash-contrib');
+  _ = require('lodash');
 
   pine = require('resin-pine');
 
   errors = require('resin-errors');
 
-  request = Promise.promisifyAll(require('resin-request'));
+  request = require('resin-request');
 
   token = require('resin-token');
 
@@ -53,24 +51,12 @@
    */
 
   exports.getAll = function(callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
+    return pine.get({
+      resource: 'device',
+      options: {
+        expand: 'application',
+        orderby: 'name asc'
       }
-      return pine.get({
-        resource: 'device',
-        options: {
-          expand: 'application',
-          orderby: 'name asc',
-          filter: {
-            user: {
-              username: username
-            }
-          }
-        }
-      });
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
       return device;
@@ -101,22 +87,17 @@
    */
 
   exports.getAllByApplication = function(name, callback) {
-    return Promise["try"](function() {
-      if (token.getUsername() == null) {
-        throw new errors.ResinNotLoggedIn();
+    return pine.get({
+      resource: 'device',
+      options: {
+        filter: {
+          application: {
+            app_name: name
+          }
+        },
+        expand: 'application',
+        orderby: 'name asc'
       }
-      return pine.get({
-        resource: 'device',
-        options: {
-          filter: {
-            application: {
-              app_name: name
-            }
-          },
-          expand: 'application',
-          orderby: 'name asc'
-        }
-      });
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
       return device;
@@ -147,24 +128,14 @@
    */
 
   exports.get = function(name, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine.get({
-        resource: 'device',
-        options: {
-          expand: 'application',
-          filter: {
-            name: name,
-            user: {
-              username: username
-            }
-          }
+    return pine.get({
+      resource: 'device',
+      options: {
+        expand: 'application',
+        filter: {
+          name: name
         }
-      });
+      }
     }).tap(function(device) {
       if (_.isEmpty(device)) {
         throw new errors.ResinDeviceNotFound(name);
@@ -198,24 +169,14 @@
    */
 
   exports.getByUUID = function(uuid, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine.get({
-        resource: 'device',
-        options: {
-          expand: 'application',
-          filter: {
-            uuid: uuid,
-            user: {
-              username: username
-            }
-          }
+    return pine.get({
+      resource: 'device',
+      options: {
+        expand: 'application',
+        filter: {
+          uuid: uuid
         }
-      });
+      }
     }).tap(function(device) {
       if (_.isEmpty(device)) {
         throw new errors.ResinDeviceNotFound(uuid);
@@ -303,23 +264,13 @@
    */
 
   exports.remove = function(name, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine["delete"]({
-        resource: 'device',
-        options: {
-          filter: {
-            name: name,
-            user: {
-              username: username
-            }
-          }
+    return pine["delete"]({
+      resource: 'device',
+      options: {
+        filter: {
+          name: name
         }
-      });
+      }
     }).nodeify(callback);
   };
 
@@ -345,18 +296,18 @@
    */
 
   exports.identify = function(uuid, callback) {
-    return Promise["try"](function() {
-      if (token.getUsername() == null) {
+    return token.has().then(function(hasToken) {
+      if (!hasToken) {
         throw new errors.ResinNotLoggedIn();
       }
-      return request.requestAsync({
+      return request.send({
         method: 'POST',
         url: '/blink',
         json: {
           uuid: uuid
         }
       });
-    }).nodeify(_.unary(callback));
+    })["return"](void 0).nodeify(callback);
   };
 
 
@@ -387,26 +338,16 @@
    */
 
   exports.rename = function(name, newName, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return pine.patch({
-        resource: 'device',
-        body: {
-          name: newName
-        },
-        options: {
-          filter: {
-            name: name,
-            user: {
-              username: username
-            }
-          }
+    return pine.patch({
+      resource: 'device',
+      body: {
+        name: newName
+      },
+      options: {
+        filter: {
+          name: name
         }
-      });
+      }
     }).nodeify(callback);
   };
 
@@ -434,30 +375,20 @@
    */
 
   exports.note = function(name, note, callback) {
-    return Promise["try"](function() {
-      var username;
-      username = token.getUsername();
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
+    return exports.has(name).then(function(hasDevice) {
+      if (!hasDevice) {
+        throw new errors.ResinDeviceNotFound(name);
       }
-      return exports.has(name).then(function(hasDevice) {
-        if (!hasDevice) {
-          throw new errors.ResinDeviceNotFound(name);
-        }
-        return pine.patch({
-          resource: 'device',
-          body: {
-            note: note
-          },
-          options: {
-            filter: {
-              name: name,
-              user: {
-                username: username
-              }
-            }
+      return pine.patch({
+        resource: 'device',
+        body: {
+          note: note
+        },
+        options: {
+          filter: {
+            name: name
           }
-        });
+        }
       });
     }).nodeify(callback);
   };

@@ -2,9 +2,8 @@
 # @module resin.auth
 ###
 
-Promise = require('bluebird')
 errors = require('resin-errors')
-request = Promise.promisifyAll(require('resin-request'))
+request = require('resin-request')
 token = require('resin-token')
 
 ###*
@@ -33,7 +32,7 @@ token = require('resin-token')
 #			console.log("My username is: #{username}")
 ###
 exports.whoami = (callback) ->
-	Promise.try(token.getUsername).nodeify(callback)
+	token.getUsername().nodeify(callback)
 
 ###*
 # authenticate callback
@@ -64,10 +63,10 @@ exports.whoami = (callback) ->
 #		console.log("My token is: #{token}")
 ###
 exports.authenticate = (credentials, callback) ->
-	request.requestAsync
+	request.send
 		method: 'POST'
 		url: '/login_'
-		json: credentials
+		data: credentials
 	.get('body')
 	.nodeify(callback)
 
@@ -121,9 +120,7 @@ exports.login = (credentials, callback) ->
 #		console.log('I\'m logged in!')
 ###
 exports.loginWithToken = (authToken, callback) ->
-	Promise.try ->
-		return token.set(authToken)
-	.nodeify(callback)
+	token.set(authToken).nodeify(callback)
 
 ###*
 # isLoggedIn callback
@@ -149,7 +146,7 @@ exports.loginWithToken = (authToken, callback) ->
 #			console.log('Too bad!')
 ###
 exports.isLoggedIn = (callback) ->
-	Promise.try(token.has).nodeify(callback)
+	token.has().nodeify(callback)
 
 ###*
 # getTokenCallback callback
@@ -173,8 +170,7 @@ exports.isLoggedIn = (callback) ->
 #		console.log(token)
 ###
 exports.getToken = (callback) ->
-	Promise.try ->
-		savedToken = token.get()
+	token.get().then (savedToken) ->
 		throw new errors.ResinNotLoggedIn() if not savedToken?
 		return savedToken
 	.nodeify(callback)
@@ -201,8 +197,7 @@ exports.getToken = (callback) ->
 #		console.log(id)
 ###
 exports.getUserId = (callback) ->
-	Promise.try ->
-		id = token.getUserId()
+	token.getUserId().then (id) ->
 		throw new errors.ResinNotLoggedIn() if not id?
 		return id
 	.nodeify(callback)
@@ -228,7 +223,7 @@ exports.getUserId = (callback) ->
 # @todo Maybe we should post to /logout or something to invalidate the token on the server?
 ###
 exports.logout = (callback) ->
-	Promise.try(token.remove).nodeify(callback)
+	token.remove().nodeify(callback)
 
 ###*
 # register callback
@@ -258,9 +253,9 @@ exports.logout = (callback) ->
 #		console.log(token)
 ###
 exports.register = (credentials = {}, callback) ->
-	request.requestAsync
+	request.send
 		method: 'POST'
 		url: '/user/register'
-		json: credentials
-	.get(1)
+		data: credentials
+	.get('body')
 	.nodeify(callback)

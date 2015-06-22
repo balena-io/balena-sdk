@@ -4,7 +4,6 @@
 
 _ = require('lodash')
 errors = require('resin-errors')
-token = require('resin-token')
 pine = require('resin-pine')
 auth = require('../auth')
 
@@ -33,12 +32,8 @@ auth = require('../auth')
 #		console.log(keys)
 ###
 exports.getAll = (callback) ->
-	auth.getUserId().then (id) ->
-		return pine.get
-			resource: 'user__has__public_key'
-			options:
-				filter:
-					user: { id }
+	return pine.get
+		resource: 'user__has__public_key'
 	.nodeify(callback)
 
 ###*
@@ -62,13 +57,9 @@ exports.getAll = (callback) ->
 #		console.log(key)
 ###
 exports.get = (id, callback) ->
-	auth.getUserId().then (userId) ->
-		return pine.get
-			resource: 'user__has__public_key'
-			id: id
-			options:
-				filter:
-					user: { id: userId }
+	return pine.get
+		resource: 'user__has__public_key'
+		id: id
 	.tap (key) ->
 		if _.isEmpty(key)
 			throw new errors.ResinKeyNotFound(id)
@@ -93,13 +84,9 @@ exports.get = (id, callback) ->
 #		throw error if error?
 ###
 exports.remove = (id, callback) ->
-	auth.getUserId().then (userId) ->
-		return pine.delete
-			resource: 'user__has__public_key'
-			id: id
-			options:
-				filter:
-					user: { id: userId }
+	return pine.delete
+		resource: 'user__has__public_key'
+		id: id
 	.nodeify(callback)
 
 ###*
@@ -126,16 +113,12 @@ exports.remove = (id, callback) ->
 #		console.log(id)
 ###
 exports.create = (title, key, callback) ->
-	Promise.try ->
 
-		if not token.getUsername()?
-			throw new errors.ResinNotLoggedIn()
+	# Avoid ugly whitespaces
+	key = key.trim()
 
-		# Avoid ugly whitespaces
-		key = key.trim()
-
-		return pine.post
-			resource: 'user__has__public_key'
-			body: { title, key }
+	return pine.post
+		resource: 'user__has__public_key'
+		body: { title, key }
 	.get('id')
 	.nodeify(callback)

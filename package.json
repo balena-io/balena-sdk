@@ -41,13 +41,14 @@
   "dependencies": {
     "async": "^1.0.0",
     "bluebird": "^2.9.27",
+    "chai-as-promised": "^5.1.0",
     "lodash": "~3.9.1",
     "lodash-contrib": "~241.4.14",
     "resin-device-logs": "^1.0.0",
     "resin-errors": "^1.0.2",
     "resin-network-config": "^1.0.0",
-    "resin-pine": "^1.1.1",
-    "resin-request": "^1.3.0",
-    "resin-token": "^1.3.0"
+    "resin-pine": "^1.3.0",
+    "resin-request": "^2.0.0",
+    "resin-token": "^2.1.0"
   }
 }
