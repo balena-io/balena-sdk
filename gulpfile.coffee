@@ -31,12 +31,6 @@ gulp.task 'coffee', ->
 		.pipe(coffee()).on('error', gutil.log)
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
-gulp.task 'jsdoc', [ 'coffee' ], ->
-	gulp.src(OPTIONS.files.documentation, read: false)
-		.pipe(shell([
-			'jsdoc -c jsdoc-conf.json'
-		]))
-
 gulp.task 'json', ->
 	gulp.src(OPTIONS.files.json)
 		.pipe(gulp.dest(OPTIONS.directories.build))

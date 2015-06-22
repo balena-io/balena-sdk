@@ -33,7 +33,6 @@
     "gulp-mocha": "~2.0.1",
     "gulp-shell": "^0.4.1",
     "gulp-util": "~3.0.4",
-    "jsdoc": "^3.3.0",
     "mocha": "~2.2.5",
     "run-sequence": "^1.1.0",
     "sinon": "~1.14.1",
