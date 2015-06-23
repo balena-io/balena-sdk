@@ -4,7 +4,6 @@ mocha = require('gulp-mocha')
 gutil = require('gulp-util')
 coffeelint = require('gulp-coffeelint')
 coffee = require('gulp-coffee')
-shell = require('gulp-shell')
 runSequence = require('run-sequence')
 packageJSON = require('./package.json')
 
@@ -13,15 +12,9 @@ OPTIONS =
 		coffeelint: path.join(__dirname, 'coffeelint.json')
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.spec.coffee', 'gulpfile.coffee' ]
-		json: 'lib/**/*.json'
 		app: 'lib/**/*.coffee'
 		tests: 'tests/**/*.spec.coffee'
 		javascript: 'build/**/*.js'
-		documentation: [
-			'build/**/*.js'
-			'README.md'
-			'tutorials/**/*.markdown'
-		]
 	directories:
 		doc: 'doc/'
 		build: 'build/'
@@ -29,10 +22,6 @@ OPTIONS =
 gulp.task 'coffee', ->
 	gulp.src(OPTIONS.files.app)
 		.pipe(coffee()).on('error', gutil.log)
-		.pipe(gulp.dest(OPTIONS.directories.build))
-
-gulp.task 'json', ->
-	gulp.src(OPTIONS.files.json)
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'test', ->
@@ -52,7 +41,7 @@ gulp.task 'build', (callback) ->
 	runSequence([
 		'lint'
 		'test'
-	], [ 'json', 'coffee' ], callback)
+	], [ 'coffee' ], callback)
 
 gulp.task 'watch', [ 'build' ], ->
-	gulp.watch([ OPTIONS.files.coffee, OPTIONS.files.json, 'README.md' ], [ 'build' ])
+	gulp.watch([ OPTIONS.files.coffee ], [ 'build' ])
