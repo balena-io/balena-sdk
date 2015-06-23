@@ -175,21 +175,19 @@ exports.remove = (name, callback) ->
 # @public
 # @function
 #
-# @param {String} uuid - device uuid
+# @param {String} name - device name
 # @returns {Promise}
 #
 # @example
-# resin.models.device.identify('23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a21369ac0f00db828')
+# resin.models.device.identify('MyDevice')
 ###
-exports.identify = (uuid, callback) ->
-	token.has().then (hasToken) ->
-		if not hasToken
-			throw new errors.ResinNotLoggedIn()
-
+exports.identify = (name, callback) ->
+	exports.get(name).then (device) ->
 		return request.send
 			method: 'POST'
 			url: '/blink'
-			json: { uuid }
+			body:
+				uuid: device.uuid
 	.return(undefined)
 	.nodeify(callback)
 
