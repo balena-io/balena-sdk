@@ -16,30 +16,15 @@
 
 
   /**
-   * A Resin API key
-   * @typedef {Object} Key
-   */
-
-
-  /**
-   * getAll callback
-   * @callback module:resin.models.key~getAllCallback
-   * @param {(Error|null)} error - error
-   * @param {Key[]} keys - ssh keys
-   */
-
-
-  /**
    * @summary Get all ssh keys
    * @public
    * @function
    *
-   * @param {module:resin.models.key~getAllCallback} callback - callback
+   * @returns {Promise<Object[]>} ssh keys
    *
    * @example
-   *	resin.models.key.getAll (error, keys) ->
-   *		throw error if error?
-   *		console.log(keys)
+   * resin.models.key.getAll().then (keys) ->
+   * 	console.log(keys)
    */
 
   exports.getAll = function(callback) {
@@ -50,25 +35,16 @@
 
 
   /**
-   * get callback
-   * @callback module:resin.models.key~getCallback
-   * @param {(Error|null)} error - error
-   * @param {Key} key - ssh key
-   */
-
-
-  /**
    * @summary Get a single ssh key
    * @public
    * @function
    *
    * @param {(String|Number)} id - key id
-   * @param {module:resin.models.key~getCallback} callback - callback
+   * @returns {Promise<Object>} ssh key
    *
    * @example
-   *	resin.models.key.get 51, (error, key) ->
-   *		throw error if error?
-   *		console.log(key)
+   * resin.models.key.get(51).then (key) ->
+   * 	console.log(key)
    */
 
   exports.get = function(id, callback) {
@@ -84,23 +60,15 @@
 
 
   /**
-   * remove callback
-   * @callback module:resin.models.key~removeCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Remove ssh key
    * @public
    * @function
    *
    * @param {(String|Number)} id - key id
-   * @param {module:resin.models.key~removeCallback} callback - callback
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.key.remove 51, (error) ->
-   *		throw error if error?
+   * resin.models.key.remove(51)
    */
 
   exports.remove = function(id, callback) {
@@ -112,28 +80,20 @@
 
 
   /**
-   * create callback
-   * @callback module:resin.models.key~createCallback
-   * @param {(Error|null)} error - error
-   * @param {Number} id - id
-   */
-
-
-  /**
    * @summary Create a ssh key
    * @public
    * @function
    *
    * @param {String} title - key title
    * @param {String} key - the public ssh key
-   * @param {module:resin.models.key~createCallback} callback - callback
+   *
+   * @returns {Promise<Number>} ssh key id
    *
    * @todo We should return an id for consistency with the other models
    *
    * @example
-   *	resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
-   *		throw error if error?
-   *		console.log(id)
+   * resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
+   * 	console.log(id)
    */
 
   exports.create = function(title, key, callback) {

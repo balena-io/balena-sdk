@@ -24,30 +24,15 @@
 
 
   /**
-   * A Resin API device
-   * @typedef {Object} Device
-   */
-
-
-  /**
-   * getAll callback
-   * @callback module:resin.models.device~getAllCallback
-   * @param {(Error|null)} error - error
-   * @param {Device[]} devices - devices
-   */
-
-
-  /**
    * @summary Get all devices
    * @public
    * @function
    *
-   * @param {module:resin.models.device~getAllCallback} callback - callback(error, devices)
+   * @returns {Promise<Object[]>} devices
    *
    * @example
-   *	resin.models.devices.getAll (error, devices) ->
-   *		throw error if error?
-   *		console.log(devices)
+   * resin.models.devices.getAll().then (devices) ->
+   * 	console.log(devices)
    */
 
   exports.getAll = function(callback) {
@@ -65,25 +50,16 @@
 
 
   /**
-   * getAllByApplication callback
-   * @callback module:resin.models.device~getAllByApplicationCallback
-   * @param {(Error|null)} error - error
-   * @param {Device[]} devices - devices
-   */
-
-
-  /**
    * @summary Get all devices by application
    * @public
    * @function
    *
    * @param {String} name - application name
-   * @param {module:resin.models.device~getAllByApplicationCallback} callback - callback
+   * @returns {Promise<Object[]>} devices
    *
    * @example
-   *	resin.models.devices.getAllByApplication 'MyApp', (error, devices) ->
-   *		throw error if error?
-   *		console.log(devices)
+   * resin.models.devices.getAllByApplication('MyApp').then (devices) ->
+   * 	console.log(devices)
    */
 
   exports.getAllByApplication = function(name, callback) {
@@ -106,25 +82,16 @@
 
 
   /**
-   * get callback
-   * @callback module:resin.models.device~getCallback
-   * @param {(Error|null)} error - error
-   * @param {Device} device - device
-   */
-
-
-  /**
    * @summary Get a single device
    * @public
    * @function
    *
    * @param {String} name - device name
-   * @param {module:resin.models.device~getCallback} callback - callback
+   * @returns {Promise<Object>} device
    *
    * @example
-   *	resin.models.device.get 'MyDevice', (error, device) ->
-   *		throw error if error?
-   *		console.log(device)
+   * resin.models.device.get('MyDevice').then (device) ->
+   * 	console.log(device)
    */
 
   exports.get = function(name, callback) {
@@ -147,25 +114,16 @@
 
 
   /**
-   * getByUUID callback
-   * @callback module:resin.models.device~getByUUIDCallback
-   * @param {(Error|null)} error - error
-   * @param {Device} device - device
-   */
-
-
-  /**
    * @summary Get a single device by UUID
    * @public
    * @function
    *
    * @param {String} uuid - device UUID
-   * @param {module:resin.models.device~getByUUIDCallback} callback - callback
+   * @returns {Promise<Object>} device
    *
    * @example
-   *	resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
-   *		throw error if error?
-   *		console.log(device)
+   * resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (device) ->
+   * 	console.log(device)
    */
 
   exports.getByUUID = function(uuid, callback) {
@@ -188,25 +146,16 @@
 
 
   /**
-   * has callback
-   * @callback module:resin.models.device~hasCallback
-   * @param {(Error|null)} error - error
-   * @param {Boolean} has - has device
-   */
-
-
-  /**
    * @summary Check if a device exists
    * @public
    * @function
    *
    * @param {String} name - device name
-   * @param {module:resin.models.device~hasCallback} callback - callback
+   * @returns {Promise<Boolean>} has device
    *
    * @example
-   *	resin.models.device.has 'MyDevice', (error, hasDevice) ->
-   *		throw error if error?
-   *		console.log(hasDevice)
+   * resin.models.device.has('MyDevice').then (hasDevice) ->
+   * 	console.log(hasDevice)
    */
 
   exports.has = function(name, callback) {
@@ -217,25 +166,16 @@
 
 
   /**
-   * isOnline callback
-   * @callback module:resin.models.device~isOnlineCallback
-   * @param {(Error|null)} error - error
-   * @param {Boolean} isOnline - is online
-   */
-
-
-  /**
    * @summary Check if a device is online
    * @public
    * @function
    *
    * @param {String} name - device name
-   * @param {module:resin.models.device~isOnlineCallback} callback - callback
+   * @returns {Promise<Boolean>} is device online
    *
    * @example
-   *	resin.models.device.isOnline 'MyDevice', (error, isOnline) ->
-   *		throw error if error?
-   *		console.log("Is device online? #{isOnline}")
+   * resin.models.device.isOnline('MyDevice').then (isOnline) ->
+   * 	console.log("Is device online? #{isOnline}")
    */
 
   exports.isOnline = function(name, callback) {
@@ -244,23 +184,15 @@
 
 
   /**
-   * remove callback
-   * @callback module:resin.models.device~removeCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Remove device
    * @public
    * @function
    *
    * @param {String} name - device name
-   * @param {module:resin.models.device~removeCallback} callback - callback
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.device.remove 'DeviceName', (error) ->
-   *		throw error if error?
+   * resin.models.device.remove('DeviceName')
    */
 
   exports.remove = function(name, callback) {
@@ -276,23 +208,15 @@
 
 
   /**
-   * identify callback
-   * @callback module:resin.models.device~identifyCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Identify device
    * @public
    * @function
    *
    * @param {String} uuid - device uuid
-   * @param {module:resin.models.device~identifyCallback} callback - callback
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.device.identify '23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a21369ac0f00db828', (error) ->
-   *		throw error if error?
+   * resin.models.device.identify('23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a21369ac0f00db828')
    */
 
   exports.identify = function(uuid, callback) {
@@ -312,29 +236,17 @@
 
 
   /**
-   * rename callback
-   * @callback module:resin.models.device~renameCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Rename device
    * @public
    * @function
    *
    * @param {String} name - device name
    * @param {String} newName - the device new name
-   * @param {module:resin.models.device~renameCallback} callback - callback
    *
-   * @todo This action doesn't return any error
-   * if trying to rename a device that does not
-   * exists. This should be fixed server side.
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.device.rename 317, 'NewName', (error) ->
-   *		throw error if error?
-   *		console.log("Device has been renamed!")
+   * resin.models.device.rename('MyDevice', 'NewName')
    */
 
   exports.rename = function(name, newName, callback) {
@@ -353,25 +265,17 @@
 
 
   /**
-   * note callback
-   * @callback module:resin.models.device~noteCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Note a device
    * @public
    * @function
    *
    * @param {String} name - device name
    * @param {String} note - the note
-   * @param {module:resin.models.device~noteCallback} callback - callback
+   *
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.device.note 'MyDevice', 'My useful note', (error) ->
-   *		throw error if error?
-   *		console.log("Device has been noted!")
+   * resin.models.device.note('MyDevice', 'My useful note')
    */
 
   exports.note = function(name, note, callback) {
@@ -403,15 +307,15 @@
    * @param {Object} [options={}] - options
    * @param {String} [options.wifiSsid] - wifi ssid
    * @param {String} [options.wifiKey] - wifi key
-   * @param {Function} callback - callback (error, device)
+   *
+   * @returns {Promise<Object>} device
    *
    * @example
    * resin.models.device.register 'MyApp',
-   *		wifiSsid: 'foobar'
-   *		wifiKey: 'hello'
-   *	, (error, device) ->
-   *		throw error if error?
-   *		console.log(device)
+   * 	wifiSsid: 'foobar'
+   * 	wifiKey: 'hello'
+   * .then (device) ->
+   * 	console.log(device)
    */
 
   exports.register = function(applicationName, options, callback) {
@@ -436,14 +340,6 @@
 
 
   /**
-   * isValidUUID callback
-   * @callback module:resin.models.device~isValidUUIDCallback
-   * @param {(Error|null)} error - error
-   * @param {Boolean} isValid - whether is valid or not
-   */
-
-
-  /**
    * @summary Checks if a UUID is valid
    * @public
    * @function
@@ -451,16 +347,16 @@
    * @param {String} uuid - the device uuid
    * @param {module:resin.models.device~isValidUUIDCallback} callback - callback
    *
+   * @returns {Promise<Boolean>} is uuid valid
+   *
    * @todo We should get better server side support for this operation
    * to avoid having to get all devices list and check manually.
    *
    * @example
    * uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
-   * resin.models.device.isValidUUID uuid, (error, valid) ->
-   *		throw error if error?
-   *
-   *		if valid
-   *			console.log('This is a valid UUID')
+   * resin.models.device.isValidUUID(uuid).then (valid) ->
+   * 	if valid
+   * 		console.log('This is a valid UUID')
    */
 
   exports.isValidUUID = function(uuid, callback) {
@@ -473,14 +369,6 @@
 
 
   /**
-   * getDisplayName callback
-   * @callback module:resin.models.device~getDisplayName
-   * @param {(Error|null)} error - error
-   * @param {String|Undefined} deviceTypeName - the device type display name or undefined
-   */
-
-
-  /**
    * @summary Get display name for a device
    * @public
    * @function
@@ -488,13 +376,12 @@
    * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
    * @param {String} deviceTypeSlug - device type slug
-   * @param {module:resin.models.device~getDisplayName} callback - callback
+   * @returns {Promise<String>} device display name
    *
    * @example
-   * resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
-   *		throw error if error?
-   *		console.log(deviceTypeName)
-   *		# Raspberry Pi
+   * resin.models.device.getDisplayName('raspberry-pi').then (deviceTypeName) ->
+   * 	console.log(deviceTypeName)
+   * 	# Raspberry Pi
    */
 
   exports.getDisplayName = function(deviceTypeSlug, callback) {
@@ -509,14 +396,6 @@
 
 
   /**
-   * getDeviceSlug callback
-   * @callback module:resin.models.device~getDeviceSlug
-   * @param {(Error|null)} error - error
-   * @param {String|Undefined} deviceTypeSlug - the device type slug or undefined
-   */
-
-
-  /**
    * @summary Get device slug
    * @public
    * @function
@@ -524,13 +403,12 @@
    * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
    * @param {String} deviceTypeName - device type name
-   * @param {module:resin.models.device~getDeviceSlug} callback - callback
+   * @returns {Promise<String>} device slug name
    *
    * @example
-   * resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
-   *		throw error if error?
-   *		console.log(deviceTypeSlug)
-   *		# raspberry-pi
+   * resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
+   * 	console.log(deviceTypeSlug)
+   * 	# raspberry-pi
    */
 
   exports.getDeviceSlug = function(deviceTypeName, callback) {
@@ -545,26 +423,16 @@
 
 
   /**
-   * getSupportedDeviceTypes callback
-   * @callback module:resin.models.device~getSupportedDeviceTypes
-   * @param {(Error|null)} error - error
-   * @param {String[]} supportedDeviceTypes - a list of supported device types by name
-   */
-
-
-  /**
    * @summary Get supported device types
    * @public
    * @function
    *
-   * @param {module:resin.models.device~getSupportedDeviceTypes} callback - callback
+   * @returns {Promise<String[]>} supported device types
    *
    * @example
-   * resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
-   *		throw error if error?
-   *
-   *		for supportedDeviceType in supportedDeviceTypes
-   *			console.log("Resin supports: #{supportedDeviceType}")
+   * resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
+   * 	for supportedDeviceType in supportedDeviceTypes
+   * 		console.log("Resin supports: #{supportedDeviceType}")
    */
 
   exports.getSupportedDeviceTypes = function(callback) {
@@ -575,25 +443,16 @@
 
 
   /**
-   * getManifestBySlug callback
-   * @callback module:resin.models.device~getManifestBySlug
-   * @param {(Error|null)} error - error
-   * @param {Object} manifest - the device manifest
-   */
-
-
-  /**
    * @summary Get a device manifest by slug
    * @public
    * @function
    *
    * @param {String} slug - device slug
-   * @param {module:resin.models.device~getManifestBySlug} callback - callback
+   * @returns {Promise<Object>} device manifest
    *
    * @example
-   * resin.models.device.getManifestBySlug 'raspberry-pi' (error, manifest) ->
-   *		throw error if error?
-   *		console.log(manifest)
+   * resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
+   * 	console.log(manifest)
    */
 
   exports.getManifestBySlug = function(slug, callback) {
