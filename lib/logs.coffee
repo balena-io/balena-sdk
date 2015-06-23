@@ -2,91 +2,62 @@
 # @module resin.logs
 ###
 
-async = require('async')
-_ = require('lodash-contrib')
-PubNub = require('pubnub')
-errors = require('resin-errors')
+Promise = require('bluebird')
+logs = require('resin-device-logs')
 configModel = require('./models/config')
 deviceModel = require('./models/device')
 
 ###*
-# subscribe callback
-# @callback module:resin.logs~subscribeCallback
-# @param {(Error|null)} error - error
-# @param {String|String[]} message - log message
+# @summary Subscribe to device logs
+# @function
+# @public
+#
+# @description
+# The `logs` object yielded by this function emits the following events:
+#
+# - `line`: when a log line is received.
+# - `error`: when an error happens.
+#
+# @param {String} deviceName - device name
+# @param {Function} callback - callback (error, logs)
+#
+# @todo
+# We should consider making this a readable stream.
+#
+# @example
+# resin.logs.subscribe 'MyDevice', (error, logs) ->
+#		throw error if error?
+#
+#		logs.on 'line', (line) ->
+#			console.log(line)
 ###
+exports.subscribe = (deviceName, callback) ->
+	Promise.props
+		uuid: deviceModel.get(deviceName).get('uuid')
+		pubNubKeys: configModel.getPubNubKeys()
+	.then (results) ->
+		return logs.subscribe(results.pubNubKeys, results.uuid)
+	.nodeify(callback)
 
 ###*
-# @summary Subscribe to device logs by their UUID
-# @public
+# @summary Get device logs history
 # @function
+# @public
 #
-# @param {String} uuid - the device uuid
-# @param {Object} options - logs options (history=0, tail=false)
-# @param {module:resin.logs~subscribeCallback} callback - callback
-#
-# @throws {Error} Will throw if `options.history` is not a number or parseable string.
-#
-# @todo Find a way to test this
+# @param {String} deviceName - device name
+# @param {Function} callback - callback (error, history)
 #
 # @example
-# uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
-# resin.logs.subscribe uuid, {
-#		history: 20
-# }, (error, message) ->
+# resin.logs.history 'MyDevice', (error, history) ->
 #		throw error if error?
-#		console.log(message)
 #
-# @example
-# uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
-# resin.logs.subscribe uuid, {
-#		tail: true
-# }, (error, message) ->
-#		throw error if error?
-#		console.log(message)
+#		for line in history
+#			console.log(line)
 ###
-exports.subscribe = (uuid, options = {}, callback) ->
-
-	_.defaults options,
-		history: 0
-		tail: false
-
-	if not _.isNumber(options.history)
-		return callback(new errors.ResinInvalidOption('history', options.history))
-
-	deviceModel.isValidUUID uuid, (error, isValidUUID) ->
-		return callback(error) if error?
-
-		if not isValidUUID
-			return callback(new Error("Invalid uuid: #{uuid}"))
-
-		configModel.getPubNubKeys (error, pubnubKeys) ->
-			return callback(error) if error?
-
-			pubnubKeys.ssl = true
-			pubnub = PubNub.init(pubnubKeys)
-
-			channel = "device-#{ uuid }-logs"
-
-			# TODO: PubNub doesn't close the connection if using only history().
-			# Not even by using pubnub.unsubscribe(). The solution is to subscribe
-			# to the channel and fetch history + unsubscribe right afterwards.
-			# The following question might led to a response:
-			# http://stackoverflow.com/questions/25806223/how-to-close-a-pubnub-connection
-
-			return pubnub.subscribe
-				channel: channel
-				callback: (message) ->
-					return if not options.tail
-					callback(null, message)
-				error: _.unary(callback)
-				connect: ->
-					pubnub.history
-						count: options.history
-						channel: channel
-						error: _.unary(callback)
-						callback: (message) ->
-							if options.tail
-								return callback(null, _.first(message))
-							pubnub.unsubscribe { channel }, ->
-								return callback(null, _.first(message))
+exports.history = (deviceName, callback) ->
+	Promise.props
+		uuid: deviceModel.get(deviceName).get('uuid')
+		pubNubKeys: configModel.getPubNubKeys()
+	.then (results) ->
+		return logs.history(results.pubNubKeys, results.uuid)
+	.nodeify(callback)
