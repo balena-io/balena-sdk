@@ -205,13 +205,14 @@ exports.identify = (name, callback) ->
 # resin.models.device.rename('MyDevice', 'NewName')
 ###
 exports.rename = (name, newName, callback) ->
-	return pine.patch
-		resource: 'device'
-		body:
-			name: newName
-		options:
-			filter:
-				name: name
+	exports.get(name).then ->
+		return pine.patch
+			resource: 'device'
+			body:
+				name: newName
+			options:
+				filter:
+					name: name
 	.nodeify(callback)
 
 ###*
