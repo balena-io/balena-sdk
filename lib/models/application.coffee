@@ -335,7 +335,7 @@ exports.getApiKey = (name, callback) ->
 ###
 exports.getConfiguration = (name, options = {}, callback) ->
 	Promise.all([
-		exports.gek(name)
+		exports.get(name)
 		exports.getApiKey(name)
 		auth.getUserId()
 		auth.whoami()
