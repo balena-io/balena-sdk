@@ -25,7 +25,6 @@
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "MIT",
   "devDependencies": {
-    "chai": "~2.3.0",
     "coffee-script": "~1.9.2",
     "gulp": "~3.8.11",
     "gulp-coffee": "~2.3.1",
@@ -33,14 +32,12 @@
     "gulp-mocha": "~2.0.1",
     "gulp-util": "~3.0.4",
     "mocha": "~2.2.5",
-    "run-sequence": "^1.1.0",
-    "sinon": "~1.14.1",
-    "sinon-chai": "~2.7.0"
+    "mochainon": "^1.0.0",
+    "run-sequence": "^1.1.0"
   },
   "dependencies": {
     "async": "^1.0.0",
     "bluebird": "^2.9.27",
-    "chai-as-promised": "^5.1.0",
     "lodash": "~3.9.1",
     "lodash-contrib": "~241.4.14",
     "resin-device-logs": "^1.0.0",

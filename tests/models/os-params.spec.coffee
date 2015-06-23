@@ -1,5 +1,4 @@
-chai = require('chai')
-expect = chai.expect
+m = require('mochainon')
 OSParams = require('../../lib/models/os-params')
 
 describe 'OS Params:', ->
@@ -7,25 +6,25 @@ describe 'OS Params:', ->
 	describe '#constructor()', ->
 
 		it 'should throw an error if no appId', ->
-			expect ->
+			m.chai.expect ->
 				new OSParams(network: 'ethernet')
 			.to.throw('Missing option: appId')
 
 		it 'should throw an error if not a parseable string', ->
-			expect ->
+			m.chai.expect ->
 				new OSParams
 					network: 'ethernet'
 					appId: 'myApp'
 			.to.throw('Invalid option appId')
 
 		it 'should throw an error if no network', ->
-			expect ->
+			m.chai.expect ->
 				new OSParams
 					appId: 91
 			.to.throw('Missing option: network')
 
 		it 'should throw an error if network is not wifi or ethernet', ->
-			expect ->
+			m.chai.expect ->
 				new OSParams
 					network: 'hello'
 					appId: 91
@@ -34,7 +33,7 @@ describe 'OS Params:', ->
 		describe 'if network is wifi', ->
 
 			it 'should throw an error if missing wifiSsid', ->
-				expect ->
+				m.chai.expect ->
 					new OSParams
 						network: 'wifi'
 						appId: 91
@@ -42,7 +41,7 @@ describe 'OS Params:', ->
 				.to.throw('Missing option: wifiSsid')
 
 			it 'should throw an error if missing wifiKey', ->
-				expect ->
+				m.chai.expect ->
 					new OSParams
 						network: 'wifi'
 						appId: 91
@@ -56,20 +55,20 @@ describe 'OS Params:', ->
 				wifiKey: 'secret'
 				appId: 91
 
-			expect(connectionParams.network).to.equal('wifi')
-			expect(connectionParams.wifiSsid).to.equal('mySsid')
-			expect(connectionParams.wifiKey).to.equal('secret')
-			expect(connectionParams.appId).to.equal(91)
+			m.chai.expect(connectionParams.network).to.equal('wifi')
+			m.chai.expect(connectionParams.wifiSsid).to.equal('mySsid')
+			m.chai.expect(connectionParams.wifiKey).to.equal('secret')
+			m.chai.expect(connectionParams.appId).to.equal(91)
 
 		it 'should parse a string appId', ->
 			connectionParams = new OSParams
 				network: 'ethernet'
 				appId: '91'
 
-			expect(connectionParams.appId).to.equal(91)
+			m.chai.expect(connectionParams.appId).to.equal(91)
 
 		it 'should throw an error if extra options', ->
-			expect ->
+			m.chai.expect ->
 				new OSParams
 					network: 'ethernet'
 					appId: '91'

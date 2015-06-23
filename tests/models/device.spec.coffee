@@ -1,8 +1,5 @@
+m = require('mochainon')
 _ = require('lodash')
-sinon = require('sinon')
-chai = require('chai')
-chai.use(require('sinon-chai'))
-expect = chai.expect
 Promise = require('bluebird')
 errors = require('resin-errors')
 pine = require('resin-pine')
@@ -17,7 +14,7 @@ describe 'Device Model:', ->
 		describe 'given no devices', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -25,8 +22,8 @@ describe 'Device Model:', ->
 
 			it 'should return an empty array', (done) ->
 				device.getAll (error, devices) ->
-					expect(error).to.not.exist
-					expect(devices).to.deep.equal([])
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(devices).to.deep.equal([])
 					done()
 
 		describe 'given devices', ->
@@ -51,7 +48,7 @@ describe 'Device Model:', ->
 					}
 				]
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve(@devices))
 
 			afterEach ->
@@ -59,8 +56,8 @@ describe 'Device Model:', ->
 
 			it 'should return the devices', (done) ->
 				device.getAll (error, devices) =>
-					expect(error).to.not.exist
-					expect(devices).to.deep.equal(@devices)
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(devices).to.deep.equal(@devices)
 					done()
 
 	describe '.getAllByApplication()', ->
@@ -68,7 +65,7 @@ describe 'Device Model:', ->
 		describe 'given no devices', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -76,8 +73,8 @@ describe 'Device Model:', ->
 
 			it 'should return an error', (done) ->
 				device.getAllByApplication 'MyApp', (error, devices) ->
-					expect(error).to.not.exist
-					expect(devices).to.deep.equal([])
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(devices).to.deep.equal([])
 					done()
 
 		describe 'given a device', ->
@@ -90,7 +87,7 @@ describe 'Device Model:', ->
 						app_name: 'App1'
 					]
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([ @device ]))
 
 			afterEach ->
@@ -98,13 +95,13 @@ describe 'Device Model:', ->
 
 			it 'should return the correct number of devices', (done) ->
 				device.getAllByApplication 'MyApp', (error, devices) ->
-					expect(error).to.not.exist
-					expect(devices).to.have.length(1)
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(devices).to.have.length(1)
 					done()
 
 			it 'should add application_name', (done) ->
 				device.getAllByApplication 'MyApp', (error, devices) =>
-					expect(devices[0].application_name).to.equal(@device.application[0].app_name)
+					m.chai.expect(devices[0].application_name).to.equal(@device.application[0].app_name)
 					done()
 
 	describe '.get()', ->
@@ -112,7 +109,7 @@ describe 'Device Model:', ->
 		describe 'given no devices', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -120,8 +117,8 @@ describe 'Device Model:', ->
 
 			it 'should return an error', (done) ->
 				device.get 'MyDevice', (error, device) ->
-					expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-					expect(device).to.not.exist
+					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+					m.chai.expect(device).to.not.exist
 					done()
 
 		describe 'given a device', ->
@@ -134,7 +131,7 @@ describe 'Device Model:', ->
 						app_name: 'App1'
 					]
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([ @device ]))
 
 			afterEach ->
@@ -142,13 +139,13 @@ describe 'Device Model:', ->
 
 			it 'should return the device', (done) ->
 				device.get 'MyDevice', (error, device) =>
-					expect(error).to.not.exist
-					expect(device).to.deep.equal(@device)
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(device).to.deep.equal(@device)
 					done()
 
 			it 'should add application_name', (done) ->
 				device.get 'MyDevice', (error, device) =>
-					expect(device.application_name).to.equal(@device.application[0].app_name)
+					m.chai.expect(device.application_name).to.equal(@device.application[0].app_name)
 					done()
 
 	describe '.has()', ->
@@ -156,7 +153,7 @@ describe 'Device Model:', ->
 		describe 'given no devices', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -164,8 +161,8 @@ describe 'Device Model:', ->
 
 			it 'should return false', (done) ->
 				device.has 'MyDevice', (error, hasDevice) ->
-					expect(error).to.not.exist
-					expect(hasDevice).to.be.false
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(hasDevice).to.be.false
 					done()
 
 		describe 'given a device', ->
@@ -178,7 +175,7 @@ describe 'Device Model:', ->
 						app_name: 'App1'
 					]
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([ @device ]))
 
 			afterEach ->
@@ -186,8 +183,8 @@ describe 'Device Model:', ->
 
 			it 'should return true', (done) ->
 				device.has 'Device1', (error, hasDevice) ->
-					expect(error).to.not.exist
-					expect(hasDevice).to.be.true
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(hasDevice).to.be.true
 					done()
 
 	describe '.isOnline()', ->
@@ -195,7 +192,7 @@ describe 'Device Model:', ->
 		describe 'given the device does not exist', ->
 
 			beforeEach ->
-				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub = m.sinon.stub(device, 'get')
 				@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('device')))
 
 			afterEach ->
@@ -203,14 +200,14 @@ describe 'Device Model:', ->
 
 			it 'should return an error', (done) ->
 				device.isOnline 'MyDevice', (error, isOnline) ->
-					expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-					expect(isOnline).to.not.exist
+					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+					m.chai.expect(isOnline).to.not.exist
 					done()
 
 		describe 'given the device is online', ->
 
 			beforeEach ->
-				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub = m.sinon.stub(device, 'get')
 				@deviceGetStub.returns(Promise.resolve(is_online: true))
 
 			afterEach ->
@@ -218,14 +215,14 @@ describe 'Device Model:', ->
 
 			it 'should return true', (done) ->
 				device.isOnline 'MyDevice', (error, isOnline) ->
-					expect(error).to.not.exist
-					expect(isOnline).to.be.true
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(isOnline).to.be.true
 					done()
 
 		describe 'given the device is not online', ->
 
 			beforeEach ->
-				@deviceGetStub = sinon.stub(device, 'get')
+				@deviceGetStub = m.sinon.stub(device, 'get')
 				@deviceGetStub.returns(Promise.resolve(is_online: false))
 
 			afterEach ->
@@ -233,8 +230,8 @@ describe 'Device Model:', ->
 
 			it 'should return false', (done) ->
 				device.isOnline 'MyDevice', (error, isOnline) ->
-					expect(error).to.not.exist
-					expect(isOnline).to.be.false
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(isOnline).to.be.false
 					done()
 
 	describe '.note()', ->
@@ -242,7 +239,7 @@ describe 'Device Model:', ->
 		describe 'given the device was not found', ->
 
 			beforeEach ->
-				@deviceHasStub = sinon.stub(device, 'has')
+				@deviceHasStub = m.sinon.stub(device, 'has')
 				@deviceHasStub.returns(Promise.resolve(false))
 
 			afterEach ->
@@ -250,7 +247,7 @@ describe 'Device Model:', ->
 
 			it 'should return an error', (done) ->
 				device.note 'MyDevice', 'Hello World', (error) ->
-					expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
 					done()
 
 	describe 'isValidUUID()', ->
@@ -258,7 +255,7 @@ describe 'Device Model:', ->
 		describe 'given the uuid exists', ->
 
 			beforeEach ->
-				@deviceGetAllStub = sinon.stub(device, 'getAll')
+				@deviceGetAllStub = m.sinon.stub(device, 'getAll')
 				@deviceGetAllStub.returns(Promise.resolve([ uuid: '1234' ]))
 
 			afterEach ->
@@ -266,14 +263,14 @@ describe 'Device Model:', ->
 
 			it 'should return true', (done) ->
 				device.isValidUUID '1234', (error, isValidUUID) ->
-					expect(error).to.not.exist
-					expect(isValidUUID).to.be.true
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(isValidUUID).to.be.true
 					done()
 
 		describe 'given the uuid does not exists', ->
 
 			beforeEach ->
-				@deviceGetAllStub = sinon.stub(device, 'getAll')
+				@deviceGetAllStub = m.sinon.stub(device, 'getAll')
 				@deviceGetAllStub.returns(Promise.resolve([ uuid: '5678' ]))
 
 			afterEach ->
@@ -281,8 +278,8 @@ describe 'Device Model:', ->
 
 			it 'should return false', (done) ->
 				device.isValidUUID '1234', (error, isValidUUID) ->
-					expect(error).to.not.exist
-					expect(isValidUUID).to.be.false
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(isValidUUID).to.be.false
 					done()
 
 	describe '.getDisplayName()', ->
@@ -290,7 +287,7 @@ describe 'Device Model:', ->
 		describe 'given device types', ->
 
 			beforeEach ->
-				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub = m.sinon.stub(config, 'getDeviceTypes')
 				@configGetDeviceTypesStub.returns Promise.resolve [
 					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
 					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
@@ -304,8 +301,8 @@ describe 'Device Model:', ->
 				it 'should return the display name', (done) ->
 
 					device.getDisplayName 'raspberry-pi', (error, displayName) ->
-						expect(error).to.not.exist
-						expect(displayName).to.equal('Raspberry Pi')
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(displayName).to.equal('Raspberry Pi')
 						done()
 
 			describe 'given the device slug is not valid', ->
@@ -313,8 +310,8 @@ describe 'Device Model:', ->
 				it 'should return undefined', (done) ->
 
 					device.getDisplayName 'foo-bar', (error, displayName) ->
-						expect(error).to.not.exist
-						expect(displayName).to.be.undefined
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(displayName).to.be.undefined
 						done()
 
 	describe '.getDeviceSlug()', ->
@@ -322,7 +319,7 @@ describe 'Device Model:', ->
 		describe 'given device types', ->
 
 			beforeEach ->
-				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub = m.sinon.stub(config, 'getDeviceTypes')
 				@configGetDeviceTypesStub.returns Promise.resolve [
 					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
 					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
@@ -336,8 +333,8 @@ describe 'Device Model:', ->
 				it 'should return the device slug', (done) ->
 
 					device.getDeviceSlug 'Raspberry Pi', (error, slug) ->
-						expect(error).to.not.exist
-						expect(slug).to.equal('raspberry-pi')
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(slug).to.equal('raspberry-pi')
 						done()
 
 			describe 'given the device name is not valid', ->
@@ -345,8 +342,8 @@ describe 'Device Model:', ->
 				it 'should return undefined', (done) ->
 
 					device.getDeviceSlug 'Foo Bar', (error, slug) ->
-						expect(error).to.not.exist
-						expect(slug).to.be.undefined
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(slug).to.be.undefined
 						done()
 
 	describe '.getSupportedDeviceTypes()', ->
@@ -354,7 +351,7 @@ describe 'Device Model:', ->
 		describe 'given device types', ->
 
 			beforeEach ->
-				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub = m.sinon.stub(config, 'getDeviceTypes')
 				@configGetDeviceTypesStub.returns Promise.resolve [
 					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
 					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
@@ -365,8 +362,8 @@ describe 'Device Model:', ->
 
 			it 'should return an array of names', (done) ->
 				device.getSupportedDeviceTypes (error, deviceTypes) ->
-					expect(error).to.not.exist
-					expect(deviceTypes).to.deep.equal([ 'Raspberry Pi', 'BeagleBone Black' ])
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(deviceTypes).to.deep.equal([ 'Raspberry Pi', 'BeagleBone Black' ])
 					done()
 
 	describe '.getManifestBySlug()', ->
@@ -374,7 +371,7 @@ describe 'Device Model:', ->
 		describe 'given device types', ->
 
 			beforeEach ->
-				@configGetDeviceTypesStub = sinon.stub(config, 'getDeviceTypes')
+				@configGetDeviceTypesStub = m.sinon.stub(config, 'getDeviceTypes')
 				@configGetDeviceTypesStub.returns Promise.resolve [
 					{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
 					{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
@@ -385,15 +382,15 @@ describe 'Device Model:', ->
 
 			it 'should return an error if no slug', (done) ->
 				device.getManifestBySlug 'foo-bar', (error, manifest) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('Unsupported device: foo-bar')
-					expect(manifest).to.not.exist
+					m.chai.expect(error).to.be.an.instanceof(Error)
+					m.chai.expect(error.message).to.equal('Unsupported device: foo-bar')
+					m.chai.expect(manifest).to.not.exist
 					done()
 
 			it 'should return the manifest if slug is valid', (done) ->
 				device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
-					expect(error).to.not.exist
-					expect(manifest).to.deep.equal
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(manifest).to.deep.equal
 						name: 'Raspberry Pi'
 						slug: 'raspberry-pi'
 					done()
@@ -402,17 +399,17 @@ describe 'Device Model:', ->
 
 		it 'should return a string', ->
 			uuid = device.generateUUID()
-			expect(uuid).to.be.a('string')
+			m.chai.expect(uuid).to.be.a('string')
 
 		it 'should have a length of 62 (31 bytes)', ->
 			uuid = device.generateUUID()
-			expect(uuid).to.have.length(62)
+			m.chai.expect(uuid).to.have.length(62)
 
 		it 'should generate different uuids each time', ->
 			uuid1 = device.generateUUID()
 			uuid2 = device.generateUUID()
 			uuid3 = device.generateUUID()
 
-			expect(uuid1).to.not.equal(uuid2)
-			expect(uuid2).to.not.equal(uuid3)
-			expect(uuid3).to.not.equal(uuid1)
+			m.chai.expect(uuid1).to.not.equal(uuid2)
+			m.chai.expect(uuid2).to.not.equal(uuid3)
+			m.chai.expect(uuid3).to.not.equal(uuid1)

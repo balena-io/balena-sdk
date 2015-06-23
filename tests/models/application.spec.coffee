@@ -1,8 +1,5 @@
+m = require('mochainon')
 _ = require('lodash')
-sinon = require('sinon')
-chai = require('chai')
-chai.use(require('sinon-chai'))
-expect = chai.expect
 Promise = require('bluebird')
 errors = require('resin-errors')
 pine = require('resin-pine')
@@ -17,7 +14,7 @@ describe 'Application Model:', ->
 		describe 'given no applications', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -25,8 +22,8 @@ describe 'Application Model:', ->
 
 			it 'should return an empty array', (done) ->
 				application.getAll (error, applications) ->
-					expect(error).to.not.exist
-					expect(applications).to.deep.equal([])
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(applications).to.deep.equal([])
 					done()
 
 		describe 'given applications', ->
@@ -34,7 +31,7 @@ describe 'Application Model:', ->
 			describe 'given an application with devices', ->
 
 				beforeEach ->
-					@pineGetStub = sinon.stub(pine, 'get')
+					@pineGetStub = m.sinon.stub(pine, 'get')
 					@pineGetStub.returns Promise.resolve [
 						{
 							device: [
@@ -56,20 +53,20 @@ describe 'Application Model:', ->
 
 				it 'should return the correct number of applications', (done) ->
 					application.getAll (error, applications) ->
-						expect(error).to.not.exist
-						expect(applications).to.have.length(1)
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(applications).to.have.length(1)
 						done()
 
 				it 'should add online_devices', (done) ->
 					application.getAll (error, applications) ->
-						expect(error).to.not.exist
-						expect(applications[0].online_devices).to.equal(1)
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(applications[0].online_devices).to.equal(1)
 						done()
 
 				it 'should add devices_length', (done) ->
 					application.getAll (error, applications) ->
-						expect(error).to.not.exist
-						expect(applications[0].devices_length).to.equal(2)
+						m.chai.expect(error).to.not.exist
+						m.chai.expect(applications[0].devices_length).to.equal(2)
 						done()
 
 	describe '.get()', ->
@@ -77,7 +74,7 @@ describe 'Application Model:', ->
 		describe 'given no application', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -85,8 +82,8 @@ describe 'Application Model:', ->
 
 			it 'should return an error', (done) ->
 				application.get 'MyApp', (error, application) ->
-					expect(error).to.be.an.instanceof(errors.ResinApplicationNotFound)
-					expect(application).to.not.exist
+					m.chai.expect(error).to.be.an.instanceof(errors.ResinApplicationNotFound)
+					m.chai.expect(application).to.not.exist
 					done()
 
 		describe 'given an application', ->
@@ -102,7 +99,7 @@ describe 'Application Model:', ->
 					device_type: 'raspberry-pi'
 					__metadata: { uri: '/ewa/application(999)', type: '' }
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([ @application ]))
 
 			afterEach ->
@@ -110,8 +107,8 @@ describe 'Application Model:', ->
 
 			it 'should return the application', (done) ->
 				application.get 'MyApp', (error, application) =>
-					expect(error).to.not.exist
-					expect(application).to.deep.equal(@application)
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(application).to.deep.equal(@application)
 					done()
 
 	describe '.has()', ->
@@ -119,7 +116,7 @@ describe 'Application Model:', ->
 		describe 'given no application', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -127,8 +124,8 @@ describe 'Application Model:', ->
 
 			it 'should return false', (done) ->
 				application.has 'MyApp', (error, has) ->
-					expect(error).to.not.exist
-					expect(has).to.be.false
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(has).to.be.false
 					done()
 
 		describe 'given an application', ->
@@ -144,7 +141,7 @@ describe 'Application Model:', ->
 					device_type: 'raspberry-pi'
 					__metadata: { uri: '/ewa/application(999)', type: '' }
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([ applicationMock ]))
 
 			afterEach ->
@@ -152,8 +149,8 @@ describe 'Application Model:', ->
 
 			it 'should return true', (done) ->
 				application.has 'MyApp', (error, has) ->
-					expect(error).to.not.exist
-					expect(has).to.be.true
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(has).to.be.true
 					done()
 
 	describe '.hasAny()', ->
@@ -161,7 +158,7 @@ describe 'Application Model:', ->
 		describe 'given no application', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
@@ -169,8 +166,8 @@ describe 'Application Model:', ->
 
 			it 'should return false', (done) ->
 				application.hasAny (error, hasAny) ->
-					expect(error).to.not.exist
-					expect(hasAny).to.be.false
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(hasAny).to.be.false
 					done()
 
 		describe 'given an application', ->
@@ -186,7 +183,7 @@ describe 'Application Model:', ->
 					device_type: 'raspberry-pi'
 					__metadata: { uri: '/ewa/application(999)', type: '' }
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve([ applicationMock ]))
 
 			afterEach ->
@@ -194,8 +191,8 @@ describe 'Application Model:', ->
 
 			it 'should return true', (done) ->
 				application.hasAny (error, hasAny) ->
-					expect(error).to.not.exist
-					expect(hasAny).to.be.true
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(hasAny).to.be.true
 					done()
 
 	describe '.getById()', ->
@@ -203,7 +200,7 @@ describe 'Application Model:', ->
 		describe 'given no application', ->
 
 			beforeEach ->
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve(undefined))
 
 			afterEach ->
@@ -211,8 +208,8 @@ describe 'Application Model:', ->
 
 			it 'should return an error', (done) ->
 				application.getById 9999, (error, application) ->
-					expect(error).to.be.an.instanceof(errors.ResinApplicationNotFound)
-					expect(application).to.not.exist
+					m.chai.expect(error).to.be.an.instanceof(errors.ResinApplicationNotFound)
+					m.chai.expect(application).to.not.exist
 					done()
 
 		describe 'given an application', ->
@@ -228,7 +225,7 @@ describe 'Application Model:', ->
 					device_type: 'raspberry-pi'
 					__metadata: { uri: '/ewa/application(999)', type: '' }
 
-				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub = m.sinon.stub(pine, 'get')
 				@pineGetStub.returns(Promise.resolve(@application))
 
 			afterEach ->
@@ -236,8 +233,8 @@ describe 'Application Model:', ->
 
 			it 'should return the application', (done) ->
 				application.getById 999, (error, application) =>
-					expect(error).to.not.exist
-					expect(application).to.deep.equal(@application)
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(application).to.deep.equal(@application)
 					done()
 
 	describe '.create()', ->
@@ -245,7 +242,7 @@ describe 'Application Model:', ->
 		describe 'given device slug was not found', ->
 
 			beforeEach ->
-				@deviceGetDeviceSlugStub = sinon.stub(device, 'getDeviceSlug')
+				@deviceGetDeviceSlugStub = m.sinon.stub(device, 'getDeviceSlug')
 				@deviceGetDeviceSlugStub.returns(Promise.resolve(undefined))
 
 			afterEach ->
@@ -253,14 +250,14 @@ describe 'Application Model:', ->
 
 			it 'should return an error', (done) ->
 				application.create 'MyApp', 'Unknown Device', (error, id) ->
-					expect(error).to.be.an.instanceof(errors.ResinInvalidDeviceType)
-					expect(id).to.not.exist
+					m.chai.expect(error).to.be.an.instanceof(errors.ResinInvalidDeviceType)
+					m.chai.expect(id).to.not.exist
 					done()
 
 		describe 'given device slug was found', ->
 
 			beforeEach ->
-				@deviceGetDeviceSlugStub = sinon.stub(device, 'getDeviceSlug')
+				@deviceGetDeviceSlugStub = m.sinon.stub(device, 'getDeviceSlug')
 				@deviceGetDeviceSlugStub.returns(Promise.resolve('raspberry-pi'))
 
 				@application =
@@ -273,7 +270,7 @@ describe 'Application Model:', ->
 					device_type: 'raspberry-pi'
 					__metadata: { uri: '/ewa/application(999)', type: '' }
 
-				@pinePostStub = sinon.stub(pine, 'post')
+				@pinePostStub = m.sinon.stub(pine, 'post')
 				@pinePostStub.returns(Promise.resolve(@application))
 
 			afterEach ->
@@ -282,6 +279,6 @@ describe 'Application Model:', ->
 
 			it 'should return the application', (done) ->
 				application.create 'MyApp', 'Raspberry Pi', (error, createdApplication) =>
-					expect(error).to.not.exist
-					expect(createdApplication).to.deep.equal(@application)
+					m.chai.expect(error).to.not.exist
+					m.chai.expect(createdApplication).to.deep.equal(@application)
 					done()
