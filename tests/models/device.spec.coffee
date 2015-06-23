@@ -6,7 +6,6 @@ expect = chai.expect
 Promise = require('bluebird')
 errors = require('resin-errors')
 pine = require('resin-pine')
-token = require('resin-token')
 device = require('../../lib/models/device')
 application = require('../../lib/models/application')
 config = require('../../lib/models/config')
@@ -15,276 +14,180 @@ describe 'Device Model:', ->
 
 	describe '.getAll()', ->
 
-		describe 'given a logged in user', ->
+		describe 'given no devices', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns('johndoe')
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@pineGetStub.restore()
 
-			describe 'given no devices', ->
-
-				beforeEach ->
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return an empty array', (done) ->
-					device.getAll (error, devices) ->
-						expect(error).to.not.exist
-						expect(devices).to.deep.equal([])
-						done()
-
-			describe 'given devices', ->
-
-				beforeEach ->
-					@devices = [
-						{
-							is_online: 0
-							id: 1
-							name: 'Device1'
-							application: [
-								{ app_name: 'MyApp' }
-							]
-						}
-						{
-							is_online: 0
-							id: 1
-							name: 'Device1'
-							application: [
-								{ app_name: 'MyApp' }
-							]
-						}
-					]
-
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve(@devices))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return the devices', (done) ->
-					device.getAll (error, devices) =>
-						expect(error).to.not.exist
-						expect(devices).to.deep.equal(@devices)
-						done()
-
-		describe 'given no logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			it 'should return an error', (done) ->
+			it 'should return an empty array', (done) ->
 				device.getAll (error, devices) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(devices).to.not.exist
+					expect(error).to.not.exist
+					expect(devices).to.deep.equal([])
+					done()
+
+		describe 'given devices', ->
+
+			beforeEach ->
+				@devices = [
+					{
+						is_online: 0
+						id: 1
+						name: 'Device1'
+						application: [
+							{ app_name: 'MyApp' }
+						]
+					}
+					{
+						is_online: 0
+						id: 1
+						name: 'Device1'
+						application: [
+							{ app_name: 'MyApp' }
+						]
+					}
+				]
+
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve(@devices))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should return the devices', (done) ->
+				device.getAll (error, devices) =>
+					expect(error).to.not.exist
+					expect(devices).to.deep.equal(@devices)
 					done()
 
 	describe '.getAllByApplication()', ->
 
-		describe 'given a logged in user', ->
+		describe 'given no devices', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns('johndoe')
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			describe 'given no devices', ->
-
-				beforeEach ->
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return an error', (done) ->
-					device.getAllByApplication 'MyApp', (error, devices) ->
-						expect(error).to.not.exist
-						expect(devices).to.deep.equal([])
-						done()
-
-			describe 'given a device', ->
-
-				beforeEach ->
-					@device =
-						id: 1
-						name: 'Device1'
-						application: [
-							app_name: 'App1'
-						]
-
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([ @device ]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return the correct number of devices', (done) ->
-					device.getAllByApplication 'MyApp', (error, devices) ->
-						expect(error).to.not.exist
-						expect(devices).to.have.length(1)
-						done()
-
-				it 'should add application_name', (done) ->
-					device.getAllByApplication 'MyApp', (error, devices) =>
-						expect(devices[0].application_name).to.equal(@device.application[0].app_name)
-						done()
-
-		describe 'given no logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@pineGetStub.restore()
 
 			it 'should return an error', (done) ->
 				device.getAllByApplication 'MyApp', (error, devices) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(devices).to.not.exist
+					expect(error).to.not.exist
+					expect(devices).to.deep.equal([])
+					done()
+
+		describe 'given a device', ->
+
+			beforeEach ->
+				@device =
+					id: 1
+					name: 'Device1'
+					application: [
+						app_name: 'App1'
+					]
+
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([ @device ]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should return the correct number of devices', (done) ->
+				device.getAllByApplication 'MyApp', (error, devices) ->
+					expect(error).to.not.exist
+					expect(devices).to.have.length(1)
+					done()
+
+			it 'should add application_name', (done) ->
+				device.getAllByApplication 'MyApp', (error, devices) =>
+					expect(devices[0].application_name).to.equal(@device.application[0].app_name)
 					done()
 
 	describe '.get()', ->
 
-		describe 'given a logged in user', ->
+		describe 'given no devices', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns('johndoe')
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			describe 'given no devices', ->
-
-				beforeEach ->
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return an error', (done) ->
-					device.get 'MyDevice', (error, device) ->
-						expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-						expect(device).to.not.exist
-						done()
-
-			describe 'given a device', ->
-
-				beforeEach ->
-					@device =
-						id: 1
-						name: 'Device1'
-						application: [
-							app_name: 'App1'
-						]
-
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([ @device ]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return the device', (done) ->
-					device.get 'MyDevice', (error, device) =>
-						expect(error).to.not.exist
-						expect(device).to.deep.equal(@device)
-						done()
-
-				it 'should add application_name', (done) ->
-					device.get 'MyDevice', (error, device) =>
-						expect(device.application_name).to.equal(@device.application[0].app_name)
-						done()
-
-		describe 'given no logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@pineGetStub.restore()
 
 			it 'should return an error', (done) ->
-				device.get 'MyDevice', (error, devices) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(devices).to.not.exist
+				device.get 'MyDevice', (error, device) ->
+					expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
+					expect(device).to.not.exist
+					done()
+
+		describe 'given a device', ->
+
+			beforeEach ->
+				@device =
+					id: 1
+					name: 'Device1'
+					application: [
+						app_name: 'App1'
+					]
+
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([ @device ]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should return the device', (done) ->
+				device.get 'MyDevice', (error, device) =>
+					expect(error).to.not.exist
+					expect(device).to.deep.equal(@device)
+					done()
+
+			it 'should add application_name', (done) ->
+				device.get 'MyDevice', (error, device) =>
+					expect(device.application_name).to.equal(@device.application[0].app_name)
 					done()
 
 	describe '.has()', ->
 
-		describe 'given a logged in user', ->
+		describe 'given no devices', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns('johndoe')
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@pineGetStub.restore()
 
-			describe 'given no devices', ->
+			it 'should return false', (done) ->
+				device.has 'MyDevice', (error, hasDevice) ->
+					expect(error).to.not.exist
+					expect(hasDevice).to.be.false
+					done()
 
-				beforeEach ->
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return false', (done) ->
-					device.has 'MyDevice', (error, hasDevice) ->
-						expect(error).to.not.exist
-						expect(hasDevice).to.be.false
-						done()
-
-			describe 'given a device', ->
-
-				beforeEach ->
-					@device =
-						id: 1
-						name: 'Device1'
-						application: [
-							app_name: 'App1'
-						]
-
-					@pineGetStub = sinon.stub(pine, 'get')
-					@pineGetStub.returns(Promise.resolve([ @device ]))
-
-				afterEach ->
-					@pineGetStub.restore()
-
-				it 'should return true', (done) ->
-					device.has 'Device1', (error, hasDevice) ->
-						expect(error).to.not.exist
-						expect(hasDevice).to.be.true
-						done()
-
-		describe 'given no logged in user', ->
+		describe 'given a device', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
+				@device =
+					id: 1
+					name: 'Device1'
+					application: [
+						app_name: 'App1'
+					]
+
+				@pineGetStub = sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([ @device ]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@pineGetStub.restore()
 
-			it 'should return an error', (done) ->
+			it 'should return true', (done) ->
 				device.has 'Device1', (error, hasDevice) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(hasDevice).to.not.exist
+					expect(error).to.not.exist
+					expect(hasDevice).to.be.true
 					done()
 
 	describe '.isOnline()', ->
@@ -334,219 +237,52 @@ describe 'Device Model:', ->
 					expect(isOnline).to.be.false
 					done()
 
-	describe '.remove()', ->
-
-		describe 'given no logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			it 'should return an error', (done) ->
-				device.remove 'MyDevice', (error, devices) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(devices).to.not.exist
-					done()
-
-	describe '.identify()', ->
-
-		describe 'given no logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			it 'should return an error', (done) ->
-				device.identify 'uuid', (error, devices) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(devices).to.not.exist
-					done()
-
-	describe '.rename()', ->
-
-		describe 'given no logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			it 'should return an error', (done) ->
-				device.rename 'MyDevice', 'NewDevice', (error) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					done()
-
 	describe '.note()', ->
 
-		describe 'given no logged in user', ->
+		describe 'given the device was not found', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
+				@deviceHasStub = sinon.stub(device, 'has')
+				@deviceHasStub.returns(Promise.resolve(false))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@deviceHasStub.restore()
 
 			it 'should return an error', (done) ->
-				device.note 'MyDevice', 'Note', (error) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
+				device.note 'MyDevice', 'Hello World', (error) ->
+					expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
 					done()
-
-		describe 'given a logged in user', ->
-
-			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns('johndoe')
-
-			afterEach ->
-				@tokenGetUsernameStub.restore()
-
-			describe 'given the device was not found', ->
-
-				beforeEach ->
-					@deviceHasStub = sinon.stub(device, 'has')
-					@deviceHasStub.returns(Promise.resolve(false))
-
-				afterEach ->
-					@deviceHasStub.restore()
-
-				it 'should return an error', (done) ->
-					device.note 'MyDevice', 'Hello World', (error) ->
-						expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-						done()
-
-	describe '.register()', ->
-
-		describe 'given there was an error getting the application configuration', ->
-
-			beforeEach ->
-				@applicationGetConfigurationStub = sinon.stub(application, 'getConfiguration')
-				@applicationGetConfigurationStub.returns(Promise.reject(new Error('pine error')))
-
-			afterEach ->
-				@applicationGetConfigurationStub.restore()
-
-			it 'should yield an error to the callback', (done) ->
-				device.register 'MyApp', null, (error, device) ->
-					expect(error).to.be.an.instanceof(Error)
-					expect(error.message).to.equal('pine error')
-					expect(device).to.not.exist
-					done()
-
-		describe 'given we got valid application configuration', ->
-
-			beforeEach ->
-				@applicationGetConfigurationStub = sinon.stub(application, 'getConfiguration')
-				@applicationGetConfigurationStub.returns Promise.resolve
-					userId: 199
-					applicationId: 10350
-					deviceType: 'raspberry-pi'
-					uuid: 'asdf'
-					apiKey: 'asdf'
-
-			afterEach ->
-				@applicationGetConfigurationStub.restore()
-
-			describe 'given the post operation is unsuccessful', ->
-
-				beforeEach ->
-					@pinePostStub = sinon.stub(pine, 'post')
-					@pinePostStub.returns(Promise.reject(new Error('pine error')))
-
-				afterEach ->
-					@pinePostStub.restore()
-
-				it 'should yield an error to the callback', (done) ->
-					device.register 'MyApp', null, (error, device) ->
-						expect(error).to.be.an.instanceof(Error)
-						expect(error.message).to.equal('pine error')
-						expect(device).to.not.exist
-						done()
-
-			describe 'given the post operation is successful', ->
-
-				beforeEach ->
-					@pinePostStub = sinon.stub(pine, 'post')
-					@pinePostStub.returns Promise.resolve
-						id: 999
-						userId: 199
-						applicationId: 10350
-						deviceType: 'raspberry-pi'
-						uuid: 'asdf'
-						apiKey: 'asdf'
-
-				afterEach ->
-					@pinePostStub.restore()
-
-				it 'should return the resulting uuid and id', (done) ->
-					device.register 'MyApp', null, (error, device) ->
-						expect(error).to.not.exist
-						expect(device.id).to.equal(999)
-						expect(device.uuid).to.equal('asdf')
-						done()
 
 	describe 'isValidUUID()', ->
 
-		describe 'given a logged in user', ->
+		describe 'given the uuid exists', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns('johndoe')
+				@deviceGetAllStub = sinon.stub(device, 'getAll')
+				@deviceGetAllStub.returns(Promise.resolve([ uuid: '1234' ]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@deviceGetAllStub.restore()
 
-			describe 'given the uuid exists', ->
+			it 'should return true', (done) ->
+				device.isValidUUID '1234', (error, isValidUUID) ->
+					expect(error).to.not.exist
+					expect(isValidUUID).to.be.true
+					done()
 
-				beforeEach ->
-					@deviceGetAllStub = sinon.stub(device, 'getAll')
-					@deviceGetAllStub.returns(Promise.resolve([ uuid: '1234' ]))
-
-				afterEach ->
-					@deviceGetAllStub.restore()
-
-				it 'should return true', (done) ->
-					device.isValidUUID '1234', (error, isValidUUID) ->
-						expect(error).to.not.exist
-						expect(isValidUUID).to.be.true
-						done()
-
-			describe 'given the uuid does not exists', ->
-
-				beforeEach ->
-					@deviceGetAllStub = sinon.stub(device, 'getAll')
-					@deviceGetAllStub.returns(Promise.resolve([ uuid: '5678' ]))
-
-				afterEach ->
-					@deviceGetAllStub.restore()
-
-				it 'should return false', (done) ->
-					device.isValidUUID '1234', (error, isValidUUID) ->
-						expect(error).to.not.exist
-						expect(isValidUUID).to.be.false
-						done()
-
-		describe 'given no logged in user', ->
+		describe 'given the uuid does not exists', ->
 
 			beforeEach ->
-				@tokenGetUsernameStub = sinon.stub(token, 'getUsername')
-				@tokenGetUsernameStub.returns(undefined)
+				@deviceGetAllStub = sinon.stub(device, 'getAll')
+				@deviceGetAllStub.returns(Promise.resolve([ uuid: '5678' ]))
 
 			afterEach ->
-				@tokenGetUsernameStub.restore()
+				@deviceGetAllStub.restore()
 
-			it 'should return an error', (done) ->
-				device.isValidUUID 'uuid', (error, devices) ->
-					expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-					expect(devices).to.not.exist
+			it 'should return false', (done) ->
+				device.isValidUUID '1234', (error, isValidUUID) ->
+					expect(error).to.not.exist
+					expect(isValidUUID).to.be.false
 					done()
 
 	describe '.getDisplayName()', ->

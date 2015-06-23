@@ -2,8 +2,7 @@
 # @module resin.models.config
 ###
 
-Promise = require('bluebird')
-request = Promise.promisifyAll(require('resin-request'))
+request = require('resin-request')
 
 ###*
 # getAll callback
@@ -25,10 +24,10 @@ request = Promise.promisifyAll(require('resin-request'))
 #		console.log(config)
 ###
 exports.getAll = (callback) ->
-	request.requestAsync
+	request.send
 		method: 'GET'
 		url: '/config'
-	.get(1)
+	.get('body')
 	.nodeify(callback)
 
 ###*

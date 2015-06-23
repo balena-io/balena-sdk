@@ -6,8 +6,7 @@ Promise = require('bluebird')
 async = require('async')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
-request = Promise.promisifyAll(require('resin-request'))
-token = require('resin-token')
+request = require('resin-request')
 pine = require('resin-pine')
 network = require('resin-network-config')
 deviceModel = require('./device')
@@ -38,18 +37,11 @@ auth = require('../auth')
 #		console.log(applications)
 ###
 exports.getAll = (callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.get
-			resource: 'application'
-			options:
-				orderby: 'app_name asc'
-				expand: 'device'
-
-				filter:
-					user: { username }
+	return pine.get
+		resource: 'application'
+		options:
+			orderby: 'app_name asc'
+			expand: 'device'
 
 	# TODO: It might be worth to do all these handy
 	# manipulations server side directly.
@@ -81,16 +73,11 @@ exports.getAll = (callback) ->
 #		console.log(application)
 ###
 exports.get = (name, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.get
-			resource: 'application'
-			options:
-				filter:
-					app_name: name
-					user: { username }
+	return pine.get
+		resource: 'application'
+		options:
+			filter:
+				app_name: name
 
 	.tap (application) ->
 		if _.isEmpty(application)
@@ -169,13 +156,9 @@ exports.hasAny = (callback) ->
 #		console.log(application)
 ###
 exports.getById = (id, callback) ->
-	Promise.try ->
-		if not token.getUsername()?
-			throw new errors.ResinNotLoggedIn()
-
-		return pine.get
-			resource: 'application'
-			id: id
+	return pine.get
+		resource: 'application'
+		id: id
 	.tap (application) ->
 		if not application?
 			throw new errors.ResinApplicationNotFound(id)
@@ -205,11 +188,7 @@ exports.getById = (id, callback) ->
 #		console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
-	Promise.try ->
-		if not token.getUsername()?
-			throw new errors.ResinNotLoggedIn()
-
-		return deviceModel.getDeviceSlug(deviceType)
+	return deviceModel.getDeviceSlug(deviceType)
 
 	.tap (deviceSlug) ->
 		if not deviceSlug?
@@ -242,16 +221,11 @@ exports.create = (name, deviceType, callback) ->
 #		throw error if error?
 ###
 exports.remove = (name, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.delete
-			resource: 'application'
-			options:
-				filter:
-					app_name: name
-					user: { username }
+	return pine.delete
+		resource: 'application'
+		options:
+			filter:
+				app_name: name
 	.nodeify(callback)
 
 ###*
@@ -274,10 +248,11 @@ exports.remove = (name, callback) ->
 ###
 exports.restart = (name, callback) ->
 	exports.get(name).then (application) ->
-		return request.requestAsync
+		return request.send
 			method: 'POST'
 			url: "/application/#{application.id}/restart"
-	.nodeify(_.unary(callback))
+	.return(undefined)
+	.nodeify(callback)
 
 ###*
 # getApiKey callback
@@ -301,7 +276,7 @@ exports.restart = (name, callback) ->
 ###
 exports.getApiKey = (name, callback) ->
 	exports.get(name).then (application) ->
-		return request.requestAsync
+		return request.send
 			method: 'POST'
 			url: "/application/#{application.id}/generate-api-key"
 	.get('body')

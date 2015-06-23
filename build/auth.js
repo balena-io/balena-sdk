@@ -4,13 +4,11 @@
  */
 
 (function() {
-  var Promise, errors, request, token;
-
-  Promise = require('bluebird');
+  var errors, request, token;
 
   errors = require('resin-errors');
 
-  request = Promise.promisifyAll(require('resin-request'));
+  request = require('resin-request');
 
   token = require('resin-token');
 
@@ -43,7 +41,7 @@
    */
 
   exports.whoami = function(callback) {
-    return Promise["try"](token.getUsername).nodeify(callback);
+    return token.getUsername().nodeify(callback);
   };
 
 
@@ -78,10 +76,10 @@
    */
 
   exports.authenticate = function(credentials, callback) {
-    return request.requestAsync({
+    return request.send({
       method: 'POST',
       url: '/login_',
-      json: credentials
+      data: credentials
     }).get('body').nodeify(callback);
   };
 
@@ -140,9 +138,7 @@
    */
 
   exports.loginWithToken = function(authToken, callback) {
-    return Promise["try"](function() {
-      return token.set(authToken);
-    }).nodeify(callback);
+    return token.set(authToken).nodeify(callback);
   };
 
 
@@ -172,7 +168,7 @@
    */
 
   exports.isLoggedIn = function(callback) {
-    return Promise["try"](token.has).nodeify(callback);
+    return token.has().nodeify(callback);
   };
 
 
@@ -200,9 +196,7 @@
    */
 
   exports.getToken = function(callback) {
-    return Promise["try"](function() {
-      var savedToken;
-      savedToken = token.get();
+    return token.get().then(function(savedToken) {
       if (savedToken == null) {
         throw new errors.ResinNotLoggedIn();
       }
@@ -235,9 +229,7 @@
    */
 
   exports.getUserId = function(callback) {
-    return Promise["try"](function() {
-      var id;
-      id = token.getUserId();
+    return token.getUserId().then(function(id) {
       if (id == null) {
         throw new errors.ResinNotLoggedIn();
       }
@@ -269,7 +261,7 @@
    */
 
   exports.logout = function(callback) {
-    return Promise["try"](token.remove).nodeify(callback);
+    return token.remove().nodeify(callback);
   };
 
 
@@ -306,11 +298,11 @@
     if (credentials == null) {
       credentials = {};
     }
-    return request.requestAsync({
+    return request.send({
       method: 'POST',
       url: '/user/register',
-      json: credentials
-    }).get(1).nodeify(callback);
+      data: credentials
+    }).get('body').nodeify(callback);
   };
 
 }).call(this);

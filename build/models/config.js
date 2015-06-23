@@ -4,11 +4,9 @@
  */
 
 (function() {
-  var Promise, request;
+  var request;
 
-  Promise = require('bluebird');
-
-  request = Promise.promisifyAll(require('resin-request'));
+  request = require('resin-request');
 
 
   /**
@@ -33,10 +31,10 @@
    */
 
   exports.getAll = function(callback) {
-    return request.requestAsync({
+    return request.send({
       method: 'GET',
       url: '/config'
-    }).get(1).nodeify(callback);
+    }).get('body').nodeify(callback);
   };
 
 

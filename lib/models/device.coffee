@@ -2,12 +2,11 @@
 # @module resin.models.device
 ###
 
-Promise = require('bluebird')
 crypto = require('crypto')
-_ = require('lodash-contrib')
+_ = require('lodash')
 pine = require('resin-pine')
 errors = require('resin-errors')
-request = Promise.promisifyAll(require('resin-request'))
+request = require('resin-request')
 token = require('resin-token')
 configModel = require('./config')
 applicationModel = require('./application')
@@ -37,17 +36,11 @@ applicationModel = require('./application')
 #		console.log(devices)
 ###
 exports.getAll = (callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.get
-			resource: 'device'
-			options:
-				expand: 'application'
-				orderby: 'name asc'
-				filter:
-					user: { username }
+	return pine.get
+		resource: 'device'
+		options:
+			expand: 'application'
+			orderby: 'name asc'
 
 	.map (device) ->
 		device.application_name = device.application[0].app_name
@@ -75,19 +68,14 @@ exports.getAll = (callback) ->
 #		console.log(devices)
 ###
 exports.getAllByApplication = (name, callback) ->
-	Promise.try ->
-
-		if not token.getUsername()?
-			throw new errors.ResinNotLoggedIn()
-
-		return pine.get
-			resource: 'device'
-			options:
-				filter:
-					application:
-						app_name: name
-				expand: 'application'
-				orderby: 'name asc'
+	return pine.get
+		resource: 'device'
+		options:
+			filter:
+				application:
+					app_name: name
+			expand: 'application'
+			orderby: 'name asc'
 
 	# TODO: Move to server
 	.map (device) ->
@@ -116,17 +104,12 @@ exports.getAllByApplication = (name, callback) ->
 #		console.log(device)
 ###
 exports.get = (name, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.get
-			resource: 'device'
-			options:
-				expand: 'application'
-				filter:
-					name: name
-					user: { username }
+	return pine.get
+		resource: 'device'
+		options:
+			expand: 'application'
+			filter:
+				name: name
 
 	.tap (device) ->
 		if _.isEmpty(device)
@@ -157,17 +140,12 @@ exports.get = (name, callback) ->
 #		console.log(device)
 ###
 exports.getByUUID = (uuid, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.get
-			resource: 'device'
-			options:
-				expand: 'application'
-				filter:
-					uuid: uuid
-					user: { username }
+	return pine.get
+		resource: 'device'
+		options:
+			expand: 'application'
+			filter:
+				uuid: uuid
 
 	.tap (device) ->
 		if _.isEmpty(device)
@@ -245,16 +223,11 @@ exports.isOnline = (name, callback) ->
 #		throw error if error?
 ###
 exports.remove = (name, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.delete
-			resource: 'device'
-			options:
-				filter:
-					name: name
-					user: { username }
+	return pine.delete
+		resource: 'device'
+		options:
+			filter:
+				name: name
 	.nodeify(callback)
 
 ###*
@@ -276,15 +249,16 @@ exports.remove = (name, callback) ->
 #		throw error if error?
 ###
 exports.identify = (uuid, callback) ->
-	Promise.try ->
-		if not token.getUsername()?
+	token.has().then (hasToken) ->
+		if not hasToken
 			throw new errors.ResinNotLoggedIn()
 
-		return request.requestAsync
+		return request.send
 			method: 'POST'
 			url: '/blink'
 			json: { uuid }
-	.nodeify(_.unary(callback))
+	.return(undefined)
+	.nodeify(callback)
 
 ###*
 # rename callback
@@ -311,18 +285,13 @@ exports.identify = (uuid, callback) ->
 #		console.log("Device has been renamed!")
 ###
 exports.rename = (name, newName, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
-
-		return pine.patch
-			resource: 'device'
-			body:
-				name: newName
-			options:
-				filter:
-					name: name
-					user: { username }
+	return pine.patch
+		resource: 'device'
+		body:
+			name: newName
+		options:
+			filter:
+				name: name
 	.nodeify(callback)
 
 ###*
@@ -346,22 +315,17 @@ exports.rename = (name, newName, callback) ->
 #		console.log("Device has been noted!")
 ###
 exports.note = (name, note, callback) ->
-	Promise.try ->
-		username = token.getUsername()
-		throw new errors.ResinNotLoggedIn() if not username?
+	exports.has(name).then (hasDevice) ->
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(name)
 
-		exports.has(name).then (hasDevice) ->
-			if not hasDevice
-				throw new errors.ResinDeviceNotFound(name)
-
-			return pine.patch
-				resource: 'device'
-				body:
-					note: note
-				options:
-					filter:
-						name: name
-						user: { username }
+		return pine.patch
+			resource: 'device'
+			body:
+				note: note
+			options:
+				filter:
+					name: name
 
 	.nodeify(callback)
 
