@@ -3,7 +3,6 @@
 ###
 
 Promise = require('bluebird')
-async = require('async')
 _ = require('lodash-contrib')
 errors = require('resin-errors')
 request = require('resin-request')
@@ -13,28 +12,15 @@ deviceModel = require('./device')
 auth = require('../auth')
 
 ###*
-# A Resin API application
-# @typedef {Object} Application
-###
-
-###*
-# getAll callback
-# @callback module:resin.models.application~getAllCallback
-# @param {(Error|null)} error - error
-# @param {Application[]} applications - applications
-###
-
-###*
 # @summary Get all applications
 # @public
 # @function
 #
-# @param {module:resin.models.application~getAllCallback} callback - callback
+# @returns {Promise<Object[]>} applications
 #
 # @example
-#	resin.models.application.getAll (error, applications) ->
-#		throw error if error?
-#		console.log(applications)
+# resin.models.application.getAll().then (applications) ->
+# 	console.log(applications)
 ###
 exports.getAll = (callback) ->
 	return pine.get
@@ -53,24 +39,16 @@ exports.getAll = (callback) ->
 	.nodeify(callback)
 
 ###*
-# get callback
-# @callback module:resin.models.application~getCallback
-# @param {(Error|null)} error - error
-# @param {Application} application - application
-###
-
-###*
 # @summary Get a single application
 # @public
 # @function
 #
 # @param {String} name - application name
-# @param {module:resin.models.application~getCallback} callback - callback
+# @returns {Promise<Object>} application
 #
 # @example
-#	resin.models.application.get 'MyApp', (error, application) ->
-#		throw error if error?
-#		console.log(application)
+# resin.models.application.get('MyApp').then (application) ->
+# 	console.log(application)
 ###
 exports.get = (name, callback) ->
 	return pine.get
@@ -86,24 +64,16 @@ exports.get = (name, callback) ->
 	.nodeify(callback)
 
 ###*
-# has callback
-# @callback module:resin.models.application~hasCallback
-# @param {(Error|null)} error - error
-# @param {Boolean} has - has application
-###
-
-###*
 # @summary Check if an application exist
 # @public
 # @function
 #
 # @param {String} name - application name
-# @param {module:resin.models.application~hasCallback} callback - callback
+# @returns {Promise<Boolean>} has application
 #
 # @example
-#	resin.models.application.has 'MyApp', (error, hasApp) ->
-#		throw error if error?
-#		console.log(hasApp)
+# resin.models.application.has('MyApp').then (hasApp) ->
+# 	console.log(hasApp)
 ###
 exports.has = (name, callback) ->
 	exports.get(name).return(true)
@@ -112,22 +82,14 @@ exports.has = (name, callback) ->
 	.nodeify(callback)
 
 ###*
-# hasAny callback
-# @callback module:resin.models.application~hasAnyCallback
-# @param {(Error|null)} error - error
-# @param {Boolean} hasAny - has any application
-###
-
-###*
 # @summary Check if the user has any applications
 # @public
 # @function
 #
-# @param {module:resin.models.application~hasAnyCallback} callback - callback
+# @returns {Promise<Boolean>} has any applications
 #
 # @example
-#	resin.models.application.hasAny (error, hasAny) ->
-#		throw error if error?
+#	resin.models.application.hasAny().then (hasAny) ->
 #		console.log("Has any? #{hasAny}")
 ###
 exports.hasAny = (callback) ->
@@ -136,24 +98,16 @@ exports.hasAny = (callback) ->
 	.nodeify(callback)
 
 ###*
-# getById callback
-# @callback module:resin.models.application~getByIdCallback
-# @param {(Error|null)} error - error
-# @param {Application} application - application
-###
-
-###*
 # @summary Get a single application by id
 # @public
 # @function
 #
 # @param {(Number|String)} id - application id
-# @param {module:resin.models.application~getByIdCallback} callback - callback
+# @returns {Promise<Object>} application
 #
 # @example
-#	resin.models.application.getById 89, (error, application) ->
-#		throw error if error?
-#		console.log(application)
+# resin.models.application.getById(89).then (application) ->
+# 	console.log(application)
 ###
 exports.getById = (id, callback) ->
 	return pine.get
@@ -165,27 +119,18 @@ exports.getById = (id, callback) ->
 	.nodeify(callback)
 
 ###*
-# create callback
-# @callback module:resin.models.application~createCallback
-# @param {(Error|null)} error - error
-# @param {Number} id - application id
-###
-
-###*
 # @summary Create an application
 # @public
 # @function
 #
 # @param {String} name - application name
 # @param {String} deviceType - device type (slug form)
-# @param {module:resin.models.application~createCallback} callback - callback
 #
-# @throw {NotFound} Will throw if the request doesn't returns an id
+# @returns {Promise<Number>} application id
 #
 # @example
-#	resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
-#		throw error if error?
-#		console.log(id)
+# resin.models.application.create('My App', 'raspberry-pi').then (id) ->
+# 	console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
 	return deviceModel.getDeviceSlug(deviceType)
@@ -203,22 +148,15 @@ exports.create = (name, deviceType, callback) ->
 	.nodeify(callback)
 
 ###*
-# remove callback
-# @callback module:resin.models.application~removeCallback
-# @param {(Error|null)} error - error
-###
-
-###*
 # @summary Remove application
 # @public
 # @function
 #
 # @param {String} name - application name
-# @param {module:resin.models.application~removeCallback} callback - callback
+# @returns {Promise}
 #
 # @example
-#	resin.models.application.remove 'MyApp', (error) ->
-#		throw error if error?
+# resin.models.application.remove('MyApp')
 ###
 exports.remove = (name, callback) ->
 	return pine.delete
@@ -229,22 +167,15 @@ exports.remove = (name, callback) ->
 	.nodeify(callback)
 
 ###*
-# restart callback
-# @callback module:resin.models.application~restartCallback
-# @param {(Error|null)} error - error
-###
-
-###*
 # @summary Restart application
 # @public
 # @function
 #
 # @param {String} name - application name
-# @param {module:resin.models.application~restartCallback} callback - callback
+# @returns {Promise}
 #
 # @example
-#	resin.models.application.restart 'MyApp', (error) ->
-#		throw error if error?
+# resin.models.application.restart('MyApp')
 ###
 exports.restart = (name, callback) ->
 	exports.get(name).then (application) ->
@@ -255,24 +186,16 @@ exports.restart = (name, callback) ->
 	.nodeify(callback)
 
 ###*
-# getApiKey callback
-# @callback module:resin.models.application~getApiKeyCallback
-# @param {(Error|null)} error - error
-# @param {String} apiKey - the api key
-###
-
-###*
 # @summary Get the API key for a specific application
 # @public
 # @function
 #
 # @param {String} name - application name
-# @param {module:resin.models.application~getApiKeyCallback} callback - callback
+# @returns {Promise<String>} the api key
 #
 # @example
-#	resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
-#		throw error if error?
-#		console.log(apiKey)
+# resin.models.application.getApiKey('MyApp').then (apiKey) ->
+# 	console.log(apiKey)
 ###
 exports.getApiKey = (name, callback) ->
 	exports.get(name).then (application) ->
@@ -283,13 +206,6 @@ exports.getApiKey = (name, callback) ->
 	.nodeify(callback)
 
 ###*
-# getConfiguration callback
-# @callback module:resin.models.application~getConfigurationCallback
-# @param {(Error|null)} error - error
-# @param {Object} configuration - application configuration
-###
-
-###*
 # @summary Get an application device configuration
 # @public
 # @function
@@ -298,15 +214,15 @@ exports.getApiKey = (name, callback) ->
 # @param {Object} [options={}] - options
 # @param {String} [options.wifiSsid] - wifi ssid
 # @param {String} [options.wifiKey] - wifi key
-# @param {module:resin.models.application~getConfigurationCallback} callback - callback
+#
+# @returns {Promise<Object>} application configuration
 #
 # @example
-#	resin.models.application.getConfiguration 'MyApp',
-#		wifiSsid: 'foobar'
-#		wifiKey: 'hello'
-#	, (error, configuration) ->
-#		throw error if error?
-#		console.log(configuration)
+# resin.models.application.getConfiguration 'MyApp',
+# 	wifiSsid: 'foobar'
+# 	wifiKey: 'hello'
+# .then (configuration) ->
+# 	console.log(configuration)
 ###
 exports.getConfiguration = (name, options = {}, callback) ->
 	Promise.all([

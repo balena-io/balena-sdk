@@ -5,23 +5,15 @@
 request = require('resin-request')
 
 ###*
-# getAll callback
-# @callback module:resin.models.config~getAllCallback
-# @param {(Error|null)} error - error
-# @param {Object} config - the configuration
-###
-
-###*
 # @summary Get all configuration
 # @public
 # @function
 #
-# @param {module:resin.models.config~getAllCallback} callback - callback
+# @returns {Promise<Object>} configuration
 #
 # @example
-#	resin.models.config.getAll (error, config) ->
-#		throw error if error?
-#		console.log(config)
+# resin.models.config.getAll().then (config) ->
+# 	console.log(config)
 ###
 exports.getAll = (callback) ->
 	request.send
@@ -31,46 +23,30 @@ exports.getAll = (callback) ->
 	.nodeify(callback)
 
 ###*
-# getPubNubKeys callback
-# @callback module:resin.models.config~getPubNubKeys
-# @param {(Error|null)} error - error
-# @param {Object} pubnubKeys - pubnub keys
-###
-
-###*
 # @summary Get PubNub keys
 # @public
 # @function
 #
-# @param {module:resin.models.config~getPubNubKeys} callback - callback
+# @returns {Promise<Object>} pubnub keys
 #
 # @example
-#	resin.models.config.getPubNubKeys (error, pubnubKeys) ->
-#		throw error if error?
-#		console.log(pubnubKeys.subscribe_key)
-#		console.log(pubnubKeys.publish_key)
+# resin.models.config.getPubNubKeys().then (pubnubKeys) ->
+# 	console.log(pubnubKeys.subscribe_key)
+# 	console.log(pubnubKeys.publish_key)
 ###
 exports.getPubNubKeys = (callback) ->
 	exports.getAll().get('pubnub').nodeify(callback)
-
-###*
-# getDeviceTypes callback
-# @callback module:resin.models.config~getDeviceTypes
-# @param {(Error|null)} error - error
-# @param {Object[]} deviceTypes - the device types
-###
 
 ###*
 # @summary Get device types
 # @public
 # @function
 #
-# @param {module:resin.models.config~getDeviceTypes} callback - callback
+# @returns {Promise<Object[]>} device types
 #
 # @example
-#	resin.models.config.getDeviceTypes (error, deviceTypes) ->
-#		throw error if error?
-#		console.log(deviceTypes)
+# resin.models.config.getDeviceTypes().then (deviceTypes) ->
+# 	console.log(deviceTypes)
 ###
 exports.getDeviceTypes = (callback) ->
 	exports.getAll().get('deviceTypes').nodeify(callback)

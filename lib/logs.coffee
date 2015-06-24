@@ -19,17 +19,15 @@ deviceModel = require('./models/device')
 # - `error`: when an error happens.
 #
 # @param {String} deviceName - device name
-# @param {Function} callback - callback (error, logs)
+# @returns {Promise<EventEmitter>} logs
 #
 # @todo
 # We should consider making this a readable stream.
 #
 # @example
-# resin.logs.subscribe 'MyDevice', (error, logs) ->
-#		throw error if error?
-#
-#		logs.on 'line', (line) ->
-#			console.log(line)
+# resin.logs.subscribe('MyDevice').then (logs) ->
+# 	logs.on 'line', (line) ->
+# 		console.log(line)
 ###
 exports.subscribe = (deviceName, callback) ->
 	Promise.props
@@ -45,14 +43,12 @@ exports.subscribe = (deviceName, callback) ->
 # @public
 #
 # @param {String} deviceName - device name
-# @param {Function} callback - callback (error, history)
+# @returns {Promise<String[]>} history lines
 #
 # @example
-# resin.logs.history 'MyDevice', (error, history) ->
-#		throw error if error?
-#
-#		for line in history
-#			console.log(line)
+# resin.logs.history('MyDevice').then (lines) ->
+# 	for line in lines
+# 		console.log(line)
 ###
 exports.history = (deviceName, callback) ->
 	Promise.props

@@ -16,31 +16,16 @@
 
 
   /**
-   * A Resin API environment variable
-   * @typedef {Object} EnvironmentVariable
-   */
-
-
-  /**
-   * getAllByApplication callback
-   * @callback module:resin.models.environment-variables~getAllByApplicationCallback
-   * @param {(Error|null)} error - error
-   * @param {EnvironmentVariable[]} environmentVariables - environment variables
-   */
-
-
-  /**
    * @summary Get all environment variables by application
    * @public
    * @function
    *
    * @param {(String|Number)} applicationId - application id
-   * @param {module:resin.models.environment-variables~getAllByApplicationCallback} callback - callback
+   * @returns {Promise<Object[]>} environment variables
    *
    * @example
-   *	resin.models.environmentVariables.getAll (error, environmentVariables) ->
-   *		throw error if error?
-   *		console.log(environmentVariables)
+   * resin.models.environmentVariables.getAll().then (environmentVariables) ->
+   * 	console.log(environmentVariables)
    */
 
   exports.getAllByApplication = function(applicationId, callback) {
@@ -57,13 +42,6 @@
 
 
   /**
-   * create callback
-   * @callback module:resin.models.environment-variables~createCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Create an environment variable for an application
    * @public
    * @function
@@ -71,11 +49,11 @@
    * @param {(String|Number)} applicationId - application id
    * @param {String} name - environment variable name
    * @param {String} value - environment variable value
-   * @param {module:resin.models.environment-variables~createCallback} callback - callback
+   *
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
-   *		throw error if error?
+   * resin.models.environmentVariables.create(91, 'EDITOR', 'vim')
    */
 
   exports.create = function(applicationId, name, value, callback) {
@@ -91,24 +69,17 @@
 
 
   /**
-   * update callback
-   * @callback module:resin.models.environment-variables~updateCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Update an environment variable value from an application
    * @public
    * @function
    *
    * @param {(String|Number)} applicationId - application id
    * @param {String} value - environment variable value
-   * @param {module:resin.models.environment-variables~updateCallback} callback - callback
+   *
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.environmentVariables.update 317, 'vim', (error) ->
-   *		throw error if error?
+   * resin.models.environmentVariables.update(317, 'vim')
    */
 
   exports.update = function(id, value, callback) {
@@ -123,23 +94,15 @@
 
 
   /**
-   * remove callback
-   * @callback module:resin.models.environment-variables~removeCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Remove environment variable
    * @public
    * @function
    *
    * @param {(String|Number)} id - environment variable id
-   * @param {module:resin.models.environment-variables~removeCallback} callback - callback
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.environmentVariables.remove 51, (error) ->
-   *		throw error if error?
+   * resin.models.environmentVariables.remove(51)
    */
 
   exports.remove = function(id, callback) {
@@ -175,25 +138,16 @@
 
 
   /**
-   * device.getAll callback
-   * @callback module:resin.models.environment-variables.device~getAllCallback
-   * @param {(Error|null)} error - error
-   * @param {EnvironmentVariable[]} environmentVariables - environment variables
-   */
-
-
-  /**
    * @summary Get all device environment variables
    * @public
    * @function
    *
    * @param {String} deviceName - device name
-   * @param {module:resin.models.environment-variables.device~getAllCallback} callback - callback
+   * @returns {Promise<Object[]>} device environment variables
    *
    * @example
-   *	resin.models.environmentVariables.device.getAll 'MyDevice', (error, environmentVariables) ->
-   *		throw error if error?
-   *		console.log(environmentVariables)
+   * resin.models.environmentVariables.device.getAll('MyDevice').then (environmentVariables) ->
+   * 	console.log(environmentVariables)
    */
 
   exports.device.getAll = function(deviceName, callback) {
@@ -220,13 +174,6 @@
 
 
   /**
-   * device.create callback
-   * @callback module:resin.models.environment-variables.device~createCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Create a device environment variable
    * @public
    * @function
@@ -234,11 +181,11 @@
    * @param {String} deviceName - device name
    * @param {String} name - environment variable name
    * @param {String} value - environment variable value
-   * @param {module:resin.models.environment-variables.device~createCallback} callback - callback
+   *
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.environmentVariables.device.create 'MyDevice', 'EDITOR', 'vim', (error) ->
-   *		throw error if error?
+   * resin.models.environmentVariables.device.create('MyDevice', 'EDITOR', 'vim')
    */
 
   exports.device.create = function(deviceName, name, value, callback) {
@@ -256,24 +203,17 @@
 
 
   /**
-   * device.update callback
-   * @callback module:resin.models.environment-variables.device~updateCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Update a device environment variable
    * @public
    * @function
    *
    * @param {(String|Number)} id - environment variable id
    * @param {String} value - environment variable value
-   * @param {module:resin.models.environment-variables.device~updateCallback} callback - callback
+   *
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
-   *		throw error if error?
+   * resin.models.environmentVariables.device.update(2, 'emacs')
    */
 
   exports.device.update = function(id, value, callback) {
@@ -288,23 +228,15 @@
 
 
   /**
-   * device.remove callback
-   * @callback module:resin.models.environment-variables.device~removeCallback
-   * @param {(Error|null)} error - error
-   */
-
-
-  /**
    * @summary Remove a device environment variable
    * @public
    * @function
    *
    * @param {(String|Number)} id - environment variable id
-   * @param {module:resin.models.environment-variables.device~removeCallback} callback - callback
+   * @returns {Promise}
    *
    * @example
-   *	resin.models.environmentVariables.device.remove 2, (error) ->
-   *		throw error if error?
+   * resin.models.environmentVariables.device.remove(2)
    */
 
   exports.device.remove = function(id, callback) {

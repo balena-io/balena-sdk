@@ -9,19 +9,12 @@ errors = require('resin-errors')
 OSParams = require('./os-params')
 
 ###*
-# download callback
-# @callback module:resin.models.os~downloadCallback
-# @param {(Error|null)} error - error
-# @param {ReadableStream} stream - download stream
-###
-
-###*
 # @summary Download an OS image
 # @public
 # @function
 #
 # @param {Object} parameters - os parameters
-# @param {module:resin.models.os~downloadCallback} callback - callback
+# @returns {ReadableStream} download stream
 #
 # @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
 #
@@ -29,12 +22,11 @@ OSParams = require('./os-params')
 #
 # @example
 # parameters =
-#		network: 'ethernet'
-#		appId: 91
+# 	network: 'ethernet'
+# 	appId: 91
 #
-# resin.models.os.download parameters, (error, stream) ->
-#		throw error if error?
-#		stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+# resin.models.os.download(parameters).then (stream) ->
+# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
 ###
 exports.download = (parameters, callback) ->
 	parameters = new OSParams(parameters)
