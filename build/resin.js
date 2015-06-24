@@ -22,7 +22,13 @@
     	 * @memberof resin
     	 * @see {@link module:resin.logs}
      */
-    logs: require('./logs')
+    logs: require('./logs'),
+
+    /**
+    	 * @memberof resin
+    	 * @see {@link module:resin.settings}
+     */
+    settings: require('./settings')
   };
 
 }).call(this);
