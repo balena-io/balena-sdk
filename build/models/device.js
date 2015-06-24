@@ -212,23 +212,20 @@
    * @public
    * @function
    *
-   * @param {String} uuid - device uuid
+   * @param {String} name - device name
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.identify('23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a21369ac0f00db828')
+   * resin.models.device.identify('MyDevice')
    */
 
-  exports.identify = function(uuid, callback) {
-    return token.has().then(function(hasToken) {
-      if (!hasToken) {
-        throw new errors.ResinNotLoggedIn();
-      }
+  exports.identify = function(name, callback) {
+    return exports.get(name).then(function(device) {
       return request.send({
         method: 'POST',
         url: '/blink',
-        json: {
-          uuid: uuid
+        body: {
+          uuid: device.uuid
         }
       });
     })["return"](void 0).nodeify(callback);
