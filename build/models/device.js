@@ -247,16 +247,18 @@
    */
 
   exports.rename = function(name, newName, callback) {
-    return pine.patch({
-      resource: 'device',
-      body: {
-        name: newName
-      },
-      options: {
-        filter: {
-          name: name
+    return exports.get(name).then(function() {
+      return pine.patch({
+        resource: 'device',
+        body: {
+          name: newName
+        },
+        options: {
+          filter: {
+            name: name
+          }
         }
-      }
+      });
     }).nodeify(callback);
   };
 
