@@ -116,7 +116,7 @@ describe 'Device Model:', ->
 				@pineGetStub.restore()
 
 			it 'should return an error', (done) ->
-				device.get 'MyDevice', (error, device) ->
+				device.get '7cf02', (error, device) ->
 					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
 					m.chai.expect(device).to.not.exist
 					done()
@@ -127,6 +127,7 @@ describe 'Device Model:', ->
 				@device =
 					id: 1
 					name: 'Device1'
+					uuid: '1234'
 					application: [
 						app_name: 'App1'
 					]
@@ -138,13 +139,13 @@ describe 'Device Model:', ->
 				@pineGetStub.restore()
 
 			it 'should return the device', (done) ->
-				device.get 'MyDevice', (error, device) =>
+				device.get '1234', (error, device) =>
 					m.chai.expect(error).to.not.exist
 					m.chai.expect(device).to.deep.equal(@device)
 					done()
 
 			it 'should add application_name', (done) ->
-				device.get 'MyDevice', (error, device) =>
+				device.get '1234', (error, device) =>
 					m.chai.expect(device.application_name).to.equal(@device.application[0].app_name)
 					done()
 
@@ -160,7 +161,7 @@ describe 'Device Model:', ->
 				@pineGetStub.restore()
 
 			it 'should return false', (done) ->
-				device.has 'MyDevice', (error, hasDevice) ->
+				device.has '1234', (error, hasDevice) ->
 					m.chai.expect(error).to.not.exist
 					m.chai.expect(hasDevice).to.be.false
 					done()
@@ -171,6 +172,7 @@ describe 'Device Model:', ->
 				@device =
 					id: 1
 					name: 'Device1'
+					uuid: '1234'
 					application: [
 						app_name: 'App1'
 					]
@@ -182,7 +184,7 @@ describe 'Device Model:', ->
 				@pineGetStub.restore()
 
 			it 'should return true', (done) ->
-				device.has 'Device1', (error, hasDevice) ->
+				device.has '1234', (error, hasDevice) ->
 					m.chai.expect(error).to.not.exist
 					m.chai.expect(hasDevice).to.be.true
 					done()
@@ -193,13 +195,13 @@ describe 'Device Model:', ->
 
 			beforeEach ->
 				@deviceGetStub = m.sinon.stub(device, 'get')
-				@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('device')))
+				@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('1234')))
 
 			afterEach ->
 				@deviceGetStub.restore()
 
 			it 'should return an error', (done) ->
-				device.isOnline 'MyDevice', (error, isOnline) ->
+				device.isOnline '1234', (error, isOnline) ->
 					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
 					m.chai.expect(isOnline).to.not.exist
 					done()
@@ -214,7 +216,7 @@ describe 'Device Model:', ->
 				@deviceGetStub.restore()
 
 			it 'should return true', (done) ->
-				device.isOnline 'MyDevice', (error, isOnline) ->
+				device.isOnline '1234', (error, isOnline) ->
 					m.chai.expect(error).to.not.exist
 					m.chai.expect(isOnline).to.be.true
 					done()
@@ -229,7 +231,7 @@ describe 'Device Model:', ->
 				@deviceGetStub.restore()
 
 			it 'should return false', (done) ->
-				device.isOnline 'MyDevice', (error, isOnline) ->
+				device.isOnline '1234', (error, isOnline) ->
 					m.chai.expect(error).to.not.exist
 					m.chai.expect(isOnline).to.be.false
 					done()
@@ -246,40 +248,8 @@ describe 'Device Model:', ->
 				@deviceHasStub.restore()
 
 			it 'should return an error', (done) ->
-				device.note 'MyDevice', 'Hello World', (error) ->
+				device.note '1234', 'Hello World', (error) ->
 					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-					done()
-
-	describe 'isValidUUID()', ->
-
-		describe 'given the uuid exists', ->
-
-			beforeEach ->
-				@deviceGetAllStub = m.sinon.stub(device, 'getAll')
-				@deviceGetAllStub.returns(Promise.resolve([ uuid: '1234' ]))
-
-			afterEach ->
-				@deviceGetAllStub.restore()
-
-			it 'should return true', (done) ->
-				device.isValidUUID '1234', (error, isValidUUID) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(isValidUUID).to.be.true
-					done()
-
-		describe 'given the uuid does not exists', ->
-
-			beforeEach ->
-				@deviceGetAllStub = m.sinon.stub(device, 'getAll')
-				@deviceGetAllStub.returns(Promise.resolve([ uuid: '5678' ]))
-
-			afterEach ->
-				@deviceGetAllStub.restore()
-
-			it 'should return false', (done) ->
-				device.isValidUUID '1234', (error, isValidUUID) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(isValidUUID).to.be.false
 					done()
 
 	describe '.getDisplayName()', ->
