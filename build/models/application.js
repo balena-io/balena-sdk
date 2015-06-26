@@ -33,7 +33,7 @@ THE SOFTWARE.
 
   Promise = require('bluebird');
 
-  _ = require('lodash-contrib');
+  _ = require('lodash');
 
   errors = require('resin-errors');
 
