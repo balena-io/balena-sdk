@@ -1,332 +1,297 @@
 m = require('mochainon')
+nock = require('nock')
 Promise = require('bluebird')
-request = require('resin-request')
 token = require('resin-token')
 errors = require('resin-errors')
 auth = require('../lib/auth')
-johnDoeFixture = require('./tokens.json').johndoe
+settings = require('../lib/settings')
+tokens = require('./tokens.json')
+johnDoeFixture = tokens.johndoe
+janeDoeFixture = tokens.janedoe
 
 describe 'Auth:', ->
 
-	describe 'given all tokens are valid', ->
+	describe '.whoami()', ->
 
-		beforeEach ->
-			@tokenIsValidStub = m.sinon.stub(token, 'isValid')
-			@tokenIsValidStub.returns(Promise.resolve(true))
+		describe 'given a logged in user', ->
 
-		afterEach ->
-			@tokenIsValidStub.restore()
+			beforeEach ->
+				auth.loginWithToken(johnDoeFixture.token)
 
-		describe '.whoami()', ->
+			it 'should eventually be the username', ->
+				promise = auth.whoami()
+				m.chai.expect(promise).to.eventually.equal(johnDoeFixture.data.username)
 
-			describe 'given a logged in user', ->
+		describe 'given a not logged in user', ->
+
+			beforeEach ->
+				auth.logout()
+
+			it 'should eventually be undefined', ->
+				promise = auth.whoami()
+				m.chai.expect(promise).to.eventually.be.undefined
+
+	describe '.authenticate()', ->
+
+		describe 'given valid credentials', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/login_').reply(200, johnDoeFixture.token)
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			it 'should eventually return a token', ->
+				promise = auth.authenticate
+					username: 'foo'
+					password: 'bar'
+
+				m.chai.expect(promise).to.eventually.equal(johnDoeFixture.token)
+
+		describe 'given invalid credentials', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/login_').reply(401, 'Unauthorized')
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			it 'should be rejected', ->
+				promise = auth.authenticate
+					username: 'foo'
+					password: 'bar'
+
+				m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
+
+	describe '.login()', ->
+
+		describe 'given invalid credentials', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/login_').reply(401, 'Unauthorized')
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			it 'should be rejected', ->
+				promise = auth.login
+					username: 'foo'
+					password: 'bar'
+
+				m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
+
+		describe 'given valid credentials', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/login_').reply(200, johnDoeFixture.token)
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			describe 'given no logged in user', ->
 
 				beforeEach ->
-					token.set(johnDoeFixture.token)
-
-				it 'should return the username', (done) ->
-					auth.whoami (error, username) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(username).to.equal(johnDoeFixture.data.username)
-						done()
-
-			describe 'given a not logged in user', ->
-
-				beforeEach ->
-					token.remove()
-
-				it 'should undefined', (done) ->
-					auth.whoami (error, username) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(username).to.be.undefined
-						done()
-
-			describe 'given an invalid token', ->
-
-				beforeEach ->
-					token.set('1234')
-
-				it 'should throw an error', (done) ->
-					auth.whoami (error, username) ->
-						m.chai.expect(error).to.be.an.instanceof(Error)
-						m.chai.expect(error.message).to.equal('Malformed token: 1234')
-						m.chai.expect(username).to.not.exist
-						done()
-
-		describe '.register()', ->
-
-			describe 'given valid credentials', ->
-
-				beforeEach ->
-					@requestStub = m.sinon.stub(request, 'send')
-					@requestStub.returns(Promise.resolve(body: '1234'))
-
-				afterEach ->
-					@requestStub.restore()
-
-				it 'should be able to register a username', (done) ->
-					auth.register
-						username: 'johndoe'
-						password: 'secret'
-						email: 'john@doe.com'
-					, (error, token) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(token).to.equal('1234')
-						done()
-
-		describe '.loginWithToken()', ->
-
-			describe 'given a not logged in user', ->
-
-				beforeEach (done) ->
-					auth.logout(done)
+					auth.logout()
 
 				it 'should save the token', (done) ->
-					auth.getToken (error, token) ->
-						m.chai.expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-						m.chai.expect(token).to.not.exist
+					m.chai.expect(auth.getToken()).to.be.rejectedWith(errors.ResinNotLoggedIn)
 
-						auth.loginWithToken '1234', (error) ->
-							m.chai.expect(error).to.not.exist
-
-							auth.getToken (error, token) ->
-								m.chai.expect(error).to.not.exist
-								m.chai.expect(token).to.equal('1234')
-								done()
-
-		describe '.authenticate()', ->
-
-			describe 'given valid credentials', ->
-
-				beforeEach ->
-					@requestStub = m.sinon.stub(request, 'send')
-					@requestStub.returns(Promise.resolve(body: '1234'))
-
-				afterEach ->
-					@requestStub.restore()
-
-				it 'should return a token string', (done) ->
-					auth.authenticate
-						username: 'johndoe'
-						password: 'secret'
-					, (error, token) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(token).to.equal('1234')
-						done()
-
-			describe 'given invalid credentials', ->
-
-				beforeEach ->
-					@requestStub = m.sinon.stub(request, 'send')
-					@requestStub.returns(Promise.reject(new Error('auth error')))
-
-				afterEach ->
-					@requestStub.restore()
-
-				it 'should return an error', (done) ->
-					auth.authenticate
-						username: 'johndoe'
-						password: 'secret'
-					, (error, token) ->
-						m.chai.expect(error).to.exist
-						m.chai.expect(error).to.be.an.instanceof(Error)
-						m.chai.expect(token).to.be.undefined
-						done()
-
-		describe '.login()', ->
-
-			describe 'given a not logged in user', ->
-
-				beforeEach (done) ->
-					@requestStub = m.sinon.stub(request, 'send')
-					@requestStub.returns(Promise.resolve(body: '1234'))
-					auth.logout(done)
-
-				afterEach ->
-					@requestStub.restore()
-
-				it 'should save the token', (done) ->
-					auth.getToken (error, token) ->
-						m.chai.expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-						m.chai.expect(token).to.not.exist
-
-						auth.login
-							username: 'johndoe'
-							password: 'secret'
-						, (error) ->
-							m.chai.expect(error).to.not.exist
-
-							auth.getToken (error, token) ->
-								m.chai.expect(error).to.not.exist
-								m.chai.expect(token).to.exist
-								done()
-
-			describe 'given invalid credentials', ->
-
-				beforeEach ->
-					@requestStub = m.sinon.stub(request, 'send')
-					@requestStub.returns(Promise.reject(new Error('auth error')))
-
-				afterEach ->
-					@requestStub.restore()
-
-				it 'should return an error', (done) ->
 					auth.login
-						username: 'johndoe'
-						password: 'secret'
-					, (error, token) ->
-						m.chai.expect(error).to.be.an.instanceof(Error)
-						m.chai.expect(token).to.be.undefined
+						username: 'foo'
+						password: 'bar'
+					.then ->
+						m.chai.expect(auth.getToken()).to.eventually.equal(johnDoeFixture.token)
 						done()
 
 			describe 'given a logged in user', ->
 
 				beforeEach ->
-					token.set('1234')
+					auth.loginWithToken(janeDoeFixture.token)
 
-					@requestStub = m.sinon.stub(request, 'send')
-					@requestStub.returns(Promise.resolve(body: '5678'))
+				it 'should replace the saved token', (done) ->
+					m.chai.expect(auth.getToken()).to.eventually.equal(janeDoeFixture.token)
 
-				afterEach ->
-					@requestStub.restore()
-
-				it 'should override the old user', (done) ->
-					token.get().then (savedToken) ->
-						m.chai.expect(savedToken).to.equal('1234')
-
-						auth.login
-							username: 'johndoe'
-							password: 'secret'
-						, (error) ->
-							m.chai.expect(error).to.not.exist
-
-							token.get().then (savedToken) ->
-								m.chai.expect(savedToken).to.equal('5678')
-								done()
-
-		describe '.isLoggedIn()', ->
-
-			describe 'given a logged in user', ->
-
-				beforeEach ->
-					token.set('1234')
-
-				it 'should return true', ->
-					m.chai.expect(token.has()).to.eventually.be.true
-
-			describe 'given a not logged in user', ->
-
-				beforeEach (done) ->
-					auth.logout(done)
-
-				it 'should return false', (done) ->
-					auth.isLoggedIn (error, isLoggedIn) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(isLoggedIn).to.be.false
+					auth.login
+						username: 'foo'
+						password: 'bar'
+					.then ->
+						m.chai.expect(auth.getToken()).to.eventually.equal(johnDoeFixture.token)
 						done()
 
-		describe '.getToken()', ->
+	describe '.loginWithToken()', ->
 
-			describe 'given a logged in user', ->
+		describe 'given an invalid token', ->
 
-				beforeEach ->
-					token.set('1234')
+			it 'should be rejected', ->
+				promise = auth.loginWithToken('1234')
+				m.chai.expect(promise).to.be.rejected
 
-				it 'should return the token', (done) ->
-					auth.getToken (error, token) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(token).to.equal('1234')
-						done()
+		describe 'given a not logged in user', ->
 
-			describe 'given a not logged in user', ->
+			beforeEach ->
+				auth.logout()
 
-				beforeEach (done) ->
-					auth.logout(done)
+			it 'should save the token', (done) ->
+				m.chai.expect(auth.getToken()).to.be.rejectedWith(errors.ResinNotLoggedIn)
 
-				it 'should return an error', (done) ->
-					auth.getToken (error, token) ->
-						m.chai.expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-						m.chai.expect(token).to.not.exist
-						done()
+				auth.loginWithToken(johnDoeFixture.token).then ->
+					m.chai.expect(auth.getToken()).to.eventually.equal(johnDoeFixture.token)
+					done()
 
-		describe '.getUserId()', ->
+		describe 'given a logged in user', ->
 
-			describe 'given there was an error getting the user id', ->
+			beforeEach ->
+				auth.loginWithToken(janeDoeFixture.token)
 
-				beforeEach ->
-					@tokenGetUserIdStub = m.sinon.stub(token, 'getUserId')
-					@tokenGetUserIdStub.returns(Promise.reject(new Error('token error')))
+			it 'should replace the saved token', (done) ->
+				m.chai.expect(auth.getToken()).to.eventually.equal(janeDoeFixture.token)
 
-				afterEach ->
-					@tokenGetUserIdStub.restore()
+				auth.loginWithToken(johnDoeFixture.token).then ->
+					m.chai.expect(auth.getToken()).to.eventually.equal(johnDoeFixture.token)
+					done()
 
-				it 'should return the error', (done) ->
-					auth.getUserId (error, id) ->
-						m.chai.expect(error).to.be.an.instanceof(Error)
-						m.chai.expect(error.message).to.equal('token error')
-						m.chai.expect(id).to.not.exist
-						done()
+	describe '.isLoggedIn()', ->
 
-			describe 'given no user id could not be retrieved', ->
+		describe 'given a logged in user', ->
 
-				beforeEach ->
-					@tokenGetUserIdStub = m.sinon.stub(token, 'getUserId')
-					@tokenGetUserIdStub.returns(Promise.resolve(undefined))
+			beforeEach ->
+				auth.loginWithToken(janeDoeFixture.token)
 
-				afterEach ->
-					@tokenGetUserIdStub.restore()
+			it 'should eventually be true', ->
+				promise = auth.isLoggedIn()
+				m.chai.expect(promise).to.eventually.be.true
 
-				it 'should return a ResinNotLoggedIn error', (done) ->
-					auth.getUserId (error, id) ->
-						m.chai.expect(error).to.be.an.instanceof(errors.ResinNotLoggedIn)
-						m.chai.expect(id).to.not.exist
-						done()
+		describe 'given no logged in user', ->
 
-			describe 'given the user id could be retrieved', ->
+			beforeEach ->
+				auth.logout()
 
-				beforeEach ->
-					@tokenGetUserIdStub = m.sinon.stub(token, 'getUserId')
-					@tokenGetUserIdStub.returns(Promise.resolve(123))
+			it 'should eventually be false', ->
+				promise = auth.isLoggedIn()
+				m.chai.expect(promise).to.eventually.be.false
 
-				afterEach ->
-					@tokenGetUserIdStub.restore()
+	describe '.getToken()', ->
 
-				it 'should return the id', (done) ->
-					auth.getUserId (error, id) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(id).to.equal(123)
-						done()
+		describe 'given a logged in user', ->
 
-		describe '#logout()', ->
+			beforeEach ->
+				auth.loginWithToken(janeDoeFixture.token)
 
-			describe 'given a logged in user', ->
+			it 'should eventually be the token', ->
+				promise = auth.getToken()
+				m.chai.expect(promise).to.eventually.equal(janeDoeFixture.token)
 
-				beforeEach ->
-					token.set('1234')
+		describe 'given no logged in user', ->
 
-				it 'should remove the token', (done) ->
-					token.has().then (hasToken) ->
-						m.chai.expect(hasToken).to.be.true
-						auth.logout (error) ->
-							m.chai.expect(error).to.not.exist
-							token.has().then (hasToken) ->
-								m.chai.expect(hasToken).to.be.false
-								done()
+			beforeEach ->
+				auth.logout()
 
-			describe 'given a not logged in user', ->
+			it 'should be rejected', ->
+				promise = auth.getToken()
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
 
-				beforeEach (done) ->
-					auth.logout(done)
+	describe '.getUserId()', ->
 
-				it 'should not return any error', (done) ->
-					auth.logout (error) ->
-						m.chai.expect(error).to.not.exist
-						done()
+		describe 'given a logged in user', ->
 
-				it 'should keep the token undefined', (done) ->
-					auth.logout (error) ->
-						m.chai.expect(error).to.not.exist
-						auth.isLoggedIn (error, isLoggedIn) ->
-							m.chai.expect(error).to.not.exist
-							m.chai.expect(isLoggedIn).to.be.false
-							done()
+			beforeEach ->
+				auth.loginWithToken(janeDoeFixture.token)
+
+			it 'should eventually be the username', ->
+				promise = auth.getUserId()
+				m.chai.expect(promise).to.eventually.equal(janeDoeFixture.data.id)
+
+		describe 'given no logged in user', ->
+
+			beforeEach ->
+				auth.logout()
+
+			it 'should be rejected', ->
+				promise = auth.getUserId()
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
+
+	describe '.logout()', ->
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				auth.loginWithToken(janeDoeFixture.token)
+
+			it 'should clear the token', (done) ->
+				m.chai.expect(auth.getToken()).to.eventually.equal(janeDoeFixture.token)
+
+				auth.logout().then ->
+					m.chai.expect(auth.getToken()).to.be.rejectedWith(errors.ResinNotLoggedIn)
+					done()
+
+		describe 'given no logged in user', ->
+
+			beforeEach ->
+				token.remove()
+
+			it 'should keep the token empty', (done) ->
+				m.chai.expect(auth.getToken()).to.be.rejectedWith(errors.ResinNotLoggedIn)
+
+				auth.logout().then ->
+					m.chai.expect(auth.getToken()).to.be.rejectedWith(errors.ResinNotLoggedIn)
+					done()
+
+	describe '.register()', ->
+
+		describe 'given register is successful', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/user/register').reply(201, johnDoeFixture.token)
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			it 'should eventually be the token', ->
+				promise = auth.register
+					email: johnDoeFixture.data.email
+					password: '12345678'
+
+				m.chai.expect(promise).to.eventually.equal(johnDoeFixture.token)
+
+		describe 'given a validation error', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/user/register').reply(400, 'Password must be at least 8 characters.')
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			it 'should be rejected with the error message', ->
+				promise = auth.register
+					email: johnDoeFixture.data.email
+					password: '1234'
+
+				m.chai.expect(promise).to.be.rejectedWith('Password must be at least 8 characters.')
+
+		describe 'given a missing field', ->
+
+			beforeEach (done) ->
+				settings.get('remoteUrl').then (remoteUrl) ->
+					nock(remoteUrl).post('/user/register').reply(400, 'Password required.')
+					done()
+
+			afterEach ->
+				nock.cleanAll()
+
+			it 'should be rejected with the error message', ->
+				promise = auth.register
+					email: johnDoeFixture.data.email
+
+				m.chai.expect(promise).to.be.rejectedWith('Password required.')
