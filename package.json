@@ -20,7 +20,8 @@
   },
   "scripts": {
     "test": "gulp test",
-    "prepublish": "gulp build"
+    "prepublish": "gulp build",
+    "docs": "jsdoc2md build/{,**/}*.js > DOCUMENTATION.md"
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "MIT",
@@ -31,6 +32,7 @@
     "gulp-coffeelint": "~0.5.0",
     "gulp-mocha": "~2.0.1",
     "gulp-util": "~3.0.4",
+    "jsdoc-to-markdown": "^1.1.1",
     "mocha": "~2.2.5",
     "mochainon": "^1.0.0",
     "nock": "^2.6.0",
