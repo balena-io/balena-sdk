@@ -24,6 +24,12 @@ THE SOFTWARE.
 
 ###*
 # @namespace resin
+# @description
+# Welcome to the Resin SDK documentation.
+#
+# This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
+#
+# If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
 ###
 module.exports =
 
