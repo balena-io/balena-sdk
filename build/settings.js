@@ -33,8 +33,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get a single setting
+   * @name get
    * @function
    * @public
+   * @memberof resin.settings
    *
    * @param {String} [key] - setting key
    * @returns {Promise<*>} setting value
@@ -53,8 +55,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get all settings
+   * @name getAll
    * @function
    * @public
+   * @memberof resin.settings
    *
    * @returns {Promise<Object>} settings
    *

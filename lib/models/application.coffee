@@ -22,10 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-###*
-# @module resin.models.application
-###
-
 Promise = require('bluebird')
 _ = require('lodash')
 errors = require('resin-errors')
@@ -37,8 +33,10 @@ auth = require('../auth')
 
 ###*
 # @summary Get all applications
+# @name getAll
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @returns {Promise<Object[]>} applications
 #
@@ -64,8 +62,10 @@ exports.getAll = (callback) ->
 
 ###*
 # @summary Get a single application
+# @name get
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @returns {Promise<Object>} application
@@ -89,8 +89,10 @@ exports.get = (name, callback) ->
 
 ###*
 # @summary Check if an application exist
+# @name has
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @returns {Promise<Boolean>} has application
@@ -107,8 +109,10 @@ exports.has = (name, callback) ->
 
 ###*
 # @summary Check if the user has any applications
+# @name hasAny
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @returns {Promise<Boolean>} has any applications
 #
@@ -123,8 +127,10 @@ exports.hasAny = (callback) ->
 
 ###*
 # @summary Get a single application by id
+# @name getById
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {(Number|String)} id - application id
 # @returns {Promise<Object>} application
@@ -144,8 +150,10 @@ exports.getById = (id, callback) ->
 
 ###*
 # @summary Create an application
+# @name create
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @param {String} deviceType - device type (slug form)
@@ -173,8 +181,10 @@ exports.create = (name, deviceType, callback) ->
 
 ###*
 # @summary Remove application
+# @name remove
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @returns {Promise}
@@ -192,8 +202,10 @@ exports.remove = (name, callback) ->
 
 ###*
 # @summary Restart application
+# @name restart
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @returns {Promise}
@@ -211,8 +223,10 @@ exports.restart = (name, callback) ->
 
 ###*
 # @summary Get the API key for a specific application
+# @name getApiKey
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @returns {Promise<String>} the api key
@@ -231,8 +245,10 @@ exports.getApiKey = (name, callback) ->
 
 ###*
 # @summary Get an application device configuration
+# @name getConfiguration
 # @public
 # @function
+# @memberof resin.models.application
 #
 # @param {String} name - application name
 # @param {Object} [options={}] - options

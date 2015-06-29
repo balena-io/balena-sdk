@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.models.device
- */
-
 (function() {
   var _, applicationModel, configModel, crypto, errors, pine, request, token;
 
@@ -50,8 +45,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get all devices
+   * @name getAll
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @returns {Promise<Object[]>} devices
    *
@@ -76,8 +73,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get all devices by application
+   * @name getAllByApplication
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} name - application name
    * @returns {Promise<Object[]>} devices
@@ -108,8 +107,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get a single device
+   * @name get
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @returns {Promise<Object>} device
@@ -140,8 +141,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get devices by name
+   * @name getByName
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} name - device name
    * @returns {Promise<Object[]>} devices
@@ -173,8 +176,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get the name of a device
+   * @name getName
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @returns {Promise<String>} device name
@@ -191,8 +196,10 @@ THE SOFTWARE.
 
   /**
    * @summary Check if a device exists
+   * @name has
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @returns {Promise<Boolean>} has device
@@ -211,8 +218,10 @@ THE SOFTWARE.
 
   /**
    * @summary Check if a device is online
+   * @name isOnline
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @returns {Promise<Boolean>} is device online
@@ -229,8 +238,10 @@ THE SOFTWARE.
 
   /**
    * @summary Remove device
+   * @name remove
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @returns {Promise}
@@ -253,8 +264,10 @@ THE SOFTWARE.
 
   /**
    * @summary Identify device
+   * @name identify
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @returns {Promise}
@@ -281,8 +294,10 @@ THE SOFTWARE.
 
   /**
    * @summary Rename device
+   * @name rename
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @param {String} newName - the device new name
@@ -315,8 +330,10 @@ THE SOFTWARE.
 
   /**
    * @summary Note a device
+   * @name note
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
    * @param {String} note - the note
@@ -349,8 +366,10 @@ THE SOFTWARE.
 
   /**
    * @summary Register a device with Resin.io
+   * @name register
    * @function
    * @public
+   * @memberof resin.models.device
    *
    * @param {String} applicationName - application name
    * @param {Object} [options={}] - options
@@ -390,8 +409,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get display name for a device
+   * @name getDisplayName
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
@@ -417,8 +438,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get device slug
+   * @name getDeviceSlug
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
@@ -444,8 +467,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get supported device types
+   * @name getSupportedDeviceTypes
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @returns {Promise<String[]>} supported device types
    *
@@ -464,8 +489,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get a device manifest by slug
+   * @name getManifestBySlug
    * @public
    * @function
+   * @memberof resin.models.device
    *
    * @param {String} slug - device slug
    * @returns {Promise<Object>} device manifest
@@ -491,8 +518,10 @@ THE SOFTWARE.
 
   /**
    * @summary Generate a random device UUID
+   * @name generateUUID
    * @function
    * @public
+   * @memberof resin.models.device
    *
    * @returns {String} A generated UUID
    *

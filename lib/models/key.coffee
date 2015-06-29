@@ -22,10 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-###*
-# @module resin.models.key
-###
-
 _ = require('lodash')
 errors = require('resin-errors')
 pine = require('resin-pine')
@@ -33,8 +29,10 @@ auth = require('../auth')
 
 ###*
 # @summary Get all ssh keys
+# @name getAll
 # @public
 # @function
+# @memberof resin.models.key
 #
 # @returns {Promise<Object[]>} ssh keys
 #
@@ -49,8 +47,10 @@ exports.getAll = (callback) ->
 
 ###*
 # @summary Get a single ssh key
+# @name get
 # @public
 # @function
+# @memberof resin.models.key
 #
 # @param {(String|Number)} id - key id
 # @returns {Promise<Object>} ssh key
@@ -71,8 +71,10 @@ exports.get = (id, callback) ->
 
 ###*
 # @summary Remove ssh key
+# @name remove
 # @public
 # @function
+# @memberof resin.models.key
 #
 # @param {(String|Number)} id - key id
 # @returns {Promise}
@@ -88,8 +90,10 @@ exports.remove = (id, callback) ->
 
 ###*
 # @summary Create a ssh key
+# @name create
 # @public
 # @function
+# @memberof resin.models.key
 #
 # @param {String} title - key title
 # @param {String} key - the public ssh key

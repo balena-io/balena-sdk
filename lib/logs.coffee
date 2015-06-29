@@ -22,10 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-###*
-# @module resin.logs
-###
-
 Promise = require('bluebird')
 logs = require('resin-device-logs')
 configModel = require('./models/config')
@@ -33,8 +29,10 @@ deviceModel = require('./models/device')
 
 ###*
 # @summary Subscribe to device logs
+# @name subscribe
 # @function
 # @public
+# @memberof resin.logs
 #
 # @description
 # The `logs` object yielded by this function emits the following events:
@@ -63,8 +61,10 @@ exports.subscribe = (deviceName, callback) ->
 
 ###*
 # @summary Get device logs history
+# @name history
 # @function
 # @public
+# @memberof resin.logs
 #
 # @param {String} deviceName - device name
 # @returns {Promise<String[]>} history lines
