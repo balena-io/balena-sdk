@@ -25,13 +25,12 @@ We currently only support NodeJS, but there are plans to make the SDK available 
 Documentation
 -------------
 
-Open [doc/](https://github.com/resin-io/resin-sdk/blob/master/doc) in a web browser to view a detailed documentation of the capabilities offered by the SDK. Notice this is a work in progress and we plan to host the documentation online soon.
+We generate JSDoc markdown documentation in [DOCUMENTATION.md](https://github.com/resin-io/resin-sdk/blob/master/DOCUMENTATION.md).
 
-You can regenerate the documentation with:
+Support
+-------
 
-```sh
-$ gulp jsdoc
-```
+If you're having any problem, please [raise an issue](https://github.com/resin-io/resin-sdk/issues/new) on GitHub and the Resin.io team will be happy to help.
 
 Tests
 -----
@@ -53,19 +52,6 @@ Before submitting a PR, please make sure that you include tests, and that [coffe
 ```sh
 $ gulp lint
 ```
-
-In order to get a nice development workflow where every asset is recompiled automatically on every change, the tests and the linter is ran, run:
-
-```sh
-$ gulp watch
-```
-
-Documentation is regenerated when releasing a new version, so if you decide to contribute, you don't need to worry about that.
-
-Support
--------
-
-If you're having any problem, please [raise an issue](https://github.com/resin-io/resin-sdk/issues/new) on GitHub.
 
 License
 -------
