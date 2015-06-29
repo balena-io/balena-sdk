@@ -111,39 +111,7 @@ THE SOFTWARE.
    * @public
    * @function
    *
-   * @param {String} name - device name
-   * @returns {Promise<Object>} device
-   *
-   * @example
-   * resin.models.device.get('MyDevice').then (device) ->
-   * 	console.log(device)
-   */
-
-  exports.get = function(name, callback) {
-    return pine.get({
-      resource: 'device',
-      options: {
-        expand: 'application',
-        filter: {
-          name: name
-        }
-      }
-    }).tap(function(device) {
-      if (_.isEmpty(device)) {
-        throw new errors.ResinDeviceNotFound(name);
-      }
-    }).get(0).tap(function(device) {
-      return device.application_name = device.application[0].app_name;
-    }).nodeify(callback);
-  };
-
-
-  /**
-   * @summary Get a single device by UUID
-   * @public
-   * @function
-   *
-   * @param {String} uuid - device UUID
+   * @param {String} uuid - device uuid
    * @returns {Promise<Object>} device
    *
    * @example
@@ -151,7 +119,7 @@ THE SOFTWARE.
    * 	console.log(device)
    */
 
-  exports.getByUUID = function(uuid, callback) {
+  exports.get = function(uuid, callback) {
     return pine.get({
       resource: 'device',
       options: {
@@ -171,20 +139,70 @@ THE SOFTWARE.
 
 
   /**
-   * @summary Check if a device exists
+   * @summary Get devices by name
    * @public
    * @function
    *
    * @param {String} name - device name
+   * @returns {Promise<Object[]>} devices
+   *
+   * @example
+   * resin.models.device.getByName('MyDevice').then (devices) ->
+   * 	console.log(devices)
+   */
+
+  exports.getByName = function(name, callback) {
+    return pine.get({
+      resource: 'device',
+      options: {
+        expand: 'application',
+        filter: {
+          name: name
+        }
+      }
+    }).tap(function(devices) {
+      if (_.isEmpty(devices)) {
+        throw new errors.ResinDeviceNotFound(name);
+      }
+    }).map(function(device) {
+      return device.application_name = device.application[0].app_name;
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Get the name of a device
+   * @public
+   * @function
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise<String>} device name
+   *
+   * @example
+   * resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
+   * 	console.log(deviceName)
+   */
+
+  exports.getName = function(uuid, callback) {
+    return exports.get(uuid).get('name').nodeify(callback);
+  };
+
+
+  /**
+   * @summary Check if a device exists
+   * @public
+   * @function
+   *
+   * @param {String} uuid - device uuid
    * @returns {Promise<Boolean>} has device
    *
    * @example
-   * resin.models.device.has('MyDevice').then (hasDevice) ->
+   * resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (hasDevice) ->
    * 	console.log(hasDevice)
    */
 
-  exports.has = function(name, callback) {
-    return exports.get(name)["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
+  exports.has = function(uuid, callback) {
+    return exports.get(uuid)["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
       return false;
     }).nodeify(callback);
   };
@@ -195,16 +213,16 @@ THE SOFTWARE.
    * @public
    * @function
    *
-   * @param {String} name - device name
+   * @param {String} uuid - device uuid
    * @returns {Promise<Boolean>} is device online
    *
    * @example
-   * resin.models.device.isOnline('MyDevice').then (isOnline) ->
+   * resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
    * 	console.log("Is device online? #{isOnline}")
    */
 
-  exports.isOnline = function(name, callback) {
-    return exports.get(name).get('is_online').nodeify(callback);
+  exports.isOnline = function(uuid, callback) {
+    return exports.get(uuid).get('is_online').nodeify(callback);
   };
 
 
@@ -213,19 +231,19 @@ THE SOFTWARE.
    * @public
    * @function
    *
-   * @param {String} name - device name
+   * @param {String} uuid - device uuid
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.remove('DeviceName')
+   * resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
    */
 
-  exports.remove = function(name, callback) {
+  exports.remove = function(uuid, callback) {
     return pine["delete"]({
       resource: 'device',
       options: {
         filter: {
-          name: name
+          uuid: uuid
         }
       }
     }).nodeify(callback);
@@ -237,20 +255,23 @@ THE SOFTWARE.
    * @public
    * @function
    *
-   * @param {String} name - device name
+   * @param {String} uuid - device uuid
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.identify('MyDevice')
+   * resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
    */
 
-  exports.identify = function(name, callback) {
-    return exports.get(name).then(function(device) {
+  exports.identify = function(uuid, callback) {
+    return exports.has(uuid).then(function(hasDevice) {
+      if (!hasDevice) {
+        throw new errors.ResinDeviceNotFound(uuid);
+      }
       return request.send({
         method: 'POST',
         url: '/blink',
         body: {
-          uuid: device.uuid
+          uuid: uuid
         }
       });
     })["return"](void 0).nodeify(callback);
@@ -262,28 +283,26 @@ THE SOFTWARE.
    * @public
    * @function
    *
-   * @param {String} name - device name
+   * @param {String} uuid - device uuid
    * @param {String} newName - the device new name
    *
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.rename('MyDevice', 'NewName')
+   * resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName')
    */
 
-  exports.rename = function(name, newName, callback) {
-    return exports.get(name).then(function() {
-      return pine.patch({
-        resource: 'device',
-        body: {
-          name: newName
-        },
-        options: {
-          filter: {
-            name: name
-          }
+  exports.rename = function(uuid, newName, callback) {
+    return pine.patch({
+      resource: 'device',
+      body: {
+        name: newName
+      },
+      options: {
+        filter: {
+          uuid: uuid
         }
-      });
+      }
     }).nodeify(callback);
   };
 
@@ -293,19 +312,19 @@ THE SOFTWARE.
    * @public
    * @function
    *
-   * @param {String} name - device name
+   * @param {String} uuid - device uuid
    * @param {String} note - the note
    *
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.note('MyDevice', 'My useful note')
+   * resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note')
    */
 
-  exports.note = function(name, note, callback) {
-    return exports.has(name).then(function(hasDevice) {
+  exports.note = function(uuid, note, callback) {
+    return exports.has(uuid).then(function(hasDevice) {
       if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(name);
+        throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
         resource: 'device',
@@ -314,7 +333,7 @@ THE SOFTWARE.
         },
         options: {
           filter: {
-            name: name
+            uuid: uuid
           }
         }
       });
@@ -359,35 +378,6 @@ THE SOFTWARE.
           apikey: config.apiKey
         }
       });
-    }).nodeify(callback);
-  };
-
-
-  /**
-   * @summary Checks if a UUID is valid
-   * @public
-   * @function
-   *
-   * @param {String} uuid - the device uuid
-   * @param {module:resin.models.device~isValidUUIDCallback} callback - callback
-   *
-   * @returns {Promise<Boolean>} is uuid valid
-   *
-   * @todo We should get better server side support for this operation
-   * to avoid having to get all devices list and check manually.
-   *
-   * @example
-   * uuid = 23c73a12e3527df55c60b9ce647640c1b7da1b32d71e6a39849ac0f00db828
-   * resin.models.device.isValidUUID(uuid).then (valid) ->
-   * 	if valid
-   * 		console.log('This is a valid UUID')
-   */
-
-  exports.isValidUUID = function(uuid, callback) {
-    return exports.getAll().then(function(devices) {
-      return _.findWhere(devices, {
-        uuid: uuid
-      }) != null;
     }).nodeify(callback);
   };
 
