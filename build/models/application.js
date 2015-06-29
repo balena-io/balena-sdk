@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.models.application
- */
-
 (function() {
   var Promise, _, auth, deviceModel, errors, network, pine, request;
 
@@ -50,8 +45,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get all applications
+   * @name getAll
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @returns {Promise<Object[]>} applications
    *
@@ -80,8 +77,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get a single application
+   * @name get
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @returns {Promise<Object>} application
@@ -109,8 +108,10 @@ THE SOFTWARE.
 
   /**
    * @summary Check if an application exist
+   * @name has
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @returns {Promise<Boolean>} has application
@@ -129,8 +130,10 @@ THE SOFTWARE.
 
   /**
    * @summary Check if the user has any applications
+   * @name hasAny
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @returns {Promise<Boolean>} has any applications
    *
@@ -148,8 +151,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get a single application by id
+   * @name getById
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {(Number|String)} id - application id
    * @returns {Promise<Object>} application
@@ -173,8 +178,10 @@ THE SOFTWARE.
 
   /**
    * @summary Create an application
+   * @name create
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @param {String} deviceType - device type (slug form)
@@ -205,8 +212,10 @@ THE SOFTWARE.
 
   /**
    * @summary Remove application
+   * @name remove
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @returns {Promise}
@@ -229,8 +238,10 @@ THE SOFTWARE.
 
   /**
    * @summary Restart application
+   * @name restart
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @returns {Promise}
@@ -251,8 +262,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get the API key for a specific application
+   * @name getApiKey
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @returns {Promise<String>} the api key
@@ -274,8 +287,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get an application device configuration
+   * @name getConfiguration
    * @public
    * @function
+   * @memberof resin.models.application
    *
    * @param {String} name - application name
    * @param {Object} [options={}] - options

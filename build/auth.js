@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.auth
- */
-
 (function() {
   var errors, request, token;
 
@@ -40,8 +35,10 @@ THE SOFTWARE.
 
   /**
    * @summary Return current logged in username
+   * @name whoami
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
@@ -62,8 +59,10 @@ THE SOFTWARE.
 
   /**
    * @summary Authenticate with the server
+   * @name authenticate
    * @protected
    * @function
+   * @memberof resin.auth
    *
    * @description You should use {@link module:resin.auth.login} when possible,
    * as it takes care of saving the token and username as well.
@@ -93,8 +92,10 @@ THE SOFTWARE.
 
   /**
    * @summary Login to Resin.io
+   * @name login
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @description If the login is successful, the token is persisted between sessions.
    *
@@ -115,8 +116,10 @@ THE SOFTWARE.
 
   /**
    * @summary Login to Resin.io with a token
+   * @name loginWithToken
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @description Login to resin with a session token instead of with credentials.
    *
@@ -134,8 +137,10 @@ THE SOFTWARE.
 
   /**
    * @summary Check if you're logged in
+   * @name isLoggedIn
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @returns {Promise<Boolean>} is logged in
    *
@@ -154,8 +159,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get current logged in user's token
+   * @name getToken
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
@@ -178,8 +185,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get current logged in user's id
+   * @name getUserId
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
@@ -203,8 +212,10 @@ THE SOFTWARE.
 
   /**
    * @summary Logout from Resin.io
+   * @name logout
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @returns {Promise}
    *
@@ -219,8 +230,10 @@ THE SOFTWARE.
 
   /**
    * @summary Register to Resin.io
+   * @name register
    * @public
    * @function
+   * @memberof resin.auth
    *
    * @param {Object} [credentials={}] - in the form of username, password and email
    * @param {String} credentials.email - the email

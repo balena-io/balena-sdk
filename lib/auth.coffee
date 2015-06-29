@@ -22,18 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-###*
-# @module resin.auth
-###
-
 errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
 
 ###*
 # @summary Return current logged in username
+# @name whoami
 # @public
 # @function
+# @memberof resin.auth
 #
 # @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
@@ -51,8 +49,10 @@ exports.whoami = (callback) ->
 
 ###*
 # @summary Authenticate with the server
+# @name authenticate
 # @protected
 # @function
+# @memberof resin.auth
 #
 # @description You should use {@link module:resin.auth.login} when possible,
 # as it takes care of saving the token and username as well.
@@ -80,8 +80,10 @@ exports.authenticate = (credentials, callback) ->
 
 ###*
 # @summary Login to Resin.io
+# @name login
 # @public
 # @function
+# @memberof resin.auth
 #
 # @description If the login is successful, the token is persisted between sessions.
 #
@@ -101,8 +103,10 @@ exports.login = (credentials, callback) ->
 
 ###*
 # @summary Login to Resin.io with a token
+# @name loginWithToken
 # @public
 # @function
+# @memberof resin.auth
 #
 # @description Login to resin with a session token instead of with credentials.
 #
@@ -117,8 +121,10 @@ exports.loginWithToken = (authToken, callback) ->
 
 ###*
 # @summary Check if you're logged in
+# @name isLoggedIn
 # @public
 # @function
+# @memberof resin.auth
 #
 # @returns {Promise<Boolean>} is logged in
 #
@@ -134,8 +140,10 @@ exports.isLoggedIn = (callback) ->
 
 ###*
 # @summary Get current logged in user's token
+# @name getToken
 # @public
 # @function
+# @memberof resin.auth
 #
 # @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
@@ -153,8 +161,10 @@ exports.getToken = (callback) ->
 
 ###*
 # @summary Get current logged in user's id
+# @name getUserId
 # @public
 # @function
+# @memberof resin.auth
 #
 # @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
@@ -173,8 +183,10 @@ exports.getUserId = (callback) ->
 
 ###*
 # @summary Logout from Resin.io
+# @name logout
 # @public
 # @function
+# @memberof resin.auth
 #
 # @returns {Promise}
 #
@@ -186,8 +198,10 @@ exports.logout = (callback) ->
 
 ###*
 # @summary Register to Resin.io
+# @name register
 # @public
 # @function
+# @memberof resin.auth
 #
 # @param {Object} [credentials={}] - in the form of username, password and email
 # @param {String} credentials.email - the email

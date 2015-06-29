@@ -22,16 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-###*
-# @module resin.models.config
-###
-
 request = require('resin-request')
 
 ###*
 # @summary Get all configuration
+# @name getAll
 # @public
 # @function
+# @memberof resin.models.config
 #
 # @returns {Promise<Object>} configuration
 #
@@ -48,8 +46,10 @@ exports.getAll = (callback) ->
 
 ###*
 # @summary Get PubNub keys
+# @name getPubNubKeys
 # @public
 # @function
+# @memberof resin.models.config
 #
 # @returns {Promise<Object>} pubnub keys
 #
@@ -66,8 +66,10 @@ exports.getPubNubKeys = (callback) ->
 
 ###*
 # @summary Get device types
+# @name getDeviceTypes
 # @public
 # @function
+# @memberof resin.models.config
 #
 # @returns {Promise<Object[]>} device types
 #

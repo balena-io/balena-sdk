@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.models.environment-variables
- */
-
 (function() {
   var _, deviceModel, errors, pine;
 
@@ -42,8 +37,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get all environment variables by application
+   * @name getAll
    * @public
    * @function
+   * @memberof resin.models.environment-variables
    *
    * @param {(String|Number)} applicationId - application id
    * @returns {Promise<Object[]>} environment variables
@@ -68,8 +65,10 @@ THE SOFTWARE.
 
   /**
    * @summary Create an environment variable for an application
+   * @name create
    * @public
    * @function
+   * @memberof resin.models.environment-variables
    *
    * @param {(String|Number)} applicationId - application id
    * @param {String} name - environment variable name
@@ -95,8 +94,10 @@ THE SOFTWARE.
 
   /**
    * @summary Update an environment variable value from an application
+   * @name update
    * @public
    * @function
+   * @memberof resin.models.environment-variables
    *
    * @param {(String|Number)} applicationId - application id
    * @param {String} value - environment variable value
@@ -120,8 +121,10 @@ THE SOFTWARE.
 
   /**
    * @summary Remove environment variable
+   * @name remove
    * @public
    * @function
+   * @memberof resin.models.environment-variables
    *
    * @param {(String|Number)} id - environment variable id
    * @returns {Promise}
@@ -140,8 +143,10 @@ THE SOFTWARE.
 
   /**
    * @summary Check is a variable is system specific
+   * @name isSystemVariable
    * @public
    * @function
+   * @memberof resin.models.environment-variables
    *
    * @param {EnvironmentVariable} variable - environment variable
    * @returns {Boolean} Whether a variable is system specific or not
@@ -159,13 +164,21 @@ THE SOFTWARE.
     return /^RESIN_/.test(variable.name);
   };
 
+
+  /**
+   * @namespace resin.models.environment-variables.device
+   * @memberof resin.models.environment-variables
+   */
+
   exports.device = {};
 
 
   /**
    * @summary Get all device environment variables
+   * @name getAll
    * @public
    * @function
+   * @memberof resin.models.environment-variables.device
    *
    * @param {String} deviceName - device name
    * @returns {Promise<Object[]>} device environment variables
@@ -193,8 +206,10 @@ THE SOFTWARE.
 
   /**
    * @summary Create a device environment variable
+   * @name create
    * @public
    * @function
+   * @memberof resin.models.environment-variables.device
    *
    * @param {String} deviceName - device name
    * @param {String} name - environment variable name
@@ -222,8 +237,10 @@ THE SOFTWARE.
 
   /**
    * @summary Update a device environment variable
+   * @name update
    * @public
    * @function
+   * @memberof resin.models.environment-variables.device
    *
    * @param {(String|Number)} id - environment variable id
    * @param {String} value - environment variable value
@@ -247,8 +264,10 @@ THE SOFTWARE.
 
   /**
    * @summary Remove a device environment variable
+   * @name remove
    * @public
    * @function
+   * @memberof resin.models.environment-variables.device
    *
    * @param {(String|Number)} id - environment variable id
    * @returns {Promise}

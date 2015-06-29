@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.models.config
- */
-
 (function() {
   var request;
 
@@ -36,8 +31,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get all configuration
+   * @name getAll
    * @public
    * @function
+   * @memberof resin.models.config
    *
    * @returns {Promise<Object>} configuration
    *
@@ -56,8 +53,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get PubNub keys
+   * @name getPubNubKeys
    * @public
    * @function
+   * @memberof resin.models.config
    *
    * @returns {Promise<Object>} pubnub keys
    *
@@ -78,8 +77,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get device types
+   * @name getDeviceTypes
    * @public
    * @function
+   * @memberof resin.models.config
    *
    * @returns {Promise<Object[]>} device types
    *

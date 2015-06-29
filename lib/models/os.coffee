@@ -22,10 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-###*
-# @module resin.models.os
-###
-
 url = require('url')
 fs = require('fs')
 request = require('resin-request')
@@ -34,8 +30,10 @@ OSParams = require('./os-params')
 
 ###*
 # @summary Download an OS image
+# @name download
 # @public
 # @function
+# @memberof resin.models.os
 #
 # @param {Object} parameters - os parameters
 # @returns {ReadableStream} download stream

@@ -23,47 +23,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @namespace resin.models
- */
-
 (function() {
   module.exports = {
 
     /**
+    	 * @namespace application
     	 * @memberof resin.models
-    	 * @see {@link module:resin.models.application}
      */
     application: require('./application'),
 
     /**
+    	 * @namespace device
     	 * @memberof resin.models
-    	 * @see {@link module:resin.models.device}
      */
     device: require('./device'),
 
     /**
+    	 * @namespace key
     	 * @memberof resin.models
-    	 * @see {@link module:resin.models.key}
      */
     key: require('./key'),
 
     /**
+    	 * @namespace environment-variables
     	 * @memberof resin.models
-    	 * @see {@link module:resin.models.environment-variables}
      */
     environmentVariables: require('./environment-variables'),
 
     /**
+    	 * @namespace os
     	 * @memberof resin.models
-    	 * @see {@link module:resin.models.os}
      */
     os: require('./os'),
 
     /**
+    	 * @namespace config
     	 * @memberof resin.models
-    	 * @see {@link module:resin.models.config}
      */
     config: require('./config')
   };

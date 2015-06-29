@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.logs
- */
-
 (function() {
   var Promise, configModel, deviceModel, logs;
 
@@ -42,8 +37,10 @@ THE SOFTWARE.
 
   /**
    * @summary Subscribe to device logs
+   * @name subscribe
    * @function
    * @public
+   * @memberof resin.logs
    *
    * @description
    * The `logs` object yielded by this function emits the following events:
@@ -75,8 +72,10 @@ THE SOFTWARE.
 
   /**
    * @summary Get device logs history
+   * @name history
    * @function
    * @public
+   * @memberof resin.logs
    *
    * @param {String} deviceName - device name
    * @returns {Promise<String[]>} history lines

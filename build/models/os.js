@@ -23,11 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-
-/**
- * @module resin.models.os
- */
-
 (function() {
   var OSParams, errors, fs, request, url;
 
@@ -44,8 +39,10 @@ THE SOFTWARE.
 
   /**
    * @summary Download an OS image
+   * @name download
    * @public
    * @function
+   * @memberof resin.models.os
    *
    * @param {Object} parameters - os parameters
    * @returns {ReadableStream} download stream
