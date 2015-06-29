@@ -58,7 +58,7 @@ exports.download = (parameters, callback) ->
 	query = url.format(query: parameters)
 	downloadUrl = url.resolve('/download', query)
 
-	return request.stream
+	request.stream
 		method: 'GET'
 		url: downloadUrl
 	.nodeify(callback)
