@@ -139,6 +139,7 @@ exports.getByName = (name, callback) ->
 			throw new errors.ResinDeviceNotFound(name)
 	.map (device) ->
 		device.application_name = device.application[0].app_name
+		return device
 	.nodeify(callback)
 
 ###*
@@ -247,13 +248,18 @@ exports.identify = (uuid, callback) ->
 # resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName')
 ###
 exports.rename = (uuid, newName, callback) ->
-	return pine.patch
-		resource: 'device'
-		body:
-			name: newName
-		options:
-			filter:
-				uuid: uuid
+	exports.has(uuid).then (hasDevice) ->
+
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(uuid)
+
+		return pine.patch
+			resource: 'device'
+			body:
+				name: newName
+			options:
+				filter:
+					uuid: uuid
 	.nodeify(callback)
 
 ###*

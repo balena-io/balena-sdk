@@ -165,7 +165,8 @@ THE SOFTWARE.
         throw new errors.ResinDeviceNotFound(name);
       }
     }).map(function(device) {
-      return device.application_name = device.application[0].app_name;
+      device.application_name = device.application[0].app_name;
+      return device;
     }).nodeify(callback);
   };
 
@@ -293,16 +294,21 @@ THE SOFTWARE.
    */
 
   exports.rename = function(uuid, newName, callback) {
-    return pine.patch({
-      resource: 'device',
-      body: {
-        name: newName
-      },
-      options: {
-        filter: {
-          uuid: uuid
-        }
+    return exports.has(uuid).then(function(hasDevice) {
+      if (!hasDevice) {
+        throw new errors.ResinDeviceNotFound(uuid);
       }
+      return pine.patch({
+        resource: 'device',
+        body: {
+          name: newName
+        },
+        options: {
+          filter: {
+            uuid: uuid
+          }
+        }
+      });
     }).nodeify(callback);
   };
 

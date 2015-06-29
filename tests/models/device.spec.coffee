@@ -1,8 +1,10 @@
 m = require('mochainon')
 _ = require('lodash')
 Promise = require('bluebird')
+nock = require('nock')
 errors = require('resin-errors')
 pine = require('resin-pine')
+settings = require('../../lib/settings')
 device = require('../../lib/models/device')
 application = require('../../lib/models/application')
 config = require('../../lib/models/config')
@@ -20,11 +22,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return an empty array', (done) ->
-				device.getAll (error, devices) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(devices).to.deep.equal([])
-					done()
+			it 'should eventually become an empty array', ->
+				promise = device.getAll()
+				m.chai.expect(promise).to.eventually.become([])
 
 		describe 'given devices', ->
 
@@ -54,11 +54,28 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return the devices', (done) ->
-				device.getAll (error, devices) =>
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(devices).to.deep.equal(@devices)
-					done()
+			it 'should eventually become the devices with an application_name property', ->
+				promise = device.getAll()
+				m.chai.expect(promise).to.eventually.become [
+					{
+						is_online: 0
+						id: 1
+						name: 'Device1'
+						application_name: 'MyApp'
+						application: [
+							{ app_name: 'MyApp' }
+						]
+					}
+					{
+						is_online: 0
+						id: 1
+						name: 'Device1'
+						application_name: 'MyApp'
+						application: [
+							{ app_name: 'MyApp' }
+						]
+					}
+				]
 
 	describe '.getAllByApplication()', ->
 
@@ -71,11 +88,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return an error', (done) ->
-				device.getAllByApplication 'MyApp', (error, devices) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(devices).to.deep.equal([])
-					done()
+			it 'should eventually become an empty array', ->
+				promise = device.getAllByApplication('MyApp')
+				m.chai.expect(promise).to.eventually.become([])
 
 		describe 'given a device', ->
 
@@ -93,16 +108,20 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return the correct number of devices', (done) ->
-				device.getAllByApplication 'MyApp', (error, devices) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(devices).to.have.length(1)
-					done()
+			it 'should eventually return the correct number of devices', ->
+				promise = device.getAllByApplication('MyApp')
+				m.chai.expect(promise).to.eventually.have.length(1)
 
-			it 'should add application_name', (done) ->
-				device.getAllByApplication 'MyApp', (error, devices) =>
-					m.chai.expect(devices[0].application_name).to.equal(@device.application[0].app_name)
-					done()
+			it 'should add application_name', ->
+				promise = device.getAllByApplication('MyApp')
+				m.chai.expect(promise).to.eventually.become [
+					id: 1
+					name: 'Device1'
+					application_name: 'App1'
+					application: [
+						app_name: 'App1'
+					]
+				]
 
 	describe '.get()', ->
 
@@ -115,11 +134,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return an error', (done) ->
-				device.get '7cf02', (error, device) ->
-					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-					m.chai.expect(device).to.not.exist
-					done()
+			it 'should be rejected', ->
+				promise = device.get('7cf02')
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
 
 		describe 'given a device', ->
 
@@ -138,16 +155,147 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return the device', (done) ->
-				device.get '1234', (error, device) =>
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(device).to.deep.equal(@device)
-					done()
+			it 'should eventually return the device', ->
+				promise = device.get('1234')
+				m.chai.expect(promise).to.eventually.become
+					id: 1
+					name: 'Device1'
+					uuid: '1234'
+					application_name: 'App1'
+					application: [
+						app_name: 'App1'
+					]
 
-			it 'should add application_name', (done) ->
-				device.get '1234', (error, device) =>
-					m.chai.expect(device.application_name).to.equal(@device.application[0].app_name)
-					done()
+	describe '.getByName()', ->
+
+		describe 'given no devices', ->
+
+			beforeEach ->
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should be rejected', ->
+				promise = device.getByName('MyDevice')
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
+		describe 'given a device', ->
+
+			beforeEach ->
+				@device =
+					id: 1
+					name: 'Device1'
+					uuid: '1234'
+					application: [
+						app_name: 'App1'
+					]
+
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([ @device ]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should eventually return the device', ->
+				promise = device.getByName('Device1')
+				m.chai.expect(promise).to.eventually.become [
+					id: 1
+					name: 'Device1'
+					uuid: '1234'
+					application_name: 'App1'
+					application: [
+						app_name: 'App1'
+					]
+				]
+
+		describe 'given multiple devices with the same name', ->
+
+			beforeEach ->
+				@devices = [
+					{
+						id: 1
+						name: 'Device1'
+						uuid: '1234'
+						application: [
+							app_name: 'App1'
+						]
+					}
+					{
+						id: 2
+						name: 'Device1'
+						uuid: '5678'
+						application: [
+							app_name: 'App1'
+						]
+					}
+				]
+
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve(@devices))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should eventually return the devices', ->
+				promise = device.getByName('Device1')
+				m.chai.expect(promise).to.eventually.become [
+					{
+						id: 1
+						name: 'Device1'
+						uuid: '1234'
+						application_name: 'App1'
+						application: [
+							app_name: 'App1'
+						]
+					}
+					{
+						id: 2
+						name: 'Device1'
+						uuid: '5678'
+						application_name: 'App1'
+						application: [
+							app_name: 'App1'
+						]
+					}
+				]
+
+	describe '.getName()', ->
+
+		describe 'given no devices', ->
+
+			beforeEach ->
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should be rejected', ->
+				promise = device.getName('1234')
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
+		describe 'given a device', ->
+
+			beforeEach ->
+				@device =
+					id: 1
+					name: 'Device1'
+					uuid: '1234'
+					application: [
+						app_name: 'App1'
+					]
+
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([ @device ]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should eventually return the device name', ->
+				promise = device.getName('1234')
+				m.chai.expect(promise).to.eventually.equal('Device1')
 
 	describe '.has()', ->
 
@@ -160,13 +308,11 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return false', (done) ->
-				device.has '1234', (error, hasDevice) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(hasDevice).to.be.false
-					done()
+			it 'should eventually be false', ->
+				promise = device.has('1234')
+				m.chai.expect(promise).to.eventually.be.false
 
-		describe 'given a device', ->
+		describe 'given the device', ->
 
 			beforeEach ->
 				@device =
@@ -183,11 +329,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@pineGetStub.restore()
 
-			it 'should return true', (done) ->
-				device.has '1234', (error, hasDevice) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(hasDevice).to.be.true
-					done()
+			it 'should eventually be true', ->
+				promise = device.has('1234')
+				m.chai.expect(promise).to.eventually.be.true
 
 	describe '.isOnline()', ->
 
@@ -200,11 +344,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@deviceGetStub.restore()
 
-			it 'should return an error', (done) ->
-				device.isOnline '1234', (error, isOnline) ->
-					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-					m.chai.expect(isOnline).to.not.exist
-					done()
+			it 'should be rejected', ->
+				promise = device.isOnline('1234')
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
 
 		describe 'given the device is online', ->
 
@@ -215,11 +357,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@deviceGetStub.restore()
 
-			it 'should return true', (done) ->
-				device.isOnline '1234', (error, isOnline) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(isOnline).to.be.true
-					done()
+			it 'should eventually be true', ->
+				promise = device.isOnline('1234')
+				m.chai.expect(promise).to.eventually.be.true
 
 		describe 'given the device is not online', ->
 
@@ -230,15 +370,13 @@ describe 'Device Model:', ->
 			afterEach ->
 				@deviceGetStub.restore()
 
-			it 'should return false', (done) ->
-				device.isOnline '1234', (error, isOnline) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(isOnline).to.be.false
-					done()
+			it 'should eventually be false', ->
+				promise = device.isOnline('1234')
+				m.chai.expect(promise).to.eventually.be.false
 
-	describe '.note()', ->
+	describe '.identify()', ->
 
-		describe 'given the device was not found', ->
+		describe 'given the device does not exist', ->
 
 			beforeEach ->
 				@deviceHasStub = m.sinon.stub(device, 'has')
@@ -247,10 +385,46 @@ describe 'Device Model:', ->
 			afterEach ->
 				@deviceHasStub.restore()
 
-			it 'should return an error', (done) ->
-				device.note '1234', 'Hello World', (error) ->
-					m.chai.expect(error).to.be.an.instanceof(errors.ResinDeviceNotFound)
-					done()
+			it 'should be rejected', ->
+				promise = device.identify('1234')
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
+		describe 'given the device exists', ->
+
+			beforeEach ->
+				@deviceHasStub = m.sinon.stub(device, 'has')
+				@deviceHasStub.returns(Promise.resolve(true))
+
+			afterEach ->
+				@deviceHasStub.restore()
+
+			describe 'given the device is offline', ->
+
+				beforeEach (done) ->
+					settings.get('remoteUrl').then (remoteUrl) ->
+						nock(remoteUrl).post('/blink').reply(404, 'No online device(s) found')
+						done()
+
+				afterEach ->
+					nock.cleanAll()
+
+				it 'should be rejected with the correct error message', ->
+					promise = device.identify('1234')
+					m.chai.expect(promise).to.be.rejectedWith('No online device(s) found')
+
+			describe 'given the device is online', ->
+
+				beforeEach (done) ->
+					settings.get('remoteUrl').then (remoteUrl) ->
+						nock(remoteUrl).post('/blink').reply(200)
+						done()
+
+				afterEach ->
+					nock.cleanAll()
+
+				it 'should eventually be undefined', ->
+					promise = device.identify('1234')
+					m.chai.expect(promise).to.eventually.be.undefined
 
 	describe '.getDisplayName()', ->
 
@@ -268,21 +442,15 @@ describe 'Device Model:', ->
 
 			describe 'given the device slug is valid', ->
 
-				it 'should return the display name', (done) ->
-
-					device.getDisplayName 'raspberry-pi', (error, displayName) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(displayName).to.equal('Raspberry Pi')
-						done()
+				it 'should eventually equal the display name', ->
+					promise = device.getDisplayName('raspberry-pi')
+					m.chai.expect(promise).to.eventually.equal('Raspberry Pi')
 
 			describe 'given the device slug is not valid', ->
 
-				it 'should return undefined', (done) ->
-
-					device.getDisplayName 'foo-bar', (error, displayName) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(displayName).to.be.undefined
-						done()
+				it 'should eventually be undefined', ->
+					promise = device.getDisplayName('foo-bar')
+					m.chai.expect(promise).to.eventually.be.undefined
 
 	describe '.getDeviceSlug()', ->
 
@@ -300,21 +468,15 @@ describe 'Device Model:', ->
 
 			describe 'given the device name is valid', ->
 
-				it 'should return the device slug', (done) ->
-
-					device.getDeviceSlug 'Raspberry Pi', (error, slug) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(slug).to.equal('raspberry-pi')
-						done()
+				it 'should eventually equal the device slug', ->
+					promise = device.getDeviceSlug('Raspberry Pi')
+					m.chai.expect(promise).to.eventually.equal('raspberry-pi')
 
 			describe 'given the device name is not valid', ->
 
-				it 'should return undefined', (done) ->
-
-					device.getDeviceSlug 'Foo Bar', (error, slug) ->
-						m.chai.expect(error).to.not.exist
-						m.chai.expect(slug).to.be.undefined
-						done()
+				it 'should eventually be undefined', ->
+					promise = device.getDeviceSlug('Foo Bar')
+					m.chai.expect(promise).to.eventually.be.undefined
 
 	describe '.getSupportedDeviceTypes()', ->
 
@@ -330,11 +492,9 @@ describe 'Device Model:', ->
 			afterEach ->
 				@configGetDeviceTypesStub.restore()
 
-			it 'should return an array of names', (done) ->
-				device.getSupportedDeviceTypes (error, deviceTypes) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(deviceTypes).to.deep.equal([ 'Raspberry Pi', 'BeagleBone Black' ])
-					done()
+			it 'should eventually become an array of names', ->
+				promise = device.getSupportedDeviceTypes()
+				m.chai.expect(promise).to.eventually.become([ 'Raspberry Pi', 'BeagleBone Black' ])
 
 	describe '.getManifestBySlug()', ->
 
@@ -350,20 +510,15 @@ describe 'Device Model:', ->
 			afterEach ->
 				@configGetDeviceTypesStub.restore()
 
-			it 'should return an error if no slug', (done) ->
-				device.getManifestBySlug 'foo-bar', (error, manifest) ->
-					m.chai.expect(error).to.be.an.instanceof(Error)
-					m.chai.expect(error.message).to.equal('Unsupported device: foo-bar')
-					m.chai.expect(manifest).to.not.exist
-					done()
+			it 'should be rejected if no slug', ->
+				promise = device.getManifestBySlug('foo-bar')
+				m.chai.expect(promise).to.be.rejectedWith('Unsupported device: foo-bar')
 
-			it 'should return the manifest if slug is valid', (done) ->
-				device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
-					m.chai.expect(error).to.not.exist
-					m.chai.expect(manifest).to.deep.equal
-						name: 'Raspberry Pi'
-						slug: 'raspberry-pi'
-					done()
+			it 'should eventually become the manifest if slug is valid', ->
+				promise = device.getManifestBySlug('raspberry-pi')
+				m.chai.expect(promise).to.eventually.become
+					name: 'Raspberry Pi'
+					slug: 'raspberry-pi'
 
 	describe '.generateUUID()', ->
 
