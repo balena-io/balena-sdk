@@ -33,6 +33,7 @@
     "gulp-util": "~3.0.4",
     "mocha": "~2.2.5",
     "mochainon": "^1.0.0",
+    "nock": "^2.6.0",
     "run-sequence": "^1.1.0"
   },
   "dependencies": {
