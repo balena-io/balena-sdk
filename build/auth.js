@@ -223,17 +223,15 @@ THE SOFTWARE.
    * @function
    *
    * @param {Object} [credentials={}] - in the form of username, password and email
-   * @param {String} credentials.username - the username
-   * @param {String} credentials.password - the password
    * @param {String} credentials.email - the email
+   * @param {String} credentials.password - the password
    *
    * @returns {Promise<String>} session token
    *
    * @example
    * resin.auth.register
-   * 	username: 'johndoe'
-   * 	password: 'secret'
    * 	email: 'johndoe@gmail.com'
+   * 	password: 'secret'
    * .then (token) ->
    * 	console.log(token)
    */

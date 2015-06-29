@@ -68,7 +68,11 @@ THE SOFTWARE.
    */
 
   exports.getPubNubKeys = function(callback) {
-    return exports.getAll().get('pubnub').nodeify(callback);
+    return exports.getAll().get('pubnub').tap(function(keys) {
+      if (keys == null) {
+        throw new Error('No pubnub keys');
+      }
+    }).nodeify(callback);
   };
 
 
@@ -85,7 +89,11 @@ THE SOFTWARE.
    */
 
   exports.getDeviceTypes = function(callback) {
-    return exports.getAll().get('deviceTypes').nodeify(callback);
+    return exports.getAll().get('deviceTypes').tap(function(deviceTypes) {
+      if (deviceTypes == null) {
+        throw new Error('No device types');
+      }
+    }).nodeify(callback);
   };
 
 }).call(this);

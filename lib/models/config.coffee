@@ -59,7 +59,10 @@ exports.getAll = (callback) ->
 # 	console.log(pubnubKeys.publish_key)
 ###
 exports.getPubNubKeys = (callback) ->
-	exports.getAll().get('pubnub').nodeify(callback)
+	exports.getAll().get('pubnub').tap (keys) ->
+		if not keys?
+			throw new Error('No pubnub keys')
+	.nodeify(callback)
 
 ###*
 # @summary Get device types
@@ -73,4 +76,7 @@ exports.getPubNubKeys = (callback) ->
 # 	console.log(deviceTypes)
 ###
 exports.getDeviceTypes = (callback) ->
-	exports.getAll().get('deviceTypes').nodeify(callback)
+	exports.getAll().get('deviceTypes').tap (deviceTypes) ->
+		if not deviceTypes?
+			throw new Error('No device types')
+	.nodeify(callback)
