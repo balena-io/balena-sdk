@@ -6,7 +6,12 @@ Resin SDK
 [![Build Status](https://travis-ci.org/resin-io/resin-sdk.svg?branch=master)](https://travis-ci.org/resin-io/resin-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/qbsivehgnq0vyrrb?svg=true)](https://ci.appveyor.com/project/jviotti/resin-sdk)
 
-The SDK to make [Resin.io](https://resin.io/) powered JavaScript applications.
+The official JavaScript [Resin.io](https://resin.io/) SDK.
+
+Role
+----
+
+The intention of this module is to provide developers a nice API to integrate their JavaScript applications with Resin.io.
 
 Installation
 ------------
