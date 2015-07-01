@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - 2015-07-01
+
+## Changed
+
+- Upgrade `resin-settings-client` to v1.4.0.
+
 ## [2.0.0] - 2015-06-29
 
 ### Added
@@ -27,4 +33,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.1.0]: https://github.com/resin-io/resin-sdk/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/resin-io/resin-sdk/compare/v1.8.0...v2.0.0
