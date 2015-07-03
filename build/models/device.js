@@ -210,7 +210,9 @@ THE SOFTWARE.
    */
 
   exports.has = function(uuid, callback) {
-    return exports.get(uuid)["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
+    return exports.get(uuid).then(function() {
+      return true;
+    })["catch"](errors.ResinDeviceNotFound, function() {
       return false;
     }).nodeify(callback);
   };

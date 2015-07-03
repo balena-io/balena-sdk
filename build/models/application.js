@@ -122,7 +122,9 @@ THE SOFTWARE.
    */
 
   exports.has = function(name, callback) {
-    return exports.get(name)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
+    return exports.get(name).then(function() {
+      return true;
+    })["catch"](errors.ResinApplicationNotFound, function() {
       return false;
     }).nodeify(callback);
   };
