@@ -29,6 +29,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.getName(uuid)](#resin.models.device.getName) ⇒ <code>Promise.&lt;String&gt;</code>
       * [.has(uuid)](#resin.models.device.has) ⇒ <code>Promise.&lt;Boolean&gt;</code>
       * [.isOnline(uuid)](#resin.models.device.isOnline) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+      * [.getLocalIPAddresses(uuid)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
       * [.remove(uuid)](#resin.models.device.remove) ⇒ <code>Promise</code>
       * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
       * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
@@ -102,6 +103,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.getName(uuid)](#resin.models.device.getName) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.has(uuid)](#resin.models.device.has) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.isOnline(uuid)](#resin.models.device.isOnline) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+    * [.getLocalIPAddresses(uuid)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
     * [.remove(uuid)](#resin.models.device.remove) ⇒ <code>Promise</code>
     * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
@@ -316,6 +318,7 @@ resin.models.application.getConfiguration 'MyApp',
   * [.getName(uuid)](#resin.models.device.getName) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.has(uuid)](#resin.models.device.has) ⇒ <code>Promise.&lt;Boolean&gt;</code>
   * [.isOnline(uuid)](#resin.models.device.isOnline) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+  * [.getLocalIPAddresses(uuid)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
   * [.remove(uuid)](#resin.models.device.remove) ⇒ <code>Promise</code>
   * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
   * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
@@ -433,6 +436,27 @@ resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f
 ```js
 resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
 	console.log("Is device online? #{isOnline}")
+```
+<a name="resin.models.device.getLocalIPAddresses"></a>
+##### device.getLocalIPAddresses(uuid) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get the local IP addresses of a device  
+**Returns**: <code>Promise.&lt;Array.&lt;String&gt;&gt;</code> - local ip addresses  
+**Throws**:
+
+- Will throw if the device is offline.
+
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (localIPAddresses) ->
+	for localIP in localIPAddresses
+		console.log(localIP)
 ```
 <a name="resin.models.device.remove"></a>
 ##### device.remove(uuid) ⇒ <code>Promise</code>

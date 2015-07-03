@@ -237,6 +237,36 @@ THE SOFTWARE.
 
 
   /**
+   * @summary Get the local IP addresses of a device
+   * @name getLocalIPAddresses
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise<Array<String>>} local ip addresses
+   *
+   * @throws Will throw if the device is offline.
+   *
+   * @example
+   * resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (localIPAddresses) ->
+   * 	for localIP in localIPAddresses
+   * 		console.log(localIP)
+   */
+
+  exports.getLocalIPAddresses = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      var ips;
+      if (!device.is_online) {
+        throw new Error("The device is offline: " + uuid);
+      }
+      ips = device.ip_address.split(' ');
+      return _.without(ips, device.vpn_address);
+    }).nodeify(callback);
+  };
+
+
+  /**
    * @summary Remove device
    * @name remove
    * @public
