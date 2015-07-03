@@ -27,6 +27,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.get(uuid)](#resin.models.device.get) ⇒ <code>Promise.&lt;Object&gt;</code>
       * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
       * [.getName(uuid)](#resin.models.device.getName) ⇒ <code>Promise.&lt;String&gt;</code>
+      * [.getApplicationName(uuid)](#resin.models.device.getApplicationName) ⇒ <code>Promise.&lt;String&gt;</code>
       * [.has(uuid)](#resin.models.device.has) ⇒ <code>Promise.&lt;Boolean&gt;</code>
       * [.isOnline(uuid)](#resin.models.device.isOnline) ⇒ <code>Promise.&lt;Boolean&gt;</code>
       * [.getLocalIPAddresses(uuid)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
@@ -101,6 +102,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.get(uuid)](#resin.models.device.get) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
     * [.getName(uuid)](#resin.models.device.getName) ⇒ <code>Promise.&lt;String&gt;</code>
+    * [.getApplicationName(uuid)](#resin.models.device.getApplicationName) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.has(uuid)](#resin.models.device.has) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.isOnline(uuid)](#resin.models.device.isOnline) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.getLocalIPAddresses(uuid)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
@@ -316,6 +318,7 @@ resin.models.application.getConfiguration 'MyApp',
   * [.get(uuid)](#resin.models.device.get) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
   * [.getName(uuid)](#resin.models.device.getName) ⇒ <code>Promise.&lt;String&gt;</code>
+  * [.getApplicationName(uuid)](#resin.models.device.getApplicationName) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.has(uuid)](#resin.models.device.has) ⇒ <code>Promise.&lt;Boolean&gt;</code>
   * [.isOnline(uuid)](#resin.models.device.isOnline) ⇒ <code>Promise.&lt;Boolean&gt;</code>
   * [.getLocalIPAddresses(uuid)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
@@ -404,6 +407,22 @@ resin.models.device.getByName('MyDevice').then (devices) ->
 ```js
 resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
 	console.log(deviceName)
+```
+<a name="resin.models.device.getApplicationName"></a>
+##### device.getApplicationName(uuid) ⇒ <code>Promise.&lt;String&gt;</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get application name  
+**Returns**: <code>Promise.&lt;String&gt;</code> - application name  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
+	console.log(applicationName)
 ```
 <a name="resin.models.device.has"></a>
 ##### device.has(uuid) ⇒ <code>Promise.&lt;Boolean&gt;</code>

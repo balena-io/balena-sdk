@@ -195,6 +195,26 @@ THE SOFTWARE.
 
 
   /**
+   * @summary Get application name
+   * @name getApplicationName
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise<String>} application name
+   *
+   * @example
+   * resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
+   * 	console.log(applicationName)
+   */
+
+  exports.getApplicationName = function(uuid, callback) {
+    return exports.get(uuid).get('application_name').nodeify(callback);
+  };
+
+
+  /**
    * @summary Check if a device exists
    * @name has
    * @public
