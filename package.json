@@ -39,7 +39,7 @@
     "run-sequence": "^1.1.0"
   },
   "dependencies": {
-    "bluebird": "^2.9.27",
+    "bluebird": "2.9.31",
     "lodash": "~3.9.1",
     "resin-device-logs": "^1.0.0",
     "resin-errors": "^1.0.2",
