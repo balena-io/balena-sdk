@@ -297,6 +297,42 @@ describe 'Device Model:', ->
 				promise = device.getName('1234')
 				m.chai.expect(promise).to.eventually.equal('Device1')
 
+	describe '.getApplicationName()', ->
+
+		describe 'given no devices', ->
+
+			beforeEach ->
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should be rejected', ->
+				promise = device.getApplicationName('7cf02')
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
+		describe 'given a device', ->
+
+			beforeEach ->
+				@device =
+					id: 1
+					name: 'Device1'
+					uuid: '1234'
+					application: [
+						app_name: 'App1'
+					]
+
+				@pineGetStub = m.sinon.stub(pine, 'get')
+				@pineGetStub.returns(Promise.resolve([ @device ]))
+
+			afterEach ->
+				@pineGetStub.restore()
+
+			it 'should eventually return the application name', ->
+				promise = device.getApplicationName('1234')
+				m.chai.expect(promise).to.eventually.equal('App1')
+
 	describe '.has()', ->
 
 		describe 'given no devices', ->
