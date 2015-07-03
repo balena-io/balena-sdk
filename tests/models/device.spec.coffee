@@ -374,6 +374,72 @@ describe 'Device Model:', ->
 				promise = device.isOnline('1234')
 				m.chai.expect(promise).to.eventually.be.false
 
+	describe '.getLocalIPAddresses()', ->
+
+		describe 'given the device is online', ->
+
+			beforeEach ->
+				@deviceGetStub = m.sinon.stub(device, 'get')
+				@deviceGetStub.returns Promise.resolve
+					is_online: true
+					ip_address: '10.2.0.78 192.168.2.7'
+					vpn_address: '10.2.0.78'
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should eventually be the an array with the local ip address', ->
+				promise = device.getLocalIPAddresses('1234')
+				m.chai.expect(promise).to.eventually.become([ '192.168.2.7' ])
+
+		describe 'given the device is not online', ->
+
+			beforeEach ->
+				@deviceGetStub = m.sinon.stub(device, 'get')
+				@deviceGetStub.returns Promise.resolve
+					is_online: false
+					ip_address: '10.2.0.78 192.168.2.7'
+					vpn_address: '10.2.0.78'
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should be rejected with an error message', ->
+				promise = device.getLocalIPAddresses('1234')
+				m.chai.expect(promise).to.be.rejectedWith('The device is offline: 1234')
+
+		describe 'given the device is online, but no local ip exist', ->
+
+			beforeEach ->
+				@deviceGetStub = m.sinon.stub(device, 'get')
+				@deviceGetStub.returns Promise.resolve
+					is_online: true
+					ip_address: '10.2.0.78'
+					vpn_address: '10.2.0.78'
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should eventually become an empty array', ->
+				promise = device.getLocalIPAddresses('1234')
+				m.chai.expect(promise).to.eventually.become([])
+
+		describe 'given the device is online and has multiple local ip addresses', ->
+
+			beforeEach ->
+				@deviceGetStub = m.sinon.stub(device, 'get')
+				@deviceGetStub.returns Promise.resolve
+					is_online: true
+					ip_address: '10.2.0.78 192.168.2.7 192.168.2.10'
+					vpn_address: '10.2.0.78'
+
+			afterEach ->
+				@deviceGetStub.restore()
+
+			it 'should eventually be the an array with the local ip addresses', ->
+				promise = device.getLocalIPAddresses('1234')
+				m.chai.expect(promise).to.eventually.become([ '192.168.2.7', '192.168.2.10' ])
+
 	describe '.identify()', ->
 
 		describe 'given the device does not exist', ->
