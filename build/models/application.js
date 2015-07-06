@@ -284,48 +284,4 @@ THE SOFTWARE.
     }).get('body').nodeify(callback);
   };
 
-
-  /**
-   * @summary Get an application device configuration
-   * @name getConfiguration
-   * @public
-   * @function
-   * @memberof resin.models.application
-   *
-   * @param {String} name - application name
-   * @param {Object} [options={}] - options
-   * @param {String} [options.wifiSsid] - wifi ssid
-   * @param {String} [options.wifiKey] - wifi key
-   *
-   * @returns {Promise<Object>} application configuration
-   *
-   * @example
-   * resin.models.application.getConfiguration 'MyApp',
-   * 	wifiSsid: 'foobar'
-   * 	wifiKey: 'hello'
-   * .then (configuration) ->
-   * 	console.log(configuration)
-   */
-
-  exports.getConfiguration = function(name, options, callback) {
-    if (options == null) {
-      options = {};
-    }
-    return Promise.all([exports.get(name), exports.getApiKey(name), auth.getUserId(), auth.whoami()]).spread(function(application, apiKey, userId, username) {
-      if (username == null) {
-        throw new errors.ResinNotLoggedIn();
-      }
-      return {
-        applicationId: String(application.id),
-        apiKey: apiKey,
-        deviceType: application.device_type,
-        userId: String(userId),
-        username: username,
-        wifiSsid: options.wifiSsid,
-        wifiKey: options.wifiKey,
-        files: network.getFiles(options)
-      };
-    }).nodeify(callback);
-  };
-
 }).call(this);

@@ -20,7 +20,6 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.remove(name)](#resin.models.application.remove) ⇒ <code>Promise</code>
       * [.restart(name)](#resin.models.application.restart) ⇒ <code>Promise</code>
       * [.getApiKey(name)](#resin.models.application.getApiKey) ⇒ <code>Promise.&lt;String&gt;</code>
-      * [.getConfiguration(name, [options])](#resin.models.application.getConfiguration) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.device](#resin.models.device) : <code>object</code>
       * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
       * [.getAllByApplication(name)](#resin.models.device.getAllByApplication) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -95,7 +94,6 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.remove(name)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(name)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.getApiKey(name)](#resin.models.application.getApiKey) ⇒ <code>Promise.&lt;String&gt;</code>
-    * [.getConfiguration(name, [options])](#resin.models.application.getConfiguration) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.device](#resin.models.device) : <code>object</code>
     * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
     * [.getAllByApplication(name)](#resin.models.device.getAllByApplication) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -153,7 +151,6 @@ If you feel something is missing, not clear or could be improved, please don't h
   * [.remove(name)](#resin.models.application.remove) ⇒ <code>Promise</code>
   * [.restart(name)](#resin.models.application.restart) ⇒ <code>Promise</code>
   * [.getApiKey(name)](#resin.models.application.getApiKey) ⇒ <code>Promise.&lt;String&gt;</code>
-  * [.getConfiguration(name, [options])](#resin.models.application.getConfiguration) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="resin.models.application.getAll"></a>
 ##### application.getAll() ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -285,28 +282,6 @@ resin.models.application.restart('MyApp')
 ```js
 resin.models.application.getApiKey('MyApp').then (apiKey) ->
 	console.log(apiKey)
-```
-<a name="resin.models.application.getConfiguration"></a>
-##### application.getConfiguration(name, [options]) ⇒ <code>Promise.&lt;Object&gt;</code>
-**Kind**: static method of <code>[application](#resin.models.application)</code>  
-**Summary**: Get an application device configuration  
-**Returns**: <code>Promise.&lt;Object&gt;</code> - application configuration  
-**Access:** public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| name | <code>String</code> |  | application name |
-| [options] | <code>Object</code> | <code>{}</code> | options |
-| [options.wifiSsid] | <code>String</code> |  | wifi ssid |
-| [options.wifiKey] | <code>String</code> |  | wifi key |
-
-**Example**  
-```js
-resin.models.application.getConfiguration 'MyApp',
-	wifiSsid: 'foobar'
-	wifiKey: 'hello'
-.then (configuration) ->
-	console.log(configuration)
 ```
 <a name="resin.models.device"></a>
 #### models.device : <code>object</code>
