@@ -195,7 +195,8 @@ exports.getApplicationName = (uuid, callback) ->
 # 	console.log(hasDevice)
 ###
 exports.has = (uuid, callback) ->
-	exports.get(uuid).return(true)
+	exports.get(uuid).then ->
+		return true
 	.catch errors.ResinDeviceNotFound, ->
 		return false
 	.nodeify(callback)

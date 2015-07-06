@@ -102,7 +102,8 @@ exports.get = (name, callback) ->
 # 	console.log(hasApp)
 ###
 exports.has = (name, callback) ->
-	exports.get(name).return(true)
+	exports.get(name).then ->
+		return true
 	.catch errors.ResinApplicationNotFound, ->
 		return false
 	.nodeify(callback)
