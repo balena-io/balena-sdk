@@ -210,6 +210,32 @@ THE SOFTWARE.
 
 
   /**
+   * @summary Get current logged in user's email
+   * @name getEmail
+   * @public
+   * @function
+   * @memberof resin.auth
+   *
+   * @description This will only work if you used {@link module:resin.auth.login} to log in.
+   *
+   * @returns {Promise<String>} user email
+   *
+   * @example
+   * resin.auth.getEmail().then (email) ->
+   * 	console.log(email)
+   */
+
+  exports.getEmail = function(callback) {
+    return token.getEmail().then(function(email) {
+      if (email == null) {
+        throw new errors.ResinNotLoggedIn();
+      }
+      return email;
+    }).nodeify(callback);
+  };
+
+
+  /**
    * @summary Logout from Resin.io
    * @name logout
    * @public

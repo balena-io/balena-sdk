@@ -70,6 +70,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise.&lt;Number&gt;</code>
+    * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
     * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.logs](#resin.logs) : <code>object</code>
@@ -933,6 +934,7 @@ resin.models.config.getDeviceTypes().then (deviceTypes) ->
   * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise.&lt;Boolean&gt;</code>
   * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise.&lt;Number&gt;</code>
+  * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
   * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise.&lt;String&gt;</code>
 
@@ -1049,6 +1051,19 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 ```js
 resin.auth.getUserId().then (userId) ->
 	console.log(userId)
+```
+<a name="resin.auth.getEmail"></a>
+#### auth.getEmail() ⇒ <code>Promise.&lt;String&gt;</code>
+This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
+
+**Kind**: static method of <code>[auth](#resin.auth)</code>  
+**Summary**: Get current logged in user&#x27;s email  
+**Returns**: <code>Promise.&lt;String&gt;</code> - user email  
+**Access:** public  
+**Example**  
+```js
+resin.auth.getEmail().then (email) ->
+	console.log(email)
 ```
 <a name="resin.auth.logout"></a>
 #### auth.logout() ⇒ <code>Promise</code>
