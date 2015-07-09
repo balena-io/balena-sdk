@@ -70,7 +70,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.loginWithToken(token)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
     * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise.&lt;String&gt;</code>
-    * [.getUserId(callback)](#resin.auth.getUserId) ⇒ <code>Promise.&lt;Number&gt;</code>
+    * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise.&lt;Number&gt;</code>
     * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
     * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.logs](#resin.logs) : <code>object</code>
@@ -957,7 +957,7 @@ resin.models.config.getDeviceTypes().then (deviceTypes) ->
   * [.loginWithToken(token)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
   * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise.&lt;Boolean&gt;</code>
   * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise.&lt;String&gt;</code>
-  * [.getUserId(callback)](#resin.auth.getUserId) ⇒ <code>Promise.&lt;Number&gt;</code>
+  * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise.&lt;Number&gt;</code>
   * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
   * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise.&lt;String&gt;</code>
 
@@ -1063,18 +1063,13 @@ resin.auth.getToken().then (token) ->
 	console.log(token)
 ```
 <a name="resin.auth.getUserId"></a>
-#### auth.getUserId(callback) ⇒ <code>Promise.&lt;Number&gt;</code>
+#### auth.getUserId() ⇒ <code>Promise.&lt;Number&gt;</code>
 This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
 
 **Kind**: static method of <code>[auth](#resin.auth)</code>  
 **Summary**: Get current logged in user&#x27;s id  
 **Returns**: <code>Promise.&lt;Number&gt;</code> - user id  
 **Access:** public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| callback | <code>module:resin.auth~getUserIdCallback</code> | callback |
-
 **Example**  
 ```js
 resin.auth.getUserId().then (userId) ->
