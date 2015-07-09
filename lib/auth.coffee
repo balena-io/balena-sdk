@@ -181,6 +181,27 @@ exports.getUserId = (callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Get current logged in user's email
+# @name getEmail
+# @public
+# @function
+# @memberof resin.auth
+#
+# @description This will only work if you used {@link module:resin.auth.login} to log in.
+#
+# @returns {Promise<String>} user email
+#
+# @example
+# resin.auth.getEmail().then (email) ->
+# 	console.log(email)
+###
+exports.getEmail = (callback) ->
+	token.getEmail().then (email) ->
+		throw new errors.ResinNotLoggedIn() if not email?
+		return email
+	.nodeify(callback)
+
+###*
 # @summary Logout from Resin.io
 # @name logout
 # @public

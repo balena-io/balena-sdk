@@ -218,6 +218,26 @@ describe 'Auth:', ->
 				promise = auth.getUserId()
 				m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
 
+	describe '.getEmail()', ->
+
+		describe 'given a logged in user', ->
+
+			beforeEach ->
+				auth.loginWithToken(janeDoeFixture.token)
+
+			it 'should eventually be the email', ->
+				promise = auth.getEmail()
+				m.chai.expect(promise).to.eventually.equal(janeDoeFixture.data.email)
+
+		describe 'given no logged in user', ->
+
+			beforeEach ->
+				auth.logout()
+
+			it 'should be rejected', ->
+				promise = auth.getEmail()
+				m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
+
 	describe '.logout()', ->
 
 		describe 'given a logged in user', ->
