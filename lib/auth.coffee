@@ -168,7 +168,6 @@ exports.getToken = (callback) ->
 #
 # @description This will only work if you used {@link module:resin.auth.login} to log in.
 #
-# @param {module:resin.auth~getUserIdCallback} callback - callback
 # @returns {Promise<Number>} user id
 #
 # @example
