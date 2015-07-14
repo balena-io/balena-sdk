@@ -43,6 +43,15 @@ token = require('resin-token')
 # 		console.log('I\'m not logged in!')
 # 	else
 # 		console.log("My username is: #{username}")
+#
+# @example
+# resin.auth.whoami (error, username) ->
+# 	throw error if error?
+#
+# 	if not username?
+# 		console.log('I\'m not logged in!')
+# 	else
+# 		console.log("My username is: #{username}")
 ###
 exports.whoami = (callback) ->
 	token.getUsername().nodeify(callback)
@@ -68,6 +77,11 @@ exports.whoami = (callback) ->
 #
 # @example
 # resin.auth.authenticate(credentials).then (token) ->
+# 	console.log("My token is: #{token}")
+#
+# @example
+# resin.auth.authenticate credentials, (error, token) ->
+# 	throw error if error?
 # 	console.log("My token is: #{token}")
 ###
 exports.authenticate = (credentials, callback) ->
@@ -95,6 +109,10 @@ exports.authenticate = (credentials, callback) ->
 #
 # @example
 # resin.auth.login(credentials)
+#
+# @example
+# resin.auth.login credentials, (error) ->
+# 	throw error if error?
 ###
 exports.login = (credentials, callback) ->
 	exports.authenticate(credentials)
@@ -115,6 +133,10 @@ exports.login = (credentials, callback) ->
 #
 # @example
 # resin.auth.loginWithToken(token)
+#
+# @example
+# resin.auth.loginWithToken token, (error) ->
+# 	throw error if error?
 ###
 exports.loginWithToken = (authToken, callback) ->
 	token.set(authToken).nodeify(callback)
@@ -130,6 +152,15 @@ exports.loginWithToken = (authToken, callback) ->
 #
 # @example
 # resin.auth.isLoggedIn().then (isLoggedIn) ->
+# 	if isLoggedIn
+# 		console.log('I\'m in!')
+# 	else
+# 		console.log('Too bad!')
+#
+# @example
+# resin.auth.isLoggedIn (error, isLoggedIn) ->
+# 	throw error if error?
+#
 # 	if isLoggedIn
 # 		console.log('I\'m in!')
 # 	else
@@ -152,6 +183,11 @@ exports.isLoggedIn = (callback) ->
 # @example
 # resin.auth.getToken().then (token) ->
 # 	console.log(token)
+#
+# @example
+# resin.auth.getToken (error, token) ->
+# 	throw error if error?
+# 	console.log(token)
 ###
 exports.getToken = (callback) ->
 	token.get().then (savedToken) ->
@@ -172,6 +208,11 @@ exports.getToken = (callback) ->
 #
 # @example
 # resin.auth.getUserId().then (userId) ->
+# 	console.log(userId)
+#
+# @example
+# resin.auth.getUserId (error, userId) ->
+# 	throw error if error?
 # 	console.log(userId)
 ###
 exports.getUserId = (callback) ->
@@ -212,6 +253,10 @@ exports.getEmail = (callback) ->
 #
 # @example
 # resin.auth.logout()
+#
+# @example
+# resin.auth.logout (error) ->
+# 	throw error if error?
 ###
 exports.logout = (callback) ->
 	token.remove().nodeify(callback)
@@ -234,6 +279,14 @@ exports.logout = (callback) ->
 # 	email: 'johndoe@gmail.com'
 # 	password: 'secret'
 # .then (token) ->
+# 	console.log(token)
+#
+# @example
+# resin.auth.register
+# 	email: 'johndoe@gmail.com'
+# 	password: 'secret'
+# , (error, token) ->
+# 	throw error if error?
 # 	console.log(token)
 ###
 exports.register = (credentials = {}, callback) ->

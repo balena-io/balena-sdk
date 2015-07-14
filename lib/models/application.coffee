@@ -43,6 +43,11 @@ auth = require('../auth')
 # @example
 # resin.models.application.getAll().then (applications) ->
 # 	console.log(applications)
+#
+# @example
+# resin.models.application.getAll (error, applications) ->
+# 	throw error if error?
+# 	console.log(applications)
 ###
 exports.getAll = (callback) ->
 	return pine.get
@@ -73,6 +78,11 @@ exports.getAll = (callback) ->
 # @example
 # resin.models.application.get('MyApp').then (application) ->
 # 	console.log(application)
+#
+# @example
+# resin.models.application.get 'MyApp', (error, application) ->
+# 	throw error if error?
+# 	console.log(application)
 ###
 exports.get = (name, callback) ->
 	return pine.get
@@ -100,6 +110,11 @@ exports.get = (name, callback) ->
 # @example
 # resin.models.application.has('MyApp').then (hasApp) ->
 # 	console.log(hasApp)
+#
+# @example
+# resin.models.application.has 'MyApp', (error, hasApp) ->
+# 	throw error if error?
+# 	console.log(hasApp)
 ###
 exports.has = (name, callback) ->
 	exports.get(name).return(true)
@@ -117,8 +132,13 @@ exports.has = (name, callback) ->
 # @returns {Promise<Boolean>} has any applications
 #
 # @example
-#	resin.models.application.hasAny().then (hasAny) ->
-#		console.log("Has any? #{hasAny}")
+# resin.models.application.hasAny().then (hasAny) ->
+# 	console.log("Has any? #{hasAny}")
+#
+# @example
+# resin.models.application.hasAny (error, hasAny) ->
+# 	throw error if error?
+# 	console.log("Has any? #{hasAny}")
 ###
 exports.hasAny = (callback) ->
 	exports.getAll().then (applications) ->
@@ -137,6 +157,11 @@ exports.hasAny = (callback) ->
 #
 # @example
 # resin.models.application.getById(89).then (application) ->
+# 	console.log(application)
+#
+# @example
+# resin.models.application.getById 89, (error, application) ->
+# 	throw error if error?
 # 	console.log(application)
 ###
 exports.getById = (id, callback) ->
@@ -162,6 +187,11 @@ exports.getById = (id, callback) ->
 #
 # @example
 # resin.models.application.create('My App', 'raspberry-pi').then (id) ->
+# 	console.log(id)
+#
+# @example
+# resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+# 	throw error if error?
 # 	console.log(id)
 ###
 exports.create = (name, deviceType, callback) ->
@@ -191,6 +221,10 @@ exports.create = (name, deviceType, callback) ->
 #
 # @example
 # resin.models.application.remove('MyApp')
+#
+# @example
+# resin.models.application.remove 'MyApp', (error) ->
+# 	throw error if error?
 ###
 exports.remove = (name, callback) ->
 	return pine.delete
@@ -212,6 +246,10 @@ exports.remove = (name, callback) ->
 #
 # @example
 # resin.models.application.restart('MyApp')
+#
+# @example
+# resin.models.application.restart 'MyApp', (error) ->
+# 	throw error if error?
 ###
 exports.restart = (name, callback) ->
 	exports.get(name).then (application) ->
@@ -233,6 +271,11 @@ exports.restart = (name, callback) ->
 #
 # @example
 # resin.models.application.getApiKey('MyApp').then (apiKey) ->
+# 	console.log(apiKey)
+#
+# @example
+# resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
+# 	throw error if error?
 # 	console.log(apiKey)
 ###
 exports.getApiKey = (name, callback) ->

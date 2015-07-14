@@ -164,6 +164,12 @@ If you feel something is missing, not clear or could be improved, please don't h
 resin.models.application.getAll().then (applications) ->
 	console.log(applications)
 ```
+**Example**  
+```js
+resin.models.application.getAll (error, applications) ->
+	throw error if error?
+	console.log(applications)
+```
 <a name="resin.models.application.get"></a>
 ##### application.get(name) ⇒ <code>Promise.&lt;Object&gt;</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
@@ -178,6 +184,12 @@ resin.models.application.getAll().then (applications) ->
 **Example**  
 ```js
 resin.models.application.get('MyApp').then (application) ->
+	console.log(application)
+```
+**Example**  
+```js
+resin.models.application.get 'MyApp', (error, application) ->
+	throw error if error?
 	console.log(application)
 ```
 <a name="resin.models.application.has"></a>
@@ -196,6 +208,12 @@ resin.models.application.get('MyApp').then (application) ->
 resin.models.application.has('MyApp').then (hasApp) ->
 	console.log(hasApp)
 ```
+**Example**  
+```js
+resin.models.application.has 'MyApp', (error, hasApp) ->
+	throw error if error?
+	console.log(hasApp)
+```
 <a name="resin.models.application.hasAny"></a>
 ##### application.hasAny() ⇒ <code>Promise.&lt;Boolean&gt;</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
@@ -205,7 +223,13 @@ resin.models.application.has('MyApp').then (hasApp) ->
 **Example**  
 ```js
 resin.models.application.hasAny().then (hasAny) ->
-		console.log("Has any? #{hasAny}")
+	console.log("Has any? #{hasAny}")
+```
+**Example**  
+```js
+resin.models.application.hasAny (error, hasAny) ->
+	throw error if error?
+	console.log("Has any? #{hasAny}")
 ```
 <a name="resin.models.application.getById"></a>
 ##### application.getById(id) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -221,6 +245,12 @@ resin.models.application.hasAny().then (hasAny) ->
 **Example**  
 ```js
 resin.models.application.getById(89).then (application) ->
+	console.log(application)
+```
+**Example**  
+```js
+resin.models.application.getById 89, (error, application) ->
+	throw error if error?
 	console.log(application)
 ```
 <a name="resin.models.application.create"></a>
@@ -240,6 +270,12 @@ resin.models.application.getById(89).then (application) ->
 resin.models.application.create('My App', 'raspberry-pi').then (id) ->
 	console.log(id)
 ```
+**Example**  
+```js
+resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+	throw error if error?
+	console.log(id)
+```
 <a name="resin.models.application.remove"></a>
 ##### application.remove(name) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
@@ -253,6 +289,11 @@ resin.models.application.create('My App', 'raspberry-pi').then (id) ->
 **Example**  
 ```js
 resin.models.application.remove('MyApp')
+```
+**Example**  
+```js
+resin.models.application.remove 'MyApp', (error) ->
+	throw error if error?
 ```
 <a name="resin.models.application.restart"></a>
 ##### application.restart(name) ⇒ <code>Promise</code>
@@ -268,6 +309,11 @@ resin.models.application.remove('MyApp')
 ```js
 resin.models.application.restart('MyApp')
 ```
+**Example**  
+```js
+resin.models.application.restart 'MyApp', (error) ->
+	throw error if error?
+```
 <a name="resin.models.application.getApiKey"></a>
 ##### application.getApiKey(name) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
@@ -282,6 +328,12 @@ resin.models.application.restart('MyApp')
 **Example**  
 ```js
 resin.models.application.getApiKey('MyApp').then (apiKey) ->
+	console.log(apiKey)
+```
+**Example**  
+```js
+resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
+	throw error if error?
 	console.log(apiKey)
 ```
 <a name="resin.models.device"></a>
@@ -320,6 +372,12 @@ resin.models.application.getApiKey('MyApp').then (apiKey) ->
 resin.models.devices.getAll().then (devices) ->
 	console.log(devices)
 ```
+**Example**  
+```js
+resin.models.devices.getAll (error, devices) ->
+	throw error if error?
+	console.log(devices)
+```
 <a name="resin.models.device.getAllByApplication"></a>
 ##### device.getAllByApplication(name) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -334,6 +392,12 @@ resin.models.devices.getAll().then (devices) ->
 **Example**  
 ```js
 resin.models.devices.getAllByApplication('MyApp').then (devices) ->
+	console.log(devices)
+```
+**Example**  
+```js
+resin.models.devices.getAllByApplication 'MyApp', (error, devices) ->
+	throw error if error?
 	console.log(devices)
 ```
 <a name="resin.models.device.get"></a>
@@ -352,6 +416,12 @@ resin.models.devices.getAllByApplication('MyApp').then (devices) ->
 resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (device) ->
 	console.log(device)
 ```
+**Example**  
+```js
+resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
+	throw error if error?
+	console.log(device)
+```
 <a name="resin.models.device.getByName"></a>
 ##### device.getByName(name) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -366,6 +436,12 @@ resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f
 **Example**  
 ```js
 resin.models.device.getByName('MyDevice').then (devices) ->
+	console.log(devices)
+```
+**Example**  
+```js
+resin.models.device.getByName 'MyDevice', (error, devices) ->
+	throw error if error?
 	console.log(devices)
 ```
 <a name="resin.models.device.getName"></a>
@@ -384,6 +460,12 @@ resin.models.device.getByName('MyDevice').then (devices) ->
 resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
 	console.log(deviceName)
 ```
+**Example**  
+```js
+resin.models.device.getName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, deviceName) ->
+	throw error if error?
+	console.log(deviceName)
+```
 <a name="resin.models.device.getApplicationName"></a>
 ##### device.getApplicationName(uuid) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -398,6 +480,12 @@ resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc
 **Example**  
 ```js
 resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
+	console.log(applicationName)
+```
+**Example**  
+```js
+resin.models.device.getApplicationName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, applicationName) ->
+	throw error if error?
 	console.log(applicationName)
 ```
 <a name="resin.models.device.has"></a>
@@ -416,6 +504,12 @@ resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d5746914894327
 resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (hasDevice) ->
 	console.log(hasDevice)
 ```
+**Example**  
+```js
+resin.models.device.has '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, hasDevice) ->
+	throw error if error?
+	console.log(hasDevice)
+```
 <a name="resin.models.device.isOnline"></a>
 ##### device.isOnline(uuid) ⇒ <code>Promise.&lt;Boolean&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -430,6 +524,12 @@ resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f
 **Example**  
 ```js
 resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
+	console.log("Is device online? #{isOnline}")
+```
+**Example**  
+```js
+resin.models.device.isOnline '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, isOnline) ->
+	throw error if error?
 	console.log("Is device online? #{isOnline}")
 ```
 <a name="resin.models.device.getLocalIPAddresses"></a>
@@ -453,6 +553,13 @@ resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d574691489432
 	for localIP in localIPAddresses
 		console.log(localIP)
 ```
+**Example**  
+```js
+resin.models.device.getLocalIPAddresses '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, localIPAddresses) ->
+	throw error if error?
+	for localIP in localIPAddresses
+		console.log(localIP)
+```
 <a name="resin.models.device.remove"></a>
 ##### device.remove(uuid) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -467,6 +574,11 @@ resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d574691489432
 ```js
 resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
 ```
+**Example**  
+```js
+resin.models.device.remove '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+	throw error if error?
+```
 <a name="resin.models.device.identify"></a>
 ##### device.identify(uuid) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -480,6 +592,11 @@ resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6
 **Example**  
 ```js
 resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+```
+**Example**  
+```js
+resin.models.device.identify '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+	throw error if error?
 ```
 <a name="resin.models.device.rename"></a>
 ##### device.rename(uuid, newName) ⇒ <code>Promise</code>
@@ -496,6 +613,11 @@ resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7f
 ```js
 resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName')
 ```
+**Example**  
+```js
+resin.models.device.rename '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', (error) ->
+	throw error if error?
+```
 <a name="resin.models.device.note"></a>
 ##### device.note(uuid, note) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -510,6 +632,11 @@ resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6
 **Example**  
 ```js
 resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note')
+```
+**Example**  
+```js
+resin.models.device.note '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', (error) ->
+	throw error if error?
 ```
 <a name="resin.models.device.register"></a>
 ##### device.register(applicationName, [options]) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -533,6 +660,15 @@ resin.models.device.register 'MyApp',
 .then (device) ->
 	console.log(device)
 ```
+**Example**  
+```js
+resin.models.device.register 'MyApp',
+	wifiSsid: 'foobar'
+	wifiKey: 'hello'
+, (error, device) ->
+	throw error if error?
+	console.log(device)
+```
 <a name="resin.models.device.getDisplayName"></a>
 ##### device.getDisplayName(deviceTypeSlug) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -548,6 +684,13 @@ resin.models.device.register 'MyApp',
 **Example**  
 ```js
 resin.models.device.getDisplayName('raspberry-pi').then (deviceTypeName) ->
+	console.log(deviceTypeName)
+	# Raspberry Pi
+```
+**Example**  
+```js
+resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
+	throw error if error?
 	console.log(deviceTypeName)
 	# Raspberry Pi
 ```
@@ -569,6 +712,13 @@ resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
 	console.log(deviceTypeSlug)
 	# raspberry-pi
 ```
+**Example**  
+```js
+resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
+	throw error if error?
+	console.log(deviceTypeSlug)
+	# raspberry-pi
+```
 <a name="resin.models.device.getSupportedDeviceTypes"></a>
 ##### device.getSupportedDeviceTypes() ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -578,6 +728,13 @@ resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
 **Example**  
 ```js
 resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
+	for supportedDeviceType in supportedDeviceTypes
+		console.log("Resin supports: #{supportedDeviceType}")
+```
+**Example**  
+```js
+resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
+	throw error if error?
 	for supportedDeviceType in supportedDeviceTypes
 		console.log("Resin supports: #{supportedDeviceType}")
 ```
@@ -595,6 +752,12 @@ resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
 **Example**  
 ```js
 resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
+	console.log(manifest)
+```
+**Example**  
+```js
+resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
+	throw error if error?
 	console.log(manifest)
 ```
 <a name="resin.models.device.generateUUID"></a>
@@ -628,6 +791,12 @@ uuid = resin.models.device.generateUUID()
 resin.models.key.getAll().then (keys) ->
 	console.log(keys)
 ```
+**Example**  
+```js
+resin.models.key.getAll (error, keys) ->
+	throw error if error?
+	console.log(keys)
+```
 <a name="resin.models.key.get"></a>
 ##### key.get(id) ⇒ <code>Promise.&lt;Object&gt;</code>
 **Kind**: static method of <code>[key](#resin.models.key)</code>  
@@ -644,6 +813,12 @@ resin.models.key.getAll().then (keys) ->
 resin.models.key.get(51).then (key) ->
 	console.log(key)
 ```
+**Example**  
+```js
+resin.models.key.get 51, (error, key) ->
+	throw error if error?
+	console.log(key)
+```
 <a name="resin.models.key.remove"></a>
 ##### key.remove(id) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[key](#resin.models.key)</code>  
@@ -657,6 +832,11 @@ resin.models.key.get(51).then (key) ->
 **Example**  
 ```js
 resin.models.key.remove(51)
+```
+**Example**  
+```js
+resin.models.key.remove 51, (error) ->
+	throw error if error?
 ```
 <a name="resin.models.key.create"></a>
 ##### key.create(title, key) ⇒ <code>Promise.&lt;Number&gt;</code>
@@ -677,6 +857,12 @@ resin.models.key.remove(51)
 **Example**  
 ```js
 resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
+	console.log(id)
+```
+**Example**  
+```js
+resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
+	throw error if error?
 	console.log(id)
 ```
 <a name="resin.models.environment-variables"></a>
@@ -721,6 +907,12 @@ resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
 resin.models.environmentVariables.device.getAll('MyDevice').then (environmentVariables) ->
 	console.log(environmentVariables)
 ```
+**Example**  
+```js
+resin.models.environmentVariables.device.getAll 'MyDevice', (error, environmentVariables) ->
+	throw error if error?
+	console.log(environmentVariables)
+```
 <a name="resin.models.environment-variables.device.create"></a>
 ###### device.create(deviceName, name, value) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
@@ -737,6 +929,11 @@ resin.models.environmentVariables.device.getAll('MyDevice').then (environmentVar
 ```js
 resin.models.environmentVariables.device.create('MyDevice', 'EDITOR', 'vim')
 ```
+**Example**  
+```js
+resin.models.environmentVariables.device.create 'MyDevice', 'EDITOR', 'vim', (error) ->
+	throw error if error?
+```
 <a name="resin.models.environment-variables.device.update"></a>
 ###### device.update(id, value) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
@@ -752,6 +949,11 @@ resin.models.environmentVariables.device.create('MyDevice', 'EDITOR', 'vim')
 ```js
 resin.models.environmentVariables.device.update(2, 'emacs')
 ```
+**Example**  
+```js
+resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
+	throw error if error?
+```
 <a name="resin.models.environment-variables.device.remove"></a>
 ###### device.remove(id) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
@@ -765,6 +967,11 @@ resin.models.environmentVariables.device.update(2, 'emacs')
 **Example**  
 ```js
 resin.models.environmentVariables.device.remove(2)
+```
+**Example**  
+```js
+resin.models.environmentVariables.device.remove 2, (error) ->
+	throw error if error?
 ```
 <a name="resin.models.environment-variables.getAll"></a>
 ##### environment-variables.getAll(applicationId) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -780,6 +987,12 @@ resin.models.environmentVariables.device.remove(2)
 **Example**  
 ```js
 resin.models.environmentVariables.getAll().then (environmentVariables) ->
+	console.log(environmentVariables)
+```
+**Example**  
+```js
+resin.models.environmentVariables.getAll (error, environmentVariables) ->
+	throw error if error?
 	console.log(environmentVariables)
 ```
 <a name="resin.models.environment-variables.create"></a>
@@ -798,6 +1011,11 @@ resin.models.environmentVariables.getAll().then (environmentVariables) ->
 ```js
 resin.models.environmentVariables.create(91, 'EDITOR', 'vim')
 ```
+**Example**  
+```js
+resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+	throw error if error?
+```
 <a name="resin.models.environment-variables.update"></a>
 ##### environment-variables.update(applicationId, value) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
@@ -813,6 +1031,11 @@ resin.models.environmentVariables.create(91, 'EDITOR', 'vim')
 ```js
 resin.models.environmentVariables.update(317, 'vim')
 ```
+**Example**  
+```js
+resin.models.environmentVariables.update 317, 'vim', (error) ->
+	throw error if error?
+```
 <a name="resin.models.environment-variables.remove"></a>
 ##### environment-variables.remove(id) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
@@ -826,6 +1049,11 @@ resin.models.environmentVariables.update(317, 'vim')
 **Example**  
 ```js
 resin.models.environmentVariables.remove(51)
+```
+**Example**  
+```js
+resin.models.environmentVariables.remove 51, (error) ->
+	throw error if error?
 ```
 <a name="resin.models.environment-variables.isSystemVariable"></a>
 ##### environment-variables.isSystemVariable(variable) ⇒ <code>Boolean</code>
@@ -879,6 +1107,16 @@ parameters =
 resin.models.os.download(parameters).then (stream) ->
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
 ```
+**Example**  
+```js
+parameters =
+	network: 'ethernet'
+	appId: 91
+
+resin.models.os.download parameters, (error, stream) ->
+	throw error if error?
+	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+```
 <a name="resin.models.config"></a>
 #### models.config : <code>object</code>
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
@@ -899,6 +1137,12 @@ resin.models.os.download(parameters).then (stream) ->
 resin.models.config.getAll().then (config) ->
 	console.log(config)
 ```
+**Example**  
+```js
+resin.models.config.getAll (error, config) ->
+	throw error if error?
+	console.log(config)
+```
 <a name="resin.models.config.getPubNubKeys"></a>
 ##### config.getPubNubKeys() ⇒ <code>Promise.&lt;Object&gt;</code>
 **Kind**: static method of <code>[config](#resin.models.config)</code>  
@@ -911,6 +1155,13 @@ resin.models.config.getPubNubKeys().then (pubnubKeys) ->
 	console.log(pubnubKeys.subscribe_key)
 	console.log(pubnubKeys.publish_key)
 ```
+**Example**  
+```js
+resin.models.config.getPubNubKeys (error, pubnubKeys) ->
+	throw error if error?
+	console.log(pubnubKeys.subscribe_key)
+	console.log(pubnubKeys.publish_key)
+```
 <a name="resin.models.config.getDeviceTypes"></a>
 ##### config.getDeviceTypes() ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
 **Kind**: static method of <code>[config](#resin.models.config)</code>  
@@ -920,6 +1171,12 @@ resin.models.config.getPubNubKeys().then (pubnubKeys) ->
 **Example**  
 ```js
 resin.models.config.getDeviceTypes().then (deviceTypes) ->
+	console.log(deviceTypes)
+```
+**Example**  
+```js
+resin.models.config.getDeviceTypes (error, deviceTypes) ->
+	throw error if error?
 	console.log(deviceTypes)
 ```
 <a name="resin.auth"></a>
@@ -954,6 +1211,16 @@ resin.auth.whoami().then (username) ->
 	else
 		console.log("My username is: #{username}")
 ```
+**Example**  
+```js
+resin.auth.whoami (error, username) ->
+	throw error if error?
+
+	if not username?
+		console.log('I\'m not logged in!')
+	else
+		console.log("My username is: #{username}")
+```
 <a name="resin.auth.authenticate"></a>
 #### auth.authenticate(credentials) ⇒ <code>Promise.&lt;String&gt;</code>
 You should use [module:resin.auth.login](module:resin.auth.login) when possible,
@@ -978,6 +1245,12 @@ by the server automatically.
 resin.auth.authenticate(credentials).then (token) ->
 	console.log("My token is: #{token}")
 ```
+**Example**  
+```js
+resin.auth.authenticate credentials, (error, token) ->
+	throw error if error?
+	console.log("My token is: #{token}")
+```
 <a name="resin.auth.login"></a>
 #### auth.login(credentials) ⇒ <code>Promise</code>
 If the login is successful, the token is persisted between sessions.
@@ -996,6 +1269,11 @@ If the login is successful, the token is persisted between sessions.
 ```js
 resin.auth.login(credentials)
 ```
+**Example**  
+```js
+resin.auth.login credentials, (error) ->
+	throw error if error?
+```
 <a name="resin.auth.loginWithToken"></a>
 #### auth.loginWithToken(token) ⇒ <code>Promise</code>
 Login to resin with a session token instead of with credentials.
@@ -1012,6 +1290,11 @@ Login to resin with a session token instead of with credentials.
 ```js
 resin.auth.loginWithToken(token)
 ```
+**Example**  
+```js
+resin.auth.loginWithToken token, (error) ->
+	throw error if error?
+```
 <a name="resin.auth.isLoggedIn"></a>
 #### auth.isLoggedIn() ⇒ <code>Promise.&lt;Boolean&gt;</code>
 **Kind**: static method of <code>[auth](#resin.auth)</code>  
@@ -1021,6 +1304,16 @@ resin.auth.loginWithToken(token)
 **Example**  
 ```js
 resin.auth.isLoggedIn().then (isLoggedIn) ->
+	if isLoggedIn
+		console.log('I\'m in!')
+	else
+		console.log('Too bad!')
+```
+**Example**  
+```js
+resin.auth.isLoggedIn (error, isLoggedIn) ->
+	throw error if error?
+
 	if isLoggedIn
 		console.log('I\'m in!')
 	else
@@ -1039,6 +1332,12 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 resin.auth.getToken().then (token) ->
 	console.log(token)
 ```
+**Example**  
+```js
+resin.auth.getToken (error, token) ->
+	throw error if error?
+	console.log(token)
+```
 <a name="resin.auth.getUserId"></a>
 #### auth.getUserId() ⇒ <code>Promise.&lt;Number&gt;</code>
 This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
@@ -1050,6 +1349,12 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 **Example**  
 ```js
 resin.auth.getUserId().then (userId) ->
+	console.log(userId)
+```
+**Example**  
+```js
+resin.auth.getUserId (error, userId) ->
+	throw error if error?
 	console.log(userId)
 ```
 <a name="resin.auth.getEmail"></a>
@@ -1074,6 +1379,11 @@ resin.auth.getEmail().then (email) ->
 ```js
 resin.auth.logout()
 ```
+**Example**  
+```js
+resin.auth.logout (error) ->
+	throw error if error?
+```
 <a name="resin.auth.register"></a>
 #### auth.register([credentials]) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of <code>[auth](#resin.auth)</code>  
@@ -1093,6 +1403,15 @@ resin.auth.register
 	email: 'johndoe@gmail.com'
 	password: 'secret'
 .then (token) ->
+	console.log(token)
+```
+**Example**  
+```js
+resin.auth.register
+	email: 'johndoe@gmail.com'
+	password: 'secret'
+, (error, token) ->
+	throw error if error?
 	console.log(token)
 ```
 <a name="resin.logs"></a>
@@ -1129,6 +1448,13 @@ resin.logs.subscribe('MyDevice').then (logs) ->
 	logs.on 'line', (line) ->
 		console.log(line)
 ```
+**Example**  
+```js
+resin.logs.subscribe 'MyDevice', (error, logs) ->
+	throw error if error?
+	logs.on 'line', (line) ->
+		console.log(line)
+```
 <a name="resin.logs.history"></a>
 #### logs.history(deviceName) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
 **Kind**: static method of <code>[logs](#resin.logs)</code>  
@@ -1143,6 +1469,13 @@ resin.logs.subscribe('MyDevice').then (logs) ->
 **Example**  
 ```js
 resin.logs.history('MyDevice').then (lines) ->
+	for line in lines
+		console.log(line)
+```
+**Example**  
+```js
+resin.logs.history 'MyDevice', (error, lines) ->
+	throw error if error?
 	for line in lines
 		console.log(line)
 ```
@@ -1170,6 +1503,12 @@ resin.logs.history('MyDevice').then (lines) ->
 resin.settings.get('remoteUrl').then (remoteUrl) ->
 	console.log(remoteUrl)
 ```
+**Example**  
+```js
+resin.settings.get 'remoteUrl', (error, remoteUrl) ->
+	throw error if error?
+	console.log(remoteUrl)
+```
 <a name="resin.settings.getAll"></a>
 #### settings.getAll() ⇒ <code>Promise.&lt;Object&gt;</code>
 **Kind**: static method of <code>[settings](#resin.settings)</code>  
@@ -1179,5 +1518,11 @@ resin.settings.get('remoteUrl').then (remoteUrl) ->
 **Example**  
 ```js
 resin.settings.getAll().then (settings) ->
+	console.log(settings)
+```
+**Example**  
+```js
+resin.settings.getAll (error, settings) ->
+	throw error if error?
 	console.log(settings)
 ```

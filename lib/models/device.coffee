@@ -43,6 +43,11 @@ applicationModel = require('./application')
 # @example
 # resin.models.devices.getAll().then (devices) ->
 # 	console.log(devices)
+#
+# @example
+# resin.models.devices.getAll (error, devices) ->
+# 	throw error if error?
+# 	console.log(devices)
 ###
 exports.getAll = (callback) ->
 	return pine.get
@@ -68,6 +73,11 @@ exports.getAll = (callback) ->
 #
 # @example
 # resin.models.devices.getAllByApplication('MyApp').then (devices) ->
+# 	console.log(devices)
+#
+# @example
+# resin.models.devices.getAllByApplication 'MyApp', (error, devices) ->
+# 	throw error if error?
 # 	console.log(devices)
 ###
 exports.getAllByApplication = (name, callback) ->
@@ -99,6 +109,11 @@ exports.getAllByApplication = (name, callback) ->
 # @example
 # resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (device) ->
 # 	console.log(device)
+#
+# @example
+# resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
+# 	throw error if error?
+# 	console.log(device)
 ###
 exports.get = (uuid, callback) ->
 	return pine.get
@@ -128,6 +143,11 @@ exports.get = (uuid, callback) ->
 #
 # @example
 # resin.models.device.getByName('MyDevice').then (devices) ->
+# 	console.log(devices)
+#
+# @example
+# resin.models.device.getByName 'MyDevice', (error, devices) ->
+# 	throw error if error?
 # 	console.log(devices)
 ###
 exports.getByName = (name, callback) ->
@@ -159,6 +179,11 @@ exports.getByName = (name, callback) ->
 # @example
 # resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
 # 	console.log(deviceName)
+#
+# @example
+# resin.models.device.getName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, deviceName) ->
+# 	throw error if error?
+# 	console.log(deviceName)
 ###
 exports.getName = (uuid, callback) ->
 	exports.get(uuid).get('name').nodeify(callback)
@@ -176,6 +201,11 @@ exports.getName = (uuid, callback) ->
 # @example
 # resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
 # 	console.log(applicationName)
+#
+# @example
+# resin.models.device.getApplicationName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, applicationName) ->
+# 	throw error if error?
+# 	console.log(applicationName)
 ###
 exports.getApplicationName = (uuid, callback) ->
 	exports.get(uuid).get('application_name').nodeify(callback)
@@ -192,6 +222,11 @@ exports.getApplicationName = (uuid, callback) ->
 #
 # @example
 # resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (hasDevice) ->
+# 	console.log(hasDevice)
+#
+# @example
+# resin.models.device.has '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, hasDevice) ->
+# 	throw error if error?
 # 	console.log(hasDevice)
 ###
 exports.has = (uuid, callback) ->
@@ -213,6 +248,11 @@ exports.has = (uuid, callback) ->
 # @example
 # resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
 # 	console.log("Is device online? #{isOnline}")
+#
+# @example
+# resin.models.device.isOnline '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, isOnline) ->
+# 	throw error if error?
+# 	console.log("Is device online? #{isOnline}")
 ###
 exports.isOnline = (uuid, callback) ->
 	exports.get(uuid).get('is_online').nodeify(callback)
@@ -231,6 +271,12 @@ exports.isOnline = (uuid, callback) ->
 #
 # @example
 # resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (localIPAddresses) ->
+# 	for localIP in localIPAddresses
+# 		console.log(localIP)
+#
+# @example
+# resin.models.device.getLocalIPAddresses '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, localIPAddresses) ->
+# 	throw error if error?
 # 	for localIP in localIPAddresses
 # 		console.log(localIP)
 ###
@@ -255,6 +301,10 @@ exports.getLocalIPAddresses = (uuid, callback) ->
 #
 # @example
 # resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+#
+# @example
+# resin.models.device.remove '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+# 	throw error if error?
 ###
 exports.remove = (uuid, callback) ->
 	return pine.delete
@@ -276,6 +326,10 @@ exports.remove = (uuid, callback) ->
 #
 # @example
 # resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+#
+# @example
+# resin.models.device.identify '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+# 	throw error if error?
 ###
 exports.identify = (uuid, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -305,6 +359,10 @@ exports.identify = (uuid, callback) ->
 #
 # @example
 # resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName')
+#
+# @example
+# resin.models.device.rename '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', (error) ->
+# 	throw error if error?
 ###
 exports.rename = (uuid, newName, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -335,6 +393,10 @@ exports.rename = (uuid, newName, callback) ->
 #
 # @example
 # resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note')
+#
+# @example
+# resin.models.device.note '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', (error) ->
+# 	throw error if error?
 ###
 exports.note = (uuid, note, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -372,6 +434,14 @@ exports.note = (uuid, note, callback) ->
 # 	wifiKey: 'hello'
 # .then (device) ->
 # 	console.log(device)
+#
+# @example
+# resin.models.device.register 'MyApp',
+# 	wifiSsid: 'foobar'
+# 	wifiKey: 'hello'
+# , (error, device) ->
+# 	throw error if error?
+# 	console.log(device)
 ###
 exports.register = (applicationName, options = {}, callback) ->
 	return applicationModel.getConfiguration(applicationName, options).then (config) ->
@@ -404,6 +474,12 @@ exports.register = (applicationName, options = {}, callback) ->
 # resin.models.device.getDisplayName('raspberry-pi').then (deviceTypeName) ->
 # 	console.log(deviceTypeName)
 # 	# Raspberry Pi
+#
+# @example
+# resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
+# 	throw error if error?
+# 	console.log(deviceTypeName)
+# 	# Raspberry Pi
 ###
 exports.getDisplayName = (deviceTypeSlug, callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -427,6 +503,12 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 # resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
 # 	console.log(deviceTypeSlug)
 # 	# raspberry-pi
+#
+# @example
+# resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
+# 	throw error if error?
+# 	console.log(deviceTypeSlug)
+# 	# raspberry-pi
 ###
 exports.getDeviceSlug = (deviceTypeName, callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -447,6 +529,12 @@ exports.getDeviceSlug = (deviceTypeName, callback) ->
 # resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
 # 	for supportedDeviceType in supportedDeviceTypes
 # 		console.log("Resin supports: #{supportedDeviceType}")
+#
+# @example
+# resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
+# 	throw error if error?
+# 	for supportedDeviceType in supportedDeviceTypes
+# 		console.log("Resin supports: #{supportedDeviceType}")
 ###
 exports.getSupportedDeviceTypes = (callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -465,6 +553,11 @@ exports.getSupportedDeviceTypes = (callback) ->
 #
 # @example
 # resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
+# 	console.log(manifest)
+#
+# @example
+# resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
+# 	throw error if error?
 # 	console.log(manifest)
 ###
 exports.getManifestBySlug = (slug, callback) ->

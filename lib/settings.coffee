@@ -38,6 +38,11 @@ settings = require('resin-settings-client')
 # @example
 # resin.settings.get('remoteUrl').then (remoteUrl) ->
 # 	console.log(remoteUrl)
+#
+# @example
+# resin.settings.get 'remoteUrl', (error, remoteUrl) ->
+# 	throw error if error?
+# 	console.log(remoteUrl)
 ###
 exports.get = (key, callback) ->
 	Promise.try ->
@@ -55,6 +60,11 @@ exports.get = (key, callback) ->
 #
 # @example
 # resin.settings.getAll().then (settings) ->
+# 	console.log(settings)
+#
+# @example
+# resin.settings.getAll (error, settings) ->
+# 	throw error if error?
 # 	console.log(settings)
 ###
 exports.getAll = (callback) ->

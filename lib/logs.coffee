@@ -50,6 +50,12 @@ deviceModel = require('./models/device')
 # resin.logs.subscribe('MyDevice').then (logs) ->
 # 	logs.on 'line', (line) ->
 # 		console.log(line)
+#
+# @example
+# resin.logs.subscribe 'MyDevice', (error, logs) ->
+# 	throw error if error?
+# 	logs.on 'line', (line) ->
+# 		console.log(line)
 ###
 exports.subscribe = (deviceName, callback) ->
 	Promise.props
@@ -71,6 +77,12 @@ exports.subscribe = (deviceName, callback) ->
 #
 # @example
 # resin.logs.history('MyDevice').then (lines) ->
+# 	for line in lines
+# 		console.log(line)
+#
+# @example
+# resin.logs.history 'MyDevice', (error, lines) ->
+# 	throw error if error?
 # 	for line in lines
 # 		console.log(line)
 ###

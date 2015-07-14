@@ -47,6 +47,11 @@ THE SOFTWARE.
    * @example
    * resin.models.key.getAll().then (keys) ->
    * 	console.log(keys)
+   *
+   * @example
+   * resin.models.key.getAll (error, keys) ->
+   * 	throw error if error?
+   * 	console.log(keys)
    */
 
   exports.getAll = function(callback) {
@@ -68,6 +73,11 @@ THE SOFTWARE.
    *
    * @example
    * resin.models.key.get(51).then (key) ->
+   * 	console.log(key)
+   *
+   * @example
+   * resin.models.key.get 51, (error, key) ->
+   * 	throw error if error?
    * 	console.log(key)
    */
 
@@ -95,6 +105,10 @@ THE SOFTWARE.
    *
    * @example
    * resin.models.key.remove(51)
+   *
+   * @example
+   * resin.models.key.remove 51, (error) ->
+   * 	throw error if error?
    */
 
   exports.remove = function(id, callback) {
@@ -121,6 +135,11 @@ THE SOFTWARE.
    *
    * @example
    * resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
+   * 	console.log(id)
+   *
+   * @example
+   * resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
+   * 	throw error if error?
    * 	console.log(id)
    */
 
