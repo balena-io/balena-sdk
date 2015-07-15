@@ -41,6 +41,11 @@ THE SOFTWARE.
    * @example
    * resin.models.config.getAll().then (config) ->
    * 	console.log(config)
+   *
+   * @example
+   * resin.models.config.getAll (error, config) ->
+   * 	throw error if error?
+   * 	console.log(config)
    */
 
   exports.getAll = function(callback) {
@@ -62,6 +67,12 @@ THE SOFTWARE.
    *
    * @example
    * resin.models.config.getPubNubKeys().then (pubnubKeys) ->
+   * 	console.log(pubnubKeys.subscribe_key)
+   * 	console.log(pubnubKeys.publish_key)
+   *
+   * @example
+   * resin.models.config.getPubNubKeys (error, pubnubKeys) ->
+   * 	throw error if error?
    * 	console.log(pubnubKeys.subscribe_key)
    * 	console.log(pubnubKeys.publish_key)
    */
@@ -86,6 +97,11 @@ THE SOFTWARE.
    *
    * @example
    * resin.models.config.getDeviceTypes().then (deviceTypes) ->
+   * 	console.log(deviceTypes)
+   *
+   * @example
+   * resin.models.config.getDeviceTypes (error, deviceTypes) ->
+   * 	throw error if error?
    * 	console.log(deviceTypes)
    */
 

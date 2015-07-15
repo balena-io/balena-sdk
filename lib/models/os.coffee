@@ -49,6 +49,15 @@ OSParams = require('./os-params')
 #
 # resin.models.os.download(parameters).then (stream) ->
 # 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+#
+# @example
+# parameters =
+# 	network: 'ethernet'
+# 	appId: 91
+#
+# resin.models.os.download parameters, (error, stream) ->
+# 	throw error if error?
+# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
 ###
 exports.download = (parameters, callback) ->
 	parameters = new OSParams(parameters)

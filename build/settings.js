@@ -44,6 +44,11 @@ THE SOFTWARE.
    * @example
    * resin.settings.get('remoteUrl').then (remoteUrl) ->
    * 	console.log(remoteUrl)
+   *
+   * @example
+   * resin.settings.get 'remoteUrl', (error, remoteUrl) ->
+   * 	throw error if error?
+   * 	console.log(remoteUrl)
    */
 
   exports.get = function(key, callback) {
@@ -64,6 +69,11 @@ THE SOFTWARE.
    *
    * @example
    * resin.settings.getAll().then (settings) ->
+   * 	console.log(settings)
+   *
+   * @example
+   * resin.settings.getAll (error, settings) ->
+   * 	throw error if error?
    * 	console.log(settings)
    */
 

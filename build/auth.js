@@ -50,6 +50,15 @@ THE SOFTWARE.
    * 		console.log('I\'m not logged in!')
    * 	else
    * 		console.log("My username is: #{username}")
+   *
+   * @example
+   * resin.auth.whoami (error, username) ->
+   * 	throw error if error?
+   *
+   * 	if not username?
+   * 		console.log('I\'m not logged in!')
+   * 	else
+   * 		console.log("My username is: #{username}")
    */
 
   exports.whoami = function(callback) {
@@ -79,6 +88,11 @@ THE SOFTWARE.
    * @example
    * resin.auth.authenticate(credentials).then (token) ->
    * 	console.log("My token is: #{token}")
+   *
+   * @example
+   * resin.auth.authenticate credentials, (error, token) ->
+   * 	throw error if error?
+   * 	console.log("My token is: #{token}")
    */
 
   exports.authenticate = function(credentials, callback) {
@@ -107,6 +121,10 @@ THE SOFTWARE.
    *
    * @example
    * resin.auth.login(credentials)
+   *
+   * @example
+   * resin.auth.login credentials, (error) ->
+   * 	throw error if error?
    */
 
   exports.login = function(credentials, callback) {
@@ -128,6 +146,10 @@ THE SOFTWARE.
    *
    * @example
    * resin.auth.loginWithToken(token)
+   *
+   * @example
+   * resin.auth.loginWithToken token, (error) ->
+   * 	throw error if error?
    */
 
   exports.loginWithToken = function(authToken, callback) {
@@ -146,6 +168,15 @@ THE SOFTWARE.
    *
    * @example
    * resin.auth.isLoggedIn().then (isLoggedIn) ->
+   * 	if isLoggedIn
+   * 		console.log('I\'m in!')
+   * 	else
+   * 		console.log('Too bad!')
+   *
+   * @example
+   * resin.auth.isLoggedIn (error, isLoggedIn) ->
+   * 	throw error if error?
+   *
    * 	if isLoggedIn
    * 		console.log('I\'m in!')
    * 	else
@@ -170,6 +201,11 @@ THE SOFTWARE.
    *
    * @example
    * resin.auth.getToken().then (token) ->
+   * 	console.log(token)
+   *
+   * @example
+   * resin.auth.getToken (error, token) ->
+   * 	throw error if error?
    * 	console.log(token)
    */
 
@@ -196,6 +232,11 @@ THE SOFTWARE.
    *
    * @example
    * resin.auth.getUserId().then (userId) ->
+   * 	console.log(userId)
+   *
+   * @example
+   * resin.auth.getUserId (error, userId) ->
+   * 	throw error if error?
    * 	console.log(userId)
    */
 
@@ -246,6 +287,10 @@ THE SOFTWARE.
    *
    * @example
    * resin.auth.logout()
+   *
+   * @example
+   * resin.auth.logout (error) ->
+   * 	throw error if error?
    */
 
   exports.logout = function(callback) {
@@ -271,6 +316,14 @@ THE SOFTWARE.
    * 	email: 'johndoe@gmail.com'
    * 	password: 'secret'
    * .then (token) ->
+   * 	console.log(token)
+   *
+   * @example
+   * resin.auth.register
+   * 	email: 'johndoe@gmail.com'
+   * 	password: 'secret'
+   * , (error, token) ->
+   * 	throw error if error?
    * 	console.log(token)
    */
 

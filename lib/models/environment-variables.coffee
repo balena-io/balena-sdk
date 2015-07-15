@@ -40,6 +40,11 @@ deviceModel = require('./device')
 # @example
 # resin.models.environmentVariables.getAll().then (environmentVariables) ->
 # 	console.log(environmentVariables)
+#
+# @example
+# resin.models.environmentVariables.getAll (error, environmentVariables) ->
+# 	throw error if error?
+# 	console.log(environmentVariables)
 ###
 exports.getAllByApplication = (applicationId, callback) ->
 	return pine.get
@@ -65,6 +70,10 @@ exports.getAllByApplication = (applicationId, callback) ->
 #
 # @example
 # resin.models.environmentVariables.create(91, 'EDITOR', 'vim')
+#
+# @example
+# resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+# 	throw error if error?
 ###
 exports.create = (applicationId, name, value, callback) ->
 	return pine.post
@@ -89,6 +98,10 @@ exports.create = (applicationId, name, value, callback) ->
 #
 # @example
 # resin.models.environmentVariables.update(317, 'vim')
+#
+# @example
+# resin.models.environmentVariables.update 317, 'vim', (error) ->
+# 	throw error if error?
 ###
 exports.update = (id, value, callback) ->
 	return pine.patch
@@ -110,6 +123,10 @@ exports.update = (id, value, callback) ->
 #
 # @example
 # resin.models.environmentVariables.remove(51)
+#
+# @example
+# resin.models.environmentVariables.remove 51, (error) ->
+# 	throw error if error?
 ###
 exports.remove = (id, callback) ->
 	return pine.delete
@@ -157,6 +174,11 @@ exports.device = {}
 # @example
 # resin.models.environmentVariables.device.getAll('MyDevice').then (environmentVariables) ->
 # 	console.log(environmentVariables)
+#
+# @example
+# resin.models.environmentVariables.device.getAll 'MyDevice', (error, environmentVariables) ->
+# 	throw error if error?
+# 	console.log(environmentVariables)
 ###
 exports.device.getAll = (deviceName, callback) ->
 	deviceModel.get(deviceName).then (device) ->
@@ -184,6 +206,10 @@ exports.device.getAll = (deviceName, callback) ->
 #
 # @example
 # resin.models.environmentVariables.device.create('MyDevice', 'EDITOR', 'vim')
+#
+# @example
+# resin.models.environmentVariables.device.create 'MyDevice', 'EDITOR', 'vim', (error) ->
+# 	throw error if error?
 ###
 exports.device.create = (deviceName, name, value, callback) ->
 	deviceModel.get(deviceName).then (device) ->
@@ -209,6 +235,10 @@ exports.device.create = (deviceName, name, value, callback) ->
 #
 # @example
 # resin.models.environmentVariables.device.update(2, 'emacs')
+#
+# @example
+# resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
+# 	throw error if error?
 ###
 exports.device.update = (id, value, callback) ->
 	return pine.patch
@@ -230,6 +260,10 @@ exports.device.update = (id, value, callback) ->
 #
 # @example
 # resin.models.environmentVariables.device.remove(2)
+#
+# @example
+# resin.models.environmentVariables.device.remove 2, (error) ->
+# 	throw error if error?
 ###
 exports.device.remove = (id, callback) ->
 	return pine.delete

@@ -39,6 +39,11 @@ auth = require('../auth')
 # @example
 # resin.models.key.getAll().then (keys) ->
 # 	console.log(keys)
+#
+# @example
+# resin.models.key.getAll (error, keys) ->
+# 	throw error if error?
+# 	console.log(keys)
 ###
 exports.getAll = (callback) ->
 	return pine.get
@@ -57,6 +62,11 @@ exports.getAll = (callback) ->
 #
 # @example
 # resin.models.key.get(51).then (key) ->
+# 	console.log(key)
+#
+# @example
+# resin.models.key.get 51, (error, key) ->
+# 	throw error if error?
 # 	console.log(key)
 ###
 exports.get = (id, callback) ->
@@ -81,6 +91,10 @@ exports.get = (id, callback) ->
 #
 # @example
 # resin.models.key.remove(51)
+#
+# @example
+# resin.models.key.remove 51, (error) ->
+# 	throw error if error?
 ###
 exports.remove = (id, callback) ->
 	return pine.delete
@@ -104,6 +118,11 @@ exports.remove = (id, callback) ->
 #
 # @example
 # resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
+# 	console.log(id)
+#
+# @example
+# resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
+# 	throw error if error?
 # 	console.log(id)
 ###
 exports.create = (title, key, callback) ->
