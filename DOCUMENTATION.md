@@ -74,8 +74,8 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
     * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.logs](#resin.logs) : <code>object</code>
-    * [.subscribe(deviceName)](#resin.logs.subscribe) ⇒ <code>Promise.&lt;EventEmitter&gt;</code>
-    * [.history(deviceName)](#resin.logs.history) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+    * [.subscribe(uuid)](#resin.logs.subscribe) ⇒ <code>Promise.&lt;EventEmitter&gt;</code>
+    * [.history(uuid)](#resin.logs.history) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
   * [.settings](#resin.settings) : <code>object</code>
     * [.get([key])](#resin.settings.get) ⇒ <code>Promise.&lt;\*&gt;</code>
     * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -1419,11 +1419,11 @@ resin.auth.register
 **Kind**: static namespace of <code>[resin](#resin)</code>  
 
 * [.logs](#resin.logs) : <code>object</code>
-  * [.subscribe(deviceName)](#resin.logs.subscribe) ⇒ <code>Promise.&lt;EventEmitter&gt;</code>
-  * [.history(deviceName)](#resin.logs.history) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+  * [.subscribe(uuid)](#resin.logs.subscribe) ⇒ <code>Promise.&lt;EventEmitter&gt;</code>
+  * [.history(uuid)](#resin.logs.history) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
 
 <a name="resin.logs.subscribe"></a>
-#### logs.subscribe(deviceName) ⇒ <code>Promise.&lt;EventEmitter&gt;</code>
+#### logs.subscribe(uuid) ⇒ <code>Promise.&lt;EventEmitter&gt;</code>
 The `logs` object yielded by this function emits the following events:
 
 - `line`: when a log line is received.
@@ -1440,23 +1440,23 @@ The `logs` object yielded by this function emits the following events:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceName | <code>String</code> | device name |
+| uuid | <code>String</code> | device uuid |
 
 **Example**  
 ```js
-resin.logs.subscribe('MyDevice').then (logs) ->
+resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (logs) ->
 	logs.on 'line', (line) ->
 		console.log(line)
 ```
 **Example**  
 ```js
-resin.logs.subscribe 'MyDevice', (error, logs) ->
+resin.logs.subscribe '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, logs) ->
 	throw error if error?
 	logs.on 'line', (line) ->
 		console.log(line)
 ```
 <a name="resin.logs.history"></a>
-#### logs.history(deviceName) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+#### logs.history(uuid) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
 **Kind**: static method of <code>[logs](#resin.logs)</code>  
 **Summary**: Get device logs history  
 **Returns**: <code>Promise.&lt;Array.&lt;String&gt;&gt;</code> - history lines  
@@ -1464,17 +1464,17 @@ resin.logs.subscribe 'MyDevice', (error, logs) ->
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceName | <code>String</code> | device name |
+| uuid | <code>String</code> | device uuid |
 
 **Example**  
 ```js
-resin.logs.history('MyDevice').then (lines) ->
+resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (lines) ->
 	for line in lines
 		console.log(line)
 ```
 **Example**  
 ```js
-resin.logs.history 'MyDevice', (error, lines) ->
+resin.logs.history '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, lines) ->
 	throw error if error?
 	for line in lines
 		console.log(line)

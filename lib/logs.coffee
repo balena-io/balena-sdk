@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 Promise = require('bluebird')
 logs = require('resin-device-logs')
+errors = require('resin-errors')
 configModel = require('./models/config')
 deviceModel = require('./models/device')
 
@@ -40,29 +41,29 @@ deviceModel = require('./models/device')
 # - `line`: when a log line is received.
 # - `error`: when an error happens.
 #
-# @param {String} deviceName - device name
+# @param {String} uuid - device uuid
 # @returns {Promise<EventEmitter>} logs
 #
 # @todo
 # We should consider making this a readable stream.
 #
 # @example
-# resin.logs.subscribe('MyDevice').then (logs) ->
+# resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (logs) ->
 # 	logs.on 'line', (line) ->
 # 		console.log(line)
 #
 # @example
-# resin.logs.subscribe 'MyDevice', (error, logs) ->
+# resin.logs.subscribe '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, logs) ->
 # 	throw error if error?
 # 	logs.on 'line', (line) ->
 # 		console.log(line)
 ###
-exports.subscribe = (deviceName, callback) ->
-	Promise.props
-		uuid: deviceModel.get(deviceName).get('uuid')
-		pubNubKeys: configModel.getPubNubKeys()
-	.then (results) ->
-		return logs.subscribe(results.pubNubKeys, results.uuid)
+exports.subscribe = (uuid, callback) ->
+	deviceModel.has(uuid).then (hasDevice) ->
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(uuid)
+	.then(configModel.getPubNubKeys).then (pubNubKeys) ->
+		return logs.subscribe(pubNubKeys, uuid)
 	.nodeify(callback)
 
 ###*
@@ -72,24 +73,24 @@ exports.subscribe = (deviceName, callback) ->
 # @public
 # @memberof resin.logs
 #
-# @param {String} deviceName - device name
+# @param {String} uuid - device uuid
 # @returns {Promise<String[]>} history lines
 #
 # @example
-# resin.logs.history('MyDevice').then (lines) ->
+# resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (lines) ->
 # 	for line in lines
 # 		console.log(line)
 #
 # @example
-# resin.logs.history 'MyDevice', (error, lines) ->
+# resin.logs.history '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, lines) ->
 # 	throw error if error?
 # 	for line in lines
 # 		console.log(line)
 ###
-exports.history = (deviceName, callback) ->
-	Promise.props
-		uuid: deviceModel.get(deviceName).get('uuid')
-		pubNubKeys: configModel.getPubNubKeys()
-	.then (results) ->
-		return logs.history(results.pubNubKeys, results.uuid)
+exports.history = (uuid, callback) ->
+	deviceModel.has(uuid).then (hasDevice) ->
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(uuid)
+	.then(configModel.getPubNubKeys).then (pubNubKeys) ->
+		return logs.history(pubNubKeys, uuid)
 	.nodeify(callback)
