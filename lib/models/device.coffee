@@ -41,11 +41,11 @@ applicationModel = require('./application')
 # @returns {Promise<Object[]>} devices
 #
 # @example
-# resin.models.devices.getAll().then (devices) ->
+# resin.models.device.getAll().then (devices) ->
 # 	console.log(devices)
 #
 # @example
-# resin.models.devices.getAll (error, devices) ->
+# resin.models.device.getAll (error, devices) ->
 # 	throw error if error?
 # 	console.log(devices)
 ###
@@ -72,11 +72,11 @@ exports.getAll = (callback) ->
 # @returns {Promise<Object[]>} devices
 #
 # @example
-# resin.models.devices.getAllByApplication('MyApp').then (devices) ->
+# resin.models.device.getAllByApplication('MyApp').then (devices) ->
 # 	console.log(devices)
 #
 # @example
-# resin.models.devices.getAllByApplication 'MyApp', (error, devices) ->
+# resin.models.device.getAllByApplication 'MyApp', (error, devices) ->
 # 	throw error if error?
 # 	console.log(devices)
 ###
