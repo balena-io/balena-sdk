@@ -3,89 +3,100 @@ Promise = require('bluebird')
 nock = require('nock')
 settings = require('../../lib/settings')
 config = require('../../lib/models/config')
+johnDoeFixture = require('../tokens.json').johndoe
 
 describe 'Config Model:', ->
 
-	describe '.getAll()', ->
+	describe 'given a /whoami endpoint', ->
 
-		describe 'given valid config', ->
+		beforeEach (done) ->
+			settings.get('remoteUrl').then (remoteUrl) ->
+				nock(remoteUrl).get('/whoami').reply(200, johnDoeFixture.token)
+				done()
 
-			beforeEach (done) ->
-				settings.get('remoteUrl').then (remoteUrl) ->
-					nock(remoteUrl).get('/config').reply 200,
-						hello: 'world'
-					done()
+		afterEach ->
+			nock.cleanAll()
 
-			afterEach ->
-				nock.cleanAll()
+		describe '.getAll()', ->
 
-			it 'should eventually become the configuration', ->
-				promise = config.getAll()
-				m.chai.expect(promise).to.eventually.become(hello: 'world')
+			describe 'given valid config', ->
 
-	describe '.getPubNubKeys()', ->
+				beforeEach (done) ->
+					settings.get('remoteUrl').then (remoteUrl) ->
+						nock(remoteUrl).get('/config').reply 200,
+							hello: 'world'
+						done()
 
-		describe 'given a configuration with pubnub keys', ->
+				afterEach ->
+					nock.cleanAll()
 
-			beforeEach ->
-				@configGetAllStub = m.sinon.stub(config, 'getAll')
-				@configGetAllStub.returns Promise.resolve
-					pubnub:
+				it 'should eventually become the configuration', ->
+					promise = config.getAll()
+					m.chai.expect(promise).to.eventually.become(hello: 'world')
+
+		describe '.getPubNubKeys()', ->
+
+			describe 'given a configuration with pubnub keys', ->
+
+				beforeEach ->
+					@configGetAllStub = m.sinon.stub(config, 'getAll')
+					@configGetAllStub.returns Promise.resolve
+						pubnub:
+							subscribe_key: 'subscribe'
+							publish_key: 'publish'
+
+				afterEach ->
+					@configGetAllStub.restore()
+
+				it 'should eventually become the pubnub keys', ->
+					promise = config.getPubNubKeys()
+					m.chai.expect(promise).to.eventually.become
 						subscribe_key: 'subscribe'
 						publish_key: 'publish'
 
-			afterEach ->
-				@configGetAllStub.restore()
+			describe 'given a configuration without pubnub keys', ->
 
-			it 'should eventually become the pubnub keys', ->
-				promise = config.getPubNubKeys()
-				m.chai.expect(promise).to.eventually.become
-					subscribe_key: 'subscribe'
-					publish_key: 'publish'
+				beforeEach ->
+					@configGetAllStub = m.sinon.stub(config, 'getAll')
+					@configGetAllStub.returns(Promise.resolve({}))
 
-		describe 'given a configuration without pubnub keys', ->
+				afterEach ->
+					@configGetAllStub.restore()
 
-			beforeEach ->
-				@configGetAllStub = m.sinon.stub(config, 'getAll')
-				@configGetAllStub.returns(Promise.resolve({}))
+				it 'should reject with an error message', ->
+					promise = config.getPubNubKeys()
+					m.chai.expect(promise).to.be.rejectedWith('No pubnub keys')
 
-			afterEach ->
-				@configGetAllStub.restore()
+		describe '.getDeviceTypes()', ->
 
-			it 'should reject with an error message', ->
-				promise = config.getPubNubKeys()
-				m.chai.expect(promise).to.be.rejectedWith('No pubnub keys')
+			describe 'given a configuration with device types', ->
 
-	describe '.getDeviceTypes()', ->
+				beforeEach ->
+					@configGetAllStub = m.sinon.stub(config, 'getAll')
+					@configGetAllStub.returns Promise.resolve
+						deviceTypes: [
+							{ slug: 'raspberry-pi' }
+							{ slug: 'intel-edison' }
+						]
 
-		describe 'given a configuration with device types', ->
+				afterEach ->
+					@configGetAllStub.restore()
 
-			beforeEach ->
-				@configGetAllStub = m.sinon.stub(config, 'getAll')
-				@configGetAllStub.returns Promise.resolve
-					deviceTypes: [
+				it 'should eventually become the device types', ->
+					promise = config.getDeviceTypes()
+					m.chai.expect(promise).to.eventually.become [
 						{ slug: 'raspberry-pi' }
 						{ slug: 'intel-edison' }
 					]
+			describe 'given a configuration without device types', ->
 
-			afterEach ->
-				@configGetAllStub.restore()
+				beforeEach ->
+					@configGetAllStub = m.sinon.stub(config, 'getAll')
+					@configGetAllStub.returns(Promise.resolve({}))
 
-			it 'should eventually become the device types', ->
-				promise = config.getDeviceTypes()
-				m.chai.expect(promise).to.eventually.become [
-					{ slug: 'raspberry-pi' }
-					{ slug: 'intel-edison' }
-				]
-		describe 'given a configuration without device types', ->
+				afterEach ->
+					@configGetAllStub.restore()
 
-			beforeEach ->
-				@configGetAllStub = m.sinon.stub(config, 'getAll')
-				@configGetAllStub.returns(Promise.resolve({}))
-
-			afterEach ->
-				@configGetAllStub.restore()
-
-			it 'should reject with an error message', ->
-				promise = config.getDeviceTypes()
-				m.chai.expect(promise).to.be.rejectedWith('No device types')
+				it 'should reject with an error message', ->
+					promise = config.getDeviceTypes()
+					m.chai.expect(promise).to.be.rejectedWith('No device types')
