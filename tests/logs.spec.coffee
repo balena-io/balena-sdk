@@ -24,25 +24,24 @@ describe 'Logs:', ->
 			describe 'given the device does not exist', ->
 
 				beforeEach ->
-					@deviceGetStub = m.sinon.stub(device, 'get')
-					@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('MyDevice')))
+					@deviceHasStub = m.sinon.stub(device, 'has')
+					@deviceHasStub.returns(Promise.resolve(false))
 
 				afterEach ->
-					@deviceGetStub.restore()
+					@deviceHasStub.restore()
 
 				it 'should be rejected', ->
-					promise = logs.subscribe('MyDevice')
+					promise = logs.subscribe('1234')
 					m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
 
 		describe 'given the device exists', ->
 
 			beforeEach ->
-				@deviceGetStub = m.sinon.stub(device, 'get')
-				@deviceGetStub.returns Promise.resolve
-					uuid: 'asdfasdf'
+				@deviceHasStub = m.sinon.stub(device, 'has')
+				@deviceHasStub.returns(Promise.resolve(true))
 
 			afterEach ->
-				@deviceGetStub.restore()
+				@deviceHasStub.restore()
 
 			describe 'given no pubnub keys', ->
 
@@ -54,7 +53,7 @@ describe 'Logs:', ->
 					@configGetPubNubKeysStub.restore()
 
 				it 'should be rejected with the error message', ->
-					promise = logs.subscribe('MyDevice')
+					promise = logs.subscribe('1234')
 					m.chai.expect(promise).to.be.rejectedWith('config error')
 
 	describe '.history()', ->
@@ -73,25 +72,24 @@ describe 'Logs:', ->
 			describe 'given the device does not exist', ->
 
 				beforeEach ->
-					@deviceGetStub = m.sinon.stub(device, 'get')
-					@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('MyDevice')))
+					@deviceHasStub = m.sinon.stub(device, 'has')
+					@deviceHasStub.returns(Promise.resolve(false))
 
 				afterEach ->
-					@deviceGetStub.restore()
+					@deviceHasStub.restore()
 
 				it 'should be rejected', ->
-					promise = logs.history('MyDevice')
+					promise = logs.history('1234')
 					m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
 
 		describe 'given the device exists', ->
 
 			beforeEach ->
-				@deviceGetStub = m.sinon.stub(device, 'get')
-				@deviceGetStub.returns Promise.resolve
-					uuid: 'asdfasdf'
+				@deviceHasStub = m.sinon.stub(device, 'has')
+				@deviceHasStub.returns(Promise.resolve(true))
 
 			afterEach ->
-				@deviceGetStub.restore()
+				@deviceHasStub.restore()
 
 			describe 'given no pubnub keys', ->
 
@@ -103,5 +101,5 @@ describe 'Logs:', ->
 					@configGetPubNubKeysStub.restore()
 
 				it 'should be rejected with the error message', ->
-					promise = logs.history('MyDevice')
+					promise = logs.history('1234')
 					m.chai.expect(promise).to.be.rejectedWith('config error')
