@@ -24,15 +24,13 @@ THE SOFTWARE.
  */
 
 (function() {
-  var _, auth, errors, pine;
+  var _, errors, pine;
 
   _ = require('lodash');
 
   errors = require('resin-errors');
 
   pine = require('resin-pine');
-
-  auth = require('../auth');
 
 
   /**

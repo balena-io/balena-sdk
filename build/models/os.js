@@ -24,15 +24,11 @@ THE SOFTWARE.
  */
 
 (function() {
-  var OSParams, errors, fs, request, url;
+  var OSParams, request, url;
 
   url = require('url');
 
-  fs = require('fs');
-
   request = require('resin-request');
-
-  errors = require('resin-errors');
 
   OSParams = require('./os-params');
 

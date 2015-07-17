@@ -24,7 +24,7 @@ THE SOFTWARE.
  */
 
 (function() {
-  var _, applicationModel, configModel, crypto, errors, pine, request, token;
+  var _, applicationModel, configModel, crypto, errors, pine, request;
 
   crypto = require('crypto');
 
@@ -35,8 +35,6 @@ THE SOFTWARE.
   errors = require('resin-errors');
 
   request = require('resin-request');
-
-  token = require('resin-token');
 
   configModel = require('./config');
 

@@ -23,9 +23,7 @@ THE SOFTWARE.
 ###
 
 url = require('url')
-fs = require('fs')
 request = require('resin-request')
-errors = require('resin-errors')
 OSParams = require('./os-params')
 
 ###*

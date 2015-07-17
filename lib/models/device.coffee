@@ -27,7 +27,6 @@ _ = require('lodash')
 pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
-token = require('resin-token')
 configModel = require('./config')
 applicationModel = require('./application')
 

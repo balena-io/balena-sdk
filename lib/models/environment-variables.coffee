@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-_ = require('lodash')
-errors = require('resin-errors')
 pine = require('resin-pine')
 deviceModel = require('./device')
 

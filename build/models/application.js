@@ -24,9 +24,7 @@ THE SOFTWARE.
  */
 
 (function() {
-  var Promise, _, auth, deviceModel, errors, network, pine, request;
-
-  Promise = require('bluebird');
+  var _, deviceModel, errors, pine, request;
 
   _ = require('lodash');
 
@@ -36,11 +34,7 @@ THE SOFTWARE.
 
   pine = require('resin-pine');
 
-  network = require('resin-network-config');
-
   deviceModel = require('./device');
-
-  auth = require('../auth');
 
 
   /**

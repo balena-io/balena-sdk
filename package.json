@@ -43,7 +43,6 @@
     "lodash": "~3.9.1",
     "resin-device-logs": "^1.0.0",
     "resin-errors": "^1.0.2",
-    "resin-network-config": "^1.0.0",
     "resin-request": "^2.2.1",
     "resin-token": "^2.3.0",
     "resin-pine": "^1.3.0",
