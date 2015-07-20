@@ -22,14 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-Promise = require('bluebird')
 _ = require('lodash')
 errors = require('resin-errors')
 request = require('resin-request')
 pine = require('resin-pine')
-network = require('resin-network-config')
 deviceModel = require('./device')
-auth = require('../auth')
 
 ###*
 # @summary Get all applications

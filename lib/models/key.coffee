@@ -25,7 +25,6 @@ THE SOFTWARE.
 _ = require('lodash')
 errors = require('resin-errors')
 pine = require('resin-pine')
-auth = require('../auth')
 
 ###*
 # @summary Get all ssh keys

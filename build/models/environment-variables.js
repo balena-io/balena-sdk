@@ -24,11 +24,7 @@ THE SOFTWARE.
  */
 
 (function() {
-  var _, deviceModel, errors, pine;
-
-  _ = require('lodash');
-
-  errors = require('resin-errors');
+  var deviceModel, pine;
 
   pine = require('resin-pine');
 
