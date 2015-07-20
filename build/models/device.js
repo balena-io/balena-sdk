@@ -475,57 +475,6 @@ THE SOFTWARE.
 
 
   /**
-   * @summary Register a device with Resin.io
-   * @name register
-   * @function
-   * @public
-   * @memberof resin.models.device
-   *
-   * @param {String} applicationName - application name
-   * @param {Object} [options={}] - options
-   * @param {String} [options.wifiSsid] - wifi ssid
-   * @param {String} [options.wifiKey] - wifi key
-   *
-   * @returns {Promise<Object>} device
-   *
-   * @example
-   * resin.models.device.register 'MyApp',
-   * 	wifiSsid: 'foobar'
-   * 	wifiKey: 'hello'
-   * .then (device) ->
-   * 	console.log(device)
-   *
-   * @example
-   * resin.models.device.register 'MyApp',
-   * 	wifiSsid: 'foobar'
-   * 	wifiKey: 'hello'
-   * , (error, device) ->
-   * 	throw error if error?
-   * 	console.log(device)
-   */
-
-  exports.register = function(applicationName, options, callback) {
-    if (options == null) {
-      options = {};
-    }
-    return applicationModel.getConfiguration(applicationName, options).then(function(config) {
-      return pine.post({
-        resource: 'device',
-        body: {
-          user: config.userId,
-          application: config.applicationId,
-          uuid: exports.generateUUID(),
-          device_type: config.deviceType
-        },
-        customOptions: {
-          apikey: config.apiKey
-        }
-      });
-    }).nodeify(callback);
-  };
-
-
-  /**
    * @summary Get display name for a device
    * @name getDisplayName
    * @public
