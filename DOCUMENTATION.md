@@ -34,7 +34,6 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
       * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
       * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
-      * [.register(applicationName, [options])](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
       * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise.&lt;String&gt;</code>
       * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise.&lt;String&gt;</code>
       * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
@@ -109,7 +108,6 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
     * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
-    * [.register(applicationName, [options])](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
@@ -354,7 +352,6 @@ resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
   * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
   * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
   * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
-  * [.register(applicationName, [options])](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
@@ -637,37 +634,6 @@ resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4
 ```js
 resin.models.device.note '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', (error) ->
 	throw error if error?
-```
-<a name="resin.models.device.register"></a>
-##### device.register(applicationName, [options]) ⇒ <code>Promise.&lt;Object&gt;</code>
-**Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Register a device with Resin.io  
-**Returns**: <code>Promise.&lt;Object&gt;</code> - device  
-**Access:** public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| applicationName | <code>String</code> |  | application name |
-| [options] | <code>Object</code> | <code>{}</code> | options |
-| [options.wifiSsid] | <code>String</code> |  | wifi ssid |
-| [options.wifiKey] | <code>String</code> |  | wifi key |
-
-**Example**  
-```js
-resin.models.device.register 'MyApp',
-	wifiSsid: 'foobar'
-	wifiKey: 'hello'
-.then (device) ->
-	console.log(device)
-```
-**Example**  
-```js
-resin.models.device.register 'MyApp',
-	wifiSsid: 'foobar'
-	wifiKey: 'hello'
-, (error, device) ->
-	throw error if error?
-	console.log(device)
 ```
 <a name="resin.models.device.getDisplayName"></a>
 ##### device.getDisplayName(deviceTypeSlug) ⇒ <code>Promise.&lt;String&gt;</code>
