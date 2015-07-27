@@ -3,15 +3,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.2.0] = 2015-07-03
+## [2.3.0] - 2015-07-27
 
-## Added
+### Added
+
+- Refresh token in an interval.
+
+### Removed
+
+- Remove deprecated `device.register()`.
+
+## [2.2.0] - 2015-07-03
+
+### Added
 
 - Implement `resin.models.device.getLocalIPAddresses()`.
 
 ## [2.1.0] - 2015-07-01
 
-## Changed
+### Changed
 
 - Upgrade `resin-settings-client` to v1.4.0.
 
@@ -39,6 +49,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.3.0]: https://github.com/resin-io/resin-sdk/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/resin-io/resin-sdk/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/resin-io/resin-sdk/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/resin-io/resin-sdk/compare/v1.8.0...v2.0.0
