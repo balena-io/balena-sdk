@@ -88,7 +88,7 @@ exports.authenticate = (credentials, callback) ->
 	request.send
 		method: 'POST'
 		url: '/login_'
-		data: credentials
+		body: credentials
 	.get('body')
 	.nodeify(callback)
 
@@ -293,6 +293,6 @@ exports.register = (credentials = {}, callback) ->
 	request.send
 		method: 'POST'
 		url: '/user/register'
-		data: credentials
+		body: credentials
 	.get('body')
 	.nodeify(callback)

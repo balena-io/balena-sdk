@@ -99,7 +99,7 @@ THE SOFTWARE.
     return request.send({
       method: 'POST',
       url: '/login_',
-      data: credentials
+      body: credentials
     }).get('body').nodeify(callback);
   };
 
@@ -334,7 +334,7 @@ THE SOFTWARE.
     return request.send({
       method: 'POST',
       url: '/user/register',
-      data: credentials
+      body: credentials
     }).get('body').nodeify(callback);
   };
 
