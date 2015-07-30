@@ -224,11 +224,12 @@ exports.create = (name, deviceType, callback) ->
 # 	throw error if error?
 ###
 exports.remove = (name, callback) ->
-	return pine.delete
-		resource: 'application'
-		options:
-			filter:
-				app_name: name
+	exports.get(name).then ->
+		return pine.delete
+			resource: 'application'
+			options:
+				filter:
+					app_name: name
 	.nodeify(callback)
 
 ###*

@@ -487,6 +487,21 @@ describe 'Device Model:', ->
 					promise = device.getLocalIPAddresses('1234')
 					m.chai.expect(promise).to.eventually.become([ '192.168.2.7', '192.168.2.10' ])
 
+		describe '.remove()', ->
+
+			describe 'given the device does not exist', ->
+
+				beforeEach ->
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should reject with not found error', ->
+					promise = device.remove('7cf02')
+					m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
 		describe '.identify()', ->
 
 			describe 'given the device does not exist', ->

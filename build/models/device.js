@@ -349,13 +349,15 @@ THE SOFTWARE.
    */
 
   exports.remove = function(uuid, callback) {
-    return pine["delete"]({
-      resource: 'device',
-      options: {
-        filter: {
-          uuid: uuid
+    return exports.get(uuid).then(function() {
+      return pine["delete"]({
+        resource: 'device',
+        options: {
+          filter: {
+            uuid: uuid
+          }
         }
-      }
+      });
     }).nodeify(callback);
   };
 

@@ -306,11 +306,12 @@ exports.getLocalIPAddresses = (uuid, callback) ->
 # 	throw error if error?
 ###
 exports.remove = (uuid, callback) ->
-	return pine.delete
-		resource: 'device'
-		options:
-			filter:
-				uuid: uuid
+	exports.get(uuid).then ->
+		return pine.delete
+			resource: 'device'
+			options:
+				filter:
+					uuid: uuid
 	.nodeify(callback)
 
 ###*

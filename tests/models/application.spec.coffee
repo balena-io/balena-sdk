@@ -238,6 +238,21 @@ describe 'Application Model:', ->
 					promise = application.create('MyApp', 'Unknown Device')
 					m.chai.expect(promise).to.eventually.become(@application)
 
+		describe '.remove()', ->
+
+			describe 'given an invalid application', ->
+
+				beforeEach ->
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should reject with not found error', ->
+					promise = application.remove('App1')
+					m.chai.expect(promise).to.be.rejectedWith(errors.ResinApplicationNotFound)
+
 		describe '.restart()', ->
 
 			describe 'given an invalid application', ->
