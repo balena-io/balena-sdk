@@ -39,6 +39,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
       * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise.&lt;Object&gt;</code>
       * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>String</code>
+      * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.key](#resin.models.key) : <code>object</code>
       * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
       * [.get(id)](#resin.models.key.get) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -113,6 +114,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
     * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>String</code>
+    * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.key](#resin.models.key) : <code>object</code>
     * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
     * [.get(id)](#resin.models.key.get) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -357,6 +359,7 @@ resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
   * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
   * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>String</code>
+  * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="resin.models.device.getAll"></a>
 ##### device.getAll() ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -735,6 +738,31 @@ resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
 **Example**  
 ```js
 uuid = resin.models.device.generateUUID()
+```
+<a name="resin.models.device.register"></a>
+##### device.register(applicationName, uuid) ⇒ <code>Promise.&lt;Object&gt;</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Register a device with a Resin.io application  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - device  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| applicationName | <code>String</code> | application name |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+uuid = resin.models.device.generateUUID()
+resin.models.device.register('MyApp', uuid).then (device) ->
+	console.log(device)
+```
+**Example**  
+```js
+uuid = resin.models.device.generateUUID()
+resin.models.device.register 'MyApp', uuid, (error, device) ->
+	throw error if error?
+	console.log(device)
 ```
 <a name="resin.models.key"></a>
 #### models.key : <code>object</code>
