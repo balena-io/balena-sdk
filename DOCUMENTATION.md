@@ -46,8 +46,8 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise.&lt;Number&gt;</code>
     * [.environment-variables](#resin.models.environment-variables) : <code>object</code>
       * [.device](#resin.models.environment-variables.device) : <code>object</code>
-        * [.getAll(deviceName)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-        * [.create(deviceName, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
+        * [.getAll(uuid)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+        * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
         * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
         * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
       * [.getAll(applicationId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -120,8 +120,8 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise.&lt;Number&gt;</code>
   * [.environment-variables](#resin.models.environment-variables) : <code>object</code>
     * [.device](#resin.models.environment-variables.device) : <code>object</code>
-      * [.getAll(deviceName)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-      * [.create(deviceName, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
+      * [.getAll(uuid)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+      * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
       * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
       * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
     * [.getAll(applicationId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -837,8 +837,8 @@ resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
 
 * [.environment-variables](#resin.models.environment-variables) : <code>object</code>
   * [.device](#resin.models.environment-variables.device) : <code>object</code>
-    * [.getAll(deviceName)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-    * [.create(deviceName, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
+    * [.getAll(uuid)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+    * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
     * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
     * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
   * [.getAll(applicationId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
@@ -852,13 +852,13 @@ resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
 **Kind**: static namespace of <code>[environment-variables](#resin.models.environment-variables)</code>  
 
 * [.device](#resin.models.environment-variables.device) : <code>object</code>
-  * [.getAll(deviceName)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-  * [.create(deviceName, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
+  * [.getAll(uuid)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+  * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
   * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
   * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
 
 <a name="resin.models.environment-variables.device.getAll"></a>
-###### device.getAll(deviceName) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+###### device.getAll(uuid) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
 **Summary**: Get all device environment variables  
 **Returns**: <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code> - device environment variables  
@@ -866,38 +866,38 @@ resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceName | <code>String</code> | device name |
+| uuid | <code>String</code> | device uuid |
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.getAll('MyDevice').then (environmentVariables) ->
+resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (environmentVariables) ->
 	console.log(environmentVariables)
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.getAll 'MyDevice', (error, environmentVariables) ->
+resin.models.environmentVariables.device.getAll '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, environmentVariables) ->
 	throw error if error?
 	console.log(environmentVariables)
 ```
 <a name="resin.models.environment-variables.device.create"></a>
-###### device.create(deviceName, name, value) ⇒ <code>Promise</code>
+###### device.create(uuid, name, value) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
 **Summary**: Create a device environment variable  
 **Access:** public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceName | <code>String</code> | device name |
+| uuid | <code>String</code> | device uuid |
 | name | <code>String</code> | environment variable name |
 | value | <code>String</code> | environment variable value |
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.create('MyDevice', 'EDITOR', 'vim')
+resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim')
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.create 'MyDevice', 'EDITOR', 'vim', (error) ->
+resin.models.environmentVariables.device.create '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', (error) ->
 	throw error if error?
 ```
 <a name="resin.models.environment-variables.device.update"></a>
