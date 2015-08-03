@@ -23,7 +23,6 @@ THE SOFTWARE.
 ###
 
 _ = require('lodash')
-errors = require('resin-errors')
 
 NETWORK_WIFI = 'wifi'
 NETWORK_ETHERNET = 'ethernet'
@@ -59,30 +58,30 @@ module.exports = class OSParams
 
 	constructor: (options) ->
 		if not options.appId?
-			throw new errors.ResinMissingOption('appId')
+			throw new Error('Missing option: appId')
 
 		options.appId = _.parseInt(options.appId)
 
 		if _.isNaN(options.appId)
-			throw new errors.ResinInvalidOption('appId', options.appId)
+			throw new Error("Invalid option appId: #{options.appId}")
 
 		if not options.network?
-			throw new errors.ResinMissingOption('network')
+			throw new Error('Missing option: network')
 
 		if _.indexOf(NETWORK_TYPES, options.network) is -1
-			throw new errors.ResinInvalidOption('network', options.network)
+			throw new Error("Invalid option network: #{options.network}")
 
 		if options.network == NETWORK_WIFI
 
 			if not options.wifiSsid?
-				throw new errors.ResinMissingOption('wifiSsid')
+				throw new Error('Missing option: wifiSsid')
 
 			if not options.wifiKey?
-				throw new errors.ResinMissingOption('wifiKey')
+				throw new Error('Missing option: wifiKey')
 
 		invalidOptions = _.difference(_.keys(options), VALID_OPTIONS)
 
 		if not _.isEmpty(invalidOptions)
-			throw new errors.ResinNonAllowedOption(_.first(invalidOptions))
+			throw new Error("Non allowed option: #{_.first(invalidOptions)}")
 
 		_.extend(this, options)
