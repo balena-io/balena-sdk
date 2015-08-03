@@ -51,8 +51,8 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
         * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
         * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-      * [.getAll(applicationId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-      * [.create(applicationId, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
+      * [.getAll(applicationName)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+      * [.create(applicationName, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
       * [.update(applicationId, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
       * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
       * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
@@ -126,8 +126,8 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
       * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
       * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-    * [.getAll(applicationId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-    * [.create(applicationId, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
+    * [.getAll(applicationName)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+    * [.create(applicationName, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
     * [.update(applicationId, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
     * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
     * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
@@ -865,8 +865,8 @@ resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
     * [.create(uuid, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
     * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
     * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-  * [.getAll(applicationId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-  * [.create(applicationId, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
+  * [.getAll(applicationName)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+  * [.create(applicationName, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
   * [.update(applicationId, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
   * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
   * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
@@ -964,7 +964,7 @@ resin.models.environmentVariables.device.remove 2, (error) ->
 	throw error if error?
 ```
 <a name="resin.models.environment-variables.getAll"></a>
-##### environment-variables.getAll(applicationId) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+##### environment-variables.getAll(applicationName) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
 **Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
 **Summary**: Get all environment variables by application  
 **Returns**: <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code> - environment variables  
@@ -972,38 +972,38 @@ resin.models.environmentVariables.device.remove 2, (error) ->
 
 | Param | Type | Description |
 | --- | --- | --- |
-| applicationId | <code>String</code> &#124; <code>Number</code> | application id |
+| applicationName | <code>String</code> | application name |
 
 **Example**  
 ```js
-resin.models.environmentVariables.getAll().then (environmentVariables) ->
+resin.models.environmentVariables.getAllByApplication('MyApp').then (environmentVariables) ->
 	console.log(environmentVariables)
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.getAll (error, environmentVariables) ->
+resin.models.environmentVariables.getAllByApplication 'MyApp', (error, environmentVariables) ->
 	throw error if error?
 	console.log(environmentVariables)
 ```
 <a name="resin.models.environment-variables.create"></a>
-##### environment-variables.create(applicationId, name, value) ⇒ <code>Promise</code>
+##### environment-variables.create(applicationName, name, value) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
 **Summary**: Create an environment variable for an application  
 **Access:** public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| applicationId | <code>String</code> &#124; <code>Number</code> | application id |
+| applicationName | <code>String</code> | application name |
 | name | <code>String</code> | environment variable name |
 | value | <code>String</code> | environment variable value |
 
 **Example**  
 ```js
-resin.models.environmentVariables.create(91, 'EDITOR', 'vim')
+resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim')
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+resin.models.environmentVariables.create 'MyApp', 'EDITOR', 'vim', (error) ->
 	throw error if error?
 ```
 <a name="resin.models.environment-variables.update"></a>

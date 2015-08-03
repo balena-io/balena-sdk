@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 pine = require('resin-pine')
 deviceModel = require('./device')
+applicationModel = require('./application')
 
 ###*
 # @summary Get all environment variables by application
@@ -32,25 +33,26 @@ deviceModel = require('./device')
 # @function
 # @memberof resin.models.environment-variables
 #
-# @param {(String|Number)} applicationId - application id
+# @param {String} applicationName - application name
 # @returns {Promise<Object[]>} environment variables
 #
 # @example
-# resin.models.environmentVariables.getAll().then (environmentVariables) ->
+# resin.models.environmentVariables.getAllByApplication('MyApp').then (environmentVariables) ->
 # 	console.log(environmentVariables)
 #
 # @example
-# resin.models.environmentVariables.getAll (error, environmentVariables) ->
+# resin.models.environmentVariables.getAllByApplication 'MyApp', (error, environmentVariables) ->
 # 	throw error if error?
 # 	console.log(environmentVariables)
 ###
-exports.getAllByApplication = (applicationId, callback) ->
-	return pine.get
-		resource: 'environment_variable'
-		options:
-			filter:
-				application: applicationId
-			orderby: 'name asc'
+exports.getAllByApplication = (applicationName, callback) ->
+	applicationModel.get(applicationName).get('id').then (applicationId) ->
+		return pine.get
+			resource: 'environment_variable'
+			options:
+				filter:
+					application: applicationId
+				orderby: 'name asc'
 	.nodeify(callback)
 
 ###*
@@ -60,26 +62,27 @@ exports.getAllByApplication = (applicationId, callback) ->
 # @function
 # @memberof resin.models.environment-variables
 #
-# @param {(String|Number)} applicationId - application id
+# @param {String} applicationName - application name
 # @param {String} name - environment variable name
 # @param {String} value - environment variable value
 #
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.create(91, 'EDITOR', 'vim')
+# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim')
 #
 # @example
-# resin.models.environmentVariables.create 91, 'EDITOR', 'vim', (error) ->
+# resin.models.environmentVariables.create 'MyApp', 'EDITOR', 'vim', (error) ->
 # 	throw error if error?
 ###
-exports.create = (applicationId, name, value, callback) ->
-	return pine.post
-		resource: 'environment_variable'
-		body:
-			name: name
-			value: value
-			application: applicationId
+exports.create = (applicationName, name, value, callback) ->
+	applicationModel.get(applicationName).get('id').then (applicationId) ->
+		return pine.post
+			resource: 'environment_variable'
+			body:
+				name: name
+				value: value
+				application: applicationId
 	.nodeify(callback)
 
 ###*
@@ -89,7 +92,7 @@ exports.create = (applicationId, name, value, callback) ->
 # @function
 # @memberof resin.models.environment-variables
 #
-# @param {(String|Number)} applicationId - application id
+# @param {(String|Number)} id - environment variable id
 # @param {String} value - environment variable value
 #
 # @returns {Promise}
@@ -139,15 +142,15 @@ exports.remove = (id, callback) ->
 # @function
 # @memberof resin.models.environment-variables
 #
-# @param {EnvironmentVariable} variable - environment variable
+# @param {Object} variable - environment variable
 # @returns {Boolean} Whether a variable is system specific or not
 #
 # @example
-# resin.models.environmentVariables.isSystemVariable('RESIN_SUPERVISOR')
+# resin.models.environmentVariables.isSystemVariable(name: 'RESIN_SUPERVISOR')
 # > true
 #
 # @example
-# resin.models.environmentVariables.isSystemVariable('EDITOR')
+# resin.models.environmentVariables.isSystemVariable(name: 'EDITOR')
 # > false
 ####
 exports.isSystemVariable = (variable) ->
