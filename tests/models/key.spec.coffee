@@ -25,10 +25,9 @@ describe 'Key Model:', ->
 
 			beforeEach ->
 				@pineGetStub = m.sinon.stub(pine, 'get')
-				@pineGetStub.returns Promise.resolve [
+				@pineGetStub.returns Promise.resolve
 					title: 'Main'
 					key: 'ssh-rsa ...'
-				]
 
 			afterEach ->
 				@pineGetStub.restore()
