@@ -178,16 +178,16 @@ exports.getById = (id, callback) ->
 # @memberof resin.models.application
 #
 # @param {String} name - application name
-# @param {String} deviceType - device type (slug form)
+# @param {String} deviceType - device type (display form)
 #
 # @returns {Promise<Number>} application id
 #
 # @example
-# resin.models.application.create('My App', 'raspberry-pi').then (id) ->
+# resin.models.application.create('My App', 'Raspberry Pi').then (id) ->
 # 	console.log(id)
 #
 # @example
-# resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+# resin.models.application.create 'My App', 'Raspberry Pi', (error, id) ->
 # 	throw error if error?
 # 	console.log(id)
 ###
