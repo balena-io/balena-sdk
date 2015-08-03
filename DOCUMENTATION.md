@@ -742,7 +742,7 @@ uuid = resin.models.device.generateUUID()
 <a name="resin.models.device.register"></a>
 ##### device.register(applicationName, uuid) ⇒ <code>Promise.&lt;Object&gt;</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Register a device with a Resin.io application  
+**Summary**: Register a new device with a Resin.io application  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - device  
 **Access:** public  
 
@@ -838,10 +838,6 @@ resin.models.key.remove 51, (error) ->
 **Summary**: Create a ssh key  
 **Returns**: <code>Promise.&lt;Number&gt;</code> - ssh key id  
 **Access:** public  
-**Todo**
-
-- [ ] We should return an id for consistency with the other models
-
 
 | Param | Type | Description |
 | --- | --- | --- |
