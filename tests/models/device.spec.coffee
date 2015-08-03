@@ -8,6 +8,7 @@ settings = require('../../lib/settings')
 device = require('../../lib/models/device')
 application = require('../../lib/models/application')
 config = require('../../lib/models/config')
+auth = require('../../lib/auth')
 johnDoeFixture = require('../tokens.json').johndoe
 
 describe 'Device Model:', ->
@@ -651,3 +652,53 @@ describe 'Device Model:', ->
 				m.chai.expect(uuid1).to.not.equal(uuid2)
 				m.chai.expect(uuid2).to.not.equal(uuid3)
 				m.chai.expect(uuid3).to.not.equal(uuid1)
+
+		describe '.register()', ->
+
+			describe 'given the user is not logged in', ->
+
+				beforeEach ->
+					auth.logout()
+
+				describe 'given the application exists', ->
+
+					beforeEach ->
+						@applicationGetApiKeyStub = m.sinon.stub(application, 'getApiKey')
+						@applicationGetApiKeyStub.returns(Promise.resolve('asdf'))
+
+						@applicationGetStub = m.sinon.stub(application, 'get')
+						@applicationGetStub.returns Promise.resolve
+							id: 999
+							device_type: 'raspberry-pi'
+
+					afterEach ->
+						@applicationGetApiKeyStub.restore()
+						@applicationGetStub.restore()
+
+					it 'should be rejected with a not logged in error', ->
+						uuid = device.generateUUID()
+						promise = device.register('MyApp', uuid)
+						m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
+
+			describe 'given a logged in user', ->
+
+				beforeEach ->
+					auth.loginWithToken(johnDoeFixture.token)
+
+				describe 'given the app does not exist', ->
+
+					beforeEach ->
+						@applicationGetApiKeyStub = m.sinon.stub(application, 'getApiKey')
+						@applicationGetApiKeyStub.returns(Promise.reject(new errors.ResinApplicationNotFound('MyApp')))
+
+						@applicationGetStub = m.sinon.stub(application, 'get')
+						@applicationGetStub.returns(Promise.reject(new errors.ResinApplicationNotFound('MyApp')))
+
+					afterEach ->
+						@applicationGetApiKeyStub.restore()
+						@applicationGetStub.restore()
+
+					it 'should be rejected with an application not found error', ->
+						uuid = device.generateUUID()
+						promise = device.register('MyApp', uuid)
+						m.chai.expect(promise).to.be.rejectedWith(errors.ResinApplicationNotFound)

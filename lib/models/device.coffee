@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
+Promise = require('bluebird')
 crypto = require('crypto')
 _ = require('lodash')
 pine = require('resin-pine')
@@ -29,6 +30,7 @@ errors = require('resin-errors')
 request = require('resin-request')
 configModel = require('./config')
 applicationModel = require('./application')
+auth = require('../auth')
 
 ###*
 # @summary Get all devices
@@ -546,3 +548,46 @@ exports.generateUUID = ->
 	# the RFC counts a final NULL byte as part of the CN or that the
 	# OpenVPN/OpenSSL implementation has a bug.
 	return crypto.pseudoRandomBytes(31).toString('hex')
+
+###*
+# @summary Register a new device with a Resin.io application
+# @name register
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} applicationName - application name
+# @param {String} uuid - device uuid
+#
+# @returns {Promise<Object>} device
+#
+# @example
+# uuid = resin.models.device.generateUUID()
+# resin.models.device.register('MyApp', uuid).then (device) ->
+# 	console.log(device)
+#
+# @example
+# uuid = resin.models.device.generateUUID()
+# resin.models.device.register 'MyApp', uuid, (error, device) ->
+# 	throw error if error?
+# 	console.log(device)
+###
+exports.register = (applicationName, uuid, callback) ->
+	Promise.props
+		userId: auth.getUserId()
+		apiKey: applicationModel.getApiKey(applicationName)
+		application: applicationModel.get(applicationName)
+	.then (results) ->
+
+		pine.post
+			resource: 'device'
+			body:
+				user: results.userId
+				application: results.application.id
+				device_type: results.application.device_type
+				registered_at: Math.floor(Date.now() / 1000)
+				uuid: uuid
+			customOptions:
+				apikey: results.apiKey
+
+	.nodeify(callback)

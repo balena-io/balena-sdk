@@ -24,7 +24,9 @@ THE SOFTWARE.
  */
 
 (function() {
-  var _, applicationModel, configModel, crypto, errors, pine, request;
+  var Promise, _, applicationModel, auth, configModel, crypto, errors, pine, request;
+
+  Promise = require('bluebird');
 
   crypto = require('crypto');
 
@@ -39,6 +41,8 @@ THE SOFTWARE.
   configModel = require('./config');
 
   applicationModel = require('./application');
+
+  auth = require('../auth');
 
 
   /**
@@ -621,6 +625,53 @@ THE SOFTWARE.
 
   exports.generateUUID = function() {
     return crypto.pseudoRandomBytes(31).toString('hex');
+  };
+
+
+  /**
+   * @summary Register a new device with a Resin.io application
+   * @name register
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} applicationName - application name
+   * @param {String} uuid - device uuid
+   *
+   * @returns {Promise<Object>} device
+   *
+   * @example
+   * uuid = resin.models.device.generateUUID()
+   * resin.models.device.register('MyApp', uuid).then (device) ->
+   * 	console.log(device)
+   *
+   * @example
+   * uuid = resin.models.device.generateUUID()
+   * resin.models.device.register 'MyApp', uuid, (error, device) ->
+   * 	throw error if error?
+   * 	console.log(device)
+   */
+
+  exports.register = function(applicationName, uuid, callback) {
+    return Promise.props({
+      userId: auth.getUserId(),
+      apiKey: applicationModel.getApiKey(applicationName),
+      application: applicationModel.get(applicationName)
+    }).then(function(results) {
+      return pine.post({
+        resource: 'device',
+        body: {
+          user: results.userId,
+          application: results.application.id,
+          device_type: results.application.device_type,
+          registered_at: Math.floor(Date.now() / 1000),
+          uuid: uuid
+        },
+        customOptions: {
+          apikey: results.apiKey
+        }
+      });
+    }).nodeify(callback);
   };
 
 }).call(this);
