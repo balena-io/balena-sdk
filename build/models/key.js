@@ -87,7 +87,7 @@ THE SOFTWARE.
       if (_.isEmpty(key)) {
         throw new errors.ResinKeyNotFound(id);
       }
-    }).get(0).nodeify(callback);
+    }).nodeify(callback);
   };
 
 
