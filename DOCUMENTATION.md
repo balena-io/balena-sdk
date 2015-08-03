@@ -263,16 +263,16 @@ resin.models.application.getById 89, (error, application) ->
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>String</code> | application name |
-| deviceType | <code>String</code> | device type (slug form) |
+| deviceType | <code>String</code> | device type (display form) |
 
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi').then (id) ->
+resin.models.application.create('My App', 'Raspberry Pi').then (id) ->
 	console.log(id)
 ```
 **Example**  
 ```js
-resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
+resin.models.application.create 'My App', 'Raspberry Pi', (error, id) ->
 	throw error if error?
 	console.log(id)
 ```
