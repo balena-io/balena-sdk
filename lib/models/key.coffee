@@ -113,8 +113,6 @@ exports.remove = (id, callback) ->
 #
 # @returns {Promise<Number>} ssh key id
 #
-# @todo We should return an id for consistency with the other models
-#
 # @example
 # resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
 # 	console.log(id)
