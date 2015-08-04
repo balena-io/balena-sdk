@@ -15,7 +15,7 @@ describe 'OS Params:', ->
 				new OSParams
 					network: 'ethernet'
 					appId: 'myApp'
-			.to.throw('Invalid option appId')
+			.to.throw('Invalid option appId: NaN')
 
 		it 'should throw an error if no network', ->
 			m.chai.expect ->
