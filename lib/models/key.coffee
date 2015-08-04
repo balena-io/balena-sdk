@@ -22,9 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
+Promise = require('bluebird')
 _ = require('lodash')
 errors = require('resin-errors')
 pine = require('resin-pine')
+auth = require('../auth')
 
 ###*
 # @summary Get all ssh keys
@@ -126,8 +128,14 @@ exports.create = (title, key, callback) ->
 	# Avoid ugly whitespaces
 	key = key.trim()
 
-	return pine.post
-		resource: 'user__has__public_key'
-		body: { title, key }
-	.get('id')
+	Promise.props
+		userId: auth.getUserId()
+	.then (results) ->
+		return pine.post
+			resource: 'user__has__public_key'
+			body:
+				title: title
+				public_key: key
+				user: results.userId
+		.get('id')
 	.nodeify(callback)
