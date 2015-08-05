@@ -253,13 +253,15 @@ THE SOFTWARE.
    */
 
   exports.remove = function(name, callback) {
-    return pine["delete"]({
-      resource: 'application',
-      options: {
-        filter: {
-          app_name: name
+    return exports.get(name).then(function() {
+      return pine["delete"]({
+        resource: 'application',
+        options: {
+          filter: {
+            app_name: name
+          }
         }
-      }
+      });
     }).nodeify(callback);
   };
 
