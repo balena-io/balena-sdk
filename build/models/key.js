@@ -24,13 +24,15 @@ THE SOFTWARE.
  */
 
 (function() {
-  var _, errors, pine;
+  var _, auth, errors, pine;
 
   _ = require('lodash');
 
   errors = require('resin-errors');
 
   pine = require('resin-pine');
+
+  auth = require('../auth');
 
 
   /**
@@ -141,13 +143,16 @@ THE SOFTWARE.
 
   exports.create = function(title, key, callback) {
     key = key.trim();
-    return pine.post({
-      resource: 'user__has__public_key',
-      body: {
-        title: title,
-        key: key
-      }
-    }).get('id').nodeify(callback);
+    return auth.getUserId().then(function(userId) {
+      return pine.post({
+        resource: 'user__has__public_key',
+        body: {
+          title: title,
+          public_key: key,
+          user: userId
+        }
+      }).get('id');
+    }).nodeify(callback);
   };
 
 }).call(this);

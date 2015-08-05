@@ -25,6 +25,7 @@ THE SOFTWARE.
 _ = require('lodash')
 errors = require('resin-errors')
 pine = require('resin-pine')
+auth = require('../auth')
 
 ###*
 # @summary Get all ssh keys
@@ -126,8 +127,12 @@ exports.create = (title, key, callback) ->
 	# Avoid ugly whitespaces
 	key = key.trim()
 
-	return pine.post
-		resource: 'user__has__public_key'
-		body: { title, key }
-	.get('id')
+	auth.getUserId().then (userId) ->
+		return pine.post
+			resource: 'user__has__public_key'
+			body:
+				title: title
+				public_key: key
+				user: userId
+		.get('id')
 	.nodeify(callback)
