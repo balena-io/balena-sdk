@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.0] - 2015-08-10
+
+### Added
+
+- Implement `resin.models.device.getManifestByApplication()`.
+- Implement `resin.models.device.register()`.
+- Check that device/application exists before attempting to remove.
+
+### Changed
+
+- Fix environment variables documentation.
+- Fix `resin.models.key.get()` `undefined` issue.
+- Fix `resin.models.key.create()` bug that caused no key to be created.
+- Fix `resin.models.application.create()` example issue with device slugs.
+- Upgrade `resin-errors` to v2.0.0.
+- Upgrade `resin-request` to v2.2.3.
+- Upgrade `resin-token` to v2.4.1.
+
 ## [2.3.1] - 2015-07-29
 
 ### Changed
@@ -56,6 +74,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.4.0]: https://github.com/resin-io/resin-sdk/compare/v2.3.1...v2.4.0
 [2.3.1]: https://github.com/resin-io/resin-sdk/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/resin-io/resin-sdk/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/resin-io/resin-sdk/compare/v2.1.0...v2.2.0
