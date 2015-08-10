@@ -649,6 +649,37 @@ describe 'Device Model:', ->
 						name: 'Raspberry Pi'
 						slug: 'raspberry-pi'
 
+		describe '.getManifestByApplication()', ->
+
+			describe 'given device types', ->
+
+				beforeEach ->
+					@configGetDeviceTypesStub = m.sinon.stub(config, 'getDeviceTypes')
+					@configGetDeviceTypesStub.returns Promise.resolve [
+						{ name: 'Raspberry Pi', slug: 'raspberry-pi' }
+						{ name: 'BeagleBone Black', slug: 'beaglebone-black' }
+					]
+
+				afterEach ->
+					@configGetDeviceTypesStub.restore()
+
+				describe 'given the app exists', ->
+
+					beforeEach ->
+						@applicationGetStub = m.sinon.stub(application, 'get')
+						@applicationGetStub.returns Promise.resolve
+							name: 'MyApp'
+							device_type: 'raspberry-pi'
+
+					afterEach ->
+						@applicationGetStub.restore()
+
+					it 'should eventually become the manifest', ->
+						promise = device.getManifestByApplication('MyApp')
+						m.chai.expect(promise).to.eventually.become
+							name: 'Raspberry Pi'
+							slug: 'raspberry-pi'
+
 		describe '.generateUUID()', ->
 
 			it 'should return a string', ->
