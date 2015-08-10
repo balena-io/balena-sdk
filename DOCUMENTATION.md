@@ -38,6 +38,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise.&lt;String&gt;</code>
       * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
       * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise.&lt;Object&gt;</code>
+      * [.getManifestByApplication(applicationName)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise.&lt;Object&gt;</code>
       * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>String</code>
       * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.key](#resin.models.key) : <code>object</code>
@@ -53,7 +54,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
       * [.getAll(applicationName)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
       * [.create(applicationName, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
-      * [.update(applicationId, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
+      * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
       * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
       * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
     * [.os](#resin.models.os) : <code>object</code>
@@ -113,6 +114,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
     * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getManifestByApplication(applicationName)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>String</code>
     * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.key](#resin.models.key) : <code>object</code>
@@ -128,7 +130,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
     * [.getAll(applicationName)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
     * [.create(applicationName, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
-    * [.update(applicationId, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
+    * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
     * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
     * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
   * [.os](#resin.models.os) : <code>object</code>
@@ -358,6 +360,7 @@ resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
   * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise.&lt;String&gt;</code>
   * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
   * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise.&lt;Object&gt;</code>
+  * [.getManifestByApplication(applicationName)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise.&lt;Object&gt;</code>
   * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>String</code>
   * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise.&lt;Object&gt;</code>
 
@@ -729,6 +732,28 @@ resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
 	throw error if error?
 	console.log(manifest)
 ```
+<a name="resin.models.device.getManifestByApplication"></a>
+##### device.getManifestByApplication(applicationName) ⇒ <code>Promise.&lt;Object&gt;</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get a device manifest by application name  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - device manifest  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| applicationName | <code>String</code> | application name |
+
+**Example**  
+```js
+resin.models.device.getManifestByApplication('MyApp').then (manifest) ->
+	console.log(manifest)
+```
+**Example**  
+```js
+resin.models.device.getManifestByApplication 'MyApp', (error, manifest) ->
+	throw error if error?
+	console.log(manifest)
+```
 <a name="resin.models.device.generateUUID"></a>
 ##### device.generateUUID() ⇒ <code>String</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
@@ -867,7 +892,7 @@ resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
     * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
   * [.getAll(applicationName)](#resin.models.environment-variables.getAll) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
   * [.create(applicationName, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
-  * [.update(applicationId, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
+  * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
   * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
   * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
 
@@ -1007,14 +1032,14 @@ resin.models.environmentVariables.create 'MyApp', 'EDITOR', 'vim', (error) ->
 	throw error if error?
 ```
 <a name="resin.models.environment-variables.update"></a>
-##### environment-variables.update(applicationId, value) ⇒ <code>Promise</code>
+##### environment-variables.update(id, value) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
 **Summary**: Update an environment variable value from an application  
 **Access:** public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| applicationId | <code>String</code> &#124; <code>Number</code> | application id |
+| id | <code>String</code> &#124; <code>Number</code> | environment variable id |
 | value | <code>String</code> | environment variable value |
 
 **Example**  
@@ -1054,16 +1079,16 @@ resin.models.environmentVariables.remove 51, (error) ->
 
 | Param | Type | Description |
 | --- | --- | --- |
-| variable | <code>EnvironmentVariable</code> | environment variable |
+| variable | <code>Object</code> | environment variable |
 
 **Example**  
 ```js
-resin.models.environmentVariables.isSystemVariable('RESIN_SUPERVISOR')
+resin.models.environmentVariables.isSystemVariable(name: 'RESIN_SUPERVISOR')
 > true
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.isSystemVariable('EDITOR')
+resin.models.environmentVariables.isSystemVariable(name: 'EDITOR')
 > false
 ```
 <a name="resin.models.os"></a>

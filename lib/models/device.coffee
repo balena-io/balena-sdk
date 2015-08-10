@@ -529,6 +529,30 @@ exports.getManifestBySlug = (slug, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Get a device manifest by application name
+# @name getManifestByApplication
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} applicationName - application name
+# @returns {Promise<Object>} device manifest
+#
+# @example
+# resin.models.device.getManifestByApplication('MyApp').then (manifest) ->
+# 	console.log(manifest)
+#
+# @example
+# resin.models.device.getManifestByApplication 'MyApp', (error, manifest) ->
+# 	throw error if error?
+# 	console.log(manifest)
+###
+exports.getManifestByApplication = (applicationName, callback) ->
+	applicationModel.get(applicationName).get('device_type').then (deviceType) ->
+		return exports.getManifestBySlug(deviceType)
+	.nodeify(callback)
+
+###*
 # @summary Generate a random device UUID
 # @name generateUUID
 # @function
