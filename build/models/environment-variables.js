@@ -224,6 +224,12 @@ THE SOFTWARE.
           orderby: 'env_var_name asc'
         }
       });
+    }).map(function(environmentVariable) {
+      if (environmentVariable.env_var_name != null) {
+        environmentVariable.name = environmentVariable.env_var_name;
+        delete environmentVariable.env_var_name;
+      }
+      return environmentVariable;
     }).nodeify(callback);
   };
 
