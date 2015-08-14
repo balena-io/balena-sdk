@@ -167,7 +167,13 @@ exports.loginWithToken = (authToken, callback) ->
 # 		console.log('Too bad!')
 ###
 exports.isLoggedIn = (callback) ->
-	token.has().nodeify(callback)
+	request.send
+		method: 'GET'
+		url: '/whoami'
+	.return(true)
+	.catch ->
+		return false
+	.nodeify(callback)
 
 ###*
 # @summary Get current logged in user's token

@@ -172,8 +172,13 @@ describe 'Auth:', ->
 
 			describe 'given a logged in user', ->
 
-				beforeEach ->
-					auth.loginWithToken(janeDoeFixture.token)
+				beforeEach (done) ->
+					settings.get('remoteUrl').then (remoteUrl) ->
+						nock(remoteUrl).get('/whoami').reply(200, janeDoeFixture.token)
+						done()
+
+				afterEach ->
+					nock.cleanAll()
 
 				it 'should eventually be true', ->
 					promise = auth.isLoggedIn()
@@ -181,8 +186,13 @@ describe 'Auth:', ->
 
 			describe 'given no logged in user', ->
 
-				beforeEach ->
-					auth.logout()
+				beforeEach (done) ->
+					settings.get('remoteUrl').then (remoteUrl) ->
+						nock(remoteUrl).get('/whoami').reply(401, 'Unauthorized')
+						done()
+
+				afterEach ->
+					nock.cleanAll()
 
 				it 'should eventually be false', ->
 					promise = auth.isLoggedIn()
