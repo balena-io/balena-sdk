@@ -184,7 +184,12 @@ THE SOFTWARE.
    */
 
   exports.isLoggedIn = function(callback) {
-    return token.has().nodeify(callback);
+    return request.send({
+      method: 'GET',
+      url: '/whoami'
+    })["return"](true)["catch"](function() {
+      return false;
+    }).nodeify(callback);
   };
 
 
