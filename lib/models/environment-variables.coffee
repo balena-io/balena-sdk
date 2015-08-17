@@ -190,6 +190,16 @@ exports.device.getAll = (uuid, callback) ->
 					device: device.id
 				expand: 'device'
 				orderby: 'env_var_name asc'
+	.map (environmentVariable) ->
+
+		# Workaround to the fact that applications environment variables
+		# contains a `name` property, while device environment variables
+		# contains an `env_var_name` property instead.
+		if environmentVariable.env_var_name?
+			environmentVariable.name = environmentVariable.env_var_name
+			delete environmentVariable.env_var_name
+		return environmentVariable
+
 	.nodeify(callback)
 
 ###*
