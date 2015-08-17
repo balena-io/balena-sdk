@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.1] - 2015-08-17
+
+### Changed
+
+- Upgrade Resin Settings Client to v2.1.0.
+- Request GET /whoami to determine if a user is logged in `resin.auth.isLoggedIn()`.  
+- Fix bug that caused device environment variables to not have a `name` property.
+
 ## [2.4.0] - 2015-08-10
 
 ### Added
