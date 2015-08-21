@@ -45,8 +45,24 @@ describe 'Environment Variables Model:', ->
 				result = environmentVariables.isSystemVariable(name: 'RESIN_VAR')
 				m.chai.expect(result).to.be.true
 
+			it 'should return true for RESIN', ->
+				result = environmentVariables.isSystemVariable(name: 'RESIN')
+				m.chai.expect(result).to.be.true
+
+			it 'should return true for USER', ->
+				result = environmentVariables.isSystemVariable(name: 'USER')
+				m.chai.expect(result).to.be.true
+
 		describe 'given a non system variable', ->
 
 			it 'should return false for EDITOR', ->
 				result = environmentVariables.isSystemVariable(name: 'EDITOR')
+				m.chai.expect(result).to.be.false
+
+			it 'should return false for RESINATOR', ->
+				result = environmentVariables.isSystemVariable(name: 'RESINATOR')
+				m.chai.expect(result).to.be.false
+
+			it 'should return false for SOME_USER', ->
+				result = environmentVariables.isSystemVariable(name: 'SOME_USER')
 				m.chai.expect(result).to.be.false

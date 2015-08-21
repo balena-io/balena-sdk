@@ -180,7 +180,7 @@ THE SOFTWARE.
    */
 
   exports.isSystemVariable = function(variable) {
-    return /^RESIN_/.test(variable.name);
+    return /^RESIN_|^RESIN$|^USER$/.test(variable.name);
   };
 
 
