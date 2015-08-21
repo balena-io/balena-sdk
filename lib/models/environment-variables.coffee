@@ -154,7 +154,7 @@ exports.remove = (id, callback) ->
 # > false
 ####
 exports.isSystemVariable = (variable) ->
-	return /^RESIN_/.test(variable.name)
+	return /^RESIN_|^RESIN$|^USER$/.test(variable.name)
 
 ###*
 # @namespace resin.models.environment-variables.device
