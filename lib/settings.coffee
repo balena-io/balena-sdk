@@ -33,7 +33,8 @@ settings = require('resin-settings-client')
 # @memberof resin.settings
 #
 # @param {String} [key] - setting key
-# @returns {Promise<*>} setting value
+# @fulfil {*} - setting value
+# @returns {Promise}
 #
 # @example
 # resin.settings.get('remoteUrl').then (remoteUrl) ->
@@ -56,7 +57,8 @@ exports.get = (key, callback) ->
 # @public
 # @memberof resin.settings
 #
-# @returns {Promise<Object>} settings
+# @fulfil {Object} - settings
+# @returns {Promise}
 #
 # @example
 # resin.settings.getAll().then (settings) ->

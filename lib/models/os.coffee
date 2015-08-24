@@ -34,9 +34,8 @@ OSParams = require('./os-params')
 # @memberof resin.models.os
 #
 # @param {Object} parameters - os parameters
-# @returns {ReadableStream} download stream
-#
-# @throws {Error} If parameters is not an instance of {@link module:resin/connection.OSParams}
+# @fulfil {ReadableStream} - download stream
+# @returns {Promise}
 #
 # @todo In the future this function should only require a device type slug.
 #

@@ -42,7 +42,8 @@ THE SOFTWARE.
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
-   * @returns {Promise<String|undefined>} username
+   * @fulfil {(String|undefined)} - username, if it exists
+   * @returns {Promise}
    *
    * @example
    * resin.auth.whoami().then (username) ->
@@ -83,7 +84,8 @@ THE SOFTWARE.
    * @param {String} credentials.username - the username
    * @param {String} credentials.password - the password
    *
-   * @returns {Promise<String>} session token
+   * @fulfil {String} - session token
+   * @returns {Promise}
    *
    * @example
    * resin.auth.authenticate(credentials).then (token) ->
@@ -164,7 +166,8 @@ THE SOFTWARE.
    * @function
    * @memberof resin.auth
    *
-   * @returns {Promise<Boolean>} is logged in
+   * @fulfil {Boolean} - is logged in
+   * @returns {Promise}
    *
    * @example
    * resin.auth.isLoggedIn().then (isLoggedIn) ->
@@ -202,7 +205,8 @@ THE SOFTWARE.
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
-   * @returns {Promise<String>} session token
+   * @fulfil {String} - session token
+   * @returns {Promise}
    *
    * @example
    * resin.auth.getToken().then (token) ->
@@ -233,7 +237,8 @@ THE SOFTWARE.
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
-   * @returns {Promise<Number>} user id
+   * @fulfil {Number} - user id
+   * @returns {Promise}
    *
    * @example
    * resin.auth.getUserId().then (userId) ->
@@ -264,7 +269,8 @@ THE SOFTWARE.
    *
    * @description This will only work if you used {@link module:resin.auth.login} to log in.
    *
-   * @returns {Promise<String>} user email
+   * @fulfil {String} - user email
+   * @returns {Promise}
    *
    * @example
    * resin.auth.getEmail().then (email) ->
@@ -314,7 +320,8 @@ THE SOFTWARE.
    * @param {String} credentials.email - the email
    * @param {String} credentials.password - the password
    *
-   * @returns {Promise<String>} session token
+   * @fulfil {String} - session token
+   * @returns {Promise}
    *
    * @example
    * resin.auth.register

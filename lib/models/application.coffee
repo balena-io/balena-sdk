@@ -35,7 +35,8 @@ deviceModel = require('./device')
 # @function
 # @memberof resin.models.application
 #
-# @returns {Promise<Object[]>} applications
+# @fulfil {Object[]} - applications
+# @returns {Promise}
 #
 # @example
 # resin.models.application.getAll().then (applications) ->
@@ -70,7 +71,8 @@ exports.getAll = (callback) ->
 # @memberof resin.models.application
 #
 # @param {String} name - application name
-# @returns {Promise<Object>} application
+# @fulfil {Object} - application
+# @returns {Promise}
 #
 # @example
 # resin.models.application.get('MyApp').then (application) ->
@@ -102,7 +104,8 @@ exports.get = (name, callback) ->
 # @memberof resin.models.application
 #
 # @param {String} name - application name
-# @returns {Promise<Boolean>} has application
+# @fulfil {Boolean} - has application
+# @returns {Promise}
 #
 # @example
 # resin.models.application.has('MyApp').then (hasApp) ->
@@ -126,7 +129,8 @@ exports.has = (name, callback) ->
 # @function
 # @memberof resin.models.application
 #
-# @returns {Promise<Boolean>} has any applications
+# @fulfil {Boolean} - has any applications
+# @returns {Promise}
 #
 # @example
 # resin.models.application.hasAny().then (hasAny) ->
@@ -150,7 +154,8 @@ exports.hasAny = (callback) ->
 # @memberof resin.models.application
 #
 # @param {(Number|String)} id - application id
-# @returns {Promise<Object>} application
+# @fulfil {Object} - application
+# @returns {Promise}
 #
 # @example
 # resin.models.application.getById(89).then (application) ->
@@ -180,7 +185,8 @@ exports.getById = (id, callback) ->
 # @param {String} name - application name
 # @param {String} deviceType - device type (display form)
 #
-# @returns {Promise<Number>} application id
+# @fulfil {Number} - application id
+# @returns {Promise}
 #
 # @example
 # resin.models.application.create('My App', 'Raspberry Pi').then (id) ->
@@ -265,7 +271,8 @@ exports.restart = (name, callback) ->
 # @memberof resin.models.application
 #
 # @param {String} name - application name
-# @returns {Promise<String>} the api key
+# @fulfil {String} - api key
+# @returns {Promise}
 #
 # @example
 # resin.models.application.getApiKey('MyApp').then (apiKey) ->

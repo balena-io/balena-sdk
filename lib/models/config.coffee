@@ -31,7 +31,8 @@ request = require('resin-request')
 # @function
 # @memberof resin.models.config
 #
-# @returns {Promise<Object>} configuration
+# @fulfil {Object} - configuration
+# @returns {Promise}
 #
 # @example
 # resin.models.config.getAll().then (config) ->
@@ -56,7 +57,8 @@ exports.getAll = (callback) ->
 # @function
 # @memberof resin.models.config
 #
-# @returns {Promise<Object>} pubnub keys
+# @fulfil {Object} - pubnub keys
+# @returns {Promise}
 #
 # @example
 # resin.models.config.getPubNubKeys().then (pubnubKeys) ->
@@ -82,7 +84,8 @@ exports.getPubNubKeys = (callback) ->
 # @function
 # @memberof resin.models.config
 #
-# @returns {Promise<Object[]>} device types
+# @fulfil {Object[]} - device types
+# @returns {Promise}
 #
 # @example
 # resin.models.config.getDeviceTypes().then (deviceTypes) ->

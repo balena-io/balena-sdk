@@ -41,7 +41,8 @@ THE SOFTWARE.
    * @memberof resin.models.environment-variables
    *
    * @param {String} applicationName - application name
-   * @returns {Promise<Object[]>} environment variables
+   * @fulfil {Object[]} - environment variables
+   * @returns {Promise}
    *
    * @example
    * resin.models.environmentVariables.getAllByApplication('MyApp').then (environmentVariables) ->
@@ -200,7 +201,8 @@ THE SOFTWARE.
    * @memberof resin.models.environment-variables.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<Object[]>} device environment variables
+   * @fulfil {Object[]} - device environment variables
+   * @returns {Promise}
    *
    * @example
    * resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (environmentVariables) ->
