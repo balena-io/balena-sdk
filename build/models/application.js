@@ -44,7 +44,8 @@ THE SOFTWARE.
    * @function
    * @memberof resin.models.application
    *
-   * @returns {Promise<Object[]>} applications
+   * @fulfil {Object[]} - applications
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.getAll().then (applications) ->
@@ -82,7 +83,8 @@ THE SOFTWARE.
    * @memberof resin.models.application
    *
    * @param {String} name - application name
-   * @returns {Promise<Object>} application
+   * @fulfil {Object} - application
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.get('MyApp').then (application) ->
@@ -118,7 +120,8 @@ THE SOFTWARE.
    * @memberof resin.models.application
    *
    * @param {String} name - application name
-   * @returns {Promise<Boolean>} has application
+   * @fulfil {Boolean} - has application
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.has('MyApp').then (hasApp) ->
@@ -144,7 +147,8 @@ THE SOFTWARE.
    * @function
    * @memberof resin.models.application
    *
-   * @returns {Promise<Boolean>} has any applications
+   * @fulfil {Boolean} - has any applications
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.hasAny().then (hasAny) ->
@@ -171,7 +175,8 @@ THE SOFTWARE.
    * @memberof resin.models.application
    *
    * @param {(Number|String)} id - application id
-   * @returns {Promise<Object>} application
+   * @fulfil {Object} - application
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.getById(89).then (application) ->
@@ -205,7 +210,8 @@ THE SOFTWARE.
    * @param {String} name - application name
    * @param {String} deviceType - device type (display form)
    *
-   * @returns {Promise<Number>} application id
+   * @fulfil {Number} - application id
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.create('My App', 'Raspberry Pi').then (id) ->
@@ -302,7 +308,8 @@ THE SOFTWARE.
    * @memberof resin.models.application
    *
    * @param {String} name - application name
-   * @returns {Promise<String>} the api key
+   * @fulfil {String} - api key
+   * @returns {Promise}
    *
    * @example
    * resin.models.application.getApiKey('MyApp').then (apiKey) ->

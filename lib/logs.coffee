@@ -42,7 +42,8 @@ deviceModel = require('./models/device')
 # - `error`: when an error happens.
 #
 # @param {String} uuid - device uuid
-# @returns {Promise<EventEmitter>} logs
+# @fulfil {EventEmitter} - logs
+# @returns {Promise}
 #
 # @todo
 # We should consider making this a readable stream.
@@ -74,7 +75,8 @@ exports.subscribe = (uuid, callback) ->
 # @memberof resin.logs
 #
 # @param {String} uuid - device uuid
-# @returns {Promise<String[]>} history lines
+# @fulfil {String[]} - history lines
+# @returns {Promise}
 #
 # @example
 # resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (lines) ->

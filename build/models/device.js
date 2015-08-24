@@ -52,7 +52,8 @@ THE SOFTWARE.
    * @function
    * @memberof resin.models.device
    *
-   * @returns {Promise<Object[]>} devices
+   * @fulfil {Object[]} - devices
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getAll().then (devices) ->
@@ -86,7 +87,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} name - application name
-   * @returns {Promise<Object[]>} devices
+   * @fulfil {Object[]} - devices
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getAllByApplication('MyApp').then (devices) ->
@@ -125,7 +127,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<Object>} device
+   * @fulfil {Object} - device
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (device) ->
@@ -164,7 +167,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} name - device name
-   * @returns {Promise<Object[]>} devices
+   * @fulfil {Object[]} - devices
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getByName('MyDevice').then (devices) ->
@@ -204,7 +208,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<String>} device name
+   * @fulfil {String} - device name
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
@@ -229,7 +234,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<String>} application name
+   * @fulfil {String} - application name
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
@@ -254,7 +260,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<Boolean>} has device
+   * @fulfil {Boolean} - has device
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (hasDevice) ->
@@ -281,7 +288,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<Boolean>} is device online
+   * @fulfil {Boolean} - is device online
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
@@ -306,9 +314,9 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
-   * @returns {Promise<Array<String>>} local ip addresses
-   *
-   * @throws Will throw if the device is offline.
+   * @fulfil {String[]} - local ip addresses
+   * @reject {Error} Will reject if the device is offline
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (localIPAddresses) ->
@@ -490,7 +498,8 @@ THE SOFTWARE.
    * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
    * @param {String} deviceTypeSlug - device type slug
-   * @returns {Promise<String>} device display name
+   * @fulfil {String} - device display name
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getDisplayName('raspberry-pi').then (deviceTypeName) ->
@@ -525,7 +534,8 @@ THE SOFTWARE.
    * @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
    *
    * @param {String} deviceTypeName - device type name
-   * @returns {Promise<String>} device slug name
+   * @fulfil {String} - device slug name
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
@@ -557,7 +567,8 @@ THE SOFTWARE.
    * @function
    * @memberof resin.models.device
    *
-   * @returns {Promise<String[]>} supported device types
+   * @fulfil {String[]} - supported device types
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
@@ -586,7 +597,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} slug - device slug
-   * @returns {Promise<Object>} device manifest
+   * @fulfil {Object} - device manifest
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
@@ -620,7 +632,8 @@ THE SOFTWARE.
    * @memberof resin.models.device
    *
    * @param {String} applicationName - application name
-   * @returns {Promise<Object>} device manifest
+   * @fulfil {Object} - device manifest
+   * @returns {Promise}
    *
    * @example
    * resin.models.device.getManifestByApplication('MyApp').then (manifest) ->
@@ -667,7 +680,8 @@ THE SOFTWARE.
    * @param {String} applicationName - application name
    * @param {String} uuid - device uuid
    *
-   * @returns {Promise<Object>} device
+   * @fulfil {Object} - device
+   * @returns {Promise}
    *
    * @example
    * uuid = resin.models.device.generateUUID()

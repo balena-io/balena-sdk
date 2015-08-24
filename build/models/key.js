@@ -42,7 +42,8 @@ THE SOFTWARE.
    * @function
    * @memberof resin.models.key
    *
-   * @returns {Promise<Object[]>} ssh keys
+   * @fulfil {Object[]} - ssh keys
+   * @returns {Promise}
    *
    * @example
    * resin.models.key.getAll().then (keys) ->
@@ -69,7 +70,8 @@ THE SOFTWARE.
    * @memberof resin.models.key
    *
    * @param {(String|Number)} id - key id
-   * @returns {Promise<Object>} ssh key
+   * @fulfil {Object} - ssh key
+   * @returns {Promise}
    *
    * @example
    * resin.models.key.get(51).then (key) ->
@@ -129,7 +131,8 @@ THE SOFTWARE.
    * @param {String} title - key title
    * @param {String} key - the public ssh key
    *
-   * @returns {Promise<Number>} ssh key id
+   * @fulfil {Number} - ssh key id
+   * @returns {Promise}
    *
    * @example
    * resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
