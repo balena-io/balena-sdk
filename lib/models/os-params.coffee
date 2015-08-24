@@ -32,13 +32,6 @@ NETWORK_TYPES = [
 	NETWORK_ETHERNET
 ]
 
-VALID_OPTIONS = [
-	'network'
-	'appId'
-	'wifiSsid'
-	'wifiKey'
-]
-
 ###*
 # Create a set of connection parameters
 # @name OSParams
@@ -78,10 +71,5 @@ module.exports = class OSParams
 
 			if not options.wifiKey?
 				throw new Error('Missing option: wifiKey')
-
-		invalidOptions = _.difference(_.keys(options), VALID_OPTIONS)
-
-		if not _.isEmpty(invalidOptions)
-			throw new Error("Non allowed option: #{_.first(invalidOptions)}")
 
 		_.extend(this, options)
