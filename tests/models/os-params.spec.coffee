@@ -67,10 +67,10 @@ describe 'OS Params:', ->
 
 			m.chai.expect(connectionParams.appId).to.equal(91)
 
-		it 'should throw an error if extra options', ->
-			m.chai.expect ->
-				new OSParams
-					network: 'ethernet'
-					appId: '91'
-					hello: 'world'
-			.to.throw('Non allowed option: hello')
+		it 'should save extra options', ->
+			connectionParams = new OSParams
+				network: 'ethernet'
+				appId: '91'
+				hello: 'world'
+
+			m.chai.expect(connectionParams.hello).to.equal('world')

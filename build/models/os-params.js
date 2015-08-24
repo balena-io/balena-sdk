@@ -24,7 +24,7 @@ THE SOFTWARE.
  */
 
 (function() {
-  var NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, OSParams, VALID_OPTIONS, _;
+  var NETWORK_ETHERNET, NETWORK_TYPES, NETWORK_WIFI, OSParams, _;
 
   _ = require('lodash');
 
@@ -33,8 +33,6 @@ THE SOFTWARE.
   NETWORK_ETHERNET = 'ethernet';
 
   NETWORK_TYPES = [NETWORK_WIFI, NETWORK_ETHERNET];
-
-  VALID_OPTIONS = ['network', 'appId', 'wifiSsid', 'wifiKey'];
 
 
   /**
@@ -55,7 +53,6 @@ THE SOFTWARE.
 
   module.exports = OSParams = (function() {
     function OSParams(options) {
-      var invalidOptions;
       if (options.appId == null) {
         throw new Error('Missing option: appId');
       }
@@ -76,10 +73,6 @@ THE SOFTWARE.
         if (options.wifiKey == null) {
           throw new Error('Missing option: wifiKey');
         }
-      }
-      invalidOptions = _.difference(_.keys(options), VALID_OPTIONS);
-      if (!_.isEmpty(invalidOptions)) {
-        throw new Error("Non allowed option: " + (_.first(invalidOptions)));
       }
       _.extend(this, options);
     }
