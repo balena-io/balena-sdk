@@ -41,6 +41,19 @@ describe 'OS Model:', ->
 							m.chai.expect(result).to.equal('Lorem ipsum dolor sit amet')
 							done()
 
+				it 'should stream the download after a slight delay', (done) ->
+					os.download
+						network: 'ethernet'
+						appId: 95
+					.then (stream) ->
+						return Promise.delay(200).return(stream)
+					.then (stream) ->
+						result = ''
+						stream.on 'data', (chunk) -> result += chunk
+						stream.on 'end', ->
+							m.chai.expect(result).to.equal('Lorem ipsum dolor sit amet')
+							done()
+
 			describe 'given invalid parameters', ->
 
 				beforeEach (done) ->
