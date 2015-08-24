@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.5.0] - 2015-08-24
+
+### Added
+
+- Set `RESIN` and `USER` as system environment variables.
+- Make use of `@fulfil` and `@reject` JSDoc tags to document promises.
+
+### Changed
+
+- Upgrade Resin Request to v2.2.4.
+
 ## [2.4.1] - 2015-08-17
 
 ### Changed
@@ -82,6 +93,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.5.0]: https://github.com/resin-io/resin-sdk/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/resin-io/resin-sdk/compare/v2.3.1...v2.4.0
 [2.3.1]: https://github.com/resin-io/resin-sdk/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/resin-io/resin-sdk/compare/v2.2.0...v2.3.0
