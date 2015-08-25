@@ -208,17 +208,17 @@ THE SOFTWARE.
    * @memberof resin.models.application
    *
    * @param {String} name - application name
-   * @param {String} deviceType - device type (display form)
+   * @param {String} deviceType - device type slug
    *
    * @fulfil {Number} - application id
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.create('My App', 'Raspberry Pi').then (id) ->
+   * resin.models.application.create('My App', 'raspberry-pi').then (id) ->
    * 	console.log(id)
    *
    * @example
-   * resin.models.application.create 'My App', 'Raspberry Pi', (error, id) ->
+   * resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
    * 	throw error if error?
    * 	console.log(id)
    */
