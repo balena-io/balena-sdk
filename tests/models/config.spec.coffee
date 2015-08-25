@@ -2,6 +2,7 @@ m = require('mochainon')
 Promise = require('bluebird')
 nock = require('nock')
 settings = require('../../lib/settings')
+device = require('../../lib/models/device')
 config = require('../../lib/models/config')
 johnDoeFixture = require('../tokens.json').johndoe
 
@@ -100,3 +101,106 @@ describe 'Config Model:', ->
 				it 'should reject with an error message', ->
 					promise = config.getDeviceTypes()
 					m.chai.expect(promise).to.be.rejectedWith('No device types')
+
+		describe '.getDeviceOptions()', ->
+
+			describe 'given a manifest with configuration options', ->
+
+				beforeEach ->
+					@deviceGetManifestBySlugStub = m.sinon.stub(device, 'getManifestBySlug')
+					@deviceGetManifestBySlugStub.returns Promise.resolve
+						options: [
+							message: 'Processor'
+							name: 'processorType'
+							type: 'list'
+							choices: [ 'Z7010', 'Z7020' ]
+						,
+							message: 'Coprocessor cores'
+							name: 'coprocessorCore'
+							type: 'list'
+							choices: [ '16', '64' ]
+						]
+
+				afterEach ->
+					@deviceGetManifestBySlugStub.restore()
+
+				it 'should become the configuration options', ->
+					promise = config.getDeviceOptions('mydevicetype')
+					m.chai.expect(promise).to.become [
+						message: 'Processor'
+						name: 'processorType'
+						type: 'list'
+						choices: [ 'Z7010', 'Z7020' ]
+					,
+						message: 'Coprocessor cores'
+						name: 'coprocessorCore'
+						type: 'list'
+						choices: [ '16', '64' ]
+					]
+
+			describe 'given a manifest with initialization options', ->
+
+				beforeEach ->
+					@deviceGetManifestBySlugStub = m.sinon.stub(device, 'getManifestBySlug')
+					@deviceGetManifestBySlugStub.returns Promise.resolve
+						initialization:
+							options: [
+								message: 'Select a drive'
+								type: 'drive'
+								name: 'drive'
+							]
+
+				afterEach ->
+					@deviceGetManifestBySlugStub.restore()
+
+				it 'should become the initialization options', ->
+					promise = config.getDeviceOptions('mydevicetype')
+					m.chai.expect(promise).to.become [
+						message: 'Select a drive'
+						type: 'drive'
+						name: 'drive'
+					]
+
+			describe 'given a manifest with configuration and initialization options', ->
+
+				beforeEach ->
+					@deviceGetManifestBySlugStub = m.sinon.stub(device, 'getManifestBySlug')
+					@deviceGetManifestBySlugStub.returns Promise.resolve
+						options: [
+							message: 'Processor'
+							name: 'processorType'
+							type: 'list'
+							choices: [ 'Z7010', 'Z7020' ]
+						,
+							message: 'Coprocessor cores'
+							name: 'coprocessorCore'
+							type: 'list'
+							choices: [ '16', '64' ]
+						]
+						initialization:
+							options: [
+								message: 'Select a drive'
+								type: 'drive'
+								name: 'drive'
+							]
+
+				afterEach ->
+					@deviceGetManifestBySlugStub.restore()
+
+				it 'shoulde become an union of both', ->
+					promise = config.getDeviceOptions('mydevicetype')
+					m.chai.expect(promise).to.become [
+							message: 'Processor'
+							name: 'processorType'
+							type: 'list'
+							choices: [ 'Z7010', 'Z7020' ]
+						,
+							message: 'Coprocessor cores'
+							name: 'coprocessorCore'
+							type: 'list'
+							choices: [ '16', '64' ]
+						,
+							message: 'Select a drive'
+							type: 'drive'
+							name: 'drive'
+					]

@@ -63,6 +63,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
       * [.getPubNubKeys()](#resin.models.config.getPubNubKeys) ⇒ <code>Promise</code>
       * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+      * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
   * [.auth](#resin.auth) : <code>object</code>
     * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
     * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
@@ -139,6 +140,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
     * [.getPubNubKeys()](#resin.models.config.getPubNubKeys) ⇒ <code>Promise</code>
     * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+    * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
 
 <a name="resin.models.application"></a>
 #### models.application : <code>object</code>
@@ -1133,6 +1135,7 @@ resin.models.os.download parameters, (error, stream) ->
   * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
   * [.getPubNubKeys()](#resin.models.config.getPubNubKeys) ⇒ <code>Promise</code>
   * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+  * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
 
 <a name="resin.models.config.getAll"></a>
 ##### config.getAll() ⇒ <code>Promise</code>
@@ -1186,6 +1189,28 @@ resin.models.config.getDeviceTypes().then (deviceTypes) ->
 resin.models.config.getDeviceTypes (error, deviceTypes) ->
 	throw error if error?
 	console.log(deviceTypes)
+```
+<a name="resin.models.config.getDeviceOptions"></a>
+##### config.getDeviceOptions(deviceType) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[config](#resin.models.config)</code>  
+**Summary**: Get configuration/initialization options for a device type  
+**Access:** public  
+**Fulfil**: <code>Object[]</code> - configuration options  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>String</code> | device type slug |
+
+**Example**  
+```js
+resin.models.config.getDeviceOptions('raspberry-pi').then (options) ->
+	console.log(options)
+```
+**Example**  
+```js
+resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
+	throw error if error?
+	console.log(options)
 ```
 <a name="resin.auth"></a>
 ### resin.auth : <code>object</code>
