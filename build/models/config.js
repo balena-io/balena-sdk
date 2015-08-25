@@ -24,9 +24,13 @@ THE SOFTWARE.
  */
 
 (function() {
-  var request;
+  var _, deviceModel, request;
+
+  _ = require('lodash');
 
   request = require('resin-request');
+
+  deviceModel = require('./device');
 
 
   /**
@@ -113,6 +117,37 @@ THE SOFTWARE.
       if (deviceTypes == null) {
         throw new Error('No device types');
       }
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Get configuration/initialization options for a device type
+   * @name getDeviceOptions
+   * @public
+   * @function
+   * @memberof resin.models.config
+   *
+   * @param {String} deviceType - device type slug
+   * @fulfil {Object[]} - configuration options
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.config.getDeviceOptions('raspberry-pi').then (options) ->
+   * 	console.log(options)
+   *
+   * @example
+   * resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
+   * 	throw error if error?
+   * 	console.log(options)
+   */
+
+  exports.getDeviceOptions = function(deviceType, callback) {
+    return deviceModel.getManifestBySlug(deviceType).then(function(manifest) {
+      if (manifest.initialization == null) {
+        manifest.initialization = {};
+      }
+      return _.union(manifest.options, manifest.initialization.options);
     }).nodeify(callback);
   };
 

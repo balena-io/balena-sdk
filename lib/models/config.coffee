@@ -22,7 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
+_ = require('lodash')
 request = require('resin-request')
+deviceModel = require('./device')
 
 ###*
 # @summary Get all configuration
@@ -100,4 +102,30 @@ exports.getDeviceTypes = (callback) ->
 	exports.getAll().get('deviceTypes').tap (deviceTypes) ->
 		if not deviceTypes?
 			throw new Error('No device types')
+	.nodeify(callback)
+
+###*
+# @summary Get configuration/initialization options for a device type
+# @name getDeviceOptions
+# @public
+# @function
+# @memberof resin.models.config
+#
+# @param {String} deviceType - device type slug
+# @fulfil {Object[]} - configuration options
+# @returns {Promise}
+#
+# @example
+# resin.models.config.getDeviceOptions('raspberry-pi').then (options) ->
+# 	console.log(options)
+#
+# @example
+# resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
+# 	throw error if error?
+# 	console.log(options)
+###
+exports.getDeviceOptions = (deviceType, callback) ->
+	deviceModel.getManifestBySlug(deviceType).then (manifest) ->
+		manifest.initialization ?= {}
+		return _.union(manifest.options, manifest.initialization.options)
 	.nodeify(callback)
