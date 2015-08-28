@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.6.2] - 2015-08-28
+
+### Changed
+
+- Update Resin Request to v2.3.1.
+- Fix bug that caused `authenticate()` to fail even with valid credentials.
+
 ## [2.6.1] - 2015-08-25
 
 ### Changed
@@ -109,6 +116,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.6.2]: https://github.com/resin-io/resin-sdk/compare/v2.6.1...v2.6.2
 [2.6.1]: https://github.com/resin-io/resin-sdk/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/resin-io/resin-sdk/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/resin-io/resin-sdk/compare/v2.4.0...v2.5.0
