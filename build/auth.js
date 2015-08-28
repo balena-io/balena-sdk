@@ -101,7 +101,8 @@ THE SOFTWARE.
     return request.send({
       method: 'POST',
       url: '/login_',
-      body: credentials
+      body: credentials,
+      refreshToken: false
     }).get('body').nodeify(callback);
   };
 
