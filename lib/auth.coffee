@@ -91,6 +91,7 @@ exports.authenticate = (credentials, callback) ->
 		method: 'POST'
 		url: '/login_'
 		body: credentials
+		refreshToken: false
 	.get('body')
 	.nodeify(callback)
 

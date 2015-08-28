@@ -335,3 +335,43 @@ describe 'Auth:', ->
 						email: johnDoeFixture.data.email
 
 					m.chai.expect(promise).to.be.rejectedWith('Password required.')
+
+	describe 'given a 401 /whoami endpoint', ->
+
+		beforeEach (done) ->
+			settings.get('remoteUrl').then (remoteUrl) ->
+				nock(remoteUrl).get('/whoami').reply(401)
+				done()
+
+		afterEach ->
+			nock.cleanAll()
+
+		describe '.authenticate()', ->
+
+			describe 'given valid credentials', ->
+
+				beforeEach (done) ->
+					settings.get('remoteUrl').then (remoteUrl) ->
+						nock(remoteUrl).post('/login_').reply(200, johnDoeFixture.token)
+						done()
+
+				afterEach ->
+					nock.cleanAll()
+
+				describe 'given the current token is old', ->
+
+					beforeEach (done) ->
+						settings.get('tokenRefreshInterval').then (tokenRefreshInterval) =>
+							@tokenGetAgeStub = m.sinon.stub(token, 'getAge')
+							@tokenGetAgeStub.returns(Promise.resolve(tokenRefreshInterval + 1))
+						.nodeify(done)
+
+					afterEach ->
+						@tokenGetAgeStub.restore()
+
+					it 'should eventually return a token', ->
+						promise = auth.authenticate
+							username: 'foo'
+							password: 'bar'
+
+						m.chai.expect(promise).to.eventually.equal(johnDoeFixture.token)
