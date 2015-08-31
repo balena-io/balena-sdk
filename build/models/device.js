@@ -24,7 +24,7 @@ THE SOFTWARE.
  */
 
 (function() {
-  var Promise, _, applicationModel, auth, configModel, crypto, errors, pine, request;
+  var Promise, _, applicationModel, auth, configModel, crypto, errors, pine, registerDevice, request;
 
   Promise = require('bluebird');
 
@@ -37,6 +37,8 @@ THE SOFTWARE.
   errors = require('resin-errors');
 
   request = require('resin-request');
+
+  registerDevice = require('resin-register-device');
 
   configModel = require('./config');
 
@@ -665,9 +667,7 @@ THE SOFTWARE.
    * uuid = resin.models.device.generateUUID()
    */
 
-  exports.generateUUID = function() {
-    return crypto.pseudoRandomBytes(31).toString('hex');
-  };
+  exports.generateUUID = registerDevice.generateUUID;
 
 
   /**
@@ -701,18 +701,12 @@ THE SOFTWARE.
       apiKey: applicationModel.getApiKey(applicationName),
       application: applicationModel.get(applicationName)
     }).then(function(results) {
-      return pine.post({
-        resource: 'device',
-        body: {
-          user: results.userId,
-          application: results.application.id,
-          device_type: results.application.device_type,
-          registered_at: Math.floor(Date.now() / 1000),
-          uuid: uuid
-        },
-        customOptions: {
-          apikey: results.apiKey
-        }
+      return registerDevice.register(pine, {
+        userId: results.userId,
+        applicationId: results.application.id,
+        deviceType: results.application.device_type,
+        uuid: uuid,
+        apiKey: results.apiKey
       });
     }).nodeify(callback);
   };
