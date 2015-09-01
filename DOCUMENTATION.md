@@ -62,6 +62,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.config](#resin.models.config) : <code>object</code>
       * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
       * [.getPubNubKeys()](#resin.models.config.getPubNubKeys) ⇒ <code>Promise</code>
+      * [.getMixpanelToken()](#resin.models.config.getMixpanelToken) ⇒ <code>Promise</code>
       * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
       * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
   * [.auth](#resin.auth) : <code>object</code>
@@ -139,6 +140,7 @@ If you feel something is missing, not clear or could be improved, please don't h
   * [.config](#resin.models.config) : <code>object</code>
     * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
     * [.getPubNubKeys()](#resin.models.config.getPubNubKeys) ⇒ <code>Promise</code>
+    * [.getMixpanelToken()](#resin.models.config.getMixpanelToken) ⇒ <code>Promise</code>
     * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
     * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
 
@@ -1134,6 +1136,7 @@ resin.models.os.download parameters, (error, stream) ->
 * [.config](#resin.models.config) : <code>object</code>
   * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
   * [.getPubNubKeys()](#resin.models.config.getPubNubKeys) ⇒ <code>Promise</code>
+  * [.getMixpanelToken()](#resin.models.config.getMixpanelToken) ⇒ <code>Promise</code>
   * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
   * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
 
@@ -1172,6 +1175,23 @@ resin.models.config.getPubNubKeys (error, pubnubKeys) ->
 	throw error if error?
 	console.log(pubnubKeys.subscribe_key)
 	console.log(pubnubKeys.publish_key)
+```
+<a name="resin.models.config.getMixpanelToken"></a>
+##### config.getMixpanelToken() ⇒ <code>Promise</code>
+**Kind**: static method of <code>[config](#resin.models.config)</code>  
+**Summary**: Get Mixpanel token  
+**Access:** public  
+**Fulfil**: <code>String</code> - Mixpanel token  
+**Example**  
+```js
+resin.models.config.getMixpanelToken().then (mixpanelToken) ->
+	console.log(mixpanelToken)
+```
+**Example**  
+```js
+resin.models.config.getMixpanelToken (error, mixpanelToken) ->
+	throw error if error?
+	console.log(mixpanelToken)
 ```
 <a name="resin.models.config.getDeviceTypes"></a>
 ##### config.getDeviceTypes() ⇒ <code>Promise</code>

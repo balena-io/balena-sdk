@@ -68,6 +68,35 @@ describe 'Config Model:', ->
 					promise = config.getPubNubKeys()
 					m.chai.expect(promise).to.be.rejectedWith('No pubnub keys')
 
+		describe '.getMixpanelToken()', ->
+
+			describe 'given a configuration with a mixpanel token', ->
+
+				beforeEach ->
+					@configGetAllStub = m.sinon.stub(config, 'getAll')
+					@configGetAllStub.returns Promise.resolve
+						mixpanelToken: 'asdf'
+
+				afterEach ->
+					@configGetAllStub.restore()
+
+				it 'should eventually be the mixpanel token', ->
+					promise = config.getMixpanelToken()
+					m.chai.expect(promise).to.eventually.equal('asdf')
+
+			describe 'given a configuration without a mixpanel token', ->
+
+				beforeEach ->
+					@configGetAllStub = m.sinon.stub(config, 'getAll')
+					@configGetAllStub.returns(Promise.resolve({}))
+
+				afterEach ->
+					@configGetAllStub.restore()
+
+				it 'should reject with an error message', ->
+					promise = config.getMixpanelToken()
+					m.chai.expect(promise).to.be.rejectedWith('No mixpanel token')
+
 		describe '.getDeviceTypes()', ->
 
 			describe 'given a configuration with device types', ->
