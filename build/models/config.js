@@ -93,6 +93,35 @@ THE SOFTWARE.
 
 
   /**
+   * @summary Get Mixpanel token
+   * @name getMixpanelToken
+   * @public
+   * @function
+   * @memberof resin.models.config
+   *
+   * @fulfil {String} - Mixpanel token
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.config.getMixpanelToken().then (mixpanelToken) ->
+   * 	console.log(mixpanelToken)
+   *
+   * @example
+   * resin.models.config.getMixpanelToken (error, mixpanelToken) ->
+   * 	throw error if error?
+   * 	console.log(mixpanelToken)
+   */
+
+  exports.getMixpanelToken = function(callback) {
+    return exports.getAll().get('mixpanelToken').tap(function(mixpanelToken) {
+      if (mixpanelToken == null) {
+        throw new Error('No mixpanel token');
+      }
+    }).nodeify(callback);
+  };
+
+
+  /**
    * @summary Get device types
    * @name getDeviceTypes
    * @public
