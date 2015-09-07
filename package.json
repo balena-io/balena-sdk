@@ -46,7 +46,7 @@
     "resin-pine": "^1.3.1",
     "resin-register-device": "^1.1.0",
     "resin-request": "^2.3.2",
-    "resin-settings-client": "^3.0.0",
+    "resin-settings-client": "^3.1.0",
     "resin-token": "^2.4.2"
   }
 }
