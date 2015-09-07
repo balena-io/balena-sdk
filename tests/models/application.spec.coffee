@@ -16,8 +16,8 @@ describe 'Application Model:', ->
 	describe 'given a /whoami endpoint', ->
 
 		beforeEach (done) ->
-			settings.get('remoteUrl').then (remoteUrl) ->
-				nock(remoteUrl).get('/whoami').reply(200, johnDoeFixture.token)
+			settings.get('apiUrl').then (apiUrl) ->
+				nock(apiUrl).get('/whoami').reply(200, johnDoeFixture.token)
 				done()
 
 		afterEach ->
@@ -285,8 +285,8 @@ describe 'Application Model:', ->
 				describe 'given a successful restart', ->
 
 					beforeEach (done) ->
-						settings.get('remoteUrl').then (remoteUrl) ->
-							nock(remoteUrl).post('/application/999/restart').reply(200)
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/application/999/restart').reply(200)
 							done()
 
 					afterEach ->
@@ -299,8 +299,8 @@ describe 'Application Model:', ->
 				describe 'given an invalid application', ->
 
 					beforeEach (done) ->
-						settings.get('remoteUrl').then (remoteUrl) ->
-							nock(remoteUrl).post('/application/999/restart')
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/application/999/restart')
 								.reply(403, 'You do not have permission to access this application')
 							done()
 
@@ -343,8 +343,8 @@ describe 'Application Model:', ->
 				describe 'given a successful request', ->
 
 					beforeEach (done) ->
-						settings.get('remoteUrl').then (remoteUrl) ->
-							nock(remoteUrl).post('/application/999/generate-api-key').reply(200, 'asdf1234')
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/application/999/generate-api-key').reply(200, 'asdf1234')
 							done()
 
 					afterEach ->

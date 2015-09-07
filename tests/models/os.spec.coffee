@@ -10,8 +10,8 @@ describe 'OS Model:', ->
 	describe 'given a /whoami endpoint', ->
 
 		beforeEach (done) ->
-			settings.get('remoteUrl').then (remoteUrl) ->
-				nock(remoteUrl).get('/whoami').reply(200, johnDoeFixture.token)
+			settings.get('apiUrl').then (apiUrl) ->
+				nock(apiUrl).get('/whoami').reply(200, johnDoeFixture.token)
 				done()
 
 		afterEach ->
@@ -22,8 +22,8 @@ describe 'OS Model:', ->
 			describe 'given valid parameters', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).get('/download?network=ethernet&appId=95')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).get('/download?network=ethernet&appId=95')
 							.reply(200, 'Lorem ipsum dolor sit amet')
 						done()
 
@@ -57,8 +57,8 @@ describe 'OS Model:', ->
 			describe 'given invalid parameters', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).get('/download?network=ethernet&appId=95')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).get('/download?network=ethernet&appId=95')
 							.reply(400, 'Invalid application name')
 						done()
 

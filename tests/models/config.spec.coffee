@@ -11,8 +11,8 @@ describe 'Config Model:', ->
 	describe 'given a /whoami endpoint', ->
 
 		beforeEach (done) ->
-			settings.get('remoteUrl').then (remoteUrl) ->
-				nock(remoteUrl).get('/whoami').reply(200, johnDoeFixture.token)
+			settings.get('apiUrl').then (apiUrl) ->
+				nock(apiUrl).get('/whoami').reply(200, johnDoeFixture.token)
 				done()
 
 		afterEach ->
@@ -23,8 +23,8 @@ describe 'Config Model:', ->
 			describe 'given valid config', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).get('/config').reply 200,
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).get('/config').reply 200,
 							hello: 'world'
 						done()
 
