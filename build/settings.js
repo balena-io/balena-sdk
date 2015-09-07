@@ -43,13 +43,13 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.settings.get('remoteUrl').then (remoteUrl) ->
-   * 	console.log(remoteUrl)
+   * resin.settings.get('apiUrl').then (apiUrl) ->
+   * 	console.log(apiUrl)
    *
    * @example
-   * resin.settings.get 'remoteUrl', (error, remoteUrl) ->
+   * resin.settings.get 'apiUrl', (error, apiUrl) ->
    * 	throw error if error?
-   * 	console.log(remoteUrl)
+   * 	console.log(apiUrl)
    */
 
   exports.get = function(key, callback) {

@@ -14,8 +14,8 @@ describe 'Auth:', ->
 	describe 'given a /whoami endpoint', ->
 
 		beforeEach (done) ->
-			settings.get('remoteUrl').then (remoteUrl) ->
-				nock(remoteUrl).get('/whoami').reply(200, johnDoeFixture.token)
+			settings.get('apiUrl').then (apiUrl) ->
+				nock(apiUrl).get('/whoami').reply(200, johnDoeFixture.token)
 				done()
 
 		afterEach ->
@@ -46,8 +46,8 @@ describe 'Auth:', ->
 			describe 'given valid credentials', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/login_').reply(200, johnDoeFixture.token)
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/login_').reply(200, johnDoeFixture.token)
 						done()
 
 				afterEach ->
@@ -63,8 +63,8 @@ describe 'Auth:', ->
 			describe 'given invalid credentials', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/login_').reply(401, 'Unauthorized')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/login_').reply(401, 'Unauthorized')
 						done()
 
 				afterEach ->
@@ -82,8 +82,8 @@ describe 'Auth:', ->
 			describe 'given invalid credentials', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/login_').reply(401, 'Unauthorized')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/login_').reply(401, 'Unauthorized')
 						done()
 
 				afterEach ->
@@ -99,8 +99,8 @@ describe 'Auth:', ->
 			describe 'given valid credentials', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/login_').reply(200, johnDoeFixture.token)
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/login_').reply(200, johnDoeFixture.token)
 						done()
 
 				afterEach ->
@@ -173,8 +173,8 @@ describe 'Auth:', ->
 			describe 'given a logged in user', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).get('/whoami').reply(200, janeDoeFixture.token)
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).get('/whoami').reply(200, janeDoeFixture.token)
 						done()
 
 				afterEach ->
@@ -187,8 +187,8 @@ describe 'Auth:', ->
 			describe 'given no logged in user', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).get('/whoami').reply(401, 'Unauthorized')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).get('/whoami').reply(401, 'Unauthorized')
 						done()
 
 				afterEach ->
@@ -289,8 +289,8 @@ describe 'Auth:', ->
 			describe 'given register is successful', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/user/register').reply(201, johnDoeFixture.token)
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/user/register').reply(201, johnDoeFixture.token)
 						done()
 
 				afterEach ->
@@ -306,8 +306,8 @@ describe 'Auth:', ->
 			describe 'given a validation error', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/user/register').reply(400, 'Password must be at least 8 characters.')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/user/register').reply(400, 'Password must be at least 8 characters.')
 						done()
 
 				afterEach ->
@@ -323,8 +323,8 @@ describe 'Auth:', ->
 			describe 'given a missing field', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/user/register').reply(400, 'Password required.')
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/user/register').reply(400, 'Password required.')
 						done()
 
 				afterEach ->
@@ -339,8 +339,8 @@ describe 'Auth:', ->
 	describe 'given a 401 /whoami endpoint', ->
 
 		beforeEach (done) ->
-			settings.get('remoteUrl').then (remoteUrl) ->
-				nock(remoteUrl).get('/whoami').reply(401)
+			settings.get('apiUrl').then (apiUrl) ->
+				nock(apiUrl).get('/whoami').reply(401)
 				done()
 
 		afterEach ->
@@ -351,8 +351,8 @@ describe 'Auth:', ->
 			describe 'given valid credentials', ->
 
 				beforeEach (done) ->
-					settings.get('remoteUrl').then (remoteUrl) ->
-						nock(remoteUrl).post('/login_').reply(200, johnDoeFixture.token)
+					settings.get('apiUrl').then (apiUrl) ->
+						nock(apiUrl).post('/login_').reply(200, johnDoeFixture.token)
 						done()
 
 				afterEach ->

@@ -16,8 +16,8 @@ describe 'Device Model:', ->
 	describe 'given a /whoami endpoint', ->
 
 		beforeEach (done) ->
-			settings.get('remoteUrl').then (remoteUrl) ->
-				nock(remoteUrl).get('/whoami').reply(200, johnDoeFixture.token)
+			settings.get('apiUrl').then (apiUrl) ->
+				nock(apiUrl).get('/whoami').reply(200, johnDoeFixture.token)
 				done()
 
 		afterEach ->
@@ -530,8 +530,8 @@ describe 'Device Model:', ->
 				describe 'given the device is offline', ->
 
 					beforeEach (done) ->
-						settings.get('remoteUrl').then (remoteUrl) ->
-							nock(remoteUrl).post('/blink').reply(404, 'No online device(s) found')
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/blink').reply(404, 'No online device(s) found')
 							done()
 
 					afterEach ->
@@ -544,8 +544,8 @@ describe 'Device Model:', ->
 				describe 'given the device is online', ->
 
 					beforeEach (done) ->
-						settings.get('remoteUrl').then (remoteUrl) ->
-							nock(remoteUrl).post('/blink').reply(200)
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/blink').reply(200)
 							done()
 
 					afterEach ->
