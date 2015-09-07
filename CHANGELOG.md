@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.7.1] - 2015-09-07
+
+### Changed
+
+- Upgrade Resin Settings Client to v3.0.0.
+
 ## [2.7.0] - 2015-09-01
 
 ### Added
@@ -126,6 +132,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.7.1]: https://github.com/resin-io/resin-sdk/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/resin-io/resin-sdk/compare/v2.6.2...v2.7.0
 [2.6.2]: https://github.com/resin-io/resin-sdk/compare/v2.6.1...v2.6.2
 [2.6.1]: https://github.com/resin-io/resin-sdk/compare/v2.6.0...v2.6.1
