@@ -683,21 +683,23 @@ describe 'Device Model:', ->
 		describe '.generateUUID()', ->
 
 			it 'should return a string', ->
-				uuid = device.generateUUID()
-				m.chai.expect(uuid).to.be.a('string')
+				promise = device.generateUUID()
+				m.chai.expect(promise).to.eventually.be.a('string')
 
 			it 'should have a length of 62 (31 bytes)', ->
-				uuid = device.generateUUID()
-				m.chai.expect(uuid).to.have.length(62)
+				promise = device.generateUUID()
+				m.chai.expect(promise).to.eventually.have.length(62)
 
-			it 'should generate different uuids each time', ->
-				uuid1 = device.generateUUID()
-				uuid2 = device.generateUUID()
-				uuid3 = device.generateUUID()
-
-				m.chai.expect(uuid1).to.not.equal(uuid2)
-				m.chai.expect(uuid2).to.not.equal(uuid3)
-				m.chai.expect(uuid3).to.not.equal(uuid1)
+			it 'should generate different uuids each time', (done) ->
+				Promise.props
+					one: device.generateUUID()
+					two: device.generateUUID()
+					three: device.generateUUID()
+				.then (uuids) ->
+					m.chai.expect(uuids.one).to.not.equal(uuids.two)
+					m.chai.expect(uuids.two).to.not.equal(uuids.three)
+					m.chai.expect(uuids.three).to.not.equal(uuids.one)
+				.nodeify(done)
 
 		describe '.register()', ->
 
