@@ -619,3 +619,118 @@ exports.register = (applicationName, uuid, callback) ->
 			apiKey: results.apiKey
 
 	.nodeify(callback)
+
+###*
+# @summary Check if a device is web accessible with device utls
+# @name hasDeviceUrl
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {Boolean} - has device url
+# @returns {Promise}
+#
+# @example
+# resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+#
+# @example
+# resin.models.device.hasDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+# 	throw error if error?
+###
+exports.hasDeviceUrl = (uuid, callback) ->
+	exports.get(uuid).get('is_web_accessible').nodeify(callback)
+
+###*
+# @summary Get a device url
+# @name getDeviceUrl
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {String} - device url
+# @returns {Promise}
+#
+# @example
+# resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (url) ->
+# 	console.log(url)
+#
+# @example
+# resin.models.device.getDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, url) ->
+# 	console.log(url)
+# 	throw error if error?
+###
+exports.getDeviceUrl = (uuid, callback) ->
+	exports.hasDeviceUrl(uuid).then (hasDeviceUrl) ->
+		if not hasDeviceUrl
+			throw new Error("Device is not web accessible: #{uuid}")
+
+		return configModel.getAll().get('deviceUrlsBase')
+	.then (deviceUrlsBase) ->
+		return "https://#{uuid}.#{deviceUrlsBase}"
+	.nodeify(callback)
+
+###*
+# @summary Enable device url for a device
+# @name enableDeviceUrl
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @example
+# resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+#
+# @example
+# resin.models.device.enableDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+# 	throw error if error?
+###
+exports.enableDeviceUrl = (uuid, callback) ->
+	exports.has(uuid).then (hasDevice) ->
+
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(uuid)
+
+		return pine.patch
+			resource: 'device'
+			body:
+				is_web_accessible: true
+			options:
+				filter:
+					uuid: uuid
+	.nodeify(callback)
+
+###*
+# @summary Disable device url for a device
+# @name disableDeviceUrl
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @example
+# resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+#
+# @example
+# resin.models.device.disableDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+# 	throw error if error?
+###
+exports.disableDeviceUrl = (uuid, callback) ->
+	exports.has(uuid).then (hasDevice) ->
+
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(uuid)
+
+		return pine.patch
+			resource: 'device'
+			body:
+				is_web_accessible: false
+			options:
+				filter:
+					uuid: uuid
+	.nodeify(callback)

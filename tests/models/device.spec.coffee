@@ -748,3 +748,83 @@ describe 'Device Model:', ->
 						uuid = device.generateUUID()
 						promise = device.register('MyApp', uuid)
 						m.chai.expect(promise).to.be.rejectedWith(errors.ResinApplicationNotFound)
+
+		describe '.hasDeviceUrl()', ->
+
+			describe 'given a device that is web accessible', ->
+
+				beforeEach ->
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns Promise.resolve [
+						id: 1
+						name: 'Device1'
+						application: [
+							{ app_name: 'MyApp' }
+						]
+						is_web_accessible: true
+					]
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should eventually be true', ->
+					promise = device.hasDeviceUrl('asdf')
+					m.chai.expect(promise).to.eventually.be.true
+
+			describe 'given a device that is not web accessible', ->
+
+				beforeEach ->
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns Promise.resolve [
+						id: 1
+						name: 'Device1'
+						application: [
+							{ app_name: 'MyApp' }
+						]
+						is_web_accessible: false
+					]
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should eventually be false', ->
+					promise = device.hasDeviceUrl('asdf')
+					m.chai.expect(promise).to.eventually.be.false
+
+		describe '.getDeviceUrl()', ->
+
+			describe 'given a device that is not web accessible', ->
+
+				beforeEach ->
+					@deviceHasDeviceUrlStub = m.sinon.stub(device, 'hasDeviceUrl')
+					@deviceHasDeviceUrlStub.returns(Promise.resolve(false))
+
+				afterEach ->
+					@deviceHasDeviceUrlStub.restore()
+
+				it 'should be rejected with an error', ->
+					promise = device.getDeviceUrl('asdf')
+					m.chai.expect(promise).to.be.rejectedWith('Device is not web accessible: asdf')
+
+			describe 'given a device that is web accessible', ->
+
+				beforeEach ->
+					@deviceHasDeviceUrlStub = m.sinon.stub(device, 'hasDeviceUrl')
+					@deviceHasDeviceUrlStub.returns(Promise.resolve(true))
+
+				afterEach ->
+					@deviceHasDeviceUrlStub.restore()
+
+				describe 'given a working /config endpoint', ->
+
+					beforeEach ->
+						@configModelGetAllStub = m.sinon.stub(config, 'getAll')
+						@configModelGetAllStub.returns Promise.resolve
+							deviceUrlsBase: 'resindevice.io'
+
+					afterEach ->
+						@configModelGetAllStub.restore()
+
+					it 'should return the device url', ->
+						promise = device.getDeviceUrl('asdf')
+						m.chai.expect(promise).to.eventually.equal('https://asdf.resindevice.io')
