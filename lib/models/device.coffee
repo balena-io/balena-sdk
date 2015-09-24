@@ -426,6 +426,31 @@ exports.note = (uuid, note, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Restart device
+# @name restart
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @example
+# resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+#
+# @example
+# resin.models.device.restart '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
+# 	throw error if error?
+###
+exports.restart = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		return request.send
+			method: 'POST'
+			url: "/device/#{device.id}/restart"
+	.get('body')
+	.nodeify(callback)
+
+###*
 # @summary Get display name for a device
 # @name getDisplayName
 # @public

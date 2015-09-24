@@ -555,6 +555,67 @@ describe 'Device Model:', ->
 						promise = device.identify('1234')
 						m.chai.expect(promise).to.eventually.be.undefined
 
+		describe '.restart()', ->
+
+			describe 'given an invalid device', ->
+
+				beforeEach ->
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				it 'should reject with not found error', ->
+					promise = device.restart('1234')
+					m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
+			describe 'given a valid device', ->
+
+				beforeEach ->
+					@device =
+						id: 1
+						name: 'Device1'
+						uuid: '1234'
+						application: [
+							app_name: 'App1'
+						]
+
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns(Promise.resolve([ @device ]))
+
+				afterEach ->
+					@pineGetStub.restore()
+
+				describe 'given a successful restart', ->
+
+					beforeEach (done) ->
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/device/1/restart').reply(200)
+							done()
+
+					afterEach ->
+						nock.cleanAll()
+
+					it 'should eventually be undefined', ->
+						promise = device.restart('1234')
+						m.chai.expect(promise).to.eventually.be.undefined
+
+				describe 'given an unsuccessful restart', ->
+
+					beforeEach (done) ->
+						settings.get('apiUrl').then (apiUrl) ->
+							nock(apiUrl).post('/device/1/restart')
+								.reply(403, 'Error restarting device')
+							done()
+
+					afterEach ->
+						nock.cleanAll()
+
+					it 'should be rejected with an error message', ->
+						promise = device.restart('1234')
+						m.chai.expect(promise).to.be.rejectedWith('Error restarting device')
+
 		describe '.getDisplayName()', ->
 
 			describe 'given device types', ->
