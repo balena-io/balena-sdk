@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased][unreleased]
+
+### Changed
+
+- Make `resin.models.config.getPubNubKeys()` and `resin.models.config.getMixpanelToken()` private.
+
 ## [2.8.0] - 2015-09-24
 
 ### Added
