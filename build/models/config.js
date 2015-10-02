@@ -64,7 +64,7 @@ THE SOFTWARE.
   /**
    * @summary Get PubNub keys
    * @name getPubNubKeys
-   * @public
+   * @private
    * @function
    * @memberof resin.models.config
    *
@@ -95,7 +95,7 @@ THE SOFTWARE.
   /**
    * @summary Get Mixpanel token
    * @name getMixpanelToken
-   * @public
+   * @private
    * @function
    * @memberof resin.models.config
    *
