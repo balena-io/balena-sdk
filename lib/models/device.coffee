@@ -598,10 +598,12 @@ exports.getManifestByApplication = (applicationName, callback) ->
 # @public
 # @memberof resin.models.device
 #
-# @returns {String} A generated UUID
+# @fulfil {String} - a generated UUID
+# @returns {Promise}
 #
 # @example
-# uuid = resin.models.device.generateUUID()
+# resin.models.device.generateUUID().then (uuid) ->
+# 	console.log(uuid)
 ###
 exports.generateUUID = registerDevice.generateUUID
 
