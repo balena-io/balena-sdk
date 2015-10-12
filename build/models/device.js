@@ -714,15 +714,17 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * uuid = resin.models.device.generateUUID()
-   * resin.models.device.register('MyApp', uuid).then (device) ->
-   * 	console.log(device)
+   * resin.models.device.generateUUID().then (uuid) ->
+   * 	resin.models.device.register('MyApp', uuid).then (device) ->
+   * 		console.log(device)
    *
    * @example
-   * uuid = resin.models.device.generateUUID()
-   * resin.models.device.register 'MyApp', uuid, (error, device) ->
+   * resin.models.device.generateUUID (error, uuid) ->
    * 	throw error if error?
-   * 	console.log(device)
+   *
+   * 	resin.models.device.register 'MyApp', uuid, (error, device) ->
+   * 		throw error if error?
+   * 		console.log(device)
    */
 
   exports.register = function(applicationName, uuid, callback) {

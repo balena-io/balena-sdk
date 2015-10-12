@@ -810,16 +810,18 @@ resin.models.device.generateUUID().then (uuid) ->
 
 **Example**  
 ```js
-uuid = resin.models.device.generateUUID()
-resin.models.device.register('MyApp', uuid).then (device) ->
-	console.log(device)
+resin.models.device.generateUUID().then (uuid) ->
+	resin.models.device.register('MyApp', uuid).then (device) ->
+		console.log(device)
 ```
 **Example**  
 ```js
-uuid = resin.models.device.generateUUID()
-resin.models.device.register 'MyApp', uuid, (error, device) ->
+resin.models.device.generateUUID (error, uuid) ->
 	throw error if error?
-	console.log(device)
+
+	resin.models.device.register 'MyApp', uuid, (error, device) ->
+		throw error if error?
+		console.log(device)
 ```
 <a name="resin.models.device.hasDeviceUrl"></a>
 ##### device.hasDeviceUrl(uuid) ⇒ <code>Promise</code>
