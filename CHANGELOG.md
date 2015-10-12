@@ -3,11 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased][unreleased]
+## [2.8.1] - 2015-10-12
 
 ### Changed
 
 - Make `resin.models.config.getPubNubKeys()` and `resin.models.config.getMixpanelToken()` private.
+- Fix `resin.models.device.generateUUID()` examples.
 
 ## [2.8.0] - 2015-09-24
 
@@ -156,6 +157,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[2.8.1]: https://github.com/resin-io/resin-sdk/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/resin-io/resin-sdk/compare/v2.7.3...v2.8.0
 [2.7.3]: https://github.com/resin-io/resin-sdk/compare/v2.7.2...v2.7.3
 [2.7.2]: https://github.com/resin-io/resin-sdk/compare/v2.7.1...v2.7.2
