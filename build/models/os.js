@@ -24,13 +24,9 @@ THE SOFTWARE.
  */
 
 (function() {
-  var OSParams, request, url;
-
-  url = require('url');
+  var request;
 
   request = require('resin-request');
-
-  OSParams = require('./os-params');
 
 
   /**
@@ -65,15 +61,10 @@ THE SOFTWARE.
    */
 
   exports.download = function(parameters, callback) {
-    var downloadUrl, query;
-    parameters = new OSParams(parameters);
-    query = url.format({
-      query: parameters
-    });
-    downloadUrl = url.resolve('/download', query);
     return request.stream({
       method: 'GET',
-      url: downloadUrl
+      url: '/download',
+      qs: parameters
     }).nodeify(callback);
   };
 

@@ -22,9 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ###
 
-url = require('url')
 request = require('resin-request')
-OSParams = require('./os-params')
 
 ###*
 # @summary Download an OS image
@@ -57,12 +55,8 @@ OSParams = require('./os-params')
 # 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
 ###
 exports.download = (parameters, callback) ->
-	parameters = new OSParams(parameters)
-
-	query = url.format(query: parameters)
-	downloadUrl = url.resolve('/download', query)
-
 	request.stream
 		method: 'GET'
-		url: downloadUrl
+		url: '/download'
+		qs: parameters
 	.nodeify(callback)
