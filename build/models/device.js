@@ -581,10 +581,14 @@ THE SOFTWARE.
 
   exports.getDeviceSlug = function(deviceTypeName, callback) {
     return configModel.getDeviceTypes().then(function(deviceTypes) {
-      var deviceTypeFound;
-      deviceTypeFound = _.findWhere(deviceTypes, {
+      var deviceTypeFound, foundByName, foundBySlug;
+      foundByName = _.findWhere(deviceTypes, {
         name: deviceTypeName
       });
+      foundBySlug = _.findWhere(deviceTypes, {
+        slug: deviceTypeName
+      });
+      deviceTypeFound = foundByName || foundBySlug;
       return deviceTypeFound != null ? deviceTypeFound.slug : void 0;
     }).nodeify(callback);
   };
