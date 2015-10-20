@@ -69,6 +69,10 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
       * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
   * [.auth](#resin.auth) : <code>object</code>
+    * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
+      * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
+      * [.isPassed()](#resin.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+      * [.challenge(code)](#resin.auth.twoFactor.challenge) ⇒ <code>Promise</code>
     * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
     * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
     * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
@@ -1312,6 +1316,10 @@ resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
 **Kind**: static namespace of <code>[resin](#resin)</code>  
 
 * [.auth](#resin.auth) : <code>object</code>
+  * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
+    * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
+    * [.isPassed()](#resin.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+    * [.challenge(code)](#resin.auth.twoFactor.challenge) ⇒ <code>Promise</code>
   * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
   * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
   * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
@@ -1323,6 +1331,74 @@ resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
   * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
   * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise</code>
 
+<a name="resin.auth.twoFactor"></a>
+#### auth.twoFactor : <code>object</code>
+**Kind**: static namespace of <code>[auth](#resin.auth)</code>  
+
+* [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
+  * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
+  * [.isPassed()](#resin.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+  * [.challenge(code)](#resin.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+
+<a name="resin.auth.twoFactor.isEnabled"></a>
+##### twoFactor.isEnabled() ⇒ <code>Promise</code>
+**Kind**: static method of <code>[twoFactor](#resin.auth.twoFactor)</code>  
+**Summary**: Check if two factor authentication is enabled  
+**Access:** public  
+**Fulfil**: <code>Boolean</code> - whether 2fa is enabled  
+**Example**  
+```js
+resin.auth.twoFactor.isEnabled().then (isEnabled) ->
+	if isEnabled
+		console.log('2FA is enabled for this account')
+```
+**Example**  
+```js
+resin.auth.twoFactor.isEnabled (error, isEnabled) ->
+	throw error if error?
+
+	if isEnabled
+		console.log('2FA is enabled for this account')
+```
+<a name="resin.auth.twoFactor.isPassed"></a>
+##### twoFactor.isPassed() ⇒ <code>Promise</code>
+**Kind**: static method of <code>[twoFactor](#resin.auth.twoFactor)</code>  
+**Summary**: Check if two factor authentication challenge was passed  
+**Access:** public  
+**Fulfil**: <code>Boolean</code> - whether 2fa challenge was passed  
+**Example**  
+```js
+resin.auth.twoFactor.isPassed().then (isPassed) ->
+	if isPassed
+		console.log('2FA challenge passed')
+```
+**Example**  
+```js
+resin.auth.twoFactor.isPassed (error, isPassed) ->
+	throw error if error?
+
+	if isPassed
+		console.log('2FA challenge passed')
+```
+<a name="resin.auth.twoFactor.challenge"></a>
+##### twoFactor.challenge(code) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[twoFactor](#resin.auth.twoFactor)</code>  
+**Summary**: Challenge two factor authentication  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| code | <code>String</code> | code |
+
+**Example**  
+```js
+resin.auth.twoFactor.challenge('1234')
+```
+**Example**  
+```js
+resin.auth.twoFactor.challenge '1234', (error) ->
+	throw error if error?
+```
 <a name="resin.auth.whoami"></a>
 #### auth.whoami() ⇒ <code>Promise</code>
 This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
