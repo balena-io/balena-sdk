@@ -1352,7 +1352,7 @@ resin.auth.whoami (error, username) ->
 <a name="resin.auth.authenticate"></a>
 #### auth.authenticate(credentials) ⇒ <code>Promise</code>
 You should use [module:resin.auth.login](module:resin.auth.login) when possible,
-as it takes care of saving the token and username as well.
+as it takes care of saving the token and email as well.
 
 Notice that if `credentials` contains extra keys, they'll be discarted
 by the server automatically.
@@ -1364,8 +1364,8 @@ by the server automatically.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| credentials | <code>Object</code> | in the form of username, password |
-| credentials.username | <code>String</code> | the username |
+| credentials | <code>Object</code> | in the form of email, password |
+| credentials.email | <code>String</code> | the email |
 | credentials.password | <code>String</code> | the password |
 
 **Example**  
@@ -1389,8 +1389,8 @@ If the login is successful, the token is persisted between sessions.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| credentials | <code>Object</code> | in the form of username, password |
-| credentials.username | <code>String</code> | the username |
+| credentials | <code>Object</code> | in the form of email, password |
+| credentials.email | <code>String</code> | the email |
 | credentials.password | <code>String</code> | the password |
 
 **Example**  
