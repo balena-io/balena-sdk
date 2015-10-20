@@ -668,6 +668,12 @@ describe 'Device Model:', ->
 						promise = device.getDeviceSlug('Foo Bar')
 						m.chai.expect(promise).to.eventually.be.undefined
 
+				describe 'given a slug', ->
+
+					it 'should return the device that matches the slug', ->
+						promise = device.getDeviceSlug('raspberry-pi')
+						m.chai.expect(promise).to.eventually.equal('raspberry-pi')
+
 		describe '.getSupportedDeviceTypes()', ->
 
 			describe 'given device types', ->

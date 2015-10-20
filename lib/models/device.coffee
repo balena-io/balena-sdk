@@ -506,7 +506,10 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 ###
 exports.getDeviceSlug = (deviceTypeName, callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
-		deviceTypeFound = _.findWhere(deviceTypes, name: deviceTypeName)
+		foundByName = _.findWhere(deviceTypes, name: deviceTypeName)
+		foundBySlug = _.findWhere(deviceTypes, slug: deviceTypeName)
+		deviceTypeFound = foundByName or foundBySlug
+
 		return deviceTypeFound?.slug
 	.nodeify(callback)
 
