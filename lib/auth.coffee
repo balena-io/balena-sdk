@@ -65,13 +65,13 @@ exports.whoami = (callback) ->
 # @memberof resin.auth
 #
 # @description You should use {@link module:resin.auth.login} when possible,
-# as it takes care of saving the token and username as well.
+# as it takes care of saving the token and email as well.
 #
 # Notice that if `credentials` contains extra keys, they'll be discarted
 # by the server automatically.
 #
-# @param {Object} credentials - in the form of username, password
-# @param {String} credentials.username - the username
+# @param {Object} credentials - in the form of email, password
+# @param {String} credentials.email - the email
 # @param {String} credentials.password - the password
 #
 # @fulfil {String} - session token
@@ -90,7 +90,9 @@ exports.authenticate = (credentials, callback) ->
 	request.send
 		method: 'POST'
 		url: '/login_'
-		body: credentials
+		body:
+			username: credentials.email
+			password: credentials.password
 		refreshToken: false
 	.get('body')
 	.nodeify(callback)
@@ -104,8 +106,8 @@ exports.authenticate = (credentials, callback) ->
 #
 # @description If the login is successful, the token is persisted between sessions.
 #
-# @param {Object} credentials - in the form of username, password
-# @param {String} credentials.username - the username
+# @param {Object} credentials - in the form of email, password
+# @param {String} credentials.email - the email
 # @param {String} credentials.password - the password
 #
 # @returns {Promise}

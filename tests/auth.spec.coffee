@@ -55,7 +55,7 @@ describe 'Auth:', ->
 
 				it 'should eventually return a token', ->
 					promise = auth.authenticate
-						username: 'foo'
+						email: 'foo'
 						password: 'bar'
 
 					m.chai.expect(promise).to.eventually.equal(johnDoeFixture.token)
@@ -72,7 +72,7 @@ describe 'Auth:', ->
 
 				it 'should be rejected', ->
 					promise = auth.authenticate
-						username: 'foo'
+						email: 'foo'
 						password: 'bar'
 
 					m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
@@ -91,7 +91,7 @@ describe 'Auth:', ->
 
 				it 'should be rejected', ->
 					promise = auth.login
-						username: 'foo'
+						email: 'foo'
 						password: 'bar'
 
 					m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
@@ -115,7 +115,7 @@ describe 'Auth:', ->
 						m.chai.expect(auth.getToken()).to.be.rejectedWith(errors.ResinNotLoggedIn)
 
 						auth.login
-							username: 'foo'
+							email: 'foo'
 							password: 'bar'
 						.then ->
 							m.chai.expect(auth.getToken()).to.eventually.equal(johnDoeFixture.token)
@@ -130,7 +130,7 @@ describe 'Auth:', ->
 						m.chai.expect(auth.getToken()).to.eventually.equal(janeDoeFixture.token)
 
 						auth.login
-							username: 'foo'
+							email: 'foo'
 							password: 'bar'
 						.then ->
 							m.chai.expect(auth.getToken()).to.eventually.equal(johnDoeFixture.token)
@@ -371,7 +371,7 @@ describe 'Auth:', ->
 
 					it 'should eventually return a token', ->
 						promise = auth.authenticate
-							username: 'foo'
+							email: 'foo'
 							password: 'bar'
 
 						m.chai.expect(promise).to.eventually.equal(johnDoeFixture.token)
