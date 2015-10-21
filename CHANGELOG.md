@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] - 2015-10-21
+
+### Added
+
+- Implement `resin.auth.twoFactor.isEnabled()`.
+- Implement `resin.auth.twoFactor.isPassed()`.
+- Implement `resin.auth.twoFactor.challenge()`.
+
+### Changed
+
+- Require an `email` instead of `username` in `resin.auth.login()` and `resin.auth.authenticate()`.
+- Support searching a device type slug by a slug.
+
 ## [3.0.0] - 2015-10-12
 
 ### Changed
