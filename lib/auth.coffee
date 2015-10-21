@@ -27,6 +27,12 @@ request = require('resin-request')
 token = require('resin-token')
 
 ###*
+# @namespace resin.auth.twoFactor
+# @memberof resin.auth
+###
+exports.twoFactor = require('./2fa')
+
+###*
 # @summary Return current logged in username
 # @name whoami
 # @public
