@@ -176,6 +176,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[4.0.0]: https://github.com/resin-io/resin-sdk/compare/v3.0.0...v4.0.0
 [3.0.0]: https://github.com/resin-io/resin-sdk/compare/v2.8.1...v3.0.0
 [2.8.1]: https://github.com/resin-io/resin-sdk/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/resin-io/resin-sdk/compare/v2.7.3...v2.8.0
