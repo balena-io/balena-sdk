@@ -85,13 +85,8 @@ THE SOFTWARE.
    */
 
   exports.isPassed = function(callback) {
-    return exports.isEnabled().then(function(isEnabled) {
-      if (!isEnabled) {
-        return true;
-      }
-      return token.getProperty('twoFactorRequired').then(function(twoFactorRequired) {
-        return !twoFactorRequired;
-      });
+    return token.getProperty('twoFactorRequired').then(function(twoFactorRequired) {
+      return !twoFactorRequired;
     }).nodeify(callback);
   };
 

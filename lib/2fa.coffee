@@ -75,13 +75,8 @@ exports.isEnabled = (callback) ->
 # 		console.log('2FA challenge passed')
 ###
 exports.isPassed = (callback) ->
-	exports.isEnabled().then (isEnabled) ->
-
-		# Users without 2FA always passed
-		return true if not isEnabled
-
-		token.getProperty('twoFactorRequired').then (twoFactorRequired) ->
-			return not twoFactorRequired
+	token.getProperty('twoFactorRequired').then (twoFactorRequired) ->
+		return not twoFactorRequired
 	.nodeify(callback)
 
 ###*
