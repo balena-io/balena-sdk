@@ -43,21 +43,25 @@ THE SOFTWARE.
    * @todo In the future this function should only require a device type slug.
    *
    * @example
-   * parameters =
-   * 	network: 'ethernet'
+   * var parameters = {
+   * 	network: 'ethernet',
    * 	appId: 91
+   * };
    *
-   * resin.models.os.download(parameters).then (stream) ->
-   * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+   * resin.models.os.download(parameters).then(function(stream) {
+   * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+   * });
    *
    * @example
-   * parameters =
-   * 	network: 'ethernet'
+   * var parameters = {
+   * 	network: 'ethernet',
    * 	appId: 91
+   * };
    *
-   * resin.models.os.download parameters, (error, stream) ->
-   * 	throw error if error?
-   * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+   * resin.models.os.download(parameters, function(error, stream) {
+   * 	if (error) throw error;
+   * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+   * });
    */
 
   exports.download = function(parameters, callback) {

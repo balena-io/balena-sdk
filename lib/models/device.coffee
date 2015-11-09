@@ -44,13 +44,15 @@ auth = require('../auth')
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getAll().then (devices) ->
-# 	console.log(devices)
+# resin.models.device.getAll().then(function(devices) {
+# 	console.log(devices);
+# });
 #
 # @example
-# resin.models.device.getAll (error, devices) ->
-# 	throw error if error?
-# 	console.log(devices)
+# resin.models.device.getAll(function(error, devices) {
+# 	if (error) throw error;
+# 	console.log(devices);
+# });
 ###
 exports.getAll = (callback) ->
 	return pine.get
@@ -76,13 +78,15 @@ exports.getAll = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getAllByApplication('MyApp').then (devices) ->
-# 	console.log(devices)
+# resin.models.device.getAllByApplication('MyApp').then(function(devices) {
+# 	console.log(devices);
+# });
 #
 # @example
-# resin.models.device.getAllByApplication 'MyApp', (error, devices) ->
-# 	throw error if error?
-# 	console.log(devices)
+# resin.models.device.getAllByApplication('MyApp', function(error, devices) {
+# 	if (error) throw error;
+# 	console.log(devices);
+# });
 ###
 exports.getAllByApplication = (name, callback) ->
 	return pine.get
@@ -112,13 +116,15 @@ exports.getAllByApplication = (name, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (device) ->
-# 	console.log(device)
+# resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(device) {
+# 	console.log(device);
+# })
 #
 # @example
-# resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
-# 	throw error if error?
-# 	console.log(device)
+# resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, device) {
+# 	if (error) throw error;
+# 	console.log(device);
+# });
 ###
 exports.get = (uuid, callback) ->
 	return pine.get
@@ -148,13 +154,15 @@ exports.get = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getByName('MyDevice').then (devices) ->
-# 	console.log(devices)
+# resin.models.device.getByName('MyDevice').then(function(devices) {
+# 	console.log(devices);
+# });
 #
 # @example
-# resin.models.device.getByName 'MyDevice', (error, devices) ->
-# 	throw error if error?
-# 	console.log(devices)
+# resin.models.device.getByName('MyDevice', function(error, devices) {
+# 	if (error) throw error;
+# 	console.log(devices);
+# });
 ###
 exports.getByName = (name, callback) ->
 	return pine.get
@@ -184,13 +192,15 @@ exports.getByName = (name, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
-# 	console.log(deviceName)
+# resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(deviceName) {
+# 	console.log(deviceName);
+# });
 #
 # @example
-# resin.models.device.getName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, deviceName) ->
-# 	throw error if error?
-# 	console.log(deviceName)
+# resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, deviceName) {
+# 	if (error) throw error;
+# 	console.log(deviceName);
+# });
 ###
 exports.getName = (uuid, callback) ->
 	exports.get(uuid).get('name').nodeify(callback)
@@ -207,13 +217,15 @@ exports.getName = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
-# 	console.log(applicationName)
+# resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(applicationName) {
+# 	console.log(applicationName);
+# });
 #
 # @example
-# resin.models.device.getApplicationName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, applicationName) ->
-# 	throw error if error?
-# 	console.log(applicationName)
+# resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, applicationName) {
+# 	if (error) throw error;
+# 	console.log(applicationName);
+# });
 ###
 exports.getApplicationName = (uuid, callback) ->
 	exports.get(uuid).get('application_name').nodeify(callback)
@@ -230,13 +242,15 @@ exports.getApplicationName = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (hasDevice) ->
-# 	console.log(hasDevice)
+# resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(hasDevice) {
+# 	console.log(hasDevice);
+# });
 #
 # @example
-# resin.models.device.has '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, hasDevice) ->
-# 	throw error if error?
-# 	console.log(hasDevice)
+# resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, hasDevice) {
+# 	if (error) throw error;
+# 	console.log(hasDevice);
+# });
 ###
 exports.has = (uuid, callback) ->
 	exports.get(uuid).return(true)
@@ -256,13 +270,15 @@ exports.has = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
-# 	console.log("Is device online? #{isOnline}")
+# resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(isOnline) {
+# 	console.log('Is device online?', isOnline);
+# });
 #
 # @example
-# resin.models.device.isOnline '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, isOnline) ->
-# 	throw error if error?
-# 	console.log("Is device online? #{isOnline}")
+# resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, isOnline) {
+# 	if (error) throw error;
+# 	console.log('Is device online?', isOnline);
+# });
 ###
 exports.isOnline = (uuid, callback) ->
 	exports.get(uuid).get('is_online').nodeify(callback)
@@ -280,15 +296,20 @@ exports.isOnline = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (localIPAddresses) ->
-# 	for localIP in localIPAddresses
-# 		console.log(localIP)
+# resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(localIPAddresses) {
+# 	localIPAddresses.forEach(function(localIP) {
+# 		console.log(localIP);
+# 	});
+# });
 #
 # @example
-# resin.models.device.getLocalIPAddresses '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, localIPAddresses) ->
-# 	throw error if error?
-# 	for localIP in localIPAddresses
-# 		console.log(localIP)
+# resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, localIPAddresses) {
+# 	if (error) throw error;
+#
+# 	localIPAddresses.forEach(function(localIP) {
+# 		console.log(localIP);
+# 	});
+# });
 ###
 exports.getLocalIPAddresses = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
@@ -310,11 +331,12 @@ exports.getLocalIPAddresses = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+# resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 #
 # @example
-# resin.models.device.remove '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-# 	throw error if error?
+# resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.remove = (uuid, callback) ->
 	exports.get(uuid).then ->
@@ -336,11 +358,12 @@ exports.remove = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+# resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 #
 # @example
-# resin.models.device.identify '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-# 	throw error if error?
+# resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.identify = (uuid, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -369,11 +392,12 @@ exports.identify = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName')
+# resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName');
 #
 # @example
-# resin.models.device.rename '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', (error) ->
-# 	throw error if error?
+# resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.rename = (uuid, newName, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -403,11 +427,12 @@ exports.rename = (uuid, newName, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note')
+# resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note');
 #
 # @example
-# resin.models.device.note '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', (error) ->
-# 	throw error if error?
+# resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', function(error) {
+#		if (error) throw error;
+# });
 ###
 exports.note = (uuid, note, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -436,11 +461,12 @@ exports.note = (uuid, note, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+# resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 #
 # @example
-# resin.models.device.restart '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-# 	throw error if error?
+# resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.restart = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
@@ -464,15 +490,17 @@ exports.restart = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getDisplayName('raspberry-pi').then (deviceTypeName) ->
-# 	console.log(deviceTypeName)
-# 	# Raspberry Pi
+# resin.models.device.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
+# 	console.log(deviceTypeName);
+# 	// Raspberry Pi
+# });
 #
 # @example
-# resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
-# 	throw error if error?
-# 	console.log(deviceTypeName)
-# 	# Raspberry Pi
+# resin.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
+# 	if (error) throw error;
+# 	console.log(deviceTypeName);
+# 	// Raspberry Pi
+# });
 ###
 exports.getDisplayName = (deviceTypeSlug, callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -494,15 +522,17 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
-# 	console.log(deviceTypeSlug)
-# 	# raspberry-pi
+# resin.models.device.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
+# 	console.log(deviceTypeSlug);
+# 	// raspberry-pi
+# });
 #
 # @example
-# resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
-# 	throw error if error?
-# 	console.log(deviceTypeSlug)
-# 	# raspberry-pi
+# resin.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
+# 	if (error) throw error;
+# 	console.log(deviceTypeSlug);
+# 	// raspberry-pi
+# });
 ###
 exports.getDeviceSlug = (deviceTypeName, callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -524,15 +554,20 @@ exports.getDeviceSlug = (deviceTypeName, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
-# 	for supportedDeviceType in supportedDeviceTypes
-# 		console.log("Resin supports: #{supportedDeviceType}")
+# resin.models.device.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
+# 	supportedDeviceTypes.forEach(function(supportedDeviceType) {
+# 		console.log('Resin supports:', supportedDeviceType);
+# 	});
+# });
 #
 # @example
-# resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
-# 	throw error if error?
-# 	for supportedDeviceType in supportedDeviceTypes
-# 		console.log("Resin supports: #{supportedDeviceType}")
+# resin.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
+# 	if (error) throw error;
+#
+# 	supportedDeviceTypes.forEach(function(supportedDeviceType) {
+# 		console.log('Resin supports:', supportedDeviceType);
+# 	});
+# });
 ###
 exports.getSupportedDeviceTypes = (callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -551,13 +586,15 @@ exports.getSupportedDeviceTypes = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
-# 	console.log(manifest)
+# resin.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
+# 	console.log(manifest);
+# });
 #
 # @example
-# resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
-# 	throw error if error?
-# 	console.log(manifest)
+# resin.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
+# 	if (error) throw error;
+# 	console.log(manifest);
+# });
 ###
 exports.getManifestBySlug = (slug, callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
@@ -581,13 +618,15 @@ exports.getManifestBySlug = (slug, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getManifestByApplication('MyApp').then (manifest) ->
-# 	console.log(manifest)
+# resin.models.device.getManifestByApplication('MyApp').then(function(manifest) {
+# 	console.log(manifest);
+# });
 #
 # @example
-# resin.models.device.getManifestByApplication 'MyApp', (error, manifest) ->
-# 	throw error if error?
-# 	console.log(manifest)
+# resin.models.device.getManifestByApplication('MyApp', function(error, manifest) {
+# 	if (error) throw error;
+# 	console.log(manifest);
+# });
 ###
 exports.getManifestByApplication = (applicationName, callback) ->
 	applicationModel.get(applicationName).get('device_type').then (deviceType) ->
@@ -605,8 +644,15 @@ exports.getManifestByApplication = (applicationName, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.generateUUID().then (uuid) ->
-# 	console.log(uuid)
+# resin.models.device.generateUUID().then(function(uuid) {
+# 	console.log(uuid);
+# });
+#
+# @example
+# resin.models.device.generateUUID(function(error, uuid) {
+# 	if (error) throw error;
+# 	console.log(uuid);
+# });
 ###
 exports.generateUUID = registerDevice.generateUUID
 
@@ -624,17 +670,22 @@ exports.generateUUID = registerDevice.generateUUID
 # @returns {Promise}
 #
 # @example
-# resin.models.device.generateUUID().then (uuid) ->
-# 	resin.models.device.register('MyApp', uuid).then (device) ->
-# 		console.log(device)
+# resin.models.device.generateUUID().then(function(uuid) {
+# 	resin.models.device.register('MyApp', uuid).then(function(device) {
+# 		console.log(device);
+# 	});
+# });
 #
 # @example
-# resin.models.device.generateUUID (error, uuid) ->
-# 	throw error if error?
+# resin.models.device.generateUUID(function(error, uuid) {
+# 	if (error) throw error;
 #
-# 	resin.models.device.register 'MyApp', uuid, (error, device) ->
-# 		throw error if error?
-# 		console.log(device)
+# 	resin.models.device.register('MyApp', uuid, function(error, device) {
+# 		if (error) throw error;
+#
+# 		console.log(device);
+# 	});
+# });
 ###
 exports.register = (applicationName, uuid, callback) ->
 	Promise.props
@@ -664,11 +715,12 @@ exports.register = (applicationName, uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+# resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 #
 # @example
-# resin.models.device.hasDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-# 	throw error if error?
+# resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.hasDeviceUrl = (uuid, callback) ->
 	exports.get(uuid).get('is_web_accessible').nodeify(callback)
@@ -685,13 +737,15 @@ exports.hasDeviceUrl = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (url) ->
-# 	console.log(url)
+# resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(url) {
+# 	console.log(url);
+# });
 #
 # @example
-# resin.models.device.getDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, url) ->
-# 	console.log(url)
-# 	throw error if error?
+# resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, url) {
+# 	if (error) throw error;
+# 	console.log(url);
+# });
 ###
 exports.getDeviceUrl = (uuid, callback) ->
 	exports.hasDeviceUrl(uuid).then (hasDeviceUrl) ->
@@ -714,11 +768,12 @@ exports.getDeviceUrl = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+# resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 #
 # @example
-# resin.models.device.enableDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-# 	throw error if error?
+# resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.enableDeviceUrl = (uuid, callback) ->
 	exports.has(uuid).then (hasDevice) ->
@@ -746,11 +801,12 @@ exports.enableDeviceUrl = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+# resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 #
 # @example
-# resin.models.device.disableDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-# 	throw error if error?
+# resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.disableDeviceUrl = (uuid, callback) ->
 	exports.has(uuid).then (hasDevice) ->

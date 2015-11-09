@@ -44,13 +44,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.config.getAll().then (config) ->
-   * 	console.log(config)
+   * resin.models.config.getAll().then(function(config) {
+   * 	console.log(config);
+   * });
    *
    * @example
-   * resin.models.config.getAll (error, config) ->
-   * 	throw error if error?
-   * 	console.log(config)
+   * resin.models.config.getAll(function(error, config) {
+   * 	if (error) throw error;
+   * 	console.log(config);
+   * });
    */
 
   exports.getAll = function(callback) {
@@ -72,15 +74,17 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.config.getPubNubKeys().then (pubnubKeys) ->
-   * 	console.log(pubnubKeys.subscribe_key)
-   * 	console.log(pubnubKeys.publish_key)
+   * resin.models.config.getPubNubKeys().then(function(pubnubKeys) {
+   * 	console.log(pubnubKeys.subscribe_key);
+   * 	console.log(pubnubKeys.publish_key);
+   * });
    *
    * @example
-   * resin.models.config.getPubNubKeys (error, pubnubKeys) ->
-   * 	throw error if error?
-   * 	console.log(pubnubKeys.subscribe_key)
-   * 	console.log(pubnubKeys.publish_key)
+   * resin.models.config.getPubNubKeys(function(error, pubnubKeys) {
+   * 	if (error) throw error;
+   * 	console.log(pubnubKeys.subscribe_key);
+   * 	console.log(pubnubKeys.publish_key);
+   * });
    */
 
   exports.getPubNubKeys = function(callback) {
@@ -103,13 +107,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.config.getMixpanelToken().then (mixpanelToken) ->
-   * 	console.log(mixpanelToken)
+   * resin.models.config.getMixpanelToken().then(function(mixpanelToken) {
+   * 	console.log(mixpanelToken);
+   * });
    *
    * @example
-   * resin.models.config.getMixpanelToken (error, mixpanelToken) ->
-   * 	throw error if error?
-   * 	console.log(mixpanelToken)
+   * resin.models.config.getMixpanelToken(function(error, mixpanelToken) {
+   * 	if (error) throw error;
+   * 	console.log(mixpanelToken);
+   * });
    */
 
   exports.getMixpanelToken = function(callback) {
@@ -132,13 +138,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.config.getDeviceTypes().then (deviceTypes) ->
-   * 	console.log(deviceTypes)
+   * resin.models.config.getDeviceTypes().then(function(deviceTypes) {
+   * 	console.log(deviceTypes);
+   * });
    *
    * @example
-   * resin.models.config.getDeviceTypes (error, deviceTypes) ->
-   * 	throw error if error?
-   * 	console.log(deviceTypes)
+   * resin.models.config.getDeviceTypes(function(error, deviceTypes) {
+   * 	if (error) throw error;
+   * 	console.log(deviceTypes);
+   * })
    */
 
   exports.getDeviceTypes = function(callback) {
@@ -162,13 +170,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.config.getDeviceOptions('raspberry-pi').then (options) ->
-   * 	console.log(options)
+   * resin.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
+   * 	console.log(options);
+   * });
    *
    * @example
-   * resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
-   * 	throw error if error?
-   * 	console.log(options)
+   * resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
+   * 	if (error) throw error;
+   * 	console.log(options);
+   * });
    */
 
   exports.getDeviceOptions = function(deviceType, callback) {

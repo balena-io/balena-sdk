@@ -42,16 +42,20 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.auth.twoFactor.isEnabled().then (isEnabled) ->
-   * 	if isEnabled
-   * 		console.log('2FA is enabled for this account')
+   * resin.auth.twoFactor.isEnabled().then(function(isEnabled) {
+   * 	if (isEnabled) {
+   * 		console.log('2FA is enabled for this account');
+   * 	}
+   * });
    *
    * @example
-   * resin.auth.twoFactor.isEnabled (error, isEnabled) ->
-   * 	throw error if error?
+   * resin.auth.twoFactor.isEnabled(function(error, isEnabled) {
+   * 	if (error) throw error;
    *
-   * 	if isEnabled
-   * 		console.log('2FA is enabled for this account')
+   * 	if (isEnabled) {
+   * 		console.log('2FA is enabled for this account');
+   * 	}
+   * });
    */
 
   exports.isEnabled = function(callback) {
@@ -72,16 +76,20 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.auth.twoFactor.isPassed().then (isPassed) ->
-   * 	if isPassed
-   * 		console.log('2FA challenge passed')
+   * resin.auth.twoFactor.isPassed().then(function(isPassed) {
+   * 	if (isPassed) {
+   * 		console.log('2FA challenge passed');
+   * 	}
+   * });
    *
    * @example
-   * resin.auth.twoFactor.isPassed (error, isPassed) ->
-   * 	throw error if error?
+   * resin.auth.twoFactor.isPassed(function(error, isPassed) {
+   * 	if (error) throw error;
    *
-   * 	if isPassed
-   * 		console.log('2FA challenge passed')
+   * 	if (isPassed) {
+   * 		console.log('2FA challenge passed');
+   * 	}
+   * });
    */
 
   exports.isPassed = function(callback) {
@@ -102,11 +110,12 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.auth.twoFactor.challenge('1234')
+   * resin.auth.twoFactor.challenge('1234');
    *
    * @example
-   * resin.auth.twoFactor.challenge '1234', (error) ->
-   * 	throw error if error?
+   * resin.auth.twoFactor.challenge('1234', function(error) {
+   * 	if (error) throw error;
+   * });
    */
 
   exports.challenge = function(code, callback) {

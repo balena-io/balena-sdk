@@ -37,13 +37,15 @@ settings = require('resin-settings-client')
 # @returns {Promise}
 #
 # @example
-# resin.settings.get('apiUrl').then (apiUrl) ->
-# 	console.log(apiUrl)
+# resin.settings.get('apiUrl').then(function(apiUrl) {
+# 	console.log(apiUrl);
+# });
 #
 # @example
-# resin.settings.get 'apiUrl', (error, apiUrl) ->
-# 	throw error if error?
-# 	console.log(apiUrl)
+# resin.settings.get('apiUrl', function(error, apiUrl) {
+# 	if (error) throw error;
+# 	console.log(apiUrl);
+# });
 ###
 exports.get = (key, callback) ->
 	Promise.try ->
@@ -61,13 +63,15 @@ exports.get = (key, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.settings.getAll().then (settings) ->
-# 	console.log(settings)
+# resin.settings.getAll().then(function(settings) {
+# 	console.log(settings);
+# });
 #
 # @example
-# resin.settings.getAll (error, settings) ->
-# 	throw error if error?
-# 	console.log(settings)
+# resin.settings.getAll(function(error, settings) {
+# 	if (error) throw error;
+# 	console.log(settings);
+# });
 ###
 exports.getAll = (callback) ->
 	return exports.get(null).nodeify(callback)
