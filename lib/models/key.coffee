@@ -38,13 +38,15 @@ auth = require('../auth')
 # @returns {Promise}
 #
 # @example
-# resin.models.key.getAll().then (keys) ->
-# 	console.log(keys)
+# resin.models.key.getAll().then(function(keys) {
+# 	console.log(keys);
+# });
 #
 # @example
-# resin.models.key.getAll (error, keys) ->
-# 	throw error if error?
-# 	console.log(keys)
+# resin.models.key.getAll(function(error, keys) {
+# 	if (error) throw error;
+# 	console.log(keys);
+# });
 ###
 exports.getAll = (callback) ->
 	return pine.get
@@ -63,13 +65,15 @@ exports.getAll = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.key.get(51).then (key) ->
-# 	console.log(key)
+# resin.models.key.get(51).then(function(key) {
+# 	console.log(key);
+# });
 #
 # @example
-# resin.models.key.get 51, (error, key) ->
-# 	throw error if error?
-# 	console.log(key)
+# resin.models.key.get(51, function(error, key) {
+# 	if (error) throw error;
+# 	console.log(key);
+# });
 ###
 exports.get = (id, callback) ->
 	return pine.get
@@ -91,11 +95,12 @@ exports.get = (id, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.key.remove(51)
+# resin.models.key.remove(51);
 #
 # @example
-# resin.models.key.remove 51, (error) ->
-# 	throw error if error?
+# resin.models.key.remove(51, function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.remove = (id, callback) ->
 	return pine.delete
@@ -117,13 +122,15 @@ exports.remove = (id, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
-# 	console.log(id)
+# resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(id) {
+# 	console.log(id);
+# });
 #
 # @example
-# resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
-# 	throw error if error?
-# 	console.log(id)
+# resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, id) {
+# 	if (error) throw error;
+# 	console.log(id);
+# });
 ###
 exports.create = (title, key, callback) ->
 

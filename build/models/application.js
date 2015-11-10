@@ -48,13 +48,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.getAll().then (applications) ->
-   * 	console.log(applications)
+   * resin.models.application.getAll().then(function(applications) {
+   * 	console.log(applications);
+   * });
    *
    * @example
-   * resin.models.application.getAll (error, applications) ->
-   * 	throw error if error?
-   * 	console.log(applications)
+   * resin.models.application.getAll(function(error, applications) {
+   * 	if (error) throw error;
+   * 	console.log(applications);
+   * });
    */
 
   exports.getAll = function(callback) {
@@ -87,13 +89,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.get('MyApp').then (application) ->
-   * 	console.log(application)
+   * resin.models.application.get('MyApp').then(function(application) {
+   * 	console.log(application);
+   * });
    *
    * @example
-   * resin.models.application.get 'MyApp', (error, application) ->
-   * 	throw error if error?
-   * 	console.log(application)
+   * resin.models.application.get('MyApp', function(error, application) {
+   * 	if (error) throw error;
+   * 	console.log(application);
+   * });
    */
 
   exports.get = function(name, callback) {
@@ -124,13 +128,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.has('MyApp').then (hasApp) ->
-   * 	console.log(hasApp)
+   * resin.models.application.has('MyApp').then(function(hasApp) {
+   * 	console.log(hasApp);
+   * });
    *
    * @example
-   * resin.models.application.has 'MyApp', (error, hasApp) ->
-   * 	throw error if error?
-   * 	console.log(hasApp)
+   * resin.models.application.has('MyApp', function(error, hasApp) {
+   * 	if (error) throw error;
+   * 	console.log(hasApp);
+   * });
    */
 
   exports.has = function(name, callback) {
@@ -151,13 +157,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.hasAny().then (hasAny) ->
-   * 	console.log("Has any? #{hasAny}")
+   * resin.models.application.hasAny().then(function(hasAny) {
+   * 	console.log('Has any?', hasAny);
+   * });
    *
    * @example
-   * resin.models.application.hasAny (error, hasAny) ->
-   * 	throw error if error?
-   * 	console.log("Has any? #{hasAny}")
+   * resin.models.application.hasAny(function(error, hasAny) {
+   * 	if (error) throw error;
+   * 	console.log('Has any?', hasAny);
+   * });
    */
 
   exports.hasAny = function(callback) {
@@ -179,13 +187,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.getById(89).then (application) ->
-   * 	console.log(application)
+   * resin.models.application.getById(89).then(function(application) {
+   * 	console.log(application);
+   * });
    *
    * @example
-   * resin.models.application.getById 89, (error, application) ->
-   * 	throw error if error?
-   * 	console.log(application)
+   * resin.models.application.getById(89, function(error, application) {
+   * 	if (error) throw error;
+   * 	console.log(application);
+   * });
    */
 
   exports.getById = function(id, callback) {
@@ -214,13 +224,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.create('My App', 'raspberry-pi').then (id) ->
-   * 	console.log(id)
+   * resin.models.application.create('My App', 'raspberry-pi').then(function(id) {
+   * 	console.log(id);
+   * });
    *
    * @example
-   * resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
-   * 	throw error if error?
-   * 	console.log(id)
+   * resin.models.application.create('My App', 'raspberry-pi', function(error, id) {
+   * 	if (error) throw error;
+   * 	console.log(id);
+   * });
    */
 
   exports.create = function(name, deviceType, callback) {
@@ -251,11 +263,12 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.remove('MyApp')
+   * resin.models.application.remove('MyApp');
    *
    * @example
-   * resin.models.application.remove 'MyApp', (error) ->
-   * 	throw error if error?
+   * resin.models.application.remove('MyApp', function(error) {
+   * 	if (error) throw error;
+   * });
    */
 
   exports.remove = function(name, callback) {
@@ -283,11 +296,12 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.restart('MyApp')
+   * resin.models.application.restart('MyApp');
    *
    * @example
-   * resin.models.application.restart 'MyApp', (error) ->
-   * 	throw error if error?
+   * resin.models.application.restart('MyApp', function(error) {
+   * 	if (error) throw error;
+   * });
    */
 
   exports.restart = function(name, callback) {
@@ -312,13 +326,15 @@ THE SOFTWARE.
    * @returns {Promise}
    *
    * @example
-   * resin.models.application.getApiKey('MyApp').then (apiKey) ->
-   * 	console.log(apiKey)
+   * resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+   * 	console.log(apiKey);
+   * });
    *
    * @example
-   * resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
-   * 	throw error if error?
-   * 	console.log(apiKey)
+   * resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+   * 	if (error) throw error;
+   * 	console.log(apiKey);
+   * });
    */
 
   exports.getApiKey = function(name, callback) {

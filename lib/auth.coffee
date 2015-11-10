@@ -45,20 +45,24 @@ exports.twoFactor = require('./2fa')
 # @returns {Promise}
 #
 # @example
-# resin.auth.whoami().then (username) ->
-# 	if not username?
-# 		console.log('I\'m not logged in!')
-# 	else
-# 		console.log("My username is: #{username}")
+# resin.auth.whoami().then(function(username) {
+#		if (!username) {
+# 		console.log('I\'m not logged in!');
+#		} else {
+# 		console.log('My username is:', username);
+#		}
+# });
 #
 # @example
-# resin.auth.whoami (error, username) ->
-# 	throw error if error?
+# resin.auth.whoami(function(error, username) {
+# 	if (error) throw error;
 #
-# 	if not username?
-# 		console.log('I\'m not logged in!')
-# 	else
-# 		console.log("My username is: #{username}")
+# 	if (!username) {
+# 		console.log('I\'m not logged in!');
+# 	} else {
+# 		console.log('My username is:', username);
+# 	}
+# });
 ###
 exports.whoami = (callback) ->
 	token.getUsername().nodeify(callback)
@@ -84,13 +88,15 @@ exports.whoami = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.authenticate(credentials).then (token) ->
-# 	console.log("My token is: #{token}")
+# resin.auth.authenticate(credentials).then(function(token) {
+# 	console.log('My token is:', token);
+# });
 #
 # @example
-# resin.auth.authenticate credentials, (error, token) ->
-# 	throw error if error?
-# 	console.log("My token is: #{token}")
+# resin.auth.authenticate(credentials, function(error, token) {
+# 	if (error) throw error;
+# 	console.log('My token is:', token);
+# });
 ###
 exports.authenticate = (credentials, callback) ->
 	request.send
@@ -119,11 +125,12 @@ exports.authenticate = (credentials, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.login(credentials)
+# resin.auth.login(credentials);
 #
 # @example
-# resin.auth.login credentials, (error) ->
-# 	throw error if error?
+# resin.auth.login(credentials, function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.login = (credentials, callback) ->
 	exports.authenticate(credentials)
@@ -143,11 +150,12 @@ exports.login = (credentials, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.loginWithToken(token)
+# resin.auth.loginWithToken(token);
 #
 # @example
-# resin.auth.loginWithToken token, (error) ->
-# 	throw error if error?
+# resin.auth.loginWithToken(token, function(error) {
+#		if (error) throw error;
+# });
 ###
 exports.loginWithToken = (authToken, callback) ->
 	token.set(authToken).nodeify(callback)
@@ -163,20 +171,24 @@ exports.loginWithToken = (authToken, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.isLoggedIn().then (isLoggedIn) ->
-# 	if isLoggedIn
-# 		console.log('I\'m in!')
-# 	else
-# 		console.log('Too bad!')
+# resin.auth.isLoggedIn().then(function(isLoggedIn) {
+# 	if (isLoggedIn) {
+# 		console.log('I\'m in!');
+# 	} else {
+# 		console.log('Too bad!');
+# 	}
+# });
 #
 # @example
-# resin.auth.isLoggedIn (error, isLoggedIn) ->
-# 	throw error if error?
+# resin.auth.isLoggedIn(function(error, isLoggedIn) {
+# 	if (error) throw error;
 #
-# 	if isLoggedIn
-# 		console.log('I\'m in!')
-# 	else
-# 		console.log('Too bad!')
+# 	if (isLoggedIn) {
+# 		console.log('I\'m in!');
+# 	} else {
+# 		console.log('Too bad!');
+# 	}
+# });
 ###
 exports.isLoggedIn = (callback) ->
 	request.send
@@ -200,13 +212,15 @@ exports.isLoggedIn = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.getToken().then (token) ->
-# 	console.log(token)
+# resin.auth.getToken().then(function(token) {
+# 	console.log(token);
+# });
 #
 # @example
-# resin.auth.getToken (error, token) ->
-# 	throw error if error?
-# 	console.log(token)
+# resin.auth.getToken(function(error, token) {
+# 	if (error) throw error;
+# 	console.log(token);
+# });
 ###
 exports.getToken = (callback) ->
 	token.get().then (savedToken) ->
@@ -227,13 +241,15 @@ exports.getToken = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.getUserId().then (userId) ->
-# 	console.log(userId)
+# resin.auth.getUserId().then(function(userId) {
+# 	console.log(userId);
+# });
 #
 # @example
-# resin.auth.getUserId (error, userId) ->
-# 	throw error if error?
-# 	console.log(userId)
+# resin.auth.getUserId(function(error, userId) {
+# 	if (error) throw error;
+# 	console.log(userId);
+# });
 ###
 exports.getUserId = (callback) ->
 	token.getUserId().then (id) ->
@@ -254,8 +270,15 @@ exports.getUserId = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.getEmail().then (email) ->
-# 	console.log(email)
+# resin.auth.getEmail().then(function(email) {
+# 	console.log(email);
+# });
+#
+# @example
+# resin.auth.getEmail(function(error, email) {
+# 	if (error) throw error;
+# 	console.log(email);
+# });
 ###
 exports.getEmail = (callback) ->
 	token.getEmail().then (email) ->
@@ -273,11 +296,12 @@ exports.getEmail = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.logout()
+# resin.auth.logout();
 #
 # @example
-# resin.auth.logout (error) ->
-# 	throw error if error?
+# resin.auth.logout(function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.logout = (callback) ->
 	token.remove().nodeify(callback)
@@ -297,19 +321,21 @@ exports.logout = (callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.auth.register
-# 	email: 'johndoe@gmail.com'
+# resin.auth.register({
+# 	email: 'johndoe@gmail.com',
 # 	password: 'secret'
-# .then (token) ->
-# 	console.log(token)
+# }).then(function(token) {
+# 	console.log(token);
+# });
 #
 # @example
-# resin.auth.register
-# 	email: 'johndoe@gmail.com'
+# resin.auth.register({
+# 	email: 'johndoe@gmail.com',
 # 	password: 'secret'
-# , (error, token) ->
-# 	throw error if error?
-# 	console.log(token)
+# }, function(error, token) {
+# 	if (error) throw error;
+# 	console.log(token);
+# });
 ###
 exports.register = (credentials = {}, callback) ->
 	request.send

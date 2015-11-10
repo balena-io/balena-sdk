@@ -38,13 +38,15 @@ applicationModel = require('./application')
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.getAllByApplication('MyApp').then (environmentVariables) ->
-# 	console.log(environmentVariables)
+# resin.models.environmentVariables.getAllByApplication('MyApp').then(function(environmentVariables) {
+# 	console.log(environmentVariables);
+# });
 #
 # @example
-# resin.models.environmentVariables.getAllByApplication 'MyApp', (error, environmentVariables) ->
-# 	throw error if error?
-# 	console.log(environmentVariables)
+# resin.models.environmentVariables.getAllByApplication('MyApp', function(error, environmentVariables) {
+# 	if (error) throw error;
+# 	console.log(environmentVariables);
+# });
 ###
 exports.getAllByApplication = (applicationName, callback) ->
 	applicationModel.get(applicationName).get('id').then (applicationId) ->
@@ -70,11 +72,12 @@ exports.getAllByApplication = (applicationName, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim')
+# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim');
 #
 # @example
-# resin.models.environmentVariables.create 'MyApp', 'EDITOR', 'vim', (error) ->
-# 	throw error if error?
+# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.create = (applicationName, name, value, callback) ->
 	applicationModel.get(applicationName).get('id').then (applicationId) ->
@@ -99,11 +102,12 @@ exports.create = (applicationName, name, value, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.update(317, 'vim')
+# resin.models.environmentVariables.update(317, 'vim');
 #
 # @example
-# resin.models.environmentVariables.update 317, 'vim', (error) ->
-# 	throw error if error?
+# resin.models.environmentVariables.update(317, 'vim', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.update = (id, value, callback) ->
 	return pine.patch
@@ -124,11 +128,12 @@ exports.update = (id, value, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.remove(51)
+# resin.models.environmentVariables.remove(51);
 #
 # @example
-# resin.models.environmentVariables.remove 51, (error) ->
-# 	throw error if error?
+# resin.models.environmentVariables.remove(51, function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.remove = (id, callback) ->
 	return pine.delete
@@ -147,11 +152,15 @@ exports.remove = (id, callback) ->
 # @returns {Boolean} Whether a variable is system specific or not
 #
 # @example
-# resin.models.environmentVariables.isSystemVariable(name: 'RESIN_SUPERVISOR')
+# resin.models.environmentVariables.isSystemVariable({
+# 	name: 'RESIN_SUPERVISOR'
+# });
 # > true
 #
 # @example
-# resin.models.environmentVariables.isSystemVariable(name: 'EDITOR')
+# resin.models.environmentVariables.isSystemVariable({
+# 	name: 'EDITOR'
+# });
 # > false
 ####
 exports.isSystemVariable = (variable) ->
@@ -175,13 +184,15 @@ exports.device = {}
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (environmentVariables) ->
-# 	console.log(environmentVariables)
+# resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(environmentVariables) {
+# 	console.log(environmentVariables);
+# });
 #
 # @example
-# resin.models.environmentVariables.device.getAll '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, environmentVariables) ->
-# 	throw error if error?
+# resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, environmentVariables) {
+# 	if (error) throw error;
 # 	console.log(environmentVariables)
+# });
 ###
 exports.device.getAll = (uuid, callback) ->
 	deviceModel.get(uuid).then (device) ->
@@ -218,11 +229,12 @@ exports.device.getAll = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim')
+# resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim');
 #
 # @example
-# resin.models.environmentVariables.device.create '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', (error) ->
-# 	throw error if error?
+# resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.device.create = (uuid, name, value, callback) ->
 	deviceModel.get(uuid).then (device) ->
@@ -247,11 +259,12 @@ exports.device.create = (uuid, name, value, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.device.update(2, 'emacs')
+# resin.models.environmentVariables.device.update(2, 'emacs');
 #
 # @example
-# resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
-# 	throw error if error?
+# resin.models.environmentVariables.device.update(2, 'emacs', function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.device.update = (id, value, callback) ->
 	return pine.patch
@@ -272,11 +285,12 @@ exports.device.update = (id, value, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.environmentVariables.device.remove(2)
+# resin.models.environmentVariables.device.remove(2);
 #
 # @example
-# resin.models.environmentVariables.device.remove 2, (error) ->
-# 	throw error if error?
+# resin.models.environmentVariables.device.remove(2, function(error) {
+# 	if (error) throw error;
+# });
 ###
 exports.device.remove = (id, callback) ->
 	return pine.delete

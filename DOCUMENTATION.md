@@ -177,14 +177,16 @@ If you feel something is missing, not clear or could be improved, please don't h
 **Fulfil**: <code>Object[]</code> - applications  
 **Example**  
 ```js
-resin.models.application.getAll().then (applications) ->
-	console.log(applications)
+resin.models.application.getAll().then(function(applications) {
+	console.log(applications);
+});
 ```
 **Example**  
 ```js
-resin.models.application.getAll (error, applications) ->
-	throw error if error?
-	console.log(applications)
+resin.models.application.getAll(function(error, applications) {
+	if (error) throw error;
+	console.log(applications);
+});
 ```
 <a name="resin.models.application.get"></a>
 ##### application.get(name) ⇒ <code>Promise</code>
@@ -199,14 +201,16 @@ resin.models.application.getAll (error, applications) ->
 
 **Example**  
 ```js
-resin.models.application.get('MyApp').then (application) ->
-	console.log(application)
+resin.models.application.get('MyApp').then(function(application) {
+	console.log(application);
+});
 ```
 **Example**  
 ```js
-resin.models.application.get 'MyApp', (error, application) ->
-	throw error if error?
-	console.log(application)
+resin.models.application.get('MyApp', function(error, application) {
+	if (error) throw error;
+	console.log(application);
+});
 ```
 <a name="resin.models.application.has"></a>
 ##### application.has(name) ⇒ <code>Promise</code>
@@ -221,14 +225,16 @@ resin.models.application.get 'MyApp', (error, application) ->
 
 **Example**  
 ```js
-resin.models.application.has('MyApp').then (hasApp) ->
-	console.log(hasApp)
+resin.models.application.has('MyApp').then(function(hasApp) {
+	console.log(hasApp);
+});
 ```
 **Example**  
 ```js
-resin.models.application.has 'MyApp', (error, hasApp) ->
-	throw error if error?
-	console.log(hasApp)
+resin.models.application.has('MyApp', function(error, hasApp) {
+	if (error) throw error;
+	console.log(hasApp);
+});
 ```
 <a name="resin.models.application.hasAny"></a>
 ##### application.hasAny() ⇒ <code>Promise</code>
@@ -238,14 +244,16 @@ resin.models.application.has 'MyApp', (error, hasApp) ->
 **Fulfil**: <code>Boolean</code> - has any applications  
 **Example**  
 ```js
-resin.models.application.hasAny().then (hasAny) ->
-	console.log("Has any? #{hasAny}")
+resin.models.application.hasAny().then(function(hasAny) {
+	console.log('Has any?', hasAny);
+});
 ```
 **Example**  
 ```js
-resin.models.application.hasAny (error, hasAny) ->
-	throw error if error?
-	console.log("Has any? #{hasAny}")
+resin.models.application.hasAny(function(error, hasAny) {
+	if (error) throw error;
+	console.log('Has any?', hasAny);
+});
 ```
 <a name="resin.models.application.getById"></a>
 ##### application.getById(id) ⇒ <code>Promise</code>
@@ -260,14 +268,16 @@ resin.models.application.hasAny (error, hasAny) ->
 
 **Example**  
 ```js
-resin.models.application.getById(89).then (application) ->
-	console.log(application)
+resin.models.application.getById(89).then(function(application) {
+	console.log(application);
+});
 ```
 **Example**  
 ```js
-resin.models.application.getById 89, (error, application) ->
-	throw error if error?
-	console.log(application)
+resin.models.application.getById(89, function(error, application) {
+	if (error) throw error;
+	console.log(application);
+});
 ```
 <a name="resin.models.application.create"></a>
 ##### application.create(name, deviceType) ⇒ <code>Promise</code>
@@ -283,14 +293,16 @@ resin.models.application.getById 89, (error, application) ->
 
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi').then (id) ->
-	console.log(id)
+resin.models.application.create('My App', 'raspberry-pi').then(function(id) {
+	console.log(id);
+});
 ```
 **Example**  
 ```js
-resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
-	throw error if error?
-	console.log(id)
+resin.models.application.create('My App', 'raspberry-pi', function(error, id) {
+	if (error) throw error;
+	console.log(id);
+});
 ```
 <a name="resin.models.application.remove"></a>
 ##### application.remove(name) ⇒ <code>Promise</code>
@@ -304,12 +316,13 @@ resin.models.application.create 'My App', 'raspberry-pi', (error, id) ->
 
 **Example**  
 ```js
-resin.models.application.remove('MyApp')
+resin.models.application.remove('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.remove 'MyApp', (error) ->
-	throw error if error?
+resin.models.application.remove('MyApp', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.application.restart"></a>
 ##### application.restart(name) ⇒ <code>Promise</code>
@@ -323,12 +336,13 @@ resin.models.application.remove 'MyApp', (error) ->
 
 **Example**  
 ```js
-resin.models.application.restart('MyApp')
+resin.models.application.restart('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.restart 'MyApp', (error) ->
-	throw error if error?
+resin.models.application.restart('MyApp', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.application.getApiKey"></a>
 ##### application.getApiKey(name) ⇒ <code>Promise</code>
@@ -343,14 +357,16 @@ resin.models.application.restart 'MyApp', (error) ->
 
 **Example**  
 ```js
-resin.models.application.getApiKey('MyApp').then (apiKey) ->
-	console.log(apiKey)
+resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+	console.log(apiKey);
+});
 ```
 **Example**  
 ```js
-resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
-	throw error if error?
-	console.log(apiKey)
+resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+	if (error) throw error;
+	console.log(apiKey);
+});
 ```
 <a name="resin.models.device"></a>
 #### models.device : <code>object</code>
@@ -391,14 +407,16 @@ resin.models.application.getApiKey 'MyApp', (error, apiKey) ->
 **Fulfil**: <code>Object[]</code> - devices  
 **Example**  
 ```js
-resin.models.device.getAll().then (devices) ->
-	console.log(devices)
+resin.models.device.getAll().then(function(devices) {
+	console.log(devices);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getAll (error, devices) ->
-	throw error if error?
-	console.log(devices)
+resin.models.device.getAll(function(error, devices) {
+	if (error) throw error;
+	console.log(devices);
+});
 ```
 <a name="resin.models.device.getAllByApplication"></a>
 ##### device.getAllByApplication(name) ⇒ <code>Promise</code>
@@ -413,14 +431,16 @@ resin.models.device.getAll (error, devices) ->
 
 **Example**  
 ```js
-resin.models.device.getAllByApplication('MyApp').then (devices) ->
-	console.log(devices)
+resin.models.device.getAllByApplication('MyApp').then(function(devices) {
+	console.log(devices);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getAllByApplication 'MyApp', (error, devices) ->
-	throw error if error?
-	console.log(devices)
+resin.models.device.getAllByApplication('MyApp', function(error, devices) {
+	if (error) throw error;
+	console.log(devices);
+});
 ```
 <a name="resin.models.device.get"></a>
 ##### device.get(uuid) ⇒ <code>Promise</code>
@@ -435,14 +455,16 @@ resin.models.device.getAllByApplication 'MyApp', (error, devices) ->
 
 **Example**  
 ```js
-resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (device) ->
-	console.log(device)
+resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(device) {
+	console.log(device);
+})
 ```
 **Example**  
 ```js
-resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, device) ->
-	throw error if error?
-	console.log(device)
+resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, device) {
+	if (error) throw error;
+	console.log(device);
+});
 ```
 <a name="resin.models.device.getByName"></a>
 ##### device.getByName(name) ⇒ <code>Promise</code>
@@ -457,14 +479,16 @@ resin.models.device.get '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f
 
 **Example**  
 ```js
-resin.models.device.getByName('MyDevice').then (devices) ->
-	console.log(devices)
+resin.models.device.getByName('MyDevice').then(function(devices) {
+	console.log(devices);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getByName 'MyDevice', (error, devices) ->
-	throw error if error?
-	console.log(devices)
+resin.models.device.getByName('MyDevice', function(error, devices) {
+	if (error) throw error;
+	console.log(devices);
+});
 ```
 <a name="resin.models.device.getName"></a>
 ##### device.getName(uuid) ⇒ <code>Promise</code>
@@ -479,14 +503,16 @@ resin.models.device.getByName 'MyDevice', (error, devices) ->
 
 **Example**  
 ```js
-resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (deviceName) ->
-	console.log(deviceName)
+resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(deviceName) {
+	console.log(deviceName);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, deviceName) ->
-	throw error if error?
-	console.log(deviceName)
+resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, deviceName) {
+	if (error) throw error;
+	console.log(deviceName);
+});
 ```
 <a name="resin.models.device.getApplicationName"></a>
 ##### device.getApplicationName(uuid) ⇒ <code>Promise</code>
@@ -501,14 +527,16 @@ resin.models.device.getName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc
 
 **Example**  
 ```js
-resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (applicationName) ->
-	console.log(applicationName)
+resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(applicationName) {
+	console.log(applicationName);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getApplicationName '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, applicationName) ->
-	throw error if error?
-	console.log(applicationName)
+resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, applicationName) {
+	if (error) throw error;
+	console.log(applicationName);
+});
 ```
 <a name="resin.models.device.has"></a>
 ##### device.has(uuid) ⇒ <code>Promise</code>
@@ -523,14 +551,16 @@ resin.models.device.getApplicationName '7cf02a62a3a84440b1bb5579a3d5746914894327
 
 **Example**  
 ```js
-resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (hasDevice) ->
-	console.log(hasDevice)
+resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(hasDevice) {
+	console.log(hasDevice);
+});
 ```
 **Example**  
 ```js
-resin.models.device.has '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, hasDevice) ->
-	throw error if error?
-	console.log(hasDevice)
+resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, hasDevice) {
+	if (error) throw error;
+	console.log(hasDevice);
+});
 ```
 <a name="resin.models.device.isOnline"></a>
 ##### device.isOnline(uuid) ⇒ <code>Promise</code>
@@ -545,14 +575,16 @@ resin.models.device.has '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f
 
 **Example**  
 ```js
-resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (isOnline) ->
-	console.log("Is device online? #{isOnline}")
+resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(isOnline) {
+	console.log('Is device online?', isOnline);
+});
 ```
 **Example**  
 ```js
-resin.models.device.isOnline '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, isOnline) ->
-	throw error if error?
-	console.log("Is device online? #{isOnline}")
+resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, isOnline) {
+	if (error) throw error;
+	console.log('Is device online?', isOnline);
+});
 ```
 <a name="resin.models.device.getLocalIPAddresses"></a>
 ##### device.getLocalIPAddresses(uuid) ⇒ <code>Promise</code>
@@ -568,16 +600,21 @@ resin.models.device.isOnline '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7f
 
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (localIPAddresses) ->
-	for localIP in localIPAddresses
-		console.log(localIP)
+resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(localIPAddresses) {
+	localIPAddresses.forEach(function(localIP) {
+		console.log(localIP);
+	});
+});
 ```
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, localIPAddresses) ->
-	throw error if error?
-	for localIP in localIPAddresses
-		console.log(localIP)
+resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, localIPAddresses) {
+	if (error) throw error;
+
+	localIPAddresses.forEach(function(localIP) {
+		console.log(localIP);
+	});
+});
 ```
 <a name="resin.models.device.remove"></a>
 ##### device.remove(uuid) ⇒ <code>Promise</code>
@@ -591,12 +628,13 @@ resin.models.device.getLocalIPAddresses '7cf02a62a3a84440b1bb5579a3d574691489432
 
 **Example**  
 ```js
-resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 ```
 **Example**  
 ```js
-resin.models.device.remove '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-	throw error if error?
+resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.device.identify"></a>
 ##### device.identify(uuid) ⇒ <code>Promise</code>
@@ -610,12 +648,13 @@ resin.models.device.remove '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6
 
 **Example**  
 ```js
-resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 ```
 **Example**  
 ```js
-resin.models.device.identify '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-	throw error if error?
+resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.device.rename"></a>
 ##### device.rename(uuid, newName) ⇒ <code>Promise</code>
@@ -630,12 +669,13 @@ resin.models.device.identify '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7f
 
 **Example**  
 ```js
-resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName')
+resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName');
 ```
 **Example**  
 ```js
-resin.models.device.rename '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', (error) ->
-	throw error if error?
+resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.device.note"></a>
 ##### device.note(uuid, note) ⇒ <code>Promise</code>
@@ -650,12 +690,13 @@ resin.models.device.rename '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6
 
 **Example**  
 ```js
-resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note')
+resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note');
 ```
 **Example**  
 ```js
-resin.models.device.note '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', (error) ->
-	throw error if error?
+resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', function(error) {
+		if (error) throw error;
+});
 ```
 <a name="resin.models.device.restart"></a>
 ##### device.restart(uuid) ⇒ <code>Promise</code>
@@ -669,12 +710,13 @@ resin.models.device.note '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4
 
 **Example**  
 ```js
-resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 ```
 **Example**  
 ```js
-resin.models.device.restart '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-	throw error if error?
+resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.device.getDisplayName"></a>
 ##### device.getDisplayName(deviceTypeSlug) ⇒ <code>Promise</code>
@@ -690,16 +732,18 @@ resin.models.device.restart '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc
 
 **Example**  
 ```js
-resin.models.device.getDisplayName('raspberry-pi').then (deviceTypeName) ->
-	console.log(deviceTypeName)
-	# Raspberry Pi
+resin.models.device.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
+	console.log(deviceTypeName);
+	// Raspberry Pi
+});
 ```
 **Example**  
 ```js
-resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
-	throw error if error?
-	console.log(deviceTypeName)
-	# Raspberry Pi
+resin.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
+	if (error) throw error;
+	console.log(deviceTypeName);
+	// Raspberry Pi
+});
 ```
 <a name="resin.models.device.getDeviceSlug"></a>
 ##### device.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>
@@ -715,16 +759,18 @@ resin.models.device.getDisplayName 'raspberry-pi', (error, deviceTypeName) ->
 
 **Example**  
 ```js
-resin.models.device.getDeviceSlug('Raspberry Pi').then (deviceTypeSlug) ->
-	console.log(deviceTypeSlug)
-	# raspberry-pi
+resin.models.device.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
+	console.log(deviceTypeSlug);
+	// raspberry-pi
+});
 ```
 **Example**  
 ```js
-resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
-	throw error if error?
-	console.log(deviceTypeSlug)
-	# raspberry-pi
+resin.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
+	if (error) throw error;
+	console.log(deviceTypeSlug);
+	// raspberry-pi
+});
 ```
 <a name="resin.models.device.getSupportedDeviceTypes"></a>
 ##### device.getSupportedDeviceTypes() ⇒ <code>Promise</code>
@@ -734,16 +780,21 @@ resin.models.device.getDeviceSlug 'Raspberry Pi', (error, deviceTypeSlug) ->
 **Fulfil**: <code>String[]</code> - supported device types  
 **Example**  
 ```js
-resin.models.device.getSupportedDeviceTypes().then (supportedDeviceTypes) ->
-	for supportedDeviceType in supportedDeviceTypes
-		console.log("Resin supports: #{supportedDeviceType}")
+resin.models.device.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
+	supportedDeviceTypes.forEach(function(supportedDeviceType) {
+		console.log('Resin supports:', supportedDeviceType);
+	});
+});
 ```
 **Example**  
 ```js
-resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
-	throw error if error?
-	for supportedDeviceType in supportedDeviceTypes
-		console.log("Resin supports: #{supportedDeviceType}")
+resin.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
+	if (error) throw error;
+
+	supportedDeviceTypes.forEach(function(supportedDeviceType) {
+		console.log('Resin supports:', supportedDeviceType);
+	});
+});
 ```
 <a name="resin.models.device.getManifestBySlug"></a>
 ##### device.getManifestBySlug(slug) ⇒ <code>Promise</code>
@@ -758,14 +809,16 @@ resin.models.device.getSupportedDeviceTypes (error, supportedDeviceTypes) ->
 
 **Example**  
 ```js
-resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
-	console.log(manifest)
+resin.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
+	console.log(manifest);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
-	throw error if error?
-	console.log(manifest)
+resin.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
+	if (error) throw error;
+	console.log(manifest);
+});
 ```
 <a name="resin.models.device.getManifestByApplication"></a>
 ##### device.getManifestByApplication(applicationName) ⇒ <code>Promise</code>
@@ -780,14 +833,16 @@ resin.models.device.getManifestBySlug 'raspberry-pi', (error, manifest) ->
 
 **Example**  
 ```js
-resin.models.device.getManifestByApplication('MyApp').then (manifest) ->
-	console.log(manifest)
+resin.models.device.getManifestByApplication('MyApp').then(function(manifest) {
+	console.log(manifest);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getManifestByApplication 'MyApp', (error, manifest) ->
-	throw error if error?
-	console.log(manifest)
+resin.models.device.getManifestByApplication('MyApp', function(error, manifest) {
+	if (error) throw error;
+	console.log(manifest);
+});
 ```
 <a name="resin.models.device.generateUUID"></a>
 ##### device.generateUUID() ⇒ <code>Promise</code>
@@ -797,8 +852,16 @@ resin.models.device.getManifestByApplication 'MyApp', (error, manifest) ->
 **Fulfil**: <code>String</code> - a generated UUID  
 **Example**  
 ```js
-resin.models.device.generateUUID().then (uuid) ->
-	console.log(uuid)
+resin.models.device.generateUUID().then(function(uuid) {
+	console.log(uuid);
+});
+```
+**Example**  
+```js
+resin.models.device.generateUUID(function(error, uuid) {
+	if (error) throw error;
+	console.log(uuid);
+});
 ```
 <a name="resin.models.device.register"></a>
 ##### device.register(applicationName, uuid) ⇒ <code>Promise</code>
@@ -814,18 +877,23 @@ resin.models.device.generateUUID().then (uuid) ->
 
 **Example**  
 ```js
-resin.models.device.generateUUID().then (uuid) ->
-	resin.models.device.register('MyApp', uuid).then (device) ->
-		console.log(device)
+resin.models.device.generateUUID().then(function(uuid) {
+	resin.models.device.register('MyApp', uuid).then(function(device) {
+		console.log(device);
+	});
+});
 ```
 **Example**  
 ```js
-resin.models.device.generateUUID (error, uuid) ->
-	throw error if error?
+resin.models.device.generateUUID(function(error, uuid) {
+	if (error) throw error;
 
-	resin.models.device.register 'MyApp', uuid, (error, device) ->
-		throw error if error?
-		console.log(device)
+	resin.models.device.register('MyApp', uuid, function(error, device) {
+		if (error) throw error;
+
+		console.log(device);
+	});
+});
 ```
 <a name="resin.models.device.hasDeviceUrl"></a>
 ##### device.hasDeviceUrl(uuid) ⇒ <code>Promise</code>
@@ -840,12 +908,13 @@ resin.models.device.generateUUID (error, uuid) ->
 
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 ```
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-	throw error if error?
+resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.device.getDeviceUrl"></a>
 ##### device.getDeviceUrl(uuid) ⇒ <code>Promise</code>
@@ -860,14 +929,16 @@ resin.models.device.hasDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b1
 
 **Example**  
 ```js
-resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (url) ->
-	console.log(url)
+resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(url) {
+	console.log(url);
+});
 ```
 **Example**  
 ```js
-resin.models.device.getDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, url) ->
-	console.log(url)
-	throw error if error?
+resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, url) {
+	if (error) throw error;
+	console.log(url);
+});
 ```
 <a name="resin.models.device.enableDeviceUrl"></a>
 ##### device.enableDeviceUrl(uuid) ⇒ <code>Promise</code>
@@ -881,12 +952,13 @@ resin.models.device.getDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b1
 
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 ```
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-	throw error if error?
+resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.device.disableDeviceUrl"></a>
 ##### device.disableDeviceUrl(uuid) ⇒ <code>Promise</code>
@@ -900,12 +972,13 @@ resin.models.device.enableDeviceUrl '7cf02a62a3a84440b1bb5579a3d5746914894327863
 
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9')
+resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
 ```
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error) ->
-	throw error if error?
+resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.key"></a>
 #### models.key : <code>object</code>
@@ -925,14 +998,16 @@ resin.models.device.disableDeviceUrl '7cf02a62a3a84440b1bb5579a3d574691489432786
 **Fulfil**: <code>Object[]</code> - ssh keys  
 **Example**  
 ```js
-resin.models.key.getAll().then (keys) ->
-	console.log(keys)
+resin.models.key.getAll().then(function(keys) {
+	console.log(keys);
+});
 ```
 **Example**  
 ```js
-resin.models.key.getAll (error, keys) ->
-	throw error if error?
-	console.log(keys)
+resin.models.key.getAll(function(error, keys) {
+	if (error) throw error;
+	console.log(keys);
+});
 ```
 <a name="resin.models.key.get"></a>
 ##### key.get(id) ⇒ <code>Promise</code>
@@ -947,14 +1022,16 @@ resin.models.key.getAll (error, keys) ->
 
 **Example**  
 ```js
-resin.models.key.get(51).then (key) ->
-	console.log(key)
+resin.models.key.get(51).then(function(key) {
+	console.log(key);
+});
 ```
 **Example**  
 ```js
-resin.models.key.get 51, (error, key) ->
-	throw error if error?
-	console.log(key)
+resin.models.key.get(51, function(error, key) {
+	if (error) throw error;
+	console.log(key);
+});
 ```
 <a name="resin.models.key.remove"></a>
 ##### key.remove(id) ⇒ <code>Promise</code>
@@ -968,12 +1045,13 @@ resin.models.key.get 51, (error, key) ->
 
 **Example**  
 ```js
-resin.models.key.remove(51)
+resin.models.key.remove(51);
 ```
 **Example**  
 ```js
-resin.models.key.remove 51, (error) ->
-	throw error if error?
+resin.models.key.remove(51, function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.key.create"></a>
 ##### key.create(title, key) ⇒ <code>Promise</code>
@@ -989,14 +1067,16 @@ resin.models.key.remove 51, (error) ->
 
 **Example**  
 ```js
-resin.models.key.create('Main', 'ssh-rsa AAAAB....').then (id) ->
-	console.log(id)
+resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(id) {
+	console.log(id);
+});
 ```
 **Example**  
 ```js
-resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
-	throw error if error?
-	console.log(id)
+resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, id) {
+	if (error) throw error;
+	console.log(id);
+});
 ```
 <a name="resin.models.environment-variables"></a>
 #### models.environment-variables : <code>object</code>
@@ -1037,14 +1117,16 @@ resin.models.key.create 'Main', 'ssh-rsa AAAAB....', (error, id) ->
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (environmentVariables) ->
-	console.log(environmentVariables)
+resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(environmentVariables) {
+	console.log(environmentVariables);
+});
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.getAll '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, environmentVariables) ->
-	throw error if error?
+resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, environmentVariables) {
+	if (error) throw error;
 	console.log(environmentVariables)
+});
 ```
 <a name="resin.models.environment-variables.device.create"></a>
 ###### device.create(uuid, name, value) ⇒ <code>Promise</code>
@@ -1060,12 +1142,13 @@ resin.models.environmentVariables.device.getAll '7cf02a62a3a84440b1bb5579a3d5746
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim')
+resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.create '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', (error) ->
-	throw error if error?
+resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.environment-variables.device.update"></a>
 ###### device.update(id, value) ⇒ <code>Promise</code>
@@ -1080,12 +1163,13 @@ resin.models.environmentVariables.device.create '7cf02a62a3a84440b1bb5579a3d5746
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.update(2, 'emacs')
+resin.models.environmentVariables.device.update(2, 'emacs');
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
-	throw error if error?
+resin.models.environmentVariables.device.update(2, 'emacs', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.environment-variables.device.remove"></a>
 ###### device.remove(id) ⇒ <code>Promise</code>
@@ -1099,12 +1183,13 @@ resin.models.environmentVariables.device.update 2, 'emacs', (error) ->
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.remove(2)
+resin.models.environmentVariables.device.remove(2);
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.remove 2, (error) ->
-	throw error if error?
+resin.models.environmentVariables.device.remove(2, function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.environment-variables.getAll"></a>
 ##### environment-variables.getAll(applicationName) ⇒ <code>Promise</code>
@@ -1119,14 +1204,16 @@ resin.models.environmentVariables.device.remove 2, (error) ->
 
 **Example**  
 ```js
-resin.models.environmentVariables.getAllByApplication('MyApp').then (environmentVariables) ->
-	console.log(environmentVariables)
+resin.models.environmentVariables.getAllByApplication('MyApp').then(function(environmentVariables) {
+	console.log(environmentVariables);
+});
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.getAllByApplication 'MyApp', (error, environmentVariables) ->
-	throw error if error?
-	console.log(environmentVariables)
+resin.models.environmentVariables.getAllByApplication('MyApp', function(error, environmentVariables) {
+	if (error) throw error;
+	console.log(environmentVariables);
+});
 ```
 <a name="resin.models.environment-variables.create"></a>
 ##### environment-variables.create(applicationName, name, value) ⇒ <code>Promise</code>
@@ -1142,12 +1229,13 @@ resin.models.environmentVariables.getAllByApplication 'MyApp', (error, environme
 
 **Example**  
 ```js
-resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim')
+resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.create 'MyApp', 'EDITOR', 'vim', (error) ->
-	throw error if error?
+resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.environment-variables.update"></a>
 ##### environment-variables.update(id, value) ⇒ <code>Promise</code>
@@ -1162,12 +1250,13 @@ resin.models.environmentVariables.create 'MyApp', 'EDITOR', 'vim', (error) ->
 
 **Example**  
 ```js
-resin.models.environmentVariables.update(317, 'vim')
+resin.models.environmentVariables.update(317, 'vim');
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.update 317, 'vim', (error) ->
-	throw error if error?
+resin.models.environmentVariables.update(317, 'vim', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.environment-variables.remove"></a>
 ##### environment-variables.remove(id) ⇒ <code>Promise</code>
@@ -1181,12 +1270,13 @@ resin.models.environmentVariables.update 317, 'vim', (error) ->
 
 **Example**  
 ```js
-resin.models.environmentVariables.remove(51)
+resin.models.environmentVariables.remove(51);
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.remove 51, (error) ->
-	throw error if error?
+resin.models.environmentVariables.remove(51, function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.models.environment-variables.isSystemVariable"></a>
 ##### environment-variables.isSystemVariable(variable) ⇒ <code>Boolean</code>
@@ -1201,12 +1291,16 @@ resin.models.environmentVariables.remove 51, (error) ->
 
 **Example**  
 ```js
-resin.models.environmentVariables.isSystemVariable(name: 'RESIN_SUPERVISOR')
+resin.models.environmentVariables.isSystemVariable({
+	name: 'RESIN_SUPERVISOR'
+});
 > true
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.isSystemVariable(name: 'EDITOR')
+resin.models.environmentVariables.isSystemVariable({
+	name: 'EDITOR'
+});
 > false
 ```
 <a name="resin.models.os"></a>
@@ -1229,22 +1323,26 @@ resin.models.environmentVariables.isSystemVariable(name: 'EDITOR')
 
 **Example**  
 ```js
-parameters =
-	network: 'ethernet'
+var parameters = {
+	network: 'ethernet',
 	appId: 91
+};
 
-resin.models.os.download(parameters).then (stream) ->
-	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+resin.models.os.download(parameters).then(function(stream) {
+	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+});
 ```
 **Example**  
 ```js
-parameters =
-	network: 'ethernet'
+var parameters = {
+	network: 'ethernet',
 	appId: 91
+};
 
-resin.models.os.download parameters, (error, stream) ->
-	throw error if error?
-	stream.pipe(fs.createWriteStream('foo/bar/image.img'))
+resin.models.os.download(parameters, function(error, stream) {
+	if (error) throw error;
+	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+});
 ```
 <a name="resin.models.config"></a>
 #### models.config : <code>object</code>
@@ -1263,14 +1361,16 @@ resin.models.os.download parameters, (error, stream) ->
 **Fulfil**: <code>Object</code> - configuration  
 **Example**  
 ```js
-resin.models.config.getAll().then (config) ->
-	console.log(config)
+resin.models.config.getAll().then(function(config) {
+	console.log(config);
+});
 ```
 **Example**  
 ```js
-resin.models.config.getAll (error, config) ->
-	throw error if error?
-	console.log(config)
+resin.models.config.getAll(function(error, config) {
+	if (error) throw error;
+	console.log(config);
+});
 ```
 <a name="resin.models.config.getDeviceTypes"></a>
 ##### config.getDeviceTypes() ⇒ <code>Promise</code>
@@ -1280,14 +1380,16 @@ resin.models.config.getAll (error, config) ->
 **Fulfil**: <code>Object[]</code> - device types  
 **Example**  
 ```js
-resin.models.config.getDeviceTypes().then (deviceTypes) ->
-	console.log(deviceTypes)
+resin.models.config.getDeviceTypes().then(function(deviceTypes) {
+	console.log(deviceTypes);
+});
 ```
 **Example**  
 ```js
-resin.models.config.getDeviceTypes (error, deviceTypes) ->
-	throw error if error?
-	console.log(deviceTypes)
+resin.models.config.getDeviceTypes(function(error, deviceTypes) {
+	if (error) throw error;
+	console.log(deviceTypes);
+})
 ```
 <a name="resin.models.config.getDeviceOptions"></a>
 ##### config.getDeviceOptions(deviceType) ⇒ <code>Promise</code>
@@ -1302,14 +1404,16 @@ resin.models.config.getDeviceTypes (error, deviceTypes) ->
 
 **Example**  
 ```js
-resin.models.config.getDeviceOptions('raspberry-pi').then (options) ->
-	console.log(options)
+resin.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
+	console.log(options);
+});
 ```
 **Example**  
 ```js
-resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
-	throw error if error?
-	console.log(options)
+resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
+	if (error) throw error;
+	console.log(options);
+});
 ```
 <a name="resin.auth"></a>
 ### resin.auth : <code>object</code>
@@ -1348,17 +1452,21 @@ resin.models.config.getDeviceOptions 'raspberry-pi', (error, options) ->
 **Fulfil**: <code>Boolean</code> - whether 2fa is enabled  
 **Example**  
 ```js
-resin.auth.twoFactor.isEnabled().then (isEnabled) ->
-	if isEnabled
-		console.log('2FA is enabled for this account')
+resin.auth.twoFactor.isEnabled().then(function(isEnabled) {
+	if (isEnabled) {
+		console.log('2FA is enabled for this account');
+	}
+});
 ```
 **Example**  
 ```js
-resin.auth.twoFactor.isEnabled (error, isEnabled) ->
-	throw error if error?
+resin.auth.twoFactor.isEnabled(function(error, isEnabled) {
+	if (error) throw error;
 
-	if isEnabled
-		console.log('2FA is enabled for this account')
+	if (isEnabled) {
+		console.log('2FA is enabled for this account');
+	}
+});
 ```
 <a name="resin.auth.twoFactor.isPassed"></a>
 ##### twoFactor.isPassed() ⇒ <code>Promise</code>
@@ -1368,17 +1476,21 @@ resin.auth.twoFactor.isEnabled (error, isEnabled) ->
 **Fulfil**: <code>Boolean</code> - whether 2fa challenge was passed  
 **Example**  
 ```js
-resin.auth.twoFactor.isPassed().then (isPassed) ->
-	if isPassed
-		console.log('2FA challenge passed')
+resin.auth.twoFactor.isPassed().then(function(isPassed) {
+	if (isPassed) {
+		console.log('2FA challenge passed');
+	}
+});
 ```
 **Example**  
 ```js
-resin.auth.twoFactor.isPassed (error, isPassed) ->
-	throw error if error?
+resin.auth.twoFactor.isPassed(function(error, isPassed) {
+	if (error) throw error;
 
-	if isPassed
-		console.log('2FA challenge passed')
+	if (isPassed) {
+		console.log('2FA challenge passed');
+	}
+});
 ```
 <a name="resin.auth.twoFactor.challenge"></a>
 ##### twoFactor.challenge(code) ⇒ <code>Promise</code>
@@ -1392,12 +1504,13 @@ resin.auth.twoFactor.isPassed (error, isPassed) ->
 
 **Example**  
 ```js
-resin.auth.twoFactor.challenge('1234')
+resin.auth.twoFactor.challenge('1234');
 ```
 **Example**  
 ```js
-resin.auth.twoFactor.challenge '1234', (error) ->
-	throw error if error?
+resin.auth.twoFactor.challenge('1234', function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.auth.whoami"></a>
 #### auth.whoami() ⇒ <code>Promise</code>
@@ -1409,21 +1522,25 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 **Fulfil**: <code>(String\|undefined)</code> - username, if it exists  
 **Example**  
 ```js
-resin.auth.whoami().then (username) ->
-	if not username?
-		console.log('I\'m not logged in!')
-	else
-		console.log("My username is: #{username}")
+resin.auth.whoami().then(function(username) {
+		if (!username) {
+		console.log('I\'m not logged in!');
+		} else {
+		console.log('My username is:', username);
+		}
+});
 ```
 **Example**  
 ```js
-resin.auth.whoami (error, username) ->
-	throw error if error?
+resin.auth.whoami(function(error, username) {
+	if (error) throw error;
 
-	if not username?
-		console.log('I\'m not logged in!')
-	else
-		console.log("My username is: #{username}")
+	if (!username) {
+		console.log('I\'m not logged in!');
+	} else {
+		console.log('My username is:', username);
+	}
+});
 ```
 <a name="resin.auth.authenticate"></a>
 #### auth.authenticate(credentials) ⇒ <code>Promise</code>
@@ -1446,14 +1563,16 @@ by the server automatically.
 
 **Example**  
 ```js
-resin.auth.authenticate(credentials).then (token) ->
-	console.log("My token is: #{token}")
+resin.auth.authenticate(credentials).then(function(token) {
+	console.log('My token is:', token);
+});
 ```
 **Example**  
 ```js
-resin.auth.authenticate credentials, (error, token) ->
-	throw error if error?
-	console.log("My token is: #{token}")
+resin.auth.authenticate(credentials, function(error, token) {
+	if (error) throw error;
+	console.log('My token is:', token);
+});
 ```
 <a name="resin.auth.login"></a>
 #### auth.login(credentials) ⇒ <code>Promise</code>
@@ -1471,12 +1590,13 @@ If the login is successful, the token is persisted between sessions.
 
 **Example**  
 ```js
-resin.auth.login(credentials)
+resin.auth.login(credentials);
 ```
 **Example**  
 ```js
-resin.auth.login credentials, (error) ->
-	throw error if error?
+resin.auth.login(credentials, function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.auth.loginWithToken"></a>
 #### auth.loginWithToken(token) ⇒ <code>Promise</code>
@@ -1492,12 +1612,13 @@ Login to resin with a session token instead of with credentials.
 
 **Example**  
 ```js
-resin.auth.loginWithToken(token)
+resin.auth.loginWithToken(token);
 ```
 **Example**  
 ```js
-resin.auth.loginWithToken token, (error) ->
-	throw error if error?
+resin.auth.loginWithToken(token, function(error) {
+		if (error) throw error;
+});
 ```
 <a name="resin.auth.isLoggedIn"></a>
 #### auth.isLoggedIn() ⇒ <code>Promise</code>
@@ -1507,21 +1628,25 @@ resin.auth.loginWithToken token, (error) ->
 **Fulfil**: <code>Boolean</code> - is logged in  
 **Example**  
 ```js
-resin.auth.isLoggedIn().then (isLoggedIn) ->
-	if isLoggedIn
-		console.log('I\'m in!')
-	else
-		console.log('Too bad!')
+resin.auth.isLoggedIn().then(function(isLoggedIn) {
+	if (isLoggedIn) {
+		console.log('I\'m in!');
+	} else {
+		console.log('Too bad!');
+	}
+});
 ```
 **Example**  
 ```js
-resin.auth.isLoggedIn (error, isLoggedIn) ->
-	throw error if error?
+resin.auth.isLoggedIn(function(error, isLoggedIn) {
+	if (error) throw error;
 
-	if isLoggedIn
-		console.log('I\'m in!')
-	else
-		console.log('Too bad!')
+	if (isLoggedIn) {
+		console.log('I\'m in!');
+	} else {
+		console.log('Too bad!');
+	}
+});
 ```
 <a name="resin.auth.getToken"></a>
 #### auth.getToken() ⇒ <code>Promise</code>
@@ -1533,14 +1658,16 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 **Fulfil**: <code>String</code> - session token  
 **Example**  
 ```js
-resin.auth.getToken().then (token) ->
-	console.log(token)
+resin.auth.getToken().then(function(token) {
+	console.log(token);
+});
 ```
 **Example**  
 ```js
-resin.auth.getToken (error, token) ->
-	throw error if error?
-	console.log(token)
+resin.auth.getToken(function(error, token) {
+	if (error) throw error;
+	console.log(token);
+});
 ```
 <a name="resin.auth.getUserId"></a>
 #### auth.getUserId() ⇒ <code>Promise</code>
@@ -1552,14 +1679,16 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 **Fulfil**: <code>Number</code> - user id  
 **Example**  
 ```js
-resin.auth.getUserId().then (userId) ->
-	console.log(userId)
+resin.auth.getUserId().then(function(userId) {
+	console.log(userId);
+});
 ```
 **Example**  
 ```js
-resin.auth.getUserId (error, userId) ->
-	throw error if error?
-	console.log(userId)
+resin.auth.getUserId(function(error, userId) {
+	if (error) throw error;
+	console.log(userId);
+});
 ```
 <a name="resin.auth.getEmail"></a>
 #### auth.getEmail() ⇒ <code>Promise</code>
@@ -1571,8 +1700,16 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 **Fulfil**: <code>String</code> - user email  
 **Example**  
 ```js
-resin.auth.getEmail().then (email) ->
-	console.log(email)
+resin.auth.getEmail().then(function(email) {
+	console.log(email);
+});
+```
+**Example**  
+```js
+resin.auth.getEmail(function(error, email) {
+	if (error) throw error;
+	console.log(email);
+});
 ```
 <a name="resin.auth.logout"></a>
 #### auth.logout() ⇒ <code>Promise</code>
@@ -1581,12 +1718,13 @@ resin.auth.getEmail().then (email) ->
 **Access:** public  
 **Example**  
 ```js
-resin.auth.logout()
+resin.auth.logout();
 ```
 **Example**  
 ```js
-resin.auth.logout (error) ->
-	throw error if error?
+resin.auth.logout(function(error) {
+	if (error) throw error;
+});
 ```
 <a name="resin.auth.register"></a>
 #### auth.register([credentials]) ⇒ <code>Promise</code>
@@ -1603,20 +1741,22 @@ resin.auth.logout (error) ->
 
 **Example**  
 ```js
-resin.auth.register
-	email: 'johndoe@gmail.com'
+resin.auth.register({
+	email: 'johndoe@gmail.com',
 	password: 'secret'
-.then (token) ->
-	console.log(token)
+}).then(function(token) {
+	console.log(token);
+});
 ```
 **Example**  
 ```js
-resin.auth.register
-	email: 'johndoe@gmail.com'
+resin.auth.register({
+	email: 'johndoe@gmail.com',
 	password: 'secret'
-, (error, token) ->
-	throw error if error?
-	console.log(token)
+}, function(error, token) {
+	if (error) throw error;
+	console.log(token);
+});
 ```
 <a name="resin.logs"></a>
 ### resin.logs : <code>object</code>
@@ -1648,16 +1788,21 @@ The `logs` object yielded by this function emits the following events:
 
 **Example**  
 ```js
-resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (logs) ->
-	logs.on 'line', (line) ->
-		console.log(line)
+resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(logs) {
+	logs.on('line', function(line) {
+		console.log(line);
+	});
+});
 ```
 **Example**  
 ```js
-resin.logs.subscribe '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, logs) ->
-	throw error if error?
-	logs.on 'line', (line) ->
-		console.log(line)
+resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, logs) {
+	if (error) throw error;
+
+	logs.on('line', function(line) {
+		console.log(line);
+	});
+});
 ```
 <a name="resin.logs.history"></a>
 #### logs.history(uuid) ⇒ <code>Promise</code>
@@ -1672,16 +1817,21 @@ resin.logs.subscribe '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b4
 
 **Example**  
 ```js
-resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then (lines) ->
-	for line in lines
-		console.log(line)
+resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(lines) {
+	lines.forEach(function(line) {
+		console.log(line);
+	});
+});
 ```
 **Example**  
 ```js
-resin.logs.history '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', (error, lines) ->
-	throw error if error?
-	for line in lines
-		console.log(line)
+resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, lines) {
+	if (error) throw error;
+
+	lines.forEach(function(line) {
+		console.log(line);
+	});
+});
 ```
 <a name="resin.settings"></a>
 ### resin.settings : <code>object</code>
@@ -1704,14 +1854,16 @@ resin.logs.history '7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465
 
 **Example**  
 ```js
-resin.settings.get('apiUrl').then (apiUrl) ->
-	console.log(apiUrl)
+resin.settings.get('apiUrl').then(function(apiUrl) {
+	console.log(apiUrl);
+});
 ```
 **Example**  
 ```js
-resin.settings.get 'apiUrl', (error, apiUrl) ->
-	throw error if error?
-	console.log(apiUrl)
+resin.settings.get('apiUrl', function(error, apiUrl) {
+	if (error) throw error;
+	console.log(apiUrl);
+});
 ```
 <a name="resin.settings.getAll"></a>
 #### settings.getAll() ⇒ <code>Promise</code>
@@ -1721,12 +1873,14 @@ resin.settings.get 'apiUrl', (error, apiUrl) ->
 **Fulfil**: <code>Object</code> - settings  
 **Example**  
 ```js
-resin.settings.getAll().then (settings) ->
-	console.log(settings)
+resin.settings.getAll().then(function(settings) {
+	console.log(settings);
+});
 ```
 **Example**  
 ```js
-resin.settings.getAll (error, settings) ->
-	throw error if error?
-	console.log(settings)
+resin.settings.getAll(function(error, settings) {
+	if (error) throw error;
+	console.log(settings);
+});
 ```
