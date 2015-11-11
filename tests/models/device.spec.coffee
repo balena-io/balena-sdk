@@ -555,6 +555,54 @@ describe 'Device Model:', ->
 						promise = device.identify('1234')
 						m.chai.expect(promise).to.eventually.be.undefined
 
+		describe '.move()', ->
+
+			describe 'given an invalid device', ->
+
+				beforeEach ->
+					@deviceHasStub = m.sinon.stub(device, 'has')
+					@deviceHasStub.returns(Promise.resolve(false))
+
+				afterEach ->
+					@deviceHasStub.restore()
+
+				it 'should reject with not found error', ->
+					promise = device.move('1234', 'MyApp')
+					m.chai.expect(promise).to.be.rejectedWith(errors.ResinDeviceNotFound)
+
+			describe 'given a valid device', ->
+
+				beforeEach ->
+					@deviceHasStub = m.sinon.stub(device, 'has')
+					@deviceHasStub.returns(Promise.resolve(true))
+
+				afterEach ->
+					@deviceHasStub.restore()
+
+				describe 'given a valid application', ->
+
+					beforeEach ->
+						@applicationGetStub = m.sinon.stub(application, 'get')
+						@applicationGetStub.returns(Promise.resolve(id: 999))
+
+					afterEach ->
+						@applicationGetStub.restore()
+
+					describe 'given a successful patch', ->
+
+						beforeEach ->
+							@pinePatchStub = m.sinon.stub(pine, 'patch')
+							@pinePatchStub.returns(Promise.resolve())
+
+						afterEach ->
+							@pinePatchStub.restore()
+
+						it 'should update the device application id', (done) ->
+							device.move('1234', 'MyApp').then =>
+								args = @pinePatchStub.getCall(0).args
+								m.chai.expect(args[0].body.application).to.equal(999)
+							.nodeify(done)
+
 		describe '.restart()', ->
 
 			describe 'given an invalid device', ->

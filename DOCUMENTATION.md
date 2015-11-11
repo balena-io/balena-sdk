@@ -34,6 +34,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
       * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
       * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
+      * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
       * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
       * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
       * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
@@ -119,6 +120,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
     * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
+    * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
     * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
     * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
     * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
@@ -386,6 +388,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
   * [.identify(uuid)](#resin.models.device.identify) ⇒ <code>Promise</code>
   * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
   * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
+  * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
   * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
   * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
   * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
@@ -696,6 +699,27 @@ resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4
 ```js
 resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', function(error) {
 		if (error) throw error;
+});
+```
+<a name="resin.models.device.move"></a>
+##### device.move(uuid, application) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Move a device to another application  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+| application | <code>String</code> | application name |
+
+**Example**  
+```js
+resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp');
+```
+**Example**  
+```js
+resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp', function(error) {
+	if (error) throw error;
 });
 ```
 <a name="resin.models.device.restart"></a>
