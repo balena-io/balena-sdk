@@ -451,6 +451,43 @@ exports.note = (uuid, note, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Move a device to another application
+# @name move
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @param {String} application - application name
+#
+# @returns {Promise}
+#
+# @example
+# resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp');
+#
+# @example
+# resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp', function(error) {
+# 	if (error) throw error;
+# });
+###
+exports.move = (uuid, application, callback) ->
+	exports.has(uuid).then (hasDevice) ->
+
+		if not hasDevice
+			throw new errors.ResinDeviceNotFound(uuid)
+
+		applicationModel.get(application).get('id').then (applicationId) ->
+			return pine.patch
+				resource: 'device'
+				body:
+					application: applicationId
+				options:
+					filter:
+						uuid: uuid
+
+	.nodeify(callback)
+
+###*
 # @summary Restart device
 # @name restart
 # @public
