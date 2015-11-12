@@ -560,11 +560,11 @@ describe 'Device Model:', ->
 			describe 'given an invalid device', ->
 
 				beforeEach ->
-					@deviceHasStub = m.sinon.stub(device, 'has')
-					@deviceHasStub.returns(Promise.resolve(false))
+					@deviceGetStub = m.sinon.stub(device, 'get')
+					@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('1234')))
 
 				afterEach ->
-					@deviceHasStub.restore()
+					@deviceGetStub.restore()
 
 				it 'should reject with not found error', ->
 					promise = device.move('1234', 'MyApp')
@@ -573,17 +573,24 @@ describe 'Device Model:', ->
 			describe 'given a valid device', ->
 
 				beforeEach ->
-					@deviceHasStub = m.sinon.stub(device, 'has')
-					@deviceHasStub.returns(Promise.resolve(true))
+					@pineGetStub = m.sinon.stub(pine, 'get')
+					@pineGetStub.returns Promise.resolve [
+						application: [
+							app_name: 'MyApp'
+						]
+						device_type: 'raspberry-pi'
+					]
 
 				afterEach ->
-					@deviceHasStub.restore()
+					@pineGetStub.restore()
 
 				describe 'given a valid application', ->
 
 					beforeEach ->
 						@applicationGetStub = m.sinon.stub(application, 'get')
-						@applicationGetStub.returns(Promise.resolve(id: 999))
+						@applicationGetStub.returns Promise.resolve
+							id: 999
+							device_type: 'raspberry-pi'
 
 					afterEach ->
 						@applicationGetStub.restore()
@@ -602,6 +609,21 @@ describe 'Device Model:', ->
 								args = @pinePatchStub.getCall(0).args
 								m.chai.expect(args[0].body.application).to.equal(999)
 							.nodeify(done)
+
+				describe 'given an application with a different device type', ->
+
+					beforeEach ->
+						@applicationGetStub = m.sinon.stub(application, 'get')
+						@applicationGetStub.returns Promise.resolve
+							id: 999
+							device_type: 'intel-nuc'
+
+					afterEach ->
+						@applicationGetStub.restore()
+
+					it 'should be rejected with an error', ->
+						promise = device.move('1234', 'MyApp')
+						m.chai.expect(promise).to.be.rejectedWith('Incompatible application: MyApp')
 
 		describe '.restart()', ->
 

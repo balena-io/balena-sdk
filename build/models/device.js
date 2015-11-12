@@ -537,22 +537,23 @@ THE SOFTWARE.
    */
 
   exports.move = function(uuid, application, callback) {
-    return exports.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
+    return Promise.props({
+      device: exports.get(uuid),
+      application: applicationModel.get(application)
+    }).then(function(results) {
+      if (results.device.device_type !== results.application.device_type) {
+        throw new Error("Incompatible application: " + application);
       }
-      return applicationModel.get(application).get('id').then(function(applicationId) {
-        return pine.patch({
-          resource: 'device',
-          body: {
-            application: applicationId
-          },
-          options: {
-            filter: {
-              uuid: uuid
-            }
+      return pine.patch({
+        resource: 'device',
+        body: {
+          application: results.application.id
+        },
+        options: {
+          filter: {
+            uuid: uuid
           }
-        });
+        }
       });
     }).nodeify(callback);
   };
