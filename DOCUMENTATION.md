@@ -714,11 +714,11 @@ resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4
 
 **Example**  
 ```js
-resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp');
+resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp');
 ```
 **Example**  
 ```js
-resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp', function(error) {
+resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp', function(error) {
 	if (error) throw error;
 });
 ```
