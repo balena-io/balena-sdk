@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.1] - 2015-11-12
+
+### Changed
+
+- Validate application device type before moving a device.
+
 ## [4.1.0] - 2015-11-11
 
 ### Added
@@ -186,6 +192,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[4.1.1]: https://github.com/resin-io/resin-sdk/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/resin-io/resin-sdk/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/resin-io/resin-sdk/compare/v3.0.0...v4.0.0
 [3.0.0]: https://github.com/resin-io/resin-sdk/compare/v2.8.1...v3.0.0
