@@ -471,19 +471,21 @@ exports.note = (uuid, note, callback) ->
 # });
 ###
 exports.move = (uuid, application, callback) ->
-	exports.has(uuid).then (hasDevice) ->
+	Promise.props
+		device: exports.get(uuid)
+		application: applicationModel.get(application)
+	.then (results) ->
 
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
+		if results.device.device_type isnt results.application.device_type
+			throw new Error("Incompatible application: #{application}")
 
-		applicationModel.get(application).get('id').then (applicationId) ->
-			return pine.patch
-				resource: 'device'
-				body:
-					application: applicationId
-				options:
-					filter:
-						uuid: uuid
+		return pine.patch
+			resource: 'device'
+			body:
+				application: results.application.id
+			options:
+				filter:
+					uuid: uuid
 
 	.nodeify(callback)
 
