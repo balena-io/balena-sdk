@@ -74,4 +74,6 @@ exports.get = (key, callback) ->
 # });
 ###
 exports.getAll = (callback) ->
-	return exports.get(null).nodeify(callback)
+	Promise.try ->
+		return settings.getAll()
+	.nodeify(callback)
