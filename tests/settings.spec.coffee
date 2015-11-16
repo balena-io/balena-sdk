@@ -53,16 +53,16 @@ describe 'Settings:', ->
 
 	describe '.getAll()', ->
 
-		describe 'given get() returns all settings', ->
+		describe 'given existing settings', ->
 
 			beforeEach ->
-				@settingsGetStub = m.sinon.stub(resinSettings, 'get')
-				@settingsGetStub.returns
+				@settingsGetAllStub = m.sinon.stub(resinSettings, 'getAll')
+				@settingsGetAllStub.returns
 					foo: 'bar'
 					bar: 'baz'
 
 			afterEach ->
-				@settingsGetStub.restore()
+				@settingsGetAllStub.restore()
 
 			it 'should yield all settings', (done) ->
 				settings.getAll (error, allSettings) ->

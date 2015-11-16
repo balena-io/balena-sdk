@@ -84,7 +84,9 @@ THE SOFTWARE.
    */
 
   exports.getAll = function(callback) {
-    return exports.get(null).nodeify(callback);
+    return Promise["try"](function() {
+      return settings.getAll();
+    }).nodeify(callback);
   };
 
 }).call(this);
