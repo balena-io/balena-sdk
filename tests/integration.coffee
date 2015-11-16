@@ -1,7 +1,7 @@
 m = require('mochainon')
 Promise = require('bluebird')
 _ = require('lodash')
-fs = require('fs')
+fs = Promise.promisifyAll(require('fs'))
 path = require('path')
 pine = require('resin-pine')
 token = require('resin-token')
@@ -9,6 +9,8 @@ errors = require('resin-errors')
 resinRequest = require('resin-request')
 request = Promise.promisifyAll(require('request'))
 cheerio = require('cheerio')
+tmp = require('tmp')
+rindle = require('rindle')
 resin = require('../lib/resin')
 
 reset = ->
@@ -49,7 +51,7 @@ describe 'SDK Integration Tests', ->
 
 	# A high timeout number prevents false alarms when
 	# running the tests in a slow connection
-	@timeout(20000)
+	@timeout(30 * 60 * 1000)
 
 	describe 'given a not logged in user', ->
 
@@ -1033,3 +1035,41 @@ describe 'SDK Integration Tests', ->
 				it 'should be rejected with an incompatiblity error', ->
 					promise = resin.models.device.move(@device.uuid, @application2.app_name)
 					m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
+
+		describe 'OS Model', ->
+
+			describe 'given a valid device slug', ->
+
+				it 'should contain a positive number length property', (done) ->
+					resin.models.os.download('parallella').then (stream) ->
+						m.chai.expect(stream.length).to.be.a('number')
+						m.chai.expect(stream.length).to.be.above(0)
+					.nodeify(done)
+
+				it 'should contain a valid mime property', (done) ->
+					resin.models.os.download('parallella').then (stream) ->
+						m.chai.expect(stream.mime).to.equal('application/octet-stream')
+					.nodeify(done)
+
+				it 'should be able to download the image', (done) ->
+					tmpFile = tmp.tmpNameSync()
+					console.log(tmpFile)
+					size = null
+
+					resin.models.os.download('parallella').then (stream) ->
+						size = stream.length
+						stream.pipe(fs.createWriteStream(tmpFile))
+					.then(rindle.wait)
+					.then ->
+						return fs.statAsync(tmpFile)
+					.then (stat) ->
+						m.chai.expect(stat.size).to.equal(size)
+					.finally ->
+						fs.unlinkAsync(tmpFile)
+					.nodeify(done)
+
+			describe 'given an invalid device slug', ->
+
+				it 'should be rejected with an error message', ->
+					promise = resin.models.os.download('foo-bar-baz')
+					m.chai.expect(promise).to.be.rejectedWith('No such device type')
