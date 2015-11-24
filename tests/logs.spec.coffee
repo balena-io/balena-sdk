@@ -24,11 +24,11 @@ describe 'Logs:', ->
 			describe 'given the device does not exist', ->
 
 				beforeEach ->
-					@deviceHasStub = m.sinon.stub(device, 'has')
-					@deviceHasStub.returns(Promise.resolve(false))
+					@deviceGetStub = m.sinon.stub(device, 'get')
+					@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('asdf')))
 
 				afterEach ->
-					@deviceHasStub.restore()
+					@deviceGetStub.restore()
 
 				it 'should be rejected', ->
 					promise = logs.subscribe('1234')
@@ -37,11 +37,11 @@ describe 'Logs:', ->
 		describe 'given the device exists', ->
 
 			beforeEach ->
-				@deviceHasStub = m.sinon.stub(device, 'has')
-				@deviceHasStub.returns(Promise.resolve(true))
+				@deviceGetStub = m.sinon.stub(device, 'get')
+				@deviceGetStub.returns(Promise.resolve(uuid: 'asdf'))
 
 			afterEach ->
-				@deviceHasStub.restore()
+				@deviceGetStub.restore()
 
 			describe 'given no pubnub keys', ->
 
@@ -72,11 +72,11 @@ describe 'Logs:', ->
 			describe 'given the device does not exist', ->
 
 				beforeEach ->
-					@deviceHasStub = m.sinon.stub(device, 'has')
-					@deviceHasStub.returns(Promise.resolve(false))
+					@deviceGetStub = m.sinon.stub(device, 'get')
+					@deviceGetStub.returns(Promise.reject(new errors.ResinDeviceNotFound('asdf')))
 
 				afterEach ->
-					@deviceHasStub.restore()
+					@deviceGetStub.restore()
 
 				it 'should be rejected', ->
 					promise = logs.history('1234')
@@ -85,11 +85,11 @@ describe 'Logs:', ->
 		describe 'given the device exists', ->
 
 			beforeEach ->
-				@deviceHasStub = m.sinon.stub(device, 'has')
-				@deviceHasStub.returns(Promise.resolve(true))
+				@deviceGetStub = m.sinon.stub(device, 'get')
+				@deviceGetStub.returns(Promise.resolve(uuid: 'asdf'))
 
 			afterEach ->
-				@deviceHasStub.restore()
+				@deviceGetStub.restore()
 
 			describe 'given no pubnub keys', ->
 

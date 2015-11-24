@@ -75,12 +75,11 @@ THE SOFTWARE.
    */
 
   exports.subscribe = function(uuid, callback) {
-    return deviceModel.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
-    }).then(configModel.getPubNubKeys).then(function(pubNubKeys) {
-      return logs.subscribe(pubNubKeys, uuid);
+    return Promise.props({
+      device: deviceModel.get(uuid),
+      pubNubKeys: configModel.getPubNubKeys()
+    }).then(function(results) {
+      return logs.subscribe(results.pubNubKeys, results.device);
     }).nodeify(callback);
   };
 
@@ -114,12 +113,11 @@ THE SOFTWARE.
    */
 
   exports.history = function(uuid, callback) {
-    return deviceModel.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
-    }).then(configModel.getPubNubKeys).then(function(pubNubKeys) {
-      return logs.history(pubNubKeys, uuid);
+    return Promise.props({
+      device: deviceModel.get(uuid),
+      pubNubKeys: configModel.getPubNubKeys()
+    }).then(function(results) {
+      return logs.history(results.pubNubKeys, results.device);
     }).nodeify(callback);
   };
 
