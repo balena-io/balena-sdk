@@ -65,11 +65,11 @@ deviceModel = require('./models/device')
 # });
 ###
 exports.subscribe = (uuid, callback) ->
-	deviceModel.has(uuid).then (hasDevice) ->
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-	.then(configModel.getPubNubKeys).then (pubNubKeys) ->
-		return logs.subscribe(pubNubKeys, uuid)
+	Promise.props
+		device: deviceModel.get(uuid)
+		pubNubKeys: configModel.getPubNubKeys()
+	.then (results) ->
+		return logs.subscribe(results.pubNubKeys, results.device)
 	.nodeify(callback)
 
 ###*
@@ -100,9 +100,9 @@ exports.subscribe = (uuid, callback) ->
 # });
 ###
 exports.history = (uuid, callback) ->
-	deviceModel.has(uuid).then (hasDevice) ->
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-	.then(configModel.getPubNubKeys).then (pubNubKeys) ->
-		return logs.history(pubNubKeys, uuid)
+	Promise.props
+		device: deviceModel.get(uuid)
+		pubNubKeys: configModel.getPubNubKeys()
+	.then (results) ->
+		return logs.history(results.pubNubKeys, results.device)
 	.nodeify(callback)
