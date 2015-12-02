@@ -1347,8 +1347,17 @@ resin.models.environmentVariables.isSystemVariable({
 
 **Example**  
 ```js
+// Ethernet
 var parameters = {
 	network: 'ethernet',
+	appId: 91
+};
+
+// Wifi
+var parameters = {
+	network: 'wifi',
+	wifiSsid: 'ssid',
+	wifiKey: 'secret',
 	appId: 91
 };
 
@@ -1358,8 +1367,17 @@ resin.models.os.download(parameters).then(function(stream) {
 ```
 **Example**  
 ```js
+// Ethernet
 var parameters = {
 	network: 'ethernet',
+	appId: 91
+};
+
+// Wifi
+var parameters = {
+	network: 'wifi',
+	wifiSsid: 'ssid',
+	wifiKey: 'secret',
 	appId: 91
 };
 

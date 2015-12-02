@@ -38,8 +38,17 @@ request = require('resin-request')
 # @todo In the future this function should only require a device type slug.
 #
 # @example
+# // Ethernet
 # var parameters = {
 # 	network: 'ethernet',
+# 	appId: 91
+# };
+#
+# // Wifi
+# var parameters = {
+# 	network: 'wifi',
+# 	wifiSsid: 'ssid',
+# 	wifiKey: 'secret',
 # 	appId: 91
 # };
 #
@@ -48,8 +57,17 @@ request = require('resin-request')
 # });
 #
 # @example
+# // Ethernet
 # var parameters = {
 # 	network: 'ethernet',
+# 	appId: 91
+# };
+#
+# // Wifi
+# var parameters = {
+# 	network: 'wifi',
+# 	wifiSsid: 'ssid',
+# 	wifiKey: 'secret',
 # 	appId: 91
 # };
 #

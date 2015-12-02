@@ -43,8 +43,17 @@ THE SOFTWARE.
    * @todo In the future this function should only require a device type slug.
    *
    * @example
+   * // Ethernet
    * var parameters = {
    * 	network: 'ethernet',
+   * 	appId: 91
+   * };
+   *
+   * // Wifi
+   * var parameters = {
+   * 	network: 'wifi',
+   * 	wifiSsid: 'ssid',
+   * 	wifiKey: 'secret',
    * 	appId: 91
    * };
    *
@@ -53,8 +62,17 @@ THE SOFTWARE.
    * });
    *
    * @example
+   * // Ethernet
    * var parameters = {
    * 	network: 'ethernet',
+   * 	appId: 91
+   * };
+   *
+   * // Wifi
+   * var parameters = {
+   * 	network: 'wifi',
+   * 	wifiSsid: 'ssid',
+   * 	wifiKey: 'secret',
    * 	appId: 91
    * };
    *
