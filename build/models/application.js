@@ -24,13 +24,15 @@ THE SOFTWARE.
  */
 
 (function() {
-  var _, deviceModel, errors, pine, request;
+  var _, deviceModel, errors, pine, request, token;
 
   _ = require('lodash');
 
   errors = require('resin-errors');
 
   request = require('resin-request');
+
+  token = require('resin-token');
 
   pine = require('resin-pine');
 
@@ -60,12 +62,17 @@ THE SOFTWARE.
    */
 
   exports.getAll = function(callback) {
-    return pine.get({
-      resource: 'application',
-      options: {
-        orderby: 'app_name asc',
-        expand: 'device'
-      }
+    return token.getUserId().then(function(userId) {
+      return pine.get({
+        resource: 'application',
+        options: {
+          orderby: 'app_name asc',
+          expand: 'device',
+          filter: {
+            user: userId
+          }
+        }
+      });
     }).map(function(application) {
       var ref;
       application.online_devices = _.where(application.device, {
