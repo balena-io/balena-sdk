@@ -25,6 +25,7 @@ THE SOFTWARE.
 _ = require('lodash')
 errors = require('resin-errors')
 request = require('resin-request')
+token = require('resin-token')
 pine = require('resin-pine')
 deviceModel = require('./device')
 
@@ -50,11 +51,14 @@ deviceModel = require('./device')
 # });
 ###
 exports.getAll = (callback) ->
-	return pine.get
-		resource: 'application'
-		options:
-			orderby: 'app_name asc'
-			expand: 'device'
+	token.getUserId().then (userId) ->
+		return pine.get
+			resource: 'application'
+			options:
+				orderby: 'app_name asc'
+				expand: 'device'
+				filter:
+					user: userId
 
 	# TODO: It might be worth to do all these handy
 	# manipulations server side directly.
