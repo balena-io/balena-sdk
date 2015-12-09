@@ -286,7 +286,7 @@ resin.models.application.getById(89, function(error, application) {
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Create an application  
 **Access:** public  
-**Fulfil**: <code>Number</code> - application id  
+**Fulfil**: <code>Object</code> - application  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -295,15 +295,15 @@ resin.models.application.getById(89, function(error, application) {
 
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi').then(function(id) {
-	console.log(id);
+resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi', function(error, id) {
+resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
 	if (error) throw error;
-	console.log(id);
+	console.log(application);
 });
 ```
 <a name="resin.models.application.remove"></a>

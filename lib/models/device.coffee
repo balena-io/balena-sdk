@@ -89,14 +89,19 @@ exports.getAll = (callback) ->
 # });
 ###
 exports.getAllByApplication = (name, callback) ->
-	return pine.get
-		resource: 'device'
-		options:
-			filter:
-				application:
-					app_name: name
-			expand: 'application'
-			orderby: 'name asc'
+	applicationModel.has(name).then (hasApplication) ->
+
+		if not hasApplication
+			throw new errors.ResinApplicationNotFound(name)
+
+		return pine.get
+			resource: 'device'
+			options:
+				filter:
+					application:
+						app_name: name
+				expand: 'application'
+				orderby: 'name asc'
 
 	# TODO: Move to server
 	.map (device) ->

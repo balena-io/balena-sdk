@@ -11,9 +11,9 @@ OPTIONS =
 	config:
 		coffeelint: path.join(__dirname, 'coffeelint.json')
 	files:
-		coffee: [ 'lib/**/*.coffee', 'tests/**/*.spec.coffee', 'gulpfile.coffee' ]
+		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
-		tests: 'tests/**/*.spec.coffee'
+		integration: 'tests/integration.coffee'
 		javascript: 'build/**/*.js'
 	directories:
 		doc: 'doc/'
@@ -25,9 +25,9 @@ gulp.task 'coffee', ->
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'test', ->
-	gulp.src(OPTIONS.files.tests, read: false)
+	gulp.src(OPTIONS.files.integration, read: false)
 		.pipe(mocha({
-			reporter: 'min'
+			reporter: 'spec'
 		}))
 
 gulp.task 'lint', ->
@@ -40,8 +40,7 @@ gulp.task 'lint', ->
 gulp.task 'build', (callback) ->
 	runSequence([
 		'lint'
-		'test'
 	], [ 'coffee' ], callback)
 
 gulp.task 'watch', [ 'build' ], ->
-	gulp.watch([ OPTIONS.files.coffee ], [ 'build' ])
+	gulp.watch([ OPTIONS.files.coffee ], [ 'lint' ])
