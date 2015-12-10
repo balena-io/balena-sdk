@@ -199,18 +199,18 @@ exports.getById = (id, callback) ->
 # @param {String} name - application name
 # @param {String} deviceType - device type slug
 #
-# @fulfil {Number} - application id
+# @fulfil {Object} - application
 # @returns {Promise}
 #
 # @example
-# resin.models.application.create('My App', 'raspberry-pi').then(function(id) {
-# 	console.log(id);
+# resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+# 	console.log(application);
 # });
 #
 # @example
-# resin.models.application.create('My App', 'raspberry-pi', function(error, id) {
+# resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
 # 	if (error) throw error;
-# 	console.log(id);
+# 	console.log(application);
 # });
 ###
 exports.create = (name, deviceType, callback) ->

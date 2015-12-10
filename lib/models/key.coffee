@@ -118,18 +118,18 @@ exports.remove = (id, callback) ->
 # @param {String} title - key title
 # @param {String} key - the public ssh key
 #
-# @fulfil {Number} - ssh key id
+# @fulfil {Object} - ssh key
 # @returns {Promise}
 #
 # @example
-# resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(id) {
-# 	console.log(id);
+# resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
+# 	console.log(key);
 # });
 #
 # @example
-# resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, id) {
+# resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 # 	if (error) throw error;
-# 	console.log(id);
+# 	console.log(key);
 # });
 ###
 exports.create = (title, key, callback) ->
@@ -144,5 +144,4 @@ exports.create = (title, key, callback) ->
 				title: title
 				public_key: key
 				user: userId
-		.get('id')
 	.nodeify(callback)

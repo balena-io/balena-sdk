@@ -107,17 +107,22 @@ THE SOFTWARE.
    */
 
   exports.getAllByApplication = function(name, callback) {
-    return pine.get({
-      resource: 'device',
-      options: {
-        filter: {
-          application: {
-            app_name: name
-          }
-        },
-        expand: 'application',
-        orderby: 'name asc'
+    return applicationModel.has(name).then(function(hasApplication) {
+      if (!hasApplication) {
+        throw new errors.ResinApplicationNotFound(name);
       }
+      return pine.get({
+        resource: 'device',
+        options: {
+          filter: {
+            application: {
+              app_name: name
+            }
+          },
+          expand: 'application',
+          orderby: 'name asc'
+        }
+      });
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
       return device;
