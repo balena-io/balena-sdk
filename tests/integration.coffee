@@ -281,7 +281,7 @@ describe 'SDK Integration Tests', ->
 
 				it 'should get the display name for a known slug', ->
 					promise = resin.models.device.getDisplayName('raspberry-pi')
-					m.chai.expect(promise).to.eventually.equal('Raspberry Pi')
+					m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 and Zero)')
 
 				it 'should eventually be undefined if the slug is invalid', ->
 					promise = resin.models.device.getDisplayName('asdf')
@@ -290,7 +290,7 @@ describe 'SDK Integration Tests', ->
 			describe 'resin.models.device.getDeviceSlug()', ->
 
 				it 'should eventually be the slug from a display name', ->
-					promise = resin.models.device.getDeviceSlug('Raspberry Pi')
+					promise = resin.models.device.getDeviceSlug('Raspberry Pi (v1 and Zero)')
 					m.chai.expect(promise).to.eventually.equal('raspberry-pi')
 
 				it 'should eventually be the slug if passing already a slug', ->
