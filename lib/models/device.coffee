@@ -129,11 +129,26 @@ exports.get = (uuid, callback) ->
 		options:
 			expand: 'application'
 			filter:
-				uuid: uuid
+
+				# Handle shorter uuids by asserting
+				# that it is a substring of the device
+				# uuid starting at index zero.
+				$eq: [
+					$substring: [
+							$: 'uuid'
+							0
+							uuid.length
+					]
+					uuid
+				]
 
 	.tap (device) ->
 		if _.isEmpty(device)
 			throw new errors.ResinDeviceNotFound(uuid)
+
+		if device.length > 1
+			throw new errors.ResinAmbiguousDevice(uuid)
+
 	.get(0)
 	.tap (device) ->
 		device.application_name = device.application[0].app_name

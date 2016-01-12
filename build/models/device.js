@@ -151,12 +151,23 @@ limitations under the License.
       options: {
         expand: 'application',
         filter: {
-          uuid: uuid
+          $eq: [
+            {
+              $substring: [
+                {
+                  $: 'uuid'
+                }, 0, uuid.length
+              ]
+            }, uuid
+          ]
         }
       }
     }).tap(function(device) {
       if (_.isEmpty(device)) {
         throw new errors.ResinDeviceNotFound(uuid);
+      }
+      if (device.length > 1) {
+        throw new Error("Device ambiguation: " + uuid);
       }
     }).get(0).tap(function(device) {
       return device.application_name = device.application[0].app_name;

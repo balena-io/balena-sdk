@@ -720,6 +720,11 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.device.get('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be able to use a shorter uuid', (done) ->
+						resin.models.device.get(@device.uuid.slice(0, 8)).then (device) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+						.nodeify(done)
+
 				describe 'resin.models.device.getByName()', ->
 
 					it 'should be able to get the device', (done) ->
@@ -951,6 +956,36 @@ describe 'SDK Integration Tests', ->
 							.then (envs) ->
 								m.chai.expect(envs).to.have.length(0)
 							.nodeify(done)
+
+		describe 'given a single application with two offline devices that share the same uuid root', ->
+
+			beforeEach (done) ->
+				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+					@application = application
+
+					uuid1 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+					uuid2 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+
+					Promise.props
+						one: resin.models.device.register(application.app_name, uuid1)
+						two: resin.models.device.register(application.app_name, uuid2)
+					.then (devices) =>
+						@devices = devices
+				.nodeify(done)
+
+			describe 'Device Model', ->
+
+				describe 'resin.models.device.get()', ->
+
+					it 'should be rejected with an error if there is an ambiguation between shorter uuids', ->
+						promise = resin.models.device.get('aaaaaaaaaaaaaaaa')
+						m.chai.expect(promise).to.be.rejectedWith(errors.ResinAmbiguousDevice)
+
+				describe 'resin.models.device.has()', ->
+
+					it 'should be rejected with an error for an ambiguous shorter uuid', ->
+						promise = resin.models.device.has('aaaaaaaaaaaaaaaa')
+						m.chai.expect(promise).to.be.rejectedWith(errors.ResinAmbiguousDevice)
 
 		describe 'given two compatible applications and a single device', ->
 
