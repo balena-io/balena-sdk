@@ -458,13 +458,13 @@ resin.models.device.getAllByApplication('MyApp', function(error, devices) {
 
 **Example**  
 ```js
-resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(device) {
+resin.models.device.get('7cf02a6').then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, device) {
+resin.models.device.get('7cf02a6', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });
@@ -506,13 +506,13 @@ resin.models.device.getByName('MyDevice', function(error, devices) {
 
 **Example**  
 ```js
-resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(deviceName) {
+resin.models.device.getName('7cf02a6').then(function(deviceName) {
 	console.log(deviceName);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, deviceName) {
+resin.models.device.getName('7cf02a6', function(error, deviceName) {
 	if (error) throw error;
 	console.log(deviceName);
 });
@@ -530,13 +530,13 @@ resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc
 
 **Example**  
 ```js
-resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(applicationName) {
+resin.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
 	console.log(applicationName);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, applicationName) {
+resin.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
 	if (error) throw error;
 	console.log(applicationName);
 });
@@ -554,13 +554,13 @@ resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d5746914894327
 
 **Example**  
 ```js
-resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(hasDevice) {
+resin.models.device.has('7cf02a6').then(function(hasDevice) {
 	console.log(hasDevice);
 });
 ```
 **Example**  
 ```js
-resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, hasDevice) {
+resin.models.device.has('7cf02a6', function(error, hasDevice) {
 	if (error) throw error;
 	console.log(hasDevice);
 });
@@ -578,13 +578,13 @@ resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f
 
 **Example**  
 ```js
-resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(isOnline) {
+resin.models.device.isOnline('7cf02a6').then(function(isOnline) {
 	console.log('Is device online?', isOnline);
 });
 ```
 **Example**  
 ```js
-resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, isOnline) {
+resin.models.device.isOnline('7cf02a6', function(error, isOnline) {
 	if (error) throw error;
 	console.log('Is device online?', isOnline);
 });
@@ -603,7 +603,7 @@ resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7f
 
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(localIPAddresses) {
+resin.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
 	localIPAddresses.forEach(function(localIP) {
 		console.log(localIP);
 	});
@@ -611,7 +611,7 @@ resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d574691489432
 ```
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, localIPAddresses) {
+resin.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
 	if (error) throw error;
 
 	localIPAddresses.forEach(function(localIP) {
@@ -631,11 +631,11 @@ resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d574691489432
 
 **Example**  
 ```js
-resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+resin.models.device.remove('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+resin.models.device.remove('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
@@ -651,11 +651,11 @@ resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6
 
 **Example**  
 ```js
-resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+resin.models.device.identify('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+resin.models.device.identify('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
@@ -672,11 +672,11 @@ resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7f
 
 **Example**  
 ```js
-resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName');
+resin.models.device.rename('7cf02a6', 'NewName');
 ```
 **Example**  
 ```js
-resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', function(error) {
+resin.models.device.rename('7cf02a6', 'NewName', function(error) {
 	if (error) throw error;
 });
 ```
@@ -693,11 +693,11 @@ resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6
 
 **Example**  
 ```js
-resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note');
+resin.models.device.note('7cf02a6', 'My useful note');
 ```
 **Example**  
 ```js
-resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', function(error) {
+resin.models.device.note('7cf02a6', 'My useful note', function(error) {
 		if (error) throw error;
 });
 ```
@@ -714,11 +714,11 @@ resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4
 
 **Example**  
 ```js
-resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp');
+resin.models.device.move('7cf02a6', 'MyApp');
 ```
 **Example**  
 ```js
-resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp', function(error) {
+resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 	if (error) throw error;
 });
 ```
@@ -734,11 +734,11 @@ resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4
 
 **Example**  
 ```js
-resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+resin.models.device.restart('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+resin.models.device.restart('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
@@ -932,11 +932,11 @@ resin.models.device.generateUUID(function(error, uuid) {
 
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+resin.models.device.hasDeviceUrl('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+resin.models.device.hasDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
@@ -953,13 +953,13 @@ resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b1
 
 **Example**  
 ```js
-resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(url) {
+resin.models.device.getDeviceUrl('7cf02a6').then(function(url) {
 	console.log(url);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, url) {
+resin.models.device.getDeviceUrl('7cf02a6', function(error, url) {
 	if (error) throw error;
 	console.log(url);
 });
@@ -976,11 +976,11 @@ resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b1
 
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+resin.models.device.enableDeviceUrl('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+resin.models.device.enableDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
@@ -996,11 +996,11 @@ resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d5746914894327863
 
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+resin.models.device.disableDeviceUrl('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
@@ -1082,7 +1082,7 @@ resin.models.key.remove(51, function(error) {
 **Kind**: static method of <code>[key](#resin.models.key)</code>  
 **Summary**: Create a ssh key  
 **Access:** public  
-**Fulfil**: <code>Number</code> - ssh key id  
+**Fulfil**: <code>Object</code> - ssh key  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1091,15 +1091,15 @@ resin.models.key.remove(51, function(error) {
 
 **Example**  
 ```js
-resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(id) {
-	console.log(id);
+resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
+	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, id) {
+resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 	if (error) throw error;
-	console.log(id);
+	console.log(key);
 });
 ```
 <a name="resin.models.environment-variables"></a>
@@ -1141,13 +1141,13 @@ resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, id) {
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(environmentVariables) {
+resin.models.environmentVariables.device.getAll('7cf02a6').then(function(environmentVariables) {
 	console.log(environmentVariables);
 });
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, environmentVariables) {
+resin.models.environmentVariables.device.getAll('7cf02a6', function(error, environmentVariables) {
 	if (error) throw error;
 	console.log(environmentVariables)
 });
@@ -1166,11 +1166,11 @@ resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d5746
 
 **Example**  
 ```js
-resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim');
+resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', function(error) {
+resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim', function(error) {
 	if (error) throw error;
 });
 ```
@@ -1830,7 +1830,7 @@ The `logs` object yielded by this function emits the following events:
 
 **Example**  
 ```js
-resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(logs) {
+resin.logs.subscribe('7cf02a6').then(function(logs) {
 	logs.on('line', function(line) {
 		console.log(line);
 	});
@@ -1838,7 +1838,7 @@ resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b4
 ```
 **Example**  
 ```js
-resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, logs) {
+resin.logs.subscribe('7cf02a6', function(error, logs) {
 	if (error) throw error;
 
 	logs.on('line', function(line) {
@@ -1859,7 +1859,7 @@ resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b4
 
 **Example**  
 ```js
-resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(lines) {
+resin.logs.history('7cf02a6').then(function(lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
@@ -1867,7 +1867,7 @@ resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465
 ```
 **Example**  
 ```js
-resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, lines) {
+resin.logs.history('7cf02a6', function(error, lines) {
 	if (error) throw error;
 
 	lines.forEach(function(line) {

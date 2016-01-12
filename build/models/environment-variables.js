@@ -206,12 +206,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(environmentVariables) {
+   * resin.models.environmentVariables.device.getAll('7cf02a6').then(function(environmentVariables) {
    * 	console.log(environmentVariables);
    * });
    *
    * @example
-   * resin.models.environmentVariables.device.getAll('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, environmentVariables) {
+   * resin.models.environmentVariables.device.getAll('7cf02a6', function(error, environmentVariables) {
    * 	if (error) throw error;
    * 	console.log(environmentVariables)
    * });
@@ -253,10 +253,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim');
+   * resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim');
    *
    * @example
-   * resin.models.environmentVariables.device.create('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'EDITOR', 'vim', function(error) {
+   * resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim', function(error) {
    * 	if (error) throw error;
    * });
    */

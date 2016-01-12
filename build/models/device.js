@@ -134,12 +134,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(device) {
+   * resin.models.device.get('7cf02a6').then(function(device) {
    * 	console.log(device);
    * })
    *
    * @example
-   * resin.models.device.get('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, device) {
+   * resin.models.device.get('7cf02a6', function(error, device) {
    * 	if (error) throw error;
    * 	console.log(device);
    * });
@@ -167,7 +167,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       if (device.length > 1) {
-        throw new Error("Device ambiguation: " + uuid);
+        throw new errors.ResinAmbiguousDevice(uuid);
       }
     }).get(0).tap(function(device) {
       return device.application_name = device.application[0].app_name;
@@ -230,12 +230,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(deviceName) {
+   * resin.models.device.getName('7cf02a6').then(function(deviceName) {
    * 	console.log(deviceName);
    * });
    *
    * @example
-   * resin.models.device.getName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, deviceName) {
+   * resin.models.device.getName('7cf02a6', function(error, deviceName) {
    * 	if (error) throw error;
    * 	console.log(deviceName);
    * });
@@ -258,12 +258,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(applicationName) {
+   * resin.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
    * 	console.log(applicationName);
    * });
    *
    * @example
-   * resin.models.device.getApplicationName('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, applicationName) {
+   * resin.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
    * 	if (error) throw error;
    * 	console.log(applicationName);
    * });
@@ -286,12 +286,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(hasDevice) {
+   * resin.models.device.has('7cf02a6').then(function(hasDevice) {
    * 	console.log(hasDevice);
    * });
    *
    * @example
-   * resin.models.device.has('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, hasDevice) {
+   * resin.models.device.has('7cf02a6', function(error, hasDevice) {
    * 	if (error) throw error;
    * 	console.log(hasDevice);
    * });
@@ -316,12 +316,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(isOnline) {
+   * resin.models.device.isOnline('7cf02a6').then(function(isOnline) {
    * 	console.log('Is device online?', isOnline);
    * });
    *
    * @example
-   * resin.models.device.isOnline('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, isOnline) {
+   * resin.models.device.isOnline('7cf02a6', function(error, isOnline) {
    * 	if (error) throw error;
    * 	console.log('Is device online?', isOnline);
    * });
@@ -345,14 +345,14 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(localIPAddresses) {
+   * resin.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
    * 	localIPAddresses.forEach(function(localIP) {
    * 		console.log(localIP);
    * 	});
    * });
    *
    * @example
-   * resin.models.device.getLocalIPAddresses('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, localIPAddresses) {
+   * resin.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
    * 	if (error) throw error;
    *
    * 	localIPAddresses.forEach(function(localIP) {
@@ -384,10 +384,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+   * resin.models.device.remove('7cf02a6');
    *
    * @example
-   * resin.models.device.remove('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+   * resin.models.device.remove('7cf02a6', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -417,10 +417,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+   * resin.models.device.identify('7cf02a6');
    *
    * @example
-   * resin.models.device.identify('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+   * resin.models.device.identify('7cf02a6', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -454,10 +454,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName');
+   * resin.models.device.rename('7cf02a6', 'NewName');
    *
    * @example
-   * resin.models.device.rename('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'NewName', function(error) {
+   * resin.models.device.rename('7cf02a6', 'NewName', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -495,10 +495,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note');
+   * resin.models.device.note('7cf02a6', 'My useful note');
    *
    * @example
-   * resin.models.device.note('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'My useful note', function(error) {
+   * resin.models.device.note('7cf02a6', 'My useful note', function(error) {
    *		if (error) throw error;
    * });
    */
@@ -536,10 +536,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp');
+   * resin.models.device.move('7cf02a6', 'MyApp');
    *
    * @example
-   * resin.models.device.move('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', 'MyApp', function(error) {
+   * resin.models.device.move('7cf02a6', 'MyApp', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -578,10 +578,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+   * resin.models.device.restart('7cf02a6');
    *
    * @example
-   * resin.models.device.restart('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+   * resin.models.device.restart('7cf02a6', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -863,10 +863,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+   * resin.models.device.hasDeviceUrl('7cf02a6');
    *
    * @example
-   * resin.models.device.hasDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+   * resin.models.device.hasDeviceUrl('7cf02a6', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -888,12 +888,12 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(url) {
+   * resin.models.device.getDeviceUrl('7cf02a6').then(function(url) {
    * 	console.log(url);
    * });
    *
    * @example
-   * resin.models.device.getDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, url) {
+   * resin.models.device.getDeviceUrl('7cf02a6', function(error, url) {
    * 	if (error) throw error;
    * 	console.log(url);
    * });
@@ -922,10 +922,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+   * resin.models.device.enableDeviceUrl('7cf02a6');
    *
    * @example
-   * resin.models.device.enableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+   * resin.models.device.enableDeviceUrl('7cf02a6', function(error) {
    * 	if (error) throw error;
    * });
    */
@@ -961,10 +961,10 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9');
+   * resin.models.device.disableDeviceUrl('7cf02a6');
    *
    * @example
-   * resin.models.device.disableDeviceUrl('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error) {
+   * resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
    * 	if (error) throw error;
    * });
    */
