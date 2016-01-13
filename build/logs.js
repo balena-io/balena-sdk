@@ -50,14 +50,14 @@ limitations under the License.
    * We should consider making this a readable stream.
    *
    * @example
-   * resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(logs) {
+   * resin.logs.subscribe('7cf02a6').then(function(logs) {
    * 	logs.on('line', function(line) {
    * 		console.log(line);
    * 	});
    * });
    *
    * @example
-   * resin.logs.subscribe('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, logs) {
+   * resin.logs.subscribe('7cf02a6', function(error, logs) {
    * 	if (error) throw error;
    *
    * 	logs.on('line', function(line) {
@@ -88,14 +88,14 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9').then(function(lines) {
+   * resin.logs.history('7cf02a6').then(function(lines) {
    * 	lines.forEach(function(line) {
    * 		console.log(line);
    * 	});
    * });
    *
    * @example
-   * resin.logs.history('7cf02a62a3a84440b1bb5579a3d57469148943278630b17e7fc6c4f7b465c9', function(error, lines) {
+   * resin.logs.history('7cf02a6', function(error, lines) {
    * 	if (error) throw error;
    *
    * 	lines.forEach(function(line) {
