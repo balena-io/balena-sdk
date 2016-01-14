@@ -698,7 +698,7 @@ resin.models.device.note('7cf02a6', 'My useful note');
 **Example**  
 ```js
 resin.models.device.note('7cf02a6', 'My useful note', function(error) {
-		if (error) throw error;
+	if (error) throw error;
 });
 ```
 <a name="resin.models.device.move"></a>
@@ -1565,11 +1565,11 @@ This will only work if you used [module:resin.auth.login](module:resin.auth.logi
 **Example**  
 ```js
 resin.auth.whoami().then(function(username) {
-		if (!username) {
+	if (!username) {
 		console.log('I\'m not logged in!');
-		} else {
+	} else {
 		console.log('My username is:', username);
-		}
+	}
 });
 ```
 **Example**  
@@ -1659,7 +1659,7 @@ resin.auth.loginWithToken(token);
 **Example**  
 ```js
 resin.auth.loginWithToken(token, function(error) {
-		if (error) throw error;
+	if (error) throw error;
 });
 ```
 <a name="resin.auth.isLoggedIn"></a>

@@ -47,11 +47,11 @@ limitations under the License.
    *
    * @example
    * resin.auth.whoami().then(function(username) {
-   *		if (!username) {
+   * 	if (!username) {
    * 		console.log('I\'m not logged in!');
-   *		} else {
+   * 	} else {
    * 		console.log('My username is:', username);
-   *		}
+   * 	}
    * });
    *
    * @example
@@ -162,7 +162,7 @@ limitations under the License.
    *
    * @example
    * resin.auth.loginWithToken(token, function(error) {
-   *		if (error) throw error;
+   * 	if (error) throw error;
    * });
    */
 

@@ -499,7 +499,7 @@ limitations under the License.
    *
    * @example
    * resin.models.device.note('7cf02a6', 'My useful note', function(error) {
-   *		if (error) throw error;
+   * 	if (error) throw error;
    * });
    */
 
