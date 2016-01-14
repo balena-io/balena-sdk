@@ -38,11 +38,11 @@ exports.twoFactor = require('./2fa')
 #
 # @example
 # resin.auth.whoami().then(function(username) {
-#		if (!username) {
+# 	if (!username) {
 # 		console.log('I\'m not logged in!');
-#		} else {
+# 	} else {
 # 		console.log('My username is:', username);
-#		}
+# 	}
 # });
 #
 # @example
@@ -146,7 +146,7 @@ exports.login = (credentials, callback) ->
 #
 # @example
 # resin.auth.loginWithToken(token, function(error) {
-#		if (error) throw error;
+# 	if (error) throw error;
 # });
 ###
 exports.loginWithToken = (authToken, callback) ->
