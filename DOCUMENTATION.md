@@ -64,7 +64,7 @@ If you feel something is missing, not clear or could be improved, please don't h
       * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
       * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
     * [.os](#resin.models.os) : <code>object</code>
-      * [.download(parameters)](#resin.models.os.download) ⇒ <code>Promise</code>
+      * [.download(deviceType)](#resin.models.os.download) ⇒ <code>Promise</code>
     * [.config](#resin.models.config) : <code>object</code>
       * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
       * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -150,7 +150,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
     * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
   * [.os](#resin.models.os) : <code>object</code>
-    * [.download(parameters)](#resin.models.os.download) ⇒ <code>Promise</code>
+    * [.download(deviceType)](#resin.models.os.download) ⇒ <code>Promise</code>
   * [.config](#resin.models.config) : <code>object</code>
     * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
     * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -1331,57 +1331,23 @@ resin.models.environmentVariables.isSystemVariable({
 #### models.os : <code>object</code>
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 <a name="resin.models.os.download"></a>
-##### os.download(parameters) ⇒ <code>Promise</code>
+##### os.download(deviceType) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[os](#resin.models.os)</code>  
 **Summary**: Download an OS image  
 **Access:** public  
 **Fulfil**: <code>ReadableStream</code> - download stream  
-**Todo**
-
-- [ ] In the future this function should only require a device type slug.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parameters | <code>Object</code> | os parameters |
+| deviceType | <code>String</code> | device type slug |
 
 **Example**  
 ```js
-// Ethernet
-var parameters = {
-	network: 'ethernet',
-	appId: 91
-};
-
-// Wifi
-var parameters = {
-	network: 'wifi',
-	wifiSsid: 'ssid',
-	wifiKey: 'secret',
-	appId: 91
-};
-
-resin.models.os.download(parameters).then(function(stream) {
+resin.models.os.download('raspberry-pi').then(function(stream) {
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 });
-```
-**Example**  
-```js
-// Ethernet
-var parameters = {
-	network: 'ethernet',
-	appId: 91
-};
 
-// Wifi
-var parameters = {
-	network: 'wifi',
-	wifiSsid: 'ssid',
-	wifiKey: 'secret',
-	appId: 91
-};
-
-resin.models.os.download(parameters, function(error, stream) {
+resin.models.os.download('raspberry-pi', function(error, stream) {
 	if (error) throw error;
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 });

@@ -16,9 +16,13 @@ limitations under the License.
  */
 
 (function() {
-  var request;
+  var request, settings, url;
+
+  url = require('url');
 
   request = require('resin-request');
+
+  settings = require('resin-settings-client');
 
 
   /**
@@ -28,57 +32,27 @@ limitations under the License.
    * @function
    * @memberof resin.models.os
    *
-   * @param {Object} parameters - os parameters
+   * @param {String} deviceType - device type slug
    * @fulfil {ReadableStream} - download stream
    * @returns {Promise}
    *
-   * @todo In the future this function should only require a device type slug.
-   *
    * @example
-   * // Ethernet
-   * var parameters = {
-   * 	network: 'ethernet',
-   * 	appId: 91
-   * };
-   *
-   * // Wifi
-   * var parameters = {
-   * 	network: 'wifi',
-   * 	wifiSsid: 'ssid',
-   * 	wifiKey: 'secret',
-   * 	appId: 91
-   * };
-   *
-   * resin.models.os.download(parameters).then(function(stream) {
+   * resin.models.os.download('raspberry-pi').then(function(stream) {
    * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
    * });
    *
-   * @example
-   * // Ethernet
-   * var parameters = {
-   * 	network: 'ethernet',
-   * 	appId: 91
-   * };
-   *
-   * // Wifi
-   * var parameters = {
-   * 	network: 'wifi',
-   * 	wifiSsid: 'ssid',
-   * 	wifiKey: 'secret',
-   * 	appId: 91
-   * };
-   *
-   * resin.models.os.download(parameters, function(error, stream) {
+   * resin.models.os.download('raspberry-pi', function(error, stream) {
    * 	if (error) throw error;
    * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
    * });
    */
 
-  exports.download = function(parameters, callback) {
+  exports.download = function(deviceType, callback) {
+    var imageMakerUrl;
+    imageMakerUrl = settings.get('imageMakerUrl');
     return request.stream({
       method: 'GET',
-      url: '/download',
-      qs: parameters
+      url: url.resolve(imageMakerUrl, "/api/v1/image/" + deviceType + "/")
     }).nodeify(callback);
   };
 
