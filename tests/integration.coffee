@@ -627,6 +627,15 @@ describe 'SDK Integration Tests', ->
 							m.chai.expect(envs[0].value).to.equal('vim')
 						.nodeify(done)
 
+					it 'should be able to create a numeric non resin variable', (done) ->
+						resin.models.environmentVariables.create(@application.app_name, 'EDITOR', 1).then =>
+							resin.models.environmentVariables.getAllByApplication(@application.app_name)
+						.then (envs) ->
+							m.chai.expect(envs).to.have.length(1)
+							m.chai.expect(envs[0].name).to.equal('EDITOR')
+							m.chai.expect(envs[0].value).to.equal('1')
+						.nodeify(done)
+
 					it 'should not allow creating a resin variable', ->
 						promise = resin.models.environmentVariables.create(@application.app_name, 'RESIN_API_KEY', 'secret')
 						m.chai.expect(promise).to.be.rejectedWith('Environment variables RESIN, USER, and any beginning with RESIN_ are reserved.')
@@ -922,6 +931,15 @@ describe 'SDK Integration Tests', ->
 							m.chai.expect(envs).to.have.length(1)
 							m.chai.expect(envs[0].name).to.equal('EDITOR')
 							m.chai.expect(envs[0].value).to.equal('vim')
+						.nodeify(done)
+
+					it 'should be able to create a numeric non resin variable', (done) ->
+						resin.models.environmentVariables.device.create(@device.uuid, 'EDITOR', 1).then =>
+							resin.models.environmentVariables.device.getAll(@device.uuid)
+						.then (envs) ->
+							m.chai.expect(envs).to.have.length(1)
+							m.chai.expect(envs[0].name).to.equal('EDITOR')
+							m.chai.expect(envs[0].value).to.equal('1')
 						.nodeify(done)
 
 					it 'should not allow creating a resin variable', ->
