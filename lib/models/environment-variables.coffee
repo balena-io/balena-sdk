@@ -77,7 +77,7 @@ exports.create = (applicationName, name, value, callback) ->
 			resource: 'environment_variable'
 			body:
 				name: name
-				value: value
+				value: String(value)
 				application: applicationId
 	.nodeify(callback)
 
@@ -235,7 +235,7 @@ exports.device.create = (uuid, name, value, callback) ->
 			body:
 				device: device.id
 				env_var_name: name
-				value: value
+				value: String(value)
 	.nodeify(callback)
 
 ###*
