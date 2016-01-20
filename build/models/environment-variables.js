@@ -91,7 +91,7 @@ limitations under the License.
         resource: 'environment_variable',
         body: {
           name: name,
-          value: value,
+          value: String(value),
           application: applicationId
         }
       });
@@ -268,7 +268,7 @@ limitations under the License.
         body: {
           device: device.id,
           env_var_name: name,
-          value: value
+          value: String(value)
         }
       });
     }).nodeify(callback);
