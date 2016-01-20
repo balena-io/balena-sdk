@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "4.1.3",
+  "version": "5.0.0",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "homepage": "https://github.com/resin-io/resin-sdk",
