@@ -124,6 +124,10 @@ exports.getAllByApplication = (name, callback) ->
 # });
 ###
 exports.get = (uuid, callback) ->
+
+	# Make sure uuid is a string
+	uuid = String(uuid)
+
 	return pine.get
 		resource: 'device'
 		options:

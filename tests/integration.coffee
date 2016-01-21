@@ -977,6 +977,28 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(envs).to.have.length(0)
 							.nodeify(done)
 
+
+		describe 'given a single application with a device id whose shorter uuid is only numbers', ->
+
+			beforeEach (done) ->
+				resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
+					@application = application
+
+					uuid = '1234567aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+					resin.models.device.register(application.app_name, uuid)
+				.then (device) =>
+					@device = device
+				.nodeify(done)
+
+			describe 'Device Model', ->
+
+				describe 'resin.models.device.get()', ->
+
+					it 'should return the device given the number shorter uuid', (done) ->
+						resin.models.device.get(1234567).then (device) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+						.nodeify(done)
+
 		describe 'given a single application with two offline devices that share the same uuid root', ->
 
 			beforeEach (done) ->
