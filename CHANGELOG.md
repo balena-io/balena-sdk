@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.1] - 2016-01-21
+
+### Changed
+
+- Upgrade `resin-request` to v4.0.0.
+
 ## [5.0.0] - 2016-01-20
 
 ### Added
@@ -216,6 +222,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.0.1]: https://github.com/resin-io/resin-sdk/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/resin-io/resin-sdk/compare/v4.1.3...v5.0.0
 [4.1.3]: https://github.com/resin-io/resin-sdk/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/resin-io/resin-sdk/compare/v4.1.1...v4.1.2
