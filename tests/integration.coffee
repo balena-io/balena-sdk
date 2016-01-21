@@ -1058,12 +1058,6 @@ describe 'SDK Integration Tests', ->
 
 			describe 'given a valid device slug', ->
 
-				it 'should contain a positive number length property', (done) ->
-					resin.models.os.download('parallella').then (stream) ->
-						m.chai.expect(stream.length).to.be.a('number')
-						m.chai.expect(stream.length).to.be.above(0)
-					.nodeify(done)
-
 				it 'should contain a valid mime property', (done) ->
 					resin.models.os.download('parallella').then (stream) ->
 						m.chai.expect(stream.mime).to.equal('application/octet-stream')
@@ -1071,17 +1065,13 @@ describe 'SDK Integration Tests', ->
 
 				it 'should be able to download the image', (done) ->
 					tmpFile = tmp.tmpNameSync()
-					console.log(tmpFile)
-					size = null
-
 					resin.models.os.download('parallella').then (stream) ->
-						size = stream.length
 						stream.pipe(fs.createWriteStream(tmpFile))
 					.then(rindle.wait)
 					.then ->
 						return fs.statAsync(tmpFile)
 					.then (stat) ->
-						m.chai.expect(stat.size).to.equal(size)
+						m.chai.expect(stat.size).to.not.equal(0)
 					.finally ->
 						fs.unlinkAsync(tmpFile)
 					.nodeify(done)
