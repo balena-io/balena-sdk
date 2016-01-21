@@ -42,6 +42,19 @@ If you're having any problem, please [raise an issue](https://github.com/resin-i
 Tests
 -----
 
+First, set the following environment variables, from an account that exists:
+
+- `RESINTEST_EMAIL`: The main account email
+- `RESINTEST_PASSWORD`: The main account password
+- `RESINTEST_USERNAME`: The main account username.
+- `RESINTEST_USERID`: The main account user id.
+
+You also have to provide the following environment variables from an account that doesn't yet exists:
+
+- `RESINTEST_REGISTER_EMAIL`: The email of the account to register.
+- `RESINTEST_REGISTER_PASSWORD`: The password of the account to register.
+- `RESINTEST_REGISTER_USERNAME`: The username of the account to register.
+
 Run the test suite by doing:
 
 ```sh
