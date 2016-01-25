@@ -44,6 +44,23 @@ exports.getAll = (callback) ->
 		method: 'GET'
 		url: '/config'
 	.get('body')
+	.then (body) ->
+
+		# Patch device types to be marked as ALPHA and BETA instead
+		# of PREVIEW and EXPERIMENTAL, respectively.
+		# This logic is literally copy and pasted from Resin UI, but
+		# there are plans to move this to `resin-device-types` so it
+		# should be a matter of time for this to be removed.
+		body.deviceTypes = _.map body.deviceTypes, (deviceType) ->
+			if deviceType.state is 'PREVIEW'
+				deviceType.state = 'ALPHA'
+				deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
+			if deviceType.state is 'EXPERIMENTAL'
+				deviceType.state = 'BETA'
+				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)')
+			return deviceType
+
+		return body
 	.nodeify(callback)
 
 ###*

@@ -51,7 +51,20 @@ limitations under the License.
     return request.send({
       method: 'GET',
       url: '/config'
-    }).get('body').nodeify(callback);
+    }).get('body').then(function(body) {
+      body.deviceTypes = _.map(body.deviceTypes, function(deviceType) {
+        if (deviceType.state === 'PREVIEW') {
+          deviceType.state = 'ALPHA';
+          deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)');
+        }
+        if (deviceType.state === 'EXPERIMENTAL') {
+          deviceType.state = 'BETA';
+          deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)');
+        }
+        return deviceType;
+      });
+      return body;
+    }).nodeify(callback);
   };
 
 
