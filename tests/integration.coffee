@@ -1078,28 +1078,44 @@ describe 'SDK Integration Tests', ->
 
 		describe 'OS Model', ->
 
-			describe 'given a valid device slug', ->
+			describe 'resin.models.os.getLastModified()', ->
 
-				it 'should contain a valid mime property', (done) ->
-					resin.models.os.download('parallella').then (stream) ->
-						m.chai.expect(stream.mime).to.equal('application/octet-stream')
-					.nodeify(done)
+				describe 'given a valid device slug', ->
 
-				it 'should be able to download the image', (done) ->
-					tmpFile = tmp.tmpNameSync()
-					resin.models.os.download('parallella').then (stream) ->
-						stream.pipe(fs.createWriteStream(tmpFile))
-					.then(rindle.wait)
-					.then ->
-						return fs.statAsync(tmpFile)
-					.then (stat) ->
-						m.chai.expect(stat.size).to.not.equal(0)
-					.finally ->
-						fs.unlinkAsync(tmpFile)
-					.nodeify(done)
+					it 'should eventually be a valid Date instance', ->
+						promise = resin.models.os.getLastModified('raspberry-pi')
+						m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
-			describe 'given an invalid device slug', ->
+				describe 'given an invalid device slug', ->
 
-				it 'should be rejected with an error message', ->
-					promise = resin.models.os.download('foo-bar-baz')
-					m.chai.expect(promise).to.be.rejectedWith('No such device type')
+					it 'should be rejected with an error message', ->
+						promise = resin.models.os.getLastModified('foo-bar-baz')
+						m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+			describe 'resin.models.os.download()', ->
+
+				describe 'given a valid device slug', ->
+
+					it 'should contain a valid mime property', (done) ->
+						resin.models.os.download('parallella').then (stream) ->
+							m.chai.expect(stream.mime).to.equal('application/octet-stream')
+						.nodeify(done)
+
+					it 'should be able to download the image', (done) ->
+						tmpFile = tmp.tmpNameSync()
+						resin.models.os.download('parallella').then (stream) ->
+							stream.pipe(fs.createWriteStream(tmpFile))
+						.then(rindle.wait)
+						.then ->
+							return fs.statAsync(tmpFile)
+						.then (stat) ->
+							m.chai.expect(stat.size).to.not.equal(0)
+						.finally ->
+							fs.unlinkAsync(tmpFile)
+						.nodeify(done)
+
+				describe 'given an invalid device slug', ->
+
+					it 'should be rejected with an error message', ->
+						promise = resin.models.os.download('foo-bar-baz')
+						m.chai.expect(promise).to.be.rejectedWith('No such device type')

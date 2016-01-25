@@ -64,6 +64,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
             * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
         * [.os](#resin.models.os) : <code>object</code>
+            * [.getLastModified(deviceType)](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(deviceType)](#resin.models.os.download) ⇒ <code>Promise</code>
         * [.config](#resin.models.config) : <code>object</code>
             * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
@@ -150,6 +151,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
         * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
     * [.os](#resin.models.os) : <code>object</code>
+        * [.getLastModified(deviceType)](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(deviceType)](#resin.models.os.download) ⇒ <code>Promise</code>
     * [.config](#resin.models.config) : <code>object</code>
         * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
@@ -1330,6 +1332,33 @@ resin.models.environmentVariables.isSystemVariable({
 <a name="resin.models.os"></a>
 #### models.os : <code>object</code>
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
+
+* [.os](#resin.models.os) : <code>object</code>
+    * [.getLastModified(deviceType)](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
+    * [.download(deviceType)](#resin.models.os.download) ⇒ <code>Promise</code>
+
+<a name="resin.models.os.getLastModified"></a>
+##### os.getLastModified(deviceType) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[os](#resin.models.os)</code>  
+**Summary**: Get OS image last modified date  
+**Access:** public  
+**Fulfil**: <code>Date</code> - last modified date  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>String</code> | device type slug |
+
+**Example**  
+```js
+resin.models.os.getLastModified('raspberry-pi').then(function(date) {
+	console.log('The raspberry-pi image was last modified in ' + date);
+});
+
+resin.models.os.getLastModified('raspberry-pi', function(error, date) {
+	if (error) throw error;
+	console.log('The raspberry-pi image was last modified in ' + date);
+});
+```
 <a name="resin.models.os.download"></a>
 ##### os.download(deviceType) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[os](#resin.models.os)</code>  
