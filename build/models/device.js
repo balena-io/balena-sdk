@@ -146,6 +146,7 @@ limitations under the License.
    */
 
   exports.get = function(uuid, callback) {
+    uuid = String(uuid);
     return pine.get({
       resource: 'device',
       options: {
