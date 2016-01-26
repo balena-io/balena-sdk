@@ -47,6 +47,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuid)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
             * [.disableDeviceUrl(uuid)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+            * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
         * [.key](#resin.models.key) : <code>object</code>
             * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise</code>
             * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
@@ -134,6 +135,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuid)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
         * [.disableDeviceUrl(uuid)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+        * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
     * [.key](#resin.models.key) : <code>object</code>
         * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise</code>
         * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
@@ -403,6 +405,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuid)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
     * [.disableDeviceUrl(uuid)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+    * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
 
 <a name="resin.models.device.getAll"></a>
 ##### device.getAll() ⇒ <code>Promise</code>
@@ -1004,6 +1007,30 @@ resin.models.device.disableDeviceUrl('7cf02a6');
 ```js
 resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
+});
+```
+<a name="resin.models.device.getStatus"></a>
+##### device.getStatus(uuid) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get the status of a device  
+**Access:** public  
+**Fulfil**: <code>String</code> - device statud  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+resin.models.device.getStatus('7cf02a6').then(function(status) {
+	console.log(status);
+});
+```
+**Example**  
+```js
+resin.models.device.getStatus('7cf02a6', function(error, status) {
+	if (error) throw error;
+	console.log(status);
 });
 ```
 <a name="resin.models.key"></a>

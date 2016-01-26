@@ -910,6 +910,12 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(promise).to.eventually.be.false
 							.nodeify(done)
 
+				describe 'resin.models.device.getStatus()', ->
+
+					it 'should return the correct status slug', ->
+						promise = resin.models.device.getStatus(@device.uuid)
+						m.chai.expect(promise).to.eventually.equal('offline')
+
 			describe 'Environment Variables Model', ->
 
 				describe 'resin.models.environmentVariables.device.getAll()', ->
