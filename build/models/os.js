@@ -16,13 +16,58 @@ limitations under the License.
  */
 
 (function() {
-  var request, settings, url;
+  var errors, getImageMakerUrl, request, settings, url;
 
   url = require('url');
 
   request = require('resin-request');
 
+  errors = require('resin-errors');
+
   settings = require('resin-settings-client');
+
+  getImageMakerUrl = function(deviceType) {
+    var imageMakerUrl;
+    imageMakerUrl = settings.get('imageMakerUrl');
+    return url.resolve(imageMakerUrl, "/api/v1/image/" + deviceType + "/");
+  };
+
+
+  /**
+   * @summary Get OS image last modified date
+   * @name getLastModified
+   * @public
+   * @function
+   * @memberof resin.models.os
+   *
+   * @param {String} deviceType - device type slug
+   * @fulfil {Date} - last modified date
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.os.getLastModified('raspberry-pi').then(function(date) {
+   * 	console.log('The raspberry-pi image was last modified in ' + date);
+   * });
+   *
+   * resin.models.os.getLastModified('raspberry-pi', function(error, date) {
+   * 	if (error) throw error;
+   * 	console.log('The raspberry-pi image was last modified in ' + date);
+   * });
+   */
+
+  exports.getLastModified = function(deviceType, callback) {
+    return request.send({
+      method: 'HEAD',
+      url: getImageMakerUrl(deviceType)
+    })["catch"](function(error) {
+      if (error.name === 'ResinRequestError' && error.statusCode === 404) {
+        throw new errors.ResinRequestError('No such device type');
+      }
+      throw error;
+    }).then(function(response) {
+      return new Date(response.headers['last-modified']);
+    }).nodeify(callback);
+  };
 
 
   /**
@@ -48,11 +93,9 @@ limitations under the License.
    */
 
   exports.download = function(deviceType, callback) {
-    var imageMakerUrl;
-    imageMakerUrl = settings.get('imageMakerUrl');
     return request.stream({
       method: 'GET',
-      url: url.resolve(imageMakerUrl, "/api/v1/image/" + deviceType + "/")
+      url: getImageMakerUrl(deviceType)
     }).nodeify(callback);
   };
 
