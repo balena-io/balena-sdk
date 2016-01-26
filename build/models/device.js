@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var Promise, _, applicationModel, auth, configModel, crypto, errors, pine, registerDevice, request;
+  var Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, pine, registerDevice, request;
 
   Promise = require('bluebird');
 
@@ -31,6 +31,8 @@ limitations under the License.
   request = require('resin-request');
 
   registerDevice = require('resin-register-device');
+
+  deviceStatus = require('resin-device-status');
 
   configModel = require('./config');
 
@@ -986,6 +988,36 @@ limitations under the License.
           }
         }
       });
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Get the status of a device
+   * @name getStatus
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @fulfil {String} - device statud
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.getStatus('7cf02a6').then(function(status) {
+   * 	console.log(status);
+   * });
+   *
+   * @example
+   * resin.models.device.getStatus('7cf02a6', function(error, status) {
+   * 	if (error) throw error;
+   * 	console.log(status);
+   * });
+   */
+
+  exports.getStatus = function(uuid, callback) {
+    return Promise["try"](function() {
+      return deviceStatus.getStatus(uuid).key;
     }).nodeify(callback);
   };
 

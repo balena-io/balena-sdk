@@ -21,6 +21,7 @@ pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
 registerDevice = require('resin-register-device')
+deviceStatus = require('resin-device-status')
 configModel = require('./config')
 applicationModel = require('./application')
 auth = require('../auth')
@@ -876,4 +877,31 @@ exports.disableDeviceUrl = (uuid, callback) ->
 			options:
 				filter:
 					uuid: uuid
+	.nodeify(callback)
+
+###*
+# @summary Get the status of a device
+# @name getStatus
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {String} - device statud
+# @returns {Promise}
+#
+# @example
+# resin.models.device.getStatus('7cf02a6').then(function(status) {
+# 	console.log(status);
+# });
+#
+# @example
+# resin.models.device.getStatus('7cf02a6', function(error, status) {
+# 	if (error) throw error;
+# 	console.log(status);
+# });
+###
+exports.getStatus = (uuid, callback) ->
+	Promise.try ->
+		return deviceStatus.getStatus(uuid).key
 	.nodeify(callback)
