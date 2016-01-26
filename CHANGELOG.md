@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0] - 2016-01-26
+
+### Added
+
+- Implement `resin.models.os.getLastModified()`.
+- Implement `resin.models.device.getStatus()`.
+
+### Changed
+
+- Patch device types to be marked as ALPHA and BETA instead of PREVIEW and EXPERIMENTAL.
+- Fix exception when fetching a device whose uuid only contains numbers.
+
 ## [5.0.1] - 2016-01-21
 
 ### Changed
@@ -222,6 +234,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.1.0]: https://github.com/resin-io/resin-sdk/compare/v5.0.1...v5.1.0
 [5.0.1]: https://github.com/resin-io/resin-sdk/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/resin-io/resin-sdk/compare/v4.1.3...v5.0.0
 [4.1.3]: https://github.com/resin-io/resin-sdk/compare/v4.1.2...v4.1.3
