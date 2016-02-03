@@ -207,9 +207,14 @@ describe 'SDK Integration Tests', ->
 						m.chai.expect(_.isArray(options)).to.be.true
 					.nodeify(done)
 
+				it 'should become the device options given a device type alias', (done) ->
+					resin.models.config.getDeviceOptions('raspberrypi').then (options) ->
+						m.chai.expect(_.isArray(options)).to.be.true
+					.nodeify(done)
+
 				it 'should reject if device type is invalid', ->
 					promise = resin.models.config.getDeviceOptions('foobarbaz')
-					m.chai.expect(promise).to.be.rejectedWith('Unsupported device: foobarbaz')
+					m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
 
 		describe 'Environment Variables Model', ->
 
@@ -285,6 +290,10 @@ describe 'SDK Integration Tests', ->
 					promise = resin.models.device.getDisplayName('raspberry-pi')
 					m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 and Zero)')
 
+				it 'should get the display name given a device type alias', ->
+					promise = resin.models.device.getDisplayName('raspberrypi')
+					m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 and Zero)')
+
 				it 'should eventually be undefined if the slug is invalid', ->
 					promise = resin.models.device.getDisplayName('asdf')
 					m.chai.expect(promise).to.eventually.be.undefined
@@ -302,6 +311,10 @@ describe 'SDK Integration Tests', ->
 				it 'should eventually be undefined if the display name is invalid', ->
 					promise = resin.models.device.getDeviceSlug('asdf')
 					m.chai.expect(promise).to.eventually.be.undefined
+
+				it 'should eventually be the slug if passing an alias', ->
+					promise = resin.models.device.getDeviceSlug('raspberrypi')
+					m.chai.expect(promise).to.eventually.equal('raspberry-pi')
 
 			describe 'resin.models.device.getSupportedDeviceTypes()', ->
 
@@ -329,7 +342,12 @@ describe 'SDK Integration Tests', ->
 
 				it 'should be rejected if the device slug is invalid', ->
 					promise = resin.models.device.getManifestBySlug('foobar')
-					m.chai.expect(promise).to.be.rejectedWith('Unsupported device: foobar')
+					m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobar')
+
+				it 'should become the manifest given a device type alias', (done) ->
+					resin.models.device.getManifestBySlug('raspberrypi').then (manifest) ->
+						m.chai.expect(manifest.slug).to.equal('raspberry-pi')
+					.nodeify(done)
 
 		describe 'given no applications', ->
 
@@ -362,6 +380,12 @@ describe 'SDK Integration Tests', ->
 					it 'should be rejected if the name has less than three characters', ->
 						promise = resin.models.application.create('Fo', 'raspberry-pi')
 						m.chai.expect(promise).to.be.rejectedWith('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4.')
+
+					it 'should be able to create an application using a device type alias', (done) ->
+						resin.models.application.create('FooBar', 'raspberrypi').then (id) ->
+							promise = resin.models.application.getAll()
+							m.chai.expect(promise).to.eventually.have.length(1)
+						.nodeify(done)
 
 		describe 'Key Model', ->
 
@@ -1092,6 +1116,10 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.os.getLastModified('raspberry-pi')
 						m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
+					it 'should eventually be a valid Date instance if passing a device type alias', ->
+						promise = resin.models.os.getLastModified('raspberrypi')
+						m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
+
 				describe 'given an invalid device slug', ->
 
 					it 'should be rejected with an error message', ->
@@ -1104,6 +1132,11 @@ describe 'SDK Integration Tests', ->
 
 					it 'should contain a valid mime property', (done) ->
 						resin.models.os.download('parallella').then (stream) ->
+							m.chai.expect(stream.mime).to.equal('application/octet-stream')
+						.nodeify(done)
+
+					it 'should contain a valid mime property if passing a device type alias', (done) ->
+						resin.models.os.download('raspberrypi').then (stream) ->
 							m.chai.expect(stream.mime).to.equal('application/octet-stream')
 						.nodeify(done)
 
