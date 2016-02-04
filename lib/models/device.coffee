@@ -559,9 +559,13 @@ exports.restart = (uuid, callback) ->
 # });
 ###
 exports.getDisplayName = (deviceTypeSlug, callback) ->
-	configModel.getDeviceTypes().then (deviceTypes) ->
-		deviceTypeFound = _.findWhere(deviceTypes, slug: deviceTypeSlug)
-		return deviceTypeFound?.name
+	exports.getManifestBySlug(deviceTypeSlug)
+		.get('name')
+		.catch (error) ->
+			if error instanceof errors.ResinInvalidDeviceType
+				return
+
+			throw error
 	.nodeify(callback)
 
 ###*
@@ -591,12 +595,13 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 # });
 ###
 exports.getDeviceSlug = (deviceTypeName, callback) ->
-	configModel.getDeviceTypes().then (deviceTypes) ->
-		foundByName = _.findWhere(deviceTypes, name: deviceTypeName)
-		foundBySlug = _.findWhere(deviceTypes, slug: deviceTypeName)
-		deviceTypeFound = foundByName or foundBySlug
+	exports.getManifestBySlug(deviceTypeName)
+		.get('slug')
+		.catch (error) ->
+			if error instanceof errors.ResinInvalidDeviceType
+				return
 
-		return deviceTypeFound?.slug
+			throw error
 	.nodeify(callback)
 
 ###*
@@ -653,11 +658,16 @@ exports.getSupportedDeviceTypes = (callback) ->
 # });
 ###
 exports.getManifestBySlug = (slug, callback) ->
-	configModel.getDeviceTypes().then (deviceTypes) ->
-		deviceManifest = _.find(deviceTypes, { slug })
-
+	return configModel.getDeviceTypes().then (deviceTypes) ->
+		return _.find deviceTypes, (deviceType) ->
+			return _.any [
+				deviceType.name is slug
+				deviceType.slug is slug
+				_.includes(deviceType.aliases, slug)
+			]
+	.then (deviceManifest) ->
 		if not deviceManifest?
-			throw new Error("Unsupported device: #{slug}")
+			throw new errors.ResinInvalidDeviceType(slug)
 
 		return deviceManifest
 	.nodeify(callback)
