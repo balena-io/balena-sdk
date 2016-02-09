@@ -51,3 +51,9 @@ module.exports =
 	# @memberof resin.models
 	###
 	config: require('./config')
+
+	###*
+	# @namespace build
+	# @memberof resin.models
+	###
+	build: require('./build')
