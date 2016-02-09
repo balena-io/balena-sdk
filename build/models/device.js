@@ -627,12 +627,11 @@ limitations under the License.
    */
 
   exports.getDisplayName = function(deviceTypeSlug, callback) {
-    return configModel.getDeviceTypes().then(function(deviceTypes) {
-      var deviceTypeFound;
-      deviceTypeFound = _.findWhere(deviceTypes, {
-        slug: deviceTypeSlug
-      });
-      return deviceTypeFound != null ? deviceTypeFound.name : void 0;
+    return exports.getManifestBySlug(deviceTypeSlug).get('name')["catch"](function(error) {
+      if (error instanceof errors.ResinInvalidDeviceType) {
+        return;
+      }
+      throw error;
     }).nodeify(callback);
   };
 
@@ -665,16 +664,11 @@ limitations under the License.
    */
 
   exports.getDeviceSlug = function(deviceTypeName, callback) {
-    return configModel.getDeviceTypes().then(function(deviceTypes) {
-      var deviceTypeFound, foundByName, foundBySlug;
-      foundByName = _.findWhere(deviceTypes, {
-        name: deviceTypeName
-      });
-      foundBySlug = _.findWhere(deviceTypes, {
-        slug: deviceTypeName
-      });
-      deviceTypeFound = foundByName || foundBySlug;
-      return deviceTypeFound != null ? deviceTypeFound.slug : void 0;
+    return exports.getManifestBySlug(deviceTypeName).get('slug')["catch"](function(error) {
+      if (error instanceof errors.ResinInvalidDeviceType) {
+        return;
+      }
+      throw error;
     }).nodeify(callback);
   };
 
@@ -738,12 +732,12 @@ limitations under the License.
 
   exports.getManifestBySlug = function(slug, callback) {
     return configModel.getDeviceTypes().then(function(deviceTypes) {
-      var deviceManifest;
-      deviceManifest = _.find(deviceTypes, {
-        slug: slug
+      return _.find(deviceTypes, function(deviceType) {
+        return _.any([deviceType.name === slug, deviceType.slug === slug, _.includes(deviceType.aliases, slug)]);
       });
+    }).then(function(deviceManifest) {
       if (deviceManifest == null) {
-        throw new Error("Unsupported device: " + slug);
+        throw new errors.ResinInvalidDeviceType(slug);
       }
       return deviceManifest;
     }).nodeify(callback);
