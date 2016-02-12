@@ -662,7 +662,7 @@ describe 'SDK Integration Tests', ->
 
 					it 'should not allow creating a resin variable', ->
 						promise = resin.models.environmentVariables.create(@application.app_name, 'RESIN_API_KEY', 'secret')
-						m.chai.expect(promise).to.be.rejectedWith('Environment variables RESIN, USER, and any beginning with RESIN_ are reserved.')
+						m.chai.expect(promise).to.be.rejectedWith('Environment variables beginning with RESIN_ are reserved.')
 
 					it 'should be rejected if the application does not exist', ->
 						promise = resin.models.environmentVariables.create('HelloWorldApp', 'EDITOR', 'vim')
@@ -974,7 +974,7 @@ describe 'SDK Integration Tests', ->
 
 					it 'should not allow creating a resin variable', ->
 						promise = resin.models.environmentVariables.device.create(@device.uuid, 'RESIN_API_KEY', 'secret')
-						m.chai.expect(promise).to.be.rejectedWith('Environment variables RESIN, USER, and any beginning with RESIN_ are reserved.')
+						m.chai.expect(promise).to.be.rejectedWith('Environment variables beginning with RESIN_ are reserved.')
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.environmentVariables.device.create('asdfghjkl', 'EDITOR', 'vim')
