@@ -14,8 +14,115 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-Promise = require('bluebird')
-settings = require('resin-settings-client')
+_ = require('lodash')
+
+###*
+# @summary Default settings
+# @namespace settings
+# @private
+###
+settings =
+
+	###*
+	# @property {Number} tokenRefreshInterval - token refresh interval
+	# @memberof settings
+	###
+	tokenRefreshInterval: 1 * 1000 * 60 * 60 # 1 hour in milliseconds
+
+	###*
+	# @property {String} resinUrl - Resin.io url
+	# @memberof settings
+	###
+	resinUrl: 'resin.io'
+
+	###*
+	# @property {Function} apiUrl - Resin.io API url
+	# @memberof settings
+	###
+	apiUrl: ->
+		return "https://api.#{@resinUrl}"
+
+	###*
+	# @property {Function} vpnUrl - Resin.io VPN url
+	# @memberof settings
+	###
+	vpnUrl: ->
+		return "vpn.#{@resinUrl}"
+
+	###*
+	# @property {Function} registryUrl - Resin.io Registry url
+	# @memberof settings
+	###
+	registryUrl: ->
+		return "registry.#{@resinUrl}"
+
+	###*
+	# @property {Function} imageMakerUrl - Resin.io Image Maker url
+	# @memberof settings
+	###
+	imageMakerUrl: ->
+		return "https://img.#{@resinUrl}"
+
+	###*
+	# @property {Function} deltaUrl - Resin.io Delta url
+	# @memberof settings
+	###
+	deltaUrl: ->
+		return "https://delta.#{@resinUrl}"
+
+	###*
+	# @property {Function} dashboardUrl - Resin.io dashboard url
+	# @memberof settings
+	###
+	dashboardUrl: ->
+		return "https://dashboard.#{@resinUrl}"
+
+evaluateSettings = ->
+	return _.chain(settings)
+		.mapValues (value, key) ->
+			value = _.get(settings, key)
+
+			if _.isFunction(value)
+				value = value.call(settings)
+
+			return value
+		.omit (value) ->
+			return _.isUndefined(value) or _.isNull(value)
+		.value()
+
+cachedSettings = evaluateSettings()
+
+###*
+# @summary Set settings
+# @name set
+# @function
+# @public
+# @memberof resin.settings
+#
+# @param {(String|Object)} [key] - setting key
+# @param {*} [value] - setting value
+#
+# @example
+# resin.settings.set('resinUrl', 'resin.io');
+#
+# @example
+# resin.settings.set({
+#   resinUrl: 'resin.io',
+#   apiUrl: 'https://api.resin.io'
+# });
+###
+exports.set = (key, value) ->
+	if _.isPlainObject(key) and not value?
+		_.assign(settings, key)
+	else
+		_.set(settings, key, value)
+
+	# Evaluate all settings functions after a setting
+	# was added/changed for performance reasons,
+	# since .get() and .getAll() only have to query
+	# for primitive properties instead of re-evaluating
+	# setting functions each time.
+	cachedSettings = evaluateSettings()
 
 ###*
 # @summary Get a single setting
@@ -25,24 +132,13 @@ settings = require('resin-settings-client')
 # @memberof resin.settings
 #
 # @param {String} [key] - setting key
-# @fulfil {*} - setting value
-# @returns {Promise}
+# @returns {*} - setting value
 #
 # @example
-# resin.settings.get('apiUrl').then(function(apiUrl) {
-# 	console.log(apiUrl);
-# });
-#
-# @example
-# resin.settings.get('apiUrl', function(error, apiUrl) {
-# 	if (error) throw error;
-# 	console.log(apiUrl);
-# });
+# var apiUrl = resin.settings.get('apiUrl');
 ###
-exports.get = (key, callback) ->
-	Promise.try ->
-		return settings.get(key)
-	.nodeify(callback)
+exports.get = (key) ->
+	return _.get(cachedSettings, key)
 
 ###*
 # @summary Get all settings
@@ -51,21 +147,10 @@ exports.get = (key, callback) ->
 # @public
 # @memberof resin.settings
 #
-# @fulfil {Object} - settings
-# @returns {Promise}
+# @returns {Object} - settings
 #
 # @example
-# resin.settings.getAll().then(function(settings) {
-# 	console.log(settings);
-# });
-#
-# @example
-# resin.settings.getAll(function(error, settings) {
-# 	if (error) throw error;
-# 	console.log(settings);
-# });
+# var settings = resin.settings.getAll();
 ###
-exports.getAll = (callback) ->
-	Promise.try ->
-		return settings.getAll()
-	.nodeify(callback)
+exports.getAll = ->
+	return _.clone(cachedSettings)
