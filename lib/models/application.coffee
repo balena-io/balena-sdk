@@ -19,6 +19,7 @@ errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
 pine = require('resin-pine')
+settings = require('../settings')
 deviceModel = require('./device')
 
 ###*
@@ -269,6 +270,7 @@ exports.restart = (name, callback) ->
 	exports.get(name).then (application) ->
 		return request.send
 			method: 'POST'
+			baseUrl: settings.get('apiUrl')
 			url: "/application/#{application.id}/restart"
 	.return(undefined)
 	.nodeify(callback)
@@ -299,6 +301,7 @@ exports.getApiKey = (name, callback) ->
 	exports.get(name).then (application) ->
 		return request.send
 			method: 'POST'
+			baseUrl: settings.get('apiUrl')
 			url: "/application/#{application.id}/generate-api-key"
 	.get('body')
 	.nodeify(callback)

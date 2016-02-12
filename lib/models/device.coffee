@@ -22,6 +22,7 @@ errors = require('resin-errors')
 request = require('resin-request')
 registerDevice = require('resin-register-device')
 deviceStatus = require('resin-device-status')
+settings = require('../settings')
 configModel = require('./config')
 applicationModel = require('./application')
 auth = require('../auth')
@@ -390,6 +391,7 @@ exports.identify = (uuid, callback) ->
 
 		return request.send
 			method: 'POST'
+			baseUrl: settings.get('apiUrl')
 			url: '/blink'
 			body:
 				uuid: uuid
@@ -528,6 +530,7 @@ exports.restart = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
 		return request.send
 			method: 'POST'
+			baseUrl: settings.get('apiUrl')
 			url: "/device/#{device.id}/restart"
 	.get('body')
 	.nodeify(callback)

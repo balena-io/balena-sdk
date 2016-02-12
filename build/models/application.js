@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var _, deviceModel, errors, pine, request, token;
+  var _, deviceModel, errors, pine, request, settings, token;
 
   _ = require('lodash');
 
@@ -27,6 +27,8 @@ limitations under the License.
   token = require('resin-token');
 
   pine = require('resin-pine');
+
+  settings = require('../settings');
 
   deviceModel = require('./device');
 
@@ -307,6 +309,7 @@ limitations under the License.
     return exports.get(name).then(function(application) {
       return request.send({
         method: 'POST',
+        baseUrl: settings.get('apiUrl'),
         url: "/application/" + application.id + "/restart"
       });
     })["return"](void 0).nodeify(callback);
@@ -340,6 +343,7 @@ limitations under the License.
     return exports.get(name).then(function(application) {
       return request.send({
         method: 'POST',
+        baseUrl: settings.get('apiUrl'),
         url: "/application/" + application.id + "/generate-api-key"
       });
     }).get('body').nodeify(callback);

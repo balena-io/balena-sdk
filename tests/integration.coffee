@@ -120,6 +120,7 @@ describe 'SDK Integration Tests', ->
 					.then (userId) ->
 						return resinRequest.send
 							method: 'DELETE'
+							baseUrl: resin.settings.get('apiUrl')
 							url: "/ewa/user(#{userId})"
 						.then(resin.auth.logout)
 					.nodeify (error) ->

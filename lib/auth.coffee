@@ -17,6 +17,7 @@ limitations under the License.
 errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
+settings = require('./settings')
 
 ###*
 # @namespace resin.auth.twoFactor
@@ -93,6 +94,7 @@ exports.whoami = (callback) ->
 exports.authenticate = (credentials, callback) ->
 	request.send
 		method: 'POST'
+		baseUrl: settings.get('apiUrl')
 		url: '/login_'
 		body:
 			username: credentials.email
@@ -185,6 +187,7 @@ exports.loginWithToken = (authToken, callback) ->
 exports.isLoggedIn = (callback) ->
 	request.send
 		method: 'GET'
+		baseUrl: settings.get('apiUrl')
 		url: '/whoami'
 	.return(true)
 	.catch ->
@@ -332,6 +335,7 @@ exports.logout = (callback) ->
 exports.register = (credentials = {}, callback) ->
 	request.send
 		method: 'POST'
+		baseUrl: settings.get('apiUrl')
 		url: '/user/register'
 		body: credentials
 	.get('body')
