@@ -24,12 +24,6 @@ _ = require('lodash')
 settings =
 
 	###*
-	# @property {Number} tokenRefreshInterval - token refresh interval
-	# @memberof settings
-	###
-	tokenRefreshInterval: 1 * 1000 * 60 * 60 # 1 hour in milliseconds
-
-	###*
 	# @property {String} resinUrl - Resin.io url
 	# @memberof settings
 	###

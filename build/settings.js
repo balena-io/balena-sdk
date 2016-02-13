@@ -30,12 +30,6 @@ limitations under the License.
   settings = {
 
     /**
-    	 * @property {Number} tokenRefreshInterval - token refresh interval
-    	 * @memberof settings
-     */
-    tokenRefreshInterval: 1 * 1000 * 60 * 60,
-
-    /**
     	 * @property {String} resinUrl - Resin.io url
     	 * @memberof settings
      */
