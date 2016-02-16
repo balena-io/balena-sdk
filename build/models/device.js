@@ -702,7 +702,7 @@ limitations under the License.
 
   exports.getSupportedDeviceTypes = function(callback) {
     return configModel.getDeviceTypes().then(function(deviceTypes) {
-      return _.pluck(deviceTypes, 'name');
+      return _.map(deviceTypes, 'name');
     }).nodeify(callback);
   };
 
@@ -733,7 +733,7 @@ limitations under the License.
   exports.getManifestBySlug = function(slug, callback) {
     return configModel.getDeviceTypes().then(function(deviceTypes) {
       return _.find(deviceTypes, function(deviceType) {
-        return _.any([deviceType.name === slug, deviceType.slug === slug, _.includes(deviceType.aliases, slug)]);
+        return _.some([deviceType.name === slug, deviceType.slug === slug, _.includes(deviceType.aliases, slug)]);
       });
     }).then(function(deviceManifest) {
       if (deviceManifest == null) {

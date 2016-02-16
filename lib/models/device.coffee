@@ -632,7 +632,7 @@ exports.getDeviceSlug = (deviceTypeName, callback) ->
 ###
 exports.getSupportedDeviceTypes = (callback) ->
 	configModel.getDeviceTypes().then (deviceTypes) ->
-		return _.pluck(deviceTypes, 'name')
+		return _.map(deviceTypes, 'name')
 	.nodeify(callback)
 
 ###*
@@ -660,7 +660,7 @@ exports.getSupportedDeviceTypes = (callback) ->
 exports.getManifestBySlug = (slug, callback) ->
 	return configModel.getDeviceTypes().then (deviceTypes) ->
 		return _.find deviceTypes, (deviceType) ->
-			return _.any [
+			return _.some [
 				deviceType.name is slug
 				deviceType.slug is slug
 				_.includes(deviceType.aliases, slug)
