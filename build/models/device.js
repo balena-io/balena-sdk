@@ -67,6 +67,7 @@ limitations under the License.
 
   exports.getAll = function(callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device',
       options: {
         expand: 'application',
@@ -108,6 +109,7 @@ limitations under the License.
         throw new errors.ResinApplicationNotFound(name);
       }
       return pine.get({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         options: {
           filter: {
@@ -152,6 +154,7 @@ limitations under the License.
   exports.get = function(uuid, callback) {
     uuid = String(uuid);
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device',
       options: {
         expand: 'application',
@@ -205,6 +208,7 @@ limitations under the License.
 
   exports.getByName = function(name, callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device',
       options: {
         expand: 'application',
@@ -400,6 +404,7 @@ limitations under the License.
   exports.remove = function(uuid, callback) {
     return exports.get(uuid).then(function() {
       return pine["delete"]({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         options: {
           filter: {
@@ -474,6 +479,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           name: newName
@@ -515,6 +521,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           note: note
@@ -559,6 +566,7 @@ limitations under the License.
         throw new Error("Incompatible application: " + application);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           application: results.application.id
@@ -937,6 +945,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           is_web_accessible: true
@@ -976,6 +985,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           is_web_accessible: false

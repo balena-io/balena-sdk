@@ -44,6 +44,14 @@ limitations under the License.
     },
 
     /**
+    	 * @property {Function} pineUrl - Resin.io Pine API url
+    	 * @memberof settings
+     */
+    pineUrl: function() {
+      return ((typeof this.apiUrl === "function" ? this.apiUrl() : void 0) || this.apiUrl) + "/ewa/";
+    },
+
+    /**
     	 * @property {Function} vpnUrl - Resin.io VPN url
     	 * @memberof settings
      */

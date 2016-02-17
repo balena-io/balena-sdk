@@ -16,13 +16,15 @@ limitations under the License.
  */
 
 (function() {
-  var _, auth, errors, pine;
+  var _, auth, errors, pine, settings;
 
   _ = require('lodash');
 
   errors = require('resin-errors');
 
   pine = require('resin-pine');
+
+  settings = require('../settings');
 
   auth = require('../auth');
 
@@ -51,6 +53,7 @@ limitations under the License.
 
   exports.getAll = function(callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'user__has__public_key'
     }).nodeify(callback);
   };
@@ -81,6 +84,7 @@ limitations under the License.
 
   exports.get = function(id, callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'user__has__public_key',
       id: id
     }).tap(function(key) {
@@ -112,6 +116,7 @@ limitations under the License.
 
   exports.remove = function(id, callback) {
     return pine["delete"]({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'user__has__public_key',
       id: id
     }).nodeify(callback);
@@ -147,6 +152,7 @@ limitations under the License.
     key = key.trim();
     return auth.getUserId().then(function(userId) {
       return pine.post({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'user__has__public_key',
         body: {
           title: title,

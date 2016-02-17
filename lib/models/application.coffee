@@ -46,6 +46,7 @@ deviceModel = require('./device')
 exports.getAll = (callback) ->
 	token.getUserId().then (userId) ->
 		return pine.get
+			apiPrefix: settings.get('pineUrl')
 			resource: 'application'
 			options:
 				orderby: 'app_name asc'
@@ -86,6 +87,7 @@ exports.getAll = (callback) ->
 ###
 exports.get = (name, callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'application'
 		options:
 			filter:
@@ -175,6 +177,7 @@ exports.hasAny = (callback) ->
 ###
 exports.getById = (id, callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'application'
 		id: id
 	.tap (application) ->
@@ -215,6 +218,7 @@ exports.create = (name, deviceType, callback) ->
 
 	.then (deviceSlug) ->
 		return pine.post
+			apiPrefix: settings.get('pineUrl')
 			resource: 'application'
 			body:
 				app_name: name
@@ -242,6 +246,7 @@ exports.create = (name, deviceType, callback) ->
 exports.remove = (name, callback) ->
 	exports.get(name).then ->
 		return pine.delete
+			apiPrefix: settings.get('pineUrl')
 			resource: 'application'
 			options:
 				filter:

@@ -17,6 +17,7 @@ limitations under the License.
 _ = require('lodash')
 errors = require('resin-errors')
 pine = require('resin-pine')
+settings = require('../settings')
 auth = require('../auth')
 
 ###*
@@ -42,6 +43,7 @@ auth = require('../auth')
 ###
 exports.getAll = (callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'user__has__public_key'
 	.nodeify(callback)
 
@@ -69,6 +71,7 @@ exports.getAll = (callback) ->
 ###
 exports.get = (id, callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'user__has__public_key'
 		id: id
 	.tap (key) ->
@@ -96,6 +99,7 @@ exports.get = (id, callback) ->
 ###
 exports.remove = (id, callback) ->
 	return pine.delete
+		apiPrefix: settings.get('pineUrl')
 		resource: 'user__has__public_key'
 		id: id
 	.nodeify(callback)
@@ -131,6 +135,7 @@ exports.create = (title, key, callback) ->
 
 	auth.getUserId().then (userId) ->
 		return pine.post
+			apiPrefix: settings.get('pineUrl')
 			resource: 'user__has__public_key'
 			body:
 				title: title

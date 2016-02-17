@@ -19,9 +19,11 @@ reset = ->
 
 		Promise.all [
 			pine.delete
+				apiPrefix: resin.settings.get('pineUrl')
 				resource: 'application'
 
 			pine.delete
+				apiPrefix: resin.settings.get('pineUrl')
 				resource: 'user__has__public_key'
 		]
 

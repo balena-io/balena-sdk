@@ -37,6 +37,13 @@ settings =
 		return "https://api.#{@resinUrl}"
 
 	###*
+	# @property {Function} pineUrl - Resin.io Pine API url
+	# @memberof settings
+	###
+	pineUrl: ->
+		return "#{@apiUrl?() or @apiUrl}/ewa/"
+
+	###*
 	# @property {Function} vpnUrl - Resin.io VPN url
 	# @memberof settings
 	###

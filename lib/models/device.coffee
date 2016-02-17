@@ -50,6 +50,7 @@ auth = require('../auth')
 ###
 exports.getAll = (callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'device'
 		options:
 			expand: 'application'
@@ -89,6 +90,7 @@ exports.getAllByApplication = (name, callback) ->
 			throw new errors.ResinApplicationNotFound(name)
 
 		return pine.get
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			options:
 				filter:
@@ -131,6 +133,7 @@ exports.get = (uuid, callback) ->
 	uuid = String(uuid)
 
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'device'
 		options:
 			expand: 'application'
@@ -184,6 +187,7 @@ exports.get = (uuid, callback) ->
 ###
 exports.getByName = (name, callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'device'
 		options:
 			expand: 'application'
@@ -359,6 +363,7 @@ exports.getLocalIPAddresses = (uuid, callback) ->
 exports.remove = (uuid, callback) ->
 	exports.get(uuid).then ->
 		return pine.delete
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			options:
 				filter:
@@ -425,6 +430,7 @@ exports.rename = (uuid, newName, callback) ->
 			throw new errors.ResinDeviceNotFound(uuid)
 
 		return pine.patch
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			body:
 				name: newName
@@ -460,6 +466,7 @@ exports.note = (uuid, note, callback) ->
 			throw new errors.ResinDeviceNotFound(uuid)
 
 		return pine.patch
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			body:
 				note: note
@@ -499,6 +506,7 @@ exports.move = (uuid, application, callback) ->
 			throw new Error("Incompatible application: #{application}")
 
 		return pine.patch
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			body:
 				application: results.application.id
@@ -851,6 +859,7 @@ exports.enableDeviceUrl = (uuid, callback) ->
 			throw new errors.ResinDeviceNotFound(uuid)
 
 		return pine.patch
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			body:
 				is_web_accessible: true
@@ -884,6 +893,7 @@ exports.disableDeviceUrl = (uuid, callback) ->
 			throw new errors.ResinDeviceNotFound(uuid)
 
 		return pine.patch
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device'
 			body:
 				is_web_accessible: false
