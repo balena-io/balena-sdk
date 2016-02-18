@@ -850,6 +850,7 @@ limitations under the License.
       application: applicationModel.get(applicationName)
     }).then(function(results) {
       return registerDevice.register(pine, {
+        apiPrefix: settings.get('pineUrl'),
         userId: results.userId,
         applicationId: results.application.id,
         deviceType: results.application.device_type,
