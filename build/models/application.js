@@ -67,7 +67,7 @@ limitations under the License.
       });
     }).map(function(application) {
       var ref;
-      application.online_devices = _.where(application.device, {
+      application.online_devices = _.filter(application.device, {
         is_online: true
       }).length;
       application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;

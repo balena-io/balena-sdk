@@ -35,7 +35,7 @@ credentials =
 		password: process.env.RESINTEST_REGISTER_PASSWORD
 		username: process.env.RESINTEST_REGISTER_USERNAME
 
-if not _.all [
+if not _.every [
 	credentials.email?
 	credentials.password?
 	credentials.username?
@@ -401,7 +401,6 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be able to create a key', (done) ->
 						key = fs.readFileSync(path.join(__dirname, 'data', 'keys', 'id_rsa.pub'), encoding: 'utf8')
-
 						resin.models.key.create('MyKey', key).then ->
 							return resin.models.key.getAll()
 						.then (keys) ->
@@ -412,7 +411,6 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be able to create a key from a non trimmed string', (done) ->
 						key = fs.readFileSync(path.join(__dirname, 'data', 'keys', 'id_rsa.pub'), encoding: 'utf8')
-
 						resin.models.key.create('MyKey', "    #{key}    ").then ->
 							return resin.models.key.getAll()
 						.then (keys) ->
@@ -425,7 +423,6 @@ describe 'SDK Integration Tests', ->
 
 				beforeEach (done) ->
 					publicKey = fs.readFileSync(path.join(__dirname, 'data', 'keys', 'id_rsa.pub'), encoding: 'utf8')
-
 					resin.models.key.create('MyKey', publicKey).then (key) =>
 						@key = key
 					.nodeify(done)
@@ -916,13 +913,13 @@ describe 'SDK Integration Tests', ->
 						it 'should eventually be an absolute url', (done) ->
 							resin.models.device.getDeviceUrl(@device.uuid).then (deviceUrl) ->
 								return request.getAsync(deviceUrl)
-							.spread (response, body) ->
+							.then (response) ->
 
 								# Because the device is not online
 								m.chai.expect(response.statusCode).to.equal(503)
 
 								# Standard HTML title for web enabled devices
-								$ = cheerio.load(body)
+								$ = cheerio.load(response.body)
 								m.chai.expect($('title').text()).to.equal('Resin.io Device Public URLs')
 							.nodeify(done)
 
