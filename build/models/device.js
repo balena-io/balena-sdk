@@ -571,11 +571,16 @@ limitations under the License.
 
 
   /**
-   * @summary Restart device
+   * @summary Restart device application
    * @name restart
    * @public
    * @function
    * @memberof resin.models.device
+   *
+   * @description
+   * This function restarts the Docker container running
+   * the application on the device, but doesn't reboot
+   * the device itself.
    *
    * @param {String} uuid - device uuid
    * @returns {Promise}

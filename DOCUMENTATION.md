@@ -729,8 +729,12 @@ resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 ```
 <a name="resin.models.device.restart"></a>
 ##### device.restart(uuid) ⇒ <code>Promise</code>
+This function restarts the Docker container running
+the application on the device, but doesn't reboot
+the device itself.
+
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Restart device  
+**Summary**: Restart device application  
 **Access:** public  
 
 | Param | Type | Description |
