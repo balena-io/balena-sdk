@@ -692,6 +692,20 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(envs).to.have.length(0)
 							.nodeify(done)
 
+			describe 'Build Model', ->
+
+				describe 'resin.models.build.getAllByApplication()', ->
+
+					it 'should eventually become an empty array', ->
+						promise = resin.models.build.getAllByApplication('FooBar')
+						m.chai.expect(promise).to.become([])
+
+				describe 'resin.models.build.getAllByApplication()', ->
+
+					it 'should be rejected with an error if the application does not exist', ->
+						promise = resin.models.build.getAllByApplication('Hello')
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: Hello')
+
 		describe 'given a single application with a single offline device', ->
 
 			beforeEach (done) ->

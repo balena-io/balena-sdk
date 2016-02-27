@@ -71,6 +71,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
             * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+        * [.build](#resin.models.build) : <code>object</code>
+            * [.getAllByApplication(name)](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
     * [.auth](#resin.auth) : <code>object</code>
         * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
             * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
@@ -159,6 +161,8 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
         * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+    * [.build](#resin.models.build) : <code>object</code>
+        * [.getAllByApplication(name)](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="resin.models.application"></a>
 #### models.application : <code>object</code>
@@ -1477,6 +1481,33 @@ resin.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 	if (error) throw error;
 	console.log(options);
+});
+```
+<a name="resin.models.build"></a>
+#### models.build : <code>object</code>
+**Kind**: static namespace of <code>[models](#resin.models)</code>  
+<a name="resin.models.build.getAllByApplication"></a>
+##### build.getAllByApplication(name) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[build](#resin.models.build)</code>  
+**Summary**: Get all builds from an application  
+**Access:** public  
+**Fulfil**: <code>Object[]</code> - builds  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | application name |
+
+**Example**  
+```js
+resin.models.build.getAllByApplication('MyApp').then(function(builds) {
+		console.log(builds);
+});
+```
+**Example**  
+```js
+resin.models.build.getAllByApplication('MyApp', function(error, builds) {
+		if (error) throw error;
+		console.log(builds);
 });
 ```
 <a name="resin.auth"></a>

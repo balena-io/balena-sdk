@@ -52,7 +52,13 @@ limitations under the License.
     	 * @namespace config
     	 * @memberof resin.models
      */
-    config: require('./config')
+    config: require('./config'),
+
+    /**
+    	 * @namespace build
+    	 * @memberof resin.models
+     */
+    build: require('./build')
   };
 
 }).call(this);
