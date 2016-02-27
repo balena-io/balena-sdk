@@ -571,7 +571,7 @@ limitations under the License.
 
 
   /**
-   * @summary Restart device application
+   * @summary Restart application on device
    * @name restart
    * @public
    * @function
@@ -599,6 +599,38 @@ limitations under the License.
       return request.send({
         method: 'POST',
         url: "/device/" + device.id + "/restart"
+      });
+    }).get('body').nodeify(callback);
+  };
+
+
+  /**
+   * @summary Reboot device
+   * @name reboot
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.reboot('7cf02a6');
+   *
+   * @example
+   * resin.models.device.reboot('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.reboot = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'POST',
+        url: '/supervisor/v1/reboot',
+        body: {
+          deviceId: device.id
+        }
       });
     }).get('body').nodeify(callback);
   };

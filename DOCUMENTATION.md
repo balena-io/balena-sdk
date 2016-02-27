@@ -36,6 +36,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
             * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
             * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
+            * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
             * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
             * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
             * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
@@ -124,6 +125,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
         * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
         * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
+        * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
         * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
         * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
         * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
@@ -394,6 +396,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
     * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
     * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
+    * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
     * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
     * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
     * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
@@ -734,7 +737,7 @@ the application on the device, but doesn't reboot
 the device itself.
 
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Restart device application  
+**Summary**: Restart application on device  
 **Access:** public  
 
 | Param | Type | Description |
@@ -748,6 +751,26 @@ resin.models.device.restart('7cf02a6');
 **Example**  
 ```js
 resin.models.device.restart('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.device.reboot"></a>
+##### device.reboot(uuid) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Reboot device  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+resin.models.device.reboot('7cf02a6');
+```
+**Example**  
+```js
+resin.models.device.reboot('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
