@@ -41,7 +41,7 @@ If you're having any problem, please [raise an issue](https://github.com/resin-i
 Tests
 -----
 
-First, set the following environment variables, from an account that exists:
+In order to run the Resin SDK test suite, set the following environment variables from an account that exists:
 
 - `RESINTEST_EMAIL`: The main account email
 - `RESINTEST_PASSWORD`: The main account password
