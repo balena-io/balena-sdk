@@ -187,8 +187,7 @@ exports.isLoggedIn = (callback) ->
 		method: 'GET'
 		url: '/whoami'
 	.return(true)
-	.catch ->
-		return false
+	.catchReturn(false)
 	.nodeify(callback)
 
 ###*

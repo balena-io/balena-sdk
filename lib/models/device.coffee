@@ -271,8 +271,7 @@ exports.getApplicationName = (uuid, callback) ->
 ###
 exports.has = (uuid, callback) ->
 	exports.get(uuid).return(true)
-	.catch errors.ResinDeviceNotFound, ->
-		return false
+	.catchReturn(errors.ResinDeviceNotFound, false)
 	.nodeify(callback)
 
 ###*
@@ -594,11 +593,7 @@ exports.reboot = (uuid, callback) ->
 exports.getDisplayName = (deviceTypeSlug, callback) ->
 	exports.getManifestBySlug(deviceTypeSlug)
 		.get('name')
-		.catch (error) ->
-			if error instanceof errors.ResinInvalidDeviceType
-				return
-
-			throw error
+		.catchReturn(errors.ResinInvalidDeviceType, undefined)
 	.nodeify(callback)
 
 ###*
@@ -630,11 +625,7 @@ exports.getDisplayName = (deviceTypeSlug, callback) ->
 exports.getDeviceSlug = (deviceTypeName, callback) ->
 	exports.getManifestBySlug(deviceTypeName)
 		.get('slug')
-		.catch (error) ->
-			if error instanceof errors.ResinInvalidDeviceType
-				return
-
-			throw error
+		.catchReturn(errors.ResinInvalidDeviceType, undefined)
 	.nodeify(callback)
 
 ###*

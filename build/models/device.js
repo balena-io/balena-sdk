@@ -301,9 +301,7 @@ limitations under the License.
    */
 
   exports.has = function(uuid, callback) {
-    return exports.get(uuid)["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
-      return false;
-    }).nodeify(callback);
+    return exports.get(uuid)["return"](true).catchReturn(errors.ResinDeviceNotFound, false).nodeify(callback);
   };
 
 
@@ -664,12 +662,7 @@ limitations under the License.
    */
 
   exports.getDisplayName = function(deviceTypeSlug, callback) {
-    return exports.getManifestBySlug(deviceTypeSlug).get('name')["catch"](function(error) {
-      if (error instanceof errors.ResinInvalidDeviceType) {
-        return;
-      }
-      throw error;
-    }).nodeify(callback);
+    return exports.getManifestBySlug(deviceTypeSlug).get('name').catchReturn(errors.ResinInvalidDeviceType, void 0).nodeify(callback);
   };
 
 
@@ -701,12 +694,7 @@ limitations under the License.
    */
 
   exports.getDeviceSlug = function(deviceTypeName, callback) {
-    return exports.getManifestBySlug(deviceTypeName).get('slug')["catch"](function(error) {
-      if (error instanceof errors.ResinInvalidDeviceType) {
-        return;
-      }
-      throw error;
-    }).nodeify(callback);
+    return exports.getManifestBySlug(deviceTypeName).get('slug').catchReturn(errors.ResinInvalidDeviceType, void 0).nodeify(callback);
   };
 
 
