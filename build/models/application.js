@@ -139,9 +139,7 @@ limitations under the License.
    */
 
   exports.has = function(name, callback) {
-    return exports.get(name)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
-      return false;
-    }).nodeify(callback);
+    return exports.get(name)["return"](true).catchReturn(errors.ResinApplicationNotFound, false).nodeify(callback);
   };
 
 

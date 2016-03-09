@@ -120,8 +120,7 @@ exports.get = (name, callback) ->
 ###
 exports.has = (name, callback) ->
 	exports.get(name).return(true)
-	.catch errors.ResinApplicationNotFound, ->
-		return false
+	.catchReturn(errors.ResinApplicationNotFound, false)
 	.nodeify(callback)
 
 ###*

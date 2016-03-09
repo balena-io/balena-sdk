@@ -206,9 +206,7 @@ limitations under the License.
     return request.send({
       method: 'GET',
       url: '/whoami'
-    })["return"](true)["catch"](function() {
-      return false;
-    }).nodeify(callback);
+    })["return"](true).catchReturn(false).nodeify(callback);
   };
 
 
