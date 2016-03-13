@@ -19,9 +19,11 @@ reset = ->
 
 		Promise.all [
 			pine.delete
+				apiPrefix: resin.settings.get('pineUrl')
 				resource: 'application'
 
 			pine.delete
+				apiPrefix: resin.settings.get('pineUrl')
 				resource: 'user__has__public_key'
 		]
 
@@ -120,6 +122,7 @@ describe 'SDK Integration Tests', ->
 					.then (userId) ->
 						return resinRequest.send
 							method: 'DELETE'
+							baseUrl: resin.settings.get('apiUrl')
 							url: "/ewa/user(#{userId})"
 						.then(resin.auth.logout)
 					.nodeify (error) ->

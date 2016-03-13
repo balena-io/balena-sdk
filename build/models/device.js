@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, pine, registerDevice, request;
+  var Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, pine, registerDevice, request, settings;
 
   Promise = require('bluebird');
 
@@ -33,6 +33,8 @@ limitations under the License.
   registerDevice = require('resin-register-device');
 
   deviceStatus = require('resin-device-status');
+
+  settings = require('../settings');
 
   configModel = require('./config');
 
@@ -65,6 +67,7 @@ limitations under the License.
 
   exports.getAll = function(callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device',
       options: {
         expand: 'application',
@@ -106,6 +109,7 @@ limitations under the License.
         throw new errors.ResinApplicationNotFound(name);
       }
       return pine.get({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         options: {
           filter: {
@@ -150,6 +154,7 @@ limitations under the License.
   exports.get = function(uuid, callback) {
     uuid = String(uuid);
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device',
       options: {
         expand: 'application',
@@ -203,6 +208,7 @@ limitations under the License.
 
   exports.getByName = function(name, callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device',
       options: {
         expand: 'application',
@@ -398,6 +404,7 @@ limitations under the License.
   exports.remove = function(uuid, callback) {
     return exports.get(uuid).then(function() {
       return pine["delete"]({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         options: {
           filter: {
@@ -435,6 +442,7 @@ limitations under the License.
       }
       return request.send({
         method: 'POST',
+        baseUrl: settings.get('apiUrl'),
         url: '/blink',
         body: {
           uuid: uuid
@@ -471,6 +479,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           name: newName
@@ -512,6 +521,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           note: note
@@ -556,6 +566,7 @@ limitations under the License.
         throw new Error("Incompatible application: " + application);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           application: results.application.id
@@ -598,6 +609,7 @@ limitations under the License.
     return exports.get(uuid).then(function(device) {
       return request.send({
         method: 'POST',
+        baseUrl: settings.get('apiUrl'),
         url: "/device/" + device.id + "/restart"
       });
     }).get('body').nodeify(callback);
@@ -875,6 +887,7 @@ limitations under the License.
       application: applicationModel.get(applicationName)
     }).then(function(results) {
       return registerDevice.register(pine, {
+        apiPrefix: settings.get('pineUrl'),
         userId: results.userId,
         applicationId: results.application.id,
         deviceType: results.application.device_type,
@@ -970,6 +983,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           is_web_accessible: true
@@ -1009,6 +1023,7 @@ limitations under the License.
         throw new errors.ResinDeviceNotFound(uuid);
       }
       return pine.patch({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device',
         body: {
           is_web_accessible: false

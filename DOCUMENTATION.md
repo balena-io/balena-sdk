@@ -93,8 +93,9 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.subscribe(uuid)](#resin.logs.subscribe) ⇒ <code>Promise</code>
         * [.history(uuid)](#resin.logs.history) ⇒ <code>Promise</code>
     * [.settings](#resin.settings) : <code>object</code>
-        * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
-        * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
+        * [.set([key], [value])](#resin.settings.set)
+        * [.get([key])](#resin.settings.get) ⇒ <code>\*</code>
+        * [.getAll()](#resin.settings.getAll) ⇒ <code>Object</code>
 
 <a name="resin.models"></a>
 ### resin.models : <code>object</code>
@@ -1960,15 +1961,38 @@ resin.logs.history('7cf02a6', function(error, lines) {
 **Kind**: static namespace of <code>[resin](#resin)</code>  
 
 * [.settings](#resin.settings) : <code>object</code>
-    * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
-    * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
+    * [.set([key], [value])](#resin.settings.set)
+    * [.get([key])](#resin.settings.get) ⇒ <code>\*</code>
+    * [.getAll()](#resin.settings.getAll) ⇒ <code>Object</code>
 
+<a name="resin.settings.set"></a>
+#### settings.set([key], [value])
+**Kind**: static method of <code>[settings](#resin.settings)</code>  
+**Summary**: Set settings  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [key] | <code>String</code> &#124; <code>Object</code> | setting key |
+| [value] | <code>\*</code> | setting value |
+
+**Example**  
+```js
+resin.settings.set('resinUrl', 'resin.io');
+```
+**Example**  
+```js
+resin.settings.set({
+  resinUrl: 'resin.io',
+  apiUrl: 'https://api.resin.io'
+});
+```
 <a name="resin.settings.get"></a>
-#### settings.get([key]) ⇒ <code>Promise</code>
+#### settings.get([key]) ⇒ <code>\*</code>
 **Kind**: static method of <code>[settings](#resin.settings)</code>  
 **Summary**: Get a single setting  
+**Returns**: <code>\*</code> - - setting value  
 **Access:** public  
-**Fulfil**: <code>\*</code> - setting value  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1976,33 +2000,15 @@ resin.logs.history('7cf02a6', function(error, lines) {
 
 **Example**  
 ```js
-resin.settings.get('apiUrl').then(function(apiUrl) {
-	console.log(apiUrl);
-});
-```
-**Example**  
-```js
-resin.settings.get('apiUrl', function(error, apiUrl) {
-	if (error) throw error;
-	console.log(apiUrl);
-});
+var apiUrl = resin.settings.get('apiUrl');
 ```
 <a name="resin.settings.getAll"></a>
-#### settings.getAll() ⇒ <code>Promise</code>
+#### settings.getAll() ⇒ <code>Object</code>
 **Kind**: static method of <code>[settings](#resin.settings)</code>  
 **Summary**: Get all settings  
+**Returns**: <code>Object</code> - - settings  
 **Access:** public  
-**Fulfil**: <code>Object</code> - settings  
 **Example**  
 ```js
-resin.settings.getAll().then(function(settings) {
-	console.log(settings);
-});
-```
-**Example**  
-```js
-resin.settings.getAll(function(error, settings) {
-	if (error) throw error;
-	console.log(settings);
-});
+var settings = resin.settings.getAll();
 ```

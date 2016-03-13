@@ -16,11 +16,125 @@ limitations under the License.
  */
 
 (function() {
-  var Promise, settings;
+  var _, cachedSettings, evaluateSettings, settings;
 
-  Promise = require('bluebird');
+  _ = require('lodash');
 
-  settings = require('resin-settings-client');
+
+  /**
+   * @summary Default settings
+   * @namespace settings
+   * @private
+   */
+
+  settings = {
+
+    /**
+    	 * @property {String} resinUrl - Resin.io url
+    	 * @memberof settings
+     */
+    resinUrl: 'resin.io',
+
+    /**
+    	 * @property {Function} apiUrl - Resin.io API url
+    	 * @memberof settings
+     */
+    apiUrl: function() {
+      return "https://api." + this.resinUrl;
+    },
+
+    /**
+    	 * @property {Function} pineUrl - Resin.io Pine API url
+    	 * @memberof settings
+     */
+    pineUrl: function() {
+      return ((typeof this.apiUrl === "function" ? this.apiUrl() : void 0) || this.apiUrl) + "/ewa/";
+    },
+
+    /**
+    	 * @property {Function} vpnUrl - Resin.io VPN url
+    	 * @memberof settings
+     */
+    vpnUrl: function() {
+      return "vpn." + this.resinUrl;
+    },
+
+    /**
+    	 * @property {Function} registryUrl - Resin.io Registry url
+    	 * @memberof settings
+     */
+    registryUrl: function() {
+      return "registry." + this.resinUrl;
+    },
+
+    /**
+    	 * @property {Function} imageMakerUrl - Resin.io Image Maker url
+    	 * @memberof settings
+     */
+    imageMakerUrl: function() {
+      return "https://img." + this.resinUrl;
+    },
+
+    /**
+    	 * @property {Function} deltaUrl - Resin.io Delta url
+    	 * @memberof settings
+     */
+    deltaUrl: function() {
+      return "https://delta." + this.resinUrl;
+    },
+
+    /**
+    	 * @property {Function} dashboardUrl - Resin.io dashboard url
+    	 * @memberof settings
+     */
+    dashboardUrl: function() {
+      return "https://dashboard." + this.resinUrl;
+    }
+  };
+
+  evaluateSettings = function() {
+    return _.chain(settings).mapValues(function(value, key) {
+      value = _.get(settings, key);
+      if (_.isFunction(value)) {
+        value = value.call(settings);
+      }
+      return value;
+    }).omit(function(value) {
+      return _.isUndefined(value) || _.isNull(value);
+    }).value();
+  };
+
+  cachedSettings = evaluateSettings();
+
+
+  /**
+   * @summary Set settings
+   * @name set
+   * @function
+   * @public
+   * @memberof resin.settings
+   *
+   * @param {(String|Object)} [key] - setting key
+   * @param {*} [value] - setting value
+   *
+   * @example
+   * resin.settings.set('resinUrl', 'resin.io');
+   *
+   * @example
+   * resin.settings.set({
+   *   resinUrl: 'resin.io',
+   *   apiUrl: 'https://api.resin.io'
+   * });
+   */
+
+  exports.set = function(key, value) {
+    if (_.isPlainObject(key) && (value == null)) {
+      _.assign(settings, key);
+    } else {
+      _.set(settings, key, value);
+    }
+    return cachedSettings = evaluateSettings();
+  };
 
 
   /**
@@ -31,25 +145,14 @@ limitations under the License.
    * @memberof resin.settings
    *
    * @param {String} [key] - setting key
-   * @fulfil {*} - setting value
-   * @returns {Promise}
+   * @returns {*} - setting value
    *
    * @example
-   * resin.settings.get('apiUrl').then(function(apiUrl) {
-   * 	console.log(apiUrl);
-   * });
-   *
-   * @example
-   * resin.settings.get('apiUrl', function(error, apiUrl) {
-   * 	if (error) throw error;
-   * 	console.log(apiUrl);
-   * });
+   * var apiUrl = resin.settings.get('apiUrl');
    */
 
-  exports.get = function(key, callback) {
-    return Promise["try"](function() {
-      return settings.get(key);
-    }).nodeify(callback);
+  exports.get = function(key) {
+    return _.get(cachedSettings, key);
   };
 
 
@@ -60,25 +163,14 @@ limitations under the License.
    * @public
    * @memberof resin.settings
    *
-   * @fulfil {Object} - settings
-   * @returns {Promise}
+   * @returns {Object} - settings
    *
    * @example
-   * resin.settings.getAll().then(function(settings) {
-   * 	console.log(settings);
-   * });
-   *
-   * @example
-   * resin.settings.getAll(function(error, settings) {
-   * 	if (error) throw error;
-   * 	console.log(settings);
-   * });
+   * var settings = resin.settings.getAll();
    */
 
-  exports.getAll = function(callback) {
-    return Promise["try"](function() {
-      return settings.getAll();
-    }).nodeify(callback);
+  exports.getAll = function() {
+    return _.clone(cachedSettings);
   };
 
 }).call(this);

@@ -15,6 +15,7 @@ limitations under the License.
 ###
 
 pine = require('resin-pine')
+settings = require('../settings')
 deviceModel = require('./device')
 applicationModel = require('./application')
 
@@ -43,6 +44,7 @@ applicationModel = require('./application')
 exports.getAllByApplication = (applicationName, callback) ->
 	applicationModel.get(applicationName).get('id').then (applicationId) ->
 		return pine.get
+			apiPrefix: settings.get('pineUrl')
 			resource: 'environment_variable'
 			options:
 				filter:
@@ -74,6 +76,7 @@ exports.getAllByApplication = (applicationName, callback) ->
 exports.create = (applicationName, name, value, callback) ->
 	applicationModel.get(applicationName).get('id').then (applicationId) ->
 		return pine.post
+			apiPrefix: settings.get('pineUrl')
 			resource: 'environment_variable'
 			body:
 				name: name
@@ -103,6 +106,7 @@ exports.create = (applicationName, name, value, callback) ->
 ###
 exports.update = (id, value, callback) ->
 	return pine.patch
+		apiPrefix: settings.get('pineUrl')
 		resource: 'environment_variable'
 		id: id
 		body:
@@ -129,6 +133,7 @@ exports.update = (id, value, callback) ->
 ###
 exports.remove = (id, callback) ->
 	return pine.delete
+		apiPrefix: settings.get('pineUrl')
 		resource: 'environment_variable'
 		id: id
 	.nodeify(callback)
@@ -189,6 +194,7 @@ exports.device = {}
 exports.device.getAll = (uuid, callback) ->
 	deviceModel.get(uuid).then (device) ->
 		return pine.get
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device_environment_variable'
 			options:
 				filter:
@@ -231,6 +237,7 @@ exports.device.getAll = (uuid, callback) ->
 exports.device.create = (uuid, name, value, callback) ->
 	deviceModel.get(uuid).then (device) ->
 		return pine.post
+			apiPrefix: settings.get('pineUrl')
 			resource: 'device_environment_variable'
 			body:
 				device: device.id
@@ -260,6 +267,7 @@ exports.device.create = (uuid, name, value, callback) ->
 ###
 exports.device.update = (id, value, callback) ->
 	return pine.patch
+		apiPrefix: settings.get('pineUrl')
 		resource: 'device_environment_variable'
 		id: id
 		body:
@@ -286,6 +294,7 @@ exports.device.update = (id, value, callback) ->
 ###
 exports.device.remove = (id, callback) ->
 	return pine.delete
+		apiPrefix: settings.get('pineUrl')
 		resource: 'device_environment_variable'
 		id: id
 	.nodeify(callback)

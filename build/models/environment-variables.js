@@ -16,9 +16,11 @@ limitations under the License.
  */
 
 (function() {
-  var applicationModel, deviceModel, pine;
+  var applicationModel, deviceModel, pine, settings;
 
   pine = require('resin-pine');
+
+  settings = require('../settings');
 
   deviceModel = require('./device');
 
@@ -51,6 +53,7 @@ limitations under the License.
   exports.getAllByApplication = function(applicationName, callback) {
     return applicationModel.get(applicationName).get('id').then(function(applicationId) {
       return pine.get({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'environment_variable',
         options: {
           filter: {
@@ -88,6 +91,7 @@ limitations under the License.
   exports.create = function(applicationName, name, value, callback) {
     return applicationModel.get(applicationName).get('id').then(function(applicationId) {
       return pine.post({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'environment_variable',
         body: {
           name: name,
@@ -122,6 +126,7 @@ limitations under the License.
 
   exports.update = function(id, value, callback) {
     return pine.patch({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'environment_variable',
       id: id,
       body: {
@@ -152,6 +157,7 @@ limitations under the License.
 
   exports.remove = function(id, callback) {
     return pine["delete"]({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'environment_variable',
       id: id
     }).nodeify(callback);
@@ -220,6 +226,7 @@ limitations under the License.
   exports.device.getAll = function(uuid, callback) {
     return deviceModel.get(uuid).then(function(device) {
       return pine.get({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device_environment_variable',
         options: {
           filter: {
@@ -264,6 +271,7 @@ limitations under the License.
   exports.device.create = function(uuid, name, value, callback) {
     return deviceModel.get(uuid).then(function(device) {
       return pine.post({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'device_environment_variable',
         body: {
           device: device.id,
@@ -298,6 +306,7 @@ limitations under the License.
 
   exports.device.update = function(id, value, callback) {
     return pine.patch({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device_environment_variable',
       id: id,
       body: {
@@ -328,6 +337,7 @@ limitations under the License.
 
   exports.device.remove = function(id, callback) {
     return pine["delete"]({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'device_environment_variable',
       id: id
     }).nodeify(callback);

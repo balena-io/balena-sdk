@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var _, deviceModel, errors, pine, request, token;
+  var _, deviceModel, errors, pine, request, settings, token;
 
   _ = require('lodash');
 
@@ -27,6 +27,8 @@ limitations under the License.
   token = require('resin-token');
 
   pine = require('resin-pine');
+
+  settings = require('../settings');
 
   deviceModel = require('./device');
 
@@ -56,6 +58,7 @@ limitations under the License.
   exports.getAll = function(callback) {
     return token.getUserId().then(function(userId) {
       return pine.get({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'application',
         options: {
           orderby: 'app_name asc',
@@ -101,6 +104,7 @@ limitations under the License.
 
   exports.get = function(name, callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'application',
       options: {
         filter: {
@@ -199,6 +203,7 @@ limitations under the License.
 
   exports.getById = function(id, callback) {
     return pine.get({
+      apiPrefix: settings.get('pineUrl'),
       resource: 'application',
       id: id
     }).tap(function(application) {
@@ -241,6 +246,7 @@ limitations under the License.
       }
     }).then(function(deviceSlug) {
       return pine.post({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'application',
         body: {
           app_name: name,
@@ -273,6 +279,7 @@ limitations under the License.
   exports.remove = function(name, callback) {
     return exports.get(name).then(function() {
       return pine["delete"]({
+        apiPrefix: settings.get('pineUrl'),
         resource: 'application',
         options: {
           filter: {
@@ -307,6 +314,7 @@ limitations under the License.
     return exports.get(name).then(function(application) {
       return request.send({
         method: 'POST',
+        baseUrl: settings.get('apiUrl'),
         url: "/application/" + application.id + "/restart"
       });
     })["return"](void 0).nodeify(callback);
@@ -340,6 +348,7 @@ limitations under the License.
     return exports.get(name).then(function(application) {
       return request.send({
         method: 'POST',
+        baseUrl: settings.get('apiUrl'),
         url: "/application/" + application.id + "/generate-api-key"
       });
     }).get('body').nodeify(callback);

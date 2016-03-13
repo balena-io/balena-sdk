@@ -14,6 +14,7 @@ OPTIONS =
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
 		integration: 'tests/integration.coffee'
+		tests: 'tests/**/*.spec.coffee'
 		javascript: 'build/**/*.js'
 	directories:
 		doc: 'doc/'
@@ -24,11 +25,19 @@ gulp.task 'coffee', ->
 		.pipe(coffee()).on('error', gutil.log)
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
-gulp.task 'test', ->
+gulp.task 'test:e2e', [ 'test:spec' ], ->
 	gulp.src(OPTIONS.files.integration, read: false)
 		.pipe(mocha({
 			reporter: 'spec'
 		}))
+
+gulp.task 'test:spec', ->
+	gulp.src(OPTIONS.files.tests, read: false)
+		.pipe(mocha({
+			reporter: 'progress'
+		}))
+
+gulp.task('test', [ 'test:spec', 'test:e2e' ])
 
 gulp.task 'lint', ->
 	gulp.src(OPTIONS.files.coffee)
@@ -40,7 +49,8 @@ gulp.task 'lint', ->
 gulp.task 'build', (callback) ->
 	runSequence([
 		'lint'
+		'test:spec'
 	], [ 'coffee' ], callback)
 
 gulp.task 'watch', [ 'build' ], ->
-	gulp.watch([ OPTIONS.files.coffee ], [ 'lint' ])
+	gulp.watch([ OPTIONS.files.coffee ], [ 'lint', 'coffee', 'test:spec' ])

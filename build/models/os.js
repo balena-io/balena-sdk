@@ -24,7 +24,7 @@ limitations under the License.
 
   errors = require('resin-errors');
 
-  settings = require('resin-settings-client');
+  settings = require('../settings');
 
   getImageMakerUrl = function(deviceType) {
     var imageMakerUrl;

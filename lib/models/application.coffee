@@ -19,6 +19,7 @@ errors = require('resin-errors')
 request = require('resin-request')
 token = require('resin-token')
 pine = require('resin-pine')
+settings = require('../settings')
 deviceModel = require('./device')
 
 ###*
@@ -45,6 +46,7 @@ deviceModel = require('./device')
 exports.getAll = (callback) ->
 	token.getUserId().then (userId) ->
 		return pine.get
+			apiPrefix: settings.get('pineUrl')
 			resource: 'application'
 			options:
 				orderby: 'app_name asc'
@@ -85,6 +87,7 @@ exports.getAll = (callback) ->
 ###
 exports.get = (name, callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'application'
 		options:
 			filter:
@@ -174,6 +177,7 @@ exports.hasAny = (callback) ->
 ###
 exports.getById = (id, callback) ->
 	return pine.get
+		apiPrefix: settings.get('pineUrl')
 		resource: 'application'
 		id: id
 	.tap (application) ->
@@ -214,6 +218,7 @@ exports.create = (name, deviceType, callback) ->
 
 	.then (deviceSlug) ->
 		return pine.post
+			apiPrefix: settings.get('pineUrl')
 			resource: 'application'
 			body:
 				app_name: name
@@ -241,6 +246,7 @@ exports.create = (name, deviceType, callback) ->
 exports.remove = (name, callback) ->
 	exports.get(name).then ->
 		return pine.delete
+			apiPrefix: settings.get('pineUrl')
 			resource: 'application'
 			options:
 				filter:
@@ -269,6 +275,7 @@ exports.restart = (name, callback) ->
 	exports.get(name).then (application) ->
 		return request.send
 			method: 'POST'
+			baseUrl: settings.get('apiUrl')
 			url: "/application/#{application.id}/restart"
 	.return(undefined)
 	.nodeify(callback)
@@ -299,6 +306,7 @@ exports.getApiKey = (name, callback) ->
 	exports.get(name).then (application) ->
 		return request.send
 			method: 'POST'
+			baseUrl: settings.get('apiUrl')
 			url: "/application/#{application.id}/generate-api-key"
 	.get('body')
 	.nodeify(callback)

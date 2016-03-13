@@ -17,7 +17,7 @@ limitations under the License.
 url = require('url')
 request = require('resin-request')
 errors = require('resin-errors')
-settings = require('resin-settings-client')
+settings = require('../settings')
 
 getImageMakerUrl = (deviceType) ->
 	imageMakerUrl = settings.get('imageMakerUrl')

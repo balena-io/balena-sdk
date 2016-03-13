@@ -16,11 +16,13 @@ limitations under the License.
  */
 
 (function() {
-  var _, deviceModel, request;
+  var _, deviceModel, request, settings;
 
   _ = require('lodash');
 
   request = require('resin-request');
+
+  settings = require('../settings');
 
   deviceModel = require('./device');
 
@@ -50,6 +52,7 @@ limitations under the License.
   exports.getAll = function(callback) {
     return request.send({
       method: 'GET',
+      baseUrl: settings.get('apiUrl'),
       url: '/config'
     }).get('body').then(function(body) {
       body.deviceTypes = _.map(body.deviceTypes, function(deviceType) {
