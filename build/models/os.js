@@ -59,11 +59,11 @@ limitations under the License.
     return request.send({
       method: 'HEAD',
       url: getImageMakerUrl(deviceType)
-    })["catch"](function(error) {
-      if (error.name === 'ResinRequestError' && error.statusCode === 404) {
-        throw new errors.ResinRequestError('No such device type');
-      }
-      throw error;
+    })["catch"]({
+      name: 'ResinRequestError',
+      statusCode: 404
+    }, function() {
+      throw new errors.ResinRequestError('No such device type');
     }).then(function(response) {
       return new Date(response.headers['last-modified']);
     }).nodeify(callback);

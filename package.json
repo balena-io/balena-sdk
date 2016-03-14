@@ -47,9 +47,9 @@
     "resin-device-logs": "^2.0.1",
     "resin-errors": "^2.2.0",
     "resin-device-status": "^1.0.0",
-    "resin-pine": "^1.3.1",
+    "resin-pine": "^3.1.0",
     "resin-register-device": "^2.0.0",
-    "resin-request": "^4.0.1",
+    "resin-request": "^4.0.7",
     "resin-settings-client": "^3.4.0",
     "resin-token": "^2.4.2"
   }
