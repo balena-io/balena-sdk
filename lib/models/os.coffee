@@ -48,10 +48,11 @@ exports.getLastModified = (deviceType, callback) ->
 	request.send
 		method: 'HEAD'
 		url: getImageMakerUrl(deviceType)
-	.catch (error) ->
-		if error.name is 'ResinRequestError' and error.statusCode is 404
-			throw new errors.ResinRequestError('No such device type')
-		throw error
+	.catch
+		name: 'ResinRequestError'
+		statusCode: 404
+	, ->
+		throw new errors.ResinRequestError('No such device type')
 	.then (response) ->
 		return new Date(response.headers['last-modified'])
 	.nodeify(callback)
