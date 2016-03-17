@@ -16,13 +16,15 @@ limitations under the License.
  */
 
 (function() {
-  var _, deviceModel, errors, pine, request, token;
+  var _, deviceModel, errors, pine, request, settings, token;
 
   _ = require('lodash');
 
   errors = require('resin-errors');
 
   request = require('resin-request');
+
+  settings = require('resin-settings-client');
 
   token = require('resin-token');
 
@@ -307,7 +309,8 @@ limitations under the License.
     return exports.get(name).then(function(application) {
       return request.send({
         method: 'POST',
-        url: "/application/" + application.id + "/restart"
+        url: "/application/" + application.id + "/restart",
+        baseUrl: settings.get('apiUrl')
       });
     })["return"](void 0).nodeify(callback);
   };
@@ -340,7 +343,8 @@ limitations under the License.
     return exports.get(name).then(function(application) {
       return request.send({
         method: 'POST',
-        url: "/application/" + application.id + "/generate-api-key"
+        url: "/application/" + application.id + "/generate-api-key",
+        baseUrl: settings.get('apiUrl')
       });
     }).get('body').nodeify(callback);
   };

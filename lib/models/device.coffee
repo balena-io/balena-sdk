@@ -20,6 +20,7 @@ _ = require('lodash')
 pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
+settings = require('resin-settings-client')
 registerDevice = require('resin-register-device')
 deviceStatus = require('resin-device-status')
 configModel = require('./config')
@@ -391,6 +392,7 @@ exports.identify = (uuid, callback) ->
 		return request.send
 			method: 'POST'
 			url: '/blink'
+			baseUrl: settings.get('apiUrl')
 			body:
 				uuid: uuid
 	.return(undefined)
@@ -534,6 +536,7 @@ exports.restart = (uuid, callback) ->
 		return request.send
 			method: 'POST'
 			url: "/device/#{device.id}/restart"
+			baseUrl: settings.get('apiUrl')
 	.get('body')
 	.nodeify(callback)
 
@@ -560,6 +563,7 @@ exports.reboot = (uuid, callback) ->
 		return request.send
 			method: 'POST'
 			url: '/supervisor/v1/reboot'
+			baseUrl: settings.get('apiUrl')
 			body:
 				deviceId: device.id
 	.get('body')

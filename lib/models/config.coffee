@@ -16,6 +16,7 @@ limitations under the License.
 
 _ = require('lodash')
 request = require('resin-request')
+settings = require('resin-settings-client')
 deviceModel = require('./device')
 
 ###*
@@ -43,6 +44,7 @@ exports.getAll = (callback) ->
 	request.send
 		method: 'GET'
 		url: '/config'
+		baseUrl: settings.get('apiUrl')
 	.get('body')
 	.then (body) ->
 

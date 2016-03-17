@@ -16,11 +16,13 @@ limitations under the License.
  */
 
 (function() {
-  var request, token;
+  var request, settings, token;
 
   token = require('resin-token');
 
   request = require('resin-request');
+
+  settings = require('resin-settings-client');
 
 
   /**
@@ -114,6 +116,7 @@ limitations under the License.
     return request.send({
       method: 'POST',
       url: '/auth/totp/verify',
+      baseUrl: settings.get('apiUrl'),
       body: {
         code: code
       }

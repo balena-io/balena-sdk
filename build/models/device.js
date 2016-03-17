@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, pine, registerDevice, request;
+  var Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, pine, registerDevice, request, settings;
 
   Promise = require('bluebird');
 
@@ -29,6 +29,8 @@ limitations under the License.
   errors = require('resin-errors');
 
   request = require('resin-request');
+
+  settings = require('resin-settings-client');
 
   registerDevice = require('resin-register-device');
 
@@ -436,6 +438,7 @@ limitations under the License.
       return request.send({
         method: 'POST',
         url: '/blink',
+        baseUrl: settings.get('apiUrl'),
         body: {
           uuid: uuid
         }
@@ -598,7 +601,8 @@ limitations under the License.
     return exports.get(uuid).then(function(device) {
       return request.send({
         method: 'POST',
-        url: "/device/" + device.id + "/restart"
+        url: "/device/" + device.id + "/restart",
+        baseUrl: settings.get('apiUrl')
       });
     }).get('body').nodeify(callback);
   };
@@ -628,6 +632,7 @@ limitations under the License.
       return request.send({
         method: 'POST',
         url: '/supervisor/v1/reboot',
+        baseUrl: settings.get('apiUrl'),
         body: {
           deviceId: device.id
         }

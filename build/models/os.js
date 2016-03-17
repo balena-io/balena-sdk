@@ -16,21 +16,13 @@ limitations under the License.
  */
 
 (function() {
-  var errors, getImageMakerUrl, request, settings, url;
-
-  url = require('url');
+  var errors, request, settings;
 
   request = require('resin-request');
 
   errors = require('resin-errors');
 
   settings = require('resin-settings-client');
-
-  getImageMakerUrl = function(deviceType) {
-    var imageMakerUrl;
-    imageMakerUrl = settings.get('imageMakerUrl');
-    return url.resolve(imageMakerUrl, "/api/v1/image/" + deviceType + "/");
-  };
 
 
   /**
@@ -58,7 +50,8 @@ limitations under the License.
   exports.getLastModified = function(deviceType, callback) {
     return request.send({
       method: 'HEAD',
-      url: getImageMakerUrl(deviceType)
+      url: "/api/v1/image/" + deviceType + "/",
+      baseUrl: settings.get('imageMakerUrl')
     })["catch"]({
       name: 'ResinRequestError',
       statusCode: 404
@@ -95,7 +88,8 @@ limitations under the License.
   exports.download = function(deviceType, callback) {
     return request.stream({
       method: 'GET',
-      url: getImageMakerUrl(deviceType)
+      url: "/api/v1/image/" + deviceType + "/",
+      baseUrl: settings.get('imageMakerUrl')
     }).nodeify(callback);
   };
 

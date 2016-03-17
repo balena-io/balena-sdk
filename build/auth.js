@@ -16,13 +16,15 @@ limitations under the License.
  */
 
 (function() {
-  var errors, request, token;
+  var errors, request, settings, token;
 
   errors = require('resin-errors');
 
   request = require('resin-request');
 
   token = require('resin-token');
+
+  settings = require('resin-settings-client');
 
 
   /**
@@ -106,6 +108,7 @@ limitations under the License.
   exports.authenticate = function(credentials, callback) {
     return request.send({
       method: 'POST',
+      baseUrl: settings.get('apiUrl'),
       url: '/login_',
       body: {
         username: credentials.email,
@@ -205,7 +208,8 @@ limitations under the License.
   exports.isLoggedIn = function(callback) {
     return request.send({
       method: 'GET',
-      url: '/whoami'
+      url: '/whoami',
+      baseUrl: settings.get('apiUrl')
     })["return"](true)["catch"](function() {
       return false;
     }).nodeify(callback);
@@ -376,6 +380,7 @@ limitations under the License.
     return request.send({
       method: 'POST',
       url: '/user/register',
+      baseUrl: settings.get('apiUrl'),
       body: credentials
     }).get('body').nodeify(callback);
   };

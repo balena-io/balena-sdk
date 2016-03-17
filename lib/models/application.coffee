@@ -17,6 +17,7 @@ limitations under the License.
 _ = require('lodash')
 errors = require('resin-errors')
 request = require('resin-request')
+settings = require('resin-settings-client')
 token = require('resin-token')
 pine = require('resin-pine')
 deviceModel = require('./device')
@@ -270,6 +271,7 @@ exports.restart = (name, callback) ->
 		return request.send
 			method: 'POST'
 			url: "/application/#{application.id}/restart"
+			baseUrl: settings.get('apiUrl')
 	.return(undefined)
 	.nodeify(callback)
 
@@ -300,5 +302,6 @@ exports.getApiKey = (name, callback) ->
 		return request.send
 			method: 'POST'
 			url: "/application/#{application.id}/generate-api-key"
+			baseUrl: settings.get('apiUrl')
 	.get('body')
 	.nodeify(callback)

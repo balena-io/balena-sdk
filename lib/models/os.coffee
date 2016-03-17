@@ -14,14 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-url = require('url')
 request = require('resin-request')
 errors = require('resin-errors')
 settings = require('resin-settings-client')
-
-getImageMakerUrl = (deviceType) ->
-	imageMakerUrl = settings.get('imageMakerUrl')
-	return url.resolve(imageMakerUrl, "/api/v1/image/#{deviceType}/")
 
 ###*
 # @summary Get OS image last modified date
@@ -47,7 +42,8 @@ getImageMakerUrl = (deviceType) ->
 exports.getLastModified = (deviceType, callback) ->
 	request.send
 		method: 'HEAD'
-		url: getImageMakerUrl(deviceType)
+		url: "/api/v1/image/#{deviceType}/"
+		baseUrl: settings.get('imageMakerUrl')
 	.catch
 		name: 'ResinRequestError'
 		statusCode: 404
@@ -81,5 +77,6 @@ exports.getLastModified = (deviceType, callback) ->
 exports.download = (deviceType, callback) ->
 	request.stream
 		method: 'GET'
-		url: getImageMakerUrl(deviceType)
+		url: "/api/v1/image/#{deviceType}/"
+		baseUrl: settings.get('imageMakerUrl')
 	.nodeify(callback)
