@@ -16,6 +16,7 @@ limitations under the License.
 
 token = require('resin-token')
 request = require('resin-request')
+settings = require('resin-settings-client')
 
 ###*
 # @summary Check if two factor authentication is enabled
@@ -101,6 +102,7 @@ exports.challenge = (code, callback) ->
 	request.send
 		method: 'POST'
 		url: '/auth/totp/verify'
+		baseUrl: settings.get('apiUrl')
 		body: { code }
 	.get('body')
 	.then(token.set)
