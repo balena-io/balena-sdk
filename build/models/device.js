@@ -902,11 +902,19 @@ limitations under the License.
    * @returns {Promise}
    *
    * @example
-   * resin.models.device.hasDeviceUrl('7cf02a6');
+   * resin.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
+   * 	if (hasDeviceUrl) {
+   * 		console.log('The device has device URL enabled');
+   * 	}
+   * });
    *
    * @example
-   * resin.models.device.hasDeviceUrl('7cf02a6', function(error) {
+   * resin.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
    * 	if (error) throw error;
+   *
+   * 	if (hasDeviceUrl) {
+   * 		console.log('The device has device URL enabled');
+   * 	}
    * });
    */
 
