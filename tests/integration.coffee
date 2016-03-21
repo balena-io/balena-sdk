@@ -7,6 +7,7 @@ pine = require('resin-pine')
 token = require('resin-token')
 errors = require('resin-errors')
 resinRequest = require('resin-request')
+settings = require('resin-settings-client')
 request = Promise.promisifyAll(require('request'))
 cheerio = require('cheerio')
 tmp = require('tmp')
@@ -121,6 +122,7 @@ describe 'SDK Integration Tests', ->
 						return resinRequest.send
 							method: 'DELETE'
 							url: "/ewa/user(#{userId})"
+							baseUrl: settings.get('apiUrl')
 						.then(resin.auth.logout)
 					.nodeify (error) ->
 						if error?.message is 'Request error: Unauthorized'
