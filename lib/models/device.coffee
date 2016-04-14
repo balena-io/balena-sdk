@@ -1062,6 +1062,40 @@ exports.enableTcpPing = (uuid, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Disable TCP ping for a device
+# @name disableTcpPing
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @description
+# When the device's connection to the Resin VPN is down, by default
+# the device performs a TCP ping heartbeat to check for connectivity.
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @example
+# resin.models.device.disableTcpPing('7cf02a6');
+#
+# @example
+# resin.models.device.disableTcpPing('7cf02a6', function(error) {
+# 	if (error) throw error;
+# });
+###
+exports.disableTcpPing = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		return request.send
+			method: 'DELETE'
+			url: '/supervisor/v1/tcp-ping'
+			baseUrl: settings.get('apiUrl')
+			data:
+				deviceId: device.id
+				appId: device.application[0].id
+	.get('body')
+	.nodeify(callback)
+
+###*
 # @summary Ping a device
 # @name ping
 # @public
