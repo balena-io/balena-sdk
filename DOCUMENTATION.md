@@ -52,6 +52,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuid)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
             * [.disableDeviceUrl(uuid)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+            * [.enableTcpPing(uuid)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
             * [.ping(uuid)](#resin.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
         * [.key](#resin.models.key) : <code>object</code>
@@ -148,6 +149,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuid)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
         * [.disableDeviceUrl(uuid)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+        * [.enableTcpPing(uuid)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
         * [.ping(uuid)](#resin.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
     * [.key](#resin.models.key) : <code>object</code>
@@ -436,6 +438,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuid)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
     * [.disableDeviceUrl(uuid)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+    * [.enableTcpPing(uuid)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
     * [.ping(uuid)](#resin.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
 
@@ -1160,6 +1163,31 @@ resin.models.device.disableDeviceUrl('7cf02a6');
 **Example**  
 ```js
 resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.device.enableTcpPing"></a>
+
+##### device.enableTcpPing(uuid) ⇒ <code>Promise</code>
+When the device's connection to the Resin VPN is down, by default
+the device performs a TCP ping heartbeat to check for connectivity.
+This is enabled by default.
+
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Enable TCP ping for a device  
+**Access:** public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+resin.models.device.enableTcpPing('7cf02a6');
+```
+**Example**  
+```js
+resin.models.device.enableTcpPing('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
