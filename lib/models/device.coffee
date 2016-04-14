@@ -927,6 +927,38 @@ exports.disableDeviceUrl = (uuid, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Ping a device
+# @name ping
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @description
+# This is useful to signal that the supervisor is alive and responding.
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @example
+# resin.models.device.ping('7cf02a6');
+#
+# @example
+# resin.models.device.ping('7cf02a6', function(error) {
+# 	if (error) throw error;
+# });
+###
+exports.ping = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		return request.send
+			method: 'GET'
+			url: '/supervisor/ping'
+			baseUrl: settings.get('apiUrl')
+			body:
+				deviceId: device.id
+				appId: device.application[0].id
+	.nodeify(callback)
+
+###*
 # @summary Get the status of a device
 # @name getStatus
 # @public
