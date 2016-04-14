@@ -676,6 +676,46 @@ limitations under the License.
 
 
   /**
+   * @summary Purge device
+   * @name purge
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @description
+   * This function clears the user application's `/data` directory.
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.purge('7cf02a6');
+   *
+   * @example
+   * resin.models.device.purge('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.purge = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'POST',
+        url: '/supervisor/v1/purge',
+        baseUrl: settings.get('apiUrl'),
+        body: {
+          deviceId: device.id,
+          appId: device.application[0].id,
+          data: {
+            appId: device.application[0].id
+          }
+        }
+      });
+    }).nodeify(callback);
+  };
+
+
+  /**
    * @summary Trigger an update check on the supervisor
    * @name update
    * @public
