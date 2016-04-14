@@ -570,6 +570,35 @@ exports.reboot = (uuid, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Shuwdown device
+# @name shutdown
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @example
+# resin.models.device.shutdown('7cf02a6');
+#
+# @example
+# resin.models.device.shutdown('7cf02a6', function(error) {
+# 	if (error) throw error;
+# });
+###
+exports.shutdown = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		return request.send
+			method: 'POST'
+			url: '/supervisor/v1/shutdown'
+			baseUrl: settings.get('apiUrl')
+			body:
+				deviceId: device.id
+				appId: device.application[0].id
+	.nodeify(callback)
+
+###*
 # @summary Trigger an update check on the supervisor
 # @name update
 # @public
