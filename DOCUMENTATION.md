@@ -38,6 +38,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
             * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
             * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
+            * [.update(uuid, options)](#resin.models.device.update) ⇒ <code>Promise</code>
             * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
             * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
             * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
@@ -131,6 +132,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
         * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
         * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
+        * [.update(uuid, options)](#resin.models.device.update) ⇒ <code>Promise</code>
         * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
         * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
         * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
@@ -416,6 +418,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
     * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
     * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
+    * [.update(uuid, options)](#resin.models.device.update) ⇒ <code>Promise</code>
     * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
     * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
     * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
@@ -807,6 +810,33 @@ resin.models.device.reboot('7cf02a6');
 **Example**  
 ```js
 resin.models.device.reboot('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.device.update"></a>
+
+##### device.update(uuid, options) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Trigger an update check on the supervisor  
+**Access:** public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuid | <code>String</code> |  | device uuid |
+| options | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
+
+**Example**  
+```js
+resin.models.device.update('7cf02a6', {
+	force: true
+});
+```
+**Example**  
+```js
+resin.models.device.update('7cf02a6', {
+	force: true
+}, function(error) {
 	if (error) throw error;
 });
 ```

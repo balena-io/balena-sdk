@@ -570,6 +570,43 @@ exports.reboot = (uuid, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Trigger an update check on the supervisor
+# @name update
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @param {Object} options - options
+# @param {Boolean} [options.force=false] - override update lock
+# @returns {Promise}
+#
+# @example
+# resin.models.device.update('7cf02a6', {
+# 	force: true
+# });
+#
+# @example
+# resin.models.device.update('7cf02a6', {
+# 	force: true
+# }, function(error) {
+# 	if (error) throw error;
+# });
+###
+exports.update = (uuid, options, callback) ->
+	exports.get(uuid).then (device) ->
+		return request.send
+			method: 'POST'
+			url: '/supervisor/v1/update'
+			baseUrl: settings.get('apiUrl')
+			body:
+				deviceId: device.id
+				appId: device.application[0].id
+				data:
+					force: Boolean(options.force)
+	.nodeify(callback)
+
+###*
 # @summary Get display name for a device
 # @name getDisplayName
 # @public
