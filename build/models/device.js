@@ -642,6 +642,123 @@ limitations under the License.
 
 
   /**
+   * @summary Shuwdown device
+   * @name shutdown
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.shutdown('7cf02a6');
+   *
+   * @example
+   * resin.models.device.shutdown('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.shutdown = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'POST',
+        url: '/supervisor/v1/shutdown',
+        baseUrl: settings.get('apiUrl'),
+        body: {
+          deviceId: device.id,
+          appId: device.application[0].id
+        }
+      });
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Purge device
+   * @name purge
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @description
+   * This function clears the user application's `/data` directory.
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.purge('7cf02a6');
+   *
+   * @example
+   * resin.models.device.purge('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.purge = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'POST',
+        url: '/supervisor/v1/purge',
+        baseUrl: settings.get('apiUrl'),
+        body: {
+          deviceId: device.id,
+          appId: device.application[0].id,
+          data: {
+            appId: device.application[0].id
+          }
+        }
+      });
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Trigger an update check on the supervisor
+   * @name update
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @param {Object} options - options
+   * @param {Boolean} [options.force=false] - override update lock
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.update('7cf02a6', {
+   * 	force: true
+   * });
+   *
+   * @example
+   * resin.models.device.update('7cf02a6', {
+   * 	force: true
+   * }, function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.update = function(uuid, options, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'POST',
+        url: '/supervisor/v1/update',
+        baseUrl: settings.get('apiUrl'),
+        body: {
+          deviceId: device.id,
+          appId: device.application[0].id,
+          data: {
+            force: Boolean(options.force)
+          }
+        }
+      });
+    }).nodeify(callback);
+  };
+
+
+  /**
    * @summary Get display name for a device
    * @name getDisplayName
    * @public
@@ -1030,6 +1147,120 @@ limitations under the License.
           filter: {
             uuid: uuid
           }
+        }
+      });
+    }).nodeify(callback);
+  };
+
+
+  /**
+   * @summary Enable TCP ping for a device
+   * @name enableTcpPing
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @description
+   * When the device's connection to the Resin VPN is down, by default
+   * the device performs a TCP ping heartbeat to check for connectivity.
+   * This is enabled by default.
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.enableTcpPing('7cf02a6');
+   *
+   * @example
+   * resin.models.device.enableTcpPing('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.enableTcpPing = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'POST',
+        url: '/supervisor/v1/tcp-ping',
+        baseUrl: settings.get('apiUrl'),
+        data: {
+          deviceId: device.id,
+          appId: device.application[0].id
+        }
+      });
+    }).get('body').nodeify(callback);
+  };
+
+
+  /**
+   * @summary Disable TCP ping for a device
+   * @name disableTcpPing
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @description
+   * When the device's connection to the Resin VPN is down, by default
+   * the device performs a TCP ping heartbeat to check for connectivity.
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.disableTcpPing('7cf02a6');
+   *
+   * @example
+   * resin.models.device.disableTcpPing('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.disableTcpPing = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'DELETE',
+        url: '/supervisor/v1/tcp-ping',
+        baseUrl: settings.get('apiUrl'),
+        data: {
+          deviceId: device.id,
+          appId: device.application[0].id
+        }
+      });
+    }).get('body').nodeify(callback);
+  };
+
+
+  /**
+   * @summary Ping a device
+   * @name ping
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @description
+   * This is useful to signal that the supervisor is alive and responding.
+   *
+   * @param {String} uuid - device uuid
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.ping('7cf02a6');
+   *
+   * @example
+   * resin.models.device.ping('7cf02a6', function(error) {
+   * 	if (error) throw error;
+   * });
+   */
+
+  exports.ping = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      return request.send({
+        method: 'GET',
+        url: '/supervisor/ping',
+        baseUrl: settings.get('apiUrl'),
+        body: {
+          deviceId: device.id,
+          appId: device.application[0].id
         }
       });
     }).nodeify(callback);
