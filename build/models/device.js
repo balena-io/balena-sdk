@@ -280,6 +280,46 @@ limitations under the License.
 
 
   /**
+   * @summary Get application container information
+   * @name getApplicationInfo
+   * @public
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} uuid - device uuid
+   * @fulfil {Object} - application info
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
+   * 	console.log(appInfo);
+   * });
+   *
+   * @example
+   * resin.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
+   * 	if (error) throw error;
+   * 	console.log(appInfo);
+   * });
+   */
+
+  exports.getApplicationInfo = function(uuid, callback) {
+    return exports.get(uuid).then(function(device) {
+      var appId;
+      appId = device.application[0].id;
+      return request.send({
+        method: 'GET',
+        url: "/supervisor/v1/apps/" + appId,
+        baseUrl: settings.get('apiUrl'),
+        body: {
+          deviceId: device.id,
+          appId: appId
+        }
+      });
+    }).get('body').nodeify(callback);
+  };
+
+
+  /**
    * @summary Check if a device exists
    * @name has
    * @public
