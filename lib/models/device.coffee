@@ -544,6 +544,42 @@ exports.move = (uuid, application, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Start application on device
+# @name startApplication
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {String} - application container id
+# @returns {Promise}
+#
+# @example
+# resin.models.device.startApplication('7cf02a6').then(function(containerId) {
+# 	console.log(containerId);
+# });
+#
+# @example
+# resin.models.device.startApplication('7cf02a6', function(error, containerId) {
+# 	if (error) throw error;
+# 	console.log(containerId);
+# });
+###
+exports.startApplication = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		appId = device.application[0].id
+		return request.send
+			method: 'POST'
+			url: "/supervisor/v1/apps/#{appId}/start"
+			baseUrl: settings.get('apiUrl')
+			body:
+				deviceId: device.id
+				appId: appId
+	.get('body')
+	.get('containerId')
+	.nodeify(callback)
+
+###*
 # @summary Stop application on device
 # @name stopApplication
 # @public

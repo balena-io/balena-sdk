@@ -37,6 +37,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
             * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
             * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
+            * [.startApplication(uuid)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
             * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
             * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
             * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
@@ -137,6 +138,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
         * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
         * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
+        * [.startApplication(uuid)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
         * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
         * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
         * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
@@ -429,6 +431,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.rename(uuid, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
     * [.note(uuid, note)](#resin.models.device.note) ⇒ <code>Promise</code>
     * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
+    * [.startApplication(uuid)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
     * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
     * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
     * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
@@ -808,6 +811,31 @@ resin.models.device.move('7cf02a6', 'MyApp');
 ```js
 resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 	if (error) throw error;
+});
+```
+<a name="resin.models.device.startApplication"></a>
+
+##### device.startApplication(uuid) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Start application on device  
+**Access:** public  
+**Fulfil**: <code>String</code> - application container id  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
+**Example**  
+```js
+resin.models.device.startApplication('7cf02a6').then(function(containerId) {
+	console.log(containerId);
+});
+```
+**Example**  
+```js
+resin.models.device.startApplication('7cf02a6', function(error, containerId) {
+	if (error) throw error;
+	console.log(containerId);
 });
 ```
 <a name="resin.models.device.stopApplication"></a>
