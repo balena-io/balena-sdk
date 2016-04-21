@@ -22,6 +22,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.restart(name)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.getApiKey(name)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>
         * [.device](#resin.models.device) : <code>object</code>
+            * [.isCompatible(version, minVersion)](#resin.models.device.isCompatible) ⇒ <code>Promise</code>
             * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(name)](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuid)](#resin.models.device.get) ⇒ <code>Promise</code>
@@ -124,6 +125,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.restart(name)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.getApiKey(name)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>
     * [.device](#resin.models.device) : <code>object</code>
+        * [.isCompatible(version, minVersion)](#resin.models.device.isCompatible) ⇒ <code>Promise</code>
         * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(name)](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuid)](#resin.models.device.get) ⇒ <code>Promise</code>
@@ -418,6 +420,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
 * [.device](#resin.models.device) : <code>object</code>
+    * [.isCompatible(version, minVersion)](#resin.models.device.isCompatible) ⇒ <code>Promise</code>
     * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(name)](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuid)](#resin.models.device.get) ⇒ <code>Promise</code>
@@ -457,6 +460,33 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.ping(uuid)](#resin.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(uuid)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
 
+<a name="resin.models.device.isCompatible"></a>
+
+##### device.isCompatible(version, minVersion) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Check supervisor version compatibility using semver  
+**Orivate**:   
+**Fulfil**: <code>Boolean</code> - is compatible  
+**Reject**: <code>Error</code> Will reject if the given version is < than the given minimum version  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| version | <code>String</code> | version under check |
+| minVersion | <code>String</code> | minimum accepted version |
+
+**Example**  
+```js
+resin.models.device.isCompatible(version, MIN_VERSION).then(function(isCompatible) {
+	console.log(isCompatible);
+});
+```
+**Example**  
+```js
+resin.models.device.isCompatible(version, MIN_VERSION, function(error, isCompatible) {
+	if (error) throw error;
+	console.log(isCompatible);
+});
+```
 <a name="resin.models.device.getAll"></a>
 
 ##### device.getAll() ⇒ <code>Promise</code>

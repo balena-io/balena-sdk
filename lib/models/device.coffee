@@ -17,6 +17,7 @@ limitations under the License.
 Promise = require('bluebird')
 crypto = require('crypto')
 _ = require('lodash')
+semver = require('semver')
 pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
@@ -26,6 +27,38 @@ deviceStatus = require('resin-device-status')
 configModel = require('./config')
 applicationModel = require('./application')
 auth = require('../auth')
+
+MIN_SUPERVISOR_APPS_API = '1.7.1'
+
+###*
+# @summary Check supervisor version compatibility using semver
+# @name isCompatible
+# @orivate
+# @function
+# @memberof resin.models.device
+#
+# @param {String} version - version under check
+# @param {String} minVersion - minimum accepted version
+# @fulfil {Boolean} - is compatible
+# @reject {Error} Will reject if the given version is < than the given minimum version
+# @returns {Promise}
+#
+# @example
+# resin.models.device.isCompatible(version, MIN_VERSION).then(function(isCompatible) {
+# 	console.log(isCompatible);
+# });
+#
+# @example
+# resin.models.device.isCompatible(version, MIN_VERSION, function(error, isCompatible) {
+# 	if (error) throw error;
+# 	console.log(isCompatible);
+# });
+###
+isCompatible = (version, minVersion) ->
+	new Promise (resolve, reject) ->
+		if semver.lt(version, minVersion)
+			return reject(new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}"))
+		resolve(true)
 
 ###*
 # @summary Get all devices
@@ -272,16 +305,16 @@ exports.getApplicationName = (uuid, callback) ->
 ###
 exports.getApplicationInfo = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
-		appId = device.application[0].id
-		return request.send
-			method: 'GET'
-			url: "/supervisor/v1/apps/#{appId}"
-			baseUrl: settings.get('apiUrl')
-			body:
-				deviceId: device.id
-				appId: appId
-	.get('body')
-	.nodeify(callback)
+		isCompatible(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
+			appId = device.application[0].id
+			return request.send
+				method: 'GET'
+				url: "/supervisor/v1/apps/#{appId}"
+				baseUrl: settings.get('apiUrl')
+				body:
+					uuid: uuid
+		.get('body')
+		.nodeify(callback)
 
 ###*
 # @summary Check if a device exists
@@ -567,14 +600,15 @@ exports.move = (uuid, application, callback) ->
 ###
 exports.startApplication = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
-		appId = device.application[0].id
-		return request.send
-			method: 'POST'
-			url: "/supervisor/v1/apps/#{appId}/start"
-			baseUrl: settings.get('apiUrl')
-			body:
-				deviceId: device.id
-				appId: appId
+		isCompatible(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
+			appId = device.application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}/start"
+				baseUrl: settings.get('apiUrl')
+				body:
+					deviceId: device.id
+					appId: appId
 	.get('body')
 	.get('containerId')
 	.nodeify(callback)
@@ -603,14 +637,15 @@ exports.startApplication = (uuid, callback) ->
 ###
 exports.stopApplication = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
-		appId = device.application[0].id
-		return request.send
-			method: 'POST'
-			url: "/supervisor/v1/apps/#{appId}/stop"
-			baseUrl: settings.get('apiUrl')
-			body:
-				deviceId: device.id
-				appId: appId
+		isCompatible(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
+			appId = device.application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}/stop"
+				baseUrl: settings.get('apiUrl')
+				body:
+					deviceId: device.id
+					appId: appId
 	.get('body')
 	.get('containerId')
 	.nodeify(callback)

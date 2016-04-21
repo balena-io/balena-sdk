@@ -16,13 +16,15 @@ limitations under the License.
  */
 
 (function() {
-  var Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, pine, registerDevice, request, settings;
+  var MIN_SUPERVISOR_APPS_API, Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, errors, isCompatible, pine, registerDevice, request, semver, settings;
 
   Promise = require('bluebird');
 
   crypto = require('crypto');
 
   _ = require('lodash');
+
+  semver = require('semver');
 
   pine = require('resin-pine');
 
@@ -41,6 +43,43 @@ limitations under the License.
   applicationModel = require('./application');
 
   auth = require('../auth');
+
+  MIN_SUPERVISOR_APPS_API = '1.7.1';
+
+
+  /**
+   * @summary Check supervisor version compatibility using semver
+   * @name isCompatible
+   * @orivate
+   * @function
+   * @memberof resin.models.device
+   *
+   * @param {String} version - version under check
+   * @param {String} minVersion - minimum accepted version
+   * @fulfil {Boolean} - is compatible
+   * @reject {Error} Will reject if the given version is < than the given minimum version
+   * @returns {Promise}
+   *
+   * @example
+   * resin.models.device.isCompatible(version, MIN_VERSION).then(function(isCompatible) {
+   * 	console.log(isCompatible);
+   * });
+   *
+   * @example
+   * resin.models.device.isCompatible(version, MIN_VERSION, function(error, isCompatible) {
+   * 	if (error) throw error;
+   * 	console.log(isCompatible);
+   * });
+   */
+
+  isCompatible = function(version, minVersion) {
+    return new Promise(function(resolve, reject) {
+      if (semver.lt(version, minVersion)) {
+        return reject(new Error("Incompatible supervisor version: " + version + " - must be >= " + minVersion));
+      }
+      return resolve(true);
+    });
+  };
 
 
   /**
@@ -304,18 +343,19 @@ limitations under the License.
 
   exports.getApplicationInfo = function(uuid, callback) {
     return exports.get(uuid).then(function(device) {
-      var appId;
-      appId = device.application[0].id;
-      return request.send({
-        method: 'GET',
-        url: "/supervisor/v1/apps/" + appId,
-        baseUrl: settings.get('apiUrl'),
-        body: {
-          deviceId: device.id,
-          appId: appId
-        }
-      });
-    }).get('body').nodeify(callback);
+      return isCompatible(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then(function() {
+        var appId;
+        appId = device.application[0].id;
+        return request.send({
+          method: 'GET',
+          url: "/supervisor/v1/apps/" + appId,
+          baseUrl: settings.get('apiUrl'),
+          body: {
+            uuid: uuid
+          }
+        });
+      }).get('body').nodeify(callback);
+    });
   };
 
 
@@ -638,16 +678,18 @@ limitations under the License.
 
   exports.startApplication = function(uuid, callback) {
     return exports.get(uuid).then(function(device) {
-      var appId;
-      appId = device.application[0].id;
-      return request.send({
-        method: 'POST',
-        url: "/supervisor/v1/apps/" + appId + "/start",
-        baseUrl: settings.get('apiUrl'),
-        body: {
-          deviceId: device.id,
-          appId: appId
-        }
+      return isCompatible(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then(function() {
+        var appId;
+        appId = device.application[0].id;
+        return request.send({
+          method: 'POST',
+          url: "/supervisor/v1/apps/" + appId + "/start",
+          baseUrl: settings.get('apiUrl'),
+          body: {
+            deviceId: device.id,
+            appId: appId
+          }
+        });
       });
     }).get('body').get('containerId').nodeify(callback);
   };
@@ -678,16 +720,18 @@ limitations under the License.
 
   exports.stopApplication = function(uuid, callback) {
     return exports.get(uuid).then(function(device) {
-      var appId;
-      appId = device.application[0].id;
-      return request.send({
-        method: 'POST',
-        url: "/supervisor/v1/apps/" + appId + "/stop",
-        baseUrl: settings.get('apiUrl'),
-        body: {
-          deviceId: device.id,
-          appId: appId
-        }
+      return isCompatible(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then(function() {
+        var appId;
+        appId = device.application[0].id;
+        return request.send({
+          method: 'POST',
+          url: "/supervisor/v1/apps/" + appId + "/stop",
+          baseUrl: settings.get('apiUrl'),
+          body: {
+            deviceId: device.id,
+            appId: appId
+          }
+        });
       });
     }).get('body').get('containerId').nodeify(callback);
   };
