@@ -39,7 +39,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
             * [.startApplication(uuid)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
             * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
-            * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
+            * [.restartApplication(uuid)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+            * ~~[.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
             * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuid)](#resin.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuid)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -140,7 +141,8 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
         * [.startApplication(uuid)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
         * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
-        * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
+        * [.restartApplication(uuid)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+        * ~~[.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
         * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuid)](#resin.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuid)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -433,7 +435,8 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.move(uuid, application)](#resin.models.device.move) ⇒ <code>Promise</code>
     * [.startApplication(uuid)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
     * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
-    * [.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>
+    * [.restartApplication(uuid)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+    * ~~[.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
     * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuid)](#resin.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuid)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -863,9 +866,9 @@ resin.models.device.stopApplication('7cf02a6', function(error, containerId) {
 	console.log(containerId);
 });
 ```
-<a name="resin.models.device.restart"></a>
+<a name="resin.models.device.restartApplication"></a>
 
-##### device.restart(uuid) ⇒ <code>Promise</code>
+##### device.restartApplication(uuid) ⇒ <code>Promise</code>
 This function restarts the Docker container running
 the application on the device, but doesn't reboot
 the device itself.
@@ -880,14 +883,28 @@ the device itself.
 
 **Example**  
 ```js
-resin.models.device.restart('7cf02a6');
+resin.models.device.restartApplication('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.restart('7cf02a6', function(error) {
+resin.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
+<a name="resin.models.device.restart"></a>
+
+##### ~~device.restart(uuid) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Restart application on device.  
+**Access:** public  
+**See**: [restartApplication](#resin.models.device.restartApplication)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | device uuid |
+
 <a name="resin.models.device.reboot"></a>
 
 ##### device.reboot(uuid) ⇒ <code>Promise</code>

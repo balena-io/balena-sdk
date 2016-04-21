@@ -617,7 +617,7 @@ exports.stopApplication = (uuid, callback) ->
 
 ###*
 # @summary Restart application on device
-# @name restart
+# @name restartApplication
 # @public
 # @function
 # @memberof resin.models.device
@@ -631,14 +631,14 @@ exports.stopApplication = (uuid, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.restart('7cf02a6');
+# resin.models.device.restartApplication('7cf02a6');
 #
 # @example
-# resin.models.device.restart('7cf02a6', function(error) {
+# resin.models.device.restartApplication('7cf02a6', function(error) {
 # 	if (error) throw error;
 # });
 ###
-exports.restart = (uuid, callback) ->
+exports.restartApplication = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
 		return request.send
 			method: 'POST'
@@ -646,6 +646,21 @@ exports.restart = (uuid, callback) ->
 			baseUrl: settings.get('apiUrl')
 	.get('body')
 	.nodeify(callback)
+
+###*
+# @summary Restart application on device.
+# @name restart
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @deprecated
+# @see {@link resin.models.device.restartApplication}
+###
+exports.restart = exports.restartApplication
 
 ###*
 # @summary Reboot device
