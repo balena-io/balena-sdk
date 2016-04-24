@@ -344,11 +344,13 @@ limitations under the License.
         var appId;
         appId = device.application[0].id;
         return request.send({
-          method: 'GET',
+          method: 'POST',
           url: "/supervisor/v1/apps/" + appId,
           baseUrl: settings.get('apiUrl'),
           body: {
-            uuid: uuid
+            deviceId: device.id,
+            appId: appId,
+            method: 'GET'
           }
         });
       }).get('body').nodeify(callback);
