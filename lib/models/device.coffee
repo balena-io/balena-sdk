@@ -28,7 +28,7 @@ configModel = require('./config')
 applicationModel = require('./application')
 auth = require('../auth')
 
-MIN_SUPERVISOR_APPS_API = '1.7.1'
+MIN_SUPERVISOR_APPS_API = '1.8.0'
 
 ###*
 # @summary Ensure supervisor version compatibility using semver

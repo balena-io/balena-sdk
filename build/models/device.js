@@ -44,7 +44,7 @@ limitations under the License.
 
   auth = require('../auth');
 
-  MIN_SUPERVISOR_APPS_API = '1.7.1';
+  MIN_SUPERVISOR_APPS_API = '1.8.0';
 
 
   /**
