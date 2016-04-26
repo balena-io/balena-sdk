@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.1] - 2016-04-24
+
+### Added
+
+- Implement `resin.models.device.getApplicationInfo()`.
+- Implement `resin.models.device.startApplication()`.
+- Implement `resin.models.device.stopApplication()`.
+
 ## [5.2.0] - 2016-02-29
 
 ### Added
