@@ -17,6 +17,7 @@ limitations under the License.
 Promise = require('bluebird')
 crypto = require('crypto')
 _ = require('lodash')
+semver = require('semver')
 pine = require('resin-pine')
 errors = require('resin-errors')
 request = require('resin-request')
@@ -26,6 +27,36 @@ deviceStatus = require('resin-device-status')
 configModel = require('./config')
 applicationModel = require('./application')
 auth = require('../auth')
+
+MIN_SUPERVISOR_APPS_API = '1.8.0'
+
+###*
+# @summary Ensure supervisor version compatibility using semver
+# @name ensureSupervisorCompatibility
+# @private
+# @function
+# @memberof resin.models.device
+#
+# @param {String} version - version under check
+# @param {String} minVersion - minimum accepted version
+# @fulfil {} - is compatible
+# @reject {Error} Will reject if the given version is < than the given minimum version
+# @returns {Promise}
+#
+# @example
+# resin.models.device.ensureSupervisorCompatibility(version, MIN_VERSION).then(function() {
+# 	console.log('Is compatible');
+# });
+#
+# @example
+# resin.models.device.ensureSupervisorCompatibility(version, MIN_VERSION, function(error) {
+# 	if (error) throw error;
+# 	console.log('Is compatible');
+# });
+###
+exports.ensureSupervisorCompatibility = ensureSupervisorCompatibility = Promise.method (version, minVersion) ->
+	if semver.lt(version, minVersion)
+		throw new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}")
 
 ###*
 # @summary Get all devices
@@ -247,6 +278,43 @@ exports.getName = (uuid, callback) ->
 ###
 exports.getApplicationName = (uuid, callback) ->
 	exports.get(uuid).get('application_name').nodeify(callback)
+
+###*
+# @summary Get application container information
+# @name getApplicationInfo
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {Object} - application info
+# @returns {Promise}
+#
+# @example
+# resin.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
+# 	console.log(appInfo);
+# });
+#
+# @example
+# resin.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
+# 	if (error) throw error;
+# 	console.log(appInfo);
+# });
+###
+exports.getApplicationInfo = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
+			appId = device.application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}"
+				baseUrl: settings.get('apiUrl')
+				body:
+					deviceId: device.id
+					appId: appId
+					method: 'GET'
+		.get('body')
+		.nodeify(callback)
 
 ###*
 # @summary Check if a device exists
@@ -509,8 +577,82 @@ exports.move = (uuid, application, callback) ->
 	.nodeify(callback)
 
 ###*
+# @summary Start application on device
+# @name startApplication
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {String} - application container id
+# @returns {Promise}
+#
+# @example
+# resin.models.device.startApplication('7cf02a6').then(function(containerId) {
+# 	console.log(containerId);
+# });
+#
+# @example
+# resin.models.device.startApplication('7cf02a6', function(error, containerId) {
+# 	if (error) throw error;
+# 	console.log(containerId);
+# });
+###
+exports.startApplication = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
+			appId = device.application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}/start"
+				baseUrl: settings.get('apiUrl')
+				body:
+					deviceId: device.id
+					appId: appId
+	.get('body')
+	.get('containerId')
+	.nodeify(callback)
+
+###*
+# @summary Stop application on device
+# @name stopApplication
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @fulfil {String} - application container id
+# @returns {Promise}
+#
+# @example
+# resin.models.device.stopApplication('7cf02a6').then(function(containerId) {
+# 	console.log(containerId);
+# });
+#
+# @example
+# resin.models.device.stopApplication('7cf02a6', function(error, containerId) {
+# 	if (error) throw error;
+# 	console.log(containerId);
+# });
+###
+exports.stopApplication = (uuid, callback) ->
+	exports.get(uuid).then (device) ->
+		ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
+			appId = device.application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}/stop"
+				baseUrl: settings.get('apiUrl')
+				body:
+					deviceId: device.id
+					appId: appId
+	.get('body')
+	.get('containerId')
+	.nodeify(callback)
+
+###*
 # @summary Restart application on device
-# @name restart
+# @name restartApplication
 # @public
 # @function
 # @memberof resin.models.device
@@ -524,14 +666,14 @@ exports.move = (uuid, application, callback) ->
 # @returns {Promise}
 #
 # @example
-# resin.models.device.restart('7cf02a6');
+# resin.models.device.restartApplication('7cf02a6');
 #
 # @example
-# resin.models.device.restart('7cf02a6', function(error) {
+# resin.models.device.restartApplication('7cf02a6', function(error) {
 # 	if (error) throw error;
 # });
 ###
-exports.restart = (uuid, callback) ->
+exports.restartApplication = (uuid, callback) ->
 	exports.get(uuid).then (device) ->
 		return request.send
 			method: 'POST'
@@ -539,6 +681,21 @@ exports.restart = (uuid, callback) ->
 			baseUrl: settings.get('apiUrl')
 	.get('body')
 	.nodeify(callback)
+
+###*
+# @summary Restart application on device.
+# @name restart
+# @public
+# @function
+# @memberof resin.models.device
+#
+# @param {String} uuid - device uuid
+# @returns {Promise}
+#
+# @deprecated
+# @see {@link resin.models.device.restartApplication}
+###
+exports.restart = exports.restartApplication
 
 ###*
 # @summary Reboot device
