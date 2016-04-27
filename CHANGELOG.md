@@ -3,13 +3,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.2.1] - 2016-04-24
+## [5.3.0] - 2016-04-26
 
 ### Added
 
 - Implement `resin.models.device.getApplicationInfo()`.
 - Implement `resin.models.device.startApplication()`.
 - Implement `resin.models.device.stopApplication()`.
+- Implement `resin.models.device.ping()`.
+- Implement `resin.models.device.update()`.
+- Implement `resin.models.device.shutdown()`.
+- Implement `resin.models.device.purge()`.
+- Implement `resin.models.device.enableTcpPing()`.
+- Implement `resin.models.device.disableTcpPing()`.
+
+### Changed
+
+- Rename `resin.models.device.restart()` to `resin.models.device.restartApplication()`.
+- Deprecate `resin.models.device.restart()`.
 
 ## [5.2.0] - 2016-02-29
 
@@ -254,6 +265,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.3.0]: https://github.com/resin-io/resin-sdk/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/resin-io/resin-sdk/compare/v5.1.0...v5.2.0
 [5.1.0]: https://github.com/resin-io/resin-sdk/compare/v5.0.1...v5.1.0
 [5.0.1]: https://github.com/resin-io/resin-sdk/compare/v5.0.0...v5.0.1
