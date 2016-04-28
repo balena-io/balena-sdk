@@ -113,6 +113,9 @@ limitations under the License.
       if (_.isEmpty(application)) {
         throw new errors.ResinApplicationNotFound(name);
       }
+      if (_.size(application) > 1) {
+        throw new errors.ResinAmbiguousApplication(name);
+      }
     }).get(0).nodeify(callback);
   };
 

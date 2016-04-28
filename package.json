@@ -46,7 +46,7 @@
     "lodash": "^4.4.0",
     "resin-device-logs": "^2.0.1",
     "resin-device-status": "^1.0.0",
-    "resin-errors": "^2.2.0",
+    "resin-errors": "^2.4.0",
     "resin-pine": "^3.1.0",
     "resin-register-device": "^2.0.0",
     "resin-request": "^4.1.1",
