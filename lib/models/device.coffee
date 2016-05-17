@@ -28,7 +28,11 @@ configModel = require('./config')
 applicationModel = require('./application')
 auth = require('../auth')
 
-MIN_SUPERVISOR_APPS_API = '1.8.0'
+# The min version where /apps API endpoints are implemented is 1.8.0 but we'll
+# be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
+# prerelase supervisor version, which precedes 1.8.0 but comes after 1.8.0-alpha.0
+# according to semver.
+MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 
 ###*
 # @summary Ensure supervisor version compatibility using semver
