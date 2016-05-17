@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.1] - 2016-05-17
+
+### Changed
+
+- Fix a semver issue when checking the supervisor version on supervisor endpoints.
+
 ## [5.3.0] - 2016-04-26
 
 ### Added
@@ -265,6 +271,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.3.1]: https://github.com/resin-io/resin-sdk/compare/v5.3.0...v5.3.1
 [5.3.0]: https://github.com/resin-io/resin-sdk/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/resin-io/resin-sdk/compare/v5.1.0...v5.2.0
 [5.1.0]: https://github.com/resin-io/resin-sdk/compare/v5.0.1...v5.1.0
