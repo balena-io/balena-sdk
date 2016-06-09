@@ -34,6 +34,12 @@ auth = require('../auth')
 # according to semver.
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 
+# Degraded network, slow devices, compressed docker binaries and any combination of these factors
+# can cause proxied device requests to surpass the default timeout (currently 30s). This was
+# noticed during tests and the endpoints that resulted in container management actions were
+# affected in particular.
+CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
+
 ###*
 # @summary Ensure supervisor version compatibility using semver
 # @name ensureSupervisorCompatibility
@@ -613,6 +619,7 @@ exports.startApplication = (uuid, callback) ->
 				body:
 					deviceId: device.id
 					appId: appId
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 	.get('body')
 	.get('containerId')
 	.nodeify(callback)
@@ -650,6 +657,7 @@ exports.stopApplication = (uuid, callback) ->
 				body:
 					deviceId: device.id
 					appId: appId
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 	.get('body')
 	.get('containerId')
 	.nodeify(callback)
@@ -683,6 +691,7 @@ exports.restartApplication = (uuid, callback) ->
 			method: 'POST'
 			url: "/device/#{device.id}/restart"
 			baseUrl: settings.get('apiUrl')
+			timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 	.get('body')
 	.nodeify(callback)
 
