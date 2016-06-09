@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var MIN_SUPERVISOR_APPS_API, Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, ensureSupervisorCompatibility, errors, pine, registerDevice, request, semver, settings;
+  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, _, applicationModel, auth, configModel, crypto, deviceStatus, ensureSupervisorCompatibility, errors, pine, registerDevice, request, semver, settings;
 
   Promise = require('bluebird');
 
@@ -45,6 +45,8 @@ limitations under the License.
   auth = require('../auth');
 
   MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
+
+  CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
 
   /**
@@ -687,7 +689,8 @@ limitations under the License.
           body: {
             deviceId: device.id,
             appId: appId
-          }
+          },
+          timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
         });
       });
     }).get('body').get('containerId').nodeify(callback);
@@ -729,7 +732,8 @@ limitations under the License.
           body: {
             deviceId: device.id,
             appId: appId
-          }
+          },
+          timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
         });
       });
     }).get('body').get('containerId').nodeify(callback);
@@ -765,7 +769,8 @@ limitations under the License.
       return request.send({
         method: 'POST',
         url: "/device/" + device.id + "/restart",
-        baseUrl: settings.get('apiUrl')
+        baseUrl: settings.get('apiUrl'),
+        timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
       });
     }).get('body').nodeify(callback);
   };
