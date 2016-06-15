@@ -1097,6 +1097,13 @@ describe 'SDK Integration Tests', ->
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
 					.nodeify(done)
 
+				it 'should be able to move a device using shorter uuids', (done) ->
+					resin.models.device.move(@device.uuid.slice(0, 7), @application2.app_name).then =>
+						resin.models.device.getApplicationName(@device.uuid)
+					.then (applicationName) =>
+						m.chai.expect(applicationName).to.equal(@application2.app_name)
+					.nodeify(done)
+
 		describe 'given two incompatible applications and a single device', ->
 
 			beforeEach (done) ->
