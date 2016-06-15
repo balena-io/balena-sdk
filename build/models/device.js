@@ -646,7 +646,7 @@ limitations under the License.
         },
         options: {
           filter: {
-            uuid: uuid
+            uuid: results.device.uuid
           }
         }
       });

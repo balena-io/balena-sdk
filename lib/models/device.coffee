@@ -582,7 +582,7 @@ exports.move = (uuid, application, callback) ->
 				application: results.application.id
 			options:
 				filter:
-					uuid: uuid
+					uuid: results.device.uuid
 
 	.nodeify(callback)
 
