@@ -849,6 +849,13 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(devices).to.deep.equal([])
 					  .nodeify(done)
 
+					it 'should be able to remove the device using a shorter uuid', (done) ->
+						resin.models.device.remove(@device.uuid.slice(0, 7))
+							.then(resin.models.device.getAll)
+							.then (devices) ->
+								m.chai.expect(devices).to.deep.equal([])
+					  .nodeify(done)
+
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.remove('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
@@ -857,6 +864,13 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be able to rename the device', (done) ->
 						resin.models.device.rename(@device.uuid, 'FooBarDevice').then =>
+							resin.models.device.getName(@device.uuid)
+						.then (name) ->
+							m.chai.expect(name).to.equal('FooBarDevice')
+						.nodeify(done)
+
+					it 'should be able to rename the device using a shorter uuid', (done) ->
+						resin.models.device.rename(@device.uuid.slice(0, 7), 'FooBarDevice').then =>
 							resin.models.device.getName(@device.uuid)
 						.then (name) ->
 							m.chai.expect(name).to.equal('FooBarDevice')
@@ -909,6 +923,12 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(promise).to.eventually.be.true
 							.nodeify(done)
 
+						it 'should be able to enable web access using a shorter uuid', (done) ->
+							resin.models.device.enableDeviceUrl(@device.uuid.slice(0, 7)).then =>
+								promise = resin.models.device.hasDeviceUrl(@device.uuid)
+								m.chai.expect(promise).to.eventually.be.true
+							.nodeify(done)
+
 						it 'should be rejected if the device does not exist', ->
 							promise = resin.models.device.enableDeviceUrl('asdfghjkl')
 							m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
@@ -943,6 +963,12 @@ describe 'SDK Integration Tests', ->
 
 						it 'should be able to disable web access', (done) ->
 							resin.models.device.disableDeviceUrl(@device.uuid).then =>
+								promise = resin.models.device.hasDeviceUrl(@device.uuid)
+								m.chai.expect(promise).to.eventually.be.false
+							.nodeify(done)
+
+						it 'should be able to disable web access using a shorter uuid', (done) ->
+							resin.models.device.disableDeviceUrl(@device.uuid.slice(0, 7)).then =>
 								promise = resin.models.device.hasDeviceUrl(@device.uuid)
 								m.chai.expect(promise).to.eventually.be.false
 							.nodeify(done)
