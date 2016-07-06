@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.4] - 2016-07-06
+
+### Changed
+
+- Make sure device functions expand shorter UUIDs before passing then to `pine`.
+
 ## [5.3.3] - 2016-06-15
 
 ### Changed
@@ -283,6 +289,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.3.4]: https://github.com/resin-io/resin-sdk/compare/v5.3.3...v5.3.4
 [5.3.3]: https://github.com/resin-io/resin-sdk/compare/v5.3.2...v5.3.3
 [5.3.2]: https://github.com/resin-io/resin-sdk/compare/v5.3.1...v5.3.2
 [5.3.1]: https://github.com/resin-io/resin-sdk/compare/v5.3.0...v5.3.1
