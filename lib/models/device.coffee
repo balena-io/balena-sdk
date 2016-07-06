@@ -435,12 +435,12 @@ exports.getLocalIPAddresses = (uuid, callback) ->
 # });
 ###
 exports.remove = (uuid, callback) ->
-	exports.get(uuid).then ->
+	exports.get(uuid).then (device) ->
 		return pine.delete
 			resource: 'device'
 			options:
 				filter:
-					uuid: uuid
+					uuid: device.uuid
 	.nodeify(callback)
 
 ###*
@@ -462,17 +462,13 @@ exports.remove = (uuid, callback) ->
 # });
 ###
 exports.identify = (uuid, callback) ->
-	exports.has(uuid).then (hasDevice) ->
-
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-
+	exports.get(uuid).then (device) ->
 		return request.send
 			method: 'POST'
 			url: '/blink'
 			baseUrl: settings.get('apiUrl')
 			body:
-				uuid: uuid
+				uuid: device.uuid
 	.return(undefined)
 	.nodeify(callback)
 
@@ -497,18 +493,14 @@ exports.identify = (uuid, callback) ->
 # });
 ###
 exports.rename = (uuid, newName, callback) ->
-	exports.has(uuid).then (hasDevice) ->
-
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-
+	exports.get(uuid).then (device) ->
 		return pine.patch
 			resource: 'device'
 			body:
 				name: newName
 			options:
 				filter:
-					uuid: uuid
+					uuid: device.uuid
 	.nodeify(callback)
 
 ###*
@@ -532,18 +524,14 @@ exports.rename = (uuid, newName, callback) ->
 # });
 ###
 exports.note = (uuid, note, callback) ->
-	exports.has(uuid).then (hasDevice) ->
-
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-
+	exports.get(uuid).then (device) ->
 		return pine.patch
 			resource: 'device'
 			body:
 				note: note
 			options:
 				filter:
-					uuid: uuid
+					uuid: device.uuid
 
 	.nodeify(callback)
 
@@ -1157,18 +1145,14 @@ exports.getDeviceUrl = (uuid, callback) ->
 # });
 ###
 exports.enableDeviceUrl = (uuid, callback) ->
-	exports.has(uuid).then (hasDevice) ->
-
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-
+	exports.get(uuid).then (device) ->
 		return pine.patch
 			resource: 'device'
 			body:
 				is_web_accessible: true
 			options:
 				filter:
-					uuid: uuid
+					uuid: device.uuid
 	.nodeify(callback)
 
 ###*
@@ -1190,18 +1174,14 @@ exports.enableDeviceUrl = (uuid, callback) ->
 # });
 ###
 exports.disableDeviceUrl = (uuid, callback) ->
-	exports.has(uuid).then (hasDevice) ->
-
-		if not hasDevice
-			throw new errors.ResinDeviceNotFound(uuid)
-
+	exports.get(uuid).then (device) ->
 		return pine.patch
 			resource: 'device'
 			body:
 				is_web_accessible: false
 			options:
 				filter:
-					uuid: uuid
+					uuid: device.uuid
 	.nodeify(callback)
 
 ###*
