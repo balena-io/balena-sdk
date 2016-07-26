@@ -479,12 +479,12 @@ limitations under the License.
    */
 
   exports.remove = function(uuid, callback) {
-    return exports.get(uuid).then(function() {
+    return exports.get(uuid).then(function(device) {
       return pine["delete"]({
         resource: 'device',
         options: {
           filter: {
-            uuid: uuid
+            uuid: device.uuid
           }
         }
       });
@@ -512,16 +512,13 @@ limitations under the License.
    */
 
   exports.identify = function(uuid, callback) {
-    return exports.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
+    return exports.get(uuid).then(function(device) {
       return request.send({
         method: 'POST',
         url: '/blink',
         baseUrl: settings.get('apiUrl'),
         body: {
-          uuid: uuid
+          uuid: device.uuid
         }
       });
     })["return"](void 0).nodeify(callback);
@@ -550,10 +547,7 @@ limitations under the License.
    */
 
   exports.rename = function(uuid, newName, callback) {
-    return exports.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
+    return exports.get(uuid).then(function(device) {
       return pine.patch({
         resource: 'device',
         body: {
@@ -561,7 +555,7 @@ limitations under the License.
         },
         options: {
           filter: {
-            uuid: uuid
+            uuid: device.uuid
           }
         }
       });
@@ -591,10 +585,7 @@ limitations under the License.
    */
 
   exports.note = function(uuid, note, callback) {
-    return exports.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
+    return exports.get(uuid).then(function(device) {
       return pine.patch({
         resource: 'device',
         body: {
@@ -602,7 +593,7 @@ limitations under the License.
         },
         options: {
           filter: {
-            uuid: uuid
+            uuid: device.uuid
           }
         }
       });
@@ -1280,10 +1271,7 @@ limitations under the License.
    */
 
   exports.enableDeviceUrl = function(uuid, callback) {
-    return exports.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
+    return exports.get(uuid).then(function(device) {
       return pine.patch({
         resource: 'device',
         body: {
@@ -1291,7 +1279,7 @@ limitations under the License.
         },
         options: {
           filter: {
-            uuid: uuid
+            uuid: device.uuid
           }
         }
       });
@@ -1319,10 +1307,7 @@ limitations under the License.
    */
 
   exports.disableDeviceUrl = function(uuid, callback) {
-    return exports.has(uuid).then(function(hasDevice) {
-      if (!hasDevice) {
-        throw new errors.ResinDeviceNotFound(uuid);
-      }
+    return exports.get(uuid).then(function(device) {
       return pine.patch({
         resource: 'device',
         body: {
@@ -1330,7 +1315,7 @@ limitations under the License.
         },
         options: {
           filter: {
-            uuid: uuid
+            uuid: device.uuid
           }
         }
       });
