@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.5] - 2016-07-26
+
+### Changed
+
+- Upgrade `resin-device-logs` to v3.0.0.
+
 ## [5.3.4] - 2016-07-06
 
 ### Changed
@@ -289,6 +295,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.3.5]: https://github.com/resin-io/resin-sdk/compare/v5.3.4...v5.3.5
 [5.3.4]: https://github.com/resin-io/resin-sdk/compare/v5.3.3...v5.3.4
 [5.3.3]: https://github.com/resin-io/resin-sdk/compare/v5.3.2...v5.3.3
 [5.3.2]: https://github.com/resin-io/resin-sdk/compare/v5.3.1...v5.3.2
