@@ -1244,9 +1244,11 @@ limitations under the License.
       if (!hasDeviceUrl) {
         throw new Error("Device is not web accessible: " + uuid);
       }
-      return configModel.getAll().get('deviceUrlsBase');
-    }).then(function(deviceUrlsBase) {
-      return "https://" + uuid + "." + deviceUrlsBase;
+      return configModel.getAll().get('deviceUrlsBase').then(function(deviceUrlsBase) {
+        return exports.get(uuid).get('uuid').then(function(uuid) {
+          return "https://" + uuid + "." + deviceUrlsBase;
+        });
+      });
     }).nodeify(callback);
   };
 

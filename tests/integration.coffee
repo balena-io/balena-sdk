@@ -946,6 +946,10 @@ describe 'SDK Integration Tests', ->
 
 					describe 'resin.models.device.getDeviceUrl()', ->
 
+						it 'should eventually return the correct device url given a shorter uuid', ->
+							promise = resin.models.device.getDeviceUrl(@device.uuid.slice(0, 7))
+							m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
+
 						it 'should eventually be an absolute url', (done) ->
 							resin.models.device.getDeviceUrl(@device.uuid).then (deviceUrl) ->
 								return request.getAsync(deviceUrl)

@@ -1121,9 +1121,9 @@ exports.getDeviceUrl = (uuid, callback) ->
 		if not hasDeviceUrl
 			throw new Error("Device is not web accessible: #{uuid}")
 
-		return configModel.getAll().get('deviceUrlsBase')
-	.then (deviceUrlsBase) ->
-		return "https://#{uuid}.#{deviceUrlsBase}"
+		configModel.getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
+			exports.get(uuid).get('uuid').then (uuid) ->
+				return "https://#{uuid}.#{deviceUrlsBase}"
 	.nodeify(callback)
 
 ###*
