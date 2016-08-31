@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Breaking Changes
+
+- `resin.models.device.generateUUID()` is now known as `resin.models.device.generateUniqueKey()` and is synchronous.
+- `resin.models.device.register()` now requires both the uuid and the deviceApiKey for the device to register to be supplied.
+
 ## [5.3.6] - 2016-09-26
 
 ### Changed
