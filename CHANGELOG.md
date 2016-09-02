@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Added
+
+- Added a warning to the readme about the test account getting reset.
+
 ## [5.3.5] - 2016-07-26
 
 ### Changed
