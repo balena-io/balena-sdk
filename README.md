@@ -26,12 +26,40 @@ $ npm install --save resin-sdk
 Platforms
 ---------
 
-We currently only support NodeJS, but there are plans to make the SDK available in the browser as well.
+We currently support NodeJS and the browser.
+The following features are node-only:
+- OS image streaming download (`resin.models.os.download`),
+- resin settings client (`resin.settings`).
+
+**Note.** This module expects [`fetch`](https://developer.mozilla.org/en/docs/Web/API/Fetch_API)
+and [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+to be available in the global scope.
+The easiest way to get `fetch` is to use `isomorphic-fetch` npm module.
 
 Documentation
 -------------
 
-We generate JSDoc markdown documentation in [DOCUMENTATION.md](https://github.com/resin-io/resin-sdk/blob/master/DOCUMENTATION.md).
+The module exports a single factory function. Use it like that:
+
+```
+var resin = require('resin-sdk')({
+	apiUrl: "https://api.resin.io/",
+	imageMakerUrl: "",
+	isBrowser: false,
+	dataDirectory: "/opt/local/resin"
+# })
+```
+
+Where the factory method accepts the following options:
+* `apiUrl`, string, **required**, is the Resin.io API url like `https://api.resin.io/`,
+* `apiVersion`, string, *optional*, is the version of the API to talk to, like `v2`. Defaults to the current stable version: `v2`,
+* `apiKey`, string, *optional*, is the API key to make the requests with,
+* `imageMakerUrl`, string, **required**, is the Resin.io API url like `https://img.resin.io/`,
+* `dataDirectory`, string, *required in Node.js*, *ignored in the browser*, is the directory where the user settings are stored, normally retrieved like `require('resin-settings-client').get('dataDirectory')`,
+* `isBrowser`, boolean, *optional*, is the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value,
+* `debug`, boolean, *optional*, when set will print some extra debug information.
+
+See the JSDoc markdown documentation for the returned `resin` object in [DOCUMENTATION.md](https://github.com/resin-io/resin-sdk/blob/master/DOCUMENTATION.md).
 
 Support
 -------
