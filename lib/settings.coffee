@@ -15,57 +15,66 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
-settings = require('resin-settings-client')
+memoize = require('memoizee')
 
-###*
-# @summary Get a single setting
-# @name get
-# @function
-# @public
-# @memberof resin.settings
-#
-# @param {String} [key] - setting key
-# @fulfil {*} - setting value
-# @returns {Promise}
-#
-# @example
-# resin.settings.get('apiUrl').then(function(apiUrl) {
-# 	console.log(apiUrl);
-# });
-#
-# @example
-# resin.settings.get('apiUrl', function(error, apiUrl) {
-# 	if (error) throw error;
-# 	console.log(apiUrl);
-# });
-###
-exports.get = (key, callback) ->
-	Promise.try ->
-		return settings.get(key)
-	.nodeify(callback)
+getSettings = (deps, opts) ->
+	{ settings } = deps
 
-###*
-# @summary Get all settings
-# @name getAll
-# @function
-# @public
-# @memberof resin.settings
-#
-# @fulfil {Object} - settings
-# @returns {Promise}
-#
-# @example
-# resin.settings.getAll().then(function(settings) {
-# 	console.log(settings);
-# });
-#
-# @example
-# resin.settings.getAll(function(error, settings) {
-# 	if (error) throw error;
-# 	console.log(settings);
-# });
-###
-exports.getAll = (callback) ->
-	Promise.try ->
-		return settings.getAll()
-	.nodeify(callback)
+	expots = {}
+
+	###*
+	# @summary Get a single setting. **Only implemented in Node.js**
+	# @name get
+	# @function
+	# @public
+	# @memberof resin.settings
+	#
+	# @param {String} [key] - setting key
+	# @fulfil {*} - setting value
+	# @returns {Promise}
+	#
+	# @example
+	# resin.settings.get('apiUrl').then(function(apiUrl) {
+	# 	console.log(apiUrl);
+	# });
+	#
+	# @example
+	# resin.settings.get('apiUrl', function(error, apiUrl) {
+	# 	if (error) throw error;
+	# 	console.log(apiUrl);
+	# });
+	###
+	exports.get = (key, callback) ->
+		Promise.try ->
+			return settings.get(key)
+		.nodeify(callback)
+
+	###*
+	# @summary Get all settings **Only implemented in Node.js**
+	# @name getAll
+	# @function
+	# @public
+	# @memberof resin.settings
+	#
+	# @fulfil {Object} - settings
+	# @returns {Promise}
+	#
+	# @example
+	# resin.settings.getAll().then(function(settings) {
+	# 	console.log(settings);
+	# });
+	#
+	# @example
+	# resin.settings.getAll(function(error, settings) {
+	# 	if (error) throw error;
+	# 	console.log(settings);
+	# });
+	###
+	exports.getAll = (callback) ->
+		Promise.try ->
+			return settings.getAll()
+		.nodeify(callback)
+
+	return exports
+
+module.exports = memoize(getSettings)

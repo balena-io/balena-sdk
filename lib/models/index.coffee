@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-module.exports =
+memoize = require('memoizee')
+mapValues = require('lodash/mapValues')
+
+modelsTemplate =
 
 	###*
 	# @namespace application
@@ -57,3 +60,8 @@ module.exports =
 	# @memberof resin.models
 	###
 	build: require('./build')
+
+getModels = (deps, opts) ->
+	mapValues(modelsTemplate, (v) -> v(deps, opts))
+
+module.exports = memoize(getModels)

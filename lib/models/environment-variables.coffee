@@ -14,278 +14,287 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-pine = require('resin-pine')
-deviceModel = require('./device')
-applicationModel = require('./application')
+memoize = require('memoizee')
 
-###*
-# @summary Get all environment variables by application
-# @name getAll
-# @public
-# @function
-# @memberof resin.models.environment-variables
-#
-# @param {String} applicationName - application name
-# @fulfil {Object[]} - environment variables
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.getAllByApplication('MyApp').then(function(environmentVariables) {
-# 	console.log(environmentVariables);
-# });
-#
-# @example
-# resin.models.environmentVariables.getAllByApplication('MyApp', function(error, environmentVariables) {
-# 	if (error) throw error;
-# 	console.log(environmentVariables);
-# });
-###
-exports.getAllByApplication = (applicationName, callback) ->
-	applicationModel.get(applicationName).get('id').then (applicationId) ->
-		return pine.get
-			resource: 'environment_variable'
-			options:
-				filter:
+getEnvironmentVariablesModel = (deps, opts) ->
+	{ pine } = deps
+	deviceModel = require('./device')(deps, opts)
+	applicationModel = require('./application')(deps, opts)
+
+	exports = {}
+
+	###*
+	# @summary Get all environment variables by application
+	# @name getAll
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables
+	#
+	# @param {String} applicationName - application name
+	# @fulfil {Object[]} - environment variables
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.getAllByApplication('MyApp').then(function(environmentVariables) {
+	# 	console.log(environmentVariables);
+	# });
+	#
+	# @example
+	# resin.models.environmentVariables.getAllByApplication('MyApp', function(error, environmentVariables) {
+	# 	if (error) throw error;
+	# 	console.log(environmentVariables);
+	# });
+	###
+	exports.getAllByApplication = (applicationName, callback) ->
+		applicationModel.get(applicationName).get('id').then (applicationId) ->
+			return pine.get
+				resource: 'environment_variable'
+				options:
+					filter:
+						application: applicationId
+					orderby: 'name asc'
+		.nodeify(callback)
+
+	###*
+	# @summary Create an environment variable for an application
+	# @name create
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables
+	#
+	# @param {String} applicationName - application name
+	# @param {String} name - environment variable name
+	# @param {String} value - environment variable value
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim');
+	#
+	# @example
+	# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.create = (applicationName, name, value, callback) ->
+		applicationModel.get(applicationName).get('id').then (applicationId) ->
+			return pine.post
+				resource: 'environment_variable'
+				body:
+					name: name
+					value: String(value)
 					application: applicationId
-				orderby: 'name asc'
-	.nodeify(callback)
+		.nodeify(callback)
 
-###*
-# @summary Create an environment variable for an application
-# @name create
-# @public
-# @function
-# @memberof resin.models.environment-variables
-#
-# @param {String} applicationName - application name
-# @param {String} name - environment variable name
-# @param {String} value - environment variable value
-#
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim');
-#
-# @example
-# resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim', function(error) {
-# 	if (error) throw error;
-# });
-###
-exports.create = (applicationName, name, value, callback) ->
-	applicationModel.get(applicationName).get('id').then (applicationId) ->
-		return pine.post
+	###*
+	# @summary Update an environment variable value from an application
+	# @name update
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables
+	#
+	# @param {(String|Number)} id - environment variable id
+	# @param {String} value - environment variable value
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.update(317, 'vim');
+	#
+	# @example
+	# resin.models.environmentVariables.update(317, 'vim', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.update = (id, value, callback) ->
+		return pine.patch
 			resource: 'environment_variable'
+			id: id
 			body:
-				name: name
-				value: String(value)
-				application: applicationId
-	.nodeify(callback)
+				value: value
+		.nodeify(callback)
 
-###*
-# @summary Update an environment variable value from an application
-# @name update
-# @public
-# @function
-# @memberof resin.models.environment-variables
-#
-# @param {(String|Number)} id - environment variable id
-# @param {String} value - environment variable value
-#
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.update(317, 'vim');
-#
-# @example
-# resin.models.environmentVariables.update(317, 'vim', function(error) {
-# 	if (error) throw error;
-# });
-###
-exports.update = (id, value, callback) ->
-	return pine.patch
-		resource: 'environment_variable'
-		id: id
-		body:
-			value: value
-	.nodeify(callback)
+	###*
+	# @summary Remove environment variable
+	# @name remove
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables
+	#
+	# @param {(String|Number)} id - environment variable id
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.remove(51);
+	#
+	# @example
+	# resin.models.environmentVariables.remove(51, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.remove = (id, callback) ->
+		return pine.delete
+			resource: 'environment_variable'
+			id: id
+		.nodeify(callback)
 
-###*
-# @summary Remove environment variable
-# @name remove
-# @public
-# @function
-# @memberof resin.models.environment-variables
-#
-# @param {(String|Number)} id - environment variable id
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.remove(51);
-#
-# @example
-# resin.models.environmentVariables.remove(51, function(error) {
-# 	if (error) throw error;
-# });
-###
-exports.remove = (id, callback) ->
-	return pine.delete
-		resource: 'environment_variable'
-		id: id
-	.nodeify(callback)
+	###*
+	# @summary Check is a variable is system specific
+	# @name isSystemVariable
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables
+	#
+	# @param {Object} variable - environment variable
+	# @returns {Boolean} Whether a variable is system specific or not
+	#
+	# @example
+	# resin.models.environmentVariables.isSystemVariable({
+	# 	name: 'RESIN_SUPERVISOR'
+	# });
+	# > true
+	#
+	# @example
+	# resin.models.environmentVariables.isSystemVariable({
+	# 	name: 'EDITOR'
+	# });
+	# > false
+	####
+	exports.isSystemVariable = (variable) ->
+		return /^RESIN_|^RESIN$|^USER$/.test(variable.name)
 
-###*
-# @summary Check is a variable is system specific
-# @name isSystemVariable
-# @public
-# @function
-# @memberof resin.models.environment-variables
-#
-# @param {Object} variable - environment variable
-# @returns {Boolean} Whether a variable is system specific or not
-#
-# @example
-# resin.models.environmentVariables.isSystemVariable({
-# 	name: 'RESIN_SUPERVISOR'
-# });
-# > true
-#
-# @example
-# resin.models.environmentVariables.isSystemVariable({
-# 	name: 'EDITOR'
-# });
-# > false
-####
-exports.isSystemVariable = (variable) ->
-	return /^RESIN_|^RESIN$|^USER$/.test(variable.name)
+	###*
+	# @namespace resin.models.environment-variables.device
+	# @memberof resin.models.environment-variables
+	###
+	exports.device = {}
 
-###*
-# @namespace resin.models.environment-variables.device
-# @memberof resin.models.environment-variables
-###
-exports.device = {}
+	###*
+	# @summary Get all device environment variables
+	# @name getAll
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables.device
+	#
+	# @param {String} uuid - device uuid
+	# @fulfil {Object[]} - device environment variables
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.device.getAll('7cf02a6').then(function(environmentVariables) {
+	# 	console.log(environmentVariables);
+	# });
+	#
+	# @example
+	# resin.models.environmentVariables.device.getAll('7cf02a6', function(error, environmentVariables) {
+	# 	if (error) throw error;
+	# 	console.log(environmentVariables)
+	# });
+	###
+	exports.device.getAll = (uuid, callback) ->
+		deviceModel.get(uuid).then (device) ->
+			return pine.get
+				resource: 'device_environment_variable'
+				options:
+					filter:
+						device: device.id
+					expand: 'device'
+					orderby: 'env_var_name asc'
+		.map (environmentVariable) ->
 
-###*
-# @summary Get all device environment variables
-# @name getAll
-# @public
-# @function
-# @memberof resin.models.environment-variables.device
-#
-# @param {String} uuid - device uuid
-# @fulfil {Object[]} - device environment variables
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.device.getAll('7cf02a6').then(function(environmentVariables) {
-# 	console.log(environmentVariables);
-# });
-#
-# @example
-# resin.models.environmentVariables.device.getAll('7cf02a6', function(error, environmentVariables) {
-# 	if (error) throw error;
-# 	console.log(environmentVariables)
-# });
-###
-exports.device.getAll = (uuid, callback) ->
-	deviceModel.get(uuid).then (device) ->
-		return pine.get
-			resource: 'device_environment_variable'
-			options:
-				filter:
+			# Workaround to the fact that applications environment variables
+			# contains a `name` property, while device environment variables
+			# contains an `env_var_name` property instead.
+			if environmentVariable.env_var_name?
+				environmentVariable.name = environmentVariable.env_var_name
+				delete environmentVariable.env_var_name
+			return environmentVariable
+
+		.nodeify(callback)
+
+	###*
+	# @summary Create a device environment variable
+	# @name create
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables.device
+	#
+	# @param {String} uuid - device uuid
+	# @param {String} name - environment variable name
+	# @param {String} value - environment variable value
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim');
+	#
+	# @example
+	# resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.device.create = (uuid, name, value, callback) ->
+		deviceModel.get(uuid).then (device) ->
+			return pine.post
+				resource: 'device_environment_variable'
+				body:
 					device: device.id
-				expand: 'device'
-				orderby: 'env_var_name asc'
-	.map (environmentVariable) ->
+					env_var_name: name
+					value: String(value)
+		.nodeify(callback)
 
-		# Workaround to the fact that applications environment variables
-		# contains a `name` property, while device environment variables
-		# contains an `env_var_name` property instead.
-		if environmentVariable.env_var_name?
-			environmentVariable.name = environmentVariable.env_var_name
-			delete environmentVariable.env_var_name
-		return environmentVariable
-
-	.nodeify(callback)
-
-###*
-# @summary Create a device environment variable
-# @name create
-# @public
-# @function
-# @memberof resin.models.environment-variables.device
-#
-# @param {String} uuid - device uuid
-# @param {String} name - environment variable name
-# @param {String} value - environment variable value
-#
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim');
-#
-# @example
-# resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim', function(error) {
-# 	if (error) throw error;
-# });
-###
-exports.device.create = (uuid, name, value, callback) ->
-	deviceModel.get(uuid).then (device) ->
-		return pine.post
+	###*
+	# @summary Update a device environment variable
+	# @name update
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables.device
+	#
+	# @param {(String|Number)} id - environment variable id
+	# @param {String} value - environment variable value
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.device.update(2, 'emacs');
+	#
+	# @example
+	# resin.models.environmentVariables.device.update(2, 'emacs', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.device.update = (id, value, callback) ->
+		return pine.patch
 			resource: 'device_environment_variable'
+			id: id
 			body:
-				device: device.id
-				env_var_name: name
-				value: String(value)
-	.nodeify(callback)
+				value: value
+		.nodeify(callback)
 
-###*
-# @summary Update a device environment variable
-# @name update
-# @public
-# @function
-# @memberof resin.models.environment-variables.device
-#
-# @param {(String|Number)} id - environment variable id
-# @param {String} value - environment variable value
-#
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.device.update(2, 'emacs');
-#
-# @example
-# resin.models.environmentVariables.device.update(2, 'emacs', function(error) {
-# 	if (error) throw error;
-# });
-###
-exports.device.update = (id, value, callback) ->
-	return pine.patch
-		resource: 'device_environment_variable'
-		id: id
-		body:
-			value: value
-	.nodeify(callback)
+	###*
+	# @summary Remove a device environment variable
+	# @name remove
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables.device
+	#
+	# @param {(String|Number)} id - environment variable id
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.device.remove(2);
+	#
+	# @example
+	# resin.models.environmentVariables.device.remove(2, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.device.remove = (id, callback) ->
+		return pine.delete
+			resource: 'device_environment_variable'
+			id: id
+		.nodeify(callback)
 
-###*
-# @summary Remove a device environment variable
-# @name remove
-# @public
-# @function
-# @memberof resin.models.environment-variables.device
-#
-# @param {(String|Number)} id - environment variable id
-# @returns {Promise}
-#
-# @example
-# resin.models.environmentVariables.device.remove(2);
-#
-# @example
-# resin.models.environmentVariables.device.remove(2, function(error) {
-# 	if (error) throw error;
-# });
-###
-exports.device.remove = (id, callback) ->
-	return pine.delete
-		resource: 'device_environment_variable'
-		id: id
-	.nodeify(callback)
+	return exports
+
+module.exports = memoize(getEnvironmentVariablesModel)

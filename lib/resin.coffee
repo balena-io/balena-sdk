@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+memoize = require('memoizee')
+mapValues = require('lodash/mapValues')
+defaults = require('lodash/defaults')
+getRequest = require('resin-request')
+getToken = require('resin-token')
+getPine = require('resin-pine')
+{ notImplemented } = require('./util')
+
 ###*
 # @namespace resin
 # @description
@@ -23,7 +31,7 @@ limitations under the License.
 #
 # If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
 ###
-module.exports =
+sdkTemplate =
 
 	###*
 	# @namespace models
@@ -44,7 +52,39 @@ module.exports =
 	logs: require('./logs')
 
 	###*
-	# @namespace settings
+	# @namespace settings. **Only implemented in Node.js**
 	# @memberof resin
 	###
 	settings: require('./settings')
+
+
+### opts:
+apiUrl
+apiVersion?
+apiKey?
+dataDirectory?
+imageMakerUrl
+###
+
+getSdk = (opts) ->
+	defaults opts,
+		apiVersion: 'v1',
+		isBrowser: window?
+
+	if opts.isBrowser
+		settings =
+			get: notImplemented
+			getAll: notImplemented
+	else
+		settings = require('resin-settings-client')
+
+	deps = {
+		settings,
+		request: getRequest(opts),
+		token: getToken(opts),
+		pine: getPine(opts)
+	}
+
+	return mapValues(sdkTemplate, (v) -> v(deps, opts))
+
+module.exports = memoize(getSdk)

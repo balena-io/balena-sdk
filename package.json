@@ -40,18 +40,19 @@
     "request": "^2.67.0",
     "rindle": "^1.2.0",
     "run-sequence": "^1.1.0",
-    "tmp": "0.0.28"
+    "tmp": "0.0.28",
+    "resin-settings-client": "^3.4.0"
   },
   "dependencies": {
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
+    "memoizee": "^0.4.1",
     "resin-device-logs": "^3.0.0",
     "resin-device-status": "^1.0.0",
     "resin-errors": "^2.4.0",
     "resin-pine": "^3.1.0",
     "resin-register-device": "^2.0.0",
     "resin-request": "^4.1.1",
-    "resin-settings-client": "^3.4.0",
     "resin-token": "^2.4.2",
     "semver": "^5.1.0"
   }

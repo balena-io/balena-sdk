@@ -3,16 +3,31 @@ Promise = require('bluebird')
 _ = require('lodash')
 fs = Promise.promisifyAll(require('fs'))
 path = require('path')
-pine = require('resin-pine')
-token = require('resin-token')
 errors = require('resin-errors')
-resinRequest = require('resin-request')
-settings = require('resin-settings-client')
 request = Promise.promisifyAll(require('request'))
 cheerio = require('cheerio')
 tmp = require('tmp')
 rindle = require('rindle')
-resin = require('../lib/resin')
+
+getPine = require('resin-pine')
+getToken = require('resin-token')
+getResinRequest = require('resin-request')
+
+getSdk = require('../lib/resin')
+
+settings = require('resin-settings-client')
+
+opts =
+	apiUrl: settings.get('apiUrl')
+	apiVersion: 'v1'
+	apiKey: null
+	dataDirectory: settings.get('dataDirectory')
+	imageMakerUrl: settings.get('imageMakerUrl')
+
+pine = getPine(opts)
+resinRequest = getResinRequest(opts)
+resin = getSdk(opts)
+token = getToken(opts)
 
 reset = ->
 	return resin.auth.isLoggedIn().then (isLoggedIn) ->

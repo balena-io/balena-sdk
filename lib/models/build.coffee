@@ -14,60 +14,69 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-pine = require('resin-pine')
+memoize = require('memoizee')
 errors = require('resin-errors')
-applicationModel = require('./application')
 
-###*
-# @summary Get all builds from an application
-# @name getAllByApplication
-# @public
-# @function
-# @memberof resin.models.build
-#
-# @param {String} name - application name
-# @fulfil {Object[]} - builds
-# @returns {Promise}
-#
-# @example
-# resin.models.build.getAllByApplication('MyApp').then(function(builds) {
-#		console.log(builds);
-# });
-#
-# @example
-# resin.models.build.getAllByApplication('MyApp', function(error, builds) {
-#		if (error) throw error;
-#		console.log(builds);
-# });
-###
-exports.getAllByApplication = (name, callback) ->
-	applicationModel.has(name).then (hasApplication) ->
+getBuildModel = (deps, opts) ->
+	{ pine } = deps
+	applicationModel = require('./application')(deps, opts)
 
-		if not hasApplication
-			throw new errors.ResinApplicationNotFound(name)
+	exports = {}
 
-		return pine.get
-			resource: 'build'
-			filter:
-				application: $any:
-					$alias: 'a'
-					$expr: a: app_name: name
-			select: [
-				'id'
-				'created_at'
-				'commit_hash'
-				'push_timestamp'
-				'start_timestamp'
-				'end_timestamp'
-				'project_type'
-				'status'
-				'message'
-			]
-			expand:
-				user:
-					$select: [
-						'id'
-						'username'
-					]
-			orderby: 'created_at desc'
-	.nodeify(callback)
+	###*
+	# @summary Get all builds from an application
+	# @name getAllByApplication
+	# @public
+	# @function
+	# @memberof resin.models.build
+	#
+	# @param {String} name - application name
+	# @fulfil {Object[]} - builds
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.build.getAllByApplication('MyApp').then(function(builds) {
+	#		console.log(builds);
+	# });
+	#
+	# @example
+	# resin.models.build.getAllByApplication('MyApp', function(error, builds) {
+	#		if (error) throw error;
+	#		console.log(builds);
+	# });
+	###
+	exports.getAllByApplication = (name, callback) ->
+		applicationModel.has(name).then (hasApplication) ->
+
+			if not hasApplication
+				throw new errors.ResinApplicationNotFound(name)
+
+			return pine.get
+				resource: 'build'
+				filter:
+					application: $any:
+						$alias: 'a'
+						$expr: a: app_name: name
+				select: [
+					'id'
+					'created_at'
+					'commit_hash'
+					'push_timestamp'
+					'start_timestamp'
+					'end_timestamp'
+					'project_type'
+					'status'
+					'message'
+				]
+				expand:
+					user:
+						$select: [
+							'id'
+							'username'
+						]
+				orderby: 'created_at desc'
+		.nodeify(callback)
+
+	return exports
+
+module.exports = memoize(getBuildModel)
