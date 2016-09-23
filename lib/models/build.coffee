@@ -16,9 +16,8 @@ limitations under the License.
 
 once = require('lodash/once')
 errors = require('resin-errors')
-{ memoize } = require('../util')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ pine } = deps
 	applicationModel = require('./application').get(deps, opts)
 

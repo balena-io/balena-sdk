@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-{ memoize } = require('./util')
-
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ token, request } = deps
 	{ apiUrl } = opts
 

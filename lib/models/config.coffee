@@ -15,9 +15,8 @@ limitations under the License.
 ###
 
 _ = require('lodash')
-{ memoize } = require('../util')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ request } = deps
 	{ apiUrl } = opts
 	deviceModel = _.once -> require('./device').get(deps, opts)

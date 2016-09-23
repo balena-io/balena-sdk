@@ -15,9 +15,9 @@ limitations under the License.
 ###
 
 errors = require('resin-errors')
-{ notImplemented, memoize } = require('../util')
+{ notImplemented } = require('../util')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ request } = deps
 	{ isBrowser, imageMakerUrl } = opts
 

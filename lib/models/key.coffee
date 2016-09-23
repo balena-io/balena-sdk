@@ -16,9 +16,8 @@ limitations under the License.
 
 _ = require('lodash')
 errors = require('resin-errors')
-{ memoize } = require('../util')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ pine } = deps
 	auth = require('../auth').get(deps, opts)
 

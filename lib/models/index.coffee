@@ -15,7 +15,6 @@ limitations under the License.
 ###
 
 mapValues = require('lodash/mapValues')
-{ memoize } = require('../util')
 
 modelsTemplate =
 
@@ -61,5 +60,5 @@ modelsTemplate =
 	###
 	build: require('./build')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	mapValues(modelsTemplate, (v) -> v.get(deps, opts))

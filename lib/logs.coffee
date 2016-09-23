@@ -17,9 +17,8 @@ limitations under the License.
 Promise = require('bluebird')
 logs = require('resin-device-logs')
 errors = require('resin-errors')
-{ memoize } = require('./util')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	configModel = require('./models/config').get(deps, opts)
 	deviceModel = require('./models/device').get(deps, opts)
 

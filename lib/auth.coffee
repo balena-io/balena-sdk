@@ -15,9 +15,8 @@ limitations under the License.
 ###
 
 errors = require('resin-errors')
-{ memoize } = require('./util')
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ token, request } = deps
 	{ apiUrl } = opts
 	twoFactor = require('./2fa').get(deps, opts)

@@ -20,7 +20,6 @@ semver = require('semver')
 errors = require('resin-errors')
 registerDevice = require('resin-register-device')
 deviceStatus = require('resin-device-status')
-{ memoize } = require('../util')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -34,7 +33,7 @@ MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 # affected in particular.
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
-module.exports.get = memoize (deps, opts) ->
+module.exports.get = (deps, opts) ->
 	{ pine, request } = deps
 	{ apiUrl } = opts
 
