@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 mapValues = require('lodash/mapValues')
 defaults = require('lodash/defaults')
 getRequest = require('resin-request')
@@ -85,6 +84,6 @@ getSdk = (opts) ->
 		pine: getPine(opts)
 	}
 
-	return mapValues(sdkTemplate, (v) -> v(deps, opts))
+	return mapValues(sdkTemplate, (v) -> v.get(deps, opts))
 
-module.exports = memoize(getSdk)
+module.exports = getSdk

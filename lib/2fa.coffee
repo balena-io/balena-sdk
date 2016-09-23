@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
+{ memoize } = require('./util')
 
-get2fa = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ token, request } = deps
 	{ apiUrl } = opts
 
@@ -113,5 +113,3 @@ get2fa = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(get2fa)

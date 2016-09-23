@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 errors = require('resin-errors')
+{ memoize } = require('./util')
 
-getAuth = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ token, request } = deps
 	{ apiUrl } = opts
+	twoFactor = require('./2fa').get(deps, opts)
 
 	exports = {}
 
@@ -27,7 +28,7 @@ getAuth = (deps, opts) ->
 	# @namespace resin.auth.twoFactor
 	# @memberof resin.auth
 	###
-	exports.twoFactor = require('./2fa')(deps, opts)
+	exports.twoFactor = twoFactor
 
 	###*
 	# @summary Return current logged in username
@@ -346,5 +347,3 @@ getAuth = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getAuth)

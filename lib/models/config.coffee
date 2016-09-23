@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 _ = require('lodash')
+{ memoize } = require('../util')
 
-getConfigModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ request } = deps
 	{ apiUrl } = opts
-	deviceModel = require('./device')(deps, opts)
+	deviceModel = _.once -> require('./device').get(deps, opts)
 
 	exports = {}
 
@@ -176,11 +176,9 @@ getConfigModel = (deps, opts) ->
 	# });
 	###
 	exports.getDeviceOptions = (deviceType, callback) ->
-		deviceModel.getManifestBySlug(deviceType).then (manifest) ->
+		deviceModel().getManifestBySlug(deviceType).then (manifest) ->
 			manifest.initialization ?= {}
 			return _.union(manifest.options, manifest.initialization.options)
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getConfigModel)

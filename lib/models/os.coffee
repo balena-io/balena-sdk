@@ -14,11 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 errors = require('resin-errors')
-{ notImplemented } = require('../util')
+{ notImplemented, memoize } = require('../util')
 
-getOsModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ request } = deps
 	{ isBrowser, imageMakerUrl } = opts
 
@@ -88,5 +87,3 @@ getOsModel = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getOsModel)

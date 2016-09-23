@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
+{ memoize } = require('../util')
 
-getEnvironmentVariablesModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ pine } = deps
-	deviceModel = require('./device')(deps, opts)
-	applicationModel = require('./application')(deps, opts)
+	deviceModel = require('./device').get(deps, opts)
+	applicationModel = require('./application').get(deps, opts)
 
 	exports = {}
 
@@ -296,5 +296,3 @@ getEnvironmentVariablesModel = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getEnvironmentVariablesModel)

@@ -15,9 +15,9 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
-memoize = require('memoizee')
+{ memoize } = require('./util')
 
-getSettings = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ settings } = deps
 
 	expots = {}
@@ -76,5 +76,3 @@ getSettings = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getSettings)

@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 _ = require('lodash')
 errors = require('resin-errors')
+{ memoize } = require('../util')
 
-getApplicationModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ request, token, pine } = deps
 	{ apiUrl } = opts
-	deviceModel = require('./device')(deps, opts)
+	deviceModel = _.once -> require('./device').get(deps, opts)
 
 	exports = {}
 
@@ -213,7 +213,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.create = (name, deviceType, callback) ->
-		return deviceModel.getDeviceSlug(deviceType)
+		return deviceModel().getDeviceSlug(deviceType)
 
 		.tap (deviceSlug) ->
 			if not deviceSlug?
@@ -313,5 +313,3 @@ getApplicationModel = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getApplicationModel)

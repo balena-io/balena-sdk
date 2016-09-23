@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
+once = require('lodash/once')
 errors = require('resin-errors')
+{ memoize } = require('../util')
 
-getBuildModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ pine } = deps
-	applicationModel = require('./application')(deps, opts)
+	applicationModel = require('./application').get(deps, opts)
 
 	exports = {}
 
@@ -78,5 +79,3 @@ getBuildModel = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getBuildModel)

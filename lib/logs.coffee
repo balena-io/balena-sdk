@@ -17,11 +17,11 @@ limitations under the License.
 Promise = require('bluebird')
 logs = require('resin-device-logs')
 errors = require('resin-errors')
-memoize = require('memoizee')
+{ memoize } = require('./util')
 
-getLogs = (deps, opts) ->
-	configModel = require('./models/config')(deps, opts)
-	deviceModel = require('./models/device')(deps, opts)
+module.exports.get = memoize (deps, opts) ->
+	configModel = require('./models/config').get(deps, opts)
+	deviceModel = require('./models/device').get(deps, opts)
 
 	exports = {}
 	###*
@@ -104,5 +104,3 @@ getLogs = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getLogs)

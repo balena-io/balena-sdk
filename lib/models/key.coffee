@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 _ = require('lodash')
 errors = require('resin-errors')
+{ memoize } = require('../util')
 
-getKeyModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ pine } = deps
-	auth = require('../auth')(deps, opts)
+	auth = require('../auth').get(deps, opts)
 
 	exports = {}
 
@@ -144,5 +144,3 @@ getKeyModel = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getKeyModel)

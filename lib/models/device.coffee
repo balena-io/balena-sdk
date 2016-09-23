@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-memoize = require('memoizee')
 Promise = require('bluebird')
 _ = require('lodash')
 semver = require('semver')
 errors = require('resin-errors')
 registerDevice = require('resin-register-device')
 deviceStatus = require('resin-device-status')
+{ memoize } = require('../util')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -34,12 +34,13 @@ MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 # affected in particular.
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
-getDeviceModel = (deps, opts) ->
+module.exports.get = memoize (deps, opts) ->
 	{ pine, request } = deps
 	{ apiUrl } = opts
-	configModel = require('./config')(deps, opts)
-	applicationModel = require('./application')(deps, opts)
-	auth = require('../auth')(deps, opts)
+
+	configModel = _.once -> require('./config').get(deps, opts)
+	applicationModel = _.once -> require('./application').get(deps, opts)
+	auth = require('../auth').get(deps, opts)
 
 	exports = {}
 
@@ -127,7 +128,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getAllByApplication = (name, callback) ->
-		applicationModel.has(name).then (hasApplication) ->
+		applicationModel().has(name).then (hasApplication) ->
 
 			if not hasApplication
 				throw new errors.ResinApplicationNotFound(name)
@@ -562,7 +563,7 @@ getDeviceModel = (deps, opts) ->
 	exports.move = (uuid, application, callback) ->
 		Promise.props
 			device: exports.get(uuid)
-			application: applicationModel.get(application)
+			application: applicationModel().get(application)
 		.then (results) ->
 
 			if results.device.device_type isnt results.application.device_type
@@ -944,7 +945,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getSupportedDeviceTypes = (callback) ->
-		configModel.getDeviceTypes().then (deviceTypes) ->
+		configModel().getDeviceTypes().then (deviceTypes) ->
 			return _.map(deviceTypes, 'name')
 		.nodeify(callback)
 
@@ -971,7 +972,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestBySlug = (slug, callback) ->
-		return configModel.getDeviceTypes().then (deviceTypes) ->
+		return configModel().getDeviceTypes().then (deviceTypes) ->
 			return _.find deviceTypes, (deviceType) ->
 				return _.some [
 					deviceType.name is slug
@@ -1008,7 +1009,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestByApplication = (applicationName, callback) ->
-		applicationModel.get(applicationName).get('device_type').then (deviceType) ->
+		applicationModel().get(applicationName).get('device_type').then (deviceType) ->
 			return exports.getManifestBySlug(deviceType)
 		.nodeify(callback)
 
@@ -1069,8 +1070,8 @@ getDeviceModel = (deps, opts) ->
 	exports.register = (applicationName, uuid, callback) ->
 		Promise.props
 			userId: auth.getUserId()
-			apiKey: applicationModel.getApiKey(applicationName)
-			application: applicationModel.get(applicationName)
+			apiKey: applicationModel().getApiKey(applicationName)
+			application: applicationModel().get(applicationName)
 		.then (results) ->
 
 			return registerDevice.register pine,
@@ -1139,7 +1140,7 @@ getDeviceModel = (deps, opts) ->
 			if not hasDeviceUrl
 				throw new Error("Device is not web accessible: #{uuid}")
 
-			configModel.getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
+			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
 				exports.get(uuid).get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.nodeify(callback)
@@ -1331,5 +1332,3 @@ getDeviceModel = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
-
-module.exports = memoize(getDeviceModel)
