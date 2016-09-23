@@ -17,7 +17,7 @@ limitations under the License.
 errors = require('resin-errors')
 { notImplemented } = require('../util')
 
-module.exports.get = (deps, opts) ->
+getOsModel = (deps, opts) ->
 	{ request } = deps
 	{ isBrowser, imageMakerUrl } = opts
 
@@ -87,3 +87,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getOsModel

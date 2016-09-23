@@ -17,10 +17,10 @@ limitations under the License.
 _ = require('lodash')
 errors = require('resin-errors')
 
-module.exports.get = (deps, opts) ->
+getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
 	{ apiUrl } = opts
-	deviceModel = _.once -> require('./device').get(deps, opts)
+	deviceModel = _.once -> require('./device')(deps, opts)
 
 	exports = {}
 
@@ -312,3 +312,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getApplicationModel

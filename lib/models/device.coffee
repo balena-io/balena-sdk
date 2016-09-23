@@ -33,13 +33,13 @@ MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 # affected in particular.
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
-module.exports.get = (deps, opts) ->
+getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
 	{ apiUrl } = opts
 
-	configModel = _.once -> require('./config').get(deps, opts)
-	applicationModel = _.once -> require('./application').get(deps, opts)
-	auth = require('../auth').get(deps, opts)
+	configModel = _.once -> require('./config')(deps, opts)
+	applicationModel = _.once -> require('./application')(deps, opts)
+	auth = require('../auth')(deps, opts)
 
 	exports = {}
 
@@ -1331,3 +1331,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getDeviceModel

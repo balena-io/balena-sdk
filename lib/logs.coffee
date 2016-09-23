@@ -18,9 +18,9 @@ Promise = require('bluebird')
 logs = require('resin-device-logs')
 errors = require('resin-errors')
 
-module.exports.get = (deps, opts) ->
-	configModel = require('./models/config').get(deps, opts)
-	deviceModel = require('./models/device').get(deps, opts)
+getLogs = (deps, opts) ->
+	configModel = require('./models/config')(deps, opts)
+	deviceModel = require('./models/device')(deps, opts)
 
 	exports = {}
 	###*
@@ -103,3 +103,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getLogs

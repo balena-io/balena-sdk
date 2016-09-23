@@ -84,6 +84,6 @@ getSdk = (opts) ->
 		pine: getPine(opts)
 	}
 
-	return mapValues(sdkTemplate, (v) -> v.get(deps, opts))
+	return mapValues(sdkTemplate, (v) -> v(deps, opts))
 
 module.exports = getSdk

@@ -60,5 +60,5 @@ modelsTemplate =
 	###
 	build: require('./build')
 
-module.exports.get = (deps, opts) ->
-	mapValues(modelsTemplate, (v) -> v.get(deps, opts))
+module.exports = (deps, opts) ->
+	mapValues(modelsTemplate, (v) -> v(deps, opts))

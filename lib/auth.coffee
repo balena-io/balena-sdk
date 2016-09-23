@@ -16,10 +16,10 @@ limitations under the License.
 
 errors = require('resin-errors')
 
-module.exports.get = (deps, opts) ->
+getAuth = (deps, opts) ->
 	{ token, request } = deps
 	{ apiUrl } = opts
-	twoFactor = require('./2fa').get(deps, opts)
+	twoFactor = require('./2fa')(deps, opts)
 
 	exports = {}
 
@@ -346,3 +346,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getAuth

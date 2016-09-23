@@ -16,10 +16,10 @@ limitations under the License.
 
 _ = require('lodash')
 
-module.exports.get = (deps, opts) ->
+getConfigModel = (deps, opts) ->
 	{ request } = deps
 	{ apiUrl } = opts
-	deviceModel = _.once -> require('./device').get(deps, opts)
+	deviceModel = _.once -> require('./device')(deps, opts)
 
 	exports = {}
 
@@ -181,3 +181,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getConfigModel

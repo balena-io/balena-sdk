@@ -16,7 +16,7 @@ limitations under the License.
 
 Promise = require('bluebird')
 
-module.exports.get = (deps, opts) ->
+getSettings = (deps, opts) ->
 	{ settings } = deps
 
 	expots = {}
@@ -75,3 +75,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getSettings

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-module.exports.get = (deps, opts) ->
+get2fa = (deps, opts) ->
 	{ token, request } = deps
 	{ apiUrl } = opts
 
@@ -111,3 +111,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = get2fa

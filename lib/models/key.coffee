@@ -17,9 +17,9 @@ limitations under the License.
 _ = require('lodash')
 errors = require('resin-errors')
 
-module.exports.get = (deps, opts) ->
+getKeyModel = (deps, opts) ->
 	{ pine } = deps
-	auth = require('../auth').get(deps, opts)
+	auth = require('../auth')(deps, opts)
 
 	exports = {}
 
@@ -143,3 +143,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getKeyModel

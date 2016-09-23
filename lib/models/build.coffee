@@ -17,9 +17,9 @@ limitations under the License.
 once = require('lodash/once')
 errors = require('resin-errors')
 
-module.exports.get = (deps, opts) ->
+getBuildModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = require('./application').get(deps, opts)
+	applicationModel = require('./application')(deps, opts)
 
 	exports = {}
 
@@ -78,3 +78,5 @@ module.exports.get = (deps, opts) ->
 		.nodeify(callback)
 
 	return exports
+
+module.exports = getBuildModel
