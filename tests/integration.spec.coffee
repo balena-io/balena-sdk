@@ -1,18 +1,16 @@
 m = require('mochainon')
 Promise = require('bluebird')
 _ = require('lodash')
-fs = Promise.promisifyAll(require('fs'))
-path = require('path')
 errors = require('resin-errors')
 request = Promise.promisifyAll(require('request'))
-cheerio = require('cheerio')
-rindle = require('rindle')
 
 getPine = require('resin-pine')
 getToken = require('resin-token')
 getResinRequest = require('resin-request')
 
 getSdk = require('../lib/resin')
+
+PUBLIC_KEY = require('./data/public-key')
 
 IS_BROWSER = window?
 
@@ -22,12 +20,16 @@ if IS_BROWSER
 		imageMakerUrl: 'https://img.resin.io'
 	env = window.__env__
 else
+	fs = Promise.promisifyAll(require('fs'))
 	tmp = require('tmp')
+	rindle = require('rindle')
+
 	settings = require('resin-settings-client')
 	opts =
 		apiUrl: settings.get('apiUrl')
 		dataDirectory: settings.get('dataDirectory')
 		imageMakerUrl: settings.get('imageMakerUrl')
+
 	env = process.env
 
 _.assign opts,
@@ -427,7 +429,7 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.key.create()', ->
 
 					it 'should be able to create a key', (done) ->
-						key = fs.readFileSync(path.join(__dirname, 'data', 'keys', 'id_rsa.pub'), encoding: 'utf8')
+						key = PUBLIC_KEY
 						resin.models.key.create('MyKey', key).then ->
 							return resin.models.key.getAll()
 						.then (keys) ->
@@ -437,7 +439,7 @@ describe 'SDK Integration Tests', ->
 						.nodeify(done)
 
 					it 'should be able to create a key from a non trimmed string', (done) ->
-						key = fs.readFileSync(path.join(__dirname, 'data', 'keys', 'id_rsa.pub'), encoding: 'utf8')
+						key = PUBLIC_KEY
 						resin.models.key.create('MyKey', "    #{key}    ").then ->
 							return resin.models.key.getAll()
 						.then (keys) ->
@@ -449,7 +451,7 @@ describe 'SDK Integration Tests', ->
 			describe 'given a single key', ->
 
 				beforeEach (done) ->
-					publicKey = fs.readFileSync(path.join(__dirname, 'data', 'keys', 'id_rsa.pub'), encoding: 'utf8')
+					publicKey = PUBLIC_KEY
 					resin.models.key.create('MyKey', publicKey).then (key) =>
 						@key = key
 					.nodeify(done)
@@ -984,8 +986,7 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(response.statusCode).to.equal(503)
 
 								# Standard HTML title for web enabled devices
-								$ = cheerio.load(response.body)
-								m.chai.expect($('title').text()).to.equal('Resin.io Device Public URLs')
+								m.chai.expect(response.body).to.match(/<title>Resin.io Device Public URLs<\/title>/)
 							.nodeify(done)
 
 					describe 'resin.models.device.disableDeviceUrl()', ->
@@ -1202,6 +1203,7 @@ describe 'SDK Integration Tests', ->
 						m.chai.expect(promise).to.be.rejectedWith('No such device type')
 
 			describe 'resin.models.os.download()', ->
+				return if IS_BROWSER
 
 				describe 'given a valid device slug', ->
 
