@@ -20,6 +20,7 @@ errors = require('resin-errors')
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
 	{ apiUrl } = opts
+
 	deviceModel = _.once -> require('./device')(deps, opts)
 
 	exports = {}

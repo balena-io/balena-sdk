@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-once = require('lodash/once')
+_ = require('lodash')
 errors = require('resin-errors')
 
 getBuildModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = require('./application')(deps, opts)
+	applicationModel = _.once -> require('./application')(deps, opts)
 
 	exports = {}
 
@@ -46,7 +46,7 @@ getBuildModel = (deps, opts) ->
 	# });
 	###
 	exports.getAllByApplication = (name, callback) ->
-		applicationModel.has(name).then (hasApplication) ->
+		applicationModel().has(name).then (hasApplication) ->
 
 			if not hasApplication
 				throw new errors.ResinApplicationNotFound(name)

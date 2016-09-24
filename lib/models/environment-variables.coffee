@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+_ = require('lodash')
+
 getEnvironmentVariablesModel = (deps, opts) ->
 	{ pine } = deps
-	deviceModel = require('./device')(deps, opts)
-	applicationModel = require('./application')(deps, opts)
+
+	deviceModel = _.once -> require('./device')(deps, opts)
+	applicationModel = _.once -> require('./application')(deps, opts)
 
 	exports = {}
 
@@ -44,7 +47,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.getAllByApplication = (applicationName, callback) ->
-		applicationModel.get(applicationName).get('id').then (applicationId) ->
+		applicationModel().get(applicationName).get('id').then (applicationId) ->
 			return pine.get
 				resource: 'environment_variable'
 				options:
@@ -75,7 +78,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.create = (applicationName, name, value, callback) ->
-		applicationModel.get(applicationName).get('id').then (applicationId) ->
+		applicationModel().get(applicationName).get('id').then (applicationId) ->
 			return pine.post
 				resource: 'environment_variable'
 				body:
@@ -190,7 +193,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.device.getAll = (uuid, callback) ->
-		deviceModel.get(uuid).then (device) ->
+		deviceModel().get(uuid).then (device) ->
 			return pine.get
 				resource: 'device_environment_variable'
 				options:
@@ -232,7 +235,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.device.create = (uuid, name, value, callback) ->
-		deviceModel.get(uuid).then (device) ->
+		deviceModel().get(uuid).then (device) ->
 			return pine.post
 				resource: 'device_environment_variable'
 				body:

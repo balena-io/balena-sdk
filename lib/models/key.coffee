@@ -19,6 +19,7 @@ errors = require('resin-errors')
 
 getKeyModel = (deps, opts) ->
 	{ pine } = deps
+
 	auth = require('../auth')(deps, opts)
 
 	exports = {}

@@ -19,6 +19,7 @@ _ = require('lodash')
 getConfigModel = (deps, opts) ->
 	{ request } = deps
 	{ apiUrl } = opts
+
 	deviceModel = _.once -> require('./device')(deps, opts)
 
 	exports = {}
