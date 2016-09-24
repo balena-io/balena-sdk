@@ -6,7 +6,6 @@ path = require('path')
 errors = require('resin-errors')
 request = Promise.promisifyAll(require('request'))
 cheerio = require('cheerio')
-tmp = require('tmp')
 rindle = require('rindle')
 
 getPine = require('resin-pine')
@@ -15,14 +14,26 @@ getResinRequest = require('resin-request')
 
 getSdk = require('../lib/resin')
 
-settings = require('resin-settings-client')
+IS_BROWSER = window?
 
-opts =
-	apiUrl: settings.get('apiUrl')
+if IS_BROWSER
+	opts =
+		apiUrl: 'https://api.resin.io'
+		imageMakerUrl: 'https://img.resin.io'
+	env = window.__env__
+else
+	tmp = require('tmp')
+	settings = require('resin-settings-client')
+	opts =
+		apiUrl: settings.get('apiUrl')
+		dataDirectory: settings.get('dataDirectory')
+		imageMakerUrl: settings.get('imageMakerUrl')
+	env = process.env
+
+_.assign opts,
 	apiVersion: 'v1'
 	apiKey: null
-	dataDirectory: settings.get('dataDirectory')
-	imageMakerUrl: settings.get('imageMakerUrl')
+	isBrowser: IS_BROWSER
 
 pine = getPine(opts)
 resinRequest = getResinRequest(opts)
@@ -42,14 +53,14 @@ reset = ->
 		]
 
 credentials =
-	email: process.env.RESINTEST_EMAIL
-	password: process.env.RESINTEST_PASSWORD
-	username: process.env.RESINTEST_USERNAME
-	userId: _.parseInt(process.env.RESINTEST_USERID)
+	email: env.RESINTEST_EMAIL
+	password: env.RESINTEST_PASSWORD
+	username: env.RESINTEST_USERNAME
+	userId: _.parseInt(env.RESINTEST_USERID)
 	register:
-		email: process.env.RESINTEST_REGISTER_EMAIL
-		password: process.env.RESINTEST_REGISTER_PASSWORD
-		username: process.env.RESINTEST_REGISTER_USERNAME
+		email: env.RESINTEST_REGISTER_EMAIL
+		password: env.RESINTEST_REGISTER_PASSWORD
+		username: env.RESINTEST_REGISTER_USERNAME
 
 if not _.every [
 	credentials.email?
@@ -60,8 +71,7 @@ if not _.every [
 	credentials.register.password?
 	credentials.register.username?
 ]
-	console.error('Missing environment credentials')
-	process.exit(1)
+	throw new Error('Missing environment credentials')
 
 describe 'SDK Integration Tests', ->
 
@@ -257,8 +267,8 @@ describe 'SDK Integration Tests', ->
 
 		beforeEach (done) ->
 			resin.auth.login
-				email: process.env.RESINTEST_EMAIL
-				password: process.env.RESINTEST_PASSWORD
+				email: credentials.email
+				password: credentials.password
 			.then(reset)
 			.nodeify(done)
 

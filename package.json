@@ -19,7 +19,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "gulp test",
+    "test": "npm run test-node && test-browser",
+    "test-node": "gulp test",
+    "test-browser": "karma start",
     "build": "gulp build",
     "prepublish": "npm test && npm run build",
     "docs": "jsdoc2md build/{,**/}*.js > DOCUMENTATION.md"
@@ -35,13 +37,16 @@
     "gulp-mocha": "^2.2.0",
     "gulp-util": "^3.0.4",
     "jsdoc-to-markdown": "^2.0.1",
+    "karma": "^1.3.0",
+    "karma-env-preprocessor": "^0.1.1",
     "mocha": "^2.4.5",
     "mochainon": "^1.0.0",
     "request": "^2.67.0",
+    "resin-config-karma": "^1.0.4",
+    "resin-settings-client": "^3.4.0",
     "rindle": "^1.2.0",
     "run-sequence": "^1.1.0",
-    "tmp": "0.0.28",
-    "resin-settings-client": "^3.4.0"
+    "tmp": "0.0.28"
   },
   "dependencies": {
     "bluebird": "^3.3.1",

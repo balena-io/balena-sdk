@@ -15,7 +15,7 @@ OPTIONS =
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
-		integration: 'tests/integration.coffee'
+		integration: 'tests/integration.spec.coffee'
 		javascript: 'build/**/*.js'
 	directories:
 		doc: 'doc/'
