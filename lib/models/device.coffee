@@ -133,8 +133,9 @@ exports.getAllByApplication = (name, callback) ->
 			resource: 'device'
 			options:
 				filter:
-					application:
-						app_name: name
+					application: $any:
+						$alias: 'a'
+						$expr: a: app_name: name
 				expand: 'application'
 				orderby: 'name asc'
 
