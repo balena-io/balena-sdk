@@ -150,7 +150,14 @@ limitations under the License.
         options: {
           filter: {
             application: {
-              app_name: name
+              $any: {
+                $alias: 'a',
+                $expr: {
+                  a: {
+                    app_name: name
+                  }
+                }
+              }
             }
           },
           expand: 'application',

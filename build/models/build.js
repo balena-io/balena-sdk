@@ -57,7 +57,14 @@ limitations under the License.
         resource: 'build',
         filter: {
           application: {
-            app_name: name
+            $any: {
+              $alias: 'a',
+              $expr: {
+                a: {
+                  app_name: name
+                }
+              }
+            }
           }
         },
         select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
