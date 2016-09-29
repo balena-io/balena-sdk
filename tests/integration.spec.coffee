@@ -1,5 +1,8 @@
-m = require('mochainon')
 Promise = require('bluebird')
+global.Promise = Promise
+require('isomorphic-fetch')
+
+m = require('mochainon')
 _ = require('lodash')
 errors = require('resin-errors')
 request = Promise.promisifyAll(require('request'))
@@ -16,8 +19,9 @@ IS_BROWSER = window?
 
 if IS_BROWSER
 	opts =
-		apiUrl: 'https://api.resin.io'
-		imageMakerUrl: 'https://img.resin.io'
+		apiUrl: 'http://api.resin.io'
+		imageMakerUrl: 'http://img.resin.io'
+
 	env = window.__env__
 else
 	fs = Promise.promisifyAll(require('fs'))
@@ -81,7 +85,7 @@ describe 'SDK Integration Tests', ->
 	# running the tests in a slow connection
 	@timeout(30 * 60 * 1000)
 
-	describe 'given a not logged in user', ->
+	describe.skip 'given a not logged in user', ->
 
 		beforeEach (done) ->
 			resin.auth.logout().nodeify(done)
@@ -277,7 +281,7 @@ describe 'SDK Integration Tests', ->
 		afterEach (done) ->
 			reset().nodeify(done)
 
-		describe 'Authentication', ->
+		describe.skip 'Authentication', ->
 
 			describe 'resin.auth.isLogged()', ->
 

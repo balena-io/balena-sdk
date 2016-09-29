@@ -16,7 +16,11 @@ limitations under the License.
  */
 
 (function() {
-  module.exports = {
+  var mapValues, modelsTemplate;
+
+  mapValues = require('lodash/mapValues');
+
+  modelsTemplate = {
 
     /**
     	 * @namespace application
@@ -59,6 +63,12 @@ limitations under the License.
     	 * @memberof resin.models
      */
     build: require('./build')
+  };
+
+  module.exports = function(deps, opts) {
+    return mapValues(modelsTemplate, function(v) {
+      return v(deps, opts);
+    });
   };
 
 }).call(this);

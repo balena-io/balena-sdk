@@ -63,6 +63,7 @@ apiVersion?
 apiKey?
 dataDirectory?
 imageMakerUrl
+debug
 ###
 
 getSdk = (opts) ->

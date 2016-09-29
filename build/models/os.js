@@ -16,81 +16,85 @@ limitations under the License.
  */
 
 (function() {
-  var errors, request, settings;
-
-  request = require('resin-request');
+  var errors, getOsModel, notImplemented;
 
   errors = require('resin-errors');
 
-  settings = require('resin-settings-client');
+  notImplemented = require('../util').notImplemented;
 
+  getOsModel = function(deps, opts) {
+    var exports, imageMakerUrl, isBrowser, request;
+    request = deps.request;
+    isBrowser = opts.isBrowser, imageMakerUrl = opts.imageMakerUrl;
+    exports = {};
 
-  /**
-   * @summary Get OS image last modified date
-   * @name getLastModified
-   * @public
-   * @function
-   * @memberof resin.models.os
-   *
-   * @param {String} deviceType - device type slug
-   * @fulfil {Date} - last modified date
-   * @returns {Promise}
-   *
-   * @example
-   * resin.models.os.getLastModified('raspberry-pi').then(function(date) {
-   * 	console.log('The raspberry-pi image was last modified in ' + date);
-   * });
-   *
-   * resin.models.os.getLastModified('raspberry-pi', function(error, date) {
-   * 	if (error) throw error;
-   * 	console.log('The raspberry-pi image was last modified in ' + date);
-   * });
-   */
+    /**
+    	 * @summary Get OS image last modified date
+    	 * @name getLastModified
+    	 * @public
+    	 * @function
+    	 * @memberof resin.models.os
+    	 *
+    	 * @param {String} deviceType - device type slug
+    	 * @fulfil {Date} - last modified date
+    	 * @returns {Promise}
+    	 *
+    	 * @example
+    	 * resin.models.os.getLastModified('raspberry-pi').then(function(date) {
+    	 * 	console.log('The raspberry-pi image was last modified in ' + date);
+    	 * });
+    	 *
+    	 * resin.models.os.getLastModified('raspberry-pi', function(error, date) {
+    	 * 	if (error) throw error;
+    	 * 	console.log('The raspberry-pi image was last modified in ' + date);
+    	 * });
+     */
+    exports.getLastModified = function(deviceType, callback) {
+      return request.send({
+        method: 'HEAD',
+        url: "/api/v1/image/" + deviceType + "/",
+        baseUrl: imageMakerUrl
+      })["catch"]({
+        name: 'ResinRequestError',
+        statusCode: 404
+      }, function() {
+        throw new errors.ResinRequestError('No such device type');
+      }).then(function(response) {
+        return new Date(response.headers['last-modified']);
+      }).nodeify(callback);
+    };
 
-  exports.getLastModified = function(deviceType, callback) {
-    return request.send({
-      method: 'HEAD',
-      url: "/api/v1/image/" + deviceType + "/",
-      baseUrl: settings.get('imageMakerUrl')
-    })["catch"]({
-      name: 'ResinRequestError',
-      statusCode: 404
-    }, function() {
-      throw new errors.ResinRequestError('No such device type');
-    }).then(function(response) {
-      return new Date(response.headers['last-modified']);
-    }).nodeify(callback);
+    /**
+    	 * @summary Download an OS image
+    	 * @name download
+    	 * @public
+    	 * @function
+    	 * @memberof resin.models.os
+    	 *
+    	 * @param {String} deviceType - device type slug
+    	 * @fulfil {ReadableStream} - download stream
+    	 * @returns {Promise}
+    	 *
+    	 * @example
+    	 * resin.models.os.download('raspberry-pi').then(function(stream) {
+    	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+    	 * });
+    	 *
+    	 * resin.models.os.download('raspberry-pi', function(error, stream) {
+    	 * 	if (error) throw error;
+    	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+    	 * });
+     */
+    exports.download = isBrowser ? notImplemented : function(deviceType, callback) {
+      return request.stream({
+        method: 'GET',
+        url: "/api/v1/image/" + deviceType + "/",
+        baseUrl: imageMakerUrl
+      }).nodeify(callback);
+    };
+    return exports;
   };
 
-
-  /**
-   * @summary Download an OS image
-   * @name download
-   * @public
-   * @function
-   * @memberof resin.models.os
-   *
-   * @param {String} deviceType - device type slug
-   * @fulfil {ReadableStream} - download stream
-   * @returns {Promise}
-   *
-   * @example
-   * resin.models.os.download('raspberry-pi').then(function(stream) {
-   * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
-   * });
-   *
-   * resin.models.os.download('raspberry-pi', function(error, stream) {
-   * 	if (error) throw error;
-   * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
-   * });
-   */
-
-  exports.download = function(deviceType, callback) {
-    return request.stream({
-      method: 'GET',
-      url: "/api/v1/image/" + deviceType + "/",
-      baseUrl: settings.get('imageMakerUrl')
-    }).nodeify(callback);
-  };
+  module.exports = getOsModel;
 
 }).call(this);

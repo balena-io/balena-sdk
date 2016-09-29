@@ -103,9 +103,6 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.logs](#resin.logs) : <code>object</code>
         * [.subscribe(uuid)](#resin.logs.subscribe) ⇒ <code>Promise</code>
         * [.history(uuid)](#resin.logs.history) ⇒ <code>Promise</code>
-    * [.settings](#resin.settings) : <code>object</code>
-        * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
-        * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
 
 <a name="resin.models"></a>
 
@@ -2311,59 +2308,5 @@ resin.logs.history('7cf02a6', function(error, lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
-});
-```
-<a name="resin.settings"></a>
-
-### resin.settings : <code>object</code>
-**Kind**: static namespace of <code>[resin](#resin)</code>  
-
-* [.settings](#resin.settings) : <code>object</code>
-    * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
-    * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
-
-<a name="resin.settings.get"></a>
-
-#### settings.get([key]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[settings](#resin.settings)</code>  
-**Summary**: Get a single setting  
-**Access:** public  
-**Fulfil**: <code>\*</code> - setting value  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [key] | <code>String</code> | setting key |
-
-**Example**  
-```js
-resin.settings.get('apiUrl').then(function(apiUrl) {
-	console.log(apiUrl);
-});
-```
-**Example**  
-```js
-resin.settings.get('apiUrl', function(error, apiUrl) {
-	if (error) throw error;
-	console.log(apiUrl);
-});
-```
-<a name="resin.settings.getAll"></a>
-
-#### settings.getAll() ⇒ <code>Promise</code>
-**Kind**: static method of <code>[settings](#resin.settings)</code>  
-**Summary**: Get all settings  
-**Access:** public  
-**Fulfil**: <code>Object</code> - settings  
-**Example**  
-```js
-resin.settings.getAll().then(function(settings) {
-	console.log(settings);
-});
-```
-**Example**  
-```js
-resin.settings.getAll(function(error, settings) {
-	if (error) throw error;
-	console.log(settings);
 });
 ```

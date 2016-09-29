@@ -15,19 +15,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-
-/**
- * @namespace resin
- * @description
- * Welcome to the Resin SDK documentation.
- *
- * This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
- *
- * If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
- */
-
 (function() {
-  module.exports = {
+  var defaults, getPine, getRequest, getSdk, getToken, mapValues, notImplemented, sdkTemplate;
+
+  mapValues = require('lodash/mapValues');
+
+  defaults = require('lodash/defaults');
+
+  getRequest = require('resin-request');
+
+  getToken = require('resin-token');
+
+  getPine = require('resin-pine');
+
+  notImplemented = require('./util').notImplemented;
+
+
+  /**
+   * @namespace resin
+   * @description
+   * Welcome to the Resin SDK documentation.
+   *
+   * This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
+   *
+   * If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
+   */
+
+  sdkTemplate = {
 
     /**
     	 * @namespace models
@@ -48,10 +62,47 @@ limitations under the License.
     logs: require('./logs'),
 
     /**
-    	 * @namespace settings
+    	 * @namespace settings. **Only implemented in Node.js**
     	 * @memberof resin
      */
     settings: require('./settings')
   };
+
+
+  /* opts:
+  apiUrl
+  apiVersion?
+  apiKey?
+  dataDirectory?
+  imageMakerUrl
+  debug
+   */
+
+  getSdk = function(opts) {
+    var deps, settings;
+    defaults(opts, {
+      apiVersion: 'v1',
+      isBrowser: typeof window !== "undefined" && window !== null
+    });
+    if (opts.isBrowser) {
+      settings = {
+        get: notImplemented,
+        getAll: notImplemented
+      };
+    } else {
+      settings = require('resin-settings-client');
+    }
+    deps = {
+      settings: settings,
+      request: getRequest(opts),
+      token: getToken(opts),
+      pine: getPine(opts)
+    };
+    return mapValues(sdkTemplate, function(v) {
+      return v(deps, opts);
+    });
+  };
+
+  module.exports = getSdk;
 
 }).call(this);
