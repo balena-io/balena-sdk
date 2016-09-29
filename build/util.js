@@ -1,10 +1,20 @@
 (function() {
-  var _;
+  var _, notImplemented;
 
   _ = require('lodash');
 
-  exports.notImplemented = function() {
+  exports.notImplemented = notImplemented = function() {
     throw new Error('The method is not implemented.');
+  };
+
+  exports.onlyIf = function(condition) {
+    return function(fn) {
+      if (condition) {
+        return fn;
+      } else {
+        return notImplemented;
+      }
+    };
   };
 
 }).call(this);

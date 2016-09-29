@@ -16,11 +16,11 @@ limitations under the License.
  */
 
 (function() {
-  var errors, getOsModel, notImplemented;
+  var errors, getOsModel, onlyIf;
 
   errors = require('resin-errors');
 
-  notImplemented = require('../util').notImplemented;
+  onlyIf = require('../util').onlyIf;
 
   getOsModel = function(deps, opts) {
     var exports, imageMakerUrl, isBrowser, request;
@@ -85,13 +85,18 @@ limitations under the License.
     	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
     	 * });
      */
-    exports.download = isBrowser ? notImplemented : function(deviceType, callback) {
+    exports.download = onlyIf(!isBrowser)(function(deviceType, callback) {
       return request.stream({
         method: 'GET',
         url: "/api/v1/image/" + deviceType + "/",
         baseUrl: imageMakerUrl
+      })["catch"]({
+        name: 'ResinRequestError',
+        statusCode: 404
+      }, function() {
+        throw new errors.ResinRequestError('No such device type');
       }).nodeify(callback);
-    };
+    });
     return exports;
   };
 

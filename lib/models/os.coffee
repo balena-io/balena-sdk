@@ -15,7 +15,7 @@ limitations under the License.
 ###
 
 errors = require('resin-errors')
-{ notImplemented } = require('../util')
+{ onlyIf } = require('../util')
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
@@ -79,11 +79,16 @@ getOsModel = (deps, opts) ->
 	# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	# });
 	###
-	exports.download = if isBrowser then notImplemented else (deviceType, callback) ->
+	exports.download = onlyIf(not isBrowser) (deviceType, callback) ->
 		request.stream
 			method: 'GET'
 			url: "/api/v1/image/#{deviceType}/"
 			baseUrl: imageMakerUrl
+		.catch
+			name: 'ResinRequestError'
+			statusCode: 404
+		, ->
+			throw new errors.ResinRequestError('No such device type')
 		.nodeify(callback)
 
 	return exports
