@@ -85,7 +85,7 @@ describe 'SDK Integration Tests', ->
 	# running the tests in a slow connection
 	@timeout(30 * 60 * 1000)
 
-	describe.skip 'given a not logged in user', ->
+	describe 'given a not logged in user', ->
 
 		beforeEach (done) ->
 			resin.auth.logout().nodeify(done)
@@ -281,7 +281,7 @@ describe 'SDK Integration Tests', ->
 		afterEach (done) ->
 			reset().nodeify(done)
 
-		describe.skip 'Authentication', ->
+		describe 'Authentication', ->
 
 			describe 'resin.auth.isLogged()', ->
 
