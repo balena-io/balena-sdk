@@ -97,8 +97,8 @@ describe 'SDK Integration Tests', ->
 
 	describe 'given a not logged in user', ->
 
-		beforeEach (done) ->
-			resin.auth.logout().nodeify(done)
+		beforeEach ->
+			resin.auth.logout().nodeify
 
 		describe 'Authentication', ->
 
@@ -122,16 +122,14 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.auth.authenticate()', ->
 
-				it 'should eventually be a valid token given valid credentials', (done) ->
+				it 'should eventually be a valid token given valid credentials', ->
 					resin.auth.authenticate(credentials).then(token.isValid).then (isValid) ->
 						m.chai.expect(isValid).to.be.true
-					.nodeify(done)
 
-				it 'should not save the token given valid credentials', (done) ->
+				it 'should not save the token given valid credentials', ->
 					resin.auth.authenticate(credentials).then ->
 						promise = resin.auth.isLoggedIn()
 						m.chai.expect(promise).to.eventually.be.false
-					.nodeify(done)
 
 				it 'should be rejected given invalid credentials', ->
 					promise = resin.auth.authenticate
@@ -154,7 +152,7 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.auth.register()', ->
 
-				beforeEach (done) ->
+				beforeEach ->
 					resin.auth.login
 						email: credentials.register.email
 						password: credentials.register.password
@@ -165,12 +163,12 @@ describe 'SDK Integration Tests', ->
 							url: "/ewa/user(#{userId})"
 							baseUrl: opts.apiUrl
 						.then(resin.auth.logout)
-					.nodeify (error) ->
+					.catch (error) ->
 						if error?.message is 'Request error: Unauthorized'
-							return done()
-						return done(error)
+							return
+						throw error
 
-				it 'should be able to register an account', (done) ->
+				it 'should be able to register an account', ->
 					resin.auth.register
 						email: credentials.register.email
 						password: credentials.register.password
@@ -178,16 +176,14 @@ describe 'SDK Integration Tests', ->
 					.then(resin.auth.isLoggedIn)
 					.then (isLoggedIn) ->
 						m.chai.expect(isLoggedIn).to.be.true
-					.nodeify(done)
 
-				it 'should not save the token automatically', (done) ->
+				it 'should not save the token automatically', ->
 					resin.auth.register
 						email: credentials.register.email
 						password: credentials.register.password
 					.then(resin.auth.isLoggedIn)
 					.then (isLoggedIn) ->
 						m.chai.expect(isLoggedIn).to.be.false
-					.nodeify(done)
 
 				it 'should be rejected if the email is invalid', ->
 					promise = resin.auth.register
@@ -207,33 +203,30 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.models.config.getAll()', ->
 
-				it 'should return all the configuration', (done) ->
+				it 'should return all the configuration', ->
 					resin.models.config.getAll().then (config) ->
 						m.chai.expect(_.isPlainObject(config)).to.be.true
 						m.chai.expect(_.isEmpty(config)).to.be.false
-					.nodeify(done)
 
 			describe 'resin.models.config.getPubNubKeys()', ->
 
-				it 'should become the pubnub keys', (done) ->
+				it 'should become the pubnub keys', ->
 					resin.models.config.getPubNubKeys().then (pubnubKeys) ->
 						m.chai.expect(_.isString(pubnubKeys.publish_key)).to.be.true
 						m.chai.expect(_.isString(pubnubKeys.subscribe_key)).to.be.true
 						m.chai.expect(pubnubKeys.publish_key).to.have.length(42)
 						m.chai.expect(pubnubKeys.subscribe_key).to.have.length(42)
-					.nodeify(done)
 
 			describe 'resin.models.config.getMixpanelToken()', ->
 
-				it 'should become the mixpanel token', (done) ->
+				it 'should become the mixpanel token', ->
 					resin.models.config.getMixpanelToken().then (mixpanelToken) ->
 						m.chai.expect(_.isString(mixpanelToken)).to.be.true
 						m.chai.expect(mixpanelToken).to.have.length(32)
-					.nodeify(done)
 
 			describe 'resin.models.config.getDeviceTypes()', ->
 
-				it 'should become the device types', (done) ->
+				it 'should become the device types', ->
 					resin.models.config.getDeviceTypes().then (deviceTypes) ->
 						m.chai.expect(deviceTypes).to.not.have.length(0)
 
@@ -241,19 +234,16 @@ describe 'SDK Integration Tests', ->
 							m.chai.expect(deviceType.slug).to.exist
 							m.chai.expect(deviceType.name).to.exist
 							m.chai.expect(deviceType.arch).to.exist
-					.nodeify(done)
 
 			describe 'resin.models.config.getDeviceOptions()', ->
 
-				it 'should become the device options', (done) ->
+				it 'should become the device options', ->
 					resin.models.config.getDeviceOptions('raspberry-pi').then (options) ->
 						m.chai.expect(_.isArray(options)).to.be.true
-					.nodeify(done)
 
-				it 'should become the device options given a device type alias', (done) ->
+				it 'should become the device options given a device type alias', ->
 					resin.models.config.getDeviceOptions('raspberrypi').then (options) ->
 						m.chai.expect(_.isArray(options)).to.be.true
-					.nodeify(done)
 
 				it 'should reject if device type is invalid', ->
 					promise = resin.models.config.getDeviceOptions('foobarbaz')
@@ -281,15 +271,14 @@ describe 'SDK Integration Tests', ->
 
 	describe 'given a logged in fresh user', ->
 
-		beforeEach (done) ->
+		beforeEach ->
 			resin.auth.login
 				email: credentials.email
 				password: credentials.password
 			.then(reset)
-			.nodeify(done)
 
-		afterEach (done) ->
-			reset().nodeify(done)
+		afterEach ->
+			reset()
 
 		describe 'Authentication', ->
 
@@ -301,11 +290,10 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.auth.logout()', ->
 
-				it 'should logout the user', (done) ->
+				it 'should logout the user', ->
 					resin.auth.logout().then ->
 						promise = resin.auth.isLoggedIn()
 						m.chai.expect(promise).to.eventually.be.false
-					.nodeify(done)
 
 			describe 'resin.auth.whoami()', ->
 
@@ -361,36 +349,32 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.models.device.getSupportedDeviceTypes()', ->
 
-				it 'should return a non empty array', (done) ->
+				it 'should return a non empty array', ->
 					resin.models.device.getSupportedDeviceTypes().then (deviceTypes) ->
 						m.chai.expect(_.isArray(deviceTypes)).to.be.true
 						m.chai.expect(deviceTypes).to.not.have.length(0)
-					.nodeify(done)
 
-				it 'should return all valid display names', (done) ->
+				it 'should return all valid display names', ->
 					resin.models.device.getSupportedDeviceTypes().each (deviceType) ->
 						promise = resin.models.device.getDeviceSlug(deviceType)
 						m.chai.expect(promise).to.eventually.not.be.undefined
-					.nodeify(done)
 
 			describe 'resin.models.device.getManifestBySlug()', ->
 
-				it 'should become the manifest if the slug is valid', (done) ->
+				it 'should become the manifest if the slug is valid', ->
 					resin.models.device.getManifestBySlug('raspberry-pi').then (manifest) ->
 						m.chai.expect(_.isPlainObject(manifest)).to.be.true
 						m.chai.expect(manifest.slug).to.exist
 						m.chai.expect(manifest.name).to.exist
 						m.chai.expect(manifest.options).to.exist
-					.nodeify(done)
 
 				it 'should be rejected if the device slug is invalid', ->
 					promise = resin.models.device.getManifestBySlug('foobar')
 					m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobar')
 
-				it 'should become the manifest given a device type alias', (done) ->
+				it 'should become the manifest given a device type alias', ->
 					resin.models.device.getManifestBySlug('raspberrypi').then (manifest) ->
 						m.chai.expect(manifest.slug).to.equal('raspberry-pi')
-					.nodeify(done)
 
 		describe 'given no applications', ->
 
@@ -410,11 +394,10 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.application.create()', ->
 
-					it 'should be able to create an application', (done) ->
+					it 'should be able to create an application', ->
 						resin.models.application.create('FooBar', 'raspberry-pi').then (id) ->
 							promise = resin.models.application.getAll()
 							m.chai.expect(promise).to.eventually.have.length(1)
-						.nodeify(done)
 
 					it 'should be rejected if the device type is invalid', ->
 						promise = resin.models.application.create('FooBar', 'foobarbaz')
@@ -424,11 +407,10 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.application.create('Fo', 'raspberry-pi')
 						m.chai.expect(promise).to.be.rejectedWith('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4.')
 
-					it 'should be able to create an application using a device type alias', (done) ->
+					it 'should be able to create an application using a device type alias', ->
 						resin.models.application.create('FooBar', 'raspberrypi').then (id) ->
 							promise = resin.models.application.getAll()
 							m.chai.expect(promise).to.eventually.have.length(1)
-						.nodeify(done)
 
 		describe 'Key Model', ->
 
@@ -442,7 +424,7 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.key.create()', ->
 
-					it 'should be able to create a key', (done) ->
+					it 'should be able to create a key', ->
 						key = PUBLIC_KEY
 						resin.models.key.create('MyKey', key).then ->
 							return resin.models.key.getAll()
@@ -450,9 +432,8 @@ describe 'SDK Integration Tests', ->
 							m.chai.expect(keys).to.have.length(1)
 							m.chai.expect(keys[0].public_key).to.equal(key.replace(/\n/g, ''))
 							m.chai.expect(keys[0].title).to.equal('MyKey')
-						.nodeify(done)
 
-					it 'should be able to create a key from a non trimmed string', (done) ->
+					it 'should be able to create a key from a non trimmed string', ->
 						key = PUBLIC_KEY
 						resin.models.key.create('MyKey', "    #{key}    ").then ->
 							return resin.models.key.getAll()
@@ -460,32 +441,28 @@ describe 'SDK Integration Tests', ->
 							m.chai.expect(keys).to.have.length(1)
 							m.chai.expect(keys[0].public_key).to.equal(key.replace(/\n/g, ''))
 							m.chai.expect(keys[0].title).to.equal('MyKey')
-						.nodeify(done)
 
 			describe 'given a single key', ->
 
-				beforeEach (done) ->
+				beforeEach ->
 					publicKey = PUBLIC_KEY
 					resin.models.key.create('MyKey', publicKey).then (key) =>
 						@key = key
-					.nodeify(done)
 
 				describe 'resin.models.key.getAll()', ->
 
-					it 'should become the list of keys', (done) ->
+					it 'should become the list of keys', ->
 						resin.models.key.getAll().then (keys) =>
 							m.chai.expect(keys).to.have.length(1)
 							m.chai.expect(keys[0].public_key).to.equal(@key.public_key.replace(/\n/g, ''))
 							m.chai.expect(keys[0].title).to.equal('MyKey')
-						.nodeify(done)
 
 				describe 'resin.models.key.get()', ->
 
-					it 'should be able to get a key', (done) ->
+					it 'should be able to get a key', ->
 						resin.models.key.get(@key.id).then (key) =>
 							m.chai.expect(key.public_key).to.equal(@key.public_key.replace(/\n/g, ''))
 							m.chai.expect(key.title).to.equal('MyKey')
-						.nodeify(done)
 
 					it 'should be rejected if the key id is invalid', ->
 						promise = resin.models.key.get(99999999999)
@@ -493,18 +470,16 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.key.remove()', ->
 
-					it 'should be able to remove the key', (done) ->
+					it 'should be able to remove the key', ->
 						resin.models.key.remove(@key.id).then ->
 							promise = resin.models.key.getAll()
 							m.chai.expect(promise).to.eventually.have.length(0)
-						.nodeify(done)
 
 		describe 'given a single application without devices', ->
 
-			beforeEach (done) ->
+			beforeEach ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
 					@application = application
-				.nodeify(done)
 
 			describe 'Application Model', ->
 
@@ -532,20 +507,17 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.application.getAll()
 						m.chai.expect(promise).to.eventually.have.length(1)
 
-					it 'should eventually become an array containing the application', (done) ->
+					it 'should eventually become an array containing the application', ->
 						resin.models.application.getAll().then (applications) =>
 							m.chai.expect(applications[0].id).to.equal(@application.id)
-						.nodeify(done)
 
-					it 'should add a devices_length property', (done) ->
+					it 'should add a devices_length property', ->
 						resin.models.application.getAll().then (applications) ->
 							m.chai.expect(applications[0].devices_length).to.equal(0)
-						.nodeify(done)
 
-					it 'should add an online_devices property', (done) ->
+					it 'should add an online_devices property', ->
 						resin.models.application.getAll().then (applications) ->
 							m.chai.expect(applications[0].online_devices).to.equal(0)
-						.nodeify(done)
 
 				describe 'resin.models.application.get()', ->
 
@@ -579,11 +551,10 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.application.remove()', ->
 
-					it 'should be able to remove an existing application', (done) ->
+					it 'should be able to remove an existing application', ->
 						resin.models.application.remove(@application.app_name).then ->
 							promise = resin.models.application.getAll()
 							m.chai.expect(promise).to.eventually.have.length(0)
-						.nodeify(done)
 
 					it 'should be rejected if the application does not exist', ->
 						promise = resin.models.application.remove('HelloWorldApp')
@@ -591,11 +562,10 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.application.getApiKey()', ->
 
-					it 'should be able to generate an API key', (done) ->
+					it 'should be able to generate an API key', ->
 						resin.models.application.getApiKey(@application.app_name).then (apiKey) ->
 							m.chai.expect(_.isString(apiKey)).to.be.true
 							m.chai.expect(apiKey).to.have.length(32)
-						.nodeify(done)
 
 					it 'should be rejected if the application does no exist', ->
 						promise = resin.models.application.getApiKey('HelloWorldApp')
@@ -617,14 +587,13 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.generateUUID()', ->
 
-					it 'should generate a valid uuid', (done) ->
+					it 'should generate a valid uuid', ->
 						resin.models.device.generateUUID().then (uuid) ->
 							m.chai.expect(_.isString(uuid)).to.be.true
 							m.chai.expect(uuid).to.have.length(62)
 							m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
-						.nodeify(done)
 
-					it 'should generate different uuids', (done) ->
+					it 'should generate different uuids', ->
 						Promise.props
 							one: resin.models.device.generateUUID()
 							two: resin.models.device.generateUUID()
@@ -632,14 +601,12 @@ describe 'SDK Integration Tests', ->
 						.then (results) ->
 							m.chai.expect(results.one).to.not.equal(results.two)
 							m.chai.expect(results.two).to.not.equal(results.three)
-						.nodeify(done)
 
 				describe 'resin.models.device.getManifestByApplication()', ->
 
-					it 'should return the appropriate manifest for an application', (done) ->
+					it 'should return the appropriate manifest for an application', ->
 						resin.models.device.getManifestByApplication(@application.app_name).then (manifest) =>
 							m.chai.expect(manifest.slug).to.equal(@application.device_type)
-						.nodeify(done)
 
 					it 'should be rejected if the application does not exist', ->
 						promise = resin.models.device.getManifestByApplication('HelloWorldApp')
@@ -647,26 +614,23 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.register()', ->
 
-					it 'should be able to register a device to a valid application', (done) ->
+					it 'should be able to register a device to a valid application', ->
 						resin.models.device.generateUUID().then (uuid) =>
 							resin.models.device.register(@application.app_name, uuid)
 						.then =>
 							promise = resin.models.device.getAllByApplication(@application.app_name)
 							m.chai.expect(promise).to.eventually.have.length(1)
-						.nodeify(done)
 
-					it 'should become a valid device object', (done) ->
+					it 'should become a valid device object', ->
 						resin.models.device.generateUUID().then (uuid) =>
 							resin.models.device.register(@application.app_name, uuid).then (device) ->
 								m.chai.expect(device.device_type).to.equal('raspberry-pi')
 								m.chai.expect(device.uuid).to.equal(uuid)
-						.nodeify(done)
 
-					it 'should be rejected if the application does not exist', (done) ->
+					it 'should be rejected if the application does not exist', ->
 						resin.models.device.generateUUID().then (uuid) ->
 							promise = resin.models.device.register('HelloWorldApp', uuid)
 							m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
-						.nodeify(done)
 
 			describe 'Environment Variables Model', ->
 
@@ -682,23 +646,21 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.environmentVariables.create()', ->
 
-					it 'should be able to create a non resin variable', (done) ->
+					it 'should be able to create a non resin variable', ->
 						resin.models.environmentVariables.create(@application.app_name, 'EDITOR', 'vim').then =>
 							resin.models.environmentVariables.getAllByApplication(@application.app_name)
 						.then (envs) ->
 							m.chai.expect(envs).to.have.length(1)
 							m.chai.expect(envs[0].name).to.equal('EDITOR')
 							m.chai.expect(envs[0].value).to.equal('vim')
-						.nodeify(done)
 
-					it 'should be able to create a numeric non resin variable', (done) ->
+					it 'should be able to create a numeric non resin variable', ->
 						resin.models.environmentVariables.create(@application.app_name, 'EDITOR', 1).then =>
 							resin.models.environmentVariables.getAllByApplication(@application.app_name)
 						.then (envs) ->
 							m.chai.expect(envs).to.have.length(1)
 							m.chai.expect(envs[0].name).to.equal('EDITOR')
 							m.chai.expect(envs[0].value).to.equal('1')
-						.nodeify(done)
 
 					it 'should not allow creating a resin variable', ->
 						promise = resin.models.environmentVariables.create(@application.app_name, 'RESIN_API_KEY', 'secret')
@@ -710,30 +672,27 @@ describe 'SDK Integration Tests', ->
 
 				describe 'given an existing environment variable', ->
 
-					beforeEach (done) ->
+					beforeEach ->
 						resin.models.environmentVariables.create(@application.app_name, 'EDITOR', 'vim').then (envVar) =>
 							@envVar = envVar
-						.nodeify(done)
 
 					describe 'resin.models.environmentVariables.update()', ->
 
-						it 'should be able to update an environment variable', (done) ->
+						it 'should be able to update an environment variable', ->
 							resin.models.environmentVariables.update(@envVar.id, 'emacs').then =>
 								resin.models.environmentVariables.getAllByApplication(@application.app_name)
 							.then (envs) ->
 								m.chai.expect(envs).to.have.length(1)
 								m.chai.expect(envs[0].name).to.equal('EDITOR')
 								m.chai.expect(envs[0].value).to.equal('emacs')
-							.nodeify(done)
 
 					describe 'resin.models.environmentVariables.remove()', ->
 
-						it 'should be able to remove an environment variable', (done) ->
+						it 'should be able to remove an environment variable', ->
 							resin.models.environmentVariables.remove(@envVar.id).then =>
 								resin.models.environmentVariables.getAllByApplication(@application.app_name)
 							.then (envs) ->
 								m.chai.expect(envs).to.have.length(0)
-							.nodeify(done)
 
 			describe 'Build Model', ->
 
@@ -751,7 +710,7 @@ describe 'SDK Integration Tests', ->
 
 		describe 'given a single application with a single offline device', ->
 
-			beforeEach (done) ->
+			beforeEach ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
 					@application = application
 
@@ -759,35 +718,30 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.register(application.app_name, uuid)
 					.then (device) =>
 						@device = device
-				.nodeify(done)
 
 			describe 'Device Model', ->
 
 				describe 'resin.models.device.getAll()', ->
 
-					it 'should become the device', (done) ->
+					it 'should become the device', ->
 						resin.models.device.getAll().then (devices) =>
 							m.chai.expect(devices).to.have.length(1)
 							m.chai.expect(devices[0].id).to.equal(@device.id)
-						.nodeify(done)
 
-					it 'should add an application_name property', (done) ->
+					it 'should add an application_name property', ->
 						resin.models.device.getAll().then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
-						.nodeify(done)
 
 				describe 'resin.models.device.getAllByApplication()', ->
 
-					it 'should get the device given the right application', (done) ->
+					it 'should get the device given the right application', ->
 						resin.models.device.getAllByApplication(@application.app_name).then (devices) =>
 							m.chai.expect(devices).to.have.length(1)
 							m.chai.expect(devices[0].id).to.equal(@device.id)
-						.nodeify(done)
 
-					it 'should add an application_name property', (done) ->
+					it 'should add an application_name property', ->
 						resin.models.device.getAllByApplication(@application.app_name).then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
-						.nodeify(done)
 
 					it 'should be rejected if the application does not exist', ->
 						promise = resin.models.device.getAllByApplication('HelloWorldApp')
@@ -795,37 +749,32 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.get()', ->
 
-					it 'should be able to get the device', (done) ->
+					it 'should be able to get the device', ->
 						resin.models.device.get(@device.uuid).then (device) =>
 							m.chai.expect(device.id).to.equal(@device.id)
-						.nodeify(done)
 
-					it 'should add an application_name property', (done) ->
+					it 'should add an application_name property', ->
 						resin.models.device.get(@device.uuid).then (device) =>
 							m.chai.expect(device.application_name).to.equal(@application.app_name)
-						.nodeify(done)
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.get('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-					it 'should be able to use a shorter uuid', (done) ->
+					it 'should be able to use a shorter uuid', ->
 						resin.models.device.get(@device.uuid.slice(0, 8)).then (device) =>
 							m.chai.expect(device.id).to.equal(@device.id)
-						.nodeify(done)
 
 				describe 'resin.models.device.getByName()', ->
 
-					it 'should be able to get the device', (done) ->
+					it 'should be able to get the device', ->
 						resin.models.device.getByName(@device.name).then (devices) =>
 							m.chai.expect(devices).to.have.length(1)
 							m.chai.expect(devices[0].id).to.equal(@device.id)
-						.nodeify(done)
 
-					it 'should add an application_name property', (done) ->
+					it 'should add an application_name property', ->
 						resin.models.device.getByName(@device.name).then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
-						.nodeify(done)
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.getByName('HelloWorldDevice')
@@ -883,19 +832,17 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.remove()', ->
 
-					it 'should be able to remove the device', (done) ->
+					it 'should be able to remove the device', ->
 						resin.models.device.remove(@device.uuid)
 							.then(resin.models.device.getAll)
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
-					  .nodeify(done)
 
-					it 'should be able to remove the device using a shorter uuid', (done) ->
+					it 'should be able to remove the device using a shorter uuid', ->
 						resin.models.device.remove(@device.uuid.slice(0, 7))
 							.then(resin.models.device.getAll)
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
-					  .nodeify(done)
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.remove('asdfghjkl')
@@ -903,19 +850,17 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.rename()', ->
 
-					it 'should be able to rename the device', (done) ->
+					it 'should be able to rename the device', ->
 						resin.models.device.rename(@device.uuid, 'FooBarDevice').then =>
 							resin.models.device.getName(@device.uuid)
 						.then (name) ->
 							m.chai.expect(name).to.equal('FooBarDevice')
-						.nodeify(done)
 
-					it 'should be able to rename the device using a shorter uuid', (done) ->
+					it 'should be able to rename the device using a shorter uuid', ->
 						resin.models.device.rename(@device.uuid.slice(0, 7), 'FooBarDevice').then =>
 							resin.models.device.getName(@device.uuid)
 						.then (name) ->
 							m.chai.expect(name).to.equal('FooBarDevice')
-						.nodeify(done)
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.rename('asdfghjkl', 'Foo Bar')
@@ -923,12 +868,11 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.note()', ->
 
-					it 'should be able to note a device', (done) ->
+					it 'should be able to note a device', ->
 						resin.models.device.note(@device.uuid, 'What you do today can improve all your tomorrows').then =>
 							resin.models.device.get(@device.uuid)
 						.then (device) ->
 							m.chai.expect(device.note).to.equal('What you do today can improve all your tomorrows')
-						.nodeify(done)
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.note('asdfghjkl', 'My note')
@@ -958,17 +902,15 @@ describe 'SDK Integration Tests', ->
 
 					describe 'resin.models.device.enableDeviceUrl()', ->
 
-						it 'should be able to enable web access', (done) ->
+						it 'should be able to enable web access', ->
 							resin.models.device.enableDeviceUrl(@device.uuid).then =>
 								promise = resin.models.device.hasDeviceUrl(@device.uuid)
 								m.chai.expect(promise).to.eventually.be.true
-							.nodeify(done)
 
-						it 'should be able to enable web access using a shorter uuid', (done) ->
+						it 'should be able to enable web access using a shorter uuid', ->
 							resin.models.device.enableDeviceUrl(@device.uuid.slice(0, 7)).then =>
 								promise = resin.models.device.hasDeviceUrl(@device.uuid)
 								m.chai.expect(promise).to.eventually.be.true
-							.nodeify(done)
 
 						it 'should be rejected if the device does not exist', ->
 							promise = resin.models.device.enableDeviceUrl('asdfghjkl')
@@ -976,9 +918,8 @@ describe 'SDK Integration Tests', ->
 
 				describe 'given device url is enabled', ->
 
-					beforeEach (done) ->
-						resin.models.device.enableDeviceUrl(@device.uuid).nodeify(done)
-
+					beforeEach ->
+						resin.models.device.enableDeviceUrl(@device.uuid)
 					describe 'resin.models.device.hasDeviceUrl()', ->
 
 						it 'should eventually be true', ->
@@ -991,7 +932,7 @@ describe 'SDK Integration Tests', ->
 							promise = resin.models.device.getDeviceUrl(@device.uuid.slice(0, 7))
 							m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
 
-						it 'should eventually be an absolute url', (done) ->
+						it 'should eventually be an absolute url', ->
 							resin.models.device.getDeviceUrl(@device.uuid)
 							.then (deviceUrl) ->
 								simpleRequest(deviceUrl)
@@ -1009,21 +950,18 @@ describe 'SDK Integration Tests', ->
 								m.chai.expect(response.response).to.match(
 									/<title>Resin.io Device Public URLs<\/title>/
 								)
-							.nodeify(done)
 
 					describe 'resin.models.device.disableDeviceUrl()', ->
 
-						it 'should be able to disable web access', (done) ->
+						it 'should be able to disable web access', ->
 							resin.models.device.disableDeviceUrl(@device.uuid).then =>
 								promise = resin.models.device.hasDeviceUrl(@device.uuid)
 								m.chai.expect(promise).to.eventually.be.false
-							.nodeify(done)
 
-						it 'should be able to disable web access using a shorter uuid', (done) ->
+						it 'should be able to disable web access using a shorter uuid', ->
 							resin.models.device.disableDeviceUrl(@device.uuid.slice(0, 7)).then =>
 								promise = resin.models.device.hasDeviceUrl(@device.uuid)
 								m.chai.expect(promise).to.eventually.be.false
-							.nodeify(done)
 
 				describe 'resin.models.device.getStatus()', ->
 
@@ -1045,23 +983,21 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.environmentVariables.device.create()', ->
 
-					it 'should be able to create a non resin variable', (done) ->
+					it 'should be able to create a non resin variable', ->
 						resin.models.environmentVariables.device.create(@device.uuid, 'EDITOR', 'vim').then =>
 							resin.models.environmentVariables.device.getAll(@device.uuid)
 						.then (envs) ->
 							m.chai.expect(envs).to.have.length(1)
 							m.chai.expect(envs[0].name).to.equal('EDITOR')
 							m.chai.expect(envs[0].value).to.equal('vim')
-						.nodeify(done)
 
-					it 'should be able to create a numeric non resin variable', (done) ->
+					it 'should be able to create a numeric non resin variable', ->
 						resin.models.environmentVariables.device.create(@device.uuid, 'EDITOR', 1).then =>
 							resin.models.environmentVariables.device.getAll(@device.uuid)
 						.then (envs) ->
 							m.chai.expect(envs).to.have.length(1)
 							m.chai.expect(envs[0].name).to.equal('EDITOR')
 							m.chai.expect(envs[0].value).to.equal('1')
-						.nodeify(done)
 
 					it 'should not allow creating a resin variable', ->
 						promise = resin.models.environmentVariables.device.create(@device.uuid, 'RESIN_API_KEY', 'secret')
@@ -1073,35 +1009,32 @@ describe 'SDK Integration Tests', ->
 
 				describe 'given an existing environment variable', ->
 
-					beforeEach (done) ->
+					beforeEach ->
 						resin.models.environmentVariables.device.create(@device.uuid, 'EDITOR', 'vim').then (envVar) =>
 							@envVar = envVar
-						.nodeify(done)
 
 					describe 'resin.models.environmentVariables.device.update()', ->
 
-						it 'should be able to update an environment variable', (done) ->
+						it 'should be able to update an environment variable', ->
 							resin.models.environmentVariables.device.update(@envVar.id, 'emacs').then =>
 								resin.models.environmentVariables.device.getAll(@device.uuid)
 							.then (envs) ->
 								m.chai.expect(envs).to.have.length(1)
 								m.chai.expect(envs[0].name).to.equal('EDITOR')
 								m.chai.expect(envs[0].value).to.equal('emacs')
-							.nodeify(done)
 
 					describe 'resin.models.environmentVariables.device.remove()', ->
 
-						it 'should be able to remove an environment variable', (done) ->
+						it 'should be able to remove an environment variable', ->
 							resin.models.environmentVariables.device.remove(@envVar.id).then =>
 								resin.models.environmentVariables.device.getAll(@device.uuid)
 							.then (envs) ->
 								m.chai.expect(envs).to.have.length(0)
-							.nodeify(done)
 
 
 		describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
-			beforeEach (done) ->
+			beforeEach ->
 				resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
 					@application = application
 
@@ -1109,20 +1042,18 @@ describe 'SDK Integration Tests', ->
 					resin.models.device.register(application.app_name, uuid)
 				.then (device) =>
 					@device = device
-				.nodeify(done)
 
 			describe 'Device Model', ->
 
 				describe 'resin.models.device.get()', ->
 
-					it 'should return the device given the number shorter uuid', (done) ->
+					it 'should return the device given the number shorter uuid', ->
 						resin.models.device.get(1234567).then (device) =>
 							m.chai.expect(device.id).to.equal(@device.id)
-						.nodeify(done)
 
 		describe 'given a single application with two offline devices that share the same uuid root', ->
 
-			beforeEach (done) ->
+			beforeEach ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
 					@application = application
 
@@ -1134,7 +1065,6 @@ describe 'SDK Integration Tests', ->
 						two: resin.models.device.register(application.app_name, uuid2)
 					.then (devices) =>
 						@devices = devices
-				.nodeify(done)
 
 			describe 'Device Model', ->
 
@@ -1152,7 +1082,7 @@ describe 'SDK Integration Tests', ->
 
 		describe 'given two compatible applications and a single device', ->
 
-			beforeEach (done) ->
+			beforeEach ->
 				Promise.props
 					application1: resin.models.application.create('FooBar', 'raspberry-pi')
 					application2: resin.models.application.create('BarBaz', 'raspberry-pi')
@@ -1164,27 +1094,24 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.register(results.application1.app_name, uuid)
 					.then (device) =>
 						@device = device
-				.nodeify(done)
 
 			describe 'resin.models.device.move()', ->
 
-				it 'should be able to move a device', (done) ->
+				it 'should be able to move a device', ->
 					resin.models.device.move(@device.uuid, @application2.app_name).then =>
 						resin.models.device.getApplicationName(@device.uuid)
 					.then (applicationName) =>
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
-					.nodeify(done)
 
-				it 'should be able to move a device using shorter uuids', (done) ->
+				it 'should be able to move a device using shorter uuids', ->
 					resin.models.device.move(@device.uuid.slice(0, 7), @application2.app_name).then =>
 						resin.models.device.getApplicationName(@device.uuid)
 					.then (applicationName) =>
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
-					.nodeify(done)
 
 		describe 'given two incompatible applications and a single device', ->
 
-			beforeEach (done) ->
+			beforeEach ->
 				Promise.props
 					application1: resin.models.application.create('FooBar', 'raspberry-pi')
 					application2: resin.models.application.create('BarBaz', 'beaglebone-black')
@@ -1196,7 +1123,6 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.register(results.application1.app_name, uuid)
 					.then (device) =>
 						@device = device
-				.nodeify(done)
 
 			describe 'resin.models.device.move()', ->
 
@@ -1231,17 +1157,15 @@ describe 'SDK Integration Tests', ->
 
 				describe 'given a valid device slug', ->
 
-					it 'should contain a valid mime property', (done) ->
+					it 'should contain a valid mime property', ->
 						resin.models.os.download('parallella').then (stream) ->
 							m.chai.expect(stream.mime).to.equal('application/octet-stream')
-						.nodeify(done)
 
-					it 'should contain a valid mime property if passing a device type alias', (done) ->
+					it 'should contain a valid mime property if passing a device type alias', ->
 						resin.models.os.download('raspberrypi').then (stream) ->
 							m.chai.expect(stream.mime).to.equal('application/octet-stream')
-						.nodeify(done)
 
-					it 'should be able to download the image', (done) ->
+					it 'should be able to download the image', ->
 						tmpFile = tmp.tmpNameSync()
 						resin.models.os.download('parallella').then (stream) ->
 							stream.pipe(fs.createWriteStream(tmpFile))
@@ -1252,7 +1176,6 @@ describe 'SDK Integration Tests', ->
 							m.chai.expect(stat.size).to.not.equal(0)
 						.finally ->
 							fs.unlinkAsync(tmpFile)
-						.nodeify(done)
 
 				describe 'given an invalid device slug', ->
 
