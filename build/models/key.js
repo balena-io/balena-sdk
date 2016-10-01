@@ -16,9 +16,9 @@ limitations under the License.
  */
 
 (function() {
-  var _, errors, getKeyModel;
+  var errors, getKeyModel, isEmpty;
 
-  _ = require('lodash');
+  isEmpty = require('lodash/isEmpty');
 
   errors = require('resin-errors');
 
@@ -82,7 +82,7 @@ limitations under the License.
         resource: 'user__has__public_key',
         id: id
       }).tap(function(key) {
-        if (_.isEmpty(key)) {
+        if (isEmpty(key)) {
           throw new errors.ResinKeyNotFound(id);
         }
       }).nodeify(callback);

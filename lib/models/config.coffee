@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-_ = require('lodash')
+once = require('lodash/once')
+union = require('lodash/union')
+map = require('lodash/map')
 
 getConfigModel = (deps, opts) ->
 	{ request } = deps
 	{ apiUrl } = opts
 
-	deviceModel = _.once -> require('./device')(deps, opts)
+	deviceModel = once -> require('./device')(deps, opts)
 
 	exports = {}
 
@@ -58,7 +60,7 @@ getConfigModel = (deps, opts) ->
 			# This logic is literally copy and pasted from Resin UI, but
 			# there are plans to move this to `resin-device-types` so it
 			# should be a matter of time for this to be removed.
-			body.deviceTypes = _.map body.deviceTypes, (deviceType) ->
+			body.deviceTypes = map body.deviceTypes, (deviceType) ->
 				if deviceType.state is 'PREVIEW'
 					deviceType.state = 'ALPHA'
 					deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
@@ -178,7 +180,7 @@ getConfigModel = (deps, opts) ->
 	exports.getDeviceOptions = (deviceType, callback) ->
 		deviceModel().getManifestBySlug(deviceType).then (manifest) ->
 			manifest.initialization ?= {}
-			return _.union(manifest.options, manifest.initialization.options)
+			return union(manifest.options, manifest.initialization.options)
 		.nodeify(callback)
 
 	return exports

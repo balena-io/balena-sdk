@@ -16,9 +16,15 @@ limitations under the License.
  */
 
 (function() {
-  var _, errors, getApplicationModel;
+  var errors, filter, getApplicationModel, isEmpty, once, size;
 
-  _ = require('lodash');
+  once = require('lodash/once');
+
+  isEmpty = require('lodash/isEmpty');
+
+  filter = require('lodash/filter');
+
+  size = require('lodash/size');
 
   errors = require('resin-errors');
 
@@ -26,7 +32,7 @@ limitations under the License.
     var apiUrl, deviceModel, exports, pine, request, token;
     request = deps.request, token = deps.token, pine = deps.pine;
     apiUrl = opts.apiUrl;
-    deviceModel = _.once(function() {
+    deviceModel = once(function() {
       return require('./device')(deps, opts);
     });
     exports = {};
@@ -66,7 +72,7 @@ limitations under the License.
         });
       }).map(function(application) {
         var ref;
-        application.online_devices = _.filter(application.device, {
+        application.online_devices = filter(application.device, {
           is_online: true
         }).length;
         application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
@@ -105,10 +111,10 @@ limitations under the License.
           }
         }
       }).tap(function(application) {
-        if (_.isEmpty(application)) {
+        if (isEmpty(application)) {
           throw new errors.ResinApplicationNotFound(name);
         }
-        if (_.size(application) > 1) {
+        if (size(application) > 1) {
           throw new errors.ResinAmbiguousApplication(name);
         }
       }).get(0).nodeify(callback);
@@ -165,7 +171,7 @@ limitations under the License.
      */
     exports.hasAny = function(callback) {
       return exports.getAll().then(function(applications) {
-        return !_.isEmpty(applications);
+        return !isEmpty(applications);
       }).nodeify(callback);
     };
 

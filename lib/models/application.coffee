@@ -14,14 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-_ = require('lodash')
+once = require('lodash/once')
+isEmpty = require('lodash/isEmpty')
+filter = require('lodash/filter')
+size = require('lodash/size')
 errors = require('resin-errors')
 
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
 	{ apiUrl } = opts
 
-	deviceModel = _.once -> require('./device')(deps, opts)
+	deviceModel = once -> require('./device')(deps, opts)
 
 	exports = {}
 
@@ -59,7 +62,7 @@ getApplicationModel = (deps, opts) ->
 		# TODO: It might be worth to do all these handy
 		# manipulations server side directly.
 		.map (application) ->
-			application.online_devices = _.filter(application.device, is_online: true).length
+			application.online_devices = filter(application.device, is_online: true).length
 			application.devices_length = application.device?.length or 0
 			return application
 
@@ -95,10 +98,10 @@ getApplicationModel = (deps, opts) ->
 					app_name: name
 
 		.tap (application) ->
-			if _.isEmpty(application)
+			if isEmpty(application)
 				throw new errors.ResinApplicationNotFound(name)
 
-			if _.size(application) > 1
+			if size(application) > 1
 				throw new errors.ResinAmbiguousApplication(name)
 		.get(0)
 		.nodeify(callback)
@@ -154,7 +157,7 @@ getApplicationModel = (deps, opts) ->
 	###
 	exports.hasAny = (callback) ->
 		exports.getAll().then (applications) ->
-			return not _.isEmpty(applications)
+			return not isEmpty(applications)
 		.nodeify(callback)
 
 	###*

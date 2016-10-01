@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-_ = require('lodash')
+isEmpty = require('lodash/isEmpty')
 errors = require('resin-errors')
 
 getKeyModel = (deps, opts) ->
@@ -77,7 +77,7 @@ getKeyModel = (deps, opts) ->
 			resource: 'user__has__public_key'
 			id: id
 		.tap (key) ->
-			if _.isEmpty(key)
+			if isEmpty(key)
 				throw new errors.ResinKeyNotFound(id)
 		.nodeify(callback)
 

@@ -16,17 +16,17 @@ limitations under the License.
  */
 
 (function() {
-  var _, getEnvironmentVariablesModel;
+  var getEnvironmentVariablesModel, once;
 
-  _ = require('lodash');
+  once = require('lodash/once');
 
   getEnvironmentVariablesModel = function(deps, opts) {
     var applicationModel, deviceModel, exports, pine;
     pine = deps.pine;
-    deviceModel = _.once(function() {
+    deviceModel = once(function() {
       return require('./device')(deps, opts);
     });
-    applicationModel = _.once(function() {
+    applicationModel = once(function() {
       return require('./application')(deps, opts);
     });
     exports = {};

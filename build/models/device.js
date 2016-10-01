@@ -16,11 +16,23 @@ limitations under the License.
  */
 
 (function() {
-  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, _, deviceStatus, errors, getDeviceModel, registerDevice, semver;
+  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, map, once, registerDevice, semver, some, without;
 
   Promise = require('bluebird');
 
-  _ = require('lodash');
+  isEmpty = require('lodash/isEmpty');
+
+  once = require('lodash/once');
+
+  without = require('lodash/without');
+
+  find = require('lodash/find');
+
+  some = require('lodash/some');
+
+  includes = require('lodash/includes');
+
+  map = require('lodash/map');
 
   semver = require('semver');
 
@@ -38,10 +50,10 @@ limitations under the License.
     var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, pine, request;
     pine = deps.pine, request = deps.request;
     apiUrl = opts.apiUrl;
-    configModel = _.once(function() {
+    configModel = once(function() {
       return require('./config')(deps, opts);
     });
-    applicationModel = _.once(function() {
+    applicationModel = once(function() {
       return require('./application')(deps, opts);
     });
     auth = require('../auth')(deps, opts);
@@ -204,7 +216,7 @@ limitations under the License.
           }
         }
       }).tap(function(device) {
-        if (_.isEmpty(device)) {
+        if (isEmpty(device)) {
           throw new errors.ResinDeviceNotFound(uuid);
         }
         if (device.length > 1) {
@@ -247,7 +259,7 @@ limitations under the License.
           }
         }
       }).tap(function(devices) {
-        if (_.isEmpty(devices)) {
+        if (isEmpty(devices)) {
           throw new errors.ResinDeviceNotFound(name);
         }
       }).map(function(device) {
@@ -438,7 +450,7 @@ limitations under the License.
           throw new Error("The device is offline: " + uuid);
         }
         ips = device.ip_address.split(' ');
-        return _.without(ips, device.vpn_address);
+        return without(ips, device.vpn_address);
       }).nodeify(callback);
     };
 
@@ -1013,7 +1025,7 @@ limitations under the License.
      */
     exports.getSupportedDeviceTypes = function(callback) {
       return configModel().getDeviceTypes().then(function(deviceTypes) {
-        return _.map(deviceTypes, 'name');
+        return map(deviceTypes, 'name');
       }).nodeify(callback);
     };
 
@@ -1041,8 +1053,8 @@ limitations under the License.
      */
     exports.getManifestBySlug = function(slug, callback) {
       return configModel().getDeviceTypes().then(function(deviceTypes) {
-        return _.find(deviceTypes, function(deviceType) {
-          return _.some([deviceType.name === slug, deviceType.slug === slug, _.includes(deviceType.aliases, slug)]);
+        return find(deviceTypes, function(deviceType) {
+          return some([deviceType.name === slug, deviceType.slug === slug, includes(deviceType.aliases, slug)]);
         });
       }).then(function(deviceManifest) {
         if (deviceManifest == null) {

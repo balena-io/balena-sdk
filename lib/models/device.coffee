@@ -15,7 +15,13 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
-_ = require('lodash')
+isEmpty = require('lodash/isEmpty')
+once = require('lodash/once')
+without = require('lodash/without')
+find = require('lodash/find')
+some = require('lodash/some')
+includes = require('lodash/includes')
+map = require('lodash/map')
 semver = require('semver')
 errors = require('resin-errors')
 registerDevice = require('resin-register-device')
@@ -37,8 +43,8 @@ getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
 	{ apiUrl } = opts
 
-	configModel = _.once -> require('./config')(deps, opts)
-	applicationModel = _.once -> require('./application')(deps, opts)
+	configModel = once -> require('./config')(deps, opts)
+	applicationModel = once -> require('./application')(deps, opts)
 	auth = require('../auth')(deps, opts)
 
 	exports = {}
@@ -193,7 +199,7 @@ getDeviceModel = (deps, opts) ->
 					]
 
 		.tap (device) ->
-			if _.isEmpty(device)
+			if isEmpty(device)
 				throw new errors.ResinDeviceNotFound(uuid)
 
 			if device.length > 1
@@ -235,7 +241,7 @@ getDeviceModel = (deps, opts) ->
 					name: name
 
 		.tap (devices) ->
-			if _.isEmpty(devices)
+			if isEmpty(devices)
 				throw new errors.ResinDeviceNotFound(name)
 		.map (device) ->
 			device.application_name = device.application[0].app_name
@@ -416,7 +422,7 @@ getDeviceModel = (deps, opts) ->
 				throw new Error("The device is offline: #{uuid}")
 
 			ips = device.ip_address.split(' ')
-			return _.without(ips, device.vpn_address)
+			return without(ips, device.vpn_address)
 		.nodeify(callback)
 
 	###*
@@ -944,7 +950,7 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getSupportedDeviceTypes = (callback) ->
 		configModel().getDeviceTypes().then (deviceTypes) ->
-			return _.map(deviceTypes, 'name')
+			return map(deviceTypes, 'name')
 		.nodeify(callback)
 
 	###*
@@ -971,11 +977,11 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getManifestBySlug = (slug, callback) ->
 		return configModel().getDeviceTypes().then (deviceTypes) ->
-			return _.find deviceTypes, (deviceType) ->
-				return _.some [
+			return find deviceTypes, (deviceType) ->
+				return some [
 					deviceType.name is slug
 					deviceType.slug is slug
-					_.includes(deviceType.aliases, slug)
+					includes(deviceType.aliases, slug)
 				]
 		.then (deviceManifest) ->
 			if not deviceManifest?

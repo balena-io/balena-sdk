@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-_ = require('lodash')
+once = require('lodash/once')
 errors = require('resin-errors')
 
 getBuildModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = _.once -> require('./application')(deps, opts)
+	applicationModel = once -> require('./application')(deps, opts)
 
 	exports = {}
 

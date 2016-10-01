@@ -16,15 +16,19 @@ limitations under the License.
  */
 
 (function() {
-  var _, getConfigModel;
+  var getConfigModel, map, once, union;
 
-  _ = require('lodash');
+  once = require('lodash/once');
+
+  union = require('lodash/union');
+
+  map = require('lodash/map');
 
   getConfigModel = function(deps, opts) {
     var apiUrl, deviceModel, exports, request;
     request = deps.request;
     apiUrl = opts.apiUrl;
-    deviceModel = _.once(function() {
+    deviceModel = once(function() {
       return require('./device')(deps, opts);
     });
     exports = {};
@@ -56,7 +60,7 @@ limitations under the License.
         url: '/config',
         baseUrl: apiUrl
       }).get('body').then(function(body) {
-        body.deviceTypes = _.map(body.deviceTypes, function(deviceType) {
+        body.deviceTypes = map(body.deviceTypes, function(deviceType) {
           if (deviceType.state === 'PREVIEW') {
             deviceType.state = 'ALPHA';
             deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)');
@@ -187,7 +191,7 @@ limitations under the License.
         if (manifest.initialization == null) {
           manifest.initialization = {};
         }
-        return _.union(manifest.options, manifest.initialization.options);
+        return union(manifest.options, manifest.initialization.options);
       }).nodeify(callback);
     };
     return exports;

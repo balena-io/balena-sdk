@@ -1,7 +1,5 @@
 (function() {
-  var _, notImplemented;
-
-  _ = require('lodash');
+  var notImplemented;
 
   exports.notImplemented = notImplemented = function() {
     throw new Error('The method is not implemented.');

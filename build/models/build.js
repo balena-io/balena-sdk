@@ -16,16 +16,16 @@ limitations under the License.
  */
 
 (function() {
-  var _, errors, getBuildModel;
+  var errors, getBuildModel, once;
 
-  _ = require('lodash');
+  once = require('lodash/once');
 
   errors = require('resin-errors');
 
   getBuildModel = function(deps, opts) {
     var applicationModel, exports, pine;
     pine = deps.pine;
-    applicationModel = _.once(function() {
+    applicationModel = once(function() {
       return require('./application')(deps, opts);
     });
     exports = {};

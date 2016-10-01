@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-_ = require('lodash')
+once = require('lodash/once')
 
 getEnvironmentVariablesModel = (deps, opts) ->
 	{ pine } = deps
 
-	deviceModel = _.once -> require('./device')(deps, opts)
-	applicationModel = _.once -> require('./application')(deps, opts)
+	deviceModel = once -> require('./device')(deps, opts)
+	applicationModel = once -> require('./application')(deps, opts)
 
 	exports = {}
 

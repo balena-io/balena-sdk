@@ -1,5 +1,3 @@
-_ = require('lodash')
-
 exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
 
