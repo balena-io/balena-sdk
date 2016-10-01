@@ -180,7 +180,6 @@ getDeviceModel = (deps, opts) ->
 			options:
 				expand: 'application'
 				filter:
-
 					# Handle shorter uuids by asserting
 					# that it is a substring of the device
 					# uuid starting at index zero.
