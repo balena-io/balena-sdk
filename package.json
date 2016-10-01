@@ -39,7 +39,6 @@
     "isomorphic-fetch": "^2.2.1",
     "jsdoc-to-markdown": "^2.0.1",
     "karma": "^1.3.0",
-    "karma-chrome-launcher": "^2.0.0",
     "karma-env-preprocessor": "^0.1.1",
     "mocha": "^2.4.5",
     "mochainon": "^1.0.0",
@@ -48,6 +47,7 @@
     "resin-settings-client": "emirotin/resin-settings-client#sdk-browser",
     "rindle": "^1.2.0",
     "run-sequence": "^1.1.0",
+    "superagent": "^2.3.0",
     "tmp": "0.0.28"
   },
   "dependencies": {

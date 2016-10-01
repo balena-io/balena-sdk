@@ -11,7 +11,6 @@ module.exports = (config) ->
 	karmaConfig.client =
 		captureConsole: true
 
-	karmaConfig.plugins.push(require('karma-chrome-launcher'))
 	karmaConfig.plugins.push(require('karma-env-preprocessor'))
 	# this does not work if set on `karmaConfig`, I have no idea why
 	config.preprocessors['**/*.spec.coffee'] = [ 'env' ]
@@ -24,15 +23,5 @@ module.exports = (config) ->
 		'RESINTEST_REGISTER_PASSWORD'
 		'RESINTEST_REGISTER_USERNAME'
 	]
-
-	karmaConfig.phantomjsLauncher = {
-		options: {
-          settings: {
-            webSecurityEnabled: false
-          },
-        },
-	}
-
-	karmaConfig.browsers = ['Chrome']
 
 	config.set(karmaConfig)
