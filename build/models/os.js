@@ -61,7 +61,7 @@ limitations under the License.
         throw new errors.ResinRequestError('No such device type');
       }).then(function(response) {
         return new Date(response.headers['last-modified']);
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -95,7 +95,7 @@ limitations under the License.
         statusCode: 404
       }, function() {
         throw new errors.ResinRequestError('No such device type');
-      }).nodeify(callback);
+      }).asCallback(callback);
     });
     return exports;
   };

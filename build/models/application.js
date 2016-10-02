@@ -77,7 +77,7 @@ limitations under the License.
         }).length;
         application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
         return application;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -117,7 +117,7 @@ limitations under the License.
         if (size(application) > 1) {
           throw new errors.ResinAmbiguousApplication(name);
         }
-      }).get(0).nodeify(callback);
+      }).get(0).asCallback(callback);
     };
 
     /**
@@ -145,7 +145,7 @@ limitations under the License.
     exports.has = function(name, callback) {
       return exports.get(name)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
         return false;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -172,7 +172,7 @@ limitations under the License.
     exports.hasAny = function(callback) {
       return exports.getAll().then(function(applications) {
         return !isEmpty(applications);
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -205,7 +205,7 @@ limitations under the License.
         if (application == null) {
           throw new errors.ResinApplicationNotFound(id);
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -245,7 +245,7 @@ limitations under the License.
             device_type: deviceSlug
           }
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -276,7 +276,7 @@ limitations under the License.
             }
           }
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -304,7 +304,7 @@ limitations under the License.
           url: "/application/" + application.id + "/restart",
           baseUrl: apiUrl
         });
-      })["return"](void 0).nodeify(callback);
+      })["return"](void 0).asCallback(callback);
     };
 
     /**
@@ -336,7 +336,7 @@ limitations under the License.
           url: "/application/" + application.id + "/generate-api-key",
           baseUrl: apiUrl
         });
-      }).get('body').nodeify(callback);
+      }).get('body').asCallback(callback);
     };
     return exports;
   };

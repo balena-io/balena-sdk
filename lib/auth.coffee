@@ -62,7 +62,7 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.whoami = (callback) ->
-		token.getUsername().nodeify(callback)
+		token.getUsername().asCallback(callback)
 
 	###*
 	# @summary Authenticate with the server
@@ -105,7 +105,7 @@ getAuth = (deps, opts) ->
 				password: credentials.password
 			refreshToken: false
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Login to Resin.io
@@ -133,7 +133,7 @@ getAuth = (deps, opts) ->
 	exports.login = (credentials, callback) ->
 		exports.authenticate(credentials)
 			.then(token.set)
-			.nodeify(callback)
+			.asCallback(callback)
 
 	###*
 	# @summary Login to Resin.io with a token
@@ -156,7 +156,7 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.loginWithToken = (authToken, callback) ->
-		token.set(authToken).nodeify(callback)
+		token.set(authToken).asCallback(callback)
 
 	###*
 	# @summary Check if you're logged in
@@ -196,7 +196,7 @@ getAuth = (deps, opts) ->
 		.return(true)
 		.catch ->
 			return false
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get current logged in user's token
@@ -225,7 +225,7 @@ getAuth = (deps, opts) ->
 		token.get().then (savedToken) ->
 			throw new errors.ResinNotLoggedIn() if not savedToken?
 			return savedToken
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get current logged in user's id
@@ -254,7 +254,7 @@ getAuth = (deps, opts) ->
 		token.getUserId().then (id) ->
 			throw new errors.ResinNotLoggedIn() if not id?
 			return id
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get current logged in user's email
@@ -283,7 +283,7 @@ getAuth = (deps, opts) ->
 		token.getEmail().then (email) ->
 			throw new errors.ResinNotLoggedIn() if not email?
 			return email
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Logout from Resin.io
@@ -303,7 +303,7 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.logout = (callback) ->
-		token.remove().nodeify(callback)
+		token.remove().asCallback(callback)
 
 	###*
 	# @summary Register to Resin.io
@@ -343,7 +343,7 @@ getAuth = (deps, opts) ->
 			baseUrl: apiUrl
 			body: credentials
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

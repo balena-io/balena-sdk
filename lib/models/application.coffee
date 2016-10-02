@@ -66,7 +66,7 @@ getApplicationModel = (deps, opts) ->
 			application.devices_length = application.device?.length or 0
 			return application
 
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get a single application
@@ -104,7 +104,7 @@ getApplicationModel = (deps, opts) ->
 			if size(application) > 1
 				throw new errors.ResinAmbiguousApplication(name)
 		.get(0)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Check if an application exist
@@ -132,7 +132,7 @@ getApplicationModel = (deps, opts) ->
 		exports.get(name).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Check if the user has any applications
@@ -158,7 +158,7 @@ getApplicationModel = (deps, opts) ->
 	exports.hasAny = (callback) ->
 		exports.getAll().then (applications) ->
 			return not isEmpty(applications)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get a single application by id
@@ -189,7 +189,7 @@ getApplicationModel = (deps, opts) ->
 		.tap (application) ->
 			if not application?
 				throw new errors.ResinApplicationNotFound(id)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Create an application
@@ -228,7 +228,7 @@ getApplicationModel = (deps, opts) ->
 				body:
 					app_name: name
 					device_type: deviceSlug
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Remove application
@@ -255,7 +255,7 @@ getApplicationModel = (deps, opts) ->
 				options:
 					filter:
 						app_name: name
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Restart application
@@ -282,7 +282,7 @@ getApplicationModel = (deps, opts) ->
 				url: "/application/#{application.id}/restart"
 				baseUrl: apiUrl
 		.return(undefined)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get the API key for a specific application
@@ -313,7 +313,7 @@ getApplicationModel = (deps, opts) ->
 				url: "/application/#{application.id}/generate-api-key"
 				baseUrl: apiUrl
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

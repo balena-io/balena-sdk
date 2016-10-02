@@ -72,7 +72,7 @@ limitations under the License.
           return deviceType;
         });
         return body;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -103,7 +103,7 @@ limitations under the License.
         if (keys == null) {
           throw new Error('No pubnub keys');
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -132,7 +132,7 @@ limitations under the License.
         if (mixpanelToken == null) {
           throw new Error('No mixpanel token');
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -161,7 +161,7 @@ limitations under the License.
         if (deviceTypes == null) {
           throw new Error('No device types');
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -192,7 +192,7 @@ limitations under the License.
           manifest.initialization = {};
         }
         return union(manifest.options, manifest.initialization.options);
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
     return exports;
   };

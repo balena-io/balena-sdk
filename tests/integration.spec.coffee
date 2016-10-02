@@ -98,7 +98,7 @@ describe 'SDK Integration Tests', ->
 	describe 'given a not logged in user', ->
 
 		beforeEach ->
-			resin.auth.logout().nodeify
+			resin.auth.logout()
 
 		describe 'Authentication', ->
 

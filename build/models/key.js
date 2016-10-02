@@ -52,7 +52,7 @@ limitations under the License.
     exports.getAll = function(callback) {
       return pine.get({
         resource: 'user__has__public_key'
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -85,7 +85,7 @@ limitations under the License.
         if (isEmpty(key)) {
           throw new errors.ResinKeyNotFound(id);
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -110,7 +110,7 @@ limitations under the License.
       return pine["delete"]({
         resource: 'user__has__public_key',
         id: id
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -148,7 +148,7 @@ limitations under the License.
             user: userId
           }
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
     return exports;
   };

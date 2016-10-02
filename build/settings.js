@@ -50,7 +50,7 @@ limitations under the License.
     exports.get = function(key, callback) {
       return Promise["try"](function() {
         return settings.get(key);
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -77,7 +77,7 @@ limitations under the License.
     exports.getAll = function(callback) {
       return Promise["try"](function() {
         return settings.getAll();
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
     return exports;
   };

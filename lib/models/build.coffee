@@ -75,7 +75,7 @@ getBuildModel = (deps, opts) ->
 							'username'
 						]
 				orderby: 'created_at desc'
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

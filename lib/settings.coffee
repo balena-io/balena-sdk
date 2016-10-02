@@ -46,7 +46,7 @@ getSettings = (deps, opts) ->
 	exports.get = (key, callback) ->
 		Promise.try ->
 			return settings.get(key)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get all settings **Only implemented in Node.js**
@@ -72,7 +72,7 @@ getSettings = (deps, opts) ->
 	exports.getAll = (callback) ->
 		Promise.try ->
 			return settings.getAll()
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

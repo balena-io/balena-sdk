@@ -66,7 +66,7 @@ limitations under the License.
     	 * });
      */
     exports.whoami = function(callback) {
-      return token.getUsername().nodeify(callback);
+      return token.getUsername().asCallback(callback);
     };
 
     /**
@@ -110,7 +110,7 @@ limitations under the License.
           password: credentials.password
         },
         refreshToken: false
-      }).get('body').nodeify(callback);
+      }).get('body').asCallback(callback);
     };
 
     /**
@@ -137,7 +137,7 @@ limitations under the License.
     	 * });
      */
     exports.login = function(credentials, callback) {
-      return exports.authenticate(credentials).then(token.set).nodeify(callback);
+      return exports.authenticate(credentials).then(token.set).asCallback(callback);
     };
 
     /**
@@ -161,7 +161,7 @@ limitations under the License.
     	 * });
      */
     exports.loginWithToken = function(authToken, callback) {
-      return token.set(authToken).nodeify(callback);
+      return token.set(authToken).asCallback(callback);
     };
 
     /**
@@ -201,7 +201,7 @@ limitations under the License.
         baseUrl: apiUrl
       })["return"](true)["catch"](function() {
         return false;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -233,7 +233,7 @@ limitations under the License.
           throw new errors.ResinNotLoggedIn();
         }
         return savedToken;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -265,7 +265,7 @@ limitations under the License.
           throw new errors.ResinNotLoggedIn();
         }
         return id;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -297,7 +297,7 @@ limitations under the License.
           throw new errors.ResinNotLoggedIn();
         }
         return email;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -318,7 +318,7 @@ limitations under the License.
     	 * });
      */
     exports.logout = function(callback) {
-      return token.remove().nodeify(callback);
+      return token.remove().asCallback(callback);
     };
 
     /**
@@ -361,7 +361,7 @@ limitations under the License.
         url: '/user/register',
         baseUrl: apiUrl,
         body: credentials
-      }).get('body').nodeify(callback);
+      }).get('body').asCallback(callback);
     };
     return exports;
   };

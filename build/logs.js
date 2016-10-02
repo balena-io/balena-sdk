@@ -72,7 +72,7 @@ limitations under the License.
         pubNubKeys: configModel.getPubNubKeys()
       }).then(function(results) {
         return logs.subscribe(results.pubNubKeys, results.device);
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -108,7 +108,7 @@ limitations under the License.
         pubNubKeys: configModel.getPubNubKeys()
       }).then(function(results) {
         return logs.history(results.pubNubKeys, results.device);
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
     return exports;
   };

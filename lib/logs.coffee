@@ -65,7 +65,7 @@ getLogs = (deps, opts) ->
 			pubNubKeys: configModel.getPubNubKeys()
 		.then (results) ->
 			return logs.subscribe(results.pubNubKeys, results.device)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get device logs history
@@ -100,7 +100,7 @@ getLogs = (deps, opts) ->
 			pubNubKeys: configModel.getPubNubKeys()
 		.then (results) ->
 			return logs.history(results.pubNubKeys, results.device)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

@@ -79,7 +79,7 @@ limitations under the License.
           },
           orderby: 'created_at desc'
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
     return exports;
   };

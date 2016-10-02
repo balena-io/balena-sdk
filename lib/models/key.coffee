@@ -48,7 +48,7 @@ getKeyModel = (deps, opts) ->
 	exports.getAll = (callback) ->
 		return pine.get
 			resource: 'user__has__public_key'
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get a single ssh key
@@ -79,7 +79,7 @@ getKeyModel = (deps, opts) ->
 		.tap (key) ->
 			if isEmpty(key)
 				throw new errors.ResinKeyNotFound(id)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Remove ssh key
@@ -103,7 +103,7 @@ getKeyModel = (deps, opts) ->
 		return pine.delete
 			resource: 'user__has__public_key'
 			id: id
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Create a ssh key
@@ -141,7 +141,7 @@ getKeyModel = (deps, opts) ->
 					title: title
 					public_key: key
 					user: userId
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

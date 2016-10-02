@@ -108,7 +108,7 @@ getDeviceModel = (deps, opts) ->
 		.map (device) ->
 			device.application_name = device.application[0].app_name
 			return device
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get all devices by application
@@ -152,7 +152,7 @@ getDeviceModel = (deps, opts) ->
 		.map (device) ->
 			device.application_name = device.application[0].app_name
 			return device
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get a single device
@@ -208,7 +208,7 @@ getDeviceModel = (deps, opts) ->
 		.get(0)
 		.tap (device) ->
 			device.application_name = device.application[0].app_name
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get devices by name
@@ -246,7 +246,7 @@ getDeviceModel = (deps, opts) ->
 		.map (device) ->
 			device.application_name = device.application[0].app_name
 			return device
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get the name of a device
@@ -271,7 +271,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getName = (uuid, callback) ->
-		exports.get(uuid).get('name').nodeify(callback)
+		exports.get(uuid).get('name').asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -296,7 +296,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationName = (uuid, callback) ->
-		exports.get(uuid).get('application_name').nodeify(callback)
+		exports.get(uuid).get('application_name').asCallback(callback)
 
 	###*
 	# @summary Get application container information
@@ -333,7 +333,7 @@ getDeviceModel = (deps, opts) ->
 						appId: appId
 						method: 'GET'
 			.get('body')
-			.nodeify(callback)
+			.asCallback(callback)
 
 	###*
 	# @summary Check if a device exists
@@ -361,7 +361,7 @@ getDeviceModel = (deps, opts) ->
 		exports.get(uuid).return(true)
 		.catch errors.ResinDeviceNotFound, ->
 			return false
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Check if a device is online
@@ -386,7 +386,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.isOnline = (uuid, callback) ->
-		exports.get(uuid).get('is_online').nodeify(callback)
+		exports.get(uuid).get('is_online').asCallback(callback)
 
 	###*
 	# @summary Get the local IP addresses of a device
@@ -423,7 +423,7 @@ getDeviceModel = (deps, opts) ->
 
 			ips = device.ip_address.split(' ')
 			return without(ips, device.vpn_address)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Remove device
@@ -450,7 +450,7 @@ getDeviceModel = (deps, opts) ->
 				options:
 					filter:
 						uuid: device.uuid
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Identify device
@@ -479,7 +479,7 @@ getDeviceModel = (deps, opts) ->
 				body:
 					uuid: device.uuid
 		.return(undefined)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Rename device
@@ -510,7 +510,7 @@ getDeviceModel = (deps, opts) ->
 				options:
 					filter:
 						uuid: device.uuid
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Note a device
@@ -542,7 +542,7 @@ getDeviceModel = (deps, opts) ->
 					filter:
 						uuid: device.uuid
 
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Move a device to another application
@@ -581,7 +581,7 @@ getDeviceModel = (deps, opts) ->
 					filter:
 						uuid: results.device.uuid
 
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Start application on device
@@ -619,7 +619,7 @@ getDeviceModel = (deps, opts) ->
 					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.get('containerId')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Stop application on device
@@ -657,7 +657,7 @@ getDeviceModel = (deps, opts) ->
 					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.get('containerId')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Restart application on device
@@ -690,7 +690,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: settings.get('apiUrl')
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Restart application on device.
@@ -741,7 +741,7 @@ getDeviceModel = (deps, opts) ->
 					data:
 						force: Boolean(options.force)
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Shutdown device
@@ -777,7 +777,7 @@ getDeviceModel = (deps, opts) ->
 					appId: device.application[0].id
 					data:
 						force: Boolean(options.force)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Purge device
@@ -811,7 +811,7 @@ getDeviceModel = (deps, opts) ->
 					appId: device.application[0].id
 					data:
 						appId: device.application[0].id
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Trigger an update check on the supervisor
@@ -848,7 +848,7 @@ getDeviceModel = (deps, opts) ->
 					appId: device.application[0].id
 					data:
 						force: Boolean(options.force)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get display name for a device
@@ -884,7 +884,7 @@ getDeviceModel = (deps, opts) ->
 					return
 
 				throw error
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get device slug
@@ -920,7 +920,7 @@ getDeviceModel = (deps, opts) ->
 					return
 
 				throw error
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get supported device types
@@ -951,7 +951,7 @@ getDeviceModel = (deps, opts) ->
 	exports.getSupportedDeviceTypes = (callback) ->
 		configModel().getDeviceTypes().then (deviceTypes) ->
 			return map(deviceTypes, 'name')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get a device manifest by slug
@@ -988,7 +988,7 @@ getDeviceModel = (deps, opts) ->
 				throw new errors.ResinInvalidDeviceType(slug)
 
 			return deviceManifest
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get a device manifest by application name
@@ -1015,7 +1015,7 @@ getDeviceModel = (deps, opts) ->
 	exports.getManifestByApplication = (applicationName, callback) ->
 		applicationModel().get(applicationName).get('device_type').then (deviceType) ->
 			return exports.getManifestBySlug(deviceType)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Generate a random device UUID
@@ -1085,7 +1085,7 @@ getDeviceModel = (deps, opts) ->
 				uuid: uuid
 				apiKey: results.apiKey
 
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Check if a device is web accessible with device utls
@@ -1115,7 +1115,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.hasDeviceUrl = (uuid, callback) ->
-		exports.get(uuid).get('is_web_accessible').nodeify(callback)
+		exports.get(uuid).get('is_web_accessible').asCallback(callback)
 
 	###*
 	# @summary Get a device url
@@ -1147,7 +1147,7 @@ getDeviceModel = (deps, opts) ->
 			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
 				exports.get(uuid).get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Enable device url for a device
@@ -1176,7 +1176,7 @@ getDeviceModel = (deps, opts) ->
 				options:
 					filter:
 						uuid: device.uuid
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Disable device url for a device
@@ -1205,7 +1205,7 @@ getDeviceModel = (deps, opts) ->
 				options:
 					filter:
 						uuid: device.uuid
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Enable TCP ping for a device
@@ -1240,7 +1240,7 @@ getDeviceModel = (deps, opts) ->
 					deviceId: device.id
 					appId: device.application[0].id
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Disable TCP ping for a device
@@ -1274,7 +1274,7 @@ getDeviceModel = (deps, opts) ->
 					deviceId: device.id
 					appId: device.application[0].id
 		.get('body')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Ping a device
@@ -1306,7 +1306,7 @@ getDeviceModel = (deps, opts) ->
 				body:
 					deviceId: device.id
 					appId: device.application[0].id
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get the status of a device
@@ -1333,7 +1333,7 @@ getDeviceModel = (deps, opts) ->
 	exports.getStatus = (uuid, callback) ->
 		Promise.try ->
 			return deviceStatus.getStatus(uuid).key
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

@@ -53,7 +53,7 @@ limitations under the License.
     exports.isEnabled = function(callback) {
       return token.getProperty('twoFactorRequired').then(function(twoFactorRequired) {
         return twoFactorRequired != null;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -85,7 +85,7 @@ limitations under the License.
     exports.isPassed = function(callback) {
       return token.getProperty('twoFactorRequired').then(function(twoFactorRequired) {
         return !twoFactorRequired;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -114,7 +114,7 @@ limitations under the License.
         body: {
           code: code
         }
-      }).get('body').then(token.set).nodeify(callback);
+      }).get('body').then(token.set).asCallback(callback);
     };
     return exports;
   };

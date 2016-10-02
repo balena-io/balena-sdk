@@ -64,7 +64,7 @@ limitations under the License.
             orderby: 'name asc'
           }
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -98,7 +98,7 @@ limitations under the License.
             application: applicationId
           }
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -128,7 +128,7 @@ limitations under the License.
         body: {
           value: value
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -153,7 +153,7 @@ limitations under the License.
       return pine["delete"]({
         resource: 'environment_variable',
         id: id
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -228,7 +228,7 @@ limitations under the License.
           delete environmentVariable.env_var_name;
         }
         return environmentVariable;
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -262,7 +262,7 @@ limitations under the License.
             value: String(value)
           }
         });
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -292,7 +292,7 @@ limitations under the License.
         body: {
           value: value
         }
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
 
     /**
@@ -317,7 +317,7 @@ limitations under the License.
       return pine["delete"]({
         resource: 'device_environment_variable',
         id: id
-      }).nodeify(callback);
+      }).asCallback(callback);
     };
     return exports;
   };

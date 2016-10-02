@@ -70,7 +70,7 @@ getConfigModel = (deps, opts) ->
 				return deviceType
 
 			return body
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get PubNub keys
@@ -99,7 +99,7 @@ getConfigModel = (deps, opts) ->
 		exports.getAll().get('pubnub').tap (keys) ->
 			if not keys?
 				throw new Error('No pubnub keys')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get Mixpanel token
@@ -126,7 +126,7 @@ getConfigModel = (deps, opts) ->
 		exports.getAll().get('mixpanelToken').tap (mixpanelToken) ->
 			if not mixpanelToken?
 				throw new Error('No mixpanel token')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get device types
@@ -153,7 +153,7 @@ getConfigModel = (deps, opts) ->
 		exports.getAll().get('deviceTypes').tap (deviceTypes) ->
 			if not deviceTypes?
 				throw new Error('No device types')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Get configuration/initialization options for a device type
@@ -181,7 +181,7 @@ getConfigModel = (deps, opts) ->
 		deviceModel().getManifestBySlug(deviceType).then (manifest) ->
 			manifest.initialization ?= {}
 			return union(manifest.options, manifest.initialization.options)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

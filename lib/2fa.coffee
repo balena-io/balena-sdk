@@ -49,7 +49,7 @@ get2fa = (deps, opts) ->
 	exports.isEnabled = (callback) ->
 		token.getProperty('twoFactorRequired').then (twoFactorRequired) ->
 			return twoFactorRequired?
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Check if two factor authentication challenge was passed
@@ -80,7 +80,7 @@ get2fa = (deps, opts) ->
 	exports.isPassed = (callback) ->
 		token.getProperty('twoFactorRequired').then (twoFactorRequired) ->
 			return not twoFactorRequired
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Challenge two factor authentication
@@ -108,7 +108,7 @@ get2fa = (deps, opts) ->
 			body: { code }
 		.get('body')
 		.then(token.set)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

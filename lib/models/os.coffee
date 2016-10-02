@@ -56,7 +56,7 @@ getOsModel = (deps, opts) ->
 			throw new errors.ResinRequestError('No such device type')
 		.then (response) ->
 			return new Date(response.headers['last-modified'])
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Download an OS image
@@ -89,7 +89,7 @@ getOsModel = (deps, opts) ->
 			statusCode: 404
 		, ->
 			throw new errors.ResinRequestError('No such device type')
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 

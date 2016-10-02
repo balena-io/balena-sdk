@@ -54,7 +54,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 					filter:
 						application: applicationId
 					orderby: 'name asc'
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Create an environment variable for an application
@@ -85,7 +85,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 					name: name
 					value: String(value)
 					application: applicationId
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Update an environment variable value from an application
@@ -113,7 +113,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			id: id
 			body:
 				value: value
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Remove environment variable
@@ -137,7 +137,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 		return pine.delete
 			resource: 'environment_variable'
 			id: id
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Check is a variable is system specific
@@ -211,7 +211,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 				delete environmentVariable.env_var_name
 			return environmentVariable
 
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Create a device environment variable
@@ -242,7 +242,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 					device: device.id
 					env_var_name: name
 					value: String(value)
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Update a device environment variable
@@ -270,7 +270,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			id: id
 			body:
 				value: value
-		.nodeify(callback)
+		.asCallback(callback)
 
 	###*
 	# @summary Remove a device environment variable
@@ -294,7 +294,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 		return pine.delete
 			resource: 'device_environment_variable'
 			id: id
-		.nodeify(callback)
+		.asCallback(callback)
 
 	return exports
 
