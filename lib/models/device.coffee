@@ -27,6 +27,8 @@ errors = require('resin-errors')
 registerDevice = require('resin-register-device')
 deviceStatus = require('resin-device-status')
 
+{ onlyIf } = require('../util')
+
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
 # prerelase supervisor version, which precedes 1.8.0 but comes after 1.8.0-alpha.0
@@ -41,7 +43,7 @@ CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
 getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
-	{ apiUrl } = opts
+	{ apiUrl, isBrowser } = opts
 
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
@@ -1071,7 +1073,7 @@ getDeviceModel = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.register = (applicationName, uuid, callback) ->
+	exports.register = onlyIf(not isBrowser) (applicationName, uuid, callback) ->
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().getApiKey(applicationName)

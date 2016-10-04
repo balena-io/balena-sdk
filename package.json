@@ -53,11 +53,11 @@
   "dependencies": {
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
-    "resin-device-logs": "emirotin/resin-device-logs#sdk-browser",
-    "resin-device-status": "emirotin/resin-device-status#sdk-browser",
+    "resin-device-logs": "^3.0.1",
+    "resin-device-status": "^1.0.1",
     "resin-errors": "^2.4.0",
     "resin-pine": "emirotin/resin-pine#sdk-browser",
-    "resin-register-device": "emirotin/resin-register-device#sdk-browser",
+    "resin-register-device": "^2.1.1",
     "resin-request": "emirotin/resin-request#sdk-browser",
     "resin-token": "emirotin/resin-token#sdk-browser",
     "semver": "^5.1.0"
