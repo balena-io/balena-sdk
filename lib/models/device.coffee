@@ -996,27 +996,19 @@ exports.getManifestByApplication = (applicationName, callback) ->
 	.nodeify(callback)
 
 ###*
-# @summary Generate a random device UUID
-# @name generateUUID
+# @summary Generate a random unique key, useful for a device uuid or api key
+# @name generateUniqueKey
 # @function
 # @public
 # @memberof resin.models.device
 #
-# @fulfil {String} - a generated UUID
+# @fulfil {String} - a generated unique key
 # @returns {Promise}
 #
 # @example
-# resin.models.device.generateUUID().then(function(uuid) {
-# 	console.log(uuid);
-# });
-#
-# @example
-# resin.models.device.generateUUID(function(error, uuid) {
-# 	if (error) throw error;
-# 	console.log(uuid);
-# });
+# uniqueKey = resin.models.device.generateUniqueKey()
 ###
-exports.generateUUID = registerDevice.generateUUID
+exports.generateUniqueKey = registerDevice.generateUniqueKey
 
 ###*
 # @summary Register a new device with a Resin.io application
@@ -1026,42 +1018,43 @@ exports.generateUUID = registerDevice.generateUUID
 # @memberof resin.models.device
 #
 # @param {String} applicationName - application name
-# @param {String} uuid - device uuid
+# @param {String} uuid - uuid to create the device with
+# @param {String} api key - device api key to create for the device
 #
 # @fulfil {Object} - device
 # @returns {Promise}
 #
 # @example
-# resin.models.device.generateUUID().then(function(uuid) {
-# 	resin.models.device.register('MyApp', uuid).then(function(device) {
-# 		console.log(device);
-# 	});
+# uuid = resin.models.device.generateUniqueKey()
+# deviceApiKey = resin.models.device.generateUniqueKey()
+# resin.models.device.register('MyApp', uuid, deviceApiKey).then(function(device) {
+# 	console.log(device);
 # });
 #
 # @example
-# resin.models.device.generateUUID(function(error, uuid) {
+# uuid = resin.models.device.generateUniqueKey()
+# deviceApiKey = resin.models.device.generateUniqueKey()
+# resin.models.device.register('MyApp', uuid, deviceApiKey, function(error, device) {
 # 	if (error) throw error;
 #
-# 	resin.models.device.register('MyApp', uuid, function(error, device) {
-# 		if (error) throw error;
-#
-# 		console.log(device);
-# 	});
+# 	console.log(device);
 # });
 ###
-exports.register = (applicationName, uuid, callback) ->
+exports.register = (applicationName, uuid, deviceApiKey, callback) ->
 	Promise.props
 		userId: auth.getUserId()
 		apiKey: applicationModel.getApiKey(applicationName)
 		application: applicationModel.get(applicationName)
 	.then (results) ->
 
-		return registerDevice.register pine,
+		return registerDevice.register
 			userId: results.userId
 			applicationId: results.application.id
-			deviceType: results.application.device_type
 			uuid: uuid
-			apiKey: results.apiKey
+			deviceType: results.application.device_type
+			deviceApiKey: deviceApiKey
+			provisioningApiKey: results.apiKey
+			apiEndpoint: settings.get('apiUrl')
 
 	.nodeify(callback)
 

@@ -574,24 +574,21 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.device.getAllByApplication(@application.app_name)
 						m.chai.expect(promise).to.become([])
 
-				describe 'resin.models.device.generateUUID()', ->
+				describe 'resin.models.device.generateUniqueKey()', ->
 
-					it 'should generate a valid uuid', (done) ->
-						resin.models.device.generateUUID().then (uuid) ->
-							m.chai.expect(_.isString(uuid)).to.be.true
-							m.chai.expect(uuid).to.have.length(62)
-							m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
-						.nodeify(done)
+					it 'should generate a valid uuid', ->
+						uuid = resin.models.device.generateUniqueKey()
+						m.chai.expect(_.isString(uuid)).to.be.true
+						m.chai.expect(uuid).to.have.length(62)
+						m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
 
-					it 'should generate different uuids', (done) ->
-						Promise.props
-							one: resin.models.device.generateUUID()
-							two: resin.models.device.generateUUID()
-							three: resin.models.device.generateUUID()
-						.then (results) ->
-							m.chai.expect(results.one).to.not.equal(results.two)
-							m.chai.expect(results.two).to.not.equal(results.three)
-						.nodeify(done)
+					it 'should generate different unique keys', ->
+						results =
+							one: resin.models.device.generateUniqueKey()
+							two: resin.models.device.generateUniqueKey()
+							three: resin.models.device.generateUniqueKey()
+						m.chai.expect(results.one).to.not.equal(results.two)
+						m.chai.expect(results.two).to.not.equal(results.three)
 
 				describe 'resin.models.device.getManifestByApplication()', ->
 
@@ -607,24 +604,27 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.device.register()', ->
 
 					it 'should be able to register a device to a valid application', (done) ->
-						resin.models.device.generateUUID().then (uuid) =>
-							resin.models.device.register(@application.app_name, uuid)
+						uuid = resin.models.device.generateUniqueKey()
+						deviceApiKey = resin.models.device.generateUniqueKey()
+						resin.models.device.register(@application.app_name, uuid, deviceApiKey)
 						.then =>
 							promise = resin.models.device.getAllByApplication(@application.app_name)
 							m.chai.expect(promise).to.eventually.have.length(1)
 						.nodeify(done)
 
 					it 'should become a valid device object', (done) ->
-						resin.models.device.generateUUID().then (uuid) =>
-							resin.models.device.register(@application.app_name, uuid).then (device) ->
-								m.chai.expect(device.device_type).to.equal('raspberry-pi')
-								m.chai.expect(device.uuid).to.equal(uuid)
+						uuid = resin.models.device.generateUniqueKey()
+						deviceApiKey = resin.models.device.generateUniqueKey()
+						resin.models.device.register(@application.app_name, uuid, deviceApiKey).then (device) ->
+							m.chai.expect(device.device_type).to.equal('raspberry-pi')
+							m.chai.expect(device.uuid).to.equal(uuid)
 						.nodeify(done)
 
 					it 'should be rejected if the application does not exist', (done) ->
-						resin.models.device.generateUUID().then (uuid) ->
-							promise = resin.models.device.register('HelloWorldApp', uuid)
-							m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+						uuid = resin.models.device.generateUniqueKey()
+						deviceApiKey = resin.models.device.generateUniqueKey()
+						promise = resin.models.device.register('HelloWorldApp', uuid, deviceApiKey)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 						.nodeify(done)
 
 			describe 'Environment Variables Model', ->
@@ -714,8 +714,9 @@ describe 'SDK Integration Tests', ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
 					@application = application
 
-					resin.models.device.generateUUID().then (uuid) ->
-						resin.models.device.register(application.app_name, uuid)
+					uuid = resin.models.device.generateUniqueKey()
+					deviceApiKey = resin.models.device.generateUniqueKey()
+					resin.models.device.register(application.app_name, uuid, deviceApiKey)
 					.then (device) =>
 						@device = device
 				.nodeify(done)
@@ -1058,7 +1059,8 @@ describe 'SDK Integration Tests', ->
 					@application = application
 
 					uuid = '1234567aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-					resin.models.device.register(application.app_name, uuid)
+					deviceApiKey = '1234567aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+					resin.models.device.register(application.app_name, uuid, deviceApiKey)
 				.then (device) =>
 					@device = device
 				.nodeify(done)
@@ -1080,10 +1082,12 @@ describe 'SDK Integration Tests', ->
 
 					uuid1 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 					uuid2 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+					deviceApiKey1 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+					deviceApiKey2 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 
 					Promise.props
-						one: resin.models.device.register(application.app_name, uuid1)
-						two: resin.models.device.register(application.app_name, uuid2)
+						one: resin.models.device.register(application.app_name, uuid1, deviceApiKey1)
+						two: resin.models.device.register(application.app_name, uuid2, deviceApiKey2)
 					.then (devices) =>
 						@devices = devices
 				.nodeify(done)
@@ -1112,8 +1116,9 @@ describe 'SDK Integration Tests', ->
 					@application1 = results.application1
 					@application2 = results.application2
 
-					resin.models.device.generateUUID().then (uuid) ->
-						resin.models.device.register(results.application1.app_name, uuid)
+					uuid = resin.models.device.generateUniqueKey()
+					deviceApiKey = resin.models.device.generateUniqueKey()
+					resin.models.device.register(results.application1.app_name, uuid, deviceApiKey)
 					.then (device) =>
 						@device = device
 				.nodeify(done)
@@ -1144,8 +1149,9 @@ describe 'SDK Integration Tests', ->
 					@application1 = results.application1
 					@application2 = results.application2
 
-					resin.models.device.generateUUID().then (uuid) ->
-						resin.models.device.register(results.application1.app_name, uuid)
+					uuid = resin.models.device.generateUniqueKey()
+					deviceApiKey = resin.models.device.generateUniqueKey()
+					resin.models.device.register(results.application1.app_name, uuid, deviceApiKey)
 					.then (device) =>
 						@device = device
 				.nodeify(done)
