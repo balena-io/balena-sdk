@@ -1207,4 +1207,4 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be rejected with an error message', ->
 						promise = resin.models.os.download('foo-bar-baz')
-						m.chai.expect(promise).to.be.rejectedWith('No such device type')
+						m.chai.expect(promise).to.be.rejectedWith('Request error: Device type "foo-bar-baz" not found')
