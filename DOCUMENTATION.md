@@ -41,8 +41,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
             * [.restartApplication(uuid)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
             * ~~[.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
-            * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
-            * [.shutdown(uuid)](#resin.models.device.shutdown) ⇒ <code>Promise</code>
+            * [.reboot(uuid, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
+            * [.shutdown(uuid, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuid)](#resin.models.device.purge) ⇒ <code>Promise</code>
             * [.update(uuid, options)](#resin.models.device.update) ⇒ <code>Promise</code>
             * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
@@ -143,8 +143,8 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
         * [.restartApplication(uuid)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
         * ~~[.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
-        * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
-        * [.shutdown(uuid)](#resin.models.device.shutdown) ⇒ <code>Promise</code>
+        * [.reboot(uuid, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
+        * [.shutdown(uuid, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuid)](#resin.models.device.purge) ⇒ <code>Promise</code>
         * [.update(uuid, options)](#resin.models.device.update) ⇒ <code>Promise</code>
         * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
@@ -437,8 +437,8 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.stopApplication(uuid)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
     * [.restartApplication(uuid)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
     * ~~[.restart(uuid)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
-    * [.reboot(uuid)](#resin.models.device.reboot) ⇒ <code>Promise</code>
-    * [.shutdown(uuid)](#resin.models.device.shutdown) ⇒ <code>Promise</code>
+    * [.reboot(uuid, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
+    * [.shutdown(uuid, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuid)](#resin.models.device.purge) ⇒ <code>Promise</code>
     * [.update(uuid, options)](#resin.models.device.update) ⇒ <code>Promise</code>
     * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
@@ -907,14 +907,16 @@ resin.models.device.restartApplication('7cf02a6', function(error) {
 
 <a name="resin.models.device.reboot"></a>
 
-##### device.reboot(uuid) ⇒ <code>Promise</code>
+##### device.reboot(uuid, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
 **Summary**: Reboot device  
 **Access:** public  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| uuid | <code>String</code> | device uuid |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuid | <code>String</code> |  | device uuid |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
 
 **Example**  
 ```js
@@ -928,14 +930,16 @@ resin.models.device.reboot('7cf02a6', function(error) {
 ```
 <a name="resin.models.device.shutdown"></a>
 
-##### device.shutdown(uuid) ⇒ <code>Promise</code>
+##### device.shutdown(uuid, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Shuwdown device  
+**Summary**: Shutdown device  
 **Access:** public  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| uuid | <code>String</code> | device uuid |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuid | <code>String</code> |  | device uuid |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
 
 **Example**  
 ```js
