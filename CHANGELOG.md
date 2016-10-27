@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.4.0] - 2016-10-27
+
+### Added
+
+- Allow passing an optional `force` option to `resin.models.device.reboot()` and `resin.models.device.shutdown()`.
+
 ## [5.3.6] - 2016-09-26
 
 ### Changed
@@ -302,6 +308,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[5.4.0]: https://github.com/resin-io/resin-sdk/compare/v5.3.6...v5.4.0
 [5.3.6]: https://github.com/resin-io/resin-sdk/compare/v5.3.5...v5.3.6
 [5.3.5]: https://github.com/resin-io/resin-sdk/compare/v5.3.4...v5.3.5
 [5.3.4]: https://github.com/resin-io/resin-sdk/compare/v5.3.3...v5.3.4
