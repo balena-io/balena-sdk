@@ -707,6 +707,8 @@ exports.restart = exports.restartApplication
 # @memberof resin.models.device
 #
 # @param {String} uuid - device uuid
+# @param {Object} [options] - options
+# @param {Boolean} [options.force=false] - override update lock
 # @returns {Promise}
 #
 # @example
@@ -717,7 +719,10 @@ exports.restart = exports.restartApplication
 # 	if (error) throw error;
 # });
 ###
-exports.reboot = (uuid, callback) ->
+exports.reboot = (uuid, options = {}, callback) ->
+	if _.isFunction(options)
+		callback = options
+		options = {}
 	exports.get(uuid).then (device) ->
 		return request.send
 			method: 'POST'
@@ -725,17 +730,21 @@ exports.reboot = (uuid, callback) ->
 			baseUrl: settings.get('apiUrl')
 			body:
 				deviceId: device.id
+				data:
+					force: Boolean(options.force)
 	.get('body')
 	.nodeify(callback)
 
 ###*
-# @summary Shuwdown device
+# @summary Shutdown device
 # @name shutdown
 # @public
 # @function
 # @memberof resin.models.device
 #
 # @param {String} uuid - device uuid
+# @param {Object} [options] - options
+# @param {Boolean} [options.force=false] - override update lock
 # @returns {Promise}
 #
 # @example
@@ -746,7 +755,10 @@ exports.reboot = (uuid, callback) ->
 # 	if (error) throw error;
 # });
 ###
-exports.shutdown = (uuid, callback) ->
+exports.shutdown = (uuid, options = {}, callback) ->
+	if _.isFunction(options)
+		callback = options
+		options = {}
 	exports.get(uuid).then (device) ->
 		return request.send
 			method: 'POST'
@@ -755,6 +767,8 @@ exports.shutdown = (uuid, callback) ->
 			body:
 				deviceId: device.id
 				appId: device.application[0].id
+				data:
+					force: Boolean(options.force)
 	.nodeify(callback)
 
 ###*

@@ -799,6 +799,8 @@ limitations under the License.
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
+   * @param {Object} [options] - options
+   * @param {Boolean} [options.force=false] - override update lock
    * @returns {Promise}
    *
    * @example
@@ -810,14 +812,24 @@ limitations under the License.
    * });
    */
 
-  exports.reboot = function(uuid, callback) {
+  exports.reboot = function(uuid, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    if (_.isFunction(options)) {
+      callback = options;
+      options = {};
+    }
     return exports.get(uuid).then(function(device) {
       return request.send({
         method: 'POST',
         url: '/supervisor/v1/reboot',
         baseUrl: settings.get('apiUrl'),
         body: {
-          deviceId: device.id
+          deviceId: device.id,
+          data: {
+            force: Boolean(options.force)
+          }
         }
       });
     }).get('body').nodeify(callback);
@@ -825,13 +837,15 @@ limitations under the License.
 
 
   /**
-   * @summary Shuwdown device
+   * @summary Shutdown device
    * @name shutdown
    * @public
    * @function
    * @memberof resin.models.device
    *
    * @param {String} uuid - device uuid
+   * @param {Object} [options] - options
+   * @param {Boolean} [options.force=false] - override update lock
    * @returns {Promise}
    *
    * @example
@@ -843,7 +857,14 @@ limitations under the License.
    * });
    */
 
-  exports.shutdown = function(uuid, callback) {
+  exports.shutdown = function(uuid, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    if (_.isFunction(options)) {
+      callback = options;
+      options = {};
+    }
     return exports.get(uuid).then(function(device) {
       return request.send({
         method: 'POST',
@@ -851,7 +872,10 @@ limitations under the License.
         baseUrl: settings.get('apiUrl'),
         body: {
           deviceId: device.id,
-          appId: device.application[0].id
+          appId: device.application[0].id,
+          data: {
+            force: Boolean(options.force)
+          }
         }
       });
     }).nodeify(callback);
