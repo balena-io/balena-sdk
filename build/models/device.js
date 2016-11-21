@@ -49,9 +49,9 @@ limitations under the License.
   CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
   getDeviceModel = function(deps, opts) {
-    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, isBrowser, pine, request;
+    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, isBrowser, isTest, pine, request;
     pine = deps.pine, request = deps.request;
-    apiUrl = opts.apiUrl, isBrowser = opts.isBrowser;
+    apiUrl = opts.apiUrl, isBrowser = opts.isBrowser, isTest = opts.isTest;
     configModel = once(function() {
       return require('./config')(deps, opts);
     });
@@ -1118,7 +1118,7 @@ limitations under the License.
     exports.generateUUID = registerDevice.generateUUID;
 
     /**
-    	 * @summary Register a new device with a Resin.io application
+    	 * @summary Register a new device with a Resin.io application. **Should not be used in the browser.**
     	 * @name register
     	 * @public
     	 * @function
@@ -1148,7 +1148,7 @@ limitations under the License.
     	 * 	});
     	 * });
      */
-    exports.register = onlyIf(!isBrowser)(function(applicationName, uuid, callback) {
+    exports.register = onlyIf(!isBrowser || isTest)(function(applicationName, uuid, callback) {
       return Promise.props({
         userId: auth.getUserId(),
         apiKey: applicationModel().getApiKey(applicationName),

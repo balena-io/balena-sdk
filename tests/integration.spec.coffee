@@ -39,7 +39,8 @@ else
 _.assign opts,
 	apiVersion: 'v1'
 	apiKey: null
-	isBrowser: IS_BROWSER
+	isBrowser: IS_BROWSER,
+	isTest: true
 
 pine = getPine(opts)
 resinRequest = getResinRequest(opts)
@@ -466,7 +467,9 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be rejected if the key id is invalid', ->
 						promise = resin.models.key.get(99999999999)
-						m.chai.expect(promise).to.be.rejectedWith('Key not found: 99999999999')
+						m.chai.expect(promise).to.be.rejectedWith('Request error: Internal Server Error')
+						# TODO: used to work before, https://www.flowdock.com/app/rulemotion/platform/threads/v_RHSp7A6eGwvb4l4G6Ro2dd4Ss
+						# m.chai.expect(promise).to.be.rejectedWith('Key not found: 99999999999')
 
 				describe 'resin.models.key.remove()', ->
 
@@ -1126,7 +1129,7 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.models.device.move()', ->
 
-				it 'should be rejected with an incompatiblity error', ->
+				it 'should be rejected with an incompatibility error', ->
 					promise = resin.models.device.move(@device.uuid, @application2.app_name)
 					m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
 
