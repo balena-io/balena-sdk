@@ -44,7 +44,7 @@
     "mochainon": "^1.0.0",
     "request": "^2.67.0",
     "resin-config-karma": "^1.0.4",
-    "resin-settings-client": "emirotin/resin-settings-client#sdk-browser",
+    "resin-settings-client": "^3.5.2",
     "rindle": "^1.2.0",
     "run-sequence": "^1.1.0",
     "superagent": "^2.3.0",
@@ -58,8 +58,8 @@
     "resin-errors": "^2.4.0",
     "resin-pine": "emirotin/resin-pine#sdk-browser",
     "resin-register-device": "^2.1.1",
-    "resin-request": "emirotin/resin-request#sdk-browser",
-    "resin-token": "emirotin/resin-token#sdk-browser",
+    "resin-request": "^6.0.0",
+    "resin-token": "^3.0.0",
     "semver": "^5.1.0"
   }
 }

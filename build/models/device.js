@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, map, once, registerDevice, semver, some, without;
+  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, map, once, onlyIf, registerDevice, semver, some, without;
 
   Promise = require('bluebird');
 
@@ -42,14 +42,16 @@ limitations under the License.
 
   deviceStatus = require('resin-device-status');
 
+  onlyIf = require('../util').onlyIf;
+
   MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
   CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
   getDeviceModel = function(deps, opts) {
-    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, pine, request;
+    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, isBrowser, pine, request;
     pine = deps.pine, request = deps.request;
-    apiUrl = opts.apiUrl;
+    apiUrl = opts.apiUrl, isBrowser = opts.isBrowser;
     configModel = once(function() {
       return require('./config')(deps, opts);
     });
@@ -1146,7 +1148,7 @@ limitations under the License.
     	 * 	});
     	 * });
      */
-    exports.register = function(applicationName, uuid, callback) {
+    exports.register = onlyIf(!isBrowser)(function(applicationName, uuid, callback) {
       return Promise.props({
         userId: auth.getUserId(),
         apiKey: applicationModel().getApiKey(applicationName),
@@ -1160,7 +1162,7 @@ limitations under the License.
           apiKey: results.apiKey
         });
       }).asCallback(callback);
-    };
+    });
 
     /**
     	 * @summary Check if a device is web accessible with device utls

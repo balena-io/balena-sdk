@@ -14,13 +14,13 @@ matrix:
 # what combinations to test
 environment:
   matrix:
-    - nodejs_version: 0.10
+    - nodejs_version: 6
       RESINTEST_EMAIL: 'test2+juan@resin.io'
       RESINTEST_USERNAME: 'test2_juan'
       RESINTEST_USERID: 5616
       RESINTEST_REGISTER_EMAIL: 'test2+register+juan@resin.io'
       RESINTEST_REGISTER_USERNAME: 'test2_register_juan'
-    - nodejs_version: 0.12
+    - nodejs_version: 4
       RESINTEST_EMAIL: 'test3+juan@resin.io'
       RESINTEST_USERNAME: 'test3_juan'
       RESINTEST_USERID: 8717
@@ -29,9 +29,8 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
-  - npm -g install npm@2.12.1
+  - npm -g install npm
   - set PATH=%APPDATA%\npm;%PATH%
-  - npm install -g gulp
   - npm install
 
 build: off
@@ -39,7 +38,7 @@ build: off
 test_script:
   - node --version
   - npm --version
-  - cmd: gulp test
+  - cmd: npm test
 
 notifications:
 
