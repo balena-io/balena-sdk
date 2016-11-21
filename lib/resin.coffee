@@ -56,19 +56,9 @@ sdkTemplate =
 	###
 	settings: require('./settings')
 
-
-### opts:
-apiUrl
-apiVersion?
-apiKey?
-dataDirectory?
-imageMakerUrl
-debug
-###
-
-getSdk = (opts) ->
+module.exports = getSdk = (opts) ->
 	defaults opts,
-		apiVersion: 'v1',
+		apiVersion: 'v2',
 		isBrowser: window?
 
 	if opts.isBrowser
@@ -86,5 +76,3 @@ getSdk = (opts) ->
 	}
 
 	return mapValues(sdkTemplate, (v) -> v(deps, opts))
-
-module.exports = getSdk

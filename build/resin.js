@@ -68,20 +68,10 @@ limitations under the License.
     settings: require('./settings')
   };
 
-
-  /* opts:
-  apiUrl
-  apiVersion?
-  apiKey?
-  dataDirectory?
-  imageMakerUrl
-  debug
-   */
-
-  getSdk = function(opts) {
+  module.exports = getSdk = function(opts) {
     var deps, settings;
     defaults(opts, {
-      apiVersion: 'v1',
+      apiVersion: 'v2',
       isBrowser: typeof window !== "undefined" && window !== null
     });
     if (opts.isBrowser) {
@@ -102,7 +92,5 @@ limitations under the License.
       return v(deps, opts);
     });
   };
-
-  module.exports = getSdk;
 
 }).call(this);
