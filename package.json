@@ -47,8 +47,8 @@
     "resin-settings-client": "^3.5.2",
     "rindle": "^1.2.0",
     "run-sequence": "^1.1.0",
-    "superagent": "^2.3.0",
-    "tmp": "0.0.28"
+    "superagent": "^3.0.0",
+    "tmp": "^0.0.31"
   },
   "dependencies": {
     "bluebird": "^3.3.1",

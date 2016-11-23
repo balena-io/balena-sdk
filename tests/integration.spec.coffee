@@ -51,7 +51,7 @@ simpleRequest = (url) ->
 	return new Promise (resolve, reject) ->
 		superagent.get(url)
 		.end (err, res) ->
-			# have to narmalize because of different behaviour in the browser and node
+			# have to normalize because of different behaviour in the browser and node
 			resolve
 				status: res?.status or err.status or 0
 				isError: !!err
@@ -1184,4 +1184,4 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be rejected with an error message', ->
 						promise = resin.models.os.download('foo-bar-baz')
-						m.chai.expect(promise).to.be.rejectedWith('Request error: Device type "foo-bar-baz" not found')
+						m.chai.expect(promise).to.be.rejectedWith('Request error: No such device type')
