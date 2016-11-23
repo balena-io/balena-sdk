@@ -51,7 +51,7 @@ sdkTemplate =
 	logs: require('./logs')
 
 	###*
-	# @namespace settings. **Only implemented in Node.js**
+	# @namespace settings
 	# @memberof resin
 	###
 	settings: require('./settings')
