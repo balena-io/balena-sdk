@@ -37,7 +37,7 @@ else
 	env = process.env
 
 _.assign opts,
-	apiVersion: 'v1'
+	apiVersion: 'v2'
 	apiKey: null
 	isBrowser: IS_BROWSER,
 	isTest: true
