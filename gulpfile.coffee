@@ -1,4 +1,5 @@
 path = require('path')
+
 gulp = require('gulp')
 mocha = require('gulp-mocha')
 gutil = require('gulp-util')
@@ -7,13 +8,15 @@ coffee = require('gulp-coffee')
 runSequence = require('run-sequence')
 packageJSON = require('./package.json')
 
+{ loadEnv } = require('./tests/util')
+
 OPTIONS =
 	config:
 		coffeelint: path.join(__dirname, 'coffeelint.json')
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
-		integration: 'tests/integration.coffee'
+		integration: 'tests/integration.spec.coffee'
 		javascript: 'build/**/*.js'
 	directories:
 		doc: 'doc/'
@@ -25,6 +28,7 @@ gulp.task 'coffee', ->
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'test', ->
+	loadEnv()
 	gulp.src(OPTIONS.files.integration, read: false)
 		.pipe(mocha({
 			reporter: 'spec'

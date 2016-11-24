@@ -1156,7 +1156,7 @@ resin.models.device.generateUUID(function(error, uuid) {
 
 ##### device.register(applicationName, uuid) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Register a new device with a Resin.io application  
+**Summary**: Register a new device with a Resin.io application. **Should not be used in the browser.**  
 **Access:** public  
 **Fulfil**: <code>Object</code> - device  
 
@@ -2326,7 +2326,7 @@ resin.logs.history('7cf02a6', function(error, lines) {
 
 #### settings.get([key]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[settings](#resin.settings)</code>  
-**Summary**: Get a single setting  
+**Summary**: Get a single setting. **Only implemented in Node.js**  
 **Access:** public  
 **Fulfil**: <code>\*</code> - setting value  
 
@@ -2351,7 +2351,7 @@ resin.settings.get('apiUrl', function(error, apiUrl) {
 
 #### settings.getAll() ⇒ <code>Promise</code>
 **Kind**: static method of <code>[settings](#resin.settings)</code>  
-**Summary**: Get all settings  
+**Summary**: Get all settings **Only implemented in Node.js**  
 **Access:** public  
 **Fulfil**: <code>Object</code> - settings  
 **Example**  

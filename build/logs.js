@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 (function() {
-  var Promise, configModel, deviceModel, errors, logs;
+  var Promise, errors, getLogs, logs;
 
   Promise = require('bluebird');
 
@@ -24,93 +24,95 @@ limitations under the License.
 
   errors = require('resin-errors');
 
-  configModel = require('./models/config');
+  getLogs = function(deps, opts) {
+    var configModel, deviceModel, exports;
+    configModel = require('./models/config')(deps, opts);
+    deviceModel = require('./models/device')(deps, opts);
+    exports = {};
 
-  deviceModel = require('./models/device');
+    /**
+    	 * @summary Subscribe to device logs
+    	 * @name subscribe
+    	 * @function
+    	 * @public
+    	 * @memberof resin.logs
+    	 *
+    	 * @description
+    	 * The `logs` object yielded by this function emits the following events:
+    	 *
+    	 * - `line`: when a log line is received.
+    	 * - `error`: when an error happens.
+    	 *
+    	 * @param {String} uuid - device uuid
+    	 * @fulfil {EventEmitter} - logs
+    	 * @returns {Promise}
+    	 *
+    	 * @todo
+    	 * We should consider making this a readable stream.
+    	 *
+    	 * @example
+    	 * resin.logs.subscribe('7cf02a6').then(function(logs) {
+    	 * 	logs.on('line', function(line) {
+    	 * 		console.log(line);
+    	 * 	});
+    	 * });
+    	 *
+    	 * @example
+    	 * resin.logs.subscribe('7cf02a6', function(error, logs) {
+    	 * 	if (error) throw error;
+    	 *
+    	 * 	logs.on('line', function(line) {
+    	 * 		console.log(line);
+    	 * 	});
+    	 * });
+     */
+    exports.subscribe = function(uuid, callback) {
+      return Promise.props({
+        device: deviceModel.get(uuid),
+        pubNubKeys: configModel.getPubNubKeys()
+      }).then(function(results) {
+        return logs.subscribe(results.pubNubKeys, results.device);
+      }).asCallback(callback);
+    };
 
-
-  /**
-   * @summary Subscribe to device logs
-   * @name subscribe
-   * @function
-   * @public
-   * @memberof resin.logs
-   *
-   * @description
-   * The `logs` object yielded by this function emits the following events:
-   *
-   * - `line`: when a log line is received.
-   * - `error`: when an error happens.
-   *
-   * @param {String} uuid - device uuid
-   * @fulfil {EventEmitter} - logs
-   * @returns {Promise}
-   *
-   * @todo
-   * We should consider making this a readable stream.
-   *
-   * @example
-   * resin.logs.subscribe('7cf02a6').then(function(logs) {
-   * 	logs.on('line', function(line) {
-   * 		console.log(line);
-   * 	});
-   * });
-   *
-   * @example
-   * resin.logs.subscribe('7cf02a6', function(error, logs) {
-   * 	if (error) throw error;
-   *
-   * 	logs.on('line', function(line) {
-   * 		console.log(line);
-   * 	});
-   * });
-   */
-
-  exports.subscribe = function(uuid, callback) {
-    return Promise.props({
-      device: deviceModel.get(uuid),
-      pubNubKeys: configModel.getPubNubKeys()
-    }).then(function(results) {
-      return logs.subscribe(results.pubNubKeys, results.device);
-    }).nodeify(callback);
+    /**
+    	 * @summary Get device logs history
+    	 * @name history
+    	 * @function
+    	 * @public
+    	 * @memberof resin.logs
+    	 *
+    	 * @param {String} uuid - device uuid
+    	 * @fulfil {String[]} - history lines
+    	 * @returns {Promise}
+    	 *
+    	 * @example
+    	 * resin.logs.history('7cf02a6').then(function(lines) {
+    	 * 	lines.forEach(function(line) {
+    	 * 		console.log(line);
+    	 * 	});
+    	 * });
+    	 *
+    	 * @example
+    	 * resin.logs.history('7cf02a6', function(error, lines) {
+    	 * 	if (error) throw error;
+    	 *
+    	 * 	lines.forEach(function(line) {
+    	 * 		console.log(line);
+    	 * 	});
+    	 * });
+     */
+    exports.history = function(uuid, callback) {
+      return Promise.props({
+        device: deviceModel.get(uuid),
+        pubNubKeys: configModel.getPubNubKeys()
+      }).then(function(results) {
+        return logs.history(results.pubNubKeys, results.device);
+      }).asCallback(callback);
+    };
+    return exports;
   };
 
-
-  /**
-   * @summary Get device logs history
-   * @name history
-   * @function
-   * @public
-   * @memberof resin.logs
-   *
-   * @param {String} uuid - device uuid
-   * @fulfil {String[]} - history lines
-   * @returns {Promise}
-   *
-   * @example
-   * resin.logs.history('7cf02a6').then(function(lines) {
-   * 	lines.forEach(function(line) {
-   * 		console.log(line);
-   * 	});
-   * });
-   *
-   * @example
-   * resin.logs.history('7cf02a6', function(error, lines) {
-   * 	if (error) throw error;
-   *
-   * 	lines.forEach(function(line) {
-   * 		console.log(line);
-   * 	});
-   * });
-   */
-
-  exports.history = function(uuid, callback) {
-    return Promise.props({
-      device: deviceModel.get(uuid),
-      pubNubKeys: configModel.getPubNubKeys()
-    }).then(function(results) {
-      return logs.history(results.pubNubKeys, results.device);
-    }).nodeify(callback);
-  };
+  module.exports = getLogs;
 
 }).call(this);
