@@ -56,7 +56,7 @@
     "resin-device-logs": "^3.0.1",
     "resin-device-status": "^1.0.1",
     "resin-errors": "^2.4.0",
-    "resin-pine": "emirotin/resin-pine#sdk-browser",
+    "resin-pine": "^4.0.0",
     "resin-register-device": "^2.1.1",
     "resin-request": "^6.0.1",
     "resin-token": "^3.0.0",

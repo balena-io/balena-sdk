@@ -42,6 +42,8 @@ _.assign opts,
 	isBrowser: IS_BROWSER,
 	isTest: true
 
+console.log('Starting tests, config:', opts)
+
 pine = getPine(opts)
 resinRequest = getResinRequest(opts)
 resin = getSdk(opts)
@@ -78,6 +80,8 @@ credentials =
 		email: env.RESINTEST_REGISTER_EMAIL
 		password: env.RESINTEST_REGISTER_PASSWORD
 		username: env.RESINTEST_REGISTER_USERNAME
+
+console.log('Test creds:', credentials)
 
 if not _.every [
 	credentials.email?
