@@ -23,6 +23,8 @@ if IS_BROWSER
 		imageMakerUrl: 'https://img.resin.io'
 
 	env = window.__env__
+
+	console.log('Running in the browser, env:', env)
 else
 	fs = Promise.promisifyAll(require('fs'))
 	tmp = require('tmp')
@@ -31,8 +33,8 @@ else
 	settings = require('resin-settings-client')
 	opts =
 		apiUrl: settings.get('apiUrl')
-		dataDirectory: settings.get('dataDirectory')
 		imageMakerUrl: settings.get('imageMakerUrl')
+		dataDirectory: settings.get('dataDirectory')
 
 	env = process.env
 
