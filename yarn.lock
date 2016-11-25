@@ -3511,7 +3511,7 @@ qjobs@^1.1.4:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/qjobs/-/qjobs-1.1.5.tgz#659de9f2cf8dcc27a1481276f205377272382e73"
 
-qs@^6.1.0, qs@~6.3.0:
+qs@^6.1.0, qs@^6.3.0, qs@~6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.3.0.tgz#f403b264f23bc01228c74131b407f18d5ea5d442"
 
@@ -3863,15 +3863,15 @@ resin-errors@^2.0.0, resin-errors@^2.3.0, resin-errors@^2.4.0:
   dependencies:
     typed-error "^0.1.0"
 
-resin-pine@emirotin/resin-pine#sdk-browser:
-  version "3.1.1"
-  resolved "https://codeload.github.com/emirotin/resin-pine/tar.gz/152979e256f771922d4ece13379c2d6f9367e9ff"
+resin-pine@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/resin-pine/-/resin-pine-4.0.0.tgz#8a0ea11ae54c5177ce36bbea68c5e1b633476ed1"
   dependencies:
     bluebird "^3.3.1"
     lodash "^4.5.0"
     pinejs-client "^2.1.1"
     resin-errors "^2.0.0"
-    resin-request "^6.0.0"
+    resin-request "^6.0.1"
     resin-token "^3.0.0"
 
 resin-register-device@^2.1.1:
@@ -3881,13 +3881,14 @@ resin-register-device@^2.1.1:
     bluebird "^3.0.0"
     lodash "^4.0.0"
 
-resin-request@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-6.0.0.tgz#c25aa6fb65e04b5cf3c63577834bd8cbf4f75d4a"
+resin-request@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-6.0.1.tgz#00d68fc8586c44021b0d96819914d62fb4514e07"
   dependencies:
     bluebird "^3.3.4"
     lodash "^4.6.1"
     progress-stream "^1.1.1"
+    qs "^6.3.0"
     resin-errors "^2.3.0"
     resin-token "^3.0.0"
     rindle "^1.2.0"
