@@ -138,15 +138,17 @@ limitations under the License.
     	 * });
      */
     exports.create = function(title, key, callback) {
-      key = key.trim();
-      return auth.getUserId().then(function(userId) {
-        return pine.post({
-          resource: 'user__has__public_key',
-          body: {
-            title: title,
-            public_key: key,
-            user: userId
-          }
+      return Promise["try"](function() {
+        key = key.trim();
+        return auth.getUserId().then(function(userId) {
+          return pine.post({
+            resource: 'user__has__public_key',
+            body: {
+              title: title,
+              public_key: key,
+              user: userId
+            }
+          });
         });
       }).asCallback(callback);
     };

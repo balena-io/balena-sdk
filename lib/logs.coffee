@@ -63,8 +63,8 @@ getLogs = (deps, opts) ->
 		Promise.props
 			device: deviceModel.get(uuid)
 			pubNubKeys: configModel.getPubNubKeys()
-		.then (results) ->
-			return logs.subscribe(results.pubNubKeys, results.device)
+		.then ({ pubNubKeys, device }) ->
+			return logs.subscribe(pubNubKeys, device)
 		.asCallback(callback)
 
 	###*

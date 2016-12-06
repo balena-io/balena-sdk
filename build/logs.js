@@ -70,8 +70,10 @@ limitations under the License.
       return Promise.props({
         device: deviceModel.get(uuid),
         pubNubKeys: configModel.getPubNubKeys()
-      }).then(function(results) {
-        return logs.subscribe(results.pubNubKeys, results.device);
+      }).then(function(arg) {
+        var device, pubNubKeys;
+        pubNubKeys = arg.pubNubKeys, device = arg.device;
+        return logs.subscribe(pubNubKeys, device);
       }).asCallback(callback);
     };
 

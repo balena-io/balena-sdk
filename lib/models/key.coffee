@@ -130,17 +130,17 @@ getKeyModel = (deps, opts) ->
 	# });
 	###
 	exports.create = (title, key, callback) ->
+		Promise.try ->
+			# Avoid ugly whitespaces
+			key = key.trim()
 
-		# Avoid ugly whitespaces
-		key = key.trim()
-
-		auth.getUserId().then (userId) ->
-			return pine.post
-				resource: 'user__has__public_key'
-				body:
-					title: title
-					public_key: key
-					user: userId
+			auth.getUserId().then (userId) ->
+				return pine.post
+					resource: 'user__has__public_key'
+					body:
+						title: title
+						public_key: key
+						user: userId
 		.asCallback(callback)
 
 	return exports

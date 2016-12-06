@@ -69,9 +69,9 @@ module.exports = getSdk = (opts) ->
 		settings = require('resin-settings-client')
 
 	deps = {
-		settings,
-		request: getRequest(opts),
-		token: getToken(opts),
+		settings
+		request: getRequest(opts)
+		token: getToken(opts)
 		pine: getPine(opts)
 	}
 
