@@ -17,4 +17,5 @@ exports.loadEnv = ->
 				throw new Error('The .env file looks malformed, key and value must be separated with =')
 			key = s.substring(0, i)
 			value = s.substring(i + 1)
+			console.log("Setting env: #{key}=#{value}")
 			process.env[key] = value

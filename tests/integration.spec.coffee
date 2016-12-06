@@ -23,8 +23,6 @@ if IS_BROWSER
 		imageMakerUrl: 'https://img.resin.io'
 
 	env = window.__env__
-
-	console.log('Running in the browser, env:', env)
 else
 	fs = Promise.promisifyAll(require('fs'))
 	tmp = require('tmp')
@@ -43,8 +41,6 @@ _.assign opts,
 	apiKey: null
 	isBrowser: IS_BROWSER,
 	isTest: true
-
-console.log('Starting tests, config:', opts)
 
 pine = getPine(opts)
 resinRequest = getResinRequest(opts)
@@ -73,28 +69,34 @@ reset = ->
 				resource: 'user__has__public_key'
 		]
 
-credentials =
-	email: env.RESINTEST_EMAIL
-	password: env.RESINTEST_PASSWORD
-	username: env.RESINTEST_USERNAME
-	userId: _.parseInt(env.RESINTEST_USERID)
-	register:
-		email: env.RESINTEST_REGISTER_EMAIL
-		password: env.RESINTEST_REGISTER_PASSWORD
-		username: env.RESINTEST_REGISTER_USERNAME
+buildCredentials = ->
+	if not env
+		throw new Error('Missing environment object?!')
 
-console.log('Test creds:', credentials)
+	credentials =
+		email: env.RESINTEST_EMAIL
+		password: env.RESINTEST_PASSWORD
+		username: env.RESINTEST_USERNAME
+		userId: _.parseInt(env.RESINTEST_USERID)
+		register:
+			email: env.RESINTEST_REGISTER_EMAIL
+			password: env.RESINTEST_REGISTER_PASSWORD
+			username: env.RESINTEST_REGISTER_USERNAME
 
-if not _.every [
-	credentials.email?
-	credentials.password?
-	credentials.username?
-	credentials.userId?
-	credentials.register.email?
-	credentials.register.password?
-	credentials.register.username?
-]
-	throw new Error('Missing environment credentials')
+	if not _.every [
+		credentials.email?
+		credentials.password?
+		credentials.username?
+		credentials.userId?
+		credentials.register.email?
+		credentials.register.password?
+		credentials.register.username?
+	]
+		throw new Error('Missing environment credentials')
+
+	return credentials
+
+credentials = buildCredentials()
 
 describe 'SDK Integration Tests', ->
 
