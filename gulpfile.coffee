@@ -24,7 +24,7 @@ OPTIONS =
 
 gulp.task 'coffee', ->
 	gulp.src(OPTIONS.files.app)
-		.pipe(coffee()).on('error', gutil.log)
+		.pipe(coffee(header: true)).on('error', gutil.log)
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'test', ->
