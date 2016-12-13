@@ -29,7 +29,7 @@
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "coffee-script": "~1.11.0",
+    "coffee-script": "~1.12.1",
     "dotenv": "^2.0.0",
     "fetch-mock": "^5.1.5",
     "gulp": "^3.9.1",
@@ -59,7 +59,7 @@
     "resin-errors": "^2.4.0",
     "resin-pine": "^4.0.0",
     "resin-register-device": "^2.1.1",
-    "resin-request": "^6.0.1",
+    "resin-request": "^6.1.0",
     "resin-token": "^3.0.0",
     "semver": "^5.1.0"
   }
