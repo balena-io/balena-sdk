@@ -59,7 +59,7 @@
     "resin-errors": "^2.4.0",
     "resin-pine": "^4.0.0",
     "resin-register-device": "^2.1.1",
-    "resin-request": "^6.1.0",
+    "resin-request": "^6.2.0",
     "resin-token": "^3.0.0",
     "semver": "^5.1.0"
   }
