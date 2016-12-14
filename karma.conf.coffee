@@ -12,7 +12,7 @@ module.exports = (config) ->
 		captureConsole: true
 
 	karmaConfig.plugins.push(require('karma-env-preprocessor'))
-	karmaConfig.preprocessors['**/*.spec.coffee'] = [ 'env' ]
+	karmaConfig.preprocessors['**/*.spec.coffee'] = [ 'browserify', 'env' ]
 	karmaConfig.envPreprocessor = [
 		'RESINTEST_EMAIL'
 		'RESINTEST_PASSWORD'
