@@ -41,7 +41,6 @@ _.assign opts,
 	apiKey: null
 	isBrowser: IS_BROWSER,
 	isTest: true
-	debug: true
 	retries: 3
 
 pine = getPine(opts)
