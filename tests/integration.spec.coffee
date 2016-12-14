@@ -1145,8 +1145,6 @@ describe 'SDK Integration Tests', ->
 		describe 'OS Model', ->
 
 			describe 'resin.models.os.getLastModified()', ->
-				# TODO: can be reenabled after the CORS PR is deployed to prod
-				return if IS_BROWSER
 
 				describe 'given a valid device slug', ->
 
