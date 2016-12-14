@@ -50,9 +50,9 @@ limitations under the License.
   CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
   getDeviceModel = function(deps, opts) {
-    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, isBrowser, isTest, pine, request;
+    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, isTest, pine, request;
     pine = deps.pine, request = deps.request;
-    apiUrl = opts.apiUrl, isBrowser = opts.isBrowser, isTest = opts.isTest;
+    apiUrl = opts.apiUrl, isTest = opts.isTest;
     configModel = once(function() {
       return require('./config')(deps, opts);
     });
@@ -1096,30 +1096,23 @@ limitations under the License.
     };
 
     /**
-    	 * @summary Generate a random device UUID
-    	 * @name generateUUID
+    	 * @summary Generate a random key, useful for both uuid and api key.
+    	 * @name generateUniqueKey
     	 * @function
     	 * @public
     	 * @memberof resin.models.device
     	 *
-    	 * @fulfil {String} - a generated UUID
-    	 * @returns {Promise}
+    	 * @returns {String} - a generated key
     	 *
     	 * @example
-    	 * resin.models.device.generateUUID().then(function(uuid) {
-    	 * 	console.log(uuid);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.models.device.generateUUID(function(error, uuid) {
-    	 * 	if (error) throw error;
-    	 * 	console.log(uuid);
-    	 * });
+    	 * randomKey = resin.models.device.generateUniqueKey();
+    	 * // randomKey is a randomly generated key that can be used as either a uuid or an api key
+    	 * console.log(randomKey);
      */
-    exports.generateUUID = registerDevice.generateUUID;
+    exports.generateUniqueKey = registerDevice.generateUniqueKey;
 
     /**
-    	 * @summary Register a new device with a Resin.io application. **Should not be used in the browser.**
+    	 * @summary Register a new device with a Resin.io application.
     	 * @name register
     	 * @public
     	 * @function
@@ -1128,42 +1121,38 @@ limitations under the License.
     	 * @param {String} applicationName - application name
     	 * @param {String} uuid - device uuid
     	 *
-    	 * @fulfil {Object} - device
+    	 * @fulfil {Object} - device registration info
     	 * @returns {Promise}
     	 *
     	 * @example
-    	 * resin.models.device.generateUUID().then(function(uuid) {
-    	 * 	resin.models.device.register('MyApp', uuid).then(function(device) {
-    	 * 		console.log(device);
-    	 * 	});
+    	 * var uuid = resin.models.device.generateUniqueKey();
+    	 * resin.models.device.register('MyApp', uuid).then(function(registrationInfo) {
+    	 * 	console.log(registrationInfo);
     	 * });
     	 *
     	 * @example
-    	 * resin.models.device.generateUUID(function(error, uuid) {
+    	 * var uuid = resin.models.device.generateUniqueKey();
+    	 * resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
     	 * 	if (error) throw error;
-    	 *
-    	 * 	resin.models.device.register('MyApp', uuid, function(error, device) {
-    	 * 		if (error) throw error;
-    	 *
-    	 * 		console.log(device);
-    	 * 	});
+    	 * 	console.log(registrationInfo);
     	 * });
      */
-    exports.register = onlyIf(!isBrowser || isTest)(function(applicationName, uuid, callback) {
+    exports.register = function(applicationName, uuid, callback) {
       return Promise.props({
         userId: auth.getUserId(),
         apiKey: applicationModel().getApiKey(applicationName),
         application: applicationModel().get(applicationName)
       }).then(function(results) {
-        return registerDevice.register(pine, {
+        return registerDevice.register({
           userId: results.userId,
           applicationId: results.application.id,
-          deviceType: results.application.device_type,
           uuid: uuid,
-          apiKey: results.apiKey
+          deviceType: results.application.device_type,
+          provisioningApiKey: results.apiKey,
+          apiEndpoint: apiUrl
         });
       }).asCallback(callback);
-    });
+    };
 
     /**
     	 * @summary Check if a device is web accessible with device utls
