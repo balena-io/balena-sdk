@@ -50,7 +50,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
             * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise</code>
             * [.getManifestByApplication(applicationName)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
-            * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>Promise</code>
+            * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise</code>
             * [.hasDeviceUrl(uuid)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
             * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
@@ -152,7 +152,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
         * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise</code>
         * [.getManifestByApplication(applicationName)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
-        * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>Promise</code>
+        * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise</code>
         * [.hasDeviceUrl(uuid)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
         * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
@@ -446,7 +446,7 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
     * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise</code>
     * [.getManifestByApplication(applicationName)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
-    * [.generateUUID()](#resin.models.device.generateUUID) ⇒ <code>Promise</code>
+    * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationName, uuid)](#resin.models.device.register) ⇒ <code>Promise</code>
     * [.hasDeviceUrl(uuid)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
     * [.getDeviceUrl(uuid)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
@@ -1132,33 +1132,26 @@ resin.models.device.getManifestByApplication('MyApp', function(error, manifest) 
 	console.log(manifest);
 });
 ```
-<a name="resin.models.device.generateUUID"></a>
+<a name="resin.models.device.generateUniqueKey"></a>
 
-##### device.generateUUID() ⇒ <code>Promise</code>
+##### device.generateUniqueKey() ⇒ <code>String</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Generate a random device UUID  
+**Summary**: Generate a random key, useful for both uuid and api key.  
+**Returns**: <code>String</code> - - a generated key  
 **Access:** public  
-**Fulfil**: <code>String</code> - a generated UUID  
 **Example**  
 ```js
-resin.models.device.generateUUID().then(function(uuid) {
-	console.log(uuid);
-});
-```
-**Example**  
-```js
-resin.models.device.generateUUID(function(error, uuid) {
-	if (error) throw error;
-	console.log(uuid);
-});
+randomKey = resin.models.device.generateUniqueKey();
+// randomKey is a randomly generated key that can be used as either a uuid or an api key
+console.log(randomKey);
 ```
 <a name="resin.models.device.register"></a>
 
 ##### device.register(applicationName, uuid) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Register a new device with a Resin.io application. **Should not be used in the browser.**  
+**Summary**: Register a new device with a Resin.io application.  
 **Access:** public  
-**Fulfil**: <code>Object</code> - device  
+**Fulfil**: <code>Object</code> - device registration info  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1167,22 +1160,17 @@ resin.models.device.generateUUID(function(error, uuid) {
 
 **Example**  
 ```js
-resin.models.device.generateUUID().then(function(uuid) {
-	resin.models.device.register('MyApp', uuid).then(function(device) {
-		console.log(device);
-	});
+var uuid = resin.models.device.generateUniqueKey();
+resin.models.device.register('MyApp', uuid).then(function(registrationInfo) {
+	console.log(registrationInfo);
 });
 ```
 **Example**  
 ```js
-resin.models.device.generateUUID(function(error, uuid) {
+var uuid = resin.models.device.generateUniqueKey();
+resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 	if (error) throw error;
-
-	resin.models.device.register('MyApp', uuid, function(error, device) {
-		if (error) throw error;
-
-		console.log(device);
-	});
+	console.log(registrationInfo);
 });
 ```
 <a name="resin.models.device.hasDeviceUrl"></a>

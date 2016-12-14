@@ -40,7 +40,6 @@ _.assign opts,
 	apiVersion: 'v2'
 	apiKey: null
 	isBrowser: IS_BROWSER,
-	isTest: true
 	retries: 3
 
 pine = getPine(opts)
@@ -597,22 +596,22 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.device.getAllByApplication(@application.app_name)
 						m.chai.expect(promise).to.become([])
 
-				describe 'resin.models.device.generateUUID()', ->
+				describe 'resin.models.device.generateUniqueKey()', ->
 
 					it 'should generate a valid uuid', ->
-						resin.models.device.generateUUID().then (uuid) ->
-							m.chai.expect(_.isString(uuid)).to.be.true
-							m.chai.expect(uuid).to.have.length(62)
-							m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
+						uuid = resin.models.device.generateUniqueKey()
+
+						m.chai.expect(uuid).to.be.a('string')
+						m.chai.expect(uuid).to.have.length(62)
+						m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
 
 					it 'should generate different uuids', ->
-						Promise.props
-							one: resin.models.device.generateUUID()
-							two: resin.models.device.generateUUID()
-							three: resin.models.device.generateUUID()
-						.then (results) ->
-							m.chai.expect(results.one).to.not.equal(results.two)
-							m.chai.expect(results.two).to.not.equal(results.three)
+						one = resin.models.device.generateUniqueKey()
+						two = resin.models.device.generateUniqueKey()
+						three = resin.models.device.generateUniqueKey()
+
+						m.chai.expect(one).to.not.equal(two)
+						m.chai.expect(two).to.not.equal(three)
 
 				describe 'resin.models.device.getManifestByApplication()', ->
 
@@ -627,22 +626,22 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.device.register()', ->
 
 					it 'should be able to register a device to a valid application', ->
-						resin.models.device.generateUUID().then (uuid) =>
-							resin.models.device.register(@application.app_name, uuid)
+						uuid = resin.models.device.generateUniqueKey()
+						resin.models.device.register(@application.app_name, uuid)
 						.then =>
 							promise = resin.models.device.getAllByApplication(@application.app_name)
 							m.chai.expect(promise).to.eventually.have.length(1)
 
-					it 'should become a valid device object', ->
-						resin.models.device.generateUUID().then (uuid) =>
-							resin.models.device.register(@application.app_name, uuid).then (device) ->
-								m.chai.expect(device.device_type).to.equal('raspberry-pi')
-								m.chai.expect(device.uuid).to.equal(uuid)
+					it 'should become valid device registration info', ->
+						uuid = resin.models.device.generateUniqueKey()
+						resin.models.device.register(@application.app_name, uuid).then (deviceInfo) ->
+							m.chai.expect(deviceInfo.uuid).to.equal(uuid)
+							m.chai.expect(deviceInfo.api_key).to.be.a('string')
 
 					it 'should be rejected if the application does not exist', ->
-						resin.models.device.generateUUID().then (uuid) ->
-							promise = resin.models.device.register('HelloWorldApp', uuid)
-							m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+						uuid = resin.models.device.generateUniqueKey()
+						promise = resin.models.device.register('HelloWorldApp', uuid)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
 			describe 'Environment Variables Model', ->
 
@@ -726,8 +725,10 @@ describe 'SDK Integration Tests', ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
 					@application = application
 
-					resin.models.device.generateUUID().then (uuid) ->
-						resin.models.device.register(application.app_name, uuid)
+					uuid = resin.models.device.generateUniqueKey()
+					resin.models.device.register(application.app_name, uuid)
+					.then (deviceInfo) ->
+						resin.models.device.get(deviceInfo.uuid)
 					.then (device) =>
 						@device = device
 
@@ -1052,8 +1053,8 @@ describe 'SDK Integration Tests', ->
 
 					uuid = '1234567aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 					resin.models.device.register(application.app_name, uuid)
-				.then (device) =>
-					@device = device
+				.then (deviceInfo) =>
+					@deviceInfo = deviceInfo
 
 			describe 'Device Model', ->
 
@@ -1061,7 +1062,7 @@ describe 'SDK Integration Tests', ->
 
 					it 'should return the device given the number shorter uuid', ->
 						resin.models.device.get(1234567).then (device) =>
-							m.chai.expect(device.id).to.equal(@device.id)
+							m.chai.expect(device.id).to.equal(@deviceInfo.id)
 
 		describe 'given a single application with two offline devices that share the same uuid root', ->
 
@@ -1072,11 +1073,10 @@ describe 'SDK Integration Tests', ->
 					uuid1 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 					uuid2 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 
-					Promise.props
-						one: resin.models.device.register(application.app_name, uuid1)
-						two: resin.models.device.register(application.app_name, uuid2)
-					.then (devices) =>
-						@devices = devices
+					Promise.all [
+						resin.models.device.register(application.app_name, uuid1)
+						resin.models.device.register(application.app_name, uuid2)
+					]
 
 			describe 'Device Model', ->
 
@@ -1102,22 +1102,22 @@ describe 'SDK Integration Tests', ->
 					@application1 = results.application1
 					@application2 = results.application2
 
-					resin.models.device.generateUUID().then (uuid) ->
-						resin.models.device.register(results.application1.app_name, uuid)
-					.then (device) =>
-						@device = device
+					uuid = resin.models.device.generateUniqueKey()
+					resin.models.device.register(results.application1.app_name, uuid)
+					.then (deviceInfo) =>
+						@deviceInfo = deviceInfo
 
 			describe 'resin.models.device.move()', ->
 
 				it 'should be able to move a device', ->
-					resin.models.device.move(@device.uuid, @application2.app_name).then =>
-						resin.models.device.getApplicationName(@device.uuid)
+					resin.models.device.move(@deviceInfo.uuid, @application2.app_name).then =>
+						resin.models.device.getApplicationName(@deviceInfo.uuid)
 					.then (applicationName) =>
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
 
 				it 'should be able to move a device using shorter uuids', ->
-					resin.models.device.move(@device.uuid.slice(0, 7), @application2.app_name).then =>
-						resin.models.device.getApplicationName(@device.uuid)
+					resin.models.device.move(@deviceInfo.uuid.slice(0, 7), @application2.app_name).then =>
+						resin.models.device.getApplicationName(@deviceInfo.uuid)
 					.then (applicationName) =>
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
 
@@ -1131,15 +1131,15 @@ describe 'SDK Integration Tests', ->
 					@application1 = results.application1
 					@application2 = results.application2
 
-					resin.models.device.generateUUID().then (uuid) ->
-						resin.models.device.register(results.application1.app_name, uuid)
-					.then (device) =>
-						@device = device
+					uuid = resin.models.device.generateUniqueKey()
+					resin.models.device.register(results.application1.app_name, uuid)
+					.then (deviceInfo) =>
+						@deviceInfo = deviceInfo
 
 			describe 'resin.models.device.move()', ->
 
 				it 'should be rejected with an incompatibility error', ->
-					promise = resin.models.device.move(@device.uuid, @application2.app_name)
+					promise = resin.models.device.move(@deviceInfo.uuid, @application2.app_name)
 					m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
 
 		describe 'OS Model', ->

@@ -43,7 +43,7 @@ CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
 getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
-	{ apiUrl, isBrowser, isTest } = opts
+	{ apiUrl } = opts
 
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
@@ -1020,30 +1020,23 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Generate a random device UUID
-	# @name generateUUID
+	# @summary Generate a random key, useful for both uuid and api key.
+	# @name generateUniqueKey
 	# @function
 	# @public
 	# @memberof resin.models.device
 	#
-	# @fulfil {String} - a generated UUID
-	# @returns {Promise}
+	# @returns {String} A generated key
 	#
 	# @example
-	# resin.models.device.generateUUID().then(function(uuid) {
-	# 	console.log(uuid);
-	# });
-	#
-	# @example
-	# resin.models.device.generateUUID(function(error, uuid) {
-	# 	if (error) throw error;
-	# 	console.log(uuid);
-	# });
+	# randomKey = resin.models.device.generateUniqueKey();
+	# // randomKey is a randomly generated key that can be used as either a uuid or an api key
+	# console.log(randomKey);
 	###
-	exports.generateUUID = registerDevice.generateUUID
+	exports.generateUniqueKey = registerDevice.generateUniqueKey
 
 	###*
-	# @summary Register a new device with a Resin.io application. **Should not be used in the browser.**
+	# @summary Register a new device with a Resin.io application.
 	# @name register
 	# @public
 	# @function
@@ -1052,40 +1045,36 @@ getDeviceModel = (deps, opts) ->
 	# @param {String} applicationName - application name
 	# @param {String} uuid - device uuid
 	#
-	# @fulfil {Object} - device
+	# @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.generateUUID().then(function(uuid) {
-	# 	resin.models.device.register('MyApp', uuid).then(function(device) {
-	# 		console.log(device);
-	# 	});
+	# var uuid = resin.models.device.generateUniqueKey();
+	# resin.models.device.register('MyApp', uuid).then(function(registrationInfo) {
+	# 	console.log(registrationInfo);
 	# });
 	#
 	# @example
-	# resin.models.device.generateUUID(function(error, uuid) {
+	# var uuid = resin.models.device.generateUniqueKey();
+	# resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 	# 	if (error) throw error;
-	#
-	# 	resin.models.device.register('MyApp', uuid, function(error, device) {
-	# 		if (error) throw error;
-	#
-	# 		console.log(device);
-	# 	});
+	# 	console.log(registrationInfo);
 	# });
 	###
-	exports.register = onlyIf(not isBrowser or isTest) (applicationName, uuid, callback) ->
+	exports.register = (applicationName, uuid, callback) ->
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().getApiKey(applicationName)
 			application: applicationModel().get(applicationName)
 		.then (results) ->
 
-			return registerDevice.register pine,
+			return registerDevice.register
 				userId: results.userId
 				applicationId: results.application.id
-				deviceType: results.application.device_type
 				uuid: uuid
-				apiKey: results.apiKey
+				deviceType: results.application.device_type
+				provisioningApiKey: results.apiKey
+				apiEndpoint: apiUrl
 
 		.asCallback(callback)
 
