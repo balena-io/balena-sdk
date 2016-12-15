@@ -23,8 +23,8 @@
     "test-node": "gulp test",
     "test-browser": "karma start",
     "build": "gulp build",
-    "prepublish": "(not-in-publish && echo 'Skipping prepublish') || npm run require-NPM4-to-publish",
-    "require-NPM4-to-publish": "semver -r '>=4.0.0' $(npm --version) || (echo 'NPM 4+ required to publish, run: sudo npm install -g npm' && exit 1)",
+    "prepublish": "(not-in-publish && echo 'Skipping prepublish') || npm run require-npm4-to-publish",
+    "require-npm4-to-publish": "semver -r '>=4.0.0' $(npm --version) || (echo 'NPM 4+ required to publish, run: sudo npm install -g npm' && exit 1)",
     "prepublishOnly": "npm test && npm run build",
     "docs": "jsdoc2md build/{,**/}*.js > DOCUMENTATION.md"
   },
