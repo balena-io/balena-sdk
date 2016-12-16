@@ -1137,7 +1137,7 @@ resin.models.device.getManifestByApplication('MyApp', function(error, manifest) 
 ##### device.generateUniqueKey() ⇒ <code>String</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
 **Summary**: Generate a random key, useful for both uuid and api key.  
-**Returns**: <code>String</code> - - a generated key  
+**Returns**: <code>String</code> - A generated key  
 **Access:** public  
 **Example**  
 ```js
@@ -1151,7 +1151,7 @@ console.log(randomKey);
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
 **Summary**: Register a new device with a Resin.io application.  
 **Access:** public  
-**Fulfil**: <code>Object</code> - device registration info  
+**Fulfil**: <code>Object</code> Device registration info ({ id: "...", uuid: "...", api_key: "..." })  
 
 | Param | Type | Description |
 | --- | --- | --- |

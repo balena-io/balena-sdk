@@ -50,9 +50,9 @@ limitations under the License.
   CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
   getDeviceModel = function(deps, opts) {
-    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, isTest, pine, request;
+    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, pine, request;
     pine = deps.pine, request = deps.request;
-    apiUrl = opts.apiUrl, isTest = opts.isTest;
+    apiUrl = opts.apiUrl;
     configModel = once(function() {
       return require('./config')(deps, opts);
     });
@@ -1102,7 +1102,7 @@ limitations under the License.
     	 * @public
     	 * @memberof resin.models.device
     	 *
-    	 * @returns {String} - a generated key
+    	 * @returns {String} A generated key
     	 *
     	 * @example
     	 * randomKey = resin.models.device.generateUniqueKey();
@@ -1121,7 +1121,7 @@ limitations under the License.
     	 * @param {String} applicationName - application name
     	 * @param {String} uuid - device uuid
     	 *
-    	 * @fulfil {Object} - device registration info
+    	 * @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
     	 * @returns {Promise}
     	 *
     	 * @example
