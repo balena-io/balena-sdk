@@ -1,6 +1,4 @@
 Promise = require('bluebird')
-global.Promise = Promise
-require('isomorphic-fetch')
 
 m = require('mochainon')
 _ = require('lodash')
@@ -42,10 +40,10 @@ _.assign opts,
 	isBrowser: IS_BROWSER,
 	retries: 3
 
-pine = getPine(opts)
-resinRequest = getResinRequest(opts)
-resin = getSdk(opts)
 token = getToken(opts)
+resinRequest = getResinRequest(_.assign({}, opts, { token }))
+pine = getPine(_.assign({}, opts, { request: resinRequest, token }))
+resin = getSdk(opts)
 
 simpleRequest = (url) ->
 	return new Promise (resolve, reject) ->

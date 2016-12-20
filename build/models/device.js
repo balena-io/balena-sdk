@@ -17,7 +17,7 @@ limitations under the License.
  */
 
 (function() {
-  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, map, once, onlyIf, registerDevice, semver, some, without;
+  var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, map, once, onlyIf, semver, some, without;
 
   Promise = require('bluebird');
 
@@ -39,8 +39,6 @@ limitations under the License.
 
   errors = require('resin-errors');
 
-  registerDevice = require('resin-register-device');
-
   deviceStatus = require('resin-device-status');
 
   onlyIf = require('../util').onlyIf;
@@ -50,9 +48,12 @@ limitations under the License.
   CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
   getDeviceModel = function(deps, opts) {
-    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, pine, request;
+    var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, pine, registerDevice, request;
     pine = deps.pine, request = deps.request;
     apiUrl = opts.apiUrl;
+    registerDevice = require('resin-register-device')({
+      request: request
+    });
     configModel = once(function() {
       return require('./config')(deps, opts);
     });

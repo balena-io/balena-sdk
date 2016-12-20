@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+assign = require('lodash/assign')
 mapValues = require('lodash/mapValues')
 defaults = require('lodash/defaults')
 getRequest = require('resin-request')
@@ -68,11 +69,15 @@ module.exports = getSdk = (opts) ->
 	else
 		settings = require('resin-settings-client')
 
+	token = getToken(opts)
+	request = getRequest(assign({}, opts, { token }))
+	pine = getPine(assign({}, opts, { token, request }))
+
 	deps = {
 		settings
-		request: getRequest(opts)
-		token: getToken(opts)
-		pine: getPine(opts)
+		request
+		token
+		pine
 	}
 
 	return mapValues(sdkTemplate, (v) -> v(deps, opts))

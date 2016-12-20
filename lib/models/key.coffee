@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
 errors = require('resin-errors')
 

@@ -17,7 +17,9 @@ limitations under the License.
  */
 
 (function() {
-  var errors, getKeyModel, isEmpty;
+  var Promise, errors, getKeyModel, isEmpty;
+
+  Promise = require('bluebird');
 
   isEmpty = require('lodash/isEmpty');
 

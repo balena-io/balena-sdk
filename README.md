@@ -31,11 +31,6 @@ The following features are node-only:
 - OS image streaming download (`resin.models.os.download`),
 - resin settings client (`resin.settings`).
 
-**Note.** This module expects [`fetch`](https://developer.mozilla.org/en/docs/Web/API/Fetch_API)
-and [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-to be available in the global scope.
-The easiest way to get `fetch` is to use `isomorphic-fetch` npm module.
-
 Documentation
 -------------
 
