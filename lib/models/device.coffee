@@ -24,7 +24,6 @@ includes = require('lodash/includes')
 map = require('lodash/map')
 semver = require('semver')
 errors = require('resin-errors')
-registerDevice = require('resin-register-device')
 deviceStatus = require('resin-device-status')
 
 { onlyIf } = require('../util')
@@ -45,6 +44,7 @@ getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
 	{ apiUrl } = opts
 
+	registerDevice = require('resin-register-device')({ request })
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	auth = require('../auth')(deps, opts)
