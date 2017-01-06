@@ -31,6 +31,8 @@ The following features are node-only:
 - OS image streaming download (`resin.models.os.download`),
 - resin settings client (`resin.settings`).
 
+In Node you can simply `require('resin-sdk')`, but in the browser things are more complicated. Resin-SDK provides a bundled single file for browsers, which allows you to include a single file with all dependencies included, available in [build/resin-browser.js](build/resin-browser.js). This uses the [UMD format](https://github.com/umdjs/umd), and will register itself as either a CommonJS or AMD module called `resin-sdk` if possible, or create a `resinSdk` global if not.
+
 Documentation
 -------------
 
