@@ -13,6 +13,14 @@ module.exports = (config) ->
 
 	karmaConfig.plugins.push(require('karma-env-preprocessor'))
 	karmaConfig.preprocessors['**/*.spec.coffee'] = [ 'browserify', 'env' ]
+	karmaConfig.browserify.configure = (bundle) ->
+		bundle.on 'prebundle', ->
+			bundle.external('./build/resin-browser.js')
+	karmaConfig.files = [
+		'build/resin-browser.js',
+		'tests/*.spec.coffee'
+	]
+
 	karmaConfig.envPreprocessor = [
 		'RESINTEST_EMAIL'
 		'RESINTEST_PASSWORD'

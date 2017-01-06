@@ -9,19 +9,21 @@ getPine = require('resin-pine')
 getToken = require('resin-token')
 getResinRequest = require('resin-request')
 
-getSdk = require('../lib/resin')
-
 PUBLIC_KEY = require('./data/public-key')
 
 IS_BROWSER = window?
 
 if IS_BROWSER
+	getSdk = window.resinSdk
+
 	opts =
 		apiUrl: 'https://api.resin.io'
 		imageMakerUrl: 'https://img.resin.io'
 
 	env = window.__env__
 else
+	getSdk = require('..')
+
 	fs = Promise.promisifyAll(require('fs'))
 	tmp = require('tmp')
 	rindle = require('rindle')
@@ -149,13 +151,15 @@ describe 'SDK Integration Tests', ->
 
 				it 'should be rejected with an error', ->
 					promise = resin.auth.getEmail()
-					m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
+					m.chai.expect(promise).to.be.rejected
+						.and.eventually.have.property('code', 'ResinNotLoggedIn')
 
 			describe 'resin.auth.getUserId()', ->
 
 				it 'should be rejected with an error', ->
 					promise = resin.auth.getUserId()
-					m.chai.expect(promise).to.be.rejectedWith(errors.ResinNotLoggedIn)
+					m.chai.expect(promise).to.be.rejected
+						.and.eventually.have.property('code', 'ResinNotLoggedIn')
 
 			describe 'resin.auth.register()', ->
 
@@ -1082,13 +1086,17 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be rejected with an error if there is an ambiguation between shorter uuids', ->
 						promise = resin.models.device.get('aaaaaaaaaaaaaaaa')
-						m.chai.expect(promise).to.be.rejectedWith(errors.ResinAmbiguousDevice)
+
+						m.chai.expect(promise).to.be.rejected
+							.and.eventually.have.property('code', 'ResinAmbiguousDevice')
 
 				describe 'resin.models.device.has()', ->
 
 					it 'should be rejected with an error for an ambiguous shorter uuid', ->
 						promise = resin.models.device.has('aaaaaaaaaaaaaaaa')
-						m.chai.expect(promise).to.be.rejectedWith(errors.ResinAmbiguousDevice)
+
+						m.chai.expect(promise).to.be.rejected
+							.and.eventually.have.property('code', 'ResinAmbiguousDevice')
 
 		describe 'given two compatible applications and a single device', ->
 
