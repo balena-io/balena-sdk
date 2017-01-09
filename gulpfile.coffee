@@ -48,7 +48,7 @@ gulp.task 'build', (callback) ->
 
 gulp.task 'build-node', ->
 	gulp.src(OPTIONS.files.app)
-		.pipe(coffee(header: true)).on('error', gutil.log)
+		.pipe(coffee(header: true, bare: true)).on('error', gutil.log)
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'build-browser', ['build-node'], ->
@@ -56,6 +56,17 @@ gulp.task 'build-browser', ['build-node'], ->
 		entries: OPTIONS.files.browserEntry,
 		basedir: OPTIONS.directories.build
 		standalone: OPTIONS.config.browserLibraryName
+	.external [
+		# These modules are referenced in the code, but only get used in Node:
+		'fs',
+		'path',
+		'resin-settings-client',
+		'node-localstorage',
+		'rindle',
+		'zlib',
+		'stream',
+		'progress-stream'
+	]
 	.bundle()
 	.pipe(source(OPTIONS.files.browserOutput))
 	.pipe(buffer())

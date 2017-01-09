@@ -15,61 +15,57 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+var mapValues, modelsTemplate;
 
-(function() {
-  var mapValues, modelsTemplate;
+mapValues = require('lodash/mapValues');
 
-  mapValues = require('lodash/mapValues');
+modelsTemplate = {
 
-  modelsTemplate = {
+  /**
+  	 * @namespace application
+  	 * @memberof resin.models
+   */
+  application: require('./application'),
 
-    /**
-    	 * @namespace application
-    	 * @memberof resin.models
-     */
-    application: require('./application'),
+  /**
+  	 * @namespace device
+  	 * @memberof resin.models
+   */
+  device: require('./device'),
 
-    /**
-    	 * @namespace device
-    	 * @memberof resin.models
-     */
-    device: require('./device'),
+  /**
+  	 * @namespace key
+  	 * @memberof resin.models
+   */
+  key: require('./key'),
 
-    /**
-    	 * @namespace key
-    	 * @memberof resin.models
-     */
-    key: require('./key'),
+  /**
+  	 * @namespace environment-variables
+  	 * @memberof resin.models
+   */
+  environmentVariables: require('./environment-variables'),
 
-    /**
-    	 * @namespace environment-variables
-    	 * @memberof resin.models
-     */
-    environmentVariables: require('./environment-variables'),
+  /**
+  	 * @namespace os
+  	 * @memberof resin.models
+   */
+  os: require('./os'),
 
-    /**
-    	 * @namespace os
-    	 * @memberof resin.models
-     */
-    os: require('./os'),
+  /**
+  	 * @namespace config
+  	 * @memberof resin.models
+   */
+  config: require('./config'),
 
-    /**
-    	 * @namespace config
-    	 * @memberof resin.models
-     */
-    config: require('./config'),
+  /**
+  	 * @namespace build
+  	 * @memberof resin.models
+   */
+  build: require('./build')
+};
 
-    /**
-    	 * @namespace build
-    	 * @memberof resin.models
-     */
-    build: require('./build')
-  };
-
-  module.exports = function(deps, opts) {
-    return mapValues(modelsTemplate, function(v) {
-      return v(deps, opts);
-    });
-  };
-
-}).call(this);
+module.exports = function(deps, opts) {
+  return mapValues(modelsTemplate, function(v) {
+    return v(deps, opts);
+  });
+};

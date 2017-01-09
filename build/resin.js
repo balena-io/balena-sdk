@@ -15,93 +15,89 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+var assign, defaults, getPine, getRequest, getSdk, getToken, mapValues, notImplemented, sdkTemplate;
 
-(function() {
-  var assign, defaults, getPine, getRequest, getSdk, getToken, mapValues, notImplemented, sdkTemplate;
+assign = require('lodash/assign');
 
-  assign = require('lodash/assign');
+mapValues = require('lodash/mapValues');
 
-  mapValues = require('lodash/mapValues');
+defaults = require('lodash/defaults');
 
-  defaults = require('lodash/defaults');
+getRequest = require('resin-request');
 
-  getRequest = require('resin-request');
+getToken = require('resin-token');
 
-  getToken = require('resin-token');
+getPine = require('resin-pine');
 
-  getPine = require('resin-pine');
+notImplemented = require('./util').notImplemented;
 
-  notImplemented = require('./util').notImplemented;
 
+/**
+ * @namespace resin
+ * @description
+ * Welcome to the Resin SDK documentation.
+ *
+ * This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
+ *
+ * If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
+ */
+
+sdkTemplate = {
 
   /**
-   * @namespace resin
-   * @description
-   * Welcome to the Resin SDK documentation.
-   *
-   * This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
-   *
-   * If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
+  	 * @namespace models
+  	 * @memberof resin
    */
+  models: require('./models'),
 
-  sdkTemplate = {
+  /**
+  	 * @namespace auth
+  	 * @memberof resin
+   */
+  auth: require('./auth'),
 
-    /**
-    	 * @namespace models
-    	 * @memberof resin
-     */
-    models: require('./models'),
+  /**
+  	 * @namespace logs
+  	 * @memberof resin
+   */
+  logs: require('./logs'),
 
-    /**
-    	 * @namespace auth
-    	 * @memberof resin
-     */
-    auth: require('./auth'),
+  /**
+  	 * @namespace settings
+  	 * @memberof resin
+   */
+  settings: require('./settings')
+};
 
-    /**
-    	 * @namespace logs
-    	 * @memberof resin
-     */
-    logs: require('./logs'),
-
-    /**
-    	 * @namespace settings
-    	 * @memberof resin
-     */
-    settings: require('./settings')
-  };
-
-  module.exports = getSdk = function(opts) {
-    var deps, pine, request, settings, token;
-    defaults(opts, {
-      apiVersion: 'v2',
-      isBrowser: typeof window !== "undefined" && window !== null
-    });
-    if (opts.isBrowser) {
-      settings = {
-        get: notImplemented,
-        getAll: notImplemented
-      };
-    } else {
-      settings = require('resin-settings-client');
-    }
-    token = getToken(opts);
-    request = getRequest(assign({}, opts, {
-      token: token
-    }));
-    pine = getPine(assign({}, opts, {
-      token: token,
-      request: request
-    }));
-    deps = {
-      settings: settings,
-      request: request,
-      token: token,
-      pine: pine
+module.exports = getSdk = function(opts) {
+  var deps, pine, request, settings, token;
+  defaults(opts, {
+    apiVersion: 'v2',
+    isBrowser: typeof window !== "undefined" && window !== null
+  });
+  if (opts.isBrowser) {
+    settings = {
+      get: notImplemented,
+      getAll: notImplemented
     };
-    return mapValues(sdkTemplate, function(v) {
-      return v(deps, opts);
-    });
+  } else {
+    settings = require('resin-settings-client');
+  }
+  token = getToken(opts);
+  request = getRequest(assign({}, opts, {
+    token: token
+  }));
+  pine = getPine(assign({}, opts, {
+    token: token,
+    request: request
+  }));
+  deps = {
+    settings: settings,
+    request: request,
+    token: token,
+    pine: pine
   };
-
-}).call(this);
+  return mapValues(sdkTemplate, function(v) {
+    return v(deps, opts);
+  });
+};

@@ -15,76 +15,72 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+var errors, getBuildModel, once;
 
-(function() {
-  var errors, getBuildModel, once;
+once = require('lodash/once');
 
-  once = require('lodash/once');
+errors = require('resin-errors');
 
-  errors = require('resin-errors');
+getBuildModel = function(deps, opts) {
+  var applicationModel, exports, pine;
+  pine = deps.pine;
+  applicationModel = once(function() {
+    return require('./application')(deps, opts);
+  });
+  exports = {};
 
-  getBuildModel = function(deps, opts) {
-    var applicationModel, exports, pine;
-    pine = deps.pine;
-    applicationModel = once(function() {
-      return require('./application')(deps, opts);
-    });
-    exports = {};
-
-    /**
-    	 * @summary Get all builds from an application
-    	 * @name getAllByApplication
-    	 * @public
-    	 * @function
-    	 * @memberof resin.models.build
-    	 *
-    	 * @param {String} name - application name
-    	 * @fulfil {Object[]} - builds
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.models.build.getAllByApplication('MyApp').then(function(builds) {
-    	 *		console.log(builds);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.models.build.getAllByApplication('MyApp', function(error, builds) {
-    	 *		if (error) throw error;
-    	 *		console.log(builds);
-    	 * });
-     */
-    exports.getAllByApplication = function(name, callback) {
-      return applicationModel().has(name).then(function(hasApplication) {
-        if (!hasApplication) {
-          throw new errors.ResinApplicationNotFound(name);
-        }
-        return pine.get({
-          resource: 'build',
-          filter: {
-            application: {
-              $any: {
-                $alias: 'a',
-                $expr: {
-                  a: {
-                    app_name: name
-                  }
+  /**
+  	 * @summary Get all builds from an application
+  	 * @name getAllByApplication
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.build
+  	 *
+  	 * @param {String} name - application name
+  	 * @fulfil {Object[]} - builds
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.build.getAllByApplication('MyApp').then(function(builds) {
+  	 *		console.log(builds);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.build.getAllByApplication('MyApp', function(error, builds) {
+  	 *		if (error) throw error;
+  	 *		console.log(builds);
+  	 * });
+   */
+  exports.getAllByApplication = function(name, callback) {
+    return applicationModel().has(name).then(function(hasApplication) {
+      if (!hasApplication) {
+        throw new errors.ResinApplicationNotFound(name);
+      }
+      return pine.get({
+        resource: 'build',
+        filter: {
+          application: {
+            $any: {
+              $alias: 'a',
+              $expr: {
+                a: {
+                  app_name: name
                 }
               }
             }
-          },
-          select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
-          expand: {
-            user: {
-              $select: ['id', 'username']
-            }
-          },
-          orderby: 'created_at desc'
-        });
-      }).asCallback(callback);
-    };
-    return exports;
+          }
+        },
+        select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
+        expand: {
+          user: {
+            $select: ['id', 'username']
+          }
+        },
+        orderby: 'created_at desc'
+      });
+    }).asCallback(callback);
   };
+  return exports;
+};
 
-  module.exports = getBuildModel;
-
-}).call(this);
+module.exports = getBuildModel;

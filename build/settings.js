@@ -15,74 +15,70 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+var Promise, getSettings;
 
-(function() {
-  var Promise, getSettings;
+Promise = require('bluebird');
 
-  Promise = require('bluebird');
+getSettings = function(deps, opts) {
+  var expots, settings;
+  settings = deps.settings;
+  expots = {};
 
-  getSettings = function(deps, opts) {
-    var expots, settings;
-    settings = deps.settings;
-    expots = {};
-
-    /**
-    	 * @summary Get a single setting. **Only implemented in Node.js**
-    	 * @name get
-    	 * @function
-    	 * @public
-    	 * @memberof resin.settings
-    	 *
-    	 * @param {String} [key] - setting key
-    	 * @fulfil {*} - setting value
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.settings.get('apiUrl').then(function(apiUrl) {
-    	 * 	console.log(apiUrl);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.settings.get('apiUrl', function(error, apiUrl) {
-    	 * 	if (error) throw error;
-    	 * 	console.log(apiUrl);
-    	 * });
-     */
-    exports.get = function(key, callback) {
-      return Promise["try"](function() {
-        return settings.get(key);
-      }).asCallback(callback);
-    };
-
-    /**
-    	 * @summary Get all settings **Only implemented in Node.js**
-    	 * @name getAll
-    	 * @function
-    	 * @public
-    	 * @memberof resin.settings
-    	 *
-    	 * @fulfil {Object} - settings
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.settings.getAll().then(function(settings) {
-    	 * 	console.log(settings);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.settings.getAll(function(error, settings) {
-    	 * 	if (error) throw error;
-    	 * 	console.log(settings);
-    	 * });
-     */
-    exports.getAll = function(callback) {
-      return Promise["try"](function() {
-        return settings.getAll();
-      }).asCallback(callback);
-    };
-    return exports;
+  /**
+  	 * @summary Get a single setting. **Only implemented in Node.js**
+  	 * @name get
+  	 * @function
+  	 * @public
+  	 * @memberof resin.settings
+  	 *
+  	 * @param {String} [key] - setting key
+  	 * @fulfil {*} - setting value
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.settings.get('apiUrl').then(function(apiUrl) {
+  	 * 	console.log(apiUrl);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.settings.get('apiUrl', function(error, apiUrl) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(apiUrl);
+  	 * });
+   */
+  exports.get = function(key, callback) {
+    return Promise["try"](function() {
+      return settings.get(key);
+    }).asCallback(callback);
   };
 
-  module.exports = getSettings;
+  /**
+  	 * @summary Get all settings **Only implemented in Node.js**
+  	 * @name getAll
+  	 * @function
+  	 * @public
+  	 * @memberof resin.settings
+  	 *
+  	 * @fulfil {Object} - settings
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.settings.getAll().then(function(settings) {
+  	 * 	console.log(settings);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.settings.getAll(function(error, settings) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(settings);
+  	 * });
+   */
+  exports.getAll = function(callback) {
+    return Promise["try"](function() {
+      return settings.getAll();
+    }).asCallback(callback);
+  };
+  return exports;
+};
 
-}).call(this);
+module.exports = getSettings;

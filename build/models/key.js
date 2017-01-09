@@ -15,149 +15,145 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+var Promise, errors, getKeyModel, isEmpty;
 
-(function() {
-  var Promise, errors, getKeyModel, isEmpty;
+Promise = require('bluebird');
 
-  Promise = require('bluebird');
+isEmpty = require('lodash/isEmpty');
 
-  isEmpty = require('lodash/isEmpty');
+errors = require('resin-errors');
 
-  errors = require('resin-errors');
+getKeyModel = function(deps, opts) {
+  var auth, exports, pine;
+  pine = deps.pine;
+  auth = require('../auth')(deps, opts);
+  exports = {};
 
-  getKeyModel = function(deps, opts) {
-    var auth, exports, pine;
-    pine = deps.pine;
-    auth = require('../auth')(deps, opts);
-    exports = {};
-
-    /**
-    	 * @summary Get all ssh keys
-    	 * @name getAll
-    	 * @public
-    	 * @function
-    	 * @memberof resin.models.key
-    	 *
-    	 * @fulfil {Object[]} - ssh keys
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.models.key.getAll().then(function(keys) {
-    	 * 	console.log(keys);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.models.key.getAll(function(error, keys) {
-    	 * 	if (error) throw error;
-    	 * 	console.log(keys);
-    	 * });
-     */
-    exports.getAll = function(callback) {
-      return pine.get({
-        resource: 'user__has__public_key'
-      }).asCallback(callback);
-    };
-
-    /**
-    	 * @summary Get a single ssh key
-    	 * @name get
-    	 * @public
-    	 * @function
-    	 * @memberof resin.models.key
-    	 *
-    	 * @param {(String|Number)} id - key id
-    	 * @fulfil {Object} - ssh key
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.models.key.get(51).then(function(key) {
-    	 * 	console.log(key);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.models.key.get(51, function(error, key) {
-    	 * 	if (error) throw error;
-    	 * 	console.log(key);
-    	 * });
-     */
-    exports.get = function(id, callback) {
-      return pine.get({
-        resource: 'user__has__public_key',
-        id: id
-      }).tap(function(key) {
-        if (isEmpty(key)) {
-          throw new errors.ResinKeyNotFound(id);
-        }
-      }).asCallback(callback);
-    };
-
-    /**
-    	 * @summary Remove ssh key
-    	 * @name remove
-    	 * @public
-    	 * @function
-    	 * @memberof resin.models.key
-    	 *
-    	 * @param {(String|Number)} id - key id
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.models.key.remove(51);
-    	 *
-    	 * @example
-    	 * resin.models.key.remove(51, function(error) {
-    	 * 	if (error) throw error;
-    	 * });
-     */
-    exports.remove = function(id, callback) {
-      return pine["delete"]({
-        resource: 'user__has__public_key',
-        id: id
-      }).asCallback(callback);
-    };
-
-    /**
-    	 * @summary Create a ssh key
-    	 * @name create
-    	 * @public
-    	 * @function
-    	 * @memberof resin.models.key
-    	 *
-    	 * @param {String} title - key title
-    	 * @param {String} key - the public ssh key
-    	 *
-    	 * @fulfil {Object} - ssh key
-    	 * @returns {Promise}
-    	 *
-    	 * @example
-    	 * resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
-    	 * 	console.log(key);
-    	 * });
-    	 *
-    	 * @example
-    	 * resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
-    	 * 	if (error) throw error;
-    	 * 	console.log(key);
-    	 * });
-     */
-    exports.create = function(title, key, callback) {
-      return Promise["try"](function() {
-        key = key.trim();
-        return auth.getUserId().then(function(userId) {
-          return pine.post({
-            resource: 'user__has__public_key',
-            body: {
-              title: title,
-              public_key: key,
-              user: userId
-            }
-          });
-        });
-      }).asCallback(callback);
-    };
-    return exports;
+  /**
+  	 * @summary Get all ssh keys
+  	 * @name getAll
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.key
+  	 *
+  	 * @fulfil {Object[]} - ssh keys
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.key.getAll().then(function(keys) {
+  	 * 	console.log(keys);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.key.getAll(function(error, keys) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(keys);
+  	 * });
+   */
+  exports.getAll = function(callback) {
+    return pine.get({
+      resource: 'user__has__public_key'
+    }).asCallback(callback);
   };
 
-  module.exports = getKeyModel;
+  /**
+  	 * @summary Get a single ssh key
+  	 * @name get
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.key
+  	 *
+  	 * @param {(String|Number)} id - key id
+  	 * @fulfil {Object} - ssh key
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.key.get(51).then(function(key) {
+  	 * 	console.log(key);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.key.get(51, function(error, key) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(key);
+  	 * });
+   */
+  exports.get = function(id, callback) {
+    return pine.get({
+      resource: 'user__has__public_key',
+      id: id
+    }).tap(function(key) {
+      if (isEmpty(key)) {
+        throw new errors.ResinKeyNotFound(id);
+      }
+    }).asCallback(callback);
+  };
 
-}).call(this);
+  /**
+  	 * @summary Remove ssh key
+  	 * @name remove
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.key
+  	 *
+  	 * @param {(String|Number)} id - key id
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.key.remove(51);
+  	 *
+  	 * @example
+  	 * resin.models.key.remove(51, function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.remove = function(id, callback) {
+    return pine["delete"]({
+      resource: 'user__has__public_key',
+      id: id
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Create a ssh key
+  	 * @name create
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.key
+  	 *
+  	 * @param {String} title - key title
+  	 * @param {String} key - the public ssh key
+  	 *
+  	 * @fulfil {Object} - ssh key
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
+  	 * 	console.log(key);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(key);
+  	 * });
+   */
+  exports.create = function(title, key, callback) {
+    return Promise["try"](function() {
+      key = key.trim();
+      return auth.getUserId().then(function(userId) {
+        return pine.post({
+          resource: 'user__has__public_key',
+          body: {
+            title: title,
+            public_key: key,
+            user: userId
+          }
+        });
+      });
+    }).asCallback(callback);
+  };
+  return exports;
+};
+
+module.exports = getKeyModel;
