@@ -20,7 +20,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npm run test-node && npm run test-browser",
+    "test": "npm run build && npm run test-node && npm run test-browser",
     "test-node": "gulp test",
     "test-browser": "karma start",
     "build": "gulp build",

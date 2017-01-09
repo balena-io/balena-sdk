@@ -56,17 +56,16 @@ gulp.task 'build-browser', ['build-node'], ->
 		entries: OPTIONS.files.browserEntry,
 		basedir: OPTIONS.directories.build
 		standalone: OPTIONS.config.browserLibraryName
-	.external [
-		# These modules are referenced in the code, but only get used in Node:
-		'fs',
-		'path',
-		'resin-settings-client',
-		'node-localstorage',
-		'rindle',
-		'zlib',
-		'stream',
-		'progress-stream'
-	]
+
+	# These modules are referenced in the code, but only get used in Node:
+	.exclude('fs')
+	.exclude('path')
+	.exclude('resin-settings-client')
+	.exclude('node-localstorage')
+	.exclude('rindle')
+	.exclude('zlib')
+	.exclude('progress-stream')
+
 	.bundle()
 	.pipe(source(OPTIONS.files.browserOutput))
 	.pipe(buffer())
