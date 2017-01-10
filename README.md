@@ -33,6 +33,22 @@ The following features are node-only:
 
 In Node you can simply `require('resin-sdk')`, but in the browser things are more complicated. Resin-SDK provides a bundled single file for browsers, which allows you to include a single file with all dependencies included, available as [build/resin-browser.min.js](build/resin-browser.min.js) (or [build/resin-browser.js](build/resin-browser.js) if you'd like the much larger unminified version). This uses the [UMD format](https://github.com/umdjs/umd), and will register itself as either a CommonJS or AMD module called `resin-sdk` if possible, or create a `resinSdk` global if not.
 
+### Bundling for browsers
+
+If you're using webpack, browserify, or a similar tool then you probably want to bundle the Resin SDK into your application yourself, rather than using the pre-built `resin-browser.js` bundle. If you do that, you should be aware that you may pick up some dependencies that are actually unnecessary in the browser, because they're only used in Node environments. You can safely exclude these dependencies, if you're not using them yourself, and significantly reduce the size of your resulting bundle.
+
+In the browser Resin-SDK doesn't use the following dependencies:
+
+* fs
+* path
+* resin-settings-client
+* node-localstorage
+* rindle
+* zlib
+* progress-stream
+
+For the future we're looking at ways to automatically exclude these in downstream bundles. See [#254](https://github.com/resin-io/resin-sdk/issues/254) for more information.
+
 Documentation
 -------------
 
