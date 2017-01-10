@@ -2,6 +2,8 @@ karmaConfig = require('resin-config-karma')
 packageJSON = require('./package.json')
 { loadEnv } = require('./tests/util')
 
+BROWSER_BUNDLE = 'build/resin-browser.js'
+
 module.exports = (config) ->
 	loadEnv()
 
@@ -15,9 +17,9 @@ module.exports = (config) ->
 	karmaConfig.preprocessors['**/*.spec.coffee'] = [ 'browserify', 'env' ]
 	karmaConfig.browserify.configure = (bundle) ->
 		bundle.on 'prebundle', ->
-			bundle.external('./build/resin-browser.js')
+			bundle.external(BROWSER_BUNDLE)
 	karmaConfig.files = [
-		'build/resin-browser.js',
+		BROWSER_BUNDLE,
 		'tests/*.spec.coffee'
 	]
 

@@ -8,8 +8,7 @@ coffee = require('gulp-coffee')
 runSequence = require('run-sequence')
 browserify = require('browserify')
 uglify = require('gulp-uglify')
-source = require('vinyl-source-stream')
-buffer = require('vinyl-buffer')
+source = require('vinyl-source-buffer')
 
 packageJSON = require('./package.json')
 
@@ -25,6 +24,7 @@ OPTIONS =
 		integration: 'tests/integration.spec.coffee'
 		browserEntry: 'resin.js'
 		browserOutput: 'resin-browser.js'
+		browserMinifiedOutput: 'resin-browser.min.js'
 	directories:
 		doc: 'doc/'
 		build: 'build/'
@@ -52,7 +52,7 @@ gulp.task 'build-node', ->
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'build-browser', ['build-node'], ->
-	browserify
+	bundle = browserify
 		entries: OPTIONS.files.browserEntry,
 		basedir: OPTIONS.directories.build
 		standalone: OPTIONS.config.browserLibraryName
@@ -65,12 +65,16 @@ gulp.task 'build-browser', ['build-node'], ->
 	.exclude('rindle')
 	.exclude('zlib')
 	.exclude('progress-stream')
-
 	.bundle()
-	.pipe(source(OPTIONS.files.browserOutput))
-	.pipe(buffer())
-	.pipe(uglify())
-	.pipe(gulp.dest(OPTIONS.directories.build))
+
+	bundle
+		.pipe(source(OPTIONS.files.browserOutput))
+		.pipe(gulp.dest(OPTIONS.directories.build))
+
+	bundle
+		.pipe(source(OPTIONS.files.browserMinifiedOutput))
+		.pipe(uglify())
+		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'watch', [ 'build' ], ->
 	gulp.watch([ OPTIONS.files.coffee ], [ 'lint' ])
