@@ -3,7 +3,6 @@
   "version": "5.4.0",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
-  "browser": "build/resin-browser.js",
   "homepage": "https://github.com/resin-io/resin-sdk",
   "repository": {
     "type": "git",
@@ -53,8 +52,7 @@
     "run-sequence": "^1.1.0",
     "superagent": "^3.0.0",
     "tmp": "^0.0.31",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-buffer": "^1.1.1"
   },
   "dependencies": {
     "bluebird": "^3.3.1",
