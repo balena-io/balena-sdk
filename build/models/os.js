@@ -54,7 +54,7 @@ getOsModel = function(deps, opts) {
       url: "/api/v1/image/" + deviceType + "/",
       baseUrl: imageMakerUrl
     })["catch"]({
-      name: 'ResinRequestError',
+      code: 'ResinRequestError',
       statusCode: 404
     }, function() {
       throw new errors.ResinRequestError('No such device type');
@@ -90,7 +90,7 @@ getOsModel = function(deps, opts) {
       url: "/api/v1/image/" + deviceType + "/",
       baseUrl: imageMakerUrl
     })["catch"]({
-      name: 'ResinRequestError',
+      code: 'ResinRequestError',
       statusCode: 404
     }, function() {
       throw new errors.ResinRequestError('No such device type');
