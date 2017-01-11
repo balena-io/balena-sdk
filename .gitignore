@@ -28,3 +28,6 @@ build/Release
 node_modules
 
 run.sh
+
+.DS_Store
+.env

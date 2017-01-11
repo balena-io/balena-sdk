@@ -14,69 +14,83 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-request = require('resin-request')
 errors = require('resin-errors')
-settings = require('resin-settings-client')
+{ onlyIf } = require('../util')
 
-###*
-# @summary Get OS image last modified date
-# @name getLastModified
-# @public
-# @function
-# @memberof resin.models.os
-#
-# @param {String} deviceType - device type slug
-# @fulfil {Date} - last modified date
-# @returns {Promise}
-#
-# @example
-# resin.models.os.getLastModified('raspberry-pi').then(function(date) {
-# 	console.log('The raspberry-pi image was last modified in ' + date);
-# });
-#
-# resin.models.os.getLastModified('raspberry-pi', function(error, date) {
-# 	if (error) throw error;
-# 	console.log('The raspberry-pi image was last modified in ' + date);
-# });
-###
-exports.getLastModified = (deviceType, callback) ->
-	request.send
-		method: 'HEAD'
-		url: "/api/v1/image/#{deviceType}/"
-		baseUrl: settings.get('imageMakerUrl')
-	.catch
-		name: 'ResinRequestError'
-		statusCode: 404
-	, ->
-		throw new errors.ResinRequestError('No such device type')
-	.then (response) ->
-		return new Date(response.headers['last-modified'])
-	.nodeify(callback)
+getOsModel = (deps, opts) ->
+	{ request } = deps
+	{ isBrowser, imageMakerUrl } = opts
 
-###*
-# @summary Download an OS image
-# @name download
-# @public
-# @function
-# @memberof resin.models.os
-#
-# @param {String} deviceType - device type slug
-# @fulfil {ReadableStream} - download stream
-# @returns {Promise}
-#
-# @example
-# resin.models.os.download('raspberry-pi').then(function(stream) {
-# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
-# });
-#
-# resin.models.os.download('raspberry-pi', function(error, stream) {
-# 	if (error) throw error;
-# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
-# });
-###
-exports.download = (deviceType, callback) ->
-	request.stream
-		method: 'GET'
-		url: "/api/v1/image/#{deviceType}/"
-		baseUrl: settings.get('imageMakerUrl')
-	.nodeify(callback)
+	exports = {}
+
+	###*
+	# @summary Get OS image last modified date
+	# @name getLastModified
+	# @public
+	# @function
+	# @memberof resin.models.os
+	#
+	# @param {String} deviceType - device type slug
+	# @fulfil {Date} - last modified date
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.os.getLastModified('raspberry-pi').then(function(date) {
+	# 	console.log('The raspberry-pi image was last modified in ' + date);
+	# });
+	#
+	# resin.models.os.getLastModified('raspberry-pi', function(error, date) {
+	# 	if (error) throw error;
+	# 	console.log('The raspberry-pi image was last modified in ' + date);
+	# });
+	###
+	exports.getLastModified = (deviceType, callback) ->
+		request.send
+			method: 'HEAD'
+			url: "/api/v1/image/#{deviceType}/"
+			baseUrl: imageMakerUrl
+		.catch
+			code: 'ResinRequestError'
+			statusCode: 404
+		, ->
+			throw new errors.ResinRequestError('No such device type')
+		.then (response) ->
+			return new Date(response.headers['last-modified'])
+		.asCallback(callback)
+
+	###*
+	# @summary Download an OS image
+	# @name download
+	# @public
+	# @function
+	# @memberof resin.models.os
+	#
+	# @param {String} deviceType - device type slug
+	# @fulfil {ReadableStream} - download stream
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.os.download('raspberry-pi').then(function(stream) {
+	# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+	# });
+	#
+	# resin.models.os.download('raspberry-pi', function(error, stream) {
+	# 	if (error) throw error;
+	# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+	# });
+	###
+	exports.download = onlyIf(not isBrowser) (deviceType, callback) ->
+		request.stream
+			method: 'GET'
+			url: "/api/v1/image/#{deviceType}/"
+			baseUrl: imageMakerUrl
+		.catch
+			code: 'ResinRequestError'
+			statusCode: 404
+		, ->
+			throw new errors.ResinRequestError('No such device type')
+		.asCallback(callback)
+
+	return exports
+
+module.exports = getOsModel

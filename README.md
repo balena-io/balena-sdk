@@ -26,12 +26,53 @@ $ npm install --save resin-sdk
 Platforms
 ---------
 
-We currently only support NodeJS, but there are plans to make the SDK available in the browser as well.
+We currently support NodeJS and the browser.
+The following features are node-only:
+- OS image streaming download (`resin.models.os.download`),
+- resin settings client (`resin.settings`).
+
+In Node you can simply `require('resin-sdk')`, but in the browser things are more complicated. Resin-SDK provides a bundled single file for browsers, which allows you to include a single file with all dependencies included, available as [build/resin-browser.min.js](build/resin-browser.min.js) (or [build/resin-browser.js](build/resin-browser.js) if you'd like the much larger unminified version). This uses the [UMD format](https://github.com/umdjs/umd), and will register itself as either a CommonJS or AMD module called `resin-sdk` if possible, or create a `resinSdk` global if not.
+
+### Bundling for browsers
+
+If you're using webpack, browserify, or a similar tool then you probably want to bundle the Resin SDK into your application yourself, rather than using the pre-built `resin-browser.js` bundle. If you do that, you should be aware that you may pick up some dependencies that are actually unnecessary in the browser, because they're only used in Node environments. You can safely exclude these dependencies, if you're not using them yourself, and significantly reduce the size of your resulting bundle.
+
+In the browser Resin-SDK doesn't use the following dependencies:
+
+* fs
+* path
+* resin-settings-client
+* node-localstorage
+* rindle
+* zlib
+* progress-stream
+
+For the future we're looking at ways to automatically exclude these in downstream bundles. See [#254](https://github.com/resin-io/resin-sdk/issues/254) for more information.
 
 Documentation
 -------------
 
-We generate JSDoc markdown documentation in [DOCUMENTATION.md](https://github.com/resin-io/resin-sdk/blob/master/DOCUMENTATION.md).
+The module exports a single factory function. Use it like that:
+
+```
+var resin = require('resin-sdk')({
+	apiUrl: "https://api.resin.io/",
+	imageMakerUrl: "",
+	isBrowser: false,
+	dataDirectory: "/opt/local/resin"
+# })
+```
+
+Where the factory method accepts the following options:
+* `apiUrl`, string, **required**, is the Resin.io API url like `https://api.resin.io/`,
+* `apiVersion`, string, *optional*, is the version of the API to talk to, like `v2`. Defaults to the current stable version: `v2`,
+* `apiKey`, string, *optional*, is the API key to make the requests with,
+* `imageMakerUrl`, string, **required**, is the Resin.io API url like `https://img.resin.io/`,
+* `dataDirectory`, string, *required in Node.js*, *ignored in the browser*, is the directory where the user settings are stored, normally retrieved like `require('resin-settings-client').get('dataDirectory')`,
+* `isBrowser`, boolean, *optional*, is the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value,
+* `debug`, boolean, *optional*, when set will print some extra debug information.
+
+See the JSDoc markdown documentation for the returned `resin` object in [DOCUMENTATION.md](https://github.com/resin-io/resin-sdk/blob/master/DOCUMENTATION.md).
 
 Support
 -------

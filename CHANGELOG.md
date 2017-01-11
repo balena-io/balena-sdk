@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- **Breaking!** Changed `register()` to work with the new device registration flow. `register()` now return device registration information (`{ id: "...", uuid: "...", api_key: "..." }`), but not the full device object.
+- **Breaking!** Changed `generateUUID()` to `generateUniqueKey()` to reflect that it should now be used for both generating a uuid and an api key.
+- **Breaking!** The error message on timeout has changed from "timeout" to "operation timed out". In addition the error thrown is now a Bluebird Promise.TimeoutError, instead of a raw Error.
+- UMD and UMD-minified builds are now available at `build/resin-browser.js` and `build/resin-browser.min.js`
+
 ## [5.4.0] - 2016-10-27
 
 ### Added

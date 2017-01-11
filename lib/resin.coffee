@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+assign = require('lodash/assign')
+mapValues = require('lodash/mapValues')
+defaults = require('lodash/defaults')
+getRequest = require('resin-request')
+getToken = require('resin-token')
+getPine = require('resin-pine')
+{ notImplemented } = require('./util')
+
 ###*
 # @namespace resin
 # @description
@@ -23,7 +31,7 @@ limitations under the License.
 #
 # If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
 ###
-module.exports =
+sdkTemplate =
 
 	###*
 	# @namespace models
@@ -48,3 +56,28 @@ module.exports =
 	# @memberof resin
 	###
 	settings: require('./settings')
+
+module.exports = getSdk = (opts) ->
+	defaults opts,
+		apiVersion: 'v2',
+		isBrowser: window?
+
+	if opts.isBrowser
+		settings =
+			get: notImplemented
+			getAll: notImplemented
+	else
+		settings = require('resin-settings-client')
+
+	token = getToken(opts)
+	request = getRequest(assign({}, opts, { token }))
+	pine = getPine(assign({}, opts, { token, request }))
+
+	deps = {
+		settings
+		request
+		token
+		pine
+	}
+
+	return mapValues(sdkTemplate, (v) -> v(deps, opts))

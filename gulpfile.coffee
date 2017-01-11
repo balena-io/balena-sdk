@@ -1,30 +1,36 @@
 path = require('path')
+
 gulp = require('gulp')
 mocha = require('gulp-mocha')
 gutil = require('gulp-util')
 coffeelint = require('gulp-coffeelint')
 coffee = require('gulp-coffee')
 runSequence = require('run-sequence')
+browserify = require('browserify')
+uglify = require('gulp-uglify')
+source = require('vinyl-source-buffer')
+
 packageJSON = require('./package.json')
+
+{ loadEnv } = require('./tests/util')
 
 OPTIONS =
 	config:
 		coffeelint: path.join(__dirname, 'coffeelint.json')
+		browserLibraryName: 'resin-sdk'
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
-		integration: 'tests/integration.coffee'
-		javascript: 'build/**/*.js'
+		integration: 'tests/integration.spec.coffee'
+		browserEntry: 'resin.js'
+		browserOutput: 'resin-browser.js'
+		browserMinifiedOutput: 'resin-browser.min.js'
 	directories:
 		doc: 'doc/'
 		build: 'build/'
 
-gulp.task 'coffee', ->
-	gulp.src(OPTIONS.files.app)
-		.pipe(coffee()).on('error', gutil.log)
-		.pipe(gulp.dest(OPTIONS.directories.build))
-
 gulp.task 'test', ->
+	loadEnv()
 	gulp.src(OPTIONS.files.integration, read: false)
 		.pipe(mocha({
 			reporter: 'spec'
@@ -38,9 +44,37 @@ gulp.task 'lint', ->
 		.pipe(coffeelint.reporter())
 
 gulp.task 'build', (callback) ->
-	runSequence([
-		'lint'
-	], [ 'coffee' ], callback)
+	runSequence('lint', 'build-node', 'build-browser', callback)
+
+gulp.task 'build-node', ->
+	gulp.src(OPTIONS.files.app)
+		.pipe(coffee(header: true, bare: true)).on('error', gutil.log)
+		.pipe(gulp.dest(OPTIONS.directories.build))
+
+gulp.task 'build-browser', ['build-node'], ->
+	bundle = browserify
+		entries: OPTIONS.files.browserEntry,
+		basedir: OPTIONS.directories.build
+		standalone: OPTIONS.config.browserLibraryName
+
+	# These modules are referenced in the code, but only get used in Node:
+	.exclude('fs')
+	.exclude('path')
+	.exclude('resin-settings-client')
+	.exclude('node-localstorage')
+	.exclude('rindle')
+	.exclude('zlib')
+	.exclude('progress-stream')
+	.bundle()
+
+	bundle
+		.pipe(source(OPTIONS.files.browserOutput))
+		.pipe(gulp.dest(OPTIONS.directories.build))
+
+	bundle
+		.pipe(source(OPTIONS.files.browserMinifiedOutput))
+		.pipe(uglify())
+		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'watch', [ 'build' ], ->
 	gulp.watch([ OPTIONS.files.coffee ], [ 'lint' ])
