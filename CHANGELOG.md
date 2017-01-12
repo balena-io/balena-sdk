@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- **Fixed** the issue with `resin-settings-client` not being installed in Node.js
+- **Fixed** the issue with where the `settings.get('apiUrl')` was used instead of the provided option.
+
 ## [6.0.0-beta1] - 2017-01-11
 
 ### Changed
