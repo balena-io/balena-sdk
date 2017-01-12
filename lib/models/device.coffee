@@ -193,9 +193,9 @@ getDeviceModel = (deps, opts) ->
 					# uuid starting at index zero.
 					$eq: [
 						$substring: [
-								$: 'uuid'
-								0
-								uuid.length
+							$: 'uuid'
+							0
+							uuid.length
 						]
 						uuid
 					]
@@ -329,7 +329,7 @@ getDeviceModel = (deps, opts) ->
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}"
-					baseUrl: settings.get('apiUrl')
+					baseUrl: apiUrl
 					body:
 						deviceId: device.id
 						appId: appId
@@ -477,7 +477,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: '/blink'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				body:
 					uuid: device.uuid
 		.return(undefined)
@@ -614,7 +614,7 @@ getDeviceModel = (deps, opts) ->
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}/start"
-					baseUrl: settings.get('apiUrl')
+					baseUrl: apiUrl
 					body:
 						deviceId: device.id
 						appId: appId
@@ -652,7 +652,7 @@ getDeviceModel = (deps, opts) ->
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}/stop"
-					baseUrl: settings.get('apiUrl')
+					baseUrl: apiUrl
 					body:
 						deviceId: device.id
 						appId: appId
@@ -689,7 +689,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: "/device/#{device.id}/restart"
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.asCallback(callback)
@@ -737,7 +737,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/reboot'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				body:
 					deviceId: device.id
 					data:
@@ -773,7 +773,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/shutdown'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				body:
 					deviceId: device.id
 					appId: device.application[0].id
@@ -807,7 +807,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/purge'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				body:
 					deviceId: device.id
 					appId: device.application[0].id
@@ -844,7 +844,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/update'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				body:
 					deviceId: device.id
 					appId: device.application[0].id
@@ -1226,7 +1226,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				data:
 					deviceId: device.id
 					appId: device.application[0].id
@@ -1260,7 +1260,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'DELETE'
 				url: '/supervisor/v1/tcp-ping'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				data:
 					deviceId: device.id
 					appId: device.application[0].id
@@ -1293,7 +1293,7 @@ getDeviceModel = (deps, opts) ->
 			return request.send
 				method: 'GET'
 				url: '/supervisor/ping'
-				baseUrl: settings.get('apiUrl')
+				baseUrl: apiUrl
 				body:
 					deviceId: device.id
 					appId: device.application[0].id
