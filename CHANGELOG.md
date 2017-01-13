@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0-beta2] - 2017-01-13
+
 ### Changed
 
 - **Fixed** the issue with `resin-settings-client` not being installed in Node.js
@@ -323,6 +325,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.0.0-beta2]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta1...v6.0.0-beta2
 [6.0.0-beta1]: https://github.com/resin-io/resin-sdk/compare/v5.4.0...v6.0.0-beta1
 [5.4.0]: https://github.com/resin-io/resin-sdk/compare/v5.3.6...v5.4.0
 [5.3.6]: https://github.com/resin-io/resin-sdk/compare/v5.3.5...v5.3.6
