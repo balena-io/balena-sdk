@@ -64,11 +64,11 @@ var resin = require('resin-sdk')({
 ```
 
 Where the factory method accepts the following options:
-* `apiUrl`, string, **required**, is the Resin.io API url like `https://api.resin.io/`,
+* `apiUrl`, string, *optional*, is the resin.io API url. Defaults to `https://api.resin.io/`,
 * `apiVersion`, string, *optional*, is the version of the API to talk to, like `v2`. Defaults to the current stable version: `v2`,
 * `apiKey`, string, *optional*, is the API key to make the requests with,
-* `imageMakerUrl`, string, **required**, is the Resin.io API url like `https://img.resin.io/`,
-* `dataDirectory`, string, *required in Node.js*, *ignored in the browser*, is the directory where the user settings are stored, normally retrieved like `require('resin-settings-client').get('dataDirectory')`,
+* `imageMakerUrl`, string, *optional*, *ignored in the browser*, is the resin.io image maker url. Defaults to `https://img.resin.io/`,
+* `dataDirectory`, string, *optional*, *ignored in the browser*, is the directory where the user settings are stored, normally retrieved like `require('resin-settings-client').get('dataDirectory')`. Defaults to `$HOME/.resin`,
 * `isBrowser`, boolean, *optional*, is the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value,
 * `debug`, boolean, *optional*, when set will print some extra debug information.
 
