@@ -71,7 +71,11 @@ sdkTemplate = {
 
 module.exports = getSdk = function(opts) {
   var deps, pine, request, settings, token;
+  if (opts == null) {
+    opts = {};
+  }
   defaults(opts, {
+    apiUrl: 'https://api.resin.io/',
     apiVersion: 'v2',
     isBrowser: typeof window !== "undefined" && window !== null
   });
@@ -82,6 +86,10 @@ module.exports = getSdk = function(opts) {
     };
   } else {
     settings = require('resin-settings-client');
+    defaults(opts, {
+      imageMakerUrl: settings.get('imageMakerUrl'),
+      dataDirectory: settings.get('dataDirectory')
+    });
   }
   token = getToken(opts);
   request = getRequest(assign({}, opts, {

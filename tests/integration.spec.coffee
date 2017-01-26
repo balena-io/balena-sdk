@@ -104,6 +104,28 @@ describe 'SDK Integration Tests', ->
 	# running the tests in a slow connection
 	@timeout(30 * 60 * 1000)
 
+	describe 'factory function', ->
+
+		validKeys = ['auth', 'models', 'logs', 'settings']
+
+		describe 'given no opts', ->
+
+			it 'should return an object with valid keys', ->
+				mockResin = getSdk()
+				m.chai.expect(mockResin).to.include.keys(validKeys)
+
+		describe 'given empty opts', ->
+
+			it 'should return an object with valid keys', ->
+				mockResin = getSdk({})
+				m.chai.expect(mockResin).to.include.keys(validKeys)
+
+		describe 'given opts', ->
+
+			it 'should return an object with valid keys', ->
+				mockResin = getSdk(opts)
+				m.chai.expect(mockResin).to.include.keys(validKeys)
+
 	describe 'given a not logged in user', ->
 
 		beforeEach ->

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Add factory function defaults so all options are optional. Example: `require('resin-sdk')();`
+
 ## [6.0.0-beta2] - 2017-01-13
 
 ### Changed
