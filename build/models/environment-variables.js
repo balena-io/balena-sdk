@@ -37,7 +37,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.environment-variables
   	 *
-  	 * @param {String} applicationName - application name
+  	 * @param {String|Number} applicationNameOrId - application name (string) or id (number)
   	 * @fulfil {Object[]} - environment variables
   	 * @returns {Promise}
   	 *
@@ -47,13 +47,18 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * });
   	 *
   	 * @example
+  	 * resin.models.environmentVariables.getAllByApplication(123).then(function(environmentVariables) {
+  	 * 	console.log(environmentVariables);
+  	 * });
+  	 *
+  	 * @example
   	 * resin.models.environmentVariables.getAllByApplication('MyApp', function(error, environmentVariables) {
   	 * 	if (error) throw error;
   	 * 	console.log(environmentVariables);
   	 * });
    */
-  exports.getAllByApplication = function(applicationName, callback) {
-    return applicationModel().get(applicationName).get('id').then(function(applicationId) {
+  exports.getAllByApplication = function(applicationNameOrId, callback) {
+    return applicationModel().get(applicationNameOrId).get('id').then(function(applicationId) {
       return pine.get({
         resource: 'environment_variable',
         options: {
@@ -73,7 +78,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.environment-variables
   	 *
-  	 * @param {String} applicationName - application name
+  	 * @param {String|Number} applicationNameOrId - application name (string) or id (number)
   	 * @param {String} name - environment variable name
   	 * @param {String} value - environment variable value
   	 *
@@ -83,12 +88,15 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim');
   	 *
   	 * @example
+  	 * resin.models.environmentVariables.create(123, 'EDITOR', 'vim');
+  	 *
+  	 * @example
   	 * resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim', function(error) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.create = function(applicationName, name, value, callback) {
-    return applicationModel().get(applicationName).get('id').then(function(applicationId) {
+  exports.create = function(applicationNameOrId, name, value, callback) {
+    return applicationModel().get(applicationNameOrId).get('id').then(function(applicationId) {
       return pine.post({
         resource: 'environment_variable',
         body: {
@@ -194,7 +202,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.environment-variables.device
   	 *
-  	 * @param {String} uuid - device uuid
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
   	 * @fulfil {Object[]} - device environment variables
   	 * @returns {Promise}
   	 *
@@ -204,13 +212,18 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * });
   	 *
   	 * @example
+  	 * resin.models.environmentVariables.device.getAll(123).then(function(environmentVariables) {
+  	 * 	console.log(environmentVariables);
+  	 * });
+  	 *
+  	 * @example
   	 * resin.models.environmentVariables.device.getAll('7cf02a6', function(error, environmentVariables) {
   	 * 	if (error) throw error;
   	 * 	console.log(environmentVariables)
   	 * });
    */
-  exports.device.getAll = function(uuid, callback) {
-    return deviceModel().get(uuid).then(function(device) {
+  exports.device.getAll = function(uuidOrId, callback) {
+    return deviceModel().get(uuidOrId).then(function(device) {
       return pine.get({
         resource: 'device_environment_variable',
         options: {
@@ -237,7 +250,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.environment-variables.device
   	 *
-  	 * @param {String} uuid - device uuid
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
   	 * @param {String} name - environment variable name
   	 * @param {String} value - environment variable value
   	 *
@@ -247,12 +260,15 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim');
   	 *
   	 * @example
+  	 * resin.models.environmentVariables.device.create(123, 'EDITOR', 'vim');
+  	 *
+  	 * @example
   	 * resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim', function(error) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.device.create = function(uuid, name, value, callback) {
-    return deviceModel().get(uuid).then(function(device) {
+  exports.device.create = function(uuidOrId, name, value, callback) {
+    return deviceModel().get(uuidOrId).then(function(device) {
       return pine.post({
         resource: 'device_environment_variable',
         body: {
