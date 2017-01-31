@@ -556,13 +556,21 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.application.get()', ->
 
-					it 'should be able to get an application', ->
+					it 'should be able to get an application by name', ->
 						promise = resin.models.application.get(@application.app_name)
 						m.chai.expect(promise).to.become(@application)
 
-					it 'should be rejected if the application does not exist', ->
+					it 'should be able to get an application by id', ->
+						promise = resin.models.application.get(@application.id)
+						m.chai.expect(promise).to.become(@application)
+
+					it 'should be rejected if the application name does not exist', ->
 						promise = resin.models.application.get('HelloWorldApp')
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.application.get(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 				describe 'resin.models.application.getById()', ->
 
@@ -576,35 +584,81 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.application.has()', ->
 
-					it 'should eventually be true if the application exists', ->
+					it 'should eventually be true if the application name exists', ->
 						promise = resin.models.application.has(@application.app_name)
 						m.chai.expect(promise).to.eventually.be.true
 
-					it 'should eventually be true if the application does not exist', ->
+					it 'should eventually be true if the application id exists', ->
+						promise = resin.models.application.has(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+					it 'should eventually be false if the application name does not exist', ->
 						promise = resin.models.application.has('HelloWorldApp')
+						m.chai.expect(promise).to.eventually.be.false
+
+					it 'should eventually be false if the application id does not exist', ->
+						promise = resin.models.application.has(999999)
 						m.chai.expect(promise).to.eventually.be.false
 
 				describe 'resin.models.application.remove()', ->
 
-					it 'should be able to remove an existing application', ->
+					it 'should be able to remove an existing application by name', ->
 						resin.models.application.remove(@application.app_name).then ->
 							promise = resin.models.application.getAll()
 							m.chai.expect(promise).to.eventually.have.length(0)
 
-					it 'should be rejected if the application does not exist', ->
+					it 'should be able to remove an existing application by id', ->
+						resin.models.application.remove(@application.id).then ->
+							promise = resin.models.application.getAll()
+							m.chai.expect(promise).to.eventually.have.length(0)
+
+					it 'should be rejected if the application name does not exist', ->
 						promise = resin.models.application.remove('HelloWorldApp')
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.application.remove(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+				describe 'resin.models.application.remove()', ->
+
+					it 'should be able to remove an existing application by name', ->
+						resin.models.application.remove(@application.app_name).then ->
+							promise = resin.models.application.getAll()
+							m.chai.expect(promise).to.eventually.have.length(0)
+
+					it 'should be able to remove an existing application by id', ->
+						resin.models.application.remove(@application.id).then ->
+							promise = resin.models.application.getAll()
+							m.chai.expect(promise).to.eventually.have.length(0)
+
+					it 'should be rejected if the application name does not exist', ->
+						promise = resin.models.application.remove('HelloWorldApp')
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.application.remove(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
 				describe 'resin.models.application.getApiKey()', ->
 
-					it 'should be able to generate an API key', ->
+					it 'should be able to generate an API key by name', ->
 						resin.models.application.getApiKey(@application.app_name).then (apiKey) ->
 							m.chai.expect(_.isString(apiKey)).to.be.true
 							m.chai.expect(apiKey).to.have.length(32)
 
-					it 'should be rejected if the application does no exist', ->
+					it 'should be able to generate an API key by id', ->
+						resin.models.application.getApiKey(@application.id).then (apiKey) ->
+							m.chai.expect(_.isString(apiKey)).to.be.true
+							m.chai.expect(apiKey).to.have.length(32)
+
+					it 'should be rejected if the application name does not exist', ->
 						promise = resin.models.application.getApiKey('HelloWorldApp')
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.application.getApiKey(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			describe 'Device Model', ->
 
