@@ -123,11 +123,11 @@ getApplicationModel = function(deps, opts) {
           app_name: nameOrId
         }
       }
-    }).tap(function(application) {
-      if (isEmpty(application)) {
+    }).tap(function(applications) {
+      if (isEmpty(applications)) {
         throw new errors.ResinApplicationNotFound(nameOrId);
       }
-      if (size(application) > 1) {
+      if (size(applications) > 1) {
         throw new errors.ResinAmbiguousApplication(nameOrId);
       }
     }).get(0)).asCallback(callback);

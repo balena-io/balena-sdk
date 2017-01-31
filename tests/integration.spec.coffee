@@ -409,6 +409,16 @@ describe 'SDK Integration Tests', ->
 					resin.models.device.getManifestBySlug('raspberrypi').then (manifest) ->
 						m.chai.expect(manifest.slug).to.equal('raspberry-pi')
 
+			describe 'resin.models.device.getStatus()', ->
+
+				it 'should return offline for offline devices', ->
+					promise = resin.models.device.getStatus({ is_online: false })
+					m.chai.expect(promise).to.eventually.equal('offline')
+
+				it 'should return idle for idle devices', ->
+					promise = resin.models.device.getStatus({ is_online: true })
+					m.chai.expect(promise).to.eventually.equal('idle')
+
 		describe 'given no applications', ->
 
 			describe 'Application Model', ->
@@ -671,7 +681,7 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.device.getAllByApplication()', ->
 
 					it 'should become an empty array', ->
-						promise = resin.models.device.getAllByApplication(@application.app_name)
+						promise = resin.models.device.getAllByApplication(@application.id)
 						m.chai.expect(promise).to.become([])
 
 				describe 'resin.models.device.generateUniqueKey()', ->
@@ -693,33 +703,53 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.getManifestByApplication()', ->
 
-					it 'should return the appropriate manifest for an application', ->
+					it 'should return the appropriate manifest for an application name', ->
 						resin.models.device.getManifestByApplication(@application.app_name).then (manifest) =>
 							m.chai.expect(manifest.slug).to.equal(@application.device_type)
 
-					it 'should be rejected if the application does not exist', ->
+					it 'should return the appropriate manifest for an application id', ->
+						resin.models.device.getManifestByApplication(@application.id).then (manifest) =>
+							m.chai.expect(manifest.slug).to.equal(@application.device_type)
+
+					it 'should be rejected if the application name does not exist', ->
 						promise = resin.models.device.getManifestByApplication('HelloWorldApp')
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.device.getManifestByApplication(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
 				describe 'resin.models.device.register()', ->
 
-					it 'should be able to register a device to a valid application', ->
+					it 'should be able to register a device to a valid application name', ->
 						uuid = resin.models.device.generateUniqueKey()
 						resin.models.device.register(@application.app_name, uuid)
 						.then =>
 							promise = resin.models.device.getAllByApplication(@application.app_name)
 							m.chai.expect(promise).to.eventually.have.length(1)
 
+					it 'should be able to register a device to a valid application id', ->
+						uuid = resin.models.device.generateUniqueKey()
+						resin.models.device.register(@application.id, uuid)
+						.then =>
+							promise = resin.models.device.getAllByApplication(@application.app_name)
+							m.chai.expect(promise).to.eventually.have.length(1)
+
 					it 'should become valid device registration info', ->
 						uuid = resin.models.device.generateUniqueKey()
-						resin.models.device.register(@application.app_name, uuid).then (deviceInfo) ->
+						resin.models.device.register(@application.id, uuid).then (deviceInfo) ->
 							m.chai.expect(deviceInfo.uuid).to.equal(uuid)
 							m.chai.expect(deviceInfo.api_key).to.be.a('string')
 
-					it 'should be rejected if the application does not exist', ->
+					it 'should be rejected if the application name does not exist', ->
 						uuid = resin.models.device.generateUniqueKey()
 						promise = resin.models.device.register('HelloWorldApp', uuid)
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						uuid = resin.models.device.generateUniqueKey()
+						promise = resin.models.device.register(999999, uuid)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			describe 'Environment Variables Model', ->
 
@@ -825,32 +855,49 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.getAllByApplication()', ->
 
-					it 'should get the device given the right application', ->
+					it 'should get the device given the right application name', ->
 						resin.models.device.getAllByApplication(@application.app_name).then (devices) =>
 							m.chai.expect(devices).to.have.length(1)
 							m.chai.expect(devices[0].id).to.equal(@device.id)
 
-					it 'should add an application_name property', ->
-						resin.models.device.getAllByApplication(@application.app_name).then (devices) =>
+					it 'should get the device given the right application id', ->
+						resin.models.device.getAllByApplication(@application.id).then (devices) =>
+							m.chai.expect(devices).to.have.length(1)
+							m.chai.expect(devices[0].id).to.equal(@device.id)
+
+					it 'should include an application_name property in the result', ->
+						resin.models.device.getAllByApplication(@application.id).then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
 
-					it 'should be rejected if the application does not exist', ->
+					it 'should be rejected if the application name does not exist', ->
 						promise = resin.models.device.getAllByApplication('HelloWorldApp')
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.device.getAllByApplication(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
 				describe 'resin.models.device.get()', ->
 
-					it 'should be able to get the device', ->
+					it 'should be able to get the device by uuid', ->
 						resin.models.device.get(@device.uuid).then (device) =>
 							m.chai.expect(device.id).to.equal(@device.id)
 
+					it 'should be able to get the device by id', ->
+						resin.models.device.get(@device.id).then (device) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+
 					it 'should add an application_name property', ->
-						resin.models.device.get(@device.uuid).then (device) =>
+						resin.models.device.get(@device.id).then (device) =>
 							m.chai.expect(device.application_name).to.equal(@application.app_name)
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should be rejected if the device name does not exist', ->
 						promise = resin.models.device.get('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.get(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
 					it 'should be able to use a shorter uuid', ->
 						resin.models.device.get(@device.uuid.slice(0, 8)).then (device) =>
@@ -873,58 +920,104 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.getName()', ->
 
-					it 'should get the correct name', ->
+					it 'should get the correct name by uuid', ->
 						promise = resin.models.device.getName(@device.uuid)
 						m.chai.expect(promise).to.eventually.equal(@device.name)
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should get the correct name by id', ->
+						promise = resin.models.device.getName(@device.id)
+						m.chai.expect(promise).to.eventually.equal(@device.name)
+
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.getName('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.getName(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.getApplicationName()', ->
 
-					it 'should get the correct application name', ->
+					it 'should get the correct application name from a device uuid', ->
 						promise = resin.models.device.getApplicationName(@device.uuid)
 						m.chai.expect(promise).to.eventually.equal(@application.app_name)
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should get the correct application name from a device id', ->
+						promise = resin.models.device.getApplicationName(@device.id)
+						m.chai.expect(promise).to.eventually.equal(@application.app_name)
+
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.getApplicationName('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.getApplicationName(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.has()', ->
 
-					it 'should eventually be true if the device exists', ->
+					it 'should eventually be true if the device uuid exists', ->
 						promise = resin.models.device.has(@device.uuid)
 						m.chai.expect(promise).to.eventually.be.true
 
-					it 'should eventually be false if the device does not exist', ->
+					it 'should eventually be true if the device id exists', ->
+						promise = resin.models.device.has(@device.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+					it 'should eventually be false if the device uuid does not exist', ->
 						promise = resin.models.device.has('asdfghjkl')
+						m.chai.expect(promise).to.eventually.be.false
+
+					it 'should eventually be false if the device id does not exist', ->
+						promise = resin.models.device.has(999999)
 						m.chai.expect(promise).to.eventually.be.false
 
 				describe 'resin.models.device.isOnline()', ->
 
-					it 'should eventually be false', ->
+					it 'should eventually be false if the device uuid is offline', ->
 						promise = resin.models.device.isOnline(@device.uuid)
 						m.chai.expect(promise).to.eventually.be.false
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should eventually be false if the device id is offline', ->
+						promise = resin.models.device.isOnline(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
+
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.isOnline('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.isOnline(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.getLocalIPAddresses()', ->
 
-					it 'should be rejected with an offline error', ->
+					it 'should be rejected with an offline error if the device uuid is offline', ->
 						promise = resin.models.device.getLocalIPAddresses(@device.uuid)
 						m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.uuid}")
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should be rejected with an offline error if the device id is offline', ->
+						promise = resin.models.device.getLocalIPAddresses(@device.id)
+						m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.id}")
+
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.getLocalIPAddresses('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.getLocalIPAddresses(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.remove()', ->
 
-					it 'should be able to remove the device', ->
+					it 'should be able to remove the device by uuid', ->
 						resin.models.device.remove(@device.uuid)
+							.then(resin.models.device.getAll)
+							.then (devices) ->
+								m.chai.expect(devices).to.deep.equal([])
+
+					it 'should be able to remove the device by id', ->
+						resin.models.device.remove(@device.id)
 							.then(resin.models.device.getAll)
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
@@ -935,15 +1028,25 @@ describe 'SDK Integration Tests', ->
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.remove('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.remove(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.rename()', ->
 
-					it 'should be able to rename the device', ->
+					it 'should be able to rename the device by uuid', ->
 						resin.models.device.rename(@device.uuid, 'FooBarDevice').then =>
 							resin.models.device.getName(@device.uuid)
+						.then (name) ->
+							m.chai.expect(name).to.equal('FooBarDevice')
+
+					it 'should be able to rename the device by id', ->
+						resin.models.device.rename(@device.id, 'FooBarDevice').then =>
+							resin.models.device.getName(@device.id)
 						.then (name) ->
 							m.chai.expect(name).to.equal('FooBarDevice')
 
@@ -953,77 +1056,103 @@ describe 'SDK Integration Tests', ->
 						.then (name) ->
 							m.chai.expect(name).to.equal('FooBarDevice')
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.rename('asdfghjkl', 'Foo Bar')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.rename(999999, 'Foo Bar')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.note()', ->
 
-					it 'should be able to note a device', ->
+					it 'should be able to note a device by uuid', ->
 						resin.models.device.note(@device.uuid, 'What you do today can improve all your tomorrows').then =>
 							resin.models.device.get(@device.uuid)
 						.then (device) ->
 							m.chai.expect(device.note).to.equal('What you do today can improve all your tomorrows')
 
-					it 'should be rejected if the device does not exist', ->
+					it 'should be able to note a device by id', ->
+						resin.models.device.note(@device.id, 'What you do today can improve all your tomorrows').then =>
+							resin.models.device.get(@device.id)
+						.then (device) ->
+							m.chai.expect(device.note).to.equal('What you do today can improve all your tomorrows')
+
+					it 'should be rejected if the device uuid does not exist', ->
 						promise = resin.models.device.note('asdfghjkl', 'My note')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-				describe 'given device url is disabled', ->
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.note(999999, 'My note')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
-					describe 'resin.models.device.hasDeviceUrl()', ->
+				describe 'resin.models.device.hasDeviceUrl()', ->
 
-						it 'should eventually be false', ->
+					it 'should be rejected if the device uuid does not exist', ->
+						promise = resin.models.device.hasDeviceUrl('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.hasDeviceUrl(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+					describe 'given device url is disabled', ->
+
+						it 'should eventually be false given a device uuid', ->
 							promise = resin.models.device.hasDeviceUrl(@device.uuid)
 							m.chai.expect(promise).to.eventually.be.false
 
-						it 'should be rejected if the device does not exist', ->
-							promise = resin.models.device.hasDeviceUrl('asdfghjkl')
-							m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+						it 'should eventually be false given a device id', ->
+							promise = resin.models.device.hasDeviceUrl(@device.id)
+							m.chai.expect(promise).to.eventually.be.false
 
-					describe 'resin.models.device.getDeviceUrl()', ->
+					describe 'given device url is enabled', ->
 
-						it 'should be rejected with an error', ->
-							promise = resin.models.device.getDeviceUrl(@device.uuid)
-							m.chai.expect(promise).to.be.rejectedWith("Device is not web accessible: #{@device.uuid}")
+						beforeEach ->
+							resin.models.device.enableDeviceUrl(@device.id)
 
-						it 'should be rejected if the device does not exist', ->
-							promise = resin.models.device.getDeviceUrl('asdfghjkl')
-							m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
-
-					describe 'resin.models.device.enableDeviceUrl()', ->
-
-						it 'should be able to enable web access', ->
-							resin.models.device.enableDeviceUrl(@device.uuid).then =>
-								promise = resin.models.device.hasDeviceUrl(@device.uuid)
-								m.chai.expect(promise).to.eventually.be.true
-
-						it 'should be able to enable web access using a shorter uuid', ->
-							resin.models.device.enableDeviceUrl(@device.uuid.slice(0, 7)).then =>
-								promise = resin.models.device.hasDeviceUrl(@device.uuid)
-								m.chai.expect(promise).to.eventually.be.true
-
-						it 'should be rejected if the device does not exist', ->
-							promise = resin.models.device.enableDeviceUrl('asdfghjkl')
-							m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
-
-				describe 'given device url is enabled', ->
-
-					beforeEach ->
-						resin.models.device.enableDeviceUrl(@device.uuid)
-					describe 'resin.models.device.hasDeviceUrl()', ->
-
-						it 'should eventually be true', ->
+						it 'should eventually be true given a device uuid', ->
 							promise = resin.models.device.hasDeviceUrl(@device.uuid)
 							m.chai.expect(promise).to.eventually.be.true
 
-					describe 'resin.models.device.getDeviceUrl()', ->
+						it 'should eventually be true given a device id', ->
+							promise = resin.models.device.hasDeviceUrl(@device.id)
+							m.chai.expect(promise).to.eventually.be.true
+
+				describe 'resin.models.device.getDeviceUrl()', ->
+
+					it 'should be rejected if the device uuid does not exist', ->
+						promise = resin.models.device.getDeviceUrl('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.getDeviceUrl(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+					describe 'given device url is disabled', ->
+
+						it 'should be rejected with an error given a device uuid', ->
+							promise = resin.models.device.getDeviceUrl(@device.uuid)
+							m.chai.expect(promise).to.be.rejectedWith("Device is not web accessible: #{@device.uuid}")
+
+						it 'should be rejected with an error given a device id', ->
+							promise = resin.models.device.getDeviceUrl(@device.id)
+							m.chai.expect(promise).to.be.rejectedWith("Device is not web accessible: #{@device.id}")
+
+					describe 'given device url is enabled', ->
+
+						beforeEach ->
+							resin.models.device.enableDeviceUrl(@device.id)
 
 						it 'should eventually return the correct device url given a shorter uuid', ->
 							promise = resin.models.device.getDeviceUrl(@device.uuid.slice(0, 7))
 							m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
 
-						it 'should eventually be an absolute url', ->
+						it 'should eventually return the correct device url given an id', ->
+							promise = resin.models.device.getDeviceUrl(@device.id)
+							m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
+
+						it 'should eventually be an absolute url given a uuid', ->
 							resin.models.device.getDeviceUrl(@device.uuid)
 							.then (deviceUrl) ->
 								simpleRequest(deviceUrl)
@@ -1042,23 +1171,62 @@ describe 'SDK Integration Tests', ->
 									/<title>Resin.io Device Public URLs<\/title>/
 								)
 
-					describe 'resin.models.device.disableDeviceUrl()', ->
+				describe 'resin.models.device.enableDeviceUrl()', ->
 
-						it 'should be able to disable web access', ->
+					it 'should be rejected if the device uuid does not exist', ->
+						promise = resin.models.device.enableDeviceUrl('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.enableDeviceUrl(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+					describe 'given the device url is disabled', ->
+
+						it 'should be able to enable web access using a uuid', ->
+							resin.models.device.enableDeviceUrl(@device.uuid).then =>
+								promise = resin.models.device.hasDeviceUrl(@device.id)
+								m.chai.expect(promise).to.eventually.be.true
+
+						it 'should be able to enable web access using an id', ->
+							resin.models.device.enableDeviceUrl(@device.id).then =>
+								promise = resin.models.device.hasDeviceUrl(@device.id)
+								m.chai.expect(promise).to.eventually.be.true
+
+						it 'should be able to enable web access using a shorter uuid', ->
+							resin.models.device.enableDeviceUrl(@device.uuid.slice(0, 7)).then =>
+								promise = resin.models.device.hasDeviceUrl(@device.id)
+								m.chai.expect(promise).to.eventually.be.true
+
+				describe 'resin.models.device.disableDeviceUrl()', ->
+
+					it 'should be rejected if the device uuid does not exist', ->
+						promise = resin.models.device.disableDeviceUrl('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.disableDeviceUrl(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+					describe 'given device url is enabled', ->
+
+						beforeEach ->
+							resin.models.device.enableDeviceUrl(@device.id)
+
+						it 'should be able to disable web access using a uuid', ->
 							resin.models.device.disableDeviceUrl(@device.uuid).then =>
-								promise = resin.models.device.hasDeviceUrl(@device.uuid)
+								promise = resin.models.device.hasDeviceUrl(@device.id)
+								m.chai.expect(promise).to.eventually.be.false
+
+						it 'should be able to disable web access using an id', ->
+							resin.models.device.disableDeviceUrl(@device.id).then =>
+								promise = resin.models.device.hasDeviceUrl(@device.id)
 								m.chai.expect(promise).to.eventually.be.false
 
 						it 'should be able to disable web access using a shorter uuid', ->
 							resin.models.device.disableDeviceUrl(@device.uuid.slice(0, 7)).then =>
-								promise = resin.models.device.hasDeviceUrl(@device.uuid)
+								promise = resin.models.device.hasDeviceUrl(@device.id)
 								m.chai.expect(promise).to.eventually.be.false
-
-				describe 'resin.models.device.getStatus()', ->
-
-					it 'should return the correct status slug', ->
-						promise = resin.models.device.getStatus(@device.uuid)
-						m.chai.expect(promise).to.eventually.equal('offline')
 
 			describe 'Environment Variables Model', ->
 
@@ -1138,9 +1306,13 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.device.get()', ->
 
-					it 'should return the device given the number shorter uuid', ->
-						resin.models.device.get(1234567).then (device) =>
+					it 'should return the device given the shorter uuid as a string', ->
+						resin.models.device.get('1234567').then (device) =>
 							m.chai.expect(device.id).to.equal(@deviceInfo.id)
+
+					it 'should fail to find the device given the shorter uuid as a number', ->
+						promise = resin.models.device.get(1234567)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 1234567')
 
 		describe 'given a single application with two offline devices that share the same uuid root', ->
 
@@ -1191,15 +1363,21 @@ describe 'SDK Integration Tests', ->
 
 			describe 'resin.models.device.move()', ->
 
-				it 'should be able to move a device', ->
+				it 'should be able to move a device by device uuid and application name', ->
 					resin.models.device.move(@deviceInfo.uuid, @application2.app_name).then =>
 						resin.models.device.getApplicationName(@deviceInfo.uuid)
 					.then (applicationName) =>
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
 
+				it 'should be able to move a device by device id and application id', ->
+					resin.models.device.move(@deviceInfo.id, @application2.id).then =>
+						resin.models.device.getApplicationName(@deviceInfo.id)
+					.then (applicationName) =>
+						m.chai.expect(applicationName).to.equal(@application2.app_name)
+
 				it 'should be able to move a device using shorter uuids', ->
-					resin.models.device.move(@deviceInfo.uuid.slice(0, 7), @application2.app_name).then =>
-						resin.models.device.getApplicationName(@deviceInfo.uuid)
+					resin.models.device.move(@deviceInfo.uuid.slice(0, 7), @application2.id).then =>
+						resin.models.device.getApplicationName(@deviceInfo.id)
 					.then (applicationName) =>
 						m.chai.expect(applicationName).to.equal(@application2.app_name)
 

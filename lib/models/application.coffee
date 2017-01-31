@@ -111,11 +111,11 @@ getApplicationModel = (deps, opts) ->
 				options:
 					filter:
 						app_name: nameOrId
-			.tap (application) ->
-				if isEmpty(application)
+			.tap (applications) ->
+				if isEmpty(applications)
 					throw new errors.ResinApplicationNotFound(nameOrId)
 
-				if size(application) > 1
+				if size(applications) > 1
 					throw new errors.ResinAmbiguousApplication(nameOrId)
 			.get(0)
 		).asCallback(callback)
