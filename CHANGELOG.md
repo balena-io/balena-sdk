@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Add factory function defaults so all options are optional. Example: `require('resin-sdk')();`
+- Allow device & application ids for all methods, in addition to device uuids & application names, if the argument is a number instead of a string.
 
 ## [6.0.0-beta2] - 2017-01-13
 
