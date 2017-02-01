@@ -833,15 +833,21 @@ describe 'SDK Integration Tests', ->
 
 				describe 'resin.models.build.getAllByApplication()', ->
 
-					it 'should eventually become an empty array', ->
-						promise = resin.models.build.getAllByApplication('FooBar')
+					it 'should eventually become an empty array given an application name', ->
+						promise = resin.models.build.getAllByApplication(@application.app_name)
 						m.chai.expect(promise).to.become([])
 
-				describe 'resin.models.build.getAllByApplication()', ->
+					it 'should eventually become an empty array given an application id', ->
+						promise = resin.models.build.getAllByApplication(@application.id)
+						m.chai.expect(promise).to.become([])
 
-					it 'should be rejected with an error if the application does not exist', ->
-						promise = resin.models.build.getAllByApplication('Hello')
-						m.chai.expect(promise).to.be.rejectedWith('Application not found: Hello')
+					it 'should be rejected if the application name does not exist', ->
+						promise = resin.models.build.getAllByApplication('HelloWorldApp')
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.build.getAllByApplication(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 		describe 'given a single application with a single offline device', ->
 
@@ -1321,7 +1327,6 @@ describe 'SDK Integration Tests', ->
 								resin.models.environmentVariables.device.getAll(@device.id)
 							.then (envs) ->
 								m.chai.expect(envs).to.have.length(0)
-
 
 		describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 

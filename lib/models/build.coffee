@@ -30,7 +30,7 @@ getBuildModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.build
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Object[]} - builds
 	# @returns {Promise}
 	#
@@ -40,23 +40,25 @@ getBuildModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.build.getAllByApplication(123).then(function(builds) {
+	#		console.log(builds);
+	# });
+	#
+	# @example
 	# resin.models.build.getAllByApplication('MyApp', function(error, builds) {
 	#		if (error) throw error;
 	#		console.log(builds);
 	# });
 	###
-	exports.getAllByApplication = (name, callback) ->
-		applicationModel().has(name).then (hasApplication) ->
-
-			if not hasApplication
-				throw new errors.ResinApplicationNotFound(name)
+	exports.getAllByApplication = (nameOrId, callback) ->
+		applicationModel().get(nameOrId).then (application) ->
 
 			return pine.get
 				resource: 'build'
 				filter:
 					application: $any:
 						$alias: 'a'
-						$expr: a: app_name: name
+						$expr: a: id: application.id
 				select: [
 					'id'
 					'created_at'
