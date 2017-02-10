@@ -40,7 +40,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
             * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
-            * ~~[.restart(uuidOrId)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
             * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -142,7 +141,6 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
         * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
-        * ~~[.restart(uuidOrId)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
         * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -464,7 +462,6 @@ resin.models.application.getApiKey('MyApp', function(error, apiKey) {
     * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
     * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
-    * ~~[.restart(uuidOrId)](#resin.models.device.restart) ⇒ <code>Promise</code>~~
     * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -1009,20 +1006,6 @@ resin.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.restart"></a>
-
-##### ~~device.restart(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Restart application on device.  
-**Access:** public  
-**See**: [restartApplication](#resin.models.device.restartApplication)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> &#124; <code>Number</code> | device uuid (string) or id (number) |
-
 <a name="resin.models.device.reboot"></a>
 
 ##### device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>

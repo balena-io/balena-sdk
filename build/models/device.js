@@ -831,21 +831,6 @@ getDeviceModel = function(deps, opts) {
   };
 
   /**
-  	 * @summary Restart application on device.
-  	 * @name restart
-  	 * @public
-  	 * @function
-  	 * @memberof resin.models.device
-  	 *
-  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-  	 * @returns {Promise}
-  	 *
-  	 * @deprecated
-  	 * @see {@link resin.models.device.restartApplication}
-   */
-  exports.restart = exports.restartApplication;
-
-  /**
   	 * @summary Reboot device
   	 * @name reboot
   	 * @public

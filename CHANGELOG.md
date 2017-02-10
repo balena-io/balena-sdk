@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- **Breaking!** Removed the (already deprecated) `resin.models.device.restart()` method, in favor of `resin.models.device.restartApplication()`
 - Add factory function defaults so all options are optional. Example: `require('resin-sdk')();`
 - Allow device & application ids for all methods, in addition to device uuids & application names, if the argument is a number instead of a string.
 
