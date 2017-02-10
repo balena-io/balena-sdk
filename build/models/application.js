@@ -15,7 +15,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var errors, filter, getApplicationModel, isEmpty, isId, once, size;
+var Promise, errors, filter, getApplicationModel, isEmpty, isId, once, ref, size, treat404AsMissingApplication;
+
+Promise = require('bluebird');
 
 once = require('lodash/once');
 
@@ -27,16 +29,19 @@ size = require('lodash/size');
 
 errors = require('resin-errors');
 
-isId = require('../util').isId;
+ref = require('../util'), isId = ref.isId, treat404AsMissingApplication = ref.treat404AsMissingApplication;
 
 getApplicationModel = function(deps, opts) {
-  var apiUrl, deviceModel, exports, pine, request, token;
+  var apiUrl, deviceModel, exports, getId, pine, request, token;
   request = deps.request, token = deps.token, pine = deps.pine;
   apiUrl = opts.apiUrl;
   deviceModel = once(function() {
     return require('./device')(deps, opts);
   });
   exports = {};
+  getId = function(nameOrId, callback) {
+    return (isId(nameOrId) ? Promise.resolve(nameOrId) : exports.get(nameOrId).get('id')).asCallback(callback);
+  };
 
   /**
   	 * @summary Get all applications
@@ -72,11 +77,11 @@ getApplicationModel = function(deps, opts) {
         }
       });
     }).map(function(application) {
-      var ref;
+      var ref1;
       application.online_devices = filter(application.device, {
         is_online: true
       }).length;
-      application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
+      application.devices_length = ((ref1 = application.device) != null ? ref1.length : void 0) || 0;
       return application;
     }).asCallback(callback);
   };
@@ -289,12 +294,12 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.remove = function(nameOrId, callback) {
-    return exports.get(nameOrId).then(function(application) {
+    return getId(nameOrId).then(function(applicationId) {
       return pine["delete"]({
         resource: 'application',
-        id: application.id
+        id: applicationId
       });
-    }).asCallback(callback);
+    })["catch"](treat404AsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**
@@ -319,13 +324,13 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.restart = function(nameOrId, callback) {
-    return exports.get(nameOrId).then(function(application) {
+    return getId(nameOrId).then(function(applicationId) {
       return request.send({
         method: 'POST',
-        url: "/application/" + application.id + "/restart",
+        url: "/application/" + applicationId + "/restart",
         baseUrl: apiUrl
       });
-    })["return"](void 0).asCallback(callback);
+    })["return"](void 0)["catch"](treat404AsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**

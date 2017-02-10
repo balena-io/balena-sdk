@@ -26,7 +26,7 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId } = require('../util')
+{ onlyIf, isId, treat404AsMissingDevice } = require('../util')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -50,6 +50,15 @@ getDeviceModel = (deps, opts) ->
 	auth = require('../auth')(deps, opts)
 
 	exports = {}
+
+	# Internal method for uuid/id disambiguation
+	# Note that this throws an exception for missing uuids, but not missing ids
+	getId = (uuidOrId, callback) ->
+		(if isId(uuidOrName)
+			Promise.resolve(uuidOrId)
+		else
+			exports.get(uuidOrId).get('id')
+		).asCallback(callback)
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver
@@ -758,13 +767,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.restartApplication = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		getId(uuidOrId).then (deviceId) ->
 			return request.send
 				method: 'POST'
-				url: "/device/#{device.id}/restart"
+				url: "/device/#{deviceId}/restart"
 				baseUrl: apiUrl
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
+		.catch(treat404AsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
@@ -809,16 +819,17 @@ getDeviceModel = (deps, opts) ->
 		if _.isFunction(options)
 			callback = options
 			options = {}
-		exports.get(uuidOrId).then (device) ->
+		getId(uuidOrId).then (deviceId) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/reboot'
 				baseUrl: apiUrl
 				body:
-					deviceId: device.id
+					deviceId: deviceId
 					data:
 						force: Boolean(options.force)
 		.get('body')
+		.catch(treat404AsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*

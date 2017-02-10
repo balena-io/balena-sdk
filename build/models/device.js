@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, once, onlyIf, ref, semver, some, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, once, onlyIf, ref, semver, some, treat404AsMissingDevice, without;
 
 Promise = require('bluebird');
 
@@ -39,14 +39,14 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId;
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, treat404AsMissingDevice = ref.treat404AsMissingDevice;
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
 getDeviceModel = function(deps, opts) {
-  var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, pine, registerDevice, request;
+  var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, getId, pine, registerDevice, request;
   pine = deps.pine, request = deps.request;
   apiUrl = opts.apiUrl;
   registerDevice = require('resin-register-device')({
@@ -60,6 +60,9 @@ getDeviceModel = function(deps, opts) {
   });
   auth = require('../auth')(deps, opts);
   exports = {};
+  getId = function(uuidOrId, callback) {
+    return (isId(uuidOrName) ? Promise.resolve(uuidOrId) : exports.get(uuidOrId).get('id')).asCallback(callback);
+  };
 
   /**
   	 * @summary Ensure supervisor version compatibility using semver
@@ -817,14 +820,14 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.restartApplication = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return getId(uuidOrId).then(function(deviceId) {
       return request.send({
         method: 'POST',
-        url: "/device/" + device.id + "/restart",
+        url: "/device/" + deviceId + "/restart",
         baseUrl: apiUrl,
         timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
       });
-    }).get('body').asCallback(callback);
+    }).get('body')["catch"](treat404AsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**
@@ -873,19 +876,19 @@ getDeviceModel = function(deps, opts) {
       callback = options;
       options = {};
     }
-    return exports.get(uuidOrId).then(function(device) {
+    return getId(uuidOrId).then(function(deviceId) {
       return request.send({
         method: 'POST',
         url: '/supervisor/v1/reboot',
         baseUrl: apiUrl,
         body: {
-          deviceId: device.id,
+          deviceId: deviceId,
           data: {
             force: Boolean(options.force)
           }
         }
       });
-    }).get('body').asCallback(callback);
+    }).get('body')["catch"](treat404AsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**
@@ -1532,7 +1535,7 @@ getDeviceModel = function(deps, opts) {
   	 * @public
   	 * @function
   	 * @memberof resin.models.device
-  	#π
+  	 *
   	 * @param {Object} device - A device object
   	 * @fulfil {String} - device status
   	 * @returns {Promise}

@@ -14,13 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+Promise = require('bluebird')
 once = require('lodash/once')
 isEmpty = require('lodash/isEmpty')
 filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
-{ isId } = require('../util')
+{ isId, treat404AsMissingApplication } = require('../util')
 
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
@@ -29,6 +30,15 @@ getApplicationModel = (deps, opts) ->
 	deviceModel = once -> require('./device')(deps, opts)
 
 	exports = {}
+
+	# Internal method for name/id disambiguation
+	# Note that this throws an exception for missing names, but not missing ids
+	getId = (nameOrId, callback) ->
+		(if isId(nameOrId)
+			Promise.resolve(nameOrId)
+		else
+			exports.get(nameOrId).get('id')
+		).asCallback(callback)
 
 	###*
 	# @summary Get all applications
@@ -272,10 +282,11 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.remove = (nameOrId, callback) ->
-		exports.get(nameOrId).then (application) ->
+		getId(nameOrId).then (applicationId) ->
 			return pine.delete
 				resource: 'application'
-				id: application.id
+				id: applicationId
+		.catch(treat404AsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	###*
@@ -300,12 +311,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.restart = (nameOrId, callback) ->
-		exports.get(nameOrId).then (application) ->
+		getId(nameOrId).then (applicationId) ->
 			return request.send
 				method: 'POST'
-				url: "/application/#{application.id}/restart"
+				url: "/application/#{applicationId}/restart"
 				baseUrl: apiUrl
 		.return(undefined)
+		.catch(treat404AsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	###*
@@ -336,6 +348,8 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.getApiKey = (nameOrId, callback) ->
+		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
+		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
 		exports.get(nameOrId).then (application) ->
 			return request.send
 				method: 'POST'

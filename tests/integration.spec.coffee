@@ -630,26 +630,6 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.application.remove(999999)
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
-				describe 'resin.models.application.remove()', ->
-
-					it 'should be able to remove an existing application by name', ->
-						resin.models.application.remove(@application.app_name).then ->
-							promise = resin.models.application.getAll()
-							m.chai.expect(promise).to.eventually.have.length(0)
-
-					it 'should be able to remove an existing application by id', ->
-						resin.models.application.remove(@application.id).then ->
-							promise = resin.models.application.getAll()
-							m.chai.expect(promise).to.eventually.have.length(0)
-
-					it 'should be rejected if the application name does not exist', ->
-						promise = resin.models.application.remove('HelloWorldApp')
-						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
-
-					it 'should be rejected if the application id does not exist', ->
-						promise = resin.models.application.remove(999999)
-						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
-
 				describe 'resin.models.application.getApiKey()', ->
 
 					it 'should be able to generate an API key by name', ->
