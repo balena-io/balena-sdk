@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, once, onlyIf, ref, semver, some, treat404AsMissingDevice, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, without;
 
 Promise = require('bluebird');
 
@@ -39,7 +39,7 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, treat404AsMissingDevice = ref.treat404AsMissingDevice;
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice;
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
@@ -61,7 +61,13 @@ getDeviceModel = function(deps, opts) {
   auth = require('../auth')(deps, opts);
   exports = {};
   getId = function(uuidOrId, callback) {
-    return (isId(uuidOrName) ? Promise.resolve(uuidOrId) : exports.get(uuidOrId).get('id')).asCallback(callback);
+    return Promise["try"](function() {
+      if (isId(uuidOrId)) {
+        return uuidOrId;
+      } else {
+        return exports.get(uuidOrId).get('id');
+      }
+    }).asCallback(callback);
   };
 
   /**
@@ -161,16 +167,7 @@ getDeviceModel = function(deps, opts) {
         resource: 'device',
         options: {
           filter: {
-            application: {
-              $any: {
-                $alias: 'a',
-                $expr: {
-                  a: {
-                    id: application.id
-                  }
-                }
-              }
-            }
+            application: application.id
           },
           expand: 'application',
           orderby: 'name asc'
@@ -827,7 +824,7 @@ getDeviceModel = function(deps, opts) {
         baseUrl: apiUrl,
         timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
       });
-    }).get('body')["catch"](treat404AsMissingDevice(uuidOrId)).asCallback(callback);
+    }).get('body')["catch"](notFoundResponse, treatAsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**
@@ -873,7 +870,7 @@ getDeviceModel = function(deps, opts) {
           }
         }
       });
-    }).get('body')["catch"](treat404AsMissingDevice(uuidOrId)).asCallback(callback);
+    }).get('body')["catch"](notFoundResponse, treatAsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**

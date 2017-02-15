@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, errors, filter, getApplicationModel, isEmpty, isId, once, ref, size, treat404AsMissingApplication;
+var Promise, errors, filter, getApplicationModel, isEmpty, isId, notFoundResponse, once, ref, size, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
@@ -29,7 +29,7 @@ size = require('lodash/size');
 
 errors = require('resin-errors');
 
-ref = require('../util'), isId = ref.isId, treat404AsMissingApplication = ref.treat404AsMissingApplication;
+ref = require('../util'), isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
 
 getApplicationModel = function(deps, opts) {
   var apiUrl, deviceModel, exports, getId, pine, request, token;
@@ -40,7 +40,13 @@ getApplicationModel = function(deps, opts) {
   });
   exports = {};
   getId = function(nameOrId, callback) {
-    return (isId(nameOrId) ? Promise.resolve(nameOrId) : exports.get(nameOrId).get('id')).asCallback(callback);
+    return Promise["try"](function() {
+      if (isId(nameOrId)) {
+        return nameOrId;
+      } else {
+        return exports.get(nameOrId).get('id');
+      }
+    }).asCallback(callback);
   };
 
   /**
@@ -299,7 +305,7 @@ getApplicationModel = function(deps, opts) {
         resource: 'application',
         id: applicationId
       });
-    })["catch"](treat404AsMissingApplication(nameOrId)).asCallback(callback);
+    })["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**
@@ -330,7 +336,7 @@ getApplicationModel = function(deps, opts) {
         url: "/application/" + applicationId + "/restart",
         baseUrl: apiUrl
       });
-    })["return"](void 0)["catch"](treat404AsMissingApplication(nameOrId)).asCallback(callback);
+    })["return"](void 0)["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**

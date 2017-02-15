@@ -21,7 +21,7 @@ filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
-{ isId, treat404AsMissingApplication } = require('../util')
+{ isId, notFoundResponse, treatAsMissingApplication } = require('../util')
 
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
@@ -34,11 +34,12 @@ getApplicationModel = (deps, opts) ->
 	# Internal method for name/id disambiguation
 	# Note that this throws an exception for missing names, but not missing ids
 	getId = (nameOrId, callback) ->
-		(if isId(nameOrId)
-			Promise.resolve(nameOrId)
-		else
-			exports.get(nameOrId).get('id')
-		).asCallback(callback)
+		Promise.try ->
+			if isId(nameOrId)
+				return nameOrId
+			else
+				exports.get(nameOrId).get('id')
+		.asCallback(callback)
 
 	###*
 	# @summary Get all applications
@@ -286,7 +287,7 @@ getApplicationModel = (deps, opts) ->
 			return pine.delete
 				resource: 'application'
 				id: applicationId
-		.catch(treat404AsMissingApplication(nameOrId))
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	###*
@@ -317,7 +318,7 @@ getApplicationModel = (deps, opts) ->
 				url: "/application/#{applicationId}/restart"
 				baseUrl: apiUrl
 		.return(undefined)
-		.catch(treat404AsMissingApplication(nameOrId))
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	###*

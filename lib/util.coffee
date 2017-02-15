@@ -8,16 +8,18 @@ exports.onlyIf = (condition) -> (fn) -> if condition then fn else notImplemented
 
 exports.isId = isNumber
 
-treat404AsOtherError = (replacementError) ->
-	(error) ->
-		if error.code == 'ResinRequestError' and error.statusCode == 404
-			replacementError.stack = error.stack
-			throw replacementError
-		else
-			throw error
+exports.notFoundResponse =
+	code: 'ResinRequestError'
+	statusCode: 404
 
-exports.treat404AsMissingApplication = (nameOrId) ->
-	treat404AsOtherError(new errors.ResinApplicationNotFound(nameOrId))
+exports.treatAsMissingApplication = (nameOrId) ->
+	return (err) ->
+		replacementErr = new errors.ResinApplicationNotFound(nameOrId)
+		replacementErr.stack = err.stack
+		throw replacementErr
 
-exports.treat404AsMissingDevice = (uuidOrId) ->
-	treat404AsOtherError(new errors.ResinDeviceNotFound(uuidOrId))
+exports.treatAsMissingDevice = (uuidOrId) ->
+	return (err) ->
+		replacementErr = new errors.ResinDeviceNotFound(uuidOrId)
+		replacementErr.stack = err.stack
+		throw replacementErr

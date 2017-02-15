@@ -26,7 +26,7 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId, treat404AsMissingDevice } = require('../util')
+{ onlyIf, isId, notFoundResponse, treatAsMissingDevice } = require('../util')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -54,11 +54,12 @@ getDeviceModel = (deps, opts) ->
 	# Internal method for uuid/id disambiguation
 	# Note that this throws an exception for missing uuids, but not missing ids
 	getId = (uuidOrId, callback) ->
-		(if isId(uuidOrName)
-			Promise.resolve(uuidOrId)
-		else
-			exports.get(uuidOrId).get('id')
-		).asCallback(callback)
+		Promise.try ->
+			if isId(uuidOrId)
+				return uuidOrId
+			else
+				exports.get(uuidOrId).get('id')
+		.asCallback(callback)
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver
@@ -154,9 +155,7 @@ getDeviceModel = (deps, opts) ->
 				resource: 'device'
 				options:
 					filter:
-						application: $any:
-							$alias: 'a'
-							$expr: a: id: application.id
+						application: application.id
 					expand: 'application'
 					orderby: 'name asc'
 
@@ -774,7 +773,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
-		.catch(treat404AsMissingDevice(uuidOrId))
+		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
@@ -814,7 +813,7 @@ getDeviceModel = (deps, opts) ->
 					data:
 						force: Boolean(options.force)
 		.get('body')
-		.catch(treat404AsMissingDevice(uuidOrId))
+		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*

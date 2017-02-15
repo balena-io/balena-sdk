@@ -61,16 +61,7 @@ getBuildModel = function(deps, opts) {
       return pine.get({
         resource: 'build',
         filter: {
-          application: {
-            $any: {
-              $alias: 'a',
-              $expr: {
-                a: {
-                  id: application.id
-                }
-              }
-            }
-          }
+          application: application.id
         },
         select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
         expand: {

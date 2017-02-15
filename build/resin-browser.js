@@ -642,7 +642,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, errors, filter, getApplicationModel, isEmpty, isId, once, ref, size, treat404AsMissingApplication;
+var Promise, errors, filter, getApplicationModel, isEmpty, isId, notFoundResponse, once, ref, size, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
@@ -656,7 +656,7 @@ size = require('lodash/size');
 
 errors = require('resin-errors');
 
-ref = require('../util'), isId = ref.isId, treat404AsMissingApplication = ref.treat404AsMissingApplication;
+ref = require('../util'), isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
 
 getApplicationModel = function(deps, opts) {
   var apiUrl, deviceModel, exports, getId, pine, request, token;
@@ -667,7 +667,13 @@ getApplicationModel = function(deps, opts) {
   });
   exports = {};
   getId = function(nameOrId, callback) {
-    return (isId(nameOrId) ? Promise.resolve(nameOrId) : exports.get(nameOrId).get('id')).asCallback(callback);
+    return Promise["try"](function() {
+      if (isId(nameOrId)) {
+        return nameOrId;
+      } else {
+        return exports.get(nameOrId).get('id');
+      }
+    }).asCallback(callback);
   };
 
   /**
@@ -926,7 +932,7 @@ getApplicationModel = function(deps, opts) {
         resource: 'application',
         id: applicationId
       });
-    })["catch"](treat404AsMissingApplication(nameOrId)).asCallback(callback);
+    })["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**
@@ -957,7 +963,7 @@ getApplicationModel = function(deps, opts) {
         url: "/application/" + applicationId + "/restart",
         baseUrl: apiUrl
       });
-    })["return"](void 0)["catch"](treat404AsMissingApplication(nameOrId)).asCallback(callback);
+    })["return"](void 0)["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**
@@ -1065,16 +1071,7 @@ getBuildModel = function(deps, opts) {
       return pine.get({
         resource: 'build',
         filter: {
-          application: {
-            $any: {
-              $alias: 'a',
-              $expr: {
-                a: {
-                  id: application.id
-                }
-              }
-            }
-          }
+          application: application.id
         },
         select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
         expand: {
@@ -1310,7 +1307,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, once, onlyIf, ref, semver, some, treat404AsMissingDevice, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, without;
 
 Promise = require('bluebird');
 
@@ -1334,7 +1331,7 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, treat404AsMissingDevice = ref.treat404AsMissingDevice;
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice;
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
@@ -1356,7 +1353,13 @@ getDeviceModel = function(deps, opts) {
   auth = require('../auth')(deps, opts);
   exports = {};
   getId = function(uuidOrId, callback) {
-    return (isId(uuidOrName) ? Promise.resolve(uuidOrId) : exports.get(uuidOrId).get('id')).asCallback(callback);
+    return Promise["try"](function() {
+      if (isId(uuidOrId)) {
+        return uuidOrId;
+      } else {
+        return exports.get(uuidOrId).get('id');
+      }
+    }).asCallback(callback);
   };
 
   /**
@@ -1456,16 +1459,7 @@ getDeviceModel = function(deps, opts) {
         resource: 'device',
         options: {
           filter: {
-            application: {
-              $any: {
-                $alias: 'a',
-                $expr: {
-                  a: {
-                    id: application.id
-                  }
-                }
-              }
-            }
+            application: application.id
           },
           expand: 'application',
           orderby: 'name asc'
@@ -2122,7 +2116,7 @@ getDeviceModel = function(deps, opts) {
         baseUrl: apiUrl,
         timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
       });
-    }).get('body')["catch"](treat404AsMissingDevice(uuidOrId)).asCallback(callback);
+    }).get('body')["catch"](notFoundResponse, treatAsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**
@@ -2168,7 +2162,7 @@ getDeviceModel = function(deps, opts) {
           }
         }
       });
-    }).get('body')["catch"](treat404AsMissingDevice(uuidOrId)).asCallback(callback);
+    }).get('body')["catch"](notFoundResponse, treatAsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**
@@ -3722,7 +3716,7 @@ module.exports = getSettings;
 
 },{"bluebird":30}],14:[function(require,module,exports){
 // Generated by CoffeeScript 1.12.2
-var errors, isNumber, notImplemented, treat404AsOtherError;
+var errors, isNumber, notImplemented;
 
 errors = require('resin-errors');
 
@@ -3744,23 +3738,27 @@ exports.onlyIf = function(condition) {
 
 exports.isId = isNumber;
 
-treat404AsOtherError = function(replacementError) {
-  return function(error) {
-    if (error.code === 'ResinRequestError' && error.statusCode === 404) {
-      replacementError.stack = error.stack;
-      throw replacementError;
-    } else {
-      throw error;
-    }
+exports.notFoundResponse = {
+  code: 'ResinRequestError',
+  statusCode: 404
+};
+
+exports.treatAsMissingApplication = function(nameOrId) {
+  return function(err) {
+    var replacementErr;
+    replacementErr = new errors.ResinApplicationNotFound(nameOrId);
+    replacementErr.stack = err.stack;
+    throw replacementErr;
   };
 };
 
-exports.treat404AsMissingApplication = function(nameOrId) {
-  return treat404AsOtherError(new errors.ResinApplicationNotFound(nameOrId));
-};
-
-exports.treat404AsMissingDevice = function(uuidOrId) {
-  return treat404AsOtherError(new errors.ResinDeviceNotFound(uuidOrId));
+exports.treatAsMissingDevice = function(uuidOrId) {
+  return function(err) {
+    var replacementErr;
+    replacementErr = new errors.ResinDeviceNotFound(uuidOrId);
+    replacementErr.stack = err.stack;
+    throw replacementErr;
+  };
 };
 
 },{"lodash/isNumber":272,"resin-errors":346}],15:[function(require,module,exports){
