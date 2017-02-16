@@ -60,14 +60,14 @@ getDeviceModel = function(deps, opts) {
   });
   auth = require('../auth')(deps, opts);
   exports = {};
-  getId = function(uuidOrId, callback) {
+  getId = function(uuidOrId) {
     return Promise["try"](function() {
       if (isId(uuidOrId)) {
         return uuidOrId;
       } else {
         return exports.get(uuidOrId).get('id');
       }
-    }).asCallback(callback);
+    });
   };
 
   /**

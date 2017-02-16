@@ -53,13 +53,12 @@ getDeviceModel = (deps, opts) ->
 
 	# Internal method for uuid/id disambiguation
 	# Note that this throws an exception for missing uuids, but not missing ids
-	getId = (uuidOrId, callback) ->
+	getId = (uuidOrId) ->
 		Promise.try ->
 			if isId(uuidOrId)
 				return uuidOrId
 			else
 				exports.get(uuidOrId).get('id')
-		.asCallback(callback)
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver

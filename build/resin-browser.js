@@ -666,14 +666,14 @@ getApplicationModel = function(deps, opts) {
     return require('./device')(deps, opts);
   });
   exports = {};
-  getId = function(nameOrId, callback) {
+  getId = function(nameOrId) {
     return Promise["try"](function() {
       if (isId(nameOrId)) {
         return nameOrId;
       } else {
         return exports.get(nameOrId).get('id');
       }
-    }).asCallback(callback);
+    });
   };
 
   /**
@@ -1352,14 +1352,14 @@ getDeviceModel = function(deps, opts) {
   });
   auth = require('../auth')(deps, opts);
   exports = {};
-  getId = function(uuidOrId, callback) {
+  getId = function(uuidOrId) {
     return Promise["try"](function() {
       if (isId(uuidOrId)) {
         return uuidOrId;
       } else {
         return exports.get(uuidOrId).get('id');
       }
-    }).asCallback(callback);
+    });
   };
 
   /**

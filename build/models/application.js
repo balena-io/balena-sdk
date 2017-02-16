@@ -39,14 +39,14 @@ getApplicationModel = function(deps, opts) {
     return require('./device')(deps, opts);
   });
   exports = {};
-  getId = function(nameOrId, callback) {
+  getId = function(nameOrId) {
     return Promise["try"](function() {
       if (isId(nameOrId)) {
         return nameOrId;
       } else {
         return exports.get(nameOrId).get('id');
       }
-    }).asCallback(callback);
+    });
   };
 
   /**

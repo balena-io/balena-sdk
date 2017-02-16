@@ -33,13 +33,12 @@ getApplicationModel = (deps, opts) ->
 
 	# Internal method for name/id disambiguation
 	# Note that this throws an exception for missing names, but not missing ids
-	getId = (nameOrId, callback) ->
+	getId = (nameOrId) ->
 		Promise.try ->
 			if isId(nameOrId)
 				return nameOrId
 			else
 				exports.get(nameOrId).get('id')
-		.asCallback(callback)
 
 	###*
 	# @summary Get all applications
