@@ -15,7 +15,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var errors, filter, getApplicationModel, isEmpty, once, size;
+var Promise, errors, filter, getApplicationModel, isEmpty, isId, notFoundResponse, once, ref, size, treatAsMissingApplication;
+
+Promise = require('bluebird');
 
 once = require('lodash/once');
 
@@ -27,14 +29,25 @@ size = require('lodash/size');
 
 errors = require('resin-errors');
 
+ref = require('../util'), isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
+
 getApplicationModel = function(deps, opts) {
-  var apiUrl, deviceModel, exports, pine, request, token;
+  var apiUrl, deviceModel, exports, getId, pine, request, token;
   request = deps.request, token = deps.token, pine = deps.pine;
   apiUrl = opts.apiUrl;
   deviceModel = once(function() {
     return require('./device')(deps, opts);
   });
   exports = {};
+  getId = function(nameOrId) {
+    return Promise["try"](function() {
+      if (isId(nameOrId)) {
+        return nameOrId;
+      } else {
+        return exports.get(nameOrId).get('id');
+      }
+    });
+  };
 
   /**
   	 * @summary Get all applications
@@ -70,11 +83,11 @@ getApplicationModel = function(deps, opts) {
         }
       });
     }).map(function(application) {
-      var ref;
+      var ref1;
       application.online_devices = filter(application.device, {
         is_online: true
       }).length;
-      application.devices_length = ((ref = application.device) != null ? ref.length : void 0) || 0;
+      application.devices_length = ((ref1 = application.device) != null ? ref1.length : void 0) || 0;
       return application;
     }).asCallback(callback);
   };
@@ -86,7 +99,7 @@ getApplicationModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.application
   	 *
-  	 * @param {String} name - application name
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
   	 * @fulfil {Object} - application
   	 * @returns {Promise}
   	 *
@@ -96,37 +109,49 @@ getApplicationModel = function(deps, opts) {
   	 * });
   	 *
   	 * @example
+  	 * resin.models.application.get(123).then(function(application) {
+  	 * 	console.log(application);
+  	 * });
+  	 *
+  	 * @example
   	 * resin.models.application.get('MyApp', function(error, application) {
   	 * 	if (error) throw error;
   	 * 	console.log(application);
   	 * });
    */
-  exports.get = function(name, callback) {
-    return pine.get({
+  exports.get = function(nameOrId, callback) {
+    return (isId(nameOrId) ? pine.get({
+      resource: 'application',
+      id: nameOrId
+    }).tap(function(application) {
+      if (application == null) {
+        throw new errors.ResinApplicationNotFound(nameOrId);
+      }
+    }) : pine.get({
       resource: 'application',
       options: {
         filter: {
-          app_name: name
+          app_name: nameOrId
         }
       }
-    }).tap(function(application) {
-      if (isEmpty(application)) {
-        throw new errors.ResinApplicationNotFound(name);
+    }).tap(function(applications) {
+      if (isEmpty(applications)) {
+        throw new errors.ResinApplicationNotFound(nameOrId);
       }
-      if (size(application) > 1) {
-        throw new errors.ResinAmbiguousApplication(name);
+      if (size(applications) > 1) {
+        throw new errors.ResinAmbiguousApplication(nameOrId);
       }
-    }).get(0).asCallback(callback);
+    }).get(0)).asCallback(callback);
   };
 
   /**
-  	 * @summary Check if an application exist
+  	 * @summary Check if an application exists
   	 * @name has
   	 * @public
   	 * @function
   	 * @memberof resin.models.application
   	 *
-  	 * @param {String} name - application name
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
   	 * @fulfil {Boolean} - has application
   	 * @returns {Promise}
   	 *
@@ -136,13 +161,18 @@ getApplicationModel = function(deps, opts) {
   	 * });
   	 *
   	 * @example
+  	 * resin.models.application.has(123).then(function(hasApp) {
+  	 * 	console.log(hasApp);
+  	 * });
+  	 *
+  	 * @example
   	 * resin.models.application.has('MyApp', function(error, hasApp) {
   	 * 	if (error) throw error;
   	 * 	console.log(hasApp);
   	 * });
    */
-  exports.has = function(name, callback) {
-    return exports.get(name)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
+  exports.has = function(nameOrId, callback) {
+    return exports.get(nameOrId)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
       return false;
     }).asCallback(callback);
   };
@@ -180,6 +210,7 @@ getApplicationModel = function(deps, opts) {
   	 * @public
   	 * @function
   	 * @memberof resin.models.application
+  	 * @deprecated .get() now accepts application ids directly
   	 *
   	 * @param {(Number|String)} id - application id
   	 * @fulfil {Object} - application
@@ -254,28 +285,27 @@ getApplicationModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.application
   	 *
-  	 * @param {String} name - application name
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
   	 * @returns {Promise}
   	 *
   	 * @example
   	 * resin.models.application.remove('MyApp');
   	 *
   	 * @example
+  	 * resin.models.application.remove(123);
+  	 *
+  	 * @example
   	 * resin.models.application.remove('MyApp', function(error) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.remove = function(name, callback) {
-    return exports.get(name).then(function() {
+  exports.remove = function(nameOrId, callback) {
+    return getId(nameOrId).then(function(applicationId) {
       return pine["delete"]({
         resource: 'application',
-        options: {
-          filter: {
-            app_name: name
-          }
-        }
+        id: applicationId
       });
-    }).asCallback(callback);
+    })["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**
@@ -285,51 +315,59 @@ getApplicationModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.application
   	 *
-  	 * @param {String} name - application name
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
   	 * @returns {Promise}
   	 *
   	 * @example
   	 * resin.models.application.restart('MyApp');
   	 *
   	 * @example
+  	 * resin.models.application.restart(123);
+  	 *
+  	 * @example
   	 * resin.models.application.restart('MyApp', function(error) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.restart = function(name, callback) {
-    return exports.get(name).then(function(application) {
+  exports.restart = function(nameOrId, callback) {
+    return getId(nameOrId).then(function(applicationId) {
       return request.send({
         method: 'POST',
-        url: "/application/" + application.id + "/restart",
+        url: "/application/" + applicationId + "/restart",
         baseUrl: apiUrl
       });
-    })["return"](void 0).asCallback(callback);
+    })["return"](void 0)["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };
 
   /**
-  	 * @summary Get the API key for a specific application
-  	 * @name getApiKey
+  	 * @summary Generate an API key for a specific application
+  	 * @name generateApiKey
   	 * @public
   	 * @function
   	 * @memberof resin.models.application
   	 *
-  	 * @param {String} name - application name
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
   	 * @fulfil {String} - api key
   	 * @returns {Promise}
   	 *
   	 * @example
-  	 * resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+  	 * resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
   	 * 	console.log(apiKey);
   	 * });
   	 *
   	 * @example
-  	 * resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+  	 * resin.models.application.generateApiKey(123).then(function(apiKey) {
+  	 * 	console.log(apiKey);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
   	 * 	if (error) throw error;
   	 * 	console.log(apiKey);
   	 * });
    */
-  exports.getApiKey = function(name, callback) {
-    return exports.get(name).then(function(application) {
+  exports.generateApiKey = function(nameOrId, callback) {
+    return exports.get(nameOrId).then(function(application) {
       return request.send({
         method: 'POST',
         url: "/application/" + application.id + "/generate-api-key",
@@ -337,6 +375,22 @@ getApplicationModel = function(deps, opts) {
       });
     }).get('body').asCallback(callback);
   };
+
+  /**
+  	 * @summary Get an API key for a specific application
+  	 * @name getApiKey
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @fulfil {String} - api key
+  	 * @returns {Promise}
+  	 *
+  	 * @deprecated Use generateApiKey instead
+  	 * @see {@link resin.models.application.generateApiKey}
+   */
+  exports.getApiKey = exports.generateApiKey;
   return exports;
 };
 

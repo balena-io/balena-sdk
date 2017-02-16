@@ -36,7 +36,7 @@ getLogs = (deps, opts) ->
 	# - `line`: when a log line is received.
 	# - `error`: when an error happens.
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {EventEmitter} - logs
 	# @returns {Promise}
 	#
@@ -51,6 +51,13 @@ getLogs = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.logs.subscribe(123).then(function(logs) {
+	# 	logs.on('line', function(line) {
+	# 		console.log(line);
+	# 	});
+	# });
+	#
+	# @example
 	# resin.logs.subscribe('7cf02a6', function(error, logs) {
 	# 	if (error) throw error;
 	#
@@ -59,9 +66,9 @@ getLogs = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.subscribe = (uuid, callback) ->
+	exports.subscribe = (uuidOrId, callback) ->
 		Promise.props
-			device: deviceModel.get(uuid)
+			device: deviceModel.get(uuidOrId)
 			pubNubKeys: configModel.getPubNubKeys()
 		.then ({ pubNubKeys, device }) ->
 			return logs.subscribe(pubNubKeys, device)
@@ -74,12 +81,19 @@ getLogs = (deps, opts) ->
 	# @public
 	# @memberof resin.logs
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String[]} - history lines
 	# @returns {Promise}
 	#
 	# @example
 	# resin.logs.history('7cf02a6').then(function(lines) {
+	# 	lines.forEach(function(line) {
+	# 		console.log(line);
+	# 	});
+	# });
+	#
+	# @example
+	# resin.logs.history(123).then(function(lines) {
 	# 	lines.forEach(function(line) {
 	# 		console.log(line);
 	# 	});
@@ -94,9 +108,9 @@ getLogs = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.history = (uuid, callback) ->
+	exports.history = (uuidOrId, callback) ->
 		Promise.props
-			device: deviceModel.get(uuid)
+			device: deviceModel.get(uuidOrId)
 			pubNubKeys: configModel.getPubNubKeys()
 		.then (results) ->
 			return logs.history(results.pubNubKeys, results.device)

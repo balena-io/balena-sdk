@@ -26,7 +26,7 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf } = require('../util')
+{ onlyIf, isId, notFoundResponse, treatAsMissingDevice } = require('../util')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -50,6 +50,15 @@ getDeviceModel = (deps, opts) ->
 	auth = require('../auth')(deps, opts)
 
 	exports = {}
+
+	# Internal method for uuid/id disambiguation
+	# Note that this throws an exception for missing uuids, but not missing ids
+	getId = (uuidOrId) ->
+		Promise.try ->
+			if isId(uuidOrId)
+				return uuidOrId
+			else
+				exports.get(uuidOrId).get('id')
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver
@@ -119,7 +128,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
 	#
@@ -129,24 +138,23 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.getAllByApplication(123).then(function(devices) {
+	# 	console.log(devices);
+	# });
+	#
+	# @example
 	# resin.models.device.getAllByApplication('MyApp', function(error, devices) {
 	# 	if (error) throw error;
 	# 	console.log(devices);
 	# });
 	###
-	exports.getAllByApplication = (name, callback) ->
-		applicationModel().has(name).then (hasApplication) ->
-
-			if not hasApplication
-				throw new errors.ResinApplicationNotFound(name)
-
+	exports.getAllByApplication = (nameOrId, callback) ->
+		applicationModel().get(nameOrId).then (application) ->
 			return pine.get
 				resource: 'device'
 				options:
 					filter:
-						application: $any:
-							$alias: 'a'
-							$expr: a: app_name: name
+						application: application.id
 					expand: 'application'
 					orderby: 'name asc'
 
@@ -163,7 +171,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Object} - device
 	# @returns {Promise}
 	#
@@ -173,42 +181,51 @@ getDeviceModel = (deps, opts) ->
 	# })
 	#
 	# @example
+	# resin.models.device.get(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
 	# resin.models.device.get('7cf02a6', function(error, device) {
 	# 	if (error) throw error;
 	# 	console.log(device);
 	# });
 	###
-	exports.get = (uuid, callback) ->
-
-		# Make sure uuid is a string
-		uuid = String(uuid)
-
-		return pine.get
-			resource: 'device'
-			options:
-				expand: 'application'
-				filter:
-					# Handle shorter uuids by asserting
-					# that it is a substring of the device
-					# uuid starting at index zero.
-					$eq: [
-						$substring: [
-							$: 'uuid'
-							0
-							uuid.length
+	exports.get = (uuidOrId, callback) ->
+		(if isId(uuidOrId)
+			pine.get
+				resource: 'device'
+				id: uuidOrId
+				options:
+					expand: 'application'
+			.tap (device) ->
+				if not device?
+					throw new errors.ResinDeviceNotFound(uuidOrId)
+		else
+			pine.get
+				resource: 'device'
+				options:
+					expand: 'application'
+					filter:
+						# Handle shorter uuids by asserting
+						# that it is a substring of the device
+						# uuid starting at index zero.
+						$eq: [
+							$substring: [
+								$: 'uuid'
+								0
+								uuidOrId.length
+							]
+							uuidOrId
 						]
-						uuid
-					]
+			.tap (devices) ->
+				if isEmpty(devices)
+					throw new errors.ResinDeviceNotFound(uuidOrId)
 
-		.tap (device) ->
-			if isEmpty(device)
-				throw new errors.ResinDeviceNotFound(uuid)
-
-			if device.length > 1
-				throw new errors.ResinAmbiguousDevice(uuid)
-
-		.get(0)
-		.tap (device) ->
+				if devices.length > 1
+					throw new errors.ResinAmbiguousDevice(uuidOrId)
+			.get(0)
+		).tap (device) ->
 			device.application_name = device.application[0].app_name
 		.asCallback(callback)
 
@@ -257,7 +274,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - device name
 	# @returns {Promise}
 	#
@@ -267,13 +284,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.getName(123).then(function(deviceName) {
+	# 	console.log(deviceName);
+	# });
+	#
+	# @example
 	# resin.models.device.getName('7cf02a6', function(error, deviceName) {
 	# 	if (error) throw error;
 	# 	console.log(deviceName);
 	# });
 	###
-	exports.getName = (uuid, callback) ->
-		exports.get(uuid).get('name').asCallback(callback)
+	exports.getName = (uuidOrId, callback) ->
+		exports.get(uuidOrId).get('name').asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -282,7 +304,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application name
 	# @returns {Promise}
 	#
@@ -292,13 +314,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.getApplicationName(123).then(function(applicationName) {
+	# 	console.log(applicationName);
+	# });
+	#
+	# @example
 	# resin.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
 	# 	if (error) throw error;
 	# 	console.log(applicationName);
 	# });
 	###
-	exports.getApplicationName = (uuid, callback) ->
-		exports.get(uuid).get('application_name').asCallback(callback)
+	exports.getApplicationName = (uuidOrId, callback) ->
+		exports.get(uuidOrId).get('application_name').asCallback(callback)
 
 	###*
 	# @summary Get application container information
@@ -307,7 +334,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Object} - application info
 	# @returns {Promise}
 	#
@@ -317,13 +344,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.getApplicationInfo(123).then(function(appInfo) {
+	# 	console.log(appInfo);
+	# });
+	#
+	# @example
 	# resin.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
 	# 	if (error) throw error;
 	# 	console.log(appInfo);
 	# });
 	###
-	exports.getApplicationInfo = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.getApplicationInfo = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.application[0].id
 				return request.send
@@ -344,7 +376,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Boolean} - has device
 	# @returns {Promise}
 	#
@@ -354,13 +386,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.has(123).then(function(hasDevice) {
+	# 	console.log(hasDevice);
+	# });
+	#
+	# @example
 	# resin.models.device.has('7cf02a6', function(error, hasDevice) {
 	# 	if (error) throw error;
 	# 	console.log(hasDevice);
 	# });
 	###
-	exports.has = (uuid, callback) ->
-		exports.get(uuid).return(true)
+	exports.has = (uuidOrId, callback) ->
+		exports.get(uuidOrId).return(true)
 		.catch errors.ResinDeviceNotFound, ->
 			return false
 		.asCallback(callback)
@@ -372,7 +409,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Boolean} - is device online
 	# @returns {Promise}
 	#
@@ -382,13 +419,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.isOnline(123).then(function(isOnline) {
+	# 	console.log('Is device online?', isOnline);
+	# });
+	#
+	# @example
 	# resin.models.device.isOnline('7cf02a6', function(error, isOnline) {
 	# 	if (error) throw error;
 	# 	console.log('Is device online?', isOnline);
 	# });
 	###
-	exports.isOnline = (uuid, callback) ->
-		exports.get(uuid).get('is_online').asCallback(callback)
+	exports.isOnline = (uuidOrId, callback) ->
+		exports.get(uuidOrId).get('is_online').asCallback(callback)
 
 	###*
 	# @summary Get the local IP addresses of a device
@@ -397,13 +439,20 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String[]} - local ip addresses
 	# @reject {Error} Will reject if the device is offline
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
+	# 	localIPAddresses.forEach(function(localIP) {
+	# 		console.log(localIP);
+	# 	});
+	# });
+	#
+	# @example
+	# resin.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
 	# 	localIPAddresses.forEach(function(localIP) {
 	# 		console.log(localIP);
 	# 	});
@@ -418,10 +467,10 @@ getDeviceModel = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.getLocalIPAddresses = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.getLocalIPAddresses = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			if not device.is_online
-				throw new Error("The device is offline: #{uuid}")
+				throw new Error("The device is offline: #{uuidOrId}")
 
 			ips = device.ip_address.split(' ')
 			return without(ips, device.vpn_address)
@@ -434,19 +483,22 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.remove('7cf02a6');
 	#
 	# @example
+	# resin.models.device.remove(123);
+	#
+	# @example
 	# resin.models.device.remove('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.remove = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.remove = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return pine.delete
 				resource: 'device'
 				options:
@@ -461,19 +513,22 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.identify('7cf02a6');
 	#
 	# @example
+	# resin.models.device.identify(123);
+	#
+	# @example
 	# resin.models.device.identify('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.identify = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.identify = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/blink'
@@ -490,7 +545,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {String} newName - the device new name
 	#
 	# @returns {Promise}
@@ -499,12 +554,15 @@ getDeviceModel = (deps, opts) ->
 	# resin.models.device.rename('7cf02a6', 'NewName');
 	#
 	# @example
+	# resin.models.device.rename(123, 'NewName');
+	#
+	# @example
 	# resin.models.device.rename('7cf02a6', 'NewName', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.rename = (uuid, newName, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.rename = (uuidOrId, newName, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -521,7 +579,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {String} note - the note
 	#
 	# @returns {Promise}
@@ -530,12 +588,15 @@ getDeviceModel = (deps, opts) ->
 	# resin.models.device.note('7cf02a6', 'My useful note');
 	#
 	# @example
+	# resin.models.device.note(123, 'My useful note');
+	#
+	# @example
 	# resin.models.device.note('7cf02a6', 'My useful note', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.note = (uuid, note, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.note = (uuidOrId, note, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -553,8 +614,8 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
-	# @param {String} application - application name
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
 	#
 	# @returns {Promise}
 	#
@@ -562,18 +623,24 @@ getDeviceModel = (deps, opts) ->
 	# resin.models.device.move('7cf02a6', 'MyApp');
 	#
 	# @example
+	# resin.models.device.move(123, 'MyApp');
+	#
+	# @example
+	# resin.models.device.move(123, 456);
+	#
+	# @example
 	# resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.move = (uuid, application, callback) ->
+	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
-			device: exports.get(uuid)
-			application: applicationModel().get(application)
+			device: exports.get(uuidOrId)
+			application: applicationModel().get(applicationNameOrId)
 		.then (results) ->
 
 			if results.device.device_type isnt results.application.device_type
-				throw new Error("Incompatible application: #{application}")
+				throw new Error("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
 				resource: 'device'
@@ -592,7 +659,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
 	# @returns {Promise}
 	#
@@ -602,13 +669,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.startApplication(123).then(function(containerId) {
+	# 	console.log(containerId);
+	# });
+	#
+	# @example
 	# resin.models.device.startApplication('7cf02a6', function(error, containerId) {
 	# 	if (error) throw error;
 	# 	console.log(containerId);
 	# });
 	###
-	exports.startApplication = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.startApplication = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.application[0].id
 				return request.send
@@ -630,7 +702,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
 	# @returns {Promise}
 	#
@@ -640,13 +712,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.stopApplication(123).then(function(containerId) {
+	# 	console.log(containerId);
+	# });
+	#
+	# @example
 	# resin.models.device.stopApplication('7cf02a6', function(error, containerId) {
 	# 	if (error) throw error;
 	# 	console.log(containerId);
 	# });
 	###
-	exports.stopApplication = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.stopApplication = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.application[0].id
 				return request.send
@@ -673,41 +750,30 @@ getDeviceModel = (deps, opts) ->
 	# the application on the device, but doesn't reboot
 	# the device itself.
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.restartApplication('7cf02a6');
 	#
 	# @example
+	# resin.models.device.restartApplication(123);
+	#
+	# @example
 	# resin.models.device.restartApplication('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.restartApplication = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.restartApplication = (uuidOrId, callback) ->
+		getId(uuidOrId).then (deviceId) ->
 			return request.send
 				method: 'POST'
-				url: "/device/#{device.id}/restart"
+				url: "/device/#{deviceId}/restart"
 				baseUrl: apiUrl
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
+		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
-
-	###*
-	# @summary Restart application on device.
-	# @name restart
-	# @public
-	# @function
-	# @memberof resin.models.device
-	#
-	# @param {String} uuid - device uuid
-	# @returns {Promise}
-	#
-	# @deprecated
-	# @see {@link resin.models.device.restartApplication}
-	###
-	exports.restart = exports.restartApplication
 
 	###*
 	# @summary Reboot device
@@ -716,7 +782,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
 	# @param {Boolean} [options.force=false] - override update lock
 	# @returns {Promise}
@@ -725,24 +791,28 @@ getDeviceModel = (deps, opts) ->
 	# resin.models.device.reboot('7cf02a6');
 	#
 	# @example
+	# resin.models.device.reboot(123);
+	#
+	# @example
 	# resin.models.device.reboot('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.reboot = (uuid, options = {}, callback) ->
+	exports.reboot = (uuidOrId, options = {}, callback) ->
 		if _.isFunction(options)
 			callback = options
 			options = {}
-		exports.get(uuid).then (device) ->
+		getId(uuidOrId).then (deviceId) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/reboot'
 				baseUrl: apiUrl
 				body:
-					deviceId: device.id
+					deviceId: deviceId
 					data:
 						force: Boolean(options.force)
 		.get('body')
+		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
@@ -752,7 +822,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
 	# @param {Boolean} [options.force=false] - override update lock
 	# @returns {Promise}
@@ -761,15 +831,18 @@ getDeviceModel = (deps, opts) ->
 	# resin.models.device.shutdown('7cf02a6');
 	#
 	# @example
+	# resin.models.device.shutdown(123);
+	#
+	# @example
 	# resin.models.device.shutdown('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.shutdown = (uuid, options = {}, callback) ->
+	exports.shutdown = (uuidOrId, options = {}, callback) ->
 		if _.isFunction(options)
 			callback = options
 			options = {}
-		exports.get(uuid).then (device) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/shutdown'
@@ -791,19 +864,22 @@ getDeviceModel = (deps, opts) ->
 	# @description
 	# This function clears the user application's `/data` directory.
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.purge('7cf02a6');
 	#
 	# @example
+	# resin.models.device.purge(123);
+	#
+	# @example
 	# resin.models.device.purge('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.purge = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.purge = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/purge'
@@ -822,7 +898,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} options - options
 	# @param {Boolean} [options.force=false] - override update lock
 	# @returns {Promise}
@@ -833,14 +909,19 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.update(123, {
+	# 	force: true
+	# });
+	#
+	# @example
 	# resin.models.device.update('7cf02a6', {
 	# 	force: true
 	# }, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.update = (uuid, options, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.update = (uuidOrid, options, callback) ->
+		exports.get(uuidOrid).then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/update'
@@ -999,7 +1080,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} applicationName - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Object} - device manifest
 	# @returns {Promise}
 	#
@@ -1009,13 +1090,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.getManifestByApplication(123).then(function(manifest) {
+	# 	console.log(manifest);
+	# });
+	#
+	# @example
 	# resin.models.device.getManifestByApplication('MyApp', function(error, manifest) {
 	# 	if (error) throw error;
 	# 	console.log(manifest);
 	# });
 	###
-	exports.getManifestByApplication = (applicationName, callback) ->
-		applicationModel().get(applicationName).get('device_type').then (deviceType) ->
+	exports.getManifestByApplication = (nameOrId, callback) ->
+		applicationModel().get(nameOrId).get('device_type').then (deviceType) ->
 			return exports.getManifestBySlug(deviceType)
 		.asCallback(callback)
 
@@ -1042,7 +1128,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} applicationName - application name
+	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
 	# @param {String} uuid - device uuid
 	#
 	# @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
@@ -1056,16 +1142,22 @@ getDeviceModel = (deps, opts) ->
 	#
 	# @example
 	# var uuid = resin.models.device.generateUniqueKey();
+	# resin.models.device.register(123, uuid).then(function(registrationInfo) {
+	# 	console.log(registrationInfo);
+	# });
+	#
+	# @example
+	# var uuid = resin.models.device.generateUniqueKey();
 	# resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 	# 	if (error) throw error;
 	# 	console.log(registrationInfo);
 	# });
 	###
-	exports.register = (applicationName, uuid, callback) ->
+	exports.register = (applicationNameOrId, uuid, callback) ->
 		Promise.props
 			userId: auth.getUserId()
-			apiKey: applicationModel().getApiKey(applicationName)
-			application: applicationModel().get(applicationName)
+			apiKey: applicationModel().getApiKey(applicationNameOrId)
+			application: applicationModel().get(applicationNameOrId)
 		.then (results) ->
 
 			return registerDevice.register
@@ -1085,12 +1177,19 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Boolean} - has device url
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
+	# 	if (hasDeviceUrl) {
+	# 		console.log('The device has device URL enabled');
+	# 	}
+	# });
+	#
+	# @example
+	# resin.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 	# 	if (hasDeviceUrl) {
 	# 		console.log('The device has device URL enabled');
 	# 	}
@@ -1105,8 +1204,8 @@ getDeviceModel = (deps, opts) ->
 	# 	}
 	# });
 	###
-	exports.hasDeviceUrl = (uuid, callback) ->
-		exports.get(uuid).get('is_web_accessible').asCallback(callback)
+	exports.hasDeviceUrl = (uuidOrId, callback) ->
+		exports.get(uuidOrId).get('is_web_accessible').asCallback(callback)
 
 	###*
 	# @summary Get a device url
@@ -1115,7 +1214,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - device url
 	# @returns {Promise}
 	#
@@ -1125,18 +1224,23 @@ getDeviceModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.device.getDeviceUrl(123).then(function(url) {
+	# 	console.log(url);
+	# });
+	#
+	# @example
 	# resin.models.device.getDeviceUrl('7cf02a6', function(error, url) {
 	# 	if (error) throw error;
 	# 	console.log(url);
 	# });
 	###
-	exports.getDeviceUrl = (uuid, callback) ->
-		exports.hasDeviceUrl(uuid).then (hasDeviceUrl) ->
+	exports.getDeviceUrl = (uuidOrId, callback) ->
+		exports.hasDeviceUrl(uuidOrId).then (hasDeviceUrl) ->
 			if not hasDeviceUrl
-				throw new Error("Device is not web accessible: #{uuid}")
+				throw new Error("Device is not web accessible: #{uuidOrId}")
 
 			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
-				exports.get(uuid).get('uuid').then (uuid) ->
+				exports.get(uuidOrId).get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.asCallback(callback)
 
@@ -1147,19 +1251,22 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.enableDeviceUrl('7cf02a6');
 	#
 	# @example
+	# resin.models.device.enableDeviceUrl(123);
+	#
+	# @example
 	# resin.models.device.enableDeviceUrl('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.enableDeviceUrl = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.enableDeviceUrl = (uuidOrid, callback) ->
+		exports.get(uuidOrid).then (device) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -1176,19 +1283,22 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.disableDeviceUrl('7cf02a6');
 	#
 	# @example
+	# resin.models.device.disableDeviceUrl(123);
+	#
+	# @example
 	# resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.disableDeviceUrl = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.disableDeviceUrl = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -1210,19 +1320,22 @@ getDeviceModel = (deps, opts) ->
 	# the device performs a TCP ping heartbeat to check for connectivity.
 	# This is enabled by default.
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.enableTcpPing('7cf02a6');
 	#
 	# @example
+	# resin.models.device.enableTcpPing(123);
+	#
+	# @example
 	# resin.models.device.enableTcpPing('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.enableTcpPing = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.enableTcpPing = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
@@ -1244,19 +1357,22 @@ getDeviceModel = (deps, opts) ->
 	# When the device's connection to the Resin VPN is down, by default
 	# the device performs a TCP ping heartbeat to check for connectivity.
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.disableTcpPing('7cf02a6');
 	#
 	# @example
+	# resin.models.device.disableTcpPing(123);
+	#
+	# @example
 	# resin.models.device.disableTcpPing('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.disableTcpPing = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.disableTcpPing = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'DELETE'
 				url: '/supervisor/v1/tcp-ping'
@@ -1277,19 +1393,22 @@ getDeviceModel = (deps, opts) ->
 	# @description
 	# This is useful to signal that the supervisor is alive and responding.
 	#
-	# @param {String} uuid - device uuid
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.device.ping('7cf02a6');
 	#
 	# @example
+	# resin.models.device.ping(123);
+	#
+	# @example
 	# resin.models.device.ping('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.ping = (uuid, callback) ->
-		exports.get(uuid).then (device) ->
+	exports.ping = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'GET'
 				url: '/supervisor/ping'
@@ -1306,24 +1425,24 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
-	# @param {String} uuid - device uuid
-	# @fulfil {String} - device statud
+	# @param {Object} device - A device object
+	# @fulfil {String} - device status
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getStatus('7cf02a6').then(function(status) {
+	# resin.models.device.getStatus(device).then(function(status) {
 	# 	console.log(status);
 	# });
 	#
 	# @example
-	# resin.models.device.getStatus('7cf02a6', function(error, status) {
+	# resin.models.device.getStatus(device, function(error, status) {
 	# 	if (error) throw error;
 	# 	console.log(status);
 	# });
 	###
-	exports.getStatus = (uuid, callback) ->
+	exports.getStatus = (device, callback) ->
 		Promise.try ->
-			return deviceStatus.getStatus(uuid).key
+			return deviceStatus.getStatus(device).key
 		.asCallback(callback)
 
 	return exports

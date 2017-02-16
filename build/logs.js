@@ -42,7 +42,7 @@ getLogs = function(deps, opts) {
   	 * - `line`: when a log line is received.
   	 * - `error`: when an error happens.
   	 *
-  	 * @param {String} uuid - device uuid
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
   	 * @fulfil {EventEmitter} - logs
   	 * @returns {Promise}
   	 *
@@ -57,6 +57,13 @@ getLogs = function(deps, opts) {
   	 * });
   	 *
   	 * @example
+  	 * resin.logs.subscribe(123).then(function(logs) {
+  	 * 	logs.on('line', function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+  	 *
+  	 * @example
   	 * resin.logs.subscribe('7cf02a6', function(error, logs) {
   	 * 	if (error) throw error;
   	 *
@@ -65,9 +72,9 @@ getLogs = function(deps, opts) {
   	 * 	});
   	 * });
    */
-  exports.subscribe = function(uuid, callback) {
+  exports.subscribe = function(uuidOrId, callback) {
     return Promise.props({
-      device: deviceModel.get(uuid),
+      device: deviceModel.get(uuidOrId),
       pubNubKeys: configModel.getPubNubKeys()
     }).then(function(arg) {
       var device, pubNubKeys;
@@ -83,12 +90,19 @@ getLogs = function(deps, opts) {
   	 * @public
   	 * @memberof resin.logs
   	 *
-  	 * @param {String} uuid - device uuid
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
   	 * @fulfil {String[]} - history lines
   	 * @returns {Promise}
   	 *
   	 * @example
   	 * resin.logs.history('7cf02a6').then(function(lines) {
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.history(123).then(function(lines) {
   	 * 	lines.forEach(function(line) {
   	 * 		console.log(line);
   	 * 	});
@@ -103,9 +117,9 @@ getLogs = function(deps, opts) {
   	 * 	});
   	 * });
    */
-  exports.history = function(uuid, callback) {
+  exports.history = function(uuidOrId, callback) {
     return Promise.props({
-      device: deviceModel.get(uuid),
+      device: deviceModel.get(uuidOrId),
       pubNubKeys: configModel.getPubNubKeys()
     }).then(function(results) {
       return logs.history(results.pubNubKeys, results.device);

@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+Promise = require('bluebird')
 once = require('lodash/once')
 isEmpty = require('lodash/isEmpty')
 filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
+
+{ isId, notFoundResponse, treatAsMissingApplication } = require('../util')
 
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
@@ -27,6 +30,15 @@ getApplicationModel = (deps, opts) ->
 	deviceModel = once -> require('./device')(deps, opts)
 
 	exports = {}
+
+	# Internal method for name/id disambiguation
+	# Note that this throws an exception for missing names, but not missing ids
+	getId = (nameOrId) ->
+		Promise.try ->
+			if isId(nameOrId)
+				return nameOrId
+			else
+				exports.get(nameOrId).get('id')
 
 	###*
 	# @summary Get all applications
@@ -75,7 +87,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Object} - application
 	# @returns {Promise}
 	#
@@ -85,35 +97,47 @@ getApplicationModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.application.get(123).then(function(application) {
+	# 	console.log(application);
+	# });
+	#
+	# @example
 	# resin.models.application.get('MyApp', function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
 	###
-	exports.get = (name, callback) ->
-		return pine.get
-			resource: 'application'
-			options:
-				filter:
-					app_name: name
+	exports.get = (nameOrId, callback) ->
+		(if isId(nameOrId)
+			pine.get
+				resource: 'application'
+				id: nameOrId
+			.tap (application) ->
+				if not application?
+					throw new errors.ResinApplicationNotFound(nameOrId)
+		else
+			pine.get
+				resource: 'application'
+				options:
+					filter:
+						app_name: nameOrId
+			.tap (applications) ->
+				if isEmpty(applications)
+					throw new errors.ResinApplicationNotFound(nameOrId)
 
-		.tap (application) ->
-			if isEmpty(application)
-				throw new errors.ResinApplicationNotFound(name)
-
-			if size(application) > 1
-				throw new errors.ResinAmbiguousApplication(name)
-		.get(0)
-		.asCallback(callback)
+				if size(applications) > 1
+					throw new errors.ResinAmbiguousApplication(nameOrId)
+			.get(0)
+		).asCallback(callback)
 
 	###*
-	# @summary Check if an application exist
+	# @summary Check if an application exists
 	# @name has
 	# @public
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Boolean} - has application
 	# @returns {Promise}
 	#
@@ -123,13 +147,18 @@ getApplicationModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.application.has(123).then(function(hasApp) {
+	# 	console.log(hasApp);
+	# });
+	#
+	# @example
 	# resin.models.application.has('MyApp', function(error, hasApp) {
 	# 	if (error) throw error;
 	# 	console.log(hasApp);
 	# });
 	###
-	exports.has = (name, callback) ->
-		exports.get(name).return(true)
+	exports.has = (nameOrId, callback) ->
+		exports.get(nameOrId).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -166,6 +195,7 @@ getApplicationModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.application
+	# @deprecated .get() now accepts application ids directly
 	#
 	# @param {(Number|String)} id - application id
 	# @fulfil {Object} - application
@@ -237,24 +267,26 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.application.remove('MyApp');
 	#
 	# @example
+	# resin.models.application.remove(123);
+	#
+	# @example
 	# resin.models.application.remove('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.remove = (name, callback) ->
-		exports.get(name).then ->
+	exports.remove = (nameOrId, callback) ->
+		getId(nameOrId).then (applicationId) ->
 			return pine.delete
 				resource: 'application'
-				options:
-					filter:
-						app_name: name
+				id: applicationId
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	###*
@@ -264,56 +296,83 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.application.restart('MyApp');
 	#
 	# @example
+	# resin.models.application.restart(123);
+	#
+	# @example
 	# resin.models.application.restart('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.restart = (name, callback) ->
-		exports.get(name).then (application) ->
+	exports.restart = (nameOrId, callback) ->
+		getId(nameOrId).then (applicationId) ->
 			return request.send
 				method: 'POST'
-				url: "/application/#{application.id}/restart"
+				url: "/application/#{applicationId}/restart"
 				baseUrl: apiUrl
 		.return(undefined)
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	###*
-	# @summary Get the API key for a specific application
-	# @name getApiKey
+	# @summary Generate an API key for a specific application
+	# @name generateApiKey
 	# @public
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
+	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {String} - api key
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+	# resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
 	# 	console.log(apiKey);
 	# });
 	#
 	# @example
-	# resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+	# resin.models.application.generateApiKey(123).then(function(apiKey) {
+	# 	console.log(apiKey);
+	# });
+	#
+	# @example
+	# resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	# 	if (error) throw error;
 	# 	console.log(apiKey);
 	# });
 	###
-	exports.getApiKey = (name, callback) ->
-		exports.get(name).then (application) ->
+	exports.generateApiKey = (nameOrId, callback) ->
+		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
+		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
+		exports.get(nameOrId).then (application) ->
 			return request.send
 				method: 'POST'
 				url: "/application/#{application.id}/generate-api-key"
 				baseUrl: apiUrl
 		.get('body')
 		.asCallback(callback)
+
+	###*
+	# @summary Get an API key for a specific application
+	# @name getApiKey
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {String} - api key
+	# @returns {Promise}
+	#
+	# @deprecated Use generateApiKey instead
+	# @see {@link resin.models.application.generateApiKey}
+	###
+	exports.getApiKey = exports.generateApiKey
 
 	return exports
 
