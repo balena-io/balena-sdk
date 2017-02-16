@@ -967,8 +967,8 @@ getApplicationModel = function(deps, opts) {
   };
 
   /**
-  	 * @summary Get the API key for a specific application
-  	 * @name getApiKey
+  	 * @summary Generate an API key for a specific application
+  	 * @name generateApiKey
   	 * @public
   	 * @function
   	 * @memberof resin.models.application
@@ -978,22 +978,22 @@ getApplicationModel = function(deps, opts) {
   	 * @returns {Promise}
   	 *
   	 * @example
-  	 * resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+  	 * resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
   	 * 	console.log(apiKey);
   	 * });
   	 *
   	 * @example
-  	 * resin.models.application.getApiKey(123).then(function(apiKey) {
+  	 * resin.models.application.generateApiKey(123).then(function(apiKey) {
   	 * 	console.log(apiKey);
   	 * });
   	 *
   	 * @example
-  	 * resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+  	 * resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
   	 * 	if (error) throw error;
   	 * 	console.log(apiKey);
   	 * });
    */
-  exports.getApiKey = function(nameOrId, callback) {
+  exports.generateApiKey = function(nameOrId, callback) {
     return exports.get(nameOrId).then(function(application) {
       return request.send({
         method: 'POST',
@@ -1002,6 +1002,22 @@ getApplicationModel = function(deps, opts) {
       });
     }).get('body').asCallback(callback);
   };
+
+  /**
+  	 * @summary Get an API key for a specific application
+  	 * @name getApiKey
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @fulfil {String} - api key
+  	 * @returns {Promise}
+  	 *
+  	 * @deprecated Use generateApiKey instead
+  	 * @see {@link resin.models.application.generateApiKey}
+   */
+  exports.getApiKey = exports.generateApiKey;
   return exports;
 };
 

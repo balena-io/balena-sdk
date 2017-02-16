@@ -20,7 +20,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.create(name, deviceType)](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-            * [.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>
+            * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+            * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
         * [.device](#resin.models.device) : <code>object</code>
             * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId)](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
@@ -121,7 +122,8 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.create(name, deviceType)](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-        * [.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>
+        * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+        * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
     * [.device](#resin.models.device) : <code>object</code>
         * [.getAll()](#resin.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId)](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
@@ -200,7 +202,8 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.create(name, deviceType)](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-    * [.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>
+    * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+    * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
 
 <a name="resin.models.application.getAll"></a>
 
@@ -407,11 +410,11 @@ resin.models.application.restart('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.getApiKey"></a>
+<a name="resin.models.application.generateApiKey"></a>
 
-##### application.getApiKey(nameOrId) ⇒ <code>Promise</code>
+##### application.generateApiKey(nameOrId) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
-**Summary**: Get the API key for a specific application  
+**Summary**: Generate an API key for a specific application  
 **Access:** public  
 **Fulfil**: <code>String</code> - api key  
 
@@ -421,23 +424,38 @@ resin.models.application.restart('MyApp', function(error) {
 
 **Example**  
 ```js
-resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.application.getApiKey(123).then(function(apiKey) {
+resin.models.application.generateApiKey(123).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	if (error) throw error;
 	console.log(apiKey);
 });
 ```
+<a name="resin.models.application.getApiKey"></a>
+
+##### ~~application.getApiKey(nameOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Get an API key for a specific application  
+**Access:** public  
+**Fulfil**: <code>String</code> - api key  
+**See**: [generateApiKey](#resin.models.application.generateApiKey)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> &#124; <code>Number</code> | application name (string) or id (number) |
+
 <a name="resin.models.device"></a>
 
 #### models.device : <code>object</code>

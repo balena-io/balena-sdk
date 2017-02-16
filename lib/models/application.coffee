@@ -321,8 +321,8 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get the API key for a specific application
-	# @name getApiKey
+	# @summary Generate an API key for a specific application
+	# @name generateApiKey
 	# @public
 	# @function
 	# @memberof resin.models.application
@@ -332,22 +332,22 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getApiKey('MyApp').then(function(apiKey) {
+	# resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
 	# 	console.log(apiKey);
 	# });
 	#
 	# @example
-	# resin.models.application.getApiKey(123).then(function(apiKey) {
+	# resin.models.application.generateApiKey(123).then(function(apiKey) {
 	# 	console.log(apiKey);
 	# });
 	#
 	# @example
-	# resin.models.application.getApiKey('MyApp', function(error, apiKey) {
+	# resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	# 	if (error) throw error;
 	# 	console.log(apiKey);
 	# });
 	###
-	exports.getApiKey = (nameOrId, callback) ->
+	exports.generateApiKey = (nameOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
 		exports.get(nameOrId).then (application) ->
@@ -357,6 +357,22 @@ getApplicationModel = (deps, opts) ->
 				baseUrl: apiUrl
 		.get('body')
 		.asCallback(callback)
+
+	###*
+	# @summary Get an API key for a specific application
+	# @name getApiKey
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {String} - api key
+	# @returns {Promise}
+	#
+	# @deprecated Use generateApiKey instead
+	# @see {@link resin.models.application.generateApiKey}
+	###
+	exports.getApiKey = exports.generateApiKey
 
 	return exports
 
