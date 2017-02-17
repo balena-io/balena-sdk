@@ -10,6 +10,8 @@ If you feel something is missing, not clear or could be improved, please don't h
 **Kind**: global namespace  
 
 * [resin](#resin) : <code>object</code>
+    * [.interceptors](#resin.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
+        * [.Interceptor](#resin.interceptors.Interceptor) : <code>object</code>
     * [.models](#resin.models) : <code>object</code>
         * [.application](#resin.models.application) : <code>object</code>
             * [.getAll()](#resin.models.application.getAll) ⇒ <code>Promise</code>
@@ -106,6 +108,45 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.settings](#resin.settings) : <code>object</code>
         * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
         * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
+
+<a name="resin.interceptors"></a>
+
+### resin.interceptors : <code>Array.&lt;Interceptor&gt;</code>
+The current array of interceptors to use. Interceptors intercept requests made
+internally and are executed in the order they appear in this array for requests,
+and in the reverse order for responses.
+
+**Kind**: static property of <code>[resin](#resin)</code>  
+**Summary**: Array of interceptors  
+**Access:** public  
+**Example**  
+```js
+resin.interceptors.push({
+	responseError: function (error) {
+		console.log(error);
+		throw error;
+	})
+});
+```
+<a name="resin.interceptors.Interceptor"></a>
+
+#### interceptors.Interceptor : <code>object</code>
+An interceptor implements some set of the four interception hook callbacks.
+To continue processing, each function should return a value or a promise that
+successfully resolves to a value.
+
+To halt processing, each function should throw an error or return a promise that
+rejects with an error.
+
+**Kind**: static typedef of <code>[interceptors](#resin.interceptors)</code>  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| request | <code>function</code> | Callback invoked before requests are made. Called with the request options, should return (or resolve to) new request options, or throw/reject. |
+| response | <code>function</code> | Callback invoked before responses are returned. Called with the response, should return (or resolve to) a new response, or throw/reject. |
+| requestError | <code>function</code> | Callback invoked if an error happens before a request. Called with the error itself, caused by a preceeding request interceptor rejecting/throwing an error for the request, or a failing in preflight token validation. Should return (or resolve to) new request options, or throw/reject. |
+| responseError | <code>function</code> | Callback invoked if an error happens in the response. Called with the error itself, caused by a preceeding response interceptor rejecting/throwing an error for the request, a network error, or an error response from the server. Should return (or resolve to) a new response, or throw/reject. |
 
 <a name="resin.models"></a>
 

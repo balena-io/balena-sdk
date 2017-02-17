@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Add support for hooks to intercept requests, responses, and errors.
 - Deprecated `resin.models.application.getApiKey()` (use `.generateApiKey()` instead).
 - **Breaking!** Removed the (already deprecated) `resin.models.device.restart()` method, in favor of `resin.models.device.restartApplication()`
 - Add factory function defaults so all options are optional. Example: `require('resin-sdk')();`
