@@ -84,4 +84,10 @@ module.exports = getSdk = (opts = {}) ->
 		pine
 	}
 
-	return mapValues(sdkTemplate, (v) -> v(deps, opts))
+	sdk = mapValues(sdkTemplate, (v) -> v(deps, opts))
+
+	Object.defineProperty sdk, 'interceptors',
+		get: -> request.interceptors,
+		set: (interceptors) -> request.interceptors = interceptors
+
+	return sdk
