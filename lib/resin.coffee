@@ -84,7 +84,7 @@ module.exports = getSdk = (opts = {}) ->
 		pine
 	}
 
-	sdk = mapValues(sdkTemplate, (v) -> v(deps, opts))
+	sdk = mapValues(sdkTemplate, (moduleFactory) -> moduleFactory(deps, opts))
 
 	###*
 	# @typedef Interceptor
