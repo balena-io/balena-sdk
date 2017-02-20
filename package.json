@@ -61,7 +61,7 @@
     "resin-errors": "^2.4.0",
     "resin-pine": "^5.0.1",
     "resin-register-device": "^4.0.1",
-    "resin-request": "^8.1.0",
+    "resin-request": "^8.2.0",
     "resin-settings-client": "^3.5.2",
     "resin-token": "^3.0.0",
     "semver": "^5.3.0"
