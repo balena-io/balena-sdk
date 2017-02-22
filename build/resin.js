@@ -166,5 +166,37 @@ module.exports = getSdk = function(opts) {
       return request.interceptors = interceptors;
     }
   });
+
+  /**
+  	 * @summary Resin request instance
+  	 * @member {Object} request
+  	 * @public
+  	 * @memberof resin
+  	 *
+  	 * @description
+  	 * The resin-request instance used internally. This should not be necessary
+  	 * in normal usage, but can be useful if you want to make an API request directly,
+  	 * using the same token and hooks as the SDK.
+  	 *
+  	 * @example
+  	 * resin.request.send({ url: 'http://api.resin.io/ping' });
+   */
+  sdk.request = request;
+
+  /**
+  	 * @summary Resin token instance
+  	 * @member {Object} token
+  	 * @public
+  	 * @memberof resin
+  	 *
+  	 * @description
+  	 * The resin-token instance used internally. This should not be necessary
+  	 * in normal usage, but can be useful if you want to directly get or set
+  	 * the auth token that the SDK will use.
+  	 *
+  	 * @example
+  	 * resin.token.set('abcdef...');
+   */
+  sdk.token = token;
   return sdk;
 };
