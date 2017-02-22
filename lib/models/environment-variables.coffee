@@ -26,7 +26,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 
 	###*
 	# @summary Get all environment variables by application
-	# @name getAll
+	# @name getAllByApplication
 	# @public
 	# @function
 	# @memberof resin.models.environment-variables
