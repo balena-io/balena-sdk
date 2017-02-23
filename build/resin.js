@@ -105,8 +105,8 @@ module.exports = getSdk = function(opts) {
     token: token,
     pine: pine
   };
-  sdk = mapValues(sdkTemplate, function(v) {
-    return v(deps, opts);
+  sdk = mapValues(sdkTemplate, function(moduleFactory) {
+    return moduleFactory(deps, opts);
   });
 
   /**

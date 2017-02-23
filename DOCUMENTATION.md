@@ -73,7 +73,7 @@ If you feel something is missing, not clear or could be improved, please don't h
                 * [.create(uuidOrId, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
                 * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
                 * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-            * [.getAll(applicationNameOrId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise</code>
+            * [.getAllByApplication(applicationNameOrId)](#resin.models.environment-variables.getAllByApplication) ⇒ <code>Promise</code>
             * [.create(applicationNameOrId, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
             * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
             * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
@@ -214,7 +214,7 @@ rejects with an error.
             * [.create(uuidOrId, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
             * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
             * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-        * [.getAll(applicationNameOrId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise</code>
+        * [.getAllByApplication(applicationNameOrId)](#resin.models.environment-variables.getAllByApplication) ⇒ <code>Promise</code>
         * [.create(applicationNameOrId, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
         * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
         * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
@@ -1706,7 +1706,7 @@ resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
         * [.create(uuidOrId, name, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
         * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
         * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-    * [.getAll(applicationNameOrId)](#resin.models.environment-variables.getAll) ⇒ <code>Promise</code>
+    * [.getAllByApplication(applicationNameOrId)](#resin.models.environment-variables.getAllByApplication) ⇒ <code>Promise</code>
     * [.create(applicationNameOrId, name, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
     * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
     * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
@@ -1824,9 +1824,9 @@ resin.models.environmentVariables.device.remove(2, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.environment-variables.getAll"></a>
+<a name="resin.models.environment-variables.getAllByApplication"></a>
 
-##### environment-variables.getAll(applicationNameOrId) ⇒ <code>Promise</code>
+##### environment-variables.getAllByApplication(applicationNameOrId) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
 **Summary**: Get all environment variables by application  
 **Access:** public  
