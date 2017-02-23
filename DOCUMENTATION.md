@@ -12,6 +12,8 @@ If you feel something is missing, not clear or could be improved, please don't h
 * [resin](#resin) : <code>object</code>
     * [.interceptors](#resin.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
         * [.Interceptor](#resin.interceptors.Interceptor) : <code>object</code>
+    * [.request](#resin.request) : <code>Object</code>
+    * [.token](#resin.token) : <code>Object</code>
     * [.models](#resin.models) : <code>object</code>
         * [.application](#resin.models.application) : <code>object</code>
             * [.getAll()](#resin.models.application.getAll) ⇒ <code>Promise</code>
@@ -148,6 +150,34 @@ rejects with an error.
 | requestError | <code>function</code> | Callback invoked if an error happens before a request. Called with the error itself, caused by a preceeding request interceptor rejecting/throwing an error for the request, or a failing in preflight token validation. Should return (or resolve to) new request options, or throw/reject. |
 | responseError | <code>function</code> | Callback invoked if an error happens in the response. Called with the error itself, caused by a preceeding response interceptor rejecting/throwing an error for the request, a network error, or an error response from the server. Should return (or resolve to) a new response, or throw/reject. |
 
+<a name="resin.request"></a>
+
+### resin.request : <code>Object</code>
+The resin-request instance used internally. This should not be necessary
+in normal usage, but can be useful if you want to make an API request directly,
+using the same token and hooks as the SDK.
+
+**Kind**: static property of <code>[resin](#resin)</code>  
+**Summary**: Resin request instance  
+**Access:** public  
+**Example**  
+```js
+resin.request.send({ url: 'http://api.resin.io/ping' });
+```
+<a name="resin.token"></a>
+
+### resin.token : <code>Object</code>
+The resin-token instance used internally. This should not be necessary
+in normal usage, but can be useful if you want to directly get or set
+the auth token that the SDK will use.
+
+**Kind**: static property of <code>[resin](#resin)</code>  
+**Summary**: Resin token instance  
+**Access:** public  
+**Example**  
+```js
+resin.token.set('abcdef...');
+```
 <a name="resin.models"></a>
 
 ### resin.models : <code>object</code>

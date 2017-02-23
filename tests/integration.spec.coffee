@@ -6,8 +6,6 @@ errors = require('resin-errors')
 superagent = require('superagent')
 
 getPine = require('resin-pine')
-getToken = require('resin-token')
-getResinRequest = require('resin-request')
 
 PUBLIC_KEY = require('./data/public-key')
 
@@ -42,10 +40,8 @@ _.assign opts,
 	isBrowser: IS_BROWSER,
 	retries: 3
 
-token = getToken(opts)
-resinRequest = getResinRequest(_.assign({}, opts, { token }))
-pine = getPine(_.assign({}, opts, { request: resinRequest, token }))
 resin = getSdk(opts)
+pine = getPine(_.assign({}, opts, { request: resin.request, token: resin.token }))
 
 simpleRequest = (url) ->
 	return new Promise (resolve, reject) ->
@@ -157,7 +153,7 @@ describe 'SDK Integration Tests', ->
 			describe 'resin.auth.authenticate()', ->
 
 				it 'should eventually be a valid token given valid credentials', ->
-					resin.auth.authenticate(credentials).then(token.isValid).then (isValid) ->
+					resin.auth.authenticate(credentials).then(resin.token.isValid).then (isValid) ->
 						m.chai.expect(isValid).to.be.true
 
 				it 'should not save the token given valid credentials', ->
@@ -194,7 +190,7 @@ describe 'SDK Integration Tests', ->
 						password: credentials.register.password
 					.then(resin.auth.getUserId)
 					.then (userId) ->
-						return resinRequest.send
+						return resin.request.send
 							method: 'DELETE'
 							url: "/ewa/user(#{userId})"
 							baseUrl: opts.apiUrl

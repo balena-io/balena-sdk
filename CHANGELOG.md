@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Expose the internal resin-request and resin-token instances
 - Corrected `environmentVariables.getAll` in documentation to `.getAllByApplication`
 - Add support for hooks to intercept requests, responses, and errors.
 - Deprecated `resin.models.application.getApiKey()` (use `.generateApiKey()` instead).
