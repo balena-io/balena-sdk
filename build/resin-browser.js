@@ -3176,7 +3176,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
           value: String(value)
         }
       });
-    }).asCallback(callback);
+    }).then(fixDeviceEnvVarNameKey).asCallback(callback);
   };
 
   /**
@@ -3206,7 +3206,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
       body: {
         value: value
       }
-    }).asCallback(callback);
+    }).then(fixDeviceEnvVarNameKey).asCallback(callback);
   };
 
   /**

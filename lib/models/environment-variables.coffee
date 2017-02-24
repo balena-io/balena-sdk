@@ -300,6 +300,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 					device: device.id
 					env_var_name: name
 					value: String(value)
+		.then(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
 
 	###*
@@ -328,6 +329,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			id: id
 			body:
 				value: value
+		.then(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
 
 	###*
