@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Add `resin.models.environmentVariables.device.getAllByApplication`
+
 ## [6.0.0-beta3] - 2017-02-24
 
 ### Changed
