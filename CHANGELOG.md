@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0-beta3] - 2017-02-24
+
 ### Changed
 
 - Expose the internal resin-request and resin-token instances
@@ -335,6 +337,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.0.0-beta3]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta2...v6.0.0-beta3
 [6.0.0-beta2]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta1...v6.0.0-beta2
 [6.0.0-beta1]: https://github.com/resin-io/resin-sdk/compare/v5.4.0...v6.0.0-beta1
 [5.4.0]: https://github.com/resin-io/resin-sdk/compare/v5.3.6...v5.4.0
