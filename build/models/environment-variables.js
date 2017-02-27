@@ -278,7 +278,14 @@ getEnvironmentVariablesModel = function(deps, opts) {
         options: {
           filter: {
             device: {
-              application: applicationId
+              $any: {
+                $alias: 'd',
+                $expr: {
+                  d: {
+                    application: applicationId
+                  }
+                }
+              }
             }
           },
           expand: 'device',

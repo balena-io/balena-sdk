@@ -261,8 +261,9 @@ getEnvironmentVariablesModel = (deps, opts) ->
 				options:
 					filter:
 						device:
-							application:
-								applicationId
+							$any:
+								$alias: 'd',
+								$expr: d: application: applicationId
 					expand: 'device'
 					orderby: 'env_var_name asc'
 		.map(fixDeviceEnvVarNameKey)
