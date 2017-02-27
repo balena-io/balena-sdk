@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Add `resin.models.environmentVariables.device.getAllByApplication`
+- **Breaking!** Ensure all environmentVariables.device methods return names as `.name`, never `.env_var_name`
+
 ## [6.0.0-beta3] - 2017-02-24
 
 ### Changed

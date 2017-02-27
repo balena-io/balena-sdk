@@ -172,6 +172,16 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	exports.isSystemVariable = (variable) ->
 		return /^RESIN_|^RESIN$|^USER$/.test(variable.name)
 
+	# Internal method to workaround the fact that applications
+	# environment variables contain a `name` property, while
+	# device environment variables contain an `env_var_name`
+	# property instead.
+	fixDeviceEnvVarNameKey = (environmentVariable) ->
+		if environmentVariable.env_var_name?
+			environmentVariable.name = environmentVariable.env_var_name
+			delete environmentVariable.env_var_name
+		return environmentVariable
+
 	###*
 	# @namespace resin.models.environment-variables.device
 	# @memberof resin.models.environment-variables
@@ -214,16 +224,49 @@ getEnvironmentVariablesModel = (deps, opts) ->
 						device: device.id
 					expand: 'device'
 					orderby: 'env_var_name asc'
-		.map (environmentVariable) ->
+		.map(fixDeviceEnvVarNameKey)
+		.asCallback(callback)
 
-			# Workaround to the fact that applications environment variables
-			# contains a `name` property, while device environment variables
-			# contains an `env_var_name` property instead.
-			if environmentVariable.env_var_name?
-				environmentVariable.name = environmentVariable.env_var_name
-				delete environmentVariable.env_var_name
-			return environmentVariable
-
+	###*
+	# @summary Get all device environment variables for an application
+	# @name getAllByApplication
+	# @public
+	# @function
+	# @memberof resin.models.environment-variables.device
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {Object[]} - device environment variables
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.environmentVariables.device.getAllByApplication('MyApp').then(function(environmentVariables) {
+	# 	console.log(environmentVariables);
+	# });
+	#
+	# @example
+	# resin.models.environmentVariables.device.getAllByApplication(999999).then(function(environmentVariables) {
+	# 	console.log(environmentVariables);
+	# });
+	#
+	# @example
+	# resin.models.environmentVariables.device.getAllByApplication('MyApp', function(error, environmentVariables) {
+	# 	if (error) throw error;
+	# 	console.log(environmentVariables)
+	# });
+	###
+	exports.device.getAllByApplication = (nameOrId, callback) ->
+		applicationModel().get(nameOrId).get('id').then (applicationId) ->
+			return pine.get
+				resource: 'device_environment_variable'
+				options:
+					filter:
+						device:
+							$any:
+								$alias: 'd',
+								$expr: d: application: applicationId
+					expand: 'device'
+					orderby: 'env_var_name asc'
+		.map(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
 
 	###*
@@ -258,6 +301,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 					device: device.id
 					env_var_name: name
 					value: String(value)
+		.then(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
 
 	###*
@@ -286,6 +330,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			id: id
 			body:
 				value: value
+		.then(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
 
 	###*

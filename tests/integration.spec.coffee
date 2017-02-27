@@ -1245,6 +1245,28 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.environmentVariables.device.getAll(999999)
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
+				describe 'resin.models.environmentVariables.device.getAllByApplication()', ->
+
+					it 'should become an empty array by default', ->
+						promise = resin.models.environmentVariables.device.getAllByApplication(@application.id)
+						m.chai.expect(promise).to.become([])
+
+					it 'should return device environment variables if they exist', ->
+						resin.models.environmentVariables.device.create(@device.uuid, 'EDITOR', 'vim').then =>
+							resin.models.environmentVariables.device.getAllByApplication(@application.id)
+						.then (envs) ->
+							m.chai.expect(envs).to.have.length(1)
+							m.chai.expect(envs[0].name).to.equal('EDITOR')
+							m.chai.expect(envs[0].value).to.equal('vim')
+
+					it 'should be rejected if the application name does not exist', ->
+						promise = resin.models.environmentVariables.device.getAllByApplication('HelloWorldApp')
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						promise = resin.models.environmentVariables.device.getAllByApplication(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
 				describe 'resin.models.environmentVariables.device.create()', ->
 
 					it 'should be able to create a non resin variable given a device uuid', ->

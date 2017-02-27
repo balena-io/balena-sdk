@@ -20,7 +20,7 @@ var getEnvironmentVariablesModel, once;
 once = require('lodash/once');
 
 getEnvironmentVariablesModel = function(deps, opts) {
-  var applicationModel, deviceModel, exports, pine;
+  var applicationModel, deviceModel, exports, fixDeviceEnvVarNameKey, pine;
   pine = deps.pine;
   deviceModel = once(function() {
     return require('./device')(deps, opts);
@@ -188,6 +188,13 @@ getEnvironmentVariablesModel = function(deps, opts) {
   exports.isSystemVariable = function(variable) {
     return /^RESIN_|^RESIN$|^USER$/.test(variable.name);
   };
+  fixDeviceEnvVarNameKey = function(environmentVariable) {
+    if (environmentVariable.env_var_name != null) {
+      environmentVariable.name = environmentVariable.env_var_name;
+      delete environmentVariable.env_var_name;
+    }
+    return environmentVariable;
+  };
 
   /**
   	 * @namespace resin.models.environment-variables.device
@@ -234,13 +241,58 @@ getEnvironmentVariablesModel = function(deps, opts) {
           orderby: 'env_var_name asc'
         }
       });
-    }).map(function(environmentVariable) {
-      if (environmentVariable.env_var_name != null) {
-        environmentVariable.name = environmentVariable.env_var_name;
-        delete environmentVariable.env_var_name;
-      }
-      return environmentVariable;
-    }).asCallback(callback);
+    }).map(fixDeviceEnvVarNameKey).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get all device environment variables for an application
+  	 * @name getAllByApplication
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.environment-variables.device
+  	 *
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @fulfil {Object[]} - device environment variables
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.environmentVariables.device.getAllByApplication('MyApp').then(function(environmentVariables) {
+  	 * 	console.log(environmentVariables);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.environmentVariables.device.getAllByApplication(999999).then(function(environmentVariables) {
+  	 * 	console.log(environmentVariables);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.environmentVariables.device.getAllByApplication('MyApp', function(error, environmentVariables) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(environmentVariables)
+  	 * });
+   */
+  exports.device.getAllByApplication = function(nameOrId, callback) {
+    return applicationModel().get(nameOrId).get('id').then(function(applicationId) {
+      return pine.get({
+        resource: 'device_environment_variable',
+        options: {
+          filter: {
+            device: {
+              $any: {
+                $alias: 'd',
+                $expr: {
+                  d: {
+                    application: applicationId
+                  }
+                }
+              }
+            }
+          },
+          expand: 'device',
+          orderby: 'env_var_name asc'
+        }
+      });
+    }).map(fixDeviceEnvVarNameKey).asCallback(callback);
   };
 
   /**
@@ -277,7 +329,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
           value: String(value)
         }
       });
-    }).asCallback(callback);
+    }).then(fixDeviceEnvVarNameKey).asCallback(callback);
   };
 
   /**
@@ -307,7 +359,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
       body: {
         value: value
       }
-    }).asCallback(callback);
+    }).then(fixDeviceEnvVarNameKey).asCallback(callback);
   };
 
   /**
