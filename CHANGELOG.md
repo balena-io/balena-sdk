@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0-beta4] - 2017-02-27
+
 - Add `resin.models.environmentVariables.device.getAllByApplication`
 - **Breaking!** Ensure all environmentVariables.device methods return names as `.name`, never `.env_var_name`
 
@@ -340,6 +342,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.0.0-beta4]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta3...v6.0.0-beta4
 [6.0.0-beta3]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta2...v6.0.0-beta3
 [6.0.0-beta2]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta1...v6.0.0-beta2
 [6.0.0-beta1]: https://github.com/resin-io/resin-sdk/compare/v5.4.0...v6.0.0-beta1
