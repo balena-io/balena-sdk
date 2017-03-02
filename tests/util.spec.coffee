@@ -13,20 +13,32 @@ describe 'Pine option merging', ->
 		extras =
 			filter: id: 1
 			select: [ 'id' ]
-			expand: 'device'
+			expand:
+				device:
+					$select: ['id']
+					$expand: ['application', 'user']
 			top: 1
 			skip: 1
 		result = mergePineOptions({}, extras)
 		m.chai.expect(result).to.deep.equal(extras)
 
-	it 'overrides select options', ->
+	it 'overrides select, top, skip and orderby options', ->
 		result = mergePineOptions
+			top: 1
+			skip: 2
 			select: [ 'id' ]
+			orderby: 'app_name asc'
 		,
-			select: [ 'timestamp' ]
+			top: 3
+			skip: 4
+			select: [ 'app_name' ]
+			orderby: 'id asc'
 
 		m.chai.expect(result).to.deep.equal
-			select: [ 'timestamp' ]
+			top: 3
+			skip: 4
+			select: [ 'app_name' ]
+			orderby: 'id asc'
 
 	it 'combines filter options with $and', ->
 		result = mergePineOptions
@@ -95,18 +107,6 @@ describe 'Pine option merging', ->
 					$expand:
 						application: {}
 						build: {}
-
-	it 'overrides top and skip options', ->
-		result = mergePineOptions
-			top: 1
-			skip: 2
-		,
-			top: 3
-			skip: 4
-
-		m.chai.expect(result).to.deep.equal
-			top: 3
-			skip: 4
 
 	it 'rejects any unknown extra options', ->
 		m.chai.expect(

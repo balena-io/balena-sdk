@@ -31,7 +31,7 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 # Merging two sets of pine options sensibly is more complicated than it sounds.
 #
 # The general rules are:
-# * select, top and skip override (select this instead of the default)
+# * select, orderby, top and skip override (select this, instead of the default)
 # * filters are combined (i.e. both filters must match)
 # * expands are combined (include both expansions), and this recurses down.
 #   * That means $expands within expands are combined
@@ -45,7 +45,7 @@ exports.mergePineOptions = (defaults, extras) ->
 
 	for own option, value of extras
 		switch option
-			when 'select', 'top', 'skip'
+			when 'select', 'orderby', 'top', 'skip'
 				result[option] = value
 
 			when 'filter'
