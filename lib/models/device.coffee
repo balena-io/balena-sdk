@@ -192,40 +192,43 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.get = (uuidOrId, callback) ->
-		(if isId(uuidOrId)
-			pine.get
-				resource: 'device'
-				id: uuidOrId
-				options:
-					expand: 'application'
-			.tap (device) ->
-				if not device?
-					throw new errors.ResinDeviceNotFound(uuidOrId)
-		else
-			pine.get
-				resource: 'device'
-				options:
-					expand: 'application'
-					filter:
-						# Handle shorter uuids by asserting
-						# that it is a substring of the device
-						# uuid starting at index zero.
-						$eq: [
-							$substring: [
-								$: 'uuid'
-								0
-								uuidOrId.length
+		Promise.try ->
+			if not uuidOrId?
+				throw new errors.ResinDeviceNotFound(uuidOrId)
+			else if isId(uuidOrId)
+				pine.get
+					resource: 'device'
+					id: uuidOrId
+					options:
+						expand: 'application'
+				.tap (device) ->
+					if not device?
+						throw new errors.ResinDeviceNotFound(uuidOrId)
+			else
+				pine.get
+					resource: 'device'
+					options:
+						expand: 'application'
+						filter:
+							# Handle shorter uuids by asserting
+							# that it is a substring of the device
+							# uuid starting at index zero.
+							$eq: [
+								$substring: [
+									$: 'uuid'
+									0
+									uuidOrId.length
+								]
+								uuidOrId
 							]
-							uuidOrId
-						]
-			.tap (devices) ->
-				if isEmpty(devices)
-					throw new errors.ResinDeviceNotFound(uuidOrId)
+				.tap (devices) ->
+					if isEmpty(devices)
+						throw new errors.ResinDeviceNotFound(uuidOrId)
 
-				if devices.length > 1
-					throw new errors.ResinAmbiguousDevice(uuidOrId)
-			.get(0)
-		).tap (device) ->
+					if devices.length > 1
+						throw new errors.ResinAmbiguousDevice(uuidOrId)
+				.get(0)
+		.tap (device) ->
 			device.application_name = device.application[0].app_name
 		.asCallback(callback)
 

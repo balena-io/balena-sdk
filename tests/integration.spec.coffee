@@ -601,6 +601,10 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.application.has(@application.id)
 						m.chai.expect(promise).to.eventually.be.true
 
+					it 'should return false if the application id is undefined', ->
+						promise = resin.models.application.has(undefined)
+						m.chai.expect(promise).to.eventually.be.false
+
 					it 'should eventually be false if the application name does not exist', ->
 						promise = resin.models.application.has('HelloWorldApp')
 						m.chai.expect(promise).to.eventually.be.false
@@ -964,6 +968,10 @@ describe 'SDK Integration Tests', ->
 					it 'should eventually be true if the device id exists', ->
 						promise = resin.models.device.has(@device.id)
 						m.chai.expect(promise).to.eventually.be.true
+
+					it 'should return false if the device id is undefined', ->
+						promise = resin.models.application.has(undefined)
+						m.chai.expect(promise).to.eventually.be.false
 
 					it 'should eventually be false if the device uuid does not exist', ->
 						promise = resin.models.device.has('asdfghjkl')

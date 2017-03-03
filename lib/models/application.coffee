@@ -108,27 +108,31 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.get = (nameOrId, callback) ->
-		(if isId(nameOrId)
-			pine.get
-				resource: 'application'
-				id: nameOrId
-			.tap (application) ->
-				if not application?
-					throw new errors.ResinApplicationNotFound(nameOrId)
-		else
-			pine.get
-				resource: 'application'
-				options:
-					filter:
-						app_name: nameOrId
-			.tap (applications) ->
-				if isEmpty(applications)
-					throw new errors.ResinApplicationNotFound(nameOrId)
+		Promise.try ->
+			if not nameOrId?
+				throw new errors.ResinApplicationNotFound(nameOrId)
 
-				if size(applications) > 1
-					throw new errors.ResinAmbiguousApplication(nameOrId)
-			.get(0)
-		).asCallback(callback)
+			else if isId(nameOrId)
+				pine.get
+					resource: 'application'
+					id: nameOrId
+				.tap (application) ->
+					if not application?
+						throw new errors.ResinApplicationNotFound(nameOrId)
+			else
+				pine.get
+					resource: 'application'
+					options:
+						filter:
+							app_name: nameOrId
+				.tap (applications) ->
+					if isEmpty(applications)
+						throw new errors.ResinApplicationNotFound(nameOrId)
+
+					if size(applications) > 1
+						throw new errors.ResinAmbiguousApplication(nameOrId)
+				.get(0)
+		.asCallback(callback)
 
 	###*
 	# @summary Check if an application exists

@@ -207,40 +207,48 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.get = function(uuidOrId, callback) {
-    return (isId(uuidOrId) ? pine.get({
-      resource: 'device',
-      id: uuidOrId,
-      options: {
-        expand: 'application'
+    return Promise["try"](function() {
+      if (uuidOrId == null) {
+        throw new errors.ResinDeviceNotFound(uuidOrId);
+      } else if (isId(uuidOrId)) {
+        return pine.get({
+          resource: 'device',
+          id: uuidOrId,
+          options: {
+            expand: 'application'
+          }
+        }).tap(function(device) {
+          if (device == null) {
+            throw new errors.ResinDeviceNotFound(uuidOrId);
+          }
+        });
+      } else {
+        return pine.get({
+          resource: 'device',
+          options: {
+            expand: 'application',
+            filter: {
+              $eq: [
+                {
+                  $substring: [
+                    {
+                      $: 'uuid'
+                    }, 0, uuidOrId.length
+                  ]
+                }, uuidOrId
+              ]
+            }
+          }
+        }).tap(function(devices) {
+          if (isEmpty(devices)) {
+            throw new errors.ResinDeviceNotFound(uuidOrId);
+          }
+          if (devices.length > 1) {
+            throw new errors.ResinAmbiguousDevice(uuidOrId);
+          }
+        }).get(0);
       }
     }).tap(function(device) {
-      if (device == null) {
-        throw new errors.ResinDeviceNotFound(uuidOrId);
-      }
-    }) : pine.get({
-      resource: 'device',
-      options: {
-        expand: 'application',
-        filter: {
-          $eq: [
-            {
-              $substring: [
-                {
-                  $: 'uuid'
-                }, 0, uuidOrId.length
-              ]
-            }, uuidOrId
-          ]
-        }
-      }
-    }).tap(function(devices) {
-      if (isEmpty(devices)) {
-        throw new errors.ResinDeviceNotFound(uuidOrId);
-      }
-      if (devices.length > 1) {
-        throw new errors.ResinAmbiguousDevice(uuidOrId);
-      }
-    }).get(0)).tap(function(device) {
       return device.application_name = device.application[0].app_name;
     }).asCallback(callback);
   };

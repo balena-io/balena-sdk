@@ -747,28 +747,36 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.get = function(nameOrId, callback) {
-    return (isId(nameOrId) ? pine.get({
-      resource: 'application',
-      id: nameOrId
-    }).tap(function(application) {
-      if (application == null) {
+    return Promise["try"](function() {
+      if (nameOrId == null) {
         throw new errors.ResinApplicationNotFound(nameOrId);
+      } else if (isId(nameOrId)) {
+        return pine.get({
+          resource: 'application',
+          id: nameOrId
+        }).tap(function(application) {
+          if (application == null) {
+            throw new errors.ResinApplicationNotFound(nameOrId);
+          }
+        });
+      } else {
+        return pine.get({
+          resource: 'application',
+          options: {
+            filter: {
+              app_name: nameOrId
+            }
+          }
+        }).tap(function(applications) {
+          if (isEmpty(applications)) {
+            throw new errors.ResinApplicationNotFound(nameOrId);
+          }
+          if (size(applications) > 1) {
+            throw new errors.ResinAmbiguousApplication(nameOrId);
+          }
+        }).get(0);
       }
-    }) : pine.get({
-      resource: 'application',
-      options: {
-        filter: {
-          app_name: nameOrId
-        }
-      }
-    }).tap(function(applications) {
-      if (isEmpty(applications)) {
-        throw new errors.ResinApplicationNotFound(nameOrId);
-      }
-      if (size(applications) > 1) {
-        throw new errors.ResinAmbiguousApplication(nameOrId);
-      }
-    }).get(0)).asCallback(callback);
+    }).asCallback(callback);
   };
 
   /**
@@ -1515,40 +1523,48 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.get = function(uuidOrId, callback) {
-    return (isId(uuidOrId) ? pine.get({
-      resource: 'device',
-      id: uuidOrId,
-      options: {
-        expand: 'application'
+    return Promise["try"](function() {
+      if (uuidOrId == null) {
+        throw new errors.ResinDeviceNotFound(uuidOrId);
+      } else if (isId(uuidOrId)) {
+        return pine.get({
+          resource: 'device',
+          id: uuidOrId,
+          options: {
+            expand: 'application'
+          }
+        }).tap(function(device) {
+          if (device == null) {
+            throw new errors.ResinDeviceNotFound(uuidOrId);
+          }
+        });
+      } else {
+        return pine.get({
+          resource: 'device',
+          options: {
+            expand: 'application',
+            filter: {
+              $eq: [
+                {
+                  $substring: [
+                    {
+                      $: 'uuid'
+                    }, 0, uuidOrId.length
+                  ]
+                }, uuidOrId
+              ]
+            }
+          }
+        }).tap(function(devices) {
+          if (isEmpty(devices)) {
+            throw new errors.ResinDeviceNotFound(uuidOrId);
+          }
+          if (devices.length > 1) {
+            throw new errors.ResinAmbiguousDevice(uuidOrId);
+          }
+        }).get(0);
       }
     }).tap(function(device) {
-      if (device == null) {
-        throw new errors.ResinDeviceNotFound(uuidOrId);
-      }
-    }) : pine.get({
-      resource: 'device',
-      options: {
-        expand: 'application',
-        filter: {
-          $eq: [
-            {
-              $substring: [
-                {
-                  $: 'uuid'
-                }, 0, uuidOrId.length
-              ]
-            }, uuidOrId
-          ]
-        }
-      }
-    }).tap(function(devices) {
-      if (isEmpty(devices)) {
-        throw new errors.ResinDeviceNotFound(uuidOrId);
-      }
-      if (devices.length > 1) {
-        throw new errors.ResinAmbiguousDevice(uuidOrId);
-      }
-    }).get(0)).tap(function(device) {
       return device.application_name = device.application[0].app_name;
     }).asCallback(callback);
   };
@@ -3940,6 +3956,7 @@ exports.mergePineOptions = function(defaults, extras) {
     value = extras[option];
     switch (option) {
       case 'select':
+      case 'orderby':
       case 'top':
       case 'skip':
         result[option] = value;

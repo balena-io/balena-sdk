@@ -120,28 +120,36 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.get = function(nameOrId, callback) {
-    return (isId(nameOrId) ? pine.get({
-      resource: 'application',
-      id: nameOrId
-    }).tap(function(application) {
-      if (application == null) {
+    return Promise["try"](function() {
+      if (nameOrId == null) {
         throw new errors.ResinApplicationNotFound(nameOrId);
+      } else if (isId(nameOrId)) {
+        return pine.get({
+          resource: 'application',
+          id: nameOrId
+        }).tap(function(application) {
+          if (application == null) {
+            throw new errors.ResinApplicationNotFound(nameOrId);
+          }
+        });
+      } else {
+        return pine.get({
+          resource: 'application',
+          options: {
+            filter: {
+              app_name: nameOrId
+            }
+          }
+        }).tap(function(applications) {
+          if (isEmpty(applications)) {
+            throw new errors.ResinApplicationNotFound(nameOrId);
+          }
+          if (size(applications) > 1) {
+            throw new errors.ResinAmbiguousApplication(nameOrId);
+          }
+        }).get(0);
       }
-    }) : pine.get({
-      resource: 'application',
-      options: {
-        filter: {
-          app_name: nameOrId
-        }
-      }
-    }).tap(function(applications) {
-      if (isEmpty(applications)) {
-        throw new errors.ResinApplicationNotFound(nameOrId);
-      }
-      if (size(applications) > 1) {
-        throw new errors.ResinAmbiguousApplication(nameOrId);
-      }
-    }).get(0)).asCallback(callback);
+    }).asCallback(callback);
   };
 
   /**
