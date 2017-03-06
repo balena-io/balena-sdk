@@ -36,7 +36,7 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 # * expands are combined (include both expansions), and this recurses down.
 #   * That means $expands within expands are combined
 #   * And $selects within expands override
-# * Any unknown options 'extra' options throw an error. Unknown 'default' options are ignored.
+# * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 exports.mergePineOptions = (defaults, extras) ->
 	if not extras
 		return defaults
@@ -50,7 +50,7 @@ exports.mergePineOptions = (defaults, extras) ->
 
 			when 'filter'
 				if defaults.filter
-					result.filter = $and: [defaults.filter, value]
+					result.filter = $and: [ defaults.filter, value ]
 				else
 					result.filter = value
 
@@ -77,7 +77,7 @@ mergeExpandOptions = (defaultExpand, extraExpand) ->
 		if extraExpandOptions.$expand
 			expandOptions.$expand = mergeExpandOptions(expandOptions.$expand, extraExpandOptions.$expand)
 
-	defaultExpand
+	return defaultExpand
 
 # Converts a valid expand object in any format into a new object
 # containing (at most) a $expand and a $select key
