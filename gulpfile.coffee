@@ -21,7 +21,7 @@ OPTIONS =
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
-		integration: 'tests/integration.spec.coffee'
+		tests: 'tests/*.spec.coffee'
 		browserEntry: 'resin.js'
 		browserOutput: 'resin-browser.js'
 		browserMinifiedOutput: 'resin-browser.min.js'
@@ -31,7 +31,7 @@ OPTIONS =
 
 gulp.task 'test', ->
 	loadEnv()
-	gulp.src(OPTIONS.files.integration, read: false)
+	gulp.src(OPTIONS.files.tests, read: false)
 		.pipe(mocha({
 			reporter: 'spec'
 		}))
