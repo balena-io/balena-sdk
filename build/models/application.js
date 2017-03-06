@@ -123,7 +123,8 @@ getApplicationModel = function(deps, opts) {
     return Promise["try"](function() {
       if (nameOrId == null) {
         throw new errors.ResinApplicationNotFound(nameOrId);
-      } else if (isId(nameOrId)) {
+      }
+      if (isId(nameOrId)) {
         return pine.get({
           resource: 'application',
           id: nameOrId

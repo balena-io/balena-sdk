@@ -112,7 +112,7 @@ getApplicationModel = (deps, opts) ->
 			if not nameOrId?
 				throw new errors.ResinApplicationNotFound(nameOrId)
 
-			else if isId(nameOrId)
+			if isId(nameOrId)
 				pine.get
 					resource: 'application'
 					id: nameOrId

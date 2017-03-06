@@ -210,7 +210,8 @@ getDeviceModel = function(deps, opts) {
     return Promise["try"](function() {
       if (uuidOrId == null) {
         throw new errors.ResinDeviceNotFound(uuidOrId);
-      } else if (isId(uuidOrId)) {
+      }
+      if (isId(uuidOrId)) {
         return pine.get({
           resource: 'device',
           id: uuidOrId,
@@ -228,15 +229,9 @@ getDeviceModel = function(deps, opts) {
           options: {
             expand: 'application',
             filter: {
-              $eq: [
-                {
-                  $substring: [
-                    {
-                      $: 'uuid'
-                    }, 0, uuidOrId.length
-                  ]
-                }, uuidOrId
-              ]
+              uuid: {
+                $startswith: uuidOrId
+              }
             }
           }
         }).tap(function(devices) {
