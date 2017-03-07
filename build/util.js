@@ -64,6 +64,7 @@ exports.mergePineOptions = function(defaults, extras) {
     value = extras[option];
     switch (option) {
       case 'select':
+      case 'orderby':
       case 'top':
       case 'skip':
         result[option] = value;
