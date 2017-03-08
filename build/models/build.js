@@ -15,11 +15,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var errors, getBuildModel, once;
+var errors, findCallback, getBuildModel, mergePineOptions, once, ref;
 
 once = require('lodash/once');
 
 errors = require('resin-errors');
+
+ref = require('../util'), findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions;
 
 getBuildModel = function(deps, opts) {
   var applicationModel, exports, pine;
@@ -70,6 +72,7 @@ getBuildModel = function(deps, opts) {
   	 * @memberof resin.models.build
   	 *
   	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object[]} - builds
   	 * @returns {Promise}
   	 *
@@ -89,20 +92,26 @@ getBuildModel = function(deps, opts) {
   	 *		console.log(builds);
   	 * });
    */
-  exports.getAllByApplication = function(nameOrId, callback) {
+  exports.getAllByApplication = function(nameOrId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return applicationModel().get(nameOrId).then(function(application) {
       return pine.get({
         resource: 'build',
-        filter: {
-          application: application.id
-        },
-        select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
-        expand: {
-          user: {
-            $select: ['id', 'username']
-          }
-        },
-        orderby: 'created_at desc'
+        options: mergePineOptions({
+          filter: {
+            application: application.id
+          },
+          select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'update_timestamp', 'project_type', 'status', 'message'],
+          expand: {
+            user: {
+              $select: ['id', 'username']
+            }
+          },
+          orderby: 'created_at desc'
+        }, options)
       });
     }).asCallback(callback);
   };

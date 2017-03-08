@@ -90,7 +90,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.build](#resin.models.build) : <code>object</code>
             * [.get(id)](#resin.models.build.get) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId)](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
     * [.auth](#resin.auth) : <code>object</code>
         * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
             * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
@@ -263,7 +263,7 @@ resin.token.set('abcdef...');
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.build](#resin.models.build) : <code>object</code>
         * [.get(id)](#resin.models.build.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId)](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="resin.models.application"></a>
 
@@ -2162,7 +2162,7 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 
 * [.build](#resin.models.build) : <code>object</code>
     * [.get(id)](#resin.models.build.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId)](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="resin.models.build.get"></a>
 
@@ -2191,15 +2191,16 @@ resin.models.build.get(123, function(error, build) {
 ```
 <a name="resin.models.build.getAllByApplication"></a>
 
-##### build.getAllByApplication(nameOrId) ⇒ <code>Promise</code>
+##### build.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[build](#resin.models.build)</code>  
 **Summary**: Get all builds from an application  
 **Access:** public  
 **Fulfil**: <code>Object[]</code> - builds  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| nameOrId | <code>String</code> &#124; <code>Number</code> | application name (string) or id (number) |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> &#124; <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js

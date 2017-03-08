@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Include `update_timestamp` in builds from `resin.models.build.getAllByApplication()`
 - Add `resin.models.build.get()` to load individual build data
 - Allow arbitrary extra pinejs options in `resin.models.key.getAll()`
 - Ensure passwords are always submitted as strings when authenticating
