@@ -829,6 +829,12 @@ describe 'SDK Integration Tests', ->
 
 			describe 'Build Model', ->
 
+				describe 'resin.models.build.get()', ->
+
+					it 'should be rejected if the build id does not exist', ->
+						promise = resin.models.build.get(123)
+						m.chai.expect(promise).to.be.rejectedWith('Build not found: 123')
+
 				describe 'resin.models.build.getAllByApplication()', ->
 
 					it 'should eventually become an empty array given an application name', ->

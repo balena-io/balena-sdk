@@ -3,8 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-- Ensure passwords are always submitted as strings when authenticating
+- Add `resin.models.build.get()` to load individual build data
 - Allow arbitrary extra pinejs options in `resin.models.key.getAll()`
+- Ensure passwords are always submitted as strings when authenticating
 
 ## [6.0.0-beta5] - 2017-03-10
 

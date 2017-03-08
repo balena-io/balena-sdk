@@ -30,6 +30,39 @@ getBuildModel = function(deps, opts) {
   exports = {};
 
   /**
+  	 * @summary Get a specific build
+  	 * @name get
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.build
+  	 *
+  	 * @param {Number} id - build id
+  	 * @fulfil {Object} - build
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.build.get(123).then(function(build) {
+  	 *		console.log(build);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.build.get(123, function(error, build) {
+  	 *		if (error) throw error;
+  	 *		console.log(build);
+  	 * });
+   */
+  exports.get = function(id, callback) {
+    return pine.get({
+      resource: 'build',
+      id: id
+    }).tap(function(build) {
+      if (build == null) {
+        throw new errors.ResinBuildNotFound(id);
+      }
+    }).asCallback(callback);
+  };
+
+  /**
   	 * @summary Get all builds from an application
   	 * @name getAllByApplication
   	 * @public
