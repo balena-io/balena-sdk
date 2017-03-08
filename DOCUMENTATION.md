@@ -65,7 +65,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
         * [.key](#resin.models.key) : <code>object</code>
-            * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise</code>
+            * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
             * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
             * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
             * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
@@ -237,7 +237,7 @@ resin.token.set('abcdef...');
         * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
     * [.key](#resin.models.key) : <code>object</code>
-        * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise</code>
+        * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
         * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
         * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
         * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
@@ -1632,18 +1632,23 @@ resin.models.device.getStatus(device, function(error, status) {
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
 * [.key](#resin.models.key) : <code>object</code>
-    * [.getAll()](#resin.models.key.getAll) ⇒ <code>Promise</code>
+    * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
     * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
     * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
     * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
 
 <a name="resin.models.key.getAll"></a>
 
-##### key.getAll() ⇒ <code>Promise</code>
+##### key.getAll([options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[key](#resin.models.key)</code>  
 **Summary**: Get all ssh keys  
 **Access:** public  
 **Fulfil**: <code>Object[]</code> - ssh keys  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
 **Example**  
 ```js
 resin.models.key.getAll().then(function(keys) {
@@ -2559,7 +2564,7 @@ The `logs` object yielded by this function emits the following events:
 
 - `line`: when a log line is received.
 - `clear`: when the logs are cleared.
-- `error`: when an error happens.
+- `error`: when an error has happened.
 
 **Kind**: static method of <code>[logs](#resin.logs)</code>  
 **Summary**: Subscribe to device logs  

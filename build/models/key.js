@@ -15,13 +15,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, errors, getKeyModel, isEmpty;
+var Promise, errors, findCallback, getKeyModel, isEmpty, mergePineOptions, ref;
 
 Promise = require('bluebird');
 
 isEmpty = require('lodash/isEmpty');
 
 errors = require('resin-errors');
+
+ref = require('../util'), findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions;
 
 getKeyModel = function(deps, opts) {
   var auth, exports, pine;
@@ -36,6 +38,7 @@ getKeyModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.key
   	 *
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object[]} - ssh keys
   	 * @returns {Promise}
   	 *
@@ -50,9 +53,14 @@ getKeyModel = function(deps, opts) {
   	 * 	console.log(keys);
   	 * });
    */
-  exports.getAll = function(callback) {
+  exports.getAll = function(options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return pine.get({
-      resource: 'user__has__public_key'
+      resource: 'user__has__public_key',
+      options: mergePineOptions({}, options)
     }).asCallback(callback);
   };
 
