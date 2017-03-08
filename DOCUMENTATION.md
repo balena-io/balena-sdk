@@ -89,7 +89,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.build](#resin.models.build) : <code>object</code>
-            * [.get(id)](#resin.models.build.get) ⇒ <code>Promise</code>
+            * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
     * [.auth](#resin.auth) : <code>object</code>
         * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
@@ -262,7 +262,7 @@ resin.token.set('abcdef...');
         * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.build](#resin.models.build) : <code>object</code>
-        * [.get(id)](#resin.models.build.get) ⇒ <code>Promise</code>
+        * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="resin.models.application"></a>
@@ -2161,20 +2161,21 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
 * [.build](#resin.models.build) : <code>object</code>
-    * [.get(id)](#resin.models.build.get) ⇒ <code>Promise</code>
+    * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="resin.models.build.get"></a>
 
-##### build.get(id) ⇒ <code>Promise</code>
+##### build.get(id, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[build](#resin.models.build)</code>  
 **Summary**: Get a specific build  
 **Access:** public  
 **Fulfil**: <code>Object</code> - build  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>Number</code> | build id |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | build id |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js

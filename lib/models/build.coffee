@@ -33,6 +33,7 @@ getBuildModel = (deps, opts) ->
 	# @memberof resin.models.build
 	#
 	# @param {Number} id - build id
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - build
 	# @returns {Promise}
 	#
@@ -47,10 +48,13 @@ getBuildModel = (deps, opts) ->
 	#		console.log(build);
 	# });
 	###
-	exports.get = (id, callback) ->
+	exports.get = (id, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		return pine.get
 			resource: 'build'
 			id: id
+			options: mergePineOptions({}, options)
 		.tap (build) ->
 			if not build?
 				throw new errors.ResinBuildNotFound(id)
