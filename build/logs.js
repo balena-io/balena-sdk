@@ -24,10 +24,16 @@ logs = require('resin-device-logs');
 errors = require('resin-errors');
 
 getLogs = function(deps, opts) {
-  var configModel, deviceModel, exports;
+  var configModel, deviceModel, exports, getContext;
   configModel = require('./models/config')(deps, opts);
   deviceModel = require('./models/device')(deps, opts);
   exports = {};
+  getContext = function(uuidOrId) {
+    return Promise.props({
+      device: deviceModel.get(uuidOrId),
+      pubNubKeys: configModel.getPubNubKeys()
+    });
+  };
 
   /**
   	 * @summary Subscribe to device logs
@@ -40,6 +46,7 @@ getLogs = function(deps, opts) {
   	 * The `logs` object yielded by this function emits the following events:
   	 *
   	 * - `line`: when a log line is received.
+  	 * - `clear`: when the logs are cleared.
   	 * - `error`: when an error happens.
   	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
@@ -54,12 +61,18 @@ getLogs = function(deps, opts) {
   	 * 	logs.on('line', function(line) {
   	 * 		console.log(line);
   	 * 	});
+  	 * 	logs.on('clear', function() {
+  	 * 		console.clear();
+  	 * 	});
   	 * });
   	 *
   	 * @example
   	 * resin.logs.subscribe(123).then(function(logs) {
   	 * 	logs.on('line', function(line) {
   	 * 		console.log(line);
+  	 * 	});
+  	 * 	logs.on('clear', function() {
+  	 * 		console.clear();
   	 * 	});
   	 * });
   	 *
@@ -73,10 +86,7 @@ getLogs = function(deps, opts) {
   	 * });
    */
   exports.subscribe = function(uuidOrId, callback) {
-    return Promise.props({
-      device: deviceModel.get(uuidOrId),
-      pubNubKeys: configModel.getPubNubKeys()
-    }).then(function(arg) {
+    return getContext(uuidOrId).then(function(arg) {
       var device, pubNubKeys;
       pubNubKeys = arg.pubNubKeys, device = arg.device;
       return logs.subscribe(pubNubKeys, device);
@@ -118,11 +128,80 @@ getLogs = function(deps, opts) {
   	 * });
    */
   exports.history = function(uuidOrId, callback) {
-    return Promise.props({
-      device: deviceModel.get(uuidOrId),
-      pubNubKeys: configModel.getPubNubKeys()
-    }).then(function(results) {
-      return logs.history(results.pubNubKeys, results.device);
+    return getContext(uuidOrId).then(function(arg) {
+      var device, pubNubKeys;
+      pubNubKeys = arg.pubNubKeys, device = arg.device;
+      return logs.history(pubNubKeys, device);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get device logs history after the most recent clear request
+  	 * @name historySinceLastClear
+  	 * @function
+  	 * @public
+  	 * @memberof resin.logs
+  	 *
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @fulfil {String[]} - history lines
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.logs.historySinceLastClear('7cf02a6').then(function(lines) {
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.historySinceLastClear(123).then(function(lines) {
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.historySinceLastClear('7cf02a6', function(error, lines) {
+  	 * 	if (error) throw error;
+  	 *
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+   */
+  exports.historySinceLastClear = function(uuidOrId, callback) {
+    return getContext(uuidOrId).then(function(arg) {
+      var device, pubNubKeys;
+      pubNubKeys = arg.pubNubKeys, device = arg.device;
+      return logs.historySinceLastClear(pubNubKeys, device);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Clear device logs history
+  	 * @name clear
+  	 * @function
+  	 * @public
+  	 * @memberof resin.logs
+  	 *
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.logs.clear('7cf02a6').then(function() {
+  	 * 	console.log('OK');
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.clear(123).then(function() {
+  	 * 	console.log('OK');
+  	 * });
+   */
+  exports.clear = function(uuidOrId, callback) {
+    return getContext(uuidOrId).then(function(arg) {
+      var device, pubNubKeys;
+      pubNubKeys = arg.pubNubKeys, device = arg.device;
+      return logs.clear(pubNubKeys, device);
     }).asCallback(callback);
   };
   return exports;

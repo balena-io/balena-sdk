@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Update the logs module to provide `historySinceLastClear` and `clear` methods.
 - Ensure device/application.get (and related methods) return a clear error if given an undefined argument
 - Ensure device/application.has returns false if passed undefined
 
