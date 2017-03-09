@@ -21,7 +21,7 @@ filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
-{ isId, notFoundResponse, treatAsMissingApplication } = require('../util')
+{ isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingApplication } = require('../util')
 
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
@@ -47,6 +47,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - applications
 	# @returns {Promise}
 	#
@@ -61,15 +62,19 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(applications);
 	# });
 	###
-	exports.getAll = (callback) ->
+	exports.getAll = (options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		token.getUserId().then (userId) ->
 			return pine.get
 				resource: 'application'
 				options:
-					orderby: 'app_name asc'
-					expand: 'device'
-					filter:
-						user: userId
+					mergePineOptions
+						orderby: 'app_name asc'
+						expand: 'device'
+						filter:
+							user: userId
+					, options
 
 		# TODO: It might be worth to do all these handy
 		# manipulations server side directly.
@@ -88,6 +93,7 @@ getApplicationModel = (deps, opts) ->
 	# @memberof resin.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
 	#
@@ -107,7 +113,9 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(application);
 	# });
 	###
-	exports.get = (nameOrId, callback) ->
+	exports.get = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		Promise.try ->
 			if not nameOrId?
 				throw new errors.ResinApplicationNotFound(nameOrId)
@@ -116,6 +124,7 @@ getApplicationModel = (deps, opts) ->
 				pine.get
 					resource: 'application'
 					id: nameOrId
+					options: mergePineOptions({}, options)
 				.tap (application) ->
 					if not application?
 						throw new errors.ResinApplicationNotFound(nameOrId)
@@ -123,8 +132,10 @@ getApplicationModel = (deps, opts) ->
 				pine.get
 					resource: 'application'
 					options:
-						filter:
-							app_name: nameOrId
+						mergePineOptions
+							filter:
+								app_name: nameOrId
+						, options
 				.tap (applications) ->
 					if isEmpty(applications)
 						throw new errors.ResinApplicationNotFound(nameOrId)

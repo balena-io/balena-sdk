@@ -578,6 +578,11 @@ describe 'SDK Integration Tests', ->
 						resin.models.application.getAll().then (applications) ->
 							m.chai.expect(applications[0].online_devices).to.equal(0)
 
+					it 'should support arbitrary pinejs options', ->
+						resin.models.application.getAll(expand: 'user')
+						.then (applications) ->
+							m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+
 				describe 'resin.models.application.get()', ->
 
 					it 'should be able to get an application by name', ->
@@ -595,6 +600,11 @@ describe 'SDK Integration Tests', ->
 					it 'should be rejected if the application id does not exist', ->
 						promise = resin.models.application.get(999999)
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+					it 'should support arbitrary pinejs options', ->
+						resin.models.application.get(@application.id, expand: 'user')
+						.then (application) ->
+							m.chai.expect(application.user[0].username).to.equal(credentials.username)
 
 				describe 'resin.models.application.getById()', ->
 

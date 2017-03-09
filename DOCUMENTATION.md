@@ -16,8 +16,8 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.token](#resin.token) : <code>Object</code>
     * [.models](#resin.models) : <code>object</code>
         * [.application](#resin.models.application) : <code>object</code>
-            * [.getAll()](#resin.models.application.getAll) ⇒ <code>Promise</code>
-            * [.get(nameOrId)](#resin.models.application.get) ⇒ <code>Promise</code>
+            * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
+            * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -189,8 +189,8 @@ resin.token.set('abcdef...');
 
 * [.models](#resin.models) : <code>object</code>
     * [.application](#resin.models.application) : <code>object</code>
-        * [.getAll()](#resin.models.application.getAll) ⇒ <code>Promise</code>
-        * [.get(nameOrId)](#resin.models.application.get) ⇒ <code>Promise</code>
+        * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
+        * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -271,8 +271,8 @@ resin.token.set('abcdef...');
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
 * [.application](#resin.models.application) : <code>object</code>
-    * [.getAll()](#resin.models.application.getAll) ⇒ <code>Promise</code>
-    * [.get(nameOrId)](#resin.models.application.get) ⇒ <code>Promise</code>
+    * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
+    * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -284,11 +284,16 @@ resin.token.set('abcdef...');
 
 <a name="resin.models.application.getAll"></a>
 
-##### application.getAll() ⇒ <code>Promise</code>
+##### application.getAll([options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Get all applications  
 **Access:** public  
 **Fulfil**: <code>Object[]</code> - applications  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
 **Example**  
 ```js
 resin.models.application.getAll().then(function(applications) {
@@ -304,15 +309,16 @@ resin.models.application.getAll(function(error, applications) {
 ```
 <a name="resin.models.application.get"></a>
 
-##### application.get(nameOrId) ⇒ <code>Promise</code>
+##### application.get(nameOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Get a single application  
 **Access:** public  
 **Fulfil**: <code>Object</code> - application  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| nameOrId | <code>String</code> &#124; <code>Number</code> | application name (string) or id (number) |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> &#124; <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js

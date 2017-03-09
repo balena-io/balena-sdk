@@ -746,7 +746,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, errors, filter, getApplicationModel, isEmpty, isId, notFoundResponse, once, ref, size, treatAsMissingApplication;
+var Promise, errors, filter, findCallback, getApplicationModel, isEmpty, isId, mergePineOptions, notFoundResponse, once, ref, size, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
@@ -760,7 +760,7 @@ size = require('lodash/size');
 
 errors = require('resin-errors');
 
-ref = require('../util'), isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
+ref = require('../util'), isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
 
 getApplicationModel = function(deps, opts) {
   var apiUrl, deviceModel, exports, getId, pine, request, token;
@@ -787,6 +787,7 @@ getApplicationModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.application
   	 *
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object[]} - applications
   	 * @returns {Promise}
   	 *
@@ -801,17 +802,21 @@ getApplicationModel = function(deps, opts) {
   	 * 	console.log(applications);
   	 * });
    */
-  exports.getAll = function(callback) {
+  exports.getAll = function(options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return token.getUserId().then(function(userId) {
       return pine.get({
         resource: 'application',
-        options: {
+        options: mergePineOptions({
           orderby: 'app_name asc',
           expand: 'device',
           filter: {
             user: userId
           }
-        }
+        }, options)
       });
     }).map(function(application) {
       var ref1;
@@ -831,6 +836,7 @@ getApplicationModel = function(deps, opts) {
   	 * @memberof resin.models.application
   	 *
   	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object} - application
   	 * @returns {Promise}
   	 *
@@ -850,7 +856,11 @@ getApplicationModel = function(deps, opts) {
   	 * 	console.log(application);
   	 * });
    */
-  exports.get = function(nameOrId, callback) {
+  exports.get = function(nameOrId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return Promise["try"](function() {
       if (nameOrId == null) {
         throw new errors.ResinApplicationNotFound(nameOrId);
@@ -858,7 +868,8 @@ getApplicationModel = function(deps, opts) {
       if (isId(nameOrId)) {
         return pine.get({
           resource: 'application',
-          id: nameOrId
+          id: nameOrId,
+          options: mergePineOptions({}, options)
         }).tap(function(application) {
           if (application == null) {
             throw new errors.ResinApplicationNotFound(nameOrId);
@@ -867,11 +878,11 @@ getApplicationModel = function(deps, opts) {
       } else {
         return pine.get({
           resource: 'application',
-          options: {
+          options: mergePineOptions({
             filter: {
               app_name: nameOrId
             }
-          }
+          }, options)
         }).tap(function(applications) {
           if (isEmpty(applications)) {
             throw new errors.ResinApplicationNotFound(nameOrId);
