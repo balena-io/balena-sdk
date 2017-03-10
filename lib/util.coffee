@@ -1,9 +1,10 @@
 errors = require('resin-errors')
-isNumber = require('lodash/isNumber')
-isArray = require('lodash/isArray')
-isString = require('lodash/isString')
-fromPairs = require('lodash/fromPairs')
 cloneDeep = require('lodash/cloneDeep')
+fromPairs = require('lodash/fromPairs')
+isArray = require('lodash/isArray')
+isFunction = require('lodash/isFunction')
+isNumber = require('lodash/isNumber')
+isString = require('lodash/isString')
 
 exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
@@ -11,6 +12,13 @@ exports.notImplemented = notImplemented = ->
 exports.onlyIf = (condition) -> (fn) -> if condition then fn else notImplemented
 
 exports.isId = isNumber
+
+# Use with: `findCallback(arguments)`.
+exports.findCallback = (args) ->
+	if isFunction(args[args.length - 1])
+		return args[args.length - 1]
+	else
+		return null
 
 exports.notFoundResponse =
 	code: 'ResinRequestError'

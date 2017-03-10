@@ -464,6 +464,21 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.key.getAll()
 						m.chai.expect(promise).to.become([])
 
+					it 'should support arbitrary pinejs options', ->
+						resin.models.key.create('MyKey', PUBLIC_KEY)
+						.then ->
+							resin.models.key.getAll { select: [ 'public_key' ] }
+						.then (keys) ->
+							key = keys[0]
+							m.chai.expect(key.public_key).to.equal(PUBLIC_KEY)
+							m.chai.expect(key.title).to.be.undefined
+
+					it 'should support a callback with no options', (done) ->
+						resin.models.key.getAll (err, keys) ->
+							m.chai.expect(keys).to.deep.equal([])
+							done()
+						return
+
 				describe 'resin.models.key.create()', ->
 
 					it 'should be able to create a key', ->

@@ -18,6 +18,8 @@ Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
 errors = require('resin-errors')
 
+{ findCallback, mergePineOptions } = require('../util')
+
 getKeyModel = (deps, opts) ->
 	{ pine } = deps
 
@@ -32,6 +34,7 @@ getKeyModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.key
 	#
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - ssh keys
 	# @returns {Promise}
 	#
@@ -46,9 +49,11 @@ getKeyModel = (deps, opts) ->
 	# 	console.log(keys);
 	# });
 	###
-	exports.getAll = (callback) ->
+	exports.getAll = (options = {}, callback) ->
+		callback = findCallback(arguments)
 		return pine.get
 			resource: 'user__has__public_key'
+			options: mergePineOptions({}, options)
 		.asCallback(callback)
 
 	###*
