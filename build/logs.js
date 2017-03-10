@@ -47,7 +47,7 @@ getLogs = function(deps, opts) {
   	 *
   	 * - `line`: when a log line is received.
   	 * - `clear`: when the logs are cleared.
-  	 * - `error`: when an error happens.
+  	 * - `error`: when an error has happened.
   	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
   	 * @fulfil {EventEmitter} - logs
@@ -100,8 +100,16 @@ getLogs = function(deps, opts) {
   	 * @public
   	 * @memberof resin.logs
   	 *
+  	 * @description
+  	 * **Note**: the default number of logs retrieved is 100.
+  	 * To get a different number pass the `{ count: N }` to the options param.
+  	 * Also note that the actual number of log lines can be bigger as the
+  	 * Resin.io supervisor can combine lines sent in a short time interval
+  	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-  	 * @fulfil {String[]} - history lines
+  	 * @param {Object} [options] - any options supported by
+  	 * https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
+  	 * @fulfil {Object[]} - history lines
   	 * @returns {Promise}
   	 *
   	 * @example
@@ -119,7 +127,7 @@ getLogs = function(deps, opts) {
   	 * });
   	 *
   	 * @example
-  	 * resin.logs.history('7cf02a6', function(error, lines) {
+  	 * resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
   	 * 	if (error) throw error;
   	 *
   	 * 	lines.forEach(function(line) {
@@ -127,11 +135,15 @@ getLogs = function(deps, opts) {
   	 * 	});
   	 * });
    */
-  exports.history = function(uuidOrId, callback) {
+  exports.history = function(uuidOrId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = void 0;
+    }
     return getContext(uuidOrId).then(function(arg) {
       var device, pubNubKeys;
       pubNubKeys = arg.pubNubKeys, device = arg.device;
-      return logs.history(pubNubKeys, device);
+      return logs.history(pubNubKeys, device, options);
     }).asCallback(callback);
   };
 
@@ -142,12 +154,20 @@ getLogs = function(deps, opts) {
   	 * @public
   	 * @memberof resin.logs
   	 *
+  	 * @description
+  	 * **Note**: the default number of logs retrieved is 200.
+  	 * To get a different number pass the `{ count: N }` to the options param.
+  	 * Also note that the actual number of log lines can be bigger as the
+  	 * Resin.io supervisor can combine lines sent in a short time interval
+  	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-  	 * @fulfil {String[]} - history lines
+  	 * @param {Object} [options] - any options supported by
+  	 * https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
+  	 * @fulfil {Object[]} - history lines
   	 * @returns {Promise}
   	 *
   	 * @example
-  	 * resin.logs.historySinceLastClear('7cf02a6').then(function(lines) {
+  	 * resin.logs.historySinceLastClear('7cf02a6', { count: 20 }).then(function(lines) {
   	 * 	lines.forEach(function(line) {
   	 * 		console.log(line);
   	 * 	});
@@ -169,11 +189,15 @@ getLogs = function(deps, opts) {
   	 * 	});
   	 * });
    */
-  exports.historySinceLastClear = function(uuidOrId, callback) {
+  exports.historySinceLastClear = function(uuidOrId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = void 0;
+    }
     return getContext(uuidOrId).then(function(arg) {
       var device, pubNubKeys;
       pubNubKeys = arg.pubNubKeys, device = arg.device;
-      return logs.historySinceLastClear(pubNubKeys, device);
+      return logs.historySinceLastClear(pubNubKeys, device, options);
     }).asCallback(callback);
   };
 
