@@ -889,6 +889,12 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.getAll().then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
 
+					it 'should support arbitrary pinejs options', ->
+						resin.models.device.getAll(select: [ 'id' ])
+						.then ([ device ]) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+							m.chai.expect(device.name).to.equal(undefined)
+
 				describe 'resin.models.device.getAllByApplication()', ->
 
 					it 'should get the device given the right application name', ->
@@ -912,6 +918,12 @@ describe 'SDK Integration Tests', ->
 					it 'should be rejected if the application id does not exist', ->
 						promise = resin.models.device.getAllByApplication(999999)
 						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+					it 'should support arbitrary pinejs options', ->
+						resin.models.device.getAllByApplication(@application.id, select: [ 'id' ])
+						.then ([ device ]) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+							m.chai.expect(device.name).to.equal(undefined)
 
 				describe 'resin.models.device.get()', ->
 
@@ -939,6 +951,12 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.get(@device.uuid.slice(0, 8)).then (device) =>
 							m.chai.expect(device.id).to.equal(@device.id)
 
+					it 'should support arbitrary pinejs options', ->
+						resin.models.device.get(@device.id, select: [ 'id' ])
+						.then (device) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+							m.chai.expect(device.name).to.equal(undefined)
+
 				describe 'resin.models.device.getByName()', ->
 
 					it 'should be able to get the device', ->
@@ -953,6 +971,12 @@ describe 'SDK Integration Tests', ->
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.getByName('HelloWorldDevice')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: HelloWorldDevice')
+
+					it 'should support arbitrary pinejs options', ->
+						resin.models.device.getByName(@device.name, select: [ 'id' ])
+						.then ([ device ]) =>
+							m.chai.expect(device.id).to.equal(@device.id)
+							m.chai.expect(device.name).to.equal(undefined)
 
 				describe 'resin.models.device.getName()', ->
 
@@ -1052,19 +1076,19 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be able to remove the device by uuid', ->
 						resin.models.device.remove(@device.uuid)
-							.then(resin.models.device.getAll)
+							.then(-> resin.models.device.getAll())
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
 
 					it 'should be able to remove the device by id', ->
 						resin.models.device.remove(@device.id)
-							.then(resin.models.device.getAll)
+							.then(-> resin.models.device.getAll())
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
 
 					it 'should be able to remove the device using a shorter uuid', ->
 						resin.models.device.remove(@device.uuid.slice(0, 7))
-							.then(resin.models.device.getAll)
+							.then(-> resin.models.device.getAll())
 							.then (devices) ->
 								m.chai.expect(devices).to.deep.equal([])
 

@@ -1495,7 +1495,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, getDeviceModel, includes, isEmpty, isId, map, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isId, map, mergePineOptions, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, without;
 
 Promise = require('bluebird');
 
@@ -1519,7 +1519,7 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice;
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice;
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
@@ -1587,6 +1587,7 @@ getDeviceModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.device
   	 *
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object[]} - devices
   	 * @returns {Promise}
   	 *
@@ -1601,13 +1602,17 @@ getDeviceModel = function(deps, opts) {
   	 * 	console.log(devices);
   	 * });
    */
-  exports.getAll = function(callback) {
+  exports.getAll = function(options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return pine.get({
       resource: 'device',
-      options: {
+      options: mergePineOptions({
         expand: 'application',
         orderby: 'name asc'
-      }
+      }, options)
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
       return device;
@@ -1622,6 +1627,7 @@ getDeviceModel = function(deps, opts) {
   	 * @memberof resin.models.device
   	 *
   	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object[]} - devices
   	 * @returns {Promise}
   	 *
@@ -1641,17 +1647,21 @@ getDeviceModel = function(deps, opts) {
   	 * 	console.log(devices);
   	 * });
    */
-  exports.getAllByApplication = function(nameOrId, callback) {
+  exports.getAllByApplication = function(nameOrId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return applicationModel().get(nameOrId).then(function(application) {
       return pine.get({
         resource: 'device',
-        options: {
+        options: mergePineOptions({
           filter: {
             application: application.id
           },
           expand: 'application',
           orderby: 'name asc'
-        }
+        }, options)
       });
     }).map(function(device) {
       device.application_name = device.application[0].app_name;
@@ -1667,6 +1677,7 @@ getDeviceModel = function(deps, opts) {
   	 * @memberof resin.models.device
   	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object} - device
   	 * @returns {Promise}
   	 *
@@ -1686,7 +1697,11 @@ getDeviceModel = function(deps, opts) {
   	 * 	console.log(device);
   	 * });
    */
-  exports.get = function(uuidOrId, callback) {
+  exports.get = function(uuidOrId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return Promise["try"](function() {
       if (uuidOrId == null) {
         throw new errors.ResinDeviceNotFound(uuidOrId);
@@ -1695,9 +1710,9 @@ getDeviceModel = function(deps, opts) {
         return pine.get({
           resource: 'device',
           id: uuidOrId,
-          options: {
+          options: mergePineOptions({
             expand: 'application'
-          }
+          }, options)
         }).tap(function(device) {
           if (device == null) {
             throw new errors.ResinDeviceNotFound(uuidOrId);
@@ -1706,14 +1721,14 @@ getDeviceModel = function(deps, opts) {
       } else {
         return pine.get({
           resource: 'device',
-          options: {
+          options: mergePineOptions({
             expand: 'application',
             filter: {
               uuid: {
                 $startswith: uuidOrId
               }
             }
-          }
+          }, options)
         }).tap(function(devices) {
           if (isEmpty(devices)) {
             throw new errors.ResinDeviceNotFound(uuidOrId);
@@ -1750,15 +1765,19 @@ getDeviceModel = function(deps, opts) {
   	 * 	console.log(devices);
   	 * });
    */
-  exports.getByName = function(name, callback) {
+  exports.getByName = function(name, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return pine.get({
       resource: 'device',
-      options: {
+      options: mergePineOptions({
         expand: 'application',
         filter: {
           name: name
         }
-      }
+      }, options)
     }).tap(function(devices) {
       if (isEmpty(devices)) {
         throw new errors.ResinDeviceNotFound(name);
