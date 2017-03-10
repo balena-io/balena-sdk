@@ -24,10 +24,16 @@ logs = require('resin-device-logs');
 errors = require('resin-errors');
 
 getLogs = function(deps, opts) {
-  var configModel, deviceModel, exports;
+  var configModel, deviceModel, exports, getContext;
   configModel = require('./models/config')(deps, opts);
   deviceModel = require('./models/device')(deps, opts);
   exports = {};
+  getContext = function(uuidOrId) {
+    return Promise.props({
+      device: deviceModel.get(uuidOrId),
+      pubNubKeys: configModel.getPubNubKeys()
+    });
+  };
 
   /**
   	 * @summary Subscribe to device logs
@@ -40,7 +46,8 @@ getLogs = function(deps, opts) {
   	 * The `logs` object yielded by this function emits the following events:
   	 *
   	 * - `line`: when a log line is received.
-  	 * - `error`: when an error happens.
+  	 * - `clear`: when the logs are cleared.
+  	 * - `error`: when an error has happened.
   	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
   	 * @fulfil {EventEmitter} - logs
@@ -54,12 +61,18 @@ getLogs = function(deps, opts) {
   	 * 	logs.on('line', function(line) {
   	 * 		console.log(line);
   	 * 	});
+  	 * 	logs.on('clear', function() {
+  	 * 		console.clear();
+  	 * 	});
   	 * });
   	 *
   	 * @example
   	 * resin.logs.subscribe(123).then(function(logs) {
   	 * 	logs.on('line', function(line) {
   	 * 		console.log(line);
+  	 * 	});
+  	 * 	logs.on('clear', function() {
+  	 * 		console.clear();
   	 * 	});
   	 * });
   	 *
@@ -73,10 +86,7 @@ getLogs = function(deps, opts) {
   	 * });
    */
   exports.subscribe = function(uuidOrId, callback) {
-    return Promise.props({
-      device: deviceModel.get(uuidOrId),
-      pubNubKeys: configModel.getPubNubKeys()
-    }).then(function(arg) {
+    return getContext(uuidOrId).then(function(arg) {
       var device, pubNubKeys;
       pubNubKeys = arg.pubNubKeys, device = arg.device;
       return logs.subscribe(pubNubKeys, device);
@@ -90,8 +100,16 @@ getLogs = function(deps, opts) {
   	 * @public
   	 * @memberof resin.logs
   	 *
+  	 * @description
+  	 * **Note**: the default number of logs retrieved is 100.
+  	 * To get a different number pass the `{ count: N }` to the options param.
+  	 * Also note that the actual number of log lines can be bigger as the
+  	 * Resin.io supervisor can combine lines sent in a short time interval
+  	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-  	 * @fulfil {String[]} - history lines
+  	 * @param {Object} [options] - any options supported by
+  	 * https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
+  	 * @fulfil {Object[]} - history lines
   	 * @returns {Promise}
   	 *
   	 * @example
@@ -109,7 +127,7 @@ getLogs = function(deps, opts) {
   	 * });
   	 *
   	 * @example
-  	 * resin.logs.history('7cf02a6', function(error, lines) {
+  	 * resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
   	 * 	if (error) throw error;
   	 *
   	 * 	lines.forEach(function(line) {
@@ -117,12 +135,97 @@ getLogs = function(deps, opts) {
   	 * 	});
   	 * });
    */
-  exports.history = function(uuidOrId, callback) {
-    return Promise.props({
-      device: deviceModel.get(uuidOrId),
-      pubNubKeys: configModel.getPubNubKeys()
-    }).then(function(results) {
-      return logs.history(results.pubNubKeys, results.device);
+  exports.history = function(uuidOrId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = void 0;
+    }
+    return getContext(uuidOrId).then(function(arg) {
+      var device, pubNubKeys;
+      pubNubKeys = arg.pubNubKeys, device = arg.device;
+      return logs.history(pubNubKeys, device, options);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get device logs history after the most recent clear request
+  	 * @name historySinceLastClear
+  	 * @function
+  	 * @public
+  	 * @memberof resin.logs
+  	 *
+  	 * @description
+  	 * **Note**: the default number of logs retrieved is 200.
+  	 * To get a different number pass the `{ count: N }` to the options param.
+  	 * Also note that the actual number of log lines can be bigger as the
+  	 * Resin.io supervisor can combine lines sent in a short time interval
+  	 *
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @param {Object} [options] - any options supported by
+  	 * https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
+  	 * @fulfil {Object[]} - history lines
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.logs.historySinceLastClear('7cf02a6', { count: 20 }).then(function(lines) {
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.historySinceLastClear(123).then(function(lines) {
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.historySinceLastClear('7cf02a6', function(error, lines) {
+  	 * 	if (error) throw error;
+  	 *
+  	 * 	lines.forEach(function(line) {
+  	 * 		console.log(line);
+  	 * 	});
+  	 * });
+   */
+  exports.historySinceLastClear = function(uuidOrId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = void 0;
+    }
+    return getContext(uuidOrId).then(function(arg) {
+      var device, pubNubKeys;
+      pubNubKeys = arg.pubNubKeys, device = arg.device;
+      return logs.historySinceLastClear(pubNubKeys, device, options);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Clear device logs history
+  	 * @name clear
+  	 * @function
+  	 * @public
+  	 * @memberof resin.logs
+  	 *
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.logs.clear('7cf02a6').then(function() {
+  	 * 	console.log('OK');
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.logs.clear(123).then(function() {
+  	 * 	console.log('OK');
+  	 * });
+   */
+  exports.clear = function(uuidOrId, callback) {
+    return getContext(uuidOrId).then(function(arg) {
+      var device, pubNubKeys;
+      pubNubKeys = arg.pubNubKeys, device = arg.device;
+      return logs.clear(pubNubKeys, device);
     }).asCallback(callback);
   };
   return exports;
