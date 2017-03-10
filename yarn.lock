@@ -1212,13 +1212,13 @@ debug@0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-0.7.4.tgz#06e1ea8082c2cb14e39806e22e2f6f757f92af39"
 
-debug@2, debug@2.6.1, debug@^2.2.0:
+debug@2, debug@2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
     ms "0.7.2"
 
-debug@2.2.0, debug@~2.2.0:
+debug@2.2.0, debug@^2.2.0, debug@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
@@ -3019,9 +3019,9 @@ longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
 
-lru-cache@2:
-  version "2.7.3"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.7.3.tgz#6d4524e8b955f95d4f5b58851ce21dd72fb4e952"
+lru-cache@2, lru-cache@~2.6.5:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.6.5.tgz#e56d6354148ede8d7707b58d143220fd08df0fd5"
 
 lru-cache@2.2.x:
   version "2.2.4"
@@ -3032,10 +3032,6 @@ lru-cache@^3.2.0:
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-3.2.0.tgz#71789b3b7f5399bec8565dda38aa30d2a097efee"
   dependencies:
     pseudomap "^1.0.1"
-
-lru-cache@~2.6.5:
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.6.5.tgz#e56d6354148ede8d7707b58d143220fd08df0fd5"
 
 make-error-cause@^1.1.1:
   version "1.2.2"
@@ -3602,6 +3598,16 @@ pinejs-client@^3.0.0:
     request "^2.51.0"
     typed-error "^0.1.0"
 
+pinejs-client@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/pinejs-client/-/pinejs-client-3.1.0.tgz#a92b6e87bee848e1eed559f5d605145c2437a203"
+  dependencies:
+    bluebird "^3.0.6"
+    bluebird-lru-cache "^1.0.0"
+    lodash "^4.0.0"
+    request "^2.51.0"
+    typed-error "^0.1.0"
+
 pinkie-promise@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/pinkie-promise/-/pinkie-promise-2.0.1.tgz#2135d6dfa7a358c069ac9b178776288228450ffa"
@@ -4067,7 +4073,7 @@ resin-device-status@^1.0.1:
   dependencies:
     lodash "^4.0.0"
 
-resin-errors@^2.0.0, resin-errors@^2.4.0, resin-errors@^2.5.0:
+resin-errors@^2.0.0, resin-errors@^2.5.0, resin-errors@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.6.0.tgz#f1e6ff95d0bbb83871b952a8dc2f2883a4e5954e"
   dependencies:
