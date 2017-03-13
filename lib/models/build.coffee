@@ -17,11 +17,48 @@ limitations under the License.
 once = require('lodash/once')
 errors = require('resin-errors')
 
+{ findCallback, mergePineOptions } = require('../util')
+
 getBuildModel = (deps, opts) ->
 	{ pine } = deps
 	applicationModel = once -> require('./application')(deps, opts)
 
 	exports = {}
+
+	###*
+	# @summary Get a specific build
+	# @name get
+	# @public
+	# @function
+	# @memberof resin.models.build
+	#
+	# @param {Number} id - build id
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - build
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.build.get(123).then(function(build) {
+	#		console.log(build);
+	# });
+	#
+	# @example
+	# resin.models.build.get(123, function(error, build) {
+	#		if (error) throw error;
+	#		console.log(build);
+	# });
+	###
+	exports.get = (id, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		return pine.get
+			resource: 'build'
+			id: id
+			options: mergePineOptions({}, options)
+		.tap (build) ->
+			if not build?
+				throw new errors.ResinBuildNotFound(id)
+		.asCallback(callback)
 
 	###*
 	# @summary Get all builds from an application
@@ -31,6 +68,7 @@ getBuildModel = (deps, opts) ->
 	# @memberof resin.models.build
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - builds
 	# @returns {Promise}
 	#
@@ -50,31 +88,38 @@ getBuildModel = (deps, opts) ->
 	#		console.log(builds);
 	# });
 	###
-	exports.getAllByApplication = (nameOrId, callback) ->
+	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		applicationModel().get(nameOrId).then (application) ->
 
 			return pine.get
 				resource: 'build'
-				filter:
-					application: application.id
-				select: [
-					'id'
-					'created_at'
-					'commit_hash'
-					'push_timestamp'
-					'start_timestamp'
-					'end_timestamp'
-					'project_type'
-					'status'
-					'message'
-				]
-				expand:
-					user:
-						$select: [
+				options:
+					mergePineOptions
+						filter:
+							application: application.id
+						select: [
 							'id'
-							'username'
+							'created_at'
+							'commit_hash'
+							'push_timestamp'
+							'start_timestamp'
+							'end_timestamp'
+							'update_timestamp'
+							'project_type'
+							'status'
+							'message'
+							# 'log' # We *don't* include logs by default, since it's usually huge.
 						]
-				orderby: 'created_at desc'
+						expand:
+							user:
+								$select: [
+									'id'
+									'username'
+								]
+						orderby: 'created_at desc'
+					, options
 		.asCallback(callback)
 
 	return exports

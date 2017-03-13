@@ -26,7 +26,7 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId, notFoundResponse, treatAsMissingDevice } = require('../util')
+{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice } = require('../util')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -95,6 +95,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.device
 	#
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
 	#
@@ -109,12 +110,16 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(devices);
 	# });
 	###
-	exports.getAll = (callback) ->
+	exports.getAll = (options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		return pine.get
 			resource: 'device'
 			options:
-				expand: 'application'
-				orderby: 'name asc'
+				mergePineOptions
+					expand: 'application'
+					orderby: 'name asc'
+				, options
 
 		.map (device) ->
 			device.application_name = device.application[0].app_name
@@ -129,6 +134,7 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
 	#
@@ -148,15 +154,19 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(devices);
 	# });
 	###
-	exports.getAllByApplication = (nameOrId, callback) ->
+	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		applicationModel().get(nameOrId).then (application) ->
 			return pine.get
 				resource: 'device'
 				options:
-					filter:
-						application: application.id
-					expand: 'application'
-					orderby: 'name asc'
+					mergePineOptions
+						filter:
+							application: application.id
+						expand: 'application'
+						orderby: 'name asc'
+					, options
 
 		# TODO: Move to server
 		.map (device) ->
@@ -172,6 +182,7 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - device
 	# @returns {Promise}
 	#
@@ -191,7 +202,9 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(device);
 	# });
 	###
-	exports.get = (uuidOrId, callback) ->
+	exports.get = (uuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		Promise.try ->
 			if not uuidOrId?
 				throw new errors.ResinDeviceNotFound(uuidOrId)
@@ -201,7 +214,9 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					id: uuidOrId
 					options:
-						expand: 'application'
+						mergePineOptions
+							expand: 'application'
+						, options
 				.tap (device) ->
 					if not device?
 						throw new errors.ResinDeviceNotFound(uuidOrId)
@@ -209,9 +224,11 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device'
 					options:
-						expand: 'application'
-						filter:
-							uuid: $startswith: uuidOrId
+						mergePineOptions
+							expand: 'application'
+							filter:
+								uuid: $startswith: uuidOrId
+						, options
 				.tap (devices) ->
 					if isEmpty(devices)
 						throw new errors.ResinDeviceNotFound(uuidOrId)
@@ -245,13 +262,17 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(devices);
 	# });
 	###
-	exports.getByName = (name, callback) ->
+	exports.getByName = (name, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		return pine.get
 			resource: 'device'
 			options:
-				expand: 'application'
-				filter:
-					name: name
+				mergePineOptions
+					expand: 'application'
+					filter:
+						name: name
+				, options
 
 		.tap (devices) ->
 			if isEmpty(devices)

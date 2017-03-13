@@ -15,11 +15,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var errors, getBuildModel, once;
+var errors, findCallback, getBuildModel, mergePineOptions, once, ref;
 
 once = require('lodash/once');
 
 errors = require('resin-errors');
+
+ref = require('../util'), findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions;
 
 getBuildModel = function(deps, opts) {
   var applicationModel, exports, pine;
@@ -30,6 +32,45 @@ getBuildModel = function(deps, opts) {
   exports = {};
 
   /**
+  	 * @summary Get a specific build
+  	 * @name get
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.build
+  	 *
+  	 * @param {Number} id - build id
+  	 * @param {Object} [options={}] - extra pine options to use
+  	 * @fulfil {Object} - build
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.build.get(123).then(function(build) {
+  	 *		console.log(build);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.build.get(123, function(error, build) {
+  	 *		if (error) throw error;
+  	 *		console.log(build);
+  	 * });
+   */
+  exports.get = function(id, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
+    return pine.get({
+      resource: 'build',
+      id: id,
+      options: mergePineOptions({}, options)
+    }).tap(function(build) {
+      if (build == null) {
+        throw new errors.ResinBuildNotFound(id);
+      }
+    }).asCallback(callback);
+  };
+
+  /**
   	 * @summary Get all builds from an application
   	 * @name getAllByApplication
   	 * @public
@@ -37,6 +78,7 @@ getBuildModel = function(deps, opts) {
   	 * @memberof resin.models.build
   	 *
   	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @param {Object} [options={}] - extra pine options to use
   	 * @fulfil {Object[]} - builds
   	 * @returns {Promise}
   	 *
@@ -56,20 +98,26 @@ getBuildModel = function(deps, opts) {
   	 *		console.log(builds);
   	 * });
    */
-  exports.getAllByApplication = function(nameOrId, callback) {
+  exports.getAllByApplication = function(nameOrId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
     return applicationModel().get(nameOrId).then(function(application) {
       return pine.get({
         resource: 'build',
-        filter: {
-          application: application.id
-        },
-        select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'project_type', 'status', 'message'],
-        expand: {
-          user: {
-            $select: ['id', 'username']
-          }
-        },
-        orderby: 'created_at desc'
+        options: mergePineOptions({
+          filter: {
+            application: application.id
+          },
+          select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'update_timestamp', 'project_type', 'status', 'message'],
+          expand: {
+            user: {
+              $select: ['id', 'username']
+            }
+          },
+          orderby: 'created_at desc'
+        }, options)
       });
     }).asCallback(callback);
   };
