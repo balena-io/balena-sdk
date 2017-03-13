@@ -102,7 +102,7 @@ getAuth = (deps, opts) ->
 			url: '/login_'
 			body:
 				username: credentials.email
-				password: credentials.password
+				password: String(credentials.password)
 			refreshToken: false
 		.get('body')
 		.asCallback(callback)
