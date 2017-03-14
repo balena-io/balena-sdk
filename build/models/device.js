@@ -46,7 +46,7 @@ MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
 getDeviceModel = function(deps, opts) {
-  var apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, getId, pine, registerDevice, request;
+  var addApplicationName, apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, getId, pine, registerDevice, request;
   pine = deps.pine, request = deps.request;
   apiUrl = opts.apiUrl;
   registerDevice = require('resin-register-device')({
@@ -99,6 +99,10 @@ getDeviceModel = function(deps, opts) {
       throw new Error("Incompatible supervisor version: " + version + " - must be >= " + minVersion);
     }
   });
+  addApplicationName = function(device) {
+    device.application_name = device.application[0].app_name;
+    return device;
+  };
 
   /**
   	 * @summary Get all devices
@@ -133,10 +137,7 @@ getDeviceModel = function(deps, opts) {
         expand: 'application',
         orderby: 'name asc'
       }, options)
-    }).map(function(device) {
-      device.application_name = device.application[0].app_name;
-      return device;
-    }).asCallback(callback);
+    }).map(addApplicationName).asCallback(callback);
   };
 
   /**
@@ -183,10 +184,7 @@ getDeviceModel = function(deps, opts) {
           orderby: 'name asc'
         }, options)
       });
-    }).map(function(device) {
-      device.application_name = device.application[0].app_name;
-      return device;
-    }).asCallback(callback);
+    }).map(addApplicationName).asCallback(callback);
   };
 
   /**
@@ -258,9 +256,7 @@ getDeviceModel = function(deps, opts) {
           }
         }).get(0);
       }
-    }).tap(function(device) {
-      return device.application_name = device.application[0].app_name;
-    }).asCallback(callback);
+    }).then(addApplicationName).asCallback(callback);
   };
 
   /**
@@ -302,10 +298,7 @@ getDeviceModel = function(deps, opts) {
       if (isEmpty(devices)) {
         throw new errors.ResinDeviceNotFound(name);
       }
-    }).map(function(device) {
-      device.application_name = device.application[0].app_name;
-      return device;
-    }).asCallback(callback);
+    }).map(addApplicationName).asCallback(callback);
   };
 
   /**

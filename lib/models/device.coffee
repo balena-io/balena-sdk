@@ -88,6 +88,11 @@ getDeviceModel = (deps, opts) ->
 		if semver.lt(version, minVersion)
 			throw new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}")
 
+	addApplicationName = (device) ->
+		# TODO: Move this to the server
+		device.application_name = device.application[0].app_name
+		return device
+
 	###*
 	# @summary Get all devices
 	# @name getAll
@@ -121,9 +126,7 @@ getDeviceModel = (deps, opts) ->
 					orderby: 'name asc'
 				, options
 
-		.map (device) ->
-			device.application_name = device.application[0].app_name
-			return device
+		.map(addApplicationName)
 		.asCallback(callback)
 
 	###*
@@ -168,10 +171,7 @@ getDeviceModel = (deps, opts) ->
 						orderby: 'name asc'
 					, options
 
-		# TODO: Move to server
-		.map (device) ->
-			device.application_name = device.application[0].app_name
-			return device
+		.map(addApplicationName)
 		.asCallback(callback)
 
 	###*
@@ -236,8 +236,7 @@ getDeviceModel = (deps, opts) ->
 					if devices.length > 1
 						throw new errors.ResinAmbiguousDevice(uuidOrId)
 				.get(0)
-		.tap (device) ->
-			device.application_name = device.application[0].app_name
+		.then(addApplicationName)
 		.asCallback(callback)
 
 	###*
@@ -277,9 +276,7 @@ getDeviceModel = (deps, opts) ->
 		.tap (devices) ->
 			if isEmpty(devices)
 				throw new errors.ResinDeviceNotFound(name)
-		.map (device) ->
-			device.application_name = device.application[0].app_name
-			return device
+		.map(addApplicationName)
 		.asCallback(callback)
 
 	###*
