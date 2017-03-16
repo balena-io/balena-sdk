@@ -16,6 +16,7 @@ limitations under the License.
 
 Promise = require('bluebird')
 once = require('lodash/once')
+assign = require('lodash/assign')
 isEmpty = require('lodash/isEmpty')
 filter = require('lodash/filter')
 size = require('lodash/size')
@@ -245,6 +246,7 @@ getApplicationModel = (deps, opts) ->
 	#
 	# @param {String} name - application name
 	# @param {String} deviceType - device type slug
+	# @param {(Number|String)} [parentNameOrId] - parent application name or id
 	#
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -255,24 +257,42 @@ getApplicationModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+	# 	console.log(application);
+	# });
+	#
+	# @example
 	# resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
 	###
-	exports.create = (name, deviceType, callback) ->
-		return deviceModel().getDeviceSlug(deviceType)
+	exports.create = (name, deviceType, parentNameOrId, callback) ->
+		callback = findCallback(arguments)
 
+		parentAppPromise = if parentNameOrId
+			exports.get(parentNameOrId, select: [ 'id' ])
+		else
+			Promise.resolve()
+
+		deviceSlugPromise = deviceModel().getDeviceSlug(deviceType)
 		.tap (deviceSlug) ->
 			if not deviceSlug?
 				throw new errors.ResinInvalidDeviceType(deviceType)
 
-		.then (deviceSlug) ->
+		return Promise.all([ deviceSlugPromise, parentAppPromise ])
+		.then ([ deviceSlug, parentApplication ]) ->
+			extraOptions = if parentApplication
+				application: parentApplication.id
+			else {}
+
 			return pine.post
 				resource: 'application'
 				body:
-					app_name: name
-					device_type: deviceSlug
+					assign
+						app_name: name
+						device_type: deviceSlug
+					, extraOptions
 		.asCallback(callback)
 
 	###*

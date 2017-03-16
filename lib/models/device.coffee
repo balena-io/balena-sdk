@@ -161,18 +161,47 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		applicationModel().get(nameOrId).then (application) ->
-			return pine.get
-				resource: 'device'
-				options:
-					mergePineOptions
-						filter:
-							application: application.id
-						expand: 'application'
-						orderby: 'name asc'
-					, options
+			exports.getAll(mergePineOptions(
+				filter: application: application.id
+				options
+			), callback)
 
-		.map(addApplicationName)
-		.asCallback(callback)
+	###*
+	# @summary Get all devices by parent device
+	# @name getAllByParentDevice
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - devices
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
+	# 	console.log(devices);
+	# });
+	#
+	# @example
+	# resin.models.device.getAllByParentDevice(123).then(function(devices) {
+	# 	console.log(devices);
+	# });
+	#
+	# @example
+	# resin.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
+	# 	if (error) throw error;
+	# 	console.log(devices);
+	# });
+	###
+	exports.getAllByParentDevice = (parentUuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get(parentUuidOrId).then (device) ->
+			exports.getAll(mergePineOptions(
+				filter: device: device.id
+				options
+			), callback)
 
 	###*
 	# @summary Get a single device
@@ -264,19 +293,12 @@ getDeviceModel = (deps, opts) ->
 	exports.getByName = (name, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		return pine.get
-			resource: 'device'
-			options:
-				mergePineOptions
-					expand: 'application'
-					filter:
-						name: name
-				, options
-
-		.tap (devices) ->
+		return exports.getAll(mergePineOptions(
+			filter: name: name
+			options
+		)).tap (devices) ->
 			if isEmpty(devices)
 				throw new errors.ResinDeviceNotFound(name)
-		.map(addApplicationName)
 		.asCallback(callback)
 
 	###*

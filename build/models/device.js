@@ -174,17 +174,54 @@ getDeviceModel = function(deps, opts) {
     }
     callback = findCallback(arguments);
     return applicationModel().get(nameOrId).then(function(application) {
-      return pine.get({
-        resource: 'device',
-        options: mergePineOptions({
-          filter: {
-            application: application.id
-          },
-          expand: 'application',
-          orderby: 'name asc'
-        }, options)
-      });
-    }).map(addApplicationName).asCallback(callback);
+      return exports.getAll(mergePineOptions({
+        filter: {
+          application: application.id
+        }
+      }, options), callback);
+    });
+  };
+
+  /**
+  	 * @summary Get all devices by parent device
+  	 * @name getAllByParentDevice
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.device
+  	 *
+  	 * @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
+  	 * @param {Object} [options={}] - extra pine options to use
+  	 * @fulfil {Object[]} - devices
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
+  	 * 	console.log(devices);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.device.getAllByParentDevice(123).then(function(devices) {
+  	 * 	console.log(devices);
+  	 * });
+  	 *
+  	 * @example
+  	 * resin.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
+  	 * 	if (error) throw error;
+  	 * 	console.log(devices);
+  	 * });
+   */
+  exports.getAllByParentDevice = function(parentUuidOrId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
+    return exports.get(parentUuidOrId).then(function(device) {
+      return exports.getAll(mergePineOptions({
+        filter: {
+          device: device.id
+        }
+      }, options), callback);
+    });
   };
 
   /**
@@ -286,19 +323,15 @@ getDeviceModel = function(deps, opts) {
       options = {};
     }
     callback = findCallback(arguments);
-    return pine.get({
-      resource: 'device',
-      options: mergePineOptions({
-        expand: 'application',
-        filter: {
-          name: name
-        }
-      }, options)
-    }).tap(function(devices) {
+    return exports.getAll(mergePineOptions({
+      filter: {
+        name: name
+      }
+    }, options)).tap(function(devices) {
       if (isEmpty(devices)) {
         throw new errors.ResinDeviceNotFound(name);
       }
-    }).map(addApplicationName).asCallback(callback);
+    }).asCallback(callback);
   };
 
   /**

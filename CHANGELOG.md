@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Add `device.getAllByParentDevice` to allow querying for dependent devices by parent
+- Add an optional parent id to `application.create`
 - Include `update_timestamp` in builds from `resin.models.build.getAllByApplication()`
 - Add `resin.models.build.get()` to load individual build data
 - Allow arbitrary extra pinejs options in `key.getAll`, and all `build.get*`, `application.get*` and `device.get*` methods.

@@ -437,9 +437,17 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.application.create()', ->
 
 					it 'should be able to create an application', ->
-						resin.models.application.create('FooBar', 'raspberry-pi').then (id) ->
+						resin.models.application.create('FooBar', 'raspberry-pi').then ->
 							promise = resin.models.application.getAll()
 							m.chai.expect(promise).to.eventually.have.length(1)
+
+					it 'should be able to create a child application', ->
+						resin.models.application.create('FooBar', 'raspberry-pi').then (parentApplication) ->
+							resin.models.application.create('FooBarChild', 'edge', parentApplication.id)
+						.then ->
+							resin.models.application.getAll()
+						.then ([ parentApplication, childApplication ]) ->
+							m.chai.expect(childApplication.application.__id).to.equal(parentApplication.id)
 
 					it 'should be rejected if the device type is invalid', ->
 						promise = resin.models.application.create('FooBar', 'foobarbaz')
@@ -450,7 +458,7 @@ describe 'SDK Integration Tests', ->
 						m.chai.expect(promise).to.be.rejectedWith('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4.')
 
 					it 'should be able to create an application using a device type alias', ->
-						resin.models.application.create('FooBar', 'raspberrypi').then (id) ->
+						resin.models.application.create('FooBar', 'raspberrypi').then ->
 							promise = resin.models.application.getAll()
 							m.chai.expect(promise).to.eventually.have.length(1)
 
@@ -924,6 +932,58 @@ describe 'SDK Integration Tests', ->
 						.then ([ device ]) =>
 							m.chai.expect(device.id).to.equal(@device.id)
 							m.chai.expect(device.name).to.equal(undefined)
+
+				describe 'resin.models.device.getAllByParentDevice()', ->
+					beforeEach ->
+						Promise.props
+							userId: resin.auth.getUserId()
+							childApplication: resin.models.application.create(
+								'ChildApp'
+								@application.device_type
+								@application.id
+							)
+						.then ({ userId, @childApplication }) =>
+							# We don't use the built-in .register or resin-register-device,
+							# because they don't yet support parent devices.
+							pine.post
+								resource: 'device'
+								body:
+									user: userId
+									application: @childApplication.id
+									device_type: @childApplication.device_type
+									uuid: resin.models.device.generateUniqueKey()
+									device: @device.id
+						.then (device) =>
+							@childDevice = device
+
+
+					it 'should get the device given the right parent uuid', ->
+						resin.models.device.getAllByParentDevice(@device.uuid).then (childDevices) =>
+							m.chai.expect(childDevices).to.have.length(1)
+							m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
+
+					it 'should get the device given the right parent id', ->
+						resin.models.device.getAllByParentDevice(@device.id).then (childDevices) =>
+							m.chai.expect(childDevices).to.have.length(1)
+							m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
+
+					it 'should include an application_name property in the result (with the child app name)', ->
+						resin.models.device.getAllByParentDevice(@device.id).then ([ childDevice ]) =>
+							m.chai.expect(childDevice.application_name).to.equal(@childApplication.app_name)
+
+					it 'should be empty if the parent device has no children', ->
+						promise = resin.models.device.getAllByParentDevice(@childDevice.id).then (childDevices) ->
+							m.chai.expect(childDevices).to.have.length(0)
+
+					it 'should be rejected if the parent device does not exist', ->
+						promise = resin.models.device.getAllByParentDevice('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should support arbitrary pinejs options', ->
+						resin.models.device.getAllByParentDevice(@device.id, select: [ 'id' ])
+						.then ([ childDevice ]) =>
+							m.chai.expect(childDevice.id).to.equal(@childDevice.id)
+							m.chai.expect(childDevice.name).to.equal(undefined)
 
 				describe 'resin.models.device.get()', ->
 

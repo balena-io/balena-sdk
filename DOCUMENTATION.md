@@ -21,7 +21,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-            * [.create(name, deviceType)](#resin.models.application.create) ⇒ <code>Promise</code>
+            * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -29,6 +29,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.device](#resin.models.device) : <code>object</code>
             * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
             * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
             * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
             * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
@@ -194,7 +195,7 @@ resin.token.set('abcdef...');
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-        * [.create(name, deviceType)](#resin.models.application.create) ⇒ <code>Promise</code>
+        * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -202,6 +203,7 @@ resin.token.set('abcdef...');
     * [.device](#resin.models.device) : <code>object</code>
         * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
         * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
         * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
         * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
@@ -276,7 +278,7 @@ resin.token.set('abcdef...');
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-    * [.create(name, deviceType)](#resin.models.application.create) ⇒ <code>Promise</code>
+    * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -419,7 +421,7 @@ resin.models.application.getById(89, function(error, application) {
 ```
 <a name="resin.models.application.create"></a>
 
-##### application.create(name, deviceType) ⇒ <code>Promise</code>
+##### application.create(name, deviceType, [parentNameOrId]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Create an application  
 **Access:** public  
@@ -429,10 +431,17 @@ resin.models.application.getById(89, function(error, application) {
 | --- | --- | --- |
 | name | <code>String</code> | application name |
 | deviceType | <code>String</code> | device type slug |
+| [parentNameOrId] | <code>Number</code> &#124; <code>String</code> | parent application name or id |
 
 **Example**  
 ```js
 resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+	console.log(application);
+});
+```
+**Example**  
+```js
+resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
 	console.log(application);
 });
 ```
@@ -547,6 +556,7 @@ resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 * [.device](#resin.models.device) : <code>object</code>
     * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
     * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
     * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
     * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
@@ -636,6 +646,38 @@ resin.models.device.getAllByApplication(123).then(function(devices) {
 **Example**  
 ```js
 resin.models.device.getAllByApplication('MyApp', function(error, devices) {
+	if (error) throw error;
+	console.log(devices);
+});
+```
+<a name="resin.models.device.getAllByParentDevice"></a>
+
+##### device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get all devices by parent device  
+**Access:** public  
+**Fulfil**: <code>Object[]</code> - devices  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| parentUuidOrId | <code>String</code> &#124; <code>Number</code> |  | parent device uuid (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
+	console.log(devices);
+});
+```
+**Example**  
+```js
+resin.models.device.getAllByParentDevice(123).then(function(devices) {
+	console.log(devices);
+});
+```
+**Example**  
+```js
+resin.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });
