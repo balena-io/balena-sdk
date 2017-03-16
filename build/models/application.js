@@ -15,11 +15,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, errors, filter, findCallback, getApplicationModel, isEmpty, isId, mergePineOptions, notFoundResponse, once, ref, size, treatAsMissingApplication;
+var Promise, assign, errors, filter, findCallback, getApplicationModel, isEmpty, isId, mergePineOptions, notFoundResponse, once, ref, size, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
 once = require('lodash/once');
+
+assign = require('lodash/assign');
 
 isEmpty = require('lodash/isEmpty');
 
@@ -267,6 +269,7 @@ getApplicationModel = function(deps, opts) {
   	 *
   	 * @param {String} name - application name
   	 * @param {String} deviceType - device type slug
+  	 * @param {(Number|String)} [parentNameOrId] - parent application name or id
   	 *
   	 * @fulfil {Object} - application
   	 * @returns {Promise}
@@ -277,23 +280,39 @@ getApplicationModel = function(deps, opts) {
   	 * });
   	 *
   	 * @example
+  	 * resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+  	 * 	console.log(application);
+  	 * });
+  	 *
+  	 * @example
   	 * resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
   	 * 	if (error) throw error;
   	 * 	console.log(application);
   	 * });
    */
-  exports.create = function(name, deviceType, callback) {
-    return deviceModel().getDeviceSlug(deviceType).tap(function(deviceSlug) {
+  exports.create = function(name, deviceType, parentNameOrId, callback) {
+    var deviceSlugPromise, parentAppPromise;
+    callback = findCallback(arguments);
+    parentAppPromise = parentNameOrId ? exports.get(parentNameOrId, {
+      select: ['id']
+    }) : Promise.resolve();
+    deviceSlugPromise = deviceModel().getDeviceSlug(deviceType).tap(function(deviceSlug) {
       if (deviceSlug == null) {
         throw new errors.ResinInvalidDeviceType(deviceType);
       }
-    }).then(function(deviceSlug) {
+    });
+    return Promise.all([deviceSlugPromise, parentAppPromise]).then(function(arg) {
+      var deviceSlug, extraOptions, parentApplication;
+      deviceSlug = arg[0], parentApplication = arg[1];
+      extraOptions = parentApplication ? {
+        application: parentApplication.id
+      } : {};
       return pine.post({
         resource: 'application',
-        body: {
+        body: assign({
           app_name: name,
           device_type: deviceSlug
-        }
+        }, extraOptions)
       });
     }).asCallback(callback);
   };
