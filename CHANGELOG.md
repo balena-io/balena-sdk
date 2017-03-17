@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix bug that broke `device.reboot` and `device.shutdown` with `_ is not defined`
 - Add `device.getAllByParentDevice` to allow querying for dependent devices by parent
 - Add an optional parent id to `application.create`
 - Include `update_timestamp` in builds from `resin.models.build.getAllByApplication()`
