@@ -902,10 +902,7 @@ getDeviceModel = function(deps, opts) {
     if (options == null) {
       options = {};
     }
-    if (_.isFunction(options)) {
-      callback = options;
-      options = {};
-    }
+    callback = findCallback(arguments);
     return getId(uuidOrId).then(function(deviceId) {
       return request.send({
         method: 'POST',
@@ -948,10 +945,7 @@ getDeviceModel = function(deps, opts) {
     if (options == null) {
       options = {};
     }
-    if (_.isFunction(options)) {
-      callback = options;
-      options = {};
-    }
+    callback = findCallback(arguments);
     return exports.get(uuidOrId).then(function(device) {
       return request.send({
         method: 'POST',

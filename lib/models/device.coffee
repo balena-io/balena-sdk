@@ -833,9 +833,8 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.reboot = (uuidOrId, options = {}, callback) ->
-		if _.isFunction(options)
-			callback = options
-			options = {}
+		callback = findCallback(arguments)
+
 		getId(uuidOrId).then (deviceId) ->
 			return request.send
 				method: 'POST'
@@ -873,9 +872,8 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.shutdown = (uuidOrId, options = {}, callback) ->
-		if _.isFunction(options)
-			callback = options
-			options = {}
+		callback = findCallback(arguments)
+
 		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
