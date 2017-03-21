@@ -38,7 +38,8 @@ gulp.task 'test', ->
 	loadEnv()
 	gulp.src(OPTIONS.files.tests, read: false)
 		.pipe(mocha({
-			reporter: 'spec'
+			reporter: 'spec',
+			compilers: 'coffee:coffee-script/register'
 		}))
 
 gulp.task 'lint', ->
