@@ -1,6 +1,6 @@
 m = require('mochainon')
 
-{ mergePineOptions } = require('../lib/util')
+{ mergePineOptions } = require('../build/util')
 
 describe 'Pine option merging', ->
 

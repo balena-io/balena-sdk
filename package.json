@@ -24,7 +24,7 @@
     "test-browser": "karma start",
     "build": "gulp build",
     "prepublish": "require-npm4-to-publish",
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm test && npm run docs",
     "docs": "jsdoc2md 'build/**/!(resin-browser*.js)' > DOCUMENTATION.md"
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
@@ -48,6 +48,7 @@
     "request": "^2.67.0",
     "require-npm4-to-publish": "^1.0.0",
     "resin-config-karma": "^1.0.4",
+    "rimraf": "^2.6.1",
     "rindle": "^1.2.0",
     "run-sequence": "^1.1.0",
     "superagent": "^3.0.0",
@@ -57,6 +58,7 @@
   "dependencies": {
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
+    "memoizee": "^0.4.4",
     "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
     "resin-errors": "^2.6.0",

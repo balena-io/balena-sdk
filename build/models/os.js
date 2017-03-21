@@ -15,26 +15,223 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var errors, getOsModel, onlyIf;
+var Promise, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, ref, reject, semver;
+
+Promise = require('bluebird');
+
+reject = require('lodash/reject');
+
+once = require('lodash/once');
+
+semver = require('semver');
 
 errors = require('resin-errors');
 
-onlyIf = require('../util').onlyIf;
+ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMakerHelper, findCallback = ref.findCallback, notFoundResponse = ref.notFoundResponse, deviceTypesUtil = ref.deviceTypes;
 
 getOsModel = function(deps, opts) {
-  var exports, imageMakerUrl, isBrowser, request;
+  var configModel, exports, getDeviceTypes, getDownloadSize, getOsVersions, imageMakerUrl, imgMakerHelper, isBrowser, isValidDeviceType, normalizeVersion, request;
   request = deps.request;
   isBrowser = opts.isBrowser, imageMakerUrl = opts.imageMakerUrl;
+  imgMakerHelper = getImgMakerHelper(imageMakerUrl, request);
+  configModel = once(function() {
+    return require('./config')(deps, opts);
+  });
+  getDeviceTypes = once(function() {
+    return configModel().getDeviceTypes();
+  });
+  isValidDeviceType = function(deviceType) {
+    return getDeviceTypes().then(function(types) {
+      return !!deviceTypesUtil.findBySlug(types, deviceType);
+    });
+  };
+  getDownloadSize = imgMakerHelper.buildApiRequester({
+    url: '/size_estimate',
+    withVersion: true,
+    postProcess: function(arg) {
+      var body;
+      body = arg.body;
+      return body.size;
+    }
+  });
+  getOsVersions = imgMakerHelper.buildApiRequester({
+    buildUrl: function(arg) {
+      var deviceType;
+      deviceType = arg.deviceType;
+      return "/image/" + deviceType + "/versions";
+    },
+    postProcess: function(arg) {
+      var body, latest, recommended, ref1, versions;
+      body = arg.body;
+      versions = body.versions, latest = body.latest;
+      versions.sort(semver.rcompare);
+      recommended = ((ref1 = reject(versions, semver.prerelease)) != null ? ref1[0] : void 0) || null;
+      return {
+        versions: versions,
+        recommended: recommended,
+        latest: latest,
+        "default": recommended || latest
+      };
+    }
+  });
+  normalizeVersion = function(v) {
+    var vNormalized;
+    if (!v) {
+      throw new Error("Invalid version: " + v);
+    }
+    if (v === 'latest') {
+      return v;
+    }
+    vNormalized = v[0] === 'v' ? v.substring(1) : v;
+    if (!semver.valid(vNormalized)) {
+      throw new Error("Invalid semver version: " + v);
+    }
+    return vNormalized;
+  };
   exports = {};
+  exports._getMaxSatisfyingVersion = function(versionOrRange, osVersions) {
+    if (versionOrRange === 'default' || versionOrRange === 'latest' || versionOrRange === 'recommended') {
+      return osVersions[versionOrRange];
+    }
+    return semver.maxSatisfying(osVersions.versions, versionOrRange);
+  };
 
   /**
-  	 * @summary Get OS image last modified date
+  	 * @summary Get OS download size estimate
+  	 * @name getDownloadSize
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.os
+  	 * @description **Note!** Currently only the raw (uncompressed) size is reported.
+  	 *
+  	 * @param {String} deviceType - device type slug
+  	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'.
+  	 * The version **must** be the exact version number.
+  	 * @fulfil {Number} - OS image download size, in bytes.
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.os.getDownloadSize('raspberry-pi').then(function(size) {
+  	 * 	console.log('The OS download size for raspberry-pi', size);
+  	 * });
+  	 *
+  	 * resin.models.os.getDownloadSize('raspberry-pi', function(error, size) {
+  	 * 	if (error) throw error;
+  	 * 	console.log('The OS download size for raspberry-pi', size);
+  	 * });
+   */
+  exports.getDownloadSize = function(deviceType, version, callback) {
+    if (version == null) {
+      version = 'latest';
+    }
+    callback = findCallback(arguments);
+    return isValidDeviceType(deviceType).then(function(isValid) {
+      if (!isValid) {
+        throw new errors.ResinInvalidDeviceType('No such device type');
+      }
+      return getDownloadSize(deviceType, version);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get OS supported versions
+  	 * @name getSupportedVersions
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.os
+  	 *
+  	 * @param {String} deviceType - device type slug
+  	 * @fulfil {Object} - the versions information, of the following structure:
+  	 * * versions - an array of strings,
+  	 * containing exact version numbers supported by the current environment
+  	 * * recommended - the recommended version, i.e. the most recent version
+  	 * that is _not_ pre-release, can be `null`
+  	 * * latest - the most recent version, including pre-releases
+  	 * * default - recommended (if available) or latest otherwise
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
+  	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
+  	 * });
+  	 *
+  	 * resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
+  	 * 	if (error) throw error;
+  	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
+  	 * });
+   */
+  exports.getSupportedVersions = function(deviceType, callback) {
+    callback = findCallback(arguments);
+    return isValidDeviceType(deviceType).then(function(isValid) {
+      if (!isValid) {
+        throw new errors.ResinInvalidDeviceType('No such device type');
+      }
+      return getOsVersions(deviceType);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get the max OS version satisfying the given range
+  	 * @name getMaxSatisfyingVersion
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.os
+  	 *
+  	 * @param {String} deviceType - device type slug
+  	 * @param {String} versionOrRange - can be one of
+  	 * * the exact version number,
+  	 * in which case it is returned if the version is supported,
+  	 * or `null` is returned otherwise,
+  	 * * a [semver](https://www.npmjs.com/package/semver)-compatible
+  	 * range specification, in which case the most recent satisfying version is returned
+  	 * if it exists, or `null` is returned,
+  	 * * `'latest'` in which case the most recent version is returned, including pre-releases,
+  	 * * `'recommended'` in which case the recommended version is returned, i.e. the most
+  	 * recent version excluding pre-releases, which can be `null` if only pre-release versions
+  	 * are available,
+  	 * * `'default'` in which case the recommended version is returned if available,
+  	 * or `latest` is returned otherwise.
+  	 * Defaults to `'latest'`.
+  	 * @fulfil {String|null} - the version number, or `null` if no matching versions are found
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
+  	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
+  	 * });
+  	 *
+  	 * resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
+  	 * 	if (error) throw error;
+  	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
+  	 * });
+   */
+  exports.getMaxSatisfyingVersion = function(deviceType, versionOrRange, callback) {
+    if (versionOrRange == null) {
+      versionOrRange = 'latest';
+    }
+    callback = findCallback(arguments);
+    return isValidDeviceType(deviceType).then(function(isValid) {
+      if (!isValid) {
+        throw new errors.ResinInvalidDeviceType('No such device type');
+      }
+      return exports.getSupportedVersions(deviceType);
+    }).then(function(osVersions) {
+      return exports._getMaxSatisfyingVersion(versionOrRange, osVersions);
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get the OS image last modified date
   	 * @name getLastModified
   	 * @public
   	 * @function
   	 * @memberof resin.models.os
   	 *
   	 * @param {String} deviceType - device type slug
+  	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'.
+  	 * Unsupported (unpublished) version will result in rejection.
+  	 * The version **must** be the exact version number.
+  	 * To resolve the semver-compatible range use `resin.model.os.getMaxSatisfyingVersion`.
   	 * @fulfil {Date} - last modified date
   	 * @returns {Promise}
   	 *
@@ -43,21 +240,32 @@ getOsModel = function(deps, opts) {
   	 * 	console.log('The raspberry-pi image was last modified in ' + date);
   	 * });
   	 *
+  	 * resin.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
+  	 * 	console.log('The raspberry-pi image was last modified in ' + date);
+  	 * });
+  	 *
   	 * resin.models.os.getLastModified('raspberry-pi', function(error, date) {
   	 * 	if (error) throw error;
   	 * 	console.log('The raspberry-pi image was last modified in ' + date);
   	 * });
    */
-  exports.getLastModified = function(deviceType, callback) {
-    return request.send({
-      method: 'HEAD',
-      url: "/api/v1/image/" + deviceType + "/",
-      baseUrl: imageMakerUrl
-    })["catch"]({
-      code: 'ResinRequestError',
-      statusCode: 404
-    }, function() {
-      throw new errors.ResinRequestError('No such device type');
+  exports.getLastModified = function(deviceType, version, callback) {
+    if (version == null) {
+      version = 'latest';
+    }
+    callback = findCallback(arguments);
+    return isValidDeviceType(deviceType).then(function(isValid) {
+      if (!isValid) {
+        throw new errors.ResinInvalidDeviceType('No such device type');
+      }
+      return normalizeVersion(version);
+    }).then(function(version) {
+      return imgMakerHelper.request({
+        method: 'HEAD',
+        url: "/image/" + deviceType + "/?version=" + version
+      });
+    })["catch"](notFoundResponse, function() {
+      throw new Error('No such version for the device type');
     }).then(function(response) {
       return new Date(response.headers['last-modified']);
     }).asCallback(callback);
@@ -71,6 +279,10 @@ getOsModel = function(deps, opts) {
   	 * @memberof resin.models.os
   	 *
   	 * @param {String} deviceType - device type slug
+  	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'
+  	 * Unsupported (unpublished) version will result in rejection.
+  	 * The version **must** be the exact version number.
+  	 * To resolve the semver-compatible range use `resin.model.os.getMaxSatisfyingVersion`.
   	 * @fulfil {ReadableStream} - download stream
   	 * @returns {Promise}
   	 *
@@ -84,16 +296,22 @@ getOsModel = function(deps, opts) {
   	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
   	 * });
    */
-  exports.download = onlyIf(!isBrowser)(function(deviceType, callback) {
-    return request.stream({
-      method: 'GET',
-      url: "/api/v1/image/" + deviceType + "/",
-      baseUrl: imageMakerUrl
-    })["catch"]({
-      code: 'ResinRequestError',
-      statusCode: 404
-    }, function() {
-      throw new errors.ResinRequestError('No such device type');
+  exports.download = onlyIf(!isBrowser)(function(deviceType, version, callback) {
+    if (version == null) {
+      version = 'latest';
+    }
+    callback = findCallback(arguments);
+    return isValidDeviceType(deviceType).then(function(isValid) {
+      if (!isValid) {
+        throw new errors.ResinInvalidDeviceType('No such device type');
+      }
+      return normalizeVersion(version);
+    }).then(function(version) {
+      return imgMakerHelper.stream({
+        url: "/image/" + deviceType + "/?version=" + version
+      });
+    })["catch"](notFoundResponse, function() {
+      throw new Error('No such version for the device type');
     }).asCallback(callback);
   });
   return exports;

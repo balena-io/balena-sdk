@@ -1,5 +1,6 @@
 path = require('path')
 
+rimraf = require('rimraf')
 gulp = require('gulp')
 mocha = require('gulp-mocha')
 gutil = require('gulp-util')
@@ -30,6 +31,9 @@ OPTIONS =
 		doc: 'doc/'
 		build: 'build/'
 
+gulp.task 'clean-build', (callback) ->
+	rimraf(OPTIONS.directories.build, callback)
+
 gulp.task 'test', ->
 	loadEnv()
 	gulp.src(OPTIONS.files.tests, read: false)
@@ -45,7 +49,7 @@ gulp.task 'lint', ->
 		.pipe(coffeelint.reporter())
 
 gulp.task 'build', (callback) ->
-	runSequence('lint', 'build-node', 'build-browser', callback)
+	runSequence('lint', 'clean-build', 'build-node', 'build-browser', callback)
 
 gulp.task 'build-node', ->
 	gulp.src(OPTIONS.files.app)

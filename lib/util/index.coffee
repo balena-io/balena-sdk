@@ -6,6 +6,9 @@ isFunction = require('lodash/isFunction')
 isNumber = require('lodash/isNumber')
 isString = require('lodash/isString')
 
+exports.deviceTypes = require('./device-types')
+exports.getImgMakerHelper = require('./img-maker')
+
 exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
 
@@ -15,10 +18,10 @@ exports.isId = isNumber
 
 # Use with: `findCallback(arguments)`.
 exports.findCallback = (args) ->
-	if isFunction(args[args.length - 1])
-		return args[args.length - 1]
-	else
-		return null
+	lastArg = args[args.length - 1]
+	if isFunction(lastArg)
+		return lastArg
+	return null
 
 exports.notFoundResponse =
 	code: 'ResinRequestError'

@@ -1565,6 +1565,97 @@ describe 'SDK Integration Tests', ->
 
 		describe 'OS Model', ->
 
+			describe 'resin.models.os._getMaxSatisfyingVersion()', ->
+				osVersions = {
+					versions: [
+						'2.0.0-rc1.rev2-dev',
+						'2.0.0-rc1.rev2',
+						'1.24.1',
+						'1.24.0',
+						'1.8.0'
+					],
+					recommended: '1.24.1',
+					latest: '2.0.0-rc1.rev2-dev',
+					default: '1.24.1'
+				}
+
+				it "should support 'latest'", ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('latest', osVersions)
+					).to.be.equal(osVersions.latest)
+
+				it "should support 'recommended'", ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('recommended', osVersions)
+					).to.be.equal(osVersions.recommended)
+
+				it "should support 'default'", ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('default', osVersions)
+					).to.be.equal(osVersions.default)
+
+				it 'should support exact version', ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('1.24.1', osVersions)
+					).to.be.equal('1.24.1')
+
+				it 'should support semver ranges', ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('^1.24.0', osVersions)
+					).to.be.equal('1.24.1')
+
+				it 'should drop unsupported exact versions', ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('1.24.5', osVersions)
+					).to.be.equal(null)
+
+				it 'should drop unsupported semver ranges', ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('~1.30.0', osVersions)
+					).to.be.equal(null)
+
+			describe 'resin.models.os.getSupportedVersions()', ->
+
+				describe 'given a valid device slug', ->
+
+					areValidVersions = (osVersions) ->
+						osVersions and
+						osVersions.versions and osVersions.versions.length and
+						osVersions.latest and osVersions.recommended and osVersions.default and
+						osVersions.default is osVersions.recommended
+
+					it 'should eventually return the valid versions object', ->
+						promise = resin.models.os.getSupportedVersions('raspberry-pi')
+						m.chai.expect(promise).to.eventually.satisfy(areValidVersions)
+
+					it 'should eventually return the valid versions object if passing a device type alias', ->
+						promise = resin.models.os.getSupportedVersions('raspberrypi')
+						m.chai.expect(promise).to.eventually.satisfy(areValidVersions)
+
+				describe 'given an invalid device slug', ->
+
+					it 'should be rejected with an error message', ->
+						promise = resin.models.os.getSupportedVersions('foo-bar-baz')
+						m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+			describe 'resin.models.os.getDownloadSize()', ->
+
+				describe 'given a valid device slug', ->
+
+					it 'should eventually be a valid number', ->
+						promise = resin.models.os.getDownloadSize('raspberry-pi')
+						m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
+
+					it 'should eventually be a valid number if passing a device type alias', ->
+						promise = resin.models.os.getDownloadSize('raspberrypi')
+						m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
+
+				describe 'given an invalid device slug', ->
+
+					it 'should be rejected with an error message', ->
+						promise = resin.models.os.getDownloadSize('foo-bar-baz')
+						m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
 			describe 'resin.models.os.getLastModified()', ->
 
 				describe 'given a valid device slug', ->
@@ -1612,7 +1703,7 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be rejected with an error message', ->
 						promise = resin.models.os.download('foo-bar-baz')
-						m.chai.expect(promise).to.be.rejectedWith('Request error: No such device type')
+						m.chai.expect(promise).to.be.rejectedWith('No such device type')
 
 		describe 'Interception Hooks', ->
 
