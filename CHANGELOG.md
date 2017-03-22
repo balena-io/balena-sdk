@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix potential issue with invalid dependencies by requiring resin-pine 5.0.2
+
 ## [6.0.0-beta6] - 2017-03-21
 
 - Fix bug that broke `device.reboot` and `device.shutdown` with `_ is not defined`
