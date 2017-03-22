@@ -5,8 +5,6 @@ _ = require('lodash')
 errors = require('resin-errors')
 superagent = require('superagent')
 
-getPine = require('resin-pine')
-
 PUBLIC_KEY = require('./data/public-key')
 
 IS_BROWSER = window?
@@ -41,7 +39,6 @@ _.assign opts,
 	retries: 3
 
 resin = getSdk(opts)
-pine = getPine(_.assign({}, opts, { request: resin.request, token: resin.token }))
 
 simpleRequest = (url) ->
 	return new Promise (resolve, reject) ->
@@ -58,10 +55,10 @@ reset = ->
 		return if not isLoggedIn
 
 		Promise.all [
-			pine.delete
+			resin.pine.delete
 				resource: 'application'
 
-			pine.delete
+			resin.pine.delete
 				resource: 'user__has__public_key'
 		]
 
@@ -945,7 +942,7 @@ describe 'SDK Integration Tests', ->
 						.then ({ userId, @childApplication }) =>
 							# We don't use the built-in .register or resin-register-device,
 							# because they don't yet support parent devices.
-							pine.post
+							resin.pine.post
 								resource: 'device'
 								body:
 									user: userId

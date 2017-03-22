@@ -14,6 +14,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.Interceptor](#resin.interceptors.Interceptor) : <code>object</code>
     * [.request](#resin.request) : <code>Object</code>
     * [.token](#resin.token) : <code>Object</code>
+    * [.pine](#resin.pine) : <code>Object</code>
     * [.models](#resin.models) : <code>object</code>
         * [.application](#resin.models.application) : <code>object</code>
             * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
@@ -185,6 +186,26 @@ the auth token that the SDK will use.
 **Example**  
 ```js
 resin.token.set('abcdef...');
+```
+<a name="resin.pine"></a>
+
+### resin.pine : <code>Object</code>
+The resin-pine instance used internally. This should not be necessary
+in normal usage, but can be useful if you want to directly make pine
+queries to the api for some resource that isn't directly supported
+in the SDK.
+
+**Kind**: static property of <code>[resin](#resin)</code>  
+**Summary**: Resin pine instance  
+**Access**: public  
+**Example**  
+```js
+resin.pine.get({
+	resource: 'build/$count',
+	options: {
+		filter: { application: applicationId }
+	}
+});
 ```
 <a name="resin.models"></a>
 
