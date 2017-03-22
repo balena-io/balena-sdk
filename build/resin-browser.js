@@ -3990,7 +3990,7 @@ getOsModel = function(deps, opts) {
     })["catch"](notFoundResponse, function() {
       throw new Error('No such version for the device type');
     }).then(function(response) {
-      return new Date(response.headers['last-modified']);
+      return new Date(response.headers.get('last-modified'));
     }).asCallback(callback);
   };
 

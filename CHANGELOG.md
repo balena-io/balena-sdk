@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Fixed `resin.models.os.getLastModified` which was retuyrning invalid dates due to improper usage of the response headers.
 - Add support for the versioned OS downloads, see
 `resin.models.os.{getSupportedVersions, getMaxSatisfyingVersion}`.
 - `resin.models.os.{getLastModified, download}` now support the `version` param.

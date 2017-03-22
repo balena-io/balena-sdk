@@ -238,7 +238,7 @@ getOsModel = (deps, opts) ->
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.then (response) ->
-				return new Date(response.headers['last-modified'])
+				return new Date(response.headers.get('last-modified'))
 			.asCallback(callback)
 
 	###*
