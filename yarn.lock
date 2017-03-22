@@ -3588,16 +3588,6 @@ phantomjs-prebuilt@^2.1.3, phantomjs-prebuilt@^2.1.7:
     request-progress "~2.0.1"
     which "~1.2.10"
 
-pinejs-client@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/pinejs-client/-/pinejs-client-3.0.0.tgz#7490e6b3a232ed05637a61f50de89c9b35f6b8b7"
-  dependencies:
-    bluebird "^3.0.6"
-    bluebird-lru-cache "^1.0.0"
-    lodash "^4.0.0"
-    request "^2.51.0"
-    typed-error "^0.1.0"
-
 pinejs-client@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/pinejs-client/-/pinejs-client-3.1.0.tgz#a92b6e87bee848e1eed559f5d605145c2437a203"
@@ -4079,13 +4069,13 @@ resin-errors@^2.0.0, resin-errors@^2.5.0, resin-errors@^2.6.0:
   dependencies:
     typed-error "^0.1.0"
 
-resin-pine@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/resin-pine/-/resin-pine-5.0.1.tgz#79e9845157e6cf827d2946c4580973c90e98877b"
+resin-pine@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/resin-pine/-/resin-pine-5.0.2.tgz#a7337acd1604d44d4ff450fbbeb8bbd9936af103"
   dependencies:
     bluebird "^3.3.1"
     lodash "^4.5.0"
-    pinejs-client "^3.0.0"
+    pinejs-client "^3.1.0"
     resin-errors "^2.0.0"
 
 resin-register-device@^4.0.1:
