@@ -3,9 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0-beta7] - 2017-03-23
+
 ### Changed
 
-- Fixed `resin.models.os.getLastModified` which was retuyrning invalid dates due to improper usage of the response headers.
+- Fix `resin.models.os.getLastModified` which was returning invalid dates due to improper usage of the response headers.
 - Add support for the versioned OS downloads, see
 `resin.models.os.{getSupportedVersions, getMaxSatisfyingVersion}`.
 - `resin.models.os.{getLastModified, download}` now support the `version` param.
@@ -373,6 +375,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.0.0-beta7]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta6...v6.0.0-beta7
 [6.0.0-beta6]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta5...v6.0.0-beta6
 [6.0.0-beta5]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta4...v6.0.0-beta5
 [6.0.0-beta4]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta3...v6.0.0-beta4
