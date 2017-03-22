@@ -1,5 +1,5 @@
 assign = require('lodash/assign')
-memoizee = require('memoizee')
+promiseMemoize = require('promise-memoize')
 
 IMG_MAKER_API_VERSION = '1'
 IMG_MAKER_API_PREFIX = "/api/v#{IMG_MAKER_API_VERSION}"
@@ -38,10 +38,8 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 	} = {}) ->
 
 		if withVersion
-			fnLength = 2
 			normalizer = ([ deviceType, version ]) -> "#{deviceType}@#{version}"
 		else
-			fnLength = 1
 			normalizer = ([ deviceType ]) -> deviceType
 
 		callHelper = (deviceType, version) ->
@@ -62,7 +60,7 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 		else if maxAge is null
 			maxAge = undefined
 
-		memoizedFn = memoizee(callHelper, { normalizer, promise: true, maxAge, length: fnLength })
+		memoizedFn = promiseMemoize(callHelper, { resolve: normalizer, maxAge })
 
 		return (deviceType, version) ->
 			if withVersion
