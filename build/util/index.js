@@ -16,6 +16,10 @@ isNumber = require('lodash/isNumber');
 
 isString = require('lodash/isString');
 
+exports.deviceTypes = require('./device-types');
+
+exports.getImgMakerHelper = require('./img-maker');
+
 exports.notImplemented = notImplemented = function() {
   throw new Error('The method is not implemented.');
 };
@@ -33,11 +37,12 @@ exports.onlyIf = function(condition) {
 exports.isId = isNumber;
 
 exports.findCallback = function(args) {
-  if (isFunction(args[args.length - 1])) {
-    return args[args.length - 1];
-  } else {
-    return null;
+  var lastArg;
+  lastArg = args[args.length - 1];
+  if (isFunction(lastArg)) {
+    return lastArg;
   }
+  return null;
 };
 
 exports.notFoundResponse = {

@@ -3,9 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Fixed `resin.models.os.getLastModified` which was retuyrning invalid dates due to improper usage of the response headers.
+- Add support for the versioned OS downloads, see
+`resin.models.os.{getSupportedVersions, getMaxSatisfyingVersion}`.
+- `resin.models.os.{getLastModified, download}` now support the `version` param.
+- Add `resin.models.os.getDownloadSize`.
 - Fix potential issue with invalid dependencies by requiring resin-pine 5.0.2
 
 ## [6.0.0-beta6] - 2017-03-21
+
+### Changed
 
 - Fix bug that broke `device.reboot` and `device.shutdown` with `_ is not defined`
 - Add `device.getAllByParentDevice` to allow querying for dependent devices by parent
