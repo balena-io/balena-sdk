@@ -172,4 +172,27 @@ module.exports = getSdk = (opts = {}) ->
 	###
 	sdk.token = token
 
+	###*
+	# @summary Resin pine instance
+	# @member {Object} pine
+	# @public
+	# @memberof resin
+	#
+	# @description
+	# The resin-pine instance used internally. This should not be necessary
+	# in normal usage, but can be useful if you want to directly make pine
+	# queries to the api for some resource that isn't directly supported
+	# in the SDK.
+	#
+	# @example
+	# resin.pine.get({
+	#	resource: 'build/$count',
+	#	options: {
+	#		filter: { application: applicationId }
+	#	}
+	# });
+
+	###
+	sdk.pine = pine
+
 	return sdk
