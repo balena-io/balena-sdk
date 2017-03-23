@@ -1185,6 +1185,69 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.device.rename(999999, 'Foo Bar')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
+				describe 'resin.models.device.setCustomLocation()', ->
+
+					it 'should be able to set the location of a device by uuid', ->
+						resin.models.device.setCustomLocation @device.uuid,
+							latitude: 41.383333
+							longitude: 2.183333
+						.then =>
+							resin.models.device.get(@device.id)
+						.then (device) ->
+							m.chai.expect(device.custom_latitude).to.equal('41.383333')
+							m.chai.expect(device.custom_longitude).to.equal('2.183333')
+
+					it 'should be able to set the location of a device by id', ->
+						resin.models.device.setCustomLocation @device.id,
+							latitude: 41.383333
+							longitude: 2.183333
+						.then =>
+							resin.models.device.get(@device.id)
+						.then (device) ->
+							m.chai.expect(device.custom_latitude).to.equal('41.383333')
+							m.chai.expect(device.custom_longitude).to.equal('2.183333')
+
+					it 'should be rejected if the device uuid does not exist', ->
+						promise = resin.models.device.setCustomLocation 'asdfghjkl',
+							latitude: 41.383333
+							longitude: 2.183333
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.setCustomLocation 999999,
+							latitude: 41.383333
+							longitude: 2.183333
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+				describe 'resin.models.device.unsetCustomLocation()', ->
+
+					beforeEach ->
+						resin.models.device.setCustomLocation @device.id,
+							latitude: 41.383333
+							longitude: 2.183333
+
+					it 'should be able to unset the location of a device by uuid', ->
+						resin.models.device.unsetCustomLocation(@device.uuid).then =>
+							resin.models.device.get(@device.id)
+						.then (device) ->
+							m.chai.expect(device.custom_latitude).to.equal('')
+							m.chai.expect(device.custom_longitude).to.equal('')
+
+					it 'should be able to unset the location of a device by id', ->
+						resin.models.device.unsetCustomLocation(@device.id).then =>
+							resin.models.device.get(@device.id)
+						.then (device) ->
+							m.chai.expect(device.custom_latitude).to.equal('')
+							m.chai.expect(device.custom_longitude).to.equal('')
+
+					it 'should be rejected if the device uuid does not exist', ->
+						promise = resin.models.device.unsetCustomLocation('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.unsetCustomLocation(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
 				describe 'resin.models.device.note()', ->
 
 					it 'should be able to note a device by uuid', ->

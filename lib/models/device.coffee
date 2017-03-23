@@ -642,6 +642,71 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
+	# @summary Set a custom location for a device
+	# @name setCustomLocation
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Object} location - the location ({ latitude: 123, longitude: 456 })
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
+	#
+	# @example
+	# resin.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
+	#
+	# @example
+	# resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.setCustomLocation = (uuidOrId, location, callback) ->
+		exports.get(uuidOrId).then (device) ->
+			return pine.patch
+				resource: 'device'
+				body:
+					custom_latitude: String(location.latitude),
+					custom_longitude: String(location.longitude)
+				options:
+					filter:
+						uuid: device.uuid
+
+		.asCallback(callback)
+
+
+	###*
+	# @summary Clear the custom location of a device
+	# @name unsetCustomLocation
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.unsetCustomLocation('7cf02a6');
+	#
+	# @example
+	# resin.models.device.unsetCustomLocation(123);
+	#
+	# @example
+	# resin.models.device.unsetLocation('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.unsetCustomLocation = (uuidOrId, callback) ->
+		exports.setCustomLocation uuidOrId,
+			latitude: ''
+			longitude: ''
+		, callback
+
+	###*
 	# @summary Move a device to another application
 	# @name move
 	# @public

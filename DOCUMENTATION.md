@@ -43,6 +43,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.identify(uuidOrId)](#resin.models.device.identify) ⇒ <code>Promise</code>
             * [.rename(uuidOrId, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
             * [.note(uuidOrId, note)](#resin.models.device.note) ⇒ <code>Promise</code>
+            * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
+            * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
             * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
             * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
@@ -240,6 +242,8 @@ resin.pine.get({
         * [.identify(uuidOrId)](#resin.models.device.identify) ⇒ <code>Promise</code>
         * [.rename(uuidOrId, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
         * [.note(uuidOrId, note)](#resin.models.device.note) ⇒ <code>Promise</code>
+        * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
+        * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
         * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
         * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
@@ -596,6 +600,8 @@ resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
     * [.identify(uuidOrId)](#resin.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuidOrId, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
     * [.note(uuidOrId, note)](#resin.models.device.note) ⇒ <code>Promise</code>
+    * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
+    * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
     * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
     * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
@@ -1059,6 +1065,57 @@ resin.models.device.note(123, 'My useful note');
 **Example**  
 ```js
 resin.models.device.note('7cf02a6', 'My useful note', function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.device.setCustomLocation"></a>
+
+##### device.setCustomLocation(uuidOrId, location) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Set a custom location for a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| location | <code>Object</code> | the location ({ latitude: 123, longitude: 456 }) |
+
+**Example**  
+```js
+resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
+```
+**Example**  
+```js
+resin.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
+```
+**Example**  
+```js
+resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.device.unsetCustomLocation"></a>
+
+##### device.unsetCustomLocation(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Clear the custom location of a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+resin.models.device.unsetCustomLocation('7cf02a6');
+```
+**Example**  
+```js
+resin.models.device.unsetCustomLocation(123);
+```
+**Example**  
+```js
+resin.models.device.unsetLocation('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
