@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Add basic support for new ResinOS version format to fix `resin-cli` issues.
 - **Breaking!** Upgrade resin-token to 4.0.0. This changes the browser token key to `resin-token`, and will drop all browser sessions.
 - Add `device.setCustomLocation` and `device.unsetCustomLocation`
 - Expose `.pine` to more easily allow requests to unsupported resources
