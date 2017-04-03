@@ -34,7 +34,7 @@ ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMak
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
 
 getOsModel = function(deps, opts) {
-  var configModel, exports, fixNonSemver, getDeviceTypes, getDownloadSize, getOsVersions, imageMakerUrl, imgMakerHelper, isBrowser, isValidDeviceType, normalizeVersion, request, unfixNonSemver;
+  var configModel, deviceImageUrl, exports, fixNonSemver, getDeviceTypes, getDownloadSize, getOsVersions, imageMakerUrl, imgMakerHelper, isBrowser, isValidDeviceType, normalizeVersion, request, unfixNonSemver;
   request = deps.request;
   isBrowser = opts.isBrowser, imageMakerUrl = opts.imageMakerUrl;
   imgMakerHelper = getImgMakerHelper(imageMakerUrl, request);
@@ -92,6 +92,9 @@ getOsModel = function(deps, opts) {
       throw new Error("Invalid semver version: " + v);
     }
     return vNormalized;
+  };
+  deviceImageUrl = function(deviceType, version) {
+    return "/image/" + deviceType + "/?version=" + (encodeURIComponent(version));
   };
   exports = {};
   fixNonSemver = function(version) {
@@ -284,7 +287,7 @@ getOsModel = function(deps, opts) {
     }).then(function(version) {
       return imgMakerHelper.request({
         method: 'HEAD',
-        url: "/image/" + deviceType + "/?version=" + version
+        url: deviceImageUrl(deviceType, version)
       });
     })["catch"](notFoundResponse, function() {
       throw new Error('No such version for the device type');
@@ -330,7 +333,7 @@ getOsModel = function(deps, opts) {
       return normalizeVersion(version);
     }).then(function(version) {
       return imgMakerHelper.stream({
-        url: "/image/" + deviceType + "/?version=" + version
+        url: deviceImageUrl(deviceType, version)
       });
     })["catch"](notFoundResponse, function() {
       throw new Error('No such version for the device type');
