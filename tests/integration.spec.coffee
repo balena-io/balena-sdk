@@ -1740,6 +1740,14 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.os.getLastModified('raspberrypi')
 						m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
+					it 'should be able to query for a specific version', ->
+						promise = resin.models.os.getLastModified('raspberrypi', '1.24.0')
+						m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
+
+					it 'should be able to query for a version containing a plus', ->
+						promise = resin.models.os.getLastModified('raspberrypi', '2.0.0+rev1')
+						m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
+
 				describe 'given an invalid device slug', ->
 
 					it 'should be rejected with an error message', ->

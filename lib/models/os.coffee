@@ -74,6 +74,9 @@ getOsModel = (deps, opts) ->
 			throw new Error("Invalid semver version: #{v}")
 		return vNormalized
 
+	deviceImageUrl = (deviceType, version) ->
+		"/image/#{deviceType}/?version=#{encodeURIComponent(version)}"
+
 	exports = {}
 
 	fixNonSemver = (version) ->
@@ -256,7 +259,7 @@ getOsModel = (deps, opts) ->
 			.then (version) ->
 				imgMakerHelper.request
 					method: 'HEAD'
-					url: "/image/#{deviceType}/?version=#{version}"
+					url: deviceImageUrl(deviceType, version)
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.then (response) ->
@@ -298,7 +301,7 @@ getOsModel = (deps, opts) ->
 				return normalizeVersion(version)
 			.then (version) ->
 				imgMakerHelper.stream
-					url: "/image/#{deviceType}/?version=#{version}"
+					url: deviceImageUrl(deviceType, version)
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.asCallback(callback)
