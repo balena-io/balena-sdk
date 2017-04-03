@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0-beta9] - 2017-04-04
+
 ### Changed
 
 - Encode plus symbols in version numbers when downloading OS images
@@ -388,6 +390,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.0.0-beta9]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta8...v6.0.0-beta9
 [6.0.0-beta8]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta7...v6.0.0-beta8
 [6.0.0-beta7]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta6...v6.0.0-beta7
 [6.0.0-beta6]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta5...v6.0.0-beta6
