@@ -1628,6 +1628,8 @@ describe 'SDK Integration Tests', ->
 			describe 'resin.models.os._getMaxSatisfyingVersion()', ->
 				osVersions = {
 					versions: [
+						'2.0.1.rev2'
+						'2.0.0.rev1'
 						'2.0.0-rc1.rev2-dev',
 						'2.0.0-rc1.rev2',
 						'1.24.1',
@@ -1635,7 +1637,7 @@ describe 'SDK Integration Tests', ->
 						'1.8.0'
 					],
 					recommended: '1.24.1',
-					latest: '2.0.0-rc1.rev2-dev',
+					latest: '2.0.0.rev1',
 					default: '1.24.1'
 				}
 
@@ -1659,10 +1661,20 @@ describe 'SDK Integration Tests', ->
 						resin.models.os._getMaxSatisfyingVersion('1.24.1', osVersions)
 					).to.be.equal('1.24.1')
 
+				it 'should support exact non-semver version', ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('2.0.0.rev1', osVersions)
+					).to.be.equal('2.0.0.rev1')
+
 				it 'should support semver ranges', ->
 					m.chai.expect(
 						resin.models.os._getMaxSatisfyingVersion('^1.24.0', osVersions)
 					).to.be.equal('1.24.1')
+
+				it 'should support non-semver version ranges', ->
+					m.chai.expect(
+						resin.models.os._getMaxSatisfyingVersion('^2.0.0.rev1', osVersions)
+					).to.be.equal('2.0.1.rev2')
 
 				it 'should drop unsupported exact versions', ->
 					m.chai.expect(
