@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, ref, reject, semver;
+var Promise, RESINOS_VERSION_REGEX, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, partition, ref, reject, semver;
 
 Promise = require('bluebird');
 
@@ -23,14 +23,18 @@ reject = require('lodash/reject');
 
 once = require('lodash/once');
 
+partition = require('lodash/partition');
+
 semver = require('semver');
 
 errors = require('resin-errors');
 
 ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMakerHelper, findCallback = ref.findCallback, notFoundResponse = ref.notFoundResponse, deviceTypesUtil = ref.deviceTypes;
 
+RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
+
 getOsModel = function(deps, opts) {
-  var configModel, exports, getDeviceTypes, getDownloadSize, getOsVersions, imageMakerUrl, imgMakerHelper, isBrowser, isValidDeviceType, normalizeVersion, request;
+  var configModel, exports, fixNonSemver, getDeviceTypes, getDownloadSize, getOsVersions, imageMakerUrl, imgMakerHelper, isBrowser, isValidDeviceType, normalizeVersion, request, unfixNonSemver;
   request = deps.request;
   isBrowser = opts.isBrowser, imageMakerUrl = opts.imageMakerUrl;
   imgMakerHelper = getImgMakerHelper(imageMakerUrl, request);
@@ -61,13 +65,14 @@ getOsModel = function(deps, opts) {
       return "/image/" + deviceType + "/versions";
     },
     postProcess: function(arg) {
-      var body, latest, recommended, ref1, versions;
+      var body, invalidVersions, latest, recommended, ref1, ref2, validVersions, versions;
       body = arg.body;
       versions = body.versions, latest = body.latest;
-      versions.sort(semver.rcompare);
-      recommended = ((ref1 = reject(versions, semver.prerelease)) != null ? ref1[0] : void 0) || null;
+      ref1 = partition(versions, semver.valid), validVersions = ref1[0], invalidVersions = ref1[1];
+      validVersions.sort(semver.rcompare);
+      recommended = ((ref2 = reject(validVersions, semver.prerelease)) != null ? ref2[0] : void 0) || null;
       return {
-        versions: versions,
+        versions: invalidVersions.concat(validVersions),
         recommended: recommended,
         latest: latest,
         "default": recommended || latest
@@ -83,17 +88,34 @@ getOsModel = function(deps, opts) {
       return v;
     }
     vNormalized = v[0] === 'v' ? v.substring(1) : v;
-    if (!semver.valid(vNormalized)) {
+    if (!RESINOS_VERSION_REGEX.test(vNormalized)) {
       throw new Error("Invalid semver version: " + v);
     }
     return vNormalized;
   };
   exports = {};
+  fixNonSemver = function(version) {
+    if (version != null) {
+      return version != null ? version.replace(/\.rev(\d+)/, '+FIXED-rev$1') : void 0;
+    } else {
+      return version;
+    }
+  };
+  unfixNonSemver = function(version) {
+    if (version != null) {
+      return version.replace(/\+FIXED-rev(\d+)/, '.rev$1');
+    } else {
+      return version;
+    }
+  };
   exports._getMaxSatisfyingVersion = function(versionOrRange, osVersions) {
+    var maxVersion, semverVersions;
     if (versionOrRange === 'default' || versionOrRange === 'latest' || versionOrRange === 'recommended') {
       return osVersions[versionOrRange];
     }
-    return semver.maxSatisfying(osVersions.versions, versionOrRange);
+    semverVersions = osVersions.versions.map(fixNonSemver);
+    maxVersion = semver.maxSatisfying(semverVersions, fixNonSemver(versionOrRange));
+    return unfixNonSemver(maxVersion);
   };
 
   /**

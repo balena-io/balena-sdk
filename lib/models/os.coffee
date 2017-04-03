@@ -17,11 +17,14 @@ limitations under the License.
 Promise = require('bluebird')
 reject = require('lodash/reject')
 once = require('lodash/once')
+partition = require('lodash/partition')
 semver = require('semver')
 
 errors = require('resin-errors')
 
 { onlyIf, getImgMakerHelper, findCallback, notFoundResponse, deviceTypes: deviceTypesUtil } = require('../util')
+
+RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
@@ -49,10 +52,13 @@ getOsModel = (deps, opts) ->
 			"/image/#{deviceType}/versions"
 		postProcess: ({ body }) ->
 			{ versions, latest } = body
-			versions.sort(semver.rcompare)
-			recommended = reject(versions, semver.prerelease)?[0] || null
+			[ validVersions, invalidVersions ] = partition(versions, semver.valid)
+
+			validVersions.sort(semver.rcompare)
+			recommended = reject(validVersions, semver.prerelease)?[0] || null
+
 			return {
-				versions
+				versions: invalidVersions.concat(validVersions)
 				recommended
 				latest
 				default: recommended or latest
@@ -64,17 +70,33 @@ getOsModel = (deps, opts) ->
 		if v is 'latest'
 			return v
 		vNormalized = if v[0] is 'v' then v.substring(1) else v
-		if not semver.valid(vNormalized)
+		if not RESINOS_VERSION_REGEX.test(vNormalized)
 			throw new Error("Invalid semver version: #{v}")
 		return vNormalized
 
 	exports = {}
 
+	fixNonSemver = (version) ->
+		if version?
+			version?.replace(/\.rev(\d+)/, '+FIXED-rev$1')
+		else
+			version
+
+	unfixNonSemver = (version) ->
+		if version?
+			version.replace(/\+FIXED-rev(\d+)/, '.rev$1')
+		else
+			version
+
 	# utility method exported for testability
 	exports._getMaxSatisfyingVersion = (versionOrRange, osVersions) ->
 		if versionOrRange in [ 'default', 'latest', 'recommended' ]
 			return osVersions[versionOrRange]
-		return semver.maxSatisfying(osVersions.versions, versionOrRange)
+
+		semverVersions = osVersions.versions.map(fixNonSemver)
+		maxVersion = semver.maxSatisfying(semverVersions, fixNonSemver(versionOrRange))
+
+		return unfixNonSemver(maxVersion)
 
 	###*
 	# @summary Get OS download size estimate
