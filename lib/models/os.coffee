@@ -43,13 +43,11 @@ getOsModel = (deps, opts) ->
 			!!deviceTypesUtil.findBySlug(types, deviceType)
 
 	getDownloadSize = imgMakerHelper.buildApiRequester
-		url: '/size_estimate'
-		withVersion: true
+		buildUrl: ({ deviceType, version }) -> "/size_estimate?deviceType=#{deviceType}&version=#{version}"
 		postProcess: ({ body }) -> body.size
 
 	getOsVersions = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType }) ->
-			"/image/#{deviceType}/versions"
+		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
 		postProcess: ({ body }) ->
 			{ versions, latest } = body
 			[ validVersions, invalidVersions ] = partition(versions, semver.valid)

@@ -3842,8 +3842,11 @@ getOsModel = function(deps, opts) {
     });
   };
   getDownloadSize = imgMakerHelper.buildApiRequester({
-    url: '/size_estimate',
-    withVersion: true,
+    buildUrl: function(arg) {
+      var deviceType, version;
+      deviceType = arg.deviceType, version = arg.version;
+      return "/size_estimate?deviceType=" + deviceType + "&version=" + version;
+    },
     postProcess: function(arg) {
       var body;
       body = arg.body;
@@ -4497,7 +4500,7 @@ IMG_MAKER_API_PREFIX = "/api/v" + IMG_MAKER_API_VERSION;
 DEFAULT_RESULTS_CACHING_INTERVAL = 10 * 60 * 1000;
 
 getImgMakerHelper = function(imageMakerUrl, request) {
-  var buildOptions, defaultBuildImgMakerUrl, exports, sendRequest;
+  var buildOptions, exports, sendRequest;
   exports = {};
   buildOptions = function(options) {
     var url;
@@ -4516,63 +4519,34 @@ getImgMakerHelper = function(imageMakerUrl, request) {
   exports.stream = function(options) {
     return request.stream(buildOptions(options));
   };
-  defaultBuildImgMakerUrl = function(arg) {
-    var deviceType, url, version;
-    url = arg.url, deviceType = arg.deviceType, version = arg.version;
-    url += "?deviceType=" + deviceType;
-    if (version) {
-      url += "&version=" + version;
-    }
-    return url;
-  };
   exports.buildApiRequester = function(arg) {
-    var buildUrl, callHelper, maxAge, memoizedFn, normalizer, onError, postProcess, ref, ref1, ref2, ref3, url, withVersion;
-    ref = arg != null ? arg : {}, url = (ref1 = ref.url) != null ? ref1 : '', withVersion = (ref2 = ref.withVersion) != null ? ref2 : false, postProcess = ref.postProcess, onError = ref.onError, buildUrl = (ref3 = ref.buildUrl) != null ? ref3 : defaultBuildImgMakerUrl, maxAge = ref.maxAge;
-    if (withVersion) {
-      normalizer = function(arg1) {
-        var deviceType, version;
-        deviceType = arg1[0], version = arg1[1];
-        return deviceType + "@" + version;
-      };
-    } else {
-      normalizer = function(arg1) {
-        var deviceType;
-        deviceType = arg1[0];
-        return deviceType;
-      };
-    }
+    var buildUrl, callHelper, maxAge, memoizedFunction, onError, postProcess, ref, ref1, ref2;
+    ref = arg != null ? arg : {}, buildUrl = ref.buildUrl, postProcess = (ref1 = ref.postProcess) != null ? ref1 : function(x) {
+      return x;
+    }, onError = (ref2 = ref.onError) != null ? ref2 : function(x) {
+      throw x;
+    }, maxAge = ref.maxAge;
     callHelper = function(deviceType, version) {
-      var fullUrl, p;
-      fullUrl = buildUrl({
-        url: url,
-        deviceType: deviceType,
-        version: version
-      });
-      p = sendRequest({
-        url: fullUrl
-      });
-      if (postProcess) {
-        p = p.then(postProcess);
-      }
-      if (onError) {
-        p = p["catch"](onError);
-      }
-      return p;
+      return sendRequest({
+        url: buildUrl({
+          deviceType: encodeURIComponent(deviceType),
+          version: encodeURIComponent(version)
+        })
+      }).then(postProcess)["catch"](onError);
     };
     if (maxAge === void 0) {
       maxAge = DEFAULT_RESULTS_CACHING_INTERVAL;
     } else if (maxAge === null) {
       maxAge = void 0;
     }
-    memoizedFn = promiseMemoize(callHelper, {
-      resolve: normalizer,
+    memoizedFunction = promiseMemoize(callHelper, {
       maxAge: maxAge
     });
     return function(deviceType, version) {
-      if (withVersion) {
-        version || (version = 'latest');
+      if (version == null) {
+        version = 'latest';
       }
-      return memoizedFn(deviceType, version);
+      return memoizedFunction(deviceType, version);
     };
   };
   return exports;

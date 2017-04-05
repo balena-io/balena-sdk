@@ -50,8 +50,11 @@ getOsModel = function(deps, opts) {
     });
   };
   getDownloadSize = imgMakerHelper.buildApiRequester({
-    url: '/size_estimate',
-    withVersion: true,
+    buildUrl: function(arg) {
+      var deviceType, version;
+      deviceType = arg.deviceType, version = arg.version;
+      return "/size_estimate?deviceType=" + deviceType + "&version=" + version;
+    },
     postProcess: function(arg) {
       var body;
       body = arg.body;

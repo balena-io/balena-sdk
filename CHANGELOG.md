@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Encode plus symbols in version numbers when estimating the size of OS images
+
 ## [6.0.0-beta9] - 2017-04-04
 
 ### Changed

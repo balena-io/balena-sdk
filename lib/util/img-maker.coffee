@@ -21,37 +21,20 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 	exports.stream = (options) ->
 		request.stream(buildOptions(options))
 
-	defaultBuildImgMakerUrl = ({ url, deviceType, version }) ->
-		url += "?deviceType=#{deviceType}"
-		if version
-			url += "&version=#{version}"
-		return url
-
 	# NB: for the sake of memoization currently only works with GET requests
 	exports.buildApiRequester = ({
-		url = '',
-		withVersion = false,
-		postProcess,
-		onError,
-		buildUrl = defaultBuildImgMakerUrl,
+		buildUrl,
+		postProcess = (x) -> x,
+		onError = (x) -> throw x,
 		maxAge
 	} = {}) ->
-
-		if withVersion
-			normalizer = ([ deviceType, version ]) -> "#{deviceType}@#{version}"
-		else
-			normalizer = ([ deviceType ]) -> deviceType
-
 		callHelper = (deviceType, version) ->
-			fullUrl = buildUrl({ url, deviceType, version })
-			p = sendRequest(url: fullUrl)
-
-			if postProcess
-				p = p.then(postProcess)
-			if onError
-				p = p.catch(onError)
-
-			return p
+			sendRequest url: buildUrl(
+				deviceType: encodeURIComponent(deviceType)
+				version: encodeURIComponent(version)
+			)
+			.then(postProcess)
+			.catch(onError)
 
 		# set to default if not passed
 		if maxAge is undefined
@@ -60,12 +43,10 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 		else if maxAge is null
 			maxAge = undefined
 
-		memoizedFn = promiseMemoize(callHelper, { resolve: normalizer, maxAge })
+		memoizedFunction = promiseMemoize(callHelper, { maxAge })
 
-		return (deviceType, version) ->
-			if withVersion
-				version or= 'latest'
-			return memoizedFn(deviceType, version)
+		return (deviceType, version = 'latest') ->
+			memoizedFunction(deviceType, version)
 
 	return exports
 
