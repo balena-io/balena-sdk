@@ -1,6 +1,10 @@
 m = require('mochainon')
+Promise = require('bluebird')
 
-{ mergePineOptions } = require('../build/util')
+{
+	mergePineOptions
+	getImgMakerHelper
+} = require('../build/util')
 
 describe 'Pine option merging', ->
 
@@ -117,3 +121,33 @@ describe 'Pine option merging', ->
 		m.chai.expect(
 			-> mergePineOptions(unknownKey: 'value', {})
 		).not.to.throw()
+
+describe 'ImgMakerHelper', ->
+
+	ROOT_URL = 'https://img.resin.io'
+
+	beforeEach =>
+		@requestStub = send: m.sinon.stub().returns(new Promise(->))
+		@imgMakerHelper = getImgMakerHelper(ROOT_URL, @requestStub)
+
+	it 'should build API requesters', =>
+		requester = @imgMakerHelper.buildApiRequester
+			buildUrl: ({ deviceType, version }) ->
+				"/endpoint?d=#{deviceType}&v=#{version}"
+
+		requester('raspberrypi3', '1.24.0')
+
+		m.chai.expect(@requestStub.send).to.be.calledWithMatch
+			method: 'GET'
+			baseUrl: ROOT_URL
+			url: '/api/v1/endpoint?d=raspberrypi3&v=1.24.0'
+
+	it 'should cache reponses', =>
+		requester = @imgMakerHelper.buildApiRequester
+			buildUrl: ({ deviceType, version }) ->
+				"/endpoint?d=#{deviceType}&v=#{version}"
+
+		requester('raspberrypi3', '1.24.0')
+		requester('raspberrypi3', '1.24.0')
+
+		m.chai.expect(@requestStub.send).to.be.calledOnce

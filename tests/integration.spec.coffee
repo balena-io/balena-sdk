@@ -1732,6 +1732,14 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.os.getDownloadSize('raspberry-pi', '2.0.0+rev2')
 						m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
 
+					it 'should cache download sizes independently for each version', ->
+						Promise.all [
+							resin.models.os.getDownloadSize('raspberry-pi', '1.24.0')
+							resin.models.os.getDownloadSize('raspberry-pi', '2.0.0+rev2')
+						]
+						.then ([ os1Size, os2Size ]) ->
+							m.chai.expect(os1Size).not.to.equal(os2Size)
+
 				describe 'given an invalid device slug', ->
 
 					it 'should be rejected with an error message', ->
