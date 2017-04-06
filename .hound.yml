@@ -1,4 +1,4 @@
-coffee_script:
+coffeescript:
   config_file: coffeelint.json
 
 javascript:
