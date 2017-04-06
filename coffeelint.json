@@ -57,6 +57,10 @@
         "name": "no_plusplus",
         "level": "ignore"
     },
+    "no_empty_functions": {
+        "name": "no_empty_functions",
+        "level": "ignore"
+    },
     "no_throwing_strings": {
         "name": "no_throwing_strings",
         "level": "error"
