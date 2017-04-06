@@ -4218,6 +4218,7 @@ module.exports = getSdk = function(opts) {
   }
   defaults(opts, {
     apiUrl: 'https://api.resin.io/',
+    imageMakerUrl: 'https://img.resin.io/',
     apiVersion: 'v2',
     isBrowser: typeof window !== "undefined" && window !== null
   });
@@ -4229,7 +4230,6 @@ module.exports = getSdk = function(opts) {
   } else {
     settings = require('resin-settings-client');
     defaults(opts, {
-      imageMakerUrl: settings.get('imageMakerUrl'),
       dataDirectory: settings.get('dataDirectory')
     });
   }
