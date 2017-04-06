@@ -52,15 +52,13 @@ For the future we're looking at ways to automatically exclude these in downstrea
 Documentation
 -------------
 
-The module exports a single factory function. Use it like that:
+The module exports a single factory function. Use it like this:
 
 ```
 var resin = require('resin-sdk')({
 	apiUrl: "https://api.resin.io/",
-	imageMakerUrl: "",
-	isBrowser: false,
 	dataDirectory: "/opt/local/resin"
-# })
+})
 ```
 
 Where the factory method accepts the following options:
