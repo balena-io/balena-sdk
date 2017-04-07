@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0] - 2017-04-07
+
+### Changed
+
+- `imageMakerUrl` is now set by default when used in the browser
+
+### Cumulative recap of previous changes (see betas below) since 5.4.0
+
+#### Breaking changes
+
+- Ensure all environmentVariables.device methods return names as `.name`, never `.env_var_name`
+- Removed the (already deprecated) `resin.models.device.restart()` method, in favor of `resin.models.device.restartApplication()`
+- Changed `register()` to work with the new device registration flow. `register()` now returns device registration information (`{ id: "...", uuid: "...", api_key: "..." }`), but not the full device object.
+- Changed `generateUUID()` to `generateUniqueKey()` to reflect that it should now be used for both generating a uuid and an api key.
+- The error message on timeout has changed from "timeout" to "operation timed out". In addition the error thrown is now a Bluebird Promise.TimeoutError, instead of a raw Error.
+- Deprecated `resin.models.application.getApiKey()` (use `.generateApiKey()` instead).
+
+#### Additions
+
+- Add `device.setCustomLocation` and `device.unsetCustomLocation`
+- Expose `.pine` to more easily allow requests to unsupported resources
+- Add support for the versioned OS downloads, see `resin.models.os.{getSupportedVersions, getMaxSatisfyingVersion}`.
+- `resin.models.os.{getLastModified, download}` now support the `version` param.
+- Add `resin.models.os.getDownloadSize`.
+- Add `device.getAllByParentDevice` to allow querying for dependent devices by parent
+- Add an optional parent id to `application.create`
+- Include `update_timestamp` in builds from `resin.models.build.getAllByApplication()`
+- Add `resin.models.build.get()` to load individual build data
+- Allow arbitrary extra pinejs options in `key.getAll`, and all `build.get*`, `application.get*` and `device.get*` methods.
+- Update the logs module to provide `historySinceLastClear` and `clear` methods.
+- Add `resin.models.environmentVariables.device.getAllByApplication`
+- Expose the internal resin-request and resin-token instances
+- Add support for hooks to intercept requests, responses, and errors.
+- Allow device & application ids for all methods, in addition to device uuids & application names, if the argument is a number instead of a string.
+- Resin-SDK now works in a browser environment
+- UMD and UMD-minified builds are now available at `build/resin-browser.js` and `build/resin-browser.min.js`
+
+#### Fixes
+
+- Encode plus symbols in version numbers when estimating the size of OS images
+- Encode plus symbols in version numbers when downloading OS images
+- Add placeholder support for new ResinOS version format to fix `resin-cli` issues.
+- Fix `resin.models.os.getLastModified` which was returning invalid dates due to improper usage of the response headers.
+- Fix potential issue with invalid dependencies by requiring resin-pine 5.0.2
+- Ensure passwords are always submitted as strings when authenticating to make this more reliable in real world usage
+- Ensure device/application.get (and related methods) return a clear error if given an undefined argument
+- Ensure device/application.has returns false if passed undefined
+- Corrected `environmentVariables.getAll` in documentation to `.getAllByApplication`
+
 ## [6.0.0-beta10] - 2017-04-06
 
 ### Changed
@@ -396,6 +445,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.0.0]:  https://github.com/resin-io/resin-sdk/compare/v5.4.0...v6.0.0
 [6.0.0-beta10]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta8...v6.0.0-beta10
 [6.0.0-beta9]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta8...v6.0.0-beta9
 [6.0.0-beta8]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta7...v6.0.0-beta8
