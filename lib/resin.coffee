@@ -60,6 +60,7 @@ sdkTemplate =
 module.exports = getSdk = (opts = {}) ->
 	defaults opts,
 		apiUrl: 'https://api.resin.io/'
+		imageMakerUrl: 'https://img.resin.io/'
 		apiVersion: 'v2'
 		isBrowser: window?
 
@@ -70,7 +71,6 @@ module.exports = getSdk = (opts = {}) ->
 	else
 		settings = require('resin-settings-client')
 		defaults opts,
-			imageMakerUrl: settings.get('imageMakerUrl')
 			dataDirectory: settings.get('dataDirectory')
 
 	token = getToken(opts)
