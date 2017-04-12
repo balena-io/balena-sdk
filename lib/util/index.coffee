@@ -1,4 +1,5 @@
 errors = require('resin-errors')
+semver = require('semver')
 cloneDeep = require('lodash/cloneDeep')
 fromPairs = require('lodash/fromPairs')
 isArray = require('lodash/isArray')
@@ -38,6 +39,26 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 		replacementErr = new errors.ResinDeviceNotFound(uuidOrId)
 		replacementErr.stack = err.stack
 		throw replacementErr
+
+exports.osVersionCompare = (versionA, versionB) ->
+	semverResult = semver.rcompare(versionA, versionB)
+	if semverResult != 0
+		return semverResult
+
+	revA = getRev(versionA)
+	revB = getRev(versionB)
+
+	return revB - revA
+
+getRev = (osVersion) ->
+	rev = semver.parse(osVersion).build
+	.map((metadataPart) -> /rev(\d+)/.exec(metadataPart)?[1])
+	.filter((x) -> x?)[0]
+
+	if rev?
+		parseInt(rev, 10)
+	else
+		null
 
 # Merging two sets of pine options sensibly is more complicated than it sounds.
 #
