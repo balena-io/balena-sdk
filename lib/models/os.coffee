@@ -22,7 +22,7 @@ semver = require('semver')
 
 errors = require('resin-errors')
 
-{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, deviceTypes: deviceTypesUtil } = require('../util')
+{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, deviceTypes: deviceTypesUtil, osVersionCompare } = require('../util')
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
@@ -52,7 +52,7 @@ getOsModel = (deps, opts) ->
 			{ versions, latest } = body
 			[ validVersions, invalidVersions ] = partition(versions, semver.valid)
 
-			validVersions.sort(semver.rcompare)
+			validVersions.sort(osVersionCompare)
 			recommended = reject(validVersions, semver.prerelease)?[0] || null
 
 			return {

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Sort OS versions taking their `rev` into account, if present
+
 ## [6.0.0] - 2017-04-07
 
 ### Changed

@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, RESINOS_VERSION_REGEX, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, partition, ref, reject, semver;
+var Promise, RESINOS_VERSION_REGEX, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, osVersionCompare, partition, ref, reject, semver;
 
 Promise = require('bluebird');
 
@@ -29,7 +29,7 @@ semver = require('semver');
 
 errors = require('resin-errors');
 
-ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMakerHelper, findCallback = ref.findCallback, notFoundResponse = ref.notFoundResponse, deviceTypesUtil = ref.deviceTypes;
+ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMakerHelper, findCallback = ref.findCallback, notFoundResponse = ref.notFoundResponse, deviceTypesUtil = ref.deviceTypes, osVersionCompare = ref.osVersionCompare;
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
 
@@ -72,7 +72,7 @@ getOsModel = function(deps, opts) {
       body = arg.body;
       versions = body.versions, latest = body.latest;
       ref1 = partition(versions, semver.valid), validVersions = ref1[0], invalidVersions = ref1[1];
-      validVersions.sort(semver.rcompare);
+      validVersions.sort(osVersionCompare);
       recommended = ((ref2 = reject(validVersions, semver.prerelease)) != null ? ref2[0] : void 0) || null;
       return {
         versions: invalidVersions.concat(validVersions),
