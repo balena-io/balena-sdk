@@ -40,7 +40,7 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 		replacementErr.stack = err.stack
 		throw replacementErr
 
-exports.osVersionCompare = (versionA, versionB) ->
+exports.osVersionRCompare = (versionA, versionB) ->
 	semverResult = semver.rcompare(versionA, versionB)
 	if semverResult != 0
 		return semverResult
@@ -58,7 +58,7 @@ getRev = (osVersion) ->
 	if rev?
 		parseInt(rev, 10)
 	else
-		null
+		0
 
 # Merging two sets of pine options sensibly is more complicated than it sounds.
 #

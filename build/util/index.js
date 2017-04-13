@@ -70,7 +70,7 @@ exports.treatAsMissingDevice = function(uuidOrId) {
   };
 };
 
-exports.osVersionCompare = function(versionA, versionB) {
+exports.osVersionRCompare = function(versionA, versionB) {
   var revA, revB, semverResult;
   semverResult = semver.rcompare(versionA, versionB);
   if (semverResult !== 0) {
@@ -92,7 +92,7 @@ getRev = function(osVersion) {
   if (rev != null) {
     return parseInt(rev, 10);
   } else {
-    return null;
+    return 0;
   }
 };
 

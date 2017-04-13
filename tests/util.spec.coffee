@@ -4,7 +4,7 @@ Promise = require('bluebird')
 {
 	mergePineOptions
 	getImgMakerHelper
-	osVersionCompare
+	osVersionRCompare
 } = require('../build/util')
 
 describe 'Pine option merging', ->
@@ -153,29 +153,29 @@ describe 'ImgMakerHelper', ->
 
 		m.chai.expect(@requestStub.send).to.be.calledOnce
 
-describe 'osVersionCompare', ->
+describe 'osVersionRCompare', ->
 
 	it 'compares simple semver correctly', ->
-		m.chai.expect(osVersionCompare('1.0.0', '1.1.0')).to.equal(1)
-		m.chai.expect(osVersionCompare('2.0.0', '1.0.0')).to.equal(-1)
-		m.chai.expect(osVersionCompare('3.0.0', '3.0.0')).to.equal(0)
+		m.chai.expect(osVersionRCompare('1.0.0', '1.1.0')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0', '1.0.0')).to.equal(-1)
+		m.chai.expect(osVersionRCompare('3.0.0', '3.0.0')).to.equal(0)
 
 	it 'puts prerelease below real releases', ->
-		m.chai.expect(osVersionCompare('2.0.0-rc6+rev2', '2.0.0+rev1')).to.equal(1)
-		m.chai.expect(osVersionCompare('2.0.0-rc6.rev2', '2.0.0+rev1')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0-rc6+rev2', '2.0.0+rev1')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0-rc6.rev2', '2.0.0+rev1')).to.equal(1)
 
 	it 'sorts by rev if the semver otherwise matches', ->
-		m.chai.expect(osVersionCompare('2.0.0+rev2', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionCompare('2.0.0+rev2', '2.0.0+rev2')).to.equal(0)
-		m.chai.expect(osVersionCompare('2.0.0+rev1', '2.0.0+rev2')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0+rev2', '2.0.0+rev1')).to.equal(-1)
+		m.chai.expect(osVersionRCompare('2.0.0+rev2', '2.0.0+rev2')).to.equal(0)
+		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.0+rev2')).to.equal(1)
 
 	it 'sorts any rev above no rev', ->
-		m.chai.expect(osVersionCompare('2.0.0', '2.0.0+rev1')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0', '2.0.0+rev1')).to.equal(1)
 
 	it 'ignores non-rev build metadata', ->
-		m.chai.expect(osVersionCompare('2.0.0+rev2.dev', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionCompare('2.0.0+dev.rev2', '2.0.0+rev2')).to.equal(0)
-		m.chai.expect(osVersionCompare('2.0.0+rev1', '2.0.0+rev2.dev')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0+rev2.dev', '2.0.0+rev1')).to.equal(-1)
+		m.chai.expect(osVersionRCompare('2.0.0+dev.rev2', '2.0.0+rev2')).to.equal(0)
+		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.0+rev2.dev')).to.equal(1)
 
 	it 'correctly sorts a full list', ->
 		m.chai.expect([
@@ -186,7 +186,7 @@ describe 'osVersionCompare', ->
 			'2.0.0'
 			'1.24.0+rev100'
 			'2.0.0+rev2.dev'
-		].sort(osVersionCompare)).to.deep.equal [
+		].sort(osVersionRCompare)).to.deep.equal [
 			'2.0.0+rev2'
 			'2.0.0+rev2.dev'
 			'2.0.0+rev1'
