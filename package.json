@@ -58,7 +58,6 @@
   "dependencies": {
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
-    "pinejs-client": "^3.1.0",
     "promise-memoize": "^1.2.0",
     "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
