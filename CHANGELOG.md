@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Added
+
+- Added a `device.generateDeviceKey` that can generate a device specific key for use by a device
+
 ### Changed
 
 - Tagged commits are now automatically published to npm
@@ -381,7 +385,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Upgrade Resin Settings Client to v2.1.0.
-- Request GET /whoami to determine if a user is logged in `resin.auth.isLoggedIn()`.  
+- Request GET /whoami to determine if a user is logged in `resin.auth.isLoggedIn()`.
 - Fix bug that caused device environment variables to not have a `name` property.
 
 ## [2.4.0] - 2015-08-10
