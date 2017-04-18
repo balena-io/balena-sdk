@@ -2885,7 +2885,11 @@ getDeviceModel = function(deps, opts) {
         url: "/api-key/device/" + deviceId + "/device-key",
         baseUrl: apiUrl
       });
-    }).get('body').asCallback(callback);
+    }).get('body')["catch"]({
+      code: 'ResinRequestError',
+      statusCode: 500,
+      body: 'No device found to associate with the api key'
+    }, treatAsMissingDevice(uuidOrId)).asCallback(callback);
   };
 
   /**

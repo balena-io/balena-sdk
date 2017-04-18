@@ -1430,7 +1430,7 @@ describe 'SDK Integration Tests', ->
 
 					it 'should be rejected if the device id does not exist', ->
 						promise = resin.models.device.generateDeviceKey(999999)
-						m.chai.expect(promise).to.be.rejectedWith('No device found to associate with the api key')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
 					it 'should be able to use a shorter uuid', ->
 						resin.models.device.generateDeviceKey(@device.uuid.slice(0, 8)).then (deviceApiKey) ->
