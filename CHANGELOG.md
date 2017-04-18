@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Tagged commits are now automatically published to npm
+
 ## [6.0.1] - 2017-04-12
 
 ### Changed

@@ -1,14 +1,22 @@
 language: node_js
 node_js:
-  - "6"
-  - "4"
+- '6'
+- '4'
 before_install:
-  - npm -g install npm
+- npm -g install npm
 notifications:
   email: false
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/8b150eaf525c280ec2ac
+    - https://webhooks.gitter.im/e/8b150eaf525c280ec2ac
     on_success: change
     on_failure: always
     on_start: never
+deploy:
+  provider: npm
+  email: 'accounts@resin.io'
+  api_key:
+    secure: SKemSDObFtG2GnVxhmxR4KMr/5S8LwlVdbgom3ouQ/kXAfMY0n6KaV6nwM+4EhW9zg6A8r2XQ6Q7fWs+ESwNvk1dS6MAHwdC5KOUpVqeRxsAuyZnIRdwa0J9wMbzt2I0E9D0sTvi4FZSO9a/6fJDWUrbTFP7Dv/S3ngyQz014ZY=
+  on:
+    tags: true
+    repo: resin-io/resin-sdk
