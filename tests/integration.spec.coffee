@@ -1412,6 +1412,31 @@ describe 'SDK Integration Tests', ->
 								promise = resin.models.device.hasDeviceUrl(@device.id)
 								m.chai.expect(promise).to.eventually.be.false
 
+				describe 'resin.models.device.generateDeviceKey()', ->
+
+					it 'should be able to generate a device key by uuid', ->
+						resin.models.device.generateDeviceKey(@device.uuid).then (deviceApiKey) ->
+							m.chai.expect(deviceApiKey).to.be.a.string
+							m.chai.expect(deviceApiKey).to.have.length(32)
+
+					it 'should be able to generate a device key by id', ->
+						resin.models.device.generateDeviceKey(@device.id).then (deviceApiKey) ->
+							m.chai.expect(deviceApiKey).to.be.a.string
+							m.chai.expect(deviceApiKey).to.have.length(32)
+
+					it 'should be rejected if the device name does not exist', ->
+						promise = resin.models.device.generateDeviceKey('asdfghjkl')
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+					it 'should be rejected if the device id does not exist', ->
+						promise = resin.models.device.generateDeviceKey(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+					it 'should be able to use a shorter uuid', ->
+						resin.models.device.generateDeviceKey(@device.uuid.slice(0, 8)).then (deviceApiKey) ->
+							m.chai.expect(deviceApiKey).to.be.a.string
+							m.chai.expect(deviceApiKey).to.have.length(32)
+
 			describe 'Environment Variables Model', ->
 
 				describe 'resin.models.environmentVariables.device.getAll()', ->

@@ -1268,6 +1268,49 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
+	# @summary Generate a device key
+	# @name generateDeviceKey
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
+	# 	console.log(deviceApiKey);
+	# });
+	#
+	# @example
+	# resin.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
+	# 	console.log(deviceApiKey);
+	# });
+	#
+	# @example
+	# resin.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
+	# 	if (error) throw error;
+	# 	console.log(deviceApiKey);
+	# });
+	###
+	exports.generateDeviceKey = (uuidOrId, callback) ->
+		getId(uuidOrId).then (deviceId) ->
+			return request.send
+				method: 'POST'
+				url: "/api-key/device/#{deviceId}/device-key"
+				baseUrl: apiUrl
+		.get('body')
+		.catch(
+			{
+				code: 'ResinRequestError'
+				statusCode: 500
+				body: 'No device found to associate with the api key'
+			}
+			treatAsMissingDevice(uuidOrId)
+		)
+		.asCallback(callback)
+
+	###*
 	# @summary Check if a device is web accessible with device utls
 	# @name hasDeviceUrl
 	# @public
