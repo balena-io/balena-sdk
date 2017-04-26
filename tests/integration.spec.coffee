@@ -10,6 +10,7 @@ PUBLIC_KEY = require('./data/public-key')
 IS_BROWSER = window?
 
 if IS_BROWSER
+	require('js-polyfills/es6')
 	getSdk = window.resinSdk
 
 	opts =
