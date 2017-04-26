@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.0] - 2017-04-26
+
 ### Added
 
 - Added a `device.generateDeviceKey` that can generate a device specific key for use by a device
@@ -459,6 +461,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.1.0]:  https://github.com/resin-io/resin-sdk/compare/v6.0.1...v6.1.0
 [6.0.1]:  https://github.com/resin-io/resin-sdk/compare/v6.0.0...v6.0.1
 [6.0.0]:  https://github.com/resin-io/resin-sdk/compare/v5.4.0...v6.0.0
 [6.0.0-beta10]: https://github.com/resin-io/resin-sdk/compare/v6.0.0-beta8...v6.0.0-beta10

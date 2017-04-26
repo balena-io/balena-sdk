@@ -60,6 +60,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getManifestByApplication(nameOrId)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
             * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationNameOrId, uuid)](#resin.models.device.register) ⇒ <code>Promise</code>
+            * [.generateDeviceKey(uuidOrId)](#resin.models.device.generateDeviceKey) ⇒ <code>Promise</code>
             * [.hasDeviceUrl(uuidOrId)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
             * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -259,6 +260,7 @@ resin.pine.get({
         * [.getManifestByApplication(nameOrId)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
         * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationNameOrId, uuid)](#resin.models.device.register) ⇒ <code>Promise</code>
+        * [.generateDeviceKey(uuidOrId)](#resin.models.device.generateDeviceKey) ⇒ <code>Promise</code>
         * [.hasDeviceUrl(uuidOrId)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
         * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -617,6 +619,7 @@ resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
     * [.getManifestByApplication(nameOrId)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
     * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationNameOrId, uuid)](#resin.models.device.register) ⇒ <code>Promise</code>
+    * [.generateDeviceKey(uuidOrId)](#resin.models.device.generateDeviceKey) ⇒ <code>Promise</code>
     * [.hasDeviceUrl(uuidOrId)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
     * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -1537,6 +1540,36 @@ var uuid = resin.models.device.generateUniqueKey();
 resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 	if (error) throw error;
 	console.log(registrationInfo);
+});
+```
+<a name="resin.models.device.generateDeviceKey"></a>
+
+##### device.generateDeviceKey(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Generate a device key  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+resin.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
+	console.log(deviceApiKey);
+});
+```
+**Example**  
+```js
+resin.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
+	console.log(deviceApiKey);
+});
+```
+**Example**  
+```js
+resin.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
+	if (error) throw error;
+	console.log(deviceApiKey);
 });
 ```
 <a name="resin.models.device.hasDeviceUrl"></a>
