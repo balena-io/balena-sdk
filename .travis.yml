@@ -20,3 +20,6 @@ deploy:
   on:
     tags: true
     repo: resin-io/resin-sdk
+branches:
+  only:
+    - "master"

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed
+
+- Travis now runs builds against commits on master, in addition to PRs, to solve #309
+
 ## [6.1.0] - 2017-04-26
 
 ### Added
