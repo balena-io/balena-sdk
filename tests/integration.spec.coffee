@@ -1845,6 +1845,49 @@ describe 'SDK Integration Tests', ->
 						promise = resin.models.os.download('foo-bar-baz')
 						m.chai.expect(promise).to.be.rejectedWith('No such device type')
 
+			describe 'resin.models.os.getConfig()', ->
+				beforeEach ->
+					resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
+						@application = application
+
+				it 'should be able to get an application config by id', ->
+					promise = resin.models.os.getConfig(@application.id)
+					m.chai.expect(promise).to.eventually.have.property('applicationId')
+					m.chai.expect(promise).to.eventually.have.property('apiKey')
+					m.chai.expect(promise).to.eventually.have.property('userId')
+					m.chai.expect(promise).to.eventually.have.property('username')
+					m.chai.expect(promise).to.eventually.have.property('deviceType')
+					m.chai.expect(promise).to.eventually.have.property('files')
+					m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
+					m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
+					m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
+					m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
+					m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
+					m.chai.expect(promise).to.eventually.have.property('listenPort')
+
+				it 'should be able to get an application config by name', ->
+					promise = resin.models.os.getConfig(@application.app_name)
+					m.chai.expect(promise).to.eventually.have.property('applicationId')
+					m.chai.expect(promise).to.eventually.have.property('apiKey')
+					m.chai.expect(promise).to.eventually.have.property('userId')
+					m.chai.expect(promise).to.eventually.have.property('username')
+					m.chai.expect(promise).to.eventually.have.property('deviceType')
+					m.chai.expect(promise).to.eventually.have.property('files')
+					m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
+					m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
+					m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
+					m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
+					m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
+					m.chai.expect(promise).to.eventually.have.property('listenPort')
+
+				it 'should be rejected if the application id does not exist', ->
+					promise = resin.models.os.getConfig(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+				it 'should be rejected if the application name does not exist', ->
+					promise = resin.models.os.getConfig('foobarbaz')
+					m.chai.expect(promise).to.be.rejectedWith('Application not found: foobarbaz')
+
 		describe 'Interception Hooks', ->
 
 			it "should update if the array is set directly (not only if it's mutated)", ->

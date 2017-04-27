@@ -22,17 +22,18 @@ semver = require('semver')
 
 errors = require('resin-errors')
 
-{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, deviceTypes: deviceTypesUtil, osVersionRCompare } = require('../util')
+{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare } = require('../util')
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
-	{ isBrowser, imageMakerUrl } = opts
+	{ apiUrl, isBrowser, imageMakerUrl } = opts
 
 	imgMakerHelper = getImgMakerHelper(imageMakerUrl, request)
 
 	configModel = once -> require('./config')(deps, opts)
+	applicationModel = once -> require('./application')(deps, opts)
 
 	getDeviceTypes = once ->
 		configModel().getDeviceTypes()
@@ -303,6 +304,42 @@ getOsModel = (deps, opts) ->
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.asCallback(callback)
+
+	###*
+	# @summary Get an applications config.json
+	# @name getConfig
+	# @public
+	# @function
+	# @memberof resin.models.os
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {Object} - application configuration as a JSON object
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.os.getConfig('MyApp').then(function(config) {
+	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
+	# });
+	#
+	# resin.models.os.getConfig(123).then(function(config) {
+	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
+	# });
+	#
+	# resin.models.os.getConfig('MyApp', function(error, config) {
+	# 	if (error) throw error;
+	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
+	# });
+	###
+	exports.getConfig = (nameOrId, callback) ->
+		applicationModel()._getId(nameOrId)
+		.then (applicationId) ->
+			request.send
+				method: 'GET'
+				url: "/download-config?appId=#{applicationId}"
+				baseUrl: apiUrl
+		.get('body')
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+		.asCallback(callback)
 
 	return exports
 

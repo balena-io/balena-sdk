@@ -41,6 +41,8 @@ getApplicationModel = (deps, opts) ->
 			else
 				exports.get(nameOrId).get('id')
 
+	exports._getId = getId
+
 	###*
 	# @summary Get all applications
 	# @name getAll
