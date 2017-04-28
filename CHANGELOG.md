@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Added
+
+- Augment returned device object with device dashboard url property (`device.dashboard_url`)
+
 ### Changed
 
 - Travis now runs builds against commits on master, in addition to PRs, to solve #309

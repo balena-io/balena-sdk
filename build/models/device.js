@@ -15,11 +15,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isId, map, mergePineOptions, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
+
+url = require('url');
 
 Promise = require('bluebird');
 
 isEmpty = require('lodash/isEmpty');
+
+isFinite = require('lodash/isFinite');
 
 once = require('lodash/once');
 
@@ -46,9 +50,9 @@ MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
 getDeviceModel = function(deps, opts) {
-  var addApplicationName, apiUrl, applicationModel, auth, configModel, ensureSupervisorCompatibility, exports, getId, pine, registerDevice, request;
+  var addExtraInfo, apiUrl, applicationModel, auth, configModel, dashboardUrl, ensureSupervisorCompatibility, exports, getDashboardUrl, getId, pine, registerDevice, request;
   pine = deps.pine, request = deps.request;
-  apiUrl = opts.apiUrl;
+  apiUrl = opts.apiUrl, dashboardUrl = opts.dashboardUrl;
   registerDevice = require('resin-register-device')({
     request: request
   });
@@ -60,6 +64,9 @@ getDeviceModel = function(deps, opts) {
   });
   auth = require('../auth')(deps, opts);
   exports = {};
+  if (dashboardUrl == null) {
+    dashboardUrl = apiUrl.replace(/api/, 'dashboard');
+  }
   getId = function(uuidOrId) {
     return Promise["try"](function() {
       if (isId(uuidOrId)) {
@@ -99,8 +106,41 @@ getDeviceModel = function(deps, opts) {
       throw new Error("Incompatible supervisor version: " + version + " - must be >= " + minVersion);
     }
   });
-  addApplicationName = function(device) {
+
+  /**
+  	 * @summary Get Dashboard URL for a specific device
+  	 * @function getDashboardUrl
+  	 *
+  	 * @param {Object} options - options
+  	 * @param {Number} options.appId - Application id
+  	 * @param {Number} options.deviceId - Device id
+  	 *
+  	 * @returns {String} - Dashboard URL for the specific device
+  	 * @throws Exception if either appId or deviceId are empty
+  	 *
+  	 * @example
+  	 * dashboardDeviceUrl = resin.models.device.getDashboardUrl({ appId: 123, deviceId: 456 })
+   */
+  exports.getDashboardUrl = getDashboardUrl = function(options) {
+    var i, key, len, ref1;
+    if (options == null) {
+      options = {};
+    }
+    ref1 = ['appId', 'deviceId'];
+    for (i = 0, len = ref1.length; i < len; i++) {
+      key = ref1[i];
+      if (!isFinite(options[key])) {
+        throw new Error(key + " option is not a finite number");
+      }
+    }
+    return url.resolve(dashboardUrl, "/apps/" + options.appId + "/devices/" + options.deviceId + "/summary");
+  };
+  addExtraInfo = function(device) {
     device.application_name = device.application[0].app_name;
+    device.dashboard_url = getDashboardUrl({
+      appId: device.application[0].id,
+      deviceId: device.id
+    });
     return device;
   };
 
@@ -137,7 +177,7 @@ getDeviceModel = function(deps, opts) {
         expand: 'application',
         orderby: 'name asc'
       }, options)
-    }).map(addApplicationName).asCallback(callback);
+    }).map(addExtraInfo).asCallback(callback);
   };
 
   /**
@@ -293,7 +333,7 @@ getDeviceModel = function(deps, opts) {
           }
         }).get(0);
       }
-    }).then(addApplicationName).asCallback(callback);
+    }).then(addExtraInfo).asCallback(callback);
   };
 
   /**

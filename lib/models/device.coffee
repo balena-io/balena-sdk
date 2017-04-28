@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
+isFinite = require('lodash/isFinite')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
@@ -42,7 +44,7 @@ CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
 getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
-	{ apiUrl } = opts
+	{ apiUrl, dashboardUrl } = opts
 
 	registerDevice = require('resin-register-device')({ request })
 	configModel = once -> require('./config')(deps, opts)
@@ -50,6 +52,10 @@ getDeviceModel = (deps, opts) ->
 	auth = require('../auth')(deps, opts)
 
 	exports = {}
+
+	# Infer dashboardUrl from apiUrl if former is undefined
+	if not dashboardUrl?
+		dashboardUrl = apiUrl.replace(/api/, 'dashboard')
 
 	# Internal method for uuid/id disambiguation
 	# Note that this throws an exception for missing uuids, but not missing ids
@@ -88,9 +94,30 @@ getDeviceModel = (deps, opts) ->
 		if semver.lt(version, minVersion)
 			throw new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}")
 
-	addApplicationName = (device) ->
+	###*
+	# @summary Get Dashboard URL for a specific device
+	# @function getDashboardUrl
+	#
+	# @param {Object} options - options
+	# @param {Number} options.appId - Application id
+	# @param {Number} options.deviceId - Device id
+	#
+	# @returns {String} - Dashboard URL for the specific device
+	# @throws Exception if either appId or deviceId are empty
+	#
+	# @example
+	# dashboardDeviceUrl = resin.models.device.getDashboardUrl({ appId: 123, deviceId: 456 })
+	###
+	exports.getDashboardUrl = getDashboardUrl = (options = {}) ->
+		for key in [ 'appId', 'deviceId' ]
+			throw new Error("#{key} option is not a finite number") if not isFinite(options[key])
+
+		return url.resolve(dashboardUrl, "/apps/#{options.appId}/devices/#{options.deviceId}/summary")
+
+	addExtraInfo = (device) ->
 		# TODO: Move this to the server
 		device.application_name = device.application[0].app_name
+		device.dashboard_url = getDashboardUrl({ appId: device.application[0].id, deviceId: device.id })
 		return device
 
 	###*
@@ -126,7 +153,7 @@ getDeviceModel = (deps, opts) ->
 					orderby: 'name asc'
 				, options
 
-		.map(addApplicationName)
+		.map(addExtraInfo)
 		.asCallback(callback)
 
 	###*
@@ -265,7 +292,7 @@ getDeviceModel = (deps, opts) ->
 					if devices.length > 1
 						throw new errors.ResinAmbiguousDevice(uuidOrId)
 				.get(0)
-		.then(addApplicationName)
+		.then(addExtraInfo)
 		.asCallback(callback)
 
 	###*

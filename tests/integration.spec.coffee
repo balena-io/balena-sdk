@@ -895,6 +895,10 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.getAll().then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
 
+					it 'should add a dashboard_url property', ->
+						resin.models.device.getAll().then (devices) =>
+							m.chai.expect(devices[0].dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
+
 					it 'should support arbitrary pinejs options', ->
 						resin.models.device.getAll(select: [ 'id' ])
 						.then ([ device ]) =>
@@ -916,6 +920,10 @@ describe 'SDK Integration Tests', ->
 					it 'should include an application_name property in the result', ->
 						resin.models.device.getAllByApplication(@application.id).then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
+
+					it 'should add a dashboard_url property', ->
+						resin.models.device.getAllByApplication(@application.id).then (devices) =>
+							m.chai.expect(devices[0].dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
 
 					it 'should be rejected if the application name does not exist', ->
 						promise = resin.models.device.getAllByApplication('HelloWorldApp')
@@ -997,6 +1005,10 @@ describe 'SDK Integration Tests', ->
 						resin.models.device.get(@device.id).then (device) =>
 							m.chai.expect(device.application_name).to.equal(@application.app_name)
 
+					it 'should add a dashboard_url property', ->
+						resin.models.device.get(@device.id).then (device) =>
+							m.chai.expect(device.dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
+
 					it 'should be rejected if the device name does not exist', ->
 						promise = resin.models.device.get('asdfghjkl')
 						m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
@@ -1025,6 +1037,10 @@ describe 'SDK Integration Tests', ->
 					it 'should add an application_name property', ->
 						resin.models.device.getByName(@device.name).then (devices) =>
 							m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
+
+					it 'should add a dashboard_url property', ->
+						resin.models.device.getByName(@device.name).then (devices) =>
+							m.chai.expect(devices[0].dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
 
 					it 'should be rejected if the device does not exist', ->
 						promise = resin.models.device.getByName('HelloWorldDevice')
