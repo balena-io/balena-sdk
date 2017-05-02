@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Augment returned device object with device dashboard url property (`device.dashboard_url`)
+- A new method `models.os.getConfig()` that retrieves an applications
+	configuration as a json object.
 
 ### Changed
 

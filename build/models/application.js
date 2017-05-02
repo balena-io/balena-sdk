@@ -50,6 +50,7 @@ getApplicationModel = function(deps, opts) {
       }
     });
   };
+  exports._getId = getId;
 
   /**
   	 * @summary Get all applications
