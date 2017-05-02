@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.2.0] - 2017-05-02
+
 ### Added
 
 - Augment returned device object with device dashboard url property (`device.dashboard_url`)
@@ -471,6 +473,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Remove HTML generated JSDoc documentation.
 
+[6.2.0]:  https://github.com/resin-io/resin-sdk/compare/v6.1.0...v6.2.0
 [6.1.0]:  https://github.com/resin-io/resin-sdk/compare/v6.0.1...v6.1.0
 [6.0.1]:  https://github.com/resin-io/resin-sdk/compare/v6.0.0...v6.0.1
 [6.0.0]:  https://github.com/resin-io/resin-sdk/compare/v5.4.0...v6.0.0

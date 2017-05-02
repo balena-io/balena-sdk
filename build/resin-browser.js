@@ -4245,7 +4245,6 @@ getOsModel = function(deps, opts) {
   	 * });
    */
   exports.getConfig = function(nameOrId, callback) {
-    console.log(applicationModel());
     return applicationModel()._getId(nameOrId).then(function(applicationId) {
       return request.send({
         method: 'GET',
