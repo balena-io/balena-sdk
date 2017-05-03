@@ -57,7 +57,8 @@ getConfigModel = function(deps, opts) {
     return request.send({
       method: 'GET',
       url: '/config',
-      baseUrl: apiUrl
+      baseUrl: apiUrl,
+      refreshToken: false
     }).get('body').then(function(body) {
       body.deviceTypes = map(body.deviceTypes, function(deviceType) {
         if (deviceType.state === 'PREVIEW') {
