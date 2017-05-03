@@ -97,6 +97,7 @@ getDeviceModel = (deps, opts) ->
 	###*
 	# @summary Get Dashboard URL for a specific device
 	# @function getDashboardUrl
+	# @memberof resin.models.device
 	#
 	# @param {Object} options - options
 	# @param {Number} options.appId - Application id

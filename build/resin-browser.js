@@ -1610,6 +1610,7 @@ getDeviceModel = function(deps, opts) {
   /**
   	 * @summary Get Dashboard URL for a specific device
   	 * @function getDashboardUrl
+  	 * @memberof resin.models.device
   	 *
   	 * @param {Object} options - options
   	 * @param {Number} options.appId - Application id
@@ -25313,7 +25314,7 @@ module.exports={
         "spec": ">=6.0.0 <7.0.0",
         "type": "range"
       },
-      "/Users/lucianbuzzo/projects/resin-sdk/node_modules/browserify-sign"
+      "/Users/tim/Dropbox/resin.io/resin-sdk/node_modules/browserify-sign"
     ]
   ],
   "_from": "elliptic@>=6.0.0 <7.0.0",
@@ -25348,7 +25349,7 @@ module.exports={
   "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
   "_shrinkwrap": null,
   "_spec": "elliptic@^6.0.0",
-  "_where": "/Users/lucianbuzzo/projects/resin-sdk/node_modules/browserify-sign",
+  "_where": "/Users/tim/Dropbox/resin.io/resin-sdk/node_modules/browserify-sign",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
