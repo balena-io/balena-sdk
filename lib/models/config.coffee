@@ -52,6 +52,7 @@ getConfigModel = (deps, opts) ->
 			method: 'GET'
 			url: '/config'
 			baseUrl: apiUrl
+			refreshToken: false
 		.get('body')
 		.then (body) ->
 
