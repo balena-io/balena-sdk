@@ -22,4 +22,4 @@ deploy:
     repo: resin-io/resin-sdk
 branches:
   only:
-    - "master"
+    - /^v?\d+\.\d+\.\d+.*/
