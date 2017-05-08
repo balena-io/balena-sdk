@@ -1852,33 +1852,59 @@ describe 'SDK Integration Tests', ->
 
 				it 'should be able to get an application config by id', ->
 					promise = resin.models.os.getConfig(@application.id)
-					m.chai.expect(promise).to.eventually.have.property('applicationId')
-					m.chai.expect(promise).to.eventually.have.property('apiKey')
-					m.chai.expect(promise).to.eventually.have.property('userId')
-					m.chai.expect(promise).to.eventually.have.property('username')
-					m.chai.expect(promise).to.eventually.have.property('deviceType')
-					m.chai.expect(promise).to.eventually.have.property('files')
-					m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
-					m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
-					m.chai.expect(promise).to.eventually.have.property('listenPort')
+					Promise.all [
+						m.chai.expect(promise).to.eventually.have.property('applicationId')
+						m.chai.expect(promise).to.eventually.have.property('apiKey')
+						m.chai.expect(promise).to.eventually.have.property('userId')
+						m.chai.expect(promise).to.eventually.have.property('username')
+						m.chai.expect(promise).to.eventually.have.property('deviceType')
+						m.chai.expect(promise).to.eventually.have.property('files')
+						m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
+						m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
+						m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
+						m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
+						m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
+						m.chai.expect(promise).to.eventually.have.property('listenPort')
+					]
 
 				it 'should be able to get an application config by name', ->
 					promise = resin.models.os.getConfig(@application.app_name)
-					m.chai.expect(promise).to.eventually.have.property('applicationId')
-					m.chai.expect(promise).to.eventually.have.property('apiKey')
-					m.chai.expect(promise).to.eventually.have.property('userId')
-					m.chai.expect(promise).to.eventually.have.property('username')
-					m.chai.expect(promise).to.eventually.have.property('deviceType')
-					m.chai.expect(promise).to.eventually.have.property('files')
-					m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
-					m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
-					m.chai.expect(promise).to.eventually.have.property('listenPort')
+					Promise.all [
+						m.chai.expect(promise).to.eventually.have.property('applicationId')
+						m.chai.expect(promise).to.eventually.have.property('apiKey')
+						m.chai.expect(promise).to.eventually.have.property('userId')
+						m.chai.expect(promise).to.eventually.have.property('username')
+						m.chai.expect(promise).to.eventually.have.property('deviceType')
+						m.chai.expect(promise).to.eventually.have.property('files')
+						m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
+						m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
+						m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
+						m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
+						m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
+						m.chai.expect(promise).to.eventually.have.property('listenPort')
+					]
+
+				it 'should be able to configure image parameters', ->
+					configOptions =
+						appUpdatePollInterval: 72
+						network: 'wifi'
+						wifiKey: 'foobar'
+						wifiSsid: 'foobarbaz'
+						ip: '1.2.3.4'
+						gateway: '5.6.7.8'
+						netmask: '9.10.11.12'
+						version: 'v1+foo'
+					promise = resin.models.os.getConfig(@application.id, configOptions)
+					Promise.all [
+						# NOTE: the interval is converted to ms in the config object
+						m.chai.expect(promise).to.eventually.have.property('appUpdatePollInterval').that.equals(configOptions.appUpdatePollInterval * 60 * 1000)
+						m.chai.expect(promise).to.eventually.have.property('wifiKey').that.equals(configOptions.wifiKey)
+						m.chai.expect(promise).to.eventually.have.property('wifiSsid').that.equals(configOptions.wifiSsid)
+						m.chai.expect(promise).to.eventually.have.property('version').that.equals(configOptions.version)
+						m.chai.expect(promise).to.eventually.have.property('files')
+							.that.has.property('network/network.config')
+							.that.includes("#{configOptions.ip}/#{configOptions.netmask}/#{configOptions.gateway}")
+					]
 
 				it 'should be rejected if the application id does not exist', ->
 					promise = resin.models.os.getConfig(999999)

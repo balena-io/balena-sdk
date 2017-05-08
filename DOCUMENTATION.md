@@ -93,7 +93,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#resin.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
             * [.getLastModified(deviceType, [version])](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(deviceType, [version])](#resin.models.os.download) ⇒ <code>Promise</code>
-            * [.getConfig(nameOrId)](#resin.models.os.getConfig) ⇒ <code>Promise</code>
+            * [.getConfig(nameOrId, [options])](#resin.models.os.getConfig) ⇒ <code>Promise</code>
         * [.config](#resin.models.config) : <code>object</code>
             * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
             * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -295,7 +295,7 @@ resin.pine.get({
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#resin.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
         * [.getLastModified(deviceType, [version])](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(deviceType, [version])](#resin.models.os.download) ⇒ <code>Promise</code>
-        * [.getConfig(nameOrId)](#resin.models.os.getConfig) ⇒ <code>Promise</code>
+        * [.getConfig(nameOrId, [options])](#resin.models.os.getConfig) ⇒ <code>Promise</code>
     * [.config](#resin.models.config) : <code>object</code>
         * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
         * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -2234,7 +2234,7 @@ resin.models.environmentVariables.isSystemVariable({
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#resin.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
     * [.getLastModified(deviceType, [version])](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
     * [.download(deviceType, [version])](#resin.models.os.download) ⇒ <code>Promise</code>
-    * [.getConfig(nameOrId)](#resin.models.os.getConfig) ⇒ <code>Promise</code>
+    * [.getConfig(nameOrId, [options])](#resin.models.os.getConfig) ⇒ <code>Promise</code>
 
 <a name="resin.models.os.getDownloadSize"></a>
 
@@ -2369,15 +2369,24 @@ resin.models.os.download('raspberry-pi', function(error, stream) {
 ```
 <a name="resin.models.os.getConfig"></a>
 
-##### os.getConfig(nameOrId) ⇒ <code>Promise</code>
+##### os.getConfig(nameOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#resin.models.os)  
 **Summary**: Get an applications config.json  
 **Access**: public  
-**Fulfil**: <code>Object</code> - application configuration as a JSON object  
+**Fulfil**: <code>Object</code> - application configuration as a JSON object.  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number). |
+| [options] | <code>Object</code> | <code>{}</code> | OS configuration options to use. |
+| [options.network] | <code>String</code> | <code>&#x27;ethernet&#x27;</code> | The network type that the device will use, one of 'ethernet' or 'wifi'. |
+| [options.appUpdatePollInterval] | <code>Number</code> |  | How often the OS checks for updates, in minutes. |
+| [options.wifiKey] | <code>String</code> |  | The key for the wifi network the device will connect to. |
+| [options.wifiSsid] | <code>String</code> |  | The ssid for the wifi network the device will connect to. |
+| [options.ip] | <code>String</code> |  | static ip address. |
+| [options.gateway] | <code>String</code> |  | static ip gateway. |
+| [options.netmask] | <code>String</code> |  | static ip netmask. |
+| [options.version] | <code>String</code> |  | The OS version of the image. |
 
 **Example**  
 ```js

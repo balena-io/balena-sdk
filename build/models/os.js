@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, RESINOS_VERSION_REGEX, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, osVersionRCompare, partition, ref, reject, semver, treatAsMissingApplication;
+var Promise, RESINOS_VERSION_REGEX, _, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, osVersionRCompare, partition, ref, reject, semver, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
@@ -26,6 +26,8 @@ once = require('lodash/once');
 partition = require('lodash/partition');
 
 semver = require('semver');
+
+_ = require('lodash');
 
 errors = require('resin-errors');
 
@@ -353,8 +355,21 @@ getOsModel = function(deps, opts) {
   	 * @function
   	 * @memberof resin.models.os
   	 *
-  	 * @param {String|Number} nameOrId - application name (string) or id (number)
-  	 * @fulfil {Object} - application configuration as a JSON object
+  	 * @param {String|Number} nameOrId - application name (string) or id (number).
+  	 * @param {Object} [options={}] - OS configuration options to use.
+  	 * @param {String} [options.network='ethernet'] - The network type that
+  	 * the device will use, one of 'ethernet' or 'wifi'.
+  	 * @param {Number} [options.appUpdatePollInterval] - How often the OS checks
+  	 * for updates, in minutes.
+  	 * @param {String} [options.wifiKey] - The key for the wifi network the
+  	 * device will connect to.
+  	 * @param {String} [options.wifiSsid] - The ssid for the wifi network the
+  	 * device will connect to.
+  	 * @param {String} [options.ip] - static ip address.
+  	 * @param {String} [options.gateway] - static ip gateway.
+  	 * @param {String} [options.netmask] - static ip netmask.
+  	 * @param {String} [options.version] - The OS version of the image.
+  	 * @fulfil {Object} - application configuration as a JSON object.
   	 * @returns {Promise}
   	 *
   	 * @example
@@ -371,12 +386,24 @@ getOsModel = function(deps, opts) {
   	 * 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
   	 * });
    */
-  exports.getConfig = function(nameOrId, callback) {
+  exports.getConfig = function(nameOrId, options, callback) {
+    var defaultOpts;
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
+    defaultOpts = {
+      network: 'ethernet'
+    };
+    _.defaults(options, defaultOpts);
     return applicationModel()._getId(nameOrId).then(function(applicationId) {
       return request.send({
-        method: 'GET',
-        url: "/download-config?appId=" + applicationId,
-        baseUrl: apiUrl
+        method: 'POST',
+        url: '/download-config',
+        baseUrl: apiUrl,
+        body: _.assign(options, {
+          appId: applicationId
+        })
       });
     }).get('body')["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
   };

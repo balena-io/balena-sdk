@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix documentation for device.getDashboardUrl()
 - Stop config.* methods from refreshing the token (as they don't use it)
 
+### Added
+
+- The method `models.os.getConfig()` now accepts image configuration options.
+
 ## [6.2.0] - 2017-05-02
 
 ### Added
