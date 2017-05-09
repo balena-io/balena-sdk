@@ -22,7 +22,8 @@ getImgMakerHelper = function(imageMakerUrl, request) {
       method: 'GET'
     }, options, {
       url: url,
-      baseUrl: imageMakerUrl
+      baseUrl: imageMakerUrl,
+      refreshToken: false
     });
   };
   exports.request = sendRequest = function(options) {
