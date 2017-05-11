@@ -13,7 +13,11 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 		{ url } = options
 		url = "#{IMG_MAKER_API_PREFIX}#{url}"
 
-		return assign({ method: 'GET' }, options, { url, baseUrl: imageMakerUrl })
+		return assign(
+			{ method: 'GET' },
+			options,
+			{ url, baseUrl: imageMakerUrl, refreshToken: false }
+		)
 
 	exports.request = sendRequest = (options) ->
 		request.send(buildOptions(options))
