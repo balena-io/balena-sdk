@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.3.1] - 2017-05-11
+
 ### Fixed
 
 - Don't refresh tokens when making requests to the image maker
