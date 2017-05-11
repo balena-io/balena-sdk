@@ -19,6 +19,7 @@ reject = require('lodash/reject')
 once = require('lodash/once')
 partition = require('lodash/partition')
 semver = require('semver')
+_ = require('lodash')
 
 errors = require('resin-errors')
 
@@ -312,8 +313,21 @@ getOsModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.os
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @fulfil {Object} - application configuration as a JSON object
+	# @param {String|Number} nameOrId - application name (string) or id (number).
+	# @param {Object} [options={}] - OS configuration options to use.
+	# @param {String} [options.network='ethernet'] - The network type that
+	# the device will use, one of 'ethernet' or 'wifi'.
+	# @param {Number} [options.appUpdatePollInterval] - How often the OS checks
+	# for updates, in minutes.
+	# @param {String} [options.wifiKey] - The key for the wifi network the
+	# device will connect to.
+	# @param {String} [options.wifiSsid] - The ssid for the wifi network the
+	# device will connect to.
+	# @param {String} [options.ip] - static ip address.
+	# @param {String} [options.gateway] - static ip gateway.
+	# @param {String} [options.netmask] - static ip netmask.
+	# @param {String} [options.version] - The OS version of the image.
+	# @fulfil {Object} - application configuration as a JSON object.
 	# @returns {Promise}
 	#
 	# @example
@@ -330,13 +344,21 @@ getOsModel = (deps, opts) ->
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	###
-	exports.getConfig = (nameOrId, callback) ->
+	exports.getConfig = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		defaultOpts =
+			network: 'ethernet'
+
+		_.defaults(options, defaultOpts)
+
 		applicationModel()._getId(nameOrId)
 		.then (applicationId) ->
 			request.send
-				method: 'GET'
-				url: "/download-config?appId=#{applicationId}"
+				method: 'POST'
+				url: '/download-config'
 				baseUrl: apiUrl
+				body: _.assign(options, appId: applicationId)
 		.get('body')
 		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
