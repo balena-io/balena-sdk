@@ -1,9 +1,25 @@
+# We want to avoid unnecessary test runs, because they load the API, so:
+# - we run tests for all changes in PRs
+# - we run deploys for all version-tagged commits
+# - we don't want to do anything for any other cases
+# Travis has a bunch of filtering that's supposed to cover this sort of this, but
+# it doesn't quite work.
+
 language: node_js
-node_js:
-- '6'
-- '4'
+matrix:
+  include:
+    - node_js:
+      - '6'
+      env:
+      - 'CAN_DEPLOY=true'
+    - node_js:
+      - '4'
 before_install:
 - npm -g install npm
+script:
+# Skip tests entirely, unless it's a pull request
+# If we end up deploying, a deploy runs the tests anyway
+- '[ "$TRAVIS_PULL_REQUEST" != "false" ] && npm test || true'
 notifications:
   email: false
   webhooks:
@@ -15,11 +31,11 @@ notifications:
 deploy:
   provider: npm
   email: 'accounts@resin.io'
+  skip_cleanup: true
   api_key:
     secure: SKemSDObFtG2GnVxhmxR4KMr/5S8LwlVdbgom3ouQ/kXAfMY0n6KaV6nwM+4EhW9zg6A8r2XQ6Q7fWs+ESwNvk1dS6MAHwdC5KOUpVqeRxsAuyZnIRdwa0J9wMbzt2I0E9D0sTvi4FZSO9a/6fJDWUrbTFP7Dv/S3ngyQz014ZY=
   on:
+    # Deploys happen if there's a tag, it's a version number, and this row in the matrix has '$CAN_DEPLOY'
     tags: true
+    condition: $CAN_DEPLOY = 'true' && $TRAVIS_TAG =~ /^v?\d+\.\d+\.\d+/
     repo: resin-io/resin-sdk
-branches:
-  only:
-    - /^v?\d+\.\d+\.\d+.*/
