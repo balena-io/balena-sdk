@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Document log subscriptions in detail
 
+### Fixed
+
+- Consistently order image versions.
+
 ## [6.3.1] - 2017-05-11
 
 ### Fixed

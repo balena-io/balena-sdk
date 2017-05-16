@@ -50,15 +50,13 @@ getOsModel = (deps, opts) ->
 
 	getOsVersions = imgMakerHelper.buildApiRequester
 		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
-		postProcess: ({ body }) ->
-			{ versions, latest } = body
-			[ validVersions, invalidVersions ] = partition(versions, semver.valid)
+		postProcess: ({ body: { versions, latest } }) ->
 
-			validVersions.sort(osVersionRCompare)
-			recommended = reject(validVersions, semver.prerelease)?[0] || null
+			versions.sort(osVersionRCompare)
+			recommended = reject(versions, semver.prerelease)?[0] || null
 
 			return {
-				versions: invalidVersions.concat(validVersions)
+				versions
 				recommended
 				latest
 				default: recommended or latest

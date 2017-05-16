@@ -40,7 +40,12 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 		replacementErr.stack = err.stack
 		throw replacementErr
 
+safeSemver = (version) ->
+	version.replace(/(\.[0-9]+)\.rev/, '$1+rev')
+
 exports.osVersionRCompare = (versionA, versionB) ->
+	versionA = safeSemver(versionA)
+	versionB = safeSemver(versionB)
 	semverResult = semver.rcompare(versionA, versionB)
 	if semverResult != 0
 		return semverResult
@@ -48,7 +53,18 @@ exports.osVersionRCompare = (versionA, versionB) ->
 	revA = getRev(versionA)
 	revB = getRev(versionB)
 
-	return revB - revA
+	if revA isnt revB
+		return revB - revA
+
+	devA = exports.isDevelopmentVersion(versionA)
+	devB = exports.isDevelopmentVersion(versionB)
+	if devA isnt devB
+		return devA - devB
+
+	return versionA.localeCompare(versionB)
+
+exports.isDevelopmentVersion = (version) ->
+	/(\.|\+|-)dev/.test(version)
 
 getRev = (osVersion) ->
 	rev = semver.parse(osVersion).build

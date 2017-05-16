@@ -172,9 +172,9 @@ describe 'osVersionRCompare', ->
 	it 'sorts any rev above no rev', ->
 		m.chai.expect(osVersionRCompare('2.0.0', '2.0.0+rev1')).to.equal(1)
 
-	it 'ignores non-rev build metadata', ->
+	it 'sorts by non-rev build metadata for matching revs', ->
 		m.chai.expect(osVersionRCompare('2.0.0+rev2.dev', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionRCompare('2.0.0+dev.rev2', '2.0.0+rev2')).to.equal(0)
+		m.chai.expect(osVersionRCompare('2.0.0+dev.rev2', '2.0.0+rev2')).to.equal(1)
 		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.0+rev2.dev')).to.equal(1)
 
 	it 'correctly sorts a full list', ->

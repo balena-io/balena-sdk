@@ -73,14 +73,12 @@ getOsModel = function(deps, opts) {
       return "/image/" + deviceType + "/versions";
     },
     postProcess: function(arg) {
-      var body, invalidVersions, latest, recommended, ref1, ref2, validVersions, versions;
-      body = arg.body;
-      versions = body.versions, latest = body.latest;
-      ref1 = partition(versions, semver.valid), validVersions = ref1[0], invalidVersions = ref1[1];
-      validVersions.sort(osVersionRCompare);
-      recommended = ((ref2 = reject(validVersions, semver.prerelease)) != null ? ref2[0] : void 0) || null;
+      var latest, recommended, ref1, ref2, versions;
+      ref1 = arg.body, versions = ref1.versions, latest = ref1.latest;
+      versions.sort(osVersionRCompare);
+      recommended = ((ref2 = reject(versions, semver.prerelease)) != null ? ref2[0] : void 0) || null;
       return {
-        versions: invalidVersions.concat(validVersions),
+        versions: versions,
         recommended: recommended,
         latest: latest,
         "default": recommended || latest
