@@ -19,7 +19,7 @@ before_install:
 script:
 # Skip tests entirely, unless it's a pull request
 # If we end up deploying, a deploy runs the tests anyway
-- '[ "$TRAVIS_PULL_REQUEST" != "false" ] && npm test || true'
+- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then npm test; fi'
 notifications:
   email: false
   webhooks:
