@@ -121,6 +121,11 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
         * [.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>
         * [.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>
+        * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
+            * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
+            * ["line"](#resin.logs.LogSubscription.event_line)
+            * ["clear"](#resin.logs.LogSubscription.event_clear)
+            * ["error"](#resin.logs.LogSubscription.event_error)
     * [.settings](#resin.settings) : <code>object</code>
         * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
         * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
@@ -2913,20 +2918,22 @@ resin.auth.register({
     * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
     * [.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>
     * [.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>
+    * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
+        * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
+        * ["line"](#resin.logs.LogSubscription.event_line)
+        * ["clear"](#resin.logs.LogSubscription.event_clear)
+        * ["error"](#resin.logs.LogSubscription.event_error)
 
 <a name="resin.logs.subscribe"></a>
 
 #### logs.subscribe(uuidOrId) ⇒ <code>Promise</code>
-The `logs` object yielded by this function emits the following events:
-
-- `line`: when a log line is received.
-- `clear`: when the logs are cleared.
-- `error`: when an error has happened.
+Connects to the stream of devices logs, returning a LogSubscription, which
+can be used to listen for logs as they appear, line by line.
 
 **Kind**: static method of [<code>logs</code>](#resin.logs)  
 **Summary**: Subscribe to device logs  
 **Access**: public  
-**Fulfil**: <code>EventEmitter</code> - logs  
+**Fulfil**: [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
 **Todo**
 
 - [ ] We should consider making this a readable stream.
@@ -3077,6 +3084,65 @@ resin.logs.clear('7cf02a6').then(function() {
 ```js
 resin.logs.clear(123).then(function() {
 	console.log('OK');
+});
+```
+<a name="resin.logs.LogSubscription"></a>
+
+#### logs.LogSubscription : <code>EventEmitter</code>
+The log subscription emits events as log data arrives.
+You can get a LogSubscription for a given device by calling `resin.logs.subscribe(deviceId)`
+
+**Kind**: static typedef of [<code>logs</code>](#resin.logs)  
+
+* [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
+    * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
+    * ["line"](#resin.logs.LogSubscription.event_line)
+    * ["clear"](#resin.logs.LogSubscription.event_clear)
+    * ["error"](#resin.logs.LogSubscription.event_error)
+
+<a name="resin.logs.LogSubscription.unsubscribe"></a>
+
+##### LogSubscription.unsubscribe()
+Disconnect from the logs feed and stop receiving any future events on this emitter.
+
+**Kind**: static method of [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Summary**: Unsubscribe from device logs  
+**Access**: public  
+**Example**  
+```js
+logs.unsubscribe();
+```
+<a name="resin.logs.LogSubscription.event_line"></a>
+
+##### "line"
+**Kind**: event emitted by [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Summary**: Event fired when a new line of log output is available  
+**Example**  
+```js
+logs.on('line', function(line) {
+	console.log(line);
+});
+```
+<a name="resin.logs.LogSubscription.event_clear"></a>
+
+##### "clear"
+**Kind**: event emitted by [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Summary**: Event fired when the logs have been cleared  
+**Example**  
+```js
+logs.on('clear', function() {
+	console.clear();
+});
+```
+<a name="resin.logs.LogSubscription.event_error"></a>
+
+##### "error"
+**Kind**: event emitted by [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Summary**: Event fired when an error has occured reading the device logs  
+**Example**  
+```js
+logs.on('error', function(error) {
+	console.error(error);
 });
 ```
 <a name="resin.settings"></a>

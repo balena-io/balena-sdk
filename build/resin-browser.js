@@ -531,6 +531,60 @@ getLogs = function(deps, opts) {
   };
 
   /**
+  	 * @typedef LogSubscription
+  	 * @type {EventEmitter}
+  	 * @memberof resin.logs
+  	 *
+  	 * @description
+  	 * The log subscription emits events as log data arrives.
+  	 * You can get a LogSubscription for a given device by calling `resin.logs.subscribe(deviceId)`
+   */
+
+  /**
+  	 * @summary Unsubscribe from device logs
+  	 * @name unsubscribe
+  	 * @function
+  	 * @public
+  	 * @memberof resin.logs.LogSubscription
+  	 *
+  	 * @description
+  	 * Disconnect from the logs feed and stop receiving any future events on this emitter.
+  	 *
+  	 * @example
+  	 * logs.unsubscribe();
+   */
+
+  /**
+  	 * @summary Event fired when a new line of log output is available
+  	 * @event line
+  	 * @memberof resin.logs.LogSubscription
+  	 * @example
+  	 * logs.on('line', function(line) {
+  	 * 	console.log(line);
+  	 * });
+   */
+
+  /**
+  	 * @summary Event fired when the logs have been cleared
+  	 * @event clear
+  	 * @memberof resin.logs.LogSubscription
+  	 * @example
+  	 * logs.on('clear', function() {
+  	 * 	console.clear();
+  	 * });
+   */
+
+  /**
+  	 * @summary Event fired when an error has occured reading the device logs
+  	 * @event error
+  	 * @memberof resin.logs.LogSubscription
+  	 * @example
+  	 * logs.on('error', function(error) {
+  	 * 	console.error(error);
+  	 * });
+   */
+
+  /**
   	 * @summary Subscribe to device logs
   	 * @name subscribe
   	 * @function
@@ -538,14 +592,11 @@ getLogs = function(deps, opts) {
   	 * @memberof resin.logs
   	 *
   	 * @description
-  	 * The `logs` object yielded by this function emits the following events:
-  	 *
-  	 * - `line`: when a log line is received.
-  	 * - `clear`: when the logs are cleared.
-  	 * - `error`: when an error has happened.
+  	 * Connects to the stream of devices logs, returning a LogSubscription, which
+  	 * can be used to listen for logs as they appear, line by line.
   	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-  	 * @fulfil {EventEmitter} - logs
+  	 * @fulfil {resin.logs.LogSubscription}
   	 * @returns {Promise}
   	 *
   	 * @todo
