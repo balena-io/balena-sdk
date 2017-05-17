@@ -23,7 +23,7 @@ _ = require('lodash')
 
 errors = require('resin-errors')
 
-{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare } = require('../util')
+{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare, isDevelopmentVersion } = require('../util')
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
@@ -53,7 +53,9 @@ getOsModel = (deps, opts) ->
 		postProcess: ({ body: { versions, latest } }) ->
 
 			versions.sort(osVersionRCompare)
-			recommended = reject(versions, semver.prerelease)?[0] || null
+			potentialRecommendedVersions = reject versions, (version) ->
+				semver.prerelease(version) or isDevelopmentVersion(version)
+			recommended = potentialRecommendedVersions?[0] || null
 
 			return {
 				versions

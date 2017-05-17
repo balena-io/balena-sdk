@@ -7,6 +7,8 @@ superagent = require('superagent')
 
 PUBLIC_KEY = require('./data/public-key')
 
+{ osVersionRCompare } = require('../build/util')
+
 IS_BROWSER = window?
 
 if IS_BROWSER
@@ -20,7 +22,6 @@ if IS_BROWSER
 	env = window.__env__
 else
 	getSdk = require('..')
-	{ osVersionRCompare } = require('../build/util')
 
 	fs = Promise.promisifyAll(require('fs'))
 	tmp = require('tmp')
