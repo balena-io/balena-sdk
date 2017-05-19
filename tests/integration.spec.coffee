@@ -1560,7 +1560,9 @@ describe 'SDK Integration Tests', ->
 				resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
 					@application = application
 
-					uuid = '1234567aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+					# Preceeding 1 is so that this can't start with a 0, so we get reversible parsing later
+					@shortUuid = '1' + Date.now().toString().slice(-6)
+					uuid = @shortUuid + resin.models.device.generateUniqueKey().slice(7)
 					resin.models.device.register(application.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
@@ -1570,12 +1572,12 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.device.get()', ->
 
 					it 'should return the device given the shorter uuid as a string', ->
-						resin.models.device.get('1234567').then (device) =>
+						resin.models.device.get(@shortUuid).then (device) =>
 							m.chai.expect(device.id).to.equal(@deviceInfo.id)
 
 					it 'should fail to find the device given the shorter uuid as a number', ->
-						promise = resin.models.device.get(1234567)
-						m.chai.expect(promise).to.be.rejectedWith('Device not found: 1234567')
+						promise = resin.models.device.get(parseInt(@shortUuid, 10))
+						m.chai.expect(promise).to.be.rejectedWith("Device not found: #{@shortUuid}")
 
 		describe 'given a single application with two offline devices that share the same uuid root', ->
 
@@ -1583,8 +1585,9 @@ describe 'SDK Integration Tests', ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
 					@application = application
 
-					uuid1 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-					uuid2 = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+					@uuidRoot = 'aaaaaaaaaaaaaaaa'
+					uuid1 = @uuidRoot + resin.models.device.generateUniqueKey().slice(16)
+					uuid2 = @uuidRoot + resin.models.device.generateUniqueKey().slice(16)
 
 					Promise.all [
 						resin.models.device.register(application.app_name, uuid1)
@@ -1596,7 +1599,7 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.device.get()', ->
 
 					it 'should be rejected with an error if there is an ambiguation between shorter uuids', ->
-						promise = resin.models.device.get('aaaaaaaaaaaaaaaa')
+						promise = resin.models.device.get(@uuidRoot)
 
 						m.chai.expect(promise).to.be.rejected
 							.and.eventually.have.property('code', 'ResinAmbiguousDevice')
@@ -1604,7 +1607,7 @@ describe 'SDK Integration Tests', ->
 				describe 'resin.models.device.has()', ->
 
 					it 'should be rejected with an error for an ambiguous shorter uuid', ->
-						promise = resin.models.device.has('aaaaaaaaaaaaaaaa')
+						promise = resin.models.device.has(@uuidRoot)
 
 						m.chai.expect(promise).to.be.rejected
 							.and.eventually.have.property('code', 'ResinAmbiguousDevice')
