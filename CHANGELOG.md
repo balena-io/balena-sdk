@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Document log subscriptions in detail
 
+### Fixed
+
+- Always choose a production image as the recommended version.
+- Consistently order image versions.
+
 ## [6.3.1] - 2017-05-11
 
 ### Fixed

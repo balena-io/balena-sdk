@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, RESINOS_VERSION_REGEX, _, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, notFoundResponse, once, onlyIf, osVersionRCompare, partition, ref, reject, semver, treatAsMissingApplication;
+var Promise, RESINOS_VERSION_REGEX, _, deviceTypesUtil, errors, findCallback, getImgMakerHelper, getOsModel, isDevelopmentVersion, notFoundResponse, once, onlyIf, osVersionRCompare, partition, ref, reject, semver, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
@@ -31,7 +31,7 @@ _ = require('lodash');
 
 errors = require('resin-errors');
 
-ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMakerHelper, findCallback = ref.findCallback, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication, deviceTypesUtil = ref.deviceTypes, osVersionRCompare = ref.osVersionRCompare;
+ref = require('../util'), onlyIf = ref.onlyIf, getImgMakerHelper = ref.getImgMakerHelper, findCallback = ref.findCallback, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication, deviceTypesUtil = ref.deviceTypes, osVersionRCompare = ref.osVersionRCompare, isDevelopmentVersion = ref.isDevelopmentVersion;
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
 
@@ -73,14 +73,15 @@ getOsModel = function(deps, opts) {
       return "/image/" + deviceType + "/versions";
     },
     postProcess: function(arg) {
-      var body, invalidVersions, latest, recommended, ref1, ref2, validVersions, versions;
-      body = arg.body;
-      versions = body.versions, latest = body.latest;
-      ref1 = partition(versions, semver.valid), validVersions = ref1[0], invalidVersions = ref1[1];
-      validVersions.sort(osVersionRCompare);
-      recommended = ((ref2 = reject(validVersions, semver.prerelease)) != null ? ref2[0] : void 0) || null;
+      var latest, potentialRecommendedVersions, recommended, ref1, versions;
+      ref1 = arg.body, versions = ref1.versions, latest = ref1.latest;
+      versions.sort(osVersionRCompare);
+      potentialRecommendedVersions = reject(versions, function(version) {
+        return semver.prerelease(version) || isDevelopmentVersion(version);
+      });
+      recommended = (potentialRecommendedVersions != null ? potentialRecommendedVersions[0] : void 0) || null;
       return {
-        versions: invalidVersions.concat(validVersions),
+        versions: versions,
         recommended: recommended,
         latest: latest,
         "default": recommended || latest

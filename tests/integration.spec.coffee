@@ -7,6 +7,8 @@ superagent = require('superagent')
 
 PUBLIC_KEY = require('./data/public-key')
 
+{ osVersionRCompare } = require('../build/util')
+
 IS_BROWSER = window?
 
 if IS_BROWSER
@@ -1736,10 +1738,13 @@ describe 'SDK Integration Tests', ->
 				describe 'given a valid device slug', ->
 
 					areValidVersions = (osVersions) ->
-						osVersions and
-						osVersions.versions and osVersions.versions.length and
-						osVersions.latest and osVersions.recommended and osVersions.default and
-						osVersions.default is osVersions.recommended
+						sortedVersions = _.clone(osVersions.versions)
+						sortedVersions.sort(osVersionRCompare)
+						return osVersions and
+							osVersions.versions and osVersions.versions.length and
+							_.isEqual(osVersions.versions, sortedVersions)
+							osVersions.latest and osVersions.recommended and osVersions.default and
+							osVersions.default is osVersions.recommended
 
 					it 'should eventually return the valid versions object', ->
 						promise = resin.models.os.getSupportedVersions('raspberry-pi')
