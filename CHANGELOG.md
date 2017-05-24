@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.4.1] - 2017-05-24
+
+### Fixed
+
+- Don't include .env when publishing to npm
+- Fix condition for travis to publish to npm
+
+
 ## [6.4.0] - 2017-05-23
 
 ### Added
