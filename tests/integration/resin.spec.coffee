@@ -38,9 +38,7 @@ describe 'Resin SDK', ->
 			interceptor = request: m.sinon.mock().returnsArg(0)
 			resin.interceptors = [ interceptor ]
 
-			promise = resin.models.application.getAll()
-
-			promise.then ->
+			resin.models.application.getAll().then ->
 				m.chai.expect(interceptor.request.called).to.equal true,
 					'Interceptor set directly should have its request hook called'
 

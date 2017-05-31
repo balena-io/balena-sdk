@@ -5,7 +5,7 @@ Promise = require('bluebird')
 
 { resin, givenLoggedInUser, IS_BROWSER } = require('../setup')
 
-simpleRequest = (url) ->
+makeRequest = (url) ->
 	return new Promise (resolve, reject) ->
 		superagent.get(url)
 		.end (err, res) ->
@@ -660,8 +660,7 @@ describe 'Device Model', ->
 
 				it 'should eventually be an absolute url given a uuid', ->
 					resin.models.device.getDeviceUrl(@device.uuid)
-					.then (deviceUrl) ->
-						simpleRequest(deviceUrl)
+					.then(makeRequest)
 					.then (response) ->
 						m.chai.expect(response.isError).to.equal(true)
 

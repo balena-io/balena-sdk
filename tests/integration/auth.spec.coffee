@@ -72,10 +72,7 @@ describe 'SDK authentication', ->
 						url: "/ewa/user(#{userId})"
 						baseUrl: sdkOpts.apiUrl
 					.then(resin.auth.logout)
-				.catch (error) ->
-					if error?.message is 'Request error: Unauthorized'
-						return
-					throw error
+				.catch(message: 'Request error: Unauthorized', ->)
 
 			it 'should be able to register an account', ->
 				resin.auth.register

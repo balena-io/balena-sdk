@@ -6,6 +6,9 @@ Promise = require('bluebird')
 
 { osVersionRCompare } = require('../../../build/util')
 
+eventuallyExpectProperty = (promise, prop) ->
+	m.chai.expect(promise).to.eventually.have.property(prop)
+
 describe 'OS model', ->
 
 	describe 'resin.models.os._getMaxSatisfyingVersion()', ->
@@ -27,47 +30,47 @@ describe 'OS model', ->
 		it "should support 'latest'", ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('latest', osVersions)
-			).to.be.equal(osVersions.latest)
+			).to.equal(osVersions.latest)
 
 		it "should support 'recommended'", ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('recommended', osVersions)
-			).to.be.equal(osVersions.recommended)
+			).to.equal(osVersions.recommended)
 
 		it "should support 'default'", ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('default', osVersions)
-			).to.be.equal(osVersions.default)
+			).to.equal(osVersions.default)
 
 		it 'should support exact version', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('1.24.1', osVersions)
-			).to.be.equal('1.24.1')
+			).to.equal('1.24.1')
 
 		it 'should support exact non-semver version', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('2.0.0.rev1', osVersions)
-			).to.be.equal('2.0.0.rev1')
+			).to.equal('2.0.0.rev1')
 
 		it 'should support semver ranges', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('^1.24.0', osVersions)
-			).to.be.equal('1.24.1')
+			).to.equal('1.24.1')
 
 		it 'should support non-semver version ranges', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('^2.0.0.rev1', osVersions)
-			).to.be.equal('2.0.1.rev2')
+			).to.equal('2.0.1.rev2')
 
 		it 'should drop unsupported exact versions', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('1.24.5', osVersions)
-			).to.be.equal(null)
+			).to.equal(null)
 
 		it 'should drop unsupported semver ranges', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('~1.30.0', osVersions)
-			).to.be.equal(null)
+			).to.equal(null)
 
 	describe 'resin.models.os.getSupportedVersions()', ->
 
@@ -102,21 +105,21 @@ describe 'OS model', ->
 
 			it 'should eventually be a valid number', ->
 				promise = resin.models.os.getDownloadSize('raspberry-pi')
-				m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
+				m.chai.expect(promise).to.eventually.be.a('number')
 
 			it 'should eventually be a valid number if passing a device type alias', ->
 				promise = resin.models.os.getDownloadSize('raspberrypi')
-				m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
+				m.chai.expect(promise).to.eventually.be.a('number')
 
 		describe 'given a specific OS version', ->
 
 			it 'should get a result for ResinOS v1', ->
 				promise = resin.models.os.getDownloadSize('raspberry-pi', '1.24.0')
-				m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
+				m.chai.expect(promise).to.eventually.be.a('number')
 
 			it 'should get a result for ResinOS v2', ->
 				promise = resin.models.os.getDownloadSize('raspberry-pi', '2.0.0+rev2')
-				m.chai.expect(promise).to.eventually.satisfy((n) -> typeof n is 'number')
+				m.chai.expect(promise).to.eventually.be.a('number')
 
 			it 'should cache download sizes independently for each version', ->
 				Promise.all [
@@ -209,35 +212,35 @@ describe 'OS model', ->
 			it 'should be able to get an application config by id', ->
 				promise = resin.models.os.getConfig(@application.id)
 				Promise.all [
-					m.chai.expect(promise).to.eventually.have.property('applicationId')
-					m.chai.expect(promise).to.eventually.have.property('apiKey')
-					m.chai.expect(promise).to.eventually.have.property('userId')
-					m.chai.expect(promise).to.eventually.have.property('username')
-					m.chai.expect(promise).to.eventually.have.property('deviceType')
-					m.chai.expect(promise).to.eventually.have.property('files')
-					m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
-					m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
-					m.chai.expect(promise).to.eventually.have.property('listenPort')
+					eventuallyExpectProperty(promise, 'applicationId')
+					eventuallyExpectProperty(promise, 'apiKey')
+					eventuallyExpectProperty(promise, 'userId')
+					eventuallyExpectProperty(promise, 'username')
+					eventuallyExpectProperty(promise, 'deviceType')
+					eventuallyExpectProperty(promise, 'files')
+					eventuallyExpectProperty(promise, 'apiEndpoint')
+					eventuallyExpectProperty(promise, 'registryEndpoint')
+					eventuallyExpectProperty(promise, 'vpnEndpoint')
+					eventuallyExpectProperty(promise, 'pubnubSubscribeKey')
+					eventuallyExpectProperty(promise, 'pubnubPublishKey')
+					eventuallyExpectProperty(promise, 'listenPort')
 				]
 
 			it 'should be able to get an application config by name', ->
 				promise = resin.models.os.getConfig(@application.app_name)
 				Promise.all [
-					m.chai.expect(promise).to.eventually.have.property('applicationId')
-					m.chai.expect(promise).to.eventually.have.property('apiKey')
-					m.chai.expect(promise).to.eventually.have.property('userId')
-					m.chai.expect(promise).to.eventually.have.property('username')
-					m.chai.expect(promise).to.eventually.have.property('deviceType')
-					m.chai.expect(promise).to.eventually.have.property('files')
-					m.chai.expect(promise).to.eventually.have.property('apiEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('registryEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('vpnEndpoint')
-					m.chai.expect(promise).to.eventually.have.property('pubnubSubscribeKey')
-					m.chai.expect(promise).to.eventually.have.property('pubnubPublishKey')
-					m.chai.expect(promise).to.eventually.have.property('listenPort')
+					eventuallyExpectProperty(promise, 'applicationId')
+					eventuallyExpectProperty(promise, 'apiKey')
+					eventuallyExpectProperty(promise, 'userId')
+					eventuallyExpectProperty(promise, 'username')
+					eventuallyExpectProperty(promise, 'deviceType')
+					eventuallyExpectProperty(promise, 'files')
+					eventuallyExpectProperty(promise, 'apiEndpoint')
+					eventuallyExpectProperty(promise, 'registryEndpoint')
+					eventuallyExpectProperty(promise, 'vpnEndpoint')
+					eventuallyExpectProperty(promise, 'pubnubSubscribeKey')
+					eventuallyExpectProperty(promise, 'pubnubPublishKey')
+					eventuallyExpectProperty(promise, 'listenPort')
 				]
 
 			it 'should be able to configure image parameters', ->
@@ -253,11 +256,11 @@ describe 'OS model', ->
 				promise = resin.models.os.getConfig(@application.id, configOptions)
 				Promise.all [
 					# NOTE: the interval is converted to ms in the config object
-					m.chai.expect(promise).to.eventually.have.property('appUpdatePollInterval').that.equals(configOptions.appUpdatePollInterval * 60 * 1000)
-					m.chai.expect(promise).to.eventually.have.property('wifiKey').that.equals(configOptions.wifiKey)
-					m.chai.expect(promise).to.eventually.have.property('wifiSsid').that.equals(configOptions.wifiSsid)
-					m.chai.expect(promise).to.eventually.have.property('version').that.equals(configOptions.version)
-					m.chai.expect(promise).to.eventually.have.property('files')
+					eventuallyExpectProperty(promise, 'appUpdatePollInterval').that.equals(configOptions.appUpdatePollInterval * 60 * 1000)
+					eventuallyExpectProperty(promise, 'wifiKey').that.equals(configOptions.wifiKey)
+					eventuallyExpectProperty(promise, 'wifiSsid').that.equals(configOptions.wifiSsid)
+					eventuallyExpectProperty(promise, 'version').that.equals(configOptions.version)
+					eventuallyExpectProperty(promise, 'files')
 						.that.has.property('network/network.config')
 						.that.includes("#{configOptions.ip}/#{configOptions.netmask}/#{configOptions.gateway}")
 				]
