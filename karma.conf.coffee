@@ -18,9 +18,12 @@ module.exports = (config) ->
 	karmaConfig.browserify.configure = (bundle) ->
 		bundle.on 'prebundle', ->
 			bundle.external(BROWSER_BUNDLE)
+	karmaConfig.client = mocha:
+		timeout: 5 * 60 * 1000
+		slow: 10 * 1000
 	karmaConfig.files = [
 		BROWSER_BUNDLE,
-		'tests/*.spec.coffee'
+		'tests/**/*.spec.coffee'
 	]
 
 	karmaConfig.envPreprocessor = [
