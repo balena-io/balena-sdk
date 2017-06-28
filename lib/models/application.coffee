@@ -411,6 +411,70 @@ getApplicationModel = (deps, opts) ->
 	###
 	exports.getApiKey = exports.generateApiKey
 
+	###*
+	# @summary Enable device urls for all devices that belong to an application
+	# @name enableDeviceUrls
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.enableDeviceUrls('MyApp');
+	#
+	# @example
+	# resin.models.application.enableDeviceUrls(123);
+	#
+	# @example
+	# resin.models.device.enableDeviceUrls('MyApp', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.enableDeviceUrls = (nameOrId, callback) ->
+		exports.get(nameOrId).then ({ id }) ->
+			return pine.patch
+				resource: 'device'
+				body:
+					is_web_accessible: true
+				options:
+					filter:
+						application: id
+		.asCallback(callback)
+
+	###*
+	# @summary Disable device urls for all devices that belong to an application
+	# @name disableDeviceUrls
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.disableDeviceUrls('MyApp');
+	#
+	# @example
+	# resin.models.application.disableDeviceUrls(123);
+	#
+	# @example
+	# resin.models.device.disableDeviceUrls('MyApp', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.disableDeviceUrls = (nameOrId, callback) ->
+		exports.get(nameOrId).then ({ id }) ->
+			return pine.patch
+				resource: 'device'
+				body:
+					is_web_accessible: false
+				options:
+					filter:
+						application: id
+		.asCallback(callback)
+
 	return exports
 
 module.exports = getApplicationModel
