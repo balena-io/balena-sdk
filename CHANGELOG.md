@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Added
+
+- A new method `models.application.grantSupportAccess` that allows resin.io support staff to access all devices in an application.
+- A new method `models.application.revokeSupportAccess` that resin.io support staff access on all devices in an application.
+- A new method `models.device.grantSupportAccess` that allows resin.io support staff to access a device.
+- A new method `models.device.revokeSupportAccess` that revokes resin.io support staff access to a device.
+
 ## [6.5.0] - 2017-06-30
 
 ### Added

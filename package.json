@@ -62,7 +62,7 @@
     "promise-memoize": "^1.2.0",
     "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
-    "resin-errors": "^2.6.0",
+    "resin-errors": "^2.7.0",
     "resin-pine": "^5.0.2",
     "resin-register-device": "^4.0.1",
     "resin-request": "^8.3.0",

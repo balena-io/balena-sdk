@@ -509,6 +509,76 @@ getApplicationModel = function(deps, opts) {
       });
     }).asCallback(callback);
   };
+
+  /**
+  	 * @summary Grant support access to an application until a specified time
+  	 * @name grantSupportAccess
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000);
+  	 *
+  	 * @example
+  	 * resin.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
+  	 *
+  	 * @example
+  	 * resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.grantSupportAccess = function(nameOrId, expiryTimestamp, callback) {
+    if ((expiryTimestamp == null) || expiryTimestamp <= Date.now()) {
+      throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp);
+    }
+    return getId(nameOrId).then(function(applicationId) {
+      return pine.patch({
+        resource: 'application',
+        id: applicationId,
+        body: {
+          support_expiry_date: expiryTimestamp
+        }
+      });
+    })["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Revoke support access to an application
+  	 * @name revokeSupportAccess
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {String|Number} nameOrId - application name (string) or id (number)
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.application.revokeSupportAccess('MyApp');
+  	 *
+  	 * @example
+  	 * resin.models.application.revokeSupportAccess(123);
+  	 *
+  	 * @example
+  	 * resin.models.application.revokeSupportAccess('MyApp', function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.revokeSupportAccess = function(nameOrId, callback) {
+    return getId(nameOrId).then(function(applicationId) {
+      return pine.patch({
+        resource: 'application',
+        id: applicationId,
+        body: {
+          support_expiry_date: null
+        }
+      });
+    })["catch"](notFoundResponse, treatAsMissingApplication(nameOrId)).asCallback(callback);
+  };
   return exports;
 };
 

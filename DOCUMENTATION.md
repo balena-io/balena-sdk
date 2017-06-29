@@ -29,6 +29,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
             * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
             * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+            * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+            * [.revokeSupportAccess(nameOrId)](#resin.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.device](#resin.models.device) : <code>object</code>
             * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
@@ -72,6 +74,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
+            * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
+            * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.key](#resin.models.key) : <code>object</code>
             * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
             * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
@@ -238,6 +242,8 @@ resin.pine.get({
         * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
         * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
         * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+        * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+        * [.revokeSupportAccess(nameOrId)](#resin.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.device](#resin.models.device) : <code>object</code>
         * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
@@ -281,6 +287,8 @@ resin.pine.get({
         * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
+        * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
+        * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.key](#resin.models.key) : <code>object</code>
         * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
         * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
@@ -331,6 +339,8 @@ resin.pine.get({
     * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
     * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
     * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+    * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+    * [.revokeSupportAccess(nameOrId)](#resin.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
 
 <a name="resin.models.application.getAll"></a>
 
@@ -646,6 +656,57 @@ resin.models.device.disableDeviceUrls('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
+<a name="resin.models.application.grantSupportAccess"></a>
+
+##### application.grantSupportAccess(nameOrId, expiryTimestamp) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Summary**: Grant support access to an application until a specified time  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+| expiryTimestamp | <code>Number</code> | a timestamp in ms for when the support access will expire |
+
+**Example**  
+```js
+resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000);
+```
+**Example**  
+```js
+resin.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
+```
+**Example**  
+```js
+resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.application.revokeSupportAccess"></a>
+
+##### application.revokeSupportAccess(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Summary**: Revoke support access to an application  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+resin.models.application.revokeSupportAccess('MyApp');
+```
+**Example**  
+```js
+resin.models.application.revokeSupportAccess(123);
+```
+**Example**  
+```js
+resin.models.application.revokeSupportAccess('MyApp', function(error) {
+	if (error) throw error;
+});
+```
 <a name="resin.models.device"></a>
 
 #### models.device : <code>object</code>
@@ -694,6 +755,8 @@ resin.models.device.disableDeviceUrls('MyApp', function(error) {
     * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
+    * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
+    * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
 
 <a name="resin.models.device.getDashboardUrl"></a>
 
@@ -1885,6 +1948,57 @@ resin.models.device.getStatus(device).then(function(status) {
 resin.models.device.getStatus(device, function(error, status) {
 	if (error) throw error;
 	console.log(status);
+});
+```
+<a name="resin.models.device.grantSupportAccess"></a>
+
+##### device.grantSupportAccess(uuidOrId, expiryTimestamp) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Grant support access to a device until a specified time  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| expiryTimestamp | <code>Number</code> | a timestamp in ms for when the support access will expire |
+
+**Example**  
+```js
+resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+```
+**Example**  
+```js
+resin.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
+```
+**Example**  
+```js
+resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.device.revokeSupportAccess"></a>
+
+##### device.revokeSupportAccess(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Revoke support access to a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+resin.models.device.revokeSupportAccess('7cf02a6');
+```
+**Example**  
+```js
+resin.models.device.revokeSupportAccess(123);
+```
+**Example**  
+```js
+resin.models.device.revokeSupportAccess('7cf02a6', function(error) {
+	if (error) throw error;
 });
 ```
 <a name="resin.models.key"></a>

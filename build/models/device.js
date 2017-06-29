@@ -1730,6 +1730,76 @@ getDeviceModel = function(deps, opts) {
       return deviceStatus.getStatus(device).key;
     }).asCallback(callback);
   };
+
+  /**
+  	 * @summary Grant support access to a device until a specified time
+  	 * @name grantSupportAccess
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.device
+  	 *
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+  	 *
+  	 * @example
+  	 * resin.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
+  	 *
+  	 * @example
+  	 * resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.grantSupportAccess = function(uuidOrid, expiryTimestamp, callback) {
+    if ((expiryTimestamp == null) || expiryTimestamp <= Date.now()) {
+      throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp);
+    }
+    return exports.get(uuidOrid).then(function(device) {
+      return pine.patch({
+        resource: 'device',
+        id: device.id,
+        body: {
+          support_expiry_date: expiryTimestamp
+        }
+      });
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Revoke support access to a device
+  	 * @name revokeSupportAccess
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.device
+  	 *
+  	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.device.revokeSupportAccess('7cf02a6');
+  	 *
+  	 * @example
+  	 * resin.models.device.revokeSupportAccess(123);
+  	 *
+  	 * @example
+  	 * resin.models.device.revokeSupportAccess('7cf02a6', function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.revokeSupportAccess = function(uuidOrid, callback) {
+    return exports.get(uuidOrid).then(function(device) {
+      return pine.patch({
+        resource: 'device',
+        id: device.id,
+        body: {
+          support_expiry_date: null
+        }
+      });
+    }).asCallback(callback);
+  };
   return exports;
 };
 

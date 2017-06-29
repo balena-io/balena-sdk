@@ -758,6 +758,37 @@ describe 'Device Model', ->
 					m.chai.expect(deviceApiKey).to.be.a.string
 					m.chai.expect(deviceApiKey).to.have.length(32)
 
+		describe 'resin.models.device.grantSupportAccess()', ->
+			it 'should throw an error if the expiry time stamp is in the past', ->
+				expiryTimestamp = Date.now() - 3600 * 1000
+
+				m.chai.expect( => resin.models.device.grantSupportAccess(@device.id, expiryTimestamp))
+				.to.throw()
+
+			it 'should throw an error if the expiry time stamp is undefined', ->
+				m.chai.expect( => resin.models.device.grantSupportAccess(@device.id))
+				.to.throw()
+
+			it 'should grant support access for the correct amount of time', ->
+				expiryTimestamp = Date.now() + 3600 * 1000
+				promise = resin.models.device.grantSupportAccess(@device.id, expiryTimestamp)
+				.then =>
+					resin.models.device.get(@device.id)
+				.then ({ support_expiry_date }) ->
+					Date.parse(support_expiry_date)
+
+				m.chai.expect(promise).to.eventually.equal(expiryTimestamp)
+
+		describe 'resin.models.device.revokeSupportAccess()', ->
+			it 'should revoke support access', ->
+				resin.models.device.grantSupportAccess(@device.id, Date.now() + 3600 * 1000)
+				.then =>
+					resin.models.device.revokeSupportAccess(@device.id)
+				.then =>
+					resin.models.device.get(@device.id)
+				.then ({ support_expiry_date }) ->
+					m.chai.expect(support_expiry_date).to.be.null
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->
