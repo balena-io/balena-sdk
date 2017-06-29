@@ -87,6 +87,9 @@ describe 'OS model', ->
 
 			it 'should eventually return the valid versions object', ->
 				promise = resin.models.os.getSupportedVersions('raspberry-pi')
+				.then (versions) ->
+					console.log(versions)
+					return versions
 				m.chai.expect(promise).to.eventually.satisfy(areValidVersions)
 
 			it 'should eventually return the valid versions object if passing a device type alias', ->
@@ -118,13 +121,13 @@ describe 'OS model', ->
 				m.chai.expect(promise).to.eventually.be.a('number')
 
 			it 'should get a result for ResinOS v2', ->
-				promise = resin.models.os.getDownloadSize('raspberry-pi', '2.0.0+rev2')
+				promise = resin.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod')
 				m.chai.expect(promise).to.eventually.be.a('number')
 
 			it 'should cache download sizes independently for each version', ->
 				Promise.all [
 					resin.models.os.getDownloadSize('raspberry-pi', '1.24.0')
-					resin.models.os.getDownloadSize('raspberry-pi', '2.0.0+rev2')
+					resin.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod')
 				]
 				.then ([ os1Size, os2Size ]) ->
 					m.chai.expect(os1Size).not.to.equal(os2Size)
@@ -152,7 +155,7 @@ describe 'OS model', ->
 				m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
 			it 'should be able to query for a version containing a plus', ->
-				promise = resin.models.os.getLastModified('raspberrypi', '2.0.0+rev2')
+				promise = resin.models.os.getLastModified('raspberrypi', '2.0.6+rev3.prod')
 				m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
 		describe 'given an invalid device slug', ->

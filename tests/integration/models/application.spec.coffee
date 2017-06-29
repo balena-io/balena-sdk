@@ -42,7 +42,10 @@ describe 'Application Model', ->
 
 			it 'should be rejected if the name has less than three characters', ->
 				promise = resin.models.application.create('Fo', 'raspberry-pi')
-				m.chai.expect(promise).to.be.rejectedWith('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4.')
+				m.chai.expect(promise).to.be.rejected
+				.then (error) ->
+					m.chai.expect(error).to.have.property('message')
+					.that.contains('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4')
 
 			it 'should be able to create an application using a device type alias', ->
 				resin.models.application.create('FooBar', 'raspberrypi').then ->
