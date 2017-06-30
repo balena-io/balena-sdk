@@ -165,30 +165,30 @@ describe 'osVersionRCompare', ->
 		m.chai.expect(osVersionRCompare('2.0.0-rc6.rev2', '2.0.0+rev1')).to.equal(1)
 
 	it 'sorts by rev if the semver otherwise matches', ->
-		m.chai.expect(osVersionRCompare('2.0.0+rev2', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionRCompare('2.0.0+rev2', '2.0.0+rev2')).to.equal(0)
-		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.0+rev2')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.6+rev3.prod', '2.0.0+rev1')).to.equal(-1)
+		m.chai.expect(osVersionRCompare('2.0.6+rev3.prod', '2.0.6+rev3.prod')).to.equal(0)
+		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.6+rev3.prod')).to.equal(1)
 
 	it 'sorts any rev above no rev', ->
 		m.chai.expect(osVersionRCompare('2.0.0', '2.0.0+rev1')).to.equal(1)
 
 	it 'sorts by non-rev build metadata for matching revs', ->
-		m.chai.expect(osVersionRCompare('2.0.0+rev2.dev', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionRCompare('2.0.0+dev.rev2', '2.0.0+rev2')).to.equal(1)
-		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.0+rev2.dev')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.6+rev3.dev', '2.0.0+rev1')).to.equal(-1)
+		m.chai.expect(osVersionRCompare('2.0.0+dev.rev2', '2.0.6+rev3.prod')).to.equal(1)
+		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.6+rev3.dev')).to.equal(1)
 
 	it 'correctly sorts a full list', ->
 		m.chai.expect([
 			'1.0.0'
 			'2.0.0-rc1+rev5'
-			'2.0.0+rev2'
+			'2.0.6+rev3.prod'
 			'2.0.0+rev1'
 			'2.0.0'
 			'1.24.0+rev100'
-			'2.0.0+rev2.dev'
+			'2.0.6+rev3.dev'
 		].sort(osVersionRCompare)).to.deep.equal [
-			'2.0.0+rev2'
-			'2.0.0+rev2.dev'
+			'2.0.6+rev3.prod'
+			'2.0.6+rev3.dev'
 			'2.0.0+rev1'
 			'2.0.0'
 			'2.0.0-rc1+rev5'
