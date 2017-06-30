@@ -193,3 +193,31 @@ describe 'Application Model', ->
 			it 'should be rejected if the application id does not exist', ->
 				promise = resin.models.application.getApiKey(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+	describe 'when toggling device URLs', ->
+		beforeEach ->
+			resin.models.application.create('DeviceUrlsTestApp', 'raspberry-pi').then (application) =>
+				@application = application
+				resin.models.device.register(@application.id, resin.models.device.generateUniqueKey())
+			.then (deviceInfo) =>
+				@deviceInfo = deviceInfo
+
+		describe 'resin.models.application.enableDeviceUrls()', ->
+
+			it 'should enable the device url for the applications devices', ->
+				promise = resin.models.application.enableDeviceUrls(@application.id)
+				.then =>
+					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
+
+				m.chai.expect(promise).to.eventually.be.true
+
+		describe 'resin.models.application.disableDeviceUrls()', ->
+
+			it 'should disable the device url for the applications devices', ->
+				promise = resin.models.device.enableDeviceUrl(@deviceInfo.uuid)
+				.then =>
+					resin.models.application.disableDeviceUrls(@application.id)
+				.then =>
+					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
+
+				m.chai.expect(promise).to.eventually.be.false

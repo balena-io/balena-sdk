@@ -27,6 +27,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
             * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
+            * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+            * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
         * [.device](#resin.models.device) : <code>object</code>
             * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
@@ -234,6 +236,8 @@ resin.pine.get({
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
         * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
+        * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+        * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
     * [.device](#resin.models.device) : <code>object</code>
         * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
@@ -325,6 +329,8 @@ resin.pine.get({
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
     * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
+    * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+    * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
 
 <a name="resin.models.application.getAll"></a>
 
@@ -590,6 +596,56 @@ resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 | --- | --- | --- |
 | nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
 
+<a name="resin.models.application.enableDeviceUrls"></a>
+
+##### application.enableDeviceUrls(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Summary**: Enable device urls for all devices that belong to an application  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+resin.models.application.enableDeviceUrls('MyApp');
+```
+**Example**  
+```js
+resin.models.application.enableDeviceUrls(123);
+```
+**Example**  
+```js
+resin.models.device.enableDeviceUrls('MyApp', function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.application.disableDeviceUrls"></a>
+
+##### application.disableDeviceUrls(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Summary**: Disable device urls for all devices that belong to an application  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+resin.models.application.disableDeviceUrls('MyApp');
+```
+**Example**  
+```js
+resin.models.application.disableDeviceUrls(123);
+```
+**Example**  
+```js
+resin.models.device.disableDeviceUrls('MyApp', function(error) {
+	if (error) throw error;
+});
+```
 <a name="resin.models.device"></a>
 
 #### models.device : <code>object</code>
