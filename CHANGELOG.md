@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.5.0] - 2017-06-30
+
 ### Added
 
 - A new method `models.application.enableDeviceUrls` that enables URLs for all devices in an application.
