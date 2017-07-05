@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.6.0] - 2017-07-05
+
 ### Added
 
 - A new method `models.application.grantSupportAccess` that allows resin.io support staff to access all devices in an application.
