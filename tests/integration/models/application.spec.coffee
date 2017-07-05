@@ -221,3 +221,43 @@ describe 'Application Model', ->
 					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
 
 				m.chai.expect(promise).to.eventually.be.false
+
+	describe 'when changing support access', ->
+		beforeEach ->
+			resin.models.application.create('SupportAccessTestApp', 'raspberry-pi').then (application) =>
+				@application = application
+
+		describe 'resin.models.application.grantSupportAccess()', ->
+			it 'should throw an error if the expiry time stamp is in the past', ->
+				expiryTimestamp = Date.now() - 3600 * 1000
+
+				m.chai.expect( => resin.models.application.grantSupportAccess(@application.id, expiryTimestamp))
+				.to.throw()
+
+			it 'should throw an error if the expiry time stamp is undefined', ->
+				m.chai.expect( => resin.models.application.grantSupportAccess(@application.id))
+				.to.throw()
+
+			it 'should grant support access until the specified time', ->
+				expiryTime = Date.now() + 3600 * 1000
+				promise = resin.models.application.grantSupportAccess(@application.id, expiryTime)
+				.then =>
+					resin.models.application.get(@application.id)
+				.then (app) ->
+					Date.parse(app.support_expiry_date)
+
+				m.chai.expect(promise).to.eventually.equal(expiryTime)
+
+		describe 'resin.models.application.revokeSupportAccess()', ->
+			it 'should revoke support access', ->
+				expiryTime = Date.now() + 3600 * 1000
+				promise = resin.models.application.grantSupportAccess(@application.id, expiryTime)
+				.then =>
+					resin.models.application.revokeSupportAccess(@application.id)
+				.then =>
+					resin.models.application.get(@application.id)
+				.then (app) ->
+					app.support_expiry_date
+
+				m.chai.expect(promise).to.eventually.equal(null)
+

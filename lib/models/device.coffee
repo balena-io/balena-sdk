@@ -1045,8 +1045,8 @@ getDeviceModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.update = (uuidOrid, options, callback) ->
-		exports.get(uuidOrid).then (device) ->
+	exports.update = (uuidOrId, options, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/update'
@@ -1433,8 +1433,8 @@ getDeviceModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.enableDeviceUrl = (uuidOrid, callback) ->
-		exports.get(uuidOrid).then (device) ->
+	exports.enableDeviceUrl = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -1611,6 +1611,68 @@ getDeviceModel = (deps, opts) ->
 	exports.getStatus = (device, callback) ->
 		Promise.try ->
 			return deviceStatus.getStatus(device).key
+		.asCallback(callback)
+
+	###*
+	# @summary Grant support access to a device until a specified time
+	# @name grantSupportAccess
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+	#
+	# @example
+	# resin.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
+	#
+	# @example
+	# resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.grantSupportAccess = (uuidOrId, expiryTimestamp, callback) ->
+		if not expiryTimestamp? or expiryTimestamp <= Date.now()
+			throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp)
+
+		exports.get(uuidOrId).then (device) ->
+			return pine.patch
+				resource: 'device'
+				id: device.id
+				body: support_expiry_date: expiryTimestamp
+		.asCallback(callback)
+
+	###*
+	# @summary Revoke support access to a device
+	# @name revokeSupportAccess
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.revokeSupportAccess('7cf02a6');
+	#
+	# @example
+	# resin.models.device.revokeSupportAccess(123);
+	#
+	# @example
+	# resin.models.device.revokeSupportAccess('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.revokeSupportAccess = (uuidOrId, callback) ->
+		exports.get(uuidOrId).then (device) ->
+			return pine.patch
+				resource: 'device'
+				id: device.id
+				body: support_expiry_date: null
 		.asCallback(callback)
 
 	return exports
