@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+Promise = require('bluebird')
+errors = require('resin-errors')
 once = require('lodash/once')
 
 getEnvironmentVariablesModel = (deps, opts) ->
@@ -23,6 +25,9 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	applicationModel = once -> require('./application')(deps, opts)
 
 	exports = {}
+
+	isValidName = (envVarName) ->
+		/^[a-zA-Z_]+[a-zA-Z0-9_]*$/.exec(envVarName)?
 
 	###*
 	# @summary Get all environment variables by application
@@ -69,7 +74,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# @memberof resin.models.environment-variables
 	#
 	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
-	# @param {String} name - environment variable name
+	# @param {String} envVarName - environment variable name
 	# @param {String} value - environment variable value
 	#
 	# @returns {Promise}
@@ -85,14 +90,18 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.create = (applicationNameOrId, name, value, callback) ->
-		applicationModel().get(applicationNameOrId).get('id').then (applicationId) ->
-			return pine.post
-				resource: 'environment_variable'
-				body:
-					name: name
-					value: String(value)
-					application: applicationId
+	exports.create = (applicationNameOrId, envVarName, value, callback) ->
+		Promise.try ->
+			if not isValidName(envVarName)
+				throw new errors.ResinInvalidParameterError('envVarName', envVarName)
+
+			applicationModel().get(applicationNameOrId).get('id').then (applicationId) ->
+				return pine.post
+					resource: 'environment_variable'
+					body:
+						name: envVarName
+						value: String(value)
+						application: applicationId
 		.asCallback(callback)
 
 	###*
@@ -277,7 +286,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# @memberof resin.models.environment-variables.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {String} name - environment variable name
+	# @param {String} envVarName - environment variable name
 	# @param {String} value - environment variable value
 	#
 	# @returns {Promise}
@@ -293,15 +302,19 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.device.create = (uuidOrId, name, value, callback) ->
-		deviceModel().get(uuidOrId).then (device) ->
-			return pine.post
-				resource: 'device_environment_variable'
-				body:
-					device: device.id
-					env_var_name: name
-					value: String(value)
-		.then(fixDeviceEnvVarNameKey)
+	exports.device.create = (uuidOrId, envVarName, value, callback) ->
+		Promise.try ->
+			if not isValidName(envVarName)
+				throw new errors.ResinInvalidParameterError('envVarName', envVarName)
+
+			deviceModel().get(uuidOrId).then (device) ->
+				return pine.post
+					resource: 'device_environment_variable'
+					body:
+						device: device.id
+						env_var_name: envVarName
+						value: String(value)
+			.then(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
 
 	###*

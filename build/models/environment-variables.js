@@ -15,12 +15,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var getEnvironmentVariablesModel, once;
+var Promise, errors, getEnvironmentVariablesModel, once;
+
+Promise = require('bluebird');
+
+errors = require('resin-errors');
 
 once = require('lodash/once');
 
 getEnvironmentVariablesModel = function(deps, opts) {
-  var applicationModel, deviceModel, exports, fixDeviceEnvVarNameKey, pine;
+  var applicationModel, deviceModel, exports, fixDeviceEnvVarNameKey, isValidName, pine;
   pine = deps.pine;
   deviceModel = once(function() {
     return require('./device')(deps, opts);
@@ -29,6 +33,9 @@ getEnvironmentVariablesModel = function(deps, opts) {
     return require('./application')(deps, opts);
   });
   exports = {};
+  isValidName = function(envVarName) {
+    return /^[a-zA-Z_]+[a-zA-Z0-9_]*$/.exec(envVarName) != null;
+  };
 
   /**
   	 * @summary Get all environment variables by application
@@ -79,7 +86,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * @memberof resin.models.environment-variables
   	 *
   	 * @param {String|Number} applicationNameOrId - application name (string) or id (number)
-  	 * @param {String} name - environment variable name
+  	 * @param {String} envVarName - environment variable name
   	 * @param {String} value - environment variable value
   	 *
   	 * @returns {Promise}
@@ -95,15 +102,20 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.create = function(applicationNameOrId, name, value, callback) {
-    return applicationModel().get(applicationNameOrId).get('id').then(function(applicationId) {
-      return pine.post({
-        resource: 'environment_variable',
-        body: {
-          name: name,
-          value: String(value),
-          application: applicationId
-        }
+  exports.create = function(applicationNameOrId, envVarName, value, callback) {
+    return Promise["try"](function() {
+      if (!isValidName(envVarName)) {
+        throw new errors.ResinInvalidParameterError('envVarName', envVarName);
+      }
+      return applicationModel().get(applicationNameOrId).get('id').then(function(applicationId) {
+        return pine.post({
+          resource: 'environment_variable',
+          body: {
+            name: envVarName,
+            value: String(value),
+            application: applicationId
+          }
+        });
       });
     }).asCallback(callback);
   };
@@ -303,7 +315,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * @memberof resin.models.environment-variables.device
   	 *
   	 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-  	 * @param {String} name - environment variable name
+  	 * @param {String} envVarName - environment variable name
   	 * @param {String} value - environment variable value
   	 *
   	 * @returns {Promise}
@@ -319,17 +331,22 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.device.create = function(uuidOrId, name, value, callback) {
-    return deviceModel().get(uuidOrId).then(function(device) {
-      return pine.post({
-        resource: 'device_environment_variable',
-        body: {
-          device: device.id,
-          env_var_name: name,
-          value: String(value)
-        }
-      });
-    }).then(fixDeviceEnvVarNameKey).asCallback(callback);
+  exports.device.create = function(uuidOrId, envVarName, value, callback) {
+    return Promise["try"](function() {
+      if (!isValidName(envVarName)) {
+        throw new errors.ResinInvalidParameterError('envVarName', envVarName);
+      }
+      return deviceModel().get(uuidOrId).then(function(device) {
+        return pine.post({
+          resource: 'device_environment_variable',
+          body: {
+            device: device.id,
+            env_var_name: envVarName,
+            value: String(value)
+          }
+        });
+      }).then(fixDeviceEnvVarNameKey);
+    }).asCallback(callback);
   };
 
   /**
