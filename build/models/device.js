@@ -1142,8 +1142,8 @@ getDeviceModel = function(deps, opts) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.update = function(uuidOrid, options, callback) {
-    return exports.get(uuidOrid).then(function(device) {
+  exports.update = function(uuidOrId, options, callback) {
+    return exports.get(uuidOrId).then(function(device) {
       return request.send({
         method: 'POST',
         url: '/supervisor/v1/update',
@@ -1533,8 +1533,8 @@ getDeviceModel = function(deps, opts) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.enableDeviceUrl = function(uuidOrid, callback) {
-    return exports.get(uuidOrid).then(function(device) {
+  exports.enableDeviceUrl = function(uuidOrId, callback) {
+    return exports.get(uuidOrId).then(function(device) {
       return pine.patch({
         resource: 'device',
         body: {
@@ -1753,11 +1753,11 @@ getDeviceModel = function(deps, opts) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.grantSupportAccess = function(uuidOrid, expiryTimestamp, callback) {
+  exports.grantSupportAccess = function(uuidOrId, expiryTimestamp, callback) {
     if ((expiryTimestamp == null) || expiryTimestamp <= Date.now()) {
       throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp);
     }
-    return exports.get(uuidOrid).then(function(device) {
+    return exports.get(uuidOrId).then(function(device) {
       return pine.patch({
         resource: 'device',
         id: device.id,
@@ -1789,8 +1789,8 @@ getDeviceModel = function(deps, opts) {
   	 * 	if (error) throw error;
   	 * });
    */
-  exports.revokeSupportAccess = function(uuidOrid, callback) {
-    return exports.get(uuidOrid).then(function(device) {
+  exports.revokeSupportAccess = function(uuidOrId, callback) {
+    return exports.get(uuidOrId).then(function(device) {
       return pine.patch({
         resource: 'device',
         id: device.id,

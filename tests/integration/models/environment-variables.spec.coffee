@@ -79,6 +79,14 @@ describe 'Environment Variables Model', ->
 					promise = resin.models.environmentVariables.create(@application.app_name, 'RESIN_API_KEY', 'secret')
 					m.chai.expect(promise).to.be.rejectedWith('Environment variables beginning with RESIN_ are reserved.')
 
+				it 'should not allow creating a variable with a name that starts with a number', ->
+					promise = resin.models.environmentVariables.create(@application.app_name, '9_EDITOR', 'vim')
+					m.chai.expect(promise).to.be.rejectedWith(/Invalid parameter: 9_EDITOR is not a valid value/)
+
+				it 'should not allow creating a variable with a name containing an illegal character', ->
+					promise = resin.models.environmentVariables.create(@application.app_name, 'EDITOR=', 'vim')
+					m.chai.expect(promise).to.be.rejectedWith(/Invalid parameter: EDITOR= is not a valid value/)
+
 				it 'should be rejected if the application name does not exist', ->
 					promise = resin.models.environmentVariables.create('HelloWorldApp', 'EDITOR', 'vim')
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
@@ -189,6 +197,14 @@ describe 'Environment Variables Model', ->
 				it 'should not allow creating a resin variable', ->
 					promise = resin.models.environmentVariables.device.create(@device.uuid, 'RESIN_API_KEY', 'secret')
 					m.chai.expect(promise).to.be.rejectedWith('Environment variables beginning with RESIN_ are reserved.')
+
+				it 'should not allow creating a variable with a name that starts with a number', ->
+					promise = resin.models.environmentVariables.device.create(@application.app_name, '9_EDITOR', 'vim')
+					m.chai.expect(promise).to.be.rejectedWith(/Invalid parameter: 9_EDITOR is not a valid value/)
+
+				it 'should not allow creating a variable with a name containing an illegal character', ->
+					promise = resin.models.environmentVariables.device.create(@application.app_name, 'EDITOR=', 'vim')
+					m.chai.expect(promise).to.be.rejectedWith(/Invalid parameter: EDITOR= is not a valid value/)
 
 				it 'should be rejected if the device uuid does not exist', ->
 					promise = resin.models.environmentVariables.device.create('asdfghjkl', 'EDITOR', 'vim')
