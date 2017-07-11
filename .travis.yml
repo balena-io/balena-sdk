@@ -2,7 +2,7 @@
 # - we run tests for all changes in PRs
 # - we run deploys for all version-tagged commits
 # - we don't want to do anything for any other cases
-# Travis has a bunch of filtering that's supposed to cover this sort of this, but
+# Travis has a bunch of filtering that's supposed to cover this sort of thing, but
 # it doesn't quite work.
 
 language: node_js
