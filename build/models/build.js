@@ -110,7 +110,7 @@ getBuildModel = function(deps, opts) {
           filter: {
             application: application.id
           },
-          select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'update_timestamp', 'project_type', 'status', 'message'],
+          select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'update_timestamp', 'project_type', 'source', 'status', 'message'],
           expand: {
             user: {
               $select: ['id', 'username']
