@@ -108,6 +108,7 @@ getBuildModel = (deps, opts) ->
 							'end_timestamp'
 							'update_timestamp'
 							'project_type'
+							'source'
 							'status'
 							'message'
 							# 'log' # We *don't* include logs by default, since it's usually huge.
