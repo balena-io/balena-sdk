@@ -15,6 +15,12 @@ describe 'Application Model', ->
 				promise = resin.models.application.getAll()
 				m.chai.expect(promise).to.become([])
 
+		describe 'resin.models.application.getAppWithOwner()', ->
+
+			it 'should eventually reject', ->
+				promise = resin.models.application.getAppWithOwner('testapp', 'FooBar')
+				m.chai.expect(promise).to.be.rejected
+
 		describe 'resin.models.application.hasAny()', ->
 
 			it 'should eventually be false', ->
@@ -75,6 +81,16 @@ describe 'Application Model', ->
 			it 'should eventually be true', ->
 				promise = resin.models.application.hasAny()
 				m.chai.expect(promise).to.eventually.be.true
+
+		describe 'resin.models.application.getAppWithOwner()', ->
+
+			it 'should find the created application', ->
+				resin.models.application.getAppWithOwner('FooBar', credentials.username).then (application) =>
+					m.chai.expect(application.id).to.equal(@application.id)
+
+			it 'should not find the created application with a different username', ->
+				promise = resin.models.application.getAppWithOwner('FooBar', 'test_username')
+				m.chai.expect(promise).to.eventually.reject
 
 		describe 'resin.models.application.getAll()', ->
 
