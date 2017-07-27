@@ -76,9 +76,7 @@ describe 'Key Model', ->
 
 			it 'should be rejected if the key id is invalid', ->
 				promise = resin.models.key.get(99999999999)
-				m.chai.expect(promise).to.be.rejectedWith('Request error: Internal Server Error')
-				# TODO: used to work before, https://www.flowdock.com/app/rulemotion/platform/threads/v_RHSp7A6eGwvb4l4G6Ro2dd4Ss
-				# m.chai.expect(promise).to.be.rejectedWith('Key not found: 99999999999')
+				m.chai.expect(promise).to.be.rejectedWith('Request error')
 
 		describe 'resin.models.key.remove()', ->
 
