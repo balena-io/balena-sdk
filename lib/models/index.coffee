@@ -60,5 +60,12 @@ modelsTemplate =
 	###
 	build: require('./build')
 
+	###*
+	# @namespace billing
+	# @memberof resin.models
+	# @description **Note!** The billing methods are available on Resin.io exclusively.
+	###
+	billing: require('./billing')
+
 module.exports = (deps, opts) ->
 	mapValues(modelsTemplate, (v) -> v(deps, opts))

@@ -61,7 +61,14 @@ modelsTemplate = {
   	 * @namespace build
   	 * @memberof resin.models
    */
-  build: require('./build')
+  build: require('./build'),
+
+  /**
+  	 * @namespace billing
+  	 * @memberof resin.models
+  	 * @description **Note!** The billing methods are available on Resin.io exclusively.
+   */
+  billing: require('./billing')
 };
 
 module.exports = function(deps, opts) {
