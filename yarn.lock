@@ -386,7 +386,7 @@ bluebird@^2.10.2, bluebird@^2.9.27, bluebird@^2.9.30:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
 
-bluebird@^3.0.0, bluebird@^3.0.6, bluebird@^3.3.0, bluebird@^3.3.1, bluebird@^3.3.4:
+bluebird@^3.0.0, bluebird@^3.0.6, bluebird@^3.3.0, bluebird@^3.3.1, bluebird@^3.3.4, bluebird@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
@@ -798,7 +798,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-coffee-script@^1.10.0, coffee-script@^1.12.0, coffee-script@~1.12.5:
+coffee-script@1.12.5, coffee-script@^1.10.0, coffee-script@^1.12.0:
   version "1.12.5"
   resolved "https://registry.yarnpkg.com/coffee-script/-/coffee-script-1.12.5.tgz#809f4585419112bbfe46a073ad7543af18c27346"
 
@@ -1558,11 +1558,11 @@ feature-detect-es6@^1.3.1:
   dependencies:
     array-back "^1.0.3"
 
-fetch-ponyfill@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/fetch-ponyfill/-/fetch-ponyfill-3.0.2.tgz#09ff05393ff315beafcd465940ed6bdc9a81fe19"
+fetch-ponyfill@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/fetch-ponyfill/-/fetch-ponyfill-4.1.0.tgz#ae3ce5f732c645eab87e4ae8793414709b239893"
   dependencies:
-    node-fetch "~1.6.0"
+    node-fetch "~1.7.1"
 
 file-set@^1.1.1:
   version "1.1.1"
@@ -2919,7 +2919,7 @@ lodash@3.10.1, lodash@^3.10.1, lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.0.1, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.4.0, lodash@^4.5.0, lodash@^4.6.1:
+lodash@^4.0.0, lodash@^4.0.1, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.4, lodash@^4.4.0, lodash@^4.5.0, lodash@^4.6.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -3206,9 +3206,9 @@ netmask@~1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
 
-node-fetch@~1.6.0:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"
+node-fetch@~1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.1.tgz#899cb3d0a3c92f952c47f1b876f4c8aeabd400d5"
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
@@ -3294,10 +3294,6 @@ object-component@0.0.3:
 object-get@^2.0.4, object-get@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/object-get/-/object-get-2.1.0.tgz#722bbdb60039efa47cad3c6dc2ce51a85c02c5ae"
-
-object-keys@~0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-0.4.0.tgz#28a6aae7428dd2c3a92f3d95f21335dd204e0336"
 
 object-to-spawn-args@^1.1.0:
   version "1.1.0"
@@ -3596,12 +3592,12 @@ process@~0.11.0:
   version "0.11.9"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.9.tgz#7bd5ad21aa6253e7da8682264f1e11d11c0318c1"
 
-progress-stream@^1.1.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/progress-stream/-/progress-stream-1.2.0.tgz#2cd3cfea33ba3a89c9c121ec3347abe9ab125f77"
+progress-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/progress-stream/-/progress-stream-2.0.0.tgz#fac63a0b3d11deacbb0969abcc93b214bce19ed5"
   dependencies:
-    speedometer "~0.1.2"
-    through2 "~0.2.3"
+    speedometer "~1.0.0"
+    through2 "~2.0.3"
 
 progress@~1.1.8:
   version "1.1.8"
@@ -4001,9 +3997,15 @@ resin-device-status@^1.0.1:
   dependencies:
     lodash "^4.0.0"
 
-resin-errors@^2.0.0, resin-errors@^2.5.0, resin-errors@^2.6.0:
+resin-errors@^2.0.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.6.0.tgz#f1e6ff95d0bbb83871b952a8dc2f2883a4e5954e"
+  dependencies:
+    typed-error "^0.1.0"
+
+resin-errors@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.7.0.tgz#93ade640792107556d916df8692b5ecd97dda297"
   dependencies:
     typed-error "^0.1.0"
 
@@ -4023,17 +4025,17 @@ resin-register-device@^4.0.1:
     bluebird "^3.0.0"
     randomstring "^1.1.5"
 
-resin-request@^8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-8.3.0.tgz#8d756e168af1127553f1450ed6257c6378b477a1"
+resin-request@^8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-8.5.0.tgz#bc1500690fecad92c44f56ff9c89ce9970d662ff"
   dependencies:
     bluebird "^3.3.4"
-    fetch-ponyfill "^3.0.2"
+    fetch-ponyfill "^4.0.0"
     lodash "^4.6.1"
-    progress-stream "^1.1.1"
+    progress-stream "^2.0.0"
     qs "^6.3.0"
-    resin-errors "^2.5.0"
-    rindle "^1.2.0"
+    resin-errors "^2.7.0"
+    rindle "^1.3.1"
 
 resin-settings-client@^3.5.2:
   version "3.5.2"
@@ -4106,6 +4108,14 @@ rindle@^1.2.0:
   dependencies:
     bluebird "^2.10.2"
     lodash "^3.10.1"
+    string-to-stream "^1.0.1"
+
+rindle@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/rindle/-/rindle-1.3.1.tgz#0ad346c76c108e2e38bd955f30ad558dbbdf2738"
+  dependencies:
+    bluebird "^3.5.0"
+    lodash "^4.17.4"
     string-to-stream "^1.0.1"
 
 ripemd160@^1.0.0:
@@ -4336,9 +4346,9 @@ sparkles@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/sparkles/-/sparkles-1.0.0.tgz#1acbbfb592436d10bbe8f785b7cc6f82815012c3"
 
-speedometer@~0.1.2:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/speedometer/-/speedometer-0.1.4.tgz#9876dbd2a169d3115402d48e6ea6329c8816a50d"
+speedometer@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/speedometer/-/speedometer-1.0.0.tgz#cd671cb06752c22bca3370e2f334440be4fc62e2"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
@@ -4624,19 +4634,12 @@ through2@^0.6.1:
     readable-stream ">=1.0.33-1 <1.1.0-0"
     xtend ">=4.0.0 <4.1.0-0"
 
-through2@^2.0.0, through2@^2.0.1, through2@^2.0.3:
+through2@^2.0.0, through2@^2.0.1, through2@^2.0.3, through2@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
   dependencies:
     readable-stream "^2.1.5"
     xtend "~4.0.1"
-
-through2@~0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/through2/-/through2-0.2.3.tgz#eb3284da4ea311b6cc8ace3653748a52abf25a3f"
-  dependencies:
-    readable-stream "~1.1.9"
-    xtend "~2.1.1"
 
 "through@>=2.2.7 <3", through@~2.3.8:
   version "2.3.8"
@@ -5030,12 +5033,6 @@ xregexp@2.0.0:
 "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
-
-xtend@~2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/xtend/-/xtend-2.1.2.tgz#6efecc2a4dad8e6962c4901b337ce7ba87b5d28b"
-  dependencies:
-    object-keys "~0.4.0"
 
 y18n@^3.2.0:
   version "3.2.1"

@@ -80,7 +80,7 @@ If you're having any problem, please [raise an issue](https://github.com/resin-i
 Tests
 -----
 
-In order to run the Resin SDK test suite, set the following environment variables from an account that exists:  
+In order to run the Resin SDK test suite, set the following environment variables from an account that exists and doesn't have a billing account code:  
 **WARNING: This will delete all applications and public keys of the test user**
 
 - `RESINTEST_EMAIL`: The main account email
@@ -93,6 +93,15 @@ You also have to provide the following environment variables from an account tha
 - `RESINTEST_REGISTER_EMAIL`: The email of the account to register.
 - `RESINTEST_REGISTER_PASSWORD`: The password of the account to register.
 - `RESINTEST_REGISTER_USERNAME`: The username of the account to register.
+
+In order to test the billing methods for a paid account, you also have to configure the following environment variables:
+
+- `RESINTEST_PAID_EMAIL`: The email of the paid account.
+- `RESINTEST_PAID_PASSWORD`: The password of the account.
+
+*Note: The paid user's `account billing code` should be set to `testdev` so that it's tested against the test plan.*
+
+You can also, optionally, set the `RESINTEST_API_URL` environment variable in order to run the tests using a different API backend (eg: `https://api.resinstaging.io`).
 
 Run the test suite by doing:
 

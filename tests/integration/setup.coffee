@@ -6,22 +6,21 @@ exports.IS_BROWSER = IS_BROWSER = window?
 if IS_BROWSER
 	require('js-polyfills/es6')
 	getSdk = window.resinSdk
+	env = window.__env__
 
 	opts =
-		apiUrl: 'https://api.resin.io'
+		apiUrl: env.RESINTEST_API_URL || 'https://api.resin.io'
 		imageMakerUrl: 'https://img.resin.io'
 
-	env = window.__env__
 else
 	getSdk = require('../..')
-
 	settings = require('resin-settings-client')
+	env = process.env
+
 	opts =
-		apiUrl: settings.get('apiUrl')
+		apiUrl: env.RESINTEST_API_URL || settings.get('apiUrl')
 		imageMakerUrl: settings.get('imageMakerUrl')
 		dataDirectory: settings.get('dataDirectory')
-
-	env = process.env
 
 _.assign opts,
 	apiVersion: 'v2'
@@ -38,6 +37,9 @@ buildCredentials = ->
 		password: env.RESINTEST_PASSWORD
 		username: env.RESINTEST_USERNAME
 		userId: _.parseInt(env.RESINTEST_USERID)
+		paid:
+			email: env.RESINTEST_PAID_EMAIL
+			password: env.RESINTEST_PAID_PASSWORD
 		register:
 			email: env.RESINTEST_REGISTER_EMAIL
 			password: env.RESINTEST_REGISTER_PASSWORD
@@ -84,3 +86,8 @@ exports.givenLoggedInUser = ->
 
 	afterEach ->
 		exports.resetUser()
+
+exports.loginPaidUser = ->
+	resin.auth.login
+		email: exports.credentials.paid.email
+		password: exports.credentials.paid.password
