@@ -69,7 +69,7 @@ describe 'SDK authentication', ->
 				.then (userId) ->
 					return resin.request.send
 						method: 'DELETE'
-						url: "/ewa/user(#{userId})"
+						url: "/v2/user(#{userId})"
 						baseUrl: sdkOpts.apiUrl
 					.then(resin.auth.logout)
 				.catch(message: 'Request error: Unauthorized', ->)
