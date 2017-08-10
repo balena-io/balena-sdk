@@ -1,8 +1,6 @@
 Resin SDK
 =========
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/resin-io/resin-sdk.svg)](https://greenkeeper.io/)
-
 > The official JavaScript [Resin.io](https://resin.io/) SDK.
 
 [![npm version](https://badge.fury.io/js/resin-sdk.svg)](http://badge.fury.io/js/resin-sdk)
@@ -10,6 +8,7 @@ Resin SDK
 [![Build Status](https://travis-ci.org/resin-io/resin-sdk.svg?branch=master)](https://travis-ci.org/resin-io/resin-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/qbsivehgnq0vyrrb/branch/master?svg=true)](https://ci.appveyor.com/project/resin-io/resin-sdk/branch/master)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/resin-io/chat)
+[![Greenkeeper badge](https://badges.greenkeeper.io/resin-io/resin-sdk.svg)](https://greenkeeper.io/)
 
 Role
 ----
