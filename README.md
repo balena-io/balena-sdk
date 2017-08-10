@@ -1,6 +1,8 @@
 Resin SDK
 =========
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/resin-io/resin-sdk.svg)](https://greenkeeper.io/)
+
 > The official JavaScript [Resin.io](https://resin.io/) SDK.
 
 [![npm version](https://badge.fury.io/js/resin-sdk.svg)](http://badge.fury.io/js/resin-sdk)
