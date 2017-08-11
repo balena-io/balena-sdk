@@ -168,6 +168,68 @@ getApplicationModel = function(deps, opts) {
   };
 
   /**
+  	 * @summary Get a single application using the appname and owner's username
+  	 * @name getAppWithOwner
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {String} appName - application name
+  	 * @param {String} owner - The owner's username
+  	 * @param {Object} [options={}] - extra pine options to use
+  	 * @fulfil {Object} - application
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.application.getAppWithOwner('MyApp', 'MyUser').then(function(application) {
+  	 * 	console.log(application);
+  	 * });
+   */
+  exports.getAppWithOwner = function(appName, owner, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    callback = findCallback(arguments);
+    appName = appName.toLowerCase();
+    owner = owner.toLowerCase();
+    return pine.get({
+      resource: 'application',
+      options: mergePineOptions({
+        filter: {
+          $eq: [
+            {
+              $tolower: {
+                $: 'app_name'
+              }
+            }, appName
+          ]
+        },
+        expand: {
+          user: {
+            $filter: {
+              $eq: [
+                {
+                  $tolower: {
+                    $: 'username'
+                  }
+                }, owner
+              ]
+            },
+            $select: 'id'
+          }
+        }
+      }, options)
+    }).tap(function(applications) {
+      if (isEmpty(applications)) {
+        throw new errors.ResinApplicationNotFound(owner + "/" + appName);
+      }
+      if (size(applications) > 1) {
+        throw new errors.ResinAmbiguousApplication(owner + "/" + appName);
+      }
+    }).get(0).asCallback(callback);
+  };
+
+  /**
   	 * @summary Check if an application exists
   	 * @name has
   	 * @public
