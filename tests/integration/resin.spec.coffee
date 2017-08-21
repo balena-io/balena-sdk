@@ -26,6 +26,15 @@ describe 'Resin SDK', ->
 				mockResin = getSdk(sdkOpts)
 				m.chai.expect(mockResin).to.include.keys(validKeys)
 
+	it 'should expose a resin-pine instance', ->
+		m.chai.expect(resin.pine).to.exist
+
+	it 'should expose a resin-token instance', ->
+		m.chai.expect(resin.token).to.exist
+
+	it 'should expose an resin-errors instance', ->
+		m.chai.expect(resin.errors).to.exist
+
 	describe 'interception Hooks', ->
 
 		beforeEach ->

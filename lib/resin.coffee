@@ -20,6 +20,7 @@ defaults = require('lodash/defaults')
 getRequest = require('resin-request')
 getToken = require('resin-token')
 getPine = require('resin-pine')
+errors = require('resin-errors')
 { notImplemented } = require('./util')
 
 ###*
@@ -191,8 +192,30 @@ module.exports = getSdk = (opts = {}) ->
 	#		filter: { application: applicationId }
 	#	}
 	# });
-
 	###
 	sdk.pine = pine
+
+	###*
+	# @summary Resin errors module
+	# @member {Object} errors
+	# @public
+	# @memberof resin
+	#
+	# @description
+	# The resin-errors module used internally. This is provided primarily for
+	# convenience, and to avoid the necessity for separate resin-errors
+	# dependencies. You'll want to use this if you need to match on the specific
+	# type of error thrown by the SDK.
+	#
+	# @example
+	# resin.models.device.get(123).catch(function (error) {
+	#   if (error.code === resin.errors.ResinDeviceNotFound.code) {
+	#     ...
+	#   } else if (error.code === resin.errors.ResinRequestError.code) {
+	#     ...
+	#   }
+	# });
+	###
+	sdk.errors = errors
 
 	return sdk

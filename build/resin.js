@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var assign, defaults, getPine, getRequest, getSdk, getToken, mapValues, notImplemented, sdkTemplate;
+var assign, defaults, errors, getPine, getRequest, getSdk, getToken, mapValues, notImplemented, sdkTemplate;
 
 assign = require('lodash/assign');
 
@@ -28,6 +28,8 @@ getRequest = require('resin-request');
 getToken = require('resin-token');
 
 getPine = require('resin-pine');
+
+errors = require('resin-errors');
 
 notImplemented = require('./util').notImplemented;
 
@@ -220,5 +222,28 @@ module.exports = getSdk = function(opts) {
   	 * });
    */
   sdk.pine = pine;
+
+  /**
+  	 * @summary Resin errors module
+  	 * @member {Object} errors
+  	 * @public
+  	 * @memberof resin
+  	 *
+  	 * @description
+  	 * The resin-errors module used internally. This is provided primarily for
+  	 * convenience, and to avoid the necessity for separate resin-errors
+  	 * dependencies. You'll want to use this if you need to match on the specific
+  	 * type of error thrown by the SDK.
+  	 *
+  	 * @example
+  	 * resin.models.device.get(123).catch(function (error) {
+  	 *   if (error.code === resin.errors.ResinDeviceNotFound.code) {
+  	 *     ...
+  	 *   } else if (error.code === resin.errors.ResinRequestError.code) {
+  	 *     ...
+  	 *   }
+  	 * });
+   */
+  sdk.errors = errors;
   return sdk;
 };

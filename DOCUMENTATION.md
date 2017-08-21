@@ -15,6 +15,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.request](#resin.request) : <code>Object</code>
     * [.token](#resin.token) : <code>Object</code>
     * [.pine](#resin.pine) : <code>Object</code>
+    * [.errors](#resin.errors) : <code>Object</code>
     * [.models](#resin.models) : <code>object</code>
         * [.application](#resin.models.application) : <code>object</code>
             * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
@@ -229,6 +230,27 @@ resin.pine.get({
 	options: {
 		filter: { application: applicationId }
 	}
+});
+```
+<a name="resin.errors"></a>
+
+### resin.errors : <code>Object</code>
+The resin-errors module used internally. This is provided primarily for
+convenience, and to avoid the necessity for separate resin-errors
+dependencies. You'll want to use this if you need to match on the specific
+type of error thrown by the SDK.
+
+**Kind**: static property of [<code>resin</code>](#resin)  
+**Summary**: Resin errors module  
+**Access**: public  
+**Example**  
+```js
+resin.models.device.get(123).catch(function (error) {
+  if (error.code === resin.errors.ResinDeviceNotFound.code) {
+    ...
+  } else if (error.code === resin.errors.ResinRequestError.code) {
+    ...
+  }
 });
 ```
 <a name="resin.models"></a>
