@@ -29,6 +29,7 @@ errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
 { onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice } = require('../util')
+{ normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -119,6 +120,7 @@ getDeviceModel = (deps, opts) ->
 		# TODO: Move this to the server
 		device.application_name = device.application[0].app_name
 		device.dashboard_url = getDashboardUrl({ appId: device.application[0].id, deviceId: device.id })
+		normalizeDeviceOsVersion(device)
 		return device
 
 	###*

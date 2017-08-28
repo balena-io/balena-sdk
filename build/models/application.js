@@ -15,13 +15,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, assign, errors, filter, findCallback, getApplicationModel, isEmpty, isId, mergePineOptions, notFoundResponse, once, ref, size, treatAsMissingApplication;
+var Promise, assign, errors, filter, findCallback, forEach, getApplicationModel, isArray, isEmpty, isId, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, ref, size, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
 once = require('lodash/once');
 
 assign = require('lodash/assign');
+
+forEach = require('lodash/forEach');
+
+isArray = require('lodash/isArray');
 
 isEmpty = require('lodash/isEmpty');
 
@@ -33,8 +37,10 @@ errors = require('resin-errors');
 
 ref = require('../util'), isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
 
+normalizeDeviceOsVersion = require('../util/device-os-version').normalizeDeviceOsVersion;
+
 getApplicationModel = function(deps, opts) {
-  var apiUrl, deviceModel, exports, getId, pine, request, token;
+  var apiUrl, deviceModel, exports, getId, normalizeApplication, pine, request, token;
   request = deps.request, token = deps.token, pine = deps.pine;
   apiUrl = opts.apiUrl;
   deviceModel = once(function() {
@@ -51,6 +57,14 @@ getApplicationModel = function(deps, opts) {
     });
   };
   exports._getId = getId;
+  normalizeApplication = function(application) {
+    if (isArray(application.device)) {
+      forEach(application.device, function(device) {
+        return normalizeDeviceOsVersion(device);
+      });
+    }
+    return application;
+  };
 
   /**
   	 * @summary Get all applications
@@ -96,6 +110,7 @@ getApplicationModel = function(deps, opts) {
         is_online: true
       }).length;
       application.devices_length = ((ref1 = application.device) != null ? ref1.length : void 0) || 0;
+      normalizeApplication(application);
       return application;
     }).asCallback(callback);
   };
@@ -164,7 +179,7 @@ getApplicationModel = function(deps, opts) {
           }
         }).get(0);
       }
-    }).asCallback(callback);
+    }).tap(normalizeApplication).asCallback(callback);
   };
 
   /**
@@ -226,7 +241,7 @@ getApplicationModel = function(deps, opts) {
       if (size(applications) > 1) {
         throw new errors.ResinAmbiguousApplication(owner + "/" + appName);
       }
-    }).get(0).asCallback(callback);
+    }).get(0).tap(normalizeApplication).asCallback(callback);
   };
 
   /**
@@ -320,6 +335,7 @@ getApplicationModel = function(deps, opts) {
       if (application == null) {
         throw new errors.ResinApplicationNotFound(id);
       }
+      return normalizeApplication(application);
     }).asCallback(callback);
   };
 

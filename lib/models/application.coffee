@@ -17,12 +17,15 @@ limitations under the License.
 Promise = require('bluebird')
 once = require('lodash/once')
 assign = require('lodash/assign')
+forEach = require('lodash/forEach')
+isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
 { isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingApplication } = require('../util')
+{ normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 getApplicationModel = (deps, opts) ->
 	{ request, token, pine } = deps
@@ -42,6 +45,12 @@ getApplicationModel = (deps, opts) ->
 				exports.get(nameOrId).get('id')
 
 	exports._getId = getId
+
+	normalizeApplication = (application) ->
+		if isArray(application.device)
+			forEach application.device, (device) ->
+				normalizeDeviceOsVersion(device)
+		return application
 
 	###*
 	# @summary Get all applications
@@ -84,6 +93,7 @@ getApplicationModel = (deps, opts) ->
 		.map (application) ->
 			application.online_devices = filter(application.device, is_online: true).length
 			application.devices_length = application.device?.length or 0
+			normalizeApplication(application)
 			return application
 
 		.asCallback(callback)
@@ -146,6 +156,7 @@ getApplicationModel = (deps, opts) ->
 					if size(applications) > 1
 						throw new errors.ResinAmbiguousApplication(nameOrId)
 				.get(0)
+		.tap(normalizeApplication)
 		.asCallback(callback)
 
 	###*
@@ -196,6 +207,7 @@ getApplicationModel = (deps, opts) ->
 			if size(applications) > 1
 				throw new errors.ResinAmbiguousApplication("#{owner}/#{appName}")
 		.get(0)
+		.tap(normalizeApplication)
 		.asCallback(callback)
 
 	###*
@@ -287,6 +299,8 @@ getApplicationModel = (deps, opts) ->
 		.tap (application) ->
 			if not application?
 				throw new errors.ResinApplicationNotFound(id)
+
+			normalizeApplication(application)
 		.asCallback(callback)
 
 	###*

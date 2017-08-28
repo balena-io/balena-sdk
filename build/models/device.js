@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
 
 url = require('url');
 
@@ -44,6 +44,8 @@ errors = require('resin-errors');
 deviceStatus = require('resin-device-status');
 
 ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice;
+
+normalizeDeviceOsVersion = require('../util/device-os-version').normalizeDeviceOsVersion;
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
@@ -142,6 +144,7 @@ getDeviceModel = function(deps, opts) {
       appId: device.application[0].id,
       deviceId: device.id
     });
+    normalizeDeviceOsVersion(device);
     return device;
   };
 
