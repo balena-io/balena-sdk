@@ -898,3 +898,31 @@ describe 'Device Model', ->
 			it 'should be rejected with an incompatibility error', ->
 				promise = resin.models.device.move(@deviceInfo.uuid, @application2.app_name)
 				m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
+
+	describe 'helpers', ->
+
+		describe 'resin.models.device.lastOnline()', ->
+
+			it 'should return the string "Connecting..." if the device has no `last_connectivity_event`', ->
+				m.chai.expect(
+					resin.models.device.lastOnline(last_connectivity_event: null)
+				).to.equal('Connecting...')
+
+			it 'should return the correct time string if the device is online', ->
+				mockDevice =
+					last_connectivity_event: Date.now() - 1000 * 60 * 5
+					is_online: true
+
+				m.chai.expect(
+					resin.models.device.lastOnline(mockDevice)
+				).to.equal('Currently online (for 5 minutes)')
+
+			it 'should return the correct time string if the device is offline', ->
+				mockDevice =
+					last_connectivity_event: Date.now() - 1000 * 60 * 5
+					is_online: false
+
+				m.chai.expect(
+					resin.models.device.lastOnline(mockDevice)
+				).to.equal('5 minutes ago')
+

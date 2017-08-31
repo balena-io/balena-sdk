@@ -60,6 +60,8 @@
   "dependencies": {
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
+    "memoizee": "^0.4.9",
+    "moment": "^2.18.1",
     "promise-memoize": "^1.2.0",
     "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
