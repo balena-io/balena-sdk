@@ -23,6 +23,13 @@ getPine = require('resin-pine')
 errors = require('resin-errors')
 { notImplemented } = require('./util')
 
+# These constants are used to create globals for sharing defualt options between
+# multiple instances of the SDK.
+# See the `setSharedOptions()` and `fromSharedOptions()` methods.
+RESIN_SDK_SHARED_OPTIONS = 'RESIN_SDK_SHARED_OPTIONS'
+RESIN_SDK_HAS_USED_SHARED_OPTIONS = 'RESIN_SDK_HAS_USED_SHARED_OPTIONS'
+RESIN_SDK_HAS_SET_SHARED_OPTIONS = 'RESIN_SDK_HAS_SET_SHARED_OPTIONS'
+
 ###*
 # @namespace resin
 # @description
@@ -58,7 +65,7 @@ sdkTemplate =
 	###
 	settings: require('./settings')
 
-module.exports = getSdk = (opts = {}) ->
+getSdk = (opts = {}) ->
 	defaults opts,
 		apiUrl: 'https://api.resin.io/'
 		imageMakerUrl: 'https://img.resin.io/'
@@ -219,3 +226,66 @@ module.exports = getSdk = (opts = {}) ->
 	sdk.errors = errors
 
 	return sdk
+
+###*
+# @summary Set shared default options
+# @name setSharedOptions
+# @public
+# @function
+# @memberof resin
+#
+# @description
+# Set options that are used by calls to `resin.fromSharedOptions()`.
+# The options accepted are the same as those used in the main SDK factory function.
+# If you use this method, it should be called as soon as possible during app
+# startup and before any calls to `fromSharedOptions()` are made.
+#
+# @params {Object} opts - The shared default options
+#
+# @example
+# resin.setSharedOptions({
+# 	apiUrl: 'https://api.resin.io/',
+# 	imageMakerUrl: 'https://img.resin.io/',
+# 	apiVersion: 'v2',
+# 	isBrowser: true,
+# });
+###
+getSdk.setSharedOptions = (opts) ->
+	root = if window? then window else GLOBAL
+
+	if root[RESIN_SDK_HAS_USED_SHARED_OPTIONS]
+		console.error('Shared SDK options have already been used. You may have a race condition in your code.')
+
+	if root[RESIN_SDK_HAS_SET_SHARED_OPTIONS]
+		console.error('Shared SDK options have already been set. You may have a race condition in your code.')
+
+	root[RESIN_SDK_SHARED_OPTIONS] = opts
+	root[RESIN_SDK_HAS_SET_SHARED_OPTIONS] = true
+
+###*
+# @summary Create an SDK instance using shared default options
+# @name fromSharedOptions
+# @public
+# @function
+# @memberof resin
+#
+# @description
+# Create an SDK instance using shared default options set using the `setSharedOptions()` method.
+# If options have not been set using this method, then this method will use the
+# same defaults as the main SDK factory function.
+#
+# @params {Object} opts - The shared default options
+#
+# @example
+# const sdk = resin.fromSharedOptions();
+###
+getSdk.fromSharedOptions = ->
+	root = if window? then window else GLOBAL
+
+	sharedOpts = root[RESIN_SDK_SHARED_OPTIONS]
+
+	root[RESIN_SDK_HAS_USED_SHARED_OPTIONS] = true
+
+	getSdk(sharedOpts)
+
+module.exports = getSdk
