@@ -30,6 +30,8 @@ _.assign opts,
 	isBrowser: IS_BROWSER,
 	retries: 3
 
+console.log('Starting tests using opts', opts)
+
 buildCredentials = ->
 	if not env
 		throw new Error('Missing environment object?!')
