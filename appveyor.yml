@@ -13,6 +13,12 @@ matrix:
 
 # what combinations to test
 environment:
+  global:
+    RESINTEST_API_URL: 'https://api.multi.resinstaging.io'
+    RESINTEST_USERNAME: pimterry
+    RESINTEST_EMAIL: pimterry@gmail.com
+    RESINTEST_PASSWORD:
+      secure: rD5GMb4U8j42X4y17hl7/0yJIj55BYQLuLvLeQBlY75sFu1JtSxsGfHMZwr+fHwCOj7syolBihWeOz3QpcmbIA==
   matrix:
     - nodejs_version: 8
       RESINTEST_EMAIL: 'test2+juan@resin.io'
