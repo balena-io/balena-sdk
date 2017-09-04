@@ -25,8 +25,8 @@ describe 'Billing Model', ->
 			it 'should return a free tier billing plan object', ->
 				promise = resin.models.billing.getPlan()
 				m.chai.expect(promise).to.become({
-					title: 'Free'
-					name: 'Free plan'
+					title: 'Personal'
+					name: 'Personal plan'
 					code: 'free'
 					tier: 'free'
 					billing:
@@ -34,7 +34,7 @@ describe 'Billing Model', ->
 						charges: [
 							{
 								itemType: 'plan'
-								name: 'Free plan'
+								name: 'Personal plan'
 								code: 'free'
 								unitCostCents: '0'
 								quantity: '1'
