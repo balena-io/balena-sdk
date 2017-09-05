@@ -28,6 +28,9 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+            * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
+            * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
+            * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
             * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
             * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
             * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
@@ -270,6 +273,9 @@ resin.models.device.get(123).catch(function (error) {
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+        * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
+        * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
+        * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
         * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
         * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
         * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
@@ -375,6 +381,9 @@ resin.models.device.get(123).catch(function (error) {
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+    * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
+    * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
+    * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
     * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
     * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
     * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
@@ -648,6 +657,73 @@ resin.models.application.generateApiKey(123).then(function(apiKey) {
 resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	if (error) throw error;
 	console.log(apiKey);
+});
+```
+<a name="resin.models.application.purge"></a>
+
+##### application.purge(appId) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Purge devices by application id  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| appId | <code>Number</code> | application id |
+
+**Example**  
+```js
+resin.models.application.purge(123);
+```
+**Example**  
+```js
+resin.models.application.purge(123, function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.application.shutdown"></a>
+
+##### application.shutdown(appId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Shutdown devices by application id  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| appId | <code>Number</code> |  | application id |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
+
+**Example**  
+```js
+resin.models.application.shutdown(123);
+```
+**Example**  
+```js
+resin.models.application.shutdown(123, function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.application.reboot"></a>
+
+##### application.reboot(appId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Reboot devices by application id  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| appId | <code>Number</code> |  | application id |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
+
+**Example**  
+```js
+resin.models.application.reboot(123);
+```
+**Example**  
+```js
+resin.models.application.reboot(123, function(error) {
+	if (error) throw error;
 });
 ```
 <a name="resin.models.application.getApiKey"></a>

@@ -28,7 +28,7 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice } = require('../util')
+{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice, LOCKED_STATUS_CODE } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
@@ -939,6 +939,11 @@ getDeviceModel = (deps, opts) ->
 					deviceId: deviceId
 					data:
 						force: Boolean(options.force)
+			.catch (err) ->
+				if err.statusCode == LOCKED_STATUS_CODE
+					throw new errors.ResinSupervisorLockedError()
+
+				throw err
 		.get('body')
 		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
@@ -979,6 +984,11 @@ getDeviceModel = (deps, opts) ->
 					appId: device.application[0].id
 					data:
 						force: Boolean(options.force)
+			.catch (err) ->
+				if err.statusCode == LOCKED_STATUS_CODE
+					throw new errors.ResinSupervisorLockedError()
+
+				throw err
 		.asCallback(callback)
 
 	###*
@@ -1016,6 +1026,11 @@ getDeviceModel = (deps, opts) ->
 					appId: device.application[0].id
 					data:
 						appId: device.application[0].id
+			.catch (err) ->
+				if err.statusCode == LOCKED_STATUS_CODE
+					throw new errors.ResinSupervisorLockedError()
+
+				throw err
 		.asCallback(callback)
 
 	###*

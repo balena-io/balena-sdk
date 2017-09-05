@@ -40,6 +40,8 @@ exports.onlyIf = function(condition) {
 
 exports.isId = isNumber;
 
+exports.LOCKED_STATUS_CODE = 423;
+
 exports.findCallback = function(args) {
   var lastArg;
   lastArg = args[args.length - 1];
