@@ -3,6 +3,7 @@ semver = require('semver')
 cloneDeep = require('lodash/cloneDeep')
 fromPairs = require('lodash/fromPairs')
 isArray = require('lodash/isArray')
+isEmpty = require('lodash/isEmpty')
 isFunction = require('lodash/isFunction')
 isNumber = require('lodash/isNumber')
 isString = require('lodash/isString')
@@ -65,6 +66,9 @@ exports.osVersionRCompare = (versionA, versionB) ->
 
 exports.isDevelopmentVersion = (version) ->
 	/(\.|\+|-)dev/.test(version)
+
+exports.isProvisioned = (device) ->
+	!isEmpty(device.supervisor_version) and !isEmpty(device.last_connectivity_event)
 
 getRev = (osVersion) ->
 	rev = semver.parse(osVersion).build
