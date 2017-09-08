@@ -24,7 +24,7 @@ filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
-{ isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingApplication } = require('../util')
+{ isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingApplication, LOCKED_STATUS_CODE } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 getApplicationModel = (deps, opts) ->
@@ -457,6 +457,112 @@ getApplicationModel = (deps, opts) ->
 				url: "/application/#{application.id}/generate-api-key"
 				baseUrl: apiUrl
 		.get('body')
+		.asCallback(callback)
+
+	###*
+	# @summary Purge devices by application id
+	# @name purge
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {Number} appId - application id
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.purge(123);
+	#
+	# @example
+	# resin.models.application.purge(123, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.purge = (appId, callback) ->
+		return request.send
+			method: 'POST'
+			url: '/supervisor/v1/purge'
+			baseUrl: apiUrl
+			body:
+				appId: appId
+				data:
+					appId: "#{appId}"
+		.catch (err) ->
+			if err.statusCode == LOCKED_STATUS_CODE
+				throw new errors.ResinSupervisorLockedError()
+
+			throw err
+		.asCallback(callback)
+
+	###*
+	# @summary Shutdown devices by application id
+	# @name shutdown
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {Number} appId - application id
+	# @param {Object} [options] - options
+	# @param {Boolean} [options.force=false] - override update lock
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.shutdown(123);
+	#
+	# @example
+	# resin.models.application.shutdown(123, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.shutdown = (appId, options = {}, callback) ->
+		return request.send
+			method: 'POST'
+			url: '/supervisor/v1/shutdown'
+			baseUrl: apiUrl
+			body:
+				appId: appId
+				data:
+					force: Boolean(options.force)
+		.catch (err) ->
+			if err.statusCode == LOCKED_STATUS_CODE
+				throw new errors.ResinSupervisorLockedError()
+
+			throw err
+		.asCallback(callback)
+
+	###*
+	# @summary Reboot devices by application id
+	# @name reboot
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {Number} appId - application id
+	# @param {Object} [options] - options
+	# @param {Boolean} [options.force=false] - override update lock
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.reboot(123);
+	#
+	# @example
+	# resin.models.application.reboot(123, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.reboot = (appId, options = {}, callback) ->
+		return request.send
+			method: 'POST'
+			url: '/supervisor/v1/reboot'
+			baseUrl: apiUrl
+			body:
+				appId: appId
+				data:
+					force: Boolean(options.force)
+		.catch (err) ->
+			if err.statusCode == LOCKED_STATUS_CODE
+				throw new errors.ResinSupervisorLockedError()
+
+			throw err
 		.asCallback(callback)
 
 	###*

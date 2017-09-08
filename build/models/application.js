@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var Promise, assign, errors, filter, findCallback, forEach, getApplicationModel, isArray, isEmpty, isId, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, ref, size, treatAsMissingApplication;
+var LOCKED_STATUS_CODE, Promise, assign, errors, filter, findCallback, forEach, getApplicationModel, isArray, isEmpty, isId, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, ref, size, treatAsMissingApplication;
 
 Promise = require('bluebird');
 
@@ -35,7 +35,7 @@ size = require('lodash/size');
 
 errors = require('resin-errors');
 
-ref = require('../util'), isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication;
+ref = require('../util'), isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingApplication = ref.treatAsMissingApplication, LOCKED_STATUS_CODE = ref.LOCKED_STATUS_CODE;
 
 normalizeDeviceOsVersion = require('../util/device-os-version').normalizeDeviceOsVersion;
 
@@ -492,6 +492,127 @@ getApplicationModel = function(deps, opts) {
         baseUrl: apiUrl
       });
     }).get('body').asCallback(callback);
+  };
+
+  /**
+  	 * @summary Purge devices by application id
+  	 * @name purge
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {Number} appId - application id
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.application.purge(123);
+  	 *
+  	 * @example
+  	 * resin.models.application.purge(123, function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.purge = function(appId, callback) {
+    return request.send({
+      method: 'POST',
+      url: '/supervisor/v1/purge',
+      baseUrl: apiUrl,
+      body: {
+        appId: appId,
+        data: {
+          appId: "" + appId
+        }
+      }
+    })["catch"](function(err) {
+      if (err.statusCode === LOCKED_STATUS_CODE) {
+        throw new errors.ResinSupervisorLockedError();
+      }
+      throw err;
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Shutdown devices by application id
+  	 * @name shutdown
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {Number} appId - application id
+  	 * @param {Object} [options] - options
+  	 * @param {Boolean} [options.force=false] - override update lock
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.application.shutdown(123);
+  	 *
+  	 * @example
+  	 * resin.models.application.shutdown(123, function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.shutdown = function(appId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    return request.send({
+      method: 'POST',
+      url: '/supervisor/v1/shutdown',
+      baseUrl: apiUrl,
+      body: {
+        appId: appId,
+        data: {
+          force: Boolean(options.force)
+        }
+      }
+    })["catch"](function(err) {
+      if (err.statusCode === LOCKED_STATUS_CODE) {
+        throw new errors.ResinSupervisorLockedError();
+      }
+      throw err;
+    }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Reboot devices by application id
+  	 * @name reboot
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.application
+  	 *
+  	 * @param {Number} appId - application id
+  	 * @param {Object} [options] - options
+  	 * @param {Boolean} [options.force=false] - override update lock
+  	 * @returns {Promise}
+  	 *
+  	 * @example
+  	 * resin.models.application.reboot(123);
+  	 *
+  	 * @example
+  	 * resin.models.application.reboot(123, function(error) {
+  	 * 	if (error) throw error;
+  	 * });
+   */
+  exports.reboot = function(appId, options, callback) {
+    if (options == null) {
+      options = {};
+    }
+    return request.send({
+      method: 'POST',
+      url: '/supervisor/v1/reboot',
+      baseUrl: apiUrl,
+      body: {
+        appId: appId,
+        data: {
+          force: Boolean(options.force)
+        }
+      }
+    })["catch"](function(err) {
+      if (err.statusCode === LOCKED_STATUS_CODE) {
+        throw new errors.ResinSupervisorLockedError();
+      }
+      throw err;
+    }).asCallback(callback);
   };
 
   /**

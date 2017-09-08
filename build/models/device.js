@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, LOCKED_STATUS_CODE, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
 
 url = require('url');
 
@@ -43,7 +43,7 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice;
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice, LOCKED_STATUS_CODE = ref.LOCKED_STATUS_CODE;
 
 normalizeDeviceOsVersion = require('../util/device-os-version').normalizeDeviceOsVersion;
 
@@ -1027,6 +1027,11 @@ getDeviceModel = function(deps, opts) {
             force: Boolean(options.force)
           }
         }
+      })["catch"](function(err) {
+        if (err.statusCode === LOCKED_STATUS_CODE) {
+          throw new errors.ResinSupervisorLockedError();
+        }
+        throw err;
       });
     }).get('body')["catch"](notFoundResponse, treatAsMissingDevice(uuidOrId)).asCallback(callback);
   };
@@ -1071,6 +1076,11 @@ getDeviceModel = function(deps, opts) {
             force: Boolean(options.force)
           }
         }
+      })["catch"](function(err) {
+        if (err.statusCode === LOCKED_STATUS_CODE) {
+          throw new errors.ResinSupervisorLockedError();
+        }
+        throw err;
       });
     }).asCallback(callback);
   };
@@ -1112,6 +1122,11 @@ getDeviceModel = function(deps, opts) {
             appId: device.application[0].id
           }
         }
+      })["catch"](function(err) {
+        if (err.statusCode === LOCKED_STATUS_CODE) {
+          throw new errors.ResinSupervisorLockedError();
+        }
+        throw err;
       });
     }).asCallback(callback);
   };

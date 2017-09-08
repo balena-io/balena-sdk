@@ -18,6 +18,8 @@ exports.onlyIf = (condition) -> (fn) -> if condition then fn else notImplemented
 
 exports.isId = isNumber
 
+exports.LOCKED_STATUS_CODE = 423
+
 # Use with: `findCallback(arguments)`.
 exports.findCallback = (args) ->
 	lastArg = args[args.length - 1]
