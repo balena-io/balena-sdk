@@ -4009,6 +4009,13 @@ resin-errors@^2.7.0:
   dependencies:
     typed-error "^0.1.0"
 
+resin-errors@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.9.0.tgz#1f5de94238d2a70c0736dca84b7bf63a144e4e50"
+  dependencies:
+    tslib "^1.7.1"
+    typed-error "^2.0.0"
+
 resin-pine@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/resin-pine/-/resin-pine-5.0.2.tgz#a7337acd1604d44d4ff450fbbeb8bbd9936af103"
