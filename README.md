@@ -103,6 +103,10 @@ In order to test the billing methods for a paid account, you also have to config
 
 You can also, optionally, set the `RESINTEST_API_URL` environment variable in order to run the tests using a different API backend (eg: `https://api.resinstaging.io`).
 
+You can persist these settings by putting them all into a `.env` file in the root of this repo, in
+[dotenv](https://www.npmjs.com/package/dotenv) format (`KEY=VALUE\n`). This will be automatically detected and used in the tests.
+Make sure you don't accidentally commit this file (`.env` by default is gitignored, so hopefully this should be difficult).
+
 Run the test suite by doing:
 
 ```sh
