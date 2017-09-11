@@ -1710,10 +1710,11 @@ getDeviceModel = function(deps, opts) {
   exports.ping = function(uuidOrId, callback) {
     return exports.get(uuidOrId).then(function(device) {
       return request.send({
-        method: 'GET',
+        method: 'POST',
         url: '/supervisor/ping',
         baseUrl: apiUrl,
         body: {
+          method: 'GET',
           deviceId: device.id,
           appId: device.application[0].id
         }
