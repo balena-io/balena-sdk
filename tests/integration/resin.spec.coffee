@@ -4,9 +4,9 @@ m = require('mochainon')
 
 describe 'Resin SDK', ->
 
-	describe 'factory function', ->
+	validKeys = ['auth', 'models', 'logs', 'settings']
 
-		validKeys = ['auth', 'models', 'logs', 'settings']
+	describe 'factory function', ->
 
 		describe 'given no opts', ->
 
@@ -100,4 +100,20 @@ describe 'Resin SDK', ->
 				.then ->
 					m.chai.expect(called).to.equal true,
 						'responseError should be called when authentication fails'
+
+	describe 'getSdk.setSharedOptions()', ->
+		it 'should set a global containing shared options', ->
+			root = if window? then window else GLOBAL
+			opts =
+				foo: 'bar'
+
+			getSdk.setSharedOptions(opts)
+
+			m.chai.expect(root['RESIN_SDK_SHARED_OPTIONS']).to.equal(opts)
+
+	describe 'getSdk.fromSharedOptions()', ->
+		it 'should return an object with valid keys', ->
+
+			mockResin = getSdk.fromSharedOptions()
+			m.chai.expect(mockResin).to.include.keys(validKeys)
 
