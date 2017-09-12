@@ -7,6 +7,9 @@ isEmpty = require('lodash/isEmpty')
 isFunction = require('lodash/isFunction')
 isNumber = require('lodash/isNumber')
 isString = require('lodash/isString')
+throttle = require('lodash/throttle')
+memoizee = require('memoizee')
+moment = require('moment')
 
 exports.deviceTypes = require('./device-types')
 exports.getImgMakerHelper = require('./img-maker')
@@ -15,6 +18,27 @@ exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
 
 exports.onlyIf = (condition) -> (fn) -> if condition then fn else notImplemented
+
+exports.now = now = throttle(
+	-> moment(),
+	1000,
+	{ leading: true },
+)
+
+exports.dateToMoment = dateToMoment = memoizee((date) ->
+	return moment(date)
+, { max: 1000, primitive: true })
+
+exports.timeSince = (input, suffix = true) ->
+	date = dateToMoment(input)
+
+	# We do this to avoid out-of-sync times causing this to return
+	# e.g. 'in a few seconds'.
+	# if the date is in the future .min will make it at maximum, the time since now
+	# which results in 'a few seconds ago'.
+	time = now()
+	return moment.min(time, date).from(time, !suffix)
+
 
 exports.isId = isNumber
 

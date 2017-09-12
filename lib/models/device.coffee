@@ -28,7 +28,7 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice, LOCKED_STATUS_CODE } = require('../util')
+{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice, LOCKED_STATUS_CODE, timeSince } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
@@ -1691,6 +1691,35 @@ getDeviceModel = (deps, opts) ->
 				id: device.id
 				body: support_expiry_date: null
 		.asCallback(callback)
+
+	###*
+	# @summary Get a string showing when a device was last set as online
+	# @name lastOnline
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @description
+	# If the device has never been online this method returns the string `Connecting...`.
+	#
+	# @param {Object} device - A device object
+	# @returns {String}
+	#
+	# @example
+	# resin.models.device.get('7cf02a6').then(function(device) {
+	# 	resin.models.device.lastOnline(device);
+	# })
+	###
+	exports.lastOnline = (device) ->
+		lce = device.last_connectivity_event
+
+		if not lce
+			return 'Connecting...'
+
+		if device.is_online
+			return "Currently online (for #{timeSince(lce, false)})"
+
+		return timeSince(lce)
 
 	return exports
 

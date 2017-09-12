@@ -15,7 +15,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+<<<<<<< HEAD
 var CONTAINER_ACTION_ENDPOINT_TIMEOUT, LOCKED_STATUS_CODE, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
+=======
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, notFoundResponse, once, onlyIf, ref, semver, some, timeSince, treatAsMissingDevice, url, without;
+>>>>>>> 1acc498... Add lastOnline() method to device model
 
 url = require('url');
 
@@ -43,9 +47,13 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
+<<<<<<< HEAD
 ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice, LOCKED_STATUS_CODE = ref.LOCKED_STATUS_CODE;
 
 normalizeDeviceOsVersion = require('../util/device-os-version').normalizeDeviceOsVersion;
+=======
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice, timeSince = ref.timeSince;
+>>>>>>> 1acc498... Add lastOnline() method to device model
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
@@ -1817,6 +1825,36 @@ getDeviceModel = function(deps, opts) {
         }
       });
     }).asCallback(callback);
+  };
+
+  /**
+  	 * @summary Get a string showing when a device was last set as online
+  	 * @name lastOnline
+  	 * @public
+  	 * @function
+  	 * @memberof resin.models.device
+  	 *
+  	 * @description
+  	 * If the device has never been online this method returns the string `Connecting...`.
+  	 *
+  	 * @param {Object} device - A device object
+  	 * @returns {String}
+  	 *
+  	 * @example
+  	 * resin.models.device.get('7cf02a6').then(function(device) {
+  	 * 	resin.models.device.lastOnline(device);
+  	 * })
+   */
+  exports.lastOnline = function(device) {
+    var lce;
+    lce = device.last_connectivity_event;
+    if (!lce) {
+      return 'Connecting...';
+    }
+    if (device.is_online) {
+      return "Currently online (for " + (timeSince(lce, false)) + ")";
+    }
+    return timeSince(lce);
   };
   return exports;
 };
