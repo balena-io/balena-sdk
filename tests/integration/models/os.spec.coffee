@@ -1,10 +1,9 @@
 _ = require('lodash')
 m = require('mochainon')
 Promise = require('bluebird')
+semver = require('resin-semver')
 
 { resin, givenLoggedInUser, IS_BROWSER } = require('../setup')
-
-{ osVersionRCompare } = require('../../../build/util')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
@@ -78,7 +77,7 @@ describe 'OS model', ->
 
 			areValidVersions = (osVersions) ->
 				sortedVersions = _.clone(osVersions.versions)
-				sortedVersions.sort(osVersionRCompare)
+				sortedVersions.sort(semver.rcompare)
 				return osVersions and
 					osVersions.versions and osVersions.versions.length and
 					_.isEqual(osVersions.versions, sortedVersions)

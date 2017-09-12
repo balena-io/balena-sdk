@@ -24,7 +24,7 @@ find = require('lodash/find')
 some = require('lodash/some')
 includes = require('lodash/includes')
 map = require('lodash/map')
-semver = require('semver')
+semver = require('resin-semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 

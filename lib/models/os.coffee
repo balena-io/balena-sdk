@@ -18,12 +18,12 @@ Promise = require('bluebird')
 reject = require('lodash/reject')
 once = require('lodash/once')
 partition = require('lodash/partition')
-semver = require('semver')
+semver = require('resin-semver')
 _ = require('lodash')
 
 errors = require('resin-errors')
 
-{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare, isDevelopmentVersion } = require('../util')
+{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, isDevelopmentVersion } = require('../util')
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
@@ -52,7 +52,7 @@ getOsModel = (deps, opts) ->
 		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
 		postProcess: ({ body: { versions, latest } }) ->
 
-			versions.sort(osVersionRCompare)
+			versions.sort(semver.rcompare)
 			potentialRecommendedVersions = reject versions, (version) ->
 				semver.prerelease(version) or isDevelopmentVersion(version)
 			recommended = potentialRecommendedVersions?[0] || null
@@ -79,27 +79,12 @@ getOsModel = (deps, opts) ->
 
 	exports = {}
 
-	fixNonSemver = (version) ->
-		if version?
-			version?.replace(/\.rev(\d+)/, '+FIXED-rev$1')
-		else
-			version
-
-	unfixNonSemver = (version) ->
-		if version?
-			version.replace(/\+FIXED-rev(\d+)/, '.rev$1')
-		else
-			version
-
 	# utility method exported for testability
 	exports._getMaxSatisfyingVersion = (versionOrRange, osVersions) ->
 		if versionOrRange in [ 'default', 'latest', 'recommended' ]
 			return osVersions[versionOrRange]
 
-		semverVersions = osVersions.versions.map(fixNonSemver)
-		maxVersion = semver.maxSatisfying(semverVersions, fixNonSemver(versionOrRange))
-
-		return unfixNonSemver(maxVersion)
+		return semver.maxSatisfying(osVersions.versions, versionOrRange)
 
 	###*
 	# @summary Get OS download size estimate
