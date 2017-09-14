@@ -4789,6 +4789,10 @@ tryor@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/tryor/-/tryor-0.1.2.tgz#8145e4ca7caff40acde3ccf946e8b8bb75b4172b"
 
+tslib@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.7.1.tgz#bc8004164691923a79fe8378bbeb3da2017538ec"
+
 tty-browserify@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.0.tgz#a157ba402da24e9bf957f9aa69d524eed42901a6"
@@ -4831,6 +4835,12 @@ type-is@~1.6.14:
 typed-error@^0.1.0, typed-error@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/typed-error/-/typed-error-0.1.0.tgz#c5feddb39648eba38c48021aa5be25012460c604"
+
+typed-error@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/typed-error/-/typed-error-2.0.0.tgz#d398fd8629fc2b79c839f9b7d1bfc0cbb6526012"
+  dependencies:
+    tslib "^1.7.1"
 
 typedarray@~0.0.5:
   version "0.0.6"

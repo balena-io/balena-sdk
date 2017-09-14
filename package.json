@@ -19,14 +19,14 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npm run build && npm run test-all",
-    "test-all": "npm run test-node && npm run test-browser",
-    "test-node": "gulp test",
-    "test-browser": "karma start",
-    "build": "gulp build",
+    "test": "npm run build && npm run test:all",
+    "test:all": "npm run test:node && npm run test:browser",
+    "test:node": "gulp test",
+    "test:browser": "karma start",
+    "build": "gulp build && npm run docs",
+    "docs": "jsdoc2md 'build/**/!(resin-browser*.js)' > DOCUMENTATION.md",
     "prepublish": "require-npm4-to-publish",
-    "prepublishOnly": "npm test && npm run docs",
-    "docs": "jsdoc2md 'build/**/!(resin-browser*.js)' > DOCUMENTATION.md"
+    "prepublishOnly": "npm test"
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "Apache-2.0",
