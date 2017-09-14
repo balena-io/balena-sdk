@@ -36,9 +36,10 @@ install:
 build: off
 
 test_script:
+  - npm -g install npm@4
   - node --version
   - npm --version
-  - cmd: npm test
+  - cmd: npm run ci
 
 notifications:
 

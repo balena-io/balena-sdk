@@ -25,6 +25,7 @@
     "test:browser": "karma start",
     "build": "gulp build && npm run docs",
     "docs": "jsdoc2md 'build/**/!(resin-browser*.js)' > DOCUMENTATION.md",
+    "ci": "./automation/catch-uncommitted-output.sh && npm test",
     "prepublish": "require-npm4-to-publish",
     "prepublishOnly": "npm test"
   },
