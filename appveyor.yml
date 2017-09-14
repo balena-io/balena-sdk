@@ -29,14 +29,13 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
-  - npm install -g npm@5.3 yarn
+  - npm install -g npm@4 yarn
   - set PATH=%APPDATA%\npm;%PATH%
   - yarn install
 
 build: off
 
 test_script:
-  - npm -g install npm@4
   - node --version
   - npm --version
   - cmd: npm run ci
