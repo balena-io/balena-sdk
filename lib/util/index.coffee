@@ -123,7 +123,16 @@ exports.mergePineOptions = (defaults, extras) ->
 
 	for own option, value of extras
 		switch option
-			when 'select', 'orderby', 'top', 'skip'
+			when 'select'
+				if value?
+					if not isArray(value)
+						value = [value]
+					if value.indexOf('id') == -1
+						value.unshift('id')
+
+				result[option] = value
+
+			when 'orderby', 'top', 'skip'
 				result[option] = value
 
 			when 'filter'

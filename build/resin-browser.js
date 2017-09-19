@@ -1085,7 +1085,9 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.hasAny = function(callback) {
-    return exports.getAll().then(function(applications) {
+    return exports.getAll({
+      select: []
+    }).then(function(applications) {
       return !isEmpty(applications);
     }).asCallback(callback);
   };
@@ -2547,7 +2549,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.getName = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'name']
+      select: 'name'
     }).get('name').asCallback(callback);
   };
 
@@ -2580,7 +2582,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.getApplicationName = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'application_name']
+      select: 'application_name'
     }).get('application_name').asCallback(callback);
   };
 
@@ -2694,7 +2696,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.isOnline = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'is_online']
+      select: 'is_online'
     }).get('is_online').asCallback(callback);
   };
 
@@ -2735,7 +2737,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.getLocalIPAddresses = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'is_online', 'ip_address', 'vpn_address']
+      select: ['is_online', 'ip_address', 'vpn_address']
     }).then(function(arg) {
       var ip_address, ips, is_online, vpn_address;
       is_online = arg.is_online, ip_address = arg.ip_address, vpn_address = arg.vpn_address;
@@ -2770,7 +2772,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.remove = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'uuid']
+      select: 'uuid'
     }).then(function(arg) {
       var uuid;
       uuid = arg.uuid;
@@ -2844,7 +2846,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.rename = function(uuidOrId, newName, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'uuid']
+      select: 'uuid'
     }).then(function(arg) {
       var uuid;
       uuid = arg.uuid;
@@ -2887,7 +2889,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.note = function(uuidOrId, note, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'uuid']
+      select: 'uuid'
     }).then(function(arg) {
       var uuid;
       uuid = arg.uuid;
@@ -2930,7 +2932,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.setCustomLocation = function(uuidOrId, location, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'uuid']
+      select: 'uuid'
     }).then(function(arg) {
       var uuid;
       uuid = arg.uuid;
@@ -3007,7 +3009,7 @@ getDeviceModel = function(deps, opts) {
   exports.move = function(uuidOrId, applicationNameOrId, callback) {
     return Promise.props({
       device: exports.get(uuidOrId, {
-        select: ['id', 'uuid', 'device_type']
+        select: ['uuid', 'device_type']
       }),
       application: applicationModel().get(applicationNameOrId, {
         select: ['id', 'device_type']
@@ -3665,7 +3667,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.hasDeviceUrl = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'is_web_accessible']
+      select: 'is_web_accessible'
     }).get('is_web_accessible').asCallback(callback);
   };
 
@@ -3703,7 +3705,7 @@ getDeviceModel = function(deps, opts) {
       }
       return configModel().getAll().get('deviceUrlsBase').then(function(deviceUrlsBase) {
         return exports.get(uuidOrId, {
-          select: ['id', 'uuid']
+          select: 'uuid'
         }).get('uuid').then(function(uuid) {
           return "https://" + uuid + "." + deviceUrlsBase;
         });
@@ -3734,7 +3736,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.enableDeviceUrl = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'uuid']
+      select: 'uuid'
     }).then(function(arg) {
       var uuid;
       uuid = arg.uuid;
@@ -3775,7 +3777,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.disableDeviceUrl = function(uuidOrId, callback) {
     return exports.get(uuidOrId, {
-      select: ['id', 'uuid']
+      select: 'uuid'
     }).then(function(arg) {
       var uuid;
       uuid = arg.uuid;
@@ -5839,6 +5841,14 @@ exports.mergePineOptions = function(defaults, extras) {
     value = extras[option];
     switch (option) {
       case 'select':
+        if (!isArray(value)) {
+          value = [value];
+        }
+        if (value.indexOf('id') === -1) {
+          value.unshift('id');
+        }
+        result[option] = value;
+        break;
       case 'orderby':
       case 'top':
       case 'skip':

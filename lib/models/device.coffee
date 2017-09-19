@@ -359,7 +359,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'name']).get('name').asCallback(callback)
+		exports.get(uuidOrId, select: 'name').get('name').asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -389,7 +389,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'application_name']).get('application_name').asCallback(callback)
+		exports.get(uuidOrId, select: 'application_name').get('application_name').asCallback(callback)
 
 	###*
 	# @summary Get application container information
@@ -494,7 +494,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.isOnline = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'is_online']).get('is_online').asCallback(callback)
+		exports.get(uuidOrId, select: 'is_online').get('is_online').asCallback(callback)
 
 	###*
 	# @summary Get the local IP addresses of a device
@@ -532,7 +532,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getLocalIPAddresses = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'is_online', 'ip_address', 'vpn_address'])
+		exports.get(uuidOrId, select: ['is_online', 'ip_address', 'vpn_address'])
 		.then ({ is_online, ip_address, vpn_address }) ->
 			if not is_online
 				throw new Error("The device is offline: #{uuidOrId}")
@@ -563,7 +563,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.remove = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'uuid']).then ({ uuid }) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.delete
 				resource: 'device'
 				options:
@@ -627,7 +627,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.rename = (uuidOrId, newName, callback) ->
-		exports.get(uuidOrId, select: ['id', 'uuid']).then ({ uuid }) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -661,7 +661,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.note = (uuidOrId, note, callback) ->
-		exports.get(uuidOrId, select: ['id', 'uuid']).then ({ uuid }) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -696,7 +696,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.setCustomLocation = (uuidOrId, location, callback) ->
-		exports.get(uuidOrId, select: ['id', 'uuid']).then ({ uuid }) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -765,7 +765,7 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
-			device: exports.get(uuidOrId, select: [ 'id', 'uuid', 'device_type' ])
+			device: exports.get(uuidOrId, select: [ 'uuid', 'device_type' ])
 			application: applicationModel().get(applicationNameOrId, select: [ 'id', 'device_type' ])
 		.then ({ application, device }) ->
 
@@ -1244,7 +1244,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId, select: ['id', 'device_type'])
+		applicationModel().get(nameOrId, select: 'device_type')
 		.get('device_type')
 		.then(exports.getManifestBySlug)
 		.asCallback(callback)
@@ -1392,7 +1392,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.hasDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'is_web_accessible'])
+		exports.get(uuidOrId, select: 'is_web_accessible')
 		.get('is_web_accessible').asCallback(callback)
 
 	###*
@@ -1428,7 +1428,7 @@ getDeviceModel = (deps, opts) ->
 				throw new Error("Device is not web accessible: #{uuidOrId}")
 
 			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
-				exports.get(uuidOrId, select: ['id', 'uuid']).get('uuid').then (uuid) ->
+				exports.get(uuidOrId, select: 'uuid').get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.asCallback(callback)
 
@@ -1454,7 +1454,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'uuid']).then ({ uuid }) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -1486,7 +1486,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id', 'uuid']).then ({ uuid }) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:

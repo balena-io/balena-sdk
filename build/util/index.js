@@ -162,6 +162,14 @@ exports.mergePineOptions = function(defaults, extras) {
     value = extras[option];
     switch (option) {
       case 'select':
+        if (!isArray(value)) {
+          value = [value];
+        }
+        if (value.indexOf('id') === -1) {
+          value.unshift('id');
+        }
+        result[option] = value;
+        break;
       case 'orderby':
       case 'top':
       case 'skip':

@@ -27,23 +27,29 @@ describe 'Pine option merging', ->
 		result = mergePineOptions({}, extras)
 		m.chai.expect(result).to.deep.equal(extras)
 
-	it 'overrides select, top, skip and orderby options', ->
+	it 'overrides top, skip and orderby options', ->
 		result = mergePineOptions
 			top: 1
 			skip: 2
-			select: [ 'id' ]
 			orderby: 'app_name asc'
 		,
 			top: 3
 			skip: 4
-			select: [ 'app_name' ]
 			orderby: 'id asc'
 
 		m.chai.expect(result).to.deep.equal
 			top: 3
 			skip: 4
-			select: [ 'app_name' ]
 			orderby: 'id asc'
+
+	it 'overrides select options, but always includes id', ->
+		result = mergePineOptions
+			select: ['id', 'other']
+		,
+			select: ['app_name']
+
+		m.chai.expect(result).to.deep.equal
+			select: ['id', 'app_name']
 
 	it 'combines filter options with $and', ->
 		result = mergePineOptions

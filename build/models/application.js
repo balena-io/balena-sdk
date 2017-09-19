@@ -303,7 +303,9 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.hasAny = function(callback) {
-    return exports.getAll().then(function(applications) {
+    return exports.getAll({
+      select: []
+    }).then(function(applications) {
       return !isEmpty(applications);
     }).asCallback(callback);
   };

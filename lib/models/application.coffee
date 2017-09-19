@@ -265,7 +265,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.hasAny = (callback) ->
-		exports.getAll().then (applications) ->
+		exports.getAll(select: []).then (applications) ->
 			return not isEmpty(applications)
 		.asCallback(callback)
 
