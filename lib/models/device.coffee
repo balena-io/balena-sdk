@@ -1598,10 +1598,11 @@ getDeviceModel = (deps, opts) ->
 	exports.ping = (uuidOrId, callback) ->
 		exports.get(uuidOrId).then (device) ->
 			return request.send
-				method: 'GET'
+				method: 'POST'
 				url: '/supervisor/ping'
 				baseUrl: apiUrl
 				body:
+					method: 'GET'
 					deviceId: device.id
 					appId: device.application[0].id
 		.asCallback(callback)
