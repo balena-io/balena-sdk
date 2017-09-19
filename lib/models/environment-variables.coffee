@@ -57,12 +57,12 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.getAllByApplication = (applicationNameOrId, callback) ->
-		applicationModel().get(applicationNameOrId).get('id').then (applicationId) ->
+		applicationModel().get(applicationNameOrId, select: 'id').then ({ id }) ->
 			return pine.get
 				resource: 'environment_variable'
 				options:
 					filter:
-						application: applicationId
+						application: id
 					orderby: 'name asc'
 		.asCallback(callback)
 
@@ -95,13 +95,13 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			if not isValidName(envVarName)
 				throw new errors.ResinInvalidParameterError('envVarName', envVarName)
 
-			applicationModel().get(applicationNameOrId).get('id').then (applicationId) ->
+			applicationModel().get(applicationNameOrId, select: 'id').then ({ id }) ->
 				return pine.post
 					resource: 'environment_variable'
 					body:
 						name: envVarName
 						value: String(value)
-						application: applicationId
+						application: id
 		.asCallback(callback)
 
 	###*
@@ -225,12 +225,12 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.device.getAll = (uuidOrId, callback) ->
-		deviceModel().get(uuidOrId).then (device) ->
+		deviceModel().get(uuidOrId, select: 'id').then ({ id }) ->
 			return pine.get
 				resource: 'device_environment_variable'
 				options:
 					filter:
-						device: device.id
+						device: id
 					expand: 'device'
 					orderby: 'env_var_name asc'
 		.map(fixDeviceEnvVarNameKey)
@@ -264,7 +264,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 	# });
 	###
 	exports.device.getAllByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId).get('id').then (applicationId) ->
+		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
 			return pine.get
 				resource: 'device_environment_variable'
 				options:
@@ -272,7 +272,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 						device:
 							$any:
 								$alias: 'd',
-								$expr: d: application: applicationId
+								$expr: d: application: id
 					expand: 'device'
 					orderby: 'env_var_name asc'
 		.map(fixDeviceEnvVarNameKey)
@@ -307,11 +307,11 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			if not isValidName(envVarName)
 				throw new errors.ResinInvalidParameterError('envVarName', envVarName)
 
-			deviceModel().get(uuidOrId).then (device) ->
+			deviceModel().get(uuidOrId, select: 'id').then ({ id }) ->
 				return pine.post
 					resource: 'device_environment_variable'
 					body:
-						device: device.id
+						device: id
 						env_var_name: envVarName
 						value: String(value)
 			.then(fixDeviceEnvVarNameKey)

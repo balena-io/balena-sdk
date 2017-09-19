@@ -15,11 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-<<<<<<< HEAD
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, LOCKED_STATUS_CODE, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, onlyIf, ref, semver, some, treatAsMissingDevice, url, without;
-=======
-var CONTAINER_ACTION_ENDPOINT_TIMEOUT, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, notFoundResponse, once, onlyIf, ref, semver, some, timeSince, treatAsMissingDevice, url, without;
->>>>>>> 1acc498... Add lastOnline() method to device model
+var CONTAINER_ACTION_ENDPOINT_TIMEOUT, LOCKED_STATUS_CODE, MIN_SUPERVISOR_APPS_API, Promise, deviceStatus, errors, find, findCallback, getDeviceModel, includes, isEmpty, isFinite, isId, map, mergePineOptions, normalizeDeviceOsVersion, notFoundResponse, once, onlyIf, ref, semver, some, timeSince, treatAsMissingDevice, url, without;
 
 url = require('url');
 
@@ -47,13 +43,9 @@ errors = require('resin-errors');
 
 deviceStatus = require('resin-device-status');
 
-<<<<<<< HEAD
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice, LOCKED_STATUS_CODE = ref.LOCKED_STATUS_CODE;
+ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice, LOCKED_STATUS_CODE = ref.LOCKED_STATUS_CODE, timeSince = ref.timeSince;
 
 normalizeDeviceOsVersion = require('../util/device-os-version').normalizeDeviceOsVersion;
-=======
-ref = require('../util'), onlyIf = ref.onlyIf, isId = ref.isId, findCallback = ref.findCallback, mergePineOptions = ref.mergePineOptions, notFoundResponse = ref.notFoundResponse, treatAsMissingDevice = ref.treatAsMissingDevice, timeSince = ref.timeSince;
->>>>>>> 1acc498... Add lastOnline() method to device model
 
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
@@ -82,7 +74,9 @@ getDeviceModel = function(deps, opts) {
       if (isId(uuidOrId)) {
         return uuidOrId;
       } else {
-        return exports.get(uuidOrId).get('id');
+        return exports.get(uuidOrId, {
+          select: 'id'
+        }).get('id');
       }
     });
   };
@@ -225,10 +219,14 @@ getDeviceModel = function(deps, opts) {
       options = {};
     }
     callback = findCallback(arguments);
-    return applicationModel().get(nameOrId).then(function(application) {
+    return applicationModel().get(nameOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return exports.getAll(mergePineOptions({
         filter: {
-          application: application.id
+          application: id
         }
       }, options), callback);
     });
@@ -267,10 +265,14 @@ getDeviceModel = function(deps, opts) {
       options = {};
     }
     callback = findCallback(arguments);
-    return exports.get(parentUuidOrId).then(function(device) {
+    return exports.get(parentUuidOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return exports.getAll(mergePineOptions({
         filter: {
-          device: device.id
+          device: id
         }
       }, options), callback);
     });
@@ -414,7 +416,9 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.getName = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).get('name').asCallback(callback);
+    return exports.get(uuidOrId, {
+      select: ['id', 'name']
+    }).get('name').asCallback(callback);
   };
 
   /**
@@ -445,7 +449,9 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.getApplicationName = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).get('application_name').asCallback(callback);
+    return exports.get(uuidOrId, {
+      select: ['id', 'application_name']
+    }).get('application_name').asCallback(callback);
   };
 
   /**
@@ -522,7 +528,9 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.has = function(uuidOrId, callback) {
-    return exports.get(uuidOrId)["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
+    return exports.get(uuidOrId, {
+      select: []
+    })["return"](true)["catch"](errors.ResinDeviceNotFound, function() {
       return false;
     }).asCallback(callback);
   };
@@ -555,7 +563,9 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.isOnline = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).get('is_online').asCallback(callback);
+    return exports.get(uuidOrId, {
+      select: ['id', 'is_online']
+    }).get('is_online').asCallback(callback);
   };
 
   /**
@@ -594,13 +604,16 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.getLocalIPAddresses = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).then(function(device) {
-      var ips;
-      if (!device.is_online) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'is_online', 'ip_address', 'vpn_address']
+    }).then(function(arg) {
+      var ip_address, ips, is_online, vpn_address;
+      is_online = arg.is_online, ip_address = arg.ip_address, vpn_address = arg.vpn_address;
+      if (!is_online) {
         throw new Error("The device is offline: " + uuidOrId);
       }
-      ips = device.ip_address.split(' ');
-      return without(ips, device.vpn_address);
+      ips = ip_address.split(' ');
+      return without(ips, vpn_address);
     }).asCallback(callback);
   };
 
@@ -626,12 +639,16 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.remove = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'uuid']
+    }).then(function(arg) {
+      var uuid;
+      uuid = arg.uuid;
       return pine["delete"]({
         resource: 'device',
         options: {
           filter: {
-            uuid: device.uuid
+            uuid: uuid
           }
         }
       });
@@ -696,7 +713,11 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.rename = function(uuidOrId, newName, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'uuid']
+    }).then(function(arg) {
+      var uuid;
+      uuid = arg.uuid;
       return pine.patch({
         resource: 'device',
         body: {
@@ -704,7 +725,7 @@ getDeviceModel = function(deps, opts) {
         },
         options: {
           filter: {
-            uuid: device.uuid
+            uuid: uuid
           }
         }
       });
@@ -735,7 +756,11 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.note = function(uuidOrId, note, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'uuid']
+    }).then(function(arg) {
+      var uuid;
+      uuid = arg.uuid;
       return pine.patch({
         resource: 'device',
         body: {
@@ -743,7 +768,7 @@ getDeviceModel = function(deps, opts) {
         },
         options: {
           filter: {
-            uuid: device.uuid
+            uuid: uuid
           }
         }
       });
@@ -774,7 +799,11 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.setCustomLocation = function(uuidOrId, location, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'uuid']
+    }).then(function(arg) {
+      var uuid;
+      uuid = arg.uuid;
       return pine.patch({
         resource: 'device',
         body: {
@@ -783,7 +812,7 @@ getDeviceModel = function(deps, opts) {
         },
         options: {
           filter: {
-            uuid: device.uuid
+            uuid: uuid
           }
         }
       });
@@ -847,20 +876,26 @@ getDeviceModel = function(deps, opts) {
    */
   exports.move = function(uuidOrId, applicationNameOrId, callback) {
     return Promise.props({
-      device: exports.get(uuidOrId),
-      application: applicationModel().get(applicationNameOrId)
-    }).then(function(results) {
-      if (results.device.device_type !== results.application.device_type) {
+      device: exports.get(uuidOrId, {
+        select: ['id', 'uuid', 'device_type']
+      }),
+      application: applicationModel().get(applicationNameOrId, {
+        select: ['id', 'device_type']
+      })
+    }).then(function(arg) {
+      var application, device;
+      application = arg.application, device = arg.device;
+      if (device.device_type !== application.device_type) {
         throw new Error("Incompatible application: " + applicationNameOrId);
       }
       return pine.patch({
         resource: 'device',
         body: {
-          application: results.application.id
+          application: application.id
         },
         options: {
           filter: {
-            uuid: results.device.uuid
+            uuid: device.uuid
           }
         }
       });
@@ -1350,9 +1385,9 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.getManifestByApplication = function(nameOrId, callback) {
-    return applicationModel().get(nameOrId).get('device_type').then(function(deviceType) {
-      return exports.getManifestBySlug(deviceType);
-    }).asCallback(callback);
+    return applicationModel().get(nameOrId, {
+      select: ['id', 'device_type']
+    }).get('device_type').then(exports.getManifestBySlug).asCallback(callback);
   };
 
   /**
@@ -1407,14 +1442,18 @@ getDeviceModel = function(deps, opts) {
     return Promise.props({
       userId: auth.getUserId(),
       apiKey: applicationModel().getApiKey(applicationNameOrId),
-      application: applicationModel().get(applicationNameOrId)
-    }).then(function(results) {
+      application: applicationModel().get(applicationNameOrId, {
+        select: ['id', 'device_type']
+      })
+    }).then(function(arg) {
+      var apiKey, application, userId;
+      userId = arg.userId, apiKey = arg.apiKey, application = arg.application;
       return registerDevice.register({
-        userId: results.userId,
-        applicationId: results.application.id,
+        userId: userId,
+        applicationId: application.id,
         uuid: uuid,
-        deviceType: results.application.device_type,
-        provisioningApiKey: results.apiKey,
+        deviceType: application.device_type,
+        provisioningApiKey: apiKey,
         apiEndpoint: apiUrl
       });
     }).asCallback(callback);
@@ -1495,7 +1534,9 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.hasDeviceUrl = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).get('is_web_accessible').asCallback(callback);
+    return exports.get(uuidOrId, {
+      select: ['id', 'is_web_accessible']
+    }).get('is_web_accessible').asCallback(callback);
   };
 
   /**
@@ -1531,7 +1572,9 @@ getDeviceModel = function(deps, opts) {
         throw new Error("Device is not web accessible: " + uuidOrId);
       }
       return configModel().getAll().get('deviceUrlsBase').then(function(deviceUrlsBase) {
-        return exports.get(uuidOrId).get('uuid').then(function(uuid) {
+        return exports.get(uuidOrId, {
+          select: ['id', 'uuid']
+        }).get('uuid').then(function(uuid) {
           return "https://" + uuid + "." + deviceUrlsBase;
         });
       });
@@ -1560,7 +1603,11 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.enableDeviceUrl = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'uuid']
+    }).then(function(arg) {
+      var uuid;
+      uuid = arg.uuid;
       return pine.patch({
         resource: 'device',
         body: {
@@ -1568,7 +1615,7 @@ getDeviceModel = function(deps, opts) {
         },
         options: {
           filter: {
-            uuid: device.uuid
+            uuid: uuid
           }
         }
       });
@@ -1597,7 +1644,11 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.disableDeviceUrl = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: ['id', 'uuid']
+    }).then(function(arg) {
+      var uuid;
+      uuid = arg.uuid;
       return pine.patch({
         resource: 'device',
         body: {
@@ -1605,7 +1656,7 @@ getDeviceModel = function(deps, opts) {
         },
         options: {
           filter: {
-            uuid: device.uuid
+            uuid: uuid
           }
         }
       });
@@ -1783,10 +1834,14 @@ getDeviceModel = function(deps, opts) {
     if ((expiryTimestamp == null) || expiryTimestamp <= Date.now()) {
       throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp);
     }
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return pine.patch({
         resource: 'device',
-        id: device.id,
+        id: id,
         body: {
           support_expiry_date: expiryTimestamp
         }
@@ -1816,10 +1871,14 @@ getDeviceModel = function(deps, opts) {
   	 * });
    */
   exports.revokeSupportAccess = function(uuidOrId, callback) {
-    return exports.get(uuidOrId).then(function(device) {
+    return exports.get(uuidOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return pine.patch({
         resource: 'device',
-        id: device.id,
+        id: id,
         body: {
           support_expiry_date: null
         }

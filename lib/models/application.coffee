@@ -42,7 +42,7 @@ getApplicationModel = (deps, opts) ->
 			if isId(nameOrId)
 				return nameOrId
 			else
-				exports.get(nameOrId).get('id')
+				exports.get(nameOrId, select: 'id').get('id')
 
 	exports._getId = getId
 
@@ -238,7 +238,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (nameOrId, callback) ->
-		exports.get(nameOrId).return(true)
+		exports.get(nameOrId, select: []).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -451,10 +451,10 @@ getApplicationModel = (deps, opts) ->
 	exports.generateApiKey = (nameOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
-		exports.get(nameOrId).then (application) ->
+		exports.get(nameOrId, select: 'id').then ({ id }) ->
 			return request.send
 				method: 'POST'
-				url: "/application/#{application.id}/generate-api-key"
+				url: "/application/#{id}/generate-api-key"
 				baseUrl: apiUrl
 		.get('body')
 		.asCallback(callback)
@@ -603,7 +603,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId).then ({ id }) ->
+		exports.get(nameOrId, select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -635,7 +635,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId).then ({ id }) ->
+		exports.get(nameOrId, select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
