@@ -341,13 +341,16 @@ getApplicationModel = (deps, opts) ->
 		else
 			Promise.resolve()
 
-		deviceSlugPromise = deviceModel().getDeviceSlug(deviceType)
-		.tap (deviceSlug) ->
-			if not deviceSlug?
+		deviceManifestPromise = deviceModel().getManifestBySlug(deviceType)
+		.tap (deviceManifest) ->
+			if not deviceManifest?
 				throw new errors.ResinInvalidDeviceType(deviceType)
 
-		return Promise.all([ deviceSlugPromise, parentAppPromise ])
-		.then ([ deviceSlug, parentApplication ]) ->
+		return Promise.all([ deviceManifestPromise, parentAppPromise ])
+		.then ([ deviceManifest, parentApplication ]) ->
+			if deviceManifest.state == 'DISCONTINUED'
+				throw new errors.ResinDiscontinuedDeviceType(deviceType)
+
 			extraOptions = if parentApplication
 				application: parentApplication.id
 			else {}
@@ -357,7 +360,7 @@ getApplicationModel = (deps, opts) ->
 				body:
 					assign
 						app_name: name
-						device_type: deviceSlug
+						device_type: deviceManifest.slug
 					, extraOptions
 		.asCallback(callback)
 
