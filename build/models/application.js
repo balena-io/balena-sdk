@@ -376,19 +376,22 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.create = function(name, deviceType, parentNameOrId, callback) {
-    var deviceSlugPromise, parentAppPromise;
+    var deviceManifestPromise, parentAppPromise;
     callback = findCallback(arguments);
     parentAppPromise = parentNameOrId ? exports.get(parentNameOrId, {
       select: ['id']
     }) : Promise.resolve();
-    deviceSlugPromise = deviceModel().getDeviceSlug(deviceType).tap(function(deviceSlug) {
-      if (deviceSlug == null) {
+    deviceManifestPromise = deviceModel().getManifestBySlug(deviceType).tap(function(deviceManifest) {
+      if (deviceManifest == null) {
         throw new errors.ResinInvalidDeviceType(deviceType);
       }
     });
-    return Promise.all([deviceSlugPromise, parentAppPromise]).then(function(arg) {
-      var deviceSlug, extraOptions, parentApplication;
-      deviceSlug = arg[0], parentApplication = arg[1];
+    return Promise.all([deviceManifestPromise, parentAppPromise]).then(function(arg) {
+      var deviceManifest, extraOptions, parentApplication;
+      deviceManifest = arg[0], parentApplication = arg[1];
+      if (deviceManifest.state === 'DISCONTINUED') {
+        throw new errors.ResinDiscontinuedDeviceType(deviceType);
+      }
       extraOptions = parentApplication ? {
         application: parentApplication.id
       } : {};
@@ -396,7 +399,7 @@ getApplicationModel = function(deps, opts) {
         resource: 'application',
         body: assign({
           app_name: name,
-          device_type: deviceSlug
+          device_type: deviceManifest.slug
         }, extraOptions)
       });
     }).asCallback(callback);
