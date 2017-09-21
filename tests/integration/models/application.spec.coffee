@@ -36,7 +36,7 @@ describe 'Application Model', ->
 
 			it 'should be able to create a child application', ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (parentApplication) ->
-					resin.models.application.create('FooBarChild', 'edge', parentApplication.id)
+					resin.models.application.create('FooBarChild', 'generic-amd64', parentApplication.id)
 				.then ->
 					resin.models.application.getAll()
 				.then ([ parentApplication, childApplication ]) ->
@@ -45,6 +45,10 @@ describe 'Application Model', ->
 			it 'should be rejected if the device type is invalid', ->
 				promise = resin.models.application.create('FooBar', 'foobarbaz')
 				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
+
+			it 'should be rejected if the device type is discontinuted', ->
+				promise = resin.models.application.create('FooBar', 'edge')
+				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
 			it 'should be rejected if the name has less than three characters', ->
 				promise = resin.models.application.create('Fo', 'raspberry-pi')
