@@ -1386,7 +1386,7 @@ getDeviceModel = function(deps, opts) {
    */
   exports.getManifestByApplication = function(nameOrId, callback) {
     return applicationModel().get(nameOrId, {
-      select: ['id', 'device_type']
+      select: 'device_type'
     }).get('device_type').then(exports.getManifestBySlug).asCallback(callback);
   };
 
