@@ -103,12 +103,16 @@ getBuildModel = function(deps, opts) {
       options = {};
     }
     callback = findCallback(arguments);
-    return applicationModel().get(nameOrId).then(function(application) {
+    return applicationModel().get(nameOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return pine.get({
         resource: 'build',
         options: mergePineOptions({
           filter: {
-            application: application.id
+            application: id
           },
           select: ['id', 'created_at', 'commit_hash', 'push_timestamp', 'start_timestamp', 'end_timestamp', 'update_timestamp', 'project_type', 'source', 'status', 'message'],
           expand: {

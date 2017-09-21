@@ -65,12 +65,16 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * });
    */
   exports.getAllByApplication = function(applicationNameOrId, callback) {
-    return applicationModel().get(applicationNameOrId).get('id').then(function(applicationId) {
+    return applicationModel().get(applicationNameOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return pine.get({
         resource: 'environment_variable',
         options: {
           filter: {
-            application: applicationId
+            application: id
           },
           orderby: 'name asc'
         }
@@ -107,13 +111,17 @@ getEnvironmentVariablesModel = function(deps, opts) {
       if (!isValidName(envVarName)) {
         throw new errors.ResinInvalidParameterError('envVarName', envVarName);
       }
-      return applicationModel().get(applicationNameOrId).get('id').then(function(applicationId) {
+      return applicationModel().get(applicationNameOrId, {
+        select: 'id'
+      }).then(function(arg) {
+        var id;
+        id = arg.id;
         return pine.post({
           resource: 'environment_variable',
           body: {
             name: envVarName,
             value: String(value),
-            application: applicationId
+            application: id
           }
         });
       });
@@ -242,12 +250,16 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * });
    */
   exports.device.getAll = function(uuidOrId, callback) {
-    return deviceModel().get(uuidOrId).then(function(device) {
+    return deviceModel().get(uuidOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return pine.get({
         resource: 'device_environment_variable',
         options: {
           filter: {
-            device: device.id
+            device: id
           },
           expand: 'device',
           orderby: 'env_var_name asc'
@@ -284,7 +296,11 @@ getEnvironmentVariablesModel = function(deps, opts) {
   	 * });
    */
   exports.device.getAllByApplication = function(nameOrId, callback) {
-    return applicationModel().get(nameOrId).get('id').then(function(applicationId) {
+    return applicationModel().get(nameOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return pine.get({
         resource: 'device_environment_variable',
         options: {
@@ -294,7 +310,7 @@ getEnvironmentVariablesModel = function(deps, opts) {
                 $alias: 'd',
                 $expr: {
                   d: {
-                    application: applicationId
+                    application: id
                   }
                 }
               }
@@ -336,11 +352,15 @@ getEnvironmentVariablesModel = function(deps, opts) {
       if (!isValidName(envVarName)) {
         throw new errors.ResinInvalidParameterError('envVarName', envVarName);
       }
-      return deviceModel().get(uuidOrId).then(function(device) {
+      return deviceModel().get(uuidOrId, {
+        select: 'id'
+      }).then(function(arg) {
+        var id;
+        id = arg.id;
         return pine.post({
           resource: 'device_environment_variable',
           body: {
-            device: device.id,
+            device: id,
             env_var_name: envVarName,
             value: String(value)
           }

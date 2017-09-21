@@ -91,14 +91,14 @@ getBuildModel = (deps, opts) ->
 	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId).then (application) ->
+		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
 
 			return pine.get
 				resource: 'build'
 				options:
 					mergePineOptions
 						filter:
-							application: application.id
+							application: id
 						select: [
 							'id'
 							'created_at'

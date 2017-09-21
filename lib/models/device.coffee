@@ -65,7 +65,7 @@ getDeviceModel = (deps, opts) ->
 			if isId(uuidOrId)
 				return uuidOrId
 			else
-				exports.get(uuidOrId).get('id')
+				exports.get(uuidOrId, select: 'id').get('id')
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver
@@ -190,9 +190,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId).then (application) ->
+		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: application: application.id
+				filter: application: id
 				options
 			), callback)
 
@@ -227,9 +227,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getAllByParentDevice = (parentUuidOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(parentUuidOrId).then (device) ->
+		exports.get(parentUuidOrId, select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: device: device.id
+				filter: device: id
 				options
 			), callback)
 
@@ -359,7 +359,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getName = (uuidOrId, callback) ->
-		exports.get(uuidOrId).get('name').asCallback(callback)
+		exports.get(uuidOrId, select: 'name').get('name').asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -389,7 +389,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
-		exports.get(uuidOrId).get('application_name').asCallback(callback)
+		exports.get(uuidOrId, select: 'application_name').get('application_name').asCallback(callback)
 
 	###*
 	# @summary Get application container information
@@ -461,7 +461,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (uuidOrId, callback) ->
-		exports.get(uuidOrId).return(true)
+		exports.get(uuidOrId, select: []).return(true)
 		.catch errors.ResinDeviceNotFound, ->
 			return false
 		.asCallback(callback)
@@ -494,7 +494,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.isOnline = (uuidOrId, callback) ->
-		exports.get(uuidOrId).get('is_online').asCallback(callback)
+		exports.get(uuidOrId, select: 'is_online').get('is_online').asCallback(callback)
 
 	###*
 	# @summary Get the local IP addresses of a device
@@ -532,12 +532,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getLocalIPAddresses = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
-			if not device.is_online
+		exports.get(uuidOrId, select: ['is_online', 'ip_address', 'vpn_address'])
+		.then ({ is_online, ip_address, vpn_address }) ->
+			if not is_online
 				throw new Error("The device is offline: #{uuidOrId}")
 
-			ips = device.ip_address.split(' ')
-			return without(ips, device.vpn_address)
+			ips = ip_address.split(' ')
+			return without(ips, vpn_address)
 		.asCallback(callback)
 
 	###*
@@ -562,12 +563,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.remove = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.delete
 				resource: 'device'
 				options:
 					filter:
-						uuid: device.uuid
+						uuid: uuid
 		.asCallback(callback)
 
 	###*
@@ -626,14 +627,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.rename = (uuidOrId, newName, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					name: newName
 				options:
 					filter:
-						uuid: device.uuid
+						uuid: uuid
 		.asCallback(callback)
 
 	###*
@@ -660,14 +661,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.note = (uuidOrId, note, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					note: note
 				options:
 					filter:
-						uuid: device.uuid
+						uuid: uuid
 
 		.asCallback(callback)
 
@@ -695,7 +696,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.setCustomLocation = (uuidOrId, location, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -703,7 +704,7 @@ getDeviceModel = (deps, opts) ->
 					custom_longitude: String(location.longitude)
 				options:
 					filter:
-						uuid: device.uuid
+						uuid: uuid
 
 		.asCallback(callback)
 
@@ -764,20 +765,20 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
-			device: exports.get(uuidOrId)
-			application: applicationModel().get(applicationNameOrId)
-		.then (results) ->
+			device: exports.get(uuidOrId, select: [ 'uuid', 'device_type' ])
+			application: applicationModel().get(applicationNameOrId, select: [ 'id', 'device_type' ])
+		.then ({ application, device }) ->
 
-			if results.device.device_type isnt results.application.device_type
+			if device.device_type isnt application.device_type
 				throw new Error("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
 				resource: 'device'
 				body:
-					application: results.application.id
+					application: application.id
 				options:
 					filter:
-						uuid: results.device.uuid
+						uuid: device.uuid
 
 		.asCallback(callback)
 
@@ -1243,8 +1244,9 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId).get('device_type').then (deviceType) ->
-			return exports.getManifestBySlug(deviceType)
+		applicationModel().get(nameOrId, select: 'device_type')
+		.get('device_type')
+		.then(exports.getManifestBySlug)
 		.asCallback(callback)
 
 	###*
@@ -1299,15 +1301,15 @@ getDeviceModel = (deps, opts) ->
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().getApiKey(applicationNameOrId)
-			application: applicationModel().get(applicationNameOrId)
-		.then (results) ->
+			application: applicationModel().get(applicationNameOrId, select: ['id', 'device_type'])
+		.then ({ userId, apiKey, application }) ->
 
 			return registerDevice.register
-				userId: results.userId
-				applicationId: results.application.id
+				userId: userId
+				applicationId: application.id
 				uuid: uuid
-				deviceType: results.application.device_type
-				provisioningApiKey: results.apiKey
+				deviceType: application.device_type
+				provisioningApiKey: apiKey
 				apiEndpoint: apiUrl
 
 		.asCallback(callback)
@@ -1390,7 +1392,8 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.hasDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId).get('is_web_accessible').asCallback(callback)
+		exports.get(uuidOrId, select: 'is_web_accessible')
+		.get('is_web_accessible').asCallback(callback)
 
 	###*
 	# @summary Get a device url
@@ -1425,7 +1428,7 @@ getDeviceModel = (deps, opts) ->
 				throw new Error("Device is not web accessible: #{uuidOrId}")
 
 			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
-				exports.get(uuidOrId).get('uuid').then (uuid) ->
+				exports.get(uuidOrId, select: 'uuid').get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.asCallback(callback)
 
@@ -1451,14 +1454,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: true
 				options:
 					filter:
-						uuid: device.uuid
+						uuid: uuid
 		.asCallback(callback)
 
 	###*
@@ -1483,14 +1486,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: false
 				options:
 					filter:
-						uuid: device.uuid
+						uuid: uuid
 		.asCallback(callback)
 
 	###*
@@ -1656,10 +1659,10 @@ getDeviceModel = (deps, opts) ->
 		if not expiryTimestamp? or expiryTimestamp <= Date.now()
 			throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp)
 
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
-				id: device.id
+				id: id
 				body: support_expiry_date: expiryTimestamp
 		.asCallback(callback)
 
@@ -1685,10 +1688,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.revokeSupportAccess = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get(uuidOrId, select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
-				id: device.id
+				id: id
 				body: support_expiry_date: null
 		.asCallback(callback)
 

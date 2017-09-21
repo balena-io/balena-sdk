@@ -2,6 +2,7 @@ errors = require('resin-errors')
 semver = require('semver')
 cloneDeep = require('lodash/cloneDeep')
 fromPairs = require('lodash/fromPairs')
+includes = require('lodash/includes')
 isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 isFunction = require('lodash/isFunction')
@@ -123,7 +124,16 @@ exports.mergePineOptions = (defaults, extras) ->
 
 	for own option, value of extras
 		switch option
-			when 'select', 'orderby', 'top', 'skip'
+			when 'select'
+				if value?
+					if not isArray(value)
+						value = [value]
+					if !includes(value, 'id')
+						value.unshift('id')
+
+				result[option] = value
+
+			when 'orderby', 'top', 'skip'
 				result[option] = value
 
 			when 'filter'

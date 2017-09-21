@@ -52,7 +52,9 @@ getApplicationModel = function(deps, opts) {
       if (isId(nameOrId)) {
         return nameOrId;
       } else {
-        return exports.get(nameOrId).get('id');
+        return exports.get(nameOrId, {
+          select: 'id'
+        }).get('id');
       }
     });
   };
@@ -272,7 +274,9 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.has = function(nameOrId, callback) {
-    return exports.get(nameOrId)["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
+    return exports.get(nameOrId, {
+      select: []
+    })["return"](true)["catch"](errors.ResinApplicationNotFound, function() {
       return false;
     }).asCallback(callback);
   };
@@ -299,7 +303,9 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.hasAny = function(callback) {
-    return exports.getAll().then(function(applications) {
+    return exports.getAll({
+      select: []
+    }).then(function(applications) {
       return !isEmpty(applications);
     }).asCallback(callback);
   };
@@ -485,10 +491,14 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.generateApiKey = function(nameOrId, callback) {
-    return exports.get(nameOrId).then(function(application) {
+    return exports.get(nameOrId, {
+      select: 'id'
+    }).then(function(arg) {
+      var id;
+      id = arg.id;
       return request.send({
         method: 'POST',
-        url: "/application/" + application.id + "/generate-api-key",
+        url: "/application/" + id + "/generate-api-key",
         baseUrl: apiUrl
       });
     }).get('body').asCallback(callback);
@@ -653,7 +663,9 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.enableDeviceUrls = function(nameOrId, callback) {
-    return exports.get(nameOrId).then(function(arg) {
+    return exports.get(nameOrId, {
+      select: 'id'
+    }).then(function(arg) {
       var id;
       id = arg.id;
       return pine.patch({
@@ -692,7 +704,9 @@ getApplicationModel = function(deps, opts) {
   	 * });
    */
   exports.disableDeviceUrls = function(nameOrId, callback) {
-    return exports.get(nameOrId).then(function(arg) {
+    return exports.get(nameOrId, {
+      select: 'id'
+    }).then(function(arg) {
       var id;
       id = arg.id;
       return pine.patch({
