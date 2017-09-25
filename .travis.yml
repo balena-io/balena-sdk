@@ -15,11 +15,12 @@ matrix:
     - node_js:
       - '4'
 before_install:
-- npm -g install npm
+- npm -g install npm@4
 script:
 # Skip tests entirely, unless it's a pull request
 # If we end up deploying, a deploy runs the tests anyway
-- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then npm test; fi'
+- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then npm run ci; fi'
+
 notifications:
   email: false
   webhooks:

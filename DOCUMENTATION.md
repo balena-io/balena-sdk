@@ -666,7 +666,7 @@ resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 <a name="resin.models.application.purge"></a>
 
 ##### application.purge(appId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Purge devices by application id  
 **Access**: public  
 
@@ -687,7 +687,7 @@ resin.models.application.purge(123, function(error) {
 <a name="resin.models.application.shutdown"></a>
 
 ##### application.shutdown(appId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Shutdown devices by application id  
 **Access**: public  
 
@@ -710,7 +710,7 @@ resin.models.application.shutdown(123, function(error) {
 <a name="resin.models.application.reboot"></a>
 
 ##### application.reboot(appId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Reboot devices by application id  
 **Access**: public  
 
@@ -3679,7 +3679,7 @@ The options accepted are the same as those used in the main SDK factory function
 If you use this method, it should be called as soon as possible during app
 startup and before any calls to `fromSharedOptions()` are made.
 
-**Kind**: static method of [<code>resin</code>](#resin)  
+**Kind**: static method of <code>[resin](#resin)</code>  
 **Summary**: Set shared default options  
 **Access**: public  
 **Params**: <code>Object</code> opts - The shared default options  
@@ -3699,7 +3699,7 @@ Create an SDK instance using shared default options set using the `setSharedOpti
 If options have not been set using this method, then this method will use the
 same defaults as the main SDK factory function.
 
-**Kind**: static method of [<code>resin</code>](#resin)  
+**Kind**: static method of <code>[resin](#resin)</code>  
 **Summary**: Create an SDK instance using shared default options  
 **Access**: public  
 **Params**: <code>Object</code> opts - The shared default options  
