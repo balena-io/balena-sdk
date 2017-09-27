@@ -31,7 +31,7 @@
     "docs": "jsdoc2md \"build/**/!(resin-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "prepublish": "require-npm4-to-publish",
-    "prepublishOnly": "npm test"
+    "prepack": "npm test"
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "Apache-2.0",
