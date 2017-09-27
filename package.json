@@ -8,6 +8,10 @@
     "type": "git",
     "url": "git://github.com/resin-io/resin-sdk.git"
   },
+  "files": [
+    "build/",
+    "DOCUMENTATION.md"
+  ],
   "keywords": [
     "sdk",
     "resin",
