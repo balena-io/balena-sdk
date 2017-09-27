@@ -33,6 +33,7 @@ deploy:
   provider: npm
   email: 'accounts@resin.io'
   skip_cleanup: true
+  tag: publish-test
   api_key:
     secure: SKemSDObFtG2GnVxhmxR4KMr/5S8LwlVdbgom3ouQ/kXAfMY0n6KaV6nwM+4EhW9zg6A8r2XQ6Q7fWs+ESwNvk1dS6MAHwdC5KOUpVqeRxsAuyZnIRdwa0J9wMbzt2I0E9D0sTvi4FZSO9a/6fJDWUrbTFP7Dv/S3ngyQz014ZY=
   on:
