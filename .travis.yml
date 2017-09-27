@@ -29,6 +29,8 @@ notifications:
     on_success: change
     on_failure: always
     on_start: never
+before_deploy:
+  - 'ls -la'
 deploy:
   provider: npm
   email: 'accounts@resin.io'
@@ -41,3 +43,5 @@ deploy:
     tags: true
     condition: $CAN_DEPLOY = 'true' && $TRAVIS_TAG =~ ^v?[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
     repo: resin-io/resin-sdk
+after_deploy:
+  - 'ls -la'
