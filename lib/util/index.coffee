@@ -133,8 +133,6 @@ exports.mergePineOptions = (defaults, extras) ->
 				if value?
 					if not isArray(value)
 						value = [value]
-					if !includes(value, 'id')
-						value.unshift('id')
 
 				result[option] = value
 
