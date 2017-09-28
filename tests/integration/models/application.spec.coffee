@@ -106,14 +106,6 @@ describe 'Application Model', ->
 				resin.models.application.getAll().then (applications) =>
 					m.chai.expect(applications[0].id).to.equal(@application.id)
 
-			it 'should add a devices_length property', ->
-				resin.models.application.getAll().then (applications) ->
-					m.chai.expect(applications[0].devices_length).to.equal(0)
-
-			it 'should add an online_devices property', ->
-				resin.models.application.getAll().then (applications) ->
-					m.chai.expect(applications[0].online_devices).to.equal(0)
-
 			it 'should support arbitrary pinejs options', ->
 				resin.models.application.getAll(expand: 'user')
 				.then (applications) ->

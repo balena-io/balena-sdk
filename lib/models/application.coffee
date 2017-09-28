@@ -96,11 +96,7 @@ getApplicationModel = (deps, opts) ->
 							user: userId
 					, options
 
-		# TODO: It might be worth to do all these handy
-		# manipulations server side directly.
 		.map (application) ->
-			application.online_devices = filter(application.device, is_online: true).length
-			application.devices_length = application.device?.length or 0
 			normalizeApplication(application)
 			return application
 
