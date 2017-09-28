@@ -251,7 +251,7 @@ getSdk = (opts = {}) ->
 # });
 ###
 getSdk.setSharedOptions = (opts) ->
-	root = if window? then window else GLOBAL
+	root = if window? then window else global
 
 	if root[RESIN_SDK_HAS_USED_SHARED_OPTIONS]
 		console.error('Shared SDK options have already been used. You may have a race condition in your code.')
@@ -280,7 +280,7 @@ getSdk.setSharedOptions = (opts) ->
 # const sdk = resin.fromSharedOptions();
 ###
 getSdk.fromSharedOptions = ->
-	root = if window? then window else GLOBAL
+	root = if window? then window else global
 
 	sharedOpts = root[RESIN_SDK_SHARED_OPTIONS]
 

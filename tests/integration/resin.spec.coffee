@@ -103,7 +103,7 @@ describe 'Resin SDK', ->
 
 	describe 'getSdk.setSharedOptions()', ->
 		it 'should set a global containing shared options', ->
-			root = if window? then window else GLOBAL
+			root = if window? then window else global
 			opts =
 				foo: 'bar'
 
