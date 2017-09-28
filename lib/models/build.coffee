@@ -98,7 +98,7 @@ getBuildModel = (deps, opts) ->
 				options:
 					mergePineOptions
 						filter:
-							application: id
+							belongs_to__application: id
 						select: [
 							'id'
 							'created_at'

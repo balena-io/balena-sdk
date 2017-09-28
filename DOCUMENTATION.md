@@ -234,7 +234,7 @@ in the SDK.
 resin.pine.get({
 	resource: 'build/$count',
 	options: {
-		filter: { application: applicationId }
+		filter: { belongs_to__application: applicationId }
 	}
 });
 ```

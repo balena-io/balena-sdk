@@ -40,7 +40,7 @@ describe 'Application Model', ->
 				.then ->
 					resin.models.application.getAll()
 				.then ([ parentApplication, childApplication ]) ->
-					m.chai.expect(childApplication.application.__id).to.equal(parentApplication.id)
+					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
 			it 'should be rejected if the device type is invalid', ->
 				promise = resin.models.application.create('FooBar', 'foobarbaz')
@@ -276,7 +276,7 @@ describe 'Application Model', ->
 				.then =>
 					resin.models.application.get(@application.id)
 				.then (app) ->
-					Date.parse(app.support_expiry_date)
+					Date.parse(app.is_accessible_by_support_until__date)
 
 				m.chai.expect(promise).to.eventually.equal(expiryTime)
 
@@ -289,7 +289,7 @@ describe 'Application Model', ->
 				.then =>
 					resin.models.application.get(@application.id)
 				.then (app) ->
-					app.support_expiry_date
+					app.is_accessible_by_support_until__date
 
 				m.chai.expect(promise).to.eventually.equal(null)
 
