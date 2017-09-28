@@ -29,6 +29,8 @@ notifications:
     on_success: change
     on_failure: always
     on_start: never
+before_deploy:
+- 'if [ "$CAN_DEPLOY" == "true" ]; then npm run ci; fi'
 deploy:
   provider: npm
   email: 'accounts@resin.io'
