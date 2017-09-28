@@ -117,9 +117,6 @@ getDeviceModel = (deps, opts) ->
 		return url.resolve(dashboardUrl, "/apps/#{options.appId}/devices/#{options.deviceId}/summary")
 
 	addExtraInfo = (device) ->
-		# TODO: Move this to the server
-		device.application_name = device.application[0].app_name
-		device.dashboard_url = getDashboardUrl({ appId: device.application[0].id, deviceId: device.id })
 		normalizeDeviceOsVersion(device)
 		return device
 
@@ -389,7 +386,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'application_name').get('application_name').asCallback(callback)
+		exports.get uuidOrId,
+			select: 'id'
+			expand: application: $select: 'app_name'
+		.then (device) ->
+			device.application[0].app_name
+		.asCallback(callback)
 
 	###*
 	# @summary Get application container information
