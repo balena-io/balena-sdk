@@ -83,7 +83,6 @@ getApplicationModel = (deps, opts) ->
 				options:
 					mergePineOptions
 						orderby: 'app_name asc'
-						expand: 'device'
 						filter:
 							user: userId
 					, options
@@ -187,15 +186,14 @@ getApplicationModel = (deps, opts) ->
 						$eq: [
 							$tolower: $: 'app_name'
 							appName
-						]
-					expand:
+						],
 						user:
-							$filter:
-								$eq: [
+							$any:
+								$alias: 'u',
+								$expr: $eq: [
 									$tolower: $: 'username'
 									owner
 								]
-							$select: 'id'
 				, options
 		.tap (applications) ->
 			if isEmpty(applications)

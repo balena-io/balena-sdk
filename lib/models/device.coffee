@@ -149,7 +149,6 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
-					expand: 'application'
 					orderby: 'name asc'
 				, options
 
@@ -269,10 +268,7 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device'
 					id: uuidOrId
-					options:
-						mergePineOptions
-							expand: 'application'
-						, options
+					options: options
 				.tap (device) ->
 					if not device?
 						throw new errors.ResinDeviceNotFound(uuidOrId)
@@ -281,7 +277,6 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					options:
 						mergePineOptions
-							expand: 'application'
 							filter:
 								uuid: $startswith: uuidOrId
 						, options

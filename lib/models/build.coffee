@@ -113,12 +113,6 @@ getBuildModel = (deps, opts) ->
 							'message'
 							# 'log' # We *don't* include logs by default, since it's usually huge.
 						]
-						expand:
-							user:
-								$select: [
-									'id'
-									'username'
-								]
 						orderby: 'created_at desc'
 					, options
 		.asCallback(callback)

@@ -42,15 +42,6 @@ describe 'Pine option merging', ->
 			skip: 4
 			orderby: 'id asc'
 
-	it 'overrides select options, but always includes id', ->
-		result = mergePineOptions
-			select: ['id', 'other']
-		,
-			select: ['app_name']
-
-		m.chai.expect(result).to.deep.equal
-			select: ['id', 'app_name']
-
 	it 'combines filter options with $and', ->
 		result = mergePineOptions
 			filter: id: 1
