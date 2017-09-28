@@ -198,7 +198,7 @@ getDeviceModel = (deps, opts) ->
 
 		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: application: id
+				filter: belongs_to__application: id
 				options
 			), callback)
 
@@ -235,7 +235,7 @@ getDeviceModel = (deps, opts) ->
 
 		exports.get(parentUuidOrId, select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: device: id
+				filter: is_managed_by__device: id
 				options
 			), callback)
 
@@ -393,9 +393,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getApplicationName = (uuidOrId, callback) ->
 		exports.get uuidOrId,
 			select: 'id'
-			expand: application: $select: 'app_name'
+			expand: belongs_to__application: $select: 'app_name'
 		.then (device) ->
-			device.application[0].app_name
+			device.belongs_to__application[0].app_name
 		.asCallback(callback)
 
 	###*
@@ -428,7 +428,7 @@ getDeviceModel = (deps, opts) ->
 	exports.getApplicationInfo = (uuidOrId, callback) ->
 		exports.get(uuidOrId).then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.application[0].id
+				appId = device.belongs_to__application[0].id
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}"
@@ -782,7 +782,7 @@ getDeviceModel = (deps, opts) ->
 			return pine.patch
 				resource: 'device'
 				body:
-					application: application.id
+					belongs_to__application: application.id
 				options:
 					filter:
 						uuid: device.uuid
@@ -819,7 +819,7 @@ getDeviceModel = (deps, opts) ->
 	exports.startApplication = (uuidOrId, callback) ->
 		exports.get(uuidOrId).then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.application[0].id
+				appId = device.belongs_to__application[0].id
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}/start"
@@ -862,7 +862,7 @@ getDeviceModel = (deps, opts) ->
 	exports.stopApplication = (uuidOrId, callback) ->
 		exports.get(uuidOrId).then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.application[0].id
+				appId = device.belongs_to__application[0].id
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}/stop"
@@ -989,7 +989,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 					data:
 						force: Boolean(options.force)
 			.catch (err) ->
@@ -1031,9 +1031,9 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 					data:
-						appId: device.application[0].id
+						appId: device.belongs_to__application[0].id
 			.catch (err) ->
 				if err.statusCode == LOCKED_STATUS_CODE
 					throw new errors.ResinSupervisorLockedError()
@@ -1078,7 +1078,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 					data:
 						force: Boolean(options.force)
 		.asCallback(callback)
@@ -1530,7 +1530,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				data:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 		.get('body')
 		.asCallback(callback)
 
@@ -1567,7 +1567,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				data:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 		.get('body')
 		.asCallback(callback)
 
@@ -1604,7 +1604,7 @@ getDeviceModel = (deps, opts) ->
 				body:
 					method: 'GET'
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 		.asCallback(callback)
 
 	###*
@@ -1664,7 +1664,7 @@ getDeviceModel = (deps, opts) ->
 			return pine.patch
 				resource: 'device'
 				id: id
-				body: support_expiry_date: expiryTimestamp
+				body: is_accessible_by_support_until__date: expiryTimestamp
 		.asCallback(callback)
 
 	###*
@@ -1693,7 +1693,7 @@ getDeviceModel = (deps, opts) ->
 			return pine.patch
 				resource: 'device'
 				id: id
-				body: support_expiry_date: null
+				body: is_accessible_by_support_until__date: null
 		.asCallback(callback)
 
 	###*

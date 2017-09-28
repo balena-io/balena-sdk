@@ -244,11 +244,11 @@ describe 'Device Model', ->
 					resin.pine.post
 						resource: 'device'
 						body:
-							user: userId
-							application: @childApplication.id
+							belongs_to__user: userId
+							belongs_to__application: @childApplication.id
 							device_type: @childApplication.device_type
 							uuid: resin.models.device.generateUniqueKey()
-							device: @device.id
+							is_managed_by__device: @device.id
 				.then (device) =>
 					@childDevice = device
 
@@ -738,8 +738,8 @@ describe 'Device Model', ->
 				promise = resin.models.device.grantSupportAccess(@device.id, expiryTimestamp)
 				.then =>
 					resin.models.device.get(@device.id)
-				.then ({ support_expiry_date }) ->
-					Date.parse(support_expiry_date)
+				.then ({ is_accessible_by_support_until__date }) ->
+					Date.parse(is_accessible_by_support_until__date)
 
 				m.chai.expect(promise).to.eventually.equal(expiryTimestamp)
 
@@ -750,8 +750,8 @@ describe 'Device Model', ->
 					resin.models.device.revokeSupportAccess(@device.id)
 				.then =>
 					resin.models.device.get(@device.id)
-				.then ({ support_expiry_date }) ->
-					m.chai.expect(support_expiry_date).to.be.null
+				.then ({ is_accessible_by_support_until__date }) ->
+					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
