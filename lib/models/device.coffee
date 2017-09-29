@@ -767,7 +767,7 @@ getDeviceModel = (deps, opts) ->
 		.then ({ application, device }) ->
 
 			if device.device_type isnt application.device_type
-				throw new Error("Incompatible application: #{applicationNameOrId}")
+				throw new errors.ResinInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
 				resource: 'device'
