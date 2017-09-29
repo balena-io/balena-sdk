@@ -1,6 +1,6 @@
 m = require('mochainon')
 
-{ resin, getSdk, sdkOpts, credentials } = require('./setup')
+{ resin, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
 
 describe 'Resin SDK', ->
 
@@ -36,6 +36,8 @@ describe 'Resin SDK', ->
 		m.chai.expect(resin.errors).to.exist
 
 	describe 'interception Hooks', ->
+
+		givenLoggedInUser()
 
 		beforeEach ->
 			resin.interceptors = []
