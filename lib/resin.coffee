@@ -30,6 +30,15 @@ RESIN_SDK_SHARED_OPTIONS = 'RESIN_SDK_SHARED_OPTIONS'
 RESIN_SDK_HAS_USED_SHARED_OPTIONS = 'RESIN_SDK_HAS_USED_SHARED_OPTIONS'
 RESIN_SDK_HAS_SET_SHARED_OPTIONS = 'RESIN_SDK_HAS_SET_SHARED_OPTIONS'
 
+# Use window (web)/self (web worker)/global (node) as appropriate
+globalEnv = if typeof window != 'undefined'
+	window
+else if typeof self != 'undefined'
+	self
+else if typeof global != 'undefined'
+	global
+else null # If we can't guarantee global state, don't fake it: fail instead.
+
 ###*
 # @namespace resin
 # @description
@@ -251,16 +260,14 @@ getSdk = (opts = {}) ->
 # });
 ###
 getSdk.setSharedOptions = (opts) ->
-	root = if window? then window else GLOBAL
-
-	if root[RESIN_SDK_HAS_USED_SHARED_OPTIONS]
+	if globalEnv[RESIN_SDK_HAS_USED_SHARED_OPTIONS]
 		console.error('Shared SDK options have already been used. You may have a race condition in your code.')
 
-	if root[RESIN_SDK_HAS_SET_SHARED_OPTIONS]
+	if globalEnv[RESIN_SDK_HAS_SET_SHARED_OPTIONS]
 		console.error('Shared SDK options have already been set. You may have a race condition in your code.')
 
-	root[RESIN_SDK_SHARED_OPTIONS] = opts
-	root[RESIN_SDK_HAS_SET_SHARED_OPTIONS] = true
+	globalEnv[RESIN_SDK_SHARED_OPTIONS] = opts
+	globalEnv[RESIN_SDK_HAS_SET_SHARED_OPTIONS] = true
 
 ###*
 # @summary Create an SDK instance using shared default options
@@ -280,11 +287,9 @@ getSdk.setSharedOptions = (opts) ->
 # const sdk = resin.fromSharedOptions();
 ###
 getSdk.fromSharedOptions = ->
-	root = if window? then window else GLOBAL
+	sharedOpts = globalEnv[RESIN_SDK_SHARED_OPTIONS]
 
-	sharedOpts = root[RESIN_SDK_SHARED_OPTIONS]
-
-	root[RESIN_SDK_HAS_USED_SHARED_OPTIONS] = true
+	globalEnv[RESIN_SDK_HAS_USED_SHARED_OPTIONS] = true
 
 	getSdk(sharedOpts)
 

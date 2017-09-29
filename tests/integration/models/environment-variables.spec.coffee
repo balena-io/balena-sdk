@@ -138,6 +138,14 @@ describe 'Environment Variables Model', ->
 					promise = resin.models.environmentVariables.device.getAll(@device.uuid)
 					m.chai.expect(promise).to.become([])
 
+				it "should return device's device environment variables if they exist", ->
+					resin.models.environmentVariables.device.create(@device.uuid, 'EDITOR', 'vim').then =>
+						resin.models.environmentVariables.device.getAll(@device.uuid)
+					.then (envs) ->
+						m.chai.expect(envs).to.have.length(1)
+						m.chai.expect(envs[0].name).to.equal('EDITOR')
+						m.chai.expect(envs[0].value).to.equal('vim')
+
 				it 'should be rejected if the device uuid does not exist', ->
 					promise = resin.models.environmentVariables.device.getAll('asdfghjkl')
 					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')

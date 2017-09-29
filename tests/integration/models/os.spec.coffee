@@ -87,9 +87,6 @@ describe 'OS model', ->
 
 			it 'should eventually return the valid versions object', ->
 				promise = resin.models.os.getSupportedVersions('raspberry-pi')
-				.then (versions) ->
-					console.log(versions)
-					return versions
 				m.chai.expect(promise).to.eventually.satisfy(areValidVersions)
 
 			it 'should eventually return the valid versions object if passing a device type alias', ->

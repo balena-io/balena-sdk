@@ -1,6 +1,6 @@
 m = require('mochainon')
 
-{ resin, getSdk, sdkOpts, credentials } = require('./setup')
+{ resin, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
 
 describe 'Resin SDK', ->
 
@@ -36,6 +36,8 @@ describe 'Resin SDK', ->
 		m.chai.expect(resin.errors).to.exist
 
 	describe 'interception Hooks', ->
+
+		givenLoggedInUser()
 
 		beforeEach ->
 			resin.interceptors = []
@@ -103,7 +105,7 @@ describe 'Resin SDK', ->
 
 	describe 'getSdk.setSharedOptions()', ->
 		it 'should set a global containing shared options', ->
-			root = if window? then window else GLOBAL
+			root = if window? then window else global
 			opts =
 				foo: 'bar'
 
