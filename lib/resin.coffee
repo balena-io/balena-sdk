@@ -37,7 +37,7 @@ else if typeof self != 'undefined'
 	self
 else if typeof global != 'undefined'
 	global
-else null
+else null # If we can't guarantee global state, don't fake it: fail instead.
 
 ###*
 # @namespace resin
