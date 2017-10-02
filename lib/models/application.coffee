@@ -156,7 +156,7 @@ getApplicationModel = (deps, opts) ->
 
 	###*
 	# @summary Get a single application using the appname and owner's username
-	# @name getAppWithOwner
+	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof resin.models.application
@@ -168,11 +168,11 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getAppWithOwner('MyApp', 'MyUser').then(function(application) {
+	# resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	# 	console.log(application);
 	# });
 	###
-	exports.getAppWithOwner = (appName, owner, options = {}, callback) ->
+	exports.getAppByOwner = (appName, owner, options = {}, callback) ->
 		callback = findCallback(arguments)
 
 		appName = appName.toLowerCase()
