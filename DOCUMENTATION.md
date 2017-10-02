@@ -20,7 +20,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.application](#resin.models.application) : <code>object</code>
             * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
             * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-            * [.getAppWithOwner(appName, owner, [options])](#resin.models.application.getAppWithOwner) ⇒ <code>Promise</code>
+            * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -269,7 +269,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.application](#resin.models.application) : <code>object</code>
         * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
         * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-        * [.getAppWithOwner(appName, owner, [options])](#resin.models.application.getAppWithOwner) ⇒ <code>Promise</code>
+        * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -379,7 +379,7 @@ resin.models.device.get(123).catch(function (error) {
 * [.application](#resin.models.application) : <code>object</code>
     * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
     * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-    * [.getAppWithOwner(appName, owner, [options])](#resin.models.application.getAppWithOwner) ⇒ <code>Promise</code>
+    * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -454,9 +454,9 @@ resin.models.application.get('MyApp', function(error, application) {
 	console.log(application);
 });
 ```
-<a name="resin.models.application.getAppWithOwner"></a>
+<a name="resin.models.application.getAppByOwner"></a>
 
-##### application.getAppWithOwner(appName, owner, [options]) ⇒ <code>Promise</code>
+##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Get a single application using the appname and owner's username  
 **Access**: public  
@@ -470,7 +470,7 @@ resin.models.application.get('MyApp', function(error, application) {
 
 **Example**  
 ```js
-resin.models.application.getAppWithOwner('MyApp', 'MyUser').then(function(application) {
+resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	console.log(application);
 });
 ```

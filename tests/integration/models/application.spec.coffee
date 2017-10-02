@@ -15,10 +15,10 @@ describe 'Application Model', ->
 				promise = resin.models.application.getAll()
 				m.chai.expect(promise).to.become([])
 
-		describe 'resin.models.application.getAppWithOwner()', ->
+		describe 'resin.models.application.getAppByOwner()', ->
 
 			it 'should eventually reject', ->
-				promise = resin.models.application.getAppWithOwner('testapp', 'FooBar')
+				promise = resin.models.application.getAppByOwner('testapp', 'FooBar')
 				m.chai.expect(promise).to.be.rejected
 
 		describe 'resin.models.application.hasAny()', ->
@@ -86,14 +86,14 @@ describe 'Application Model', ->
 				promise = resin.models.application.hasAny()
 				m.chai.expect(promise).to.eventually.be.true
 
-		describe 'resin.models.application.getAppWithOwner()', ->
+		describe 'resin.models.application.getAppByOwner()', ->
 
 			it 'should find the created application', ->
-				resin.models.application.getAppWithOwner('FooBar', credentials.username).then (application) =>
+				resin.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
 					m.chai.expect(application.id).to.equal(@application.id)
 
 			it 'should not find the created application with a different username', ->
-				promise = resin.models.application.getAppWithOwner('FooBar', 'test_username')
+				promise = resin.models.application.getAppByOwner('FooBar', 'test_username')
 				m.chai.expect(promise).to.eventually.reject
 
 		describe 'resin.models.application.getAll()', ->
@@ -105,14 +105,6 @@ describe 'Application Model', ->
 			it 'should eventually become an array containing the application', ->
 				resin.models.application.getAll().then (applications) =>
 					m.chai.expect(applications[0].id).to.equal(@application.id)
-
-			it 'should add a devices_length property', ->
-				resin.models.application.getAll().then (applications) ->
-					m.chai.expect(applications[0].devices_length).to.equal(0)
-
-			it 'should add an online_devices property', ->
-				resin.models.application.getAll().then (applications) ->
-					m.chai.expect(applications[0].online_devices).to.equal(0)
 
 			it 'should support arbitrary pinejs options', ->
 				resin.models.application.getAll(expand: 'user')
