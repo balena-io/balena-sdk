@@ -56,6 +56,16 @@ exports.notFoundResponse =
 	code: 'ResinRequestError'
 	statusCode: 404
 
+exports.noDeviceForKeyResponse =
+	code: 'ResinRequestError'
+	statusCode: 500
+	body: 'No device found to associate with the api key'
+
+exports.noApplicationForKeyResponse =
+	code: 'ResinRequestError'
+	statusCode: 500
+	body: 'No application found to associate with the api key'
+
 exports.treatAsMissingApplication = (nameOrId) ->
 	return (err) ->
 		replacementErr = new errors.ResinApplicationNotFound(nameOrId)
