@@ -186,24 +186,24 @@ describe 'Application Model', ->
 				promise = resin.models.application.remove(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
-		describe 'resin.models.application.getApiKey()', ->
+		describe 'resin.models.application.generateProvisioningKey()', ->
 
-			it 'should be able to generate an API key by name', ->
-				resin.models.application.getApiKey(@application.app_name).then (apiKey) ->
-					m.chai.expect(_.isString(apiKey)).to.be.true
-					m.chai.expect(apiKey).to.have.length(32)
+			it 'should be able to generate a provisioning key by name', ->
+				resin.models.application.generateProvisioningKey(@application.app_name).then (key) ->
+					m.chai.expect(_.isString(key)).to.be.true
+					m.chai.expect(key).to.have.length(32)
 
 			it 'should be able to generate an API key by id', ->
-				resin.models.application.getApiKey(@application.id).then (apiKey) ->
-					m.chai.expect(_.isString(apiKey)).to.be.true
-					m.chai.expect(apiKey).to.have.length(32)
+				resin.models.application.generateProvisioningKey(@application.id).then (key) ->
+					m.chai.expect(_.isString(key)).to.be.true
+					m.chai.expect(key).to.have.length(32)
 
 			it 'should be rejected if the application name does not exist', ->
-				promise = resin.models.application.getApiKey('HelloWorldApp')
+				promise = resin.models.application.generateProvisioningKey('HelloWorldApp')
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
 			it 'should be rejected if the application id does not exist', ->
-				promise = resin.models.application.getApiKey(999999)
+				promise = resin.models.application.generateProvisioningKey(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 	describe 'when toggling device URLs', ->

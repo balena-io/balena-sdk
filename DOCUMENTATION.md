@@ -27,7 +27,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-            * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+            * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
             * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
@@ -274,7 +274,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-        * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+        * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
         * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
@@ -382,7 +382,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-    * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+    * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
     * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
@@ -629,13 +629,13 @@ resin.models.application.restart('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.generateApiKey"></a>
+<a name="resin.models.application.generateProvisioningKey"></a>
 
-##### application.generateApiKey(nameOrId) ⇒ <code>Promise</code>
+##### application.generateProvisioningKey(nameOrId) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
-**Summary**: Generate an API key for a specific application  
+**Summary**: Generate a device provisioning key for a specific application  
 **Access**: public  
-**Fulfil**: <code>String</code> - api key  
+**Fulfil**: <code>String</code> - device provisioning key  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -643,21 +643,21 @@ resin.models.application.restart('MyApp', function(error) {
 
 **Example**  
 ```js
-resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
-	console.log(apiKey);
+resin.models.application.generateProvisioningKey('MyApp').then(function(key) {
+	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.application.generateApiKey(123).then(function(apiKey) {
-	console.log(apiKey);
+resin.models.application.generateProvisioningKey(123).then(function(key) {
+	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
+resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
 	if (error) throw error;
-	console.log(apiKey);
+	console.log(key);
 });
 ```
 <a name="resin.models.application.purge"></a>
