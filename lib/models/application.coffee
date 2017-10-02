@@ -612,22 +612,6 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get an API key for a specific application
-	# @name getApiKey
-	# @public
-	# @function
-	# @memberof resin.models.application
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @fulfil {String} - api key
-	# @returns {Promise}
-	#
-	# @deprecated Use generateApiKey instead
-	# @see {@link resin.models.application.generateApiKey}
-	###
-	exports.getApiKey = exports.generateApiKey
-
-	###*
 	# @summary Enable device urls for all devices that belong to an application
 	# @name enableDeviceUrls
 	# @public
