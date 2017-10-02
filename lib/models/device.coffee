@@ -117,9 +117,6 @@ getDeviceModel = (deps, opts) ->
 		return url.resolve(dashboardUrl, "/apps/#{options.appId}/devices/#{options.deviceId}/summary")
 
 	addExtraInfo = (device) ->
-		# TODO: Move this to the server
-		device.application_name = device.application[0].app_name
-		device.dashboard_url = getDashboardUrl({ appId: device.application[0].id, deviceId: device.id })
 		normalizeDeviceOsVersion(device)
 		return device
 
@@ -152,7 +149,6 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
-					expand: 'application'
 					orderby: 'name asc'
 				, options
 
@@ -272,10 +268,7 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device'
 					id: uuidOrId
-					options:
-						mergePineOptions
-							expand: 'application'
-						, options
+					options: options
 				.tap (device) ->
 					if not device?
 						throw new errors.ResinDeviceNotFound(uuidOrId)
@@ -284,7 +277,6 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					options:
 						mergePineOptions
-							expand: 'application'
 							filter:
 								uuid: $startswith: uuidOrId
 						, options
@@ -389,7 +381,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'application_name').get('application_name').asCallback(callback)
+		exports.get uuidOrId,
+			select: 'id'
+			expand: application: $select: 'app_name'
+		.then (device) ->
+			device.application[0].app_name
+		.asCallback(callback)
 
 	###*
 	# @summary Get application container information
@@ -770,7 +767,7 @@ getDeviceModel = (deps, opts) ->
 		.then ({ application, device }) ->
 
 			if device.device_type isnt application.device_type
-				throw new Error("Incompatible application: #{applicationNameOrId}")
+				throw new errors.ResinInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
 				resource: 'device'

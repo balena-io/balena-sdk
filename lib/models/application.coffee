@@ -83,16 +83,11 @@ getApplicationModel = (deps, opts) ->
 				options:
 					mergePineOptions
 						orderby: 'app_name asc'
-						expand: 'device'
 						filter:
 							user: userId
 					, options
 
-		# TODO: It might be worth to do all these handy
-		# manipulations server side directly.
 		.map (application) ->
-			application.online_devices = filter(application.device, is_online: true).length
-			application.devices_length = application.device?.length or 0
 			normalizeApplication(application)
 			return application
 
@@ -161,7 +156,7 @@ getApplicationModel = (deps, opts) ->
 
 	###*
 	# @summary Get a single application using the appname and owner's username
-	# @name getAppWithOwner
+	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof resin.models.application
@@ -173,11 +168,11 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getAppWithOwner('MyApp', 'MyUser').then(function(application) {
+	# resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	# 	console.log(application);
 	# });
 	###
-	exports.getAppWithOwner = (appName, owner, options = {}, callback) ->
+	exports.getAppByOwner = (appName, owner, options = {}, callback) ->
 		callback = findCallback(arguments)
 
 		appName = appName.toLowerCase()
@@ -191,15 +186,14 @@ getApplicationModel = (deps, opts) ->
 						$eq: [
 							$tolower: $: 'app_name'
 							appName
-						]
-					expand:
+						],
 						user:
-							$filter:
-								$eq: [
+							$any:
+								$alias: 'u',
+								$expr: $eq: [
 									$tolower: $: 'username'
 									owner
 								]
-							$select: 'id'
 				, options
 		.tap (applications) ->
 			if isEmpty(applications)
