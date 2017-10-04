@@ -32,7 +32,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-            * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
             * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
             * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
             * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -281,7 +280,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-        * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
         * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
         * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
         * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -391,7 +389,6 @@ resin.models.device.get(123).catch(function (error) {
     * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-    * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
     * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
     * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
     * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -768,21 +765,6 @@ resin.models.application.reboot(123, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.getApiKey"></a>
-
-##### ~~application.getApiKey(nameOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of <code>[application](#resin.models.application)</code>  
-**Summary**: Get an API key for a specific application  
-**Access**: public  
-**Fulfil**: <code>String</code> - api key  
-**See**: [generateApiKey](#resin.models.application.generateApiKey)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
-
 <a name="resin.models.application.enableDeviceUrls"></a>
 
 ##### application.enableDeviceUrls(nameOrId) ⇒ <code>Promise</code>

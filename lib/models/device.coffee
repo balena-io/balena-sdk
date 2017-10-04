@@ -28,7 +28,17 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice, LOCKED_STATUS_CODE, timeSince } = require('../util')
+{
+	onlyIf,
+	isId,
+	findCallback,
+	mergePineOptions,
+	notFoundResponse,
+	noDeviceForKeyResponse,
+	treatAsMissingDevice,
+	LOCKED_STATUS_CODE,
+	timeSince
+} = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
@@ -1297,7 +1307,7 @@ getDeviceModel = (deps, opts) ->
 	exports.register = (applicationNameOrId, uuid, callback) ->
 		Promise.props
 			userId: auth.getUserId()
-			apiKey: applicationModel().getApiKey(applicationNameOrId)
+			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
 			application: applicationModel().get(applicationNameOrId, select: ['id', 'device_type'])
 		.then ({ userId, apiKey, application }) ->
 
@@ -1344,14 +1354,7 @@ getDeviceModel = (deps, opts) ->
 				url: "/api-key/device/#{deviceId}/device-key"
 				baseUrl: apiUrl
 		.get('body')
-		.catch(
-			{
-				code: 'ResinRequestError'
-				statusCode: 500
-				body: 'No device found to associate with the api key'
-			}
-			treatAsMissingDevice(uuidOrId)
-		)
+		.catch(noDeviceForKeyResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
