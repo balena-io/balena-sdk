@@ -24,7 +24,15 @@ filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
-{ isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingApplication, LOCKED_STATUS_CODE } = require('../util')
+{
+	isId,
+	findCallback,
+	mergePineOptions,
+	notFoundResponse,
+	noApplicationForKeyResponse,
+	treatAsMissingApplication,
+	LOCKED_STATUS_CODE
+} = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 getApplicationModel = (deps, opts) ->
@@ -419,40 +427,39 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Generate an API key for a specific application
-	# @name generateApiKey
+	# @summary Generate a device provisioning key for a specific application
+	# @name generateProvisioningKey
 	# @public
 	# @function
 	# @memberof resin.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @fulfil {String} - api key
+	# @fulfil {String} - device provisioning key
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
-	# 	console.log(apiKey);
+	# resin.models.application.generateProvisioningKey('MyApp').then(function(key) {
+	# 	console.log(key);
 	# });
 	#
 	# @example
-	# resin.models.application.generateApiKey(123).then(function(apiKey) {
-	# 	console.log(apiKey);
+	# resin.models.application.generateProvisioningKey(123).then(function(key) {
+	# 	console.log(key);
 	# });
 	#
 	# @example
-	# resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
+	# resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
 	# 	if (error) throw error;
-	# 	console.log(apiKey);
+	# 	console.log(key);
 	# });
 	###
-	exports.generateApiKey = (nameOrId, callback) ->
-		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
-		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+	exports.generateProvisioningKey = (nameOrId, callback) ->
+		getId(nameOrId).then (applicationId) ->
 			return request.send
 				method: 'POST'
-				url: "/application/#{id}/generate-api-key"
+				url: "/api-key/application/#{applicationId}/provisioning"
 				baseUrl: apiUrl
+		.catch(noApplicationForKeyResponse, treatAsMissingApplication(nameOrId))
 		.get('body')
 		.asCallback(callback)
 
@@ -561,22 +568,6 @@ getApplicationModel = (deps, opts) ->
 
 			throw err
 		.asCallback(callback)
-
-	###*
-	# @summary Get an API key for a specific application
-	# @name getApiKey
-	# @public
-	# @function
-	# @memberof resin.models.application
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @fulfil {String} - api key
-	# @returns {Promise}
-	#
-	# @deprecated Use generateApiKey instead
-	# @see {@link resin.models.application.generateApiKey}
-	###
-	exports.getApiKey = exports.generateApiKey
 
 	###*
 	# @summary Enable device urls for all devices that belong to an application
