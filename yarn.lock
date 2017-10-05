@@ -4111,9 +4111,9 @@ resin-register-device@^4.0.1:
     bluebird "^3.0.0"
     randomstring "^1.1.5"
 
-resin-request@^8.5.0:
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-8.5.0.tgz#bc1500690fecad92c44f56ff9c89ce9970d662ff"
+resin-request@^8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-8.6.0.tgz#79365f3e5cb39c195fd782b638b4217374213994"
   dependencies:
     bluebird "^3.3.4"
     fetch-ponyfill "^4.0.0"

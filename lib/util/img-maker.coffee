@@ -16,7 +16,7 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 		return assign(
 			{ method: 'GET' },
 			options,
-			{ url, baseUrl: imageMakerUrl, refreshToken: false }
+			{ url, baseUrl: imageMakerUrl, sendToken: false }
 		)
 
 	exports.request = sendRequest = (options) ->
