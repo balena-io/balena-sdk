@@ -103,7 +103,7 @@ getAuth = (deps, opts) ->
 			body:
 				username: credentials.email
 				password: String(credentials.password)
-			refreshToken: false
+			sendToken: false
 		.get('body')
 		.asCallback(callback)
 
@@ -342,6 +342,7 @@ getAuth = (deps, opts) ->
 			url: '/user/register'
 			baseUrl: apiUrl
 			body: credentials
+			sendToken: false
 		.get('body')
 		.asCallback(callback)
 
