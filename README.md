@@ -26,7 +26,8 @@ $ npm install --save resin-sdk
 Platforms
 ---------
 
-We currently support NodeJS and the browser.
+We currently support NodeJS (6+) and the browser.
+
 The following features are node-only:
 - OS image streaming download (`resin.models.os.download`),
 - resin settings client (`resin.settings`).

@@ -35,6 +35,9 @@
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=6.0"
+  },
   "devDependencies": {
     "browserify": "^14.3.0",
     "catch-uncommitted": "^1.0.0",
