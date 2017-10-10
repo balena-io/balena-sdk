@@ -12,8 +12,6 @@ matrix:
       - '6'
       env:
       - 'CAN_DEPLOY=true'
-    - node_js:
-      - '4'
 before_install:
 - npm -g install npm@4
 script:
