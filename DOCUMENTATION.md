@@ -3670,7 +3670,6 @@ startup and before any calls to `fromSharedOptions()` are made.
 resin.setSharedOptions({
 	apiUrl: 'https://api.resin.io/',
 	imageMakerUrl: 'https://img.resin.io/',
-	apiVersion: 'v2',
 	isBrowser: true,
 });
 ```
