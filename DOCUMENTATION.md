@@ -28,6 +28,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+            * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
             * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
@@ -276,6 +277,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+        * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
         * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
@@ -385,6 +387,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+    * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
     * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
@@ -635,6 +638,10 @@ resin.models.application.restart('MyApp', function(error) {
 <a name="resin.models.application.generateApiKey"></a>
 
 ##### application.generateApiKey(nameOrId) ⇒ <code>Promise</code>
+Generally you shouldn't use this method: if you're provisioning a recent ResinOS
+version (2.4.0+) then generateProvisioningKey should work just as well, but
+be more secure.
+
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Generate an API key for a specific application  
 **Access**: public  
@@ -661,6 +668,37 @@ resin.models.application.generateApiKey(123).then(function(apiKey) {
 resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	if (error) throw error;
 	console.log(apiKey);
+});
+```
+<a name="resin.models.application.generateProvisioningKey"></a>
+
+##### application.generateProvisioningKey(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Generate a device provisioning key for a specific application  
+**Access**: public  
+**Fulfil**: <code>String</code> - device provisioning key  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+resin.models.application.generateProvisioningKey('MyApp').then(function(key) {
+	console.log(key);
+});
+```
+**Example**  
+```js
+resin.models.application.generateProvisioningKey(123).then(function(key) {
+	console.log(key);
+});
+```
+**Example**  
+```js
+resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
+	if (error) throw error;
+	console.log(key);
 });
 ```
 <a name="resin.models.application.purge"></a>
