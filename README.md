@@ -64,7 +64,6 @@ var resin = require('resin-sdk')({
 
 Where the factory method accepts the following options:
 * `apiUrl`, string, *optional*, is the resin.io API url. Defaults to `https://api.resin.io/`,
-* `apiVersion`, string, *optional*, is the version of the API to talk to, like `v2`. Defaults to the current stable version: `v2`,
 * `apiKey`, string, *optional*, is the API key to make the requests with,
 * `imageMakerUrl`, string, *optional*, is the resin.io image maker url. Defaults to `https://img.resin.io/`,
 * `dataDirectory`, string, *optional*, *ignored in the browser*, is the directory where the user settings are stored, normally retrieved like `require('resin-settings-client').get('dataDirectory')`. Defaults to `$HOME/.resin`,
