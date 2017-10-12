@@ -101,7 +101,7 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log('Is compatible');
 	# });
 	###
-	exports.ensureSupervisorCompatibility = ensureSupervisorCompatibility = Promise.method (version, minVersion) ->
+	ensureSupervisorCompatibility = Promise.method (version, minVersion) ->
 		if semver.lt(version, minVersion)
 			throw new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}")
 
