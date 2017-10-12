@@ -24,7 +24,15 @@ filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('resin-errors')
 
-{ isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingApplication, LOCKED_STATUS_CODE } = require('../util')
+{
+	isId,
+	findCallback,
+	mergePineOptions,
+	notFoundResponse,
+	noApplicationForKeyResponse,
+	treatAsMissingApplication,
+	LOCKED_STATUS_CODE
+} = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 getApplicationModel = (deps, opts) ->
@@ -427,6 +435,10 @@ getApplicationModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.application
+	# @description
+	# Generally you shouldn't use this method: if you're provisioning a recent ResinOS
+	# version (2.4.0+) then generateProvisioningKey should work just as well, but
+	# be more secure.
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {String} - api key
@@ -456,6 +468,43 @@ getApplicationModel = (deps, opts) ->
 				method: 'POST'
 				url: "/application/#{id}/generate-api-key"
 				baseUrl: apiUrl
+		.get('body')
+		.asCallback(callback)
+
+	###*
+	# @summary Generate a device provisioning key for a specific application
+	# @name generateProvisioningKey
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {String} - device provisioning key
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.generateProvisioningKey('MyApp').then(function(key) {
+	# 	console.log(key);
+	# });
+	#
+	# @example
+	# resin.models.application.generateProvisioningKey(123).then(function(key) {
+	# 	console.log(key);
+	# });
+	#
+	# @example
+	# resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
+	# 	if (error) throw error;
+	# 	console.log(key);
+	# });
+	###
+	exports.generateProvisioningKey = (nameOrId, callback) ->
+		getId(nameOrId).then (applicationId) ->
+			return request.send
+				method: 'POST'
+				url: "/api-key/application/#{applicationId}/provisioning"
+				baseUrl: apiUrl
+		.catch(noApplicationForKeyResponse, treatAsMissingApplication(nameOrId))
 		.get('body')
 		.asCallback(callback)
 
