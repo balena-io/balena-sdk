@@ -25,7 +25,7 @@ node_modules
 
 
 .DS_Store
-.env
+.env*
 .vscode
 
 # Ignore all build output

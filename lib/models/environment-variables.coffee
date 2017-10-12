@@ -229,9 +229,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 			return pine.get
 				resource: 'device_environment_variable'
 				options:
-					filter:
-						device: id
-					expand: 'device'
+					filter: device: id
 					orderby: 'env_var_name asc'
 		.map(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
@@ -272,8 +270,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 						device:
 							$any:
 								$alias: 'd',
-								$expr: d: application: id
-					expand: 'device'
+								$expr: d: belongs_to__application: id
 					orderby: 'env_var_name asc'
 		.map(fixDeviceEnvVarNameKey)
 		.asCallback(callback)

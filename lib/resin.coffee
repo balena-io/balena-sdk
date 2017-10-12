@@ -78,8 +78,10 @@ getSdk = (opts = {}) ->
 	defaults opts,
 		apiUrl: 'https://api.resin.io/'
 		imageMakerUrl: 'https://img.resin.io/'
-		apiVersion: 'v2'
 		isBrowser: window?
+
+	# You cannot externally set the API version (as SDK implementation depends on it)
+	opts.apiVersion = 'v3'
 
 	if opts.isBrowser
 		settings =
@@ -205,7 +207,7 @@ getSdk = (opts = {}) ->
 	# resin.pine.get({
 	#	resource: 'build/$count',
 	#	options: {
-	#		filter: { application: applicationId }
+	#		filter: { belongs_to__application: applicationId }
 	#	}
 	# });
 	###
@@ -255,7 +257,6 @@ getSdk = (opts = {}) ->
 # resin.setSharedOptions({
 # 	apiUrl: 'https://api.resin.io/',
 # 	imageMakerUrl: 'https://img.resin.io/',
-# 	apiVersion: 'v2',
 # 	isBrowser: true,
 # });
 ###

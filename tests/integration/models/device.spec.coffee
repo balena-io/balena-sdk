@@ -197,14 +197,6 @@ describe 'Device Model', ->
 					m.chai.expect(devices).to.have.length(1)
 					m.chai.expect(devices[0].id).to.equal(@device.id)
 
-			it 'should add an application_name property', ->
-				resin.models.device.getAll().then (devices) =>
-					m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
-
-			it 'should add a dashboard_url property', ->
-				resin.models.device.getAll().then (devices) =>
-					m.chai.expect(devices[0].dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
-
 			it 'should support arbitrary pinejs options', ->
 				resin.models.device.getAll(select: [ 'id' ])
 				.then ([ device ]) =>
@@ -222,14 +214,6 @@ describe 'Device Model', ->
 				resin.models.device.getAllByApplication(@application.id).then (devices) =>
 					m.chai.expect(devices).to.have.length(1)
 					m.chai.expect(devices[0].id).to.equal(@device.id)
-
-			it 'should include an application_name property in the result', ->
-				resin.models.device.getAllByApplication(@application.id).then (devices) =>
-					m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
-
-			it 'should add a dashboard_url property', ->
-				resin.models.device.getAllByApplication(@application.id).then (devices) =>
-					m.chai.expect(devices[0].dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
 
 			it 'should be rejected if the application name does not exist', ->
 				promise = resin.models.device.getAllByApplication('HelloWorldApp')
@@ -260,11 +244,11 @@ describe 'Device Model', ->
 					resin.pine.post
 						resource: 'device'
 						body:
-							user: userId
-							application: @childApplication.id
+							belongs_to__user: userId
+							belongs_to__application: @childApplication.id
 							device_type: @childApplication.device_type
 							uuid: resin.models.device.generateUniqueKey()
-							device: @device.id
+							is_managed_by__device: @device.id
 				.then (device) =>
 					@childDevice = device
 
@@ -277,10 +261,6 @@ describe 'Device Model', ->
 				resin.models.device.getAllByParentDevice(@device.id).then (childDevices) =>
 					m.chai.expect(childDevices).to.have.length(1)
 					m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
-
-			it 'should include an application_name property in the result (with the child app name)', ->
-				resin.models.device.getAllByParentDevice(@device.id).then ([ childDevice ]) =>
-					m.chai.expect(childDevice.application_name).to.equal(@childApplication.app_name)
 
 			it 'should be empty if the parent device has no children', ->
 				promise = resin.models.device.getAllByParentDevice(@childDevice.id).then (childDevices) ->
@@ -306,14 +286,6 @@ describe 'Device Model', ->
 				resin.models.device.get(@device.id).then (device) =>
 					m.chai.expect(device.id).to.equal(@device.id)
 
-			it 'should add an application_name property', ->
-				resin.models.device.get(@device.id).then (device) =>
-					m.chai.expect(device.application_name).to.equal(@application.app_name)
-
-			it 'should add a dashboard_url property', ->
-				resin.models.device.get(@device.id).then (device) =>
-					m.chai.expect(device.dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
-
 			it 'should be rejected if the device name does not exist', ->
 				promise = resin.models.device.get('asdfghjkl')
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
@@ -338,14 +310,6 @@ describe 'Device Model', ->
 				resin.models.device.getByName(@device.name).then (devices) =>
 					m.chai.expect(devices).to.have.length(1)
 					m.chai.expect(devices[0].id).to.equal(@device.id)
-
-			it 'should add an application_name property', ->
-				resin.models.device.getByName(@device.name).then (devices) =>
-					m.chai.expect(devices[0].application_name).to.equal(@application.app_name)
-
-			it 'should add a dashboard_url property', ->
-				resin.models.device.getByName(@device.name).then (devices) =>
-					m.chai.expect(devices[0].dashboard_url).to.equal(resin.models.device.getDashboardUrl({ appId: @application.id, deviceId: @device.id }))
 
 			it 'should be rejected if the device does not exist', ->
 				promise = resin.models.device.getByName('HelloWorldDevice')
@@ -774,8 +738,8 @@ describe 'Device Model', ->
 				promise = resin.models.device.grantSupportAccess(@device.id, expiryTimestamp)
 				.then =>
 					resin.models.device.get(@device.id)
-				.then ({ support_expiry_date }) ->
-					Date.parse(support_expiry_date)
+				.then ({ is_accessible_by_support_until__date }) ->
+					Date.parse(is_accessible_by_support_until__date)
 
 				m.chai.expect(promise).to.eventually.equal(expiryTimestamp)
 
@@ -786,8 +750,8 @@ describe 'Device Model', ->
 					resin.models.device.revokeSupportAccess(@device.id)
 				.then =>
 					resin.models.device.get(@device.id)
-				.then ({ support_expiry_date }) ->
-					m.chai.expect(support_expiry_date).to.be.null
+				.then ({ is_accessible_by_support_until__date }) ->
+					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 

@@ -56,6 +56,11 @@ exports.notFoundResponse =
 	code: 'ResinRequestError'
 	statusCode: 404
 
+exports.noDeviceForKeyResponse =
+	code: 'ResinRequestError'
+	statusCode: 500
+	body: 'No device found to associate with the api key'
+
 exports.noApplicationForKeyResponse =
 	code: 'ResinRequestError'
 	statusCode: 500
@@ -133,8 +138,6 @@ exports.mergePineOptions = (defaults, extras) ->
 				if value?
 					if not isArray(value)
 						value = [value]
-					if !includes(value, 'id')
-						value.unshift('id')
 
 				result[option] = value
 

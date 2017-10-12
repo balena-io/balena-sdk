@@ -55,8 +55,8 @@ getApplicationModel = (deps, opts) ->
 	exports._getId = getId
 
 	normalizeApplication = (application) ->
-		if isArray(application.device)
-			forEach application.device, (device) ->
+		if isArray(application.owns__device)
+			forEach application.owns__device, (device) ->
 				normalizeDeviceOsVersion(device)
 		return application
 
@@ -91,16 +91,11 @@ getApplicationModel = (deps, opts) ->
 				options:
 					mergePineOptions
 						orderby: 'app_name asc'
-						expand: 'device'
 						filter:
 							user: userId
 					, options
 
-		# TODO: It might be worth to do all these handy
-		# manipulations server side directly.
 		.map (application) ->
-			application.online_devices = filter(application.device, is_online: true).length
-			application.devices_length = application.device?.length or 0
 			normalizeApplication(application)
 			return application
 
@@ -169,7 +164,7 @@ getApplicationModel = (deps, opts) ->
 
 	###*
 	# @summary Get a single application using the appname and owner's username
-	# @name getAppWithOwner
+	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof resin.models.application
@@ -181,11 +176,11 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getAppWithOwner('MyApp', 'MyUser').then(function(application) {
+	# resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	# 	console.log(application);
 	# });
 	###
-	exports.getAppWithOwner = (appName, owner, options = {}, callback) ->
+	exports.getAppByOwner = (appName, owner, options = {}, callback) ->
 		callback = findCallback(arguments)
 
 		appName = appName.toLowerCase()
@@ -199,15 +194,14 @@ getApplicationModel = (deps, opts) ->
 						$eq: [
 							$tolower: $: 'app_name'
 							appName
-						]
-					expand:
+						],
 						user:
-							$filter:
-								$eq: [
+							$any:
+								$alias: 'u',
+								$expr: $eq: [
 									$tolower: $: 'username'
 									owner
 								]
-							$select: 'id'
 				, options
 		.tap (applications) ->
 			if isEmpty(applications)
@@ -349,15 +343,18 @@ getApplicationModel = (deps, opts) ->
 		else
 			Promise.resolve()
 
-		deviceSlugPromise = deviceModel().getDeviceSlug(deviceType)
-		.tap (deviceSlug) ->
-			if not deviceSlug?
+		deviceManifestPromise = deviceModel().getManifestBySlug(deviceType)
+		.tap (deviceManifest) ->
+			if not deviceManifest?
 				throw new errors.ResinInvalidDeviceType(deviceType)
 
-		return Promise.all([ deviceSlugPromise, parentAppPromise ])
-		.then ([ deviceSlug, parentApplication ]) ->
+		return Promise.all([ deviceManifestPromise, parentAppPromise ])
+		.then ([ deviceManifest, parentApplication ]) ->
+			if deviceManifest.state == 'DISCONTINUED'
+				throw new errors.ResinDiscontinuedDeviceType(deviceType)
+
 			extraOptions = if parentApplication
-				application: parentApplication.id
+				depends_on__application: parentApplication.id
 			else {}
 
 			return pine.post
@@ -365,7 +362,7 @@ getApplicationModel = (deps, opts) ->
 				body:
 					assign
 						app_name: name
-						device_type: deviceSlug
+						device_type: deviceManifest.slug
 					, extraOptions
 		.asCallback(callback)
 
@@ -615,22 +612,6 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get an API key for a specific application
-	# @name getApiKey
-	# @public
-	# @function
-	# @memberof resin.models.application
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @fulfil {String} - api key
-	# @returns {Promise}
-	#
-	# @deprecated Use generateApiKey instead
-	# @see {@link resin.models.application.generateApiKey}
-	###
-	exports.getApiKey = exports.generateApiKey
-
-	###*
 	# @summary Enable device urls for all devices that belong to an application
 	# @name enableDeviceUrls
 	# @public
@@ -659,7 +640,7 @@ getApplicationModel = (deps, opts) ->
 					is_web_accessible: true
 				options:
 					filter:
-						application: id
+						belongs_to__application: id
 		.asCallback(callback)
 
 	###*
@@ -691,7 +672,7 @@ getApplicationModel = (deps, opts) ->
 					is_web_accessible: false
 				options:
 					filter:
-						application: id
+						belongs_to__application: id
 		.asCallback(callback)
 
 	###*
@@ -724,7 +705,7 @@ getApplicationModel = (deps, opts) ->
 			return pine.patch
 				resource: 'application'
 				id: applicationId
-				body: support_expiry_date: expiryTimestamp
+				body: is_accessible_by_support_until__date: expiryTimestamp
 		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
@@ -754,7 +735,7 @@ getApplicationModel = (deps, opts) ->
 			return pine.patch
 				resource: 'application'
 				id: applicationId
-				body: support_expiry_date: null
+				body: is_accessible_by_support_until__date: null
 		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 

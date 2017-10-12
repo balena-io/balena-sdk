@@ -28,7 +28,17 @@ semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
 
-{ onlyIf, isId, findCallback, mergePineOptions, notFoundResponse, treatAsMissingDevice, LOCKED_STATUS_CODE, timeSince } = require('../util')
+{
+	onlyIf,
+	isId,
+	findCallback,
+	mergePineOptions,
+	notFoundResponse,
+	noDeviceForKeyResponse,
+	treatAsMissingDevice,
+	LOCKED_STATUS_CODE,
+	timeSince
+} = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
@@ -91,7 +101,7 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log('Is compatible');
 	# });
 	###
-	exports.ensureSupervisorCompatibility = ensureSupervisorCompatibility = Promise.method (version, minVersion) ->
+	ensureSupervisorCompatibility = Promise.method (version, minVersion) ->
 		if semver.lt(version, minVersion)
 			throw new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}")
 
@@ -117,9 +127,6 @@ getDeviceModel = (deps, opts) ->
 		return url.resolve(dashboardUrl, "/apps/#{options.appId}/devices/#{options.deviceId}/summary")
 
 	addExtraInfo = (device) ->
-		# TODO: Move this to the server
-		device.application_name = device.application[0].app_name
-		device.dashboard_url = getDashboardUrl({ appId: device.application[0].id, deviceId: device.id })
 		normalizeDeviceOsVersion(device)
 		return device
 
@@ -152,7 +159,6 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
-					expand: 'application'
 					orderby: 'name asc'
 				, options
 
@@ -192,7 +198,7 @@ getDeviceModel = (deps, opts) ->
 
 		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: application: id
+				filter: belongs_to__application: id
 				options
 			), callback)
 
@@ -229,7 +235,7 @@ getDeviceModel = (deps, opts) ->
 
 		exports.get(parentUuidOrId, select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: device: id
+				filter: is_managed_by__device: id
 				options
 			), callback)
 
@@ -272,10 +278,7 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device'
 					id: uuidOrId
-					options:
-						mergePineOptions
-							expand: 'application'
-						, options
+					options: options
 				.tap (device) ->
 					if not device?
 						throw new errors.ResinDeviceNotFound(uuidOrId)
@@ -284,7 +287,6 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					options:
 						mergePineOptions
-							expand: 'application'
 							filter:
 								uuid: $startswith: uuidOrId
 						, options
@@ -389,7 +391,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'application_name').get('application_name').asCallback(callback)
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'app_name'
+		.then (device) ->
+			device.belongs_to__application[0].app_name
+		.asCallback(callback)
 
 	###*
 	# @summary Get application container information
@@ -419,9 +426,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationInfo = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: ['id', 'supervisor_version']
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.application[0].id
+				appId = device.belongs_to__application[0].id
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}"
@@ -770,12 +780,12 @@ getDeviceModel = (deps, opts) ->
 		.then ({ application, device }) ->
 
 			if device.device_type isnt application.device_type
-				throw new Error("Incompatible application: #{applicationNameOrId}")
+				throw new errors.ResinInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
 				resource: 'device'
 				body:
-					application: application.id
+					belongs_to__application: application.id
 				options:
 					filter:
 						uuid: device.uuid
@@ -810,9 +820,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.startApplication = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: ['id', 'supervisor_version']
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.application[0].id
+				appId = device.belongs_to__application[0].id
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}/start"
@@ -853,9 +866,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.stopApplication = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: ['id', 'supervisor_version']
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.application[0].id
+				appId = device.belongs_to__application[0].id
 				return request.send
 					method: 'POST'
 					url: "/supervisor/v1/apps/#{appId}/stop"
@@ -975,14 +991,17 @@ getDeviceModel = (deps, opts) ->
 	exports.shutdown = (uuidOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/shutdown'
 				baseUrl: apiUrl
 				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 					data:
 						force: Boolean(options.force)
 			.catch (err) ->
@@ -1017,16 +1036,19 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.purge = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/purge'
 				baseUrl: apiUrl
 				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 					data:
-						appId: device.application[0].id
+						appId: device.belongs_to__application[0].id
 			.catch (err) ->
 				if err.statusCode == LOCKED_STATUS_CODE
 					throw new errors.ResinSupervisorLockedError()
@@ -1063,15 +1085,20 @@ getDeviceModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.update = (uuidOrId, options, callback) ->
-		exports.get(uuidOrId).then (device) ->
+	exports.update = (uuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/update'
 				baseUrl: apiUrl
 				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 					data:
 						force: Boolean(options.force)
 		.asCallback(callback)
@@ -1300,7 +1327,7 @@ getDeviceModel = (deps, opts) ->
 	exports.register = (applicationNameOrId, uuid, callback) ->
 		Promise.props
 			userId: auth.getUserId()
-			apiKey: applicationModel().getApiKey(applicationNameOrId)
+			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
 			application: applicationModel().get(applicationNameOrId, select: ['id', 'device_type'])
 		.then ({ userId, apiKey, application }) ->
 
@@ -1347,14 +1374,7 @@ getDeviceModel = (deps, opts) ->
 				url: "/api-key/device/#{deviceId}/device-key"
 				baseUrl: apiUrl
 		.get('body')
-		.catch(
-			{
-				code: 'ResinRequestError'
-				statusCode: 500
-				body: 'No device found to associate with the api key'
-			}
-			treatAsMissingDevice(uuidOrId)
-		)
+		.catch(noDeviceForKeyResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
@@ -1523,14 +1543,17 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.enableTcpPing = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
 				baseUrl: apiUrl
-				data:
+				body:
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 		.get('body')
 		.asCallback(callback)
 
@@ -1560,14 +1583,18 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.disableTcpPing = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
-				method: 'DELETE'
+				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
 				baseUrl: apiUrl
-				data:
+				body:
+					method: 'DELETE'
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 		.get('body')
 		.asCallback(callback)
 
@@ -1596,7 +1623,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.ping = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/ping'
@@ -1604,7 +1634,7 @@ getDeviceModel = (deps, opts) ->
 				body:
 					method: 'GET'
 					deviceId: device.id
-					appId: device.application[0].id
+					appId: device.belongs_to__application[0].id
 		.asCallback(callback)
 
 	###*
@@ -1664,7 +1694,7 @@ getDeviceModel = (deps, opts) ->
 			return pine.patch
 				resource: 'device'
 				id: id
-				body: support_expiry_date: expiryTimestamp
+				body: is_accessible_by_support_until__date: expiryTimestamp
 		.asCallback(callback)
 
 	###*
@@ -1693,7 +1723,7 @@ getDeviceModel = (deps, opts) ->
 			return pine.patch
 				resource: 'device'
 				id: id
-				body: support_expiry_date: null
+				body: is_accessible_by_support_until__date: null
 		.asCallback(callback)
 
 	###*

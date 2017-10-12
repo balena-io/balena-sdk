@@ -15,10 +15,10 @@ describe 'Application Model', ->
 				promise = resin.models.application.getAll()
 				m.chai.expect(promise).to.become([])
 
-		describe 'resin.models.application.getAppWithOwner()', ->
+		describe 'resin.models.application.getAppByOwner()', ->
 
 			it 'should eventually reject', ->
-				promise = resin.models.application.getAppWithOwner('testapp', 'FooBar')
+				promise = resin.models.application.getAppByOwner('testapp', 'FooBar')
 				m.chai.expect(promise).to.be.rejected
 
 		describe 'resin.models.application.hasAny()', ->
@@ -36,15 +36,19 @@ describe 'Application Model', ->
 
 			it 'should be able to create a child application', ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (parentApplication) ->
-					resin.models.application.create('FooBarChild', 'edge', parentApplication.id)
+					resin.models.application.create('FooBarChild', 'generic-amd64', parentApplication.id)
 				.then ->
 					resin.models.application.getAll()
 				.then ([ parentApplication, childApplication ]) ->
-					m.chai.expect(childApplication.application.__id).to.equal(parentApplication.id)
+					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
 			it 'should be rejected if the device type is invalid', ->
 				promise = resin.models.application.create('FooBar', 'foobarbaz')
 				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
+
+			it 'should be rejected if the device type is discontinuted', ->
+				promise = resin.models.application.create('FooBar', 'edge')
+				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
 			it 'should be rejected if the name has less than three characters', ->
 				promise = resin.models.application.create('Fo', 'raspberry-pi')
@@ -82,14 +86,14 @@ describe 'Application Model', ->
 				promise = resin.models.application.hasAny()
 				m.chai.expect(promise).to.eventually.be.true
 
-		describe 'resin.models.application.getAppWithOwner()', ->
+		describe 'resin.models.application.getAppByOwner()', ->
 
 			it 'should find the created application', ->
-				resin.models.application.getAppWithOwner('FooBar', credentials.username).then (application) =>
+				resin.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
 					m.chai.expect(application.id).to.equal(@application.id)
 
 			it 'should not find the created application with a different username', ->
-				promise = resin.models.application.getAppWithOwner('FooBar', 'test_username')
+				promise = resin.models.application.getAppByOwner('FooBar', 'test_username')
 				m.chai.expect(promise).to.eventually.reject
 
 		describe 'resin.models.application.getAll()', ->
@@ -101,14 +105,6 @@ describe 'Application Model', ->
 			it 'should eventually become an array containing the application', ->
 				resin.models.application.getAll().then (applications) =>
 					m.chai.expect(applications[0].id).to.equal(@application.id)
-
-			it 'should add a devices_length property', ->
-				resin.models.application.getAll().then (applications) ->
-					m.chai.expect(applications[0].devices_length).to.equal(0)
-
-			it 'should add an online_devices property', ->
-				resin.models.application.getAll().then (applications) ->
-					m.chai.expect(applications[0].online_devices).to.equal(0)
 
 			it 'should support arbitrary pinejs options', ->
 				resin.models.application.getAll(expand: 'user')
@@ -280,7 +276,7 @@ describe 'Application Model', ->
 				.then =>
 					resin.models.application.get(@application.id)
 				.then (app) ->
-					Date.parse(app.support_expiry_date)
+					Date.parse(app.is_accessible_by_support_until__date)
 
 				m.chai.expect(promise).to.eventually.equal(expiryTime)
 
@@ -293,7 +289,7 @@ describe 'Application Model', ->
 				.then =>
 					resin.models.application.get(@application.id)
 				.then (app) ->
-					app.support_expiry_date
+					app.is_accessible_by_support_until__date
 
 				m.chai.expect(promise).to.eventually.equal(null)
 

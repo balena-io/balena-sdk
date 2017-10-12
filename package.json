@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "6.15.0",
+  "version": "7.0.0",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "homepage": "https://github.com/resin-io/resin-sdk",
@@ -35,6 +35,9 @@
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=6.0"
+  },
   "devDependencies": {
     "browserify": "^14.3.0",
     "catch-uncommitted": "^1.0.0",
@@ -71,7 +74,7 @@
     "promise-memoize": "^1.2.0",
     "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
-    "resin-errors": "^2.9.0",
+    "resin-errors": "^2.10.0",
     "resin-pine": "^5.0.2",
     "resin-register-device": "^4.0.1",
     "resin-request": "^8.6.0",

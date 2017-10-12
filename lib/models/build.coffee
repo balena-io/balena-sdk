@@ -98,7 +98,7 @@ getBuildModel = (deps, opts) ->
 				options:
 					mergePineOptions
 						filter:
-							application: id
+							belongs_to__application: id
 						select: [
 							'id'
 							'created_at'
@@ -113,12 +113,6 @@ getBuildModel = (deps, opts) ->
 							'message'
 							# 'log' # We *don't* include logs by default, since it's usually huge.
 						]
-						expand:
-							user:
-								$select: [
-									'id'
-									'username'
-								]
 						orderby: 'created_at desc'
 					, options
 		.asCallback(callback)

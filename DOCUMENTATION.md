@@ -20,7 +20,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.application](#resin.models.application) : <code>object</code>
             * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
             * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-            * [.getAppWithOwner(appName, owner, [options])](#resin.models.application.getAppWithOwner) ⇒ <code>Promise</code>
+            * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -32,7 +32,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-            * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
             * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
             * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
             * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -235,7 +234,7 @@ in the SDK.
 resin.pine.get({
 	resource: 'build/$count',
 	options: {
-		filter: { application: applicationId }
+		filter: { belongs_to__application: applicationId }
 	}
 });
 ```
@@ -269,7 +268,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.application](#resin.models.application) : <code>object</code>
         * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
         * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-        * [.getAppWithOwner(appName, owner, [options])](#resin.models.application.getAppWithOwner) ⇒ <code>Promise</code>
+        * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -281,7 +280,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-        * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
         * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
         * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
         * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -379,7 +377,7 @@ resin.models.device.get(123).catch(function (error) {
 * [.application](#resin.models.application) : <code>object</code>
     * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
     * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-    * [.getAppWithOwner(appName, owner, [options])](#resin.models.application.getAppWithOwner) ⇒ <code>Promise</code>
+    * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
@@ -391,7 +389,6 @@ resin.models.device.get(123).catch(function (error) {
     * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-    * ~~[.getApiKey(nameOrId)](#resin.models.application.getApiKey) ⇒ <code>Promise</code>~~
     * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
     * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
     * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -454,9 +451,9 @@ resin.models.application.get('MyApp', function(error, application) {
 	console.log(application);
 });
 ```
-<a name="resin.models.application.getAppWithOwner"></a>
+<a name="resin.models.application.getAppByOwner"></a>
 
-##### application.getAppWithOwner(appName, owner, [options]) ⇒ <code>Promise</code>
+##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Get a single application using the appname and owner's username  
 **Access**: public  
@@ -470,7 +467,7 @@ resin.models.application.get('MyApp', function(error, application) {
 
 **Example**  
 ```js
-resin.models.application.getAppWithOwner('MyApp', 'MyUser').then(function(application) {
+resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	console.log(application);
 });
 ```
@@ -768,21 +765,6 @@ resin.models.application.reboot(123, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.getApiKey"></a>
-
-##### ~~application.getApiKey(nameOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of <code>[application](#resin.models.application)</code>  
-**Summary**: Get an API key for a specific application  
-**Access**: public  
-**Fulfil**: <code>String</code> - api key  
-**See**: [generateApiKey](#resin.models.application.generateApiKey)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
-
 <a name="resin.models.application.enableDeviceUrls"></a>
 
 ##### application.enableDeviceUrls(nameOrId) ⇒ <code>Promise</code>
@@ -3726,7 +3708,6 @@ startup and before any calls to `fromSharedOptions()` are made.
 resin.setSharedOptions({
 	apiUrl: 'https://api.resin.io/',
 	imageMakerUrl: 'https://img.resin.io/',
-	apiVersion: 'v2',
 	isBrowser: true,
 });
 ```
