@@ -1551,7 +1551,7 @@ getDeviceModel = (deps, opts) ->
 				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
 				baseUrl: apiUrl
-				data:
+				body:
 					deviceId: device.id
 					appId: device.belongs_to__application[0].id
 		.get('body')
@@ -1588,10 +1588,11 @@ getDeviceModel = (deps, opts) ->
 			expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
-				method: 'DELETE'
+				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
 				baseUrl: apiUrl
-				data:
+				body:
+					method: 'DELETE'
 					deviceId: device.id
 					appId: device.belongs_to__application[0].id
 		.get('body')
