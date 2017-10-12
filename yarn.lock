@@ -2,6 +2,28 @@
 # yarn lockfile v1
 
 
+"@types/chai@^4.0.1":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.4.tgz#fe86315d9a66827feeb16f73bc954688ec950e18"
+
+"@types/lodash.memoize@^4.1.2":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@types/lodash.memoize/-/lodash.memoize-4.1.3.tgz#7d3cd9cb9cd87085c9ee8a1679991180e6dae3cc"
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.74"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.74.tgz#ac3bd8db988e7f7038e5d22bd76a7ba13f876168"
+
+"@types/mocha@^2.2.41":
+  version "2.2.43"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.43.tgz#03c54589c43ad048cbcbfd63999b55d0424eec27"
+
+"@types/semver@^5.3.34":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-5.4.0.tgz#f3658535af7f1f502acd6da7daf405ffeb1f7ee4"
+
 JSONStream@^1.0.3:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.1.tgz#707f761e01dae9e16f1bcf93703b78c70966579a"
@@ -2926,6 +2948,10 @@ lodash.mapvalues@^4.4.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
 
+lodash.memoize@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
+
 lodash.memoize@~3.0.3:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-3.0.4.tgz#2dcbd2c287cbc0a55cc42328bd0c736150d53e3f"
@@ -4122,6 +4148,17 @@ resin-request@^8.6.0:
     qs "^6.3.0"
     resin-errors "^2.7.0"
     rindle "^1.3.1"
+
+resin-semver@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/resin-semver/-/resin-semver-1.2.0.tgz#3a721bd6b6982a768a849464b8c50249c30961c8"
+  dependencies:
+    "@types/chai" "^4.0.1"
+    "@types/lodash.memoize" "^4.1.2"
+    "@types/mocha" "^2.2.41"
+    "@types/semver" "^5.3.34"
+    lodash.memoize "^4.1.2"
+    semver "^5.3.0"
 
 resin-settings-client@^3.5.2:
   version "3.5.2"
