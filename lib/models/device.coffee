@@ -1085,7 +1085,9 @@ getDeviceModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.update = (uuidOrId, options, callback) ->
+	exports.update = (uuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
 		exports.get uuidOrId,
 			select: 'id'
 			expand: belongs_to__application: $select: 'id'
