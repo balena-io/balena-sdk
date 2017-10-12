@@ -55,8 +55,8 @@ getApplicationModel = (deps, opts) ->
 	exports._getId = getId
 
 	normalizeApplication = (application) ->
-		if isArray(application.device)
-			forEach application.device, (device) ->
+		if isArray(application.owns__device)
+			forEach application.owns__device, (device) ->
 				normalizeDeviceOsVersion(device)
 		return application
 
@@ -354,7 +354,7 @@ getApplicationModel = (deps, opts) ->
 				throw new errors.ResinDiscontinuedDeviceType(deviceType)
 
 			extraOptions = if parentApplication
-				application: parentApplication.id
+				depends_on__application: parentApplication.id
 			else {}
 
 			return pine.post
@@ -640,7 +640,7 @@ getApplicationModel = (deps, opts) ->
 					is_web_accessible: true
 				options:
 					filter:
-						application: id
+						belongs_to__application: id
 		.asCallback(callback)
 
 	###*
@@ -672,7 +672,7 @@ getApplicationModel = (deps, opts) ->
 					is_web_accessible: false
 				options:
 					filter:
-						application: id
+						belongs_to__application: id
 		.asCallback(callback)
 
 	###*
@@ -705,7 +705,7 @@ getApplicationModel = (deps, opts) ->
 			return pine.patch
 				resource: 'application'
 				id: applicationId
-				body: support_expiry_date: expiryTimestamp
+				body: is_accessible_by_support_until__date: expiryTimestamp
 		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
@@ -735,7 +735,7 @@ getApplicationModel = (deps, opts) ->
 			return pine.patch
 				resource: 'application'
 				id: applicationId
-				body: support_expiry_date: null
+				body: is_accessible_by_support_until__date: null
 		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 

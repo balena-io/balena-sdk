@@ -234,7 +234,7 @@ in the SDK.
 resin.pine.get({
 	resource: 'build/$count',
 	options: {
-		filter: { application: applicationId }
+		filter: { belongs_to__application: applicationId }
 	}
 });
 ```
@@ -3708,7 +3708,6 @@ startup and before any calls to `fromSharedOptions()` are made.
 resin.setSharedOptions({
 	apiUrl: 'https://api.resin.io/',
 	imageMakerUrl: 'https://img.resin.io/',
-	apiVersion: 'v2',
 	isBrowser: true,
 });
 ```

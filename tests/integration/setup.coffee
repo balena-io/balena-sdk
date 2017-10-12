@@ -23,7 +23,6 @@ else
 		dataDirectory: settings.get('dataDirectory')
 
 _.assign opts,
-	apiVersion: 'v2'
 	apiKey: null
 	isBrowser: IS_BROWSER,
 	retries: 3

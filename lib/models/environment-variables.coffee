@@ -270,7 +270,7 @@ getEnvironmentVariablesModel = (deps, opts) ->
 						device:
 							$any:
 								$alias: 'd',
-								$expr: d: application: id
+								$expr: d: belongs_to__application: id
 					orderby: 'env_var_name asc'
 		.map(fixDeviceEnvVarNameKey)
 		.asCallback(callback)
