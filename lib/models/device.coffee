@@ -426,7 +426,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getApplicationInfo = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: ['id', 'supervisor_version']
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
 				return request.send
@@ -817,7 +820,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.startApplication = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: ['id', 'supervisor_version']
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
 				return request.send
@@ -860,7 +866,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.stopApplication = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: ['id', 'supervisor_version']
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
 				return request.send
@@ -982,7 +991,10 @@ getDeviceModel = (deps, opts) ->
 	exports.shutdown = (uuidOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/shutdown'
@@ -1024,7 +1036,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.purge = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/purge'
@@ -1071,7 +1086,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.update = (uuidOrId, options, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/update'
@@ -1523,7 +1541,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.enableTcpPing = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/v1/tcp-ping'
@@ -1560,7 +1581,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.disableTcpPing = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'DELETE'
 				url: '/supervisor/v1/tcp-ping'
@@ -1596,7 +1620,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.ping = (uuidOrId, callback) ->
-		exports.get(uuidOrId).then (device) ->
+		exports.get uuidOrId,
+			select: 'id'
+			expand: belongs_to__application: $select: 'id'
+		.then (device) ->
 			return request.send
 				method: 'POST'
 				url: '/supervisor/ping'
