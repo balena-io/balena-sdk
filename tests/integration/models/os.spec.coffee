@@ -14,7 +14,8 @@ describe 'OS model', ->
 	describe 'resin.models.os._getMaxSatisfyingVersion()', ->
 		osVersions = {
 			versions: [
-				'2.0.1.rev2'
+				'2.0.1+rev2.prod',
+				'2.0.1+rev2.dev',
 				'2.0.0.rev1'
 				'2.0.0-rc1.rev2-dev',
 				'2.0.0-rc1.rev2',
@@ -52,6 +53,18 @@ describe 'OS model', ->
 				resin.models.os._getMaxSatisfyingVersion('2.0.0.rev1', osVersions)
 			).to.equal('2.0.0.rev1')
 
+		it 'should return an exact match, if it exists, when given a specific version', ->
+			# Concern here is that semver says .dev is equivalent to .prod, but
+			# we want provide an exact version and use _exactly_ that version.
+			m.chai.expect(
+				resin.models.os._getMaxSatisfyingVersion('2.0.1+rev2.dev', osVersions)
+			).to.equal('2.0.1+rev2.dev')
+
+		it 'should return an equivalent result, if no exact result exists, when given a specific version', ->
+			m.chai.expect(
+				resin.models.os._getMaxSatisfyingVersion('2.0.1+rev2', osVersions)
+			).to.equal('2.0.1+rev2.prod')
+
 		it 'should support semver ranges', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('^1.24.0', osVersions)
@@ -60,7 +73,7 @@ describe 'OS model', ->
 		it 'should support non-semver version ranges', ->
 			m.chai.expect(
 				resin.models.os._getMaxSatisfyingVersion('^2.0.0.rev1', osVersions)
-			).to.equal('2.0.1.rev2')
+			).to.equal('2.0.1+rev2.prod')
 
 		it 'should drop unsupported exact versions', ->
 			m.chai.expect(
