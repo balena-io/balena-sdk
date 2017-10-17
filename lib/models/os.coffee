@@ -97,7 +97,15 @@ getOsModel = (deps, opts) ->
 			return osVersions[versionOrRange]
 
 		semverVersions = osVersions.versions.map(fixNonSemver)
-		maxVersion = semver.maxSatisfying(semverVersions, fixNonSemver(versionOrRange))
+
+		# TODO: Once we integrate resin-semver, resin-semver should learn to handle this itself
+		semverVersionOrRange = fixNonSemver(versionOrRange)
+		if _.includes(semverVersions, semverVersionOrRange)
+			# If the _exact_ version you're looking for exists, it's not a range, and
+			# we should return it exactly, not any old equivalent version.
+			return unfixNonSemver(semverVersionOrRange)
+
+		maxVersion = semver.maxSatisfying(semverVersions, semverVersionOrRange)
 
 		return unfixNonSemver(maxVersion)
 
