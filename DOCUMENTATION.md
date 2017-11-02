@@ -53,6 +53,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
             * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
+            * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
             * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
             * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
             * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
@@ -312,6 +313,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
         * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
+        * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
         * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
         * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
         * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
@@ -1027,6 +1029,7 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
     * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
+    * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
     * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
     * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
     * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
@@ -1356,6 +1359,43 @@ resin.models.device.get(123).then(function(device) {
 **Example**  
 ```js
 resin.models.device.get('7cf02a6', function(error, device) {
+	if (error) throw error;
+	console.log(device);
+});
+```
+<a name="resin.models.device.getWithServiceDetails"></a>
+
+##### device.getWithServiceDetails(uuidOrId, [options]) ⇒ <code>Promise</code>
+This method does not map exactly to the underlying model: it runs a
+larger prebuilt query, and reformats it into an easy to use and
+understand format. If you want more control, or to see the raw model
+directly, use `device.get(uuidOrId, options)` instead.
+
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get a single device together with its associated service's essential details  
+**Access**: public  
+**Fulfil**: <code>Object</code> - device with service details  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.device.getWithServiceDetails(123).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });

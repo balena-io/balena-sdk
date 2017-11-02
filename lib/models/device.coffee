@@ -18,12 +18,15 @@ url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
 isFinite = require('lodash/isFinite')
+groupBy = require('lodash/groupBy')
+omit = require('lodash/omit')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
 some = require('lodash/some')
 includes = require('lodash/includes')
 map = require('lodash/map')
+mapValues = require('lodash/mapValues')
 semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
@@ -305,6 +308,106 @@ getDeviceModel = (deps, opts) ->
 				.get(0)
 		.then(addExtraInfo)
 		.asCallback(callback)
+
+	###*
+	# @summary Get a single device together with its associated service's essential details
+	# @name getWithServiceDetails
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `device.get(uuidOrId, options)` instead.
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - device with service details
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
+	# 	if (error) throw error;
+	# 	console.log(device);
+	# });
+	###
+	exports.getWithServiceDetails = (uuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get uuidOrId,
+			mergePineOptions
+				select: [
+					'id',
+					'uuid'
+					'device_name'
+					'status'
+					'is_online'
+					'supervisor_version'
+					'os_version'
+					'created_at',
+					'last_seen_time'
+					'last_connectivity_event'
+					'ip_address'
+					'provisioning_state'
+					'provisioning_progress'
+				]
+				expand:
+					should_be_running__release:
+						$select: ['id', 'commit']
+
+					image_install:
+						$select: [
+							'id'
+							'download_progress'
+							'is_running'
+							'install_date'
+						]
+						$expand:
+							'image':
+								$select: ['id']
+								$expand:
+									is_part_of__release:
+										$select: ['id', 'commit']
+									is_a_build_of__service:
+										$select: ['id', 'service_name']
+			, options
+		.then (rawData) ->
+			containers = rawData.image_install.map (install) ->
+				release = install.image[0].is_part_of__release[0]
+				service = install.image[0].is_a_build_of__service[0]
+
+				return Object.assign {}, omit(install, 'image'),
+					service_name: service.service_name
+					commit: release.commit
+
+			current_release = rawData.should_be_running__release[0]
+
+			# Strip expanded fields (we reformat and readd them below)
+			device = omit(rawData, [
+				'image_install'
+				'should_be_running__release'
+			])
+
+			device.current_release = current_release.commit
+			device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
+				service_containers.map (container) ->
+					omit(container, 'service_name')
+				.sort (a, b) ->
+					b.install_date.localeCompare(a.install_date)
+
+			return device
 
 	###*
 	# @summary Get devices by name
