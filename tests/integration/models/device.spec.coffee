@@ -793,6 +793,201 @@ describe 'Device Model', ->
 			describe 'resin.models.device.tags.remove()', ->
 				itShouldRemoveTags(deviceTagTestOptions)
 
+	describe 'given a multicontainer application with a single offline device', ->
+
+		beforeEach ->
+			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+				@application = application
+				userId = application.user.__id
+
+				Promise.all [
+					# Register web & DB services
+					resin.pine.post
+						resource: 'service'
+						body:
+							application: @application.id
+							service_name: 'web'
+				,
+					resin.pine.post
+						resource: 'service'
+						body:
+							application: @application.id
+							service_name: 'db'
+				,
+					# Register an old & new release of this application
+					resin.pine.post
+						resource: 'release'
+						body:
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'old-release-commit'
+							status: 'success'
+							source: 'cloud'
+							start_timestamp: 1234
+				,
+					resin.pine.post
+						resource: 'release'
+						body:
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'new-release-commit'
+							status: 'success'
+							source: 'cloud'
+							start_timestamp: 54321
+				]
+			.spread (webService, dbService, oldRelease, newRelease) =>
+				@currentRelease = newRelease
+
+				uuid = resin.models.device.generateUniqueKey()
+
+				Promise.all [
+					# Register the device itself, running the new release
+					resin.models.device.register(@application.app_name, uuid)
+					.tap (deviceInfo) ->
+						resin.pine.patch
+							resource: 'device'
+							body:
+								should_be_running__release: newRelease.id
+							options:
+								filter:
+									uuid: deviceInfo.uuid
+					.then (deviceInfo) ->
+						resin.models.device.get(deviceInfo.uuid)
+					.tap (device) =>
+						@device = device
+				,
+					# Register an old & new web image build from the old and
+					# new releases, and a db build in the new release only
+					resin.pine.post
+						resource: 'image'
+						body:
+							is_part_of__release: oldRelease.id
+							is_a_build_of__service: webService.id
+							project_type: 'dockerfile'
+							start_timestamp: 1234
+							status: 'success'
+				,
+					resin.pine.post
+						resource: 'image'
+						body:
+							is_part_of__release: newRelease.id
+							is_a_build_of__service: webService.id
+							project_type: 'dockerfile'
+							start_timestamp: 54321
+							status: 'success'
+				,
+					resin.pine.post
+						resource: 'image'
+						body:
+							is_part_of__release: newRelease.id
+							is_a_build_of__service: dbService.id
+							project_type: 'dockerfile'
+							start_timestamp: 54321
+							status: 'success'
+				]
+				.spread (device, oldWebImage, newWebImage, dbImage) ->
+					Promise.all [
+						# Create image installs for the images on the device
+						resin.pine.post
+							resource: 'image_install'
+							body:
+								installs__image: oldWebImage.id
+								device: device.id
+								download_progress: 100
+								is_running: true
+								install_date: '2017-10-01'
+					,
+						resin.pine.post
+							resource: 'image_install'
+							body:
+								installs__image: newWebImage.id
+								device: device.id
+								download_progress: 50,
+								install_date: '2017-10-30'
+					,
+						resin.pine.post
+							resource: 'image_install'
+							body:
+								installs__image: dbImage.id
+								device: device.id
+								download_progress: 100,
+								is_running: true,
+								install_date: '2017-10-30'
+					,
+						# Create service installs for the services running on the device
+						resin.pine.post
+							resource: 'service_install'
+							body:
+								installs__service: webService.id
+								device: device.id
+					,
+						resin.pine.post
+							resource: 'service_install'
+							body:
+								installs__service: dbService.id
+								device: device.id
+					]
+
+		describe 'resin.models.device.getWithServiceDetails()', ->
+
+			it 'should be able to get the device by uuid', ->
+				resin.models.device.getWithServiceDetails(@device.uuid).then (device) =>
+					m.chai.expect(device.id).to.equal(@device.id)
+
+			it 'should be able to get the device by id', ->
+				resin.models.device.getWithServiceDetails(@device.id).then (device) =>
+					m.chai.expect(device.id).to.equal(@device.id)
+
+			it 'should retrieve the current service details', ->
+				resin.models.device.getWithServiceDetails(@device.id).then (deviceDetails) =>
+					m.chai.expect(deviceDetails).to.deep.match
+						device_name: @device.device_name
+						uuid: @device.uuid
+						current_release: @currentRelease.commit
+						current_services:
+							web: [
+								commit: 'new-release-commit'
+								is_running: false
+								download_progress: 50
+							,
+								commit: 'old-release-commit'
+								is_running: true
+								download_progress: 100
+							]
+							db: [
+								commit: 'new-release-commit'
+								is_running: true
+								download_progress: 100
+							]
+
+			it 'should allow options to change the device fields returned', ->
+				resin.models.device.getWithServiceDetails @device.id,
+					select: ['id', 'uuid']
+					expand:
+						belongs_to__application:
+							$select: ['id', 'app_name']
+				.then (deviceDetails) =>
+
+					m.chai.expect(deviceDetails.device_name).to.be.undefined
+
+					m.chai.expect(deviceDetails.current_services).not.to.be.undefined
+
+					m.chai.expect(deviceDetails.belongs_to__application[0]).to.deep.match
+						id: @application.id
+						app_name: @application.app_name
+
+			it 'should be rejected if the device name does not exist', ->
+				promise = resin.models.device.getWithServiceDetails('asdfghjkl')
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+			it 'should be rejected if the device id does not exist', ->
+				promise = resin.models.device.getWithServiceDetails(999999)
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+			it 'should be able to use a shorter uuid', ->
+				resin.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
+					m.chai.expect(device.id).to.equal(@device.id)
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->

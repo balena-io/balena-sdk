@@ -51,6 +51,7 @@
     "@types/lodash": "^4.14.85",
     "browserify": "^14.3.0",
     "catch-uncommitted": "^1.0.0",
+    "chai-samsam": "0.0.2",
     "coffee-script": "1.12.5",
     "dotenv": "^4.0.0",
     "gulp": "^3.9.1",
