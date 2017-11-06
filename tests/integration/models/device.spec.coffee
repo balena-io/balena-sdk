@@ -896,7 +896,7 @@ describe 'Device Model', ->
 								installs__image: oldWebImage.id
 								device: device.id
 								download_progress: 100
-								is_running: true
+								status: 'running'
 								install_date: '2017-10-01'
 					,
 						resin.pine.post
@@ -905,6 +905,7 @@ describe 'Device Model', ->
 								installs__image: newWebImage.id
 								device: device.id
 								download_progress: 50,
+								status: 'downloading'
 								install_date: '2017-10-30'
 					,
 						resin.pine.post
@@ -913,7 +914,7 @@ describe 'Device Model', ->
 								installs__image: dbImage.id
 								device: device.id
 								download_progress: 100,
-								is_running: true,
+								status: 'running',
 								install_date: '2017-10-30'
 					,
 						# Create service installs for the services running on the device
@@ -949,16 +950,16 @@ describe 'Device Model', ->
 						current_services:
 							web: [
 								commit: 'new-release-commit'
-								is_running: false
+								status: 'downloading'
 								download_progress: 50
 							,
 								commit: 'old-release-commit'
-								is_running: true
+								status: 'running'
 								download_progress: 100
 							]
 							db: [
 								commit: 'new-release-commit'
-								is_running: true
+								status: 'running'
 								download_progress: 100
 							]
 
