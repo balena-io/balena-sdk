@@ -371,7 +371,7 @@ getDeviceModel = (deps, opts) ->
 						$select: [
 							'id'
 							'download_progress'
-							'is_running'
+							'status'
 							'install_date'
 						]
 						$expand:
