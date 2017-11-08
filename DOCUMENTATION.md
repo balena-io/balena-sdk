@@ -13,7 +13,6 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.interceptors](#resin.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
         * [.Interceptor](#resin.interceptors.Interceptor) : <code>object</code>
     * [.request](#resin.request) : <code>Object</code>
-    * [.token](#resin.token) : <code>Object</code>
     * [.pine](#resin.pine) : <code>Object</code>
     * [.errors](#resin.errors) : <code>Object</code>
     * [.models](#resin.models) : <code>object</code>
@@ -139,7 +138,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
         * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
         * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
-        * [.loginWithToken(token)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
+        * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
         * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
         * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
         * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
@@ -214,20 +213,6 @@ using the same token and hooks as the SDK.
 **Example**  
 ```js
 resin.request.send({ url: 'http://api.resin.io/ping' });
-```
-<a name="resin.token"></a>
-
-### resin.token : <code>Object</code>
-The resin-token instance used internally. This should not be necessary
-in normal usage, but can be useful if you want to directly get or set
-the auth token that the SDK will use.
-
-**Kind**: static property of <code>[resin](#resin)</code>  
-**Summary**: Resin token instance  
-**Access**: public  
-**Example**  
-```js
-resin.token.set('abcdef...');
 ```
 <a name="resin.pine"></a>
 
@@ -3353,7 +3338,7 @@ resin.models.billing.downloadInvoice('0000').then(function(stream) {
     * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
     * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
     * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
-    * [.loginWithToken(token)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
+    * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
     * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
     * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
     * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
@@ -3533,24 +3518,24 @@ resin.auth.login(credentials, function(error) {
 ```
 <a name="resin.auth.loginWithToken"></a>
 
-#### auth.loginWithToken(token) ⇒ <code>Promise</code>
-Login to resin with a session token instead of with credentials.
+#### auth.loginWithToken(authToken) ⇒ <code>Promise</code>
+Login to resin with a session token or api key instead of with credentials.
 
 **Kind**: static method of <code>[auth](#resin.auth)</code>  
-**Summary**: Login to Resin.io with a token  
+**Summary**: Login to Resin.io with a token or api key  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| token | <code>String</code> | the auth token |
+| authToken | <code>String</code> | the auth token |
 
 **Example**  
 ```js
-resin.auth.loginWithToken(token);
+resin.auth.loginWithToken(authToken);
 ```
 **Example**  
 ```js
-resin.auth.loginWithToken(token, function(error) {
+resin.auth.loginWithToken(authToken, function(error) {
 	if (error) throw error;
 });
 ```
@@ -3589,9 +3574,9 @@ resin.auth.isLoggedIn(function(error, isLoggedIn) {
 This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
 
 **Kind**: static method of <code>[auth](#resin.auth)</code>  
-**Summary**: Get current logged in user's token  
+**Summary**: Get current logged in user's raw API key or session token  
 **Access**: public  
-**Fulfil**: <code>String</code> - session token  
+**Fulfil**: <code>String</code> - raw API key or session token  
 **Example**  
 ```js
 resin.auth.getToken().then(function(token) {

@@ -93,14 +93,14 @@
     "memoizee": "^0.4.9",
     "moment": "^2.18.1",
     "promise-memoize": "^1.2.0",
+    "resin-auth": "^2.0.0",
     "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
     "resin-errors": "^2.10.0",
-    "resin-pine": "^5.0.2",
+    "resin-pine": "^6.0.0",
     "resin-register-device": "^4.0.1",
-    "resin-request": "^8.6.0",
+    "resin-request": "^9.0.0",
     "resin-settings-client": "^3.5.2",
-    "resin-token": "^4.0.0",
     "semver": "^5.3.0"
   },
   "lint-staged": {

@@ -74,6 +74,26 @@ exports.resetUser = ->
 
 exports.credentials = buildCredentials()
 
+exports.givenLoggedInUserWithApiKey = ->
+	beforeEach ->
+		resin.auth.login
+			email: exports.credentials.email
+			password: exports.credentials.password
+		.then ->
+			return resin.request.send
+				method: 'POST'
+				url: '/api-key/user/full'
+				baseUrl: opts.apiUrl
+				body:
+					name: 'apiKey'
+		.get('body')
+		.tap(resin.auth.logout)
+		.then(resin.auth.loginWithToken)
+		.then(exports.resetUser)
+
+	afterEach ->
+		exports.resetUser()
+
 exports.givenLoggedInUser = ->
 	beforeEach ->
 		resin.auth.login
