@@ -18,7 +18,7 @@ assign = require('lodash/assign')
 mapValues = require('lodash/mapValues')
 defaults = require('lodash/defaults')
 getRequest = require('resin-request')
-getToken = require('resin-token')
+ResinAuth = require('resin-auth')['default']
 getPine = require('resin-pine')
 errors = require('resin-errors')
 { notImplemented } = require('./util')
@@ -92,14 +92,14 @@ getSdk = (opts = {}) ->
 		defaults opts,
 			dataDirectory: settings.get('dataDirectory')
 
-	token = getToken(opts)
-	request = getRequest(assign({}, opts, { token }))
-	pine = getPine(assign({}, opts, { token, request }))
+	auth = new ResinAuth(opts)
+	request = getRequest(assign({}, opts, { auth }))
+	pine = getPine(assign({}, opts, { auth, request }))
 
 	deps = {
 		settings
 		request
-		token
+		auth
 		pine
 	}
 
@@ -174,22 +174,6 @@ getSdk = (opts = {}) ->
 	# resin.request.send({ url: 'http://api.resin.io/ping' });
 	###
 	sdk.request = request
-
-	###*
-	# @summary Resin token instance
-	# @member {Object} token
-	# @public
-	# @memberof resin
-	#
-	# @description
-	# The resin-token instance used internally. This should not be necessary
-	# in normal usage, but can be useful if you want to directly get or set
-	# the auth token that the SDK will use.
-	#
-	# @example
-	# resin.token.set('abcdef...');
-	###
-	sdk.token = token
 
 	###*
 	# @summary Resin pine instance
