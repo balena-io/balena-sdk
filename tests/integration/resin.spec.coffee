@@ -29,15 +29,10 @@ describe 'Resin SDK', ->
 	it 'should expose a resin-pine instance', ->
 		m.chai.expect(resin.pine).to.exist
 
-	it 'should expose a resin-token instance', ->
-		m.chai.expect(resin.token).to.exist
-
 	it 'should expose an resin-errors instance', ->
 		m.chai.expect(resin.errors).to.exist
 
 	describe 'interception Hooks', ->
-
-		givenLoggedInUser()
 
 		beforeEach ->
 			resin.interceptors = []
@@ -45,12 +40,19 @@ describe 'Resin SDK', ->
 		afterEach ->
 			resin.interceptors = []
 
-		it "should update if the array is set directly (not only if it's mutated)", ->
-			interceptor = request: m.sinon.mock().returnsArg(0)
-			resin.interceptors = [ interceptor ]
+		givenLoggedInUser()
 
+		ignoreWhoamiCalls = (fn) ->
+			(arg) ->
+				if /\/user\/v1\/whoami/.test(arg.url)
+					return arg
+				return fn(arg)
+
+		it "should update if the array is set directly (not only if it's mutated)", ->
+			interceptor = m.sinon.mock().returnsArg(0)
+			resin.interceptors = [ { request: ignoreWhoamiCalls(interceptor) } ]
 			resin.models.application.getAll().then ->
-				m.chai.expect(interceptor.request.called).to.equal true,
+				m.chai.expect(interceptor.called).to.equal true,
 					'Interceptor set directly should have its request hook called'
 
 		describe 'for request', ->
@@ -80,7 +82,6 @@ describe 'Resin SDK', ->
 		describe 'for response', ->
 			it 'should be able to intercept responses', ->
 				resin.interceptors.push response: m.sinon.mock().returnsArg(0)
-
 				promise = resin.models.application.getAll()
 
 				promise.then ->
