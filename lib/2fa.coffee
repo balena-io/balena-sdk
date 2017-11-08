@@ -15,7 +15,7 @@ limitations under the License.
 ###
 
 get2fa = (deps, opts) ->
-	{ token, request } = deps
+	{ auth, request } = deps
 	{ apiUrl } = opts
 
 	exports = {}
@@ -47,7 +47,7 @@ get2fa = (deps, opts) ->
 	# });
 	###
 	exports.isEnabled = (callback) ->
-		token.getProperty('twoFactorRequired').then (twoFactorRequired) ->
+		auth.getProperty('twoFactorRequired').then (twoFactorRequired) ->
 			return twoFactorRequired?
 		.asCallback(callback)
 
@@ -78,7 +78,7 @@ get2fa = (deps, opts) ->
 	# });
 	###
 	exports.isPassed = (callback) ->
-		token.getProperty('twoFactorRequired').then (twoFactorRequired) ->
+		auth.getProperty('twoFactorRequired').then (twoFactorRequired) ->
 			return not twoFactorRequired
 		.asCallback(callback)
 
@@ -107,7 +107,7 @@ get2fa = (deps, opts) ->
 			baseUrl: apiUrl
 			body: { code }
 		.get('body')
-		.then(token.set)
+		.then(auth.setKey)
 		.asCallback(callback)
 
 	return exports

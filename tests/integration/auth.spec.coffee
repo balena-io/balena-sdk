@@ -30,8 +30,8 @@ describe 'SDK authentication', ->
 		describe 'resin.auth.authenticate()', ->
 
 			it 'should eventually be a valid token given valid credentials', ->
-				resin.auth.authenticate(credentials).then(resin.token.isValid).then (isValid) ->
-					m.chai.expect(isValid).to.be.true
+				resin.auth.authenticate(credentials).then(resin.auth.loginWithToken).then(resin.auth.getKey).then (token) ->
+					m.chai.expect(token).to.be.a('string')
 
 			it 'should not save the token given valid credentials', ->
 				resin.auth.authenticate(credentials).then ->
