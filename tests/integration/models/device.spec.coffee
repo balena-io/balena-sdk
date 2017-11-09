@@ -864,6 +864,7 @@ describe 'Device Model', ->
 							is_part_of__release: oldRelease.id
 							is_a_build_of__service: webService.id
 							project_type: 'dockerfile'
+							content_hash: 'abc'
 							start_timestamp: 1234
 							status: 'success'
 				,
@@ -873,6 +874,7 @@ describe 'Device Model', ->
 							is_part_of__release: newRelease.id
 							is_a_build_of__service: webService.id
 							project_type: 'dockerfile'
+							content_hash: 'def'
 							start_timestamp: 54321
 							status: 'success'
 				,
@@ -882,6 +884,7 @@ describe 'Device Model', ->
 							is_part_of__release: newRelease.id
 							is_a_build_of__service: dbService.id
 							project_type: 'dockerfile'
+							content_hash: 'ghi'
 							start_timestamp: 54321
 							status: 'success'
 				]
