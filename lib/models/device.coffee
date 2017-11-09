@@ -310,7 +310,7 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get a single device together with its associated service's essential details
+	# @summary Get a single device along with its associated services' essential details
 	# @name getWithServiceDetails
 	# @public
 	# @function
@@ -394,13 +394,13 @@ getDeviceModel = (deps, opts) ->
 
 			current_release = rawData.should_be_running__release[0]
 
-			# Strip expanded fields (we reformat and readd them below)
+			# Strip expanded fields (we reformat and re-add them below)
 			device = omit(rawData, [
 				'image_install'
 				'should_be_running__release'
 			])
 
-			device.current_release = current_release.commit
+			device.current_release = current_release?.commit
 			device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
 				service_containers.map (container) ->
 					omit(container, 'service_name')

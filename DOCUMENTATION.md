@@ -1372,7 +1372,7 @@ understand format. If you want more control, or to see the raw model
 directly, use `device.get(uuidOrId, options)` instead.
 
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
-**Summary**: Get a single device together with its associated service's essential details  
+**Summary**: Get a single device along with its associated services' essential details  
 **Access**: public  
 **Fulfil**: <code>Object</code> - device with service details  
 
