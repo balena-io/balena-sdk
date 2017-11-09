@@ -375,17 +375,17 @@ getDeviceModel = (deps, opts) ->
 							'install_date'
 						]
 						$expand:
-							'image':
+							image:
 								$select: ['id']
 								$expand:
-									is_part_of__release:
-										$select: ['id', 'commit']
 									is_a_build_of__service:
 										$select: ['id', 'service_name']
+							is_provided_by__release:
+								$select: ['id', 'commit']
 			, options
 		.then (rawData) ->
 			containers = rawData.image_install.map (install) ->
-				release = install.image[0].is_part_of__release[0]
+				release = install.is_provided_by__release[0]
 				service = install.image[0].is_a_build_of__service[0]
 
 				return Object.assign {}, omit(install, 'image'),
