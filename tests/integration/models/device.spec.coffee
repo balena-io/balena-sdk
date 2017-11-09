@@ -894,6 +894,7 @@ describe 'Device Model', ->
 							resource: 'image_install'
 							body:
 								installs__image: oldWebImage.id
+								is_provided_by__release: oldRelease.id
 								device: device.id
 								download_progress: 100
 								status: 'running'
@@ -903,6 +904,7 @@ describe 'Device Model', ->
 							resource: 'image_install'
 							body:
 								installs__image: newWebImage.id
+								is_provided_by__release: newRelease.id
 								device: device.id
 								download_progress: 50,
 								status: 'downloading'
@@ -912,6 +914,7 @@ describe 'Device Model', ->
 							resource: 'image_install'
 							body:
 								installs__image: dbImage.id
+								is_provided_by__release: newRelease.id
 								device: device.id
 								download_progress: 100,
 								status: 'running',
