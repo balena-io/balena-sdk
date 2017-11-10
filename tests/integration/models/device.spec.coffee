@@ -934,6 +934,10 @@ describe 'Device Model', ->
 								installs__service: dbService.id
 								device: device.id
 					]
+				.spread (oldWebInstall, newWebInstall, dbInstall) =>
+					@oldWebInstall = oldWebInstall
+					@newWebInstall = newWebInstall
+					@dbInstall = dbInstall
 
 		describe 'resin.models.device.getWithServiceDetails()', ->
 
@@ -953,15 +957,18 @@ describe 'Device Model', ->
 						current_release: @currentRelease.commit
 						current_services:
 							web: [
+								id: @newWebInstall.id
 								commit: 'new-release-commit'
 								status: 'downloading'
 								download_progress: 50
 							,
+								id: @oldWebInstall.id
 								commit: 'old-release-commit'
 								status: 'running'
 								download_progress: 100
 							]
 							db: [
+								id: @dbInstall.id
 								commit: 'new-release-commit'
 								status: 'running'
 								download_progress: 100
