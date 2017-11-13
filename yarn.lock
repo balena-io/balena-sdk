@@ -4673,9 +4673,9 @@ resin-errors@^2.0.0:
   dependencies:
     typed-error "^0.1.0"
 
-resin-errors@^2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.10.0.tgz#1e24d07f0ef7d4f1edb519fad4ae4e659c1e0c66"
+resin-errors@^2.11.0, resin-errors@^2.8.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.12.0.tgz#709a5758f47bc31ff98e839ee832a0882e12c571"
   dependencies:
     tslib "^1.7.1"
     typed-error "^2.0.0"
@@ -4685,13 +4685,6 @@ resin-errors@^2.7.0:
   resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.7.0.tgz#93ade640792107556d916df8692b5ecd97dda297"
   dependencies:
     typed-error "^0.1.0"
-
-resin-errors@^2.8.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.12.0.tgz#709a5758f47bc31ff98e839ee832a0882e12c571"
-  dependencies:
-    tslib "^1.7.1"
-    typed-error "^2.0.0"
 
 resin-pine@^6.0.0:
   version "6.0.5"
