@@ -154,8 +154,8 @@ exports.givenMulticontainerApplication = ->
 				.tap (device) =>
 					@device = device
 			,
-				# Register an old & new web image build from the old and
-				# new releases, and a db build in the new release only
+				# Register an old & new web image build from the old and new
+				# releases, a db build in the new release only
 				resin.pine.post
 					resource: 'image'
 					body:
@@ -182,11 +182,20 @@ exports.givenMulticontainerApplication = ->
 						is_part_of__release: newRelease.id
 						is_a_build_of__service: dbService.id
 						project_type: 'dockerfile'
+						content_hash: 'jkl'
+						start_timestamp: 123
+						status: 'success'
+			,
+				resin.pine.post
+					resource: 'image'
+					body:
+						is_a_build_of__service: dbService.id
+						project_type: 'dockerfile'
 						content_hash: 'ghi'
 						start_timestamp: 54321
 						status: 'success'
 			]
-			.spread (device, oldWebImage, newWebImage, dbImage) ->
+			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) ->
 				Promise.all [
 					# Create image installs for the images on the device
 					resin.pine.post
@@ -212,7 +221,17 @@ exports.givenMulticontainerApplication = ->
 					resin.pine.post
 						resource: 'image_install'
 						body:
-							installs__image: dbImage.id
+							installs__image: oldDbImage.id
+							is_provided_by__release: oldRelease.id
+							device: device.id
+							download_progress: 100,
+							status: 'Deleted',
+							install_date: '2017-09-30'
+				,
+					resin.pine.post
+						resource: 'image_install'
+						body:
+							installs__image: newDbImage.id
 							is_provided_by__release: newRelease.id
 							device: device.id
 							download_progress: 100,
@@ -232,7 +251,7 @@ exports.givenMulticontainerApplication = ->
 							installs__service: dbService.id
 							device: device.id
 				]
-			.spread (oldWebInstall, newWebInstall, dbInstall) =>
+			.then ([..., oldWebInstall, newWebInstall, oldDbInstall, newDbInstall, _w, _db]) =>
 				@oldWebInstall = oldWebInstall
 				@newWebInstall = newWebInstall
-				@dbInstall = dbInstall
+				@newDbInstall = newDbInstall

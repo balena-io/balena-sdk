@@ -827,11 +827,13 @@ describe 'Device Model', ->
 								download_progress: 100
 							]
 							db: [
-								id: @dbInstall.id
+								id: @newDbInstall.id
 								commit: 'new-release-commit'
 								status: 'running'
 								download_progress: 100
 							]
+					# Should filter out deleted image install
+					m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1)
 
 			it 'should allow options to change the device fields returned', ->
 				resin.models.device.getWithServiceDetails @device.id,
