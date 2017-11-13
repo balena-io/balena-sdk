@@ -3197,6 +3197,11 @@ resin.models.release.get(123, function(error, release) {
 <a name="resin.models.release.getWithImageDetails"></a>
 
 ##### release.getWithImageDetails(id, [options]) ⇒ <code>Promise</code>
+This method does not map exactly to the underlying model: it runs a
+larger prebuilt query, and reformats it into an easy to use and
+understand format. If you want significantly more control, or to see the
+raw model directly, use `release.get(uuidOrId, options)` instead.
+
 **Kind**: static method of <code>[release](#resin.models.release)</code>  
 **Summary**: Get a specific release with the details of the images built  
 **Access**: public  
@@ -3205,12 +3210,21 @@ resin.models.release.get(123, function(error, release) {
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | id | <code>Number</code> |  | release id |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+| [options] | <code>Object</code> | <code>{}</code> | a map of extra pine options |
+| [options.release] | <code>Boolean</code> | <code>{}</code> | extra pine options for releases |
+| [options.image] | <code>Object</code> | <code>{}</code> | extra pine options for images |
 
 **Example**  
 ```js
 resin.models.release.getWithImageDetails(123).then(function(release) {
 		console.log(release);
+});
+```
+**Example**  
+```js
+resin.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
+.then(function(release) {
+		console.log(release.images[0].build_log);
 });
 ```
 **Example**  
