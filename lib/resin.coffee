@@ -205,7 +205,7 @@ getSdk = (opts = {}) ->
 	#
 	# @example
 	# resin.pine.get({
-	#	resource: 'build/$count',
+	#	resource: 'release/$count',
 	#	options: {
 	#		filter: { belongs_to__application: applicationId }
 	#	}

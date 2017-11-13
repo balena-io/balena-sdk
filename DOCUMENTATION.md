@@ -122,9 +122,9 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
             * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-        * [.build](#resin.models.build) : <code>object</code>
-            * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+        * [.release](#resin.models.release) : <code>object</code>
+            * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
         * [.billing](#resin.models.billing) : <code>object</code>
             * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -244,7 +244,7 @@ in the SDK.
 **Example**  
 ```js
 resin.pine.get({
-	resource: 'build/$count',
+	resource: 'release/$count',
 	options: {
 		filter: { belongs_to__application: applicationId }
 	}
@@ -382,9 +382,9 @@ resin.models.device.get(123).catch(function (error) {
         * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
         * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-    * [.build](#resin.models.build) : <code>object</code>
-        * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+    * [.release](#resin.models.release) : <code>object</code>
+        * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
     * [.billing](#resin.models.billing) : <code>object</code>
         * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -3172,48 +3172,48 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 	console.log(options);
 });
 ```
-<a name="resin.models.build"></a>
+<a name="resin.models.release"></a>
 
-#### models.build : <code>object</code>
+#### models.release : <code>object</code>
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
-* [.build](#resin.models.build) : <code>object</code>
-    * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+* [.release](#resin.models.release) : <code>object</code>
+    * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
 
-<a name="resin.models.build.get"></a>
+<a name="resin.models.release.get"></a>
 
-##### build.get(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[build](#resin.models.build)</code>  
-**Summary**: Get a specific build  
+##### release.get(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[release](#resin.models.release)</code>  
+**Summary**: Get a specific release  
 **Access**: public  
-**Fulfil**: <code>Object</code> - build  
+**Fulfil**: <code>Object</code> - release  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| id | <code>Number</code> |  | build id |
+| id | <code>Number</code> |  | release id |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
-resin.models.build.get(123).then(function(build) {
-		console.log(build);
+resin.models.release.get(123).then(function(release) {
+		console.log(release);
 });
 ```
 **Example**  
 ```js
-resin.models.build.get(123, function(error, build) {
+resin.models.release.get(123, function(error, release) {
 		if (error) throw error;
-		console.log(build);
+		console.log(release);
 });
 ```
-<a name="resin.models.build.getAllByApplication"></a>
+<a name="resin.models.release.getAllByApplication"></a>
 
-##### build.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[build](#resin.models.build)</code>  
-**Summary**: Get all builds from an application  
+##### release.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[release](#resin.models.release)</code>  
+**Summary**: Get all releases from an application  
 **Access**: public  
-**Fulfil**: <code>Object[]</code> - builds  
+**Fulfil**: <code>Object[]</code> - releases  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -3222,21 +3222,21 @@ resin.models.build.get(123, function(error, build) {
 
 **Example**  
 ```js
-resin.models.build.getAllByApplication('MyApp').then(function(builds) {
-		console.log(builds);
+resin.models.release.getAllByApplication('MyApp').then(function(releases) {
+		console.log(releases);
 });
 ```
 **Example**  
 ```js
-resin.models.build.getAllByApplication(123).then(function(builds) {
-		console.log(builds);
+resin.models.release.getAllByApplication(123).then(function(releases) {
+		console.log(releases);
 });
 ```
 **Example**  
 ```js
-resin.models.build.getAllByApplication('MyApp', function(error, builds) {
+resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
-		console.log(builds);
+		console.log(releases);
 });
 ```
 <a name="resin.models.billing"></a>
