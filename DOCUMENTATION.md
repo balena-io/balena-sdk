@@ -126,6 +126,9 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
             * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+        * [.image](#resin.models.image) : <code>object</code>
+            * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
+            * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
         * [.billing](#resin.models.billing) : <code>object</code>
             * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -387,6 +390,9 @@ resin.models.device.get(123).catch(function (error) {
         * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
         * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+    * [.image](#resin.models.image) : <code>object</code>
+        * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
+        * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
     * [.billing](#resin.models.billing) : <code>object</code>
         * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -3280,6 +3286,66 @@ resin.models.release.getAllByApplication(123).then(function(releases) {
 resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
 		console.log(releases);
+});
+```
+<a name="resin.models.image"></a>
+
+#### models.image : <code>object</code>
+**Kind**: static namespace of <code>[models](#resin.models)</code>  
+
+* [.image](#resin.models.image) : <code>object</code>
+    * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
+    * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
+
+<a name="resin.models.image.get"></a>
+
+##### image.get(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[image](#resin.models.image)</code>  
+**Summary**: Get a specific image  
+**Access**: public  
+**Fulfil**: <code>Object</code> - image  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | image id |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.image.get(123).then(function(image) {
+		console.log(image);
+});
+```
+**Example**  
+```js
+resin.models.image.get(123, function(error, image) {
+		if (error) throw error;
+		console.log(image);
+});
+```
+<a name="resin.models.image.getLogs"></a>
+
+##### image.getLogs(id) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[image](#resin.models.image)</code>  
+**Summary**: Get the logs for an image  
+**Access**: public  
+**Fulfil**: <code>string</code> - logs  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | image id |
+
+**Example**  
+```js
+resin.models.image.getLogs(123).then(function(logs) {
+		console.log(logs);
+});
+```
+**Example**  
+```js
+resin.models.image.getLogs(123, function(error, logs) {
+		if (error) throw error;
+		console.log(logs);
 });
 ```
 <a name="resin.models.billing"></a>
