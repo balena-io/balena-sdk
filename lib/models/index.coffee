@@ -55,10 +55,10 @@ modelsTemplate =
 	config: require('./config')
 
 	###*
-	# @namespace build
+	# @namespace release
 	# @memberof resin.models
 	###
-	build: require('./build')
+	release: require('./release')
 
 	###*
 	# @namespace billing
