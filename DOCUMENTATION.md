@@ -123,6 +123,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.release](#resin.models.release) : <code>object</code>
             * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+            * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
         * [.billing](#resin.models.billing) : <code>object</code>
             * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
@@ -370,6 +371,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.release](#resin.models.release) : <code>object</code>
         * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+        * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
     * [.billing](#resin.models.billing) : <code>object</code>
         * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
@@ -3163,6 +3165,7 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 
 * [.release](#resin.models.release) : <code>object</code>
     * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+    * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="resin.models.release.get"></a>
@@ -3187,6 +3190,32 @@ resin.models.release.get(123).then(function(release) {
 **Example**  
 ```js
 resin.models.release.get(123, function(error, release) {
+		if (error) throw error;
+		console.log(release);
+});
+```
+<a name="resin.models.release.getWithImageDetails"></a>
+
+##### release.getWithImageDetails(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[release](#resin.models.release)</code>  
+**Summary**: Get a specific release with the details of the images built  
+**Access**: public  
+**Fulfil**: <code>Object</code> - release with image details  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | release id |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.release.getWithImageDetails(123).then(function(release) {
+		console.log(release);
+});
+```
+**Example**  
+```js
+resin.models.release.getWithImageDetails(123, function(error, release) {
 		if (error) throw error;
 		console.log(release);
 });
