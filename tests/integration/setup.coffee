@@ -216,7 +216,9 @@ exports.givenMulticontainerApplication = ->
 						start_timestamp: 54321
 						status: 'success'
 			]
-			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) ->
+			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) =>
+				@newWebImage = newWebImage
+
 				Promise.all [
 					# Tie the images to their corresponding releases
 					resin.pine.post
