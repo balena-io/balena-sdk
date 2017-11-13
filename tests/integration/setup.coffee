@@ -159,7 +159,6 @@ exports.givenMulticontainerApplication = ->
 				resin.pine.post
 					resource: 'image'
 					body:
-						is_part_of__release: oldRelease.id
 						is_a_build_of__service: webService.id
 						project_type: 'dockerfile'
 						content_hash: 'abc'
@@ -169,7 +168,6 @@ exports.givenMulticontainerApplication = ->
 				resin.pine.post
 					resource: 'image'
 					body:
-						is_part_of__release: newRelease.id
 						is_a_build_of__service: webService.id
 						project_type: 'dockerfile'
 						content_hash: 'def'
@@ -179,7 +177,6 @@ exports.givenMulticontainerApplication = ->
 				resin.pine.post
 					resource: 'image'
 					body:
-						is_part_of__release: newRelease.id
 						is_a_build_of__service: dbService.id
 						project_type: 'dockerfile'
 						content_hash: 'jkl'
@@ -197,6 +194,31 @@ exports.givenMulticontainerApplication = ->
 			]
 			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) ->
 				Promise.all [
+					# Tie the images to their corresponding releases
+					resin.pine.post
+						resource: 'image__is_part_of__release'
+						body:
+							image: oldWebImage.id
+							is_part_of__release: oldRelease.id
+				,
+					resin.pine.post
+						resource: 'image__is_part_of__release'
+						body:
+							image: oldDbImage.id
+							is_part_of__release: oldRelease.id
+				,
+					resin.pine.post
+						resource: 'image__is_part_of__release'
+						body:
+							image: newWebImage.id
+							is_part_of__release: newRelease.id
+				,
+					resin.pine.post
+						resource: 'image__is_part_of__release'
+						body:
+							image: newDbImage.id
+							is_part_of__release: newRelease.id
+				,
 					# Create image installs for the images on the device
 					resin.pine.post
 						resource: 'image_install'
