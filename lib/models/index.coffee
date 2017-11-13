@@ -61,6 +61,12 @@ modelsTemplate =
 	release: require('./release')
 
 	###*
+	# @namespace image
+	# @memberof resin.models
+	###
+	image: require('./image')
+
+	###*
 	# @namespace billing
 	# @memberof resin.models
 	# @description **Note!** The billing methods are available on Resin.io exclusively.
