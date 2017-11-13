@@ -372,6 +372,12 @@ getDeviceModel = (deps, opts) ->
 							'status'
 							'install_date'
 						]
+						$filter:
+							# We filter out deleted images entirely
+							$ne: [
+								$tolower: $: 'status'
+								'deleted'
+							]
 						$expand:
 							image:
 								$select: ['id']
