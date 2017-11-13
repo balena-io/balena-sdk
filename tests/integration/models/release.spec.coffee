@@ -97,3 +97,18 @@ describe 'Release Model', ->
 							id: credentials.userId
 							username: credentials.username
 
+					m.chai.expect(release.images[0].build_log).to.be.undefined
+
+			it 'should allow extra options to also get the build log', ->
+				resin.models.release.getWithImageDetails @currentRelease.id,
+					image: $select: 'build_log'
+				.then (release) ->
+					m.chai.expect(release).to.deep.match
+						images: [
+							service_name: 'db'
+							build_log: 'db log'
+						,
+							service_name: 'web'
+							build_log: 'web log'
+						]
+
