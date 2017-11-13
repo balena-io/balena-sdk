@@ -151,7 +151,9 @@ exports.mergePineOptions = (defaults, extras) ->
 	result = cloneDeep(defaults)
 
 	for own option, value of extras
-		switch option
+		# Drop leading `$`, so we support select & $select
+		# We'll move to _only_ $select with pine 5, this is a short-term change (hopefully)
+		switch option.replace(/^\$/, '')
 			when 'select'
 				if value?
 					if not isArray(value)
