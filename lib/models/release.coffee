@@ -68,14 +68,28 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.release
 	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want significantly more control, or to see the
+	# raw model directly, use `release.get(uuidOrId, options)` instead.
+	#
 	# @param {Number} id - release id
-	# @param {Object} [options={}] - extra pine options to use
+	# @param {Object} [options={}] - a map of extra pine options
+	# @param {Boolean} [options.release={}] - extra pine options for releases
+	# @param {Object} [options.image={}] - extra pine options for images
 	# @fulfil {Object} - release with image details
 	# @returns {Promise}
 	#
 	# @example
 	# resin.models.release.getWithImageDetails(123).then(function(release) {
 	#		console.log(release);
+	# });
+	#
+	# @example
+	# resin.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
+	# .then(function(release) {
+	#		console.log(release.images[0].build_log);
 	# });
 	#
 	# @example
@@ -92,18 +106,20 @@ getReleaseModel = (deps, opts) ->
 				contains__image:
 					$expand:
 						image:
-							$select: [ 'id' ],
-							$expand:
-								is_a_build_of__service:
-									$select: [ 'service_name' ],
+							mergePineOptions
+								$select: [ 'id' ]
+								$expand:
+									is_a_build_of__service:
+										$select: [ 'service_name' ]
+							, options.image
 				is_created_by__user:
 					$select: ['id', 'username']
-		, options
+		, options.release
 		.then (rawRelease) ->
-			release = omit(rawRelease, [
+			release = omit rawRelease, [
 				'contains__image'
 				'is_created_by__user'
-			])
+			]
 
 			# Squash .contains__image[x].image[0] into a simple array
 			images = rawRelease.contains__image.map (imageJoin) ->
