@@ -182,6 +182,7 @@ exports.givenMulticontainerApplication = ->
 						is_a_build_of__service: webService.id
 						project_type: 'dockerfile'
 						content_hash: 'abc'
+						build_log: 'old web log'
 						start_timestamp: 1234
 						status: 'success'
 			,
@@ -191,6 +192,7 @@ exports.givenMulticontainerApplication = ->
 						is_a_build_of__service: webService.id
 						project_type: 'dockerfile'
 						content_hash: 'def'
+						build_log: 'new web log'
 						start_timestamp: 54321
 						status: 'success'
 			,
@@ -200,6 +202,7 @@ exports.givenMulticontainerApplication = ->
 						is_a_build_of__service: dbService.id
 						project_type: 'dockerfile'
 						content_hash: 'jkl'
+						build_log: 'old db log'
 						start_timestamp: 123
 						status: 'success'
 			,
@@ -209,6 +212,7 @@ exports.givenMulticontainerApplication = ->
 						is_a_build_of__service: dbService.id
 						project_type: 'dockerfile'
 						content_hash: 'ghi'
+						build_log: 'new db log'
 						start_timestamp: 54321
 						status: 'success'
 			]
