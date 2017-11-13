@@ -15,6 +15,7 @@ limitations under the License.
 ###
 
 once = require('lodash/once')
+omit = require('lodash/omit')
 errors = require('resin-errors')
 
 { findCallback, mergePineOptions } = require('../util')
@@ -58,6 +59,66 @@ getReleaseModel = (deps, opts) ->
 		.tap (release) ->
 			if not release?
 				throw new errors.ResinReleaseNotFound(id)
+		.asCallback(callback)
+
+	###*
+	# @summary Get a specific release with the details of the images built
+	# @name getWithImageDetails
+	# @public
+	# @function
+	# @memberof resin.models.release
+	#
+	# @param {Number} id - release id
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - release with image details
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.release.getWithImageDetails(123).then(function(release) {
+	#		console.log(release);
+	# });
+	#
+	# @example
+	# resin.models.release.getWithImageDetails(123, function(error, release) {
+	#		if (error) throw error;
+	#		console.log(release);
+	# });
+	###
+	exports.getWithImageDetails = (id, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		return exports.get id, mergePineOptions
+			expand:
+				contains__image:
+					$expand:
+						image:
+							$select: [ 'id' ],
+							$expand:
+								is_a_build_of__service:
+									$select: [ 'service_name' ],
+				is_created_by__user:
+					$select: ['id', 'username']
+		, options
+		.then (rawRelease) ->
+			release = omit(rawRelease, [
+				'contains__image'
+				'is_created_by__user'
+			])
+
+			# Squash .contains__image[x].image[0] into a simple array
+			images = rawRelease.contains__image.map (imageJoin) ->
+				imageJoin.image[0]
+
+			release.images = images.map (imageData) ->
+				image = omit(imageData, 'is_a_build_of__service')
+				image.service_name = imageData.is_a_build_of__service[0].service_name
+				return image
+			.sort (a, b) ->
+				a.service_name.localeCompare(b.service_name)
+
+			release.user = rawRelease.is_created_by__user[0]
+
+			return release
 		.asCallback(callback)
 
 	###*
