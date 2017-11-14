@@ -17,7 +17,6 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
-isFinite = require('lodash/isFinite')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
@@ -116,21 +115,19 @@ getDeviceModel = (deps, opts) ->
 	# @function getDashboardUrl
 	# @memberof resin.models.device
 	#
-	# @param {Object} options - options
-	# @param {Number} options.appId - Application id
-	# @param {Number} options.deviceId - Device id
+	# @param {String} uuid - Device uuid
 	#
 	# @returns {String} - Dashboard URL for the specific device
-	# @throws Exception if either appId or deviceId are empty
+	# @throws Exception if the uuid is empty
 	#
 	# @example
-	# dashboardDeviceUrl = resin.models.device.getDashboardUrl({ appId: 123, deviceId: 456 })
+	# dashboardDeviceUrl = resin.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 	###
-	exports.getDashboardUrl = getDashboardUrl = (options = {}) ->
-		for key in [ 'appId', 'deviceId' ]
-			throw new Error("#{key} option is not a finite number") if not isFinite(options[key])
+	exports.getDashboardUrl = getDashboardUrl = (uuid) ->
+		if typeof uuid != 'string' || isEmpty(uuid)
+			throw new Error('The uuid option should be a non empty string')
 
-		return url.resolve(dashboardUrl, "/apps/#{options.appId}/devices/#{options.deviceId}/summary")
+		return url.resolve(dashboardUrl, "/devices/#{uuid}/summary")
 
 	addExtraInfo = (device) ->
 		normalizeDeviceOsVersion(device)

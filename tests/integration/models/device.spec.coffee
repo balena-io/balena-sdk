@@ -3,7 +3,7 @@ m = require('mochainon')
 superagent = require('superagent')
 Promise = require('bluebird')
 
-{ resin, givenLoggedInUser, IS_BROWSER } = require('../setup')
+{ resin, givenLoggedInUser, IS_BROWSER, sdkOpts } = require('../setup')
 {
 	itShouldGetAllTagsByResource
 	itShouldGetAllTags
@@ -904,6 +904,22 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
 
 	describe 'helpers', ->
+
+		describe 'resin.models.device.getDashboardUrl()', ->
+
+			it 'should return the respective DashboardUrl when a device uuid is provided', ->
+				dashboardUrl = sdkOpts.apiUrl.replace(/api/, 'dashboard')
+				m.chai.expect(
+					resin.models.device.getDashboardUrl('af1150f1b1734c428fb1606a4cddec6c')
+				).to.equal("#{dashboardUrl}/devices/af1150f1b1734c428fb1606a4cddec6c/summary")
+
+			it 'should throw when a device uuid is not a string', ->
+				m.chai.expect( -> resin.models.device.getDashboardUrl(1234567))
+				.to.throw()
+
+			it 'should throw when a device uuid is not provided', ->
+				m.chai.expect( -> resin.models.device.getDashboardUrl())
+				.to.throw()
 
 		describe 'resin.models.device.lastOnline()', ->
 

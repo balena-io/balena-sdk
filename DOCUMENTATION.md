@@ -48,7 +48,7 @@ If you feel something is missing, not clear or could be improved, please don't h
                 * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
-            * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
+            * [.getDashboardUrl(uuid)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
@@ -307,7 +307,7 @@ resin.models.device.get(123).catch(function (error) {
             * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
             * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
-        * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
+        * [.getDashboardUrl(uuid)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
@@ -1022,7 +1022,7 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
         * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
         * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
-    * [.getDashboardUrl(options)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
+    * [.getDashboardUrl(uuid)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
@@ -1220,24 +1220,22 @@ resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
 ```
 <a name="resin.models.device.getDashboardUrl"></a>
 
-##### device.getDashboardUrl(options) ⇒ <code>String</code>
+##### device.getDashboardUrl(uuid) ⇒ <code>String</code>
 **Kind**: static method of <code>[device](#resin.models.device)</code>  
 **Summary**: Get Dashboard URL for a specific device  
 **Returns**: <code>String</code> - - Dashboard URL for the specific device  
 **Throws**:
 
-- Exception if either appId or deviceId are empty
+- Exception if the uuid is empty
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| options | <code>Object</code> | options |
-| options.appId | <code>Number</code> | Application id |
-| options.deviceId | <code>Number</code> | Device id |
+| uuid | <code>String</code> | Device uuid |
 
 **Example**  
 ```js
-dashboardDeviceUrl = resin.models.device.getDashboardUrl({ appId: 123, deviceId: 456 })
+dashboardDeviceUrl = resin.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 ```
 <a name="resin.models.device.getAll"></a>
 
