@@ -408,6 +408,7 @@ getDeviceModel = (deps, opts) ->
 					b.install_date.localeCompare(a.install_date)
 
 			return device
+		.asCallback(callback)
 
 	###*
 	# @summary Get devices by name
