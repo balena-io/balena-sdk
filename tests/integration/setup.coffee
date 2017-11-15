@@ -165,7 +165,7 @@ exports.givenMulticontainerApplication = ->
 					resin.pine.patch
 						resource: 'device'
 						body:
-							should_be_running__release: newRelease.id
+							is_on__commit: newRelease.commit
 						options:
 							filter:
 								uuid: deviceInfo.uuid
