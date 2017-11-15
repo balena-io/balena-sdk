@@ -176,20 +176,22 @@ getSdk = (opts = {}) ->
 	sdk.request = request
 
 	###*
-	# @summary Resin token instance
+	# @summary Resin token "get" and "isValid" methods
 	# @member {Object} token
 	# @public
 	# @memberof resin
 	#
 	# @description
-	# The resin-token instance used internally. This should not be necessary
-	# in normal usage, but can be useful if you want to directly get or set
-	# the auth token that the SDK will use.
+	# The resin-token "get" and "isValid" methods used internally. This should not be necessary
+	# in normal usage, but can be useful if you want to directly get
+	# the auth token that the SDK will use or check if the token is valid.
 	#
 	# @example
-	# resin.token.set('abcdef...');
+	# resin.token.get('abcdef...');
 	###
-	sdk.token = token
+	sdk.token =
+		get: token.get,
+		isValid: token.isValid
 
 	###*
 	# @summary Resin pine instance
