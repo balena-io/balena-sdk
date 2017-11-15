@@ -207,16 +207,16 @@ resin.request.send({ url: 'http://api.resin.io/ping' });
 <a name="resin.token"></a>
 
 ### resin.token : <code>Object</code>
-The resin-token instance used internally. This should not be necessary
-in normal usage, but can be useful if you want to directly get or set
-the auth token that the SDK will use.
+The resin-token "get" and "isValid" methods used internally. This should not be necessary
+in normal usage, but can be useful if you want to directly get
+the auth token that the SDK will use or check if the token is valid.
 
 **Kind**: static property of <code>[resin](#resin)</code>  
-**Summary**: Resin token instance  
+**Summary**: Resin token "get" and "isValid" methods  
 **Access**: public  
 **Example**  
 ```js
-resin.token.set('abcdef...');
+resin.token.get('abcdef...');
 ```
 <a name="resin.pine"></a>
 
