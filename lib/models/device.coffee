@@ -352,6 +352,7 @@ getDeviceModel = (deps, opts) ->
 					'device_name'
 					'status'
 					'is_online'
+					'is_on__commit'
 					'supervisor_version'
 					'os_version'
 					'created_at',
@@ -362,9 +363,6 @@ getDeviceModel = (deps, opts) ->
 					'provisioning_progress'
 				]
 				expand:
-					should_be_running__release:
-						$select: ['id', 'commit']
-
 					image_install:
 						$select: [
 							'id'
@@ -396,15 +394,11 @@ getDeviceModel = (deps, opts) ->
 					service_name: service.service_name
 					commit: release.commit
 
-			current_release = rawData.should_be_running__release[0]
-
 			# Strip expanded fields (we reformat and re-add them below)
 			device = omit(rawData, [
 				'image_install'
-				'should_be_running__release'
 			])
 
-			device.current_release = current_release?.commit
 			device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
 				service_containers.map (container) ->
 					omit(container, 'service_name')
