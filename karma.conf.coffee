@@ -26,6 +26,11 @@ module.exports = (config) ->
 		'tests/**/*.spec.coffee'
 	]
 
+	karmaConfig.browserConsoleLogOptions =
+		level: 'log'
+		format: '%b %T: %m'
+		terminal: true
+
 	karmaConfig.envPreprocessor = [
 		'RESINTEST_API_URL'
 		'RESINTEST_EMAIL'
