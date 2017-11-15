@@ -813,7 +813,7 @@ describe 'Device Model', ->
 					m.chai.expect(deviceDetails).to.deep.match
 						device_name: @device.device_name
 						uuid: @device.uuid
-						current_release: @currentRelease.commit
+						is_on__commit: @currentRelease.commit
 						current_services:
 							web: [
 								id: @newWebInstall.id
