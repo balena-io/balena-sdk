@@ -40,6 +40,12 @@ getApplicationModel = (deps, opts) ->
 	{ apiUrl } = opts
 
 	deviceModel = once -> require('./device')(deps, opts)
+	tagsModel = once -> require('./tags').tagsModel(
+		deps,
+			associatedResource: 'application'
+			getResourceId: (nameOrId) -> exports.get(nameOrId, select: 'id').get('id')
+			ResourceNotFoundError: errors.ResinApplicationNotFound
+	)
 
 	exports = {}
 
@@ -738,6 +744,122 @@ getApplicationModel = (deps, opts) ->
 				body: is_accessible_by_support_until__date: null
 		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
+
+	###*
+	# @namespace resin.models.application.tags
+	# @memberof resin.models.application
+	###
+	exports.tags = {}
+
+	###*
+	# @summary Get all application tags for an application
+	# @name getAllByApplication
+	# @public
+	# @function
+	# @memberof resin.models.application.tags
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - application tags
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.application.tags.getAllByApplication(999999).then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
+	# 	if (error) throw error;
+	# 	console.log(tags)
+	# });
+	###
+	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get(nameOrId, select: 'id').get('id').then (id) ->
+			exports.tags.getAll(
+				mergePineOptions
+					filter: application: id
+				, options
+			)
+		.asCallback(callback)
+
+	###*
+	# @summary Get all application tags
+	# @name getAll
+	# @public
+	# @function
+	# @memberof resin.models.application.tags
+	#
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - application tags
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.tags.getAll().then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.application.tags.getAll(function(error, tags) {
+	# 	if (error) throw error;
+	# 	console.log(tags)
+	# });
+	###
+	exports.tags.getAll = tagsModel().getAll
+
+	###*
+	# @summary Set an application tag
+	# @name set
+	# @public
+	# @function
+	# @memberof resin.models.application.tags
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String} tagKey - tag key
+	# @param {String|undefined} value - tag value
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
+	#
+	# @example
+	# resin.models.application.tags.set(123, 'EDITOR', 'vim');
+	#
+	# @example
+	# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.tags.set = tagsModel().set
+
+	###*
+	# @summary Remove an application tag
+	# @name remove
+	# @public
+	# @function
+	# @memberof resin.models.application.tags
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String} tagKey - tag key
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.tags.remove('7cf02a6', 'EDITOR');
+	#
+	# @example
+	# resin.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.tags.remove = tagsModel().remove
 
 	return exports
 

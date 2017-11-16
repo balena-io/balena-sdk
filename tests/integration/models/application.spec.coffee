@@ -2,6 +2,12 @@ _ = require('lodash')
 m = require('mochainon')
 
 { resin, givenLoggedInUser, credentials } = require('../setup')
+{
+	itShouldGetAllTagsByResource
+	itShouldGetAllTags
+	itShouldSetTags
+	itShouldRemoveTags
+} = require('./tags')
 
 describe 'Application Model', ->
 
@@ -226,6 +232,28 @@ describe 'Application Model', ->
 				promise = resin.models.application.generateProvisioningKey(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
+		describe 'resin.models.application.tags', ->
+
+			tagTestOptions =
+				model: resin.models.application.tags
+				resourceName: 'application'
+				uniquePropertyName: 'app_name'
+
+			beforeEach ->
+				tagTestOptions.resourceProvider = => @application
+
+			describe 'resin.models.application.tags.getAllByApplication()', ->
+				itShouldGetAllTagsByResource(tagTestOptions)
+
+			describe 'resin.models.application.tags.getAll()', ->
+				itShouldGetAllTags(tagTestOptions)
+
+			describe 'resin.models.application.tags.set()', ->
+				itShouldSetTags(tagTestOptions)
+
+			describe 'resin.models.application.tags.remove()', ->
+				itShouldRemoveTags(tagTestOptions)
+
 	describe 'when toggling device URLs', ->
 		beforeEach ->
 			resin.models.application.create('DeviceUrlsTestApp', 'raspberry-pi').then (application) =>
@@ -292,4 +320,3 @@ describe 'Application Model', ->
 					app.is_accessible_by_support_until__date
 
 				m.chai.expect(promise).to.eventually.equal(null)
-
