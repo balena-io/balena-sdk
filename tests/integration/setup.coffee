@@ -164,6 +164,7 @@ exports.givenMulticontainerApplication = ->
 						content_hash: 'abc'
 						build_log: 'old web log'
 						start_timestamp: 1234
+						push_timestamp: 1234
 						status: 'success'
 			,
 				resin.pine.post
@@ -174,6 +175,7 @@ exports.givenMulticontainerApplication = ->
 						content_hash: 'def'
 						build_log: 'new web log'
 						start_timestamp: 54321
+						push_timestamp: 54321
 						status: 'success'
 			,
 				resin.pine.post
@@ -184,6 +186,7 @@ exports.givenMulticontainerApplication = ->
 						content_hash: 'jkl'
 						build_log: 'old db log'
 						start_timestamp: 123
+						push_timestamp: 123
 						status: 'success'
 			,
 				resin.pine.post
@@ -194,6 +197,7 @@ exports.givenMulticontainerApplication = ->
 						content_hash: 'ghi'
 						build_log: 'new db log'
 						start_timestamp: 54321
+						push_timestamp: 54321
 						status: 'success'
 			]
 			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) =>
