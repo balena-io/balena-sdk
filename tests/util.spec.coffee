@@ -97,6 +97,28 @@ describe 'Pine option merging', ->
 		m.chai.expect(result).to.deep.equal
 			expand: device: $select: [ 'name' ]
 
+	it 'adds $filter params for expand options, if present', ->
+		result = mergePineOptions
+			expand: 'device'
+		,
+			expand: device: $filter: name: 'myname'
+
+		m.chai.expect(result).to.deep.equal
+			expand: device: $filter: name: 'myname'
+
+	it 'combines $filter params for expand options for the same relationship, if present', ->
+		result = mergePineOptions
+			expand: device: $filter: id: 1
+		,
+			expand: device: $filter: name: 'myname'
+
+		m.chai.expect(result).to.deep.equal
+			expand: device: $filter: $and: [
+				id: 1
+			,
+				name: 'myname'
+			]
+
 	it 'combines $expand params for expand options for the same relationship, if present', ->
 		result = mergePineOptions
 			expand: device: $expand: [ 'application' ]
