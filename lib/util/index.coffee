@@ -190,13 +190,19 @@ mergeExpandOptions = (defaultExpand, extraExpand) ->
 		if extraExpandOptions.$select
 			expandOptions.$select = extraExpandOptions.$select
 
+		if extraExpandOptions.$filter
+			if expandOptions.$filter
+				expandOptions.$filter = $and: [ expandOptions.$filter, extraExpandOptions.$filter ]
+			else
+				expandOptions.$filter = extraExpandOptions.$filter
+
 		if extraExpandOptions.$expand
 			expandOptions.$expand = mergeExpandOptions(expandOptions.$expand, extraExpandOptions.$expand)
 
 	return defaultExpand
 
 # Converts a valid expand object in any format into a new object
-# containing (at most) a $expand and a $select key
+# containing (at most) $expand, $filter and $select keys
 convertExpandToObject = (expandOption) ->
 	if not expandOption?
 		return {}
@@ -211,7 +217,7 @@ convertExpandToObject = (expandOption) ->
 		# Check the options in this object are the ones we know how to merge
 		for own expandKey, expandRelationshipOptions of expandOption
 			invalidKeys = Object.keys(expandRelationshipOptions).filter (key) ->
-				key != '$select' and key != '$expand'
+				key != '$select' and key != '$expand' and key != '$filter'
 			if invalidKeys.length > 0
 				throw new Error("Unknown pine expand options: #{invalidKeys}")
 
