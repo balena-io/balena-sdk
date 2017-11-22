@@ -209,7 +209,7 @@ describe 'Device Model', ->
 				resin.models.device.getAll(select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getAllByApplication()', ->
 
@@ -235,7 +235,7 @@ describe 'Device Model', ->
 				resin.models.device.getAllByApplication(@application.id, select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getAllByParentDevice()', ->
 			beforeEach ->
@@ -282,7 +282,7 @@ describe 'Device Model', ->
 				resin.models.device.getAllByParentDevice(@device.id, select: [ 'id' ])
 				.then ([ childDevice ]) =>
 					m.chai.expect(childDevice.id).to.equal(@childDevice.id)
-					m.chai.expect(childDevice.name).to.equal(undefined)
+					m.chai.expect(childDevice.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.get()', ->
 
@@ -310,12 +310,12 @@ describe 'Device Model', ->
 				resin.models.device.get(@device.id, select: [ 'id' ])
 				.then (device) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getByName()', ->
 
 			it 'should be able to get the device', ->
-				resin.models.device.getByName(@device.name).then (devices) =>
+				resin.models.device.getByName(@device.device_name).then (devices) =>
 					m.chai.expect(devices).to.have.length(1)
 					m.chai.expect(devices[0].id).to.equal(@device.id)
 
@@ -324,20 +324,20 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: HelloWorldDevice')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getByName(@device.name, select: [ 'id' ])
+				resin.models.device.getByName(@device.device_name, select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getName()', ->
 
 			it 'should get the correct name by uuid', ->
 				promise = resin.models.device.getName(@device.uuid)
-				m.chai.expect(promise).to.eventually.equal(@device.name)
+				m.chai.expect(promise).to.eventually.equal(@device.device_name)
 
 			it 'should get the correct name by id', ->
 				promise = resin.models.device.getName(@device.id)
-				m.chai.expect(promise).to.eventually.equal(@device.name)
+				m.chai.expect(promise).to.eventually.equal(@device.device_name)
 
 			it 'should be rejected if the device uuid does not exist', ->
 				promise = resin.models.device.getName('asdfghjkl')
