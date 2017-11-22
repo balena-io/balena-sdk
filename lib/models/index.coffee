@@ -43,12 +43,6 @@ modelsTemplate =
 	key: require('./key')
 
 	###*
-	# @namespace environment-variables
-	# @memberof resin.models
-	###
-	environmentVariables: require('./environment-variables')
-
-	###*
 	# @namespace os
 	# @memberof resin.models
 	###
