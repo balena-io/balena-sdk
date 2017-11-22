@@ -166,7 +166,7 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
-					orderby: 'name asc'
+					orderby: 'device_name asc'
 				, options
 
 		.map(addExtraInfo)
@@ -434,7 +434,7 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		return exports.getAll(mergePineOptions(
-			filter: name: name
+			filter: device_name: name
 			options
 		)).tap (devices) ->
 			if isEmpty(devices)
@@ -469,7 +469,9 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'name').get('name').asCallback(callback)
+		exports.get(uuidOrId, select: 'device_name')
+		.get('device_name')
+		.asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -749,7 +751,7 @@ getDeviceModel = (deps, opts) ->
 			return pine.patch
 				resource: 'device'
 				body:
-					name: newName
+					device_name: newName
 				options:
 					filter:
 						uuid: uuid
