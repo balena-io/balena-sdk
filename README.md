@@ -86,7 +86,6 @@ In order to run the Resin SDK test suite, set the following environment variable
 - `RESINTEST_EMAIL`: The main account email
 - `RESINTEST_PASSWORD`: The main account password
 - `RESINTEST_USERNAME`: The main account username.
-- `RESINTEST_USERID`: The main account user id.
 
 You also have to provide the following environment variables from an account that doesn't yet exists:
 
