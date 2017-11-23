@@ -7,7 +7,7 @@ Promise = require('bluebird')
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
 
-describe 'Billing Model', ->
+describe.skip 'Billing Model', ->
 
 	describe 'Free Account', ->
 		givenLoggedInUser()
