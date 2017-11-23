@@ -6,12 +6,6 @@
 # it doesn't quite work.
 
 language: node_js
-env:
-  global:
-    - secure: F/5yx2HHhh5V0yTQfwSIXvDjY821KQWOwg+dH8cidzwAeTDQwxt07X+2E+S0mY8ckyYEVDzATGHTJneuRblNeiSGhWBE6oaF5SaVYs5TEo12m/b4Vkt4H08kzwrHyZ5cHn3Q/Ukm3CAypcbwACRrioLtA3USj6cg5h6DXMSunmA=
-    - RESINTEST_API_URL="https://api.multi.resinstaging.io"
-    - RESINTEST_USERNAME=pimterry
-    - RESINTEST_EMAIL=pimterry@gmail.com
 matrix:
   include:
     - node_js:
