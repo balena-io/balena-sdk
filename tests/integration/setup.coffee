@@ -35,7 +35,6 @@ buildCredentials = ->
 		email: env.RESINTEST_EMAIL
 		password: env.RESINTEST_PASSWORD
 		username: env.RESINTEST_USERNAME
-		userId: _.parseInt(env.RESINTEST_USERID)
 		paid:
 			email: env.RESINTEST_PAID_EMAIL
 			password: env.RESINTEST_PAID_PASSWORD
@@ -48,7 +47,6 @@ buildCredentials = ->
 		credentials.email?
 		credentials.password?
 		credentials.username?
-		credentials.userId?
 		credentials.register.email?
 		credentials.register.password?
 		credentials.register.username?

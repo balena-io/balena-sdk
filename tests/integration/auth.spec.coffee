@@ -1,3 +1,4 @@
+_ = require('lodash')
 m = require('mochainon')
 
 { resin, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
@@ -136,6 +137,8 @@ describe 'SDK authentication', ->
 
 		describe 'resin.auth.getUserId()', ->
 
-			it 'should eventually be the user id', ->
-				promise = resin.auth.getUserId()
-				m.chai.expect(promise).to.eventually.equal(credentials.userId)
+			it 'should eventually be a user id', ->
+				resin.auth.getUserId()
+				.then (userId) ->
+					m.chai.expect(userId).to.be.a('number')
+					m.chai.expect(userId).to.be.greaterThan(0)
