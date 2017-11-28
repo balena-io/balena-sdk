@@ -141,3 +141,4 @@ describe 'SDK authentication', ->
 				resin.auth.getUserId()
 				.then (userId) ->
 					m.chai.expect(userId).to.be.a('number')
+					m.chai.expect(userId).to.be.greaterThan(0)
