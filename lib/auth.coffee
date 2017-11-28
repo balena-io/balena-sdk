@@ -17,7 +17,7 @@ limitations under the License.
 errors = require('resin-errors')
 
 getAuth = (deps, opts) ->
-	{ token, request } = deps
+	{ auth, request} = deps
 	{ apiUrl } = opts
 	twoFactor = require('./2fa')(deps, opts)
 
@@ -62,7 +62,16 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.whoami = (callback) ->
-		token.getUsername().asCallback(callback)
+		request.send
+			method: 'GET'
+			url: '/user/v1/whoami'
+			baseUrl: apiUrl
+		.get('body')
+		.then (body) ->
+			return body.username || undefined
+		.catch ->
+			return undefined
+		.asCallback(callback)
 
 	###*
 	# @summary Authenticate with the server
@@ -132,31 +141,31 @@ getAuth = (deps, opts) ->
 	###
 	exports.login = (credentials, callback) ->
 		exports.authenticate(credentials)
-			.then(token.set)
+			.then(auth.setKey)
 			.asCallback(callback)
 
 	###*
-	# @summary Login to Resin.io with a token
-	# @name loginWithToken
+	# @summary Login to Resin.io with a token or api key
+	# @name loginWithAuth
 	# @public
 	# @function
 	# @memberof resin.auth
 	#
-	# @description Login to resin with a session token instead of with credentials.
+	# @description Login to resin with a session token ar api key instead of with credentials.
 	#
-	# @param {String} token - the auth token
+	# @param {String} authToken - the auth token
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.loginWithToken(token);
+	# resin.auth.loginWithAuth(authToken);
 	#
 	# @example
-	# resin.auth.loginWithToken(token, function(error) {
+	# resin.auth.loginWithAuth(authToken, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
-	exports.loginWithToken = (authToken, callback) ->
-		token.set(authToken).asCallback(callback)
+	exports.loginWithAuth = (authToken, callback) ->
+		auth.setKey(authToken).asCallback(callback)
 
 	###*
 	# @summary Check if you're logged in
@@ -191,7 +200,7 @@ getAuth = (deps, opts) ->
 	exports.isLoggedIn = (callback) ->
 		request.send
 			method: 'GET'
-			url: '/whoami'
+			url: '/user/v1/whoami'
 			baseUrl: apiUrl
 		.return(true)
 		.catch ->
@@ -222,7 +231,7 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getToken = (callback) ->
-		token.get().then (savedToken) ->
+		auth.getKey().then (savedToken) ->
 			throw new errors.ResinNotLoggedIn() if not savedToken?
 			return savedToken
 		.asCallback(callback)
@@ -251,9 +260,15 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getUserId = (callback) ->
-		token.getUserId().then (id) ->
-			throw new errors.ResinNotLoggedIn() if not id?
-			return id
+		request.send
+			method: 'GET'
+			url: '/user/v1/whoami'
+			baseUrl: apiUrl
+		.get('body')
+		.then (body) ->
+			return body.id
+		.catch ->
+			throw new errors.ResinNotLoggedIn()
 		.asCallback(callback)
 
 	###*
@@ -280,9 +295,15 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getEmail = (callback) ->
-		token.getEmail().then (email) ->
-			throw new errors.ResinNotLoggedIn() if not email?
-			return email
+		request.send
+			method: 'GET'
+			url: '/user/v1/whoami'
+			baseUrl: apiUrl
+		.get('body')
+		.then (body) ->
+			return body.email
+		.catch ->
+			throw new errors.ResinNotLoggedIn()
 		.asCallback(callback)
 
 	###*
@@ -303,7 +324,7 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.logout = (callback) ->
-		token.remove().asCallback(callback)
+		auth.removeKey().asCallback(callback)
 
 	###*
 	# @summary Register to Resin.io

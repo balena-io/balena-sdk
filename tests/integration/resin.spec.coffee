@@ -29,9 +29,6 @@ describe 'Resin SDK', ->
 	it 'should expose a resin-pine instance', ->
 		m.chai.expect(resin.pine).to.exist
 
-	it 'should expose a resin-token instance', ->
-		m.chai.expect(resin.token).to.exist
-
 	it 'should expose an resin-errors instance', ->
 		m.chai.expect(resin.errors).to.exist
 
@@ -80,7 +77,6 @@ describe 'Resin SDK', ->
 		describe 'for response', ->
 			it 'should be able to intercept responses', ->
 				resin.interceptors.push response: m.sinon.mock().returnsArg(0)
-
 				promise = resin.models.application.getAll()
 
 				promise.then ->
