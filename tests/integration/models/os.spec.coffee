@@ -184,7 +184,7 @@ describe 'OS model', ->
 		describe 'given a valid device slug', ->
 
 			it 'should contain a valid mime property', ->
-				resin.models.os.download('parallella').then (stream) ->
+				resin.models.os.download('raspberry-pi').then (stream) ->
 					m.chai.expect(stream.mime).to.equal('application/octet-stream')
 
 			it 'should contain a valid mime property if passing a device type alias', ->
@@ -193,7 +193,7 @@ describe 'OS model', ->
 
 			it 'should be able to download the image', ->
 				tmpFile = tmp.tmpNameSync()
-				resin.models.os.download('parallella').then (stream) ->
+				resin.models.os.download('raspberry-pi').then (stream) ->
 					stream.pipe(fs.createWriteStream(tmpFile))
 				.then(rindle.wait)
 				.then ->
