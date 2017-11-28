@@ -100,7 +100,7 @@ describe 'Application Model', ->
 
 			it 'should not find the created application with a different username', ->
 				promise = resin.models.application.getAppByOwner('FooBar', 'test_username')
-				m.chai.expect(promise).to.eventually.reject
+				m.chai.expect(promise).to.eventually.be.rejected('Application not found: test_username/foobar')
 
 		describe 'resin.models.application.getAll()', ->
 
