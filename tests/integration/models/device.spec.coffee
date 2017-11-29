@@ -4,6 +4,12 @@ superagent = require('superagent')
 Promise = require('bluebird')
 
 { resin, givenLoggedInUser, IS_BROWSER } = require('../setup')
+{
+	itShouldGetAllTagsByResource
+	itShouldGetAllTags
+	itShouldSetTags
+	itShouldRemoveTags
+} = require('./tags')
 
 makeRequest = (url) ->
 	return new Promise (resolve, reject) ->
@@ -753,6 +759,40 @@ describe 'Device Model', ->
 				.then ({ is_accessible_by_support_until__date }) ->
 					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
+		describe 'resin.models.device.tags', ->
+
+			appTagTestOptions =
+				model: resin.models.device.tags
+				resourceName: 'application'
+				uniquePropertyName: 'app_name'
+
+			deviceTagTestOptions =
+				model: resin.models.device.tags
+				resourceName: 'device'
+				uniquePropertyName: 'uuid'
+
+			beforeEach ->
+				appTagTestOptions.resourceProvider = => @application
+				deviceTagTestOptions.resourceProvider = => @device
+				# used for tag creation during the
+				# device.tags.getAllByApplication() test
+				appTagTestOptions.setTagResourceProvider = => @device
+
+			describe 'resin.models.device.tags.getAllByApplication()', ->
+				itShouldGetAllTagsByResource(appTagTestOptions)
+
+			describe 'resin.models.device.tags.getAllByDevice()', ->
+				itShouldGetAllTagsByResource(deviceTagTestOptions)
+
+			describe 'resin.models.device.tags.getAll()', ->
+				itShouldGetAllTags(deviceTagTestOptions)
+
+			describe 'resin.models.device.tags.set()', ->
+				itShouldSetTags(deviceTagTestOptions)
+
+			describe 'resin.models.device.tags.remove()', ->
+				itShouldRemoveTags(deviceTagTestOptions)
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->
@@ -889,4 +929,3 @@ describe 'Device Model', ->
 				m.chai.expect(
 					resin.models.device.lastOnline(mockDevice)
 				).to.equal('5 minutes ago')
-

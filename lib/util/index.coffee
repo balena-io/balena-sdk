@@ -66,6 +66,10 @@ exports.noApplicationForKeyResponse =
 	statusCode: 500
 	body: 'No application found to associate with the api key'
 
+exports.uniqueKeyViolated =
+	name: 'ResinRequestError'
+	body: 'Unique key constraint violated'
+
 exports.treatAsMissingApplication = (nameOrId) ->
 	return (err) ->
 		replacementErr = new errors.ResinApplicationNotFound(nameOrId)
