@@ -1,6 +1,5 @@
 path = require('path')
 
-rimraf = require('rimraf')
 gulp = require('gulp')
 mocha = require('gulp-mocha')
 gutil = require('gulp-util')
@@ -18,7 +17,6 @@ packageJSON = require('./package.json')
 
 OPTIONS =
 	config:
-		coffeelint: path.join(__dirname, 'coffeelint.json')
 		browserLibraryName: 'resin-sdk'
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
@@ -31,28 +29,20 @@ OPTIONS =
 		doc: 'doc/'
 		build: 'build/'
 
-gulp.task 'clean-build', (callback) ->
-	rimraf(OPTIONS.directories.build, callback)
-
 gulp.task 'test', ->
 	loadEnv()
 	gulp.src(OPTIONS.files.tests, read: false)
 		.pipe(mocha({
 			reporter: 'spec',
+			require: ['ts-node/register'],
 			compilers: 'coffee:coffee-script/register',
 			timeout: 5 * 60 * 1000,
 			slow: 10 * 1000
 		}))
 
-gulp.task 'lint', ->
-	gulp.src(OPTIONS.files.coffee)
-		.pipe(coffeelint({
-			optFile: OPTIONS.config.coffeelint
-		}))
-		.pipe(coffeelint.reporter())
-
 gulp.task 'build', (callback) ->
-	runSequence('lint', 'clean-build', 'build-node', 'build-browser', callback)
+	runSequence('build-node', 'build-browser', callback)
+
 
 gulp.task 'build-node', ->
 	gulp.src(OPTIONS.files.app)
@@ -85,5 +75,3 @@ gulp.task 'build-browser', ['build-node'], ->
 		.pipe(uglify())
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
-gulp.task 'watch', [ 'build' ], ->
-	gulp.watch([ OPTIONS.files.coffee ], [ 'lint' ])

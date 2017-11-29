@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "homepage": "https://github.com/resin-io/resin-sdk",
@@ -23,15 +23,22 @@
     "test": "tests"
   },
   "scripts": {
+    "clean": "rimraf build",
     "test": "npm run build && npm run test:all",
     "test:all": "npm run test:node && npm run test:browser",
     "test:node": "gulp test",
     "test:browser": "karma start",
-    "build": "gulp build && npm run docs",
+    "build": "npm run lint && npm run clean && tsc && gulp build && npm run docs",
     "docs": "jsdoc2md \"build/**/!(resin-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
+    "coffeelint": "coffeelint -f coffeelint.json -r \"lib\" \"tests\" \"gulpfile.coffee\"",
+    "tslint": "tslint -t stylish -c tslint.json \"lib/**/*.ts\"",
+    "lint": "npm run coffeelint && npm run tslint",
+    "precommit": "lint-staged",
     "prepublish": "require-npm4-to-publish",
-    "prepack": "npm test"
+    "prepack": "npm test",
+    "prettify": "prettier --write \"lib/**/*.ts\"",
+    "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",
   "license": "Apache-2.0",
@@ -39,6 +46,9 @@
     "node": ">=6.0"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.18",
+    "@types/lodash": "^4.14.85",
+    "@types/node": "^8.0.53",
     "browserify": "^14.3.0",
     "catch-uncommitted": "^1.0.0",
     "coffee-script": "1.12.5",
@@ -48,14 +58,19 @@
     "gulp-coffeelint": "^0.6.0",
     "gulp-insert": "^0.5.0",
     "gulp-mocha": "^4.1.0",
+    "gulp-tap": "^1.0.1",
+    "gulp-typescript": "^3.2.3",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.4",
+    "husky": "^0.14.3",
     "js-polyfills": "^0.1.33",
     "jsdoc-to-markdown": "^3.0.0",
     "karma": "^1.3.0",
     "karma-env-preprocessor": "^0.1.1",
+    "lint-staged": "^5.0.0",
     "mocha": "^3.0.0",
     "mochainon": "^1.0.0",
+    "prettier": "^1.8.2",
     "request": "^2.67.0",
     "require-npm4-to-publish": "^1.0.0",
     "resin-config-karma": "^1.0.4",
@@ -64,7 +79,11 @@
     "run-sequence": "^1.1.0",
     "superagent": "^3.0.0",
     "tmp": "^0.0.31",
-    "vinyl-source-buffer": "^1.1.1"
+    "ts-node": "^3.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1",
+    "vinyl-source-buffer": "^1.1.1",
+    "watch": "^1.0.2"
   },
   "dependencies": {
     "bluebird": "^3.3.1",
@@ -81,5 +100,11 @@
     "resin-settings-client": "^3.5.2",
     "resin-token": "^4.0.0",
     "semver": "^5.3.0"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "tslint -t stylish"
+    ]
   }
 }

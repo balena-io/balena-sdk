@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": false,
+        "outDir": "build",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "rootDir": "lib/",
+        "preserveConstEnums": true,
+        "strictNullChecks": true,
+        "sourceMap": false,
+        "target": "es5",
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "moduleResolution": "node"
+    },
+    "include": [
+        "lib/**/*.ts",
+        "lib/**/*.d.ts"
+    ]
+}
