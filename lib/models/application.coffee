@@ -36,8 +36,10 @@ errors = require('resin-errors')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 getApplicationModel = (deps, opts) ->
-	{ request, auth, pine } = deps
+	{ request, pine } = deps
 	{ apiUrl } = opts
+
+	auth = require('../auth')(deps, opts)
 
 	deviceModel = once -> require('./device')(deps, opts)
 
@@ -85,26 +87,22 @@ getApplicationModel = (deps, opts) ->
 	exports.getAll = (options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		request.send
-			method: 'GET'
-			url: '/user/v1/whoami'
-			baseUrl: apiUrl
-		.get('body')
-		.then (body) ->
-			return pine.get
-				resource: 'application'
-				options:
-					mergePineOptions
-						orderby: 'app_name asc'
-						filter:
-							user: body.id
-					, options
+		auth.getUserDetails()
+			.then (body) ->
+				return pine.get
+					resource: 'application'
+					options:
+						mergePineOptions
+							orderby: 'app_name asc'
+							filter:
+								user: body.id
+						, options
 
-		.map (application) ->
-			normalizeApplication(application)
-			return application
+			.map (application) ->
+				normalizeApplication(application)
+				return application
 
-		.asCallback(callback)
+			.asCallback(callback)
 
 	###*
 	# @summary Get a single application

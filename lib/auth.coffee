@@ -15,6 +15,7 @@ limitations under the License.
 ###
 
 errors = require('resin-errors')
+Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
 	{ auth, request} = deps
@@ -28,6 +29,24 @@ getAuth = (deps, opts) ->
 	# @memberof resin.auth
 	###
 	exports.twoFactor = twoFactor
+
+	userDetails = null
+	exports.getUserDetails = ->
+		return new Promise (resolve, reject) ->
+			if(userDetails)
+				resolve userDetails
+			else
+				request.send
+					method: 'GET'
+					url: '/user/v1/whoami'
+					baseUrl: apiUrl
+				.get('body')
+				.then (body) ->
+					console.log(body)
+					userDetails = body
+					resolve userDetails
+				.catch ->
+					reject undefined
 
 	###*
 	# @summary Return current logged in username
@@ -62,16 +81,12 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.whoami = (callback) ->
-		request.send
-			method: 'GET'
-			url: '/user/v1/whoami'
-			baseUrl: apiUrl
-		.get('body')
-		.then (body) ->
-			return body.username || undefined
-		.catch ->
-			return undefined
-		.asCallback(callback)
+		exports.getUserDetails()
+			.then (body) ->
+				return body.username || undefined
+			.catch ->
+				return undefined
+			.asCallback(callback)
 
 	###*
 	# @summary Authenticate with the server
@@ -198,14 +213,12 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.isLoggedIn = (callback) ->
-		request.send
-			method: 'GET'
-			url: '/user/v1/whoami'
-			baseUrl: apiUrl
-		.return(true)
-		.catch ->
-			return false
-		.asCallback(callback)
+		exports.getUserDetails()
+			.then ->
+				return true
+			.catch ->
+				return false
+			.asCallback(callback)
 
 	###*
 	# @summary Get current logged in user's raw API key or session token
@@ -260,16 +273,12 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getUserId = (callback) ->
-		request.send
-			method: 'GET'
-			url: '/user/v1/whoami'
-			baseUrl: apiUrl
-		.get('body')
-		.then (body) ->
-			return body.id
-		.catch ->
-			throw new errors.ResinNotLoggedIn()
-		.asCallback(callback)
+		exports.getUserDetails()
+			.then (body) ->
+				return body.id
+			.catch ->
+				throw new errors.ResinNotLoggedIn()
+			.asCallback(callback)
 
 	###*
 	# @summary Get current logged in user's email
@@ -295,16 +304,12 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getEmail = (callback) ->
-		request.send
-			method: 'GET'
-			url: '/user/v1/whoami'
-			baseUrl: apiUrl
-		.get('body')
-		.then (body) ->
-			return body.email
-		.catch ->
-			throw new errors.ResinNotLoggedIn()
-		.asCallback(callback)
+		exports.getUserDetails()
+			.then (body) ->
+				return body.email
+			.catch ->
+				throw new errors.ResinNotLoggedIn()
+			.asCallback(callback)
 
 	###*
 	# @summary Logout from Resin.io
@@ -324,6 +329,7 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.logout = (callback) ->
+		userDetails = null
 		auth.removeKey().asCallback(callback)
 
 	###*

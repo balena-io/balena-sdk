@@ -45,7 +45,7 @@ describe 'Resin SDK', ->
 		it "should update if the array is set directly (not only if it's mutated)", ->
 			interceptor = request: m.sinon.mock().returnsArg(0)
 			resin.interceptors = [ interceptor ]
-
+			console.log(resin.models.application.getAll)
 			resin.models.application.getAll().then ->
 				m.chai.expect(interceptor.request.called).to.equal true,
 					'Interceptor set directly should have its request hook called'

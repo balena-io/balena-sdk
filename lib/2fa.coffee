@@ -47,7 +47,7 @@ get2fa = (deps, opts) ->
 	# });
 	###
 	exports.isEnabled = (callback) ->
-		auth.getProperty('twoFactorRequired').then (twoFactorRequired) ->
+		auth.needs2FA().then (twoFactorRequired) ->
 			return twoFactorRequired?
 		.asCallback(callback)
 
@@ -78,7 +78,7 @@ get2fa = (deps, opts) ->
 	# });
 	###
 	exports.isPassed = (callback) ->
-		auth.getProperty('twoFactorRequired').then (twoFactorRequired) ->
+		auth.needs2FA().then (twoFactorRequired) ->
 			return not twoFactorRequired
 		.asCallback(callback)
 
