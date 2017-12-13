@@ -628,7 +628,7 @@ describe 'Device Model', ->
 					promise = resin.models.device.getDeviceUrl(@device.id)
 					m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
 
-				xit 'should eventually be an absolute url given a uuid', ->
+				it 'should eventually be an absolute url given a uuid', ->
 					resin.models.device.getDeviceUrl(@device.uuid)
 					.then(makeRequest)
 					.then (response) ->
