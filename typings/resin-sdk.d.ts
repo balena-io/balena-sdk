@@ -4,6 +4,7 @@ import { ResinRequest } from 'resin-request';
 import { ResinToken } from 'resin-token';
 import * as Pine from './pinejs-client-core';
 
+/* tslint:disable:no-namespace */
 declare namespace ResinSdk {
 	interface Interceptor {
 		request?(response: any): Promise<any>;
