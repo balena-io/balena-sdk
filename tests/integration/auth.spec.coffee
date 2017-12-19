@@ -41,8 +41,8 @@ describe 'SDK authentication', ->
 
 			it 'should be rejected given invalid credentials', ->
 				promise = resin.auth.authenticate
-					email: 'helloworld@resin.io',
-					password: 'asdfghjkl'
+					email: credentials.username,
+					password: 'NOT-THE-CORRECT-PASSWORD'
 
 				m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
 
