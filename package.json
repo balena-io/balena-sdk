@@ -38,7 +38,7 @@
     "precommit": "lint-staged",
     "prepublish": "require-npm4-to-publish",
     "prepack": "npm test",
-    "prettify": "prettier --write \"lib/**/*.ts\"",
+    "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
   "author": "Juan Cruz Viotti <juan@resin.io>",

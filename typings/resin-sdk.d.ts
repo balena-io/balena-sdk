@@ -202,15 +202,7 @@ declare namespace ResinSdk {
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
 	}
 
-	type BuildStatus =
-		| 'cancelled'
-		| 'error'
-		| 'interrupted'
-		| 'local'
-		| 'running'
-		| 'success'
-		| 'timeout'
-		| null;
+	type BuildStatus = 'cancelled' | 'error' | 'interrupted' | 'local' | 'running' | 'success' | 'timeout' | null;
 
 	interface Build {
 		log: string;
@@ -348,9 +340,7 @@ declare namespace ResinSdk {
 		belongs_to__user: NavigationResource<User>;
 		is_managed_by__device: NavigationResource<Device>;
 
-		device_environment_variable: ReverseNavigationResource<
-			DeviceEnvironmentVariable
-		>;
+		device_environment_variable: ReverseNavigationResource<DeviceEnvironmentVariable>;
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
 	}
@@ -424,15 +414,11 @@ declare namespace ResinSdk {
 
 	interface ResinSDK {
 		auth: {
-			login: (
-				credentials: { email: string; password: string },
-			) => Promise<void>;
+			login: (credentials: { email: string; password: string }) => Promise<void>;
 			loginWithToken: (authToken: string) => Promise<void>;
 			logout: () => Promise<void>;
 			getToken: () => Promise<string>;
-			register: (
-				credentials: { email: string; password: string },
-			) => Promise<string>;
+			register: (credentials: { email: string; password: string }) => Promise<string>;
 		};
 		token: ResinToken;
 		request: ResinRequest;
@@ -453,30 +439,17 @@ declare namespace ResinSdk {
 		};
 		models: {
 			application: {
-				create(
-					name: string,
-					deviceType: string,
-					parentNameOrId?: number | string,
-				): Promise<Application>;
-				get(
-					nameOrId: string | number,
-					options?: PineOptionsFor<Application>,
-				): Promise<Application>;
+				create(name: string, deviceType: string, parentNameOrId?: number | string): Promise<Application>;
+				get(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<Application>;
 				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
 				remove(nameOrId: string | number): Promise<void>;
 				restart(nameOrId: string | number): Promise<void>;
 				enableDeviceUrls(nameOrId: string | number): Promise<void>;
 				disableDeviceUrls(nameOrId: string | number): Promise<void>;
-				grantSupportAccess(
-					nameOrId: string | number,
-					expiryTimestamp: number,
-				): Promise<void>;
+				grantSupportAccess(nameOrId: string | number, expiryTimestamp: number): Promise<void>;
 				revokeSupportAccess(nameOrId: string | number): Promise<void>;
 				reboot(appId: number, { force }: { force?: boolean }): Promise<void>;
-				shutdown(
-					appId: number,
-					{ force }: { force?: boolean },
-				): Promise<void>;
+				shutdown(appId: number, { force }: { force?: boolean }): Promise<void>;
 				purge(appId: number): Promise<void>;
 				tags: {
 					getAllByApplication(
@@ -490,60 +463,34 @@ declare namespace ResinSdk {
 			};
 			build: {
 				get(id: number, options: PineOptionsFor<Build>): Promise<Build>;
-				getAllByApplication(
-					nameOrId: string | number,
-					options: PineOptionsFor<Build>,
-				): Promise<Build[]>;
+				getAllByApplication(nameOrId: string | number, options: PineOptionsFor<Build>): Promise<Build[]>;
 			};
 			billing: {
 				getAccount(): Promise<BillingAccountInfo>;
 				getPlan(): Promise<BillingPlanInfo>;
 				getBillingInfo(): Promise<BillingInfo>;
-				updateBillingInfo(
-					billingInfo: TokenBillingSubmitInfo,
-				): Promise<BillingInfo>;
+				updateBillingInfo(billingInfo: TokenBillingSubmitInfo): Promise<BillingInfo>;
 				getInvoices(): Promise<InvoiceInfo[]>;
 				downloadInvoice(invoiceNumber: string): Promise<Blob>;
 			};
 			device: {
 				enableDeviceUrl(uuidOrId: string | number): Promise<void>;
 				disableDeviceUrl(uuidOrId: string | number): Promise<void>;
-				get(
-					uuidOrId: string | number,
-					options: PineOptionsFor<Device>,
-				): Promise<Device>;
+				get(uuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device>;
 				getAll(options: PineOptionsFor<Device>): Promise<Device[]>;
-				getAllByApplication(
-					nameOrId: string | number,
-					options: PineOptionsFor<Device>,
-				): Promise<Device[]>;
-				getAllByParentDevice(
-					parentUuidOrId: string | number,
-					options: PineOptionsFor<Device>,
-				): Promise<Device[]>;
+				getAllByApplication(nameOrId: string | number, options: PineOptionsFor<Device>): Promise<Device[]>;
+				getAllByParentDevice(parentUuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device[]>;
 				getSupportedDeviceTypes(): Promise<string[]>;
-				move(
-					uuidOrId: string | number,
-					applicationNameOrId: string | number,
-				): Promise<void>;
+				move(uuidOrId: string | number, applicationNameOrId: string | number): Promise<void>;
 				note(uuidOrId: string | number, note: string): Promise<void>;
 				remove(uuidOrId: string | number): Promise<void>;
 				rename(uuidOrId: string | number, newName: string): Promise<void>;
 				identify(uuidOrId: string | number): Promise<void>;
 				restartApplication(uuidOrId: string | number): Promise<void>;
-				grantSupportAccess(
-					uuidOrId: string | number,
-					expiryTimestamp: number,
-				): Promise<void>;
+				grantSupportAccess(uuidOrId: string | number, expiryTimestamp: number): Promise<void>;
 				revokeSupportAccess(uuidOrId: string | number): Promise<void>;
-				reboot(
-					deviceId: number,
-					{ force }: { force?: boolean },
-				): Promise<void>;
-				shutdown(
-					deviceId: number,
-					{ force }: { force?: boolean },
-				): Promise<void>;
+				reboot(deviceId: number, { force }: { force?: boolean }): Promise<void>;
+				shutdown(deviceId: number, { force }: { force?: boolean }): Promise<void>;
 				purge(deviceId: number): Promise<void>;
 				lastOnline(device: Device): string;
 				tags: {
@@ -557,26 +504,14 @@ declare namespace ResinSdk {
 			environmentVariables: {
 				device: {
 					getAll(id: number): Promise<DeviceEnvironmentVariable[]>;
-					getAllByApplication(
-						applicationNameOrId: number | string,
-					): Promise<DeviceEnvironmentVariable[]>;
+					getAllByApplication(applicationNameOrId: number | string): Promise<DeviceEnvironmentVariable[]>;
 					update(id: number, value: string): Promise<void>;
-					create(
-						uuidOrId: number | string,
-						name: string,
-						value: string,
-					): Promise<void>;
+					create(uuidOrId: number | string, name: string, value: string): Promise<void>;
 					remove(id: number): Promise<void>;
 				};
-				getAllByApplication(
-					applicationNameOrId: number | string,
-				): Promise<EnvironmentVariable[]>;
+				getAllByApplication(applicationNameOrId: number | string): Promise<EnvironmentVariable[]>;
 				update(id: number, value: string): Promise<void>;
-				create(
-					applicationNameOrId: number | string,
-					name: string,
-					value: string,
-				): Promise<void>;
+				create(applicationNameOrId: number | string, name: string, value: string): Promise<void>;
 				remove(id: number): Promise<void>;
 			};
 			config: {
@@ -589,10 +524,7 @@ declare namespace ResinSdk {
 				create(title: string, key: string): Promise<SSHKey>;
 			};
 			os: {
-				getConfig(
-					nameOrId: string | number,
-					options: ImgConfigOptions,
-				): Promise<object>;
+				getConfig(nameOrId: string | number, options: ImgConfigOptions): Promise<object>;
 				getDownloadSize(slug: string, version?: string): Promise<number>;
 				getSupportedVersions(slug: string): Promise<OsVersions>;
 			};
@@ -604,9 +536,7 @@ declare namespace ResinSdk {
 			clear(uuid: string): void;
 		};
 		pine: {
-			delete<T>(
-				params: PineParamsWithIdFor<T> | PineParamsFor<T>,
-			): Promise<string>;
+			delete<T>(params: PineParamsWithIdFor<T> | PineParamsFor<T>): Promise<string>;
 			get<T>(params: PineParamsWithIdFor<T>): Promise<T>;
 			get<T>(params: PineParamsFor<T>): Promise<T[]>;
 			get<T, Result>(params: PineParamsFor<T>): Promise<Result>;
