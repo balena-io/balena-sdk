@@ -341,6 +341,7 @@ declare namespace ResinSdk {
 		is_accessible_by_support_until__date: string;
 		download_progress?: number;
 		provisioning_progress?: number;
+		local_id?: string;
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
@@ -350,7 +351,6 @@ declare namespace ResinSdk {
 			DeviceEnvironmentVariable
 		>;
 		manages__device: ReverseNavigationResource<Device>;
-		local_id?: string;
 	}
 
 	interface LogMessage {
