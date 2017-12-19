@@ -1,3 +1,4 @@
+import * as Promise from 'bluebird';
 import { EventEmitter } from 'events';
 import * as ResinErrors from 'resin-errors';
 import { ResinRequest } from 'resin-request';
@@ -418,10 +419,23 @@ declare namespace ResinSdk {
 			loginWithToken: (authToken: string) => Promise<void>;
 			logout: () => Promise<void>;
 			getToken: () => Promise<string>;
+			whoami: () => Promise<string | undefined>;
 			register: (credentials: { email: string; password: string }) => Promise<string>;
+			twoFactor: {
+				isEnabled: () => Promise<boolean>;
+				isPassed: () => Promise<boolean>;
+				challenge: (code: string) => Promise<void>;
+			}
 		};
+
+		settings: {
+			get(key: string): Promise<string>;
+			getAll(): Promise<{ [key: string]: string }>;
+		};
+
 		token: ResinToken;
 		request: ResinRequest;
+
 		errors: {
 			ResinAmbiguousApplication: ResinErrors.ResinAmbiguousApplication;
 			ResinAmbiguousDevice: ResinErrors.ResinAmbiguousDevice;
@@ -437,11 +451,13 @@ declare namespace ResinSdk {
 			ResinRequestError: ResinErrors.ResinRequestError;
 			ResinSupervisorLockedError: ResinErrors.ResinSupervisorLockedError;
 		};
+
 		models: {
 			application: {
 				create(name: string, deviceType: string, parentNameOrId?: number | string): Promise<Application>;
 				get(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<Application>;
 				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
+				hasAny(): Promise<boolean>;
 				remove(nameOrId: string | number): Promise<void>;
 				restart(nameOrId: string | number): Promise<void>;
 				enableDeviceUrls(nameOrId: string | number): Promise<void>;
@@ -477,9 +493,11 @@ declare namespace ResinSdk {
 				enableDeviceUrl(uuidOrId: string | number): Promise<void>;
 				disableDeviceUrl(uuidOrId: string | number): Promise<void>;
 				get(uuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device>;
-				getAll(options: PineOptionsFor<Device>): Promise<Device[]>;
-				getAllByApplication(nameOrId: string | number, options: PineOptionsFor<Device>): Promise<Device[]>;
-				getAllByParentDevice(parentUuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device[]>;
+				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
+				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
+				getAllByParentDevice(parentUuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
+				getName(uuidOrId: string | number): Promise<string>;
+				isOnline(uuidOrId: string | number): Promise<boolean>;
 				getSupportedDeviceTypes(): Promise<string[]>;
 				move(uuidOrId: string | number, applicationNameOrId: string | number): Promise<void>;
 				note(uuidOrId: string | number, note: string): Promise<void>;
@@ -529,12 +547,14 @@ declare namespace ResinSdk {
 				getSupportedVersions(slug: string): Promise<OsVersions>;
 			};
 		};
+
 		logs: {
 			history(uuid: string): LogsPromise;
 			historySinceLastClear(uuid: string): LogsPromise;
 			subscribe(uuid: string): Promise<LogsSubscription>;
 			clear(uuid: string): void;
 		};
+
 		pine: {
 			delete<T>(params: PineParamsWithIdFor<T> | PineParamsFor<T>): Promise<string>;
 			get<T>(params: PineParamsWithIdFor<T>): Promise<T>;
@@ -547,6 +567,22 @@ declare namespace ResinSdk {
 	}
 }
 
-declare function ResinSdk(options: object): ResinSdk.ResinSDK;
+interface SdkOptions {
+	apiUrl?: string;
+	apiKey?: string;
+	imageMakerUrl?: string;
+	dataDirectory?: string;
+	isBrowser?: boolean;
+	debug?: boolean;
+}
+
+interface SdkConstructor {
+	(options: SdkOptions): ResinSdk.ResinSDK;
+
+	setSharedOptions(options: SdkOptions): void;
+	fromSharedOptions: () => ResinSdk.ResinSDK;
+}
+
+declare const ResinSdk: SdkConstructor;
 
 export = ResinSdk;
