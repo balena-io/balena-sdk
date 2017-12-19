@@ -196,6 +196,7 @@ declare namespace ResinSdk {
 		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
 
+		application_tag: ReverseNavigationResource<ApplicationTag>;
 		owns__device: ReverseNavigationResource<Device>;
 		owns__build: ReverseNavigationResource<Build>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
@@ -350,6 +351,7 @@ declare namespace ResinSdk {
 		device_environment_variable: ReverseNavigationResource<
 			DeviceEnvironmentVariable
 		>;
+		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
 	}
 
@@ -401,6 +403,20 @@ declare namespace ResinSdk {
 	interface DeviceEnvironmentVariable extends EnvironmentVariableBase {
 		env_var_name?: string;
 
+		device: NavigationResource<Device>;
+	}
+
+	interface ResourceTagBase {
+		id: number;
+		tag_key: string;
+		value: string;
+	}
+
+	interface ApplicationTag extends ResourceTagBase {
+		application: NavigationResource<Application>;
+	}
+
+	interface DeviceTag extends ResourceTagBase {
 		device: NavigationResource<Device>;
 	}
 
@@ -462,6 +478,15 @@ declare namespace ResinSdk {
 					{ force }: { force?: boolean },
 				): Promise<void>;
 				purge(appId: number): Promise<void>;
+				tags: {
+					getAllByApplication(
+						nameOrId: string | number,
+						options?: PineOptionsFor<ApplicationTag>,
+					): Promise<ApplicationTag[]>;
+					getAll(options?: PineOptionsFor<ApplicationTag>): Promise<ApplicationTag[]>;
+					set(nameOrId: string | number, tagKey: string, value: string): Promise<void>;
+					remove(nameOrId: string | number, tagKey: string): Promise<void>;
+				};
 			};
 			build: {
 				get(id: number, options: PineOptionsFor<Build>): Promise<Build>;
@@ -521,6 +546,13 @@ declare namespace ResinSdk {
 				): Promise<void>;
 				purge(deviceId: number): Promise<void>;
 				lastOnline(device: Device): string;
+				tags: {
+					getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
+					getAllByDevice(uuidOrId: string | number, options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
+					getAll(options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
+					set(uuidOrId: string | number, tagKey: string, value: string): Promise<void>;
+					remove(uuidOrId: string | number, tagKey: string): Promise<void>;
+				};
 			};
 			environmentVariables: {
 				device: {
