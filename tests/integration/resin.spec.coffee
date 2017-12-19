@@ -94,14 +94,12 @@ describe 'Resin SDK', ->
 					called = true
 					throw err
 
-				promise = resin.auth.authenticate
-					email: 'helloworld@resin.io',
-					password: 'asdfghjkl'
+				promise = resin.models.device.restartApplication(999999)
 
-				m.chai.expect(promise).to.be.rejectedWith('Request error: Unauthorized')
+				m.chai.expect(promise).to.be.rejected
 				.then ->
 					m.chai.expect(called).to.equal true,
-						'responseError should be called when authentication fails'
+						'responseError should be called when request fails'
 
 	describe 'getSdk.setSharedOptions()', ->
 		it 'should set a global containing shared options', ->
