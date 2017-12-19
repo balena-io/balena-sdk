@@ -429,7 +429,7 @@ declare namespace ResinSdk {
 				isEnabled: () => Promise<boolean>;
 				isPassed: () => Promise<boolean>;
 				challenge: (code: string) => Promise<void>;
-			}
+			};
 		};
 
 		settings: {

@@ -35,7 +35,7 @@
     "ci": "npm test && catch-uncommitted",
     "coffeelint": "coffeelint -f coffeelint.json -r \"lib\" \"tests\" \"gulpfile.coffee\"",
     "tslint": "tslint -t stylish -c tslint.json \"typings/**/*.d.ts\" \"lib/**/*.ts\"",
-    "lint": "npm run coffeelint && npm run tslint",
+    "lint": "npm run prettify && npm run coffeelint && npm run tslint",
     "precommit": "lint-staged",
     "prepublish": "require-npm4-to-publish",
     "prepack": "npm test",
