@@ -471,6 +471,8 @@ declare namespace ResinSdk {
 				reboot(appId: number, { force }: { force?: boolean }): Promise<void>;
 				shutdown(appId: number, { force }: { force?: boolean }): Promise<void>;
 				purge(appId: number): Promise<void>;
+				generateApiKey(nameOrId: string | number): Promise<string>;
+				generateProvisioningKey(nameOrId: string | number): Promise<string>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
@@ -515,6 +517,7 @@ declare namespace ResinSdk {
 				shutdown(deviceId: number, { force }: { force?: boolean }): Promise<void>;
 				purge(deviceId: number): Promise<void>;
 				lastOnline(device: Device): string;
+				generateDeviceKey(uuidOrId: string | number): Promise<string>;
 				tags: {
 					getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
 					getAllByDevice(uuidOrId: string | number, options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
