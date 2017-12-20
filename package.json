@@ -48,9 +48,7 @@
     "node": ">=6.0"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.18",
     "@types/lodash": "^4.14.85",
-    "@types/node": "^8.0.53",
     "browserify": "^14.3.0",
     "catch-uncommitted": "^1.0.0",
     "coffee-script": "1.12.5",
@@ -88,6 +86,8 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
+    "@types/bluebird": "^3.5.18",
+    "@types/node": "^8.0.53",
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
     "memoizee": "^0.4.9",

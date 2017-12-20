@@ -2,6 +2,7 @@ import * as Promise from 'bluebird';
 import { EventEmitter } from 'events';
 import * as ResinErrors from 'resin-errors';
 import { ResinRequest } from 'resin-request';
+import { Readable } from 'stream';
 import * as Pine from './pinejs-client-core';
 import { ResinToken } from './resin-token';
 
@@ -45,12 +46,20 @@ declare namespace ResinSdk {
 		slug: string;
 		name: string;
 
+		arch: string;
+		state?: string;
+
 		isDependent?: boolean;
 		instructions?: string[] | DeviceTypeInstructions;
 		gettingStartedLink?: string | DeviceTypeGettingStartedLink;
 		stateInstructions?: { [key: string]: string[] };
 		options?: DeviceTypeOptions[];
-		state?: string;
+		initialization?: {
+			options?: DeviceInitializationOptions[];
+			operations: Array<{
+				command: string;
+			}>;
+		};
 		supportsBlink?: boolean;
 		yocto: {
 			fstype?: string;
@@ -77,6 +86,12 @@ declare namespace ResinSdk {
 		isCollapsible: boolean;
 		isGroup: boolean;
 		message: string;
+		name: string;
+	}
+
+	interface DeviceInitializationOptions {
+		message: string;
+		type: string;
 		name: string;
 	}
 
@@ -314,9 +329,9 @@ declare namespace ResinSdk {
 		ip_address: string | null;
 		vpn_address: string | null;
 		last_connectivity_event: string;
-		is_in_local_mode: boolean;
-		app_name: string;
-		state: { key: string; name: string };
+		is_in_local_mode?: boolean;
+		app_name?: string;
+		state?: { key: string; name: string };
 		status: string;
 		provisioning_state: string;
 		is_online: boolean;
@@ -460,7 +475,9 @@ declare namespace ResinSdk {
 			application: {
 				create(name: string, deviceType: string, parentNameOrId?: number | string): Promise<Application>;
 				get(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<Application>;
+				getAppByOwner(appName: string, owner: string, options?: PineOptionsFor<Application>): Promise<Application>;
 				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
+				has(name: string): Promise<boolean>;
 				hasAny(): Promise<boolean>;
 				remove(nameOrId: string | number): Promise<void>;
 				restart(nameOrId: string | number): Promise<void>;
@@ -484,8 +501,8 @@ declare namespace ResinSdk {
 				};
 			};
 			build: {
-				get(id: number, options: PineOptionsFor<Build>): Promise<Build>;
-				getAllByApplication(nameOrId: string | number, options: PineOptionsFor<Build>): Promise<Build[]>;
+				get(id: number, options?: PineOptionsFor<Build>): Promise<Build>;
+				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Build>): Promise<Build[]>;
 			};
 			billing: {
 				getAccount(): Promise<BillingAccountInfo>;
@@ -496,28 +513,51 @@ declare namespace ResinSdk {
 				downloadInvoice(invoiceNumber: string): Promise<Blob>;
 			};
 			device: {
-				enableDeviceUrl(uuidOrId: string | number): Promise<void>;
-				disableDeviceUrl(uuidOrId: string | number): Promise<void>;
 				get(uuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device>;
+				getByName(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByParentDevice(parentUuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getName(uuidOrId: string | number): Promise<string>;
+				getApplicationName(uuidOrId: string | number): Promise<string>;
+				getApplicationInfo(uuidOrId: string | number): Promise<object>;
+				has(uuidOrId: string | number): Promise<boolean>;
 				isOnline(uuidOrId: string | number): Promise<boolean>;
+				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
+				getDashboardUrl(options: { appId: number; deviceId: number }): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
+				getManifestBySlug(slugOrName: string): Promise<DeviceType>;
+				getManifestByApplication(nameOrId: string | number): Promise<DeviceType>;
 				move(uuidOrId: string | number, applicationNameOrId: string | number): Promise<void>;
 				note(uuidOrId: string | number, note: string): Promise<void>;
 				remove(uuidOrId: string | number): Promise<void>;
 				rename(uuidOrId: string | number, newName: string): Promise<void>;
+				setCustomLocation(uuidOrId: string | number, location: { latitude: number; longitude: number }): Promise<void>;
+				unsetCustomLocation(uuidOrId: string | number): Promise<void>;
 				identify(uuidOrId: string | number): Promise<void>;
+				startApplication(uuidOrId: string | number): Promise<void>;
+				stopApplication(uuidOrId: string | number): Promise<void>;
 				restartApplication(uuidOrId: string | number): Promise<void>;
 				grantSupportAccess(uuidOrId: string | number, expiryTimestamp: number): Promise<void>;
 				revokeSupportAccess(uuidOrId: string | number): Promise<void>;
-				reboot(deviceId: number, { force }: { force?: boolean }): Promise<void>;
-				shutdown(deviceId: number, { force }: { force?: boolean }): Promise<void>;
-				purge(deviceId: number): Promise<void>;
-				lastOnline(device: Device): string;
+				reboot(uuidOrId: string | number, { force }?: { force?: boolean }): Promise<void>;
+				shutdown(uuidOrId: string | number, { force }?: { force?: boolean }): Promise<void>;
+				purge(uuidOrId: string | number): Promise<void>;
+				update(uuidOrId: string | number, { force }?: { force?: boolean }): Promise<void>;
+				getDisplayName(deviceTypeName: string): string;
+				getDeviceSlug(deviceTypeName: string): string;
+				generateUniqueKey(): string;
+				register(applicationNameOrId: string | number, uuid?: string): Promise<object>;
 				generateDeviceKey(uuidOrId: string | number): Promise<string>;
+				enableDeviceUrl(uuidOrId: string | number): Promise<void>;
+				disableDeviceUrl(uuidOrId: string | number): Promise<void>;
+				hasDeviceUrl(uuidOrId: string | number): Promise<boolean>;
+				getDeviceUrl(uuidOrId: string | number): Promise<string>;
+				enableTcpPing(uuidOrId: string | number): Promise<void>;
+				disableTcpPing(uuidOrId: string | number): Promise<void>;
+				ping(uuidOrId: string | number): Promise<void>;
+				getStatus(device: object): string;
+				lastOnline(device: Device): string;
 				tags: {
 					getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
 					getAllByDevice(uuidOrId: string | number, options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
@@ -538,9 +578,12 @@ declare namespace ResinSdk {
 				update(id: number, value: string): Promise<void>;
 				create(applicationNameOrId: number | string, name: string, value: string): Promise<void>;
 				remove(id: number): Promise<void>;
+				isSystemVariable(variable: { name: string }): boolean;
 			};
 			config: {
 				getAll: () => Promise<Config>;
+				getDeviceTypes: () => Promise<DeviceType[]>;
+				getDeviceOptions(deviceType: string): Promise<Array<DeviceTypeOptions | DeviceInitializationOptions>>;
 			};
 			key: {
 				getAll(options?: PineOptionsFor<SSHKey>): Promise<SSHKey[]>;
@@ -549,9 +592,12 @@ declare namespace ResinSdk {
 				create(title: string, key: string): Promise<SSHKey>;
 			};
 			os: {
-				getConfig(nameOrId: string | number, options: ImgConfigOptions): Promise<object>;
+				getConfig(nameOrId: string | number, options?: ImgConfigOptions): Promise<object>;
 				getDownloadSize(slug: string, version?: string): Promise<number>;
 				getSupportedVersions(slug: string): Promise<OsVersions>;
+				getMaxSatisfyingVersion(deviceType: string, versionOrRange: string): string;
+				getLastModified(deviceType: string, version?: string): Promise<Date>;
+				download(deviceType: string, version?: string): Promise<Readable>;
 			};
 		};
 

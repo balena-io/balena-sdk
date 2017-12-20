@@ -15,6 +15,7 @@
         "moduleResolution": "node"
     },
     "include": [
+        "typings/*.d.ts",
         "lib/**/*.ts",
         "lib/**/*.d.ts"
     ]
