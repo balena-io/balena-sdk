@@ -1070,7 +1070,7 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {Object} options - options
+	# @param {Object} [options] - options
 	# @param {Boolean} [options.force=false] - override update lock
 	# @returns {Promise}
 	#
@@ -1306,7 +1306,7 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
-	# @param {String} uuid - device uuid
+	# @param {String} [uuid] - device uuid
 	#
 	# @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
 	# @returns {Promise}
@@ -1331,6 +1331,8 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.register = (applicationNameOrId, uuid, callback) ->
+		callback = findCallback(arguments)
+
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
