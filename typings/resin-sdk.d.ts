@@ -1,9 +1,9 @@
 import * as Promise from 'bluebird';
 import { EventEmitter } from 'events';
 import * as ResinErrors from 'resin-errors';
-import { ResinRequest } from 'resin-request';
 import { Readable } from 'stream';
 import * as Pine from './pinejs-client-core';
+import { ResinRequest } from './resin-request';
 import { ResinToken } from './resin-token';
 
 /* tslint:disable:no-namespace */
