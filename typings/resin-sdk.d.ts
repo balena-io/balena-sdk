@@ -171,28 +171,28 @@ declare namespace ResinSdk {
 	}
 
 	interface User {
-		id: number;
-		username: string;
-		email?: string;
-		first_name?: string;
-		last_name?: string;
-		company?: string;
 		account_type?: string;
-		has_disabled_newsletter?: boolean;
-		jwt_secret: string;
+		actualUser?: number;
+		company?: string;
 		created_at: string;
-		twoFactorRequired?: boolean;
-		hasPasswordSet?: boolean;
-		needsPasswordReset?: boolean;
-		public_key?: boolean;
+		email?: string;
 		features?: string[];
+		first_name?: string;
+		hasPasswordSet?: boolean;
+		has_disabled_newsletter?: boolean;
+		id: number;
 		intercomUserName?: string;
 		intercomUserHash?: string;
-		permissions?: string[];
+		jwt_secret: string;
+		last_name?: string;
 		loginAs?: boolean;
-		actualUser?: number;
+		needsPasswordReset?: boolean;
+		permissions?: string[];
+		public_key?: boolean;
+		twoFactorRequired?: boolean;
+		username: string;
 
-		owns__build: ReverseNavigationResource<Build>;
+		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
@@ -214,26 +214,26 @@ declare namespace ResinSdk {
 
 		application_tag: ReverseNavigationResource<ApplicationTag>;
 		owns__device: ReverseNavigationResource<Device>;
-		owns__build: ReverseNavigationResource<Build>;
+		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
 	}
 
-	type BuildStatus = 'cancelled' | 'error' | 'interrupted' | 'local' | 'running' | 'success' | 'timeout' | null;
+	type ReleaseStatus = 'cancelled' | 'error' | 'interrupted' | 'local' | 'running' | 'success' | 'timeout' | null;
 
-	interface Build {
+	interface Release {
 		log: string;
-		commit_hash: string;
+		commit: string;
 		created_at: string;
-		end_timestamp: string;
 		id: number;
-		message: string | null;
-		project_type: string;
+		composition: string | null;
+		source: string;
+		end_timestamp: string;
 		push_timestamp: string | null;
 		start_timestamp: string;
-		status: BuildStatus;
+		status: ReleaseStatus;
 		update_timestamp: string | null;
 
-		belongs_to__user: NavigationResource<User>;
+		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
 	}
 
@@ -317,48 +317,79 @@ declare namespace ResinSdk {
 	}
 
 	interface Device {
-		is_on__commit: string;
+		app_name: string;
 		created_at: string;
-		device_type: string;
-		id: number;
-		name: string;
-		os_version: string;
-		os_variant?: string;
-		status_sort_index?: number;
-		uuid: string;
-		ip_address: string | null;
-		vpn_address: string | null;
-		last_connectivity_event: string;
-		is_in_local_mode?: boolean;
-		app_name?: string;
-		state?: { key: string; name: string };
-		status: string;
-		provisioning_state: string;
-		is_online: boolean;
-		is_connected_to_vpn: boolean;
-		is_locked_until__date: string;
-		supervisor_version: string;
-		should_be_managed_by__supervisor_release: number;
-		is_web_accessible: boolean;
-		has_dependent: boolean;
-		note: string;
-		location: string;
-		latitude?: string;
-		longitude?: string;
 		custom_latitude?: string;
 		custom_longitude?: string;
-		is_accessible_by_support_until__date: string;
+		device_name: string;
+		device_type: string;
 		download_progress?: number;
-		provisioning_progress?: number;
+		has_dependent: boolean;
+		id: number;
+		ip_address: string | null;
+		is_accessible_by_support_until__date: string;
+		is_connected_to_vpn: boolean;
+		is_in_local_mode?: boolean;
+		is_locked_until__date: string;
+		is_on__commit: string;
+		is_web_accessible: boolean;
+		is_online: boolean;
+		last_connectivity_event: string;
+		latitude?: string;
 		local_id?: string;
+		location: string;
+		longitude?: string;
+		note: string;
+		os_variant?: string;
+		os_version: string;
+		provisioning_progress?: number;
+		provisioning_state: string;
+		state?: { key: string; name: string };
+		status: string;
+		status_sort_index?: number;
+		supervisor_version: string;
+		uuid: string;
+		vpn_address: string | null;
+		should_be_managed_by__supervisor_release: number;
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
+		should_be_running__release: NavigationResource<Release>;
+		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
 		is_managed_by__device: NavigationResource<Device>;
 
-		device_environment_variable: ReverseNavigationResource<DeviceEnvironmentVariable>;
+		device_config_variable: ReverseNavigationResource<DeviceConfigVariable>;
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
+	}
+
+	interface SupervisorRelease {
+		created_at: string;
+		id: number;
+		supervisor_version: string;
+		device_type: string;
+		image_name: string;
+		is_public: boolean;
+		note?: string;
+	}
+
+	interface ServiceInstance {
+		created_at: string;
+		id: number;
+		service_type: string;
+		ip_address: string;
+		last_heartbeat: string;
+	}
+
+	interface Service {
+		id: number;
+		service_name: string;
+		application: NavigationResource<Application>;
+	}
+
+	interface Image {
+		id: number;
+		build_log: string;
 	}
 
 	interface LogMessage {
@@ -397,20 +428,35 @@ declare namespace ResinSdk {
 		versions: string[];
 	};
 
+	interface ServiceInstall {
+		id: number;
+		should_be_running: boolean;
+		device: NavigationResource<Device>;
+		installs__service: NavigationResource<Service>;
+		service: Service[];
+		application: NavigationResource<Application>;
+	}
+
 	interface EnvironmentVariableBase {
 		id: number;
 		name: string;
 		value: string;
 	}
 
-	interface EnvironmentVariable extends EnvironmentVariableBase {
-		application: NavigationResource<Application>;
+	interface DeviceServiceEnvironmentVariable extends EnvironmentVariableBase {
+		service_install: NavigationResource<ServiceInstall>;
 	}
 
-	interface DeviceEnvironmentVariable extends EnvironmentVariableBase {
-		env_var_name?: string;
+	interface ServiceEnvironmentVariable extends EnvironmentVariableBase {
+		service: NavigationResource<Service>;
+	}
 
+	interface DeviceConfigVariable extends EnvironmentVariableBase {
 		device: NavigationResource<Device>;
+	}
+
+	interface ApplicationConfigVariable extends EnvironmentVariableBase {
+		application: NavigationResource<Application>;
 	}
 
 	interface ResourceTagBase {
@@ -461,14 +507,15 @@ declare namespace ResinSdk {
 			ResinAmbiguousApplication: ResinErrors.ResinAmbiguousApplication;
 			ResinAmbiguousDevice: ResinErrors.ResinAmbiguousDevice;
 			ResinApplicationNotFound: ResinErrors.ResinApplicationNotFound;
-			ResinBuildNotFound: ResinErrors.ResinBuildNotFound;
 			ResinDeviceNotFound: ResinErrors.ResinDeviceNotFound;
 			ResinExpiredToken: ResinErrors.ResinExpiredToken;
+			ResinImageNotFound: ResinErrors.ResinBuildNotFound;
 			ResinInvalidDeviceType: ResinErrors.ResinInvalidDeviceType;
 			ResinInvalidParameterError: ResinErrors.ResinInvalidParameterError;
 			ResinKeyNotFound: ResinErrors.ResinKeyNotFound;
 			ResinMalformedToken: ResinErrors.ResinMalformedToken;
 			ResinNotLoggedIn: ResinErrors.ResinNotLoggedIn;
+			ResinReleaseNotFound: ResinErrors.ResinBuildNotFound;
 			ResinRequestError: ResinErrors.ResinRequestError;
 			ResinSupervisorLockedError: ResinErrors.ResinSupervisorLockedError;
 		};
@@ -502,9 +549,26 @@ declare namespace ResinSdk {
 					remove(nameOrId: string | number, tagKey: string): Promise<void>;
 				};
 			};
-			build: {
-				get(id: number, options?: PineOptionsFor<Build>): Promise<Build>;
-				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Build>): Promise<Build[]>;
+			release: {
+				get(id: number, options?: PineOptionsFor<Release>): Promise<Release>;
+				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Release>): Promise<Release[]>;
+				getWithImageDetails(
+					nameOrId: string | number,
+					options?: {
+						release?: PineOptionsFor<Release>;
+						image?: PineOptionsFor<Image>;
+					},
+				): Promise<
+					Array<
+						Release & {
+							images: Array<{
+								id: number;
+								service_name: string;
+							}>;
+							user: User;
+						}
+					>
+				>;
 			};
 			billing: {
 				getAccount(): Promise<BillingAccountInfo>;
@@ -517,6 +581,21 @@ declare namespace ResinSdk {
 			device: {
 				get(uuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device>;
 				getByName(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
+				getWithServiceDetails(
+					nameOrId: string | number,
+					options?: PineOptionsFor<Device>,
+				): Promise<
+					Device & {
+						current_services: {
+							[serviceName: string]: Array<{
+								id: number;
+								commit: string;
+								status: string;
+								download_progress: number;
+							}>;
+						};
+					}
+				>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByParentDevice(parentUuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
@@ -582,20 +661,6 @@ declare namespace ResinSdk {
 					set(uuidOrId: string | number, tagKey: string, value: string): Promise<void>;
 					remove(uuidOrId: string | number, tagKey: string): Promise<void>;
 				};
-			};
-			environmentVariables: {
-				device: {
-					getAll(id: number): Promise<DeviceEnvironmentVariable[]>;
-					getAllByApplication(applicationNameOrId: number | string): Promise<DeviceEnvironmentVariable[]>;
-					update(id: number, value: string): Promise<void>;
-					create(uuidOrId: number | string, name: string, value: string): Promise<void>;
-					remove(id: number): Promise<void>;
-				};
-				getAllByApplication(applicationNameOrId: number | string): Promise<EnvironmentVariable[]>;
-				update(id: number, value: string): Promise<void>;
-				create(applicationNameOrId: number | string, name: string, value: string): Promise<void>;
-				remove(id: number): Promise<void>;
-				isSystemVariable(variable: { name: string }): boolean;
 			};
 			config: {
 				getAll: () => Promise<Config>;
