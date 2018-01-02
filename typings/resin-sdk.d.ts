@@ -140,7 +140,8 @@ declare namespace ResinSdk {
 	interface PineOptionsFor<T> extends PineOptions {
 		filter?: PineFilterFor<T>;
 		expand?: PineExpandFor<T>;
-		select?: Array<keyof T> | keyof T;
+		select?: Array<keyof T> | keyof T | '*';
+		orderby?: string;
 	}
 
 	interface PineDeferred {
