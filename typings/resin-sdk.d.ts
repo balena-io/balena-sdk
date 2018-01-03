@@ -36,6 +36,14 @@ declare namespace ResinSdk {
 		supportedSocialProviders: string[];
 	}
 
+	interface CurrentService {
+		id: number;
+		commit: string;
+		download_progress: number;
+		install_date: string;
+		status: string;
+	}
+
 	interface GaConfig {
 		site: string;
 		id: string;
@@ -587,12 +595,7 @@ declare namespace ResinSdk {
 				): Promise<
 					Device & {
 						current_services: {
-							[serviceName: string]: Array<{
-								id: number;
-								commit: string;
-								status: string;
-								download_progress: number;
-							}>;
+							[serviceName: string]: CurrentService[]
 						};
 					}
 				>;
