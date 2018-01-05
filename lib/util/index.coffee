@@ -67,7 +67,7 @@ exports.noApplicationForKeyResponse =
 	body: 'No application found to associate with the api key'
 
 exports.uniqueKeyViolated =
-	name: 'ResinRequestError'
+	code: 'ResinRequestError'
 	body: 'Unique key constraint violated'
 
 exports.treatAsMissingApplication = (nameOrId) ->
