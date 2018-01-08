@@ -2,13 +2,29 @@
 # yarn lockfile v1
 
 
+"@resin.io/types-node-localstorage@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@resin.io/types-node-localstorage/-/types-node-localstorage-1.3.0.tgz#626bd067c96692b9d93be3fbc6a246cc1b2447a1"
+
 "@types/bluebird@^3.5.18":
   version "3.5.18"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.18.tgz#6a60435d4663e290f3709898a4f75014f279c4d6"
 
+"@types/bluebird@^3.5.8":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.19.tgz#1a47308819ac2d1d6d1ca4f5d800ac84924100de"
+
+"@types/jwt-decode@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@types/jwt-decode/-/jwt-decode-2.2.1.tgz#afdf5c527fcfccbd4009b5fd02d1e18241f2d2f2"
+
 "@types/lodash@^4.14.85":
   version "4.14.85"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.85.tgz#a16fbf942422f6eca5622b6910492c496c35069b"
+
+"@types/node@^8.0.19":
+  version "8.5.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.5.tgz#6f9e8164ae1a55a9beb1d2571cfb7acf9d720c61"
 
 "@types/node@^8.0.53":
   version "8.0.53"
@@ -3757,7 +3773,7 @@ node-int64@~0.3.0:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.3.3.tgz#2d6e6b2ece5de8588b43d88d1bc41b26cd1fa84d"
 
-node-localstorage@^1.1.2:
+node-localstorage@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/node-localstorage/-/node-localstorage-1.3.0.tgz#2e436aae8dcc9ace97b43c65c16c0d577be0a55c"
   dependencies:
@@ -4605,6 +4621,17 @@ requizzle@~0.2.1:
   dependencies:
     underscore "~1.6.0"
 
+resin-auth@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/resin-auth/-/resin-auth-2.0.0.tgz#4e08a99ce0d0feb564933f53e0cc0989e31b935a"
+  dependencies:
+    "@types/bluebird" "^3.5.8"
+    "@types/jwt-decode" "^2.2.1"
+    bluebird "^3.0.0"
+    jwt-decode "^2.1.0"
+    resin-errors "^2.8.0"
+    resin-settings-storage "^4.0.0"
+
 resin-config-karma@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/resin-config-karma/-/resin-config-karma-1.0.4.tgz#93c632c2bd86e5ce77134c2cd509550cbca6af55"
@@ -4653,9 +4680,16 @@ resin-errors@^2.7.0:
   dependencies:
     typed-error "^0.1.0"
 
-resin-pine@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/resin-pine/-/resin-pine-5.0.2.tgz#a7337acd1604d44d4ff450fbbeb8bbd9936af103"
+resin-errors@^2.8.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/resin-errors/-/resin-errors-2.12.0.tgz#709a5758f47bc31ff98e839ee832a0882e12c571"
+  dependencies:
+    tslib "^1.7.1"
+    typed-error "^2.0.0"
+
+resin-pine@^6.0.0:
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/resin-pine/-/resin-pine-6.0.5.tgz#364d7a4b36529a3aa60d14b706fad85955d2de52"
   dependencies:
     bluebird "^3.3.1"
     lodash "^4.5.0"
@@ -4669,9 +4703,9 @@ resin-register-device@^4.0.1:
     bluebird "^3.0.0"
     randomstring "^1.1.5"
 
-resin-request@^8.6.0:
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-8.6.0.tgz#79365f3e5cb39c195fd782b638b4217374213994"
+resin-request@^9.0.0:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-9.0.2.tgz#9428794c352d260cc7b8d0a60c2cc0231a107521"
   dependencies:
     bluebird "^3.3.4"
     fetch-ponyfill "^4.0.0"
@@ -4690,22 +4724,15 @@ resin-settings-client@^3.5.2:
     js-yaml "^3.4.0"
     lodash "^4.15.0"
 
-resin-settings-storage@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/resin-settings-storage/-/resin-settings-storage-3.0.1.tgz#0e46c1cd2c7a981504e75d1c862b20fd9e0bd820"
+resin-settings-storage@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/resin-settings-storage/-/resin-settings-storage-4.0.1.tgz#c93fb0f30a3ba5cbd692d53236ed2c4dba0d1f0f"
   dependencies:
+    "@resin.io/types-node-localstorage" "^1.3.0"
+    "@types/bluebird" "^3.5.8"
+    "@types/node" "^8.0.19"
     bluebird "^3.3.4"
-    lodash "^4.0.0"
-    node-localstorage "^1.1.2"
-
-resin-token@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/resin-token/-/resin-token-4.1.0.tgz#43d1e9f5d3dfcbc86bbdaca4f2b6bf9da075fa00"
-  dependencies:
-    bluebird "^3.0.0"
-    jwt-decode "^2.1.0"
-    resin-errors "^2.0.0"
-    resin-settings-storage "^3.0.0"
+    node-localstorage "^1.3.0"
 
 resolve-dir@^0.1.0:
   version "0.1.1"

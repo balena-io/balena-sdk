@@ -1,7 +1,7 @@
 _ = require('lodash')
 m = require('mochainon')
 
-{ resin, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
+{ resin, sdkOpts, credentials, givenLoggedInUser, givenLoggedInUserWithApiKey } = require('./setup')
 
 describe 'SDK authentication', ->
 
@@ -10,7 +10,7 @@ describe 'SDK authentication', ->
 		beforeEach ->
 			resin.auth.logout()
 
-		describe 'resin.auth.isLogged()', ->
+		describe 'resin.auth.isLoggedIn()', ->
 
 			it 'should eventually be false', ->
 				promise = resin.auth.isLoggedIn()
@@ -30,14 +30,34 @@ describe 'SDK authentication', ->
 
 		describe 'resin.auth.authenticate()', ->
 
-			it 'should eventually be a valid token given valid credentials', ->
-				resin.auth.authenticate(credentials).then(resin.token.isValid).then (isValid) ->
-					m.chai.expect(isValid).to.be.true
+			it 'should eventually be a valid api key given valid credentials', ->
+				resin.auth.authenticate(credentials)
+				.then(resin.auth.loginWithToken)
+				.then ->
+					return resin.request.send
+						method: 'POST'
+						url: '/api-key/user/full'
+						baseUrl: sdkOpts.apiUrl
+						body:
+							name: 'apiKey'
+ 				.get('body')
+				.tap(resin.auth.logout)
+				.then(resin.auth.loginWithToken)
+				.then(resin.auth.getToken)
+				.then (key) ->
+					m.chai.expect(key).to.be.a('string')
 
 			it 'should not save the token given valid credentials', ->
 				resin.auth.authenticate(credentials).then ->
 					promise = resin.auth.isLoggedIn()
 					m.chai.expect(promise).to.eventually.be.false
+
+			it 'should eventually be a valid token given valid credentials', ->
+				resin.auth.authenticate(credentials)
+				.then(resin.auth.loginWithToken)
+				.then(resin.auth.getToken)
+				.then (key) ->
+					m.chai.expect(key).to.be.a('string')
 
 			it 'should be rejected given invalid credentials', ->
 				promise = resin.auth.authenticate
@@ -106,11 +126,11 @@ describe 'SDK authentication', ->
 
 				m.chai.expect(promise).to.be.rejectedWith('This email is already taken')
 
-	describe 'when logged in', ->
+	describe 'when logged in with credentials', ->
 
 		givenLoggedInUser()
 
-		describe 'resin.auth.isLogged()', ->
+		describe 'resin.auth.isLoggedIn()', ->
 
 			it 'should eventually be true', ->
 				promise = resin.auth.isLoggedIn()
@@ -122,6 +142,49 @@ describe 'SDK authentication', ->
 				resin.auth.logout().then ->
 					promise = resin.auth.isLoggedIn()
 					m.chai.expect(promise).to.eventually.be.false
+
+		describe 'resin.auth.whoami()', ->
+
+			it 'should eventually be the username', ->
+				promise = resin.auth.whoami()
+				m.chai.expect(promise).to.eventually.equal(credentials.username)
+
+		describe 'resin.auth.getEmail()', ->
+
+			it 'should eventually be the email', ->
+				promise = resin.auth.getEmail()
+				m.chai.expect(promise).to.eventually.equal(credentials.email)
+
+		describe 'resin.auth.getUserId()', ->
+
+			it 'should eventually be a user id', ->
+				resin.auth.getUserId()
+				.then (userId) ->
+					m.chai.expect(userId).to.be.a('number')
+					m.chai.expect(userId).to.be.greaterThan(0)
+
+	describe 'when logged in with API key', ->
+
+		givenLoggedInUserWithApiKey()
+
+		describe 'resin.auth.isLoggedIn()', ->
+
+			it 'should eventually be true', ->
+				promise = resin.auth.isLoggedIn()
+				m.chai.expect(promise).to.eventually.be.true
+
+		describe 'resin.auth.logout()', ->
+
+			it 'should logout the user', ->
+				resin.auth.logout().then ->
+					promise = resin.auth.isLoggedIn()
+					m.chai.expect(promise).to.eventually.be.false
+
+			it 'should reset the token on logout', ->
+				resin.auth.logout().then ->
+					promise = resin.auth.getToken()
+					m.chai.expect(promise).to.be.rejected
+						.and.eventually.have.property('code', 'ResinNotLoggedIn')
 
 		describe 'resin.auth.whoami()', ->
 

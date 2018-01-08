@@ -36,8 +36,10 @@ errors = require('resin-errors')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
 getApplicationModel = (deps, opts) ->
-	{ request, token, pine } = deps
+	{ request, pine } = deps
 	{ apiUrl } = opts
+
+	auth = require('../auth')(deps, opts)
 
 	deviceModel = once -> require('./device')(deps, opts)
 	tagsModel = once -> require('./tags').tagsModel(
@@ -91,7 +93,8 @@ getApplicationModel = (deps, opts) ->
 	exports.getAll = (options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		token.getUserId().then (userId) ->
+		auth.getUserId()
+		.then (userId) ->
 			return pine.get
 				resource: 'application'
 				options:

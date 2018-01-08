@@ -15,9 +15,10 @@ limitations under the License.
 ###
 
 errors = require('resin-errors')
+Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
-	{ token, request } = deps
+	{ auth, request} = deps
 	{ apiUrl } = opts
 	twoFactor = require('./2fa')(deps, opts)
 
@@ -28,6 +29,21 @@ getAuth = (deps, opts) ->
 	# @memberof resin.auth
 	###
 	exports.twoFactor = twoFactor
+
+	userDetailsCache = null
+	getUserDetails = ->
+		Promise.try ->
+			if userDetailsCache
+				return userDetailsCache
+			return request.send
+				method: 'GET'
+				url: '/user/v1/whoami'
+				baseUrl: apiUrl
+			.get('body')
+			.tap (body) ->
+				userDetailsCache = body
+			.catch ->
+				throw new errors.ResinNotLoggedIn()
 
 	###*
 	# @summary Return current logged in username
@@ -62,7 +78,10 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.whoami = (callback) ->
-		token.getUsername().asCallback(callback)
+		getUserDetails()
+		.then (userDetails) -> userDetails.username || undefined
+		.catchReturn(undefined)
+		.asCallback(callback)
 
 	###*
 	# @summary Authenticate with the server
@@ -131,32 +150,34 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.login = (credentials, callback) ->
+		userDetailsCache = null
 		exports.authenticate(credentials)
-			.then(token.set)
-			.asCallback(callback)
+		.then(auth.setKey)
+		.asCallback(callback)
 
 	###*
-	# @summary Login to Resin.io with a token
+	# @summary Login to Resin.io with a token or api key
 	# @name loginWithToken
 	# @public
 	# @function
 	# @memberof resin.auth
 	#
-	# @description Login to resin with a session token instead of with credentials.
+	# @description Login to resin with a session token or api key instead of with credentials.
 	#
-	# @param {String} token - the auth token
+	# @param {String} authToken - the auth token
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.loginWithToken(token);
+	# resin.auth.loginWithToken(authToken);
 	#
 	# @example
-	# resin.auth.loginWithToken(token, function(error) {
+	# resin.auth.loginWithToken(authToken, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
 	exports.loginWithToken = (authToken, callback) ->
-		token.set(authToken).asCallback(callback)
+		userDetailsCache = null
+		auth.setKey(authToken).asCallback(callback)
 
 	###*
 	# @summary Check if you're logged in
@@ -189,17 +210,13 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.isLoggedIn = (callback) ->
-		request.send
-			method: 'GET'
-			url: '/whoami'
-			baseUrl: apiUrl
+		getUserDetails()
 		.return(true)
-		.catch ->
-			return false
+		.catchReturn(false)
 		.asCallback(callback)
 
 	###*
-	# @summary Get current logged in user's token
+	# @summary Get current logged in user's raw API key or session token
 	# @name getToken
 	# @public
 	# @function
@@ -207,7 +224,7 @@ getAuth = (deps, opts) ->
 	#
 	# @description This will only work if you used {@link module:resin.auth.login} to log in.
 	#
-	# @fulfil {String} - session token
+	# @fulfil {String} - raw API key or session token
 	# @returns {Promise}
 	#
 	# @example
@@ -222,9 +239,12 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getToken = (callback) ->
-		token.get().then (savedToken) ->
+		auth.getKey()
+		.then (savedToken) ->
 			throw new errors.ResinNotLoggedIn() if not savedToken?
 			return savedToken
+		.catch ->
+			throw new errors.ResinNotLoggedIn()
 		.asCallback(callback)
 
 	###*
@@ -251,9 +271,8 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getUserId = (callback) ->
-		token.getUserId().then (id) ->
-			throw new errors.ResinNotLoggedIn() if not id?
-			return id
+		getUserDetails()
+		.get('id')
 		.asCallback(callback)
 
 	###*
@@ -280,9 +299,8 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.getEmail = (callback) ->
-		token.getEmail().then (email) ->
-			throw new errors.ResinNotLoggedIn() if not email?
-			return email
+		getUserDetails()
+		.get ('email')
 		.asCallback(callback)
 
 	###*
@@ -303,7 +321,8 @@ getAuth = (deps, opts) ->
 	# });
 	###
 	exports.logout = (callback) ->
-		token.remove().asCallback(callback)
+		userDetailsCache = null
+		auth.removeKey().asCallback(callback)
 
 	###*
 	# @summary Register to Resin.io

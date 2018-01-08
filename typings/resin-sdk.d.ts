@@ -4,7 +4,6 @@ import * as ResinErrors from 'resin-errors';
 import { Readable } from 'stream';
 import * as Pine from './pinejs-client-core';
 import { ResinRequest } from './resin-request';
-import { ResinToken } from './resin-token';
 
 /* tslint:disable:no-namespace */
 declare namespace ResinSdk {
@@ -452,7 +451,6 @@ declare namespace ResinSdk {
 			getAll(): Promise<{ [key: string]: string }>;
 		};
 
-		token: ResinToken;
 		request: ResinRequest;
 
 		errors: {
@@ -524,7 +522,7 @@ declare namespace ResinSdk {
 				has(uuidOrId: string | number): Promise<boolean>;
 				isOnline(uuidOrId: string | number): Promise<boolean>;
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
-				getDashboardUrl(options: { appId: number; deviceId: number }): string;
+				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
 				getManifestBySlug(slugOrName: string): Promise<DeviceType>;
 				getManifestByApplication(nameOrId: string | number): Promise<DeviceType>;
