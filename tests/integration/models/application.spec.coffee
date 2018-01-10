@@ -52,7 +52,7 @@ describe 'Application Model', ->
 				promise = resin.models.application.create('FooBar', 'foobarbaz')
 				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
 
-			it 'should be rejected if the device type is discontinuted', ->
+			it 'should be rejected if the device type is discontinued', ->
 				promise = resin.models.application.create('FooBar', 'edge')
 				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
