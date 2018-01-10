@@ -5,7 +5,7 @@ type RawFilter =
 	| Array<string | Filter<any>>
 	| {
 			$string: string;
-			[index: string]: Filter<any>;
+			[index: string]: Filter<any> | string;
 		};
 type Lambda<T> = {
 	$alias: string;
