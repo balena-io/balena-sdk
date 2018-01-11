@@ -156,6 +156,8 @@ exports.givenMulticontainerApplication = ->
 						start_timestamp: 54321
 			]
 		.spread (webService, dbService, oldRelease, newRelease) =>
+			@webService = webService
+			@dbService = dbService
 			@currentRelease = newRelease
 
 			uuid = resin.models.device.generateUniqueKey()
