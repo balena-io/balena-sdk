@@ -38,6 +38,7 @@ declare namespace ResinSdk {
 
 	interface CurrentService {
 		id: number;
+		service_id: number;
 		commit: string;
 		download_progress: number;
 		install_date: string;
@@ -593,7 +594,7 @@ declare namespace ResinSdk {
 				): Promise<
 					Device & {
 						current_services: {
-							[serviceName: string]: CurrentService[]
+							[serviceName: string]: CurrentService[];
 						};
 					}
 				>;
