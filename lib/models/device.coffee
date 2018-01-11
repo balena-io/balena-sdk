@@ -391,6 +391,7 @@ getDeviceModel = (deps, opts) ->
 				service = install.image[0].is_a_build_of__service[0]
 
 				return Object.assign {}, omit(install, 'image'),
+					service_id: service.id
 					service_name: service.service_name
 					commit: release.commit
 
