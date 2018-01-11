@@ -141,6 +141,7 @@ exports.givenMulticontainerApplication = ->
 						commit: 'old-release-commit'
 						status: 'success'
 						source: 'cloud'
+						composition: {}
 						start_timestamp: 1234
 			,
 				resin.pine.post
@@ -151,6 +152,7 @@ exports.givenMulticontainerApplication = ->
 						commit: 'new-release-commit'
 						status: 'success'
 						source: 'cloud'
+						composition: {}
 						start_timestamp: 54321
 			]
 		.spread (webService, dbService, oldRelease, newRelease) =>
