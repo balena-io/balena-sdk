@@ -388,11 +388,13 @@ getDeviceModel = (deps, opts) ->
 		.then (rawData) ->
 			containers = rawData.image_install.map (install) ->
 				release = install.is_provided_by__release[0]
-				service = install.image[0].is_a_build_of__service[0]
+				image = install.image[0]
+				service = image.is_a_build_of__service[0]
 
 				return Object.assign {}, omit(install, 'image'),
-					service_id: service.id
 					service_name: service.service_name
+					image_id: image.id
+					service_id: service.id
 					commit: release.commit
 
 			# Strip expanded fields (we reformat and re-add them below)

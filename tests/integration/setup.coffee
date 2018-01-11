@@ -225,7 +225,10 @@ exports.givenMulticontainerApplication = ->
 						status: 'success'
 			]
 			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) =>
+				@oldWebImage = oldWebImage
 				@newWebImage = newWebImage
+				@oldDbImage = oldDbImage
+				@newDbImage = newDbImage
 
 				Promise.all [
 					# Tie the images to their corresponding releases
