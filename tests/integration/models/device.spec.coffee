@@ -817,17 +817,20 @@ describe 'Device Model', ->
 						current_services:
 							web: [
 								id: @newWebInstall.id
+								service_id: @webService.id
 								commit: 'new-release-commit'
 								status: 'downloading'
 								download_progress: 50
 							,
 								id: @oldWebInstall.id
+								service_id: @webService.id
 								commit: 'old-release-commit'
 								status: 'running'
 								download_progress: 100
 							]
 							db: [
 								id: @newDbInstall.id
+								service_id: @dbService.id
 								commit: 'new-release-commit'
 								status: 'running'
 								download_progress: 100
