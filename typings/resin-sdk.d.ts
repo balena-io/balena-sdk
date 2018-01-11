@@ -519,7 +519,15 @@ declare namespace ResinSdk {
 				getAllByParentDevice(parentUuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getName(uuidOrId: string | number): Promise<string>;
 				getApplicationName(uuidOrId: string | number): Promise<string>;
-				getApplicationInfo(uuidOrId: string | number): Promise<object>;
+				getApplicationInfo(
+					uuidOrId: string | number,
+				): Promise<{
+					appId: string;
+					commit: string;
+					containerId: string;
+					env: { [key: string]: string | number };
+					imageId: string;
+				}>;
 				has(uuidOrId: string | number): Promise<boolean>;
 				isOnline(uuidOrId: string | number): Promise<boolean>;
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
