@@ -361,9 +361,10 @@ declare namespace ResinSdk {
 	}
 
 	interface LogMessage {
-		timestamp: number;
 		message: string;
 		isSystem: boolean;
+		timestamp: number | null;
+		serviceId: number | null;
 	}
 
 	interface LogsSubscription extends EventEmitter {
@@ -511,14 +512,22 @@ declare namespace ResinSdk {
 				downloadInvoice(invoiceNumber: string): Promise<Blob>;
 			};
 			device: {
-				get(uuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device>;
+				get(uuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device>;
 				getByName(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByParentDevice(parentUuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getName(uuidOrId: string | number): Promise<string>;
 				getApplicationName(uuidOrId: string | number): Promise<string>;
-				getApplicationInfo(uuidOrId: string | number): Promise<object>;
+				getApplicationInfo(
+					uuidOrId: string | number,
+				): Promise<{
+					appId: string;
+					commit: string;
+					containerId: string;
+					env: { [key: string]: string | number };
+					imageId: string;
+				}>;
 				has(uuidOrId: string | number): Promise<boolean>;
 				isOnline(uuidOrId: string | number): Promise<boolean>;
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
@@ -628,7 +637,7 @@ interface SdkOptions {
 }
 
 interface SdkConstructor {
-	(options: SdkOptions): ResinSdk.ResinSDK;
+	(options?: SdkOptions): ResinSdk.ResinSDK;
 
 	setSharedOptions(options: SdkOptions): void;
 	fromSharedOptions: () => ResinSdk.ResinSDK;
