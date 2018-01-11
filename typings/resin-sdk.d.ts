@@ -512,7 +512,7 @@ declare namespace ResinSdk {
 				downloadInvoice(invoiceNumber: string): Promise<Blob>;
 			};
 			device: {
-				get(uuidOrId: string | number, options: PineOptionsFor<Device>): Promise<Device>;
+				get(uuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device>;
 				getByName(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
@@ -629,7 +629,7 @@ interface SdkOptions {
 }
 
 interface SdkConstructor {
-	(options: SdkOptions): ResinSdk.ResinSDK;
+	(options?: SdkOptions): ResinSdk.ResinSDK;
 
 	setSharedOptions(options: SdkOptions): void;
 	fromSharedOptions: () => ResinSdk.ResinSDK;
