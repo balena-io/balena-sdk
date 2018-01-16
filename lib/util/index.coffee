@@ -2,12 +2,16 @@ errors = require('resin-errors')
 semver = require('semver')
 assign = require('lodash/assign')
 cloneDeep = require('lodash/cloneDeep')
+groupBy = require('lodash/groupBy')
 includes = require('lodash/includes')
 isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 isFunction = require('lodash/isFunction')
 isNumber = require('lodash/isNumber')
 isString = require('lodash/isString')
+mapKeys = require('lodash/mapKeys')
+mapValues = require('lodash/mapValues')
+omit = require('lodash/omit')
 throttle = require('lodash/throttle')
 memoizee = require('memoizee')
 moment = require('moment')
@@ -24,6 +28,8 @@ else null # If we can't guarantee global state, don't fake it: fail instead.
 
 exports.deviceTypes = require('./device-types')
 exports.getImgMakerHelper = require('./img-maker')
+
+exports.dollarify = (obj) -> mapKeys(obj, (v, k) -> "$#{k}")
 
 exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
@@ -222,3 +228,72 @@ convertExpandToObject = (expandOption) ->
 				throw new Error("Unknown pine expand options: #{invalidKeys}")
 
 		return cloneDeep(expandOption)
+
+# Pine options necessary for getting raw service data for a device
+exports.getCurrentServiceDetailsPineOptions = ->
+	select: [
+		'id',
+		'uuid'
+		'device_name'
+		'status'
+		'is_online'
+		'is_on__commit'
+		'supervisor_version'
+		'os_version'
+		'created_at',
+		'last_seen_time'
+		'last_connectivity_event'
+		'ip_address'
+		'provisioning_state'
+		'provisioning_progress'
+	]
+	expand:
+		image_install:
+			$select: [
+				'id'
+				'download_progress'
+				'status'
+				'install_date'
+			]
+			$filter:
+				# We filter out deleted images entirely
+				$ne:
+					[
+						$tolower: $: 'status'
+						'deleted'
+					]
+			$expand:
+				image:
+					$select: ['id']
+					$expand:
+						is_a_build_of__service:
+							$select: ['id', 'service_name']
+				is_provided_by__release:
+					$select: ['id', 'commit']
+
+# Converts raw service data into a more usable structure and attaches it to the
+# device object under the `current_services` key
+exports.generateCurrentServiceDetails = (rawData) ->
+		containers = rawData.image_install.map (install) ->
+			release = install.is_provided_by__release[0]
+			image = install.image[0]
+			service = image.is_a_build_of__service[0]
+
+			return Object.assign {}, omit(install, 'image'),
+				service_name: service.service_name
+				image_id: image.id
+				service_id: service.id
+				commit: release.commit
+
+		# Strip expanded fields (we reformat and re-add them below)
+		device = omit(rawData, [
+			'image_install'
+		])
+
+		device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
+			service_containers.map (container) ->
+				omit(container, 'service_name')
+			.sort (a, b) ->
+				b.install_date.localeCompare(a.install_date)
+
+		return device
