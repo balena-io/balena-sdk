@@ -221,22 +221,6 @@ convertExpandToObject = (expandOption) ->
 
 # Pine options necessary for getting raw service data for a device
 exports.getCurrentServiceDetailsPineOptions = ->
-	select: [
-		'id',
-		'uuid'
-		'device_name'
-		'status'
-		'is_online'
-		'is_on__commit'
-		'supervisor_version'
-		'os_version'
-		'created_at',
-		'last_seen_time'
-		'last_connectivity_event'
-		'ip_address'
-		'provisioning_state'
-		'provisioning_progress'
-	]
 	expand:
 		image_install:
 			$select: [
