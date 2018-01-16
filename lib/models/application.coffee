@@ -144,8 +144,6 @@ getApplicationModel = (deps, opts) ->
 	exports.get = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		console.log('OPTIONS', options)
-
 		Promise.try ->
 			if not nameOrId?
 				throw new errors.ResinApplicationNotFound(nameOrId)
