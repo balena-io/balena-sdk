@@ -132,6 +132,22 @@ describe 'Pine option merging', ->
 						application: {}
 						build: {}
 
+	it 'combines $expand params for expand options that are arrays of objects', ->
+		result = mergePineOptions
+			expand: [
+				device: $select: [ 'id' ]
+			]
+		,
+			expand: [
+				device: $expand: [ 'build' ]
+			]
+
+		m.chai.expect(result).to.deep.equal
+			expand:
+				device:
+					$select: [ 'id' ]
+					$expand: [ 'build' ]
+
 	it 'rejects any unknown extra options', ->
 		m.chai.expect(
 			-> mergePineOptions({}, unknownKey: 'value')

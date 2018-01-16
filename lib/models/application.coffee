@@ -185,7 +185,6 @@ getApplicationModel = (deps, opts) ->
 	# @memberof resin.models.application
 	#
 	# @description
-	# @description
 	# This method does not map exactly to the underlying model: it runs a
 	# larger prebuilt query, and reformats it into an easy to use and
 	# understand format. If you want more control, or to see the raw model

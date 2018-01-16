@@ -201,7 +201,13 @@ convertExpandToObject = (expandOption) ->
 	else if isString(expandOption)
 		return "#{expandOption}": {}
 	else if isArray(expandOption)
-		return fromPairs(expandOption.map((key) -> [key, {}]))
+		return fromPairs(expandOption.map((value) ->
+			if isString(value)
+				return [value, {}]
+			else
+				key = Object.keys(value).shift()
+				return [key, value[key]]
+		))
 	else
 		# Check the options in this object are the ones we know how to merge
 		for own expandKey, expandRelationshipOptions of expandOption
@@ -241,26 +247,26 @@ exports.getCurrentServiceDetailsPineOptions = ->
 # Converts raw service data into a more usable structure and attaches it to the
 # device object under the `current_services` key
 exports.generateCurrentServiceDetails = (rawData) ->
-		containers = rawData.image_install.map (install) ->
-			release = install.is_provided_by__release[0]
-			image = install.image[0]
-			service = image.is_a_build_of__service[0]
+	containers = rawData.image_install.map (install) ->
+		release = install.is_provided_by__release[0]
+		image = install.image[0]
+		service = image.is_a_build_of__service[0]
 
-			return Object.assign {}, omit(install, 'image'),
-				service_name: service.service_name
-				image_id: image.id
-				service_id: service.id
-				commit: release.commit
+		return Object.assign {}, omit(install, 'image'),
+			service_name: service.service_name
+			image_id: image.id
+			service_id: service.id
+			commit: release.commit
 
-		# Strip expanded fields (we reformat and re-add them below)
-		device = omit(rawData, [
-			'image_install'
-		])
+	# Strip expanded fields (we reformat and re-add them below)
+	device = omit(rawData, [
+		'image_install'
+	])
 
-		device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
-			service_containers.map (container) ->
-				omit(container, 'service_name')
-			.sort (a, b) ->
-				b.install_date.localeCompare(a.install_date)
+	device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
+		service_containers.map (container) ->
+			omit(container, 'service_name')
+		.sort (a, b) ->
+			b.install_date.localeCompare(a.install_date)
 
-		return device
+	return device

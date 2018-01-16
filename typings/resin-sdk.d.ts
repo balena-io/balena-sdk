@@ -531,13 +531,18 @@ declare namespace ResinSdk {
 			application: {
 				create(name: string, deviceType: string, parentNameOrId?: number | string): Promise<Application>;
 				get(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<Application>;
-				getWithDeviceServiceDetails(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<
+				getWithDeviceServiceDetails(
+					nameOrId: string | number,
+					options?: PineOptionsFor<Application>,
+				): Promise<
 					Application & {
-						owns__device: Array<Device & {
-							current_services: {
-								[serviceName: string]: CurrentService[];
-							};
-						}>
+						owns__device: Array<
+							Device & {
+								current_services: {
+									[serviceName: string]: CurrentService[];
+								};
+							}
+						>;
 					}
 				>;
 				getAppByOwner(appName: string, owner: string, options?: PineOptionsFor<Application>): Promise<Application>;
@@ -640,10 +645,10 @@ declare namespace ResinSdk {
 				restartApplication(uuidOrId: string | number): Promise<void>;
 				grantSupportAccess(uuidOrId: string | number, expiryTimestamp: number): Promise<void>;
 				revokeSupportAccess(uuidOrId: string | number): Promise<void>;
-				reboot(uuidOrId: string | number, { force }?: { force?: boolean }): Promise<void>;
-				shutdown(uuidOrId: string | number, { force }?: { force?: boolean }): Promise<void>;
+				reboot(uuidOrId: string | number, { force }: { force?: boolean }): Promise<void>;
+				shutdown(uuidOrId: string | number, { force }: { force?: boolean }): Promise<void>;
 				purge(uuidOrId: string | number): Promise<void>;
-				update(uuidOrId: string | number, { force }?: { force?: boolean }): Promise<void>;
+				update(uuidOrId: string | number, { force }: { force?: boolean }): Promise<void>;
 				getDisplayName(deviceTypeName: string): string;
 				getDeviceSlug(deviceTypeName: string): string;
 				generateUniqueKey(): string;
