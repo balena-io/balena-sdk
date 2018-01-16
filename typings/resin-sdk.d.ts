@@ -531,6 +531,15 @@ declare namespace ResinSdk {
 			application: {
 				create(name: string, deviceType: string, parentNameOrId?: number | string): Promise<Application>;
 				get(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<Application>;
+				getWithDeviceServiceDetails(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<
+					Application & {
+						owns__device: Array<Device & {
+							current_services: {
+								[serviceName: string]: CurrentService[];
+							};
+						}>
+					}
+				>;
 				getAppByOwner(appName: string, owner: string, options?: PineOptionsFor<Application>): Promise<Application>;
 				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
 				has(name: string): Promise<boolean>;
