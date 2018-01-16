@@ -474,7 +474,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: []).return(true)
+		exports.get(uuidOrId, select: ['id']).return(true)
 		.catch errors.ResinDeviceNotFound, ->
 			return false
 		.asCallback(callback)
