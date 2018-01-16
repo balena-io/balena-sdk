@@ -18,15 +18,12 @@ url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
 isFinite = require('lodash/isFinite')
-groupBy = require('lodash/groupBy')
-omit = require('lodash/omit')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
 some = require('lodash/some')
 includes = require('lodash/includes')
 map = require('lodash/map')
-mapValues = require('lodash/mapValues')
 semver = require('semver')
 errors = require('resin-errors')
 deviceStatus = require('resin-device-status')
@@ -35,6 +32,8 @@ deviceStatus = require('resin-device-status')
 	onlyIf,
 	isId,
 	findCallback,
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noDeviceForKeyResponse,
@@ -345,70 +344,8 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			mergePineOptions
-				select: [
-					'id',
-					'uuid'
-					'device_name'
-					'status'
-					'is_online'
-					'is_on__commit'
-					'supervisor_version'
-					'os_version'
-					'created_at',
-					'last_seen_time'
-					'last_connectivity_event'
-					'ip_address'
-					'provisioning_state'
-					'provisioning_progress'
-				]
-				expand:
-					image_install:
-						$select: [
-							'id'
-							'download_progress'
-							'status'
-							'install_date'
-						]
-						$filter:
-							# We filter out deleted images entirely
-							$ne: [
-								$tolower: $: 'status'
-								'deleted'
-							]
-						$expand:
-							image:
-								$select: ['id']
-								$expand:
-									is_a_build_of__service:
-										$select: ['id', 'service_name']
-							is_provided_by__release:
-								$select: ['id', 'commit']
-			, options
-		.then (rawData) ->
-			containers = rawData.image_install.map (install) ->
-				release = install.is_provided_by__release[0]
-				image = install.image[0]
-				service = image.is_a_build_of__service[0]
-
-				return Object.assign {}, omit(install, 'image'),
-					service_name: service.service_name
-					image_id: image.id
-					service_id: service.id
-					commit: release.commit
-
-			# Strip expanded fields (we reformat and re-add them below)
-			device = omit(rawData, [
-				'image_install'
-			])
-
-			device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
-				service_containers.map (container) ->
-					omit(container, 'service_name')
-				.sort (a, b) ->
-					b.install_date.localeCompare(a.install_date)
-
-			return device
+			mergePineOptions(getCurrentServiceDetailsPineOptions(), options)
+		.then(generateCurrentServiceDetails)
 		.asCallback(callback)
 
 	###*
