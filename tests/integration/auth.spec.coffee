@@ -34,13 +34,7 @@ describe 'SDK authentication', ->
 				resin.auth.authenticate(credentials)
 				.then(resin.auth.loginWithToken)
 				.then ->
-					return resin.request.send
-						method: 'POST'
-						url: '/api-key/user/full'
-						baseUrl: sdkOpts.apiUrl
-						body:
-							name: 'apiKey'
- 				.get('body')
+					resin.auth.createApiKey('apiKey')
 				.tap(resin.auth.logout)
 				.then(resin.auth.loginWithToken)
 				.then(resin.auth.getToken)

@@ -21,7 +21,6 @@ getAuth = (deps, opts) ->
 	{ auth, request} = deps
 	{ apiUrl } = opts
 	twoFactor = require('./2fa')(deps, opts)
-
 	exports = {}
 
 	###*
@@ -213,6 +212,43 @@ getAuth = (deps, opts) ->
 		getUserDetails()
 		.return(true)
 		.catchReturn(false)
+		.asCallback(callback)
+
+	###*
+	# @summary Creates a new user API key
+	# @name createApiKey
+	# @public
+	# @function
+	# @memberof resin.auth
+	#
+	# @description This method registers a new api key for the current user with the name given.
+	#
+	# @param {String} name - the API key name
+	#
+	# @fulfil {String} - API key
+	# @returns {Promise}
+	#
+	# @example
+	# resin.auth.createApiKey(apiKeyName).then(function(apiKey) {
+	# 	console.log(apiKey);
+	# });
+	#
+	# @example
+	# resin.auth.createApiKey(apiKeyName, function(error, apiKey) {
+	# 	if (error) throw error;
+	# 	console.log(apiKey);
+	# });
+	###
+	exports.createApiKey = (name, callback) ->
+		request.send
+			method: 'POST'
+			url: '/api-key/user/full'
+			baseUrl: apiUrl
+			body:
+				name: name
+		.get('body')
+		.catch ->
+			throw new errors.ResinNotLoggedIn()
 		.asCallback(callback)
 
 	###*
