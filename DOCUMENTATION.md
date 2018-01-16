@@ -24,6 +24,7 @@ If you feel something is missing, not clear or could be improved, please don't h
                 * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
             * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
             * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
+            * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
@@ -260,6 +261,7 @@ resin.models.device.get(123).catch(function (error) {
             * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
         * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
         * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
+        * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
@@ -373,6 +375,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
     * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
     * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
+    * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
@@ -562,6 +565,44 @@ resin.models.application.get(123).then(function(application) {
 resin.models.application.get('MyApp', function(error, application) {
 	if (error) throw error;
 	console.log(application);
+});
+```
+<a name="resin.models.application.getWithDeviceServiceDetails"></a>
+
+##### application.getWithDeviceServiceDetails(nameOrId, [options]) ⇒ <code>Promise</code>
+This method does not map exactly to the underlying model: it runs a
+larger prebuilt query, and reformats it into an easy to use and
+understand format. If you want more control, or to see the raw model
+directly, use `application.get(uuidOrId, options)` instead.
+
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Get a single application and its deives, along with each device's
+associated services' essential details  
+**Access**: public  
+**Fulfil**: <code>Object</code> - application  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+	if (error) throw error;
+	console.log(device);
 });
 ```
 <a name="resin.models.application.getAppByOwner"></a>
