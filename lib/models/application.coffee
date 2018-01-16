@@ -226,6 +226,8 @@ getApplicationModel = (deps, opts) ->
 		.then (app) ->
 			if app and app.owns__device
 				app.owns__device = app.owns__device.map(generateCurrentServiceDetails)
+
+			return app
 		.asCallback(callback)
 
 
