@@ -25,8 +25,11 @@ size = require('lodash/size')
 errors = require('resin-errors')
 
 {
+	dollarify,
 	isId,
 	findCallback,
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noApplicationForKeyResponse,
@@ -141,6 +144,8 @@ getApplicationModel = (deps, opts) ->
 	exports.get = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
+		console.log('OPTIONS', options)
+
 		Promise.try ->
 			if not nameOrId?
 				throw new errors.ResinApplicationNotFound(nameOrId)
@@ -170,6 +175,59 @@ getApplicationModel = (deps, opts) ->
 				.get(0)
 		.tap(normalizeApplication)
 		.asCallback(callback)
+
+	###*
+	# @summary Get a single application and its deives, along with each device's
+	# associated services' essential details
+	# @name getWithDeviceServiceDetails
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @description
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `application.get(uuidOrId, options)` instead.
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - application
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+	# 	if (error) throw error;
+	# 	console.log(device);
+	# });
+	###
+	exports.getWithDeviceServiceDetails = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		serviceOptions = mergePineOptions
+			expand: [
+				owns__device:
+					dollarify(getCurrentServiceDetailsPineOptions())
+			]
+		, options
+
+		exports.get(nameOrId, serviceOptions)
+		.then (app) ->
+			if app and app.owns__device
+				app.owns__device = app.owns__device.map(generateCurrentServiceDetails)
+		.asCallback(callback)
+
 
 	###*
 	# @summary Get a single application using the appname and owner's username
