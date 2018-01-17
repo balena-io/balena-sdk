@@ -38,11 +38,28 @@ declare namespace ResinSdk {
 
 	interface CurrentService {
 		id: number;
+		image_id: number;
 		service_id: number;
 		commit: string;
 		download_progress: number;
 		install_date: string;
 		status: string;
+	}
+
+	interface CurrentGatewayDownload {
+		id: number;
+		image_id: number;
+		service_id: number;
+		download_progress: number;
+		status: string;
+	}
+
+	interface DeviceWithServiceDetails extends Device {
+		current_services: {
+			[serviceName: string]: CurrentService[];
+		};
+
+		current_gateway_downloads: CurrentGatewayDownload[];
 	}
 
 	interface GaConfig {
@@ -538,13 +555,7 @@ declare namespace ResinSdk {
 					options?: PineOptionsFor<Application>,
 				): Promise<
 					Application & {
-						owns__device: Array<
-							Device & {
-								current_services: {
-									[serviceName: string]: CurrentService[];
-								};
-							}
-						>;
+						owns__device: DeviceWithServiceDetails[];
 					}
 				>;
 				getAppByOwner(appName: string, owner: string, options?: PineOptionsFor<Application>): Promise<Application>;
@@ -607,13 +618,7 @@ declare namespace ResinSdk {
 				getWithServiceDetails(
 					nameOrId: string | number,
 					options?: PineOptionsFor<Device>,
-				): Promise<
-					Device & {
-						current_services: {
-							[serviceName: string]: CurrentService[];
-						};
-					}
-				>;
+				): Promise<DeviceWithServiceDetails>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByParentDevice(parentUuidOrId: string | number, options?: PineOptionsFor<Device>): Promise<Device[]>;
