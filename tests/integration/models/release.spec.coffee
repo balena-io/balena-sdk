@@ -94,7 +94,6 @@ describe 'Release Model', ->
 							{ service_name: 'web' }
 						]
 						user:
-							id: credentials.userId
 							username: credentials.username
 
 					m.chai.expect(release.images[0].build_log).to.be.undefined
