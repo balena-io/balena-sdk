@@ -254,30 +254,58 @@ exports.getCurrentServiceDetailsPineOptions = ->
 							$select: ['id', 'service_name']
 				is_provided_by__release:
 					$select: ['id', 'commit']
+		gateway_download:
+			$select: [
+				'id'
+				'download_progress'
+				'status'
+			]
+			$filter:
+				# We filter out deleted gateway downloads entirely
+				$ne:
+					[
+						$tolower: $: 'status'
+						'deleted'
+					]
+			$expand:
+				image:
+					$select: ['id']
+					$expand:
+						is_a_build_of__service:
+							$select: ['id', 'service_name']
+
+# Builds summary data for an image install or gateway download
+getSingleInstallSummary = (rawData) ->
+	image = rawData.image[0]
+	service = image.is_a_build_of__service[0]
+
+	# ? because gateway downloads don't have releases
+	release = rawData.is_provided_by__release?[0]
+
+	return Object.assign {}, omit(rawData, ['image', 'is_provided_by__release']),
+		service_name: service.service_name
+		image_id: image.id
+		service_id: service.id
+		commit: release?.commit
 
 # Converts raw service data into a more usable structure and attaches it to the
 # device object under the `current_services` key
 exports.generateCurrentServiceDetails = (rawData) ->
-	containers = rawData.image_install.map (install) ->
-		release = install.is_provided_by__release[0]
-		image = install.image[0]
-		service = image.is_a_build_of__service[0]
-
-		return Object.assign {}, omit(install, 'image'),
-			service_name: service.service_name
-			image_id: image.id
-			service_id: service.id
-			commit: release.commit
+	installs = rawData.image_install.map(getSingleInstallSummary)
+	downloads = rawData.gateway_download.map(getSingleInstallSummary)
 
 	# Strip expanded fields (we reformat and re-add them below)
 	device = omit(rawData, [
 		'image_install'
+		'gateway_download'
 	])
 
-	device.current_services = mapValues groupBy(containers, 'service_name'), (service_containers) ->
+	device.current_services = mapValues groupBy(installs, 'service_name'), (service_containers) ->
 		service_containers.map (container) ->
 			omit(container, 'service_name')
 		.sort (a, b) ->
 			b.install_date.localeCompare(a.install_date)
+
+	device.current_gateway_downloads = downloads
 
 	return device

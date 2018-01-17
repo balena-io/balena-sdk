@@ -840,8 +840,40 @@ describe 'Device Model', ->
 								status: 'running'
 								download_progress: 100
 							]
-					# Should filter out deleted image install
+
+					# Should filter out deleted image installs
 					m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1)
+
+					# Should have an empty list of gateway downloads
+					m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0)
+
+			it 'should return gateway downloads, if available', ->
+				Promise.all [
+					resin.pine.post
+						resource: 'gateway_download'
+						body:
+							image: @newWebImage.id
+							status: 'downloading'
+							is_downloaded_by__device: @device.id
+							download_progress: 50
+				,
+					resin.pine.post
+						resource: 'gateway_download'
+						body:
+							image: @oldWebImage.id
+							status: 'deleted'
+							is_downloaded_by__device: @device.id
+							download_progress: 100
+				]
+				.then =>
+					resin.models.device.getWithServiceDetails(@device.id)
+				.then (deviceDetails) =>
+					m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1)
+					m.chai.expect(deviceDetails.current_gateway_downloads[0]).to.deep.match
+						service_id: @webService.id
+						image_id: @newWebImage.id
+						status: 'downloading'
+						download_progress: 50
 
 			it 'should allow options to change the device fields returned', ->
 				resin.models.device.getWithServiceDetails @device.id,
