@@ -259,6 +259,10 @@ declare namespace ResinSdk {
 		status: ReleaseStatus;
 		update_timestamp: string | null;
 
+		contains__image: null | Array<{
+			id: number;
+			image: NavigationResource<Image>;
+		}>;
 		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
 	}
@@ -416,6 +420,7 @@ declare namespace ResinSdk {
 	interface Image {
 		id: number;
 		build_log: string;
+		is_a_build_of__service: ReverseNavigationResource<Service>;
 	}
 
 	interface LogMessage {
