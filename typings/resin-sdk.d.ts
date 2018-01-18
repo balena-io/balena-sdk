@@ -421,6 +421,9 @@ declare namespace ResinSdk {
 		id: number;
 		build_log: string;
 		is_a_build_of__service: ReverseNavigationResource<Service>;
+                start_timestamp?: number | null;
+                end_timestamp?: number | null;
+                image_size?: number | null;
 	}
 
 	interface LogMessage {
