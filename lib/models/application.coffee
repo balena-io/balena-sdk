@@ -249,7 +249,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (nameOrId, callback) ->
-		exports.get(nameOrId, select: []).return(true)
+		exports.get(nameOrId, select: ['id']).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -276,7 +276,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.hasAny = (callback) ->
-		exports.getAll(select: []).then (applications) ->
+		exports.getAll(select: ['id']).then (applications) ->
 			return not isEmpty(applications)
 		.asCallback(callback)
 
