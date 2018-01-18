@@ -629,6 +629,9 @@ declare namespace ResinSdk {
 
 interface SdkOptions {
 	apiUrl?: string;
+	/**
+	 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
+	 */
 	apiKey?: string;
 	imageMakerUrl?: string;
 	dataDirectory?: string;
