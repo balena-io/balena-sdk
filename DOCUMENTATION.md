@@ -140,6 +140,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
         * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
         * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
+        * [.createApiKey(name)](#resin.auth.createApiKey) ⇒ <code>Promise</code>
         * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
         * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
         * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
@@ -3340,6 +3341,7 @@ resin.models.billing.downloadInvoice('0000').then(function(stream) {
     * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
     * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
     * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
+    * [.createApiKey(name)](#resin.auth.createApiKey) ⇒ <code>Promise</code>
     * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
     * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
     * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
@@ -3566,6 +3568,33 @@ resin.auth.isLoggedIn(function(error, isLoggedIn) {
 	} else {
 		console.log('Too bad!');
 	}
+});
+```
+<a name="resin.auth.createApiKey"></a>
+
+#### auth.createApiKey(name) ⇒ <code>Promise</code>
+This method registers a new api key for the current user with the name given.
+
+**Kind**: static method of <code>[auth](#resin.auth)</code>  
+**Summary**: Creates a new user API key  
+**Access**: public  
+**Fulfil**: <code>String</code> - API key  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | the API key name |
+
+**Example**  
+```js
+resin.auth.createApiKey(apiKeyName).then(function(apiKey) {
+	console.log(apiKey);
+});
+```
+**Example**  
+```js
+resin.auth.createApiKey(apiKeyName, function(error, apiKey) {
+	if (error) throw error;
+	console.log(apiKey);
 });
 ```
 <a name="resin.auth.getToken"></a>
