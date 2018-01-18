@@ -421,8 +421,8 @@ declare namespace ResinSdk {
 		id: number;
 		build_log: string;
 		is_a_build_of__service: ReverseNavigationResource<Service>;
-                start_timestamp?: number | null;
-                end_timestamp?: number | null;
+                start_timestamp?: string | null;
+                end_timestamp?: string | null;
                 image_size?: number | null;
 	}
 
