@@ -101,6 +101,7 @@
     "resin-pine": "^6.0.0",
     "resin-register-device": "^5.0.0",
     "resin-request": "^9.0.0",
+    "resin-semver": "^1.2.1",
     "resin-settings-client": "^3.5.2",
     "semver": "^5.3.0"
   },
