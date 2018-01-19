@@ -3657,10 +3657,11 @@ Resin.io supervisor can combine lines sent in a short time interval
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - history lines  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| [options] | <code>Object</code> | any options supported by https://www.pubnub.com/docs/nodejs-javascript/api-reference#history |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.count] | <code>Number</code> | <code>100</code> | Number of requests to return |
 
 **Example**  
 ```js

@@ -134,8 +134,9 @@ getLogs = (deps, opts) ->
 	# Resin.io supervisor can combine lines sent in a short time interval
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {Object} [options] - any options supported by
-	# https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
+
+	# @param {Object} [options] - options
+	# @param {Number} [options.count=100] - Number of requests to return
 	# @fulfil {Object[]} - history lines
 	# @returns {Promise}
 	#
@@ -162,13 +163,13 @@ getLogs = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.history = (uuidOrId, options, callback) ->
+	exports.history = (uuidOrId, { count }, callback) ->
 		if typeof options == 'function'
 			callback = options
 			options = undefined
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
-			return logs.history(pubNubKeys, device, options)
+			return logs.history(pubNubKeys, device, { count })
 		.asCallback(callback)
 
 	return exports
