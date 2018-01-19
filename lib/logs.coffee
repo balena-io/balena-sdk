@@ -15,10 +15,24 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
-logs = require('resin-device-logs')
+find = require('lodash/find')
+flatMap = require('lodash/flatMap')
+max = require('lodash/max')
+pubnubLogs = require('resin-device-logs')
+rSemver = require('resin-semver')
 errors = require('resin-errors')
+moment = require('moment')
+{ EventEmitter } = require('events')
+
+{ findCallback } = require('./util')
+
+API_LOGS_SUPERVISOR_VERSION_RANGE = '>=7.0.0'
+LOGGING_OVERRIDE_VAR = 'RESIN_SUPERVISOR_NATIVE_LOGGER'
+
+API_POLL_INTERVAL = 1000
 
 getLogs = (deps, opts) ->
+	{ pine } = deps
 	configModel = require('./models/config')(deps, opts)
 	deviceModel = require('./models/device')(deps, opts)
 
@@ -26,8 +40,128 @@ getLogs = (deps, opts) ->
 
 	getContext = (uuidOrId) ->
 		return Promise.props
-			device: deviceModel.get(uuidOrId)
+			device: deviceModel.get uuidOrId,
+				expand:
+					# Get only the most recent device log
+					owns__device_log:
+						$top: '1'
+						$select: 'device_timestamp'
+						$orderby: 'device_timestamp desc'
+					image_install:
+						$select: 'id'
+						$expand:
+							# Get only the most recent image install log
+							owns__image_install_log:
+								$top: '1'
+								$select: 'device_timestamp'
+								$orderby: 'device_timestamp desc'
+					device_config_variable: {}
+					belongs_to__application:
+						$select: 'id'
+						$expand:
+							application_config_variable: {}
+
 			pubNubKeys: configModel.getPubNubKeys()
+
+	usesApiLogs = Promise.method (device) ->
+		# If don't know the supervisor, assume it's a new one to start with
+		hasNewSupervisor = !device.supervisor_version or rSemver.satisfies(
+			device.supervisor_version,
+			API_LOGS_SUPERVISOR_VERSION_RANGE
+		)
+
+		if !hasNewSupervisor
+			return false
+
+		deviceVar = find(device.device_config_variable, { name: LOGGING_OVERRIDE_VAR })
+		appVar = find(device.belongs_to__application[0].application_config_variable, { name: LOGGING_OVERRIDE_VAR })
+
+		if deviceVar
+			return deviceVar.value != 'false'
+		else if appVar
+			return appVar.value != 'false'
+		else
+			return true
+
+	getLogsFromApi = Promise.method (device, { fromTime, count } = {}) ->
+		logOptions = Object.assign {
+			$orderby: 'device_timestamp desc'
+		},
+		if fromTime? then {
+			$filter:
+				$gt: [
+					$: 'device_timestamp'
+					moment(fromTime).toISOString()
+				]
+		} else {},
+		if count? then {
+			$top: String(count)
+		}
+
+		return deviceModel.get device.id,
+			select: 'id'
+			expand:
+				owns__device_log: logOptions
+				image_install:
+					$select: 'id'
+					$expand:
+						owns__image_install_log: logOptions
+						image:
+							$select: 'id'
+							$expand:
+								is_a_build_of__service:
+									$select: 'id'
+
+		.then (device) ->
+			# Have to order desc and reverse so we can use $top
+			# (there is no $bottom, sadly)
+			deviceLogs = device.owns__device_log.reverse()
+			imageInstallLogs = flatMap(device.image_install, (install) ->
+				serviceId = install.image[0].is_a_build_of__service[0].id
+
+				install.owns__image_install_log.reverse().map (logMessage) ->
+					message: logMessage.message
+					isSystem: logMessage.is_system
+					timestamp: moment(logMessage.device_timestamp).valueOf()
+					serviceId: serviceId
+			)
+
+			return deviceLogs.map (logMessage) ->
+				message: logMessage.message
+				isSystem: logMessage.is_system
+				timestamp: moment(logMessage.device_timestamp).valueOf()
+				serviceId: null
+			.concat(imageInstallLogs)
+			.sort (a, b) ->
+				a.timestamp - b.timestamp
+
+	subscribeToApiLogs = Promise.method (device) ->
+		emitter = new EventEmitter()
+
+		latestLogTime = max device.owns__device_log.concat(
+			flatMap device.image_install,
+				(install) -> install.owns__image_install_log
+		).map (log) ->
+			moment(log.device_timestamp).valueOf()
+
+		intervalId = setInterval ->
+			getLogsFromApi(device, { fromTime: latestLogTime || null })
+			.then (logs) ->
+				if !intervalId?
+					# This means we unsubscribed while waiting for the API
+					return
+
+				logs.forEach (log) ->
+					emitter.emit('line', log)
+			.catch (e) ->
+				emitter.emit('error', e)
+		, API_POLL_INTERVAL
+
+		emitter.unsubscribe = ->
+			clearInterval(intervalId)
+			intervalId = null
+
+		return emitter
 
 	###*
 	# @typedef LogSubscription
@@ -117,7 +251,10 @@ getLogs = (deps, opts) ->
 	exports.subscribe = (uuidOrId, callback) ->
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
-			return logs.subscribe(pubNubKeys, device)
+			if usesApiLogs(device)
+				subscribeToApiLogs(device)
+			else
+				pubnubLogs.subscribe(pubNubKeys, device)
 		.asCallback(callback)
 
 	###*
@@ -163,14 +300,15 @@ getLogs = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.history = (uuidOrId, options, callback) ->
-		if typeof options == 'function'
-			callback = options
-			options = undefined
+	exports.history = (uuidOrId, { count } = {}, callback) ->
+		callback = findCallback(arguments)
 
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
-			return logs.history(pubNubKeys, device, options)
+			if usesApiLogs(device)
+				getLogsFromApi(device, { count })
+			else
+				pubnubLogs.history(pubNubKeys, device, { count })
 		.asCallback(callback)
 
 	return exports
