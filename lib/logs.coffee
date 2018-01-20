@@ -151,6 +151,9 @@ getLogs = (deps, opts) ->
 					# This means we unsubscribed while waiting for the API
 					return
 
+				if logs.length
+					latestLogTime = logs[logs.length - 1].timestamp
+
 				logs.forEach (log) ->
 					emitter.emit('line', log)
 			.catch (e) ->
