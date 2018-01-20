@@ -63,7 +63,7 @@ getLogs = (deps, opts) ->
 
 			pubNubKeys: configModel.getPubNubKeys()
 
-	usesApiLogs = Promise.method (device) ->
+	usesApiLogs = (device) ->
 		# If don't know the supervisor, assume it's a new one to start with
 		hasNewSupervisor = !device.supervisor_version or rSemver.satisfies(
 			device.supervisor_version,
