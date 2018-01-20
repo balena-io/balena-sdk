@@ -22,8 +22,8 @@ createContainerLog = (message, imageInstall, deviceKey, options = {}) ->
 		body: Object.assign
 			belongs_to__image_install: imageInstall.id
 			device_timestamp: Date.now()
-			stderr: false
-			system: false
+			is_stderr: false
+			is_system: false
 			message: 'hi!'
 		, options, { message }
 		passthrough:
@@ -90,7 +90,9 @@ describe 'Logs', ->
 			beforeEach ->
 				createLog('Test message 1', @device, @deviceKey)
 				.then =>
-					createLog('Test message 2', @device, @deviceKey)
+					createLog 'Test message 2', @device, @deviceKey,
+						is_system: true
+						is_stderr: true
 
 			describe '.history', ->
 
@@ -99,8 +101,12 @@ describe 'Logs', ->
 					.then (history) ->
 						m.chai.expect(history).to.deep.match([
 							message: 'Test message 1'
+							isSystem: false
+							isStdErr: false
 						,
 							message: 'Test message 2'
+							isSystem: true
+							isStdErr: true
 						])
 
 				it 'should limit the logs by the count given', ->

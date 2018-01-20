@@ -119,21 +119,22 @@ getLogs = (deps, opts) ->
 			imageInstallLogs = flatMap(device.image_install, (install) ->
 				serviceId = install.image[0].is_a_build_of__service[0].id
 
-				install.owns__image_install_log.reverse().map (logMessage) ->
-					message: logMessage.message
-					isSystem: logMessage.is_system
-					timestamp: moment(logMessage.device_timestamp).valueOf()
-					serviceId: serviceId
+				install.owns__image_install_log.reverse().map (msg) ->
+					formatLogMessage(msg, serviceId)
 			)
 
-			return deviceLogs.map (logMessage) ->
-				message: logMessage.message
-				isSystem: logMessage.is_system
-				timestamp: moment(logMessage.device_timestamp).valueOf()
-				serviceId: null
+			return deviceLogs.map (msg) ->
+				formatLogMessage(msg, null)
 			.concat(imageInstallLogs)
 			.sort (a, b) ->
 				a.timestamp - b.timestamp
+
+	formatLogMessage = (logMessage, serviceId) ->
+		message: logMessage.message
+		isSystem: logMessage.is_system
+		isStdErr: logMessage.is_stderr
+		timestamp: moment(logMessage.device_timestamp).valueOf()
+		serviceId: serviceId
 
 	subscribeToApiLogs = Promise.method (device) ->
 		emitter = new EventEmitter()
