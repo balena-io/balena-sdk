@@ -62,15 +62,26 @@ describe 'Logs', ->
 				it 'should emit new messages', ->
 					resin.logs.subscribe(@device.uuid)
 					.then (subscription) =>
-						new Promise (resolve, reject) =>
-							subscription.on('line', resolve)
-							subscription.on('error', reject)
+						messages = []
 
-							createLog('New message', @device, @deviceKey)
-						.timeout(2000)
-						.then (logMessage) ->
-							m.chai.expect(logMessage).to.deep.match
-								message: 'New message'
+						subscription.on('line', (msg) -> messages.push(msg))
+
+						createLog('Message 1', @device, @deviceKey)
+						.delay(1500)
+						.then =>
+							m.chai.expect(messages).to.have.lengthOf(1)
+							m.chai.expect(messages).to.deep.match [
+								message: 'Message 1'
+							]
+							createLog('Message 2', @device, @deviceKey)
+						.delay(1500)
+						.then ->
+							m.chai.expect(messages).to.have.lengthOf(2)
+							m.chai.expect(messages).to.deep.match [
+								message: 'Message 1'
+							,
+								message: 'Message 2'
+							]
 						.finally ->
 							subscription.unsubscribe()
 
