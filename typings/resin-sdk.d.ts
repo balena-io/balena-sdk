@@ -430,6 +430,7 @@ declare namespace ResinSdk {
 	interface LogMessage {
 		message: string;
 		isSystem: boolean;
+		isStdErr: boolean | null;
 		timestamp: number | null;
 		serviceId: number | null;
 	}
