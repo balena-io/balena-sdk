@@ -163,13 +163,14 @@ getLogs = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.history = (uuidOrId, { count }, callback) ->
+	exports.history = (uuidOrId, options, callback) ->
 		if typeof options == 'function'
 			callback = options
 			options = undefined
+
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
-			return logs.history(pubNubKeys, device, { count })
+			return logs.history(pubNubKeys, device, options)
 		.asCallback(callback)
 
 	return exports
