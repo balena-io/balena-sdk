@@ -424,6 +424,7 @@ declare namespace ResinSdk {
 		start_timestamp?: string | null;
 		end_timestamp?: string | null;
 		image_size?: number | null;
+		dockerfile: string;
 	}
 
 	interface LogMessage {
