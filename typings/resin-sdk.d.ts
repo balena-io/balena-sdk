@@ -699,8 +699,8 @@ declare namespace ResinSdk {
 				getDeviceOptions(deviceType: string): Promise<Array<DeviceTypeOptions | DeviceInitializationOptions>>;
 			};
 			image: {
-				get(id: string, options?: PineOptionsFor<Image>): Promise<Image>;
-				getLogs(id: string): Promise<string>;
+				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;
+				getLogs(id: number): Promise<string>;
 			};
 			key: {
 				getAll(options?: PineOptionsFor<SSHKey>): Promise<SSHKey[]>;
