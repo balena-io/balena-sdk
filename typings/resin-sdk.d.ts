@@ -700,6 +700,10 @@ declare namespace ResinSdk {
 				getDeviceTypes: () => Promise<DeviceType[]>;
 				getDeviceOptions(deviceType: string): Promise<Array<DeviceTypeOptions | DeviceInitializationOptions>>;
 			};
+			image: {
+				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;
+				getLogs(id: number): Promise<string>;
+			};
 			key: {
 				getAll(options?: PineOptionsFor<SSHKey>): Promise<SSHKey[]>;
 				get(id: string | number): Promise<SSHKey>;
