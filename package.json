@@ -95,7 +95,7 @@
     "moment": "^2.18.1",
     "promise-memoize": "^1.2.0",
     "resin-auth": "^2.0.0",
-    "resin-device-logs": "^3.1.0",
+    "resin-device-logs": "^3.2.1",
 		"resin-device-status": "^1.0.1",
     "resin-errors": "^2.12.0",
     "resin-pine": "^6.0.0",
