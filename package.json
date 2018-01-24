@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "8.2.0",
+  "version": "9.0.0-beta3",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "types": "typings/resin-sdk.d.ts",
