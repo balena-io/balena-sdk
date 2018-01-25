@@ -4696,9 +4696,9 @@ resin-pine@^6.0.0:
     pinejs-client "^3.1.0"
     resin-errors "^2.0.0"
 
-resin-register-device@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/resin-register-device/-/resin-register-device-4.0.1.tgz#1863adf7c994ec5d256af34614a6ae88ede3f5f6"
+resin-register-device@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/resin-register-device/-/resin-register-device-5.0.0.tgz#8214a201dbace6b5d9acaa76ec9185f1b8319a18"
   dependencies:
     bluebird "^3.0.0"
     randomstring "^1.1.5"
