@@ -32,7 +32,6 @@ LOGGING_OVERRIDE_VAR = 'RESIN_SUPERVISOR_NATIVE_LOGGER'
 API_POLL_INTERVAL = 1000
 
 getLogs = (deps, opts) ->
-	{ pine } = deps
 	configModel = require('./models/config')(deps, opts)
 	deviceModel = require('./models/device')(deps, opts)
 
@@ -55,11 +54,13 @@ getLogs = (deps, opts) ->
 								$top: '1'
 								$select: 'device_timestamp'
 								$orderby: 'device_timestamp desc'
-					device_config_variable: {}
+					device_config_variable:
+						$select: ['name', 'value']
 					belongs_to__application:
 						$select: 'id'
 						$expand:
-							application_config_variable: {}
+							application_config_variable:
+								$select: ['name', 'value']
 
 			pubNubKeys: configModel.getPubNubKeys()
 
@@ -85,6 +86,12 @@ getLogs = (deps, opts) ->
 
 	getLogsFromApi = Promise.method (device, { fromTime, count } = {}) ->
 		logOptions = Object.assign {
+			$select: [
+				'message'
+				'is_system'
+				'is_stderr'
+				'device_timestamp'
+			]
 			$orderby: 'device_timestamp desc'
 		},
 		if fromTime? then {
@@ -93,7 +100,7 @@ getLogs = (deps, opts) ->
 					$: 'device_timestamp'
 					moment(fromTime).toISOString()
 				]
-		} else {},
+		},
 		if count? then {
 			$top: String(count)
 		}
@@ -115,7 +122,9 @@ getLogs = (deps, opts) ->
 		.then (device) ->
 			# Have to order desc and reverse so we can use $top
 			# (there is no $bottom, sadly)
-			deviceLogs = device.owns__device_log.reverse()
+			deviceLogs = device.owns__device_log.reverse().map (msg) ->
+				formatLogMessage(msg, null)
+
 			imageInstallLogs = flatMap(device.image_install, (install) ->
 				serviceId = install.image[0].is_a_build_of__service[0].id
 
@@ -123,8 +132,7 @@ getLogs = (deps, opts) ->
 					formatLogMessage(msg, serviceId)
 			)
 
-			return deviceLogs.map (msg) ->
-				formatLogMessage(msg, null)
+			return deviceLogs
 			.concat(imageInstallLogs)
 			.sort (a, b) ->
 				a.timestamp - b.timestamp
