@@ -1,7 +1,7 @@
 errors = require('resin-errors')
 semver = require('semver')
+assign = require('lodash/assign')
 cloneDeep = require('lodash/cloneDeep')
-fromPairs = require('lodash/fromPairs')
 includes = require('lodash/includes')
 isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
@@ -187,7 +187,10 @@ convertExpandToObject = (expandOption) ->
 	else if isString(expandOption)
 		return "#{expandOption}": {}
 	else if isArray(expandOption)
-		return fromPairs(expandOption.map((key) -> [key, {}]))
+		# Reduce the array into a single object
+		return expandOption.reduce (result, option) ->
+			assign(result, if isString(option) then { "#{option}": {} } else option)
+		, {}
 	else
 		# Check the options in this object are the ones we know how to merge
 		for own expandKey, expandRelationshipOptions of expandOption
