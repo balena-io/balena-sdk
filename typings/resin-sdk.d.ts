@@ -420,7 +420,7 @@ declare namespace ResinSdk {
 	interface Image {
 		id: number;
 		build_log: string;
-		is_a_build_of__service: ReverseNavigationResource<Service>;
+		is_a_build_of__service: NavigationResource<Service>;
 		start_timestamp?: string | null;
 		end_timestamp?: string | null;
 		image_size?: number | null;
