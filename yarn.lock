@@ -14,13 +14,31 @@
   version "3.5.19"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.19.tgz#1a47308819ac2d1d6d1ca4f5d800ac84924100de"
 
+"@types/chai@^4.0.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.1.tgz#15f1257fab17b7acb9c413f9f88d3d87f834d11e"
+
 "@types/jwt-decode@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@types/jwt-decode/-/jwt-decode-2.2.1.tgz#afdf5c527fcfccbd4009b5fd02d1e18241f2d2f2"
 
+"@types/lodash.memoize@^4.1.2":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@types/lodash.memoize/-/lodash.memoize-4.1.3.tgz#7d3cd9cb9cd87085c9ee8a1679991180e6dae3cc"
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.93"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.93.tgz#a6d2a1e1601a3c29196f38ef1990b68a9afa1e1c"
+
 "@types/lodash@^4.14.85":
   version "4.14.85"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.85.tgz#a16fbf942422f6eca5622b6910492c496c35069b"
+
+"@types/mocha@^2.2.41":
+  version "2.2.46"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.46.tgz#b04713f7759d1cf752effdaae7b3969e285ebc16"
 
 "@types/node@^8.0.19":
   version "8.5.5"
@@ -29,6 +47,10 @@
 "@types/node@^8.0.53":
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
+
+"@types/semver@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-5.4.0.tgz#f3658535af7f1f502acd6da7daf405ffeb1f7ee4"
 
 JSONStream@^1.0.3:
   version "1.3.1"
@@ -3374,6 +3396,10 @@ lodash.mapvalues@^4.4.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
 
+lodash.memoize@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
+
 lodash.memoize@~3.0.3:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-3.0.4.tgz#2dcbd2c287cbc0a55cc42328bd0c736150d53e3f"
@@ -4713,6 +4739,17 @@ resin-request@^9.0.0:
     qs "^6.3.0"
     resin-errors "^2.7.0"
     rindle "^1.3.1"
+
+resin-semver@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/resin-semver/-/resin-semver-1.2.1.tgz#aed5a975e9bd13bd7c33f9006197e5c9c1470f5a"
+  dependencies:
+    "@types/chai" "^4.0.1"
+    "@types/lodash.memoize" "^4.1.2"
+    "@types/mocha" "^2.2.41"
+    "@types/semver" "^5.4.0"
+    lodash.memoize "^4.1.2"
+    semver "^5.3.0"
 
 resin-settings-client@^3.5.2:
   version "3.5.2"
