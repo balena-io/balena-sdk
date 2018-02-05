@@ -430,6 +430,7 @@ declare namespace ResinSdk {
 
 	interface ResinSDK {
 		auth: {
+			createApiKey: (name: string) => Promise<string>;
 			register: (credentials: { email: string; password: string }) => Promise<string>;
 			authenticate: (credentials: { email: string; password: string }) => Promise<string>;
 			login: (credentials: { email: string; password: string }) => Promise<void>;
@@ -440,6 +441,7 @@ declare namespace ResinSdk {
 			isLoggedIn: () => Promise<boolean>;
 			getUserId: () => Promise<number>;
 			getEmail: () => Promise<string>;
+
 			twoFactor: {
 				isEnabled: () => Promise<boolean>;
 				isPassed: () => Promise<boolean>;
