@@ -55,6 +55,12 @@ modelsTemplate =
 	release: require('./release')
 
 	###*
+	# @namespace service
+	# @memberof resin.models
+	###
+	service: require('./service')
+
+	###*
 	# @namespace image
 	# @memberof resin.models
 	###
