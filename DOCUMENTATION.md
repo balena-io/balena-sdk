@@ -114,6 +114,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
             * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+        * [.service](#resin.models.service) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
         * [.image](#resin.models.image) : <code>object</code>
             * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
             * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
@@ -351,6 +353,8 @@ resin.models.device.get(123).catch(function (error) {
         * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
         * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+    * [.service](#resin.models.service) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
     * [.image](#resin.models.image) : <code>object</code>
         * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
         * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
@@ -2995,6 +2999,42 @@ resin.models.release.getAllByApplication(123).then(function(releases) {
 resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
 		console.log(releases);
+});
+```
+<a name="resin.models.service"></a>
+
+#### models.service : <code>object</code>
+**Kind**: static namespace of <code>[models](#resin.models)</code>  
+<a name="resin.models.service.getAllByApplication"></a>
+
+##### service.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[service](#resin.models.service)</code>  
+**Summary**: Get all services from an application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - services  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.service.getAllByApplication('MyApp').then(function(services) {
+		console.log(services);
+});
+```
+**Example**  
+```js
+resin.models.service.getAllByApplication(123).then(function(services) {
+		console.log(services);
+});
+```
+**Example**  
+```js
+resin.models.service.getAllByApplication('MyApp', function(error, services) {
+		if (error) throw error;
+		console.log(services);
 });
 ```
 <a name="resin.models.image"></a>
