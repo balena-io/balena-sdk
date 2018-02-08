@@ -686,6 +686,9 @@ declare namespace ResinSdk {
 					remove(uuidOrId: string | number, tagKey: string): Promise<void>;
 				};
 			};
+			service: {
+				getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<Service>): Promise<Service[]>;
+			};
 			config: {
 				getAll: () => Promise<Config>;
 				getDeviceTypes: () => Promise<DeviceType[]>;
