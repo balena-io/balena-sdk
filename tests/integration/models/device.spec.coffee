@@ -191,6 +191,7 @@ describe 'Device Model', ->
 
 				uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(application.app_name, uuid)
+				.delay(100)
 				.then (deviceInfo) ->
 					resin.models.device.get(deviceInfo.uuid)
 				.then (device) =>
@@ -257,6 +258,7 @@ describe 'Device Model', ->
 							is_managed_by__device: @device.id
 				.then (device) =>
 					@childDevice = device
+				.delay(100)
 
 			it 'should get the device given the right parent uuid', ->
 				resin.models.device.getAllByParentDevice(@device.uuid).then (childDevices) =>
@@ -805,6 +807,7 @@ describe 'Device Model', ->
 				resin.models.device.register(application.app_name, uuid)
 			.then (deviceInfo) =>
 				@deviceInfo = deviceInfo
+			.delay(100)
 
 		describe 'resin.models.device.get()', ->
 
@@ -830,6 +833,7 @@ describe 'Device Model', ->
 					resin.models.device.register(application.app_name, uuid1)
 					resin.models.device.register(application.app_name, uuid2)
 				]
+				.delay(100)
 
 		describe 'resin.models.device.get()', ->
 
@@ -861,6 +865,7 @@ describe 'Device Model', ->
 				resin.models.device.register(results.application1.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
+				.delay(100)
 
 		describe 'resin.models.device.move()', ->
 
@@ -896,6 +901,7 @@ describe 'Device Model', ->
 				resin.models.device.register(results.application1.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
+				.delay(100)
 
 		describe 'resin.models.device.move()', ->
 
