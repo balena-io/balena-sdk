@@ -554,7 +554,14 @@ declare namespace ResinSdk {
 				getDisplayName(deviceTypeName: string): string;
 				getDeviceSlug(deviceTypeName: string): string;
 				generateUniqueKey(): string;
-				register(applicationNameOrId: string | number, uuid?: string): Promise<object>;
+				register(
+					applicationNameOrId: string | number,
+					uuid: string,
+				): Promise<{
+					id: number;
+					uuid: string;
+					api_key: string;
+				}>;
 				generateDeviceKey(uuidOrId: string | number): Promise<string>;
 				enableDeviceUrl(uuidOrId: string | number): Promise<void>;
 				disableDeviceUrl(uuidOrId: string | number): Promise<void>;
