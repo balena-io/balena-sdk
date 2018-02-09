@@ -12,19 +12,15 @@ describe 'Config Model', ->
 				m.chai.expect(_.isPlainObject(config)).to.be.true
 				m.chai.expect(_.isEmpty(config)).to.be.false
 
-	describe 'resin.models.config.getPubNubKeys()', ->
-
-		it 'should become the pubnub keys', ->
-			resin.models.config.getPubNubKeys().then (pubnubKeys) ->
+		it 'should include the pubnub keys', ->
+			resin.models.config.getAll().get('pubnub').then (pubnubKeys) ->
 				m.chai.expect(_.isString(pubnubKeys.publish_key)).to.be.true
 				m.chai.expect(_.isString(pubnubKeys.subscribe_key)).to.be.true
 				m.chai.expect(pubnubKeys.publish_key).to.have.length(42)
 				m.chai.expect(pubnubKeys.subscribe_key).to.have.length(42)
 
-	describe 'resin.models.config.getMixpanelToken()', ->
-
-		it 'should become the mixpanel token', ->
-			resin.models.config.getMixpanelToken().then (mixpanelToken) ->
+		it 'should include the mixpanel token', ->
+			resin.models.config.getAll().get('mixpanelToken').then (mixpanelToken) ->
 				m.chai.expect(_.isString(mixpanelToken)).to.be.true
 				m.chai.expect(mixpanelToken).to.have.length(32)
 
