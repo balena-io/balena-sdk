@@ -432,6 +432,7 @@ declare namespace ResinSdk {
 		isSystem: boolean;
 		isStdErr: boolean | null;
 		timestamp: number | null;
+		createdAt: number | null;
 		serviceId: number | null;
 	}
 
