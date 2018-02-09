@@ -3645,6 +3645,11 @@ resin.auth.register({
 Connects to the stream of devices logs, returning a LogSubscription, which
 can be used to listen for logs as they appear, line by line.
 
+Log order here is not guaranteed to reflect the order they were emitted on the device.
+Use line.timestamp to get the exact timestamp recorded by the device itself, or
+line.createdAt (on modern devices only) to get the time it was received & stored
+in the cloud.
+
 **Kind**: static method of <code>[logs](#resin.logs)</code>  
 **Summary**: Subscribe to device logs  
 **Access**: public  
@@ -3687,6 +3692,13 @@ resin.logs.subscribe('7cf02a6', function(error, logs) {
 <a name="resin.logs.history"></a>
 
 #### logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
+Get an array of the latest log messages for a given device.
+
+Log order here is not guaranteed to reflect the order they were emitted on the device.
+Use line.timestamp to get the exact timestamp recorded by the device itself, or
+line.createdAt (on modern devices only) to get the time it was received & stored
+in the cloud.
+
 **Note**: the default number of logs retrieved is 100.
 To get a different number pass the `{ count: N }` to the options param.
 Also note that the actual number of log lines can be bigger as the
