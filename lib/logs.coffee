@@ -44,16 +44,16 @@ getLogs = (deps, opts) ->
 					# Get only the most recent device log
 					owns__device_log:
 						$top: '1'
-						$select: 'device_timestamp'
-						$orderby: 'device_timestamp desc'
+						$select: 'id'
+						$orderby: 'id desc'
 					image_install:
 						$select: 'id'
 						$expand:
 							# Get only the most recent image install log
 							owns__image_install_log:
 								$top: '1'
-								$select: 'device_timestamp'
-								$orderby: 'device_timestamp desc'
+								$select: 'id'
+								$orderby: 'id desc'
 					device_config_variable:
 						$select: ['name', 'value']
 					belongs_to__application:
@@ -84,35 +84,50 @@ getLogs = (deps, opts) ->
 		else
 			return true
 
-	getLogsFromApi = Promise.method (device, { fromTime, count } = {}) ->
+	getLogsFromApi = Promise.method (device, { count, fromDeviceLogId, fromImageLogId } = {}) ->
 		logOptions = Object.assign {
 			$select: [
+				'id'
 				'message'
 				'is_system'
 				'is_stderr'
+				'created_at'
 				'device_timestamp'
 			]
-			$orderby: 'device_timestamp desc'
-		},
-		if fromTime? then {
-			$filter:
-				$gt: [
-					$: 'device_timestamp'
-					moment(fromTime).toISOString()
-				]
+			# Have to order desc and reverse so we can use $top
+			# (there is no $bottom, sadly)
+			$orderby: 'created_at desc'
 		},
 		if count? then {
 			$top: String(count)
 		}
 
+		deviceLogOptions = Object.assign {}, logOptions,
+		if fromDeviceLogId? then {
+			$filter:
+				$gt: [
+					$: 'id'
+					fromDeviceLogId
+				]
+		}
+
+		imageLogOptions = Object.assign {}, logOptions,
+		if fromImageLogId? then {
+			$filter:
+				$gt: [
+					$: 'id'
+					fromImageLogId
+				]
+		}
+
 		return deviceModel.get device.id,
 			select: 'id'
 			expand:
-				owns__device_log: logOptions
+				owns__device_log: deviceLogOptions
 				image_install:
 					$select: 'id'
 					$expand:
-						owns__image_install_log: logOptions
+						owns__image_install_log: imageLogOptions
 						image:
 							$select: 'id'
 							$expand:
@@ -132,36 +147,47 @@ getLogs = (deps, opts) ->
 					formatLogMessage(msg, serviceId)
 			)
 
-			return deviceLogs
-			.concat(imageInstallLogs)
-			.sort (a, b) ->
-				a.timestamp - b.timestamp
+			return {
+				logs: deviceLogs
+					.concat(imageInstallLogs)
+					.sort (a, b) ->
+						a.createdAt - b.createdAt
+
+				nextLogsParams: getNextLogsParams(device, { fromDeviceLogId, fromImageLogId })
+			}
 
 	formatLogMessage = (logMessage, serviceId) ->
 		message: logMessage.message
 		isSystem: logMessage.is_system
 		isStdErr: logMessage.is_stderr
 		timestamp: moment(logMessage.device_timestamp).valueOf()
+		createdAt: moment(logMessage.created_at).valueOf()
 		serviceId: serviceId
+
+	getNextLogsParams = (deviceWithLogs, existingParams = {}) ->
+		return {
+			fromDeviceLogId: max(deviceWithLogs.owns__device_log.map (log) ->
+				log.id
+			.concat(existingParams.fromDeviceLogId))
+
+			fromImageLogId: max(deviceWithLogs.image_install.map (install) ->
+				max(install.owns__image_install_log.map((log) -> log.id))
+			.concat(existingParams.fromImageLogId))
+		}
 
 	subscribeToApiLogs = Promise.method (device) ->
 		emitter = new EventEmitter()
 
-		latestLogTime = max device.owns__device_log.concat(
-			flatMap device.image_install,
-				(install) -> install.owns__image_install_log
-		).map (log) ->
-			moment(log.device_timestamp).valueOf()
+		logsParams = getNextLogsParams(device)
 
 		intervalId = setInterval ->
-			getLogsFromApi(device, { fromTime: latestLogTime || null })
-			.then (logs) ->
+			getLogsFromApi(device, logsParams)
+			.then ({ logs, nextLogsParams }) ->
 				if !intervalId?
 					# This means we unsubscribed while waiting for the API
 					return
 
-				if logs.length
-					latestLogTime = logs[logs.length - 1].timestamp
+				logsParams = nextLogsParams
 
 				logs.forEach (log) ->
 					emitter.emit('line', log)
@@ -318,7 +344,7 @@ getLogs = (deps, opts) ->
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
 			if usesApiLogs(device)
-				getLogsFromApi(device, { count })
+				getLogsFromApi(device, { count }).get('logs')
 			else
 				pubnubLogs.history(pubNubKeys, device, { count })
 		.asCallback(callback)

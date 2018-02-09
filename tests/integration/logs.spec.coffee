@@ -59,6 +59,8 @@ describe 'Logs', ->
 					.then (history) ->
 						m.chai.expect(history).to.deep.equal([])
 
+			describe '.subscribe', ->
+
 				it 'should emit new messages', ->
 					resin.logs.subscribe(@device.uuid)
 					.then (subscription) =>
