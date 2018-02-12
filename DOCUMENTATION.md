@@ -236,7 +236,7 @@ in the SDK.
 resin.pine.get({
 	resource: 'release/$count',
 	options: {
-		filter: { belongs_to__application: applicationId }
+		$filter: { belongs_to__application: applicationId }
 	}
 });
 ```
