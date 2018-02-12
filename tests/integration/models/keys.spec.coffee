@@ -20,7 +20,7 @@ describe 'Key Model', ->
 			it 'should support arbitrary pinejs options', ->
 				resin.models.key.create('MyKey', PUBLIC_KEY)
 				.then ->
-					resin.models.key.getAll { select: [ 'public_key' ] }
+					resin.models.key.getAll { $select: [ 'public_key' ] }
 				.then (keys) ->
 					key = keys[0]
 					m.chai.expect(key.public_key).to.equal(PUBLIC_KEY)
