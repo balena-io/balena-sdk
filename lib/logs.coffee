@@ -43,7 +43,7 @@ getLogs = (deps, opts) ->
 				$expand:
 					# Get only the most recent device log
 					owns__device_log:
-						$top: '1'
+						$top: 1
 						$select: 'id'
 						$orderby: 'id desc'
 					image_install:
@@ -51,7 +51,7 @@ getLogs = (deps, opts) ->
 						$expand:
 							# Get only the most recent image install log
 							owns__image_install_log:
-								$top: '1'
+								$top: 1
 								$select: 'id'
 								$orderby: 'id desc'
 					device_config_variable:
@@ -99,7 +99,7 @@ getLogs = (deps, opts) ->
 			$orderby: 'created_at desc'
 		},
 		if count? then {
-			$top: String(count)
+			$top: count
 		}
 
 		deviceLogOptions = Object.assign {}, logOptions,
