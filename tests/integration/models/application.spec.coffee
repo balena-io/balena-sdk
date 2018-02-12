@@ -42,7 +42,7 @@ describe 'Application Model', ->
 
 			it 'should be able to create a child application', ->
 				resin.models.application.create('FooBar', 'raspberry-pi').then (parentApplication) ->
-					resin.models.application.create('FooBarChild', 'generic-amd64', parentApplication.id)
+					resin.models.application.create('FooBarChild', 'generic', parentApplication.id)
 				.then ->
 					resin.models.application.getAll()
 				.then ([ parentApplication, childApplication ]) ->
