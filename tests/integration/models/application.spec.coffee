@@ -113,7 +113,7 @@ describe 'Application Model', ->
 					m.chai.expect(applications[0].id).to.equal(@application.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.application.getAll(expand: 'user')
+				resin.models.application.getAll($expand: 'user')
 				.then (applications) ->
 					m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
 
@@ -136,7 +136,7 @@ describe 'Application Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.application.get(@application.id, expand: 'user')
+				resin.models.application.get(@application.id, $expand: 'user')
 				.then (application) ->
 					m.chai.expect(application.user[0].username).to.equal(credentials.username)
 

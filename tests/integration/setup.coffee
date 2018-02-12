@@ -171,7 +171,7 @@ exports.givenMulticontainerApplication = ->
 						body:
 							is_on__commit: newRelease.commit
 						options:
-							filter:
+							$filter:
 								uuid: deviceInfo.uuid
 				.then (deviceInfo) ->
 					resin.models.device.get(deviceInfo.uuid)

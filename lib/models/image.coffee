@@ -55,7 +55,7 @@ getImageModel = (deps, opts) ->
 			resource: 'image'
 			id: id
 			options: mergePineOptions
-				select: [
+				$select: [
 					# Select all the interesting fields *except* build_log
 					# (which can be very large)
 					'id'
@@ -99,7 +99,7 @@ getImageModel = (deps, opts) ->
 	# });
 	###
 	exports.getLogs = (id, callback) ->
-		return exports.get(id, select: 'build_log')
+		return exports.get(id, $select: 'build_log')
 		.get('build_log')
 		.asCallback(callback)
 

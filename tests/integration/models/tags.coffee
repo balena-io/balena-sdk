@@ -83,7 +83,7 @@ exports.itShouldGetAllTags = (opts) ->
 				m.chai.expect(tags[1].value).to.equal('js')
 
 		it 'should retrieve the filtered tag', ->
-			model.getAll(filter: tag_key: 'EDITOR')
+			model.getAll($filter: tag_key: 'EDITOR')
 			.then (tags) ->
 				m.chai.expect(tags).to.have.length(1)
 				m.chai.expect(tags[0].tag_key).to.equal('EDITOR')

@@ -40,7 +40,7 @@ getLogs = (deps, opts) ->
 	getContext = (uuidOrId) ->
 		return Promise.props
 			device: deviceModel.get uuidOrId,
-				expand:
+				$expand:
 					# Get only the most recent device log
 					owns__device_log:
 						$top: '1'
@@ -121,8 +121,8 @@ getLogs = (deps, opts) ->
 		}
 
 		return deviceModel.get device.id,
-			select: 'id'
-			expand:
+			$select: 'id'
+			$expand:
 				owns__device_log: deviceLogOptions
 				image_install:
 					$select: 'id'

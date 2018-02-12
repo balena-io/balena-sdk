@@ -48,7 +48,7 @@ getApplicationModel = (deps, opts) ->
 	tagsModel = once -> require('./tags').tagsModel(
 		deps,
 			associatedResource: 'application'
-			getResourceId: (nameOrId) -> exports.get(nameOrId, select: 'id').get('id')
+			getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
 			ResourceNotFoundError: errors.ResinApplicationNotFound
 	)
 
@@ -61,7 +61,7 @@ getApplicationModel = (deps, opts) ->
 			if isId(nameOrId)
 				return nameOrId
 			else
-				exports.get(nameOrId, select: 'id').get('id')
+				exports.get(nameOrId, $select: 'id').get('id')
 
 	exports._getId = getId
 
@@ -102,8 +102,8 @@ getApplicationModel = (deps, opts) ->
 				resource: 'application'
 				options:
 					mergePineOptions
-						orderby: 'app_name asc'
-						filter:
+						$orderby: 'app_name asc'
+						$filter:
 							user: userId
 					, options
 
@@ -161,7 +161,7 @@ getApplicationModel = (deps, opts) ->
 					resource: 'application'
 					options:
 						mergePineOptions
-							filter:
+							$filter:
 								app_name: nameOrId
 						, options
 				.tap (applications) ->
@@ -213,7 +213,7 @@ getApplicationModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		serviceOptions = mergePineOptions
-			expand: [
+			$expand: [
 				owns__device:
 					dollarify(getCurrentServiceDetailsPineOptions())
 			]
@@ -256,7 +256,7 @@ getApplicationModel = (deps, opts) ->
 			resource: 'application'
 			options:
 				mergePineOptions
-					filter:
+					$filter:
 						$eq: [
 							$tolower: $: 'app_name'
 							appName
@@ -306,7 +306,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (nameOrId, callback) ->
-		exports.get(nameOrId, select: ['id']).return(true)
+		exports.get(nameOrId, $select: ['id']).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -333,7 +333,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.hasAny = (callback) ->
-		exports.getAll(select: ['id']).then (applications) ->
+		exports.getAll($select: ['id']).then (applications) ->
 			return not isEmpty(applications)
 		.asCallback(callback)
 
@@ -405,7 +405,7 @@ getApplicationModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		parentAppPromise = if parentNameOrId
-			exports.get(parentNameOrId, select: [ 'id' ])
+			exports.get(parentNameOrId, $select: [ 'id' ])
 		else
 			Promise.resolve()
 
@@ -526,7 +526,7 @@ getApplicationModel = (deps, opts) ->
 	exports.generateApiKey = (nameOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return request.send
 				method: 'POST'
 				url: "/application/#{id}/generate-api-key"
@@ -699,13 +699,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: true
 				options:
-					filter:
+					$filter:
 						belongs_to__application: id
 		.asCallback(callback)
 
@@ -731,13 +731,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: false
 				options:
-					filter:
+					$filter:
 						belongs_to__application: id
 		.asCallback(callback)
 
@@ -842,10 +842,10 @@ getApplicationModel = (deps, opts) ->
 	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(nameOrId, select: 'id').get('id').then (id) ->
+		exports.get(nameOrId, $select: 'id').get('id').then (id) ->
 			exports.tags.getAll(
 				mergePineOptions
-					filter: application: id
+					$filter: application: id
 				, options
 			)
 		.asCallback(callback)
