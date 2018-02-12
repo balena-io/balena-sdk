@@ -102,7 +102,7 @@ getReleaseModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		return exports.get id, mergePineOptions
-			expand:
+			$expand:
 				contains__image:
 					$expand:
 						image:
@@ -168,15 +168,15 @@ getReleaseModel = (deps, opts) ->
 	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, select: 'id')
+		applicationModel().get(nameOrId, $select: 'id')
 		.then ({ id }) ->
 			return pine.get
 				resource: 'release'
 				options:
 					mergePineOptions
-						filter:
+						$filter:
 							belongs_to__application: id
-						orderby: 'created_at desc'
+						$orderby: 'created_at desc'
 					, options
 		.asCallback(callback)
 

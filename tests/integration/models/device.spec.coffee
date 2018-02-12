@@ -205,7 +205,7 @@ describe 'Device Model', ->
 					m.chai.expect(devices[0].id).to.equal(@device.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getAll(select: [ 'id' ])
+				resin.models.device.getAll($select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
 					m.chai.expect(device.device_name).to.equal(undefined)
@@ -231,7 +231,7 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getAllByApplication(@application.id, select: [ 'id' ])
+				resin.models.device.getAllByApplication(@application.id, $select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
 					m.chai.expect(device.device_name).to.equal(undefined)
@@ -278,7 +278,7 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getAllByParentDevice(@device.id, select: [ 'id' ])
+				resin.models.device.getAllByParentDevice(@device.id, $select: [ 'id' ])
 				.then ([ childDevice ]) =>
 					m.chai.expect(childDevice.id).to.equal(@childDevice.id)
 					m.chai.expect(childDevice.device_name).to.equal(undefined)
@@ -306,7 +306,7 @@ describe 'Device Model', ->
 					m.chai.expect(device.id).to.equal(@device.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.get(@device.id, select: [ 'id' ])
+				resin.models.device.get(@device.id, $select: [ 'id' ])
 				.then (device) =>
 					m.chai.expect(device.id).to.equal(@device.id)
 					m.chai.expect(device.device_name).to.equal(undefined)
@@ -323,7 +323,7 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: HelloWorldDevice')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getByName(@device.device_name, select: [ 'id' ])
+				resin.models.device.getByName(@device.device_name, $select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
 					m.chai.expect(device.device_name).to.equal(undefined)
@@ -875,8 +875,8 @@ describe 'Device Model', ->
 
 			it 'should allow options to change the device fields returned', ->
 				resin.models.device.getWithServiceDetails @device.id,
-					select: ['id', 'uuid']
-					expand:
+					$select: ['id', 'uuid']
+					$expand:
 						belongs_to__application:
 							$select: ['id', 'app_name']
 				.then (deviceDetails) =>
