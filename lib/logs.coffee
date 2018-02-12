@@ -62,7 +62,7 @@ getLogs = (deps, opts) ->
 							application_config_variable:
 								$select: ['name', 'value']
 
-			pubNubKeys: configModel.getPubNubKeys()
+			pubNubKeys: configModel.getAll().get('pubnub')
 
 	usesApiLogs = (device) ->
 		# If don't know the supervisor, assume it's a new one to start with
