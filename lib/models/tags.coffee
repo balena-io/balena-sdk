@@ -49,7 +49,7 @@ exports.tagsModel = (
 		pine.get
 			resource: "#{associatedResource}_tag"
 			options: mergePineOptions
-				orderby: 'tag_key asc'
+				$orderby: 'tag_key asc'
 			, options
 		.asCallback(callback)
 
@@ -91,7 +91,7 @@ exports.tagsModel = (
 				pine.patch
 					resource: "#{associatedResource}_tag"
 					options:
-						filter:
+						$filter:
 							"#{associatedResource}": resourceId
 							tag_key: tagKey
 					body:
@@ -104,7 +104,7 @@ exports.tagsModel = (
 				pine.delete
 					resource: "#{associatedResource}_tag"
 					options:
-						filter:
+						$filter:
 							"#{associatedResource}": resourceId
 							tag_key: tagKey
 		.asCallback(callback)

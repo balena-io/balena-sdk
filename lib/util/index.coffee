@@ -157,27 +157,25 @@ exports.mergePineOptions = (defaults, extras) ->
 	result = cloneDeep(defaults)
 
 	for own option, value of extras
-		# Drop leading `$`, so we support select & $select
-		# We'll move to _only_ $select with pine 5, this is a short-term change (hopefully)
-		switch option.replace(/^\$/, '')
-			when 'select'
+		switch option
+			when '$select'
 				if value?
 					if not isArray(value)
 						value = [value]
 
 				result[option] = value
 
-			when 'orderby', 'top', 'skip'
+			when '$orderby', '$top', '$skip'
 				result[option] = value
 
-			when 'filter'
-				if defaults.filter
-					result.filter = $and: [ defaults.filter, value ]
+			when '$filter'
+				if defaults.$filter
+					result.$filter = $and: [ defaults.$filter, value ]
 				else
-					result.filter = value
+					result.$filter = value
 
-			when 'expand'
-				result.expand = mergeExpandOptions(defaults.expand, value)
+			when '$expand'
+				result.$expand = mergeExpandOptions(defaults.$expand, value)
 
 			else
 				throw new Error("Unknown pine option: #{option}")
@@ -231,7 +229,7 @@ convertExpandToObject = (expandOption) ->
 
 # Pine options necessary for getting raw service data for a device
 exports.getCurrentServiceDetailsPineOptions = ->
-	expand:
+	$expand:
 		image_install:
 			$select: [
 				'id'

@@ -56,13 +56,13 @@ getServiceModel = (deps, opts) ->
 	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, select: 'id')
+		applicationModel().get(nameOrId, $select: 'id')
 		.then ({ id }) ->
 			return pine.get
 				resource: 'service'
 				options:
 					mergePineOptions
-						filter: application: id
+						$filter: application: id
 					, options
 		.asCallback(callback)
 
