@@ -88,6 +88,7 @@
   },
   "dependencies": {
     "@types/bluebird": "^3.5.18",
+    "@types/json-schema": "^6.0.0",
     "@types/node": "^8.0.53",
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
@@ -96,7 +97,7 @@
     "promise-memoize": "^1.2.0",
     "resin-auth": "^2.0.0",
     "resin-device-logs": "^3.2.1",
-		"resin-device-status": "^1.0.1",
+    "resin-device-status": "^1.0.1",
     "resin-errors": "^2.12.0",
     "resin-pine": "^6.0.0",
     "resin-register-device": "^5.0.0",
