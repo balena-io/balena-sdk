@@ -168,7 +168,7 @@ getLogs = (deps, opts) ->
 	exports.subscribe = (uuidOrId, options, callback) ->
 		callback = findCallback(arguments)
 
-		deviceModel.get(uuidOrId, select: 'uuid')
+		deviceModel.get(uuidOrId, $select: 'uuid')
 			.then (device) ->
 				subscribeToApiLogs(device, options)
 			.asCallback(callback)
@@ -216,7 +216,7 @@ getLogs = (deps, opts) ->
 	exports.history = (uuidOrId, options, callback) ->
 		callback = findCallback(arguments)
 
-		deviceModel.get(uuidOrId, select: 'uuid')
+		deviceModel.get(uuidOrId, $select: 'uuid')
 			.then (device) ->
 				getLogsFromApi(device, options)
 			.asCallback(callback)
