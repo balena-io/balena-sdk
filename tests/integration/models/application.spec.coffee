@@ -261,6 +261,7 @@ describe 'Application Model', ->
 				resin.models.device.register(@application.id, resin.models.device.generateUniqueKey())
 			.then (deviceInfo) =>
 				@deviceInfo = deviceInfo
+			.delay(1000)
 
 		describe 'resin.models.application.enableDeviceUrls()', ->
 

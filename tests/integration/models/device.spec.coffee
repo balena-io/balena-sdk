@@ -156,6 +156,7 @@ describe 'Device Model', ->
 			it 'should be able to register a device to a valid application name', ->
 				uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(@application.app_name, uuid)
+				.delay(1000)
 				.then =>
 					promise = resin.models.device.getAllByApplication(@application.app_name)
 					m.chai.expect(promise).to.eventually.have.length(1)
@@ -163,13 +164,16 @@ describe 'Device Model', ->
 			it 'should be able to register a device to a valid application id', ->
 				uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(@application.id, uuid)
+				.delay(1000)
 				.then =>
 					promise = resin.models.device.getAllByApplication(@application.app_name)
 					m.chai.expect(promise).to.eventually.have.length(1)
 
 			it 'should become valid device registration info', ->
 				uuid = resin.models.device.generateUniqueKey()
-				resin.models.device.register(@application.id, uuid).then (deviceInfo) ->
+				resin.models.device.register(@application.id, uuid)
+				.delay(1000)
+				.then (deviceInfo) ->
 					m.chai.expect(deviceInfo.uuid).to.equal(uuid)
 					m.chai.expect(deviceInfo.api_key).to.be.a('string')
 
@@ -191,6 +195,7 @@ describe 'Device Model', ->
 
 				uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(application.app_name, uuid)
+				.delay(1000)
 				.then (deviceInfo) ->
 					resin.models.device.get(deviceInfo.uuid)
 				.then (device) =>
@@ -257,6 +262,7 @@ describe 'Device Model', ->
 							is_managed_by__device: @device.id
 				.then (device) =>
 					@childDevice = device
+				.delay(1000)
 
 			it 'should get the device given the right parent uuid', ->
 				resin.models.device.getAllByParentDevice(@device.uuid).then (childDevices) =>
@@ -805,6 +811,7 @@ describe 'Device Model', ->
 				resin.models.device.register(application.app_name, uuid)
 			.then (deviceInfo) =>
 				@deviceInfo = deviceInfo
+			.delay(1000)
 
 		describe 'resin.models.device.get()', ->
 
@@ -830,6 +837,7 @@ describe 'Device Model', ->
 					resin.models.device.register(application.app_name, uuid1)
 					resin.models.device.register(application.app_name, uuid2)
 				]
+				.delay(1000)
 
 		describe 'resin.models.device.get()', ->
 
@@ -861,6 +869,7 @@ describe 'Device Model', ->
 				resin.models.device.register(results.application1.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
+				.delay(1000)
 
 		describe 'resin.models.device.move()', ->
 
@@ -896,6 +905,7 @@ describe 'Device Model', ->
 				resin.models.device.register(results.application1.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
+				.delay(1000)
 
 		describe 'resin.models.device.move()', ->
 

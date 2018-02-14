@@ -71,6 +71,7 @@ exports.resetUser = ->
 			resin.pine.delete
 				resource: 'user__has__public_key'
 		]
+		.delay(1000)
 
 exports.credentials = buildCredentials()
 
