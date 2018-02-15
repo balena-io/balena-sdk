@@ -19,8 +19,6 @@ moment = require('moment')
 exports.deviceTypes = require('./device-types')
 exports.getImgMakerHelper = require('./img-maker')
 
-exports.dollarify = (obj) -> mapKeys(obj, (v, k) -> "$#{k}")
-
 exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
 
