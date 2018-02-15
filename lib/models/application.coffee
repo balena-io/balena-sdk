@@ -25,7 +25,6 @@ size = require('lodash/size')
 errors = require('resin-errors')
 
 {
-	dollarify,
 	isId,
 	findCallback,
 	getCurrentServiceDetailsPineOptions,
@@ -214,8 +213,7 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device:
-					dollarify(getCurrentServiceDetailsPineOptions())
+				owns__device: getCurrentServiceDetailsPineOptions()
 			]
 		, options
 
