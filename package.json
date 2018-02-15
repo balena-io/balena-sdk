@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "9.0.0-beta12",
+  "version": "9.0.0-beta13",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "types": "typings/resin-sdk.d.ts",
@@ -88,7 +88,6 @@
   },
   "dependencies": {
     "@types/bluebird": "^3.5.18",
-    "@types/json-schema": "^6.0.0",
     "@types/node": "^8.0.53",
     "bluebird": "^3.3.1",
     "lodash": "^4.4.0",
