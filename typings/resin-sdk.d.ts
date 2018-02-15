@@ -149,12 +149,12 @@ declare namespace ResinSdk {
 	}
 
 	interface PineOptions {
-		filter?: object;
-		expand?: object | string;
-		orderBy?: Pine.OrderBy;
-		top?: string;
-		skip?: string;
-		select?: string | string[];
+		$filter?: object;
+		$expand?: object | string;
+		$orderBy?: Pine.OrderBy;
+		$top?: string;
+		$skip?: string;
+		$select?: string | string[];
 	}
 
 	interface PineParamsFor<T> extends PineParams {
@@ -170,10 +170,10 @@ declare namespace ResinSdk {
 	type PineExpandFor<T> = Pine.Expand<T>;
 
 	interface PineOptionsFor<T> extends PineOptions {
-		filter?: PineFilterFor<T>;
-		expand?: PineExpandFor<T>;
-		select?: Array<keyof T> | keyof T | '*';
-		orderby?: string;
+		$filter?: PineFilterFor<T>;
+		$expand?: PineExpandFor<T>;
+		$select?: Array<keyof T> | keyof T | '*';
+		$orderby?: string;
 	}
 
 	interface PineDeferred {
@@ -251,7 +251,16 @@ declare namespace ResinSdk {
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
 	}
 
-	type ReleaseStatus = 'cancelled' | 'error' | 'failed' | 'interrupted' | 'local' | 'running' | 'success' | 'timeout' | null;
+	type ReleaseStatus =
+		| 'cancelled'
+		| 'error'
+		| 'failed'
+		| 'interrupted'
+		| 'local'
+		| 'running'
+		| 'success'
+		| 'timeout'
+		| null;
 
 	interface Release {
 		log: string;
