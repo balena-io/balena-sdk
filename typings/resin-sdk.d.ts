@@ -1,6 +1,5 @@
 import * as Promise from 'bluebird';
 import { EventEmitter } from 'events';
-import { JSONSchema4 } from 'json-schema';
 import * as ResinErrors from 'resin-errors';
 import { Readable } from 'stream';
 import * as Pine from './pinejs-client-core';
@@ -16,12 +15,6 @@ declare namespace ResinSdk {
 	}
 
 	interface Config {
-		configVars: {
-			invalidRegex: string;
-			reservedNames: string[];
-			reservedNamespaces: string[];
-			schema: JSONSchema4;
-		};
 		deployment: string | null;
 		deviceUrlsBase: string;
 		adminUrl: string;
