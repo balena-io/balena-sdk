@@ -29,8 +29,6 @@ else null # If we can't guarantee global state, don't fake it: fail instead.
 exports.deviceTypes = require('./device-types')
 exports.getImgMakerHelper = require('./img-maker')
 
-exports.dollarify = (obj) -> mapKeys(obj, (v, k) -> "$#{k}")
-
 exports.notImplemented = notImplemented = ->
 	throw new Error('The method is not implemented.')
 
