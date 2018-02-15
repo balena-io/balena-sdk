@@ -251,7 +251,7 @@ declare namespace ResinSdk {
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
 	}
 
-	type ReleaseStatus = 'cancelled' | 'error' | 'interrupted' | 'local' | 'running' | 'success' | 'timeout' | null;
+	type ReleaseStatus = 'cancelled' | 'error' | 'failed' | 'interrupted' | 'local' | 'running' | 'success' | 'timeout' | null;
 
 	interface Release {
 		log: string;
