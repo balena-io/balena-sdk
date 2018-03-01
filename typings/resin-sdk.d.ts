@@ -230,7 +230,7 @@ declare namespace ResinSdk {
 		git_repository: string;
 		commit: string;
 		id: number;
-		device_type_info?: any;
+		device_type_info?: DeviceType;
 		has_dependent?: boolean;
 		is_accessible_by_support_until__date: string;
 		should_track_latest_release: boolean;
