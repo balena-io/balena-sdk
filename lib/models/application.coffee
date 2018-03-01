@@ -376,34 +376,51 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
-	# @param {String} deviceType - device type slug
-	# @param {(Number|String)} [parentNameOrId] - parent application name or id
+	# @param {Object} options - application creation parameters
+	# @param {String} options.name - application name
+	# @param {String} [options.applicationType] - application type slug e.g. microservices-starter
+	# @param {String} options.deviceType - device type slug
+	# @param {(Number|String)} [options.parent] - parent application name or id
 	#
 	# @fulfil {Object} - application
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
 	###
-	exports.create = (name, deviceType, parentNameOrId, callback) ->
+	exports.create = ({ name, applicationType, deviceType, parent }, callback) ->
 		callback = findCallback(arguments)
 
-		parentAppPromise = if parentNameOrId
-			exports.get(parentNameOrId, $select: [ 'id' ])
+		applicationTypePromise = if !applicationType
+			Promise.resolve()
+		else
+			pine.get
+				resource: 'application_type'
+				options:
+					$select: [ 'id' ]
+					$filter:
+						slug: applicationType
+			.get(0)
+			.then (appType) ->
+				if not appType
+					throw new Error("Invalid application type: #{applicationType}")
+				appType.id
+
+		parentAppPromise = if parent
+			exports.get(parent, $select: [ 'id' ])
 		else
 			Promise.resolve()
 
@@ -412,14 +429,26 @@ getApplicationModel = (deps, opts) ->
 			if not deviceManifest?
 				throw new errors.ResinInvalidDeviceType(deviceType)
 
-		return Promise.all([ deviceManifestPromise, parentAppPromise ])
-		.then ([ deviceManifest, parentApplication ]) ->
+		return Promise.props([
+			deviceManifestPromise
+			applicationTypePromise
+			parentAppPromise
+		])
+		.then ([
+			deviceManifest
+			applicationTypeId
+			parentApplication
+		]) ->
 			if deviceManifest.state == 'DISCONTINUED'
 				throw new errors.ResinDiscontinuedDeviceType(deviceType)
 
 			extraOptions = if parentApplication
 				depends_on__application: parentApplication.id
 			else {}
+
+			if applicationTypeId
+				assign extraOptions,
+					application_type: applicationTypeId
 
 			return pine.post
 				resource: 'application'
