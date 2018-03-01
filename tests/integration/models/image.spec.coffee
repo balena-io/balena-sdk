@@ -10,7 +10,11 @@ describe 'Image Model', ->
 	describe 'given an application with no releases', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.image.get()', ->

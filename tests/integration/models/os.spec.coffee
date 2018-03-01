@@ -214,12 +214,20 @@ describe 'OS model', ->
 		givenLoggedInUser()
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.os.getConfig()', ->
 			beforeEach ->
-				resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
+				resin.models.application.create
+					name: 'TestApp'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				.then (application) =>
 					@application = application
 
 			it 'should be able to get an application config by id', ->

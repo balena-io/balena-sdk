@@ -29,7 +29,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-            * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
+            * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -280,7 +280,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-        * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
+        * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -408,7 +408,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-    * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
+    * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -733,7 +733,7 @@ resin.models.application.getById(89, function(error, application) {
 ```
 <a name="resin.models.application.create"></a>
 
-##### application.create(name, deviceType, [parentNameOrId]) ⇒ <code>Promise</code>
+##### application.create(options) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Create an application  
 **Access**: public  
@@ -741,25 +741,27 @@ resin.models.application.getById(89, function(error, application) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>String</code> | application name |
-| deviceType | <code>String</code> | device type slug |
-| [parentNameOrId] | <code>Number</code> \| <code>String</code> | parent application name or id |
+| options | <code>Object</code> | application creation parameters |
+| options.name | <code>String</code> | application name |
+| [options.applicationType] | <code>String</code> | application type slug e.g. microservices-starter |
+| options.deviceType | <code>String</code> | device type slug |
+| [options.parent] | <code>Number</code> \| <code>String</code> | parent application name or id |
 
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
+resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	if (error) throw error;
 	console.log(application);
 });

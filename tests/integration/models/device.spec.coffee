@@ -102,7 +102,11 @@ describe 'Device Model', ->
 	describe 'given a single application without devices', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.device.getAll()', ->
@@ -188,7 +192,11 @@ describe 'Device Model', ->
 	describe 'given a single application with a single offline device', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 				uuid = resin.models.device.generateUniqueKey()
@@ -241,11 +249,11 @@ describe 'Device Model', ->
 			beforeEach ->
 				Promise.props
 					userId: resin.auth.getUserId()
-					childApplication: resin.models.application.create(
-						'ChildApp'
-						@application.device_type
-						@application.id
-					)
+					childApplication: resin.models.application.create
+						name: 'ChildApp'
+						applicationType: 'microservices-starter'
+						deviceType: @application.device_type
+						parent: @application.id
 				.then ({ userId, @childApplication }) =>
 					# We don't use the built-in .register or resin-register-device,
 					# because they don't yet support parent devices.
@@ -906,7 +914,11 @@ describe 'Device Model', ->
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->
-			resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'TestApp'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 				# Preceeding 1 is so that this can't start with a 0, so we get reversible parsing later
@@ -929,7 +941,11 @@ describe 'Device Model', ->
 	describe 'given a single application with two offline devices that share the same uuid root', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 				@uuidRoot = 'aaaaaaaaaaaaaaaa'
@@ -961,8 +977,14 @@ describe 'Device Model', ->
 
 		beforeEach ->
 			Promise.props
-				application1: resin.models.application.create('FooBar', 'raspberry-pi')
-				application2: resin.models.application.create('BarBaz', 'raspberry-pi')
+				application1: resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				application2: resin.models.application.create
+					name: 'BarBaz'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
@@ -996,8 +1018,14 @@ describe 'Device Model', ->
 
 		beforeEach ->
 			Promise.props
-				application1: resin.models.application.create('FooBar', 'raspberry-pi')
-				application2: resin.models.application.create('BarBaz', 'beaglebone-black')
+				application1: resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				application2: resin.models.application.create
+					name: 'BarBaz'
+					applicationType: 'microservices-starter'
+					deviceType: 'beaglebone-black'
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2

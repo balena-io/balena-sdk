@@ -35,43 +35,86 @@ describe 'Application Model', ->
 
 		describe 'resin.models.application.create()', ->
 
-			it 'should be able to create an application', ->
-				resin.models.application.create('FooBar', 'raspberry-pi').then ->
+			it 'should be able to create an application w/o providing an application type', ->
+				resin.models.application.create
+					name: 'FooBar'
+					deviceType: 'raspberry-pi'
+				.then ->
+					promise = resin.models.application.getAll()
+					m.chai.expect(promise).to.eventually.have.length(1)
+
+			it 'should be able to create an application with a specific application type', ->
+				resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				.then ->
 					promise = resin.models.application.getAll()
 					m.chai.expect(promise).to.eventually.have.length(1)
 
 			it 'should be able to create a child application', ->
-				resin.models.application.create('FooBar', 'raspberry-pi').then (parentApplication) ->
-					resin.models.application.create('FooBarChild', 'generic', parentApplication.id)
+				resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				.then (parentApplication) ->
+					resin.models.application.create
+						name: 'FooBarChild'
+						deviceType: 'generic'
+						parent: parentApplication.id
 				.then ->
 					resin.models.application.getAll()
 				.then ([ parentApplication, childApplication ]) ->
 					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
+			it 'should be rejected if the application type is invalid', ->
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'non-existing'
+					deviceType: 'raspberry-pi'
+				m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
+
 			it 'should be rejected if the device type is invalid', ->
-				promise = resin.models.application.create('FooBar', 'foobarbaz')
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'foobarbaz'
 				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
 
 			it 'should be rejected if the device type is discontinued', ->
-				promise = resin.models.application.create('FooBar', 'edge')
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'edge'
 				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
 			it 'should be rejected if the name has less than three characters', ->
-				promise = resin.models.application.create('Fo', 'raspberry-pi')
+				promise = resin.models.application.create
+					name: 'Fo'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
 				m.chai.expect(promise).to.be.rejected
 				.then (error) ->
 					m.chai.expect(error).to.have.property('message')
 					.that.contains('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4')
 
 			it 'should be able to create an application using a device type alias', ->
-				resin.models.application.create('FooBar', 'raspberrypi').then ->
+				resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberrypi'
+				.then ->
 					promise = resin.models.application.getAll()
 					m.chai.expect(promise).to.eventually.have.length(1)
 
 	describe 'given a single application', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.application.hasAny()', ->
@@ -83,7 +126,10 @@ describe 'Application Model', ->
 		describe 'resin.models.application.create()', ->
 
 			it 'should reject if trying to create an app with the same name', ->
-				promise = resin.models.application.create('FooBar', 'beaglebone-black')
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'beaglebone-black'
 				m.chai.expect(promise).to.be.rejectedWith('Application name must be unique')
 
 		describe 'resin.models.application.hasAny()', ->
