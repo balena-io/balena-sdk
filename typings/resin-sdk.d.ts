@@ -744,7 +744,7 @@ declare namespace ResinSdk {
 			get<T>(params: PineParamsFor<T>): Promise<T[]>;
 			get<T, Result>(params: PineParamsFor<T>): Promise<Result>;
 			post<T>(params: PineParams): Promise<T>;
-			patch<T>(params: PineParamsWithIdFor<T>): Promise<T>;
+			patch<T>(params: PineParams): Promise<T>;
 		};
 		interceptors: Interceptor[];
 	}
