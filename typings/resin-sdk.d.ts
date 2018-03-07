@@ -230,11 +230,12 @@ declare namespace ResinSdk {
 		git_repository: string;
 		commit: string;
 		id: number;
-		device_type_info?: any;
+		device_type_info?: DeviceType;
 		has_dependent?: boolean;
 		is_accessible_by_support_until__date: string;
 		should_track_latest_release: boolean;
 
+		application_type: NavigationResource<ApplicationType>;
 		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
 
@@ -242,6 +243,20 @@ declare namespace ResinSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
+	}
+
+	interface ApplicationType {
+		id: number;
+		name: string;
+		slug: string;
+		description: string | null;
+		supports_gateway_mode: boolean;
+		supports_multicontainer: boolean;
+		supports_web_url: boolean;
+		is_legacy: boolean;
+		requires_payment: boolean;
+		needs__os_version_range: string | null;
+		maximum_device_count: number | null;
 	}
 
 	type ReleaseStatus =
@@ -566,7 +581,12 @@ declare namespace ResinSdk {
 
 		models: {
 			application: {
-				create(name: string, deviceType: string, parentNameOrId?: number | string): Promise<Application>;
+				create(options: {
+					name: string;
+					applicationType?: string;
+					deviceType: string;
+					parent?: number | string;
+				}): Promise<Application>;
 				get(nameOrId: string | number, options?: PineOptionsFor<Application>): Promise<Application>;
 				getWithDeviceServiceDetails(
 					nameOrId: string | number,
@@ -735,7 +755,7 @@ declare namespace ResinSdk {
 			get<T>(params: PineParamsFor<T>): Promise<T[]>;
 			get<T, Result>(params: PineParamsFor<T>): Promise<Result>;
 			post<T>(params: PineParams): Promise<T>;
-			patch<T>(params: PineParamsWithIdFor<T>): Promise<T>;
+			patch<T>(params: PineParams): Promise<T>;
 		};
 		interceptors: Interceptor[];
 	}
