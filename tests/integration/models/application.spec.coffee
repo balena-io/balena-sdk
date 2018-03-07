@@ -289,30 +289,30 @@ describe 'Application Model', ->
 
 				m.chai.expect(promise).to.eventually.equal(null)
 
-	describe 'with a registered device', ->
+		describe 'with a registered device', ->
 
-		beforeEach ->
-			resin.models.device.register(@application.id, resin.models.device.generateUniqueKey())
-			.then (deviceInfo) =>
-				@deviceInfo = deviceInfo
+			beforeEach ->
+				resin.models.device.register(@application.id, resin.models.device.generateUniqueKey())
+				.then (deviceInfo) =>
+					@deviceInfo = deviceInfo
 
-		describe 'resin.models.application.enableDeviceUrls()', ->
+			describe 'resin.models.application.enableDeviceUrls()', ->
 
-			it "should enable the device url for the application's devices", ->
-				promise = resin.models.application.enableDeviceUrls(@application.id)
-				.then =>
-					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
+				it "should enable the device url for the application's devices", ->
+					promise = resin.models.application.enableDeviceUrls(@application.id)
+					.then =>
+						resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
 
-				m.chai.expect(promise).to.eventually.be.true
+					m.chai.expect(promise).to.eventually.be.true
 
-		describe 'resin.models.application.disableDeviceUrls()', ->
+			describe 'resin.models.application.disableDeviceUrls()', ->
 
-			it "should disable the device url for the application's devices", ->
-				promise = resin.models.device.enableDeviceUrl(@deviceInfo.uuid)
-				.then =>
-					resin.models.application.disableDeviceUrls(@application.id)
-				.then =>
-					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
+				it "should disable the device url for the application's devices", ->
+					promise = resin.models.device.enableDeviceUrl(@deviceInfo.uuid)
+					.then =>
+						resin.models.application.disableDeviceUrls(@application.id)
+					.then =>
+						resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
 
-				m.chai.expect(promise).to.eventually.be.false
+					m.chai.expect(promise).to.eventually.be.false
 
