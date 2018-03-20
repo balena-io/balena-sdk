@@ -90,6 +90,8 @@ declare namespace ResinSdk {
 			fstype?: string;
 			deployArtifact: string;
 		};
+		/** Holds the latest resinOS version */
+		buildId?: string;
 	}
 
 	interface DeviceTypeInstructions {
