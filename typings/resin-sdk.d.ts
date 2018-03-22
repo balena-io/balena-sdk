@@ -90,6 +90,8 @@ declare namespace ResinSdk {
 			fstype?: string;
 			deployArtifact: string;
 		};
+		/** Holds the latest resinOS version */
+		buildId?: string;
 	}
 
 	interface DeviceTypeInstructions {
@@ -239,6 +241,8 @@ declare namespace ResinSdk {
 		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
 
+		application_config_variable: ReverseNavigationResource<ApplicationConfigVariable>;
+		application_environment_variable: ReverseNavigationResource<ApplicationEnvironmentVariable>;
 		application_tag: ReverseNavigationResource<ApplicationTag>;
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
@@ -413,6 +417,7 @@ declare namespace ResinSdk {
 		is_managed_by__device: NavigationResource<Device>;
 
 		device_config_variable: ReverseNavigationResource<DeviceConfigVariable>;
+		device_environment_variable: ReverseNavigationResource<DeviceEnvironmentVariable>;
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
 	}
@@ -518,6 +523,20 @@ declare namespace ResinSdk {
 
 	interface ApplicationConfigVariable extends EnvironmentVariableBase {
 		application: NavigationResource<Application>;
+	}
+
+	interface SecondaryEnvironmentVariableBase {
+		id: number;
+		env_var_name: string;
+		value: string;
+	}
+
+	interface ApplicationEnvironmentVariable extends SecondaryEnvironmentVariableBase {
+		application: NavigationResource<Application>;
+	}
+
+	interface DeviceEnvironmentVariable extends SecondaryEnvironmentVariableBase {
+		device: NavigationResource<Device>;
 	}
 
 	interface ResourceTagBase {
