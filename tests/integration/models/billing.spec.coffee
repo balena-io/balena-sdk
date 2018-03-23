@@ -23,36 +23,36 @@ describe 'Billing Model', ->
 
 		describe 'resin.models.billing.getPlan()', ->
 			it 'should return a free tier billing plan object', ->
-				resin.models.billing.getPlan()
-				.then (plan) ->
-					m.chai.expect(plan).to.deep.match
-						title: 'Free'
-						name: 'Free plan'
-						code: 'free'
-						tier: 'free'
-						addOns: [],
-						billing:
-							currency: 'USD'
-							charges: [
-								{
-									itemType: 'plan'
-									name: 'Free plan'
-									code: 'free'
-									unitCostCents: '0'
-									quantity: '1'
-								}
-								{
-									itemType: 'support'
-									name: 'Community support'
-									code: 'community'
-									unitCostCents: '0'
-									quantity: '1'
-								}
-							]
-							totalCostCents: '0'
-						support:
-							title: 'Community'
-							name: 'Community support'
+				promise = resin.models.billing.getPlan()
+				m.chai.expect(promise).to.become({
+					title: 'Free'
+					name: 'Free plan'
+					code: 'free'
+					tier: 'free'
+					addOns: [],
+					billing:
+						currency: 'USD'
+						charges: [
+							{
+								itemType: 'plan'
+								name: 'Free plan'
+								code: 'free'
+								unitCostCents: '0'
+								quantity: '1'
+							}
+							{
+								itemType: 'support'
+								name: 'Community support'
+								code: 'community'
+								unitCostCents: '0'
+								quantity: '1'
+							}
+						]
+						totalCostCents: '0'
+					support:
+						title: 'Community'
+						name: 'Community support'
+				})
 
 		describe 'resin.models.billing.getBillingInfo()', ->
 			it 'should return a free tier billing info object', ->
@@ -142,38 +142,53 @@ describe 'Billing Model', ->
 			givenABillingAccountIt 'should return a paid tier billing plan object', ->
 				resin.models.billing.getPlan()
 				.then (plan) ->
-					m.chai.expect(plan).to.deep.match
+
+					m.chai.expect(_.pick(plan, [
+						'title'
+						'name'
+						'code'
+						'tier'
+						'addOns'
+						'intervalUnit'
+						'intervalLength'
+					])).to.deep.equal({
 						title: 'TestDev'
 						name: 'TestDev plan'
 						code: 'testdev'
 						tier: 'testdev'
 						addOns: []
-						billing:
-							currency: 'USD'
-							charges: [
-								{
-									itemType: 'plan'
-									name: 'TestDev plan'
-									code: 'testdev'
-									unitCostCents: '0'
-									quantity: '1'
-								}
-								{
-									itemType: 'support'
-									name: 'Standard support'
-									code: 'standard'
-									unitCostCents: '0'
-									quantity: '1'
-								}
-							]
-							totalCostCents: '0'
-						support:
-							title: 'Standard'
-							name: 'Standard support'
+						intervalUnit: 'months'
+						intervalLength: '1'
+					})
 
 					m.chai.expect(plan).to.have.property('currentPeriodEndDate').that.is.a('string')
 					m.chai.expect(plan).to.have.property('id').that.is.a('string')
 					m.chai.expect(plan).to.have.property('id').that.has.length(32)
+
+					m.chai.expect(plan).to.have.property('billing').that.deep.equals({
+						currency: 'USD'
+						charges: [
+							{
+								itemType: 'plan'
+								name: 'TestDev plan'
+								code: 'testdev'
+								unitCostCents: '0'
+								quantity: '1'
+							}
+							{
+								itemType: 'support'
+								name: 'Standard support'
+								code: 'standard'
+								unitCostCents: '0'
+								quantity: '1'
+							}
+						]
+						totalCostCents: '0'
+					})
+					m.chai.expect(plan).to.have.property('support').that.deep.equals({
+						title: 'Standard'
+						name: 'Standard support'
+					})
 
 		describe 'resin.models.billing.getBillingInfo()', ->
 			givenABillingAccountIt 'should return a billing info object', ->
