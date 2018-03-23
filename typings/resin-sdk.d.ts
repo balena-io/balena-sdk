@@ -356,7 +356,10 @@ declare namespace ResinSdk {
 
 	interface BillingPlanInfo {
 		name: string;
-		billing?: BillingPlanBillingInfo;
+		tier: string;
+		billing: BillingPlanBillingInfo;
+		intervalUnit?: string;
+		intervalLength?: string;
 	}
 
 	interface BillingPlanBillingInfo {
