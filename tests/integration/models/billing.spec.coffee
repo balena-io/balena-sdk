@@ -25,16 +25,17 @@ describe 'Billing Model', ->
 			it 'should return a free tier billing plan object', ->
 				promise = resin.models.billing.getPlan()
 				m.chai.expect(promise).to.become({
-					title: 'Personal'
-					name: 'Personal plan'
+					title: 'Free'
+					name: 'Free plan'
 					code: 'free'
 					tier: 'free'
+					addOns: [],
 					billing:
 						currency: 'USD'
 						charges: [
 							{
 								itemType: 'plan'
-								name: 'Personal plan'
+								name: 'Free plan'
 								code: 'free'
 								unitCostCents: '0'
 								quantity: '1'
@@ -42,6 +43,7 @@ describe 'Billing Model', ->
 							{
 								itemType: 'support'
 								name: 'Community support'
+								code: 'community'
 								unitCostCents: '0'
 								quantity: '1'
 							}
@@ -146,6 +148,7 @@ describe 'Billing Model', ->
 						'name'
 						'code'
 						'tier'
+						'addOns'
 						'intervalUnit'
 						'intervalLength'
 					])).to.deep.equal({
@@ -153,6 +156,7 @@ describe 'Billing Model', ->
 						name: 'TestDev plan'
 						code: 'testdev'
 						tier: 'testdev'
+						addOns: []
 						intervalUnit: 'months'
 						intervalLength: '1'
 					})
@@ -173,6 +177,7 @@ describe 'Billing Model', ->
 							{
 								itemType: 'support'
 								name: 'Standard support'
+								code: 'standard'
 								unitCostCents: '0'
 								quantity: '1'
 							}
