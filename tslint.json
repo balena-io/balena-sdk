@@ -1,7 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
-    "indent": [ true, "tabs" ],
+    "indent": [ false, "tabs" ],
     "jsdoc-format": true,
     "whitespace": [
       false,
