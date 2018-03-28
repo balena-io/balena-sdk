@@ -132,61 +132,36 @@ declare namespace ResinSdk {
 		choicesLabels?: { [key: string]: string };
 	}
 
-	interface WithId {
-		id: number;
-	}
+	type WithId = Pine.WithId;
+	type PineDeferred = Pine.Deferred;
 
-	interface PineParams {
-		resource: string;
-		id?: number;
-		body?: object;
-		options?: PineOptions;
-	}
-
-	interface PineOptions {
-		$filter?: object;
-		$expand?: object | string;
-		$orderBy?: Pine.OrderBy;
-		$top?: string;
-		$skip?: string;
-		$select?: string | string[];
-	}
-
-	interface PineParamsFor<T> extends PineParams {
-		body?: Partial<T>;
-		options?: PineOptionsFor<T>;
-	}
-
-	interface PineParamsWithIdFor<T> extends PineParamsFor<T> {
-		id: number;
-	}
+	type PineParams = Pine.Params;
 
 	type PineFilterFor<T> = Pine.Filter<T>;
 	type PineExpandFor<T> = Pine.Expand<T>;
+	type PineOptions = Pine.ODataOptions;
+	type PineOptionsFor<T> = Pine.OptionsFor<T>;
+	type PineSubmitBody<T> = Pine.SubmitBody<T>;
+	type PineParamsFor<T> = Pine.ParamsFor<T>;
 
-	interface PineOptionsFor<T> extends PineOptions {
-		$filter?: PineFilterFor<T>;
-		$expand?: PineExpandFor<T>;
-		$select?: Array<keyof T> | keyof T | '*';
-		$orderby?: string;
-	}
-
-	interface PineDeferred {
-		__id: number;
+	interface PineParamsWithIdFor<T> extends PineParamsFor<T> {
+		id: number;
 	}
 
 	/**
 	 * When not selected-out holds a deferred.
 	 * When expanded hold an array with a single element.
 	 */
-	type NavigationResource<T = WithId> = T[] | PineDeferred;
+	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
 
 	/**
 	 * When expanded holds an array, otherwise the property is not present.
 	 * Selecting is not suggested,
 	 * in that case it holds a deferred to the original resource.
 	 */
-	type ReverseNavigationResource<T = WithId> = T[] | undefined;
+	type ReverseNavigationResource<T = WithId> = Pine.ReverseNavigationResource<T>;
+
+	/* API models */
 
 	interface SocialServiceAccount {
 		provider: string;
@@ -776,8 +751,8 @@ declare namespace ResinSdk {
 			get<T>(params: PineParamsWithIdFor<T>): Promise<T>;
 			get<T>(params: PineParamsFor<T>): Promise<T[]>;
 			get<T, Result>(params: PineParamsFor<T>): Promise<Result>;
-			post<T>(params: PineParams): Promise<T>;
-			patch<T>(params: PineParams): Promise<T>;
+			post<T>(params: PineParamsFor<T>): Promise<T>;
+			patch<T>(params: PineParamsWithIdFor<T> | PineParamsFor<T>): Promise<string>;
 		};
 		interceptors: Interceptor[];
 	}
