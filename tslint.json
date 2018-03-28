@@ -5,7 +5,7 @@
     "tslint-no-unused-expression-chai"
   ],
   "rules": {
-    "indent": [ true, "tabs" ],
+    "indent": [ false, "tabs" ],
     "jsdoc-format": true,
     "whitespace": [
       false,
