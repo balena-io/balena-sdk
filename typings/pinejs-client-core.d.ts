@@ -8,17 +8,7 @@ export interface Deferred {
 	__id: number;
 }
 
-/**
- * When not selected-out holds a deferred.
- * When expanded hold an array with a single element.
- */
 export type NavigationResource<T = WithId> = T[] | Deferred;
-
-/**
- * When expanded holds an array, otherwise the property is not present.
- * Selecting is not suggested,
- * in that case it holds a deferred to the original resource.
- */
 export type ReverseNavigationResource<T = WithId> = T[] | undefined;
 
 export type AssociatedResource<T = WithId> = NavigationResource<T> | ReverseNavigationResource<T>;
@@ -123,4 +113,3 @@ export interface ParamsFor<T> extends ParamsBase {
 	body?: SubmitBody<T>;
 	options?: OptionsFor<T>;
 }
-
