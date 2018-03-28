@@ -11,7 +11,16 @@ import * as Pine from './pinejs-client-core';
 declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
+	/**
+	 * When not selected-out holds a deferred.
+	 * When expanded hold an array with a single element.
+	 */
 	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
+	/**
+	 * When expanded holds an array, otherwise the property is not present.
+	 * Selecting is not suggested,
+	 * in that case it holds a deferred to the original resource.
+	 */
 	type ReverseNavigationResource<T = WithId> = Pine.ReverseNavigationResource<
 		T
 	>;
@@ -19,6 +28,7 @@ declare namespace BalenaSdk {
 	type PineExpandFor<T> = Pine.Expand<T>;
 	type PineOptions = Pine.PineOptions;
 	type PineOptionsFor<T> = Pine.PineOptionsFor<T>;
+	type PineSubmitBody<T> = Pine.SubmitBody<T>;
 	type PineParams = Pine.PineParams;
 	type PineParamsFor<T> = Pine.PineParamsFor<T>;
 	type PineParamsWithIdFor<T> = Pine.PineParamsWithIdFor<T>;
@@ -1016,6 +1026,7 @@ declare namespace BalenaSdk {
 		};
 
 		pine: BalenaPine.Pine;
+
 		interceptors: Interceptor[];
 	}
 
