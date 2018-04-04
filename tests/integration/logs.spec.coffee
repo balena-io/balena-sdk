@@ -29,7 +29,8 @@ createContainerLog = (message, imageInstall, deviceKey, options = {}) ->
 		passthrough:
 			apiKey: deviceKey
 
-describe 'Logs', ->
+# Skipping until native logging gets enabled in the api
+describe.skip 'Logs', ->
 
 	givenLoggedInUser()
 
