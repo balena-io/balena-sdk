@@ -17,6 +17,7 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
+isFinite = require('lodash/isFinite')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
@@ -31,6 +32,8 @@ deviceStatus = require('resin-device-status')
 	onlyIf,
 	isId,
 	findCallback,
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noDeviceForKeyResponse,
@@ -63,7 +66,7 @@ getDeviceModel = (deps, opts) ->
 	tagsModel = once -> require('./tags').tagsModel(
 		deps,
 			associatedResource: 'device'
-			getResourceId: (uuidOrId) -> exports.get(uuidOrId, select: 'id').get('id')
+			getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
 			ResourceNotFoundError: errors.ResinDeviceNotFound
 	)
 
@@ -80,7 +83,7 @@ getDeviceModel = (deps, opts) ->
 			if isId(uuidOrId)
 				return uuidOrId
 			else
-				exports.get(uuidOrId, select: 'id').get('id')
+				exports.get(uuidOrId, $select: 'id').get('id')
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver
@@ -162,7 +165,7 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
-					orderby: 'name asc'
+					$orderby: 'device_name asc'
 				, options
 
 		.map(addExtraInfo)
@@ -199,9 +202,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
+		applicationModel().get(nameOrId, $select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: belongs_to__application: id
+				$filter: belongs_to__application: id
 				options
 			), callback)
 
@@ -236,9 +239,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getAllByParentDevice = (parentUuidOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(parentUuidOrId, select: 'id').then ({ id }) ->
+		exports.get(parentUuidOrId, $select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: is_managed_by__device: id
+				$filter: is_managed_by__device: id
 				options
 			), callback)
 
@@ -290,7 +293,7 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					options:
 						mergePineOptions
-							filter:
+							$filter:
 								uuid: $startswith: uuidOrId
 						, options
 				.tap (devices) ->
@@ -301,6 +304,48 @@ getDeviceModel = (deps, opts) ->
 						throw new errors.ResinAmbiguousDevice(uuidOrId)
 				.get(0)
 		.then(addExtraInfo)
+		.asCallback(callback)
+
+	###*
+	# @summary Get a single device along with its associated services' essential details
+	# @name getWithServiceDetails
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `device.get(uuidOrId, options)` instead.
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - device with service details
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
+	# 	if (error) throw error;
+	# 	console.log(device);
+	# });
+	###
+	exports.getWithServiceDetails = (uuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get uuidOrId,
+			mergePineOptions(getCurrentServiceDetailsPineOptions(), options)
+		.then(generateCurrentServiceDetails)
 		.asCallback(callback)
 
 	###*
@@ -329,7 +374,7 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		return exports.getAll(mergePineOptions(
-			filter: name: name
+			$filter: device_name: name
 			options
 		)).tap (devices) ->
 			if isEmpty(devices)
@@ -364,7 +409,9 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'name').get('name').asCallback(callback)
+		exports.get(uuidOrId, $select: 'device_name')
+		.get('device_name')
+		.asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -395,8 +442,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'app_name'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'app_name'
 		.then (device) ->
 			device.belongs_to__application[0].app_name
 		.asCallback(callback)
@@ -430,8 +477,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getApplicationInfo = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: ['id', 'supervisor_version']
-			expand: belongs_to__application: $select: 'id'
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
@@ -474,7 +521,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id']).return(true)
+		exports.get(uuidOrId, $select: ['id']).return(true)
 		.catch errors.ResinDeviceNotFound, ->
 			return false
 		.asCallback(callback)
@@ -507,7 +554,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.isOnline = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'is_online').get('is_online').asCallback(callback)
+		exports.get(uuidOrId, $select: 'is_online').get('is_online').asCallback(callback)
 
 	###*
 	# @summary Get the local IP addresses of a device
@@ -545,7 +592,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getLocalIPAddresses = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['is_online', 'ip_address', 'vpn_address'])
+		exports.get(uuidOrId, $select: ['is_online', 'ip_address', 'vpn_address'])
 		.then ({ is_online, ip_address, vpn_address }) ->
 			if not is_online
 				throw new Error("The device is offline: #{uuidOrId}")
@@ -576,11 +623,11 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.remove = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.delete
 				resource: 'device'
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -640,13 +687,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.rename = (uuidOrId, newName, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
-					name: newName
+					device_name: newName
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -674,13 +721,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.note = (uuidOrId, note, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					note: note
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 
 		.asCallback(callback)
@@ -709,14 +756,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.setCustomLocation = (uuidOrId, location, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					custom_latitude: String(location.latitude),
 					custom_longitude: String(location.longitude)
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 
 		.asCallback(callback)
@@ -778,8 +825,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
-			device: exports.get(uuidOrId, select: [ 'uuid', 'device_type' ])
-			application: applicationModel().get(applicationNameOrId, select: [ 'id', 'device_type' ])
+			device: exports.get(uuidOrId, $select: [ 'uuid', 'device_type' ])
+			application: applicationModel().get(applicationNameOrId, $select: [ 'id', 'device_type' ])
 		.then ({ application, device }) ->
 
 			if device.device_type isnt application.device_type
@@ -790,7 +837,7 @@ getDeviceModel = (deps, opts) ->
 				body:
 					belongs_to__application: application.id
 				options:
-					filter:
+					$filter:
 						uuid: device.uuid
 
 		.asCallback(callback)
@@ -824,8 +871,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.startApplication = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: ['id', 'supervisor_version']
-			expand: belongs_to__application: $select: 'id'
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
@@ -870,8 +917,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.stopApplication = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: ['id', 'supervisor_version']
-			expand: belongs_to__application: $select: 'id'
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
@@ -995,8 +1042,8 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1040,8 +1087,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.purge = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1092,8 +1139,8 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1274,7 +1321,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId, select: 'device_type')
+		applicationModel().get(nameOrId, $select: 'device_type')
 		.get('device_type')
 		.then(exports.getManifestBySlug)
 		.asCallback(callback)
@@ -1333,7 +1380,7 @@ getDeviceModel = (deps, opts) ->
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
-			application: applicationModel().get(applicationNameOrId, select: ['id', 'device_type'])
+			application: applicationModel().get(applicationNameOrId, $select: ['id', 'device_type'])
 		.then ({ userId, apiKey, application }) ->
 
 			return registerDevice.register
@@ -1417,7 +1464,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.hasDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'is_web_accessible')
+		exports.get(uuidOrId, $select: 'is_web_accessible')
 		.get('is_web_accessible').asCallback(callback)
 
 	###*
@@ -1453,7 +1500,7 @@ getDeviceModel = (deps, opts) ->
 				throw new Error("Device is not web accessible: #{uuidOrId}")
 
 			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
-				exports.get(uuidOrId, select: 'uuid').get('uuid').then (uuid) ->
+				exports.get(uuidOrId, $select: 'uuid').get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.asCallback(callback)
 
@@ -1479,13 +1526,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: true
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -1511,13 +1558,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: false
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -1549,8 +1596,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.enableTcpPing = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1589,8 +1636,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.disableTcpPing = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1629,8 +1676,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.ping = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1695,7 +1742,7 @@ getDeviceModel = (deps, opts) ->
 		if not expiryTimestamp? or expiryTimestamp <= Date.now()
 			throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp)
 
-		exports.get(uuidOrId, select: 'id').then ({ id }) ->
+		exports.get(uuidOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				id: id
@@ -1724,7 +1771,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.revokeSupportAccess = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'id').then ({ id }) ->
+		exports.get(uuidOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				id: id
@@ -1795,10 +1842,10 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
-		applicationModel().get(nameOrId, select: 'id').get('id').then (id) ->
+		applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
 			tagsModel().getAll(
 				mergePineOptions
-					filter:
+					$filter:
 						device:
 							$any:
 								$alias: 'd',
@@ -1838,10 +1885,10 @@ getDeviceModel = (deps, opts) ->
 	exports.tags.getAllByDevice = (uuidOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(uuidOrId, select: 'id').get('id').then (id) ->
+		exports.get(uuidOrId, $select: 'id').get('id').then (id) ->
 			exports.tags.getAll(
 				mergePineOptions
-					filter: device: id
+					$filter: device: id
 				, options
 			)
 		.asCallback(callback)

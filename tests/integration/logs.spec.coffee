@@ -1,0 +1,189 @@
+_ = require('lodash')
+m = require('mochainon')
+Promise = require('bluebird')
+
+{ resin, givenLoggedInUser, givenMulticontainerApplication } = require('./setup')
+
+createLog = (message, device, deviceKey, options = {}) ->
+	resin.pine.post
+		resource: 'device_log'
+		body: Object.assign
+			belongs_to__device: device.id
+			device_timestamp: Date.now()
+			stderr: false
+			system: false
+		, options, { message }
+		passthrough:
+			apiKey: deviceKey
+
+createContainerLog = (message, imageInstall, deviceKey, options = {}) ->
+	resin.pine.post
+		resource: 'image_install_log'
+		body: Object.assign
+			belongs_to__image_install: imageInstall.id
+			device_timestamp: Date.now()
+			is_stderr: false
+			is_system: false
+			message: 'hi!'
+		, options, { message }
+		passthrough:
+			apiKey: deviceKey
+
+# Skipping until native logging gets enabled in the api
+describe.skip 'Logs', ->
+
+	givenLoggedInUser()
+
+	describe 'given an application with a api-logging device', ->
+
+		givenMulticontainerApplication()
+
+		beforeEach ->
+			Promise.all [
+				# Make sure our device looks api-log compatible
+				resin.pine.patch
+					resource: 'device'
+					body:
+						supervisor_version: '7.0.0'
+			,
+				resin.models.device.generateDeviceKey(@device.id)
+				.then (key) =>
+					@deviceKey = key
+			]
+
+		describe 'given no logs present', ->
+
+			describe '.history', ->
+
+				it 'should return no history', ->
+					resin.logs.history(@device.uuid)
+					.then (history) ->
+						m.chai.expect(history).to.deep.equal([])
+
+			describe '.subscribe', ->
+
+				it 'should emit new messages', ->
+					resin.logs.subscribe(@device.uuid)
+					.then (subscription) =>
+						messages = []
+
+						subscription.on('line', (msg) -> messages.push(msg))
+
+						createLog('Message 1', @device, @deviceKey)
+						.delay(1500)
+						.then =>
+							m.chai.expect(messages).to.have.lengthOf(1)
+							m.chai.expect(messages).to.deep.match [
+								message: 'Message 1'
+							]
+							createLog('Message 2', @device, @deviceKey)
+						.delay(1500)
+						.then ->
+							m.chai.expect(messages).to.have.lengthOf(2)
+							m.chai.expect(messages).to.deep.match [
+								message: 'Message 1'
+							,
+								message: 'Message 2'
+							]
+						.finally ->
+							subscription.unsubscribe()
+
+		describe 'given pre-existing device logs', ->
+
+			beforeEach ->
+				createLog('Test message 1', @device, @deviceKey)
+				.then =>
+					createLog 'Test message 2', @device, @deviceKey,
+						is_system: true
+						is_stderr: true
+
+			describe '.history', ->
+
+				it 'should return the logs', ->
+					resin.logs.history(@device.uuid)
+					.then (history) ->
+						m.chai.expect(history).to.deep.match([
+							message: 'Test message 1'
+							isSystem: false
+							isStdErr: false
+						,
+							message: 'Test message 2'
+							isSystem: true
+							isStdErr: true
+						])
+
+				it 'should limit the logs by the count given', ->
+					resin.logs.history(@device.uuid, { count: 1 })
+					.then (history) ->
+						m.chai.expect(history).to.deep.match([
+							message: 'Test message 2'
+						])
+
+			describe '.subscribe', ->
+
+				it 'should emit new messages', ->
+					resin.logs.subscribe(@device.uuid)
+					.then (subscription) =>
+						new Promise (resolve, reject) =>
+							subscription.on('line', resolve)
+							subscription.on('error', reject)
+
+							createLog('New message', @device, @deviceKey)
+						.timeout(2000)
+						.then (logMessage) ->
+							m.chai.expect(logMessage).to.deep.match
+								message: 'New message'
+						.finally ->
+							subscription.unsubscribe()
+
+		describe 'given preexisting container logs', ->
+
+			beforeEach ->
+				createContainerLog('Test message 1', @newWebInstall, @deviceKey)
+				.then =>
+					createContainerLog('Test message 2', @newDbInstall, @deviceKey)
+				.then =>
+					createContainerLog('Test message 3', @newWebInstall, @deviceKey)
+
+			describe '.history', ->
+
+				it 'should return the logs', ->
+					resin.logs.history(@device.uuid)
+					.then (history) =>
+						m.chai.expect(history).to.deep.match([
+							message: 'Test message 1'
+							serviceId: @webService.id
+						,
+							message: 'Test message 2'
+							serviceId: @dbService.id
+						,
+							message: 'Test message 3'
+							serviceId: @webService.id
+						])
+
+				it 'should limit the logs by the count given', ->
+					resin.logs.history(@device.uuid, { count: 1 })
+					.then (history) ->
+						m.chai.expect(history).to.deep.match([
+							message: 'Test message 2'
+						])
+
+			describe '.subscribe', ->
+
+				it 'should emit new messages', ->
+					resin.logs.subscribe(@device.uuid)
+					.then (subscription) =>
+						new Promise (resolve, reject) =>
+							subscription.on('line', resolve)
+							subscription.on('error', reject)
+
+							createContainerLog('New message', @newWebInstall, @deviceKey)
+						.timeout(2000)
+						.then (logMessage) ->
+							m.chai.expect(logMessage).to.deep.match
+								message: 'New message'
+						.finally ->
+							subscription.unsubscribe()
+
+
+

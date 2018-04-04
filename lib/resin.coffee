@@ -81,7 +81,7 @@ getSdk = (opts = {}) ->
 		isBrowser: window?
 
 	# You cannot externally set the API version (as SDK implementation depends on it)
-	opts.apiVersion = 'v3'
+	opts.apiVersion = 'v4'
 
 	if opts.isBrowser
 		settings =
@@ -189,9 +189,9 @@ getSdk = (opts = {}) ->
 	#
 	# @example
 	# resin.pine.get({
-	#	resource: 'build/$count',
+	#	resource: 'release/$count',
 	#	options: {
-	#		filter: { belongs_to__application: applicationId }
+	#		$filter: { belongs_to__application: applicationId }
 	#	}
 	# });
 	###

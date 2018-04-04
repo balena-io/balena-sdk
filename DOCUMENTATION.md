@@ -24,11 +24,12 @@ If you feel something is missing, not clear or could be improved, please don't h
                 * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
             * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
             * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
+            * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-            * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
+            * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
             * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -52,6 +53,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
             * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
+            * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
             * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
             * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
             * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
@@ -97,18 +99,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
             * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
             * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
-        * [.environment-variables](#resin.models.environment-variables) : <code>object</code>
-            * [.device](#resin.models.environment-variables.device) : <code>object</code>
-                * [.getAll(uuidOrId)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise</code>
-                * [.getAllByApplication(nameOrId)](#resin.models.environment-variables.device.getAllByApplication) ⇒ <code>Promise</code>
-                * [.create(uuidOrId, envVarName, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
-                * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
-                * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-            * [.getAllByApplication(applicationNameOrId)](#resin.models.environment-variables.getAllByApplication) ⇒ <code>Promise</code>
-            * [.create(applicationNameOrId, envVarName, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
-            * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
-            * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
-            * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
         * [.os](#resin.models.os) : <code>object</code>
             * [.getDownloadSize(deviceType, [version])](#resin.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getSupportedVersions(deviceType)](#resin.models.os.getSupportedVersions) ⇒ <code>Promise</code>
@@ -120,9 +110,15 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
             * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-        * [.build](#resin.models.build) : <code>object</code>
-            * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+        * [.release](#resin.models.release) : <code>object</code>
+            * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+            * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+        * [.service](#resin.models.service) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
+        * [.image](#resin.models.image) : <code>object</code>
+            * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
+            * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
         * [.billing](#resin.models.billing) : <code>object</code>
             * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -149,12 +145,9 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.logs](#resin.logs) : <code>object</code>
         * [.subscribe(uuidOrId)](#resin.logs.subscribe) ⇒ <code>Promise</code>
         * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
-        * [.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>
-        * [.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>
         * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
             * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
             * ["line"](#resin.logs.LogSubscription.event_line)
-            * ["clear"](#resin.logs.LogSubscription.event_clear)
             * ["error"](#resin.logs.LogSubscription.event_error)
     * [.settings](#resin.settings) : <code>object</code>
         * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
@@ -229,9 +222,9 @@ in the SDK.
 **Example**  
 ```js
 resin.pine.get({
-	resource: 'build/$count',
+	resource: 'release/$count',
 	options: {
-		filter: { belongs_to__application: applicationId }
+		$filter: { belongs_to__application: applicationId }
 	}
 });
 ```
@@ -270,11 +263,12 @@ resin.models.device.get(123).catch(function (error) {
             * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
         * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
         * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
+        * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-        * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
+        * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
         * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -298,6 +292,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
         * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
+        * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
         * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
         * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
         * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
@@ -343,18 +338,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
         * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
         * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
-    * [.environment-variables](#resin.models.environment-variables) : <code>object</code>
-        * [.device](#resin.models.environment-variables.device) : <code>object</code>
-            * [.getAll(uuidOrId)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId)](#resin.models.environment-variables.device.getAllByApplication) ⇒ <code>Promise</code>
-            * [.create(uuidOrId, envVarName, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
-            * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
-            * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-        * [.getAllByApplication(applicationNameOrId)](#resin.models.environment-variables.getAllByApplication) ⇒ <code>Promise</code>
-        * [.create(applicationNameOrId, envVarName, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
-        * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
-        * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
-        * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
     * [.os](#resin.models.os) : <code>object</code>
         * [.getDownloadSize(deviceType, [version])](#resin.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getSupportedVersions(deviceType)](#resin.models.os.getSupportedVersions) ⇒ <code>Promise</code>
@@ -366,9 +349,15 @@ resin.models.device.get(123).catch(function (error) {
         * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
         * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-    * [.build](#resin.models.build) : <code>object</code>
-        * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+    * [.release](#resin.models.release) : <code>object</code>
+        * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+        * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+    * [.service](#resin.models.service) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
+    * [.image](#resin.models.image) : <code>object</code>
+        * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
+        * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
     * [.billing](#resin.models.billing) : <code>object</code>
         * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -390,11 +379,12 @@ resin.models.device.get(123).catch(function (error) {
         * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
     * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
     * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
+    * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
-    * [.create(name, deviceType, [parentNameOrId])](#resin.models.application.create) ⇒ <code>Promise</code>
+    * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
     * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
@@ -581,6 +571,44 @@ resin.models.application.get('MyApp', function(error, application) {
 	console.log(application);
 });
 ```
+<a name="resin.models.application.getWithDeviceServiceDetails"></a>
+
+##### application.getWithDeviceServiceDetails(nameOrId, [options]) ⇒ <code>Promise</code>
+This method does not map exactly to the underlying model: it runs a
+larger prebuilt query, and reformats it into an easy to use and
+understand format. If you want more control, or to see the raw model
+directly, use `application.get(uuidOrId, options)` instead.
+
+**Kind**: static method of <code>[application](#resin.models.application)</code>  
+**Summary**: Get a single application and its deives, along with each device's
+associated services' essential details  
+**Access**: public  
+**Fulfil**: <code>Object</code> - application  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+	if (error) throw error;
+	console.log(device);
+});
+```
 <a name="resin.models.application.getAppByOwner"></a>
 
 ##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
@@ -681,7 +709,7 @@ resin.models.application.getById(89, function(error, application) {
 ```
 <a name="resin.models.application.create"></a>
 
-##### application.create(name, deviceType, [parentNameOrId]) ⇒ <code>Promise</code>
+##### application.create(options) ⇒ <code>Promise</code>
 **Kind**: static method of <code>[application](#resin.models.application)</code>  
 **Summary**: Create an application  
 **Access**: public  
@@ -689,25 +717,27 @@ resin.models.application.getById(89, function(error, application) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>String</code> | application name |
-| deviceType | <code>String</code> | device type slug |
-| [parentNameOrId] | <code>Number</code> \| <code>String</code> | parent application name or id |
+| options | <code>Object</code> | application creation parameters |
+| options.name | <code>String</code> | application name |
+| [options.applicationType] | <code>String</code> | application type slug e.g. microservices-starter |
+| options.deviceType | <code>String</code> | device type slug |
+| [options.parent] | <code>Number</code> \| <code>String</code> | parent application name or id |
 
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
+resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	if (error) throw error;
 	console.log(application);
 });
@@ -1013,6 +1043,7 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
     * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
+    * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
     * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
     * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
     * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
@@ -1340,6 +1371,43 @@ resin.models.device.get(123).then(function(device) {
 **Example**  
 ```js
 resin.models.device.get('7cf02a6', function(error, device) {
+	if (error) throw error;
+	console.log(device);
+});
+```
+<a name="resin.models.device.getWithServiceDetails"></a>
+
+##### device.getWithServiceDetails(uuidOrId, [options]) ⇒ <code>Promise</code>
+This method does not map exactly to the underlying model: it runs a
+larger prebuilt query, and reformats it into an easy to use and
+understand format. If you want more control, or to see the raw model
+directly, use `device.get(uuidOrId, options)` instead.
+
+**Kind**: static method of <code>[device](#resin.models.device)</code>  
+**Summary**: Get a single device along with its associated services' essential details  
+**Access**: public  
+**Fulfil**: <code>Object</code> - device with service details  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.device.getWithServiceDetails(123).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });
@@ -2572,295 +2640,6 @@ resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 	console.log(key);
 });
 ```
-<a name="resin.models.environment-variables"></a>
-
-#### models.environment-variables : <code>object</code>
-**Kind**: static namespace of <code>[models](#resin.models)</code>  
-
-* [.environment-variables](#resin.models.environment-variables) : <code>object</code>
-    * [.device](#resin.models.environment-variables.device) : <code>object</code>
-        * [.getAll(uuidOrId)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId)](#resin.models.environment-variables.device.getAllByApplication) ⇒ <code>Promise</code>
-        * [.create(uuidOrId, envVarName, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
-        * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
-        * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-    * [.getAllByApplication(applicationNameOrId)](#resin.models.environment-variables.getAllByApplication) ⇒ <code>Promise</code>
-    * [.create(applicationNameOrId, envVarName, value)](#resin.models.environment-variables.create) ⇒ <code>Promise</code>
-    * [.update(id, value)](#resin.models.environment-variables.update) ⇒ <code>Promise</code>
-    * [.remove(id)](#resin.models.environment-variables.remove) ⇒ <code>Promise</code>
-    * [.isSystemVariable(variable)](#resin.models.environment-variables.isSystemVariable) ⇒ <code>Boolean</code>
-
-<a name="resin.models.environment-variables.device"></a>
-
-##### environment-variables.device : <code>object</code>
-**Kind**: static namespace of <code>[environment-variables](#resin.models.environment-variables)</code>  
-
-* [.device](#resin.models.environment-variables.device) : <code>object</code>
-    * [.getAll(uuidOrId)](#resin.models.environment-variables.device.getAll) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId)](#resin.models.environment-variables.device.getAllByApplication) ⇒ <code>Promise</code>
-    * [.create(uuidOrId, envVarName, value)](#resin.models.environment-variables.device.create) ⇒ <code>Promise</code>
-    * [.update(id, value)](#resin.models.environment-variables.device.update) ⇒ <code>Promise</code>
-    * [.remove(id)](#resin.models.environment-variables.device.remove) ⇒ <code>Promise</code>
-
-<a name="resin.models.environment-variables.device.getAll"></a>
-
-###### device.getAll(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
-**Summary**: Get all device environment variables  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - device environment variables  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-resin.models.environmentVariables.device.getAll('7cf02a6').then(function(environmentVariables) {
-	console.log(environmentVariables);
-});
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.getAll(123).then(function(environmentVariables) {
-	console.log(environmentVariables);
-});
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.getAll('7cf02a6', function(error, environmentVariables) {
-	if (error) throw error;
-	console.log(environmentVariables)
-});
-```
-<a name="resin.models.environment-variables.device.getAllByApplication"></a>
-
-###### device.getAllByApplication(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
-**Summary**: Get all device environment variables for an application  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - device environment variables  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
-
-**Example**  
-```js
-resin.models.environmentVariables.device.getAllByApplication('MyApp').then(function(environmentVariables) {
-	console.log(environmentVariables);
-});
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.getAllByApplication(999999).then(function(environmentVariables) {
-	console.log(environmentVariables);
-});
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.getAllByApplication('MyApp', function(error, environmentVariables) {
-	if (error) throw error;
-	console.log(environmentVariables)
-});
-```
-<a name="resin.models.environment-variables.device.create"></a>
-
-###### device.create(uuidOrId, envVarName, value) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
-**Summary**: Create a device environment variable  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| envVarName | <code>String</code> | environment variable name |
-| value | <code>String</code> | environment variable value |
-
-**Example**  
-```js
-resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim');
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.create(123, 'EDITOR', 'vim');
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.create('7cf02a6', 'EDITOR', 'vim', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.environment-variables.device.update"></a>
-
-###### device.update(id, value) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
-**Summary**: Update a device environment variable  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>String</code> \| <code>Number</code> | environment variable id |
-| value | <code>String</code> | environment variable value |
-
-**Example**  
-```js
-resin.models.environmentVariables.device.update(2, 'emacs');
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.update(2, 'emacs', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.environment-variables.device.remove"></a>
-
-###### device.remove(id) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[device](#resin.models.environment-variables.device)</code>  
-**Summary**: Remove a device environment variable  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>String</code> \| <code>Number</code> | environment variable id |
-
-**Example**  
-```js
-resin.models.environmentVariables.device.remove(2);
-```
-**Example**  
-```js
-resin.models.environmentVariables.device.remove(2, function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.environment-variables.getAllByApplication"></a>
-
-##### environment-variables.getAllByApplication(applicationNameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
-**Summary**: Get all environment variables by application  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - environment variables  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| applicationNameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
-
-**Example**  
-```js
-resin.models.environmentVariables.getAllByApplication('MyApp').then(function(environmentVariables) {
-	console.log(environmentVariables);
-});
-```
-**Example**  
-```js
-resin.models.environmentVariables.getAllByApplication(123).then(function(environmentVariables) {
-	console.log(environmentVariables);
-});
-```
-**Example**  
-```js
-resin.models.environmentVariables.getAllByApplication('MyApp', function(error, environmentVariables) {
-	if (error) throw error;
-	console.log(environmentVariables);
-});
-```
-<a name="resin.models.environment-variables.create"></a>
-
-##### environment-variables.create(applicationNameOrId, envVarName, value) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
-**Summary**: Create an environment variable for an application  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| applicationNameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
-| envVarName | <code>String</code> | environment variable name |
-| value | <code>String</code> | environment variable value |
-
-**Example**  
-```js
-resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim');
-```
-**Example**  
-```js
-resin.models.environmentVariables.create(123, 'EDITOR', 'vim');
-```
-**Example**  
-```js
-resin.models.environmentVariables.create('MyApp', 'EDITOR', 'vim', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.environment-variables.update"></a>
-
-##### environment-variables.update(id, value) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
-**Summary**: Update an environment variable value from an application  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>String</code> \| <code>Number</code> | environment variable id |
-| value | <code>String</code> | environment variable value |
-
-**Example**  
-```js
-resin.models.environmentVariables.update(317, 'vim');
-```
-**Example**  
-```js
-resin.models.environmentVariables.update(317, 'vim', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.environment-variables.remove"></a>
-
-##### environment-variables.remove(id) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
-**Summary**: Remove environment variable  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>String</code> \| <code>Number</code> | environment variable id |
-
-**Example**  
-```js
-resin.models.environmentVariables.remove(51);
-```
-**Example**  
-```js
-resin.models.environmentVariables.remove(51, function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.environment-variables.isSystemVariable"></a>
-
-##### environment-variables.isSystemVariable(variable) ⇒ <code>Boolean</code>
-**Kind**: static method of <code>[environment-variables](#resin.models.environment-variables)</code>  
-**Summary**: Check is a variable is system specific  
-**Returns**: <code>Boolean</code> - Whether a variable is system specific or not  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| variable | <code>Object</code> | environment variable |
-
-**Example**  
-```js
-resin.models.environmentVariables.isSystemVariable({
-	name: 'RESIN_SUPERVISOR'
-});
-> true
-```
-**Example**  
-```js
-resin.models.environmentVariables.isSystemVariable({
-	name: 'EDITOR'
-});
-> false
-```
 <a name="resin.models.os"></a>
 
 #### models.os : <code>object</code>
@@ -3116,48 +2895,89 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 	console.log(options);
 });
 ```
-<a name="resin.models.build"></a>
+<a name="resin.models.release"></a>
 
-#### models.build : <code>object</code>
+#### models.release : <code>object</code>
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
-* [.build](#resin.models.build) : <code>object</code>
-    * [.get(id, [options])](#resin.models.build.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.build.getAllByApplication) ⇒ <code>Promise</code>
+* [.release](#resin.models.release) : <code>object</code>
+    * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
+    * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
 
-<a name="resin.models.build.get"></a>
+<a name="resin.models.release.get"></a>
 
-##### build.get(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[build](#resin.models.build)</code>  
-**Summary**: Get a specific build  
+##### release.get(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[release](#resin.models.release)</code>  
+**Summary**: Get a specific release  
 **Access**: public  
-**Fulfil**: <code>Object</code> - build  
+**Fulfil**: <code>Object</code> - release  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| id | <code>Number</code> |  | build id |
+| id | <code>Number</code> |  | release id |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
-resin.models.build.get(123).then(function(build) {
-		console.log(build);
+resin.models.release.get(123).then(function(release) {
+		console.log(release);
 });
 ```
 **Example**  
 ```js
-resin.models.build.get(123, function(error, build) {
+resin.models.release.get(123, function(error, release) {
 		if (error) throw error;
-		console.log(build);
+		console.log(release);
 });
 ```
-<a name="resin.models.build.getAllByApplication"></a>
+<a name="resin.models.release.getWithImageDetails"></a>
 
-##### build.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[build](#resin.models.build)</code>  
-**Summary**: Get all builds from an application  
+##### release.getWithImageDetails(id, [options]) ⇒ <code>Promise</code>
+This method does not map exactly to the underlying model: it runs a
+larger prebuilt query, and reformats it into an easy to use and
+understand format. If you want significantly more control, or to see the
+raw model directly, use `release.get(uuidOrId, options)` instead.
+
+**Kind**: static method of <code>[release](#resin.models.release)</code>  
+**Summary**: Get a specific release with the details of the images built  
 **Access**: public  
-**Fulfil**: <code>Object[]</code> - builds  
+**Fulfil**: <code>Object</code> - release with image details  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | release id |
+| [options] | <code>Object</code> | <code>{}</code> | a map of extra pine options |
+| [options.release] | <code>Boolean</code> | <code>{}</code> | extra pine options for releases |
+| [options.image] | <code>Object</code> | <code>{}</code> | extra pine options for images |
+
+**Example**  
+```js
+resin.models.release.getWithImageDetails(123).then(function(release) {
+		console.log(release);
+});
+```
+**Example**  
+```js
+resin.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
+.then(function(release) {
+		console.log(release.images[0].build_log);
+});
+```
+**Example**  
+```js
+resin.models.release.getWithImageDetails(123, function(error, release) {
+		if (error) throw error;
+		console.log(release);
+});
+```
+<a name="resin.models.release.getAllByApplication"></a>
+
+##### release.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[release](#resin.models.release)</code>  
+**Summary**: Get all releases from an application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - releases  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -3166,21 +2986,117 @@ resin.models.build.get(123, function(error, build) {
 
 **Example**  
 ```js
-resin.models.build.getAllByApplication('MyApp').then(function(builds) {
-		console.log(builds);
+resin.models.release.getAllByApplication('MyApp').then(function(releases) {
+		console.log(releases);
 });
 ```
 **Example**  
 ```js
-resin.models.build.getAllByApplication(123).then(function(builds) {
-		console.log(builds);
+resin.models.release.getAllByApplication(123).then(function(releases) {
+		console.log(releases);
 });
 ```
 **Example**  
 ```js
-resin.models.build.getAllByApplication('MyApp', function(error, builds) {
+resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
-		console.log(builds);
+		console.log(releases);
+});
+```
+<a name="resin.models.service"></a>
+
+#### models.service : <code>object</code>
+**Kind**: static namespace of <code>[models](#resin.models)</code>  
+<a name="resin.models.service.getAllByApplication"></a>
+
+##### service.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[service](#resin.models.service)</code>  
+**Summary**: Get all services from an application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - services  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.service.getAllByApplication('MyApp').then(function(services) {
+		console.log(services);
+});
+```
+**Example**  
+```js
+resin.models.service.getAllByApplication(123).then(function(services) {
+		console.log(services);
+});
+```
+**Example**  
+```js
+resin.models.service.getAllByApplication('MyApp', function(error, services) {
+		if (error) throw error;
+		console.log(services);
+});
+```
+<a name="resin.models.image"></a>
+
+#### models.image : <code>object</code>
+**Kind**: static namespace of <code>[models](#resin.models)</code>  
+
+* [.image](#resin.models.image) : <code>object</code>
+    * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
+    * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
+
+<a name="resin.models.image.get"></a>
+
+##### image.get(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[image](#resin.models.image)</code>  
+**Summary**: Get a specific image  
+**Access**: public  
+**Fulfil**: <code>Object</code> - image  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | image id |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.image.get(123).then(function(image) {
+		console.log(image);
+});
+```
+**Example**  
+```js
+resin.models.image.get(123, function(error, image) {
+		if (error) throw error;
+		console.log(image);
+});
+```
+<a name="resin.models.image.getLogs"></a>
+
+##### image.getLogs(id) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[image](#resin.models.image)</code>  
+**Summary**: Get the logs for an image  
+**Access**: public  
+**Fulfil**: <code>string</code> - logs  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | image id |
+
+**Example**  
+```js
+resin.models.image.getLogs(123).then(function(logs) {
+		console.log(logs);
+});
+```
+**Example**  
+```js
+resin.models.image.getLogs(123, function(error, logs) {
+		if (error) throw error;
+		console.log(logs);
 });
 ```
 <a name="resin.models.billing"></a>
@@ -3720,12 +3636,9 @@ resin.auth.register({
 * [.logs](#resin.logs) : <code>object</code>
     * [.subscribe(uuidOrId)](#resin.logs.subscribe) ⇒ <code>Promise</code>
     * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
-    * [.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>
-    * [.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>
     * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
         * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
         * ["line"](#resin.logs.LogSubscription.event_line)
-        * ["clear"](#resin.logs.LogSubscription.event_clear)
         * ["error"](#resin.logs.LogSubscription.event_error)
 
 <a name="resin.logs.subscribe"></a>
@@ -3733,6 +3646,11 @@ resin.auth.register({
 #### logs.subscribe(uuidOrId) ⇒ <code>Promise</code>
 Connects to the stream of devices logs, returning a LogSubscription, which
 can be used to listen for logs as they appear, line by line.
+
+Log order here is not guaranteed to reflect the order they were emitted on the device.
+Use line.timestamp to get the exact timestamp recorded by the device itself, or
+line.createdAt (on modern devices only) to get the time it was received & stored
+in the cloud.
 
 **Kind**: static method of <code>[logs](#resin.logs)</code>  
 **Summary**: Subscribe to device logs  
@@ -3753,9 +3671,6 @@ resin.logs.subscribe('7cf02a6').then(function(logs) {
 	logs.on('line', function(line) {
 		console.log(line);
 	});
-	logs.on('clear', function() {
-		console.clear();
-	});
 });
 ```
 **Example**  
@@ -3763,9 +3678,6 @@ resin.logs.subscribe('7cf02a6').then(function(logs) {
 resin.logs.subscribe(123).then(function(logs) {
 	logs.on('line', function(line) {
 		console.log(line);
-	});
-	logs.on('clear', function() {
-		console.clear();
 	});
 });
 ```
@@ -3782,6 +3694,13 @@ resin.logs.subscribe('7cf02a6', function(error, logs) {
 <a name="resin.logs.history"></a>
 
 #### logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
+Get an array of the latest log messages for a given device.
+
+Log order here is not guaranteed to reflect the order they were emitted on the device.
+Use line.timestamp to get the exact timestamp recorded by the device itself, or
+line.createdAt (on modern devices only) to get the time it was received & stored
+in the cloud.
+
 **Note**: the default number of logs retrieved is 100.
 To get a different number pass the `{ count: N }` to the options param.
 Also note that the actual number of log lines can be bigger as the
@@ -3792,10 +3711,11 @@ Resin.io supervisor can combine lines sent in a short time interval
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - history lines  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| [options] | <code>Object</code> | any options supported by https://www.pubnub.com/docs/nodejs-javascript/api-reference#history |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.count] | <code>Number</code> | <code>100</code> | Number of requests to return |
 
 **Example**  
 ```js
@@ -3823,73 +3743,6 @@ resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
 	});
 });
 ```
-<a name="resin.logs.historySinceLastClear"></a>
-
-#### logs.historySinceLastClear(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Note**: the default number of logs retrieved is 200.
-To get a different number pass the `{ count: N }` to the options param.
-Also note that the actual number of log lines can be bigger as the
-Resin.io supervisor can combine lines sent in a short time interval
-
-**Kind**: static method of <code>[logs](#resin.logs)</code>  
-**Summary**: Get device logs history after the most recent clear request  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - history lines  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| [options] | <code>Object</code> | any options supported by https://www.pubnub.com/docs/nodejs-javascript/api-reference#history |
-
-**Example**  
-```js
-resin.logs.historySinceLastClear('7cf02a6', { count: 20 }).then(function(lines) {
-	lines.forEach(function(line) {
-		console.log(line);
-	});
-});
-```
-**Example**  
-```js
-resin.logs.historySinceLastClear(123).then(function(lines) {
-	lines.forEach(function(line) {
-		console.log(line);
-	});
-});
-```
-**Example**  
-```js
-resin.logs.historySinceLastClear('7cf02a6', function(error, lines) {
-	if (error) throw error;
-
-	lines.forEach(function(line) {
-		console.log(line);
-	});
-});
-```
-<a name="resin.logs.clear"></a>
-
-#### logs.clear(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[logs](#resin.logs)</code>  
-**Summary**: Clear device logs history  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-resin.logs.clear('7cf02a6').then(function() {
-	console.log('OK');
-});
-```
-**Example**  
-```js
-resin.logs.clear(123).then(function() {
-	console.log('OK');
-});
-```
 <a name="resin.logs.LogSubscription"></a>
 
 #### logs.LogSubscription : <code>EventEmitter</code>
@@ -3901,7 +3754,6 @@ You can get a LogSubscription for a given device by calling `resin.logs.subscrib
 * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
     * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
     * ["line"](#resin.logs.LogSubscription.event_line)
-    * ["clear"](#resin.logs.LogSubscription.event_clear)
     * ["error"](#resin.logs.LogSubscription.event_error)
 
 <a name="resin.logs.LogSubscription.unsubscribe"></a>
@@ -3925,17 +3777,6 @@ logs.unsubscribe();
 ```js
 logs.on('line', function(line) {
 	console.log(line);
-});
-```
-<a name="resin.logs.LogSubscription.event_clear"></a>
-
-##### "clear"
-**Kind**: event emitted by <code>[LogSubscription](#resin.logs.LogSubscription)</code>  
-**Summary**: Event fired when the logs have been cleared  
-**Example**  
-```js
-logs.on('clear', function() {
-	console.clear();
 });
 ```
 <a name="resin.logs.LogSubscription.event_error"></a>

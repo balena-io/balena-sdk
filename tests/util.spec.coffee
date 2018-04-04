@@ -10,46 +10,46 @@ Promise = require('bluebird')
 describe 'Pine option merging', ->
 
 	it 'uses the defaults only, if no extra options are provided', ->
-		defaults = filter: id: 1
+		defaults = $filter: id: 1
 		result = mergePineOptions(defaults, undefined)
 		m.chai.expect(result).to.deep.equal(defaults)
 
 	it "uses extra options directly if they don't conflict with defaults", ->
 		extras =
-			filter: id: 1
-			select: [ 'id' ]
-			expand:
+			$filter: id: 1
+			$select: [ 'id' ]
+			$expand:
 				device:
 					$select: ['id']
 					$expand: ['application', 'user']
-			top: 1
-			skip: 1
+			$top: 1
+			$skip: 1
 		result = mergePineOptions({}, extras)
 		m.chai.expect(result).to.deep.equal(extras)
 
 	it 'overrides top, skip and orderby options', ->
 		result = mergePineOptions
-			top: 1
-			skip: 2
-			orderby: 'app_name asc'
+			$top: 1
+			$skip: 2
+			$orderby: 'app_name asc'
 		,
-			top: 3
-			skip: 4
-			orderby: 'id asc'
+			$top: 3
+			$skip: 4
+			$orderby: 'id asc'
 
 		m.chai.expect(result).to.deep.equal
-			top: 3
-			skip: 4
-			orderby: 'id asc'
+			$top: 3
+			$skip: 4
+			$orderby: 'id asc'
 
 	it 'combines filter options with $and', ->
 		result = mergePineOptions
-			filter: id: 1
+			$filter: id: 1
 		,
-			filter: name: 'MyApp'
+			$filter: name: 'MyApp'
 
 		m.chai.expect(result).to.deep.equal
-			filter:
+			$filter:
 				$and: [
 					id: 1
 				,
@@ -58,53 +58,75 @@ describe 'Pine option merging', ->
 
 	it 'combines expand options for separate single relationships', ->
 		result = mergePineOptions
-			expand: 'device'
+			$expand: 'device'
 		,
-			expand: 'application'
+			$expand: 'application'
 
 		m.chai.expect(result).to.deep.equal
-			expand:
+			$expand:
 				device: {}
 				application: {}
 
 	it 'combines expand options for separate arrays of relationships', ->
 		result = mergePineOptions
-			expand: ['device', 'application']
+			$expand: ['device', 'application']
 		,
-			expand: ['application', 'build']
+			$expand: ['application', 'build']
 
 		m.chai.expect(result).to.deep.equal
-			expand:
+			$expand:
 				device: {}
 				application: {}
 				build: {}
 
 	it 'combines identical expand options to a single expand', ->
 		result = mergePineOptions
-			expand: 'device'
+			$expand: 'device'
 		,
-			expand: 'device'
+			$expand: 'device'
 
 		m.chai.expect(result).to.deep.equal
-			expand: device: {}
+			$expand: device: {}
 
 	it 'overrides $select params for expand options for the same relationship, if present', ->
 		result = mergePineOptions
-			expand: device: $select: [ 'id' ]
+			$expand: device: $select: [ 'id' ]
 		,
-			expand: device: $select: [ 'name' ]
+			$expand: device: $select: [ 'name' ]
 
 		m.chai.expect(result).to.deep.equal
-			expand: device: $select: [ 'name' ]
+			$expand: device: $select: [ 'name' ]
+
+	it 'adds $filter params for expand options, if present', ->
+		result = mergePineOptions
+			$expand: 'device'
+		,
+			$expand: device: $filter: name: 'myname'
+
+		m.chai.expect(result).to.deep.equal
+			$expand: device: $filter: name: 'myname'
+
+	it 'combines $filter params for expand options for the same relationship, if present', ->
+		result = mergePineOptions
+			$expand: device: $filter: id: 1
+		,
+			$expand: device: $filter: name: 'myname'
+
+		m.chai.expect(result).to.deep.equal
+			$expand: device: $filter: $and: [
+				id: 1
+			,
+				name: 'myname'
+			]
 
 	it 'combines $expand params for expand options for the same relationship, if present', ->
 		result = mergePineOptions
-			expand: device: $expand: [ 'application' ]
+			$expand: device: $expand: [ 'application' ]
 		,
-			expand: device: $expand: [ 'build' ]
+			$expand: device: $expand: [ 'build' ]
 
 		m.chai.expect(result).to.deep.equal
-			expand:
+			$expand:
 				device:
 					$expand:
 						application: {}
@@ -112,18 +134,18 @@ describe 'Pine option merging', ->
 
 	it 'combines $expand params for expand options that are arrays of objects', ->
 		result = mergePineOptions
-			expand: [
+			$expand: [
 				device: $select: [ 'id' ]
 			]
 		,
-			expand: [
+			$expand: [
 				device: $expand: [ 'build' ]
 			,
 				application: $expand: [ 'release' ]
 			]
 
 		m.chai.expect(result).to.deep.equal
-			expand:
+			$expand:
 				application:
 					$expand: [ 'release' ]
 				device:
@@ -132,18 +154,18 @@ describe 'Pine option merging', ->
 
 	it 'combines $expand params for expand options that are arrays of objects with multiple keys', ->
 		result = mergePineOptions
-			expand: [
+			$expand: [
 				device: $select: [ 'id' ]
 				application: $expand: [ 'user' ]
 			]
 		,
-			expand: [
+			$expand: [
 				device: $expand: [ 'build' ]
 				application: $expand: 'release'
 			]
 
 		m.chai.expect(result).to.deep.equal
-			expand:
+			$expand:
 				application:
 					$expand:
 						release: {},

@@ -37,12 +37,6 @@ modelsTemplate =
 	key: require('./key')
 
 	###*
-	# @namespace environment-variables
-	# @memberof resin.models
-	###
-	environmentVariables: require('./environment-variables')
-
-	###*
 	# @namespace os
 	# @memberof resin.models
 	###
@@ -55,10 +49,22 @@ modelsTemplate =
 	config: require('./config')
 
 	###*
-	# @namespace build
+	# @namespace release
 	# @memberof resin.models
 	###
-	build: require('./build')
+	release: require('./release')
+
+	###*
+	# @namespace service
+	# @memberof resin.models
+	###
+	service: require('./service')
+
+	###*
+	# @namespace image
+	# @memberof resin.models
+	###
+	image: require('./image')
 
 	###*
 	# @namespace billing

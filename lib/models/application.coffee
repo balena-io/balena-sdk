@@ -27,6 +27,8 @@ errors = require('resin-errors')
 {
 	isId,
 	findCallback,
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noApplicationForKeyResponse,
@@ -45,7 +47,7 @@ getApplicationModel = (deps, opts) ->
 	tagsModel = once -> require('./tags').tagsModel(
 		deps,
 			associatedResource: 'application'
-			getResourceId: (nameOrId) -> exports.get(nameOrId, select: 'id').get('id')
+			getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
 			ResourceNotFoundError: errors.ResinApplicationNotFound
 	)
 
@@ -58,7 +60,7 @@ getApplicationModel = (deps, opts) ->
 			if isId(nameOrId)
 				return nameOrId
 			else
-				exports.get(nameOrId, select: 'id').get('id')
+				exports.get(nameOrId, $select: 'id').get('id')
 
 	exports._getId = getId
 
@@ -99,8 +101,8 @@ getApplicationModel = (deps, opts) ->
 				resource: 'application'
 				options:
 					mergePineOptions
-						orderby: 'app_name asc'
-						filter:
+						$orderby: 'app_name asc'
+						$filter:
 							user: userId
 					, options
 
@@ -158,7 +160,7 @@ getApplicationModel = (deps, opts) ->
 					resource: 'application'
 					options:
 						mergePineOptions
-							filter:
+							$filter:
 								app_name: nameOrId
 						, options
 				.tap (applications) ->
@@ -170,6 +172,59 @@ getApplicationModel = (deps, opts) ->
 				.get(0)
 		.tap(normalizeApplication)
 		.asCallback(callback)
+
+	###*
+	# @summary Get a single application and its deives, along with each device's
+	# associated services' essential details
+	# @name getWithDeviceServiceDetails
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `application.get(uuidOrId, options)` instead.
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - application
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+	# 	if (error) throw error;
+	# 	console.log(device);
+	# });
+	###
+	exports.getWithDeviceServiceDetails = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		serviceOptions = mergePineOptions
+			$expand: [
+				owns__device: getCurrentServiceDetailsPineOptions()
+			]
+		, options
+
+		exports.get(nameOrId, serviceOptions)
+		.then (app) ->
+			if app and app.owns__device
+				app.owns__device = app.owns__device.map(generateCurrentServiceDetails)
+
+			return app
+		.asCallback(callback)
+
 
 	###*
 	# @summary Get a single application using the appname and owner's username
@@ -199,7 +254,7 @@ getApplicationModel = (deps, opts) ->
 			resource: 'application'
 			options:
 				mergePineOptions
-					filter:
+					$filter:
 						$eq: [
 							$tolower: $: 'app_name'
 							appName
@@ -249,7 +304,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (nameOrId, callback) ->
-		exports.get(nameOrId, select: ['id']).return(true)
+		exports.get(nameOrId, $select: ['id']).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -276,7 +331,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.hasAny = (callback) ->
-		exports.getAll(select: ['id']).then (applications) ->
+		exports.getAll($select: ['id']).then (applications) ->
 			return not isEmpty(applications)
 		.asCallback(callback)
 
@@ -321,34 +376,51 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
-	# @param {String} deviceType - device type slug
-	# @param {(Number|String)} [parentNameOrId] - parent application name or id
+	# @param {Object} options - application creation parameters
+	# @param {String} options.name - application name
+	# @param {String} [options.applicationType] - application type slug e.g. microservices-starter
+	# @param {String} options.deviceType - device type slug
+	# @param {(Number|String)} [options.parent] - parent application name or id
 	#
 	# @fulfil {Object} - application
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
 	###
-	exports.create = (name, deviceType, parentNameOrId, callback) ->
+	exports.create = ({ name, applicationType, deviceType, parent }, callback) ->
 		callback = findCallback(arguments)
 
-		parentAppPromise = if parentNameOrId
-			exports.get(parentNameOrId, select: [ 'id' ])
+		applicationTypePromise = if !applicationType
+			Promise.resolve()
+		else
+			pine.get
+				resource: 'application_type'
+				options:
+					$select: [ 'id' ]
+					$filter:
+						slug: applicationType
+			.get(0)
+			.then (appType) ->
+				if not appType
+					throw new Error("Invalid application type: #{applicationType}")
+				appType.id
+
+		parentAppPromise = if parent
+			exports.get(parent, $select: [ 'id' ])
 		else
 			Promise.resolve()
 
@@ -357,14 +429,26 @@ getApplicationModel = (deps, opts) ->
 			if not deviceManifest?
 				throw new errors.ResinInvalidDeviceType(deviceType)
 
-		return Promise.all([ deviceManifestPromise, parentAppPromise ])
-		.then ([ deviceManifest, parentApplication ]) ->
+		return Promise.props([
+			deviceManifestPromise
+			applicationTypePromise
+			parentAppPromise
+		])
+		.then ([
+			deviceManifest
+			applicationTypeId
+			parentApplication
+		]) ->
 			if deviceManifest.state == 'DISCONTINUED'
 				throw new errors.ResinDiscontinuedDeviceType(deviceType)
 
 			extraOptions = if parentApplication
 				depends_on__application: parentApplication.id
 			else {}
+
+			if applicationTypeId
+				assign extraOptions,
+					application_type: applicationTypeId
 
 			return pine.post
 				resource: 'application'
@@ -469,7 +553,7 @@ getApplicationModel = (deps, opts) ->
 	exports.generateApiKey = (nameOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return request.send
 				method: 'POST'
 				url: "/application/#{id}/generate-api-key"
@@ -642,13 +726,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: true
 				options:
-					filter:
+					$filter:
 						belongs_to__application: id
 		.asCallback(callback)
 
@@ -674,13 +758,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: false
 				options:
-					filter:
+					$filter:
 						belongs_to__application: id
 		.asCallback(callback)
 
@@ -785,10 +869,10 @@ getApplicationModel = (deps, opts) ->
 	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(nameOrId, select: 'id').get('id').then (id) ->
+		exports.get(nameOrId, $select: 'id').get('id').then (id) ->
 			exports.tags.getAll(
 				mergePineOptions
-					filter: application: id
+					$filter: application: id
 				, options
 			)
 		.asCallback(callback)
