@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 import * as ResinErrors from 'resin-errors';
 import { Readable } from 'stream';
 import * as Pine from './pinejs-client-core';
+import * as ResinPine from './resin-pine';
 import { ResinRequest } from './resin-request';
 
 /* tslint:disable:no-namespace */
@@ -792,37 +793,30 @@ declare namespace ResinSdk {
 			subscribe(uuid: string): Promise<LogsSubscription>;
 		};
 
-		pine: {
-			delete<T>(params: PineParamsWithIdFor<T> | PineParamsFor<T>): Promise<string>;
-			get<T>(params: PineParamsWithIdFor<T>): Promise<T>;
-			get<T>(params: PineParamsFor<T>): Promise<T[]>;
-			get<T, Result>(params: PineParamsFor<T>): Promise<Result>;
-			post<T>(params: PineParams): Promise<T>;
-			patch<T>(params: PineParams): Promise<T>;
-		};
+		pine: ResinPine.Pine;
 		interceptors: Interceptor[];
+	}
+
+	interface SdkOptions {
+		apiUrl?: string;
+		/**
+		 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
+		 */
+		apiKey?: string;
+		imageMakerUrl?: string;
+		dataDirectory?: string;
+		isBrowser?: boolean;
+		debug?: boolean;
+	}
+
+	interface SdkConstructor {
+		(options?: SdkOptions): ResinSdk.ResinSDK;
+
+		setSharedOptions(options: SdkOptions): void;
+		fromSharedOptions: () => ResinSdk.ResinSDK;
 	}
 }
 
-interface SdkOptions {
-	apiUrl?: string;
-	/**
-	 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
-	 */
-	apiKey?: string;
-	imageMakerUrl?: string;
-	dataDirectory?: string;
-	isBrowser?: boolean;
-	debug?: boolean;
-}
-
-interface SdkConstructor {
-	(options?: SdkOptions): ResinSdk.ResinSDK;
-
-	setSharedOptions(options: SdkOptions): void;
-	fromSharedOptions: () => ResinSdk.ResinSDK;
-}
-
-declare const ResinSdk: SdkConstructor;
+declare const ResinSdk: ResinSdk.SdkConstructor;
 
 export = ResinSdk;

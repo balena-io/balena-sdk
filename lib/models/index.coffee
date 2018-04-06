@@ -34,7 +34,7 @@ modelsTemplate =
 	# @namespace apiKey
 	# @memberof resin.models
 	###
-	apiKey: require('./api-key')
+	apiKey: require('./api-key').default
 
 	###*
 	# @namespace key
