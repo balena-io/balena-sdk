@@ -4,6 +4,7 @@ import * as Promise from 'bluebird';
 declare namespace ResinRequest {
 	interface ResinRequestOptions {
 		method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
+		baseUrl?: string;
 		url: string;
 		apiKey?: string;
 		body?: any;
