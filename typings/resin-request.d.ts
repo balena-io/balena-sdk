@@ -1,3 +1,5 @@
+import * as Promise from 'bluebird';
+
 /* tslint:disable:no-namespace */
 declare namespace ResinRequest {
 	interface ResinRequestOptions {
