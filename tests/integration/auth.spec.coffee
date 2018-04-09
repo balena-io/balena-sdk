@@ -34,7 +34,7 @@ describe 'SDK authentication', ->
 				resin.auth.authenticate(credentials)
 				.then(resin.auth.loginWithToken)
 				.then ->
-					resin.auth.createApiKey('apiKey')
+					resin.models.apiKey.create('apiKey')
 				.tap(resin.auth.logout)
 				.then(resin.auth.loginWithToken)
 				.then(resin.auth.getToken)

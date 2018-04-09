@@ -73,6 +73,13 @@ exports.resetUser = ->
 
 			resin.pine.delete
 				resource: 'user__has__public_key'
+
+			resin.pine.delete
+				resource: 'api_key'
+				# only delete named user api keys
+				options: $filter: name: $ne: null
+			# Api keys can't delete api keys, just ignore failures here
+			.catchReturn()
 		]
 
 exports.credentials = buildCredentials()
