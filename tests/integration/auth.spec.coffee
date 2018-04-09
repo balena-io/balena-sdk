@@ -30,7 +30,28 @@ describe 'SDK authentication', ->
 
 		describe 'resin.auth.authenticate()', ->
 
-			it 'should eventually be a valid api key given valid credentials', ->
+			it 'should not save the token given valid credentials', ->
+				resin.auth.authenticate(credentials).then ->
+					promise = resin.auth.isLoggedIn()
+					m.chai.expect(promise).to.eventually.be.false
+
+			it 'should be rejected given invalid credentials', ->
+				promise = resin.auth.authenticate
+					email: credentials.username,
+					password: 'NOT-THE-CORRECT-PASSWORD'
+
+				m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
+
+		describe 'resin.auth.loginWithToken()', ->
+
+			it 'should be able to login with a session token', ->
+				resin.auth.authenticate(credentials)
+				.then(resin.auth.loginWithToken)
+				.then(resin.auth.getToken)
+				.then (key) ->
+					m.chai.expect(key).to.be.a('string')
+
+			it 'should be able to login with an API Key', ->
 				resin.auth.authenticate(credentials)
 				.then(resin.auth.loginWithToken)
 				.then ->
@@ -40,25 +61,6 @@ describe 'SDK authentication', ->
 				.then(resin.auth.getToken)
 				.then (key) ->
 					m.chai.expect(key).to.be.a('string')
-
-			it 'should not save the token given valid credentials', ->
-				resin.auth.authenticate(credentials).then ->
-					promise = resin.auth.isLoggedIn()
-					m.chai.expect(promise).to.eventually.be.false
-
-			it 'should eventually be a valid token given valid credentials', ->
-				resin.auth.authenticate(credentials)
-				.then(resin.auth.loginWithToken)
-				.then(resin.auth.getToken)
-				.then (key) ->
-					m.chai.expect(key).to.be.a('string')
-
-			it 'should be rejected given invalid credentials', ->
-				promise = resin.auth.authenticate
-					email: credentials.username,
-					password: 'NOT-THE-CORRECT-PASSWORD'
-
-				m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
 
 		describe 'resin.auth.getEmail()', ->
 
