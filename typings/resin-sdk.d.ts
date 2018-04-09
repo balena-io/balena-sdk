@@ -653,6 +653,9 @@ declare namespace ResinSdk {
 			};
 			apiKey: {
 				create: (name: string, description?: string | null) => Promise<string>;
+				getAll: (options?: PineOptionsFor<ApiKey>) => Promise<ApiKey[]>;
+				update: (id: number, apiKeyInfo: { name?: string; description?: string | null }) => Promise<void>;
+				revoke: (id: number) => Promise<void>;
 			};
 			release: {
 				get(id: number, options?: PineOptionsFor<Release>): Promise<Release>;
