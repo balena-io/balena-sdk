@@ -94,6 +94,11 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
             * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
             * [.lastOnline(device)](#resin.models.device.lastOnline) ⇒ <code>String</code>
+        * [.apiKey](#resin.models.apiKey) : <code>object</code>
+            * [.create(name, [description])](#resin.models.apiKey.create) ⇒ <code>Promise</code>
+            * [.getAll([options])](#resin.models.apiKey.getAll) ⇒ <code>Promise</code>
+            * [.update(id, apiKeyInfo)](#resin.models.apiKey.update) ⇒ <code>Promise</code>
+            * [.revoke(id)](#resin.models.apiKey.revoke) ⇒ <code>Promise</code>
         * [.key](#resin.models.key) : <code>object</code>
             * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
             * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
@@ -136,7 +141,6 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
         * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
         * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
-        * [.createApiKey(name)](#resin.auth.createApiKey) ⇒ <code>Promise</code>
         * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
         * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
         * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
@@ -333,6 +337,11 @@ resin.models.device.get(123).catch(function (error) {
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
         * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.lastOnline(device)](#resin.models.device.lastOnline) ⇒ <code>String</code>
+    * [.apiKey](#resin.models.apiKey) : <code>object</code>
+        * [.create(name, [description])](#resin.models.apiKey.create) ⇒ <code>Promise</code>
+        * [.getAll([options])](#resin.models.apiKey.getAll) ⇒ <code>Promise</code>
+        * [.update(id, apiKeyInfo)](#resin.models.apiKey.update) ⇒ <code>Promise</code>
+        * [.revoke(id)](#resin.models.apiKey.revoke) ⇒ <code>Promise</code>
     * [.key](#resin.models.key) : <code>object</code>
         * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
         * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
@@ -2532,6 +2541,128 @@ resin.models.device.get('7cf02a6').then(function(device) {
 	resin.models.device.lastOnline(device);
 })
 ```
+<a name="resin.models.apiKey"></a>
+
+#### models.apiKey : <code>object</code>
+**Kind**: static namespace of <code>[models](#resin.models)</code>  
+
+* [.apiKey](#resin.models.apiKey) : <code>object</code>
+    * [.create(name, [description])](#resin.models.apiKey.create) ⇒ <code>Promise</code>
+    * [.getAll([options])](#resin.models.apiKey.getAll) ⇒ <code>Promise</code>
+    * [.update(id, apiKeyInfo)](#resin.models.apiKey.update) ⇒ <code>Promise</code>
+    * [.revoke(id)](#resin.models.apiKey.revoke) ⇒ <code>Promise</code>
+
+<a name="resin.models.apiKey.create"></a>
+
+##### apiKey.create(name, [description]) ⇒ <code>Promise</code>
+This method registers a new api key for the current user with the name given.
+
+**Kind**: static method of <code>[apiKey](#resin.models.apiKey)</code>  
+**Summary**: Creates a new user API key  
+**Access**: public  
+**Fulfil**: <code>String</code> - API key  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>String</code> |  | the API key name |
+| [description] | <code>String</code> | <code></code> | the API key description |
+
+**Example**  
+```js
+resin.models.apiKey.create(apiKeyName).then(function(apiKey) {
+	console.log(apiKey);
+});
+```
+**Example**  
+```js
+resin.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
+	console.log(apiKey);
+});
+```
+**Example**  
+```js
+resin.models.apiKey.create(apiKeyName, function(error, apiKey) {
+	if (error) throw error;
+	console.log(apiKey);
+});
+```
+<a name="resin.models.apiKey.getAll"></a>
+
+##### apiKey.getAll([options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[apiKey](#resin.models.apiKey)</code>  
+**Summary**: Get all API keys  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - apiKeys  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.apiKey.getAll().then(function(apiKeys) {
+	console.log(apiKeys);
+});
+```
+**Example**  
+```js
+resin.models.apiKey.getAll(function(error, apiKeys) {
+	if (error) throw error;
+	console.log(apiKeys);
+});
+```
+<a name="resin.models.apiKey.update"></a>
+
+##### apiKey.update(id, apiKeyInfo) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[apiKey](#resin.models.apiKey)</code>  
+**Summary**: Update the details of an API key  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | API key id |
+| apiKeyInfo | <code>Object</code> | an object with the updated name or description |
+
+**Example**  
+```js
+resin.models.apiKey.update(123, { name: 'updatedName' });
+```
+**Example**  
+```js
+resin.models.apiKey.update(123, { description: 'updated description' });
+```
+**Example**  
+```js
+resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
+```
+**Example**  
+```js
+resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
+	if (error) throw error;
+	console.log(apiKeys);
+});
+```
+<a name="resin.models.apiKey.revoke"></a>
+
+##### apiKey.revoke(id) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[apiKey](#resin.models.apiKey)</code>  
+**Summary**: Revoke an API key  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | API key id |
+
+**Example**  
+```js
+resin.models.apiKey.revoke(123);
+```
+**Example**  
+```js
+resin.models.apiKey.revoke(123, function(error) {
+	if (error) throw error;
+});
+```
 <a name="resin.models.key"></a>
 
 #### models.key : <code>object</code>
@@ -3257,7 +3388,6 @@ resin.models.billing.downloadInvoice('0000').then(function(stream) {
     * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
     * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
     * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
-    * [.createApiKey(name)](#resin.auth.createApiKey) ⇒ <code>Promise</code>
     * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
     * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
     * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
@@ -3484,33 +3614,6 @@ resin.auth.isLoggedIn(function(error, isLoggedIn) {
 	} else {
 		console.log('Too bad!');
 	}
-});
-```
-<a name="resin.auth.createApiKey"></a>
-
-#### auth.createApiKey(name) ⇒ <code>Promise</code>
-This method registers a new api key for the current user with the name given.
-
-**Kind**: static method of <code>[auth](#resin.auth)</code>  
-**Summary**: Creates a new user API key  
-**Access**: public  
-**Fulfil**: <code>String</code> - API key  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>String</code> | the API key name |
-
-**Example**  
-```js
-resin.auth.createApiKey(apiKeyName).then(function(apiKey) {
-	console.log(apiKey);
-});
-```
-**Example**  
-```js
-resin.auth.createApiKey(apiKeyName, function(error, apiKey) {
-	if (error) throw error;
-	console.log(apiKey);
 });
 ```
 <a name="resin.auth.getToken"></a>

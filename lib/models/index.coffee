@@ -31,6 +31,12 @@ modelsTemplate =
 	device: require('./device')
 
 	###*
+	# @namespace apiKey
+	# @memberof resin.models
+	###
+	apiKey: require('./api-key').default
+
+	###*
 	# @namespace key
 	# @memberof resin.models
 	###

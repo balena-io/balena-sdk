@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 import * as ResinErrors from 'resin-errors';
 import { Readable } from 'stream';
 import * as Pine from './pinejs-client-core';
+import * as ResinPine from './resin-pine';
 import { ResinRequest } from './resin-request';
 
 /* tslint:disable:no-namespace */
@@ -224,6 +225,13 @@ declare namespace ResinSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
+	}
+
+	interface ApiKey {
+		id: number;
+		created_at: string;
+		name: string;
+		description: string | null;
 	}
 
 	interface Application {
@@ -560,7 +568,6 @@ declare namespace ResinSdk {
 
 	interface ResinSDK {
 		auth: {
-			createApiKey: (name: string) => Promise<string>;
 			register: (credentials: { email: string; password: string }) => Promise<string>;
 			authenticate: (credentials: { email: string; password: string }) => Promise<string>;
 			login: (credentials: { email: string; password: string }) => Promise<void>;
@@ -644,6 +651,12 @@ declare namespace ResinSdk {
 					set(nameOrId: string | number, tagKey: string, value: string): Promise<void>;
 					remove(nameOrId: string | number, tagKey: string): Promise<void>;
 				};
+			};
+			apiKey: {
+				create: (name: string, description?: string | null) => Promise<string>;
+				getAll: (options?: PineOptionsFor<ApiKey>) => Promise<ApiKey[]>;
+				update: (id: number, apiKeyInfo: { name?: string; description?: string | null }) => Promise<void>;
+				revoke: (id: number) => Promise<void>;
 			};
 			release: {
 				get(id: number, options?: PineOptionsFor<Release>): Promise<Release>;
@@ -780,37 +793,30 @@ declare namespace ResinSdk {
 			subscribe(uuid: string): Promise<LogsSubscription>;
 		};
 
-		pine: {
-			delete<T>(params: PineParamsWithIdFor<T> | PineParamsFor<T>): Promise<string>;
-			get<T>(params: PineParamsWithIdFor<T>): Promise<T>;
-			get<T>(params: PineParamsFor<T>): Promise<T[]>;
-			get<T, Result>(params: PineParamsFor<T>): Promise<Result>;
-			post<T>(params: PineParams): Promise<T>;
-			patch<T>(params: PineParams): Promise<T>;
-		};
+		pine: ResinPine.Pine;
 		interceptors: Interceptor[];
+	}
+
+	interface SdkOptions {
+		apiUrl?: string;
+		/**
+		 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
+		 */
+		apiKey?: string;
+		imageMakerUrl?: string;
+		dataDirectory?: string;
+		isBrowser?: boolean;
+		debug?: boolean;
+	}
+
+	interface SdkConstructor {
+		(options?: SdkOptions): ResinSdk.ResinSDK;
+
+		setSharedOptions(options: SdkOptions): void;
+		fromSharedOptions: () => ResinSdk.ResinSDK;
 	}
 }
 
-interface SdkOptions {
-	apiUrl?: string;
-	/**
-	 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
-	 */
-	apiKey?: string;
-	imageMakerUrl?: string;
-	dataDirectory?: string;
-	isBrowser?: boolean;
-	debug?: boolean;
-}
-
-interface SdkConstructor {
-	(options?: SdkOptions): ResinSdk.ResinSDK;
-
-	setSharedOptions(options: SdkOptions): void;
-	fromSharedOptions: () => ResinSdk.ResinSDK;
-}
-
-declare const ResinSdk: SdkConstructor;
+declare const ResinSdk: ResinSdk.SdkConstructor;
 
 export = ResinSdk;
