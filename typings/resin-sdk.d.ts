@@ -226,6 +226,13 @@ declare namespace ResinSdk {
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
 	}
 
+	interface ApiKey {
+		id: number;
+		created_at: string;
+		name: string;
+		description: string | null;
+	}
+
 	interface Application {
 		app_name: string;
 		device_type: string;
@@ -563,7 +570,6 @@ declare namespace ResinSdk {
 
 	interface ResinSDK {
 		auth: {
-			createApiKey: (name: string) => Promise<string>;
 			register: (credentials: { email: string; password: string }) => Promise<string>;
 			authenticate: (credentials: { email: string; password: string }) => Promise<string>;
 			login: (credentials: { email: string; password: string }) => Promise<void>;
@@ -647,6 +653,9 @@ declare namespace ResinSdk {
 					set(nameOrId: string | number, tagKey: string, value: string): Promise<void>;
 					remove(nameOrId: string | number, tagKey: string): Promise<void>;
 				};
+			};
+			apiKey: {
+				create: (name: string, description?: string | null) => Promise<string>;
 			};
 			release: {
 				get(id: number, options?: PineOptionsFor<Release>): Promise<Release>;
