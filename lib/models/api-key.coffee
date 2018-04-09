@@ -77,6 +77,123 @@ getApiKeysModel = (deps, opts) ->
 			throw new errors.ResinNotLoggedIn()
 		.asCallback(callback)
 
+	###*
+	# @summary Get all API keys
+	# @name getAll
+	# @public
+	# @function
+	# @memberof resin.models.apiKey
+	#
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - apiKeys
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.apiKey.getAll().then(function(apiKeys) {
+	# 	console.log(apiKeys);
+	# });
+	#
+	# @example
+	# resin.models.apiKey.getAll(function(error, apiKeys) {
+	# 	if (error) throw error;
+	# 	console.log(apiKeys);
+	# });
+	###
+	exports.getAll = (options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		return pine.get
+			resource: 'api_key'
+			options:
+				mergePineOptions
+					# the only way to reason whether
+					# it's a named user api key is whether
+					# it has a name
+					$filter: name: $ne: null
+					$orderby: 'name asc'
+				, options
+
+		.asCallback(callback)
+
+	###*
+	# @summary Update the details of an API key
+	# @name update
+	# @public
+	# @function
+	# @memberof resin.models.apiKey
+	#
+	# @param {Number} id - API key id
+	# @param {Object} apiKeyInfo - an object with the updated name or description
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.apiKey.update(123, { name: 'updatedName' });
+	#
+	# @example
+	# resin.models.apiKey.update(123, { description: 'updated description' });
+	#
+	# @example
+	# resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
+	#
+	# @example
+	# resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
+	# 	if (error) throw error;
+	# 	console.log(apiKeys);
+	# });
+	###
+	exports.update = (id, apiKeyInfo, callback) ->
+		Promise.try ->
+			if not apiKeyInfo
+				throw new errors.ResinInvalidParameterError('apiKeyInfo', apiKeyInfo)
+
+			if apiKeyInfo.name == null or apiKeyInfo.name == ''
+				throw new errors.ResinInvalidParameterError('apiKeyInfo.name', apiKeyInfo.name)
+
+			return pine.patch
+				resource: 'api_key'
+				id: id
+				body: pick(apiKeyInfo
+					[
+						'name'
+						'description'
+					]
+				)
+				options:
+					# the only way to reason whether
+					# it's a named user api key is whether
+					# it has a name
+					$filter: name: $ne: null
+		.asCallback(callback)
+
+	###*
+	# @summary Revoke an API key
+	# @name revoke
+	# @public
+	# @function
+	# @memberof resin.models.apiKey
+	#
+	# @param {Number} id - API key id
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.apiKey.revoke(123);
+	#
+	# @example
+	# resin.models.apiKey.revoke(123, function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.revoke = (id, callback) ->
+		return pine.delete
+			resource: 'api_key'
+			id: id
+			options:
+				# so that we don't accidentally delete
+				# a non named user api key
+				$filter: name: $ne: null
+
+		.asCallback(callback)
+
 	return exports
 
 module.exports = getApiKeysModel
