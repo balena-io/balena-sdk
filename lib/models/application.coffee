@@ -103,7 +103,11 @@ getApplicationModel = (deps, opts) ->
 					mergePineOptions
 						$orderby: 'app_name asc'
 						$filter:
-							user: userId
+							$or:
+								user: userId
+								includes__user: $any:
+									$alias: 'x'
+									$expr: x: user: userId
 					, options
 
 		.map (application) ->
