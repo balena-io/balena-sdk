@@ -82,6 +82,7 @@
     "tmp": "^0.0.31",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
+    "tslint-config-prettier": "^1.10.0",
     "typescript": "2.6.2",
     "vinyl-source-buffer": "^1.1.1",
     "watch": "^1.0.2"

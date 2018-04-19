@@ -30,3 +30,6 @@ node_modules
 
 # Ignore all build output
 build/
+
+# Ignore package-lock.json, since our end users will
+package-lock.json
