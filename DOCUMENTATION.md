@@ -116,6 +116,12 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
             * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.release](#resin.models.release) : <code>object</code>
+            * [.tags](#resin.models.release.tags) : <code>object</code>
+                * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+                * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
+                * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
+                * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
             * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
             * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
@@ -359,6 +365,12 @@ resin.models.device.get(123).catch(function (error) {
         * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
         * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.release](#resin.models.release) : <code>object</code>
+        * [.tags](#resin.models.release.tags) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+            * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
+            * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
+            * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
         * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
         * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
@@ -3032,10 +3044,156 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 **Kind**: static namespace of <code>[models](#resin.models)</code>  
 
 * [.release](#resin.models.release) : <code>object</code>
+    * [.tags](#resin.models.release.tags) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+        * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
+        * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
+        * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
     * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
     * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
 
+<a name="resin.models.release.tags"></a>
+
+##### release.tags : <code>object</code>
+**Kind**: static namespace of <code>[release](#resin.models.release)</code>  
+
+* [.tags](#resin.models.release.tags) : <code>object</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+    * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
+    * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
+    * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
+
+<a name="resin.models.release.tags.getAllByApplication"></a>
+
+###### tags.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Summary**: Get all release tags for an application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - release tags  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
+	console.log(tags);
+});
+```
+**Example**  
+```js
+resin.models.release.tags.getAllByApplication(999999).then(function(tags) {
+	console.log(tags);
+});
+```
+**Example**  
+```js
+resin.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
+	if (error) throw error;
+	console.log(tags)
+});
+```
+<a name="resin.models.release.tags.getAllByRelease"></a>
+
+###### tags.getAllByRelease(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Summary**: Get all release tags for a release  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - release tags  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | release id |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.release.tags.getAllByRelease(123).then(function(tags) {
+	console.log(tags);
+});
+```
+**Example**  
+```js
+resin.models.release.tags.getAllByRelease(123, function(error, tags) {
+	if (error) throw error;
+	console.log(tags)
+});
+```
+<a name="resin.models.release.tags.getAll"></a>
+
+###### tags.getAll([options]) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Summary**: Get all release tags  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - release tags  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.release.tags.getAll().then(function(tags) {
+	console.log(tags);
+});
+```
+**Example**  
+```js
+resin.models.release.tags.getAll(function(error, tags) {
+	if (error) throw error;
+	console.log(tags)
+});
+```
+<a name="resin.models.release.tags.set"></a>
+
+###### tags.set(releaseId, tagKey, value) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Summary**: Set a release tag  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| releaseId | <code>Number</code> | release id |
+| tagKey | <code>String</code> | tag key |
+| value | <code>String</code> \| <code>undefined</code> | tag value |
+
+**Example**  
+```js
+resin.models.release.tags.set(123, 'EDITOR', 'vim');
+```
+**Example**  
+```js
+resin.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
+	if (error) throw error;
+});
+```
+<a name="resin.models.release.tags.remove"></a>
+
+###### tags.remove(releaseId, tagKey) ⇒ <code>Promise</code>
+**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Summary**: Remove a release tag  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| releaseId | <code>Number</code> | release id |
+| tagKey | <code>String</code> | tag key |
+
+**Example**  
+```js
+resin.models.release.tags.remove(123, 'EDITOR');
+```
+**Example**  
+```js
+resin.models.release.tags.remove(123, 'EDITOR', function(error) {
+	if (error) throw error;
+});
+```
 <a name="resin.models.release.get"></a>
 
 ##### release.get(id, [options]) ⇒ <code>Promise</code>
@@ -3068,7 +3226,7 @@ resin.models.release.get(123, function(error, release) {
 This method does not map exactly to the underlying model: it runs a
 larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want significantly more control, or to see the
-raw model directly, use `release.get(uuidOrId, options)` instead.
+raw model directly, use `release.get(id, options)` instead.
 
 **Kind**: static method of <code>[release](#resin.models.release)</code>  
 **Summary**: Get a specific release with the details of the images built  

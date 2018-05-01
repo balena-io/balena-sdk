@@ -3,6 +3,13 @@ _ = require('lodash')
 
 { resin, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
 
+{
+	itShouldGetAllTagsByResource
+	itShouldGetAllTags
+	itShouldSetTags
+	itShouldRemoveTags
+} = require('./tags')
+
 describe 'Release Model', ->
 
 	givenLoggedInUser()
@@ -115,3 +122,36 @@ describe 'Release Model', ->
 							build_log: 'web log'
 						]
 
+		describe 'resin.models.release.tags', ->
+
+			appTagTestOptions =
+				model: resin.models.release.tags
+				resourceName: 'application'
+				uniquePropertyName: 'app_name'
+
+			releaseTagTestOptions =
+				model: resin.models.release.tags
+				resourceName: 'release'
+				uniquePropertyName: null
+
+			beforeEach ->
+				appTagTestOptions.resourceProvider = => @application
+				releaseTagTestOptions.resourceProvider = => @currentRelease
+				# used for tag creation during the
+				# release.tags.getAllByApplication() test
+				appTagTestOptions.setTagResourceProvider = => @currentRelease
+
+			describe 'resin.models.release.tags.getAllByApplication()', ->
+				itShouldGetAllTagsByResource(appTagTestOptions)
+
+			describe 'resin.models.release.tags.getAllByRelease()', ->
+				itShouldGetAllTagsByResource(releaseTagTestOptions)
+
+			describe 'resin.models.release.tags.getAll()', ->
+				itShouldGetAllTags(releaseTagTestOptions)
+
+			describe 'resin.models.release.tags.set()', ->
+				itShouldSetTags(releaseTagTestOptions)
+
+			describe 'resin.models.release.tags.remove()', ->
+				itShouldRemoveTags(releaseTagTestOptions)
