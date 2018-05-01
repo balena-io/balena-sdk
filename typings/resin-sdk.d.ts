@@ -301,6 +301,8 @@ declare namespace ResinSdk {
 		}>;
 		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
+
+		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
 	interface BillingAccountAddressInfo {
@@ -564,6 +566,10 @@ declare namespace ResinSdk {
 		device: NavigationResource<Device>;
 	}
 
+	interface ReleaseTag extends ResourceTagBase {
+		release: NavigationResource<Release>;
+	}
+
 	type LogsPromise = Promise<LogMessage[]>;
 
 	interface ResinSDK {
@@ -678,6 +684,13 @@ declare namespace ResinSdk {
 						}
 					>
 				>;
+				tags: {
+					getAllByApplication(nameOrId: string | number, options?: PineOptionsFor<ReleaseTag>): Promise<ReleaseTag[]>;
+					getAllByRelease(id: number, options?: PineOptionsFor<ReleaseTag>): Promise<ReleaseTag[]>;
+					getAll(options?: PineOptionsFor<ReleaseTag>): Promise<ReleaseTag[]>;
+					set(releaseId: number, tagKey: string, value: string): Promise<void>;
+					remove(releaseId: number, tagKey: string): Promise<void>;
+				};
 			};
 			billing: {
 				getAccount(): Promise<BillingAccountInfo>;
