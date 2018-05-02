@@ -17,12 +17,20 @@ limitations under the License.
 once = require('lodash/once')
 omit = require('lodash/omit')
 errors = require('resin-errors')
+Promise = require('bluebird')
 
 { findCallback, mergePineOptions } = require('../util')
 
 getReleaseModel = (deps, opts) ->
 	{ pine } = deps
 	applicationModel = once -> require('./application')(deps, opts)
+	tagsModel = once -> require('./tags').tagsModel(
+		deps,
+			associatedResource: 'release'
+			# so that the user receives a ResinReleaseNotFound
+			getResourceId: (id) -> exports.get(id, $select: 'id').get('id')
+			ResourceNotFoundError: errors.ResinReleaseNotFound
+	)
 
 	exports = {}
 
@@ -72,7 +80,7 @@ getReleaseModel = (deps, opts) ->
 	# This method does not map exactly to the underlying model: it runs a
 	# larger prebuilt query, and reformats it into an easy to use and
 	# understand format. If you want significantly more control, or to see the
-	# raw model directly, use `release.get(uuidOrId, options)` instead.
+	# raw model directly, use `release.get(id, options)` instead.
 	#
 	# @param {Number} id - release id
 	# @param {Object} [options={}] - a map of extra pine options
@@ -179,6 +187,158 @@ getReleaseModel = (deps, opts) ->
 						$orderby: 'created_at desc'
 					, options
 		.asCallback(callback)
+
+	###*
+	# @namespace resin.models.release.tags
+	# @memberof resin.models.release
+	###
+	exports.tags = {}
+
+	###*
+	# @summary Get all release tags for an application
+	# @name getAllByApplication
+	# @public
+	# @function
+	# @memberof resin.models.release.tags
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - release tags
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.release.tags.getAllByApplication(999999).then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
+	# 	if (error) throw error;
+	# 	console.log(tags)
+	# });
+	###
+	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
+		applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
+			tagsModel().getAll(
+				mergePineOptions
+					$filter:
+						release:
+							$any:
+								$alias: 'r',
+								$expr: r: belongs_to__application: id
+				, options
+			)
+		.asCallback(callback)
+
+	###*
+	# @summary Get all release tags for a release
+	# @name getAllByRelease
+	# @public
+	# @function
+	# @memberof resin.models.release.tags
+	#
+	# @param {Number} id - release id
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - release tags
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.release.tags.getAllByRelease(123).then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.release.tags.getAllByRelease(123, function(error, tags) {
+	# 	if (error) throw error;
+	# 	console.log(tags)
+	# });
+	###
+	exports.tags.getAllByRelease = (id, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get(id,
+			$select: 'id'
+			$expand:
+				release_tag:
+					mergePineOptions
+						$orderby: 'tag_key asc'
+					, options
+		)
+		.then (release) -> release.release_tag
+		.asCallback(callback)
+
+	###*
+	# @summary Get all release tags
+	# @name getAll
+	# @public
+	# @function
+	# @memberof resin.models.release.tags
+	#
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - release tags
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.release.tags.getAll().then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
+	# resin.models.release.tags.getAll(function(error, tags) {
+	# 	if (error) throw error;
+	# 	console.log(tags)
+	# });
+	###
+	exports.tags.getAll = tagsModel().getAll
+
+	###*
+	# @summary Set a release tag
+	# @name set
+	# @public
+	# @function
+	# @memberof resin.models.release.tags
+	#
+	# @param {Number} releaseId - release id
+	# @param {String} tagKey - tag key
+	# @param {String|undefined} value - tag value
+	#
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.release.tags.set(123, 'EDITOR', 'vim');
+	#
+	# @example
+	# resin.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.tags.set = tagsModel().set
+
+	###*
+	# @summary Remove a release tag
+	# @name remove
+	# @public
+	# @function
+	# @memberof resin.models.release.tags
+	#
+	# @param {Number} releaseId - release id
+	# @param {String} tagKey - tag key
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.release.tags.remove(123, 'EDITOR');
+	#
+	# @example
+	# resin.models.release.tags.remove(123, 'EDITOR', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.tags.remove = tagsModel().remove
 
 	return exports
 
