@@ -215,11 +215,14 @@ describe 'Billing Model', ->
 					invoice = invoices[0]
 					m.chai.expect(invoice).to.have.property('closed_at').that.is.a('string')
 					m.chai.expect(invoice).to.have.property('created_at').that.is.a('string')
-					m.chai.expect(invoice).to.have.property('currency').that.equals('USD')
+					m.chai.expect(invoice).to.have.property('due_on').that.is.a('string')
 					m.chai.expect(invoice).to.have.property('invoice_number').that.is.a('string')
-					m.chai.expect(invoice).to.have.property('subtotal_in_cents').that.equals('0')
-					m.chai.expect(invoice).to.have.property('total_in_cents').that.equals('0')
 					m.chai.expect(invoice).to.have.property('uuid').that.is.a('string')
+
+					m.chai.expect(invoice).to.have.property('currency', 'USD')
+					m.chai.expect(invoice).to.have.property('total_in_cents', '0')
+					m.chai.expect(invoice).to.have.property('subtotal_in_cents', '0')
+					m.chai.expect(invoice).to.have.property('state', 'paid')
 
 		describe 'resin.models.billing.downloadInvoice()', ->
 			before ->
