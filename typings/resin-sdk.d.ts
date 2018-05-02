@@ -384,11 +384,13 @@ declare namespace ResinSdk {
 	interface InvoiceInfo {
 		closed_at: string;
 		created_at: string;
+		due_on: string;
 		currency: string;
 		invoice_number: string;
 		subtotal_in_cents: string;
 		total_in_cents: string;
 		uuid: string;
+		state: 'pending' | 'paid' | 'failed' | 'past_due';
 	}
 
 	interface Device {
