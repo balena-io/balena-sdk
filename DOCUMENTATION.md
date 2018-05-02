@@ -3370,7 +3370,7 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 <a name="resin.models.release.tags"></a>
 
 ##### release.tags : <code>object</code>
-**Kind**: static namespace of <code>[release](#resin.models.release)</code>  
+**Kind**: static namespace of [<code>release</code>](#resin.models.release)  
 
 * [.tags](#resin.models.release.tags) : <code>object</code>
     * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
@@ -3382,7 +3382,7 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 <a name="resin.models.release.tags.getAllByApplication"></a>
 
 ###### tags.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
 **Summary**: Get all release tags for an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - release tags  
@@ -3414,7 +3414,7 @@ resin.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
 <a name="resin.models.release.tags.getAllByRelease"></a>
 
 ###### tags.getAllByRelease(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
 **Summary**: Get all release tags for a release  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - release tags  
@@ -3440,7 +3440,7 @@ resin.models.release.tags.getAllByRelease(123, function(error, tags) {
 <a name="resin.models.release.tags.getAll"></a>
 
 ###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
 **Summary**: Get all release tags  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - release tags  
@@ -3465,7 +3465,7 @@ resin.models.release.tags.getAll(function(error, tags) {
 <a name="resin.models.release.tags.set"></a>
 
 ###### tags.set(releaseId, tagKey, value) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
 **Summary**: Set a release tag  
 **Access**: public  
 
@@ -3488,7 +3488,7 @@ resin.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
 <a name="resin.models.release.tags.remove"></a>
 
 ###### tags.remove(releaseId, tagKey) ⇒ <code>Promise</code>
-**Kind**: static method of <code>[tags](#resin.models.release.tags)</code>  
+**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
 **Summary**: Remove a release tag  
 **Access**: public  
 
