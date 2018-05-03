@@ -14,4 +14,7 @@ export function findCallback(args: IArguments): (() => void);
  *   * And $selects within expands override
  * * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
  */
-export function mergePineOptions<T = ResinSdk.PineOptions>(defaults: T, extras: T): T;
+export function mergePineOptions<T = ResinSdk.PineOptions>(
+	defaults: T,
+	extras: T,
+): T;

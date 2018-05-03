@@ -22,7 +22,10 @@ import * as ResinSdk from '../../typings/resin-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../resin';
 import { findCallback, mergePineOptions } from '../util';
 
-const getApiKeysModel = function(deps: InjectedDependenciesParam, opts: InjectedOptionsParam) {
+const getApiKeysModel = function(
+	deps: InjectedDependenciesParam,
+	opts: InjectedOptionsParam,
+) {
 	const { pine, request } = deps;
 	const { apiUrl } = opts;
 	exports = {};
@@ -61,7 +64,9 @@ const getApiKeysModel = function(deps: InjectedDependenciesParam, opts: Injected
 	exports.create = function(
 		name: string,
 		description: string | null = null,
-		_callback: ((error?: Error, result?: string) => void) | undefined = undefined,
+		_callback:
+			| ((error?: Error, result?: string) => void)
+			| undefined = undefined,
 	): Promise<string> {
 		_callback = findCallback(arguments);
 
@@ -169,7 +174,10 @@ const getApiKeysModel = function(deps: InjectedDependenciesParam, opts: Injected
 				throw new errors.ResinInvalidParameterError('apiKeyInfo', apiKeyInfo);
 			}
 			if (apiKeyInfo.name === null || apiKeyInfo.name === '') {
-				throw new errors.ResinInvalidParameterError('apiKeyInfo.name', apiKeyInfo.name);
+				throw new errors.ResinInvalidParameterError(
+					'apiKeyInfo.name',
+					apiKeyInfo.name,
+				);
 			}
 			return pine
 				.patch<ResinSdk.ApiKey>({
@@ -209,7 +217,10 @@ const getApiKeysModel = function(deps: InjectedDependenciesParam, opts: Injected
 	 * 	if (error) throw error;
 	 * });
 	 */
-	exports.revoke = function(id: number, callback: (error?: Error) => void): Promise<void> {
+	exports.revoke = function(
+		id: number,
+		callback: (error?: Error) => void,
+	): Promise<void> {
 		return pine
 			.delete({
 				resource: 'api_key',
