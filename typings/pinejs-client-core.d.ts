@@ -1,6 +1,9 @@
 // based on https://github.com/resin-io/pinejs-client-js/blob/master/core.d.ts
 
-type RawFilter = string | Array<string | Filter<any>> | { $string: string; [index: string]: Filter<any> | string };
+type RawFilter =
+	| string
+	| Array<string | Filter<any>>
+	| { $string: string; [index: string]: Filter<any> | string };
 type Lambda<T> = {
 	$alias: string;
 	$expr: Filter<T>;
