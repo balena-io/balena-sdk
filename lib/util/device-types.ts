@@ -14,9 +14,13 @@ const includes = <T>(array: T[], el: T) => array && array.indexOf(el) >= 0;
 const dtPredicate = (slug: string) => (deviceType: DeviceType) =>
 	deviceType.slug === slug || includes(deviceType.aliases, slug);
 
-export const findBySlug = (deviceTypes: DeviceType[], slug: string) => find(deviceTypes, dtPredicate(slug));
+export const findBySlug = (deviceTypes: DeviceType[], slug: string) =>
+	find(deviceTypes, dtPredicate(slug));
 
-export const normalizeDeviceType = (deviceTypes: DeviceType[], slug: string) => {
+export const normalizeDeviceType = (
+	deviceTypes: DeviceType[],
+	slug: string,
+) => {
 	// returns `undefined` in case of invalid slug
 	const deviceType = findBySlug(deviceTypes, slug);
 	if (deviceType) {
