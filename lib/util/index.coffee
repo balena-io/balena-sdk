@@ -2,7 +2,7 @@ errors = require('resin-errors')
 semver = require('semver')
 assign = require('lodash/assign')
 cloneDeep = require('lodash/cloneDeep')
-includes = require('lodash/includes')
+endsWith = require('lodash/endsWith')
 isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 isFunction = require('lodash/isFunction')
@@ -66,9 +66,13 @@ exports.noApplicationForKeyResponse =
 	statusCode: 500
 	body: 'No application found to associate with the api key'
 
-exports.uniqueKeyViolated =
-	code: 'ResinRequestError'
-	body: 'Unique key constraint violated'
+exports.uniqueKeyViolated = (error) ->
+	error.code == 'ResinRequestError' &&
+	error.statusCode == 404 &&
+	(
+		error.body == 'Unique key constraint violated' ||
+		endsWith(error.body, 'must be unique.')
+	)
 
 exports.treatAsMissingApplication = (nameOrId) ->
 	return (err) ->
