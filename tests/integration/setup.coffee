@@ -1,6 +1,9 @@
 Promise = require('bluebird')
 _ = require('lodash')
 
+{ chai } = require('mochainon')
+chai.use(require('chai-samsam'))
+
 exports.IS_BROWSER = IS_BROWSER = window?
 
 if IS_BROWSER
