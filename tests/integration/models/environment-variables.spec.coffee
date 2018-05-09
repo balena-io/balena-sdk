@@ -25,7 +25,7 @@ describe 'Environment Variables Model', ->
 			result = resin.models.environmentVariables.isSystemVariable(name: 'RESIN_API_KEY')
 			m.chai.expect(result).to.be.true
 
-	describe 'when logged in', ->
+	describe.skip 'when logged in', ->
 
 		givenLoggedInUser()
 
