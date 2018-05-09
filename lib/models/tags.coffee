@@ -29,6 +29,7 @@ errors = require('resin-errors')
 	findCallback
 	isId
 	mergePineOptions
+	unauthorizedError
 	uniqueKeyViolated
 } = require('../util')
 
@@ -72,11 +73,20 @@ exports.tagsModel = (
 					tag_key: tagKey
 					value: value
 			.tap (tag) ->
+				# On Pine 6, when the post adds nothing to the DB
+				# then the associated tagged resource was not found.
 				# If we never checked that the resource actually exists
-				# then we should reject an appropriate error
-				# when the post adds nothing to the DB
+				# then we should reject an appropriate error.
 				if isId(uniqueParam) && isEmpty(tag)
 					throw new ResourceNotFoundError(uniqueParam)
+			.tapCatch unauthorizedError, ->
+				# On Pine 7, when the post throws a 401
+				# then the associated tagged resource might not exist.
+				# If we never checked that the resource actually exists
+				# then we should reject an appropriate error.
+				if not isId(uniqueParam)
+					return
+				getResourceId(uniqueParam)
 			.catch uniqueKeyViolated, ->
 				pine.patch
 					resource: "#{associatedResource}_tag"

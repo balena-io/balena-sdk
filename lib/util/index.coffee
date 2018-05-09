@@ -52,6 +52,10 @@ exports.findCallback = (args) ->
 		return lastArg
 	return null
 
+exports.unauthorizedError =
+	code: 'ResinRequestError'
+	statusCode: 401
+
 exports.notFoundResponse =
 	code: 'ResinRequestError'
 	statusCode: 404
