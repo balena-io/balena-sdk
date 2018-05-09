@@ -68,15 +68,22 @@ declare namespace ResinSdk {
 		id: string;
 	}
 
+	interface ImageDownloadAlert {
+		type: string;
+		message: string;
+	}
+
 	interface DeviceType {
 		slug: string;
 		name: string;
+		isDefault?: boolean;
 
 		arch: string;
 		state?: string;
 
 		isDependent?: boolean;
 		instructions?: string[] | DeviceTypeInstructions;
+		imageDownloadAlerts?: ImageDownloadAlert[];
 		gettingStartedLink?: string | DeviceTypeGettingStartedLink;
 		stateInstructions?: { [key: string]: string[] };
 		options?: DeviceTypeOptions[];
