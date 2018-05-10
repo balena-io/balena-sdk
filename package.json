@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "8.2.1",
+  "version": "9.0.0-beta19",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "types": "typings/resin-sdk.d.ts",
@@ -82,6 +82,7 @@
     "tmp": "^0.0.31",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
+    "tslint-config-prettier": "^1.10.0",
     "typescript": "2.6.2",
     "vinyl-source-buffer": "^1.1.1",
     "watch": "^1.0.2"
@@ -95,12 +96,13 @@
     "moment": "^2.18.1",
     "promise-memoize": "^1.2.0",
     "resin-auth": "^2.0.0",
-    "resin-device-logs": "^3.1.0",
+    "resin-device-logs": "^3.2.1",
     "resin-device-status": "^1.0.1",
-    "resin-errors": "^2.10.0",
-    "resin-pine": "^6.0.0",
+    "resin-errors": "^2.12.0",
+    "resin-pine": "^7.0.0",
     "resin-register-device": "^5.0.0",
     "resin-request": "^9.0.0",
+    "resin-semver": "^1.2.1",
     "resin-settings-client": "^3.5.2",
     "semver": "^5.3.0"
   },

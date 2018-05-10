@@ -3,22 +3,14 @@
 type RawFilter =
 	| string
 	| Array<string | Filter<any>>
-	| {
-			$string: string;
-			[index: string]: Filter<any> | string;
-		};
+	| { $string: string; [index: string]: Filter<any> | string };
 type Lambda<T> = {
 	$alias: string;
 	$expr: Filter<T>;
 };
 
 type OrderByValues = 'asc' | 'desc';
-type OrderBy =
-	| string
-	| string[]
-	| {
-			[index: string]: OrderByValues;
-		};
+type OrderBy = string | string[] | { [index: string]: OrderByValues };
 
 type ResourceObjFilter<T> = { [k in keyof T]?: object | number | string };
 

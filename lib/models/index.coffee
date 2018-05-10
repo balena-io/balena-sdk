@@ -31,16 +31,16 @@ modelsTemplate =
 	device: require('./device')
 
 	###*
+	# @namespace apiKey
+	# @memberof resin.models
+	###
+	apiKey: require('./api-key').default
+
+	###*
 	# @namespace key
 	# @memberof resin.models
 	###
 	key: require('./key')
-
-	###*
-	# @namespace environment-variables
-	# @memberof resin.models
-	###
-	environmentVariables: require('./environment-variables')
 
 	###*
 	# @namespace os
@@ -55,10 +55,22 @@ modelsTemplate =
 	config: require('./config')
 
 	###*
-	# @namespace build
+	# @namespace release
 	# @memberof resin.models
 	###
-	build: require('./build')
+	release: require('./release')
+
+	###*
+	# @namespace service
+	# @memberof resin.models
+	###
+	service: require('./service')
+
+	###*
+	# @namespace image
+	# @memberof resin.models
+	###
+	image: require('./image')
 
 	###*
 	# @namespace billing
