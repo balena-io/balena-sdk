@@ -24,13 +24,16 @@ Promise = require('bluebird')
 getReleaseModel = (deps, opts) ->
 	{ pine } = deps
 	applicationModel = once -> require('./application')(deps, opts)
-	tagsModel = once -> require('./tags').tagsModel(
-		deps,
-			associatedResource: 'release'
-			# so that the user receives a ResinReleaseNotFound
-			getResourceId: (id) -> exports.get(id, $select: 'id').get('id')
-			ResourceNotFoundError: errors.ResinReleaseNotFound
-	)
+
+	{ buildDependentResource } = require('../util/dependent-resource')
+
+	tagsModel = buildDependentResource { pine }, {
+		resourceName: 'release_tag'
+		resourceKeyField: 'tag_key'
+		parentResourceName: 'release',
+		getResourceId: (id) -> exports.get(id, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinReleaseNotFound
+	}
 
 	exports = {}
 
@@ -224,7 +227,7 @@ getReleaseModel = (deps, opts) ->
 	###
 	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
 		applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
-			tagsModel().getAll(
+			tagsModel.getAll(
 				mergePineOptions
 					$filter:
 						release:
@@ -294,7 +297,7 @@ getReleaseModel = (deps, opts) ->
 	# 	console.log(tags)
 	# });
 	###
-	exports.tags.getAll = tagsModel().getAll
+	exports.tags.getAll = tagsModel.getAll
 
 	###*
 	# @summary Set a release tag
@@ -317,7 +320,7 @@ getReleaseModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.tags.set = tagsModel().set
+	exports.tags.set = tagsModel.set
 
 	###*
 	# @summary Remove a release tag
@@ -338,7 +341,7 @@ getReleaseModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.tags.remove = tagsModel().remove
+	exports.tags.remove = tagsModel.remove
 
 	return exports
 

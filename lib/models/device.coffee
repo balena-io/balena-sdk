@@ -65,12 +65,16 @@ getDeviceModel = (deps, opts) ->
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	auth = require('../auth')(deps, opts)
-	tagsModel = once -> require('./tags').tagsModel(
-		deps,
-			associatedResource: 'device'
-			getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-			ResourceNotFoundError: errors.ResinDeviceNotFound
-	)
+
+	{ buildDependentResource } = require('../util/dependent-resource')
+
+	tagsModel = buildDependentResource { pine }, {
+		resourceName: 'device_tag'
+		resourceKeyField: 'tag_key'
+		parentResourceName: 'device',
+		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinDeviceNotFound
+	}
 
 	exports = {}
 
@@ -1900,158 +1904,149 @@ getDeviceModel = (deps, opts) ->
 	# @namespace resin.models.device.tags
 	# @memberof resin.models.device
 	###
-	exports.tags = {}
+	exports.tags = {
+		###*
+		# @summary Get all device tags for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByApplication(999999).then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
+				tagsModel.getAll(
+					mergePineOptions
+						$filter:
+							device:
+								$any:
+									$alias: 'd',
+									$expr: d: belongs_to__application: id
+					, options
+				)
+			.asCallback(callback)
 
-	###*
-	# @summary Get all device tags for an application
-	# @name getAllByApplication
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - device tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByApplication(999999).then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
-	###
-	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
-		applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
-			tagsModel().getAll(
-				mergePineOptions
-					$filter:
-						device:
-							$any:
-								$alias: 'd',
-								$expr: d: belongs_to__application: id
-				, options
-			)
-		.asCallback(callback)
+		###*
+		# @summary Get all device tags for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByDevice(123).then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAllByDevice: tagsModel.getAllByParent
 
-	###*
-	# @summary Get all device tags for a device
-	# @name getAllByDevice
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - device tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByDevice(123).then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
-	###
-	exports.tags.getAllByDevice = (uuidOrId, options = {}, callback) ->
-		callback = findCallback(arguments)
+		###*
+		# @summary Get all device tags
+		# @name getAll
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.getAll().then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAll(function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAll: tagsModel.getAll
 
-		exports.get(uuidOrId, $select: 'id').get('id').then (id) ->
-			exports.tags.getAll(
-				mergePineOptions
-					$filter: device: id
-				, options
-			)
-		.asCallback(callback)
+		###*
+		# @summary Set a device tag
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} tagKey - tag key
+		# @param {String|undefined} value - tag value
+		#
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
+		#
+		# @example
+		# resin.models.device.tags.set(123, 'EDITOR', 'vim');
+		#
+		# @example
+		# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+		# 	if (error) throw error;
+		# });
+		###
+		set: tagsModel.set
 
-	###*
-	# @summary Get all device tags
-	# @name getAll
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - device tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.getAll().then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAll(function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
-	###
-	exports.tags.getAll = tagsModel().getAll
-
-	###*
-	# @summary Set a device tag
-	# @name set
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {String} tagKey - tag key
-	# @param {String|undefined} value - tag value
-	#
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
-	#
-	# @example
-	# resin.models.device.tags.set(123, 'EDITOR', 'vim');
-	#
-	# @example
-	# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.tags.set = tagsModel().set
-
-	###*
-	# @summary Remove a device tag
-	# @name remove
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {String} tagKey - tag key
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.remove('7cf02a6', 'EDITOR');
-	#
-	# @example
-	# resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.tags.remove = tagsModel().remove
+		###*
+		# @summary Remove a device tag
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} tagKey - tag key
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.remove('7cf02a6', 'EDITOR');
+		#
+		# @example
+		# resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
+		# 	if (error) throw error;
+		# });
+		###
+		remove: tagsModel.remove
+	}
 
 	return exports
 
