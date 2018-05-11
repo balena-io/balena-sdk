@@ -39,7 +39,8 @@ deviceStatus = require('resin-device-status')
 	noDeviceForKeyResponse,
 	treatAsMissingDevice,
 	LOCKED_STATUS_CODE,
-	timeSince
+	timeSince,
+	uniqueKeyViolated
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
@@ -2304,6 +2305,219 @@ getDeviceModel = (deps, opts) ->
 		# });
 		###
 		remove: envVarModel.remove
+	}
+
+	exports.serviceVar = {
+
+		###*
+		# @summary Get all service variable overrides for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - service variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByDevice: (uuidOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			exports.get(uuidOrId, $select: 'id').get('id')
+			.then (deviceId) ->
+				pine.get
+					resource: 'device_service_environment_variable'
+					options: mergePineOptions
+						$filter:
+							service_install:
+								$any:
+									$alias: 'si',
+									$expr: si: device: deviceId
+						, options
+			.asCallback(callback)
+
+		###*
+		# @summary Get the overriden value of a service variable on a device
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @fulfil {String|undefined} - the variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: (uuidOrId, serviceId, key, callback) ->
+			callback = findCallback(arguments)
+
+			exports.get(uuidOrId, $select: 'id').get('id')
+			.then (deviceId) ->
+				pine.get
+					resource: 'device_service_environment_variable'
+					options:
+						$filter:
+							service_install:
+								$any:
+									$alias: 'si',
+									$expr: si:
+										device: deviceId
+										service: serviceId
+							name: key
+			.then (results) ->
+				if (results[0])
+					results[0].value
+			.asCallback(callback)
+
+		###*
+		# @summary Set the overriden value of a service variable on a device
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @param {String} value - variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: (uuidOrId, serviceId, key, value, callback) ->
+			Promise.try ->
+				value = String(value)
+
+				deviceFilter = if isId(uuidOrId)
+					uuidOrId
+				else
+					$any:
+						$alias: 'd'
+						$expr: d:
+							uuid: uuidOrId
+
+				pine.get
+					resource: 'service_install'
+					options:
+						$filter:
+							device: deviceFilter
+							service: serviceId
+				.tap (serviceInstalls) ->
+					if isEmpty(serviceInstalls)
+						throw new errors.ResinServiceNotFound(serviceId)
+					else if serviceInstalls.length > 1
+						throw new errors.ResinAmbiguousDevice(uuidOrId)
+				.get(0)
+				.get('id')
+			.then (serviceInstallId) ->
+				pine.post
+					resource: 'device_service_environment_variable'
+					body:
+						service_install: serviceInstallId
+						name: key
+						value: value
+				.catch uniqueKeyViolated, ->
+					pine.patch
+						resource: 'device_service_environment_variable'
+						options:
+							$filter:
+								service_install: serviceInstallId
+								name: key
+						body:
+							value: value
+			.asCallback(callback)
+
+		###*
+		# @summary Clear the overridden value of a service variable on a device
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: (uuidOrId, serviceId, key, callback) ->
+			exports.get(uuidOrId, $select: 'id').get('id')
+			.then (deviceId) ->
+				pine.delete
+					resource: 'device_service_environment_variable'
+					options:
+						$filter:
+							service_install:
+								$any:
+									$alias: 'si',
+									$expr: si:
+										device: deviceId
+										service: serviceId
+							name: key
+			.asCallback(callback)
 	}
 
 	return exports
