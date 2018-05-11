@@ -49,6 +49,8 @@ deviceStatus = require('resin-device-status')
 # according to semver.
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 
+MIN_SUPERVISOR_MC_API = '7.0.0'
+
 # Degraded network, slow devices, compressed docker binaries and any combination of these factors
 # can cause proxied device requests to surpass the default timeout (currently 30s). This was
 # noticed during tests and the endpoints that resulted in container management actions were
@@ -981,6 +983,159 @@ getDeviceModel = (deps, opts) ->
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
+		.asCallback(callback)
+
+	###*
+	# @summary Start service on device
+	# @name startService
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} imageId - id of the image to start
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.startService('7cf02a6', 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.startService(1, 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.startService('7cf02a6', 123, function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.startService = (uuidOrId, imageId, callback) ->
+		exports.get uuidOrId,
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
+		.then (device) ->
+			ensureSupervisorCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API
+			).then ->
+				appId = device.belongs_to__application[0].id
+				return request.send
+					method: 'POST'
+					url: "/supervisor/v2/applications/#{appId}/start-service"
+					baseUrl: apiUrl
+					body:
+						deviceId: device.id
+						appId: appId
+						data: {
+							appId
+							imageId
+						}
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+		.asCallback(callback)
+
+	###*
+	# @summary Stop service on device
+	# @name stopService
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} imageId - id of the image to stop
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.stopService('7cf02a6', 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.stopService(1, 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.stopService('7cf02a6', 123, function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.stopService = (uuidOrId, imageId, callback) ->
+		exports.get uuidOrId,
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
+		.then (device) ->
+			ensureSupervisorCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API
+			).then ->
+				appId = device.belongs_to__application[0].id
+				return request.send
+					method: 'POST'
+					url: "/supervisor/v2/applications/#{appId}/stop-service"
+					baseUrl: apiUrl
+					body:
+						deviceId: device.id
+						appId: appId
+						data: {
+							appId
+							imageId
+						}
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+		.asCallback(callback)
+
+	###*
+	# @summary Restart service on device
+	# @name restartService
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} imageId - id of the image to restart
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.restartService('7cf02a6', 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.restartService(1, 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.restartService('7cf02a6', 123, function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.restartService = (uuidOrId, imageId, callback) ->
+		exports.get uuidOrId,
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
+		.then (device) ->
+			ensureSupervisorCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API
+			).then ->
+				appId = device.belongs_to__application[0].id
+				return request.send
+					method: 'POST'
+					url: "/supervisor/v2/applications/#{appId}/restart-service"
+					baseUrl: apiUrl
+					body:
+						deviceId: device.id
+						appId: appId
+						data: {
+							appId
+							imageId
+						}
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.asCallback(callback)
 
 	###*
