@@ -910,6 +910,25 @@ declare namespace ResinSdk {
 						key: string,
 					): Promise<string | undefined>;
 				};
+				envVar: {
+					getAllByDevice(
+						uuidOrId: string | number,
+						options?: PineOptionsFor<DeviceEnvironmentVariable>,
+					): Promise<DeviceEnvironmentVariable[]>;
+					set(
+						uuidOrId: string | number,
+						key: string,
+						value: string,
+					): Promise<void>;
+					get(
+						uuidOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+					remove(
+						uuidOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+				};
 			};
 			service: {
 				getAllByApplication(

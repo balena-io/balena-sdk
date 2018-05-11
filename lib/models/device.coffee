@@ -84,6 +84,14 @@ getDeviceModel = (deps, opts) ->
 		ResourceNotFoundError: errors.ResinDeviceNotFound
 	}
 
+	envVarModel = buildDependentResource { pine }, {
+		resourceName: 'device_environment_variable'
+		resourceKeyField: 'env_var_name'
+		parentResourceName: 'device',
+		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinDeviceNotFound
+	}
+
 	exports = {}
 
 	# Infer dashboardUrl from apiUrl if former is undefined
@@ -2070,7 +2078,7 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.configVar.getAllByDevice('abc123').then(function(vars) {
+		# resin.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
@@ -2080,7 +2088,7 @@ getDeviceModel = (deps, opts) ->
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.getAllByDevice('abc123', function(error, vars) {
+		# resin.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2175,6 +2183,127 @@ getDeviceModel = (deps, opts) ->
 		# });
 		###
 		remove: configVarModel.remove
+	}
+
+	exports.envVar = {
+		###*
+		# @summary Get all environment variables for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device environment variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByDevice(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByDevice: envVarModel.getAllByParent
+
+		###*
+		# @summary Get the value of a specific environment variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - environment variable name
+		# @fulfil {String|undefined} - the environment variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.get(999999, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: envVarModel.get
+
+		###*
+		# @summary Set the value of a specific environment variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - environment variable name
+		# @param {String} value - environment variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: envVarModel.set
+
+		###*
+		# @summary Clear the value of a specific environment variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - environment variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.remove(999999, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: envVarModel.remove
 	}
 
 	return exports

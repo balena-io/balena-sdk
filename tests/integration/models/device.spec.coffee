@@ -804,7 +804,6 @@ describe 'Device Model', ->
 			describe 'resin.models.device.tags.remove()', ->
 				itShouldRemoveTags(deviceTagTestOptions)
 
-
 		describe 'resin.models.device.configVar', ->
 
 			configVarModel = resin.models.device.configVar
@@ -844,6 +843,48 @@ describe 'Device Model', ->
 						configVarModel.remove(@device[deviceParam], 'RESIN_EDITOR')
 					.then =>
 						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+		describe 'resin.models.device.envVar', ->
+
+			envVarModel = resin.models.device.envVar
+
+			['id', 'uuid'].forEach (deviceParam) ->
+
+				it "can create and retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.get(@device[deviceParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.set(@device[deviceParam], 'EDITOR', 'emacs')
+					.then =>
+						envVarModel.get(@device[deviceParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+					Promise.all [
+						envVarModel.set(@device[deviceParam], 'A', 'a')
+						envVarModel.set(@device[deviceParam], 'B', 'b')
+					]
+					.then =>
+						envVarModel.getAllByDevice(@device[deviceParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { env_var_name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { env_var_name: 'B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.remove(@device[deviceParam], 'EDITOR')
+					.then =>
+						envVarModel.get(@device[deviceParam], 'EDITOR')
 					.then (result) ->
 						m.chai.expect(result).to.equal(undefined)
 
