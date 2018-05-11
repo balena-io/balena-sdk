@@ -28,7 +28,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-            * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
             * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
@@ -287,7 +286,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-        * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
         * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
@@ -424,7 +422,6 @@ resin.models.device.get(123).catch(function (error) {
     * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-    * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
     * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
@@ -719,33 +716,6 @@ resin.models.application.hasAny().then(function(hasAny) {
 resin.models.application.hasAny(function(error, hasAny) {
 	if (error) throw error;
 	console.log('Has any?', hasAny);
-});
-```
-<a name="resin.models.application.getById"></a>
-
-##### ~~application.getById(id) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
-**Summary**: Get a single application by id  
-**Access**: public  
-**Fulfil**: <code>Object</code> - application  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>Number</code> \| <code>String</code> | application id |
-
-**Example**  
-```js
-resin.models.application.getById(89).then(function(application) {
-	console.log(application);
-});
-```
-**Example**  
-```js
-resin.models.application.getById(89, function(error, application) {
-	if (error) throw error;
-	console.log(application);
 });
 ```
 <a name="resin.models.application.create"></a>
