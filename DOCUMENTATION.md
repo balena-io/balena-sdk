@@ -56,7 +56,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
             * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
             * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-            * [.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>
+            * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
             * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
             * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -67,8 +67,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-            * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
-            * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
+            * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
+            * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
             * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
@@ -302,7 +302,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
         * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
         * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-        * [.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>
+        * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
         * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
         * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -313,8 +313,8 @@ resin.models.device.get(123).catch(function (error) {
         * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-        * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
-        * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
+        * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
+        * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
         * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
@@ -1034,7 +1034,7 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
     * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
     * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-    * [.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>
+    * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
     * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
     * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -1045,8 +1045,8 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-    * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
-    * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
+    * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
+    * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
     * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
@@ -1486,7 +1486,9 @@ resin.models.device.getApplicationName('7cf02a6', function(error, applicationNam
 ```
 <a name="resin.models.device.getApplicationInfo"></a>
 
-##### device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>
+##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Get application container information  
 **Access**: public  
@@ -1801,7 +1803,9 @@ resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 ```
 <a name="resin.models.device.startApplication"></a>
 
-##### device.startApplication(uuidOrId) ⇒ <code>Promise</code>
+##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Start application on device  
 **Access**: public  
@@ -1832,7 +1836,9 @@ resin.models.device.startApplication('7cf02a6', function(error, containerId) {
 ```
 <a name="resin.models.device.stopApplication"></a>
 
-##### device.stopApplication(uuidOrId) ⇒ <code>Promise</code>
+##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Stop application on device  
 **Access**: public  
