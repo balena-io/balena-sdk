@@ -995,6 +995,49 @@ describe 'Device Model', ->
 				resin.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
 					m.chai.expect(device.id).to.equal(@device.id)
 
+
+		describe 'resin.models.device.serviceVar', ->
+
+			varModel = resin.models.device.serviceVar
+
+			['id', 'uuid'].forEach (deviceParam) ->
+
+				it "can create and retrieve a variable by #{deviceParam}", ->
+					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+					.then =>
+						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{deviceParam}", ->
+					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+					.then =>
+						varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'emacs')
+					.then =>
+						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+					Promise.all [
+						varModel.set(@device[deviceParam], @webService.id, 'A', 'a')
+						varModel.set(@device[deviceParam], @dbService.id, 'B', 'b')
+					]
+					.then =>
+						varModel.getAllByDevice(@device[deviceParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
+					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+					.then =>
+						varModel.remove(@device[deviceParam], @webService.id, 'EDITOR')
+					.then =>
+						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->
