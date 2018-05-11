@@ -23,7 +23,28 @@ getServiceModel = (deps, opts) ->
 	{ pine } = deps
 	applicationModel = once -> require('./application')(deps, opts)
 
+	{ buildDependentResource } = require('../util/dependent-resource')
+
+	varModel = buildDependentResource { pine }, {
+		resourceName: 'service_environment_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'service',
+		getResourceId: (id) -> get(id, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinServiceNotFound
+	}
+
 	exports = {}
+
+	# Not exported for now, but we could document & export in future
+	# if there are external use cases for this.
+	get = (id, options = {}) ->
+		pine.get
+			resource: 'service'
+			id: id
+			options: options
+		.tap (service) ->
+			if not service?
+				throw new errors.ResinServiceNotFound(id)
 
 	###*
 	# @summary Get all services from an application
@@ -65,6 +86,108 @@ getServiceModel = (deps, opts) ->
 						$filter: application: id
 					, options
 		.asCallback(callback)
+
+
+	exports.var = {
+		###*
+		# @summary Get all variables for a service
+		# @name getAllByService
+		# @public
+		# @function
+		# @memberof resin.models.service.var
+		#
+		# @param {Number} id - service id
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - service variables
+		# @returns {Promise}
+
+		# @example
+		# resin.models.service.var.getAllByService(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.service.var.getAllByService(999999, function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByService: varModel.getAllByParent
+
+		###*
+		# @summary Get the value of a specific service variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.service.var
+		#
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @fulfil {String|undefined} - the variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.service.var.get(999999, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+
+		# @example
+		# resin.models.service.var.get(999999, 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: varModel.get
+
+		###*
+		# @summary Set the value of a specific service variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.service.var
+		#
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @param {String} value - variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: varModel.set
+
+		###*
+		# @summary Clear the value of a specific service variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.service.var
+		#
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.service.var.remove(999999, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.service.var.remove(999999, 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: varModel.remove
+	}
 
 	return exports
 

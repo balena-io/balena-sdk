@@ -920,6 +920,15 @@ declare namespace ResinSdk {
 					nameOrId: string | number,
 					options?: PineOptionsFor<Service>,
 				): Promise<Service[]>;
+				var: {
+					getAllByService(
+						id: number,
+						options?: PineOptionsFor<ServiceEnvironmentVariable>,
+					): Promise<ServiceEnvironmentVariable[]>;
+					set(id: number, key: string, value: string): Promise<void>;
+					get(id: number, key: string): Promise<string | undefined>;
+					remove(id: number, key: string): Promise<string | undefined>;
+				};
 			};
 			config: {
 				getAll: () => Promise<Config>;
