@@ -650,22 +650,7 @@ declare namespace ResinSdk {
 
 		request: ResinRequest;
 
-		errors: {
-			ResinAmbiguousApplication: ResinErrors.ResinAmbiguousApplication;
-			ResinAmbiguousDevice: ResinErrors.ResinAmbiguousDevice;
-			ResinApplicationNotFound: ResinErrors.ResinApplicationNotFound;
-			ResinDeviceNotFound: ResinErrors.ResinDeviceNotFound;
-			ResinExpiredToken: ResinErrors.ResinExpiredToken;
-			ResinImageNotFound: ResinErrors.ResinBuildNotFound;
-			ResinInvalidDeviceType: ResinErrors.ResinInvalidDeviceType;
-			ResinInvalidParameterError: ResinErrors.ResinInvalidParameterError;
-			ResinKeyNotFound: ResinErrors.ResinKeyNotFound;
-			ResinMalformedToken: ResinErrors.ResinMalformedToken;
-			ResinNotLoggedIn: ResinErrors.ResinNotLoggedIn;
-			ResinReleaseNotFound: ResinErrors.ResinBuildNotFound;
-			ResinRequestError: ResinErrors.ResinRequestError;
-			ResinSupervisorLockedError: ResinErrors.ResinSupervisorLockedError;
-		};
+		errors: typeof ResinErrors;
 
 		models: {
 			application: {
