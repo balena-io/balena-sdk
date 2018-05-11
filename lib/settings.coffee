@@ -19,7 +19,7 @@ Promise = require('bluebird')
 getSettings = (deps, opts) ->
 	{ settings } = deps
 
-	expots = {}
+	exports = {}
 
 	###*
 	# @summary Get a single setting. **Only implemented in Node.js**
