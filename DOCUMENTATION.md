@@ -70,6 +70,9 @@ If you feel something is missing, not clear or could be improved, please don't h
             * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
             * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+            * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
+            * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
+            * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
             * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -328,6 +331,9 @@ resin.models.device.get(123).catch(function (error) {
         * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
         * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+        * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
+        * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
+        * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
         * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -1072,6 +1078,9 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
     * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+    * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
+    * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
+    * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
     * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -1918,6 +1927,99 @@ resin.models.device.restartApplication(123);
 ```js
 resin.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
+});
+```
+<a name="resin.models.device.startService"></a>
+
+##### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Start service on device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to start |
+
+**Example**  
+```js
+resin.models.device.startService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.startService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.startService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="resin.models.device.stopService"></a>
+
+##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Stop service on device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to stop |
+
+**Example**  
+```js
+resin.models.device.stopService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.stopService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.stopService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="resin.models.device.restartService"></a>
+
+##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Restart service on device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to restart |
+
+**Example**  
+```js
+resin.models.device.restartService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.restartService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.restartService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
 });
 ```
 <a name="resin.models.device.reboot"></a>
