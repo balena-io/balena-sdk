@@ -340,40 +340,6 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get a single application by id
-	# @name getById
-	# @public
-	# @function
-	# @memberof resin.models.application
-	# @deprecated .get() now accepts application ids directly
-	#
-	# @param {(Number|String)} id - application id
-	# @fulfil {Object} - application
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.application.getById(89).then(function(application) {
-	# 	console.log(application);
-	# });
-	#
-	# @example
-	# resin.models.application.getById(89, function(error, application) {
-	# 	if (error) throw error;
-	# 	console.log(application);
-	# });
-	###
-	exports.getById = (id, callback) ->
-		return pine.get
-			resource: 'application'
-			id: id
-		.tap (application) ->
-			if not application?
-				throw new errors.ResinApplicationNotFound(id)
-
-			normalizeApplication(application)
-		.asCallback(callback)
-
-	###*
 	# @summary Create an application
 	# @name create
 	# @public
