@@ -95,7 +95,7 @@ exports.buildDependentResource = (
 			.then (parentId) ->
 				pine.post
 					resource: resourceName
-					body: Object.assign
+					body:
 						"#{parentResourceName}": parentId
 						"#{resourceKeyField}": key
 						value: value

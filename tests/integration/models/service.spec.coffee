@@ -55,3 +55,43 @@ describe 'Service Model', ->
 						service_name: 'web'
 						application: __id: @application.id
 					]
+
+		describe 'resin.models.service.var', ->
+
+			varModel = resin.models.service.var
+
+			it 'can create and retrieve a variable', ->
+				varModel.set(@webService.id, 'EDITOR', 'vim')
+				.then =>
+					varModel.get(@webService.id, 'EDITOR')
+				.then (result) ->
+					m.chai.expect(result).to.equal('vim')
+
+			it 'can create, update and retrieve a variable', ->
+				varModel.set(@webService.id, 'EDITOR', 'vim')
+				.then =>
+					varModel.set(@webService.id, 'EDITOR', 'emacs')
+				.then =>
+					varModel.get(@webService.id, 'EDITOR')
+				.then (result) ->
+					m.chai.expect(result).to.equal('emacs')
+
+			it 'can create and then retrieve multiple variables', ->
+				Promise.all [
+					varModel.set(@webService.id, 'A', 'a')
+					varModel.set(@webService.id, 'B', 'b')
+				]
+				.then =>
+					varModel.getAllByService(@webService.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
+			it 'can create, delete and then fail to retrieve a variable', ->
+				varModel.set(@webService.id, 'EDITOR', 'vim')
+				.then =>
+					varModel.remove(@webService.id, 'EDITOR')
+				.then =>
+					varModel.get(@webService.id, 'EDITOR')
+				.then (result) ->
+					m.chai.expect(result).to.equal(undefined)
