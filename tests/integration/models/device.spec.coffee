@@ -804,6 +804,49 @@ describe 'Device Model', ->
 			describe 'resin.models.device.tags.remove()', ->
 				itShouldRemoveTags(deviceTagTestOptions)
 
+
+		describe 'resin.models.device.configVar', ->
+
+			configVarModel = resin.models.device.configVar
+
+			['id', 'uuid'].forEach (deviceParam) ->
+
+				it "can create and retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'emacs')
+					.then =>
+						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+					Promise.all [
+						configVarModel.set(@device[deviceParam], 'RESIN_A', 'a')
+						configVarModel.set(@device[deviceParam], 'RESIN_B', 'b')
+					]
+					.then =>
+						configVarModel.getAllByDevice(@device[deviceParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'RESIN_A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'RESIN_B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.remove(@device[deviceParam], 'RESIN_EDITOR')
+					.then =>
+						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
 	describe 'given a multicontainer application with a single offline device', ->
 
 		givenMulticontainerApplication()

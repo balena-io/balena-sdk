@@ -76,6 +76,14 @@ getDeviceModel = (deps, opts) ->
 		ResourceNotFoundError: errors.ResinDeviceNotFound
 	}
 
+	configVarModel = buildDependentResource { pine }, {
+		resourceName: 'device_config_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'device',
+		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinDeviceNotFound
+	}
+
 	exports = {}
 
 	# Infer dashboardUrl from apiUrl if former is undefined
@@ -2046,6 +2054,127 @@ getDeviceModel = (deps, opts) ->
 		# });
 		###
 		remove: tagsModel.remove
+	}
+
+	exports.configVar = {
+		###*
+		# @summary Get all config variables for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device config variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.getAllByDevice('abc123').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByDevice(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByDevice('abc123', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByDevice: configVarModel.getAllByParent
+
+		###*
+		# @summary Get the value of a specific config variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - config variable name
+		# @fulfil {String|undefined} - the config variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: configVarModel.get
+
+		###*
+		# @summary Set the value of a specific config variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - config variable name
+		# @param {String} value - config variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: configVarModel.set
+
+		###*
+		# @summary Clear the value of a specific config variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - config variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.remove(999999, 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: configVarModel.remove
 	}
 
 	return exports
