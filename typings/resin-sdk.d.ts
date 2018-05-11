@@ -743,6 +743,25 @@ declare namespace ResinSdk {
 						key: string,
 					): Promise<string | undefined>;
 				};
+				envVar: {
+					getAllByApplication(
+						nameOrId: string | number,
+						options?: PineOptionsFor<ApplicationEnvironmentVariable>,
+					): Promise<ApplicationEnvironmentVariable[]>;
+					set(
+						nameOrId: string | number,
+						key: string,
+						value: string,
+					): Promise<void>;
+					get(
+						nameOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+					remove(
+						nameOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+				};
 			};
 			apiKey: {
 				create: (name: string, description?: string | null) => Promise<string>;

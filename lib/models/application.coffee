@@ -62,6 +62,13 @@ getApplicationModel = (deps, opts) ->
 		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.ResinApplicationNotFound
 	}
+	envVarModel = buildDependentResource { pine }, {
+		resourceName: 'application_environment_variable'
+		resourceKeyField: 'env_var_name'
+		parentResourceName: 'application',
+		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinApplicationNotFound
+	}
 
 	exports = {}
 
@@ -971,7 +978,7 @@ getApplicationModel = (deps, opts) ->
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR').then(function(value) {
+		# resin.models.application.configVar.get(999999, 'RESIN_VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
@@ -1001,7 +1008,7 @@ getApplicationModel = (deps, opts) ->
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue').then(function() {
+		# resin.models.application.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
@@ -1030,7 +1037,7 @@ getApplicationModel = (deps, opts) ->
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR').then(function() {
+		# resin.models.application.configVar.remove(999999, 'RESIN_VAR').then(function() {
 		# 	...
 		# });
 		#
@@ -1041,6 +1048,127 @@ getApplicationModel = (deps, opts) ->
 		# });
 		###
 		remove: configVarModel.remove
+	}
+
+	exports.envVar = {
+		###*
+		# @summary Get all environment variables for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - application environment variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: envVarModel.getAllByParent
+
+		###*
+		# @summary Get the value of a specific environment variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - environment variable name
+		# @fulfil {String|undefined} - the environment variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.get('MyApp', 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.get(999999, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: envVarModel.get
+
+		###*
+		# @summary Set the value of a specific environment variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - environment variable name
+		# @param {String} value - environment variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: envVarModel.set
+
+		###*
+		# @summary Clear the value of a specific environment variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - environment variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.remove('MyApp', 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.remove(999999, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.remove('MyApp', 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: envVarModel.remove
 	}
 
 	return exports

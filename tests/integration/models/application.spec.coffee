@@ -367,6 +367,48 @@ describe 'Application Model', ->
 					.then (result) ->
 						m.chai.expect(result).to.equal(undefined)
 
+		describe 'resin.models.application.envVar', ->
+
+			envVarModel = resin.models.application.envVar
+
+			['id', 'app_name'].forEach (appParam) ->
+
+				it "can create and retrieve a variable by #{appParam}", ->
+					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.get(@application[appParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{appParam}", ->
+					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.set(@application[appParam], 'EDITOR', 'emacs')
+					.then =>
+						envVarModel.get(@application[appParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{appParam}", ->
+					Promise.all [
+						envVarModel.set(@application[appParam], 'A', 'a')
+						envVarModel.set(@application[appParam], 'B', 'b')
+					]
+					.then =>
+						envVarModel.getAllByApplication(@application[appParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { env_var_name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { env_var_name: 'B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{appParam}", ->
+					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.remove(@application[appParam], 'EDITOR')
+					.then =>
+						envVarModel.get(@application[appParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
 		describe 'with a registered device', ->
 
 			beforeEach ->
