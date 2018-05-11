@@ -891,6 +891,25 @@ declare namespace ResinSdk {
 					): Promise<void>;
 					remove(uuidOrId: string | number, tagKey: string): Promise<void>;
 				};
+				configVar: {
+					getAllByDevice(
+						uuidOrId: string | number,
+						options?: PineOptionsFor<DeviceConfigVariable>,
+					): Promise<DeviceConfigVariable[]>;
+					set(
+						uuidOrId: string | number,
+						key: string,
+						value: string,
+					): Promise<void>;
+					get(
+						uuidOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+					remove(
+						uuidOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+				};
 			};
 			service: {
 				getAllByApplication(
