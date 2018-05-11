@@ -87,7 +87,10 @@ getServiceModel = (deps, opts) ->
 					, options
 		.asCallback(callback)
 
-
+	###*
+	# @namespace resin.models.service.var
+	# @memberof resin.models.service
+	###
 	exports.var = {
 		###*
 		# @summary Get all variables for a service

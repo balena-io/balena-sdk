@@ -2065,6 +2065,10 @@ getDeviceModel = (deps, opts) ->
 		remove: tagsModel.remove
 	}
 
+	###*
+	# @namespace resin.models.device.configVar
+	# @memberof resin.models.device
+	###
 	exports.configVar = {
 		###*
 		# @summary Get all config variables for a device
@@ -2186,6 +2190,10 @@ getDeviceModel = (deps, opts) ->
 		remove: configVarModel.remove
 	}
 
+	###*
+	# @namespace resin.models.device.envVar
+	# @memberof resin.models.device
+	###
 	exports.envVar = {
 		###*
 		# @summary Get all environment variables for a device
@@ -2307,6 +2315,10 @@ getDeviceModel = (deps, opts) ->
 		remove: envVarModel.remove
 	}
 
+	###*
+	# @namespace resin.models.device.serviceVar
+	# @memberof resin.models.device
+	###
 	exports.serviceVar = {
 
 		###*
