@@ -65,6 +65,21 @@ exports.buildDependentResource = (
 				)
 			.asCallback(callback)
 
+		get: (parentParam, key, callback) ->
+			callback = findCallback(arguments)
+
+			getResourceId(parentParam).then (id) ->
+				pine.get
+					resource: resourceName
+					options:
+						$filter:
+							"#{parentResourceName}": id
+							"#{resourceKeyField}": key
+			.then (results) ->
+				if (results[0])
+					results[0].value
+			.asCallback(callback)
+
 		set: (parentParam, key, value, callback) ->
 			Promise.try ->
 				value = String(value)

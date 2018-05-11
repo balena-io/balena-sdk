@@ -55,6 +55,14 @@ getApplicationModel = (deps, opts) ->
 		ResourceNotFoundError: errors.ResinApplicationNotFound
 	}
 
+	configVarModel = buildDependentResource { pine }, {
+		resourceName: 'application_config_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'application',
+		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinApplicationNotFound
+	}
+
 	exports = {}
 
 	# Internal method for name/id disambiguation
@@ -912,6 +920,127 @@ getApplicationModel = (deps, opts) ->
 		# });
 		###
 		remove: tagsModel.remove
+	}
+
+	exports.configVar = {
+		###*
+		# @summary Get all config variables for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - application config variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: configVarModel.getAllByParent
+
+		###*
+		# @summary Get the value of a specific config variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - config variable name
+		# @fulfil {String|undefined} - the config variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: configVarModel.get
+
+		###*
+		# @summary Set the value of a specific config variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - config variable name
+		# @param {String} value - config variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: configVarModel.set
+
+		###*
+		# @summary Clear the value of a specific config variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - config variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: configVarModel.remove
 	}
 
 	return exports

@@ -325,6 +325,48 @@ describe 'Application Model', ->
 
 				m.chai.expect(promise).to.eventually.equal(null)
 
+		describe 'resin.models.application.configVar', ->
+
+			configVarModel = resin.models.application.configVar
+
+			['id', 'app_name'].forEach (appParam) ->
+
+				it "can create and retrieve a variable by #{appParam}", ->
+					configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.get(@application[appParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{appParam}", ->
+					configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'emacs')
+					.then =>
+						configVarModel.get(@application[appParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{appParam}", ->
+					Promise.all [
+						configVarModel.set(@application[appParam], 'RESIN_A', 'a')
+						configVarModel.set(@application[appParam], 'RESIN_B', 'b')
+					]
+					.then =>
+						configVarModel.getAllByApplication(@application[appParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'RESIN_A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'RESIN_B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{appParam}", ->
+					configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.remove(@application[appParam], 'RESIN_EDITOR')
+					.then =>
+						configVarModel.get(@application[appParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
 		describe 'with a registered device', ->
 
 			beforeEach ->
