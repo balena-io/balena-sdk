@@ -87,8 +87,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
             * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-            * [.enableTcpPing(uuidOrId)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
-            * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -336,8 +334,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
         * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-        * [.enableTcpPing(uuidOrId)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
-        * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -1098,8 +1094,6 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
     * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-    * [.enableTcpPing(uuidOrId)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
-    * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -2371,63 +2365,6 @@ resin.models.device.disableDeviceUrl(123);
 **Example**  
 ```js
 resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.device.enableTcpPing"></a>
-
-##### device.enableTcpPing(uuidOrId) ⇒ <code>Promise</code>
-When the device's connection to the Resin VPN is down, by default
-the device performs a TCP ping heartbeat to check for connectivity.
-This is enabled by default.
-
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Enable TCP ping for a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-resin.models.device.enableTcpPing('7cf02a6');
-```
-**Example**  
-```js
-resin.models.device.enableTcpPing(123);
-```
-**Example**  
-```js
-resin.models.device.enableTcpPing('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.device.disableTcpPing"></a>
-
-##### device.disableTcpPing(uuidOrId) ⇒ <code>Promise</code>
-When the device's connection to the Resin VPN is down, by default
-the device performs a TCP ping heartbeat to check for connectivity.
-
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Disable TCP ping for a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-resin.models.device.disableTcpPing('7cf02a6');
-```
-**Example**  
-```js
-resin.models.device.disableTcpPing(123);
-```
-**Example**  
-```js
-resin.models.device.disableTcpPing('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
