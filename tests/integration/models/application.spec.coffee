@@ -186,16 +186,6 @@ describe 'Application Model', ->
 				.then (application) ->
 					m.chai.expect(application.user[0].username).to.equal(credentials.username)
 
-		describe 'resin.models.application.getById()', ->
-
-			it 'should be able to get an application', ->
-				promise = resin.models.application.getById(@application.id)
-				m.chai.expect(promise).to.become(@application)
-
-			it 'should be rejected if the application does not exist', ->
-				promise = resin.models.application.getById(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
-
 		describe 'resin.models.application.has()', ->
 
 			it 'should eventually be true if the application name exists', ->
