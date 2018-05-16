@@ -545,10 +545,9 @@ declare namespace ResinSdk {
 		application: NavigationResource<Application>;
 	}
 
-	interface SecondaryEnvironmentVariableBase {
-		id: number;
-		env_var_name: string;
-		value: string;
+	interface SecondaryEnvironmentVariableBase extends EnvironmentVariableBase {
+		/** @deprecated */
+		env_var_name?: string;
 	}
 
 	interface ApplicationEnvironmentVariable
