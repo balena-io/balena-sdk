@@ -1909,7 +1909,7 @@ resin.models.device.restartApplication('7cf02a6', function(error) {
 
 ##### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Start service on device  
+**Summary**: Start a service on a device  
 **Access**: public  
 
 | Param | Type | Description |
@@ -1940,7 +1940,7 @@ resin.models.device.startService('7cf02a6', 123, function(error) {
 
 ##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Stop service on device  
+**Summary**: Stop a service on a device  
 **Access**: public  
 
 | Param | Type | Description |
@@ -1971,7 +1971,7 @@ resin.models.device.stopService('7cf02a6', 123, function(error) {
 
 ##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Restart service on device  
+**Summary**: Restart a service on a device  
 **Access**: public  
 
 | Param | Type | Description |
