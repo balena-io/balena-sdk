@@ -459,7 +459,7 @@ getDeviceModel = (deps, opts) ->
 	#
 	# @deprecated
 	# This is not supported on multicontainer devices, and will
-	# be removed in future
+	# be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Object} - application info
@@ -857,7 +857,7 @@ getDeviceModel = (deps, opts) ->
 	#
 	# @deprecated
 	# This is not supported on multicontainer devices, and will
-	# be removed in future
+	# be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
@@ -907,7 +907,7 @@ getDeviceModel = (deps, opts) ->
 	#
 	# @deprecated
 	# This is not supported on multicontainer devices, and will
-	# be removed in future
+	# be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
@@ -986,7 +986,7 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Start service on device
+	# @summary Start a service on a device
 	# @name startService
 	# @public
 	# @function
@@ -1037,7 +1037,7 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Stop service on device
+	# @summary Stop a service on a device
 	# @name stopService
 	# @public
 	# @function
@@ -1088,7 +1088,7 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Restart service on device
+	# @summary Restart a service on a device
 	# @name restartService
 	# @public
 	# @function
