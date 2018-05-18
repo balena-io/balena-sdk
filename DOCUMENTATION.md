@@ -28,7 +28,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-            * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
             * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
@@ -57,7 +56,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
             * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
             * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-            * [.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>
+            * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
             * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
             * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -68,9 +67,12 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-            * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
-            * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
+            * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
+            * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+            * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
+            * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
+            * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
             * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -87,8 +89,6 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
             * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-            * [.enableTcpPing(uuidOrId)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
-            * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -277,7 +277,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-        * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
         * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
@@ -306,7 +305,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
         * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
         * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-        * [.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>
+        * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
         * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
         * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -317,9 +316,12 @@ resin.models.device.get(123).catch(function (error) {
         * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-        * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
-        * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
+        * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
+        * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+        * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
+        * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
+        * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
         * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -336,8 +338,6 @@ resin.models.device.get(123).catch(function (error) {
         * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
         * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-        * [.enableTcpPing(uuidOrId)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
-        * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -404,7 +404,6 @@ resin.models.device.get(123).catch(function (error) {
     * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-    * ~~[.getById(id)](#resin.models.application.getById) ⇒ <code>Promise</code>~~
     * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
@@ -699,33 +698,6 @@ resin.models.application.hasAny().then(function(hasAny) {
 resin.models.application.hasAny(function(error, hasAny) {
 	if (error) throw error;
 	console.log('Has any?', hasAny);
-});
-```
-<a name="resin.models.application.getById"></a>
-
-##### ~~application.getById(id) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
-**Summary**: Get a single application by id  
-**Access**: public  
-**Fulfil**: <code>Object</code> - application  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>Number</code> \| <code>String</code> | application id |
-
-**Example**  
-```js
-resin.models.application.getById(89).then(function(application) {
-	console.log(application);
-});
-```
-**Example**  
-```js
-resin.models.application.getById(89, function(error, application) {
-	if (error) throw error;
-	console.log(application);
 });
 ```
 <a name="resin.models.application.create"></a>
@@ -1068,7 +1040,7 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
     * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
     * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-    * [.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>
+    * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
     * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
     * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -1079,9 +1051,12 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-    * [.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>
-    * [.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>
+    * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
+    * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
+    * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
+    * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
+    * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
     * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
@@ -1098,8 +1073,6 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
     * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-    * [.enableTcpPing(uuidOrId)](#resin.models.device.enableTcpPing) ⇒ <code>Promise</code>
-    * [.disableTcpPing(uuidOrId)](#resin.models.device.disableTcpPing) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -1522,7 +1495,9 @@ resin.models.device.getApplicationName('7cf02a6', function(error, applicationNam
 ```
 <a name="resin.models.device.getApplicationInfo"></a>
 
-##### device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>
+##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Get application container information  
 **Access**: public  
@@ -1837,7 +1812,9 @@ resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 ```
 <a name="resin.models.device.startApplication"></a>
 
-##### device.startApplication(uuidOrId) ⇒ <code>Promise</code>
+##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Start application on device  
 **Access**: public  
@@ -1868,7 +1845,9 @@ resin.models.device.startApplication('7cf02a6', function(error, containerId) {
 ```
 <a name="resin.models.device.stopApplication"></a>
 
-##### device.stopApplication(uuidOrId) ⇒ <code>Promise</code>
+##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Stop application on device  
 **Access**: public  
@@ -1924,6 +1903,99 @@ resin.models.device.restartApplication(123);
 ```js
 resin.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
+});
+```
+<a name="resin.models.device.startService"></a>
+
+##### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Start a service on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to start |
+
+**Example**  
+```js
+resin.models.device.startService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.startService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.startService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="resin.models.device.stopService"></a>
+
+##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Stop a service on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to stop |
+
+**Example**  
+```js
+resin.models.device.stopService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.stopService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.stopService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="resin.models.device.restartService"></a>
+
+##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Summary**: Restart a service on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to restart |
+
+**Example**  
+```js
+resin.models.device.restartService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.restartService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+resin.models.device.restartService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
 });
 ```
 <a name="resin.models.device.reboot"></a>
@@ -2371,63 +2443,6 @@ resin.models.device.disableDeviceUrl(123);
 **Example**  
 ```js
 resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.device.enableTcpPing"></a>
-
-##### device.enableTcpPing(uuidOrId) ⇒ <code>Promise</code>
-When the device's connection to the Resin VPN is down, by default
-the device performs a TCP ping heartbeat to check for connectivity.
-This is enabled by default.
-
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Enable TCP ping for a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-resin.models.device.enableTcpPing('7cf02a6');
-```
-**Example**  
-```js
-resin.models.device.enableTcpPing(123);
-```
-**Example**  
-```js
-resin.models.device.enableTcpPing('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="resin.models.device.disableTcpPing"></a>
-
-##### device.disableTcpPing(uuidOrId) ⇒ <code>Promise</code>
-When the device's connection to the Resin VPN is down, by default
-the device performs a TCP ping heartbeat to check for connectivity.
-
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Disable TCP ping for a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-resin.models.device.disableTcpPing('7cf02a6');
-```
-**Example**  
-```js
-resin.models.device.disableTcpPing(123);
-```
-**Example**  
-```js
-resin.models.device.disableTcpPing('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
