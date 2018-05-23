@@ -832,10 +832,14 @@ getDeviceModel = (deps, opts) ->
 	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
 			device: exports.get(uuidOrId, $select: [ 'uuid', 'device_type' ])
+			deviceTypes: configModel().getDeviceTypes()
 			application: applicationModel().get(applicationNameOrId, $select: [ 'id', 'device_type' ])
-		.then ({ application, device }) ->
-
-			if device.device_type isnt application.device_type
+		.then ({ application, device, deviceTypes }) ->
+			deviceDeviceType = find(deviceTypes, { slug: device.device_type })
+			appDeviceType = find(deviceTypes, { slug: application.device_type })
+			isCompatibleMove = deviceDeviceType.arch is appDeviceType.arch and
+				(!!deviceDeviceType.isDependent is !!appDeviceType.isDependent)
+			if not isCompatibleMove
 				throw new errors.ResinInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
