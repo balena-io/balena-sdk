@@ -971,21 +971,26 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejected
 					.and.eventually.have.property('code', 'ResinAmbiguousDevice')
 
-	describe 'given two compatible applications and a single device', ->
+	describe 'given three compatible applications and a single device', ->
 
 		beforeEach ->
 			Promise.props
 				application1: resin.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
+					deviceType: 'raspberrypi3'
 				application2: resin.models.application.create
 					name: 'BarBaz'
 					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
+					deviceType: 'raspberrypi3'
+				application3: resin.models.application.create
+					name: 'BazFoo'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi2'
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
+				@application3 = results.application3
 
 				uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(results.application1.app_name, uuid)
@@ -1012,6 +1017,12 @@ describe 'Device Model', ->
 				.then (applicationName) =>
 					m.chai.expect(applicationName).to.equal(@application2.app_name)
 
+			it 'should be able to move a device to an application of the same architecture', ->
+				resin.models.device.move(@deviceInfo.id, @application3.id).then =>
+					resin.models.device.getApplicationName(@deviceInfo.id)
+				.then (applicationName) =>
+					m.chai.expect(applicationName).to.equal(@application3.app_name)
+
 	describe 'given two incompatible applications and a single device', ->
 
 		beforeEach ->
@@ -1023,7 +1034,7 @@ describe 'Device Model', ->
 				application2: resin.models.application.create
 					name: 'BarBaz'
 					applicationType: 'microservices-starter'
-					deviceType: 'beaglebone-black'
+					deviceType: 'intel-nuc'
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
