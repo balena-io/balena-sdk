@@ -410,6 +410,7 @@ declare namespace ResinSdk {
 		is_locked_until__date: string;
 		is_on__commit: string;
 		is_web_accessible: boolean;
+		is_active: boolean;
 		is_online: boolean;
 		last_connectivity_event: string;
 		latitude?: string;
