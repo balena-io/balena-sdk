@@ -374,11 +374,33 @@ declare namespace ResinSdk {
 		billing: BillingPlanBillingInfo;
 		intervalUnit?: string;
 		intervalLength?: string;
+		addonPlan?: BillingAddonPlanInfo;
+	}
+
+	interface BillingAddonPlanInfo {
+		code: string;
+		currentPeriodEndDate?: string;
+		billing: BillingPlanBillingInfo;
+
+		addOns: Array<{
+			code: string;
+			unitCostCents?: string;
+			quantity?: string;
+		}>;
 	}
 
 	interface BillingPlanBillingInfo {
 		currency: string;
 		currencySymbol?: string;
+		totalCostCents: string;
+
+		charges: Array<{
+			itemType: string;
+			name: string;
+			code: string;
+			unitCostCents: string;
+			quantity: string;
+		}>;
 	}
 
 	interface InvoiceInfo {
