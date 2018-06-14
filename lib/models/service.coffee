@@ -118,6 +118,53 @@ getServiceModel = (deps, opts) ->
 		getAllByService: varModel.getAllByParent
 
 		###*
+		# @summary Get all service variables by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.service.var
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - service variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.service.var.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.service.var.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.service.var.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				varModel.getAll(
+					mergePineOptions
+						$filter:
+							service:
+								$any:
+									$alias: 's'
+									$expr: s:
+										application: id
+						$orderby: 'name asc'
+					, options
+				)
+			.asCallback(callback)
+
+		###*
 		# @summary Get the value of a specific service variable
 		# @name get
 		# @public

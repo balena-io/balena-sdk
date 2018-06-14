@@ -663,10 +663,7 @@ declare namespace ResinSdk {
 						nameOrId: string | number,
 						key: string,
 					): Promise<string | undefined>;
-					remove(
-						nameOrId: string | number,
-						key: string,
-					): Promise<void>;
+					remove(nameOrId: string | number, key: string): Promise<void>;
 				};
 				envVar: {
 					getAllByApplication(
@@ -682,10 +679,7 @@ declare namespace ResinSdk {
 						nameOrId: string | number,
 						key: string,
 					): Promise<string | undefined>;
-					remove(
-						nameOrId: string | number,
-						key: string,
-					): Promise<void>;
+					remove(nameOrId: string | number, key: string): Promise<void>;
 				};
 			};
 			apiKey: {
@@ -863,23 +857,8 @@ declare namespace ResinSdk {
 						uuidOrId: string | number,
 						options?: PineOptionsFor<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
-					set(
-						uuidOrId: string | number,
-						key: string,
-						value: string,
-					): Promise<void>;
-					get(
-						uuidOrId: string | number,
-						key: string,
-					): Promise<string | undefined>;
-					remove(
-						uuidOrId: string | number,
-						key: string,
-					): Promise<void>;
-				};
-				envVar: {
-					getAllByDevice(
-						uuidOrId: string | number,
+					getAllByApplication(
+						nameOrId: string | number,
 						options?: PineOptionsFor<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					set(
@@ -891,14 +870,35 @@ declare namespace ResinSdk {
 						uuidOrId: string | number,
 						key: string,
 					): Promise<string | undefined>;
-					remove(
+					remove(uuidOrId: string | number, key: string): Promise<void>;
+				};
+				envVar: {
+					getAllByDevice(
+						uuidOrId: string | number,
+						options?: PineOptionsFor<DeviceVariable>,
+					): Promise<DeviceVariable[]>;
+					getAllByApplication(
+						nameOrId: string | number,
+						options?: PineOptionsFor<DeviceVariable>,
+					): Promise<DeviceVariable[]>;
+					set(
 						uuidOrId: string | number,
 						key: string,
+						value: string,
 					): Promise<void>;
+					get(
+						uuidOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+					remove(uuidOrId: string | number, key: string): Promise<void>;
 				};
 				serviceVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
+						options?: PineOptionsFor<DeviceServiceEnvironmentVariable>,
+					): Promise<DeviceServiceEnvironmentVariable[]>;
+					getAllByApplication(
+						nameOrId: string | number,
 						options?: PineOptionsFor<DeviceServiceEnvironmentVariable>,
 					): Promise<DeviceServiceEnvironmentVariable[]>;
 					set(
@@ -927,6 +927,10 @@ declare namespace ResinSdk {
 				var: {
 					getAllByService(
 						id: number,
+						options?: PineOptionsFor<ServiceEnvironmentVariable>,
+					): Promise<ServiceEnvironmentVariable[]>;
+					getAllByApplication(
+						nameOrId: string | number,
 						options?: PineOptionsFor<ServiceEnvironmentVariable>,
 					): Promise<ServiceEnvironmentVariable[]>;
 					set(id: number, key: string, value: string): Promise<void>;

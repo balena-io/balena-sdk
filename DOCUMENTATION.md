@@ -59,16 +59,19 @@ If you feel something is missing, not clear or could be improved, please don't h
                 * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
             * [.configVar](#resin.models.device.configVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
             * [.envVar](#resin.models.device.envVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
             * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
@@ -165,6 +168,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.service](#resin.models.service) : <code>object</code>
             * [.var](#resin.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
                 * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
                 * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
@@ -350,16 +354,19 @@ resin.models.device.get(123).catch(function (error) {
             * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
         * [.configVar](#resin.models.device.configVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
         * [.envVar](#resin.models.device.envVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
         * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
@@ -456,6 +463,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.service](#resin.models.service) : <code>object</code>
         * [.var](#resin.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
             * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
             * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
@@ -1405,16 +1413,19 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
         * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
     * [.configVar](#resin.models.device.configVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
     * [.envVar](#resin.models.device.envVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
     * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
@@ -1623,6 +1634,7 @@ resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
 
 * [.configVar](#resin.models.device.configVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
     * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
@@ -1655,6 +1667,38 @@ resin.models.device.configVar.getAllByDevice(999999).then(function(vars) {
 **Example**  
 ```js
 resin.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
+	if (error) throw error;
+	console.log(vars)
+});
+```
+<a name="resin.models.device.configVar.getAllByApplication"></a>
+
+###### configVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>configVar</code>](#resin.models.device.configVar)  
+**Summary**: Get all device config variables by application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device config variables  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.device.configVar.getAllByApplication(999999).then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
@@ -1761,6 +1805,7 @@ resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR', function(error) {
 
 * [.envVar](#resin.models.device.envVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
     * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
@@ -1793,6 +1838,38 @@ resin.models.device.envVar.getAllByDevice(999999).then(function(vars) {
 **Example**  
 ```js
 resin.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
+	if (error) throw error;
+	console.log(vars)
+});
+```
+<a name="resin.models.device.envVar.getAllByApplication"></a>
+
+###### envVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>envVar</code>](#resin.models.device.envVar)  
+**Summary**: Get all device environment variables by application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device environment variables  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.device.envVar.getAllByApplication(999999).then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
@@ -1899,6 +1976,7 @@ resin.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
 
 * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
     * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
@@ -1931,6 +2009,38 @@ resin.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
 **Example**  
 ```js
 resin.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
+	if (error) throw error;
+	console.log(vars)
+});
+```
+<a name="resin.models.device.serviceVar.getAllByApplication"></a>
+
+###### serviceVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>serviceVar</code>](#resin.models.device.serviceVar)  
+**Summary**: Get all device service variable overrides by application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - service variables  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
@@ -4420,6 +4530,7 @@ resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 * [.service](#resin.models.service) : <code>object</code>
     * [.var](#resin.models.service.var) : <code>object</code>
         * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
         * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
         * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
@@ -4432,6 +4543,7 @@ resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 
 * [.var](#resin.models.service.var) : <code>object</code>
     * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
     * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
     * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
@@ -4458,6 +4570,38 @@ resin.models.service.var.getAllByService(999999).then(function(vars) {
 **Example**  
 ```js
 resin.models.service.var.getAllByService(999999, function(error, vars) {
+	if (error) throw error;
+	console.log(vars)
+});
+```
+<a name="resin.models.service.var.getAllByApplication"></a>
+
+###### var.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>var</code>](#resin.models.service.var)  
+**Summary**: Get all service variables by application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - service variables  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+resin.models.service.var.getAllByApplication('MyApp').then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.service.var.getAllByApplication(999999).then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+resin.models.service.var.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });

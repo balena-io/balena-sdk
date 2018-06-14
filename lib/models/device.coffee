@@ -2101,6 +2101,53 @@ getDeviceModel = (deps, opts) ->
 		getAllByDevice: configVarModel.getAllByParent
 
 		###*
+		# @summary Get all device config variables by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device config variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				configVarModel.getAll(
+					mergePineOptions
+						$filter:
+							device:
+								$any:
+									$alias: 'd'
+									$expr: d:
+										belongs_to__application: id
+						$orderby: 'name asc'
+					, options
+				)
+			.asCallback(callback)
+
+		###*
 		# @summary Get the value of a specific config variable
 		# @name get
 		# @public
@@ -2224,6 +2271,53 @@ getDeviceModel = (deps, opts) ->
 		# });
 		###
 		getAllByDevice: envVarModel.getAllByParent
+
+		###*
+		# @summary Get all device environment variables by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device environment variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				envVarModel.getAll(
+					mergePineOptions
+						$filter:
+							device:
+								$any:
+									$alias: 'd'
+									$expr: d:
+										belongs_to__application: id
+						$orderby: 'name asc'
+					, options
+				)
+			.asCallback(callback)
 
 		###*
 		# @summary Get the value of a specific environment variable
@@ -2362,6 +2456,58 @@ getDeviceModel = (deps, opts) ->
 								$any:
 									$alias: 'si',
 									$expr: si: device: deviceId
+						, options
+			.asCallback(callback)
+
+		###*
+		# @summary Get all device service variable overrides by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - service variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				pine.get
+					resource: 'device_service_environment_variable'
+					options:
+						mergePineOptions
+							$filter:
+								service_install:
+									$any:
+										$alias: 'si',
+										$expr: si:
+											device:
+												$any:
+													$alias: 'd'
+													$expr: d:
+														belongs_to__application: id
+							$orderby: 'name asc'
 						, options
 			.asCallback(callback)
 
