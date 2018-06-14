@@ -10,8 +10,6 @@ matrix:
   include:
     - node_js:
       - '8'
-    - node_js:
-      - '6'
       env:
       - 'CAN_DEPLOY=true'
 before_install:
