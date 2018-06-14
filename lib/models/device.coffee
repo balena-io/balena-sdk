@@ -2556,9 +2556,9 @@ getDeviceModel = (deps, opts) ->
 										device: deviceId
 										service: serviceId
 							name: key
-			.then (results) ->
-				if (results[0])
-					results[0].value
+			.get(0)
+			.then (variable) ->
+				variable?.value
 			.asCallback(callback)
 
 		###*
@@ -2611,7 +2611,7 @@ getDeviceModel = (deps, opts) ->
 				.tap (serviceInstalls) ->
 					if isEmpty(serviceInstalls)
 						throw new errors.ResinServiceNotFound(serviceId)
-					else if serviceInstalls.length > 1
+					if serviceInstalls.length > 1
 						throw new errors.ResinAmbiguousDevice(uuidOrId)
 				.get(0)
 				.get('id')
