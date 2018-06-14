@@ -87,6 +87,17 @@ describe 'Service Model', ->
 					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
 					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					varModel.set(@webService.id, 'A', 'a')
+					varModel.set(@webService.id, 'B', 'b')
+				]
+				.then =>
+					varModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
 			it 'can create, delete and then fail to retrieve a variable', ->
 				varModel.set(@webService.id, 'EDITOR', 'vim')
 				.then =>

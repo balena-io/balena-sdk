@@ -846,6 +846,17 @@ describe 'Device Model', ->
 					.then (result) ->
 						m.chai.expect(result).to.equal(undefined)
 
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					configVarModel.set(@device.id, 'RESIN_A', 'a')
+					configVarModel.set(@device.id, 'RESIN_B', 'b')
+				]
+				.then =>
+					configVarModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'RESIN_A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'RESIN_B' }).value).equal('b')
+
 		describe 'resin.models.device.envVar', ->
 
 			envVarModel = resin.models.device.envVar
@@ -887,6 +898,17 @@ describe 'Device Model', ->
 						envVarModel.get(@device[deviceParam], 'EDITOR')
 					.then (result) ->
 						m.chai.expect(result).to.equal(undefined)
+
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					envVarModel.set(@device.id, 'A', 'a')
+					envVarModel.set(@device.id, 'B', 'b')
+				]
+				.then =>
+					envVarModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
 	describe 'given a multicontainer application with a single offline device', ->
 
@@ -1037,6 +1059,17 @@ describe 'Device Model', ->
 						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
 					.then (result) ->
 						m.chai.expect(result).to.equal(undefined)
+
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					varModel.set(@device.id, @webService.id, 'A', 'a')
+					varModel.set(@device.id, @dbService.id, 'B', 'b')
+				]
+				.then =>
+					varModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
