@@ -64,7 +64,7 @@ getApplicationModel = (deps, opts) ->
 	}
 	envVarModel = buildDependentResource { pine }, {
 		resourceName: 'application_environment_variable'
-		resourceKeyField: 'env_var_name'
+		resourceKeyField: 'name'
 		parentResourceName: 'application',
 		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.ResinApplicationNotFound

@@ -208,11 +208,9 @@ declare namespace ResinSdk {
 		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
 
-		application_config_variable: ReverseNavigationResource<
-			ApplicationConfigVariable
-		>;
+		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
-			ApplicationEnvironmentVariable
+			ApplicationVariable
 		>;
 		application_tag: ReverseNavigationResource<ApplicationTag>;
 		owns__device: ReverseNavigationResource<Device>;
@@ -427,10 +425,8 @@ declare namespace ResinSdk {
 		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
 		is_managed_by__device: NavigationResource<Device>;
 
-		device_config_variable: ReverseNavigationResource<DeviceConfigVariable>;
-		device_environment_variable: ReverseNavigationResource<
-			DeviceEnvironmentVariable
-		>;
+		device_config_variable: ReverseNavigationResource<DeviceVariable>;
+		device_environment_variable: ReverseNavigationResource<DeviceVariable>;
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
 	}
@@ -535,26 +531,12 @@ declare namespace ResinSdk {
 		service: NavigationResource<Service>;
 	}
 
-	interface DeviceConfigVariable extends EnvironmentVariableBase {
+	interface DeviceVariable extends EnvironmentVariableBase {
 		device: NavigationResource<Device>;
 	}
 
-	interface ApplicationConfigVariable extends EnvironmentVariableBase {
+	interface ApplicationVariable extends EnvironmentVariableBase {
 		application: NavigationResource<Application>;
-	}
-
-	interface SecondaryEnvironmentVariableBase extends EnvironmentVariableBase {
-		/** @deprecated */
-		env_var_name?: string;
-	}
-
-	interface ApplicationEnvironmentVariable
-		extends SecondaryEnvironmentVariableBase {
-		application: NavigationResource<Application>;
-	}
-
-	interface DeviceEnvironmentVariable extends SecondaryEnvironmentVariableBase {
-		device: NavigationResource<Device>;
 	}
 
 	interface ResourceTagBase {
@@ -670,8 +652,8 @@ declare namespace ResinSdk {
 				configVar: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationConfigVariable>,
-					): Promise<ApplicationConfigVariable[]>;
+						options?: PineOptionsFor<ApplicationVariable>,
+					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
 						key: string,
@@ -689,8 +671,8 @@ declare namespace ResinSdk {
 				envVar: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationEnvironmentVariable>,
-					): Promise<ApplicationEnvironmentVariable[]>;
+						options?: PineOptionsFor<ApplicationVariable>,
+					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
 						key: string,
@@ -879,8 +861,8 @@ declare namespace ResinSdk {
 				configVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceConfigVariable>,
-					): Promise<DeviceConfigVariable[]>;
+						options?: PineOptionsFor<DeviceVariable>,
+					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
 						key: string,
@@ -898,8 +880,8 @@ declare namespace ResinSdk {
 				envVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceEnvironmentVariable>,
-					): Promise<DeviceEnvironmentVariable[]>;
+						options?: PineOptionsFor<DeviceVariable>,
+					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
 						key: string,

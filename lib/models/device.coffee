@@ -87,7 +87,7 @@ getDeviceModel = (deps, opts) ->
 
 	envVarModel = buildDependentResource { pine }, {
 		resourceName: 'device_environment_variable'
-		resourceKeyField: 'env_var_name'
+		resourceKeyField: 'name'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.ResinDeviceNotFound
