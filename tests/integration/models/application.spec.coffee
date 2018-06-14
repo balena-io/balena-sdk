@@ -397,8 +397,8 @@ describe 'Application Model', ->
 					.then =>
 						envVarModel.getAllByApplication(@application[appParam])
 					.then (result) ->
-						m.chai.expect(_.find(result, { env_var_name: 'A' }).value).equal('a')
-						m.chai.expect(_.find(result, { env_var_name: 'B' }).value).equal('b')
+						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
 				it "can create, delete and then fail to retrieve a variable by #{appParam}", ->
 					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
