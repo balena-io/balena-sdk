@@ -666,7 +666,7 @@ declare namespace ResinSdk {
 					remove(
 						nameOrId: string | number,
 						key: string,
-					): Promise<string | undefined>;
+					): Promise<void>;
 				};
 				envVar: {
 					getAllByApplication(
@@ -685,7 +685,7 @@ declare namespace ResinSdk {
 					remove(
 						nameOrId: string | number,
 						key: string,
-					): Promise<string | undefined>;
+					): Promise<void>;
 				};
 			};
 			apiKey: {
@@ -875,7 +875,7 @@ declare namespace ResinSdk {
 					remove(
 						uuidOrId: string | number,
 						key: string,
-					): Promise<string | undefined>;
+					): Promise<void>;
 				};
 				envVar: {
 					getAllByDevice(
@@ -894,7 +894,7 @@ declare namespace ResinSdk {
 					remove(
 						uuidOrId: string | number,
 						key: string,
-					): Promise<string | undefined>;
+					): Promise<void>;
 				};
 				serviceVar: {
 					getAllByDevice(
@@ -916,7 +916,7 @@ declare namespace ResinSdk {
 						uuidOrId: string | number,
 						serviceId: number,
 						key: string,
-					): Promise<string | undefined>;
+					): Promise<void>;
 				};
 			};
 			service: {
@@ -931,7 +931,7 @@ declare namespace ResinSdk {
 					): Promise<ServiceEnvironmentVariable[]>;
 					set(id: number, key: string, value: string): Promise<void>;
 					get(id: number, key: string): Promise<string | undefined>;
-					remove(id: number, key: string): Promise<string | undefined>;
+					remove(id: number, key: string): Promise<void>;
 				};
 			};
 			config: {
