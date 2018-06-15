@@ -148,8 +148,8 @@ declare namespace ResinSdk {
 		$filter?: object;
 		$expand?: object | string;
 		$orderBy?: Pine.OrderBy;
-		$top?: string;
-		$skip?: string;
+		$top?: number;
+		$skip?: number;
 		$select?: string | string[];
 	}
 
