@@ -148,8 +148,8 @@ declare namespace ResinSdk {
 		$filter?: object;
 		$expand?: object | string;
 		$orderBy?: Pine.OrderBy;
-		$top?: string;
-		$skip?: string;
+		$top?: number;
+		$skip?: number;
 		$select?: string | string[];
 	}
 
@@ -259,6 +259,16 @@ declare namespace ResinSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
+		user__is_member_of__application: ReverseNavigationResource<
+			ApplicationMember
+		>;
+	}
+
+	interface ApplicationMember {
+		id: number;
+		role_title: string;
+		is_member_of__application: NavigationResource<Application>;
+		user: NavigationResource<User>;
 	}
 
 	interface ApplicationType {

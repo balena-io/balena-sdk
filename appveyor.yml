@@ -14,11 +14,6 @@ matrix:
 # what combinations to test
 environment:
   matrix:
-    - nodejs_version: 8
-      RESINTEST_EMAIL: 'test2+juan@resin.io'
-      RESINTEST_USERNAME: 'test2_juan'
-      RESINTEST_REGISTER_EMAIL: 'test2+register+juan@resin.io'
-      RESINTEST_REGISTER_USERNAME: 'test2_register_juan'
     - nodejs_version: 6
       RESINTEST_EMAIL: 'test3+juan@resin.io'
       RESINTEST_USERNAME: 'test3_juan'
