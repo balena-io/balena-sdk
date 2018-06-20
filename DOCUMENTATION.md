@@ -149,12 +149,12 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.logs](#resin.logs) : <code>object</code>
         * [.subscribe(uuidOrId)](#resin.logs.subscribe) ⇒ <code>Promise</code>
         * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
-        * [.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>
-        * [.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>
+        * ~~[.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>~~
+        * ~~[.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>~~
         * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
             * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
             * ["line"](#resin.logs.LogSubscription.event_line)
-            * ["clear"](#resin.logs.LogSubscription.event_clear)
+            * ~~["clear"](#resin.logs.LogSubscription.event_clear)~~
             * ["error"](#resin.logs.LogSubscription.event_error)
     * [.settings](#resin.settings) : <code>object</code>
         * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
@@ -3720,12 +3720,12 @@ resin.auth.register({
 * [.logs](#resin.logs) : <code>object</code>
     * [.subscribe(uuidOrId)](#resin.logs.subscribe) ⇒ <code>Promise</code>
     * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
-    * [.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>
-    * [.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>
+    * ~~[.historySinceLastClear(uuidOrId, [options])](#resin.logs.historySinceLastClear) ⇒ <code>Promise</code>~~
+    * ~~[.clear(uuidOrId)](#resin.logs.clear) ⇒ <code>Promise</code>~~
     * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
         * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
         * ["line"](#resin.logs.LogSubscription.event_line)
-        * ["clear"](#resin.logs.LogSubscription.event_clear)
+        * ~~["clear"](#resin.logs.LogSubscription.event_clear)~~
         * ["error"](#resin.logs.LogSubscription.event_error)
 
 <a name="resin.logs.subscribe"></a>
@@ -3825,7 +3825,9 @@ resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
 ```
 <a name="resin.logs.historySinceLastClear"></a>
 
-#### logs.historySinceLastClear(uuidOrId, [options]) ⇒ <code>Promise</code>
+#### ~~logs.historySinceLastClear(uuidOrId, [options]) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Note**: the default number of logs retrieved is 200.
 To get a different number pass the `{ count: N }` to the options param.
 Also note that the actual number of log lines can be bigger as the
@@ -3869,7 +3871,9 @@ resin.logs.historySinceLastClear('7cf02a6', function(error, lines) {
 ```
 <a name="resin.logs.clear"></a>
 
-#### logs.clear(uuidOrId) ⇒ <code>Promise</code>
+#### ~~logs.clear(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of <code>[logs](#resin.logs)</code>  
 **Summary**: Clear device logs history  
 **Access**: public  
@@ -3901,7 +3905,7 @@ You can get a LogSubscription for a given device by calling `resin.logs.subscrib
 * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
     * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
     * ["line"](#resin.logs.LogSubscription.event_line)
-    * ["clear"](#resin.logs.LogSubscription.event_clear)
+    * ~~["clear"](#resin.logs.LogSubscription.event_clear)~~
     * ["error"](#resin.logs.LogSubscription.event_error)
 
 <a name="resin.logs.LogSubscription.unsubscribe"></a>
@@ -3929,7 +3933,9 @@ logs.on('line', function(line) {
 ```
 <a name="resin.logs.LogSubscription.event_clear"></a>
 
-##### "clear"
+##### ~~"clear"~~
+***Deprecated***
+
 **Kind**: event emitted by <code>[LogSubscription](#resin.logs.LogSubscription)</code>  
 **Summary**: Event fired when the logs have been cleared  
 **Example**  

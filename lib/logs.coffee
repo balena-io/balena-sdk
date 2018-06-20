@@ -67,6 +67,7 @@ getLogs = (deps, opts) ->
 	# @summary Event fired when the logs have been cleared
 	# @event clear
 	# @memberof resin.logs.LogSubscription
+	# @deprecated this event will be removed in the next major release
 	# @example
 	# logs.on('clear', function() {
 	# 	console.clear();
@@ -193,6 +194,7 @@ getLogs = (deps, opts) ->
 	# @function
 	# @public
 	# @memberof resin.logs
+	# @deprecated this method will be removed in the next major release, please use resin.logs.history() instead
 	#
 	# @description
 	# **Note**: the default number of logs retrieved is 200.
@@ -244,6 +246,7 @@ getLogs = (deps, opts) ->
 	# @function
 	# @public
 	# @memberof resin.logs
+	# @deprecated this method will be removed in the next major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
