@@ -272,7 +272,6 @@ describe 'OS model', ->
 					eventuallyExpectProperty(promise, 'appUpdatePollInterval').that.equals(configOptions.appUpdatePollInterval * 60 * 1000)
 					eventuallyExpectProperty(promise, 'wifiKey').that.equals(configOptions.wifiKey)
 					eventuallyExpectProperty(promise, 'wifiSsid').that.equals(configOptions.wifiSsid)
-					eventuallyExpectProperty(promise, 'version').that.equals(configOptions.version)
 					eventuallyExpectProperty(promise, 'files')
 						.that.has.property('network/network.config')
 						.that.includes("#{configOptions.ip}/#{configOptions.netmask}/#{configOptions.gateway}")
