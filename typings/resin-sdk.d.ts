@@ -223,6 +223,7 @@ declare namespace ResinSdk {
 
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
+		user__is_member_of__application: ReverseNavigationResource<Application>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
 	}
