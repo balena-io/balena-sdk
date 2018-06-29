@@ -9,7 +9,11 @@ insert = require('gulp-insert')
 runSequence = require('run-sequence')
 browserify = require('browserify')
 uglify = require('gulp-uglify')
+uglifyEs = require('uglify-es')
+uglifyComposer = require('gulp-uglify/composer')
 source = require('vinyl-source-buffer')
+
+minify = uglifyComposer(uglifyEs, console)
 
 packageJSON = require('./package.json')
 
@@ -60,9 +64,6 @@ gulp.task 'build-browser', ['build-node'], ->
 	.exclude('path')
 	.exclude('resin-settings-client')
 	.exclude('node-localstorage')
-	.exclude('rindle')
-	.exclude('zlib')
-	.exclude('progress-stream')
 	.bundle()
 
 	bundle
@@ -72,6 +73,6 @@ gulp.task 'build-browser', ['build-node'], ->
 
 	bundle
 		.pipe(source(OPTIONS.files.browserMinifiedOutput))
-		.pipe(uglify())
+		.pipe(minify())
 		.pipe(gulp.dest(OPTIONS.directories.build))
 

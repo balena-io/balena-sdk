@@ -44,9 +44,6 @@ In the browser Resin-SDK doesn't use the following dependencies:
 * path
 * resin-settings-client
 * node-localstorage
-* rindle
-* zlib
-* progress-stream
 
 For the future we're looking at ways to automatically exclude these in downstream bundles. See [#254](https://github.com/resin-io/resin-sdk/issues/254) for more information.
 
