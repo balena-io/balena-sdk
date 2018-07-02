@@ -12,7 +12,7 @@ type Lambda<T> = {
 type OrderByValues = 'asc' | 'desc';
 type OrderBy = string | string[] | { [index: string]: OrderByValues };
 
-type ResourceObjFilter<T> = { [k in keyof T]?: object | number | string };
+type ResourceObjFilter<T> = { [k in keyof T]?: object | number | string | boolean };
 
 interface FilterArray<T> extends Array<Filter<T>> {}
 
