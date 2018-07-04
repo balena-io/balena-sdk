@@ -19,6 +19,8 @@ errors = require('resin-errors')
 { EventEmitter } = require('events')
 ndjson = require('ndjson')
 
+{ findCallback } = require('./util')
+
 getLogs = (deps, opts) ->
 	{ request } = deps
 
@@ -139,7 +141,7 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.subscribe = (uuidOrId, callback) ->
-		deviceModel.get(uuidOrId)
+		deviceModel.get(uuidOrId, select: 'uuid')
 			.then (device) ->
 				subscribeToApiLogs(device)
 			.asCallback(callback)
@@ -152,14 +154,17 @@ getLogs = (deps, opts) ->
 	# @memberof resin.logs
 	#
 	# @description
+	# Get an array of the latest log messages for a given device.
+	#
 	# **Note**: the default number of logs retrieved is 100.
 	# To get a different number pass the `{ count: N }` to the options param.
 	# Also note that the actual number of log lines can be bigger as the
 	# Resin.io supervisor can combine lines sent in a short time interval
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {Object} [options] - any options supported by
-	# https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
+
+	# @param {Object} [options] - options
+	# @param {Number} [options.count=100] - Number of requests to return
 	# @fulfil {Object[]} - history lines
 	# @returns {Promise}
 	#
@@ -187,11 +192,9 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.history = (uuidOrId, options, callback) ->
-		if typeof options == 'function'
-			callback = options
-			options = undefined
+		callback = findCallback(arguments)
 
-		deviceModel.get(uuidOrId)
+		deviceModel.get(uuidOrId, select: 'uuid')
 			.then (device) ->
 				getLogsFromApi(device, options)
 			.asCallback(callback)
