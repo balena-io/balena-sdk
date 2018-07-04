@@ -18,6 +18,7 @@ Promise = require('bluebird')
 errors = require('resin-errors')
 { EventEmitter } = require('events')
 ndjson = require('ndjson')
+{ AbortController } = require('abortcontroller-polyfill/dist/cjs-ponyfill')
 
 { findCallback } = require('./util')
 
@@ -39,19 +40,29 @@ getLogs = (deps, opts) ->
 
 	subscribeToApiLogs = (device) ->
 		emitter = new EventEmitter()
+		controller = new AbortController()
+		parser = ndjson()
+
 		request.stream
 			url: getLogsPath(device) + '?stream=1'
 			baseUrl: opts.apiUrl
+			signal: controller.signal
 		.then (stream) ->
-			parser = ndjson()
 			parser.on 'data', (log) ->
-				emitter.emit('line', log)
+				# Manually silence events after abort, as
+				# abort is not reliable in all environments
+				if not controller.signal.aborted
+					emitter.emit('line', log)
 			parser.on 'error', (err) ->
-				emitter.emit('error', err)
+				# Manually silence events after abort, as
+				# abort is not reliable in all environments
+				if not controller.signal.aborted
+					emitter.emit('error', err)
 			stream.pipe(parser)
 
 		emitter.unsubscribe = ->
-			# TODO: Close the connection
+			controller.abort()
+			parser.destroy()
 
 		return emitter
 

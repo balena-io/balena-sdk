@@ -45,6 +45,10 @@ abbrev@1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"
 
+abortcontroller-polyfill@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/abortcontroller-polyfill/-/abortcontroller-polyfill-1.1.9.tgz#9fefe359fda2e9e0932dc85e6106453ac393b2da"
+
 accepts@1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.3.tgz#c3ca7434938648c3e0d9c1e328dd68b622c284ca"
@@ -1825,6 +1829,10 @@ fetch-ponyfill@^4.0.0:
   resolved "https://registry.yarnpkg.com/fetch-ponyfill/-/fetch-ponyfill-4.1.0.tgz#ae3ce5f732c645eab87e4ae8793414709b239893"
   dependencies:
     node-fetch "~1.7.1"
+
+fetch-readablestream@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/fetch-readablestream/-/fetch-readablestream-0.1.0.tgz#2219bccea9bf3b97cb599624094099eafaa400be"
 
 figures@^1.7.0:
   version "1.7.0"
@@ -3827,6 +3835,13 @@ node-uuid@~1.4.0:
   version "1.4.8"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
 
+"node-web-streams@github:donejs/node-web-streams#newer-version":
+  version "0.2.2"
+  resolved "https://codeload.github.com/donejs/node-web-streams/tar.gz/de0e1bac1934e6b97b75a4ae7b3939778b320fa4"
+  dependencies:
+    is-stream "^1.1.0"
+    web-streams-polyfill "~1.3.2"
+
 nopt@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
@@ -4555,7 +4570,7 @@ request-progress@~2.0.1:
   dependencies:
     throttleit "^1.0.0"
 
-request@^2.51.0, request@^2.67.0, request@^2.81.0:
+request@^2.51.0, request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -4733,13 +4748,15 @@ resin-register-device@^5.0.0:
     bluebird "^3.0.0"
     randomstring "^1.1.5"
 
-resin-request@^9.0.0:
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-9.0.2.tgz#9428794c352d260cc7b8d0a60c2cc0231a107521"
+resin-request@^9.3.0:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/resin-request/-/resin-request-9.3.0.tgz#c81794e3b18f0dfdf7cf213d4f3230d9f88686b1"
   dependencies:
     bluebird "^3.3.4"
     fetch-ponyfill "^4.0.0"
+    fetch-readablestream "^0.1.0"
     lodash "^4.6.1"
+    node-web-streams donejs/node-web-streams#newer-version
     progress-stream "^2.0.0"
     qs "^6.3.0"
     resin-errors "^2.7.0"
@@ -5902,6 +5919,10 @@ wd@^0.3.4:
     request "~2.55.0"
     underscore.string "~3.0.3"
     vargs "~0.1.0"
+
+web-streams-polyfill@~1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-1.3.2.tgz#3719245e909282d93967825f44bcd550e9c03995"
 
 which@^1.2.10:
   version "1.3.0"
