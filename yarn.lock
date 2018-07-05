@@ -1970,6 +1970,12 @@ formidable@^1.0.17, formidable@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.1.1.tgz#96b8886f7c3c3508b932d6bd70c4d3a88f35f1a9"
 
+fs-access@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fs-access/-/fs-access-1.0.1.tgz#d6a87f262271cefebec30c553407fb995da8777a"
+  dependencies:
+    null-check "^1.0.0"
+
 fs-exists-sync@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/fs-exists-sync/-/fs-exists-sync-0.1.0.tgz#982d6893af918e72d08dec9e8673ff2b5a8d6add"
@@ -3063,6 +3069,13 @@ karma-browserify@^5.0.1:
     minimatch "^3.0.0"
     os-shim "^0.1.3"
 
+karma-chrome-launcher@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/karma-chrome-launcher/-/karma-chrome-launcher-2.2.0.tgz#cf1b9d07136cc18fe239327d24654c3dbc368acf"
+  dependencies:
+    fs-access "^1.0.0"
+    which "^1.2.1"
+
 karma-env-preprocessor@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/karma-env-preprocessor/-/karma-env-preprocessor-0.1.1.tgz#bbe8c87d59c00edb76070bd3c31b4b39d5dc7e15"
@@ -3835,7 +3848,7 @@ node-uuid@~1.4.0:
   version "1.4.8"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
 
-"node-web-streams@github:donejs/node-web-streams#newer-version":
+node-web-streams@donejs/node-web-streams#newer-version:
   version "0.2.2"
   resolved "https://codeload.github.com/donejs/node-web-streams/tar.gz/de0e1bac1934e6b97b75a4ae7b3939778b320fa4"
   dependencies:
@@ -3885,6 +3898,10 @@ npmlog@^4.0.2:
     console-control-strings "~1.1.0"
     gauge "~2.7.1"
     set-blocking "~2.0.0"
+
+null-check@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/null-check/-/null-check-1.0.0.tgz#977dffd7176012b9ec30d2a39db5cf72a0439edd"
 
 number-is-nan@^1.0.0:
   version "1.0.1"
@@ -5923,6 +5940,12 @@ wd@^0.3.4:
 web-streams-polyfill@~1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-1.3.2.tgz#3719245e909282d93967825f44bcd550e9c03995"
+
+which@^1.2.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/which/-/which-1.3.1.tgz#a45043d54f5805316da8d62f9f50918d3da70b0a"
+  dependencies:
+    isexe "^2.0.0"
 
 which@^1.2.10:
   version "1.3.0"
