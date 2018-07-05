@@ -18,9 +18,13 @@ Promise = require('bluebird')
 errors = require('resin-errors')
 { EventEmitter } = require('events')
 ndjson = require('ndjson')
-{ AbortController } = require('abortcontroller-polyfill/dist/cjs-ponyfill')
+{
+	AbortController: AbortControllerPonyfill
+} = require('abortcontroller-polyfill/dist/cjs-ponyfill')
 
-{ findCallback } = require('./util')
+{ findCallback, globalEnv } = require('./util')
+
+AbortController = globalEnv?.AbortController || AbortControllerPonyfill
 
 getLogs = (deps, opts) ->
 	{ request } = deps
