@@ -101,7 +101,6 @@
     "ndjson": "^1.5.0",
     "promise-memoize": "^1.2.0",
     "resin-auth": "^2.0.0",
-    "resin-device-logs": "^3.1.0",
     "resin-device-status": "^1.0.1",
     "resin-errors": "^2.10.0",
     "resin-pine": "^6.0.0",
