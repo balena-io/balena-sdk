@@ -52,17 +52,23 @@ getLogs = (deps, opts) ->
 			baseUrl: opts.apiUrl
 			signal: controller.signal
 		.then (stream) ->
+			# Forward request errors to the parser
+			stream.on 'error', (e) ->
+				parser.emit('error', e)
+
 			parser.on 'data', (log) ->
-				# Manually silence events after abort, as
-				# abort is not reliable in all environments
 				if not controller.signal.aborted
 					emitter.emit('line', log)
+
 			parser.on 'error', (err) ->
-				# Manually silence events after abort, as
-				# abort is not reliable in all environments
 				if not controller.signal.aborted
 					emitter.emit('error', err)
+
 			stream.pipe(parser)
+		.catch (e) ->
+			# Forward request setup errors
+			if not controller.signal.aborted
+				emitter.emit('error', err)
 
 		emitter.unsubscribe = ->
 			controller.abort()
