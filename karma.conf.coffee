@@ -7,6 +7,9 @@ BROWSER_BUNDLE = 'build/resin-browser.js'
 module.exports = (config) ->
 	loadEnv()
 
+	karmaConfig.plugins.push(require('karma-chrome-launcher'))
+	karmaConfig.browsers = ['ChromeHeadless']
+
 	karmaConfig.logLevel = config.LOG_INFO
 	karmaConfig.sauceLabs =
 		testName: "#{packageJSON.name} v#{packageJSON.version}"

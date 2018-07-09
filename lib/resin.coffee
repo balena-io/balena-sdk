@@ -21,7 +21,7 @@ getRequest = require('resin-request')
 ResinAuth = require('resin-auth')['default']
 getPine = require('resin-pine')
 errors = require('resin-errors')
-{ notImplemented } = require('./util')
+{ notImplemented, globalEnv } = require('./util')
 
 # These constants are used to create globals for sharing defualt options between
 # multiple instances of the SDK.
@@ -29,15 +29,6 @@ errors = require('resin-errors')
 RESIN_SDK_SHARED_OPTIONS = 'RESIN_SDK_SHARED_OPTIONS'
 RESIN_SDK_HAS_USED_SHARED_OPTIONS = 'RESIN_SDK_HAS_USED_SHARED_OPTIONS'
 RESIN_SDK_HAS_SET_SHARED_OPTIONS = 'RESIN_SDK_HAS_SET_SHARED_OPTIONS'
-
-# Use window (web)/self (web worker)/global (node) as appropriate
-globalEnv = if typeof window != 'undefined'
-	window
-else if typeof self != 'undefined'
-	self
-else if typeof global != 'undefined'
-	global
-else null # If we can't guarantee global state, don't fake it: fail instead.
 
 ###*
 # @namespace resin

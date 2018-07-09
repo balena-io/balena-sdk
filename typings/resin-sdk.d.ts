@@ -619,9 +619,7 @@ declare namespace ResinSdk {
 
 		logs: {
 			history(uuid: string): LogsPromise;
-			historySinceLastClear(uuid: string): LogsPromise;
 			subscribe(uuid: string): Promise<LogsSubscription>;
-			clear(uuid: string): void;
 		};
 
 		pine: {
