@@ -37,6 +37,7 @@ describe 'Logs', ->
 					message: 'Second message',
 					timestamp: Date.now()
 				}]
+				.delay(2000)
 				.then =>
 					resin.logs.history(@uuid)
 				.then (logs) ->
@@ -67,7 +68,7 @@ describe 'Logs', ->
 						Promise.delay(2000)
 						.then ->
 							resolve(lines)
-						.tap(logs.unsubscribe)
+					.finally(logs.unsubscribe)
 				.then (lines) ->
 					m.chai.expect(lines.length).to.equal(2)
 					m.chai.expect(lines).to.deep.match [{
@@ -81,8 +82,8 @@ describe 'Logs', ->
 					message: 'Existing message',
 					timestamp: Date.now()
 				}]
-
-				resin.logs.subscribe(@uuid)
+				.then =>
+					resin.logs.subscribe(@uuid)
 				.then (logs) =>
 					new Promise (resolve, reject) =>
 						lines = []
@@ -95,12 +96,11 @@ describe 'Logs', ->
 								message: 'New message',
 								timestamp: Date.now()
 							}]
+							.delay(2000)
+							.then ->
+								resolve(lines)
 							.catch(reject)
-
-						Promise.delay(2000)
-						.then ->
-							resolve(lines)
-						.tap(logs.unsubscribe)
+					.finally(logs.unsubscribe)
 				.then (lines) ->
 					m.chai.expect(lines.length).to.equal(2)
 					m.chai.expect(lines).to.deep.match [{
@@ -125,9 +125,7 @@ describe 'Logs', ->
 							message: 'New message',
 							timestamp: Date.now()
 						}]
-						.catch(reject)
-
-						Promise.delay(2000)
+						.delay(2000)
 						.then ->
 							resolve(lines)
 				.then (lines) ->
