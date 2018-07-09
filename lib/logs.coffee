@@ -18,6 +18,8 @@ Promise = require('bluebird')
 logs = require('resin-device-logs')
 errors = require('resin-errors')
 
+deprecationWarnings = require('./util/deprecation-warnings')
+
 getLogs = (deps, opts) ->
 	configModel = require('./models/config')(deps, opts)
 	deviceModel = require('./models/device')(deps, opts)
@@ -132,6 +134,8 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.subscribe = (uuidOrId, callback) ->
+		deprecationWarnings.pubNubDeprecated()
+
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
 			return logs.subscribe(pubNubKeys, device)
@@ -180,6 +184,8 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.history = (uuidOrId, options, callback) ->
+		deprecationWarnings.pubNubDeprecated()
+
 		if typeof options == 'function'
 			callback = options
 			options = undefined
@@ -232,6 +238,8 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.historySinceLastClear = (uuidOrId, options, callback) ->
+		deprecationWarnings.pubNubDeprecated()
+
 		if typeof options == 'function'
 			callback = options
 			options = undefined
@@ -262,6 +270,8 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.clear = (uuidOrId, callback) ->
+		deprecationWarnings.pubNubDeprecated()
+
 		getContext(uuidOrId)
 		.then ({ pubNubKeys, device }) ->
 			return logs.clear(pubNubKeys, device)
