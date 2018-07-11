@@ -20,7 +20,11 @@ describe 'Logs', ->
 	describe 'given a device', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				deviceType: 'raspberry-pi'
+				applicationType: 'microservices-starter'
+			.then (application) =>
 				@application = application
 				@uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(application.id, @uuid)
