@@ -3278,15 +3278,15 @@ resin.models.os.download('raspberry-pi', function(error, stream) {
 
 **Example**  
 ```js
-resin.models.os.getConfig('MyApp').then(function(config) {
+resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 
-resin.models.os.getConfig(123).then(function(config) {
+resin.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 
-resin.models.os.getConfig('MyApp', function(error, config) {
+resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
 	if (error) throw error;
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
