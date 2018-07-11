@@ -322,7 +322,8 @@ getOsModel = (deps, opts) ->
 	# @memberof resin.models.os
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number).
-	# @param {Object} [options={}] - OS configuration options to use.
+	# @param {Object} options - OS configuration options to use.
+	# @param {String} options.version - Required: the OS version of the image.
 	# @param {String} [options.network='ethernet'] - The network type that
 	# the device will use, one of 'ethernet' or 'wifi'.
 	# @param {Number} [options.appUpdatePollInterval] - How often the OS checks
@@ -334,7 +335,6 @@ getOsModel = (deps, opts) ->
 	# @param {String} [options.ip] - static ip address.
 	# @param {String} [options.gateway] - static ip gateway.
 	# @param {String} [options.netmask] - static ip netmask.
-	# @param {String} [options.version] - The OS version of the image.
 	# @fulfil {Object} - application configuration as a JSON object.
 	# @returns {Promise}
 	#
@@ -355,20 +355,24 @@ getOsModel = (deps, opts) ->
 	exports.getConfig = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		defaultOpts =
-			network: 'ethernet'
+		Promise.try ->
+			if !options.version
+				throw new Error('An OS version is required when calling os.getConfig')
 
-		_.defaults(options, defaultOpts)
+			defaultOpts =
+				network: 'ethernet'
 
-		applicationModel()._getId(nameOrId)
-		.then (applicationId) ->
-			request.send
-				method: 'POST'
-				url: '/download-config'
-				baseUrl: apiUrl
-				body: _.assign(options, appId: applicationId)
-		.get('body')
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+			_.defaults(options, defaultOpts)
+
+			applicationModel()._getId(nameOrId)
+			.then (applicationId) ->
+				request.send
+					method: 'POST'
+					url: '/download-config'
+					baseUrl: apiUrl
+					body: _.assign(options, appId: applicationId)
+			.get('body')
+			.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	return exports

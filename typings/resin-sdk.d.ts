@@ -544,7 +544,7 @@ declare namespace ResinSdk {
 		ip?: string;
 		gateway?: string;
 		netmask?: string;
-		version?: string;
+		version: string;
 	};
 
 	type OsVersions = {
@@ -922,7 +922,7 @@ declare namespace ResinSdk {
 			os: {
 				getConfig(
 					nameOrId: string | number,
-					options?: ImgConfigOptions,
+					options: ImgConfigOptions,
 				): Promise<object>;
 				getDownloadSize(slug: string, version?: string): Promise<number>;
 				getSupportedVersions(slug: string): Promise<OsVersions>;
