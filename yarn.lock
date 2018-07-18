@@ -6,9 +6,9 @@
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@resin.io/types-node-localstorage/-/types-node-localstorage-1.3.0.tgz#626bd067c96692b9d93be3fbc6a246cc1b2447a1"
 
-"@types/bluebird@^3.5.18":
-  version "3.5.18"
-  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.18.tgz#6a60435d4663e290f3709898a4f75014f279c4d6"
+"@types/bluebird@3.5.21":
+  version "3.5.21"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.21.tgz#567615589cc913e84a28ecf9edb031732bdf2634"
 
 "@types/bluebird@^3.5.8":
   version "3.5.19"
