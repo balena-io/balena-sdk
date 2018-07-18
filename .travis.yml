@@ -38,7 +38,7 @@ deploy:
   email: 'accounts@resin.io'
   skip_cleanup: true
   api_key:
-    secure: SKemSDObFtG2GnVxhmxR4KMr/5S8LwlVdbgom3ouQ/kXAfMY0n6KaV6nwM+4EhW9zg6A8r2XQ6Q7fWs+ESwNvk1dS6MAHwdC5KOUpVqeRxsAuyZnIRdwa0J9wMbzt2I0E9D0sTvi4FZSO9a/6fJDWUrbTFP7Dv/S3ngyQz014ZY=
+    secure: Sf3NkUEWA+YNwX2m4XuIPc8RxFAVa/TuUaD2lSGYn5fSPD7AFtWZKn24N3PVWbJjG8F8l6Zuwq+xgqxw4nrLLRvHsixZnxtpCRr7afyjnaUV4/UqUDgUgXlAKcbGlzObUPChZ/b2hGAkD5RtVvBmseVOFNAv2qUXv7ELuaRtML0=
   on:
     # Deploys happen if there's a tag, it's a version number, and this row in the matrix has '$CAN_DEPLOY'
     tags: true
