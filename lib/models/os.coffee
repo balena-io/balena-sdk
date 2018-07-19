@@ -321,6 +321,13 @@ getOsModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.os
 	#
+	# @description
+	# Builds the config.json for a device in the given application, with the given
+	# options.
+	#
+	# Note that an OS version is required. For versions < 2.7.8, config
+	# generation is only supported when using a session token, not an API key.
+	#
 	# @param {String|Number} nameOrId - application name (string) or id (number).
 	# @param {Object} options - OS configuration options to use.
 	# @param {String} options.version - Required: the OS version of the image.

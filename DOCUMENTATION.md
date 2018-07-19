@@ -2945,6 +2945,12 @@ resin.models.os.download('raspberry-pi', function(error, stream) {
 <a name="resin.models.os.getConfig"></a>
 
 ##### os.getConfig(nameOrId, options) ⇒ <code>Promise</code>
+Builds the config.json for a device in the given application, with the given
+options.
+
+Note that an OS version is required. For versions < 2.7.8, config
+generation is only supported when using a session token, not an API key.
+
 **Kind**: static method of [<code>os</code>](#resin.models.os)  
 **Summary**: Get an applications config.json  
 **Access**: public  
