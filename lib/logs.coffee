@@ -15,66 +15,19 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
+logs = require('resin-device-logs')
 errors = require('resin-errors')
-{ EventEmitter } = require('events')
-ndjson = require('ndjson')
-{
-	AbortController: AbortControllerPonyfill
-} = require('abortcontroller-polyfill/dist/cjs-ponyfill')
-
-{ findCallback, globalEnv } = require('./util')
-
-AbortController = globalEnv?.AbortController || AbortControllerPonyfill
 
 getLogs = (deps, opts) ->
-	{ request } = deps
-
+	configModel = require('./models/config')(deps, opts)
 	deviceModel = require('./models/device')(deps, opts)
 
 	exports = {}
 
-	getLogsPath = (device) ->
-		"/device/v2/#{device.uuid}/logs"
-
-	getLogsFromApi = (device, { count } = {}) ->
-		request.send
-			url: getLogsPath(device) + (if count then '?count=' + count else '')
-			baseUrl: opts.apiUrl
-		.get('body')
-
-	subscribeToApiLogs = (device) ->
-		emitter = new EventEmitter()
-		controller = new AbortController()
-		parser = ndjson()
-
-		request.stream
-			url: getLogsPath(device) + '?stream=1'
-			baseUrl: opts.apiUrl
-			signal: controller.signal
-		.then (stream) ->
-			# Forward request errors to the parser
-			stream.on 'error', (e) ->
-				parser.emit('error', e)
-
-			parser.on 'data', (log) ->
-				if not controller.signal.aborted
-					emitter.emit('line', log)
-
-			parser.on 'error', (err) ->
-				if not controller.signal.aborted
-					emitter.emit('error', err)
-
-			stream.pipe(parser)
-		.catch (e) ->
-			# Forward request setup errors
-			if not controller.signal.aborted
-				emitter.emit('error', err)
-
-		emitter.unsubscribe = ->
-			controller.abort()
-			parser.destroy()
-
-		return emitter
+	getContext = (uuidOrId) ->
+		return Promise.props
+			device: deviceModel.get(uuidOrId)
+			pubNubKeys: configModel.getAll().get('pubnub')
 
 	###*
 	# @typedef LogSubscription
@@ -162,10 +115,10 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.subscribe = (uuidOrId, callback) ->
-		deviceModel.get(uuidOrId, $select: 'uuid')
-			.then (device) ->
-				subscribeToApiLogs(device)
-			.asCallback(callback)
+		getContext(uuidOrId)
+		.then ({ pubNubKeys, device }) ->
+			return logs.subscribe(pubNubKeys, device)
+		.asCallback(callback)
 
 	###*
 	# @summary Get device logs history
@@ -175,17 +128,14 @@ getLogs = (deps, opts) ->
 	# @memberof resin.logs
 	#
 	# @description
-	# Get an array of the latest log messages for a given device.
-	#
 	# **Note**: the default number of logs retrieved is 100.
 	# To get a different number pass the `{ count: N }` to the options param.
 	# Also note that the actual number of log lines can be bigger as the
 	# Resin.io supervisor can combine lines sent in a short time interval
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-
-	# @param {Object} [options] - options
-	# @param {Number} [options.count=100] - Number of requests to return
+	# @param {Object} [options] - any options supported by
+	# https://www.pubnub.com/docs/nodejs-javascript/api-reference#history
 	# @fulfil {Object[]} - history lines
 	# @returns {Promise}
 	#
@@ -213,12 +163,13 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.history = (uuidOrId, options, callback) ->
-		callback = findCallback(arguments)
-
-		deviceModel.get(uuidOrId, $select: 'uuid')
-			.then (device) ->
-				getLogsFromApi(device, options)
-			.asCallback(callback)
+		if typeof options == 'function'
+			callback = options
+			options = undefined
+		getContext(uuidOrId)
+		.then ({ pubNubKeys, device }) ->
+			return logs.history(pubNubKeys, device, options)
+		.asCallback(callback)
 
 	return exports
 
