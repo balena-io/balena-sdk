@@ -3971,8 +3971,6 @@ resin.logs.subscribe('7cf02a6', function(error, logs) {
 <a name="resin.logs.history"></a>
 
 #### logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
-Get an array of the latest log messages for a given device.
-
 **Note**: the default number of logs retrieved is 100.
 To get a different number pass the `{ count: N }` to the options param.
 Also note that the actual number of log lines can be bigger as the
@@ -3983,11 +3981,10 @@ Resin.io supervisor can combine lines sent in a short time interval
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - history lines  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
-| [options] | <code>Object</code> |  | options |
-| [options.count] | <code>Number</code> | <code>100</code> | Number of requests to return |
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| [options] | <code>Object</code> | any options supported by https://www.pubnub.com/docs/nodejs-javascript/api-reference#history |
 
 **Example**  
 ```js
