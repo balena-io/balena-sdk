@@ -373,6 +373,10 @@ declare namespace ResinSdk {
 		unsubscribe(): void;
 	}
 
+	interface LogsOptions {
+		count?: number;
+	}
+
 	interface SSHKey {
 		title: string;
 		public_key: string;
@@ -427,8 +431,6 @@ declare namespace ResinSdk {
 	interface DeviceTag extends ResourceTagBase {
 		device: NavigationResource<Device>;
 	}
-
-	type LogsPromise = Promise<LogMessage[]>;
 
 	interface ResinSDK {
 		auth: {
@@ -620,8 +622,8 @@ declare namespace ResinSdk {
 		};
 
 		logs: {
-			history(uuid: string): LogsPromise;
-			subscribe(uuid: string): Promise<LogsSubscription>;
+			history(uuid: string, options?: LogsOptions): Promise<LogMessage[]>;
+			subscribe(uuid: string, options?: LogsOptions): Promise<LogsSubscription>;
 		};
 
 		pine: {
