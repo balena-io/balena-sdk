@@ -47,6 +47,21 @@ describe 'Logs', ->
 						message: 'Second message'
 					}]
 
+			it 'should limit logs by count', ->
+				sendLogMessages @uuid, @deviceApiKey, [{
+					message: 'First message',
+					timestamp: Date.now()
+				}, {
+					message: 'Second message',
+					timestamp: Date.now()
+				}]
+				.delay(2000)
+				.then =>
+					resin.logs.history(@uuid, { count: 1 })
+				.then (logs) ->
+					m.chai.expect(logs).to.have.lengthOf(1)
+					m.chai.expect(logs[0].message).to.equal('Second message')
+
 		describe 'resin.logs.subscribe()', ->
 
 			it 'should load historical logs first', ->
@@ -76,6 +91,30 @@ describe 'Logs', ->
 					}, {
 						message: 'Slightly newer message'
 					}]
+
+			it 'should limit historical logs by count', ->
+				sendLogMessages @uuid, @deviceApiKey, [{
+					message: 'Old message',
+					timestamp: Date.now()
+				}, {
+					message: 'Slightly newer message',
+					timestamp: Date.now()
+				}]
+				.then =>
+					resin.logs.subscribe(@uuid, { count: 1 })
+				.then (logs) ->
+					new Promise (resolve, reject) ->
+						lines = []
+						logs.on('line', (line) -> lines.push(line))
+						logs.on('error', reject)
+
+						Promise.delay(2000)
+						.then ->
+							resolve(lines)
+					.finally(logs.unsubscribe)
+				.then (lines) ->
+					m.chai.expect(lines).to.have.lengthOf(1)
+					m.chai.expect(lines[0].message).to.equal('Slightly newer message')
 
 			it 'should stream new logs after historical logs', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
