@@ -363,8 +363,10 @@ declare namespace ResinSdk {
 	interface LogMessage {
 		message: string;
 		isSystem: boolean;
-		timestamp: number | null;
-		serviceId: number | null;
+		createdAt: number;
+		timestamp: number;
+		serviceId?: number;
+		isStdErr: boolean;
 	}
 
 	interface LogsSubscription extends EventEmitter {

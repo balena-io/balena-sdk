@@ -15,6 +15,7 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
+querystring = require('querystring')
 errors = require('resin-errors')
 { EventEmitter } = require('events')
 ndjson = require('ndjson')
@@ -33,22 +34,23 @@ getLogs = (deps, opts) ->
 
 	exports = {}
 
-	getLogsPath = (device) ->
-		"/device/v2/#{device.uuid}/logs"
+	getLogsUrl = (device, options) ->
+		query = querystring.stringify(options)
+		return "/device/v2/#{device.uuid}/logs?#{query}"
 
-	getLogsFromApi = (device, { count } = {}) ->
+	getLogsFromApi = (device, options = {}) ->
 		request.send
-			url: getLogsPath(device) + (if count then '?count=' + count else '')
+			url: getLogsUrl(device, options)
 			baseUrl: opts.apiUrl
 		.get('body')
 
-	subscribeToApiLogs = (device) ->
+	subscribeToApiLogs = (device, options = {}) ->
 		emitter = new EventEmitter()
 		controller = new AbortController()
 		parser = ndjson()
 
 		request.stream
-			url: getLogsPath(device) + '?stream=1'
+			url: getLogsUrl(device, Object.assign({}, options, { stream: 1 }))
 			baseUrl: opts.apiUrl
 			signal: controller.signal
 		.then (stream) ->
@@ -132,6 +134,8 @@ getLogs = (deps, opts) ->
 	# can be used to listen for logs as they appear, line by line.
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Object} [options] - options
+	# @param {Number} [options.count] - number of historical messages to include
 	# @fulfil {resin.logs.LogSubscription}
 	# @returns {Promise}
 	#
@@ -161,10 +165,12 @@ getLogs = (deps, opts) ->
 	# 	});
 	# });
 	###
-	exports.subscribe = (uuidOrId, callback) ->
+	exports.subscribe = (uuidOrId, options, callback) ->
+		callback = findCallback(arguments)
+
 		deviceModel.get(uuidOrId, select: 'uuid')
 			.then (device) ->
-				subscribeToApiLogs(device)
+				subscribeToApiLogs(device, options)
 			.asCallback(callback)
 
 	###*
@@ -177,15 +183,10 @@ getLogs = (deps, opts) ->
 	# @description
 	# Get an array of the latest log messages for a given device.
 	#
-	# **Note**: the default number of logs retrieved is 100.
-	# To get a different number pass the `{ count: N }` to the options param.
-	# Also note that the actual number of log lines can be bigger as the
-	# Resin.io supervisor can combine lines sent in a short time interval
-	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 
 	# @param {Object} [options] - options
-	# @param {Number} [options.count=100] - Number of requests to return
+	# @param {Number} [options.count] - number of log messages to return
 	# @fulfil {Object[]} - history lines
 	# @returns {Promise}
 	#
