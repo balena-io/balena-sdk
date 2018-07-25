@@ -8,6 +8,20 @@ import { ResinRequest } from './resin-request';
 
 /* tslint:disable:no-namespace */
 declare namespace ResinSdk {
+	type WithId = Pine.WithId;
+	type PineDeferred = Pine.PineDeferred;
+	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
+	type ReverseNavigationResource<T = WithId> = Pine.ReverseNavigationResource<
+		T
+	>;
+	type PineFilterFor<T> = Pine.Filter<T>;
+	type PineExpandFor<T> = Pine.Expand<T>;
+	type PineOptions = Pine.PineOptions;
+	type PineOptionsFor<T> = Pine.PineOptionsFor<T>;
+	type PineParams = Pine.PineParams;
+	type PineParamsFor<T> = Pine.PineParamsFor<T>;
+	type PineParamsWithIdFor<T> = Pine.PineParamsWithIdFor<T>;
+
 	interface Interceptor {
 		request?(response: any): Promise<any>;
 		response?(response: any): Promise<any>;
@@ -132,62 +146,6 @@ declare namespace ResinSdk {
 		choices?: string[] | number[];
 		choicesLabels?: { [key: string]: string };
 	}
-
-	interface WithId {
-		id: number;
-	}
-
-	interface PineParams {
-		resource: string;
-		id?: number;
-		body?: object;
-		options?: PineOptions;
-	}
-
-	interface PineOptions {
-		$filter?: object;
-		$expand?: object | string;
-		$orderBy?: Pine.OrderBy;
-		$top?: number;
-		$skip?: number;
-		$select?: string | string[];
-	}
-
-	interface PineParamsFor<T> extends PineParams {
-		body?: Partial<T>;
-		options?: PineOptionsFor<T>;
-	}
-
-	interface PineParamsWithIdFor<T> extends PineParamsFor<T> {
-		id: number;
-	}
-
-	type PineFilterFor<T> = Pine.Filter<T>;
-	type PineExpandFor<T> = Pine.Expand<T>;
-
-	interface PineOptionsFor<T> extends PineOptions {
-		$filter?: PineFilterFor<T>;
-		$expand?: PineExpandFor<T>;
-		$select?: Array<keyof T> | keyof T | '*';
-		$orderby?: string;
-	}
-
-	interface PineDeferred {
-		__id: number;
-	}
-
-	/**
-	 * When not selected-out holds a deferred.
-	 * When expanded hold an array with a single element.
-	 */
-	type NavigationResource<T = WithId> = T[] | PineDeferred;
-
-	/**
-	 * When expanded holds an array, otherwise the property is not present.
-	 * Selecting is not suggested,
-	 * in that case it holds a deferred to the original resource.
-	 */
-	type ReverseNavigationResource<T = WithId> = T[] | undefined;
 
 	interface SocialServiceAccount {
 		provider: string;
