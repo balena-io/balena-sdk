@@ -10,12 +10,21 @@ addons:
     chrome: stable
 
 language: node_js
+env:
+  global:
+    - secure: F/5yx2HHhh5V0yTQfwSIXvDjY821KQWOwg+dH8cidzwAeTDQwxt07X+2E+S0mY8ckyYEVDzATGHTJneuRblNeiSGhWBE6oaF5SaVYs5TEo12m/b4Vkt4H08kzwrHyZ5cHn3Q/Ukm3CAypcbwACRrioLtA3USj6cg5h6DXMSunmA=
+    - RESINTEST_API_URL="https://api.resinstaging.io"
+    - RESINTEST_USERNAME=pimterry
+    - RESINTEST_EMAIL=pimterry@gmail.com
+    - RESINTEST_USERID=480
 matrix:
   include:
     - node_js:
+      - '10'
+    - node_js:
       - '8'
-      env:
-      - 'CAN_DEPLOY=true'
+    - node_js:
+      - '6'
 before_install:
 - npm -g install npm@4
 script:
