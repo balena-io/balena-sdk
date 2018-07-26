@@ -495,6 +495,7 @@ getApplicationModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.application
+	# @deprecated
 	# @description
 	# Generally you shouldn't use this method: if you're provisioning a recent ResinOS
 	# version (2.4.0+) then generateProvisioningKey should work just as well, but
