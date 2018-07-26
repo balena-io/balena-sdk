@@ -31,7 +31,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
             * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-            * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+            * ~~[.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>~~
             * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
             * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
@@ -292,7 +292,7 @@ resin.models.device.get(123).catch(function (error) {
         * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
         * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-        * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+        * ~~[.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>~~
         * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
         * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
@@ -431,7 +431,7 @@ resin.models.device.get(123).catch(function (error) {
     * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
     * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-    * [.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>
+    * ~~[.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>~~
     * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
     * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
@@ -811,7 +811,9 @@ resin.models.application.restart('MyApp', function(error) {
 ```
 <a name="resin.models.application.generateApiKey"></a>
 
-##### application.generateApiKey(nameOrId) ⇒ <code>Promise</code>
+##### ~~application.generateApiKey(nameOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 Generally you shouldn't use this method: if you're provisioning a recent ResinOS
 version (2.4.0+) then generateProvisioningKey should work just as well, but
 be more secure.
