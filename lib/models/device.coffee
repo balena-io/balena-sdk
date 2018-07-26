@@ -458,8 +458,8 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @deprecated
-	# This is not supported on multicontainer devices, and will
-	# be removed in a future major release
+	# @description
+	# This is not supported on multicontainer devices, and will be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Object} - application info
@@ -860,8 +860,8 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @deprecated
-	# This is not supported on multicontainer devices, and will
-	# be removed in a future major release
+	# @description
+	# This is not supported on multicontainer devices, and will be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
@@ -910,8 +910,8 @@ getDeviceModel = (deps, opts) ->
 	# @memberof resin.models.device
 	#
 	# @deprecated
-	# This is not supported on multicontainer devices, and will
-	# be removed in a future major release
+	# @description
+	# This is not supported on multicontainer devices, and will be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id

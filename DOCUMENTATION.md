@@ -1500,6 +1500,8 @@ resin.models.device.getApplicationName('7cf02a6', function(error, applicationNam
 ##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
+This is not supported on multicontainer devices, and will be removed in a future major release
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Get application container information  
 **Access**: public  
@@ -1817,6 +1819,8 @@ resin.models.device.move('7cf02a6', 'MyApp', function(error) {
 ##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
+This is not supported on multicontainer devices, and will be removed in a future major release
+
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Start application on device  
 **Access**: public  
@@ -1849,6 +1853,8 @@ resin.models.device.startApplication('7cf02a6', function(error, containerId) {
 
 ##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
+
+This is not supported on multicontainer devices, and will be removed in a future major release
 
 **Kind**: static method of [<code>device</code>](#resin.models.device)  
 **Summary**: Stop application on device  
