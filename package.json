@@ -1,6 +1,6 @@
 {
   "name": "resin-sdk",
-  "version": "9.0.4",
+  "version": "10.0.0-beta4",
   "description": "The Resin.io JavaScript SDK",
   "main": "build/resin.js",
   "types": "typings/resin-sdk.d.ts",
@@ -38,7 +38,6 @@
     "lint": "npm run prettify && npm run coffeelint && npm run tslint",
     "precommit": "lint-staged",
     "prepublish": "require-npm4-to-publish",
-    "prepack": "npm test",
     "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
