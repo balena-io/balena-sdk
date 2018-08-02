@@ -1,6 +1,5 @@
 {
-  "single-quote": true,
-  "trailing-comma": "all",
-  "use-tabs": true,
-  "print-width": 120
+  "singleQuote": true,
+  "trailingComma": "all",
+  "useTabs": true
 }

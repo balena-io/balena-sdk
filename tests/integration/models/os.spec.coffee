@@ -214,23 +214,36 @@ describe 'OS model', ->
 		givenLoggedInUser()
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.os.getConfig()', ->
+			DEFAULT_OS_VERSION = '2.12.7+rev1.prod'
+
 			beforeEach ->
-				resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
+				resin.models.application.create
+					name: 'TestApp'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				.then (application) =>
 					@application = application
 
+			it 'should fail if no version option is provided', ->
+				m.chai.expect(resin.models.os.getConfig(@application.id))
+				.to.be.rejectedWith('An OS version is required when calling os.getConfig')
+
 			it 'should be able to get an application config by id', ->
-				promise = resin.models.os.getConfig(@application.id)
+				promise = resin.models.os.getConfig(@application.id, { version: DEFAULT_OS_VERSION })
 				Promise.all [
 					eventuallyExpectProperty(promise, 'applicationId')
 					eventuallyExpectProperty(promise, 'apiKey')
 					eventuallyExpectProperty(promise, 'userId')
 					eventuallyExpectProperty(promise, 'username')
 					eventuallyExpectProperty(promise, 'deviceType')
-					eventuallyExpectProperty(promise, 'files')
 					eventuallyExpectProperty(promise, 'apiEndpoint')
 					eventuallyExpectProperty(promise, 'registryEndpoint')
 					eventuallyExpectProperty(promise, 'vpnEndpoint')
@@ -240,14 +253,13 @@ describe 'OS model', ->
 				]
 
 			it 'should be able to get an application config by name', ->
-				promise = resin.models.os.getConfig(@application.app_name)
+				promise = resin.models.os.getConfig(@application.app_name, { version: DEFAULT_OS_VERSION })
 				Promise.all [
 					eventuallyExpectProperty(promise, 'applicationId')
 					eventuallyExpectProperty(promise, 'apiKey')
 					eventuallyExpectProperty(promise, 'userId')
 					eventuallyExpectProperty(promise, 'username')
 					eventuallyExpectProperty(promise, 'deviceType')
-					eventuallyExpectProperty(promise, 'files')
 					eventuallyExpectProperty(promise, 'apiEndpoint')
 					eventuallyExpectProperty(promise, 'registryEndpoint')
 					eventuallyExpectProperty(promise, 'vpnEndpoint')
@@ -278,9 +290,9 @@ describe 'OS model', ->
 				]
 
 			it 'should be rejected if the application id does not exist', ->
-				promise = resin.models.os.getConfig(999999)
+				promise = resin.models.os.getConfig(999999, { version: DEFAULT_OS_VERSION })
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			it 'should be rejected if the application name does not exist', ->
-				promise = resin.models.os.getConfig('foobarbaz')
+				promise = resin.models.os.getConfig('foobarbaz', { version: DEFAULT_OS_VERSION })
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: foobarbaz')

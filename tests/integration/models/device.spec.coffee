@@ -3,7 +3,8 @@ m = require('mochainon')
 superagent = require('superagent')
 Promise = require('bluebird')
 
-{ resin, givenLoggedInUser, IS_BROWSER, sdkOpts } = require('../setup')
+{ resin, givenLoggedInUser, givenMulticontainerApplication, sdkOpts, IS_BROWSER } = require('../setup')
+
 {
 	itShouldGetAllTagsByResource
 	itShouldGetAllTags
@@ -101,7 +102,11 @@ describe 'Device Model', ->
 	describe 'given a single application without devices', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.device.getAll()', ->
@@ -187,7 +192,11 @@ describe 'Device Model', ->
 	describe 'given a single application with a single offline device', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 				uuid = resin.models.device.generateUniqueKey()
@@ -205,10 +214,10 @@ describe 'Device Model', ->
 					m.chai.expect(devices[0].id).to.equal(@device.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getAll(select: [ 'id' ])
+				resin.models.device.getAll($select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getAllByApplication()', ->
 
@@ -231,20 +240,20 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getAllByApplication(@application.id, select: [ 'id' ])
+				resin.models.device.getAllByApplication(@application.id, $select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getAllByParentDevice()', ->
 			beforeEach ->
 				Promise.props
 					userId: resin.auth.getUserId()
-					childApplication: resin.models.application.create(
-						'ChildApp'
-						@application.device_type
-						@application.id
-					)
+					childApplication: resin.models.application.create
+						name: 'ChildApp'
+						applicationType: 'microservices-starter'
+						deviceType: @application.device_type
+						parent: @application.id
 				.then ({ userId, @childApplication }) =>
 					# We don't use the built-in .register or resin-register-device,
 					# because they don't yet support parent devices.
@@ -278,10 +287,10 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getAllByParentDevice(@device.id, select: [ 'id' ])
+				resin.models.device.getAllByParentDevice(@device.id, $select: [ 'id' ])
 				.then ([ childDevice ]) =>
 					m.chai.expect(childDevice.id).to.equal(@childDevice.id)
-					m.chai.expect(childDevice.name).to.equal(undefined)
+					m.chai.expect(childDevice.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.get()', ->
 
@@ -306,15 +315,15 @@ describe 'Device Model', ->
 					m.chai.expect(device.id).to.equal(@device.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.get(@device.id, select: [ 'id' ])
+				resin.models.device.get(@device.id, $select: [ 'id' ])
 				.then (device) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getByName()', ->
 
 			it 'should be able to get the device', ->
-				resin.models.device.getByName(@device.name).then (devices) =>
+				resin.models.device.getByName(@device.device_name).then (devices) =>
 					m.chai.expect(devices).to.have.length(1)
 					m.chai.expect(devices[0].id).to.equal(@device.id)
 
@@ -323,20 +332,20 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: HelloWorldDevice')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.device.getByName(@device.name, select: [ 'id' ])
+				resin.models.device.getByName(@device.device_name, $select: [ 'id' ])
 				.then ([ device ]) =>
 					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.name).to.equal(undefined)
+					m.chai.expect(device.device_name).to.equal(undefined)
 
 		describe 'resin.models.device.getName()', ->
 
 			it 'should get the correct name by uuid', ->
 				promise = resin.models.device.getName(@device.uuid)
-				m.chai.expect(promise).to.eventually.equal(@device.name)
+				m.chai.expect(promise).to.eventually.equal(@device.device_name)
 
 			it 'should get the correct name by id', ->
 				promise = resin.models.device.getName(@device.id)
-				m.chai.expect(promise).to.eventually.equal(@device.name)
+				m.chai.expect(promise).to.eventually.equal(@device.device_name)
 
 			it 'should be rejected if the device uuid does not exist', ->
 				promise = resin.models.device.getName('asdfghjkl')
@@ -795,10 +804,281 @@ describe 'Device Model', ->
 			describe 'resin.models.device.tags.remove()', ->
 				itShouldRemoveTags(deviceTagTestOptions)
 
+		describe 'resin.models.device.configVar', ->
+
+			configVarModel = resin.models.device.configVar
+
+			['id', 'uuid'].forEach (deviceParam) ->
+
+				it "can create and retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'emacs')
+					.then =>
+						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+					Promise.all [
+						configVarModel.set(@device[deviceParam], 'RESIN_A', 'a')
+						configVarModel.set(@device[deviceParam], 'RESIN_B', 'b')
+					]
+					.then =>
+						configVarModel.getAllByDevice(@device[deviceParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'RESIN_A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'RESIN_B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.remove(@device[deviceParam], 'RESIN_EDITOR')
+					.then =>
+						configVarModel.get(@device[deviceParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					configVarModel.set(@device.id, 'RESIN_A', 'a')
+					configVarModel.set(@device.id, 'RESIN_B', 'b')
+				]
+				.then =>
+					configVarModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'RESIN_A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'RESIN_B' }).value).equal('b')
+
+		describe 'resin.models.device.envVar', ->
+
+			envVarModel = resin.models.device.envVar
+
+			['id', 'uuid'].forEach (deviceParam) ->
+
+				it "can create and retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.get(@device[deviceParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.set(@device[deviceParam], 'EDITOR', 'emacs')
+					.then =>
+						envVarModel.get(@device[deviceParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+					Promise.all [
+						envVarModel.set(@device[deviceParam], 'A', 'a')
+						envVarModel.set(@device[deviceParam], 'B', 'b')
+					]
+					.then =>
+						envVarModel.getAllByDevice(@device[deviceParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.remove(@device[deviceParam], 'EDITOR')
+					.then =>
+						envVarModel.get(@device[deviceParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					envVarModel.set(@device.id, 'A', 'a')
+					envVarModel.set(@device.id, 'B', 'b')
+				]
+				.then =>
+					envVarModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
+	describe 'given a multicontainer application with a single offline device', ->
+
+		givenMulticontainerApplication()
+
+		describe 'resin.models.device.getWithServiceDetails()', ->
+
+			it 'should be able to get the device by uuid', ->
+				resin.models.device.getWithServiceDetails(@device.uuid).then (device) =>
+					m.chai.expect(device.id).to.equal(@device.id)
+
+			it 'should be able to get the device by id', ->
+				resin.models.device.getWithServiceDetails(@device.id).then (device) =>
+					m.chai.expect(device.id).to.equal(@device.id)
+
+			it 'should retrieve the current service details', ->
+				resin.models.device.getWithServiceDetails(@device.id).then (deviceDetails) =>
+					m.chai.expect(deviceDetails).to.deep.match
+						device_name: @device.device_name
+						uuid: @device.uuid
+						is_on__commit: @currentRelease.commit
+						current_services:
+							web: [
+								id: @newWebInstall.id
+								service_id: @webService.id
+								image_id: @newWebImage.id
+								commit: 'new-release-commit'
+								status: 'downloading'
+								download_progress: 50
+							,
+								id: @oldWebInstall.id
+								service_id: @webService.id
+								image_id: @oldWebImage.id
+								commit: 'old-release-commit'
+								status: 'running'
+								download_progress: 100
+							]
+							db: [
+								id: @newDbInstall.id
+								service_id: @dbService.id
+								image_id: @newDbImage.id
+								commit: 'new-release-commit'
+								status: 'running'
+								download_progress: 100
+							]
+
+					# Should filter out deleted image installs
+					m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1)
+
+					# Should have an empty list of gateway downloads
+					m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0)
+
+			it 'should return gateway downloads, if available', ->
+				Promise.all [
+					resin.pine.post
+						resource: 'gateway_download'
+						body:
+							image: @newWebImage.id
+							status: 'downloading'
+							is_downloaded_by__device: @device.id
+							download_progress: 50
+				,
+					resin.pine.post
+						resource: 'gateway_download'
+						body:
+							image: @oldWebImage.id
+							status: 'deleted'
+							is_downloaded_by__device: @device.id
+							download_progress: 100
+				]
+				.then =>
+					resin.models.device.getWithServiceDetails(@device.id)
+				.then (deviceDetails) =>
+					m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1)
+					m.chai.expect(deviceDetails.current_gateway_downloads[0]).to.deep.match
+						service_id: @webService.id
+						image_id: @newWebImage.id
+						status: 'downloading'
+						download_progress: 50
+
+			it 'should allow options to change the device fields returned', ->
+				resin.models.device.getWithServiceDetails @device.id,
+					$select: ['id', 'uuid']
+					$expand:
+						belongs_to__application:
+							$select: ['id', 'app_name']
+				.then (deviceDetails) =>
+
+					m.chai.expect(deviceDetails.device_name).to.be.undefined
+
+					m.chai.expect(deviceDetails.current_services).not.to.be.undefined
+
+					m.chai.expect(deviceDetails.belongs_to__application[0]).to.deep.match
+						id: @application.id
+						app_name: @application.app_name
+
+			it 'should be rejected if the device name does not exist', ->
+				promise = resin.models.device.getWithServiceDetails('asdfghjkl')
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+			it 'should be rejected if the device id does not exist', ->
+				promise = resin.models.device.getWithServiceDetails(999999)
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+			it 'should be able to use a shorter uuid', ->
+				resin.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
+					m.chai.expect(device.id).to.equal(@device.id)
+
+
+		describe 'resin.models.device.serviceVar', ->
+
+			varModel = resin.models.device.serviceVar
+
+			['id', 'uuid'].forEach (deviceParam) ->
+
+				it "can create and retrieve a variable by #{deviceParam}", ->
+					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+					.then =>
+						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{deviceParam}", ->
+					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+					.then =>
+						varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'emacs')
+					.then =>
+						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+					Promise.all [
+						varModel.set(@device[deviceParam], @webService.id, 'A', 'a')
+						varModel.set(@device[deviceParam], @dbService.id, 'B', 'b')
+					]
+					.then =>
+						varModel.getAllByDevice(@device[deviceParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
+					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+					.then =>
+						varModel.remove(@device[deviceParam], @webService.id, 'EDITOR')
+					.then =>
+						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+			it 'can create and then retrieve multiple variables by application', ->
+				Promise.all [
+					varModel.set(@device.id, @webService.id, 'A', 'a')
+					varModel.set(@device.id, @dbService.id, 'B', 'b')
+				]
+				.then =>
+					varModel.getAllByApplication(@application.id)
+				.then (result) ->
+					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->
-			resin.models.application.create('TestApp', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'TestApp'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 				# Preceeding 1 is so that this can't start with a 0, so we get reversible parsing later
@@ -821,7 +1101,11 @@ describe 'Device Model', ->
 	describe 'given a single application with two offline devices that share the same uuid root', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 				@uuidRoot = 'aaaaaaaaaaaaaaaa'
@@ -849,15 +1133,26 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejected
 					.and.eventually.have.property('code', 'ResinAmbiguousDevice')
 
-	describe 'given two compatible applications and a single device', ->
+	describe 'given three compatible applications and a single device', ->
 
 		beforeEach ->
 			Promise.props
-				application1: resin.models.application.create('FooBar', 'raspberry-pi')
-				application2: resin.models.application.create('BarBaz', 'raspberry-pi')
+				application1: resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberrypi3'
+				application2: resin.models.application.create
+					name: 'BarBaz'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberrypi3'
+				application3: resin.models.application.create
+					name: 'BazFoo'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi2'
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
+				@application3 = results.application3
 
 				uuid = resin.models.device.generateUniqueKey()
 				resin.models.device.register(results.application1.app_name, uuid)
@@ -884,12 +1179,24 @@ describe 'Device Model', ->
 				.then (applicationName) =>
 					m.chai.expect(applicationName).to.equal(@application2.app_name)
 
+			it 'should be able to move a device to an application of the same architecture', ->
+				resin.models.device.move(@deviceInfo.id, @application3.id).then =>
+					resin.models.device.getApplicationName(@deviceInfo.id)
+				.then (applicationName) =>
+					m.chai.expect(applicationName).to.equal(@application3.app_name)
+
 	describe 'given two incompatible applications and a single device', ->
 
 		beforeEach ->
 			Promise.props
-				application1: resin.models.application.create('FooBar', 'raspberry-pi')
-				application2: resin.models.application.create('BarBaz', 'beaglebone-black')
+				application1: resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				application2: resin.models.application.create
+					name: 'BarBaz'
+					applicationType: 'microservices-starter'
+					deviceType: 'intel-nuc'
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2

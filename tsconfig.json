@@ -4,7 +4,7 @@
         "declaration": false,
         "outDir": "build",
         "noImplicitAny": true,
-        "removeComments": true,
+        "removeComments": false,
         "rootDir": "lib/",
         "preserveConstEnums": true,
         "strictNullChecks": true,

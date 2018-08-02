@@ -27,6 +27,8 @@ errors = require('resin-errors')
 {
 	isId,
 	findCallback,
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noApplicationForKeyResponse,
@@ -42,12 +44,31 @@ getApplicationModel = (deps, opts) ->
 	auth = require('../auth')(deps, opts)
 
 	deviceModel = once -> require('./device')(deps, opts)
-	tagsModel = once -> require('./tags').tagsModel(
-		deps,
-			associatedResource: 'application'
-			getResourceId: (nameOrId) -> exports.get(nameOrId, select: 'id').get('id')
-			ResourceNotFoundError: errors.ResinApplicationNotFound
-	)
+
+	{ buildDependentResource } = require('../util/dependent-resource')
+
+	tagsModel = buildDependentResource { pine }, {
+		resourceName: 'application_tag'
+		resourceKeyField: 'tag_key'
+		parentResourceName: 'application',
+		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinApplicationNotFound
+	}
+
+	configVarModel = buildDependentResource { pine }, {
+		resourceName: 'application_config_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'application',
+		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinApplicationNotFound
+	}
+	envVarModel = buildDependentResource { pine }, {
+		resourceName: 'application_environment_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'application',
+		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinApplicationNotFound
+	}
 
 	exports = {}
 
@@ -58,7 +79,7 @@ getApplicationModel = (deps, opts) ->
 			if isId(nameOrId)
 				return nameOrId
 			else
-				exports.get(nameOrId, select: 'id').get('id')
+				exports.get(nameOrId, $select: 'id').get('id')
 
 	exports._getId = getId
 
@@ -99,9 +120,13 @@ getApplicationModel = (deps, opts) ->
 				resource: 'application'
 				options:
 					mergePineOptions
-						orderby: 'app_name asc'
-						filter:
-							user: userId
+						$orderby: 'app_name asc'
+						$filter:
+							$or:
+								user: userId
+								includes__user: $any:
+									$alias: 'x'
+									$expr: x: user: userId
 					, options
 
 		.map (application) ->
@@ -158,7 +183,7 @@ getApplicationModel = (deps, opts) ->
 					resource: 'application'
 					options:
 						mergePineOptions
-							filter:
+							$filter:
 								app_name: nameOrId
 						, options
 				.tap (applications) ->
@@ -170,6 +195,59 @@ getApplicationModel = (deps, opts) ->
 				.get(0)
 		.tap(normalizeApplication)
 		.asCallback(callback)
+
+	###*
+	# @summary Get a single application and its deives, along with each device's
+	# associated services' essential details
+	# @name getWithDeviceServiceDetails
+	# @public
+	# @function
+	# @memberof resin.models.application
+	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `application.get(uuidOrId, options)` instead.
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - application
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+	# 	if (error) throw error;
+	# 	console.log(device);
+	# });
+	###
+	exports.getWithDeviceServiceDetails = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		serviceOptions = mergePineOptions
+			$expand: [
+				owns__device: getCurrentServiceDetailsPineOptions()
+			]
+		, options
+
+		exports.get(nameOrId, serviceOptions)
+		.then (app) ->
+			if app and app.owns__device
+				app.owns__device = app.owns__device.map(generateCurrentServiceDetails)
+
+			return app
+		.asCallback(callback)
+
 
 	###*
 	# @summary Get a single application using the appname and owner's username
@@ -199,7 +277,7 @@ getApplicationModel = (deps, opts) ->
 			resource: 'application'
 			options:
 				mergePineOptions
-					filter:
+					$filter:
 						$eq: [
 							$tolower: $: 'app_name'
 							appName
@@ -249,7 +327,7 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (nameOrId, callback) ->
-		exports.get(nameOrId, select: ['id']).return(true)
+		exports.get(nameOrId, $select: ['id']).return(true)
 		.catch errors.ResinApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -276,42 +354,8 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.hasAny = (callback) ->
-		exports.getAll(select: ['id']).then (applications) ->
+		exports.getAll($select: ['id']).then (applications) ->
 			return not isEmpty(applications)
-		.asCallback(callback)
-
-	###*
-	# @summary Get a single application by id
-	# @name getById
-	# @public
-	# @function
-	# @memberof resin.models.application
-	# @deprecated .get() now accepts application ids directly
-	#
-	# @param {(Number|String)} id - application id
-	# @fulfil {Object} - application
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.application.getById(89).then(function(application) {
-	# 	console.log(application);
-	# });
-	#
-	# @example
-	# resin.models.application.getById(89, function(error, application) {
-	# 	if (error) throw error;
-	# 	console.log(application);
-	# });
-	###
-	exports.getById = (id, callback) ->
-		return pine.get
-			resource: 'application'
-			id: id
-		.tap (application) ->
-			if not application?
-				throw new errors.ResinApplicationNotFound(id)
-
-			normalizeApplication(application)
 		.asCallback(callback)
 
 	###*
@@ -321,34 +365,51 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.application
 	#
-	# @param {String} name - application name
-	# @param {String} deviceType - device type slug
-	# @param {(Number|String)} [parentNameOrId] - parent application name or id
+	# @param {Object} options - application creation parameters
+	# @param {String} options.name - application name
+	# @param {String} [options.applicationType] - application type slug e.g. microservices-starter
+	# @param {String} options.deviceType - device type slug
+	# @param {(Number|String)} [options.parent] - parent application name or id
 	#
 	# @fulfil {Object} - application
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi').then(function(application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi', 'ParentApp').then(function(application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create('My App', 'raspberry-pi', function(error, application) {
+	# resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
 	###
-	exports.create = (name, deviceType, parentNameOrId, callback) ->
+	exports.create = ({ name, applicationType, deviceType, parent }, callback) ->
 		callback = findCallback(arguments)
 
-		parentAppPromise = if parentNameOrId
-			exports.get(parentNameOrId, select: [ 'id' ])
+		applicationTypePromise = if !applicationType
+			Promise.resolve()
+		else
+			pine.get
+				resource: 'application_type'
+				options:
+					$select: [ 'id' ]
+					$filter:
+						slug: applicationType
+			.get(0)
+			.then (appType) ->
+				if not appType
+					throw new Error("Invalid application type: #{applicationType}")
+				appType.id
+
+		parentAppPromise = if parent
+			exports.get(parent, $select: [ 'id' ])
 		else
 			Promise.resolve()
 
@@ -357,14 +418,26 @@ getApplicationModel = (deps, opts) ->
 			if not deviceManifest?
 				throw new errors.ResinInvalidDeviceType(deviceType)
 
-		return Promise.all([ deviceManifestPromise, parentAppPromise ])
-		.then ([ deviceManifest, parentApplication ]) ->
+		return Promise.props([
+			deviceManifestPromise
+			applicationTypePromise
+			parentAppPromise
+		])
+		.then ([
+			deviceManifest
+			applicationTypeId
+			parentApplication
+		]) ->
 			if deviceManifest.state == 'DISCONTINUED'
 				throw new errors.ResinDiscontinuedDeviceType(deviceType)
 
 			extraOptions = if parentApplication
 				depends_on__application: parentApplication.id
 			else {}
+
+			if applicationTypeId
+				assign extraOptions,
+					application_type: applicationTypeId
 
 			return pine.post
 				resource: 'application'
@@ -441,6 +514,7 @@ getApplicationModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.application
+	# @deprecated
 	# @description
 	# Generally you shouldn't use this method: if you're provisioning a recent ResinOS
 	# version (2.4.0+) then generateProvisioningKey should work just as well, but
@@ -469,7 +543,7 @@ getApplicationModel = (deps, opts) ->
 	exports.generateApiKey = (nameOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return request.send
 				method: 'POST'
 				url: "/application/#{id}/generate-api-key"
@@ -642,13 +716,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: true
 				options:
-					filter:
+					$filter:
 						belongs_to__application: id
 		.asCallback(callback)
 
@@ -674,13 +748,13 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, select: 'id').then ({ id }) ->
+		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: false
 				options:
-					filter:
+					$filter:
 						belongs_to__application: id
 		.asCallback(callback)
 
@@ -752,117 +826,359 @@ getApplicationModel = (deps, opts) ->
 	# @namespace resin.models.application.tags
 	# @memberof resin.models.application
 	###
-	exports.tags = {}
+	exports.tags = {
+
+		###*
+		# @summary Get all application tags for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.application.tags
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - application tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.application.tags.getAllByApplication(999999).then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAllByApplication: tagsModel.getAllByParent
+
+		###*
+		# @summary Get all application tags
+		# @name getAll
+		# @public
+		# @function
+		# @memberof resin.models.application.tags
+		#
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - application tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.tags.getAll().then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.application.tags.getAll(function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAll: tagsModel.getAll
+
+		###*
+		# @summary Set an application tag
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.application.tags
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} tagKey - tag key
+		# @param {String|undefined} value - tag value
+		#
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
+		#
+		# @example
+		# resin.models.application.tags.set(123, 'EDITOR', 'vim');
+		#
+		# @example
+		# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+		# 	if (error) throw error;
+		# });
+		###
+		set: tagsModel.set
+
+		###*
+		# @summary Remove an application tag
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.application.tags
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} tagKey - tag key
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.tags.remove('7cf02a6', 'EDITOR');
+		#
+		# @example
+		# resin.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
+		# 	if (error) throw error;
+		# });
+		###
+		remove: tagsModel.remove
+	}
 
 	###*
-	# @summary Get all application tags for an application
-	# @name getAllByApplication
-	# @public
-	# @function
-	# @memberof resin.models.application.tags
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - application tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.application.tags.getAllByApplication(999999).then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
+	# @namespace resin.models.application.configVar
+	# @memberof resin.models.application
 	###
-	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
-		callback = findCallback(arguments)
+	exports.configVar = {
+		###*
+		# @summary Get all config variables for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - application config variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: configVarModel.getAllByParent
 
-		exports.get(nameOrId, select: 'id').get('id').then (id) ->
-			exports.tags.getAll(
-				mergePineOptions
-					filter: application: id
-				, options
-			)
-		.asCallback(callback)
+		###*
+		# @summary Get the value of a specific config variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - config variable name
+		# @fulfil {String|undefined} - the config variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: configVarModel.get
+
+		###*
+		# @summary Set the value of a specific config variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - config variable name
+		# @param {String} value - config variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: configVarModel.set
+
+		###*
+		# @summary Clear the value of a specific config variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.application.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - config variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.remove(999999, 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: configVarModel.remove
+	}
 
 	###*
-	# @summary Get all application tags
-	# @name getAll
-	# @public
-	# @function
-	# @memberof resin.models.application.tags
-	#
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - application tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.application.tags.getAll().then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.application.tags.getAll(function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
+	# @namespace resin.models.application.envVar
+	# @memberof resin.models.application
 	###
-	exports.tags.getAll = tagsModel().getAll
+	exports.envVar = {
+		###*
+		# @summary Get all environment variables for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - application environment variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: envVarModel.getAllByParent
 
-	###*
-	# @summary Set an application tag
-	# @name set
-	# @public
-	# @function
-	# @memberof resin.models.application.tags
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @param {String} tagKey - tag key
-	# @param {String|undefined} value - tag value
-	#
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
-	#
-	# @example
-	# resin.models.application.tags.set(123, 'EDITOR', 'vim');
-	#
-	# @example
-	# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.tags.set = tagsModel().set
+		###*
+		# @summary Get the value of a specific environment variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - environment variable name
+		# @fulfil {String|undefined} - the environment variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.get('MyApp', 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.get(999999, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: envVarModel.get
 
-	###*
-	# @summary Remove an application tag
-	# @name remove
-	# @public
-	# @function
-	# @memberof resin.models.application.tags
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @param {String} tagKey - tag key
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.application.tags.remove('7cf02a6', 'EDITOR');
-	#
-	# @example
-	# resin.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.tags.remove = tagsModel().remove
+		###*
+		# @summary Set the value of a specific environment variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - environment variable name
+		# @param {String} value - environment variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: envVarModel.set
+
+		###*
+		# @summary Clear the value of a specific environment variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.application.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String} key - environment variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.application.envVar.remove('MyApp', 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.remove(999999, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.application.envVar.remove('MyApp', 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: envVarModel.remove
+	}
 
 	return exports
 

@@ -17,6 +17,7 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
+isFinite = require('lodash/isFinite')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
@@ -31,12 +32,15 @@ deviceStatus = require('resin-device-status')
 	onlyIf,
 	isId,
 	findCallback,
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noDeviceForKeyResponse,
 	treatAsMissingDevice,
 	LOCKED_STATUS_CODE,
-	timeSince
+	timeSince,
+	uniqueKeyViolated
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
@@ -45,6 +49,8 @@ deviceStatus = require('resin-device-status')
 # prerelase supervisor version, which precedes 1.8.0 but comes after 1.8.0-alpha.0
 # according to semver.
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
+
+MIN_SUPERVISOR_MC_API = '7.0.0'
 
 # Degraded network, slow devices, compressed docker binaries and any combination of these factors
 # can cause proxied device requests to surpass the default timeout (currently 30s). This was
@@ -60,12 +66,32 @@ getDeviceModel = (deps, opts) ->
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	auth = require('../auth')(deps, opts)
-	tagsModel = once -> require('./tags').tagsModel(
-		deps,
-			associatedResource: 'device'
-			getResourceId: (uuidOrId) -> exports.get(uuidOrId, select: 'id').get('id')
-			ResourceNotFoundError: errors.ResinDeviceNotFound
-	)
+
+	{ buildDependentResource } = require('../util/dependent-resource')
+
+	tagsModel = buildDependentResource { pine }, {
+		resourceName: 'device_tag'
+		resourceKeyField: 'tag_key'
+		parentResourceName: 'device',
+		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinDeviceNotFound
+	}
+
+	configVarModel = buildDependentResource { pine }, {
+		resourceName: 'device_config_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'device',
+		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinDeviceNotFound
+	}
+
+	envVarModel = buildDependentResource { pine }, {
+		resourceName: 'device_environment_variable'
+		resourceKeyField: 'name'
+		parentResourceName: 'device',
+		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
+		ResourceNotFoundError: errors.ResinDeviceNotFound
+	}
 
 	exports = {}
 
@@ -80,7 +106,7 @@ getDeviceModel = (deps, opts) ->
 			if isId(uuidOrId)
 				return uuidOrId
 			else
-				exports.get(uuidOrId, select: 'id').get('id')
+				exports.get(uuidOrId, $select: 'id').get('id')
 
 	###*
 	# @summary Ensure supervisor version compatibility using semver
@@ -162,7 +188,7 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
-					orderby: 'name asc'
+					$orderby: 'device_name asc'
 				, options
 
 		.map(addExtraInfo)
@@ -199,9 +225,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, select: 'id').then ({ id }) ->
+		applicationModel().get(nameOrId, $select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: belongs_to__application: id
+				$filter: belongs_to__application: id
 				options
 			), callback)
 
@@ -236,9 +262,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getAllByParentDevice = (parentUuidOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(parentUuidOrId, select: 'id').then ({ id }) ->
+		exports.get(parentUuidOrId, $select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
-				filter: is_managed_by__device: id
+				$filter: is_managed_by__device: id
 				options
 			), callback)
 
@@ -290,7 +316,7 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					options:
 						mergePineOptions
-							filter:
+							$filter:
 								uuid: $startswith: uuidOrId
 						, options
 				.tap (devices) ->
@@ -301,6 +327,48 @@ getDeviceModel = (deps, opts) ->
 						throw new errors.ResinAmbiguousDevice(uuidOrId)
 				.get(0)
 		.then(addExtraInfo)
+		.asCallback(callback)
+
+	###*
+	# @summary Get a single device along with its associated services' essential details
+	# @name getWithServiceDetails
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `device.get(uuidOrId, options)` instead.
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object} - device with service details
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
+	# 	if (error) throw error;
+	# 	console.log(device);
+	# });
+	###
+	exports.getWithServiceDetails = (uuidOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.get uuidOrId,
+			mergePineOptions(getCurrentServiceDetailsPineOptions(), options)
+		.then(generateCurrentServiceDetails)
 		.asCallback(callback)
 
 	###*
@@ -329,7 +397,7 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		return exports.getAll(mergePineOptions(
-			filter: name: name
+			$filter: device_name: name
 			options
 		)).tap (devices) ->
 			if isEmpty(devices)
@@ -364,7 +432,9 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getName = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'name').get('name').asCallback(callback)
+		exports.get(uuidOrId, $select: 'device_name')
+		.get('device_name')
+		.asCallback(callback)
 
 	###*
 	# @summary Get application name
@@ -395,8 +465,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getApplicationName = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'app_name'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'app_name'
 		.then (device) ->
 			device.belongs_to__application[0].app_name
 		.asCallback(callback)
@@ -407,6 +477,10 @@ getDeviceModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.device
+	#
+	# @deprecated
+	# @description
+	# This is not supported on multicontainer devices, and will be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Object} - application info
@@ -430,8 +504,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getApplicationInfo = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: ['id', 'supervisor_version']
-			expand: belongs_to__application: $select: 'id'
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
@@ -474,7 +548,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.has = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['id']).return(true)
+		exports.get(uuidOrId, $select: ['id']).return(true)
 		.catch errors.ResinDeviceNotFound, ->
 			return false
 		.asCallback(callback)
@@ -507,7 +581,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.isOnline = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'is_online').get('is_online').asCallback(callback)
+		exports.get(uuidOrId, $select: 'is_online').get('is_online').asCallback(callback)
 
 	###*
 	# @summary Get the local IP addresses of a device
@@ -545,7 +619,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getLocalIPAddresses = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: ['is_online', 'ip_address', 'vpn_address'])
+		exports.get(uuidOrId, $select: ['is_online', 'ip_address', 'vpn_address'])
 		.then ({ is_online, ip_address, vpn_address }) ->
 			if not is_online
 				throw new Error("The device is offline: #{uuidOrId}")
@@ -576,11 +650,11 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.remove = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.delete
 				resource: 'device'
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -640,13 +714,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.rename = (uuidOrId, newName, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
-					name: newName
+					device_name: newName
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -674,13 +748,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.note = (uuidOrId, note, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					note: note
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 
 		.asCallback(callback)
@@ -709,14 +783,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.setCustomLocation = (uuidOrId, location, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					custom_latitude: String(location.latitude),
 					custom_longitude: String(location.longitude)
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 
 		.asCallback(callback)
@@ -778,11 +852,15 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
-			device: exports.get(uuidOrId, select: [ 'uuid', 'device_type' ])
-			application: applicationModel().get(applicationNameOrId, select: [ 'id', 'device_type' ])
-		.then ({ application, device }) ->
-
-			if device.device_type isnt application.device_type
+			device: exports.get(uuidOrId, $select: [ 'uuid', 'device_type' ])
+			deviceTypes: configModel().getDeviceTypes()
+			application: applicationModel().get(applicationNameOrId, $select: [ 'id', 'device_type' ])
+		.then ({ application, device, deviceTypes }) ->
+			deviceDeviceType = find(deviceTypes, { slug: device.device_type })
+			appDeviceType = find(deviceTypes, { slug: application.device_type })
+			isCompatibleMove = deviceDeviceType.arch is appDeviceType.arch and
+				(!!deviceDeviceType.isDependent is !!appDeviceType.isDependent)
+			if not isCompatibleMove
 				throw new errors.ResinInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
@@ -790,7 +868,7 @@ getDeviceModel = (deps, opts) ->
 				body:
 					belongs_to__application: application.id
 				options:
-					filter:
+					$filter:
 						uuid: device.uuid
 
 		.asCallback(callback)
@@ -801,6 +879,10 @@ getDeviceModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.device
+	#
+	# @deprecated
+	# @description
+	# This is not supported on multicontainer devices, and will be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
@@ -824,8 +906,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.startApplication = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: ['id', 'supervisor_version']
-			expand: belongs_to__application: $select: 'id'
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
@@ -847,6 +929,10 @@ getDeviceModel = (deps, opts) ->
 	# @public
 	# @function
 	# @memberof resin.models.device
+	#
+	# @deprecated
+	# @description
+	# This is not supported on multicontainer devices, and will be removed in a future major release
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application container id
@@ -870,8 +956,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.stopApplication = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: ['id', 'supervisor_version']
-			expand: belongs_to__application: $select: 'id'
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
 				appId = device.belongs_to__application[0].id
@@ -922,6 +1008,159 @@ getDeviceModel = (deps, opts) ->
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
+		.asCallback(callback)
+
+	###*
+	# @summary Start a service on a device
+	# @name startService
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} imageId - id of the image to start
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.startService('7cf02a6', 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.startService(1, 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.startService('7cf02a6', 123, function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.startService = (uuidOrId, imageId, callback) ->
+		exports.get uuidOrId,
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
+		.then (device) ->
+			ensureSupervisorCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API
+			).then ->
+				appId = device.belongs_to__application[0].id
+				return request.send
+					method: 'POST'
+					url: "/supervisor/v2/applications/#{appId}/start-service"
+					baseUrl: apiUrl
+					body:
+						deviceId: device.id
+						appId: appId
+						data: {
+							appId
+							imageId
+						}
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+		.asCallback(callback)
+
+	###*
+	# @summary Stop a service on a device
+	# @name stopService
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} imageId - id of the image to stop
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.stopService('7cf02a6', 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.stopService(1, 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.stopService('7cf02a6', 123, function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.stopService = (uuidOrId, imageId, callback) ->
+		exports.get uuidOrId,
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
+		.then (device) ->
+			ensureSupervisorCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API
+			).then ->
+				appId = device.belongs_to__application[0].id
+				return request.send
+					method: 'POST'
+					url: "/supervisor/v2/applications/#{appId}/stop-service"
+					baseUrl: apiUrl
+					body:
+						deviceId: device.id
+						appId: appId
+						data: {
+							appId
+							imageId
+						}
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+		.asCallback(callback)
+
+	###*
+	# @summary Restart a service on a device
+	# @name restartService
+	# @public
+	# @function
+	# @memberof resin.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {Number} imageId - id of the image to restart
+	# @returns {Promise}
+	#
+	# @example
+	# resin.models.device.restartService('7cf02a6', 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.restartService(1, 123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# resin.models.device.restartService('7cf02a6', 123, function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.restartService = (uuidOrId, imageId, callback) ->
+		exports.get uuidOrId,
+			$select: ['id', 'supervisor_version']
+			$expand: belongs_to__application: $select: 'id'
+		.then (device) ->
+			ensureSupervisorCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API
+			).then ->
+				appId = device.belongs_to__application[0].id
+				return request.send
+					method: 'POST'
+					url: "/supervisor/v2/applications/#{appId}/restart-service"
+					baseUrl: apiUrl
+					body:
+						deviceId: device.id
+						appId: appId
+						data: {
+							appId
+							imageId
+						}
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.asCallback(callback)
 
 	###*
@@ -995,8 +1234,8 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1040,8 +1279,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.purge = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1092,8 +1331,8 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1274,7 +1513,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId, select: 'device_type')
+		applicationModel().get(nameOrId, $select: 'device_type')
 		.get('device_type')
 		.then(exports.getManifestBySlug)
 		.asCallback(callback)
@@ -1333,7 +1572,7 @@ getDeviceModel = (deps, opts) ->
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
-			application: applicationModel().get(applicationNameOrId, select: ['id', 'device_type'])
+			application: applicationModel().get(applicationNameOrId, $select: ['id', 'device_type'])
 		.then ({ userId, apiKey, application }) ->
 
 			return registerDevice.register
@@ -1417,7 +1656,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.hasDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'is_web_accessible')
+		exports.get(uuidOrId, $select: 'is_web_accessible')
 		.get('is_web_accessible').asCallback(callback)
 
 	###*
@@ -1453,7 +1692,7 @@ getDeviceModel = (deps, opts) ->
 				throw new Error("Device is not web accessible: #{uuidOrId}")
 
 			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
-				exports.get(uuidOrId, select: 'uuid').get('uuid').then (uuid) ->
+				exports.get(uuidOrId, $select: 'uuid').get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.asCallback(callback)
 
@@ -1479,13 +1718,13 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.enableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: true
 				options:
-					filter:
+					$filter:
 						uuid: uuid
 		.asCallback(callback)
 
@@ -1511,96 +1750,14 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.disableDeviceUrl = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'uuid').then ({ uuid }) ->
+		exports.get(uuidOrId, $select: 'uuid').then ({ uuid }) ->
 			return pine.patch
 				resource: 'device'
 				body:
 					is_web_accessible: false
 				options:
-					filter:
+					$filter:
 						uuid: uuid
-		.asCallback(callback)
-
-	###*
-	# @summary Enable TCP ping for a device
-	# @name enableTcpPing
-	# @public
-	# @function
-	# @memberof resin.models.device
-	#
-	# @description
-	# When the device's connection to the Resin VPN is down, by default
-	# the device performs a TCP ping heartbeat to check for connectivity.
-	# This is enabled by default.
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.enableTcpPing('7cf02a6');
-	#
-	# @example
-	# resin.models.device.enableTcpPing(123);
-	#
-	# @example
-	# resin.models.device.enableTcpPing('7cf02a6', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.enableTcpPing = (uuidOrId, callback) ->
-		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
-		.then (device) ->
-			return request.send
-				method: 'POST'
-				url: '/supervisor/v1/tcp-ping'
-				baseUrl: apiUrl
-				body:
-					deviceId: device.id
-					appId: device.belongs_to__application[0].id
-		.get('body')
-		.asCallback(callback)
-
-	###*
-	# @summary Disable TCP ping for a device
-	# @name disableTcpPing
-	# @public
-	# @function
-	# @memberof resin.models.device
-	#
-	# @description
-	# When the device's connection to the Resin VPN is down, by default
-	# the device performs a TCP ping heartbeat to check for connectivity.
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.disableTcpPing('7cf02a6');
-	#
-	# @example
-	# resin.models.device.disableTcpPing(123);
-	#
-	# @example
-	# resin.models.device.disableTcpPing('7cf02a6', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.disableTcpPing = (uuidOrId, callback) ->
-		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
-		.then (device) ->
-			return request.send
-				method: 'POST'
-				url: '/supervisor/v1/tcp-ping'
-				baseUrl: apiUrl
-				body:
-					method: 'DELETE'
-					deviceId: device.id
-					appId: device.belongs_to__application[0].id
-		.get('body')
 		.asCallback(callback)
 
 	###*
@@ -1629,8 +1786,8 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.ping = (uuidOrId, callback) ->
 		exports.get uuidOrId,
-			select: 'id'
-			expand: belongs_to__application: $select: 'id'
+			$select: 'id'
+			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
 			return request.send
 				method: 'POST'
@@ -1695,7 +1852,7 @@ getDeviceModel = (deps, opts) ->
 		if not expiryTimestamp? or expiryTimestamp <= Date.now()
 			throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp)
 
-		exports.get(uuidOrId, select: 'id').then ({ id }) ->
+		exports.get(uuidOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				id: id
@@ -1724,7 +1881,7 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.revokeSupportAccess = (uuidOrId, callback) ->
-		exports.get(uuidOrId, select: 'id').then ({ id }) ->
+		exports.get(uuidOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				id: id
@@ -1764,158 +1921,762 @@ getDeviceModel = (deps, opts) ->
 	# @namespace resin.models.device.tags
 	# @memberof resin.models.device
 	###
-	exports.tags = {}
+	exports.tags = {
+		###*
+		# @summary Get all device tags for an application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByApplication(999999).then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
+				tagsModel.getAll(
+					mergePineOptions
+						$filter:
+							device:
+								$any:
+									$alias: 'd',
+									$expr: d: belongs_to__application: id
+					, options
+				)
+			.asCallback(callback)
+
+		###*
+		# @summary Get all device tags for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByDevice(123).then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAllByDevice: tagsModel.getAllByParent
+
+		###*
+		# @summary Get all device tags
+		# @name getAll
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device tags
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.getAll().then(function(tags) {
+		# 	console.log(tags);
+		# });
+		#
+		# @example
+		# resin.models.device.tags.getAll(function(error, tags) {
+		# 	if (error) throw error;
+		# 	console.log(tags)
+		# });
+		###
+		getAll: tagsModel.getAll
+
+		###*
+		# @summary Set a device tag
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} tagKey - tag key
+		# @param {String|undefined} value - tag value
+		#
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
+		#
+		# @example
+		# resin.models.device.tags.set(123, 'EDITOR', 'vim');
+		#
+		# @example
+		# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+		# 	if (error) throw error;
+		# });
+		###
+		set: tagsModel.set
+
+		###*
+		# @summary Remove a device tag
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.tags
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} tagKey - tag key
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.tags.remove('7cf02a6', 'EDITOR');
+		#
+		# @example
+		# resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
+		# 	if (error) throw error;
+		# });
+		###
+		remove: tagsModel.remove
+	}
 
 	###*
-	# @summary Get all device tags for an application
-	# @name getAllByApplication
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - device tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByApplication(999999).then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
+	# @namespace resin.models.device.configVar
+	# @memberof resin.models.device
 	###
-	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
-		applicationModel().get(nameOrId, select: 'id').get('id').then (id) ->
-			tagsModel().getAll(
-				mergePineOptions
-					filter:
-						device:
-							$any:
-								$alias: 'd',
-								$expr: d: belongs_to__application: id
-				, options
-			)
-		.asCallback(callback)
+	exports.configVar = {
+		###*
+		# @summary Get all config variables for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device config variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByDevice(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByDevice: configVarModel.getAllByParent
+
+		###*
+		# @summary Get all device config variables by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device config variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				configVarModel.getAll(
+					mergePineOptions
+						$filter:
+							device:
+								$any:
+									$alias: 'd'
+									$expr: d:
+										belongs_to__application: id
+						$orderby: 'name asc'
+					, options
+				)
+			.asCallback(callback)
+
+		###*
+		# @summary Get the value of a specific config variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - config variable name
+		# @fulfil {String|undefined} - the config variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: configVarModel.get
+
+		###*
+		# @summary Set the value of a specific config variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - config variable name
+		# @param {String} value - config variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: configVarModel.set
+
+		###*
+		# @summary Clear the value of a specific config variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.configVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - config variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.remove(999999, 'RESIN_VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: configVarModel.remove
+	}
 
 	###*
-	# @summary Get all device tags for a device
-	# @name getAllByDevice
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - device tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByDevice(123).then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
+	# @namespace resin.models.device.envVar
+	# @memberof resin.models.device
 	###
-	exports.tags.getAllByDevice = (uuidOrId, options = {}, callback) ->
-		callback = findCallback(arguments)
+	exports.envVar = {
+		###*
+		# @summary Get all environment variables for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device environment variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByDevice(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByDevice: envVarModel.getAllByParent
 
-		exports.get(uuidOrId, select: 'id').get('id').then (id) ->
-			exports.tags.getAll(
-				mergePineOptions
-					filter: device: id
-				, options
-			)
-		.asCallback(callback)
+		###*
+		# @summary Get all device environment variables by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - device environment variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				envVarModel.getAll(
+					mergePineOptions
+						$filter:
+							device:
+								$any:
+									$alias: 'd'
+									$expr: d:
+										belongs_to__application: id
+						$orderby: 'name asc'
+					, options
+				)
+			.asCallback(callback)
+
+		###*
+		# @summary Get the value of a specific environment variable
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - environment variable name
+		# @fulfil {String|undefined} - the environment variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.get(999999, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: envVarModel.get
+
+		###*
+		# @summary Set the value of a specific environment variable
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - environment variable name
+		# @param {String} value - environment variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: envVarModel.set
+
+		###*
+		# @summary Clear the value of a specific environment variable
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.envVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {String} key - environment variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.remove(999999, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: envVarModel.remove
+	}
 
 	###*
-	# @summary Get all device tags
-	# @name getAll
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {Object} [options={}] - extra pine options to use
-	# @fulfil {Object[]} - device tags
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.getAll().then(function(tags) {
-	# 	console.log(tags);
-	# });
-	#
-	# @example
-	# resin.models.device.tags.getAll(function(error, tags) {
-	# 	if (error) throw error;
-	# 	console.log(tags)
-	# });
+	# @namespace resin.models.device.serviceVar
+	# @memberof resin.models.device
 	###
-	exports.tags.getAll = tagsModel().getAll
+	exports.serviceVar = {
 
-	###*
-	# @summary Set a device tag
-	# @name set
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {String} tagKey - tag key
-	# @param {String|undefined} value - tag value
-	#
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
-	#
-	# @example
-	# resin.models.device.tags.set(123, 'EDITOR', 'vim');
-	#
-	# @example
-	# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.tags.set = tagsModel().set
+		###*
+		# @summary Get all service variable overrides for a device
+		# @name getAllByDevice
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - service variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByDevice: (uuidOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
 
-	###*
-	# @summary Remove a device tag
-	# @name remove
-	# @public
-	# @function
-	# @memberof resin.models.device.tags
-	#
-	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {String} tagKey - tag key
-	# @returns {Promise}
-	#
-	# @example
-	# resin.models.device.tags.remove('7cf02a6', 'EDITOR');
-	#
-	# @example
-	# resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
-	# 	if (error) throw error;
-	# });
-	###
-	exports.tags.remove = tagsModel().remove
+			exports.get(uuidOrId, $select: 'id').get('id')
+			.then (deviceId) ->
+				pine.get
+					resource: 'device_service_environment_variable'
+					options: mergePineOptions
+						$filter:
+							service_install:
+								$any:
+									$alias: 'si',
+									$expr: si: device: deviceId
+						, options
+			.asCallback(callback)
+
+		###*
+		# @summary Get all device service variable overrides by application
+		# @name getAllByApplication
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {Object} [options={}] - extra pine options to use
+		# @fulfil {Object[]} - service variables
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
+		# 	console.log(vars);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
+		# 	if (error) throw error;
+		# 	console.log(vars)
+		# });
+		###
+		getAllByApplication: (nameOrId, options = {}, callback) ->
+			callback = findCallback(arguments)
+
+			applicationModel().get(nameOrId, $select: 'id')
+			.get('id')
+			.then (id) ->
+				pine.get
+					resource: 'device_service_environment_variable'
+					options:
+						mergePineOptions
+							$filter:
+								service_install:
+									$any:
+										$alias: 'si',
+										$expr: si:
+											device:
+												$any:
+													$alias: 'd'
+													$expr: d:
+														belongs_to__application: id
+							$orderby: 'name asc'
+						, options
+			.asCallback(callback)
+
+		###*
+		# @summary Get the overriden value of a service variable on a device
+		# @name get
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @fulfil {String|undefined} - the variable value (or undefined)
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
+		# 	console.log(value);
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
+		# 	if (error) throw error;
+		# 	console.log(value)
+		# });
+		###
+		get: (uuidOrId, serviceId, key, callback) ->
+			callback = findCallback(arguments)
+
+			exports.get(uuidOrId, $select: 'id').get('id')
+			.then (deviceId) ->
+				pine.get
+					resource: 'device_service_environment_variable'
+					options:
+						$filter:
+							service_install:
+								$any:
+									$alias: 'si',
+									$expr: si:
+										device: deviceId
+										service: serviceId
+							name: key
+			.get(0)
+			.then (variable) ->
+				variable?.value
+			.asCallback(callback)
+
+		###*
+		# @summary Set the overriden value of a service variable on a device
+		# @name set
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @param {String} value - variable value
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		set: (uuidOrId, serviceId, key, value, callback) ->
+			Promise.try ->
+				value = String(value)
+
+				deviceFilter = if isId(uuidOrId)
+					uuidOrId
+				else
+					$any:
+						$alias: 'd'
+						$expr: d:
+							uuid: uuidOrId
+
+				pine.get
+					resource: 'service_install'
+					options:
+						$filter:
+							device: deviceFilter
+							service: serviceId
+				.tap (serviceInstalls) ->
+					if isEmpty(serviceInstalls)
+						throw new errors.ResinServiceNotFound(serviceId)
+					if serviceInstalls.length > 1
+						throw new errors.ResinAmbiguousDevice(uuidOrId)
+				.get(0)
+				.get('id')
+			.then (serviceInstallId) ->
+				pine.post
+					resource: 'device_service_environment_variable'
+					body:
+						service_install: serviceInstallId
+						name: key
+						value: value
+				.catch uniqueKeyViolated, ->
+					pine.patch
+						resource: 'device_service_environment_variable'
+						options:
+							$filter:
+								service_install: serviceInstallId
+								name: key
+						body:
+							value: value
+			.asCallback(callback)
+
+		###*
+		# @summary Clear the overridden value of a service variable on a device
+		# @name remove
+		# @public
+		# @function
+		# @memberof resin.models.device.serviceVar
+		#
+		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		# @param {Number} id - service id
+		# @param {String} key - variable name
+		# @returns {Promise}
+		#
+		# @example
+		# resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
+		# 	...
+		# });
+		#
+		# @example
+		# resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
+		# 	if (error) throw error;
+		# 	...
+		# });
+		###
+		remove: (uuidOrId, serviceId, key, callback) ->
+			exports.get(uuidOrId, $select: 'id').get('id')
+			.then (deviceId) ->
+				pine.delete
+					resource: 'device_service_environment_variable'
+					options:
+						$filter:
+							service_install:
+								$any:
+									$alias: 'si',
+									$expr: si:
+										device: deviceId
+										service: serviceId
+							name: key
+			.asCallback(callback)
+	}
 
 	return exports
 

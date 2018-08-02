@@ -321,8 +321,16 @@ getOsModel = (deps, opts) ->
 	# @function
 	# @memberof resin.models.os
 	#
+	# @description
+	# Builds the config.json for a device in the given application, with the given
+	# options.
+	#
+	# Note that an OS version is required. For versions < 2.7.8, config
+	# generation is only supported when using a session token, not an API key.
+	#
 	# @param {String|Number} nameOrId - application name (string) or id (number).
-	# @param {Object} [options={}] - OS configuration options to use.
+	# @param {Object} options - OS configuration options to use.
+	# @param {String} options.version - Required: the OS version of the image.
 	# @param {String} [options.network='ethernet'] - The network type that
 	# the device will use, one of 'ethernet' or 'wifi'.
 	# @param {Number} [options.appUpdatePollInterval] - How often the OS checks
@@ -334,20 +342,19 @@ getOsModel = (deps, opts) ->
 	# @param {String} [options.ip] - static ip address.
 	# @param {String} [options.gateway] - static ip gateway.
 	# @param {String} [options.netmask] - static ip netmask.
-	# @param {String} [options.version] - The OS version of the image.
 	# @fulfil {Object} - application configuration as a JSON object.
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.getConfig('MyApp').then(function(config) {
+	# resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	#
-	# resin.models.os.getConfig(123).then(function(config) {
+	# resin.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	#
-	# resin.models.os.getConfig('MyApp', function(error, config) {
+	# resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
 	# 	if (error) throw error;
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
@@ -355,20 +362,24 @@ getOsModel = (deps, opts) ->
 	exports.getConfig = (nameOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		defaultOpts =
-			network: 'ethernet'
+		Promise.try ->
+			if !options.version
+				throw new Error('An OS version is required when calling os.getConfig')
 
-		_.defaults(options, defaultOpts)
+			defaultOpts =
+				network: 'ethernet'
 
-		applicationModel()._getId(nameOrId)
-		.then (applicationId) ->
-			request.send
-				method: 'POST'
-				url: '/download-config'
-				baseUrl: apiUrl
-				body: _.assign(options, appId: applicationId)
-		.get('body')
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+			_.defaults(options, defaultOpts)
+
+			applicationModel()._getId(nameOrId)
+			.then (applicationId) ->
+				request.send
+					method: 'POST'
+					url: '/download-config'
+					baseUrl: apiUrl
+					body: _.assign(options, appId: applicationId)
+			.get('body')
+			.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)
 
 	return exports

@@ -10,6 +10,8 @@ getAllByResourceFactory = (model, resourceName) ->
 	(idOrUniqueParam) ->
 		model["getAllBy#{_.startCase(resourceName)}"](idOrUniqueParam)
 
+NO_UNIQUE_PROP_LABEL = 'unique property'
+
 exports.itShouldGetAllTagsByResource = (opts) ->
 	{ model, resourceName, uniquePropertyName } = opts
 	getAllByResource = getAllByResourceFactory(model, resourceName)
@@ -27,7 +29,10 @@ exports.itShouldGetAllTagsByResource = (opts) ->
 		promise = getAllByResource(999999)
 		m.chai.expect(promise).to.be.rejectedWith("#{_.startCase(resourceName)} not found: 999999")
 
-	it "should be rejected if the #{resourceName} #{uniquePropertyName} does not exist", ->
+	it "should be rejected if the #{resourceName} #{uniquePropertyName || NO_UNIQUE_PROP_LABEL} does not exist", ->
+		if !uniquePropertyName
+			return this.skip()
+
 		promise = getAllByResource('123456789')
 		m.chai.expect(promise).to.be.rejectedWith("#{_.startCase(resourceName)} not found: 123456789")
 
@@ -47,7 +52,10 @@ exports.itShouldGetAllTagsByResource = (opts) ->
 				m.chai.expect(tags[0].tag_key).to.equal('EDITOR')
 				m.chai.expect(tags[0].value).to.equal('vim')
 
-		it "should retrieve the tag by #{resourceName} #{uniquePropertyName}", ->
+		it "should retrieve the tag by #{resourceName} #{uniquePropertyName || NO_UNIQUE_PROP_LABEL}", ->
+			if !uniquePropertyName
+				return this.skip()
+
 			getAllByResource(@resource[uniquePropertyName])
 			.then (tags) ->
 				m.chai.expect(tags).to.have.length(1)
@@ -55,7 +63,7 @@ exports.itShouldGetAllTagsByResource = (opts) ->
 				m.chai.expect(tags[0].value).to.equal('vim')
 
 exports.itShouldGetAllTags = (opts) ->
-	{ model, resourceName, uniquePropertyName } = opts
+	{ model, resourceName } = opts
 
 	beforeEach ->
 		@resource = opts.resourceProvider()
@@ -83,7 +91,7 @@ exports.itShouldGetAllTags = (opts) ->
 				m.chai.expect(tags[1].value).to.equal('js')
 
 		it 'should retrieve the filtered tag', ->
-			model.getAll(filter: tag_key: 'EDITOR')
+			model.getAll($filter: tag_key: 'EDITOR')
 			.then (tags) ->
 				m.chai.expect(tags).to.have.length(1)
 				m.chai.expect(tags[0].tag_key).to.equal('EDITOR')
@@ -104,7 +112,10 @@ exports.itShouldSetTags = (opts) ->
 			m.chai.expect(tags[0].tag_key).to.equal('EDITOR')
 			m.chai.expect(tags[0].value).to.equal('vim')
 
-	it "should be able to create a tag given a #{resourceName} #{uniquePropertyName}", ->
+	it "should be able to create a tag given a #{resourceName} #{uniquePropertyName || NO_UNIQUE_PROP_LABEL}", ->
+		if !uniquePropertyName
+			return this.skip()
+
 		model.set(@resource[uniquePropertyName], 'EDITOR', 'vim').then =>
 			getAllByResource(@resource.id)
 		.then (tags) ->
@@ -132,7 +143,10 @@ exports.itShouldSetTags = (opts) ->
 		promise = model.set(999999, 'EDITOR', 'vim')
 		m.chai.expect(promise).to.be.rejectedWith("#{_.startCase(resourceName)} not found: 999999")
 
-	it "should be rejected if the #{resourceName} #{uniquePropertyName} does not exist", ->
+	it "should be rejected if the #{resourceName} #{uniquePropertyName || NO_UNIQUE_PROP_LABEL} does not exist", ->
+		if !uniquePropertyName
+			return this.skip()
+
 		promise = model.set('123456789', 'EDITOR', 'vim')
 		m.chai.expect(promise).to.be.rejectedWith("#{_.startCase(resourceName)} not found: 123456789")
 
@@ -180,7 +194,10 @@ exports.itShouldRemoveTags = (opts) ->
 			.then (tags) ->
 				m.chai.expect(tags).to.have.length(0)
 
-		it "should be able to remove a tag by #{resourceName} #{uniquePropertyName}", ->
+		it "should be able to remove a tag by #{resourceName} #{uniquePropertyName || NO_UNIQUE_PROP_LABEL}", ->
+			if !uniquePropertyName
+				return this.skip()
+
 			model.remove(@resource[uniquePropertyName], @tag.tag_key).then =>
 				getAllByResource(@resource[uniquePropertyName])
 			.then (tags) ->

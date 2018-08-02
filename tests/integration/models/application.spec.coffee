@@ -35,43 +35,86 @@ describe 'Application Model', ->
 
 		describe 'resin.models.application.create()', ->
 
-			it 'should be able to create an application', ->
-				resin.models.application.create('FooBar', 'raspberry-pi').then ->
+			it 'should be able to create an application w/o providing an application type', ->
+				resin.models.application.create
+					name: 'FooBar'
+					deviceType: 'raspberry-pi'
+				.then ->
+					promise = resin.models.application.getAll()
+					m.chai.expect(promise).to.eventually.have.length(1)
+
+			it 'should be able to create an application with a specific application type', ->
+				resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				.then ->
 					promise = resin.models.application.getAll()
 					m.chai.expect(promise).to.eventually.have.length(1)
 
 			it 'should be able to create a child application', ->
-				resin.models.application.create('FooBar', 'raspberry-pi').then (parentApplication) ->
-					resin.models.application.create('FooBarChild', 'generic', parentApplication.id)
+				resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				.then (parentApplication) ->
+					resin.models.application.create
+						name: 'FooBarChild'
+						deviceType: 'generic'
+						parent: parentApplication.id
 				.then ->
 					resin.models.application.getAll()
 				.then ([ parentApplication, childApplication ]) ->
 					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
+			it 'should be rejected if the application type is invalid', ->
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'non-existing'
+					deviceType: 'raspberry-pi'
+				m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
+
 			it 'should be rejected if the device type is invalid', ->
-				promise = resin.models.application.create('FooBar', 'foobarbaz')
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'foobarbaz'
 				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
 
 			it 'should be rejected if the device type is discontinued', ->
-				promise = resin.models.application.create('FooBar', 'edge')
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'edge'
 				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
 			it 'should be rejected if the name has less than three characters', ->
-				promise = resin.models.application.create('Fo', 'raspberry-pi')
+				promise = resin.models.application.create
+					name: 'Fo'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
 				m.chai.expect(promise).to.be.rejected
 				.then (error) ->
 					m.chai.expect(error).to.have.property('message')
 					.that.contains('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4')
 
 			it 'should be able to create an application using a device type alias', ->
-				resin.models.application.create('FooBar', 'raspberrypi').then ->
+				resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberrypi'
+				.then ->
 					promise = resin.models.application.getAll()
 					m.chai.expect(promise).to.eventually.have.length(1)
 
 	describe 'given a single application', ->
 
 		beforeEach ->
-			resin.models.application.create('FooBar', 'raspberry-pi').then (application) =>
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			.then (application) =>
 				@application = application
 
 		describe 'resin.models.application.hasAny()', ->
@@ -83,7 +126,10 @@ describe 'Application Model', ->
 		describe 'resin.models.application.create()', ->
 
 			it 'should reject if trying to create an app with the same name', ->
-				promise = resin.models.application.create('FooBar', 'beaglebone-black')
+				promise = resin.models.application.create
+					name: 'FooBar'
+					applicationType: 'microservices-starter'
+					deviceType: 'beaglebone-black'
 				m.chai.expect(promise).to.be.rejectedWith('Application name must be unique')
 
 		describe 'resin.models.application.hasAny()', ->
@@ -100,7 +146,7 @@ describe 'Application Model', ->
 
 			it 'should not find the created application with a different username', ->
 				promise = resin.models.application.getAppByOwner('FooBar', 'test_username')
-				m.chai.expect(promise).to.be.rejected
+				m.chai.expect(promise).to.eventually.be.rejectedWith('Application not found: test_username/foobar')
 
 		describe 'resin.models.application.getAll()', ->
 
@@ -113,7 +159,7 @@ describe 'Application Model', ->
 					m.chai.expect(applications[0].id).to.equal(@application.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.application.getAll(expand: 'user')
+				resin.models.application.getAll($expand: 'user')
 				.then (applications) ->
 					m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
 
@@ -136,19 +182,9 @@ describe 'Application Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.application.get(@application.id, expand: 'user')
+				resin.models.application.get(@application.id, $expand: 'user')
 				.then (application) ->
 					m.chai.expect(application.user[0].username).to.equal(credentials.username)
-
-		describe 'resin.models.application.getById()', ->
-
-			it 'should be able to get an application', ->
-				promise = resin.models.application.getById(@application.id)
-				m.chai.expect(promise).to.become(@application)
-
-			it 'should be rejected if the application does not exist', ->
-				promise = resin.models.application.getById(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 		describe 'resin.models.application.has()', ->
 
@@ -255,39 +291,6 @@ describe 'Application Model', ->
 			describe 'resin.models.application.tags.remove()', ->
 				itShouldRemoveTags(tagTestOptions)
 
-	describe 'when toggling device URLs', ->
-		beforeEach ->
-			resin.models.application.create('DeviceUrlsTestApp', 'raspberry-pi').then (application) =>
-				@application = application
-				resin.models.device.register(@application.id, resin.models.device.generateUniqueKey())
-			.then (deviceInfo) =>
-				@deviceInfo = deviceInfo
-
-		describe 'resin.models.application.enableDeviceUrls()', ->
-
-			it 'should enable the device url for the applications devices', ->
-				promise = resin.models.application.enableDeviceUrls(@application.id)
-				.then =>
-					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
-
-				m.chai.expect(promise).to.eventually.be.true
-
-		describe 'resin.models.application.disableDeviceUrls()', ->
-
-			it 'should disable the device url for the applications devices', ->
-				promise = resin.models.device.enableDeviceUrl(@deviceInfo.uuid)
-				.then =>
-					resin.models.application.disableDeviceUrls(@application.id)
-				.then =>
-					resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
-
-				m.chai.expect(promise).to.eventually.be.false
-
-	describe 'when changing support access', ->
-		beforeEach ->
-			resin.models.application.create('SupportAccessTestApp', 'raspberry-pi').then (application) =>
-				@application = application
-
 		describe 'resin.models.application.grantSupportAccess()', ->
 			it 'should throw an error if the expiry time stamp is in the past', ->
 				expiryTimestamp = Date.now() - 3600 * 1000
@@ -321,3 +324,115 @@ describe 'Application Model', ->
 					app.is_accessible_by_support_until__date
 
 				m.chai.expect(promise).to.eventually.equal(null)
+
+		describe 'resin.models.application.configVar', ->
+
+			configVarModel = resin.models.application.configVar
+
+			['id', 'app_name'].forEach (appParam) ->
+
+				it "can create and retrieve a variable by #{appParam}", ->
+					configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.get(@application[appParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{appParam}", ->
+					configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'emacs')
+					.then =>
+						configVarModel.get(@application[appParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{appParam}", ->
+					Promise.all [
+						configVarModel.set(@application[appParam], 'RESIN_A', 'a')
+						configVarModel.set(@application[appParam], 'RESIN_B', 'b')
+					]
+					.then =>
+						configVarModel.getAllByApplication(@application[appParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'RESIN_A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'RESIN_B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{appParam}", ->
+					configVarModel.set(@application[appParam], 'RESIN_EDITOR', 'vim')
+					.then =>
+						configVarModel.remove(@application[appParam], 'RESIN_EDITOR')
+					.then =>
+						configVarModel.get(@application[appParam], 'RESIN_EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+		describe 'resin.models.application.envVar', ->
+
+			envVarModel = resin.models.application.envVar
+
+			['id', 'app_name'].forEach (appParam) ->
+
+				it "can create and retrieve a variable by #{appParam}", ->
+					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.get(@application[appParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('vim')
+
+				it "can create, update and retrieve a variable by #{appParam}", ->
+					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.set(@application[appParam], 'EDITOR', 'emacs')
+					.then =>
+						envVarModel.get(@application[appParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal('emacs')
+
+				it "can create and then retrieve multiple variables by #{appParam}", ->
+					Promise.all [
+						envVarModel.set(@application[appParam], 'A', 'a')
+						envVarModel.set(@application[appParam], 'B', 'b')
+					]
+					.then =>
+						envVarModel.getAllByApplication(@application[appParam])
+					.then (result) ->
+						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
+						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+
+				it "can create, delete and then fail to retrieve a variable by #{appParam}", ->
+					envVarModel.set(@application[appParam], 'EDITOR', 'vim')
+					.then =>
+						envVarModel.remove(@application[appParam], 'EDITOR')
+					.then =>
+						envVarModel.get(@application[appParam], 'EDITOR')
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+		describe 'with a registered device', ->
+
+			beforeEach ->
+				resin.models.device.register(@application.id, resin.models.device.generateUniqueKey())
+				.then (deviceInfo) =>
+					@deviceInfo = deviceInfo
+
+			describe 'resin.models.application.enableDeviceUrls()', ->
+
+				it "should enable the device url for the application's devices", ->
+					promise = resin.models.application.enableDeviceUrls(@application.id)
+					.then =>
+						resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
+
+					m.chai.expect(promise).to.eventually.be.true
+
+			describe 'resin.models.application.disableDeviceUrls()', ->
+
+				it "should disable the device url for the application's devices", ->
+					promise = resin.models.device.enableDeviceUrl(@deviceInfo.uuid)
+					.then =>
+						resin.models.application.disableDeviceUrls(@application.id)
+					.then =>
+						resin.models.device.hasDeviceUrl(@deviceInfo.uuid)
+
+					m.chai.expect(promise).to.eventually.be.false
+
