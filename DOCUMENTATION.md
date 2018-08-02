@@ -4995,7 +4995,7 @@ can be used to listen for logs as they appear, line by line.
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
 | [options] | <code>Object</code> | options |
-| [options.count] | <code>Number</code> | number of historical messages to include |
+| [options.count] | <code>Number</code> | number of historical messages to include (or 'all') |
 
 **Example**  
 ```js
@@ -5037,7 +5037,7 @@ Get an array of the latest log messages for a given device.
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
 | [options] | <code>Object</code> | options |
-| [options.count] | <code>Number</code> | number of log messages to return |
+| [options.count] | <code>Number</code> | number of log messages to return (or 'all') |
 
 **Example**  
 ```js

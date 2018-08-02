@@ -483,7 +483,7 @@ declare namespace ResinSdk {
 	}
 
 	interface LogsOptions {
-		count?: number;
+		count?: number | 'all';
 	}
 
 	interface SSHKey {
