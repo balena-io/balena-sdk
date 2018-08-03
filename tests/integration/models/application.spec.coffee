@@ -264,8 +264,7 @@ describe 'Application Model', ->
 				promise = resin.models.application.generateProvisioningKey('HelloWorldApp')
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
-			# TODO: Reenable once https://github.com/resin-io/resin-api/issues/1122 is resolved
-			it.skip 'should be rejected if the application id does not exist', ->
+			it 'should be rejected if the application id does not exist', ->
 				promise = resin.models.application.generateProvisioningKey(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 

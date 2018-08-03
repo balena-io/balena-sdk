@@ -183,8 +183,7 @@ describe 'Device Model', ->
 				promise = resin.models.device.register('HelloWorldApp', uuid)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
-			# TODO: Reenable once https://github.com/resin-io/resin-api/issues/1122 is resolved
-			it.skip 'should be rejected if the application id does not exist', ->
+			it 'should be rejected if the application id does not exist', ->
 				uuid = resin.models.device.generateUniqueKey()
 				promise = resin.models.device.register(999999, uuid)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
@@ -729,8 +728,7 @@ describe 'Device Model', ->
 				promise = resin.models.device.generateDeviceKey('asdfghjkl')
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			# TODO: Reenable once https://github.com/resin-io/resin-api/issues/1122 is resolved
-			it.skip 'should be rejected if the device id does not exist', ->
+			it 'should be rejected if the device id does not exist', ->
 				promise = resin.models.device.generateDeviceKey(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
