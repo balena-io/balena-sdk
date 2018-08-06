@@ -4991,11 +4991,11 @@ can be used to listen for logs as they appear, line by line.
 - [ ] We should consider making this a readable stream.
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| [options] | <code>Object</code> | options |
-| [options.count] | <code>Number</code> | number of historical messages to include (or 'all') |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.count] | <code>Number</code> \| <code>&#x27;all&#x27;</code> | <code>0</code> | number of historical messages to include (or 'all') |
 
 **Example**  
 ```js
@@ -5033,11 +5033,11 @@ Get an array of the latest log messages for a given device.
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - history lines  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| [options] | <code>Object</code> | options |
-| [options.count] | <code>Number</code> | number of log messages to return (or 'all') |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.count] | <code>Number</code> \| <code>&#x27;all&#x27;</code> | <code>1000</code> | number of log messages to return (or 'all') |
 
 **Example**  
 ```js
