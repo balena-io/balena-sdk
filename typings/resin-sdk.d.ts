@@ -147,6 +147,32 @@ declare namespace ResinSdk {
 		choicesLabels?: { [key: string]: string };
 	}
 
+	interface Organization {
+		id: number;
+		created_at: string;
+		name: string;
+
+		application: ReverseNavigationResource<Application>;
+		owns__team: ReverseNavigationResource<Team>;
+		user__is_member_of__organization: ReverseNavigationResource<
+			OrganizationMember
+		>;
+	}
+
+	interface Team {
+		id: number;
+		created_at: string;
+		name: string;
+
+		belongs_to__organization: NavigationResource<Organization>;
+		is_managed_as__application_membership_role: NavigationResource<
+			ApplicationMembershipRole
+		>;
+
+		team__is_member_of__application: ReverseNavigationResource<ApplicationTeam>;
+		user__is_member_of__team: ReverseNavigationResource<TeamMember>;
+	}
+
 	interface SocialServiceAccount {
 		provider: string;
 		display_name: string;
@@ -179,14 +205,47 @@ declare namespace ResinSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
-		application: ReverseNavigationResource<Application>;
+		owns__organization: NavigationResource<Organization>;
+
+		user__is_member_of__organization: ReverseNavigationResource<Organization>;
+		user__is_member_of__team: ReverseNavigationResource<Team>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
-		>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
+	}
+
+	type OrganizationMembershipRoles = 'owner' | 'administrator' | 'member';
+
+	interface OrganizationMembershipRole {
+		id: number;
+		name: OrganizationMembershipRoles;
+	}
+
+	interface OrganizationMember {
+		id: number;
+		created_at: string;
+
+		grants__organization_membership_role: NavigationResource<
+			OrganizationMembershipRole
+		>;
+		is_member_of__organization: NavigationResource<Organization>;
+		user: NavigationResource<User>;
+	}
+
+	type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
+
+	interface ApplicationMembershipRole {
+		id: number;
+		name: ApplicationMembershipRoles;
+	}
+
+	interface TeamMember {
+		id: number;
+		created_at: string;
+
+		is_member_of__team: NavigationResource<Team>;
+		user: NavigationResource<User>;
 	}
 
 	interface ApiKey {
@@ -208,8 +267,8 @@ declare namespace ResinSdk {
 		should_track_latest_release: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
-		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
+		organization: NavigationResource<Organization>;
 
 		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
@@ -219,16 +278,18 @@ declare namespace ResinSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
-		>;
+		team__is_member_of__application: ReverseNavigationResource<ApplicationTeam>;
 	}
 
-	interface ApplicationMember {
+	interface ApplicationTeam {
 		id: number;
-		role_title: string;
+		created_at: string;
+
+		grants__application_membership_role: NavigationResource<
+			ApplicationMembershipRole
+		>;
 		is_member_of__application: NavigationResource<Application>;
-		user: NavigationResource<User>;
+		team: NavigationResource<Team>;
 	}
 
 	interface ApplicationType {
@@ -424,6 +485,7 @@ declare namespace ResinSdk {
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
+		belongs_to__organization: NavigationResource<Organization>;
 		should_be_running__release: NavigationResource<Release>;
 		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
 		is_managed_by__device: NavigationResource<Device>;
