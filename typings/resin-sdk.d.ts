@@ -179,9 +179,12 @@ declare namespace ResinSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
+		application: ReverseNavigationResource<Application>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
-		user__is_member_of__application: ReverseNavigationResource<Application>;
+		user__is_member_of__application: ReverseNavigationResource<
+			ApplicationMember
+		>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
 	}
