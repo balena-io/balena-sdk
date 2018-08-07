@@ -70,7 +70,7 @@ getLogs = (deps, opts) ->
 		.catch (e) ->
 			# Forward request setup errors
 			if not controller.signal.aborted
-				emitter.emit('error', err)
+				emitter.emit('error', e)
 
 		emitter.unsubscribe = ->
 			controller.abort()
