@@ -114,19 +114,34 @@ getApplicationModel = (deps, opts) ->
 	exports.getAll = (options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		auth.getUserId()
-		.then (userId) ->
+		Promise.props(
+			userId: auth.getUserId()
+			organizationId: auth.getPersonalOrganizationId()
+		)
+		.then ({ userId, organizationId }) ->
 			return pine.get
 				resource: 'application'
 				options:
 					mergePineOptions
 						$orderby: 'app_name asc'
 						$filter:
-							$or:
-								user: userId
-								includes__user: $any:
-									$alias: 'x'
-									$expr: x: user: userId
+							$or: [
+								organization: organizationId
+							,
+								organization: $any:
+									$alias: 'o'
+									$expr: o: user__is_member_of__organization: $any:
+										$alias: 'umo'
+										$expr: umo: user: userId
+							,
+								team__is_member_of__application: $any:
+									$alias: 'tma'
+									$expr: tma: team: $any:
+										$alias: 't'
+										$expr: t: user__is_member_of__team: $any:
+											$alias: 'umt'
+											$expr: umt: user: userId
+							]
 					, options
 
 		.map (application) ->
@@ -250,14 +265,14 @@ getApplicationModel = (deps, opts) ->
 
 
 	###*
-	# @summary Get a single application using the appname and owner's username
+	# @summary Get a single application using the appname and owner's username or organization name
 	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof resin.models.application
 	#
 	# @param {String} appName - application name
-	# @param {String} owner - The owner's username
+	# @param {String} owner - The owner's username or organization name
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -282,11 +297,13 @@ getApplicationModel = (deps, opts) ->
 							$tolower: $: 'app_name'
 							appName
 						],
-						user:
+						organization:
 							$any:
-								$alias: 'u',
+								$alias: 'o',
 								$expr: $eq: [
-									$tolower: $: 'username'
+									# the user's username always matches
+									# their personal organization name
+									$tolower: $: 'name'
 									owner
 								]
 				, options

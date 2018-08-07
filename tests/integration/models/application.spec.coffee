@@ -96,7 +96,7 @@ describe 'Application Model', ->
 				m.chai.expect(promise).to.be.rejected
 				.then (error) ->
 					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each app name that is of a user (Auth), has a Length (Type) that is greater than or equal to 4')
+					.that.contains('It is necessary that each app name that is of an organization, has a Length (Type) that is greater than or equal to 4')
 
 			it 'should be able to create an application using a device type alias', ->
 				resin.models.application.create
@@ -159,9 +159,9 @@ describe 'Application Model', ->
 					m.chai.expect(applications[0].id).to.equal(@application.id)
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.application.getAll($expand: 'user')
+				resin.models.application.getAll($expand: 'organization')
 				.then (applications) ->
-					m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+					m.chai.expect(applications[0].organization[0].name).to.equal(credentials.username)
 
 		describe 'resin.models.application.get()', ->
 
@@ -182,9 +182,9 @@ describe 'Application Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 			it 'should support arbitrary pinejs options', ->
-				resin.models.application.get(@application.id, $expand: 'user')
+				resin.models.application.get(@application.id, $expand: 'organization')
 				.then (application) ->
-					m.chai.expect(application.user[0].username).to.equal(credentials.username)
+					m.chai.expect(application.organization[0].name).to.equal(credentials.username)
 
 		describe 'resin.models.application.has()', ->
 

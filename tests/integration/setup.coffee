@@ -121,13 +121,15 @@ exports.loginPaidUser = ->
 
 exports.givenMulticontainerApplication = ->
 	beforeEach ->
-		resin.models.application.create
-			name: 'FooBar'
-			applicationType: 'microservices-starter'
-			deviceType: 'raspberry-pi'
-		.then (application) =>
+		Promise.all([
+			resin.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
+			resin.auth.getUserId()
+		])
+		.then ([application, userId]) =>
 			@application = application
-			userId = application.user.__id
 
 			Promise.all [
 				# Register web & DB services

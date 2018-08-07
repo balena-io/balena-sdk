@@ -76,6 +76,13 @@ describe 'SDK authentication', ->
 				m.chai.expect(promise).to.be.rejected
 					.and.eventually.have.property('code', 'ResinNotLoggedIn')
 
+		describe 'resin.auth.getPersonalOrganizationId()', ->
+
+			it 'should be rejected with an error', ->
+				promise = resin.auth.getPersonalOrganizationId()
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'ResinNotLoggedIn')
+
 		describe 'resin.auth.register()', ->
 
 			beforeEach ->
@@ -159,6 +166,14 @@ describe 'SDK authentication', ->
 					m.chai.expect(userId).to.be.a('number')
 					m.chai.expect(userId).to.be.greaterThan(0)
 
+		describe 'resin.auth.getPersonalOrganizationId()', ->
+
+			it 'should eventually be an organization id', ->
+				resin.auth.getPersonalOrganizationId()
+				.then (organizationId) ->
+					m.chai.expect(organizationId).to.be.a('number')
+					m.chai.expect(organizationId).to.be.greaterThan(0)
+
 	describe 'when logged in with API key', ->
 
 		givenLoggedInUserWithApiKey()
@@ -201,3 +216,11 @@ describe 'SDK authentication', ->
 				.then (userId) ->
 					m.chai.expect(userId).to.be.a('number')
 					m.chai.expect(userId).to.be.greaterThan(0)
+
+		describe 'resin.auth.getPersonalOrganizationId()', ->
+
+			it 'should eventually be an organization id', ->
+				resin.auth.getPersonalOrganizationId()
+				.then (organizationId) ->
+					m.chai.expect(organizationId).to.be.a('number')
+					m.chai.expect(organizationId).to.be.greaterThan(0)

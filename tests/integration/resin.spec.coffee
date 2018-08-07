@@ -42,15 +42,16 @@ describe 'Resin SDK', ->
 
 		givenLoggedInUser()
 
-		ignoreWhoamiCalls = (fn) ->
+		ignoreUserInfoCalls = (fn) ->
 			(arg) ->
-				if /\/user\/v1\/whoami/.test(arg.url)
+				if /\/user\/v1\/whoami/.test(arg.url) or
+				/\/v5\/user\(\d+\)\?\$select=owns__organization/.test(arg.url)
 					return arg
 				return fn(arg)
 
 		it "should update if the array is set directly (not only if it's mutated)", ->
 			interceptor = m.sinon.mock().returnsArg(0)
-			resin.interceptors = [ { request: ignoreWhoamiCalls(interceptor) } ]
+			resin.interceptors = [ { request: ignoreUserInfoCalls(interceptor) } ]
 			resin.models.application.getAll().then ->
 				m.chai.expect(interceptor.called).to.equal true,
 					'Interceptor set directly should have its request hook called'
