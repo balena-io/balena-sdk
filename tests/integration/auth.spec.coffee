@@ -42,6 +42,13 @@ describe 'SDK authentication', ->
 
 				m.chai.expect(promise).to.be.rejectedWith('Unauthorized')
 
+		describe 'resin.auth.getToken()', ->
+
+			it 'should be rejected', ->
+				promise = resin.auth.getToken()
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'ResinNotLoggedIn')
+
 		describe 'resin.auth.loginWithToken()', ->
 
 			it 'should be able to login with a session token', ->
@@ -121,6 +128,7 @@ describe 'SDK authentication', ->
 					password: credentials.register.password
 
 				m.chai.expect(promise).to.be.rejectedWith('This email is already taken')
+
 
 	describe 'when logged in with credentials', ->
 
