@@ -183,6 +183,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
         * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
         * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
+        * [.getPersonalOrganizationId()](#resin.auth.getPersonalOrganizationId) ⇒ <code>Promise</code>
         * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
         * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
         * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise</code>
@@ -987,14 +988,14 @@ resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, 
 
 ##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#resin.models.application)  
-**Summary**: Get a single application using the appname and owner's username  
+**Summary**: Get a single application using the appname and owner's username or organization name  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | appName | <code>String</code> |  | application name |
-| owner | <code>String</code> |  | The owner's username |
+| owner | <code>String</code> |  | The owner's username or organization name |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -4622,6 +4623,7 @@ resin.models.billing.downloadInvoice('0000').then(function(stream) {
     * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
     * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
     * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
+    * [.getPersonalOrganizationId()](#resin.auth.getPersonalOrganizationId) ⇒ <code>Promise</code>
     * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
     * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
     * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise</code>
@@ -4890,6 +4892,28 @@ resin.auth.getUserId().then(function(userId) {
 resin.auth.getUserId(function(error, userId) {
 	if (error) throw error;
 	console.log(userId);
+});
+```
+<a name="resin.auth.getPersonalOrganizationId"></a>
+
+#### auth.getPersonalOrganizationId() ⇒ <code>Promise</code>
+This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
+
+**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Summary**: Get current logged in user's personal organization id  
+**Access**: public  
+**Fulfil**: <code>Number</code> - user's personal organization id  
+**Example**  
+```js
+resin.auth.getPersonalOrganizationId().then(function(organizationId) {
+	console.log(organizationId);
+});
+```
+**Example**  
+```js
+resin.auth.getPersonalOrganizationId(function(error, organizationId) {
+	if (error) throw error;
+	console.log(organizationId);
 });
 ```
 <a name="resin.auth.getEmail"></a>
