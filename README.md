@@ -105,7 +105,7 @@ Make sure you don't accidentally commit this file (`.env` by default is gitignor
 Run the test suite by doing:
 
 ```sh
-$ gulp test
+$ npm test
 ```
 
 Contribute
