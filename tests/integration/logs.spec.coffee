@@ -68,7 +68,7 @@ describe 'Logs', ->
 
 		describe 'resin.logs.subscribe()', ->
 
-			it 'should load historical logs first', ->
+			it 'should not load historical logs by default', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
 					message: 'Old message',
 					timestamp: Date.now()
@@ -78,6 +78,29 @@ describe 'Logs', ->
 				}]
 				.then =>
 					resin.logs.subscribe(@uuid)
+				.then (logs) ->
+					new Promise (resolve, reject) ->
+						lines = []
+						logs.on('line', (line) -> lines.push(line))
+						logs.on('error', reject)
+
+						Promise.delay(2000)
+						.then ->
+							resolve(lines)
+					.finally(logs.unsubscribe)
+				.then (lines) ->
+					m.chai.expect(lines.length).to.equal(0)
+
+			it 'should load historical logs if requested', ->
+				sendLogMessages @uuid, @deviceApiKey, [{
+					message: 'Old message',
+					timestamp: Date.now()
+				}, {
+					message: 'Slightly newer message',
+					timestamp: Date.now()
+				}]
+				.then =>
+					resin.logs.subscribe(@uuid, { count: 100 })
 				.then (logs) ->
 					new Promise (resolve, reject) ->
 						lines = []
@@ -126,7 +149,7 @@ describe 'Logs', ->
 					timestamp: Date.now()
 				}]
 				.then =>
-					resin.logs.subscribe(@uuid)
+					resin.logs.subscribe(@uuid, { count: 100 })
 				.then (logs) =>
 					new Promise (resolve, reject) =>
 						lines = []
