@@ -621,7 +621,7 @@ declare namespace ResinSdk {
 					options?: PineOptionsFor<Application>,
 				): Promise<Application>;
 				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
-				has(name: string): Promise<boolean>;
+				has(nameOrId: string | number): Promise<boolean>;
 				hasAny(): Promise<boolean>;
 				remove(nameOrId: string | number): Promise<void>;
 				restart(nameOrId: string | number): Promise<void>;
