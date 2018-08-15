@@ -23,10 +23,10 @@ getAuth = (deps, opts) ->
 	twoFactor = require('./2fa')(deps, opts)
 	exports = {}
 
-	normalizeError = (err) ->
+	normalizeAuthError = (err) ->
 		if err.statusCode == 401
 			return new errors.ResinNotLoggedIn()
-		else if err.code == 'ResinMalformedToken' and not savedToken?
+		else if err.code == 'ResinMalformedToken'
 			return new errors.ResinNotLoggedIn()
 		else
 			return err
@@ -50,7 +50,7 @@ getAuth = (deps, opts) ->
 			.tap (body) ->
 				userDetailsCache = body
 			.catch (err) ->
-				throw normalizeError(err)
+				throw normalizeAuthError(err)
 
 	###*
 	# @summary Return current logged in username
@@ -250,7 +250,7 @@ getAuth = (deps, opts) ->
 		.then (savedToken) ->
 			return savedToken
 		.catch (err) ->
-			throw normalizeError(err)
+			throw normalizeAuthError(err)
 		.asCallback(callback)
 
 	###*
