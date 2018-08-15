@@ -100,7 +100,7 @@ describe 'Logs', ->
 					timestamp: Date.now()
 				}]
 				.then =>
-					resin.logs.subscribe(@uuid, { count: 100 })
+					resin.logs.subscribe(@uuid, { count: 'all' })
 				.then (logs) ->
 					new Promise (resolve, reject) ->
 						lines = []
