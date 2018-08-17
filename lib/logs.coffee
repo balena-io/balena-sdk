@@ -135,7 +135,7 @@ getLogs = (deps, opts) ->
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
-	# @param {Number} [options.count] - number of historical messages to include
+	# @param {Number|'all'} [options.count=0] - number of historical messages to include (or 'all')
 	# @fulfil {resin.logs.LogSubscription}
 	# @returns {Promise}
 	#
@@ -186,7 +186,7 @@ getLogs = (deps, opts) ->
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 
 	# @param {Object} [options] - options
-	# @param {Number} [options.count] - number of log messages to return
+	# @param {Number|'all'} [options.count=1000] - number of log messages to return (or 'all')
 	# @fulfil {Object[]} - history lines
 	# @returns {Promise}
 	#
