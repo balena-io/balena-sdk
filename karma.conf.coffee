@@ -8,7 +8,13 @@ module.exports = (config) ->
 	loadEnv()
 
 	karmaConfig.plugins.push(require('karma-chrome-launcher'))
-	karmaConfig.browsers = ['ChromeHeadless']
+	karmaConfig.browsers = ['ChromeHeadlessCustom']
+	karmaConfig.customLaunchers =
+		ChromeHeadlessCustom:
+			base: 'ChromeHeadless'
+			flags: [
+				'--no-sandbox'
+			]
 
 	karmaConfig.logLevel = config.LOG_INFO
 	karmaConfig.sauceLabs =
