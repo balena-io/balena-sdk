@@ -25,7 +25,7 @@ OPTIONS =
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
-		tests: 'tests/**/*.spec.coffee'
+		tests: [ 'tests/**/*.spec.ts', 'tests/**/*.spec.coffee' ]
 		browserEntry: 'resin.js'
 		browserOutput: 'resin-browser.js'
 		browserMinifiedOutput: 'resin-browser.min.js'
@@ -39,7 +39,7 @@ gulp.task 'test', ->
 		.pipe(mocha({
 			reporter: 'spec',
 			require: ['ts-node/register'],
-			compilers: 'coffee:coffee-script/register',
+			compilers: 'coffee:coffeescript/register',
 			timeout: 5 * 60 * 1000,
 			slow: 10 * 1000
 		}))

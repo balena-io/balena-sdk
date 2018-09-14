@@ -1,32 +1,27 @@
-karmaConfig = require('resin-config-karma')
+_ = require('lodash')
+getKarmaConfig = require('balena-config-karma')
 packageJSON = require('./package.json')
 { loadEnv } = require('./tests/util')
+
+getKarmaConfig.DEFAULT_WEBPACK_CONFIG.externals = fs: true
 
 BROWSER_BUNDLE = 'build/resin-browser.js'
 
 module.exports = (config) ->
 	loadEnv()
 
-	karmaConfig.plugins.push(require('karma-chrome-launcher'))
-	karmaConfig.browsers = ['ChromeHeadless']
-
-	karmaConfig.logLevel = config.LOG_INFO
-	karmaConfig.sauceLabs =
-		testName: "#{packageJSON.name} v#{packageJSON.version}"
-	karmaConfig.client =
-		captureConsole: true
-
+	karmaConfig = getKarmaConfig(packageJSON)
 	karmaConfig.plugins.push(require('karma-env-preprocessor'))
-	karmaConfig.preprocessors['**/*.spec.coffee'] = [ 'browserify', 'env' ]
-	karmaConfig.browserify.configure = (bundle) ->
-		bundle.on 'prebundle', ->
-			bundle.external(BROWSER_BUNDLE)
+	# do not pre-process the browser build
+	karmaConfig.preprocessors = _.omitBy(karmaConfig.preprocessors, (_value, key) -> _.startsWith(key, 'build/'))
+	karmaConfig.preprocessors['tests/**/*.coffee'] = [ 'webpack', 'sourcemap', 'env' ]
 	karmaConfig.client = mocha:
 		timeout: 5 * 60 * 1000
 		slow: 10 * 1000
 	karmaConfig.files = [
-		BROWSER_BUNDLE,
+		BROWSER_BUNDLE
 		'tests/**/*.spec.coffee'
+		'tests/**/*.spec.ts'
 	]
 
 	karmaConfig.browserConsoleLogOptions =
