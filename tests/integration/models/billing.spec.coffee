@@ -143,25 +143,34 @@ describe 'Billing Model', ->
 				resin.models.billing.getPlan()
 				.then (plan) ->
 					m.chai.expect(plan).to.deep.match
-						title: 'TestDev'
-						name: 'TestDev plan'
-						code: 'testdev'
-						tier: 'testdev'
+						title: 'Team member'
+						name: 'Team member plan'
+						code: 'free'
+						tier: 'free'
 						addOns: []
+						addonPlan:
+							addOns: []
+							billing:
+								charges: []
+								currency: 'USD'
+								totalCostCents: '0'
+							code: 'addons'
+							currentPeriodEndDate: ''
+							uuid: ''
 						billing:
 							currency: 'USD'
 							charges: [
 								{
 									itemType: 'plan'
-									name: 'TestDev plan'
-									code: 'testdev'
+									name: 'Team member plan'
+									code: 'free'
 									unitCostCents: '0'
 									quantity: '1'
 								}
 								{
 									itemType: 'support'
 									name: 'Standard support'
-									code: 'standard'
+									code: 'core'
 									unitCostCents: '0'
 									quantity: '1'
 								}
@@ -172,8 +181,6 @@ describe 'Billing Model', ->
 							name: 'Standard support'
 
 					m.chai.expect(plan).to.have.property('currentPeriodEndDate').that.is.a('string')
-					m.chai.expect(plan).to.have.property('id').that.is.a('string')
-					m.chai.expect(plan).to.have.property('id').that.has.length(32)
 
 		describe 'resin.models.billing.getBillingInfo()', ->
 			givenABillingAccountIt 'should return a billing info object', ->
