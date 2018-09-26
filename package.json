@@ -38,7 +38,7 @@
     "lint": "npm run prettify && npm run coffeelint && npm run tslint",
     "precommit": "lint-staged",
     "prepublish": "require-npm4-to-publish",
-    "prepack": "npm test",
+    "prepack": "npm run build",
     "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
