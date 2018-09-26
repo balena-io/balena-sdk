@@ -144,7 +144,7 @@ exports.givenMulticontainerApplication = ->
 						service_name: 'db'
 			,
 				# Register an old & new release of this application
-				balena.pine.post
+				Promise.mapSeries [
 					resource: 'release'
 					body:
 						belongs_to__application: @application.id
@@ -154,8 +154,7 @@ exports.givenMulticontainerApplication = ->
 						source: 'cloud'
 						composition: {}
 						start_timestamp: 1234
-			,
-				balena.pine.post
+				,
 					resource: 'release'
 					body:
 						belongs_to__application: @application.id
@@ -165,8 +164,9 @@ exports.givenMulticontainerApplication = ->
 						source: 'cloud'
 						composition: {}
 						start_timestamp: 54321
+				], (pineParams) -> balena.pine.post pineParams
 			]
-		.spread (webService, dbService, oldRelease, newRelease) =>
+		.spread (webService, dbService, [oldRelease, newRelease]) =>
 			@webService = webService
 			@dbService = dbService
 			@currentRelease = newRelease
