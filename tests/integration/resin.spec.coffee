@@ -1,6 +1,6 @@
 m = require('mochainon')
 
-{ resin, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
+{ resin, getSdk, sdkOpts, givenLoggedInUser } = require('./setup')
 
 describe 'Resin SDK', ->
 

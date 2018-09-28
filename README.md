@@ -76,37 +76,43 @@ If you're having any problem, please [raise an issue](https://github.com/resin-i
 Tests
 -----
 
-In order to run the Resin SDK test suite, set the following environment variables from an account that exists and doesn't have a billing account code:  
-**WARNING: This will delete all applications and public keys of the test user**
-
-- `RESINTEST_EMAIL`: The main account email
-- `RESINTEST_PASSWORD`: The main account password
-- `RESINTEST_USERNAME`: The main account username.
-
-You also have to provide the following environment variables from an account that doesn't yet exists:
-
-- `RESINTEST_REGISTER_EMAIL`: The email of the account to register.
-- `RESINTEST_REGISTER_PASSWORD`: The password of the account to register.
-- `RESINTEST_REGISTER_USERNAME`: The username of the account to register.
-
-In order to test the billing methods for a paid account, you also have to configure the following environment variables:
-
-- `RESINTEST_PAID_EMAIL`: The email of the paid account.
-- `RESINTEST_PAID_PASSWORD`: The password of the account.
-
-*Note: The paid user's `account billing code` should be set to `testdev` so that it's tested against the test plan.*
-
-You can also, optionally, set the `RESINTEST_API_URL` environment variable in order to run the tests using a different API backend (eg: `https://api.resinstaging.io`).
-
-You can persist these settings by putting them all into a `.env` file in the root of this repo, in
-[dotenv](https://www.npmjs.com/package/dotenv) format (`KEY=VALUE\n`). This will be automatically detected and used in the tests.
-Make sure you don't accidentally commit this file (`.env` by default is gitignored, so hopefully this should be difficult).
-
 Run the test suite by doing:
 
 ```sh
 $ npm test
 ```
+
+### API Url
+
+You can, optionally, set the `RESINTEST_API_URL` environment variable in order to run the tests using a different API backend (eg: `https://api.resinstaging.io`).
+
+### Billing
+
+In order to test the billing methods for a paid account, you have to configure the following environment variables:
+
+- `RESINTEST_PAID_EMAIL`: The email of the paid account.
+- `RESINTEST_PAID_PASSWORD`: The password of the account.
+
+*Note: The paid user's `account billing code` should be set to `testdev` so that it's tested against the proper plan.*
+
+### Avoiding rate limiting errors
+
+While developing you might end up in a situation that the API returns rate limiting errors.
+That's probably caused by the new user signups that each run of the test suit does.
+You can avoid those errors to some extend by specifying a pre-existing **empty** user account to run the suit against.
+In order to do so, set the following environment variables for an account that exists and doesn't have a billing account code:  
+**WARNING: This will delete all applications and public keys of the test user**
+
+- `RESINTEST_EMAIL`: The test account email
+- `RESINTEST_PASSWORD`: The test account password
+- `RESINTEST_USERNAME`: The test account username.
+
+### Persisting ENV configuration
+
+You can persist these settings by putting them all into a `.env` file in the root of this repo, in
+[dotenv](https://www.npmjs.com/package/dotenv) format (`KEY=VALUE\n`). This will be automatically detected and used in the tests.
+Make sure you don't accidentally commit this file (`.env` by default is gitignored, so hopefully this should be difficult).
+
 
 Contribute
 ----------
@@ -114,10 +120,10 @@ Contribute
 - Issue Tracker: [github.com/resin-io/resin-sdk/issues](https://github.com/resin-io/resin-sdk/issues)
 - Source Code: [github.com/resin-io/resin-sdk](https://github.com/resin-io/resin-sdk)
 
-Before submitting a PR, please make sure that you include tests, and that [coffeelint](http://www.coffeelint.org/) runs without any warning:
+Before submitting a PR, please make sure that you include tests, and that the linter runs without any warning:
 
 ```sh
-$ gulp lint
+$ npm run lint
 ```
 
 License
