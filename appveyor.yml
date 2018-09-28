@@ -17,8 +17,9 @@ environment:
     - nodejs_version: 6
       TEST_EMAIL: 'test3+juan@resin.io'
       TEST_USERNAME: 'test3_juan'
-      TEST_REGISTER_EMAIL: 'test3+register+juan@resin.io'
-      TEST_REGISTER_USERNAME: 'test3_register_juan'
+      TEST_PAID_EMAIL: 'test+paid+thodoris@resin.io'
+      TEST_PAID_PASSWORD:
+        secure: zqKu7kmQ2b53eRh4lPwKW1ht/Va/ykIuDwdkkT5cwgc=
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
