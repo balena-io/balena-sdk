@@ -15,10 +15,9 @@ matrix:
 environment:
   matrix:
     - nodejs_version: 6
-      RESINTEST_EMAIL: 'test3+juan@resin.io'
-      RESINTEST_USERNAME: 'test3_juan'
-      RESINTEST_REGISTER_EMAIL: 'test3+register+juan@resin.io'
-      RESINTEST_REGISTER_USERNAME: 'test3_register_juan'
+      RESINTEST_PAID_EMAIL: 'test+paid+thodoris@resin.io'
+      RESINTEST_PAID_PASSWORD:
+        secure: zqKu7kmQ2b53eRh4lPwKW1ht/Va/ykIuDwdkkT5cwgc=
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
