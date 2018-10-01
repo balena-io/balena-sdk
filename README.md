@@ -83,6 +83,8 @@ Run the test suite by doing:
 $ npm test
 ```
 
+*Note: Each run of the test suit will register new users with random emails on the `@resin.io` domain and delete them after the tests finish.*
+
 ### API Url
 
 You can, optionally, set the `TEST_API_URL` environment variable in order to run the tests using a different API backend (eg: `https://api.balena-staging.com`).
