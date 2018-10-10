@@ -21,7 +21,9 @@ getRequest = require('resin-request')
 ResinAuth = require('resin-auth')['default']
 getPine = require('resin-pine')
 errors = require('resin-errors')
+
 { notImplemented, globalEnv } = require('./util')
+deprecationWarnings = require('./util/deprecation-warnings')
 
 # These constants are used to create globals for sharing defualt options between
 # multiple instances of the SDK.
@@ -66,6 +68,8 @@ sdkTemplate =
 	settings: require('./settings')
 
 getSdk = (opts = {}) ->
+	deprecationWarnings.resinRenameDeprecation()
+
 	defaults opts,
 		apiUrl: 'https://api.resin.io/'
 		imageMakerUrl: 'https://img.resin.io/'
