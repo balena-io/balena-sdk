@@ -3,10 +3,10 @@ import * as _ from 'lodash';
 
 export = _.mapValues(
 	{
-		pubNubDeprecated: () =>
+		resinRenameDeprecation: () =>
 			console.error(stripIndent`
-				Warning: using legacy logging services, this will stop working shortly.
-				Please update to ensure logs are correctly retrieved in future.
+				Warning: 'resin-sdk' is now 'balena-sdk'.
+				Please update your dependencies to continue receiving new updates.
 			`),
 	},
 	_.once,
