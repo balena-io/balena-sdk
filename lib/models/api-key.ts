@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Resin.io
+Copyright 2018 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ import * as Promise from 'bluebird';
 import isString = require('lodash/isString');
 import pick = require('lodash/pick');
 import * as errors from 'resin-errors';
-import * as ResinSdk from '../../typings/resin-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '../resin';
+import * as BalenaSdk from '../../typings/balena-sdk';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { findCallback, mergePineOptions } from '../util';
 
 const getApiKeysModel = function(
@@ -35,7 +35,7 @@ const getApiKeysModel = function(
 	 * @name create
 	 * @public
 	 * @function
-	 * @memberof resin.models.apiKey
+	 * @memberof balena.models.apiKey
 	 *
 	 * @description This method registers a new api key for the current user with the name given.
 	 *
@@ -46,17 +46,17 @@ const getApiKeysModel = function(
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * resin.models.apiKey.create(apiKeyName).then(function(apiKey) {
+	 * balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
 	 * 	console.log(apiKey);
 	 * });
 	 *
 	 * @example
-	 * resin.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
+	 * balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
 	 * 	console.log(apiKey);
 	 * });
 	 *
 	 * @example
-	 * resin.models.apiKey.create(apiKeyName, function(error, apiKey) {
+	 * balena.models.apiKey.create(apiKeyName, function(error, apiKey) {
 	 * 	if (error) throw error;
 	 * 	console.log(apiKey);
 	 * });
@@ -95,30 +95,30 @@ const getApiKeysModel = function(
 	 * @name getAll
 	 * @public
 	 * @function
-	 * @memberof resin.models.apiKey
+	 * @memberof balena.models.apiKey
 	 *
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - apiKeys
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * resin.models.apiKey.getAll().then(function(apiKeys) {
+	 * balena.models.apiKey.getAll().then(function(apiKeys) {
 	 * 	console.log(apiKeys);
 	 * });
 	 *
 	 * @example
-	 * resin.models.apiKey.getAll(function(error, apiKeys) {
+	 * balena.models.apiKey.getAll(function(error, apiKeys) {
 	 * 	if (error) throw error;
 	 * 	console.log(apiKeys);
 	 * });
 	 */
 	exports.getAll = function(
-		options: ResinSdk.PineOptionsFor<ResinSdk.ApiKey> = {},
-		callback: (error?: Error, apiKeys?: ResinSdk.ApiKey[]) => void,
-	): Promise<ResinSdk.ApiKey[]> {
+		options: BalenaSdk.PineOptionsFor<BalenaSdk.ApiKey> = {},
+		callback: (error?: Error, apiKeys?: BalenaSdk.ApiKey[]) => void,
+	): Promise<BalenaSdk.ApiKey[]> {
 		callback = findCallback(arguments);
 		return pine
-			.get<ResinSdk.ApiKey>({
+			.get<BalenaSdk.ApiKey>({
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
@@ -143,23 +143,23 @@ const getApiKeysModel = function(
 	 * @name update
 	 * @public
 	 * @function
-	 * @memberof resin.models.apiKey
+	 * @memberof balena.models.apiKey
 	 *
 	 * @param {Number} id - API key id
 	 * @param {Object} apiKeyInfo - an object with the updated name or description
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * resin.models.apiKey.update(123, { name: 'updatedName' });
+	 * balena.models.apiKey.update(123, { name: 'updatedName' });
 	 *
 	 * @example
-	 * resin.models.apiKey.update(123, { description: 'updated description' });
+	 * balena.models.apiKey.update(123, { description: 'updated description' });
 	 *
 	 * @example
-	 * resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
+	 * balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
 	 *
 	 * @example
-	 * resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
+	 * balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
 	 * 	if (error) throw error;
 	 * 	console.log(apiKeys);
 	 * });
@@ -180,7 +180,7 @@ const getApiKeysModel = function(
 				);
 			}
 			return pine
-				.patch<ResinSdk.ApiKey>({
+				.patch<BalenaSdk.ApiKey>({
 					resource: 'api_key',
 					id,
 					body: pick(apiKeyInfo, ['name', 'description']),
@@ -204,16 +204,16 @@ const getApiKeysModel = function(
 	 * @name revoke
 	 * @public
 	 * @function
-	 * @memberof resin.models.apiKey
+	 * @memberof balena.models.apiKey
 	 *
 	 * @param {Number} id - API key id
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * resin.models.apiKey.revoke(123);
+	 * balena.models.apiKey.revoke(123);
 	 *
 	 * @example
-	 * resin.models.apiKey.revoke(123, function(error) {
+	 * balena.models.apiKey.revoke(123, function(error) {
 	 * 	if (error) throw error;
 	 * });
 	 */

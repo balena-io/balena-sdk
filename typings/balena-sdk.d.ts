@@ -7,7 +7,7 @@ import * as ResinPine from './resin-pine';
 import { ResinRequest } from './resin-request';
 
 /* tslint:disable:no-namespace */
-declare namespace ResinSdk {
+declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
 	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
@@ -105,7 +105,7 @@ declare namespace ResinSdk {
 			fstype?: string;
 			deployArtifact: string;
 		};
-		/** Holds the latest resinOS version */
+		/** Holds the latest balenaOS version */
 		buildId?: string;
 	}
 
@@ -560,7 +560,7 @@ declare namespace ResinSdk {
 		release: NavigationResource<Release>;
 	}
 
-	interface ResinSDK {
+	interface BalenaSDK {
 		auth: {
 			register: (
 				credentials: { email: string; password: string },
@@ -591,9 +591,9 @@ declare namespace ResinSdk {
 			getAll(): Promise<{ [key: string]: string }>;
 		};
 
-		request: ResinRequest;
+		request: BalenaRequest;
 
-		errors: typeof ResinErrors;
+		errors: typeof BalenaErrors;
 
 		models: {
 			application: {
@@ -979,14 +979,14 @@ declare namespace ResinSdk {
 			subscribe(uuid: string, options?: LogsOptions): Promise<LogsSubscription>;
 		};
 
-		pine: ResinPine.Pine;
+		pine: BalenaPine.Pine;
 		interceptors: Interceptor[];
 	}
 
 	interface SdkOptions {
 		apiUrl?: string;
 		/**
-		 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
+		 * @deprecated Use balena.auth.loginWithToken(apiKey) instead
 		 */
 		apiKey?: string;
 		imageMakerUrl?: string;
@@ -996,13 +996,13 @@ declare namespace ResinSdk {
 	}
 
 	interface SdkConstructor {
-		(options?: SdkOptions): ResinSdk.ResinSDK;
+		(options?: SdkOptions): BalenaSdk.BalenaSDK;
 
 		setSharedOptions(options: SdkOptions): void;
-		fromSharedOptions: () => ResinSdk.ResinSDK;
+		fromSharedOptions: () => BalenaSdk.BalenaSDK;
 	}
 }
 
-declare const ResinSdk: ResinSdk.SdkConstructor;
+declare const BalenaSdk: BalenaSdk.SdkConstructor;
 
-export = ResinSdk;
+export = BalenaSdk;

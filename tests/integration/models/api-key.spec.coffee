@@ -2,7 +2,7 @@ _ = require('lodash')
 m = require('mochainon')
 Promise = require('bluebird')
 
-{ resin, givenLoggedInUser } = require('../setup')
+{ balena, givenLoggedInUser } = require('../setup')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
@@ -11,18 +11,18 @@ describe 'API Key model', ->
 
 	givenLoggedInUser()
 
-	describe 'resin.models.apiKey.create()', ->
+	describe 'balena.models.apiKey.create()', ->
 
 		it 'should be able to create a new api key', ->
-			resin.models.apiKey.create('apiKey')
+			balena.models.apiKey.create('apiKey')
 			.then (key) ->
 				m.chai.expect(key).to.be.a('string')
 
 		it 'should be able to create a new api key with description', ->
-			resin.models.apiKey.create('apiKey', 'apiKeyDescription')
+			balena.models.apiKey.create('apiKey', 'apiKeyDescription')
 			.then (key) ->
 				m.chai.expect(key).to.be.a('string')
-				resin.models.apiKey.getAll()
+				balena.models.apiKey.getAll()
 			.then (apiKeys) ->
 				m.chai.expect(apiKeys).to.be.an('array')
 				m.chai.expect(apiKeys).to.have.lengthOf(1)
@@ -31,12 +31,12 @@ describe 'API Key model', ->
 					description: 'apiKeyDescription'
 				]
 
-	describe 'resin.models.apiKey.getAll()', ->
+	describe 'balena.models.apiKey.getAll()', ->
 
 		describe 'given no named api keys', ->
 
 			it 'should retrieve an empty array', ->
-				resin.models.apiKey.getAll()
+				balena.models.apiKey.getAll()
 				.then (apiKeys) ->
 					m.chai.expect(apiKeys).to.be.an('array')
 					m.chai.expect(apiKeys).to.have.lengthOf(0)
@@ -45,12 +45,12 @@ describe 'API Key model', ->
 
 			beforeEach ->
 				Promise.all([
-					resin.models.apiKey.create('apiKey1')
-					resin.models.apiKey.create('apiKey2', 'apiKey2Description')
+					balena.models.apiKey.create('apiKey1')
+					balena.models.apiKey.create('apiKey2', 'apiKey2Description')
 				])
 
 			it 'should be able to retrieve all api keys created', ->
-				resin.models.apiKey.getAll()
+				balena.models.apiKey.getAll()
 				.then (apiKeys) ->
 					m.chai.expect(apiKeys).to.be.an('array')
 					m.chai.expect(apiKeys).to.have.lengthOf(2)
@@ -68,83 +68,83 @@ describe 'API Key model', ->
 						m.chai.expect(apiKey).to.have.property('id').that.is.a('number')
 						m.chai.expect(apiKey).to.have.property('created_at').that.is.a('string')
 
-	describe 'resin.models.apiKey.update()', ->
+	describe 'balena.models.apiKey.update()', ->
 
 		describe 'given a named api key', ->
 
 			beforeEach ->
-				resin.models.apiKey.create('apiKeyToBeUpdated', 'apiKeyDescriptionToBeUpdated')
+				balena.models.apiKey.create('apiKeyToBeUpdated', 'apiKeyDescriptionToBeUpdated')
 				.then ->
-					resin.models.apiKey.getAll({ $filter: name: 'apiKeyToBeUpdated' })
+					balena.models.apiKey.getAll({ $filter: name: 'apiKeyToBeUpdated' })
 				.then ([apiKey]) =>
 					@apiKey = apiKey
 
 			it 'should be able to update the name of an api key', ->
-				resin.models.apiKey.update(@apiKey.id, { name: 'updatedApiKeyName' })
+				balena.models.apiKey.update(@apiKey.id, { name: 'updatedApiKeyName' })
 				.then =>
-					resin.models.apiKey.getAll({ $filter: id: @apiKey.id })
+					balena.models.apiKey.getAll({ $filter: id: @apiKey.id })
 				.then ([apiKey]) ->
 					m.chai.expect(apiKey).to.deep.match
 						name: 'updatedApiKeyName'
 						description: 'apiKeyDescriptionToBeUpdated'
 
 			it 'should be able to update the description of an api key to a non empty string', ->
-				resin.models.apiKey.update(@apiKey.id, { description: 'updatedApiKeyDescription' })
+				balena.models.apiKey.update(@apiKey.id, { description: 'updatedApiKeyDescription' })
 				.then =>
-					resin.models.apiKey.getAll({ $filter: id: @apiKey.id })
+					balena.models.apiKey.getAll({ $filter: id: @apiKey.id })
 				.then ([apiKey]) ->
 					m.chai.expect(apiKey).to.deep.match
 						name: 'apiKeyToBeUpdated'
 						description: 'updatedApiKeyDescription'
 
 			it 'should be able to update the description of an api key to an empty string', ->
-				resin.models.apiKey.update(@apiKey.id, { description: '' })
+				balena.models.apiKey.update(@apiKey.id, { description: '' })
 				.then =>
-					resin.models.apiKey.getAll({ $filter: id: @apiKey.id })
+					balena.models.apiKey.getAll({ $filter: id: @apiKey.id })
 				.then ([apiKey]) ->
 					m.chai.expect(apiKey).to.deep.match
 						name: 'apiKeyToBeUpdated'
 						description: ''
 
 			it 'should not be able to update the name of an api key to null', ->
-				m.chai.expect(resin.models.apiKey.update(@apiKey.id, { name: null })).to.be.rejected
+				m.chai.expect(balena.models.apiKey.update(@apiKey.id, { name: null })).to.be.rejected
 
 			it 'should not be able to update the name of an api key to an empty string', ->
-				m.chai.expect(resin.models.apiKey.update(@apiKey.id, { name: '' })).to.be.rejected
+				m.chai.expect(balena.models.apiKey.update(@apiKey.id, { name: '' })).to.be.rejected
 
 			it 'should be able to update the description of an api key to null', ->
-				resin.models.apiKey.update(@apiKey.id, { description: null })
+				balena.models.apiKey.update(@apiKey.id, { description: null })
 				.then =>
-					resin.models.apiKey.getAll({ $filter: id: @apiKey.id })
+					balena.models.apiKey.getAll({ $filter: id: @apiKey.id })
 				.then ([apiKey]) ->
 					m.chai.expect(apiKey).to.deep.match
 						name: 'apiKeyToBeUpdated'
 						description: null
 
 			it 'should be able to update the name & description of an api key', ->
-				resin.models.apiKey.update(@apiKey.id, { name: 'updatedApiKeyName', description: 'updatedApiKeyDescription' })
+				balena.models.apiKey.update(@apiKey.id, { name: 'updatedApiKeyName', description: 'updatedApiKeyDescription' })
 				.then =>
-					resin.models.apiKey.getAll({ $filter: id: @apiKey.id })
+					balena.models.apiKey.getAll({ $filter: id: @apiKey.id })
 				.then ([apiKey]) ->
 					m.chai.expect(apiKey).to.deep.match
 						name: 'updatedApiKeyName'
 						description: 'updatedApiKeyDescription'
 
-	describe 'resin.models.apiKey.revoke()', ->
+	describe 'balena.models.apiKey.revoke()', ->
 
 		describe 'given a named api key', ->
 
 			beforeEach ->
-				resin.models.apiKey.create('apiKeyToBeRevoked')
+				balena.models.apiKey.create('apiKeyToBeRevoked')
 				.then ->
-					resin.models.apiKey.getAll({ $filter: name: 'apiKeyToBeRevoked' })
+					balena.models.apiKey.getAll({ $filter: name: 'apiKeyToBeRevoked' })
 				.then ([apiKey]) =>
 					@apiKey = apiKey
 
 			it 'should be able to revoke an exising api key', ->
-				m.chai.expect(resin.models.apiKey.revoke(@apiKey.id)).to.not.be.rejected
+				m.chai.expect(balena.models.apiKey.revoke(@apiKey.id)).to.not.be.rejected
 				.then ->
-					resin.models.apiKey.getAll()
+					balena.models.apiKey.getAll()
 				.then (apiKeys) ->
 					m.chai.expect(apiKeys).to.be.an('array')
 					m.chai.expect(apiKeys).to.have.lengthOf(0)

@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -81,11 +81,11 @@ getLogs = (deps, opts) ->
 	###*
 	# @typedef LogSubscription
 	# @type {EventEmitter}
-	# @memberof resin.logs
+	# @memberof balena.logs
 	#
 	# @description
 	# The log subscription emits events as log data arrives.
-	# You can get a LogSubscription for a given device by calling `resin.logs.subscribe(deviceId)`
+	# You can get a LogSubscription for a given device by calling `balena.logs.subscribe(deviceId)`
 	###
 
 	###*
@@ -93,7 +93,7 @@ getLogs = (deps, opts) ->
 	# @name unsubscribe
 	# @function
 	# @public
-	# @memberof resin.logs.LogSubscription
+	# @memberof balena.logs.LogSubscription
 	#
 	# @description
 	# Disconnect from the logs feed and stop receiving any future events on this emitter.
@@ -105,7 +105,7 @@ getLogs = (deps, opts) ->
 	###*
 	# @summary Event fired when a new line of log output is available
 	# @event line
-	# @memberof resin.logs.LogSubscription
+	# @memberof balena.logs.LogSubscription
 	# @example
 	# logs.on('line', function(line) {
 	# 	console.log(line);
@@ -115,7 +115,7 @@ getLogs = (deps, opts) ->
 	###*
 	# @summary Event fired when an error has occured reading the device logs
 	# @event error
-	# @memberof resin.logs.LogSubscription
+	# @memberof balena.logs.LogSubscription
 	# @example
 	# logs.on('error', function(error) {
 	# 	console.error(error);
@@ -127,7 +127,7 @@ getLogs = (deps, opts) ->
 	# @name subscribe
 	# @function
 	# @public
-	# @memberof resin.logs
+	# @memberof balena.logs
 	#
 	# @description
 	# Connects to the stream of devices logs, returning a LogSubscription, which
@@ -136,28 +136,28 @@ getLogs = (deps, opts) ->
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
 	# @param {Number|'all'} [options.count=0] - number of historical messages to include (or 'all')
-	# @fulfil {resin.logs.LogSubscription}
+	# @fulfil {balena.logs.LogSubscription}
 	# @returns {Promise}
 	#
 	# @todo
 	# We should consider making this a readable stream.
 	#
 	# @example
-	# resin.logs.subscribe('7cf02a6').then(function(logs) {
+	# balena.logs.subscribe('7cf02a6').then(function(logs) {
 	# 	logs.on('line', function(line) {
 	# 		console.log(line);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.logs.subscribe(123).then(function(logs) {
+	# balena.logs.subscribe(123).then(function(logs) {
 	# 	logs.on('line', function(line) {
 	# 		console.log(line);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.logs.subscribe('7cf02a6', function(error, logs) {
+	# balena.logs.subscribe('7cf02a6', function(error, logs) {
 	# 	if (error) throw error;
 	#
 	# 	logs.on('line', function(line) {
@@ -178,7 +178,7 @@ getLogs = (deps, opts) ->
 	# @name history
 	# @function
 	# @public
-	# @memberof resin.logs
+	# @memberof balena.logs
 	#
 	# @description
 	# Get an array of the latest log messages for a given device.
@@ -191,21 +191,21 @@ getLogs = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.logs.history('7cf02a6').then(function(lines) {
+	# balena.logs.history('7cf02a6').then(function(lines) {
 	# 	lines.forEach(function(line) {
 	# 		console.log(line);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.logs.history(123).then(function(lines) {
+	# balena.logs.history(123).then(function(lines) {
 	# 	lines.forEach(function(line) {
 	# 		console.log(line);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
+	# balena.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
 	# 	if (error) throw error;
 	#
 	# 	lines.forEach(function(line) {

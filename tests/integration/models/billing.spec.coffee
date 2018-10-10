@@ -2,7 +2,7 @@ _ = require('lodash')
 m = require('mochainon')
 Promise = require('bluebird')
 
-{ resin, givenLoggedInUser, loginPaidUser, IS_BROWSER } = require('../setup')
+{ balena, givenLoggedInUser, loginPaidUser, IS_BROWSER } = require('../setup')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
@@ -12,18 +12,18 @@ describe 'Billing Model', ->
 	describe 'Free Account', ->
 		givenLoggedInUser()
 
-		describe 'resin.models.billing.getAccount()', ->
+		describe 'balena.models.billing.getAccount()', ->
 			it 'should not return a billing account info object', ->
-				promise = resin.models.billing.getAccount()
+				promise = balena.models.billing.getAccount()
 				m.chai.expect(promise).to.be.rejected
 				.then (error) ->
 					m.chai.expect(error).to.have.property('code', 'ResinRequestError')
 					m.chai.expect(error).to.have.property('statusCode', 404)
 					m.chai.expect(error).to.have.property('message').that.contains('Billing Account was not found.')
 
-		describe 'resin.models.billing.getPlan()', ->
+		describe 'balena.models.billing.getPlan()', ->
 			it 'should return a free tier billing plan object', ->
-				resin.models.billing.getPlan()
+				balena.models.billing.getPlan()
 				.then (plan) ->
 					m.chai.expect(plan).to.deep.match
 						title: 'Free'
@@ -54,51 +54,51 @@ describe 'Billing Model', ->
 							title: 'Community'
 							name: 'Community support'
 
-		describe 'resin.models.billing.getBillingInfo()', ->
+		describe 'balena.models.billing.getBillingInfo()', ->
 			it 'should return a free tier billing info object', ->
-				promise = resin.models.billing.getBillingInfo()
+				promise = balena.models.billing.getBillingInfo()
 				m.chai.expect(promise).to.become({})
 
-		describe 'resin.models.billing.updateBillingInfo()', ->
+		describe 'balena.models.billing.updateBillingInfo()', ->
 			it 'should throw when no parameters are provided', ->
-				promise = resin.models.billing.updateBillingInfo()
+				promise = balena.models.billing.updateBillingInfo()
 				m.chai.expect(promise).to.be.rejectedWith('Token not provided.')
 
 			it 'should throw when an token_id is not provided', ->
-				promise = resin.models.billing.updateBillingInfo({ token_id: '' })
+				promise = balena.models.billing.updateBillingInfo({ token_id: '' })
 				m.chai.expect(promise).to.be.rejectedWith('Token not provided.')
 
-		describe 'resin.models.billing.getInvoices()', ->
+		describe 'balena.models.billing.getInvoices()', ->
 			it 'should return no invoices', ->
-				promise = resin.models.billing.getInvoices()
+				promise = balena.models.billing.getInvoices()
 				m.chai.expect(promise).to.become([])
 
-		describe 'resin.models.billing.downloadInvoice()', ->
+		describe 'balena.models.billing.downloadInvoice()', ->
 			before ->
-				resin.models.billing.getInvoices()
+				balena.models.billing.getInvoices()
 				.then (invoices) =>
 					@firstInvoiceNumber = invoices[0]?.invoice_number
 				.catch ->
 
 			it 'should not be able to download any invoice', ->
 				m.chai.expect(@firstInvoiceNumber).to.be.a('undefined')
-				promise = resin.models.billing.downloadInvoice('anyinvoicenumber')
+				promise = balena.models.billing.downloadInvoice('anyinvoicenumber')
 				m.chai.expect(promise).to.be.rejected
 
 			it 'should throw when an invoice number is not provided', ->
-				promise = resin.models.billing.downloadInvoice()
+				promise = balena.models.billing.downloadInvoice()
 				m.chai.expect(promise).to.be.rejected
 
 			it 'should throw when an empty string invoice number is provided', ->
-				promise = resin.models.billing.downloadInvoice('')
+				promise = balena.models.billing.downloadInvoice('')
 				m.chai.expect(promise).to.be.rejected
 
 			it 'should throw when trying to retrieve an non-existing invoice', ->
-				promise = resin.models.billing.downloadInvoice('notfound')
+				promise = balena.models.billing.downloadInvoice('notfound')
 				m.chai.expect(promise).to.be.rejected
 
 			it 'should not return an invoice of a different user', ->
-				promise = resin.models.billing.downloadInvoice('1000')
+				promise = balena.models.billing.downloadInvoice('1000')
 				m.chai.expect(promise).to.be.rejected
 
 	describe 'Paid Account', ->
@@ -113,14 +113,14 @@ describe 'Billing Model', ->
 
 		before ->
 			loginPaidUser().then ->
-				resin.models.billing.getAccount()
+				balena.models.billing.getAccount()
 			.then (accountInfo) ->
 				hasActiveBillingAccount = accountInfo?.account_state == 'active'
 			.catch ->
 
-		describe 'resin.models.billing.getAccount()', ->
+		describe 'balena.models.billing.getAccount()', ->
 			givenABillingAccountIt 'should return a paid tier billing account info object', ->
-				promise = resin.models.billing.getAccount()
+				promise = balena.models.billing.getAccount()
 				m.chai.expect(promise).to.become({
 					account_state: 'active'
 					address:
@@ -138,9 +138,9 @@ describe 'Billing Model', ->
 					vat_number: ''
 				})
 
-		describe 'resin.models.billing.getPlan()', ->
+		describe 'balena.models.billing.getPlan()', ->
 			givenABillingAccountIt 'should return a paid tier billing plan object', ->
-				resin.models.billing.getPlan()
+				balena.models.billing.getPlan()
 				.then (plan) ->
 					m.chai.expect(plan).to.deep.match
 						title: 'Team member'
@@ -182,9 +182,9 @@ describe 'Billing Model', ->
 
 					m.chai.expect(plan).to.have.property('currentPeriodEndDate').that.is.a('string')
 
-		describe 'resin.models.billing.getBillingInfo()', ->
+		describe 'balena.models.billing.getBillingInfo()', ->
 			givenABillingAccountIt 'should return a billing info object', ->
-				resin.models.billing.getBillingInfo()
+				balena.models.billing.getBillingInfo()
 				.then (billingInfo) ->
 					m.chai.expect(billingInfo).to.not.be.null
 					# this is for local tests
@@ -212,9 +212,9 @@ describe 'Billing Model', ->
 					else
 						m.chai.expect(billingInfo).to.deep.equal({})
 
-		describe 'resin.models.billing.getInvoices()', ->
+		describe 'balena.models.billing.getInvoices()', ->
 			givenABillingAccountIt 'should return an array of invoice objects', ->
-				resin.models.billing.getInvoices()
+				balena.models.billing.getInvoices()
 				.then (invoices) ->
 					m.chai.expect(_.isArray(invoices)).to.be.true
 					m.chai.expect(invoices.length).to.not.equal(0)
@@ -231,16 +231,16 @@ describe 'Billing Model', ->
 					m.chai.expect(invoice).to.have.property('subtotal_in_cents', '0')
 					m.chai.expect(invoice).to.have.property('state', 'paid')
 
-		describe 'resin.models.billing.downloadInvoice()', ->
+		describe 'balena.models.billing.downloadInvoice()', ->
 			before ->
-				resin.models.billing.getInvoices()
+				balena.models.billing.getInvoices()
 				.then (invoices) =>
 					@firstInvoiceNumber = invoices[0]?.invoice_number
 				.catch ->
 
 			if IS_BROWSER
 				givenABillingAccountIt 'should be able to download an invoice on the browser', ->
-					resin.models.billing.downloadInvoice(@firstInvoiceNumber)
+					balena.models.billing.downloadInvoice(@firstInvoiceNumber)
 					.then (result) ->
 						m.chai.expect(result).to.be.an.instanceof(Blob)
 						m.chai.expect(result.size).to.not.equal(0)
@@ -252,7 +252,7 @@ describe 'Billing Model', ->
 				fs = Promise.promisifyAll(require('fs'))
 
 				givenABillingAccountIt 'should be able to download an invoice on node', ->
-					resin.models.billing.downloadInvoice(@firstInvoiceNumber)
+					balena.models.billing.downloadInvoice(@firstInvoiceNumber)
 					.then (stream) ->
 						m.chai.expect(stream.mime).to.equal('application/pdf')
 

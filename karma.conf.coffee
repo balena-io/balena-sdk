@@ -2,7 +2,7 @@ karmaConfig = require('resin-config-karma')
 packageJSON = require('./package.json')
 { loadEnv } = require('./tests/util')
 
-BROWSER_BUNDLE = 'build/resin-browser.js'
+BROWSER_BUNDLE = 'build/balena-browser.js'
 
 module.exports = (config) ->
 	loadEnv()

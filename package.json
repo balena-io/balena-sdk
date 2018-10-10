@@ -1,13 +1,13 @@
 {
-  "name": "resin-sdk",
+  "name": "balena-sdk",
   "version": "10.0.8",
-  "description": "The Resin.io JavaScript SDK",
-  "main": "build/resin.js",
-  "types": "typings/resin-sdk.d.ts",
-  "homepage": "https://github.com/resin-io/resin-sdk",
+  "description": "The Balena JavaScript SDK",
+  "main": "build/balena.js",
+  "types": "typings/balena-sdk.d.ts",
+  "homepage": "https://github.com/balena-io/balena-sdk",
   "repository": {
     "type": "git",
-    "url": "git://github.com/resin-io/resin-sdk.git"
+    "url": "git://github.com/balena-io/balena-sdk.git"
   },
   "files": [
     "build/",
@@ -18,6 +18,8 @@
     "sdk",
     "resin",
     "resin.io",
+    "balena",
+    "balena.io",
     "iot",
     "devices"
   ],
@@ -31,7 +33,7 @@
     "test:node": "gulp test",
     "test:browser": "karma start",
     "build": "npm run lint && npm run clean && tsc && gulp build && npm run docs",
-    "docs": "jsdoc2md \"build/**/!(resin-browser*.js)\" > DOCUMENTATION.md",
+    "docs": "jsdoc2md \"build/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "coffeelint": "coffeelint -f coffeelint.json -r \"lib\" \"tests\" \"gulpfile.coffee\"",
     "tslint": "tslint -t stylish -c tslint.json \"typings/**/*.d.ts\" \"lib/**/*.ts\"",
@@ -42,7 +44,7 @@
     "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
-  "author": "Juan Cruz Viotti <juan@resin.io>",
+  "author": "Juan Cruz Viotti <juan@balena.io>",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=6.0"

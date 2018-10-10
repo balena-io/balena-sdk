@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,19 +32,19 @@ getKeyModel = (deps, opts) ->
 	# @name getAll
 	# @public
 	# @function
-	# @memberof resin.models.key
+	# @memberof balena.models.key
 	#
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - ssh keys
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.key.getAll().then(function(keys) {
+	# balena.models.key.getAll().then(function(keys) {
 	# 	console.log(keys);
 	# });
 	#
 	# @example
-	# resin.models.key.getAll(function(error, keys) {
+	# balena.models.key.getAll(function(error, keys) {
 	# 	if (error) throw error;
 	# 	console.log(keys);
 	# });
@@ -61,19 +61,19 @@ getKeyModel = (deps, opts) ->
 	# @name get
 	# @public
 	# @function
-	# @memberof resin.models.key
+	# @memberof balena.models.key
 	#
 	# @param {(String|Number)} id - key id
 	# @fulfil {Object} - ssh key
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.key.get(51).then(function(key) {
+	# balena.models.key.get(51).then(function(key) {
 	# 	console.log(key);
 	# });
 	#
 	# @example
-	# resin.models.key.get(51, function(error, key) {
+	# balena.models.key.get(51, function(error, key) {
 	# 	if (error) throw error;
 	# 	console.log(key);
 	# });
@@ -92,16 +92,16 @@ getKeyModel = (deps, opts) ->
 	# @name remove
 	# @public
 	# @function
-	# @memberof resin.models.key
+	# @memberof balena.models.key
 	#
 	# @param {(String|Number)} id - key id
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.key.remove(51);
+	# balena.models.key.remove(51);
 	#
 	# @example
-	# resin.models.key.remove(51, function(error) {
+	# balena.models.key.remove(51, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -116,7 +116,7 @@ getKeyModel = (deps, opts) ->
 	# @name create
 	# @public
 	# @function
-	# @memberof resin.models.key
+	# @memberof balena.models.key
 	#
 	# @param {String} title - key title
 	# @param {String} key - the public ssh key
@@ -125,12 +125,12 @@ getKeyModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
+	# balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
 	# 	console.log(key);
 	# });
 	#
 	# @example
-	# resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
+	# balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 	# 	if (error) throw error;
 	# 	console.log(key);
 	# });

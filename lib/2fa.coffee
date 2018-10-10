@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,20 +25,20 @@ get2fa = (deps, opts) ->
 	# @name isEnabled
 	# @public
 	# @function
-	# @memberof resin.auth.twoFactor
+	# @memberof balena.auth.twoFactor
 	#
 	# @fulfil {Boolean} - whether 2fa is enabled
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.twoFactor.isEnabled().then(function(isEnabled) {
+	# balena.auth.twoFactor.isEnabled().then(function(isEnabled) {
 	# 	if (isEnabled) {
 	# 		console.log('2FA is enabled for this account');
 	# 	}
 	# });
 	#
 	# @example
-	# resin.auth.twoFactor.isEnabled(function(error, isEnabled) {
+	# balena.auth.twoFactor.isEnabled(function(error, isEnabled) {
 	# 	if (error) throw error;
 	#
 	# 	if (isEnabled) {
@@ -56,20 +56,20 @@ get2fa = (deps, opts) ->
 	# @name isPassed
 	# @public
 	# @function
-	# @memberof resin.auth.twoFactor
+	# @memberof balena.auth.twoFactor
 	#
 	# @fulfil {Boolean} - whether 2fa challenge was passed
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.twoFactor.isPassed().then(function(isPassed) {
+	# balena.auth.twoFactor.isPassed().then(function(isPassed) {
 	# 	if (isPassed) {
 	# 		console.log('2FA challenge passed');
 	# 	}
 	# });
 	#
 	# @example
-	# resin.auth.twoFactor.isPassed(function(error, isPassed) {
+	# balena.auth.twoFactor.isPassed(function(error, isPassed) {
 	# 	if (error) throw error;
 	#
 	# 	if (isPassed) {
@@ -87,16 +87,16 @@ get2fa = (deps, opts) ->
 	# @name challenge
 	# @public
 	# @function
-	# @memberof resin.auth.twoFactor
+	# @memberof balena.auth.twoFactor
 	#
 	# @param {String} code - code
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.twoFactor.challenge('1234');
+	# balena.auth.twoFactor.challenge('1234');
 	#
 	# @example
-	# resin.auth.twoFactor.challenge('1234', function(error) {
+	# balena.auth.twoFactor.challenge('1234', function(error) {
 	# 	if (error) throw error;
 	# });
 	###

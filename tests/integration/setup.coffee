@@ -8,12 +8,12 @@ exports.IS_BROWSER = IS_BROWSER = window?
 
 if IS_BROWSER
 	require('js-polyfills/es6')
-	getSdk = window.resinSdk
+	getSdk = window.balenaSdk
 	env = window.__env__
 
 	opts =
-		apiUrl: env.RESINTEST_API_URL || 'https://api.resin.io'
-		imageMakerUrl: 'https://img.resin.io'
+		apiUrl: env.RESINTEST_API_URL || 'https://api.balena.io'
+		imageMakerUrl: 'https://img.balena.io'
 
 else
 	getSdk = require('../..')
@@ -61,20 +61,20 @@ buildCredentials = ->
 exports.getSdk = getSdk
 
 exports.sdkOpts = opts
-exports.resin = resin = getSdk(opts)
+exports.balena = balena = getSdk(opts)
 
 exports.resetUser = ->
-	return resin.auth.isLoggedIn().then (isLoggedIn) ->
+	return balena.auth.isLoggedIn().then (isLoggedIn) ->
 		return if not isLoggedIn
 
 		Promise.all [
-			resin.pine.delete
+			balena.pine.delete
 				resource: 'application'
 
-			resin.pine.delete
+			balena.pine.delete
 				resource: 'user__has__public_key'
 
-			resin.pine.delete
+			balena.pine.delete
 				resource: 'api_key'
 				# only delete named user api keys
 				options: $filter: name: $ne: null
@@ -86,19 +86,19 @@ exports.credentials = buildCredentials()
 
 exports.givenLoggedInUserWithApiKey = ->
 	beforeEach ->
-		resin.auth.login
+		balena.auth.login
 			email: exports.credentials.email
 			password: exports.credentials.password
 		.then ->
-			return resin.request.send
+			return balena.request.send
 				method: 'POST'
 				url: '/api-key/user/full'
 				baseUrl: opts.apiUrl
 				body:
 					name: 'apiKey'
 		.get('body')
-		.tap(resin.auth.logout)
-		.then(resin.auth.loginWithToken)
+		.tap(balena.auth.logout)
+		.then(balena.auth.loginWithToken)
 		.then(exports.resetUser)
 
 	afterEach ->
@@ -106,7 +106,7 @@ exports.givenLoggedInUserWithApiKey = ->
 
 exports.givenLoggedInUser = ->
 	beforeEach ->
-		resin.auth.login
+		balena.auth.login
 			email: exports.credentials.email
 			password: exports.credentials.password
 		.then(exports.resetUser)
@@ -115,13 +115,13 @@ exports.givenLoggedInUser = ->
 		exports.resetUser()
 
 exports.loginPaidUser = ->
-	resin.auth.login
+	balena.auth.login
 		email: exports.credentials.paid.email
 		password: exports.credentials.paid.password
 
 exports.givenMulticontainerApplication = ->
 	beforeEach ->
-		resin.models.application.create
+		balena.models.application.create
 			name: 'FooBar'
 			applicationType: 'microservices-starter'
 			deviceType: 'raspberry-pi'
@@ -131,20 +131,20 @@ exports.givenMulticontainerApplication = ->
 
 			Promise.all [
 				# Register web & DB services
-				resin.pine.post
+				balena.pine.post
 					resource: 'service'
 					body:
 						application: @application.id
 						service_name: 'web'
 			,
-				resin.pine.post
+				balena.pine.post
 					resource: 'service'
 					body:
 						application: @application.id
 						service_name: 'db'
 			,
 				# Register an old & new release of this application
-				resin.pine.post
+				balena.pine.post
 					resource: 'release'
 					body:
 						belongs_to__application: @application.id
@@ -155,7 +155,7 @@ exports.givenMulticontainerApplication = ->
 						composition: {}
 						start_timestamp: 1234
 			,
-				resin.pine.post
+				balena.pine.post
 					resource: 'release'
 					body:
 						belongs_to__application: @application.id
@@ -171,13 +171,13 @@ exports.givenMulticontainerApplication = ->
 			@dbService = dbService
 			@currentRelease = newRelease
 
-			uuid = resin.models.device.generateUniqueKey()
+			uuid = balena.models.device.generateUniqueKey()
 
 			Promise.all [
 				# Register the device itself, running the new release
-				resin.models.device.register(@application.app_name, uuid)
+				balena.models.device.register(@application.app_name, uuid)
 				.tap (deviceInfo) ->
-					resin.pine.patch
+					balena.pine.patch
 						resource: 'device'
 						body:
 							is_on__commit: newRelease.commit
@@ -185,13 +185,13 @@ exports.givenMulticontainerApplication = ->
 							$filter:
 								uuid: deviceInfo.uuid
 				.then (deviceInfo) ->
-					resin.models.device.get(deviceInfo.uuid)
+					balena.models.device.get(deviceInfo.uuid)
 				.tap (device) =>
 					@device = device
 			,
 				# Register an old & new web image build from the old and new
 				# releases, a db build in the new release only
-				resin.pine.post
+				balena.pine.post
 					resource: 'image'
 					body:
 						is_a_build_of__service: webService.id
@@ -202,7 +202,7 @@ exports.givenMulticontainerApplication = ->
 						push_timestamp: 1234
 						status: 'success'
 			,
-				resin.pine.post
+				balena.pine.post
 					resource: 'image'
 					body:
 						is_a_build_of__service: webService.id
@@ -213,7 +213,7 @@ exports.givenMulticontainerApplication = ->
 						push_timestamp: 54321
 						status: 'success'
 			,
-				resin.pine.post
+				balena.pine.post
 					resource: 'image'
 					body:
 						is_a_build_of__service: dbService.id
@@ -224,7 +224,7 @@ exports.givenMulticontainerApplication = ->
 						push_timestamp: 123
 						status: 'success'
 			,
-				resin.pine.post
+				balena.pine.post
 					resource: 'image'
 					body:
 						is_a_build_of__service: dbService.id
@@ -243,32 +243,32 @@ exports.givenMulticontainerApplication = ->
 
 				Promise.all [
 					# Tie the images to their corresponding releases
-					resin.pine.post
+					balena.pine.post
 						resource: 'image__is_part_of__release'
 						body:
 							image: oldWebImage.id
 							is_part_of__release: oldRelease.id
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'image__is_part_of__release'
 						body:
 							image: oldDbImage.id
 							is_part_of__release: oldRelease.id
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'image__is_part_of__release'
 						body:
 							image: newWebImage.id
 							is_part_of__release: newRelease.id
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'image__is_part_of__release'
 						body:
 							image: newDbImage.id
 							is_part_of__release: newRelease.id
 				,
 					# Create image installs for the images on the device
-					resin.pine.post
+					balena.pine.post
 						resource: 'image_install'
 						body:
 							installs__image: oldWebImage.id
@@ -278,7 +278,7 @@ exports.givenMulticontainerApplication = ->
 							status: 'running'
 							install_date: '2017-10-01'
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'image_install'
 						body:
 							installs__image: newWebImage.id
@@ -288,7 +288,7 @@ exports.givenMulticontainerApplication = ->
 							status: 'downloading'
 							install_date: '2017-10-30'
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'image_install'
 						body:
 							installs__image: oldDbImage.id
@@ -298,7 +298,7 @@ exports.givenMulticontainerApplication = ->
 							status: 'Deleted',
 							install_date: '2017-09-30'
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'image_install'
 						body:
 							installs__image: newDbImage.id
@@ -309,13 +309,13 @@ exports.givenMulticontainerApplication = ->
 							install_date: '2017-10-30'
 				,
 					# Create service installs for the services running on the device
-					resin.pine.post
+					balena.pine.post
 						resource: 'service_install'
 						body:
 							installs__service: webService.id
 							device: device.id
 				,
-					resin.pine.post
+					balena.pine.post
 						resource: 'service_install'
 						body:
 							installs__service: dbService.id
