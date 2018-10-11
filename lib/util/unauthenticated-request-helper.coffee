@@ -1,32 +1,26 @@
 assign = require('lodash/assign')
 promiseMemoize = require('promise-memoize')
 
-IMG_MAKER_API_VERSION = '1'
-IMG_MAKER_API_PREFIX = "/api/v#{IMG_MAKER_API_VERSION}"
-
 DEFAULT_RESULTS_CACHING_INTERVAL = 10 * 60 * 1000 # 10 minutes
 
-getImgMakerHelper = (imageMakerUrl, request) ->
+getUnauthenticatedRequestHelper = (baseUrl, request) ->
 	exports = {}
 
-	buildOptions = (options) ->
-		{ url } = options
-		url = "#{IMG_MAKER_API_PREFIX}#{url}"
-
+	exports.buildOptions = (options) ->
 		return assign(
 			{ method: 'GET' },
 			options,
-			{ url, baseUrl: imageMakerUrl, sendToken: false }
+			{ baseUrl, sendToken: false }
 		)
 
 	exports.request = sendRequest = (options) ->
-		request.send(buildOptions(options))
+		request.send(exports.buildOptions(options))
 
 	exports.stream = (options) ->
-		request.stream(buildOptions(options))
+		request.stream(exports.buildOptions(options))
 
 	# NB: for the sake of memoization currently only works with GET requests
-	exports.buildApiRequester = ({
+	exports.buildMemoizedApiRequester = ({
 		buildUrl,
 		postProcess = (x) -> x,
 		onError = (x) -> throw x,
@@ -54,4 +48,4 @@ getImgMakerHelper = (imageMakerUrl, request) ->
 
 	return exports
 
-module.exports = getImgMakerHelper
+module.exports = getUnauthenticatedRequestHelper

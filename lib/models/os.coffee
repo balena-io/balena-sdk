@@ -23,7 +23,17 @@ _ = require('lodash')
 
 errors = require('resin-errors')
 
-{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare, isDevelopmentVersion } = require('../util')
+{
+	onlyIf
+	getImgMakerHelper
+	getUnauthenticatedRequestHelper
+	findCallback
+	notFoundResponse
+	treatAsMissingApplication
+	deviceTypes: deviceTypesUtil
+	osVersionRCompare
+	isDevelopmentVersion
+} = require('../util')
 
 RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
@@ -31,6 +41,7 @@ getOsModel = (deps, opts) ->
 	{ request } = deps
 	{ apiUrl, isBrowser, imageMakerUrl } = opts
 
+	unauthenticatedRequestHelper = getUnauthenticatedRequestHelper(apiUrl, request)
 	imgMakerHelper = getImgMakerHelper(imageMakerUrl, request)
 
 	configModel = once -> require('./config')(deps, opts)
@@ -44,12 +55,12 @@ getOsModel = (deps, opts) ->
 		.then (types) ->
 			!!deviceTypesUtil.findBySlug(types, deviceType)
 
-	getDownloadSize = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType, version }) -> "/size_estimate?deviceType=#{deviceType}&version=#{version}"
+	getDownloadSize = unauthenticatedRequestHelper.buildMemoizedApiRequester
+		buildUrl: ({ deviceType, version }) -> "/download-size?deviceType=#{deviceType}&version=#{version}"
 		postProcess: ({ body }) -> body.size
 
-	getOsVersions = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
+	getOsVersions = unauthenticatedRequestHelper.buildMemoizedApiRequester
+		buildUrl: ({ deviceType }) -> "/images/v1/#{deviceType}/versions"
 		postProcess: ({ body: { versions, latest } }) ->
 
 			versions.sort(osVersionRCompare)
