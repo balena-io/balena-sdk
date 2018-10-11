@@ -193,7 +193,7 @@ describe 'ImgMakerHelper', ->
 		@imgMakerHelper = getImgMakerHelper(ROOT_URL, @requestStub)
 
 	it 'should build API requesters', =>
-		requester = @imgMakerHelper.buildApiRequester
+		requester = @imgMakerHelper.buildMemoizedApiRequester
 			buildUrl: ({ deviceType, version }) ->
 				"/endpoint?d=#{deviceType}&v=#{version}"
 
@@ -205,7 +205,7 @@ describe 'ImgMakerHelper', ->
 			url: '/api/v1/endpoint?d=raspberrypi3&v=1.24.0'
 
 	it 'should cache reponses', =>
-		requester = @imgMakerHelper.buildApiRequester
+		requester = @imgMakerHelper.buildMemoizedApiRequester
 			buildUrl: ({ deviceType, version }) ->
 				"/endpoint?d=#{deviceType}&v=#{version}"
 
