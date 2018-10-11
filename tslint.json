@@ -25,6 +25,7 @@
     "no-angle-bracket-type-assertion": false,
     "no-console": [false],
     "no-empty-interface": false,
+    "no-namespace": [true, "allow-declarations"],
     "no-string-literal": false,
     "object-literal-key-quotes": [true, "as-needed"],
     "interface-name": [false],
