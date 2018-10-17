@@ -26,6 +26,21 @@ getConfigModel = (deps, opts) ->
 
 	exports = {}
 
+	normalizeDeviceTypes = (deviceTypes) ->
+		# Patch device types to be marked as ALPHA and BETA instead
+		# of PREVIEW and EXPERIMENTAL, respectively.
+		# This logic is literally copy and pasted from Resin UI, but
+		# there are plans to move this to `resin-device-types` so it
+		# should be a matter of time for this to be removed.
+		return map deviceTypes, (deviceType) ->
+			if deviceType.state is 'PREVIEW'
+				deviceType.state = 'ALPHA'
+				deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
+			if deviceType.state is 'EXPERIMENTAL'
+				deviceType.state = 'BETA'
+				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)')
+			return deviceType
+
 	###*
 	# @summary Get all configuration
 	# @name getAll
@@ -55,21 +70,7 @@ getConfigModel = (deps, opts) ->
 			sendToken: false
 		.get('body')
 		.then (body) ->
-
-			# Patch device types to be marked as ALPHA and BETA instead
-			# of PREVIEW and EXPERIMENTAL, respectively.
-			# This logic is literally copy and pasted from Resin UI, but
-			# there are plans to move this to `resin-device-types` so it
-			# should be a matter of time for this to be removed.
-			body.deviceTypes = map body.deviceTypes, (deviceType) ->
-				if deviceType.state is 'PREVIEW'
-					deviceType.state = 'ALPHA'
-					deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
-				if deviceType.state is 'EXPERIMENTAL'
-					deviceType.state = 'BETA'
-					deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)')
-				return deviceType
-
+			body.deviceTypes = normalizeDeviceTypes(body.deviceTypes)
 			return body
 		.asCallback(callback)
 
@@ -95,9 +96,16 @@ getConfigModel = (deps, opts) ->
 	# })
 	###
 	exports.getDeviceTypes = (callback) ->
-		exports.getAll().get('deviceTypes').tap (deviceTypes) ->
+		request.send
+			method: 'GET'
+			url: '/device-types/v1'
+			baseUrl: apiUrl
+			sendToken: false
+		.get('body')
+		.tap (deviceTypes) ->
 			if not deviceTypes?
 				throw new Error('No device types')
+		.then normalizeDeviceTypes
 		.asCallback(callback)
 
 	###*
