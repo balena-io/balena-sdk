@@ -74,9 +74,9 @@ getSdk = (opts = {}) ->
 		apiUrl: 'https://api.resin.io/'
 		imageMakerUrl: 'https://img.resin.io/'
 		isBrowser: window?
-
-	# You cannot externally set the API version (as SDK implementation depends on it)
-	opts.apiVersion = 'v4'
+		# API version is configurable but only do so if you know what you're doing,
+		# as the SDK is directly tied to a specific version.
+		apiVersion: 'v4'
 
 	if opts.isBrowser
 		settings =
