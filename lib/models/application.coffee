@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 filter = require('lodash/filter')
 size = require('lodash/size')
-errors = require('resin-errors')
+errors = require('balena-errors')
 
 {
 	isId,
@@ -52,7 +52,7 @@ getApplicationModel = (deps, opts) ->
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'application',
 		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinApplicationNotFound
+		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 
 	configVarModel = buildDependentResource { pine }, {
@@ -60,14 +60,14 @@ getApplicationModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'application',
 		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinApplicationNotFound
+		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 	envVarModel = buildDependentResource { pine }, {
 		resourceName: 'application_environment_variable'
 		resourceKeyField: 'name'
 		parentResourceName: 'application',
 		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinApplicationNotFound
+		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 
 	exports = {}
@@ -94,19 +94,19 @@ getApplicationModel = (deps, opts) ->
 	# @name getAll
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - applications
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getAll().then(function(applications) {
+	# balena.models.application.getAll().then(function(applications) {
 	# 	console.log(applications);
 	# });
 	#
 	# @example
-	# resin.models.application.getAll(function(error, applications) {
+	# balena.models.application.getAll(function(error, applications) {
 	# 	if (error) throw error;
 	# 	console.log(applications);
 	# });
@@ -134,7 +134,7 @@ getApplicationModel = (deps, opts) ->
 	# @name get
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -142,17 +142,17 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.get('MyApp').then(function(application) {
+	# balena.models.application.get('MyApp').then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.get(123).then(function(application) {
+	# balena.models.application.get(123).then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.get('MyApp', function(error, application) {
+	# balena.models.application.get('MyApp', function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
@@ -162,7 +162,7 @@ getApplicationModel = (deps, opts) ->
 
 		Promise.try ->
 			if not nameOrId?
-				throw new errors.ResinApplicationNotFound(nameOrId)
+				throw new errors.BalenaApplicationNotFound(nameOrId)
 
 			if isId(nameOrId)
 				pine.get
@@ -171,7 +171,7 @@ getApplicationModel = (deps, opts) ->
 					options: mergePineOptions({}, options)
 				.tap (application) ->
 					if not application?
-						throw new errors.ResinApplicationNotFound(nameOrId)
+						throw new errors.BalenaApplicationNotFound(nameOrId)
 			else
 				pine.get
 					resource: 'application'
@@ -182,10 +182,10 @@ getApplicationModel = (deps, opts) ->
 						, options
 				.tap (applications) ->
 					if isEmpty(applications)
-						throw new errors.ResinApplicationNotFound(nameOrId)
+						throw new errors.BalenaApplicationNotFound(nameOrId)
 
 					if size(applications) > 1
-						throw new errors.ResinAmbiguousApplication(nameOrId)
+						throw new errors.BalenaAmbiguousApplication(nameOrId)
 				.get(0)
 		.tap(normalizeApplication)
 		.asCallback(callback)
@@ -196,7 +196,7 @@ getApplicationModel = (deps, opts) ->
 	# @name getWithDeviceServiceDetails
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @description
 	# This method does not map exactly to the underlying model: it runs a
@@ -210,17 +210,17 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+	# balena.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
 	# 	console.log(device);
 	# })
 	#
 	# @example
-	# resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+	# balena.models.application.getWithDeviceServiceDetails(123).then(function(device) {
 	# 	console.log(device);
 	# })
 	#
 	# @example
-	# resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+	# balena.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
 	# 	if (error) throw error;
 	# 	console.log(device);
 	# });
@@ -248,7 +248,7 @@ getApplicationModel = (deps, opts) ->
 	# @name getAppByOwner
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String} appName - application name
 	# @param {String} owner - The owner's username
@@ -257,7 +257,7 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
+	# balena.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	# 	console.log(application);
 	# });
 	###
@@ -286,9 +286,9 @@ getApplicationModel = (deps, opts) ->
 				, options
 		.tap (applications) ->
 			if isEmpty(applications)
-				throw new errors.ResinApplicationNotFound("#{owner}/#{appName}")
+				throw new errors.BalenaApplicationNotFound("#{owner}/#{appName}")
 			if size(applications) > 1
-				throw new errors.ResinAmbiguousApplication("#{owner}/#{appName}")
+				throw new errors.BalenaAmbiguousApplication("#{owner}/#{appName}")
 		.get(0)
 		.tap(normalizeApplication)
 		.asCallback(callback)
@@ -298,31 +298,31 @@ getApplicationModel = (deps, opts) ->
 	# @name has
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Boolean} - has application
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.has('MyApp').then(function(hasApp) {
+	# balena.models.application.has('MyApp').then(function(hasApp) {
 	# 	console.log(hasApp);
 	# });
 	#
 	# @example
-	# resin.models.application.has(123).then(function(hasApp) {
+	# balena.models.application.has(123).then(function(hasApp) {
 	# 	console.log(hasApp);
 	# });
 	#
 	# @example
-	# resin.models.application.has('MyApp', function(error, hasApp) {
+	# balena.models.application.has('MyApp', function(error, hasApp) {
 	# 	if (error) throw error;
 	# 	console.log(hasApp);
 	# });
 	###
 	exports.has = (nameOrId, callback) ->
 		exports.get(nameOrId, $select: ['id']).return(true)
-		.catch errors.ResinApplicationNotFound, ->
+		.catch errors.BalenaApplicationNotFound, ->
 			return false
 		.asCallback(callback)
 
@@ -331,18 +331,18 @@ getApplicationModel = (deps, opts) ->
 	# @name hasAny
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @fulfil {Boolean} - has any applications
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.hasAny().then(function(hasAny) {
+	# balena.models.application.hasAny().then(function(hasAny) {
 	# 	console.log('Has any?', hasAny);
 	# });
 	#
 	# @example
-	# resin.models.application.hasAny(function(error, hasAny) {
+	# balena.models.application.hasAny(function(error, hasAny) {
 	# 	if (error) throw error;
 	# 	console.log('Has any?', hasAny);
 	# });
@@ -357,7 +357,7 @@ getApplicationModel = (deps, opts) ->
 	# @name create
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {Object} options - application creation parameters
 	# @param {String} options.name - application name
@@ -369,17 +369,17 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
+	# balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
+	# balena.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	# 	console.log(application);
 	# });
 	#
 	# @example
-	# resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
+	# balena.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	# 	if (error) throw error;
 	# 	console.log(application);
 	# });
@@ -410,7 +410,7 @@ getApplicationModel = (deps, opts) ->
 		deviceManifestPromise = deviceModel().getManifestBySlug(deviceType)
 		.tap (deviceManifest) ->
 			if not deviceManifest?
-				throw new errors.ResinInvalidDeviceType(deviceType)
+				throw new errors.BalenaInvalidDeviceType(deviceType)
 
 		return Promise.props([
 			deviceManifestPromise
@@ -423,7 +423,7 @@ getApplicationModel = (deps, opts) ->
 			parentApplication
 		]) ->
 			if deviceManifest.state == 'DISCONTINUED'
-				throw new errors.ResinDiscontinuedDeviceType(deviceType)
+				throw new errors.BalenaDiscontinuedDeviceType(deviceType)
 
 			extraOptions = if parentApplication
 				depends_on__application: parentApplication.id
@@ -447,19 +447,19 @@ getApplicationModel = (deps, opts) ->
 	# @name remove
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.remove('MyApp');
+	# balena.models.application.remove('MyApp');
 	#
 	# @example
-	# resin.models.application.remove(123);
+	# balena.models.application.remove(123);
 	#
 	# @example
-	# resin.models.application.remove('MyApp', function(error) {
+	# balena.models.application.remove('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -476,19 +476,19 @@ getApplicationModel = (deps, opts) ->
 	# @name restart
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.restart('MyApp');
+	# balena.models.application.restart('MyApp');
 	#
 	# @example
-	# resin.models.application.restart(123);
+	# balena.models.application.restart(123);
 	#
 	# @example
-	# resin.models.application.restart('MyApp', function(error) {
+	# balena.models.application.restart('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -507,10 +507,10 @@ getApplicationModel = (deps, opts) ->
 	# @name generateApiKey
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	# @deprecated
 	# @description
-	# Generally you shouldn't use this method: if you're provisioning a recent ResinOS
+	# Generally you shouldn't use this method: if you're provisioning a recent BalenaOS
 	# version (2.4.0+) then generateProvisioningKey should work just as well, but
 	# be more secure.
 	#
@@ -519,24 +519,24 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
+	# balena.models.application.generateApiKey('MyApp').then(function(apiKey) {
 	# 	console.log(apiKey);
 	# });
 	#
 	# @example
-	# resin.models.application.generateApiKey(123).then(function(apiKey) {
+	# balena.models.application.generateApiKey(123).then(function(apiKey) {
 	# 	console.log(apiKey);
 	# });
 	#
 	# @example
-	# resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
+	# balena.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	# 	if (error) throw error;
 	# 	console.log(apiKey);
 	# });
 	###
 	exports.generateApiKey = (nameOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
-		# doesn't exist. TODO: Can use getId once https://github.com/resin-io/resin-api/issues/110 is resolved
+		# doesn't exist. TODO: Can use getId once https://github.com/balena-io/balena-api/issues/110 is resolved
 		exports.get(nameOrId, $select: 'id').then ({ id }) ->
 			return request.send
 				method: 'POST'
@@ -550,24 +550,24 @@ getApplicationModel = (deps, opts) ->
 	# @name generateProvisioningKey
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {String} - device provisioning key
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.generateProvisioningKey('MyApp').then(function(key) {
+	# balena.models.application.generateProvisioningKey('MyApp').then(function(key) {
 	# 	console.log(key);
 	# });
 	#
 	# @example
-	# resin.models.application.generateProvisioningKey(123).then(function(key) {
+	# balena.models.application.generateProvisioningKey(123).then(function(key) {
 	# 	console.log(key);
 	# });
 	#
 	# @example
-	# resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
+	# balena.models.application.generateProvisioningKey('MyApp', function(error, key) {
 	# 	if (error) throw error;
 	# 	console.log(key);
 	# });
@@ -587,16 +587,16 @@ getApplicationModel = (deps, opts) ->
 	# @name purge
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {Number} appId - application id
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.purge(123);
+	# balena.models.application.purge(123);
 	#
 	# @example
-	# resin.models.application.purge(123, function(error) {
+	# balena.models.application.purge(123, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -611,7 +611,7 @@ getApplicationModel = (deps, opts) ->
 					appId: "#{appId}"
 		.catch (err) ->
 			if err.statusCode == LOCKED_STATUS_CODE
-				throw new errors.ResinSupervisorLockedError()
+				throw new errors.BalenaSupervisorLockedError()
 
 			throw err
 		.asCallback(callback)
@@ -621,7 +621,7 @@ getApplicationModel = (deps, opts) ->
 	# @name shutdown
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {Number} appId - application id
 	# @param {Object} [options] - options
@@ -629,10 +629,10 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.shutdown(123);
+	# balena.models.application.shutdown(123);
 	#
 	# @example
-	# resin.models.application.shutdown(123, function(error) {
+	# balena.models.application.shutdown(123, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -647,7 +647,7 @@ getApplicationModel = (deps, opts) ->
 					force: Boolean(options.force)
 		.catch (err) ->
 			if err.statusCode == LOCKED_STATUS_CODE
-				throw new errors.ResinSupervisorLockedError()
+				throw new errors.BalenaSupervisorLockedError()
 
 			throw err
 		.asCallback(callback)
@@ -657,7 +657,7 @@ getApplicationModel = (deps, opts) ->
 	# @name reboot
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {Number} appId - application id
 	# @param {Object} [options] - options
@@ -665,10 +665,10 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.reboot(123);
+	# balena.models.application.reboot(123);
 	#
 	# @example
-	# resin.models.application.reboot(123, function(error) {
+	# balena.models.application.reboot(123, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -683,7 +683,7 @@ getApplicationModel = (deps, opts) ->
 					force: Boolean(options.force)
 		.catch (err) ->
 			if err.statusCode == LOCKED_STATUS_CODE
-				throw new errors.ResinSupervisorLockedError()
+				throw new errors.BalenaSupervisorLockedError()
 
 			throw err
 		.asCallback(callback)
@@ -693,19 +693,19 @@ getApplicationModel = (deps, opts) ->
 	# @name enableDeviceUrls
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.enableDeviceUrls('MyApp');
+	# balena.models.application.enableDeviceUrls('MyApp');
 	#
 	# @example
-	# resin.models.application.enableDeviceUrls(123);
+	# balena.models.application.enableDeviceUrls(123);
 	#
 	# @example
-	# resin.models.device.enableDeviceUrls('MyApp', function(error) {
+	# balena.models.device.enableDeviceUrls('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -725,19 +725,19 @@ getApplicationModel = (deps, opts) ->
 	# @name disableDeviceUrls
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.disableDeviceUrls('MyApp');
+	# balena.models.application.disableDeviceUrls('MyApp');
 	#
 	# @example
-	# resin.models.application.disableDeviceUrls(123);
+	# balena.models.application.disableDeviceUrls(123);
 	#
 	# @example
-	# resin.models.device.disableDeviceUrls('MyApp', function(error) {
+	# balena.models.device.disableDeviceUrls('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -757,26 +757,26 @@ getApplicationModel = (deps, opts) ->
 	# @name grantSupportAccess
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000);
+	# balena.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000);
 	#
 	# @example
-	# resin.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
+	# balena.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
 	#
 	# @example
-	# resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, function(error) {
+	# balena.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
 	exports.grantSupportAccess = (nameOrId, expiryTimestamp, callback) ->
 		if not expiryTimestamp? or expiryTimestamp <= Date.now()
-			throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp)
+			throw new errors.BalenaInvalidParameterError('expiryTimestamp', expiryTimestamp)
 
 		getId(nameOrId).then (applicationId) ->
 			return pine.patch
@@ -791,19 +791,19 @@ getApplicationModel = (deps, opts) ->
 	# @name revokeSupportAccess
 	# @public
 	# @function
-	# @memberof resin.models.application
+	# @memberof balena.models.application
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.application.revokeSupportAccess('MyApp');
+	# balena.models.application.revokeSupportAccess('MyApp');
 	#
 	# @example
-	# resin.models.application.revokeSupportAccess(123);
+	# balena.models.application.revokeSupportAccess(123);
 	#
 	# @example
-	# resin.models.application.revokeSupportAccess('MyApp', function(error) {
+	# balena.models.application.revokeSupportAccess('MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -817,8 +817,8 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @namespace resin.models.application.tags
-	# @memberof resin.models.application
+	# @namespace balena.models.application.tags
+	# @memberof balena.models.application
 	###
 	exports.tags = {
 
@@ -827,7 +827,7 @@ getApplicationModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.application.tags
+		# @memberof balena.models.application.tags
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -835,17 +835,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
+		# balena.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.application.tags.getAllByApplication(999999).then(function(tags) {
+		# balena.models.application.tags.getAllByApplication(999999).then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
+		# balena.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
 		# 	if (error) throw error;
 		# 	console.log(tags)
 		# });
@@ -857,19 +857,19 @@ getApplicationModel = (deps, opts) ->
 		# @name getAll
 		# @public
 		# @function
-		# @memberof resin.models.application.tags
+		# @memberof balena.models.application.tags
 		#
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - application tags
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.tags.getAll().then(function(tags) {
+		# balena.models.application.tags.getAll().then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.application.tags.getAll(function(error, tags) {
+		# balena.models.application.tags.getAll(function(error, tags) {
 		# 	if (error) throw error;
 		# 	console.log(tags)
 		# });
@@ -881,7 +881,7 @@ getApplicationModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.application.tags
+		# @memberof balena.models.application.tags
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} tagKey - tag key
@@ -890,13 +890,13 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
+		# balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
 		#
 		# @example
-		# resin.models.application.tags.set(123, 'EDITOR', 'vim');
+		# balena.models.application.tags.set(123, 'EDITOR', 'vim');
 		#
 		# @example
-		# resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+		# balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 		# 	if (error) throw error;
 		# });
 		###
@@ -907,17 +907,17 @@ getApplicationModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.application.tags
+		# @memberof balena.models.application.tags
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} tagKey - tag key
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.tags.remove('7cf02a6', 'EDITOR');
+		# balena.models.application.tags.remove('7cf02a6', 'EDITOR');
 		#
 		# @example
-		# resin.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
+		# balena.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
 		# 	if (error) throw error;
 		# });
 		###
@@ -925,8 +925,8 @@ getApplicationModel = (deps, opts) ->
 	}
 
 	###*
-	# @namespace resin.models.application.configVar
-	# @memberof resin.models.application
+	# @namespace balena.models.application.configVar
+	# @memberof balena.models.application
 	###
 	exports.configVar = {
 		###*
@@ -934,7 +934,7 @@ getApplicationModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.application.configVar
+		# @memberof balena.models.application.configVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -942,17 +942,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.configVar.getAllByApplication('MyApp').then(function(vars) {
+		# balena.models.application.configVar.getAllByApplication('MyApp').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.getAllByApplication(999999).then(function(vars) {
+		# balena.models.application.configVar.getAllByApplication(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.getAllByApplication('MyApp', function(error, vars) {
+		# balena.models.application.configVar.getAllByApplication('MyApp', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -964,7 +964,7 @@ getApplicationModel = (deps, opts) ->
 		# @name get
 		# @public
 		# @function
-		# @memberof resin.models.application.configVar
+		# @memberof balena.models.application.configVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} key - config variable name
@@ -972,17 +972,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR').then(function(value) {
+		# balena.models.application.configVar.get('MyApp', 'BALENA_VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+		# balena.models.application.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.get('MyApp', 'RESIN_VAR', function(error, value) {
+		# balena.models.application.configVar.get('MyApp', 'BALENA_VAR', function(error, value) {
 		# 	if (error) throw error;
 		# 	console.log(value)
 		# });
@@ -994,7 +994,7 @@ getApplicationModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.application.configVar
+		# @memberof balena.models.application.configVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} key - config variable name
@@ -1002,17 +1002,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue').then(function() {
+		# balena.models.application.configVar.set('MyApp', 'BALENA_VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+		# balena.models.application.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue', function(error) {
+		# balena.models.application.configVar.set('MyApp', 'BALENA_VAR', 'newvalue', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -1024,24 +1024,24 @@ getApplicationModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.application.configVar
+		# @memberof balena.models.application.configVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} key - config variable name
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR').then(function() {
+		# balena.models.application.configVar.remove('MyApp', 'BALENA_VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.remove(999999, 'RESIN_VAR').then(function() {
+		# balena.models.application.configVar.remove(999999, 'BALENA_VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.configVar.remove('MyApp', 'RESIN_VAR', function(error) {
+		# balena.models.application.configVar.remove('MyApp', 'BALENA_VAR', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -1050,8 +1050,8 @@ getApplicationModel = (deps, opts) ->
 	}
 
 	###*
-	# @namespace resin.models.application.envVar
-	# @memberof resin.models.application
+	# @namespace balena.models.application.envVar
+	# @memberof balena.models.application
 	###
 	exports.envVar = {
 		###*
@@ -1059,7 +1059,7 @@ getApplicationModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.application.envVar
+		# @memberof balena.models.application.envVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -1067,17 +1067,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.envVar.getAllByApplication('MyApp').then(function(vars) {
+		# balena.models.application.envVar.getAllByApplication('MyApp').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.getAllByApplication(999999).then(function(vars) {
+		# balena.models.application.envVar.getAllByApplication(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.getAllByApplication('MyApp', function(error, vars) {
+		# balena.models.application.envVar.getAllByApplication('MyApp', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -1089,7 +1089,7 @@ getApplicationModel = (deps, opts) ->
 		# @name get
 		# @public
 		# @function
-		# @memberof resin.models.application.envVar
+		# @memberof balena.models.application.envVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} key - environment variable name
@@ -1097,17 +1097,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.envVar.get('MyApp', 'VAR').then(function(value) {
+		# balena.models.application.envVar.get('MyApp', 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.get(999999, 'VAR').then(function(value) {
+		# balena.models.application.envVar.get(999999, 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
+		# balena.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
 		# 	if (error) throw error;
 		# 	console.log(value)
 		# });
@@ -1119,7 +1119,7 @@ getApplicationModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.application.envVar
+		# @memberof balena.models.application.envVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} key - environment variable name
@@ -1127,17 +1127,17 @@ getApplicationModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue').then(function() {
+		# balena.models.application.envVar.set('MyApp', 'VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+		# balena.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) {
+		# balena.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -1149,24 +1149,24 @@ getApplicationModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.application.envVar
+		# @memberof balena.models.application.envVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {String} key - environment variable name
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.application.envVar.remove('MyApp', 'VAR').then(function() {
+		# balena.models.application.envVar.remove('MyApp', 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.remove(999999, 'VAR').then(function() {
+		# balena.models.application.envVar.remove(999999, 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.application.envVar.remove('MyApp', 'VAR', function(error) {
+		# balena.models.application.envVar.remove('MyApp', 'VAR', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });

@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ some = require('lodash/some')
 includes = require('lodash/includes')
 map = require('lodash/map')
 semver = require('semver')
-errors = require('resin-errors')
+errors = require('balena-errors')
 deviceStatus = require('resin-device-status')
 
 {
@@ -74,7 +74,7 @@ getDeviceModel = (deps, opts) ->
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinDeviceNotFound
+		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
 	configVarModel = buildDependentResource { pine }, {
@@ -82,7 +82,7 @@ getDeviceModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinDeviceNotFound
+		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
 	envVarModel = buildDependentResource { pine }, {
@@ -90,7 +90,7 @@ getDeviceModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinDeviceNotFound
+		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
 	exports = {}
@@ -113,7 +113,7 @@ getDeviceModel = (deps, opts) ->
 	# @name ensureSupervisorCompatibility
 	# @private
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String} version - version under check
 	# @param {String} minVersion - minimum accepted version
@@ -122,12 +122,12 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.ensureSupervisorCompatibility(version, MIN_VERSION).then(function() {
+	# balena.models.device.ensureSupervisorCompatibility(version, MIN_VERSION).then(function() {
 	# 	console.log('Is compatible');
 	# });
 	#
 	# @example
-	# resin.models.device.ensureSupervisorCompatibility(version, MIN_VERSION, function(error) {
+	# balena.models.device.ensureSupervisorCompatibility(version, MIN_VERSION, function(error) {
 	# 	if (error) throw error;
 	# 	console.log('Is compatible');
 	# });
@@ -139,7 +139,7 @@ getDeviceModel = (deps, opts) ->
 	###*
 	# @summary Get Dashboard URL for a specific device
 	# @function getDashboardUrl
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String} uuid - Device uuid
 	#
@@ -147,7 +147,7 @@ getDeviceModel = (deps, opts) ->
 	# @throws Exception if the uuid is empty
 	#
 	# @example
-	# dashboardDeviceUrl = resin.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
+	# dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 	###
 	exports.getDashboardUrl = getDashboardUrl = (uuid) ->
 		if typeof uuid != 'string' || isEmpty(uuid)
@@ -164,19 +164,19 @@ getDeviceModel = (deps, opts) ->
 	# @name getAll
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getAll().then(function(devices) {
+	# balena.models.device.getAll().then(function(devices) {
 	# 	console.log(devices);
 	# });
 	#
 	# @example
-	# resin.models.device.getAll(function(error, devices) {
+	# balena.models.device.getAll(function(error, devices) {
 	# 	if (error) throw error;
 	# 	console.log(devices);
 	# });
@@ -199,7 +199,7 @@ getDeviceModel = (deps, opts) ->
 	# @name getAllByApplication
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -207,17 +207,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getAllByApplication('MyApp').then(function(devices) {
+	# balena.models.device.getAllByApplication('MyApp').then(function(devices) {
 	# 	console.log(devices);
 	# });
 	#
 	# @example
-	# resin.models.device.getAllByApplication(123).then(function(devices) {
+	# balena.models.device.getAllByApplication(123).then(function(devices) {
 	# 	console.log(devices);
 	# });
 	#
 	# @example
-	# resin.models.device.getAllByApplication('MyApp', function(error, devices) {
+	# balena.models.device.getAllByApplication('MyApp', function(error, devices) {
 	# 	if (error) throw error;
 	# 	console.log(devices);
 	# });
@@ -236,7 +236,7 @@ getDeviceModel = (deps, opts) ->
 	# @name getAllByParentDevice
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -244,17 +244,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
+	# balena.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
 	# 	console.log(devices);
 	# });
 	#
 	# @example
-	# resin.models.device.getAllByParentDevice(123).then(function(devices) {
+	# balena.models.device.getAllByParentDevice(123).then(function(devices) {
 	# 	console.log(devices);
 	# });
 	#
 	# @example
-	# resin.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
+	# balena.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
 	# 	if (error) throw error;
 	# 	console.log(devices);
 	# });
@@ -273,7 +273,7 @@ getDeviceModel = (deps, opts) ->
 	# @name get
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -281,17 +281,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.get('7cf02a6').then(function(device) {
+	# balena.models.device.get('7cf02a6').then(function(device) {
 	# 	console.log(device);
 	# })
 	#
 	# @example
-	# resin.models.device.get(123).then(function(device) {
+	# balena.models.device.get(123).then(function(device) {
 	# 	console.log(device);
 	# })
 	#
 	# @example
-	# resin.models.device.get('7cf02a6', function(error, device) {
+	# balena.models.device.get('7cf02a6', function(error, device) {
 	# 	if (error) throw error;
 	# 	console.log(device);
 	# });
@@ -301,7 +301,7 @@ getDeviceModel = (deps, opts) ->
 
 		Promise.try ->
 			if not uuidOrId?
-				throw new errors.ResinDeviceNotFound(uuidOrId)
+				throw new errors.BalenaDeviceNotFound(uuidOrId)
 
 			if isId(uuidOrId)
 				pine.get
@@ -310,7 +310,7 @@ getDeviceModel = (deps, opts) ->
 					options: options
 				.tap (device) ->
 					if not device?
-						throw new errors.ResinDeviceNotFound(uuidOrId)
+						throw new errors.BalenaDeviceNotFound(uuidOrId)
 			else
 				pine.get
 					resource: 'device'
@@ -321,10 +321,10 @@ getDeviceModel = (deps, opts) ->
 						, options
 				.tap (devices) ->
 					if isEmpty(devices)
-						throw new errors.ResinDeviceNotFound(uuidOrId)
+						throw new errors.BalenaDeviceNotFound(uuidOrId)
 
 					if devices.length > 1
-						throw new errors.ResinAmbiguousDevice(uuidOrId)
+						throw new errors.BalenaAmbiguousDevice(uuidOrId)
 				.get(0)
 		.then(addExtraInfo)
 		.asCallback(callback)
@@ -334,7 +334,7 @@ getDeviceModel = (deps, opts) ->
 	# @name getWithServiceDetails
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @description
 	# This method does not map exactly to the underlying model: it runs a
@@ -348,17 +348,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	# balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
 	# 	console.log(device);
 	# })
 	#
 	# @example
-	# resin.models.device.getWithServiceDetails(123).then(function(device) {
+	# balena.models.device.getWithServiceDetails(123).then(function(device) {
 	# 	console.log(device);
 	# })
 	#
 	# @example
-	# resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
+	# balena.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
 	# 	if (error) throw error;
 	# 	console.log(device);
 	# });
@@ -376,19 +376,19 @@ getDeviceModel = (deps, opts) ->
 	# @name getByName
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String} name - device name
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getByName('MyDevice').then(function(devices) {
+	# balena.models.device.getByName('MyDevice').then(function(devices) {
 	# 	console.log(devices);
 	# });
 	#
 	# @example
-	# resin.models.device.getByName('MyDevice', function(error, devices) {
+	# balena.models.device.getByName('MyDevice', function(error, devices) {
 	# 	if (error) throw error;
 	# 	console.log(devices);
 	# });
@@ -401,7 +401,7 @@ getDeviceModel = (deps, opts) ->
 			options
 		)).tap (devices) ->
 			if isEmpty(devices)
-				throw new errors.ResinDeviceNotFound(name)
+				throw new errors.BalenaDeviceNotFound(name)
 		.asCallback(callback)
 
 	###*
@@ -409,24 +409,24 @@ getDeviceModel = (deps, opts) ->
 	# @name getName
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - device name
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getName('7cf02a6').then(function(deviceName) {
+	# balena.models.device.getName('7cf02a6').then(function(deviceName) {
 	# 	console.log(deviceName);
 	# });
 	#
 	# @example
-	# resin.models.device.getName(123).then(function(deviceName) {
+	# balena.models.device.getName(123).then(function(deviceName) {
 	# 	console.log(deviceName);
 	# });
 	#
 	# @example
-	# resin.models.device.getName('7cf02a6', function(error, deviceName) {
+	# balena.models.device.getName('7cf02a6', function(error, deviceName) {
 	# 	if (error) throw error;
 	# 	console.log(deviceName);
 	# });
@@ -441,24 +441,24 @@ getDeviceModel = (deps, opts) ->
 	# @name getApplicationName
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - application name
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
+	# balena.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
 	# 	console.log(applicationName);
 	# });
 	#
 	# @example
-	# resin.models.device.getApplicationName(123).then(function(applicationName) {
+	# balena.models.device.getApplicationName(123).then(function(applicationName) {
 	# 	console.log(applicationName);
 	# });
 	#
 	# @example
-	# resin.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
+	# balena.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
 	# 	if (error) throw error;
 	# 	console.log(applicationName);
 	# });
@@ -476,7 +476,7 @@ getDeviceModel = (deps, opts) ->
 	# @name getApplicationInfo
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @deprecated
 	# @description
@@ -487,17 +487,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
+	# balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
 	# 	console.log(appInfo);
 	# });
 	#
 	# @example
-	# resin.models.device.getApplicationInfo(123).then(function(appInfo) {
+	# balena.models.device.getApplicationInfo(123).then(function(appInfo) {
 	# 	console.log(appInfo);
 	# });
 	#
 	# @example
-	# resin.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
+	# balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
 	# 	if (error) throw error;
 	# 	console.log(appInfo);
 	# });
@@ -525,31 +525,31 @@ getDeviceModel = (deps, opts) ->
 	# @name has
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Boolean} - has device
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.has('7cf02a6').then(function(hasDevice) {
+	# balena.models.device.has('7cf02a6').then(function(hasDevice) {
 	# 	console.log(hasDevice);
 	# });
 	#
 	# @example
-	# resin.models.device.has(123).then(function(hasDevice) {
+	# balena.models.device.has(123).then(function(hasDevice) {
 	# 	console.log(hasDevice);
 	# });
 	#
 	# @example
-	# resin.models.device.has('7cf02a6', function(error, hasDevice) {
+	# balena.models.device.has('7cf02a6', function(error, hasDevice) {
 	# 	if (error) throw error;
 	# 	console.log(hasDevice);
 	# });
 	###
 	exports.has = (uuidOrId, callback) ->
 		exports.get(uuidOrId, $select: ['id']).return(true)
-		.catch errors.ResinDeviceNotFound, ->
+		.catch errors.BalenaDeviceNotFound, ->
 			return false
 		.asCallback(callback)
 
@@ -558,24 +558,24 @@ getDeviceModel = (deps, opts) ->
 	# @name isOnline
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Boolean} - is device online
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.isOnline('7cf02a6').then(function(isOnline) {
+	# balena.models.device.isOnline('7cf02a6').then(function(isOnline) {
 	# 	console.log('Is device online?', isOnline);
 	# });
 	#
 	# @example
-	# resin.models.device.isOnline(123).then(function(isOnline) {
+	# balena.models.device.isOnline(123).then(function(isOnline) {
 	# 	console.log('Is device online?', isOnline);
 	# });
 	#
 	# @example
-	# resin.models.device.isOnline('7cf02a6', function(error, isOnline) {
+	# balena.models.device.isOnline('7cf02a6', function(error, isOnline) {
 	# 	if (error) throw error;
 	# 	console.log('Is device online?', isOnline);
 	# });
@@ -588,7 +588,7 @@ getDeviceModel = (deps, opts) ->
 	# @name getLocalIPAddresses
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String[]} - local ip addresses
@@ -596,21 +596,21 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
+	# balena.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
 	# 	localIPAddresses.forEach(function(localIP) {
 	# 		console.log(localIP);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
+	# balena.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
 	# 	localIPAddresses.forEach(function(localIP) {
 	# 		console.log(localIP);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
+	# balena.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
 	# 	if (error) throw error;
 	#
 	# 	localIPAddresses.forEach(function(localIP) {
@@ -633,19 +633,19 @@ getDeviceModel = (deps, opts) ->
 	# @name remove
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.remove('7cf02a6');
+	# balena.models.device.remove('7cf02a6');
 	#
 	# @example
-	# resin.models.device.remove(123);
+	# balena.models.device.remove(123);
 	#
 	# @example
-	# resin.models.device.remove('7cf02a6', function(error) {
+	# balena.models.device.remove('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -663,19 +663,19 @@ getDeviceModel = (deps, opts) ->
 	# @name identify
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.identify('7cf02a6');
+	# balena.models.device.identify('7cf02a6');
 	#
 	# @example
-	# resin.models.device.identify(123);
+	# balena.models.device.identify(123);
 	#
 	# @example
-	# resin.models.device.identify('7cf02a6', function(error) {
+	# balena.models.device.identify('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -695,7 +695,7 @@ getDeviceModel = (deps, opts) ->
 	# @name rename
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {String} newName - the device new name
@@ -703,13 +703,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.rename('7cf02a6', 'NewName');
+	# balena.models.device.rename('7cf02a6', 'NewName');
 	#
 	# @example
-	# resin.models.device.rename(123, 'NewName');
+	# balena.models.device.rename(123, 'NewName');
 	#
 	# @example
-	# resin.models.device.rename('7cf02a6', 'NewName', function(error) {
+	# balena.models.device.rename('7cf02a6', 'NewName', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -729,7 +729,7 @@ getDeviceModel = (deps, opts) ->
 	# @name note
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {String} note - the note
@@ -737,13 +737,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.note('7cf02a6', 'My useful note');
+	# balena.models.device.note('7cf02a6', 'My useful note');
 	#
 	# @example
-	# resin.models.device.note(123, 'My useful note');
+	# balena.models.device.note(123, 'My useful note');
 	#
 	# @example
-	# resin.models.device.note('7cf02a6', 'My useful note', function(error) {
+	# balena.models.device.note('7cf02a6', 'My useful note', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -764,7 +764,7 @@ getDeviceModel = (deps, opts) ->
 	# @name setCustomLocation
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} location - the location ({ latitude: 123, longitude: 456 })
@@ -772,13 +772,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
+	# balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
 	#
 	# @example
-	# resin.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
+	# balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 	#
 	# @example
-	# resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
+	# balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -801,20 +801,20 @@ getDeviceModel = (deps, opts) ->
 	# @name unsetCustomLocation
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	#
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.unsetCustomLocation('7cf02a6');
+	# balena.models.device.unsetCustomLocation('7cf02a6');
 	#
 	# @example
-	# resin.models.device.unsetCustomLocation(123);
+	# balena.models.device.unsetCustomLocation(123);
 	#
 	# @example
-	# resin.models.device.unsetLocation('7cf02a6', function(error) {
+	# balena.models.device.unsetLocation('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -829,7 +829,7 @@ getDeviceModel = (deps, opts) ->
 	# @name move
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
@@ -837,16 +837,16 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.move('7cf02a6', 'MyApp');
+	# balena.models.device.move('7cf02a6', 'MyApp');
 	#
 	# @example
-	# resin.models.device.move(123, 'MyApp');
+	# balena.models.device.move(123, 'MyApp');
 	#
 	# @example
-	# resin.models.device.move(123, 456);
+	# balena.models.device.move(123, 456);
 	#
 	# @example
-	# resin.models.device.move('7cf02a6', 'MyApp', function(error) {
+	# balena.models.device.move('7cf02a6', 'MyApp', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -861,7 +861,7 @@ getDeviceModel = (deps, opts) ->
 			isCompatibleMove = deviceDeviceType.arch is appDeviceType.arch and
 				(!!deviceDeviceType.isDependent is !!appDeviceType.isDependent)
 			if not isCompatibleMove
-				throw new errors.ResinInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
+				throw new errors.BalenaInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
 			return pine.patch
 				resource: 'device'
@@ -878,7 +878,7 @@ getDeviceModel = (deps, opts) ->
 	# @name startApplication
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @deprecated
 	# @description
@@ -889,17 +889,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.startApplication('7cf02a6').then(function(containerId) {
+	# balena.models.device.startApplication('7cf02a6').then(function(containerId) {
 	# 	console.log(containerId);
 	# });
 	#
 	# @example
-	# resin.models.device.startApplication(123).then(function(containerId) {
+	# balena.models.device.startApplication(123).then(function(containerId) {
 	# 	console.log(containerId);
 	# });
 	#
 	# @example
-	# resin.models.device.startApplication('7cf02a6', function(error, containerId) {
+	# balena.models.device.startApplication('7cf02a6', function(error, containerId) {
 	# 	if (error) throw error;
 	# 	console.log(containerId);
 	# });
@@ -928,7 +928,7 @@ getDeviceModel = (deps, opts) ->
 	# @name stopApplication
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @deprecated
 	# @description
@@ -939,17 +939,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.stopApplication('7cf02a6').then(function(containerId) {
+	# balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
 	# 	console.log(containerId);
 	# });
 	#
 	# @example
-	# resin.models.device.stopApplication(123).then(function(containerId) {
+	# balena.models.device.stopApplication(123).then(function(containerId) {
 	# 	console.log(containerId);
 	# });
 	#
 	# @example
-	# resin.models.device.stopApplication('7cf02a6', function(error, containerId) {
+	# balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
 	# 	if (error) throw error;
 	# 	console.log(containerId);
 	# });
@@ -978,7 +978,7 @@ getDeviceModel = (deps, opts) ->
 	# @name restartApplication
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @description
 	# This function restarts the Docker container running
@@ -989,13 +989,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.restartApplication('7cf02a6');
+	# balena.models.device.restartApplication('7cf02a6');
 	#
 	# @example
-	# resin.models.device.restartApplication(123);
+	# balena.models.device.restartApplication(123);
 	#
 	# @example
-	# resin.models.device.restartApplication('7cf02a6', function(error) {
+	# balena.models.device.restartApplication('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1015,24 +1015,24 @@ getDeviceModel = (deps, opts) ->
 	# @name startService
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Number} imageId - id of the image to start
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.startService('7cf02a6', 123).then(function() {
+	# balena.models.device.startService('7cf02a6', 123).then(function() {
 	# 	...
 	# });
 	#
 	# @example
-	# resin.models.device.startService(1, 123).then(function() {
+	# balena.models.device.startService(1, 123).then(function() {
 	# 	...
 	# });
 	#
 	# @example
-	# resin.models.device.startService('7cf02a6', 123, function(error) {
+	# balena.models.device.startService('7cf02a6', 123, function(error) {
 	# 	if (error) throw error;
 	# 	...
 	# });
@@ -1066,24 +1066,24 @@ getDeviceModel = (deps, opts) ->
 	# @name stopService
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Number} imageId - id of the image to stop
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.stopService('7cf02a6', 123).then(function() {
+	# balena.models.device.stopService('7cf02a6', 123).then(function() {
 	# 	...
 	# });
 	#
 	# @example
-	# resin.models.device.stopService(1, 123).then(function() {
+	# balena.models.device.stopService(1, 123).then(function() {
 	# 	...
 	# });
 	#
 	# @example
-	# resin.models.device.stopService('7cf02a6', 123, function(error) {
+	# balena.models.device.stopService('7cf02a6', 123, function(error) {
 	# 	if (error) throw error;
 	# 	...
 	# });
@@ -1117,24 +1117,24 @@ getDeviceModel = (deps, opts) ->
 	# @name restartService
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Number} imageId - id of the image to restart
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.restartService('7cf02a6', 123).then(function() {
+	# balena.models.device.restartService('7cf02a6', 123).then(function() {
 	# 	...
 	# });
 	#
 	# @example
-	# resin.models.device.restartService(1, 123).then(function() {
+	# balena.models.device.restartService(1, 123).then(function() {
 	# 	...
 	# });
 	#
 	# @example
-	# resin.models.device.restartService('7cf02a6', 123, function(error) {
+	# balena.models.device.restartService('7cf02a6', 123, function(error) {
 	# 	if (error) throw error;
 	# 	...
 	# });
@@ -1168,7 +1168,7 @@ getDeviceModel = (deps, opts) ->
 	# @name reboot
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
@@ -1176,13 +1176,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.reboot('7cf02a6');
+	# balena.models.device.reboot('7cf02a6');
 	#
 	# @example
-	# resin.models.device.reboot(123);
+	# balena.models.device.reboot(123);
 	#
 	# @example
-	# resin.models.device.reboot('7cf02a6', function(error) {
+	# balena.models.device.reboot('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1200,7 +1200,7 @@ getDeviceModel = (deps, opts) ->
 						force: Boolean(options.force)
 			.catch (err) ->
 				if err.statusCode == LOCKED_STATUS_CODE
-					throw new errors.ResinSupervisorLockedError()
+					throw new errors.BalenaSupervisorLockedError()
 
 				throw err
 		.get('body')
@@ -1212,7 +1212,7 @@ getDeviceModel = (deps, opts) ->
 	# @name shutdown
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
@@ -1220,13 +1220,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.shutdown('7cf02a6');
+	# balena.models.device.shutdown('7cf02a6');
 	#
 	# @example
-	# resin.models.device.shutdown(123);
+	# balena.models.device.shutdown(123);
 	#
 	# @example
-	# resin.models.device.shutdown('7cf02a6', function(error) {
+	# balena.models.device.shutdown('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1248,7 +1248,7 @@ getDeviceModel = (deps, opts) ->
 						force: Boolean(options.force)
 			.catch (err) ->
 				if err.statusCode == LOCKED_STATUS_CODE
-					throw new errors.ResinSupervisorLockedError()
+					throw new errors.BalenaSupervisorLockedError()
 
 				throw err
 		.asCallback(callback)
@@ -1258,7 +1258,7 @@ getDeviceModel = (deps, opts) ->
 	# @name purge
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @description
 	# This function clears the user application's `/data` directory.
@@ -1267,13 +1267,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.purge('7cf02a6');
+	# balena.models.device.purge('7cf02a6');
 	#
 	# @example
-	# resin.models.device.purge(123);
+	# balena.models.device.purge(123);
 	#
 	# @example
-	# resin.models.device.purge('7cf02a6', function(error) {
+	# balena.models.device.purge('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1293,7 +1293,7 @@ getDeviceModel = (deps, opts) ->
 						appId: device.belongs_to__application[0].id
 			.catch (err) ->
 				if err.statusCode == LOCKED_STATUS_CODE
-					throw new errors.ResinSupervisorLockedError()
+					throw new errors.BalenaSupervisorLockedError()
 
 				throw err
 		.asCallback(callback)
@@ -1303,7 +1303,7 @@ getDeviceModel = (deps, opts) ->
 	# @name update
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options] - options
@@ -1311,17 +1311,17 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.update('7cf02a6', {
+	# balena.models.device.update('7cf02a6', {
 	# 	force: true
 	# });
 	#
 	# @example
-	# resin.models.device.update(123, {
+	# balena.models.device.update(123, {
 	# 	force: true
 	# });
 	#
 	# @example
-	# resin.models.device.update('7cf02a6', {
+	# balena.models.device.update('7cf02a6', {
 	# 	force: true
 	# }, function(error) {
 	# 	if (error) throw error;
@@ -1350,22 +1350,22 @@ getDeviceModel = (deps, opts) ->
 	# @name getDisplayName
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
-	# @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
+	# @see {@link module:balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 	#
 	# @param {String} deviceTypeSlug - device type slug
 	# @fulfil {String} - device display name
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
+	# balena.models.device.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
 	# 	console.log(deviceTypeName);
 	# 	// Raspberry Pi
 	# });
 	#
 	# @example
-	# resin.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
+	# balena.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
 	# 	if (error) throw error;
 	# 	console.log(deviceTypeName);
 	# 	// Raspberry Pi
@@ -1375,7 +1375,7 @@ getDeviceModel = (deps, opts) ->
 		exports.getManifestBySlug(deviceTypeSlug)
 			.get('name')
 			.catch (error) ->
-				if error instanceof errors.ResinInvalidDeviceType
+				if error instanceof errors.BalenaInvalidDeviceType
 					return
 
 				throw error
@@ -1386,22 +1386,22 @@ getDeviceModel = (deps, opts) ->
 	# @name getDeviceSlug
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
-	# @see {@link module:resin.models.device.getSupportedDeviceTypes} for a list of supported devices
+	# @see {@link module:balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 	#
 	# @param {String} deviceTypeName - device type name
 	# @fulfil {String} - device slug name
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
+	# balena.models.device.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
 	# 	console.log(deviceTypeSlug);
 	# 	// raspberry-pi
 	# });
 	#
 	# @example
-	# resin.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
+	# balena.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
 	# 	if (error) throw error;
 	# 	console.log(deviceTypeSlug);
 	# 	// raspberry-pi
@@ -1411,7 +1411,7 @@ getDeviceModel = (deps, opts) ->
 		exports.getManifestBySlug(deviceTypeName)
 			.get('slug')
 			.catch (error) ->
-				if error instanceof errors.ResinInvalidDeviceType
+				if error instanceof errors.BalenaInvalidDeviceType
 					return
 
 				throw error
@@ -1422,24 +1422,24 @@ getDeviceModel = (deps, opts) ->
 	# @name getSupportedDeviceTypes
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @fulfil {String[]} - supported device types
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
+	# balena.models.device.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
 	# 	supportedDeviceTypes.forEach(function(supportedDeviceType) {
-	# 		console.log('Resin supports:', supportedDeviceType);
+	# 		console.log('Balena supports:', supportedDeviceType);
 	# 	});
 	# });
 	#
 	# @example
-	# resin.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
+	# balena.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
 	# 	if (error) throw error;
 	#
 	# 	supportedDeviceTypes.forEach(function(supportedDeviceType) {
-	# 		console.log('Resin supports:', supportedDeviceType);
+	# 		console.log('Balena supports:', supportedDeviceType);
 	# 	});
 	# });
 	###
@@ -1453,19 +1453,19 @@ getDeviceModel = (deps, opts) ->
 	# @name getManifestBySlug
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String} slug - device slug
 	# @fulfil {Object} - device manifest
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
+	# balena.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
 	# 	console.log(manifest);
 	# });
 	#
 	# @example
-	# resin.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
+	# balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
 	# 	if (error) throw error;
 	# 	console.log(manifest);
 	# });
@@ -1480,7 +1480,7 @@ getDeviceModel = (deps, opts) ->
 				]
 		.then (deviceManifest) ->
 			if not deviceManifest?
-				throw new errors.ResinInvalidDeviceType(slug)
+				throw new errors.BalenaInvalidDeviceType(slug)
 
 			return deviceManifest
 		.asCallback(callback)
@@ -1490,24 +1490,24 @@ getDeviceModel = (deps, opts) ->
 	# @name getManifestByApplication
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @fulfil {Object} - device manifest
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getManifestByApplication('MyApp').then(function(manifest) {
+	# balena.models.device.getManifestByApplication('MyApp').then(function(manifest) {
 	# 	console.log(manifest);
 	# });
 	#
 	# @example
-	# resin.models.device.getManifestByApplication(123).then(function(manifest) {
+	# balena.models.device.getManifestByApplication(123).then(function(manifest) {
 	# 	console.log(manifest);
 	# });
 	#
 	# @example
-	# resin.models.device.getManifestByApplication('MyApp', function(error, manifest) {
+	# balena.models.device.getManifestByApplication('MyApp', function(error, manifest) {
 	# 	if (error) throw error;
 	# 	console.log(manifest);
 	# });
@@ -1523,23 +1523,23 @@ getDeviceModel = (deps, opts) ->
 	# @name generateUniqueKey
 	# @function
 	# @public
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @returns {String} A generated key
 	#
 	# @example
-	# randomKey = resin.models.device.generateUniqueKey();
+	# randomKey = balena.models.device.generateUniqueKey();
 	# // randomKey is a randomly generated key that can be used as either a uuid or an api key
 	# console.log(randomKey);
 	###
 	exports.generateUniqueKey = registerDevice.generateUniqueKey
 
 	###*
-	# @summary Register a new device with a Resin.io application.
+	# @summary Register a new device with a Balena application.
 	# @name register
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
 	# @param {String} [uuid] - device uuid
@@ -1548,20 +1548,20 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# var uuid = resin.models.device.generateUniqueKey();
-	# resin.models.device.register('MyApp', uuid).then(function(registrationInfo) {
+	# var uuid = balena.models.device.generateUniqueKey();
+	# balena.models.device.register('MyApp', uuid).then(function(registrationInfo) {
 	# 	console.log(registrationInfo);
 	# });
 	#
 	# @example
-	# var uuid = resin.models.device.generateUniqueKey();
-	# resin.models.device.register(123, uuid).then(function(registrationInfo) {
+	# var uuid = balena.models.device.generateUniqueKey();
+	# balena.models.device.register(123, uuid).then(function(registrationInfo) {
 	# 	console.log(registrationInfo);
 	# });
 	#
 	# @example
-	# var uuid = resin.models.device.generateUniqueKey();
-	# resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
+	# var uuid = balena.models.device.generateUniqueKey();
+	# balena.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 	# 	if (error) throw error;
 	# 	console.log(registrationInfo);
 	# });
@@ -1590,23 +1590,23 @@ getDeviceModel = (deps, opts) ->
 	# @name generateDeviceKey
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
+	# balena.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
 	# 	console.log(deviceApiKey);
 	# });
 	#
 	# @example
-	# resin.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
+	# balena.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
 	# 	console.log(deviceApiKey);
 	# });
 	#
 	# @example
-	# resin.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
+	# balena.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
 	# 	if (error) throw error;
 	# 	console.log(deviceApiKey);
 	# });
@@ -1626,28 +1626,28 @@ getDeviceModel = (deps, opts) ->
 	# @name hasDeviceUrl
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {Boolean} - has device url
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
+	# balena.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
 	# 	if (hasDeviceUrl) {
 	# 		console.log('The device has device URL enabled');
 	# 	}
 	# });
 	#
 	# @example
-	# resin.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
+	# balena.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 	# 	if (hasDeviceUrl) {
 	# 		console.log('The device has device URL enabled');
 	# 	}
 	# });
 	#
 	# @example
-	# resin.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
+	# balena.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
 	# 	if (error) throw error;
 	#
 	# 	if (hasDeviceUrl) {
@@ -1664,24 +1664,24 @@ getDeviceModel = (deps, opts) ->
 	# @name getDeviceUrl
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - device url
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getDeviceUrl('7cf02a6').then(function(url) {
+	# balena.models.device.getDeviceUrl('7cf02a6').then(function(url) {
 	# 	console.log(url);
 	# });
 	#
 	# @example
-	# resin.models.device.getDeviceUrl(123).then(function(url) {
+	# balena.models.device.getDeviceUrl(123).then(function(url) {
 	# 	console.log(url);
 	# });
 	#
 	# @example
-	# resin.models.device.getDeviceUrl('7cf02a6', function(error, url) {
+	# balena.models.device.getDeviceUrl('7cf02a6', function(error, url) {
 	# 	if (error) throw error;
 	# 	console.log(url);
 	# });
@@ -1701,19 +1701,19 @@ getDeviceModel = (deps, opts) ->
 	# @name enableDeviceUrl
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.enableDeviceUrl('7cf02a6');
+	# balena.models.device.enableDeviceUrl('7cf02a6');
 	#
 	# @example
-	# resin.models.device.enableDeviceUrl(123);
+	# balena.models.device.enableDeviceUrl(123);
 	#
 	# @example
-	# resin.models.device.enableDeviceUrl('7cf02a6', function(error) {
+	# balena.models.device.enableDeviceUrl('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1733,19 +1733,19 @@ getDeviceModel = (deps, opts) ->
 	# @name disableDeviceUrl
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.disableDeviceUrl('7cf02a6');
+	# balena.models.device.disableDeviceUrl('7cf02a6');
 	#
 	# @example
-	# resin.models.device.disableDeviceUrl(123);
+	# balena.models.device.disableDeviceUrl(123);
 	#
 	# @example
-	# resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
+	# balena.models.device.disableDeviceUrl('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1765,7 +1765,7 @@ getDeviceModel = (deps, opts) ->
 	# @name ping
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @description
 	# This is useful to signal that the supervisor is alive and responding.
@@ -1774,13 +1774,13 @@ getDeviceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.ping('7cf02a6');
+	# balena.models.device.ping('7cf02a6');
 	#
 	# @example
-	# resin.models.device.ping(123);
+	# balena.models.device.ping(123);
 	#
 	# @example
-	# resin.models.device.ping('7cf02a6', function(error) {
+	# balena.models.device.ping('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1804,19 +1804,19 @@ getDeviceModel = (deps, opts) ->
 	# @name getStatus
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {Object} device - A device object
 	# @fulfil {String} - device status
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.getStatus(device).then(function(status) {
+	# balena.models.device.getStatus(device).then(function(status) {
 	# 	console.log(status);
 	# });
 	#
 	# @example
-	# resin.models.device.getStatus(device, function(error, status) {
+	# balena.models.device.getStatus(device, function(error, status) {
 	# 	if (error) throw error;
 	# 	console.log(status);
 	# });
@@ -1831,26 +1831,26 @@ getDeviceModel = (deps, opts) ->
 	# @name grantSupportAccess
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+	# balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
 	#
 	# @example
-	# resin.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
+	# balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 	#
 	# @example
-	# resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
+	# balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
 	exports.grantSupportAccess = (uuidOrId, expiryTimestamp, callback) ->
 		if not expiryTimestamp? or expiryTimestamp <= Date.now()
-			throw new errors.ResinInvalidParameterError('expiryTimestamp', expiryTimestamp)
+			throw new errors.BalenaInvalidParameterError('expiryTimestamp', expiryTimestamp)
 
 		exports.get(uuidOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
@@ -1864,19 +1864,19 @@ getDeviceModel = (deps, opts) ->
 	# @name revokeSupportAccess
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.device.revokeSupportAccess('7cf02a6');
+	# balena.models.device.revokeSupportAccess('7cf02a6');
 	#
 	# @example
-	# resin.models.device.revokeSupportAccess(123);
+	# balena.models.device.revokeSupportAccess(123);
 	#
 	# @example
-	# resin.models.device.revokeSupportAccess('7cf02a6', function(error) {
+	# balena.models.device.revokeSupportAccess('7cf02a6', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -1893,7 +1893,7 @@ getDeviceModel = (deps, opts) ->
 	# @name lastOnline
 	# @public
 	# @function
-	# @memberof resin.models.device
+	# @memberof balena.models.device
 	#
 	# @description
 	# If the device has never been online this method returns the string `Connecting...`.
@@ -1902,8 +1902,8 @@ getDeviceModel = (deps, opts) ->
 	# @returns {String}
 	#
 	# @example
-	# resin.models.device.get('7cf02a6').then(function(device) {
-	# 	resin.models.device.lastOnline(device);
+	# balena.models.device.get('7cf02a6').then(function(device) {
+	# 	balena.models.device.lastOnline(device);
 	# })
 	###
 	exports.lastOnline = (device) ->
@@ -1918,8 +1918,8 @@ getDeviceModel = (deps, opts) ->
 		return timeSince(lce)
 
 	###*
-	# @namespace resin.models.device.tags
-	# @memberof resin.models.device
+	# @namespace balena.models.device.tags
+	# @memberof balena.models.device
 	###
 	exports.tags = {
 		###*
@@ -1927,7 +1927,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.device.tags
+		# @memberof balena.models.device.tags
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -1935,17 +1935,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
+		# balena.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.device.tags.getAllByApplication(999999).then(function(tags) {
+		# balena.models.device.tags.getAllByApplication(999999).then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
+		# balena.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
 		# 	if (error) throw error;
 		# 	console.log(tags)
 		# });
@@ -1968,7 +1968,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByDevice
 		# @public
 		# @function
-		# @memberof resin.models.device.tags
+		# @memberof balena.models.device.tags
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -1976,17 +1976,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
+		# balena.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.device.tags.getAllByDevice(123).then(function(tags) {
+		# balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
+		# balena.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
 		# 	if (error) throw error;
 		# 	console.log(tags)
 		# });
@@ -1998,19 +1998,19 @@ getDeviceModel = (deps, opts) ->
 		# @name getAll
 		# @public
 		# @function
-		# @memberof resin.models.device.tags
+		# @memberof balena.models.device.tags
 		#
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - device tags
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.tags.getAll().then(function(tags) {
+		# balena.models.device.tags.getAll().then(function(tags) {
 		# 	console.log(tags);
 		# });
 		#
 		# @example
-		# resin.models.device.tags.getAll(function(error, tags) {
+		# balena.models.device.tags.getAll(function(error, tags) {
 		# 	if (error) throw error;
 		# 	console.log(tags)
 		# });
@@ -2022,7 +2022,7 @@ getDeviceModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.device.tags
+		# @memberof balena.models.device.tags
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} tagKey - tag key
@@ -2031,13 +2031,13 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
+		# balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
 		#
 		# @example
-		# resin.models.device.tags.set(123, 'EDITOR', 'vim');
+		# balena.models.device.tags.set(123, 'EDITOR', 'vim');
 		#
 		# @example
-		# resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+		# balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 		# 	if (error) throw error;
 		# });
 		###
@@ -2048,17 +2048,17 @@ getDeviceModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.device.tags
+		# @memberof balena.models.device.tags
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} tagKey - tag key
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.tags.remove('7cf02a6', 'EDITOR');
+		# balena.models.device.tags.remove('7cf02a6', 'EDITOR');
 		#
 		# @example
-		# resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
+		# balena.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
 		# 	if (error) throw error;
 		# });
 		###
@@ -2066,8 +2066,8 @@ getDeviceModel = (deps, opts) ->
 	}
 
 	###*
-	# @namespace resin.models.device.configVar
-	# @memberof resin.models.device
+	# @namespace balena.models.device.configVar
+	# @memberof balena.models.device
 	###
 	exports.configVar = {
 		###*
@@ -2075,7 +2075,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByDevice
 		# @public
 		# @function
-		# @memberof resin.models.device.configVar
+		# @memberof balena.models.device.configVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -2083,17 +2083,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# balena.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.getAllByDevice(999999).then(function(vars) {
+		# balena.models.device.configVar.getAllByDevice(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2105,7 +2105,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.device.configVar
+		# @memberof balena.models.device.configVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -2113,17 +2113,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
+		# balena.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.getAllByApplication(999999).then(function(vars) {
+		# balena.models.device.configVar.getAllByApplication(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
+		# balena.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2152,7 +2152,7 @@ getDeviceModel = (deps, opts) ->
 		# @name get
 		# @public
 		# @function
-		# @memberof resin.models.device.configVar
+		# @memberof balena.models.device.configVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} key - config variable name
@@ -2160,17 +2160,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR').then(function(value) {
+		# balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+		# balena.models.device.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR', function(error, value) {
+		# balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR', function(error, value) {
 		# 	if (error) throw error;
 		# 	console.log(value)
 		# });
@@ -2182,7 +2182,7 @@ getDeviceModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.device.configVar
+		# @memberof balena.models.device.configVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} key - config variable name
@@ -2190,17 +2190,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue').then(function() {
+		# balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+		# balena.models.device.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue', function(error) {
+		# balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -2212,24 +2212,24 @@ getDeviceModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.device.configVar
+		# @memberof balena.models.device.configVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} key - config variable name
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR').then(function() {
+		# balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.remove(999999, 'RESIN_VAR').then(function() {
+		# balena.models.device.configVar.remove(999999, 'BALENA_VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR', function(error) {
+		# balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -2238,8 +2238,8 @@ getDeviceModel = (deps, opts) ->
 	}
 
 	###*
-	# @namespace resin.models.device.envVar
-	# @memberof resin.models.device
+	# @namespace balena.models.device.envVar
+	# @memberof balena.models.device
 	###
 	exports.envVar = {
 		###*
@@ -2247,7 +2247,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByDevice
 		# @public
 		# @function
-		# @memberof resin.models.device.envVar
+		# @memberof balena.models.device.envVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -2255,17 +2255,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# balena.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.getAllByDevice(999999).then(function(vars) {
+		# balena.models.device.envVar.getAllByDevice(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2277,7 +2277,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.device.envVar
+		# @memberof balena.models.device.envVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -2285,17 +2285,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
+		# balena.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.getAllByApplication(999999).then(function(vars) {
+		# balena.models.device.envVar.getAllByApplication(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
+		# balena.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2324,7 +2324,7 @@ getDeviceModel = (deps, opts) ->
 		# @name get
 		# @public
 		# @function
-		# @memberof resin.models.device.envVar
+		# @memberof balena.models.device.envVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} key - environment variable name
@@ -2332,17 +2332,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
+		# balena.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.get(999999, 'VAR').then(function(value) {
+		# balena.models.device.envVar.get(999999, 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
+		# balena.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
 		# 	if (error) throw error;
 		# 	console.log(value)
 		# });
@@ -2354,7 +2354,7 @@ getDeviceModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.device.envVar
+		# @memberof balena.models.device.envVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} key - environment variable name
@@ -2362,17 +2362,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
+		# balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+		# balena.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
+		# balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -2384,24 +2384,24 @@ getDeviceModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.device.envVar
+		# @memberof balena.models.device.envVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {String} key - environment variable name
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
+		# balena.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.remove(999999, 'VAR').then(function() {
+		# balena.models.device.envVar.remove(999999, 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
+		# balena.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -2410,8 +2410,8 @@ getDeviceModel = (deps, opts) ->
 	}
 
 	###*
-	# @namespace resin.models.device.serviceVar
-	# @memberof resin.models.device
+	# @namespace balena.models.device.serviceVar
+	# @memberof balena.models.device
 	###
 	exports.serviceVar = {
 
@@ -2420,7 +2420,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByDevice
 		# @public
 		# @function
-		# @memberof resin.models.device.serviceVar
+		# @memberof balena.models.device.serviceVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -2428,17 +2428,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
+		# balena.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
+		# balena.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
+		# balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2464,7 +2464,7 @@ getDeviceModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.device.serviceVar
+		# @memberof balena.models.device.serviceVar
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -2472,17 +2472,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
+		# balena.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
+		# balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
+		# balena.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -2516,7 +2516,7 @@ getDeviceModel = (deps, opts) ->
 		# @name get
 		# @public
 		# @function
-		# @memberof resin.models.device.serviceVar
+		# @memberof balena.models.device.serviceVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Number} id - service id
@@ -2525,17 +2525,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+		# balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
+		# balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
+		# balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
 		# 	if (error) throw error;
 		# 	console.log(value)
 		# });
@@ -2566,7 +2566,7 @@ getDeviceModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.device.serviceVar
+		# @memberof balena.models.device.serviceVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Number} id - service id
@@ -2575,17 +2575,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+		# balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
+		# balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
+		# balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -2610,9 +2610,9 @@ getDeviceModel = (deps, opts) ->
 							service: serviceId
 				.tap (serviceInstalls) ->
 					if isEmpty(serviceInstalls)
-						throw new errors.ResinServiceNotFound(serviceId)
+						throw new errors.BalenaServiceNotFound(serviceId)
 					if serviceInstalls.length > 1
-						throw new errors.ResinAmbiguousDevice(uuidOrId)
+						throw new errors.BalenaAmbiguousDevice(uuidOrId)
 				.get(0)
 				.get('id')
 			.then (serviceInstallId) ->
@@ -2638,7 +2638,7 @@ getDeviceModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.device.serviceVar
+		# @memberof balena.models.device.serviceVar
 		#
 		# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		# @param {Number} id - service id
@@ -2646,17 +2646,17 @@ getDeviceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+		# balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
+		# balena.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
+		# balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });

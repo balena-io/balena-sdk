@@ -186,7 +186,7 @@ describe 'Pine option merging', ->
 
 describe 'ImgMakerHelper', ->
 
-	ROOT_URL = 'https://img.resin.io'
+	ROOT_URL = 'https://img.balena-cloud.com'
 
 	beforeEach =>
 		@requestStub = send: m.sinon.stub().returns(new Promise(->))

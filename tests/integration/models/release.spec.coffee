@@ -1,7 +1,7 @@
 m = require('mochainon')
 _ = require('lodash')
 
-{ resin, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
+{ balena, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
 
 {
 	itShouldGetAllTagsByResource
@@ -17,51 +17,51 @@ describe 'Release Model', ->
 	describe 'given an application with no releases', ->
 
 		beforeEach ->
-			resin.models.application.create
+			balena.models.application.create
 				name: 'FooBar'
 				applicationType: 'microservices-starter'
 				deviceType: 'raspberry-pi'
 			.then (application) =>
 				@application = application
 
-		describe 'resin.models.release.get()', ->
+		describe 'balena.models.release.get()', ->
 
 			it 'should be rejected if the release id does not exist', ->
-				promise = resin.models.release.get(123)
+				promise = balena.models.release.get(123)
 				m.chai.expect(promise).to.be.rejectedWith('Release not found: 123')
 
-		describe 'resin.models.release.getWithImageDetails()', ->
+		describe 'balena.models.release.getWithImageDetails()', ->
 
 			it 'should be rejected if the release id does not exist', ->
-				promise = resin.models.release.getWithImageDetails(123)
+				promise = balena.models.release.getWithImageDetails(123)
 				m.chai.expect(promise).to.be.rejectedWith('Release not found: 123')
 
-		describe 'resin.models.release.getAllByApplication()', ->
+		describe 'balena.models.release.getAllByApplication()', ->
 
 			it 'should eventually become an empty array given an application name', ->
-				promise = resin.models.release.getAllByApplication(@application.app_name)
+				promise = balena.models.release.getAllByApplication(@application.app_name)
 				m.chai.expect(promise).to.become([])
 
 			it 'should eventually become an empty array given an application id', ->
-				promise = resin.models.release.getAllByApplication(@application.id)
+				promise = balena.models.release.getAllByApplication(@application.id)
 				m.chai.expect(promise).to.become([])
 
 			it 'should be rejected if the application name does not exist', ->
-				promise = resin.models.release.getAllByApplication('HelloWorldApp')
+				promise = balena.models.release.getAllByApplication('HelloWorldApp')
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
 			it 'should be rejected if the application id does not exist', ->
-				promise = resin.models.release.getAllByApplication(999999)
+				promise = balena.models.release.getAllByApplication(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 	describe 'given a multicontainer application with two releases', ->
 
 		givenMulticontainerApplication()
 
-		describe 'resin.models.release.get()', ->
+		describe 'balena.models.release.get()', ->
 
 			it 'should get the requested release', ->
-				resin.models.release.get(@currentRelease.id)
+				balena.models.release.get(@currentRelease.id)
 				.then (release) =>
 					m.chai.expect(release).to.deep.match
 						status: 'success',
@@ -70,10 +70,10 @@ describe 'Release Model', ->
 						id: @currentRelease.id
 						belongs_to__application: __id: @application.id
 
-		describe 'resin.models.release.getAllByApplication()', ->
+		describe 'balena.models.release.getAllByApplication()', ->
 
 			it 'should load both releases', ->
-				resin.models.release.getAllByApplication(@application.id)
+				balena.models.release.getAllByApplication(@application.id)
 				.then (releases) ->
 					m.chai.expect(releases).to.have.lengthOf(2)
 
@@ -91,10 +91,10 @@ describe 'Release Model', ->
 						commit: 'new-release-commit'
 					]
 
-		describe 'resin.models.release.getWithImageDetails()', ->
+		describe 'balena.models.release.getWithImageDetails()', ->
 
 			it 'should get the release with associated images attached', ->
-				resin.models.release.getWithImageDetails(@currentRelease.id)
+				balena.models.release.getWithImageDetails(@currentRelease.id)
 				.then (release) ->
 					m.chai.expect(release).to.deep.match
 						commit: 'new-release-commit'
@@ -110,7 +110,7 @@ describe 'Release Model', ->
 					m.chai.expect(release.images[0].build_log).to.be.undefined
 
 			it 'should allow extra options to also get the build log', ->
-				resin.models.release.getWithImageDetails @currentRelease.id,
+				balena.models.release.getWithImageDetails @currentRelease.id,
 					image: $select: 'build_log'
 				.then (release) ->
 					m.chai.expect(release).to.deep.match
@@ -122,15 +122,15 @@ describe 'Release Model', ->
 							build_log: 'web log'
 						]
 
-		describe 'resin.models.release.tags', ->
+		describe 'balena.models.release.tags', ->
 
 			appTagTestOptions =
-				model: resin.models.release.tags
+				model: balena.models.release.tags
 				resourceName: 'application'
 				uniquePropertyName: 'app_name'
 
 			releaseTagTestOptions =
-				model: resin.models.release.tags
+				model: balena.models.release.tags
 				resourceName: 'release'
 				uniquePropertyName: null
 
@@ -141,17 +141,17 @@ describe 'Release Model', ->
 				# release.tags.getAllByApplication() test
 				appTagTestOptions.setTagResourceProvider = => @currentRelease
 
-			describe 'resin.models.release.tags.getAllByApplication()', ->
+			describe 'balena.models.release.tags.getAllByApplication()', ->
 				itShouldGetAllTagsByResource(appTagTestOptions)
 
-			describe 'resin.models.release.tags.getAllByRelease()', ->
+			describe 'balena.models.release.tags.getAllByRelease()', ->
 				itShouldGetAllTagsByResource(releaseTagTestOptions)
 
-			describe 'resin.models.release.tags.getAll()', ->
+			describe 'balena.models.release.tags.getAll()', ->
 				itShouldGetAllTags(releaseTagTestOptions)
 
-			describe 'resin.models.release.tags.set()', ->
+			describe 'balena.models.release.tags.set()', ->
 				itShouldSetTags(releaseTagTestOptions)
 
-			describe 'resin.models.release.tags.remove()', ->
+			describe 'balena.models.release.tags.remove()', ->
 				itShouldRemoveTags(releaseTagTestOptions)

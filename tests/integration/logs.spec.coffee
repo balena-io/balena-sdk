@@ -2,10 +2,10 @@ Promise = require('bluebird')
 m = require('mochainon')
 rindle = require('rindle')
 
-{ resin, sdkOpts, givenLoggedInUser } = require('./setup')
+{ balena, sdkOpts, givenLoggedInUser } = require('./setup')
 
 sendLogMessages = (uuid, deviceApiKey, messages) ->
-	resin.request.send
+	balena.request.send
 		method: 'POST'
 		url: "/device/v2/#{uuid}/logs"
 		baseUrl: sdkOpts.apiUrl
@@ -20,18 +20,18 @@ describe 'Logs', ->
 	describe 'given a device', ->
 
 		beforeEach ->
-			resin.models.application.create
+			balena.models.application.create
 				name: 'FooBar'
 				deviceType: 'raspberry-pi'
 				applicationType: 'microservices-starter'
 			.then (application) =>
 				@application = application
-				@uuid = resin.models.device.generateUniqueKey()
-				resin.models.device.register(application.id, @uuid)
+				@uuid = balena.models.device.generateUniqueKey()
+				balena.models.device.register(application.id, @uuid)
 			.then (registrationInfo) =>
 				@deviceApiKey = registrationInfo.api_key
 
-		describe 'resin.logs.history()', ->
+		describe 'balena.logs.history()', ->
 
 			it 'should successfully load historical logs', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -43,7 +43,7 @@ describe 'Logs', ->
 				}]
 				.delay(2000)
 				.then =>
-					resin.logs.history(@uuid)
+					balena.logs.history(@uuid)
 				.then (logs) ->
 					m.chai.expect(logs).to.deep.match [{
 						message: 'First message'
@@ -61,12 +61,12 @@ describe 'Logs', ->
 				}]
 				.delay(2000)
 				.then =>
-					resin.logs.history(@uuid, { count: 1 })
+					balena.logs.history(@uuid, { count: 1 })
 				.then (logs) ->
 					m.chai.expect(logs).to.have.lengthOf(1)
 					m.chai.expect(logs[0].message).to.equal('Second message')
 
-		describe 'resin.logs.subscribe()', ->
+		describe 'balena.logs.subscribe()', ->
 
 			it 'should not load historical logs by default', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -77,7 +77,7 @@ describe 'Logs', ->
 					timestamp: Date.now()
 				}]
 				.then =>
-					resin.logs.subscribe(@uuid)
+					balena.logs.subscribe(@uuid)
 				.then (logs) ->
 					new Promise (resolve, reject) ->
 						lines = []
@@ -100,7 +100,7 @@ describe 'Logs', ->
 					timestamp: Date.now()
 				}]
 				.then =>
-					resin.logs.subscribe(@uuid, { count: 'all' })
+					balena.logs.subscribe(@uuid, { count: 'all' })
 				.then (logs) ->
 					new Promise (resolve, reject) ->
 						lines = []
@@ -128,7 +128,7 @@ describe 'Logs', ->
 					timestamp: Date.now()
 				}]
 				.then =>
-					resin.logs.subscribe(@uuid, { count: 1 })
+					balena.logs.subscribe(@uuid, { count: 1 })
 				.then (logs) ->
 					new Promise (resolve, reject) ->
 						lines = []
@@ -149,7 +149,7 @@ describe 'Logs', ->
 					timestamp: Date.now()
 				}]
 				.then =>
-					resin.logs.subscribe(@uuid, { count: 100 })
+					balena.logs.subscribe(@uuid, { count: 100 })
 				.then (logs) =>
 					new Promise (resolve, reject) =>
 						lines = []
@@ -176,7 +176,7 @@ describe 'Logs', ->
 					}]
 
 			it 'should allow unsubscribing from logs', ->
-				resin.logs.subscribe(@uuid)
+				balena.logs.subscribe(@uuid)
 				.delay(1000) # Make sure we're connected
 				.then (logs) =>
 					# Unsubscribe before any messages are sent

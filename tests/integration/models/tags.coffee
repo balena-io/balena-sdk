@@ -135,6 +135,10 @@ exports.itShouldSetTags = (opts) ->
 		promise = model.set(@resource.id, 'io.resin.test', 'secret')
 		m.chai.expect(promise).to.be.rejectedWith('Tag keys beginning with io.resin. are reserved.')
 
+	it 'should not allow creating a balena tag', ->
+		promise = model.set(@resource.id, 'io.balena.test', 'secret')
+		m.chai.expect(promise).to.be.rejectedWith('Tag keys beginning with io.balena. are reserved.')
+
 	it 'should not allow creating a tag with a name containing a whitespace', ->
 		promise = model.set(@resource.id, 'EDITOR 1', 'vim')
 		m.chai.expect(promise).to.be.rejectedWith(/Request error: Tag keys cannot contain whitespace./)
