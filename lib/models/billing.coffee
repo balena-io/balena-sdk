@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,18 +23,18 @@ getBillingModel = (deps, opts) ->
 	# @name getAccount
 	# @public
 	# @function
-	# @memberof resin.models.billing
+	# @memberof balena.models.billing
 	#
 	# @fulfil {Object} - billing account
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.billing.getAccount().then(function(billingAccount) {
+	# balena.models.billing.getAccount().then(function(billingAccount) {
 	# 	console.log(billingAccount);
 	# });
 	#
 	# @example
-	# resin.models.billing.getAccount(function(error, billingAccount) {
+	# balena.models.billing.getAccount(function(error, billingAccount) {
 	# 	if (error) throw error;
 	# 	console.log(billingAccount);
 	# });
@@ -52,18 +52,18 @@ getBillingModel = (deps, opts) ->
 	# @name getPlan
 	# @public
 	# @function
-	# @memberof resin.models.billing
+	# @memberof balena.models.billing
 	#
 	# @fulfil {Object} - billing plan
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.billing.getPlan().then(function(billingPlan) {
+	# balena.models.billing.getPlan().then(function(billingPlan) {
 	# 	console.log(billingPlan);
 	# });
 	#
 	# @example
-	# resin.models.billing.getPlan(function(error, billingPlan) {
+	# balena.models.billing.getPlan(function(error, billingPlan) {
 	# 	if (error) throw error;
 	# 	console.log(billingPlan);
 	# });
@@ -81,18 +81,18 @@ getBillingModel = (deps, opts) ->
 	# @name getBillingInfo
 	# @public
 	# @function
-	# @memberof resin.models.billing
+	# @memberof balena.models.billing
 	#
 	# @fulfil {Object} - billing information
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.billing.getBillingInfo().then(function(billingInfo) {
+	# balena.models.billing.getBillingInfo().then(function(billingInfo) {
 	# 	console.log(billingInfo);
 	# });
 	#
 	# @example
-	# resin.models.billing.getBillingInfo(function(error, billingInfo) {
+	# balena.models.billing.getBillingInfo(function(error, billingInfo) {
 	# 	if (error) throw error;
 	# 	console.log(billingInfo);
 	# });
@@ -110,19 +110,19 @@ getBillingModel = (deps, opts) ->
 	# @name updateBillingInfo
 	# @public
 	# @function
-	# @memberof resin.models.billing
+	# @memberof balena.models.billing
 	#
 	# @param {Object} - an object containing a billing info token_id
 	# @fulfil {Object} - billing information
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }).then(function(billingInfo) {
+	# balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }).then(function(billingInfo) {
 	# 	console.log(billingInfo);
 	# });
 	#
 	# @example
-	# resin.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }, function(error, billingInfo) {
+	# balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }, function(error, billingInfo) {
 	# 	if (error) throw error;
 	# 	console.log(billingInfo);
 	# });
@@ -141,18 +141,18 @@ getBillingModel = (deps, opts) ->
 	# @name getInvoices
 	# @public
 	# @function
-	# @memberof resin.models.billing
+	# @memberof balena.models.billing
 	#
 	# @fulfil {Object} - invoices
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.billing.getInvoices().then(function(invoices) {
+	# balena.models.billing.getInvoices().then(function(invoices) {
 	# 	console.log(invoices);
 	# });
 	#
 	# @example
-	# resin.models.billing.getInvoices(function(error, invoices) {
+	# balena.models.billing.getInvoices(function(error, invoices) {
 	# 	if (error) throw error;
 	# 	console.log(invoices);
 	# });
@@ -170,7 +170,7 @@ getBillingModel = (deps, opts) ->
 	# @name downloadInvoice
 	# @public
 	# @function
-	# @memberof resin.models.billing
+	# @memberof balena.models.billing
 	#
 	# @param {String} - an invoice number
 	# @fulfil {Blob|ReadableStream} - blob on the browser, download stream on node
@@ -178,11 +178,11 @@ getBillingModel = (deps, opts) ->
 	#
 	# @example
 	# # Browser
-	# resin.models.billing.downloadInvoice('0000').then(function(blob) {
+	# balena.models.billing.downloadInvoice('0000').then(function(blob) {
 	# 	console.log(blob);
 	# });
 	# # Node
-	# resin.models.billing.downloadInvoice('0000').then(function(stream) {
+	# balena.models.billing.downloadInvoice('0000').then(function(stream) {
 	# 	stream.pipe(fs.createWriteStream('foo/bar/invoice-0000.pdf'));
 	# });
 	###

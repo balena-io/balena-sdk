@@ -1,10 +1,10 @@
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
-import * as ResinSdk from '../../typings/resin-sdk';
+import * as BalenaSdk from '../../typings/balena-sdk';
 
 export const IS_BROWSER: boolean;
 
-export const getSdk: ResinSdk.SdkConstructor;
+export const getSdk: BalenaSdk.SdkConstructor;
 
 export const sdkOpts: {
 	apiUrl: string;
@@ -30,7 +30,7 @@ export const credentials: {
 	};
 };
 
-export const resin: ResinSdk.ResinSDK;
+export const balena: BalenaSdk.BalenaSDK;
 
 export const resetUser: () => Promise<void>;
 

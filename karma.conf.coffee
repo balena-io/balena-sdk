@@ -5,7 +5,7 @@ packageJSON = require('./package.json')
 
 getKarmaConfig.DEFAULT_WEBPACK_CONFIG.externals = fs: true
 
-BROWSER_BUNDLE = 'build/resin-browser.js'
+BROWSER_BUNDLE = 'build/balena-browser.js'
 
 module.exports = (config) ->
 	loadEnv()
@@ -30,15 +30,15 @@ module.exports = (config) ->
 		terminal: true
 
 	karmaConfig.envPreprocessor = [
-		'RESINTEST_API_URL'
-		'RESINTEST_EMAIL'
-		'RESINTEST_PASSWORD'
-		'RESINTEST_USERNAME'
-		'RESINTEST_PAID_EMAIL'
-		'RESINTEST_PAID_PASSWORD'
-		'RESINTEST_REGISTER_EMAIL'
-		'RESINTEST_REGISTER_PASSWORD'
-		'RESINTEST_REGISTER_USERNAME'
+		'TEST_API_URL'
+		'TEST_EMAIL'
+		'TEST_PASSWORD'
+		'TEST_USERNAME'
+		'TEST_PAID_EMAIL'
+		'TEST_PAID_PASSWORD'
+		'TEST_REGISTER_EMAIL'
+		'TEST_REGISTER_PASSWORD'
+		'TEST_REGISTER_USERNAME'
 	]
 
 	config.set(karmaConfig)
