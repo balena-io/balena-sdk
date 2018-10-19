@@ -117,16 +117,10 @@ getApplicationModel = (deps, opts) ->
 		auth.getUserId()
 		.then (userId) ->
 			return pine.get
-				resource: 'application'
+				resource: 'my_application'
 				options:
 					mergePineOptions
 						$orderby: 'app_name asc'
-						$filter:
-							$or:
-								user: userId
-								includes__user: $any:
-									$alias: 'x'
-									$expr: x: user: userId
 					, options
 
 		.map (application) ->
