@@ -272,17 +272,7 @@ getApplicationModel = (deps, opts) ->
 			options:
 				mergePineOptions
 					$filter:
-						$eq: [
-							$tolower: $: 'app_name'
-							appName
-						],
-						user:
-							$any:
-								$alias: 'u',
-								$expr: $eq: [
-									$tolower: $: 'username'
-									owner
-								]
+						slug: "#{owner}/#{appName}"
 				, options
 		.tap (applications) ->
 			if isEmpty(applications)
