@@ -8,7 +8,13 @@ module.exports = (config) ->
 	loadEnv()
 
 	karmaConfig.plugins.push(require('karma-chrome-launcher'))
-	karmaConfig.browsers = ['ChromeHeadless']
+	karmaConfig.browsers = ['ChromeHeadlessCustom']
+	karmaConfig.customLaunchers =
+		ChromeHeadlessCustom:
+			base: 'ChromeHeadless'
+			flags: [
+				'--no-sandbox'
+			]
 
 	karmaConfig.logLevel = config.LOG_INFO
 	karmaConfig.sauceLabs =
@@ -41,9 +47,6 @@ module.exports = (config) ->
 		'RESINTEST_USERNAME'
 		'RESINTEST_PAID_EMAIL'
 		'RESINTEST_PAID_PASSWORD'
-		'RESINTEST_REGISTER_EMAIL'
-		'RESINTEST_REGISTER_PASSWORD'
-		'RESINTEST_REGISTER_USERNAME'
 	]
 
 	config.set(karmaConfig)

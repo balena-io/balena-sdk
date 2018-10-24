@@ -1,7 +1,7 @@
 m = require('mochainon')
 _ = require('lodash')
 
-{ resin, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
+{ resin, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
 
 describe 'Image Model', ->
 
