@@ -88,15 +88,17 @@ describe 'Application Model', ->
 					deviceType: 'edge'
 				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
-			it 'should be rejected if the name has less than three characters', ->
+			it 'should be rejected if the name has less than four characters', ->
 				promise = resin.models.application.create
-					name: 'Fo'
+					name: 'Foo'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi'
 				m.chai.expect(promise).to.be.rejected
 				.then (error) ->
+					m.chai.expect(error).to.have.property('code', 'ResinRequestError')
+					m.chai.expect(error).to.have.property('statusCode', 400)
 					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each app name that is of an organization, has a Length (Type) that is greater than or equal to 4')
+					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4')
 
 			it 'should be able to create an application using a device type alias', ->
 				resin.models.application.create
