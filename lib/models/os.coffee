@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ partition = require('lodash/partition')
 semver = require('semver')
 _ = require('lodash')
 
-errors = require('resin-errors')
+errors = require('balena-errors')
 
 { onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare, isDevelopmentVersion } = require('../util')
 
-RESINOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
+BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
@@ -70,7 +70,7 @@ getOsModel = (deps, opts) ->
 		if v is 'latest'
 			return v
 		vNormalized = if v[0] is 'v' then v.substring(1) else v
-		if not RESINOS_VERSION_REGEX.test(vNormalized)
+		if not BALENAOS_VERSION_REGEX.test(vNormalized)
 			throw new Error("Invalid semver version: #{v}")
 		return vNormalized
 
@@ -98,7 +98,7 @@ getOsModel = (deps, opts) ->
 
 		semverVersions = osVersions.versions.map(fixNonSemver)
 
-		# TODO: Once we integrate resin-semver, resin-semver should learn to handle this itself
+		# TODO: Once we integrate balena-semver, balena-semver should learn to handle this itself
 		semverVersionOrRange = fixNonSemver(versionOrRange)
 		if _.includes(semverVersions, semverVersionOrRange)
 			# If the _exact_ version you're looking for exists, it's not a range, and
@@ -114,7 +114,7 @@ getOsModel = (deps, opts) ->
 	# @name getDownloadSize
 	# @public
 	# @function
-	# @memberof resin.models.os
+	# @memberof balena.models.os
 	# @description **Note!** Currently only the raw (uncompressed) size is reported.
 	#
 	# @param {String} deviceType - device type slug
@@ -124,11 +124,11 @@ getOsModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.getDownloadSize('raspberry-pi').then(function(size) {
+	# balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 	# 	console.log('The OS download size for raspberry-pi', size);
 	# });
 	#
-	# resin.models.os.getDownloadSize('raspberry-pi', function(error, size) {
+	# balena.models.os.getDownloadSize('raspberry-pi', function(error, size) {
 	# 	if (error) throw error;
 	# 	console.log('The OS download size for raspberry-pi', size);
 	# });
@@ -139,7 +139,7 @@ getOsModel = (deps, opts) ->
 		return isValidDeviceType(deviceType)
 			.then (isValid) ->
 				if not isValid
-					throw new errors.ResinInvalidDeviceType('No such device type')
+					throw new errors.BalenaInvalidDeviceType('No such device type')
 				getDownloadSize(deviceType, version)
 			.asCallback(callback)
 
@@ -148,7 +148,7 @@ getOsModel = (deps, opts) ->
 	# @name getSupportedVersions
 	# @public
 	# @function
-	# @memberof resin.models.os
+	# @memberof balena.models.os
 	#
 	# @param {String} deviceType - device type slug
 	# @fulfil {Object} - the versions information, of the following structure:
@@ -161,11 +161,11 @@ getOsModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
+	# balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
 	# 	console.log('Supported OS versions for raspberry-pi', osVersions);
 	# });
 	#
-	# resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
+	# balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
 	# 	if (error) throw error;
 	# 	console.log('Supported OS versions for raspberry-pi', osVersions);
 	# });
@@ -176,7 +176,7 @@ getOsModel = (deps, opts) ->
 		return isValidDeviceType(deviceType)
 			.then (isValid) ->
 				if not isValid
-					throw new errors.ResinInvalidDeviceType('No such device type')
+					throw new errors.BalenaInvalidDeviceType('No such device type')
 				getOsVersions(deviceType)
 			.asCallback(callback)
 
@@ -185,7 +185,7 @@ getOsModel = (deps, opts) ->
 	# @name getMaxSatisfyingVersion
 	# @public
 	# @function
-	# @memberof resin.models.os
+	# @memberof balena.models.os
 	#
 	# @param {String} deviceType - device type slug
 	# @param {String} versionOrRange - can be one of
@@ -206,11 +206,11 @@ getOsModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
+	# balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
 	# 	console.log('Supported OS versions for raspberry-pi', osVersions);
 	# });
 	#
-	# resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
+	# balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
 	# 	if (error) throw error;
 	# 	console.log('Supported OS versions for raspberry-pi', osVersions);
 	# });
@@ -221,7 +221,7 @@ getOsModel = (deps, opts) ->
 		return isValidDeviceType(deviceType)
 			.then (isValid) ->
 				if not isValid
-					throw new errors.ResinInvalidDeviceType('No such device type')
+					throw new errors.BalenaInvalidDeviceType('No such device type')
 				exports.getSupportedVersions(deviceType)
 			.then (osVersions) ->
 				exports._getMaxSatisfyingVersion(versionOrRange, osVersions)
@@ -232,26 +232,26 @@ getOsModel = (deps, opts) ->
 	# @name getLastModified
 	# @public
 	# @function
-	# @memberof resin.models.os
+	# @memberof balena.models.os
 	#
 	# @param {String} deviceType - device type slug
 	# @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'.
 	# Unsupported (unpublished) version will result in rejection.
 	# The version **must** be the exact version number.
-	# To resolve the semver-compatible range use `resin.model.os.getMaxSatisfyingVersion`.
+	# To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
 	# @fulfil {Date} - last modified date
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.getLastModified('raspberry-pi').then(function(date) {
+	# balena.models.os.getLastModified('raspberry-pi').then(function(date) {
 	# 	console.log('The raspberry-pi image was last modified in ' + date);
 	# });
 	#
-	# resin.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
+	# balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
 	# 	console.log('The raspberry-pi image was last modified in ' + date);
 	# });
 	#
-	# resin.models.os.getLastModified('raspberry-pi', function(error, date) {
+	# balena.models.os.getLastModified('raspberry-pi', function(error, date) {
 	# 	if (error) throw error;
 	# 	console.log('The raspberry-pi image was last modified in ' + date);
 	# });
@@ -262,7 +262,7 @@ getOsModel = (deps, opts) ->
 		return isValidDeviceType(deviceType)
 			.then (isValid) ->
 				if not isValid
-					throw new errors.ResinInvalidDeviceType('No such device type')
+					throw new errors.BalenaInvalidDeviceType('No such device type')
 				return normalizeVersion(version)
 			.then (version) ->
 				imgMakerHelper.request
@@ -279,22 +279,22 @@ getOsModel = (deps, opts) ->
 	# @name download
 	# @public
 	# @function
-	# @memberof resin.models.os
+	# @memberof balena.models.os
 	#
 	# @param {String} deviceType - device type slug
 	# @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'
 	# Unsupported (unpublished) version will result in rejection.
 	# The version **must** be the exact version number.
-	# To resolve the semver-compatible range use `resin.model.os.getMaxSatisfyingVersion`.
+	# To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
 	# @fulfil {ReadableStream} - download stream
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.download('raspberry-pi').then(function(stream) {
+	# balena.models.os.download('raspberry-pi').then(function(stream) {
 	# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	# });
 	#
-	# resin.models.os.download('raspberry-pi', function(error, stream) {
+	# balena.models.os.download('raspberry-pi', function(error, stream) {
 	# 	if (error) throw error;
 	# 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	# });
@@ -305,7 +305,7 @@ getOsModel = (deps, opts) ->
 		return isValidDeviceType(deviceType)
 			.then (isValid) ->
 				if not isValid
-					throw new errors.ResinInvalidDeviceType('No such device type')
+					throw new errors.BalenaInvalidDeviceType('No such device type')
 				return normalizeVersion(version)
 			.then (version) ->
 				imgMakerHelper.stream
@@ -319,7 +319,7 @@ getOsModel = (deps, opts) ->
 	# @name getConfig
 	# @public
 	# @function
-	# @memberof resin.models.os
+	# @memberof balena.models.os
 	#
 	# @description
 	# Builds the config.json for a device in the given application, with the given
@@ -346,15 +346,15 @@ getOsModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+	# balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	#
-	# resin.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+	# balena.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	#
-	# resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
+	# balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
 	# 	if (error) throw error;
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });

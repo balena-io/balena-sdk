@@ -1,4 +1,4 @@
-import * as ResinSdk from '../../typings/resin-sdk';
+import * as BalenaSdk from '../../typings/balena-sdk';
 
 /** Use with: `findCallback(arguments)`. */
 export function findCallback(args: IArguments): (() => void);
@@ -14,7 +14,7 @@ export function findCallback(args: IArguments): (() => void);
  *   * And $selects within expands override
  * * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
  */
-export function mergePineOptions<T = ResinSdk.PineOptions>(
+export function mergePineOptions<T = BalenaSdk.PineOptions>(
 	defaults: T,
 	extras: T,
 ): T;

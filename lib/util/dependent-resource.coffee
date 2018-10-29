@@ -1,5 +1,5 @@
 ###
-Copyright 2017 Resin.io
+Copyright 2017 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
-errors = require('resin-errors')
+errors = require('balena-errors')
 
 {
 	findCallback
