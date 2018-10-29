@@ -201,7 +201,6 @@ declare namespace BalenaSdk {
 		app_name: string;
 		device_type: string;
 		slug: string;
-		git_repository: string;
 		commit: string;
 		id: number;
 		device_type_info?: DeviceType;
