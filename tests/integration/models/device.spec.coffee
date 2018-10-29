@@ -630,12 +630,14 @@ describe 'Device Model', ->
 					resin.models.device.enableDeviceUrl(@device.id)
 
 				it 'should eventually return the correct device url given a shorter uuid', ->
-					promise = resin.models.device.getDeviceUrl(@device.uuid.slice(0, 7))
-					m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
+					resin.models.device.getDeviceUrl(@device.uuid.slice(0, 7))
+					.then (deviceUrl) ->
+						m.chai.expect(deviceUrl).to.match(/[a-z0-9]{62}/)
 
 				it 'should eventually return the correct device url given an id', ->
-					promise = resin.models.device.getDeviceUrl(@device.id)
-					m.chai.expect(promise).to.eventually.match(/[a-z0-9]{62}/)
+					resin.models.device.getDeviceUrl(@device.id)
+					.then (deviceUrl) ->
+						m.chai.expect(deviceUrl).to.match(/[a-z0-9]{62}/)
 
 				it 'should eventually be an absolute url given a uuid', ->
 					resin.models.device.getDeviceUrl(@device.uuid)

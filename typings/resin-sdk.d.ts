@@ -6,7 +6,6 @@ import * as Pine from './pinejs-client-core';
 import * as ResinPine from './resin-pine';
 import { ResinRequest } from './resin-request';
 
-/* tslint:disable:no-namespace */
 declare namespace ResinSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;

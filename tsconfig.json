@@ -5,17 +5,21 @@
         "outDir": "build",
         "noImplicitAny": true,
         "removeComments": false,
-        "rootDir": "lib/",
         "preserveConstEnums": true,
         "strictNullChecks": true,
         "sourceMap": false,
         "target": "es5",
         "noUnusedParameters": true,
         "noUnusedLocals": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "typeRoots": [
+            "node_modules/@types",
+            "node_modules/@resin.io"
+        ]
     },
     "include": [
         "typings/*.d.ts",
+        "tests/typings/*.d.ts",
         "lib/**/*.ts",
         "lib/**/*.d.ts"
     ]
