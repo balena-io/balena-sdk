@@ -7,7 +7,6 @@ Balena SDK
 [![dependencies](https://david-dm.org/balena-io/balena-sdk.svg)](https://david-dm.org/balena-io/balena.sdk.svg)
 [![Build Status](https://travis-ci.org/balena-io/balena-sdk.svg?branch=master)](https://travis-ci.org/balena-io/balena-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/qbsivehgnq0vyrrb/branch/master?svg=true)](https://ci.appveyor.com/project/balena-io/balena-sdk/branch/master)
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/balena-io/chat)
 
 Role
 ----
