@@ -74,7 +74,7 @@ getSdk = (opts = {}) ->
 		isBrowser: window?
 		# API version is configurable but only do so if you know what you're doing,
 		# as the SDK is directly tied to a specific version.
-		apiVersion: 'v4'
+		apiVersion: 'v5'
 
 	if opts.isBrowser
 		settings =
