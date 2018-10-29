@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-errors = require('resin-errors')
+errors = require('balena-errors')
 Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
@@ -25,15 +25,15 @@ getAuth = (deps, opts) ->
 
 	normalizeAuthError = (err) ->
 		if err.statusCode == 401
-			return new errors.ResinNotLoggedIn()
-		else if err.code == 'ResinMalformedToken'
-			return new errors.ResinNotLoggedIn()
+			return new errors.BalenaNotLoggedIn()
+		else if err.code == 'BalenaMalformedToken'
+			return new errors.BalenaNotLoggedIn()
 		else
 			return err
 
 	###*
-	# @namespace resin.auth.twoFactor
-	# @memberof resin.auth
+	# @namespace balena.auth.twoFactor
+	# @memberof balena.auth
 	###
 	exports.twoFactor = twoFactor
 
@@ -57,15 +57,15 @@ getAuth = (deps, opts) ->
 	# @name whoami
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:resin.auth.login} to log in.
+	# @description This will only work if you used {@link module:balena.auth.login} to log in.
 	#
 	# @fulfil {(String|undefined)} - username, if it exists
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.whoami().then(function(username) {
+	# balena.auth.whoami().then(function(username) {
 	# 	if (!username) {
 	# 		console.log('I\'m not logged in!');
 	# 	} else {
@@ -74,7 +74,7 @@ getAuth = (deps, opts) ->
 	# });
 	#
 	# @example
-	# resin.auth.whoami(function(error, username) {
+	# balena.auth.whoami(function(error, username) {
 	# 	if (error) throw error;
 	#
 	# 	if (!username) {
@@ -95,9 +95,9 @@ getAuth = (deps, opts) ->
 	# @name authenticate
 	# @protected
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
-	# @description You should use {@link module:resin.auth.login} when possible,
+	# @description You should use {@link module:balena.auth.login} when possible,
 	# as it takes care of saving the token and email as well.
 	#
 	# Notice that if `credentials` contains extra keys, they'll be discarted
@@ -111,12 +111,12 @@ getAuth = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.authenticate(credentials).then(function(token) {
+	# balena.auth.authenticate(credentials).then(function(token) {
 	# 	console.log('My token is:', token);
 	# });
 	#
 	# @example
-	# resin.auth.authenticate(credentials, function(error, token) {
+	# balena.auth.authenticate(credentials, function(error, token) {
 	# 	if (error) throw error;
 	# 	console.log('My token is:', token);
 	# });
@@ -134,11 +134,11 @@ getAuth = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Login to Resin.io
+	# @summary Login
 	# @name login
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
 	# @description If the login is successful, the token is persisted between sessions.
 	#
@@ -149,10 +149,10 @@ getAuth = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.login(credentials);
+	# balena.auth.login(credentials);
 	#
 	# @example
-	# resin.auth.login(credentials, function(error) {
+	# balena.auth.login(credentials, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -163,22 +163,22 @@ getAuth = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Login to Resin.io with a token or api key
+	# @summary Login with a token or api key
 	# @name loginWithToken
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
-	# @description Login to resin with a session token or api key instead of with credentials.
+	# @description Login to balena with a session token or api key instead of with credentials.
 	#
 	# @param {String} authToken - the auth token
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.loginWithToken(authToken);
+	# balena.auth.loginWithToken(authToken);
 	#
 	# @example
-	# resin.auth.loginWithToken(authToken, function(error) {
+	# balena.auth.loginWithToken(authToken, function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -191,13 +191,13 @@ getAuth = (deps, opts) ->
 	# @name isLoggedIn
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
 	# @fulfil {Boolean} - is logged in
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.isLoggedIn().then(function(isLoggedIn) {
+	# balena.auth.isLoggedIn().then(function(isLoggedIn) {
 	# 	if (isLoggedIn) {
 	# 		console.log('I\'m in!');
 	# 	} else {
@@ -206,7 +206,7 @@ getAuth = (deps, opts) ->
 	# });
 	#
 	# @example
-	# resin.auth.isLoggedIn(function(error, isLoggedIn) {
+	# balena.auth.isLoggedIn(function(error, isLoggedIn) {
 	# 	if (error) throw error;
 	#
 	# 	if (isLoggedIn) {
@@ -227,20 +227,20 @@ getAuth = (deps, opts) ->
 	# @name getToken
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:resin.auth.login} to log in.
+	# @description This will only work if you used {@link module:balena.auth.login} to log in.
 	#
 	# @fulfil {String} - raw API key or session token
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.getToken().then(function(token) {
+	# balena.auth.getToken().then(function(token) {
 	# 	console.log(token);
 	# });
 	#
 	# @example
-	# resin.auth.getToken(function(error, token) {
+	# balena.auth.getToken(function(error, token) {
 	# 	if (error) throw error;
 	# 	console.log(token);
 	# });
@@ -258,20 +258,20 @@ getAuth = (deps, opts) ->
 	# @name getUserId
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:resin.auth.login} to log in.
+	# @description This will only work if you used {@link module:balena.auth.login} to log in.
 	#
 	# @fulfil {Number} - user id
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.getUserId().then(function(userId) {
+	# balena.auth.getUserId().then(function(userId) {
 	# 	console.log(userId);
 	# });
 	#
 	# @example
-	# resin.auth.getUserId(function(error, userId) {
+	# balena.auth.getUserId(function(error, userId) {
 	# 	if (error) throw error;
 	# 	console.log(userId);
 	# });
@@ -286,20 +286,20 @@ getAuth = (deps, opts) ->
 	# @name getEmail
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:resin.auth.login} to log in.
+	# @description This will only work if you used {@link module:balena.auth.login} to log in.
 	#
 	# @fulfil {String} - user email
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.getEmail().then(function(email) {
+	# balena.auth.getEmail().then(function(email) {
 	# 	console.log(email);
 	# });
 	#
 	# @example
-	# resin.auth.getEmail(function(error, email) {
+	# balena.auth.getEmail(function(error, email) {
 	# 	if (error) throw error;
 	# 	console.log(email);
 	# });
@@ -310,19 +310,19 @@ getAuth = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Logout from Resin.io
+	# @summary Logout
 	# @name logout
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.logout();
+	# balena.auth.logout();
 	#
 	# @example
-	# resin.auth.logout(function(error) {
+	# balena.auth.logout(function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -331,11 +331,11 @@ getAuth = (deps, opts) ->
 		auth.removeKey().asCallback(callback)
 
 	###*
-	# @summary Register to Resin.io
+	# @summary Register a user account
 	# @name register
 	# @public
 	# @function
-	# @memberof resin.auth
+	# @memberof balena.auth
 	#
 	# @param {Object} [credentials={}] - in the form of username, password and email
 	# @param {String} credentials.email - the email
@@ -345,7 +345,7 @@ getAuth = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.auth.register({
+	# balena.auth.register({
 	# 	email: 'johndoe@gmail.com',
 	# 	password: 'secret'
 	# }).then(function(token) {
@@ -353,7 +353,7 @@ getAuth = (deps, opts) ->
 	# });
 	#
 	# @example
-	# resin.auth.register({
+	# balena.auth.register({
 	# 	email: 'johndoe@gmail.com',
 	# 	password: 'secret'
 	# }, function(error, token) {

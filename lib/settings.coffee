@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,19 +26,19 @@ getSettings = (deps, opts) ->
 	# @name get
 	# @function
 	# @public
-	# @memberof resin.settings
+	# @memberof balena.settings
 	#
 	# @param {String} [key] - setting key
 	# @fulfil {*} - setting value
 	# @returns {Promise}
 	#
 	# @example
-	# resin.settings.get('apiUrl').then(function(apiUrl) {
+	# balena.settings.get('apiUrl').then(function(apiUrl) {
 	# 	console.log(apiUrl);
 	# });
 	#
 	# @example
-	# resin.settings.get('apiUrl', function(error, apiUrl) {
+	# balena.settings.get('apiUrl', function(error, apiUrl) {
 	# 	if (error) throw error;
 	# 	console.log(apiUrl);
 	# });
@@ -53,18 +53,18 @@ getSettings = (deps, opts) ->
 	# @name getAll
 	# @function
 	# @public
-	# @memberof resin.settings
+	# @memberof balena.settings
 	#
 	# @fulfil {Object} - settings
 	# @returns {Promise}
 	#
 	# @example
-	# resin.settings.getAll().then(function(settings) {
+	# balena.settings.getAll().then(function(settings) {
 	# 	console.log(settings);
 	# });
 	#
 	# @example
-	# resin.settings.getAll(function(error, settings) {
+	# balena.settings.getAll(function(error, settings) {
 	# 	if (error) throw error;
 	# 	console.log(settings);
 	# });

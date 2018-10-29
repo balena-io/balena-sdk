@@ -1,4 +1,4 @@
-errors = require('resin-errors')
+errors = require('balena-errors')
 semver = require('semver')
 assign = require('lodash/assign')
 cloneDeep = require('lodash/cloneDeep')
@@ -67,36 +67,36 @@ exports.findCallback = (args) ->
 	return null
 
 exports.unauthorizedError =
-	code: 'ResinRequestError'
+	code: 'BalenaRequestError'
 	statusCode: 401
 
 exports.notFoundResponse =
-	code: 'ResinRequestError'
+	code: 'BalenaRequestError'
 	statusCode: 404
 
 exports.noDeviceForKeyResponse =
-	code: 'ResinRequestError'
+	code: 'BalenaRequestError'
 	statusCode: 500
 	body: 'No device found to associate with the api key'
 
 exports.noApplicationForKeyResponse =
-	code: 'ResinRequestError'
+	code: 'BalenaRequestError'
 	statusCode: 500
 	body: 'No application found to associate with the api key'
 
 exports.uniqueKeyViolated =
-	code: 'ResinRequestError'
+	code: 'BalenaRequestError'
 	body: 'Unique key constraint violated'
 
 exports.treatAsMissingApplication = (nameOrId) ->
 	return (err) ->
-		replacementErr = new errors.ResinApplicationNotFound(nameOrId)
+		replacementErr = new errors.BalenaApplicationNotFound(nameOrId)
 		replacementErr.stack = err.stack
 		throw replacementErr
 
 exports.treatAsMissingDevice = (uuidOrId) ->
 	return (err) ->
-		replacementErr = new errors.ResinDeviceNotFound(uuidOrId)
+		replacementErr = new errors.BalenaDeviceNotFound(uuidOrId)
 		replacementErr.stack = err.stack
 		throw replacementErr
 

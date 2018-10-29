@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,23 +26,38 @@ getConfigModel = (deps, opts) ->
 
 	exports = {}
 
+	normalizeDeviceTypes = (deviceTypes) ->
+		# Patch device types to be marked as ALPHA and BETA instead
+		# of PREVIEW and EXPERIMENTAL, respectively.
+		# This logic is literally copy and pasted from balena UI, but
+		# there are plans to move this to `resin-device-types` so it
+		# should be a matter of time for this to be removed.
+		return map deviceTypes, (deviceType) ->
+			if deviceType.state is 'PREVIEW'
+				deviceType.state = 'ALPHA'
+				deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
+			if deviceType.state is 'EXPERIMENTAL'
+				deviceType.state = 'BETA'
+				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)')
+			return deviceType
+
 	###*
 	# @summary Get all configuration
 	# @name getAll
 	# @public
 	# @function
-	# @memberof resin.models.config
+	# @memberof balena.models.config
 	#
 	# @fulfil {Object} - configuration
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.config.getAll().then(function(config) {
+	# balena.models.config.getAll().then(function(config) {
 	# 	console.log(config);
 	# });
 	#
 	# @example
-	# resin.models.config.getAll(function(error, config) {
+	# balena.models.config.getAll(function(error, config) {
 	# 	if (error) throw error;
 	# 	console.log(config);
 	# });
@@ -55,21 +70,7 @@ getConfigModel = (deps, opts) ->
 			sendToken: false
 		.get('body')
 		.then (body) ->
-
-			# Patch device types to be marked as ALPHA and BETA instead
-			# of PREVIEW and EXPERIMENTAL, respectively.
-			# This logic is literally copy and pasted from Resin UI, but
-			# there are plans to move this to `resin-device-types` so it
-			# should be a matter of time for this to be removed.
-			body.deviceTypes = map body.deviceTypes, (deviceType) ->
-				if deviceType.state is 'PREVIEW'
-					deviceType.state = 'ALPHA'
-					deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
-				if deviceType.state is 'EXPERIMENTAL'
-					deviceType.state = 'BETA'
-					deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)')
-				return deviceType
-
+			body.deviceTypes = normalizeDeviceTypes(body.deviceTypes)
 			return body
 		.asCallback(callback)
 
@@ -78,26 +79,33 @@ getConfigModel = (deps, opts) ->
 	# @name getDeviceTypes
 	# @public
 	# @function
-	# @memberof resin.models.config
+	# @memberof balena.models.config
 	#
 	# @fulfil {Object[]} - device types
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.config.getDeviceTypes().then(function(deviceTypes) {
+	# balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 	# 	console.log(deviceTypes);
 	# });
 	#
 	# @example
-	# resin.models.config.getDeviceTypes(function(error, deviceTypes) {
+	# balena.models.config.getDeviceTypes(function(error, deviceTypes) {
 	# 	if (error) throw error;
 	# 	console.log(deviceTypes);
 	# })
 	###
 	exports.getDeviceTypes = (callback) ->
-		exports.getAll().get('deviceTypes').tap (deviceTypes) ->
+		request.send
+			method: 'GET'
+			url: '/device-types/v1'
+			baseUrl: apiUrl
+			sendToken: false
+		.get('body')
+		.tap (deviceTypes) ->
 			if not deviceTypes?
 				throw new Error('No device types')
+		.then normalizeDeviceTypes
 		.asCallback(callback)
 
 	###*
@@ -105,19 +113,19 @@ getConfigModel = (deps, opts) ->
 	# @name getDeviceOptions
 	# @public
 	# @function
-	# @memberof resin.models.config
+	# @memberof balena.models.config
 	#
 	# @param {String} deviceType - device type slug
 	# @fulfil {Object[]} - configuration options
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
+	# balena.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 	# 	console.log(options);
 	# });
 	#
 	# @example
-	# resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
+	# balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 	# 	if (error) throw error;
 	# 	console.log(options);
 	# });

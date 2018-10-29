@@ -1,12 +1,14 @@
+import * as BalenaErrors from 'balena-errors';
 import * as Promise from 'bluebird';
 import { EventEmitter } from 'events';
-import * as ResinErrors from 'resin-errors';
-import { Readable } from 'stream';
-import * as Pine from './pinejs-client-core';
-import * as ResinPine from './resin-pine';
-import { ResinRequest } from './resin-request';
 
-declare namespace ResinSdk {
+import { Readable } from 'stream';
+
+import * as BalenaPine from './balena-pine';
+import { BalenaRequest } from './balena-request';
+import * as Pine from './pinejs-client-core';
+
+declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
 	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
@@ -104,7 +106,7 @@ declare namespace ResinSdk {
 			fstype?: string;
 			deployArtifact: string;
 		};
-		/** Holds the latest resinOS version */
+		/** Holds the latest balenaOS version */
 		buildId?: string;
 	}
 
@@ -198,7 +200,7 @@ declare namespace ResinSdk {
 	interface Application {
 		app_name: string;
 		device_type: string;
-		git_repository: string;
+		slug: string;
 		commit: string;
 		id: number;
 		device_type_info?: DeviceType;
@@ -225,9 +227,14 @@ declare namespace ResinSdk {
 
 	interface ApplicationMember {
 		id: number;
-		role_title: string;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 		is_member_of__application: NavigationResource<Application>;
 		user: NavigationResource<User>;
+	}
+
+	interface ApplicationMembershipRole {
+		id: number;
+		name: string;
 	}
 
 	interface ApplicationType {
@@ -559,7 +566,7 @@ declare namespace ResinSdk {
 		release: NavigationResource<Release>;
 	}
 
-	interface ResinSDK {
+	interface BalenaSDK {
 		auth: {
 			register: (
 				credentials: { email: string; password: string },
@@ -590,9 +597,9 @@ declare namespace ResinSdk {
 			getAll(): Promise<{ [key: string]: string }>;
 		};
 
-		request: ResinRequest;
+		request: BalenaRequest;
 
-		errors: typeof ResinErrors;
+		errors: typeof BalenaErrors;
 
 		models: {
 			application: {
@@ -978,14 +985,14 @@ declare namespace ResinSdk {
 			subscribe(uuid: string, options?: LogsOptions): Promise<LogsSubscription>;
 		};
 
-		pine: ResinPine.Pine;
+		pine: BalenaPine.Pine;
 		interceptors: Interceptor[];
 	}
 
 	interface SdkOptions {
 		apiUrl?: string;
 		/**
-		 * @deprecated Use resin.auth.loginWithToken(apiKey) instead
+		 * @deprecated Use balena.auth.loginWithToken(apiKey) instead
 		 */
 		apiKey?: string;
 		imageMakerUrl?: string;
@@ -995,13 +1002,13 @@ declare namespace ResinSdk {
 	}
 
 	interface SdkConstructor {
-		(options?: SdkOptions): ResinSdk.ResinSDK;
+		(options?: SdkOptions): BalenaSdk.BalenaSDK;
 
 		setSharedOptions(options: SdkOptions): void;
-		fromSharedOptions: () => ResinSdk.ResinSDK;
+		fromSharedOptions: () => BalenaSdk.BalenaSDK;
 	}
 }
 
-declare const ResinSdk: ResinSdk.SdkConstructor;
+declare const BalenaSdk: BalenaSdk.SdkConstructor;
 
-export = ResinSdk;
+export = BalenaSdk;

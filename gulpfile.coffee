@@ -21,14 +21,14 @@ packageJSON = require('./package.json')
 
 OPTIONS =
 	config:
-		browserLibraryName: 'resin-sdk'
+		browserLibraryName: 'balena-sdk'
 	files:
 		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
 		app: 'lib/**/*.coffee'
 		tests: [ 'tests/**/*.spec.ts', 'tests/**/*.spec.coffee' ]
-		browserEntry: 'resin.js'
-		browserOutput: 'resin-browser.js'
-		browserMinifiedOutput: 'resin-browser.min.js'
+		browserEntry: 'balena.js'
+		browserOutput: 'balena-browser.js'
+		browserMinifiedOutput: 'balena-browser.min.js'
 	directories:
 		doc: 'doc/'
 		build: 'build/'
@@ -62,7 +62,7 @@ gulp.task 'build-browser', ['build-node'], ->
 	# These modules are referenced in the code, but only get used in Node:
 	.exclude('fs')
 	.exclude('path')
-	.exclude('resin-settings-client')
+	.exclude('balena-settings-client')
 	.exclude('node-localstorage')
 	.bundle()
 

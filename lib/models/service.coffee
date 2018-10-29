@@ -1,5 +1,5 @@
 ###
-Copyright 2018 Resin.io
+Copyright 2018 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 ###
 
 once = require('lodash/once')
-errors = require('resin-errors')
+errors = require('balena-errors')
 
 { findCallback, mergePineOptions } = require('../util')
 
@@ -30,7 +30,7 @@ getServiceModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'service',
 		getResourceId: (id) -> get(id, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinServiceNotFound
+		ResourceNotFoundError: errors.BalenaServiceNotFound
 	}
 
 	exports = {}
@@ -44,14 +44,14 @@ getServiceModel = (deps, opts) ->
 			options: options
 		.tap (service) ->
 			if not service?
-				throw new errors.ResinServiceNotFound(id)
+				throw new errors.BalenaServiceNotFound(id)
 
 	###*
 	# @summary Get all services from an application
 	# @name getAllByApplication
 	# @public
 	# @function
-	# @memberof resin.models.service
+	# @memberof balena.models.service
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -59,17 +59,17 @@ getServiceModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.service.getAllByApplication('MyApp').then(function(services) {
+	# balena.models.service.getAllByApplication('MyApp').then(function(services) {
 	#		console.log(services);
 	# });
 	#
 	# @example
-	# resin.models.service.getAllByApplication(123).then(function(services) {
+	# balena.models.service.getAllByApplication(123).then(function(services) {
 	#		console.log(services);
 	# });
 	#
 	# @example
-	# resin.models.service.getAllByApplication('MyApp', function(error, services) {
+	# balena.models.service.getAllByApplication('MyApp', function(error, services) {
 	#		if (error) throw error;
 	#		console.log(services);
 	# });
@@ -88,8 +88,8 @@ getServiceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @namespace resin.models.service.var
-	# @memberof resin.models.service
+	# @namespace balena.models.service.var
+	# @memberof balena.models.service
 	###
 	exports.var = {
 		###*
@@ -97,7 +97,7 @@ getServiceModel = (deps, opts) ->
 		# @name getAllByService
 		# @public
 		# @function
-		# @memberof resin.models.service.var
+		# @memberof balena.models.service.var
 		#
 		# @param {Number} id - service id
 		# @param {Object} [options={}] - extra pine options to use
@@ -105,12 +105,12 @@ getServiceModel = (deps, opts) ->
 		# @returns {Promise}
 
 		# @example
-		# resin.models.service.var.getAllByService(999999).then(function(vars) {
+		# balena.models.service.var.getAllByService(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.service.var.getAllByService(999999, function(error, vars) {
+		# balena.models.service.var.getAllByService(999999, function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -122,7 +122,7 @@ getServiceModel = (deps, opts) ->
 		# @name getAllByApplication
 		# @public
 		# @function
-		# @memberof resin.models.service.var
+		# @memberof balena.models.service.var
 		#
 		# @param {String|Number} nameOrId - application name (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
@@ -130,17 +130,17 @@ getServiceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.service.var.getAllByApplication('MyApp').then(function(vars) {
+		# balena.models.service.var.getAllByApplication('MyApp').then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.service.var.getAllByApplication(999999).then(function(vars) {
+		# balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 		# 	console.log(vars);
 		# });
 		#
 		# @example
-		# resin.models.service.var.getAllByApplication('MyApp', function(error, vars) {
+		# balena.models.service.var.getAllByApplication('MyApp', function(error, vars) {
 		# 	if (error) throw error;
 		# 	console.log(vars)
 		# });
@@ -169,7 +169,7 @@ getServiceModel = (deps, opts) ->
 		# @name get
 		# @public
 		# @function
-		# @memberof resin.models.service.var
+		# @memberof balena.models.service.var
 		#
 		# @param {Number} id - service id
 		# @param {String} key - variable name
@@ -177,12 +177,12 @@ getServiceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.service.var.get(999999, 'VAR').then(function(value) {
+		# balena.models.service.var.get(999999, 'VAR').then(function(value) {
 		# 	console.log(value);
 		# });
 
 		# @example
-		# resin.models.service.var.get(999999, 'VAR', function(error, value) {
+		# balena.models.service.var.get(999999, 'VAR', function(error, value) {
 		# 	if (error) throw error;
 		# 	console.log(value)
 		# });
@@ -194,7 +194,7 @@ getServiceModel = (deps, opts) ->
 		# @name set
 		# @public
 		# @function
-		# @memberof resin.models.service.var
+		# @memberof balena.models.service.var
 		#
 		# @param {Number} id - service id
 		# @param {String} key - variable name
@@ -202,12 +202,12 @@ getServiceModel = (deps, opts) ->
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
+		# balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
+		# balena.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });
@@ -219,19 +219,19 @@ getServiceModel = (deps, opts) ->
 		# @name remove
 		# @public
 		# @function
-		# @memberof resin.models.service.var
+		# @memberof balena.models.service.var
 		#
 		# @param {Number} id - service id
 		# @param {String} key - variable name
 		# @returns {Promise}
 		#
 		# @example
-		# resin.models.service.var.remove(999999, 'VAR').then(function() {
+		# balena.models.service.var.remove(999999, 'VAR').then(function() {
 		# 	...
 		# });
 		#
 		# @example
-		# resin.models.service.var.remove(999999, 'VAR', function(error) {
+		# balena.models.service.var.remove(999999, 'VAR', function(error) {
 		# 	if (error) throw error;
 		# 	...
 		# });

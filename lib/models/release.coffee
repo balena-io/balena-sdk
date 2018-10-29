@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 
 once = require('lodash/once')
 omit = require('lodash/omit')
-errors = require('resin-errors')
+errors = require('balena-errors')
 Promise = require('bluebird')
 
 { findCallback, mergePineOptions } = require('../util')
@@ -32,7 +32,7 @@ getReleaseModel = (deps, opts) ->
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'release',
 		getResourceId: (id) -> exports.get(id, $select: 'id').get('id')
-		ResourceNotFoundError: errors.ResinReleaseNotFound
+		ResourceNotFoundError: errors.BalenaReleaseNotFound
 	}
 
 	exports = {}
@@ -42,7 +42,7 @@ getReleaseModel = (deps, opts) ->
 	# @name get
 	# @public
 	# @function
-	# @memberof resin.models.release
+	# @memberof balena.models.release
 	#
 	# @param {Number} id - release id
 	# @param {Object} [options={}] - extra pine options to use
@@ -50,12 +50,12 @@ getReleaseModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.get(123).then(function(release) {
+	# balena.models.release.get(123).then(function(release) {
 	#		console.log(release);
 	# });
 	#
 	# @example
-	# resin.models.release.get(123, function(error, release) {
+	# balena.models.release.get(123, function(error, release) {
 	#		if (error) throw error;
 	#		console.log(release);
 	# });
@@ -69,7 +69,7 @@ getReleaseModel = (deps, opts) ->
 			options: mergePineOptions({}, options)
 		.tap (release) ->
 			if not release?
-				throw new errors.ResinReleaseNotFound(id)
+				throw new errors.BalenaReleaseNotFound(id)
 		.asCallback(callback)
 
 	###*
@@ -77,7 +77,7 @@ getReleaseModel = (deps, opts) ->
 	# @name getWithImageDetails
 	# @public
 	# @function
-	# @memberof resin.models.release
+	# @memberof balena.models.release
 	#
 	# @description
 	# This method does not map exactly to the underlying model: it runs a
@@ -93,18 +93,18 @@ getReleaseModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.getWithImageDetails(123).then(function(release) {
+	# balena.models.release.getWithImageDetails(123).then(function(release) {
 	#		console.log(release);
 	# });
 	#
 	# @example
-	# resin.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
+	# balena.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
 	# .then(function(release) {
 	#		console.log(release.images[0].build_log);
 	# });
 	#
 	# @example
-	# resin.models.release.getWithImageDetails(123, function(error, release) {
+	# balena.models.release.getWithImageDetails(123, function(error, release) {
 	#		if (error) throw error;
 	#		console.log(release);
 	# });
@@ -153,7 +153,7 @@ getReleaseModel = (deps, opts) ->
 	# @name getAllByApplication
 	# @public
 	# @function
-	# @memberof resin.models.release
+	# @memberof balena.models.release
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -161,17 +161,17 @@ getReleaseModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.getAllByApplication('MyApp').then(function(releases) {
+	# balena.models.release.getAllByApplication('MyApp').then(function(releases) {
 	#		console.log(releases);
 	# });
 	#
 	# @example
-	# resin.models.release.getAllByApplication(123).then(function(releases) {
+	# balena.models.release.getAllByApplication(123).then(function(releases) {
 	#		console.log(releases);
 	# });
 	#
 	# @example
-	# resin.models.release.getAllByApplication('MyApp', function(error, releases) {
+	# balena.models.release.getAllByApplication('MyApp', function(error, releases) {
 	#		if (error) throw error;
 	#		console.log(releases);
 	# });
@@ -192,8 +192,8 @@ getReleaseModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @namespace resin.models.release.tags
-	# @memberof resin.models.release
+	# @namespace balena.models.release.tags
+	# @memberof balena.models.release
 	###
 	exports.tags = {}
 
@@ -202,7 +202,7 @@ getReleaseModel = (deps, opts) ->
 	# @name getAllByApplication
 	# @public
 	# @function
-	# @memberof resin.models.release.tags
+	# @memberof balena.models.release.tags
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -210,17 +210,17 @@ getReleaseModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
+	# balena.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
 	# 	console.log(tags);
 	# });
 	#
 	# @example
-	# resin.models.release.tags.getAllByApplication(999999).then(function(tags) {
+	# balena.models.release.tags.getAllByApplication(999999).then(function(tags) {
 	# 	console.log(tags);
 	# });
 	#
 	# @example
-	# resin.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
+	# balena.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
 	# 	if (error) throw error;
 	# 	console.log(tags)
 	# });
@@ -243,7 +243,7 @@ getReleaseModel = (deps, opts) ->
 	# @name getAllByRelease
 	# @public
 	# @function
-	# @memberof resin.models.release.tags
+	# @memberof balena.models.release.tags
 	#
 	# @param {Number} id - release id
 	# @param {Object} [options={}] - extra pine options to use
@@ -251,12 +251,12 @@ getReleaseModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.tags.getAllByRelease(123).then(function(tags) {
+	# balena.models.release.tags.getAllByRelease(123).then(function(tags) {
 	# 	console.log(tags);
 	# });
 	#
 	# @example
-	# resin.models.release.tags.getAllByRelease(123, function(error, tags) {
+	# balena.models.release.tags.getAllByRelease(123, function(error, tags) {
 	# 	if (error) throw error;
 	# 	console.log(tags)
 	# });
@@ -280,19 +280,19 @@ getReleaseModel = (deps, opts) ->
 	# @name getAll
 	# @public
 	# @function
-	# @memberof resin.models.release.tags
+	# @memberof balena.models.release.tags
 	#
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - release tags
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.tags.getAll().then(function(tags) {
+	# balena.models.release.tags.getAll().then(function(tags) {
 	# 	console.log(tags);
 	# });
 	#
 	# @example
-	# resin.models.release.tags.getAll(function(error, tags) {
+	# balena.models.release.tags.getAll(function(error, tags) {
 	# 	if (error) throw error;
 	# 	console.log(tags)
 	# });
@@ -304,7 +304,7 @@ getReleaseModel = (deps, opts) ->
 	# @name set
 	# @public
 	# @function
-	# @memberof resin.models.release.tags
+	# @memberof balena.models.release.tags
 	#
 	# @param {Number} releaseId - release id
 	# @param {String} tagKey - tag key
@@ -313,10 +313,10 @@ getReleaseModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.tags.set(123, 'EDITOR', 'vim');
+	# balena.models.release.tags.set(123, 'EDITOR', 'vim');
 	#
 	# @example
-	# resin.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
+	# balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
 	# 	if (error) throw error;
 	# });
 	###
@@ -327,17 +327,17 @@ getReleaseModel = (deps, opts) ->
 	# @name remove
 	# @public
 	# @function
-	# @memberof resin.models.release.tags
+	# @memberof balena.models.release.tags
 	#
 	# @param {Number} releaseId - release id
 	# @param {String} tagKey - tag key
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.release.tags.remove(123, 'EDITOR');
+	# balena.models.release.tags.remove(123, 'EDITOR');
 	#
 	# @example
-	# resin.models.release.tags.remove(123, 'EDITOR', function(error) {
+	# balena.models.release.tags.remove(123, 'EDITOR', function(error) {
 	# 	if (error) throw error;
 	# });
 	###

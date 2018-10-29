@@ -1,13 +1,13 @@
 {
-  "name": "resin-sdk",
+  "name": "balena-sdk",
   "version": "10.1.1",
-  "description": "The Resin.io JavaScript SDK",
-  "main": "build/resin.js",
-  "types": "typings/resin-sdk.d.ts",
-  "homepage": "https://github.com/resin-io/resin-sdk",
+  "description": "The Balena JavaScript SDK",
+  "main": "build/balena.js",
+  "types": "typings/balena-sdk.d.ts",
+  "homepage": "https://github.com/balena-io/balena-sdk",
   "repository": {
     "type": "git",
-    "url": "git://github.com/resin-io/resin-sdk.git"
+    "url": "git://github.com/balena-io/balena-sdk.git"
   },
   "files": [
     "build/",
@@ -18,6 +18,8 @@
     "sdk",
     "resin",
     "resin.io",
+    "balena",
+    "balena.io",
     "iot",
     "devices"
   ],
@@ -31,7 +33,7 @@
     "test:node": "gulp test",
     "test:browser": "karma start",
     "build": "npm run lint && npm run clean && tsc && gulp build && npm run docs",
-    "docs": "jsdoc2md \"build/**/!(resin-browser*.js)\" > DOCUMENTATION.md",
+    "docs": "jsdoc2md \"build/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "coffeelint": "coffeelint -f coffeelint.json -r \"lib\" \"tests\" \"gulpfile.coffee\"",
     "tslint": "tslint -t stylish -c tslint.json \"typings/**/*.d.ts\" \"lib/**/*.ts\" \"tests/**/*.ts\"",
@@ -42,7 +44,7 @@
     "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
-  "author": "Juan Cruz Viotti <juan@resin.io>",
+  "author": "Juan Cruz Viotti <juan@balena.io>",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=6.0"
@@ -96,6 +98,11 @@
     "@types/common-tags": "^1.4.0",
     "@types/node": "^8.0.53",
     "abortcontroller-polyfill": "^1.1.9",
+    "balena-auth": "^3.0.0",
+    "balena-errors": "^4.0.0",
+    "balena-pine": "^9.0.0",
+    "balena-request": "^10.0.0",
+    "balena-settings-client": "^4.0.0",
     "bluebird": "^3.3.1",
     "common-tags": "^1.8.0",
     "lodash": "^4.4.0",
@@ -103,13 +110,8 @@
     "moment": "^2.18.1",
     "ndjson": "^1.5.0",
     "promise-memoize": "^1.2.0",
-    "resin-auth": "^2.0.0",
     "resin-device-status": "^1.0.1",
-    "resin-errors": "^2.13.0",
-    "resin-pine": "^7.0.0",
     "resin-register-device": "^5.0.0",
-    "resin-request": "^9.3.1",
-    "resin-settings-client": "^3.5.2",
     "semver": "^5.3.0"
   },
   "lint-staged": {

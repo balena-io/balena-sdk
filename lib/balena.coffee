@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ limitations under the License.
 assign = require('lodash/assign')
 mapValues = require('lodash/mapValues')
 defaults = require('lodash/defaults')
-getRequest = require('resin-request')
-ResinAuth = require('resin-auth')['default']
-getPine = require('resin-pine')
-errors = require('resin-errors')
+getRequest = require('balena-request')
+BalenaAuth = require('balena-auth')['default']
+getPine = require('balena-pine')
+errors = require('balena-errors')
 
 { notImplemented, globalEnv } = require('./util')
 deprecationWarnings = require('./util/deprecation-warnings')
@@ -28,66 +28,64 @@ deprecationWarnings = require('./util/deprecation-warnings')
 # These constants are used to create globals for sharing defualt options between
 # multiple instances of the SDK.
 # See the `setSharedOptions()` and `fromSharedOptions()` methods.
-RESIN_SDK_SHARED_OPTIONS = 'RESIN_SDK_SHARED_OPTIONS'
-RESIN_SDK_HAS_USED_SHARED_OPTIONS = 'RESIN_SDK_HAS_USED_SHARED_OPTIONS'
-RESIN_SDK_HAS_SET_SHARED_OPTIONS = 'RESIN_SDK_HAS_SET_SHARED_OPTIONS'
+BALENA_SDK_SHARED_OPTIONS = 'BALENA_SDK_SHARED_OPTIONS'
+BALENA_SDK_HAS_USED_SHARED_OPTIONS = 'BALENA_SDK_HAS_USED_SHARED_OPTIONS'
+BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 
 ###*
-# @namespace resin
+# @namespace balena
 # @description
-# Welcome to the Resin SDK documentation.
+# Welcome to the Balena SDK documentation.
 #
 # This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
 #
-# If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
+# If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
 ###
 sdkTemplate =
 
 	###*
 	# @namespace models
-	# @memberof resin
+	# @memberof balena
 	###
 	models: require('./models')
 
 	###*
 	# @namespace auth
-	# @memberof resin
+	# @memberof balena
 	###
 	auth: require('./auth')
 
 	###*
 	# @namespace logs
-	# @memberof resin
+	# @memberof balena
 	###
 	logs: require('./logs')
 
 	###*
 	# @namespace settings
-	# @memberof resin
+	# @memberof balena
 	###
 	settings: require('./settings')
 
 getSdk = (opts = {}) ->
-	deprecationWarnings.resinRenameDeprecation()
-
 	defaults opts,
-		apiUrl: 'https://api.resin.io/'
-		imageMakerUrl: 'https://img.resin.io/'
+		apiUrl: 'https://api.balena-cloud.com/'
+		imageMakerUrl: 'https://img.balena-cloud.com/'
 		isBrowser: window?
-
-	# You cannot externally set the API version (as SDK implementation depends on it)
-	opts.apiVersion = 'v4'
+		# API version is configurable but only do so if you know what you're doing,
+		# as the SDK is directly tied to a specific version.
+		apiVersion: 'v5'
 
 	if opts.isBrowser
 		settings =
 			get: notImplemented
 			getAll: notImplemented
 	else
-		settings = require('resin-settings-client')
+		settings = require('balena-settings-client')
 		defaults opts,
 			dataDirectory: settings.get('dataDirectory')
 
-	auth = new ResinAuth(opts)
+	auth = new BalenaAuth(opts)
 	request = getRequest(assign({}, opts, { auth }))
 	pine = getPine(assign({}, opts, { auth, request }))
 
@@ -103,7 +101,7 @@ getSdk = (opts = {}) ->
 	###*
 	# @typedef Interceptor
 	# @type {object}
-	# @memberof resin.interceptors
+	# @memberof balena.interceptors
 	#
 	# @description
 	# An interceptor implements some set of the four interception hook callbacks.
@@ -135,7 +133,7 @@ getSdk = (opts = {}) ->
 	# @summary Array of interceptors
 	# @member {Interceptor[]} interceptors
 	# @public
-	# @memberof resin
+	# @memberof balena
 	#
 	# @description
 	# The current array of interceptors to use. Interceptors intercept requests made
@@ -143,7 +141,7 @@ getSdk = (opts = {}) ->
 	# and in the reverse order for responses.
 	#
 	# @example
-	# resin.interceptors.push({
+	# balena.interceptors.push({
 	#	responseError: function (error) {
 	#		console.log(error);
 	#		throw error;
@@ -155,35 +153,35 @@ getSdk = (opts = {}) ->
 		set: (interceptors) -> request.interceptors = interceptors
 
 	###*
-	# @summary Resin request instance
+	# @summary Balena request instance
 	# @member {Object} request
 	# @public
-	# @memberof resin
+	# @memberof balena
 	#
 	# @description
-	# The resin-request instance used internally. This should not be necessary
+	# The balena-request instance used internally. This should not be necessary
 	# in normal usage, but can be useful if you want to make an API request directly,
 	# using the same token and hooks as the SDK.
 	#
 	# @example
-	# resin.request.send({ url: 'http://api.resin.io/ping' });
+	# balena.request.send({ url: 'http://api.balena-cloud.com/ping' });
 	###
 	sdk.request = request
 
 	###*
-	# @summary Resin pine instance
+	# @summary Balena pine instance
 	# @member {Object} pine
 	# @public
-	# @memberof resin
+	# @memberof balena
 	#
 	# @description
-	# The resin-pine instance used internally. This should not be necessary
+	# The balena-pine instance used internally. This should not be necessary
 	# in normal usage, but can be useful if you want to directly make pine
 	# queries to the api for some resource that isn't directly supported
 	# in the SDK.
 	#
 	# @example
-	# resin.pine.get({
+	# balena.pine.get({
 	#	resource: 'release/$count',
 	#	options: {
 	#		$filter: { belongs_to__application: applicationId }
@@ -193,22 +191,22 @@ getSdk = (opts = {}) ->
 	sdk.pine = pine
 
 	###*
-	# @summary Resin errors module
+	# @summary Balena errors module
 	# @member {Object} errors
 	# @public
-	# @memberof resin
+	# @memberof balena
 	#
 	# @description
-	# The resin-errors module used internally. This is provided primarily for
-	# convenience, and to avoid the necessity for separate resin-errors
+	# The balena-errors module used internally. This is provided primarily for
+	# convenience, and to avoid the necessity for separate balena-errors
 	# dependencies. You'll want to use this if you need to match on the specific
 	# type of error thrown by the SDK.
 	#
 	# @example
-	# resin.models.device.get(123).catch(function (error) {
-	#   if (error.code === resin.errors.ResinDeviceNotFound.code) {
+	# balena.models.device.get(123).catch(function (error) {
+	#   if (error.code === balena.errors.BalenaDeviceNotFound.code) {
 	#     ...
-	#   } else if (error.code === resin.errors.ResinRequestError.code) {
+	#   } else if (error.code === balena.errors.BalenaRequestError.code) {
 	#     ...
 	#   }
 	# });
@@ -222,10 +220,10 @@ getSdk = (opts = {}) ->
 # @name setSharedOptions
 # @public
 # @function
-# @memberof resin
+# @memberof balena
 #
 # @description
-# Set options that are used by calls to `resin.fromSharedOptions()`.
+# Set options that are used by calls to `balena.fromSharedOptions()`.
 # The options accepted are the same as those used in the main SDK factory function.
 # If you use this method, it should be called as soon as possible during app
 # startup and before any calls to `fromSharedOptions()` are made.
@@ -233,28 +231,28 @@ getSdk = (opts = {}) ->
 # @params {Object} opts - The shared default options
 #
 # @example
-# resin.setSharedOptions({
-# 	apiUrl: 'https://api.resin.io/',
-# 	imageMakerUrl: 'https://img.resin.io/',
+# balena.setSharedOptions({
+# 	apiUrl: 'https://api.balena-cloud.com/',
+# 	imageMakerUrl: 'https://img.balena-cloud.com/',
 # 	isBrowser: true,
 # });
 ###
 getSdk.setSharedOptions = (opts) ->
-	if globalEnv[RESIN_SDK_HAS_USED_SHARED_OPTIONS]
+	if globalEnv[BALENA_SDK_HAS_USED_SHARED_OPTIONS]
 		console.error('Shared SDK options have already been used. You may have a race condition in your code.')
 
-	if globalEnv[RESIN_SDK_HAS_SET_SHARED_OPTIONS]
+	if globalEnv[BALENA_SDK_HAS_SET_SHARED_OPTIONS]
 		console.error('Shared SDK options have already been set. You may have a race condition in your code.')
 
-	globalEnv[RESIN_SDK_SHARED_OPTIONS] = opts
-	globalEnv[RESIN_SDK_HAS_SET_SHARED_OPTIONS] = true
+	globalEnv[BALENA_SDK_SHARED_OPTIONS] = opts
+	globalEnv[BALENA_SDK_HAS_SET_SHARED_OPTIONS] = true
 
 ###*
 # @summary Create an SDK instance using shared default options
 # @name fromSharedOptions
 # @public
 # @function
-# @memberof resin
+# @memberof balena
 #
 # @description
 # Create an SDK instance using shared default options set using the `setSharedOptions()` method.
@@ -264,12 +262,12 @@ getSdk.setSharedOptions = (opts) ->
 # @params {Object} opts - The shared default options
 #
 # @example
-# const sdk = resin.fromSharedOptions();
+# const sdk = balena.fromSharedOptions();
 ###
 getSdk.fromSharedOptions = ->
-	sharedOpts = globalEnv[RESIN_SDK_SHARED_OPTIONS]
+	sharedOpts = globalEnv[BALENA_SDK_SHARED_OPTIONS]
 
-	globalEnv[RESIN_SDK_HAS_USED_SHARED_OPTIONS] = true
+	globalEnv[BALENA_SDK_HAS_USED_SHARED_OPTIONS] = true
 
 	getSdk(sharedOpts)
 

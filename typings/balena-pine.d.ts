@@ -2,7 +2,7 @@ import * as Promise from 'bluebird';
 import * as PineClient from './pinejs-client-core';
 
 /* tslint:disable:no-namespace */
-declare namespace ResinPine {
+declare namespace BalenaPine {
 	interface Pine {
 		delete<T>(
 			params: PineClient.PineParamsWithIdFor<T> | PineClient.PineParamsFor<T>,
@@ -15,6 +15,6 @@ declare namespace ResinPine {
 	}
 }
 
-declare function ResinPine(options: object): ResinPine.Pine;
+declare function BalenaPine(options: object): BalenaPine.Pine;
 
-export = ResinPine;
+export = BalenaPine;
