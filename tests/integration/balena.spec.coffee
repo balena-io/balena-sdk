@@ -1,8 +1,8 @@
 m = require('mochainon')
 
-{ resin, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
+{ balena, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
 
-describe 'Resin SDK', ->
+describe 'Balena SDK', ->
 
 	validKeys = ['auth', 'models', 'logs', 'settings']
 
@@ -11,34 +11,34 @@ describe 'Resin SDK', ->
 		describe 'given no opts', ->
 
 			it 'should return an object with valid keys', ->
-				mockResin = getSdk()
-				m.chai.expect(mockResin).to.include.keys(validKeys)
+				mockBalena = getSdk()
+				m.chai.expect(mockBalena).to.include.keys(validKeys)
 
 		describe 'given empty opts', ->
 
 			it 'should return an object with valid keys', ->
-				mockResin = getSdk({})
-				m.chai.expect(mockResin).to.include.keys(validKeys)
+				mockBalena = getSdk({})
+				m.chai.expect(mockBalena).to.include.keys(validKeys)
 
 		describe 'given opts', ->
 
 			it 'should return an object with valid keys', ->
-				mockResin = getSdk(sdkOpts)
-				m.chai.expect(mockResin).to.include.keys(validKeys)
+				mockBalena = getSdk(sdkOpts)
+				m.chai.expect(mockBalena).to.include.keys(validKeys)
 
-	it 'should expose a resin-pine instance', ->
-		m.chai.expect(resin.pine).to.exist
+	it 'should expose a balena-pine instance', ->
+		m.chai.expect(balena.pine).to.exist
 
-	it 'should expose an resin-errors instance', ->
-		m.chai.expect(resin.errors).to.exist
+	it 'should expose an balena-errors instance', ->
+		m.chai.expect(balena.errors).to.exist
 
 	describe 'interception Hooks', ->
 
 		beforeEach ->
-			resin.interceptors = []
+			balena.interceptors = []
 
 		afterEach ->
-			resin.interceptors = []
+			balena.interceptors = []
 
 		givenLoggedInUser()
 
@@ -50,52 +50,52 @@ describe 'Resin SDK', ->
 
 		it "should update if the array is set directly (not only if it's mutated)", ->
 			interceptor = m.sinon.mock().returnsArg(0)
-			resin.interceptors = [ { request: ignoreWhoamiCalls(interceptor) } ]
-			resin.models.application.getAll().then ->
+			balena.interceptors = [ { request: ignoreWhoamiCalls(interceptor) } ]
+			balena.models.application.getAll().then ->
 				m.chai.expect(interceptor.called).to.equal true,
 					'Interceptor set directly should have its request hook called'
 
 		describe 'for request', ->
 			it 'should be able to intercept requests', ->
-				resin.interceptors.push request: m.sinon.mock().returnsArg(0)
+				balena.interceptors.push request: m.sinon.mock().returnsArg(0)
 
-				promise = resin.models.application.getAll()
+				promise = balena.models.application.getAll()
 
 				promise.then ->
-					m.chai.expect(resin.interceptors[0].request.called).to.equal true,
+					m.chai.expect(balena.interceptors[0].request.called).to.equal true,
 						'Interceptor request hook should be called'
 
 		describe 'for requestError', ->
 			it 'should intercept request errors from other interceptors', ->
-				resin.interceptors.push request:
+				balena.interceptors.push request:
 					m.sinon.mock().throws(new Error('rejected'))
-				resin.interceptors.push requestError:
+				balena.interceptors.push requestError:
 					m.sinon.mock().throws(new Error('replacement error'))
 
-				promise = resin.models.application.getAll()
+				promise = balena.models.application.getAll()
 
 				m.chai.expect(promise).to.be.rejectedWith('replacement error')
 				.then ->
-					m.chai.expect(resin.interceptors[1].requestError.called).to.equal true,
+					m.chai.expect(balena.interceptors[1].requestError.called).to.equal true,
 						'Interceptor requestError hook should be called'
 
 		describe 'for response', ->
 			it 'should be able to intercept responses', ->
-				resin.interceptors.push response: m.sinon.mock().returnsArg(0)
-				promise = resin.models.application.getAll()
+				balena.interceptors.push response: m.sinon.mock().returnsArg(0)
+				promise = balena.models.application.getAll()
 
 				promise.then ->
-					m.chai.expect(resin.interceptors[0].response.called).to.equal true,
+					m.chai.expect(balena.interceptors[0].response.called).to.equal true,
 						'Interceptor response hook should be called'
 
 		describe 'for responseError', ->
 			it 'should be able to intercept error responses', ->
 				called = false
-				resin.interceptors.push responseError: (err) ->
+				balena.interceptors.push responseError: (err) ->
 					called = true
 					throw err
 
-				promise = resin.models.device.restartApplication(999999)
+				promise = balena.models.device.restartApplication(999999)
 
 				m.chai.expect(promise).to.be.rejected
 				.then ->
@@ -110,11 +110,11 @@ describe 'Resin SDK', ->
 
 			getSdk.setSharedOptions(opts)
 
-			m.chai.expect(root['RESIN_SDK_SHARED_OPTIONS']).to.equal(opts)
+			m.chai.expect(root['BALENA_SDK_SHARED_OPTIONS']).to.equal(opts)
 
 	describe 'getSdk.fromSharedOptions()', ->
 		it 'should return an object with valid keys', ->
 
-			mockResin = getSdk.fromSharedOptions()
-			m.chai.expect(mockResin).to.include.keys(validKeys)
+			mockBalena = getSdk.fromSharedOptions()
+			m.chai.expect(mockBalena).to.include.keys(validKeys)
 

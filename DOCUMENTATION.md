@@ -1,224 +1,224 @@
-<a name="resin"></a>
+<a name="balena"></a>
 
-## resin : <code>object</code>
-Welcome to the Resin SDK documentation.
+## balena : <code>object</code>
+Welcome to the Balena SDK documentation.
 
 This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
 
-If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/resin-io/resin-sdk/issues/new), we'll be happy to help.
+If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
 
 **Kind**: global namespace  
 
-* [resin](#resin) : <code>object</code>
-    * [.interceptors](#resin.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
-        * [.Interceptor](#resin.interceptors.Interceptor) : <code>object</code>
-    * [.request](#resin.request) : <code>Object</code>
-    * [.pine](#resin.pine) : <code>Object</code>
-    * [.errors](#resin.errors) : <code>Object</code>
-    * [.models](#resin.models) : <code>object</code>
-        * [.application](#resin.models.application) : <code>object</code>
-            * [.tags](#resin.models.application.tags) : <code>object</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-                * [.getAll([options])](#resin.models.application.tags.getAll) ⇒ <code>Promise</code>
-                * [.set(nameOrId, tagKey, value)](#resin.models.application.tags.set) ⇒ <code>Promise</code>
-                * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
-            * [.configVar](#resin.models.application.configVar) : <code>object</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(nameOrId, key)](#resin.models.application.configVar.get) ⇒ <code>Promise</code>
-                * [.set(nameOrId, key, value)](#resin.models.application.configVar.set) ⇒ <code>Promise</code>
-                * [.remove(nameOrId, key)](#resin.models.application.configVar.remove) ⇒ <code>Promise</code>
-            * [.envVar](#resin.models.application.envVar) : <code>object</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(nameOrId, key)](#resin.models.application.envVar.get) ⇒ <code>Promise</code>
-                * [.set(nameOrId, key, value)](#resin.models.application.envVar.set) ⇒ <code>Promise</code>
-                * [.remove(nameOrId, key)](#resin.models.application.envVar.remove) ⇒ <code>Promise</code>
-            * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
-            * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-            * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
-            * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
-            * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
-            * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-            * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
-            * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
-            * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-            * ~~[.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-            * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
-            * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
-            * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
-            * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-            * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
-            * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
-            * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
-            * [.revokeSupportAccess(nameOrId)](#resin.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
-        * [.device](#resin.models.device) : <code>object</code>
-            * [.tags](#resin.models.device.tags) : <code>object</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
-                * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
-                * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
-                * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
-            * [.configVar](#resin.models.device.configVar) : <code>object</code>
-                * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
-                * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
-                * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
-            * [.envVar](#resin.models.device.envVar) : <code>object</code>
-                * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
-                * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
-                * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
-            * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
-                * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
-                * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
-                * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
-            * [.getDashboardUrl(uuid)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
-            * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
-            * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
-            * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
-            * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
-            * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
-            * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-            * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
-            * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
-            * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
-            * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
-            * [.remove(uuidOrId)](#resin.models.device.remove) ⇒ <code>Promise</code>
-            * [.identify(uuidOrId)](#resin.models.device.identify) ⇒ <code>Promise</code>
-            * [.rename(uuidOrId, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
-            * [.note(uuidOrId, note)](#resin.models.device.note) ⇒ <code>Promise</code>
-            * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
-            * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-            * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-            * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
-            * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
-            * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
-            * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
-            * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
-            * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
-            * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
-            * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
-            * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
-            * [.update(uuidOrId, [options])](#resin.models.device.update) ⇒ <code>Promise</code>
-            * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
-            * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
-            * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-            * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise</code>
-            * [.getManifestByApplication(nameOrId)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
-            * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
-            * [.register(applicationNameOrId, [uuid])](#resin.models.device.register) ⇒ <code>Promise</code>
-            * [.generateDeviceKey(uuidOrId)](#resin.models.device.generateDeviceKey) ⇒ <code>Promise</code>
-            * [.hasDeviceUrl(uuidOrId)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
-            * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
-            * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
-            * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-            * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
-            * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
-            * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
-            * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
-            * [.lastOnline(device)](#resin.models.device.lastOnline) ⇒ <code>String</code>
-        * [.apiKey](#resin.models.apiKey) : <code>object</code>
-            * [.create(name, [description])](#resin.models.apiKey.create) ⇒ <code>Promise</code>
-            * [.getAll([options])](#resin.models.apiKey.getAll) ⇒ <code>Promise</code>
-            * [.update(id, apiKeyInfo)](#resin.models.apiKey.update) ⇒ <code>Promise</code>
-            * [.revoke(id)](#resin.models.apiKey.revoke) ⇒ <code>Promise</code>
-        * [.key](#resin.models.key) : <code>object</code>
-            * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
-            * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
-            * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
-            * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
-        * [.os](#resin.models.os) : <code>object</code>
-            * [.getDownloadSize(deviceType, [version])](#resin.models.os.getDownloadSize) ⇒ <code>Promise</code>
-            * [.getSupportedVersions(deviceType)](#resin.models.os.getSupportedVersions) ⇒ <code>Promise</code>
-            * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#resin.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-            * [.getLastModified(deviceType, [version])](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
-            * [.download(deviceType, [version])](#resin.models.os.download) ⇒ <code>Promise</code>
-            * [.getConfig(nameOrId, options)](#resin.models.os.getConfig) ⇒ <code>Promise</code>
-        * [.config](#resin.models.config) : <code>object</code>
-            * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
-            * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
-            * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-        * [.release](#resin.models.release) : <code>object</code>
-            * [.tags](#resin.models.release.tags) : <code>object</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-                * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-                * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
-                * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
-                * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
-            * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
-            * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
-        * [.service](#resin.models.service) : <code>object</code>
-            * [.var](#resin.models.service.var) : <code>object</code>
-                * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
-                * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
-                * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
-                * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
-        * [.image](#resin.models.image) : <code>object</code>
-            * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
-            * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
-        * [.billing](#resin.models.billing) : <code>object</code>
-            * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
-            * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
-            * [.getBillingInfo()](#resin.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-            * [.updateBillingInfo()](#resin.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
-            * [.getInvoices()](#resin.models.billing.getInvoices) ⇒ <code>Promise</code>
-            * [.downloadInvoice()](#resin.models.billing.downloadInvoice) ⇒ <code>Promise</code>
-    * [.auth](#resin.auth) : <code>object</code>
-        * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
-            * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
-            * [.isPassed()](#resin.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
-            * [.challenge(code)](#resin.auth.twoFactor.challenge) ⇒ <code>Promise</code>
-        * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
-        * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
-        * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
-        * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
-        * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
-        * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
-        * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
-        * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
-        * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
-        * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise</code>
-    * [.logs](#resin.logs) : <code>object</code>
-        * [.subscribe(uuidOrId, [options])](#resin.logs.subscribe) ⇒ <code>Promise</code>
-        * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
-        * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
-            * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
-            * ["line"](#resin.logs.LogSubscription.event_line)
-            * ["error"](#resin.logs.LogSubscription.event_error)
-    * [.settings](#resin.settings) : <code>object</code>
-        * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
-        * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
-    * [.setSharedOptions()](#resin.setSharedOptions)
-    * [.fromSharedOptions()](#resin.fromSharedOptions)
+* [balena](#balena) : <code>object</code>
+    * [.interceptors](#balena.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
+        * [.Interceptor](#balena.interceptors.Interceptor) : <code>object</code>
+    * [.request](#balena.request) : <code>Object</code>
+    * [.pine](#balena.pine) : <code>Object</code>
+    * [.errors](#balena.errors) : <code>Object</code>
+    * [.models](#balena.models) : <code>object</code>
+        * [.application](#balena.models.application) : <code>object</code>
+            * [.tags](#balena.models.application.tags) : <code>object</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
+                * [.set(nameOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+                * [.remove(nameOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+            * [.configVar](#balena.models.application.configVar) : <code>object</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(nameOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+                * [.set(nameOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+                * [.remove(nameOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+            * [.envVar](#balena.models.application.envVar) : <code>object</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(nameOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+                * [.set(nameOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+                * [.remove(nameOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
+            * [.get(nameOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
+            * [.getWithDeviceServiceDetails(nameOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+            * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+            * [.has(nameOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
+            * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
+            * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
+            * [.remove(nameOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+            * [.restart(nameOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
+            * ~~[.generateApiKey(nameOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
+            * [.generateProvisioningKey(nameOrId)](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+            * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
+            * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
+            * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
+            * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+            * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+            * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+            * [.revokeSupportAccess(nameOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
+        * [.device](#balena.models.device) : <code>object</code>
+            * [.tags](#balena.models.device.tags) : <code>object</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
+                * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
+                * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
+            * [.configVar](#balena.models.device.configVar) : <code>object</code>
+                * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
+                * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
+                * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
+            * [.envVar](#balena.models.device.envVar) : <code>object</code>
+                * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
+                * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
+                * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
+            * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
+                * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+                * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+                * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+            * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
+            * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+            * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
+            * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
+            * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
+            * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
+            * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
+            * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
+            * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
+            * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
+            * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
+            * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
+            * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+            * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
+            * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
+            * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
+            * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
+            * [.move(uuidOrId, applicationNameOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
+            * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
+            * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
+            * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
+            * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
+            * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
+            * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
+            * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
+            * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
+            * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
+            * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+            * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
+            * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
+            * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+            * [.getManifestBySlug(slug)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+            * [.getManifestByApplication(nameOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+            * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
+            * [.register(applicationNameOrId, [uuid])](#balena.models.device.register) ⇒ <code>Promise</code>
+            * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+            * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
+            * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
+            * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
+            * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+            * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
+            * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+            * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
+            * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
+            * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+        * [.apiKey](#balena.models.apiKey) : <code>object</code>
+            * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
+            * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
+            * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
+        * [.key](#balena.models.key) : <code>object</code>
+            * [.getAll([options])](#balena.models.key.getAll) ⇒ <code>Promise</code>
+            * [.get(id)](#balena.models.key.get) ⇒ <code>Promise</code>
+            * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
+            * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
+        * [.os](#balena.models.os) : <code>object</code>
+            * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
+            * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
+            * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
+            * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
+            * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
+            * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+        * [.config](#balena.models.config) : <code>object</code>
+            * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
+            * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+            * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+        * [.release](#balena.models.release) : <code>object</code>
+            * [.tags](#balena.models.release.tags) : <code>object</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByRelease(id, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+                * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
+                * [.set(releaseId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+                * [.remove(releaseId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+            * [.get(id, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
+            * [.getWithImageDetails(id, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+        * [.service](#balena.models.service) : <code>object</code>
+            * [.var](#balena.models.service.var) : <code>object</code>
+                * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+                * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+                * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
+        * [.image](#balena.models.image) : <code>object</code>
+            * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
+            * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
+        * [.billing](#balena.models.billing) : <code>object</code>
+            * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
+            * [.getPlan()](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
+            * [.getBillingInfo()](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+            * [.updateBillingInfo()](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+            * [.getInvoices()](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
+            * [.downloadInvoice()](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
+    * [.auth](#balena.auth) : <code>object</code>
+        * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
+            * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
+            * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+            * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+        * [.whoami()](#balena.auth.whoami) ⇒ <code>Promise</code>
+        * [.authenticate(credentials)](#balena.auth.authenticate) ⇒ <code>Promise</code>
+        * [.login(credentials)](#balena.auth.login) ⇒ <code>Promise</code>
+        * [.loginWithToken(authToken)](#balena.auth.loginWithToken) ⇒ <code>Promise</code>
+        * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
+        * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
+        * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
+        * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
+        * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
+        * [.register([credentials])](#balena.auth.register) ⇒ <code>Promise</code>
+    * [.logs](#balena.logs) : <code>object</code>
+        * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise</code>
+        * [.history(uuidOrId, [options])](#balena.logs.history) ⇒ <code>Promise</code>
+        * [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
+            * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
+            * ["line"](#balena.logs.LogSubscription.event_line)
+            * ["error"](#balena.logs.LogSubscription.event_error)
+    * [.settings](#balena.settings) : <code>object</code>
+        * [.get([key])](#balena.settings.get) ⇒ <code>Promise</code>
+        * [.getAll()](#balena.settings.getAll) ⇒ <code>Promise</code>
+    * [.setSharedOptions()](#balena.setSharedOptions)
+    * [.fromSharedOptions()](#balena.fromSharedOptions)
 
-<a name="resin.interceptors"></a>
+<a name="balena.interceptors"></a>
 
-### resin.interceptors : <code>Array.&lt;Interceptor&gt;</code>
+### balena.interceptors : <code>Array.&lt;Interceptor&gt;</code>
 The current array of interceptors to use. Interceptors intercept requests made
 internally and are executed in the order they appear in this array for requests,
 and in the reverse order for responses.
 
-**Kind**: static property of [<code>resin</code>](#resin)  
+**Kind**: static property of [<code>balena</code>](#balena)  
 **Summary**: Array of interceptors  
 **Access**: public  
 **Example**  
 ```js
-resin.interceptors.push({
+balena.interceptors.push({
 	responseError: function (error) {
 		console.log(error);
 		throw error;
 	})
 });
 ```
-<a name="resin.interceptors.Interceptor"></a>
+<a name="balena.interceptors.Interceptor"></a>
 
 #### interceptors.Interceptor : <code>object</code>
 An interceptor implements some set of the four interception hook callbacks.
@@ -228,7 +228,7 @@ successfully resolves to a value.
 To halt processing, each function should throw an error or return a promise that
 rejects with an error.
 
-**Kind**: static typedef of [<code>interceptors</code>](#resin.interceptors)  
+**Kind**: static typedef of [<code>interceptors</code>](#balena.interceptors)  
 **Properties**
 
 | Name | Type | Description |
@@ -238,278 +238,278 @@ rejects with an error.
 | [requestError] | <code>function</code> | Callback invoked if an error happens before a request. Called with the error itself, caused by a preceeding request interceptor rejecting/throwing an error for the request, or a failing in preflight token validation. Should return (or resolve to) new request options, or throw/reject. |
 | [responseError] | <code>function</code> | Callback invoked if an error happens in the response. Called with the error itself, caused by a preceeding response interceptor rejecting/throwing an error for the request, a network error, or an error response from the server. Should return (or resolve to) a new response, or throw/reject. |
 
-<a name="resin.request"></a>
+<a name="balena.request"></a>
 
-### resin.request : <code>Object</code>
-The resin-request instance used internally. This should not be necessary
+### balena.request : <code>Object</code>
+The balena-request instance used internally. This should not be necessary
 in normal usage, but can be useful if you want to make an API request directly,
 using the same token and hooks as the SDK.
 
-**Kind**: static property of [<code>resin</code>](#resin)  
-**Summary**: Resin request instance  
+**Kind**: static property of [<code>balena</code>](#balena)  
+**Summary**: Balena request instance  
 **Access**: public  
 **Example**  
 ```js
-resin.request.send({ url: 'http://api.resin.io/ping' });
+balena.request.send({ url: 'http://api.balena-cloud.com/ping' });
 ```
-<a name="resin.pine"></a>
+<a name="balena.pine"></a>
 
-### resin.pine : <code>Object</code>
-The resin-pine instance used internally. This should not be necessary
+### balena.pine : <code>Object</code>
+The balena-pine instance used internally. This should not be necessary
 in normal usage, but can be useful if you want to directly make pine
 queries to the api for some resource that isn't directly supported
 in the SDK.
 
-**Kind**: static property of [<code>resin</code>](#resin)  
-**Summary**: Resin pine instance  
+**Kind**: static property of [<code>balena</code>](#balena)  
+**Summary**: Balena pine instance  
 **Access**: public  
 **Example**  
 ```js
-resin.pine.get({
+balena.pine.get({
 	resource: 'release/$count',
 	options: {
 		$filter: { belongs_to__application: applicationId }
 	}
 });
 ```
-<a name="resin.errors"></a>
+<a name="balena.errors"></a>
 
-### resin.errors : <code>Object</code>
-The resin-errors module used internally. This is provided primarily for
-convenience, and to avoid the necessity for separate resin-errors
+### balena.errors : <code>Object</code>
+The balena-errors module used internally. This is provided primarily for
+convenience, and to avoid the necessity for separate balena-errors
 dependencies. You'll want to use this if you need to match on the specific
 type of error thrown by the SDK.
 
-**Kind**: static property of [<code>resin</code>](#resin)  
-**Summary**: Resin errors module  
+**Kind**: static property of [<code>balena</code>](#balena)  
+**Summary**: Balena errors module  
 **Access**: public  
 **Example**  
 ```js
-resin.models.device.get(123).catch(function (error) {
-  if (error.code === resin.errors.ResinDeviceNotFound.code) {
+balena.models.device.get(123).catch(function (error) {
+  if (error.code === balena.errors.BalenaDeviceNotFound.code) {
     ...
-  } else if (error.code === resin.errors.ResinRequestError.code) {
+  } else if (error.code === balena.errors.BalenaRequestError.code) {
     ...
   }
 });
 ```
-<a name="resin.models"></a>
+<a name="balena.models"></a>
 
-### resin.models : <code>object</code>
-**Kind**: static namespace of [<code>resin</code>](#resin)  
+### balena.models : <code>object</code>
+**Kind**: static namespace of [<code>balena</code>](#balena)  
 
-* [.models](#resin.models) : <code>object</code>
-    * [.application](#resin.models.application) : <code>object</code>
-        * [.tags](#resin.models.application.tags) : <code>object</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAll([options])](#resin.models.application.tags.getAll) ⇒ <code>Promise</code>
-            * [.set(nameOrId, tagKey, value)](#resin.models.application.tags.set) ⇒ <code>Promise</code>
-            * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
-        * [.configVar](#resin.models.application.configVar) : <code>object</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(nameOrId, key)](#resin.models.application.configVar.get) ⇒ <code>Promise</code>
-            * [.set(nameOrId, key, value)](#resin.models.application.configVar.set) ⇒ <code>Promise</code>
-            * [.remove(nameOrId, key)](#resin.models.application.configVar.remove) ⇒ <code>Promise</code>
-        * [.envVar](#resin.models.application.envVar) : <code>object</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(nameOrId, key)](#resin.models.application.envVar.get) ⇒ <code>Promise</code>
-            * [.set(nameOrId, key, value)](#resin.models.application.envVar.set) ⇒ <code>Promise</code>
-            * [.remove(nameOrId, key)](#resin.models.application.envVar.remove) ⇒ <code>Promise</code>
-        * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
-        * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-        * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
-        * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
-        * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
-        * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-        * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
-        * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
-        * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-        * ~~[.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-        * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
-        * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
-        * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
-        * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-        * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
-        * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
-        * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
-        * [.revokeSupportAccess(nameOrId)](#resin.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
-    * [.device](#resin.models.device) : <code>object</code>
-        * [.tags](#resin.models.device.tags) : <code>object</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
-            * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
-            * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
-        * [.configVar](#resin.models.device.configVar) : <code>object</code>
-            * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
-            * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
-            * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
-        * [.envVar](#resin.models.device.envVar) : <code>object</code>
-            * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
-            * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
-            * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
-        * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
-            * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
-            * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
-            * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
-        * [.getDashboardUrl(uuid)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
-        * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
-        * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
-        * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
-        * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
-        * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
-        * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-        * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
-        * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
-        * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
-        * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId)](#resin.models.device.remove) ⇒ <code>Promise</code>
-        * [.identify(uuidOrId)](#resin.models.device.identify) ⇒ <code>Promise</code>
-        * [.rename(uuidOrId, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
-        * [.note(uuidOrId, note)](#resin.models.device.note) ⇒ <code>Promise</code>
-        * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
-        * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-        * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-        * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
-        * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
-        * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
-        * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
-        * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
-        * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
-        * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
-        * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
-        * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
-        * [.update(uuidOrId, [options])](#resin.models.device.update) ⇒ <code>Promise</code>
-        * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
-        * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
-        * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-        * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise</code>
-        * [.getManifestByApplication(nameOrId)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
-        * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
-        * [.register(applicationNameOrId, [uuid])](#resin.models.device.register) ⇒ <code>Promise</code>
-        * [.generateDeviceKey(uuidOrId)](#resin.models.device.generateDeviceKey) ⇒ <code>Promise</code>
-        * [.hasDeviceUrl(uuidOrId)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
-        * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
-        * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
-        * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-        * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
-        * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
-        * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
-        * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
-        * [.lastOnline(device)](#resin.models.device.lastOnline) ⇒ <code>String</code>
-    * [.apiKey](#resin.models.apiKey) : <code>object</code>
-        * [.create(name, [description])](#resin.models.apiKey.create) ⇒ <code>Promise</code>
-        * [.getAll([options])](#resin.models.apiKey.getAll) ⇒ <code>Promise</code>
-        * [.update(id, apiKeyInfo)](#resin.models.apiKey.update) ⇒ <code>Promise</code>
-        * [.revoke(id)](#resin.models.apiKey.revoke) ⇒ <code>Promise</code>
-    * [.key](#resin.models.key) : <code>object</code>
-        * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
-        * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
-        * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
-        * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
-    * [.os](#resin.models.os) : <code>object</code>
-        * [.getDownloadSize(deviceType, [version])](#resin.models.os.getDownloadSize) ⇒ <code>Promise</code>
-        * [.getSupportedVersions(deviceType)](#resin.models.os.getSupportedVersions) ⇒ <code>Promise</code>
-        * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#resin.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-        * [.getLastModified(deviceType, [version])](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
-        * [.download(deviceType, [version])](#resin.models.os.download) ⇒ <code>Promise</code>
-        * [.getConfig(nameOrId, options)](#resin.models.os.getConfig) ⇒ <code>Promise</code>
-    * [.config](#resin.models.config) : <code>object</code>
-        * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
-        * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
-        * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-    * [.release](#resin.models.release) : <code>object</code>
-        * [.tags](#resin.models.release.tags) : <code>object</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-            * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
-            * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
-            * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
-        * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
-        * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
-    * [.service](#resin.models.service) : <code>object</code>
-        * [.var](#resin.models.service.var) : <code>object</code>
-            * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
-            * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
-            * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
-            * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
-    * [.image](#resin.models.image) : <code>object</code>
-        * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
-        * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
-    * [.billing](#resin.models.billing) : <code>object</code>
-        * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
-        * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
-        * [.getBillingInfo()](#resin.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-        * [.updateBillingInfo()](#resin.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
-        * [.getInvoices()](#resin.models.billing.getInvoices) ⇒ <code>Promise</code>
-        * [.downloadInvoice()](#resin.models.billing.downloadInvoice) ⇒ <code>Promise</code>
+* [.models](#balena.models) : <code>object</code>
+    * [.application](#balena.models.application) : <code>object</code>
+        * [.tags](#balena.models.application.tags) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
+            * [.set(nameOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+            * [.remove(nameOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+        * [.configVar](#balena.models.application.configVar) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(nameOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+            * [.set(nameOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+            * [.remove(nameOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+        * [.envVar](#balena.models.application.envVar) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(nameOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+            * [.set(nameOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+            * [.remove(nameOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
+        * [.get(nameOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
+        * [.getWithDeviceServiceDetails(nameOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+        * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+        * [.has(nameOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
+        * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
+        * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
+        * [.remove(nameOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+        * [.restart(nameOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
+        * ~~[.generateApiKey(nameOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
+        * [.generateProvisioningKey(nameOrId)](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+        * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
+        * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
+        * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
+        * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+        * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+        * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+        * [.revokeSupportAccess(nameOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
+    * [.device](#balena.models.device) : <code>object</code>
+        * [.tags](#balena.models.device.tags) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
+            * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
+            * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
+        * [.configVar](#balena.models.device.configVar) : <code>object</code>
+            * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
+            * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
+            * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
+        * [.envVar](#balena.models.device.envVar) : <code>object</code>
+            * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
+            * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
+            * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
+        * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
+            * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+            * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+            * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+        * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
+        * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+        * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
+        * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
+        * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
+        * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
+        * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
+        * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
+        * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
+        * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
+        * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
+        * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
+        * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+        * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
+        * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
+        * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
+        * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
+        * [.move(uuidOrId, applicationNameOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
+        * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
+        * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
+        * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
+        * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
+        * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
+        * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
+        * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
+        * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
+        * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
+        * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+        * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
+        * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
+        * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+        * [.getManifestBySlug(slug)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+        * [.getManifestByApplication(nameOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+        * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
+        * [.register(applicationNameOrId, [uuid])](#balena.models.device.register) ⇒ <code>Promise</code>
+        * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+        * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
+        * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
+        * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
+        * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+        * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
+        * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+        * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
+        * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
+        * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+    * [.apiKey](#balena.models.apiKey) : <code>object</code>
+        * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
+        * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
+        * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
+    * [.key](#balena.models.key) : <code>object</code>
+        * [.getAll([options])](#balena.models.key.getAll) ⇒ <code>Promise</code>
+        * [.get(id)](#balena.models.key.get) ⇒ <code>Promise</code>
+        * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
+        * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
+    * [.os](#balena.models.os) : <code>object</code>
+        * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
+        * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
+        * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
+        * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
+        * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
+        * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+    * [.config](#balena.models.config) : <code>object</code>
+        * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
+        * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+        * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+    * [.release](#balena.models.release) : <code>object</code>
+        * [.tags](#balena.models.release.tags) : <code>object</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByRelease(id, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
+            * [.set(releaseId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+            * [.remove(releaseId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+        * [.get(id, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
+        * [.getWithImageDetails(id, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+    * [.service](#balena.models.service) : <code>object</code>
+        * [.var](#balena.models.service.var) : <code>object</code>
+            * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+            * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+            * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
+    * [.image](#balena.models.image) : <code>object</code>
+        * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
+        * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
+    * [.billing](#balena.models.billing) : <code>object</code>
+        * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
+        * [.getPlan()](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
+        * [.getBillingInfo()](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+        * [.updateBillingInfo()](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+        * [.getInvoices()](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
+        * [.downloadInvoice()](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
 
-<a name="resin.models.application"></a>
+<a name="balena.models.application"></a>
 
 #### models.application : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.application](#resin.models.application) : <code>object</code>
-    * [.tags](#resin.models.application.tags) : <code>object</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAll([options])](#resin.models.application.tags.getAll) ⇒ <code>Promise</code>
-        * [.set(nameOrId, tagKey, value)](#resin.models.application.tags.set) ⇒ <code>Promise</code>
-        * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
-    * [.configVar](#resin.models.application.configVar) : <code>object</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(nameOrId, key)](#resin.models.application.configVar.get) ⇒ <code>Promise</code>
-        * [.set(nameOrId, key, value)](#resin.models.application.configVar.set) ⇒ <code>Promise</code>
-        * [.remove(nameOrId, key)](#resin.models.application.configVar.remove) ⇒ <code>Promise</code>
-    * [.envVar](#resin.models.application.envVar) : <code>object</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(nameOrId, key)](#resin.models.application.envVar.get) ⇒ <code>Promise</code>
-        * [.set(nameOrId, key, value)](#resin.models.application.envVar.set) ⇒ <code>Promise</code>
-        * [.remove(nameOrId, key)](#resin.models.application.envVar.remove) ⇒ <code>Promise</code>
-    * [.getAll([options])](#resin.models.application.getAll) ⇒ <code>Promise</code>
-    * [.get(nameOrId, [options])](#resin.models.application.get) ⇒ <code>Promise</code>
-    * [.getWithDeviceServiceDetails(nameOrId, [options])](#resin.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
-    * [.getAppByOwner(appName, owner, [options])](#resin.models.application.getAppByOwner) ⇒ <code>Promise</code>
-    * [.has(nameOrId)](#resin.models.application.has) ⇒ <code>Promise</code>
-    * [.hasAny()](#resin.models.application.hasAny) ⇒ <code>Promise</code>
-    * [.create(options)](#resin.models.application.create) ⇒ <code>Promise</code>
-    * [.remove(nameOrId)](#resin.models.application.remove) ⇒ <code>Promise</code>
-    * [.restart(nameOrId)](#resin.models.application.restart) ⇒ <code>Promise</code>
-    * ~~[.generateApiKey(nameOrId)](#resin.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-    * [.generateProvisioningKey(nameOrId)](#resin.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
-    * [.purge(appId)](#resin.models.application.purge) ⇒ <code>Promise</code>
-    * [.shutdown(appId, [options])](#resin.models.application.shutdown) ⇒ <code>Promise</code>
-    * [.reboot(appId, [options])](#resin.models.application.reboot) ⇒ <code>Promise</code>
-    * [.enableDeviceUrls(nameOrId)](#resin.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
-    * [.disableDeviceUrls(nameOrId)](#resin.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
-    * [.grantSupportAccess(nameOrId, expiryTimestamp)](#resin.models.application.grantSupportAccess) ⇒ <code>Promise</code>
-    * [.revokeSupportAccess(nameOrId)](#resin.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
+* [.application](#balena.models.application) : <code>object</code>
+    * [.tags](#balena.models.application.tags) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
+        * [.set(nameOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+        * [.remove(nameOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+    * [.configVar](#balena.models.application.configVar) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(nameOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+        * [.set(nameOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+        * [.remove(nameOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+    * [.envVar](#balena.models.application.envVar) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(nameOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+        * [.set(nameOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+        * [.remove(nameOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
+    * [.get(nameOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
+    * [.getWithDeviceServiceDetails(nameOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+    * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+    * [.has(nameOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
+    * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
+    * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
+    * [.remove(nameOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+    * [.restart(nameOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
+    * ~~[.generateApiKey(nameOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
+    * [.generateProvisioningKey(nameOrId)](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+    * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
+    * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
+    * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
+    * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+    * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+    * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+    * [.revokeSupportAccess(nameOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
 
-<a name="resin.models.application.tags"></a>
+<a name="balena.models.application.tags"></a>
 
 ##### application.tags : <code>object</code>
-**Kind**: static namespace of [<code>application</code>](#resin.models.application)  
+**Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
-* [.tags](#resin.models.application.tags) : <code>object</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAll([options])](#resin.models.application.tags.getAll) ⇒ <code>Promise</code>
-    * [.set(nameOrId, tagKey, value)](#resin.models.application.tags.set) ⇒ <code>Promise</code>
-    * [.remove(nameOrId, tagKey)](#resin.models.application.tags.remove) ⇒ <code>Promise</code>
+* [.tags](#balena.models.application.tags) : <code>object</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
+    * [.set(nameOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+    * [.remove(nameOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.application.tags.getAllByApplication"></a>
+<a name="balena.models.application.tags.getAllByApplication"></a>
 
 ###### tags.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.application.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Get all application tags for an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - application tags  
@@ -521,27 +521,27 @@ resin.models.device.get(123).catch(function (error) {
 
 **Example**  
 ```js
-resin.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
+balena.models.application.tags.getAllByApplication('MyApp').then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.application.tags.getAllByApplication(999999).then(function(tags) {
+balena.models.application.tags.getAllByApplication(999999).then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
+balena.models.application.tags.getAllByApplication('MyApp', function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.application.tags.getAll"></a>
+<a name="balena.models.application.tags.getAll"></a>
 
 ###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.application.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Get all application tags  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - application tags  
@@ -552,21 +552,21 @@ resin.models.application.tags.getAllByApplication('MyApp', function(error, tags)
 
 **Example**  
 ```js
-resin.models.application.tags.getAll().then(function(tags) {
+balena.models.application.tags.getAll().then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.application.tags.getAll(function(error, tags) {
+balena.models.application.tags.getAll(function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.application.tags.set"></a>
+<a name="balena.models.application.tags.set"></a>
 
 ###### tags.set(nameOrId, tagKey, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.application.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Set an application tag  
 **Access**: public  
 
@@ -578,22 +578,22 @@ resin.models.application.tags.getAll(function(error, tags) {
 
 **Example**  
 ```js
-resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
+balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.application.tags.set(123, 'EDITOR', 'vim');
+balena.models.application.tags.set(123, 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.tags.remove"></a>
+<a name="balena.models.application.tags.remove"></a>
 
 ###### tags.remove(nameOrId, tagKey) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.application.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Remove an application tag  
 **Access**: public  
 
@@ -604,29 +604,29 @@ resin.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 
 **Example**  
 ```js
-resin.models.application.tags.remove('7cf02a6', 'EDITOR');
+balena.models.application.tags.remove('7cf02a6', 'EDITOR');
 ```
 **Example**  
 ```js
-resin.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
+balena.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.configVar"></a>
+<a name="balena.models.application.configVar"></a>
 
 ##### application.configVar : <code>object</code>
-**Kind**: static namespace of [<code>application</code>](#resin.models.application)  
+**Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
-* [.configVar](#resin.models.application.configVar) : <code>object</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(nameOrId, key)](#resin.models.application.configVar.get) ⇒ <code>Promise</code>
-    * [.set(nameOrId, key, value)](#resin.models.application.configVar.set) ⇒ <code>Promise</code>
-    * [.remove(nameOrId, key)](#resin.models.application.configVar.remove) ⇒ <code>Promise</code>
+* [.configVar](#balena.models.application.configVar) : <code>object</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(nameOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+    * [.set(nameOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+    * [.remove(nameOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.application.configVar.getAllByApplication"></a>
+<a name="balena.models.application.configVar.getAllByApplication"></a>
 
 ###### configVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.application.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Get all config variables for an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - application config variables  
@@ -638,27 +638,27 @@ resin.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
 
 **Example**  
 ```js
-resin.models.application.configVar.getAllByApplication('MyApp').then(function(vars) {
+balena.models.application.configVar.getAllByApplication('MyApp').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.getAllByApplication(999999).then(function(vars) {
+balena.models.application.configVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.getAllByApplication('MyApp', function(error, vars) {
+balena.models.application.configVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.application.configVar.get"></a>
+<a name="balena.models.application.configVar.get"></a>
 
 ###### configVar.get(nameOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.application.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Get the value of a specific config variable  
 **Access**: public  
 **Fulfil**: <code>String\|undefined</code> - the config variable value (or undefined)  
@@ -670,27 +670,27 @@ resin.models.application.configVar.getAllByApplication('MyApp', function(error, 
 
 **Example**  
 ```js
-resin.models.application.configVar.get('MyApp', 'RESIN_VAR').then(function(value) {
+balena.models.application.configVar.get('MyApp', 'BALENA_VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+balena.models.application.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.get('MyApp', 'RESIN_VAR', function(error, value) {
+balena.models.application.configVar.get('MyApp', 'BALENA_VAR', function(error, value) {
 	if (error) throw error;
 	console.log(value)
 });
 ```
-<a name="resin.models.application.configVar.set"></a>
+<a name="balena.models.application.configVar.set"></a>
 
 ###### configVar.set(nameOrId, key, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.application.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Set the value of a specific config variable  
 **Access**: public  
 
@@ -702,27 +702,27 @@ resin.models.application.configVar.get('MyApp', 'RESIN_VAR', function(error, val
 
 **Example**  
 ```js
-resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue').then(function() {
+balena.models.application.configVar.set('MyApp', 'BALENA_VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+balena.models.application.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue', function(error) {
+balena.models.application.configVar.set('MyApp', 'BALENA_VAR', 'newvalue', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.application.configVar.remove"></a>
+<a name="balena.models.application.configVar.remove"></a>
 
 ###### configVar.remove(nameOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.application.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Clear the value of a specific config variable  
 **Access**: public  
 
@@ -733,38 +733,38 @@ resin.models.application.configVar.set('MyApp', 'RESIN_VAR', 'newvalue', functio
 
 **Example**  
 ```js
-resin.models.application.configVar.remove('MyApp', 'RESIN_VAR').then(function() {
+balena.models.application.configVar.remove('MyApp', 'BALENA_VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.remove(999999, 'RESIN_VAR').then(function() {
+balena.models.application.configVar.remove(999999, 'BALENA_VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.configVar.remove('MyApp', 'RESIN_VAR', function(error) {
+balena.models.application.configVar.remove('MyApp', 'BALENA_VAR', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.application.envVar"></a>
+<a name="balena.models.application.envVar"></a>
 
 ##### application.envVar : <code>object</code>
-**Kind**: static namespace of [<code>application</code>](#resin.models.application)  
+**Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
-* [.envVar](#resin.models.application.envVar) : <code>object</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(nameOrId, key)](#resin.models.application.envVar.get) ⇒ <code>Promise</code>
-    * [.set(nameOrId, key, value)](#resin.models.application.envVar.set) ⇒ <code>Promise</code>
-    * [.remove(nameOrId, key)](#resin.models.application.envVar.remove) ⇒ <code>Promise</code>
+* [.envVar](#balena.models.application.envVar) : <code>object</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(nameOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+    * [.set(nameOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+    * [.remove(nameOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.application.envVar.getAllByApplication"></a>
+<a name="balena.models.application.envVar.getAllByApplication"></a>
 
 ###### envVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.application.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Get all environment variables for an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - application environment variables  
@@ -776,27 +776,27 @@ resin.models.application.configVar.remove('MyApp', 'RESIN_VAR', function(error) 
 
 **Example**  
 ```js
-resin.models.application.envVar.getAllByApplication('MyApp').then(function(vars) {
+balena.models.application.envVar.getAllByApplication('MyApp').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.getAllByApplication(999999).then(function(vars) {
+balena.models.application.envVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.getAllByApplication('MyApp', function(error, vars) {
+balena.models.application.envVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.application.envVar.get"></a>
+<a name="balena.models.application.envVar.get"></a>
 
 ###### envVar.get(nameOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.application.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Get the value of a specific environment variable  
 **Access**: public  
 **Fulfil**: <code>String\|undefined</code> - the environment variable value (or undefined)  
@@ -808,27 +808,27 @@ resin.models.application.envVar.getAllByApplication('MyApp', function(error, var
 
 **Example**  
 ```js
-resin.models.application.envVar.get('MyApp', 'VAR').then(function(value) {
+balena.models.application.envVar.get('MyApp', 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.get(999999, 'VAR').then(function(value) {
+balena.models.application.envVar.get(999999, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
+balena.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
 	if (error) throw error;
 	console.log(value)
 });
 ```
-<a name="resin.models.application.envVar.set"></a>
+<a name="balena.models.application.envVar.set"></a>
 
 ###### envVar.set(nameOrId, key, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.application.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Set the value of a specific environment variable  
 **Access**: public  
 
@@ -840,27 +840,27 @@ resin.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
 
 **Example**  
 ```js
-resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue').then(function() {
+balena.models.application.envVar.set('MyApp', 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+balena.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) {
+balena.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.application.envVar.remove"></a>
+<a name="balena.models.application.envVar.remove"></a>
 
 ###### envVar.remove(nameOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.application.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Clear the value of a specific environment variable  
 **Access**: public  
 
@@ -871,27 +871,27 @@ resin.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error) 
 
 **Example**  
 ```js
-resin.models.application.envVar.remove('MyApp', 'VAR').then(function() {
+balena.models.application.envVar.remove('MyApp', 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.remove(999999, 'VAR').then(function() {
+balena.models.application.envVar.remove(999999, 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.application.envVar.remove('MyApp', 'VAR', function(error) {
+balena.models.application.envVar.remove('MyApp', 'VAR', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.application.getAll"></a>
+<a name="balena.models.application.getAll"></a>
 
 ##### application.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get all applications  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - applications  
@@ -902,21 +902,21 @@ resin.models.application.envVar.remove('MyApp', 'VAR', function(error) {
 
 **Example**  
 ```js
-resin.models.application.getAll().then(function(applications) {
+balena.models.application.getAll().then(function(applications) {
 	console.log(applications);
 });
 ```
 **Example**  
 ```js
-resin.models.application.getAll(function(error, applications) {
+balena.models.application.getAll(function(error, applications) {
 	if (error) throw error;
 	console.log(applications);
 });
 ```
-<a name="resin.models.application.get"></a>
+<a name="balena.models.application.get"></a>
 
 ##### application.get(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application  
@@ -928,24 +928,24 @@ resin.models.application.getAll(function(error, applications) {
 
 **Example**  
 ```js
-resin.models.application.get('MyApp').then(function(application) {
+balena.models.application.get('MyApp').then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.get(123).then(function(application) {
+balena.models.application.get(123).then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.get('MyApp', function(error, application) {
+balena.models.application.get('MyApp', function(error, application) {
 	if (error) throw error;
 	console.log(application);
 });
 ```
-<a name="resin.models.application.getWithDeviceServiceDetails"></a>
+<a name="balena.models.application.getWithDeviceServiceDetails"></a>
 
 ##### application.getWithDeviceServiceDetails(nameOrId, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
@@ -953,7 +953,7 @@ larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want more control, or to see the raw model
 directly, use `application.get(uuidOrId, options)` instead.
 
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application and its deives, along with each device's
 associated services' essential details  
 **Access**: public  
@@ -966,27 +966,27 @@ associated services' essential details
 
 **Example**  
 ```js
-resin.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+balena.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.application.getWithDeviceServiceDetails(123).then(function(device) {
+balena.models.application.getWithDeviceServiceDetails(123).then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+balena.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });
 ```
-<a name="resin.models.application.getAppByOwner"></a>
+<a name="balena.models.application.getAppByOwner"></a>
 
 ##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application using the appname and owner's username  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application  
@@ -999,14 +999,14 @@ resin.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, 
 
 **Example**  
 ```js
-resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
+balena.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
 	console.log(application);
 });
 ```
-<a name="resin.models.application.has"></a>
+<a name="balena.models.application.has"></a>
 
 ##### application.has(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Check if an application exists  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - has application  
@@ -1017,47 +1017,47 @@ resin.models.application.getAppByOwner('MyApp', 'MyUser').then(function(applicat
 
 **Example**  
 ```js
-resin.models.application.has('MyApp').then(function(hasApp) {
+balena.models.application.has('MyApp').then(function(hasApp) {
 	console.log(hasApp);
 });
 ```
 **Example**  
 ```js
-resin.models.application.has(123).then(function(hasApp) {
+balena.models.application.has(123).then(function(hasApp) {
 	console.log(hasApp);
 });
 ```
 **Example**  
 ```js
-resin.models.application.has('MyApp', function(error, hasApp) {
+balena.models.application.has('MyApp', function(error, hasApp) {
 	if (error) throw error;
 	console.log(hasApp);
 });
 ```
-<a name="resin.models.application.hasAny"></a>
+<a name="balena.models.application.hasAny"></a>
 
 ##### application.hasAny() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Check if the user has any applications  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - has any applications  
 **Example**  
 ```js
-resin.models.application.hasAny().then(function(hasAny) {
+balena.models.application.hasAny().then(function(hasAny) {
 	console.log('Has any?', hasAny);
 });
 ```
 **Example**  
 ```js
-resin.models.application.hasAny(function(error, hasAny) {
+balena.models.application.hasAny(function(error, hasAny) {
 	if (error) throw error;
 	console.log('Has any?', hasAny);
 });
 ```
-<a name="resin.models.application.create"></a>
+<a name="balena.models.application.create"></a>
 
 ##### application.create(options) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Create an application  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application  
@@ -1072,27 +1072,27 @@ resin.models.application.hasAny(function(error, hasAny) {
 
 **Example**  
 ```js
-resin.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
+balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
+balena.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-resin.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
+balena.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
 	if (error) throw error;
 	console.log(application);
 });
 ```
-<a name="resin.models.application.remove"></a>
+<a name="balena.models.application.remove"></a>
 
 ##### application.remove(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Remove application  
 **Access**: public  
 
@@ -1102,22 +1102,22 @@ resin.models.application.create({ name: 'My App', applicationType: 'microservice
 
 **Example**  
 ```js
-resin.models.application.remove('MyApp');
+balena.models.application.remove('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.remove(123);
+balena.models.application.remove(123);
 ```
 **Example**  
 ```js
-resin.models.application.remove('MyApp', function(error) {
+balena.models.application.remove('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.restart"></a>
+<a name="balena.models.application.restart"></a>
 
 ##### application.restart(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Restart application  
 **Access**: public  
 
@@ -1127,28 +1127,28 @@ resin.models.application.remove('MyApp', function(error) {
 
 **Example**  
 ```js
-resin.models.application.restart('MyApp');
+balena.models.application.restart('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.restart(123);
+balena.models.application.restart(123);
 ```
 **Example**  
 ```js
-resin.models.application.restart('MyApp', function(error) {
+balena.models.application.restart('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.generateApiKey"></a>
+<a name="balena.models.application.generateApiKey"></a>
 
 ##### ~~application.generateApiKey(nameOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
-Generally you shouldn't use this method: if you're provisioning a recent ResinOS
+Generally you shouldn't use this method: if you're provisioning a recent BalenaOS
 version (2.4.0+) then generateProvisioningKey should work just as well, but
 be more secure.
 
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Generate an API key for a specific application  
 **Access**: public  
 **Fulfil**: <code>String</code> - api key  
@@ -1159,27 +1159,27 @@ be more secure.
 
 **Example**  
 ```js
-resin.models.application.generateApiKey('MyApp').then(function(apiKey) {
+balena.models.application.generateApiKey('MyApp').then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.application.generateApiKey(123).then(function(apiKey) {
+balena.models.application.generateApiKey(123).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
+balena.models.application.generateApiKey('MyApp', function(error, apiKey) {
 	if (error) throw error;
 	console.log(apiKey);
 });
 ```
-<a name="resin.models.application.generateProvisioningKey"></a>
+<a name="balena.models.application.generateProvisioningKey"></a>
 
 ##### application.generateProvisioningKey(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Generate a device provisioning key for a specific application  
 **Access**: public  
 **Fulfil**: <code>String</code> - device provisioning key  
@@ -1190,27 +1190,27 @@ resin.models.application.generateApiKey('MyApp', function(error, apiKey) {
 
 **Example**  
 ```js
-resin.models.application.generateProvisioningKey('MyApp').then(function(key) {
+balena.models.application.generateProvisioningKey('MyApp').then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.application.generateProvisioningKey(123).then(function(key) {
+balena.models.application.generateProvisioningKey(123).then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
+balena.models.application.generateProvisioningKey('MyApp', function(error, key) {
 	if (error) throw error;
 	console.log(key);
 });
 ```
-<a name="resin.models.application.purge"></a>
+<a name="balena.models.application.purge"></a>
 
 ##### application.purge(appId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Purge devices by application id  
 **Access**: public  
 
@@ -1220,18 +1220,18 @@ resin.models.application.generateProvisioningKey('MyApp', function(error, key) {
 
 **Example**  
 ```js
-resin.models.application.purge(123);
+balena.models.application.purge(123);
 ```
 **Example**  
 ```js
-resin.models.application.purge(123, function(error) {
+balena.models.application.purge(123, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.shutdown"></a>
+<a name="balena.models.application.shutdown"></a>
 
 ##### application.shutdown(appId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Shutdown devices by application id  
 **Access**: public  
 
@@ -1243,18 +1243,18 @@ resin.models.application.purge(123, function(error) {
 
 **Example**  
 ```js
-resin.models.application.shutdown(123);
+balena.models.application.shutdown(123);
 ```
 **Example**  
 ```js
-resin.models.application.shutdown(123, function(error) {
+balena.models.application.shutdown(123, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.reboot"></a>
+<a name="balena.models.application.reboot"></a>
 
 ##### application.reboot(appId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Reboot devices by application id  
 **Access**: public  
 
@@ -1266,18 +1266,18 @@ resin.models.application.shutdown(123, function(error) {
 
 **Example**  
 ```js
-resin.models.application.reboot(123);
+balena.models.application.reboot(123);
 ```
 **Example**  
 ```js
-resin.models.application.reboot(123, function(error) {
+balena.models.application.reboot(123, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.enableDeviceUrls"></a>
+<a name="balena.models.application.enableDeviceUrls"></a>
 
 ##### application.enableDeviceUrls(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Enable device urls for all devices that belong to an application  
 **Access**: public  
 
@@ -1287,22 +1287,22 @@ resin.models.application.reboot(123, function(error) {
 
 **Example**  
 ```js
-resin.models.application.enableDeviceUrls('MyApp');
+balena.models.application.enableDeviceUrls('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.enableDeviceUrls(123);
+balena.models.application.enableDeviceUrls(123);
 ```
 **Example**  
 ```js
-resin.models.device.enableDeviceUrls('MyApp', function(error) {
+balena.models.device.enableDeviceUrls('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.disableDeviceUrls"></a>
+<a name="balena.models.application.disableDeviceUrls"></a>
 
 ##### application.disableDeviceUrls(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Disable device urls for all devices that belong to an application  
 **Access**: public  
 
@@ -1312,22 +1312,22 @@ resin.models.device.enableDeviceUrls('MyApp', function(error) {
 
 **Example**  
 ```js
-resin.models.application.disableDeviceUrls('MyApp');
+balena.models.application.disableDeviceUrls('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.disableDeviceUrls(123);
+balena.models.application.disableDeviceUrls(123);
 ```
 **Example**  
 ```js
-resin.models.device.disableDeviceUrls('MyApp', function(error) {
+balena.models.device.disableDeviceUrls('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.grantSupportAccess"></a>
+<a name="balena.models.application.grantSupportAccess"></a>
 
 ##### application.grantSupportAccess(nameOrId, expiryTimestamp) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Grant support access to an application until a specified time  
 **Access**: public  
 
@@ -1338,22 +1338,22 @@ resin.models.device.disableDeviceUrls('MyApp', function(error) {
 
 **Example**  
 ```js
-resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000);
+balena.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000);
 ```
 **Example**  
 ```js
-resin.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
+balena.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
 ```
 **Example**  
 ```js
-resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, function(error) {
+balena.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.application.revokeSupportAccess"></a>
+<a name="balena.models.application.revokeSupportAccess"></a>
 
 ##### application.revokeSupportAccess(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>application</code>](#resin.models.application)  
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Revoke support access to an application  
 **Access**: public  
 
@@ -1363,112 +1363,112 @@ resin.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, f
 
 **Example**  
 ```js
-resin.models.application.revokeSupportAccess('MyApp');
+balena.models.application.revokeSupportAccess('MyApp');
 ```
 **Example**  
 ```js
-resin.models.application.revokeSupportAccess(123);
+balena.models.application.revokeSupportAccess(123);
 ```
 **Example**  
 ```js
-resin.models.application.revokeSupportAccess('MyApp', function(error) {
+balena.models.application.revokeSupportAccess('MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device"></a>
+<a name="balena.models.device"></a>
 
 #### models.device : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.device](#resin.models.device) : <code>object</code>
-    * [.tags](#resin.models.device.tags) : <code>object</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
-    * [.configVar](#resin.models.device.configVar) : <code>object</code>
-        * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
-    * [.envVar](#resin.models.device.envVar) : <code>object</code>
-        * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
-    * [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
-        * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
-    * [.getDashboardUrl(uuid)](#resin.models.device.getDashboardUrl) ⇒ <code>String</code>
-    * [.getAll([options])](#resin.models.device.getAll) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByParentDevice(parentUuidOrId, [options])](#resin.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
-    * [.get(uuidOrId, [options])](#resin.models.device.get) ⇒ <code>Promise</code>
-    * [.getWithServiceDetails(uuidOrId, [options])](#resin.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
-    * [.getByName(name)](#resin.models.device.getByName) ⇒ <code>Promise</code>
-    * [.getName(uuidOrId)](#resin.models.device.getName) ⇒ <code>Promise</code>
-    * [.getApplicationName(uuidOrId)](#resin.models.device.getApplicationName) ⇒ <code>Promise</code>
-    * ~~[.getApplicationInfo(uuidOrId)](#resin.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
-    * [.has(uuidOrId)](#resin.models.device.has) ⇒ <code>Promise</code>
-    * [.isOnline(uuidOrId)](#resin.models.device.isOnline) ⇒ <code>Promise</code>
-    * [.getLocalIPAddresses(uuidOrId)](#resin.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId)](#resin.models.device.remove) ⇒ <code>Promise</code>
-    * [.identify(uuidOrId)](#resin.models.device.identify) ⇒ <code>Promise</code>
-    * [.rename(uuidOrId, newName)](#resin.models.device.rename) ⇒ <code>Promise</code>
-    * [.note(uuidOrId, note)](#resin.models.device.note) ⇒ <code>Promise</code>
-    * [.setCustomLocation(uuidOrId, location)](#resin.models.device.setCustomLocation) ⇒ <code>Promise</code>
-    * [.unsetCustomLocation(uuidOrId)](#resin.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-    * [.move(uuidOrId, applicationNameOrId)](#resin.models.device.move) ⇒ <code>Promise</code>
-    * ~~[.startApplication(uuidOrId)](#resin.models.device.startApplication) ⇒ <code>Promise</code>~~
-    * ~~[.stopApplication(uuidOrId)](#resin.models.device.stopApplication) ⇒ <code>Promise</code>~~
-    * [.restartApplication(uuidOrId)](#resin.models.device.restartApplication) ⇒ <code>Promise</code>
-    * [.startService(uuidOrId, imageId)](#resin.models.device.startService) ⇒ <code>Promise</code>
-    * [.stopService(uuidOrId, imageId)](#resin.models.device.stopService) ⇒ <code>Promise</code>
-    * [.restartService(uuidOrId, imageId)](#resin.models.device.restartService) ⇒ <code>Promise</code>
-    * [.reboot(uuidOrId, [options])](#resin.models.device.reboot) ⇒ <code>Promise</code>
-    * [.shutdown(uuidOrId, [options])](#resin.models.device.shutdown) ⇒ <code>Promise</code>
-    * [.purge(uuidOrId)](#resin.models.device.purge) ⇒ <code>Promise</code>
-    * [.update(uuidOrId, [options])](#resin.models.device.update) ⇒ <code>Promise</code>
-    * [.getDisplayName(deviceTypeSlug)](#resin.models.device.getDisplayName) ⇒ <code>Promise</code>
-    * [.getDeviceSlug(deviceTypeName)](#resin.models.device.getDeviceSlug) ⇒ <code>Promise</code>
-    * [.getSupportedDeviceTypes()](#resin.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-    * [.getManifestBySlug(slug)](#resin.models.device.getManifestBySlug) ⇒ <code>Promise</code>
-    * [.getManifestByApplication(nameOrId)](#resin.models.device.getManifestByApplication) ⇒ <code>Promise</code>
-    * [.generateUniqueKey()](#resin.models.device.generateUniqueKey) ⇒ <code>String</code>
-    * [.register(applicationNameOrId, [uuid])](#resin.models.device.register) ⇒ <code>Promise</code>
-    * [.generateDeviceKey(uuidOrId)](#resin.models.device.generateDeviceKey) ⇒ <code>Promise</code>
-    * [.hasDeviceUrl(uuidOrId)](#resin.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
-    * [.getDeviceUrl(uuidOrId)](#resin.models.device.getDeviceUrl) ⇒ <code>Promise</code>
-    * [.enableDeviceUrl(uuidOrId)](#resin.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
-    * [.disableDeviceUrl(uuidOrId)](#resin.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-    * [.ping(uuidOrId)](#resin.models.device.ping) ⇒ <code>Promise</code>
-    * [.getStatus(device)](#resin.models.device.getStatus) ⇒ <code>Promise</code>
-    * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#resin.models.device.grantSupportAccess) ⇒ <code>Promise</code>
-    * [.revokeSupportAccess(uuidOrId)](#resin.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
-    * [.lastOnline(device)](#resin.models.device.lastOnline) ⇒ <code>String</code>
+* [.device](#balena.models.device) : <code>object</code>
+    * [.tags](#balena.models.device.tags) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
+        * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
+        * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
+    * [.configVar](#balena.models.device.configVar) : <code>object</code>
+        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
+        * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
+        * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
+    * [.envVar](#balena.models.device.envVar) : <code>object</code>
+        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
+        * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
+        * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
+    * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
+        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+        * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+        * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+    * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
+    * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+    * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
+    * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
+    * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
+    * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
+    * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
+    * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
+    * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
+    * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
+    * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
+    * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
+    * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+    * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
+    * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
+    * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
+    * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
+    * [.move(uuidOrId, applicationNameOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
+    * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
+    * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
+    * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
+    * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
+    * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
+    * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
+    * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
+    * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
+    * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
+    * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+    * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
+    * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
+    * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+    * [.getManifestBySlug(slug)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+    * [.getManifestByApplication(nameOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+    * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
+    * [.register(applicationNameOrId, [uuid])](#balena.models.device.register) ⇒ <code>Promise</code>
+    * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+    * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
+    * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
+    * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
+    * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+    * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
+    * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+    * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
+    * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
+    * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
 
-<a name="resin.models.device.tags"></a>
+<a name="balena.models.device.tags"></a>
 
 ##### device.tags : <code>object</code>
-**Kind**: static namespace of [<code>device</code>](#resin.models.device)  
+**Kind**: static namespace of [<code>device</code>](#balena.models.device)  
 
-* [.tags](#resin.models.device.tags) : <code>object</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAll([options])](#resin.models.device.tags.getAll) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, tagKey, value)](#resin.models.device.tags.set) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, tagKey)](#resin.models.device.tags.remove) ⇒ <code>Promise</code>
+* [.tags](#balena.models.device.tags) : <code>object</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
+    * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
+    * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.device.tags.getAllByApplication"></a>
+<a name="balena.models.device.tags.getAllByApplication"></a>
 
 ###### tags.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.device.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Get all device tags for an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device tags  
@@ -1480,27 +1480,27 @@ resin.models.application.revokeSupportAccess('MyApp', function(error) {
 
 **Example**  
 ```js
-resin.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
+balena.models.device.tags.getAllByApplication('MyApp').then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.device.tags.getAllByApplication(999999).then(function(tags) {
+balena.models.device.tags.getAllByApplication(999999).then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
+balena.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.device.tags.getAllByDevice"></a>
+<a name="balena.models.device.tags.getAllByDevice"></a>
 
 ###### tags.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.device.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Get all device tags for a device  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device tags  
@@ -1512,27 +1512,27 @@ resin.models.device.tags.getAllByApplication('MyApp', function(error, tags) {
 
 **Example**  
 ```js
-resin.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
+balena.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.device.tags.getAllByDevice(123).then(function(tags) {
+balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
+balena.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.device.tags.getAll"></a>
+<a name="balena.models.device.tags.getAll"></a>
 
 ###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.device.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Get all device tags  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device tags  
@@ -1543,21 +1543,21 @@ resin.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
 
 **Example**  
 ```js
-resin.models.device.tags.getAll().then(function(tags) {
+balena.models.device.tags.getAll().then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.device.tags.getAll(function(error, tags) {
+balena.models.device.tags.getAll(function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.device.tags.set"></a>
+<a name="balena.models.device.tags.set"></a>
 
 ###### tags.set(uuidOrId, tagKey, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.device.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Set a device tag  
 **Access**: public  
 
@@ -1569,22 +1569,22 @@ resin.models.device.tags.getAll(function(error, tags) {
 
 **Example**  
 ```js
-resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
+balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.device.tags.set(123, 'EDITOR', 'vim');
+balena.models.device.tags.set(123, 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.tags.remove"></a>
+<a name="balena.models.device.tags.remove"></a>
 
 ###### tags.remove(uuidOrId, tagKey) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.device.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Remove a device tag  
 **Access**: public  
 
@@ -1595,30 +1595,30 @@ resin.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 
 **Example**  
 ```js
-resin.models.device.tags.remove('7cf02a6', 'EDITOR');
+balena.models.device.tags.remove('7cf02a6', 'EDITOR');
 ```
 **Example**  
 ```js
-resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
+balena.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.configVar"></a>
+<a name="balena.models.device.configVar"></a>
 
 ##### device.configVar : <code>object</code>
-**Kind**: static namespace of [<code>device</code>](#resin.models.device)  
+**Kind**: static namespace of [<code>device</code>](#balena.models.device)  
 
-* [.configVar](#resin.models.device.configVar) : <code>object</code>
-    * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(uuidOrId, key)](#resin.models.device.configVar.get) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, key, value)](#resin.models.device.configVar.set) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, key)](#resin.models.device.configVar.remove) ⇒ <code>Promise</code>
+* [.configVar](#balena.models.device.configVar) : <code>object</code>
+    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
+    * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
+    * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.device.configVar.getAllByDevice"></a>
+<a name="balena.models.device.configVar.getAllByDevice"></a>
 
 ###### configVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.device.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get all config variables for a device  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device config variables  
@@ -1630,27 +1630,27 @@ resin.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
 
 **Example**  
 ```js
-resin.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
+balena.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.getAllByDevice(999999).then(function(vars) {
+balena.models.device.configVar.getAllByDevice(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
+balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.device.configVar.getAllByApplication"></a>
+<a name="balena.models.device.configVar.getAllByApplication"></a>
 
 ###### configVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.device.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get all device config variables by application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device config variables  
@@ -1662,27 +1662,27 @@ resin.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 **Example**  
 ```js
-resin.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
+balena.models.device.configVar.getAllByApplication('MyApp').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.getAllByApplication(999999).then(function(vars) {
+balena.models.device.configVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
+balena.models.device.configVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.device.configVar.get"></a>
+<a name="balena.models.device.configVar.get"></a>
 
 ###### configVar.get(uuidOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.device.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get the value of a specific config variable  
 **Access**: public  
 **Fulfil**: <code>String\|undefined</code> - the config variable value (or undefined)  
@@ -1694,27 +1694,27 @@ resin.models.device.configVar.getAllByApplication('MyApp', function(error, vars)
 
 **Example**  
 ```js
-resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR').then(function(value) {
+balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.get(999999, 'RESIN_VAR').then(function(value) {
+balena.models.device.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR', function(error, value) {
+balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR', function(error, value) {
 	if (error) throw error;
 	console.log(value)
 });
 ```
-<a name="resin.models.device.configVar.set"></a>
+<a name="balena.models.device.configVar.set"></a>
 
 ###### configVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.device.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Set the value of a specific config variable  
 **Access**: public  
 
@@ -1726,27 +1726,27 @@ resin.models.device.configVar.get('7cf02a6', 'RESIN_VAR', function(error, value)
 
 **Example**  
 ```js
-resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue').then(function() {
+balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.set(999999, 'RESIN_VAR', 'newvalue').then(function() {
+balena.models.device.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue', function(error) {
+balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.configVar.remove"></a>
+<a name="balena.models.device.configVar.remove"></a>
 
 ###### configVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>configVar</code>](#resin.models.device.configVar)  
+**Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Clear the value of a specific config variable  
 **Access**: public  
 
@@ -1757,39 +1757,39 @@ resin.models.device.configVar.set('7cf02a6', 'RESIN_VAR', 'newvalue', function(e
 
 **Example**  
 ```js
-resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR').then(function() {
+balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.remove(999999, 'RESIN_VAR').then(function() {
+balena.models.device.configVar.remove(999999, 'BALENA_VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR', function(error) {
+balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.envVar"></a>
+<a name="balena.models.device.envVar"></a>
 
 ##### device.envVar : <code>object</code>
-**Kind**: static namespace of [<code>device</code>](#resin.models.device)  
+**Kind**: static namespace of [<code>device</code>](#balena.models.device)  
 
-* [.envVar](#resin.models.device.envVar) : <code>object</code>
-    * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(uuidOrId, key)](#resin.models.device.envVar.get) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, key, value)](#resin.models.device.envVar.set) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, key)](#resin.models.device.envVar.remove) ⇒ <code>Promise</code>
+* [.envVar](#balena.models.device.envVar) : <code>object</code>
+    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
+    * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
+    * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.device.envVar.getAllByDevice"></a>
+<a name="balena.models.device.envVar.getAllByDevice"></a>
 
 ###### envVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.device.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get all environment variables for a device  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device environment variables  
@@ -1801,27 +1801,27 @@ resin.models.device.configVar.remove('7cf02a6', 'RESIN_VAR', function(error) {
 
 **Example**  
 ```js
-resin.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
+balena.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.getAllByDevice(999999).then(function(vars) {
+balena.models.device.envVar.getAllByDevice(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
+balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.device.envVar.getAllByApplication"></a>
+<a name="balena.models.device.envVar.getAllByApplication"></a>
 
 ###### envVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.device.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get all device environment variables by application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device environment variables  
@@ -1833,27 +1833,27 @@ resin.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 **Example**  
 ```js
-resin.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
+balena.models.device.envVar.getAllByApplication('MyApp').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.getAllByApplication(999999).then(function(vars) {
+balena.models.device.envVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
+balena.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.device.envVar.get"></a>
+<a name="balena.models.device.envVar.get"></a>
 
 ###### envVar.get(uuidOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.device.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get the value of a specific environment variable  
 **Access**: public  
 **Fulfil**: <code>String\|undefined</code> - the environment variable value (or undefined)  
@@ -1865,27 +1865,27 @@ resin.models.device.envVar.getAllByApplication('MyApp', function(error, vars) {
 
 **Example**  
 ```js
-resin.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
+balena.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.get(999999, 'VAR').then(function(value) {
+balena.models.device.envVar.get(999999, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
+balena.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
 	if (error) throw error;
 	console.log(value)
 });
 ```
-<a name="resin.models.device.envVar.set"></a>
+<a name="balena.models.device.envVar.set"></a>
 
 ###### envVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.device.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Set the value of a specific environment variable  
 **Access**: public  
 
@@ -1897,27 +1897,27 @@ resin.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
 
 **Example**  
 ```js
-resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
+balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
+balena.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
+balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.envVar.remove"></a>
+<a name="balena.models.device.envVar.remove"></a>
 
 ###### envVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>envVar</code>](#resin.models.device.envVar)  
+**Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Clear the value of a specific environment variable  
 **Access**: public  
 
@@ -1928,39 +1928,39 @@ resin.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
 
 **Example**  
 ```js
-resin.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
+balena.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.remove(999999, 'VAR').then(function() {
+balena.models.device.envVar.remove(999999, 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
+balena.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.serviceVar"></a>
+<a name="balena.models.device.serviceVar"></a>
 
 ##### device.serviceVar : <code>object</code>
-**Kind**: static namespace of [<code>device</code>](#resin.models.device)  
+**Kind**: static namespace of [<code>device</code>](#balena.models.device)  
 
-* [.serviceVar](#resin.models.device.serviceVar) : <code>object</code>
-    * [.getAllByDevice(uuidOrId, [options])](#resin.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(uuidOrId, id, key)](#resin.models.device.serviceVar.get) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, id, key, value)](#resin.models.device.serviceVar.set) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, id, key)](#resin.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+* [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
+    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+    * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+    * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.device.serviceVar.getAllByDevice"></a>
+<a name="balena.models.device.serviceVar.getAllByDevice"></a>
 
 ###### serviceVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>serviceVar</code>](#resin.models.device.serviceVar)  
+**Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get all service variable overrides for a device  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - service variables  
@@ -1972,27 +1972,27 @@ resin.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
 
 **Example**  
 ```js
-resin.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
+balena.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
+balena.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
+balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.device.serviceVar.getAllByApplication"></a>
+<a name="balena.models.device.serviceVar.getAllByApplication"></a>
 
 ###### serviceVar.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>serviceVar</code>](#resin.models.device.serviceVar)  
+**Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get all device service variable overrides by application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - service variables  
@@ -2004,27 +2004,27 @@ resin.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 **Example**  
 ```js
-resin.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
+balena.models.device.serviceVar.getAllByApplication('MyApp').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
+balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
+balena.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.device.serviceVar.get"></a>
+<a name="balena.models.device.serviceVar.get"></a>
 
 ###### serviceVar.get(uuidOrId, id, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>serviceVar</code>](#resin.models.device.serviceVar)  
+**Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get the overriden value of a service variable on a device  
 **Access**: public  
 **Fulfil**: <code>String\|undefined</code> - the variable value (or undefined)  
@@ -2037,27 +2037,27 @@ resin.models.device.serviceVar.getAllByApplication('MyApp', function(error, vars
 
 **Example**  
 ```js
-resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
+balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
+balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
 	if (error) throw error;
 	console.log(value)
 });
 ```
-<a name="resin.models.device.serviceVar.set"></a>
+<a name="balena.models.device.serviceVar.set"></a>
 
 ###### serviceVar.set(uuidOrId, id, key, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>serviceVar</code>](#resin.models.device.serviceVar)  
+**Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Set the overriden value of a service variable on a device  
 **Access**: public  
 
@@ -2070,27 +2070,27 @@ resin.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value)
 
 **Example**  
 ```js
-resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
+balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
+balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.serviceVar.remove"></a>
+<a name="balena.models.device.serviceVar.remove"></a>
 
 ###### serviceVar.remove(uuidOrId, id, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>serviceVar</code>](#resin.models.device.serviceVar)  
+**Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Clear the overridden value of a service variable on a device  
 **Access**: public  
 
@@ -2102,27 +2102,27 @@ resin.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(e
 
 **Example**  
 ```js
-resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
+balena.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
+balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.getDashboardUrl"></a>
+<a name="balena.models.device.getDashboardUrl"></a>
 
 ##### device.getDashboardUrl(uuid) ⇒ <code>String</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get Dashboard URL for a specific device  
 **Returns**: <code>String</code> - - Dashboard URL for the specific device  
 **Throws**:
@@ -2136,12 +2136,12 @@ resin.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
 
 **Example**  
 ```js
-dashboardDeviceUrl = resin.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
+dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 ```
-<a name="resin.models.device.getAll"></a>
+<a name="balena.models.device.getAll"></a>
 
 ##### device.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - devices  
@@ -2152,21 +2152,21 @@ dashboardDeviceUrl = resin.models.device.getDashboardUrl('a44b544b8cc24d11b036c6
 
 **Example**  
 ```js
-resin.models.device.getAll().then(function(devices) {
+balena.models.device.getAll().then(function(devices) {
 	console.log(devices);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getAll(function(error, devices) {
+balena.models.device.getAll(function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });
 ```
-<a name="resin.models.device.getAllByApplication"></a>
+<a name="balena.models.device.getAllByApplication"></a>
 
 ##### device.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - devices  
@@ -2178,27 +2178,27 @@ resin.models.device.getAll(function(error, devices) {
 
 **Example**  
 ```js
-resin.models.device.getAllByApplication('MyApp').then(function(devices) {
+balena.models.device.getAllByApplication('MyApp').then(function(devices) {
 	console.log(devices);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getAllByApplication(123).then(function(devices) {
+balena.models.device.getAllByApplication(123).then(function(devices) {
 	console.log(devices);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getAllByApplication('MyApp', function(error, devices) {
+balena.models.device.getAllByApplication('MyApp', function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });
 ```
-<a name="resin.models.device.getAllByParentDevice"></a>
+<a name="balena.models.device.getAllByParentDevice"></a>
 
 ##### device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by parent device  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - devices  
@@ -2210,27 +2210,27 @@ resin.models.device.getAllByApplication('MyApp', function(error, devices) {
 
 **Example**  
 ```js
-resin.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
+balena.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
 	console.log(devices);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getAllByParentDevice(123).then(function(devices) {
+balena.models.device.getAllByParentDevice(123).then(function(devices) {
 	console.log(devices);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
+balena.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });
 ```
-<a name="resin.models.device.get"></a>
+<a name="balena.models.device.get"></a>
 
 ##### device.get(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a single device  
 **Access**: public  
 **Fulfil**: <code>Object</code> - device  
@@ -2242,24 +2242,24 @@ resin.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
 
 **Example**  
 ```js
-resin.models.device.get('7cf02a6').then(function(device) {
+balena.models.device.get('7cf02a6').then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.device.get(123).then(function(device) {
+balena.models.device.get(123).then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.device.get('7cf02a6', function(error, device) {
+balena.models.device.get('7cf02a6', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });
 ```
-<a name="resin.models.device.getWithServiceDetails"></a>
+<a name="balena.models.device.getWithServiceDetails"></a>
 
 ##### device.getWithServiceDetails(uuidOrId, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
@@ -2267,7 +2267,7 @@ larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want more control, or to see the raw model
 directly, use `device.get(uuidOrId, options)` instead.
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a single device along with its associated services' essential details  
 **Access**: public  
 **Fulfil**: <code>Object</code> - device with service details  
@@ -2279,27 +2279,27 @@ directly, use `device.get(uuidOrId, options)` instead.
 
 **Example**  
 ```js
-resin.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.device.getWithServiceDetails(123).then(function(device) {
+balena.models.device.getWithServiceDetails(123).then(function(device) {
 	console.log(device);
 })
 ```
 **Example**  
 ```js
-resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
+balena.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });
 ```
-<a name="resin.models.device.getByName"></a>
+<a name="balena.models.device.getByName"></a>
 
 ##### device.getByName(name) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get devices by name  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - devices  
@@ -2310,21 +2310,21 @@ resin.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
 
 **Example**  
 ```js
-resin.models.device.getByName('MyDevice').then(function(devices) {
+balena.models.device.getByName('MyDevice').then(function(devices) {
 	console.log(devices);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getByName('MyDevice', function(error, devices) {
+balena.models.device.getByName('MyDevice', function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });
 ```
-<a name="resin.models.device.getName"></a>
+<a name="balena.models.device.getName"></a>
 
 ##### device.getName(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the name of a device  
 **Access**: public  
 **Fulfil**: <code>String</code> - device name  
@@ -2335,27 +2335,27 @@ resin.models.device.getByName('MyDevice', function(error, devices) {
 
 **Example**  
 ```js
-resin.models.device.getName('7cf02a6').then(function(deviceName) {
+balena.models.device.getName('7cf02a6').then(function(deviceName) {
 	console.log(deviceName);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getName(123).then(function(deviceName) {
+balena.models.device.getName(123).then(function(deviceName) {
 	console.log(deviceName);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getName('7cf02a6', function(error, deviceName) {
+balena.models.device.getName('7cf02a6', function(error, deviceName) {
 	if (error) throw error;
 	console.log(deviceName);
 });
 ```
-<a name="resin.models.device.getApplicationName"></a>
+<a name="balena.models.device.getApplicationName"></a>
 
 ##### device.getApplicationName(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get application name  
 **Access**: public  
 **Fulfil**: <code>String</code> - application name  
@@ -2366,31 +2366,31 @@ resin.models.device.getName('7cf02a6', function(error, deviceName) {
 
 **Example**  
 ```js
-resin.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
+balena.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
 	console.log(applicationName);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getApplicationName(123).then(function(applicationName) {
+balena.models.device.getApplicationName(123).then(function(applicationName) {
 	console.log(applicationName);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
+balena.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
 	if (error) throw error;
 	console.log(applicationName);
 });
 ```
-<a name="resin.models.device.getApplicationInfo"></a>
+<a name="balena.models.device.getApplicationInfo"></a>
 
 ##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
 This is not supported on multicontainer devices, and will be removed in a future major release
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get application container information  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application info  
@@ -2401,27 +2401,27 @@ This is not supported on multicontainer devices, and will be removed in a future
 
 **Example**  
 ```js
-resin.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
+balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
 	console.log(appInfo);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getApplicationInfo(123).then(function(appInfo) {
+balena.models.device.getApplicationInfo(123).then(function(appInfo) {
 	console.log(appInfo);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
+balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
 	if (error) throw error;
 	console.log(appInfo);
 });
 ```
-<a name="resin.models.device.has"></a>
+<a name="balena.models.device.has"></a>
 
 ##### device.has(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device exists  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - has device  
@@ -2432,27 +2432,27 @@ resin.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
 
 **Example**  
 ```js
-resin.models.device.has('7cf02a6').then(function(hasDevice) {
+balena.models.device.has('7cf02a6').then(function(hasDevice) {
 	console.log(hasDevice);
 });
 ```
 **Example**  
 ```js
-resin.models.device.has(123).then(function(hasDevice) {
+balena.models.device.has(123).then(function(hasDevice) {
 	console.log(hasDevice);
 });
 ```
 **Example**  
 ```js
-resin.models.device.has('7cf02a6', function(error, hasDevice) {
+balena.models.device.has('7cf02a6', function(error, hasDevice) {
 	if (error) throw error;
 	console.log(hasDevice);
 });
 ```
-<a name="resin.models.device.isOnline"></a>
+<a name="balena.models.device.isOnline"></a>
 
 ##### device.isOnline(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device is online  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - is device online  
@@ -2463,27 +2463,27 @@ resin.models.device.has('7cf02a6', function(error, hasDevice) {
 
 **Example**  
 ```js
-resin.models.device.isOnline('7cf02a6').then(function(isOnline) {
+balena.models.device.isOnline('7cf02a6').then(function(isOnline) {
 	console.log('Is device online?', isOnline);
 });
 ```
 **Example**  
 ```js
-resin.models.device.isOnline(123).then(function(isOnline) {
+balena.models.device.isOnline(123).then(function(isOnline) {
 	console.log('Is device online?', isOnline);
 });
 ```
 **Example**  
 ```js
-resin.models.device.isOnline('7cf02a6', function(error, isOnline) {
+balena.models.device.isOnline('7cf02a6', function(error, isOnline) {
 	if (error) throw error;
 	console.log('Is device online?', isOnline);
 });
 ```
-<a name="resin.models.device.getLocalIPAddresses"></a>
+<a name="balena.models.device.getLocalIPAddresses"></a>
 
 ##### device.getLocalIPAddresses(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the local IP addresses of a device  
 **Access**: public  
 **Fulfil**: <code>String[]</code> - local ip addresses  
@@ -2495,7 +2495,7 @@ resin.models.device.isOnline('7cf02a6', function(error, isOnline) {
 
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
+balena.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
 	localIPAddresses.forEach(function(localIP) {
 		console.log(localIP);
 	});
@@ -2503,7 +2503,7 @@ resin.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresse
 ```
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
+balena.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
 	localIPAddresses.forEach(function(localIP) {
 		console.log(localIP);
 	});
@@ -2511,7 +2511,7 @@ resin.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
 ```
 **Example**  
 ```js
-resin.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
+balena.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
 	if (error) throw error;
 
 	localIPAddresses.forEach(function(localIP) {
@@ -2519,10 +2519,10 @@ resin.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddres
 	});
 });
 ```
-<a name="resin.models.device.remove"></a>
+<a name="balena.models.device.remove"></a>
 
 ##### device.remove(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Remove device  
 **Access**: public  
 
@@ -2532,22 +2532,22 @@ resin.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddres
 
 **Example**  
 ```js
-resin.models.device.remove('7cf02a6');
+balena.models.device.remove('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.remove(123);
+balena.models.device.remove(123);
 ```
 **Example**  
 ```js
-resin.models.device.remove('7cf02a6', function(error) {
+balena.models.device.remove('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.identify"></a>
+<a name="balena.models.device.identify"></a>
 
 ##### device.identify(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Identify device  
 **Access**: public  
 
@@ -2557,22 +2557,22 @@ resin.models.device.remove('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.identify('7cf02a6');
+balena.models.device.identify('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.identify(123);
+balena.models.device.identify(123);
 ```
 **Example**  
 ```js
-resin.models.device.identify('7cf02a6', function(error) {
+balena.models.device.identify('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.rename"></a>
+<a name="balena.models.device.rename"></a>
 
 ##### device.rename(uuidOrId, newName) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Rename device  
 **Access**: public  
 
@@ -2583,22 +2583,22 @@ resin.models.device.identify('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.rename('7cf02a6', 'NewName');
+balena.models.device.rename('7cf02a6', 'NewName');
 ```
 **Example**  
 ```js
-resin.models.device.rename(123, 'NewName');
+balena.models.device.rename(123, 'NewName');
 ```
 **Example**  
 ```js
-resin.models.device.rename('7cf02a6', 'NewName', function(error) {
+balena.models.device.rename('7cf02a6', 'NewName', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.note"></a>
+<a name="balena.models.device.note"></a>
 
 ##### device.note(uuidOrId, note) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Note a device  
 **Access**: public  
 
@@ -2609,22 +2609,22 @@ resin.models.device.rename('7cf02a6', 'NewName', function(error) {
 
 **Example**  
 ```js
-resin.models.device.note('7cf02a6', 'My useful note');
+balena.models.device.note('7cf02a6', 'My useful note');
 ```
 **Example**  
 ```js
-resin.models.device.note(123, 'My useful note');
+balena.models.device.note(123, 'My useful note');
 ```
 **Example**  
 ```js
-resin.models.device.note('7cf02a6', 'My useful note', function(error) {
+balena.models.device.note('7cf02a6', 'My useful note', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.setCustomLocation"></a>
+<a name="balena.models.device.setCustomLocation"></a>
 
 ##### device.setCustomLocation(uuidOrId, location) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Set a custom location for a device  
 **Access**: public  
 
@@ -2635,22 +2635,22 @@ resin.models.device.note('7cf02a6', 'My useful note', function(error) {
 
 **Example**  
 ```js
-resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
+balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
 ```
 **Example**  
 ```js
-resin.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
+balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 ```
 **Example**  
 ```js
-resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
+balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.unsetCustomLocation"></a>
+<a name="balena.models.device.unsetCustomLocation"></a>
 
 ##### device.unsetCustomLocation(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Clear the custom location of a device  
 **Access**: public  
 
@@ -2660,22 +2660,22 @@ resin.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456
 
 **Example**  
 ```js
-resin.models.device.unsetCustomLocation('7cf02a6');
+balena.models.device.unsetCustomLocation('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.unsetCustomLocation(123);
+balena.models.device.unsetCustomLocation(123);
 ```
 **Example**  
 ```js
-resin.models.device.unsetLocation('7cf02a6', function(error) {
+balena.models.device.unsetLocation('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.move"></a>
+<a name="balena.models.device.move"></a>
 
 ##### device.move(uuidOrId, applicationNameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Move a device to another application  
 **Access**: public  
 
@@ -2686,30 +2686,30 @@ resin.models.device.unsetLocation('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.move('7cf02a6', 'MyApp');
+balena.models.device.move('7cf02a6', 'MyApp');
 ```
 **Example**  
 ```js
-resin.models.device.move(123, 'MyApp');
+balena.models.device.move(123, 'MyApp');
 ```
 **Example**  
 ```js
-resin.models.device.move(123, 456);
+balena.models.device.move(123, 456);
 ```
 **Example**  
 ```js
-resin.models.device.move('7cf02a6', 'MyApp', function(error) {
+balena.models.device.move('7cf02a6', 'MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.startApplication"></a>
+<a name="balena.models.device.startApplication"></a>
 
 ##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
 This is not supported on multicontainer devices, and will be removed in a future major release
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Start application on device  
 **Access**: public  
 **Fulfil**: <code>String</code> - application container id  
@@ -2720,31 +2720,31 @@ This is not supported on multicontainer devices, and will be removed in a future
 
 **Example**  
 ```js
-resin.models.device.startApplication('7cf02a6').then(function(containerId) {
+balena.models.device.startApplication('7cf02a6').then(function(containerId) {
 	console.log(containerId);
 });
 ```
 **Example**  
 ```js
-resin.models.device.startApplication(123).then(function(containerId) {
+balena.models.device.startApplication(123).then(function(containerId) {
 	console.log(containerId);
 });
 ```
 **Example**  
 ```js
-resin.models.device.startApplication('7cf02a6', function(error, containerId) {
+balena.models.device.startApplication('7cf02a6', function(error, containerId) {
 	if (error) throw error;
 	console.log(containerId);
 });
 ```
-<a name="resin.models.device.stopApplication"></a>
+<a name="balena.models.device.stopApplication"></a>
 
 ##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
 This is not supported on multicontainer devices, and will be removed in a future major release
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Stop application on device  
 **Access**: public  
 **Fulfil**: <code>String</code> - application container id  
@@ -2755,31 +2755,31 @@ This is not supported on multicontainer devices, and will be removed in a future
 
 **Example**  
 ```js
-resin.models.device.stopApplication('7cf02a6').then(function(containerId) {
+balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
 	console.log(containerId);
 });
 ```
 **Example**  
 ```js
-resin.models.device.stopApplication(123).then(function(containerId) {
+balena.models.device.stopApplication(123).then(function(containerId) {
 	console.log(containerId);
 });
 ```
 **Example**  
 ```js
-resin.models.device.stopApplication('7cf02a6', function(error, containerId) {
+balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
 	if (error) throw error;
 	console.log(containerId);
 });
 ```
-<a name="resin.models.device.restartApplication"></a>
+<a name="balena.models.device.restartApplication"></a>
 
 ##### device.restartApplication(uuidOrId) ⇒ <code>Promise</code>
 This function restarts the Docker container running
 the application on the device, but doesn't reboot
 the device itself.
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Restart application on device  
 **Access**: public  
 
@@ -2789,22 +2789,22 @@ the device itself.
 
 **Example**  
 ```js
-resin.models.device.restartApplication('7cf02a6');
+balena.models.device.restartApplication('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.restartApplication(123);
+balena.models.device.restartApplication(123);
 ```
 **Example**  
 ```js
-resin.models.device.restartApplication('7cf02a6', function(error) {
+balena.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.startService"></a>
+<a name="balena.models.device.startService"></a>
 
 ##### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Start a service on a device  
 **Access**: public  
 
@@ -2815,27 +2815,27 @@ resin.models.device.restartApplication('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.startService('7cf02a6', 123).then(function() {
+balena.models.device.startService('7cf02a6', 123).then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.startService(1, 123).then(function() {
+balena.models.device.startService(1, 123).then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.startService('7cf02a6', 123, function(error) {
+balena.models.device.startService('7cf02a6', 123, function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.stopService"></a>
+<a name="balena.models.device.stopService"></a>
 
 ##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Stop a service on a device  
 **Access**: public  
 
@@ -2846,27 +2846,27 @@ resin.models.device.startService('7cf02a6', 123, function(error) {
 
 **Example**  
 ```js
-resin.models.device.stopService('7cf02a6', 123).then(function() {
+balena.models.device.stopService('7cf02a6', 123).then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.stopService(1, 123).then(function() {
+balena.models.device.stopService(1, 123).then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.stopService('7cf02a6', 123, function(error) {
+balena.models.device.stopService('7cf02a6', 123, function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.restartService"></a>
+<a name="balena.models.device.restartService"></a>
 
 ##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Restart a service on a device  
 **Access**: public  
 
@@ -2877,27 +2877,27 @@ resin.models.device.stopService('7cf02a6', 123, function(error) {
 
 **Example**  
 ```js
-resin.models.device.restartService('7cf02a6', 123).then(function() {
+balena.models.device.restartService('7cf02a6', 123).then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.restartService(1, 123).then(function() {
+balena.models.device.restartService(1, 123).then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.device.restartService('7cf02a6', 123, function(error) {
+balena.models.device.restartService('7cf02a6', 123, function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.device.reboot"></a>
+<a name="balena.models.device.reboot"></a>
 
 ##### device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Reboot device  
 **Access**: public  
 
@@ -2909,22 +2909,22 @@ resin.models.device.restartService('7cf02a6', 123, function(error) {
 
 **Example**  
 ```js
-resin.models.device.reboot('7cf02a6');
+balena.models.device.reboot('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.reboot(123);
+balena.models.device.reboot(123);
 ```
 **Example**  
 ```js
-resin.models.device.reboot('7cf02a6', function(error) {
+balena.models.device.reboot('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.shutdown"></a>
+<a name="balena.models.device.shutdown"></a>
 
 ##### device.shutdown(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Shutdown device  
 **Access**: public  
 
@@ -2936,24 +2936,24 @@ resin.models.device.reboot('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.shutdown('7cf02a6');
+balena.models.device.shutdown('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.shutdown(123);
+balena.models.device.shutdown(123);
 ```
 **Example**  
 ```js
-resin.models.device.shutdown('7cf02a6', function(error) {
+balena.models.device.shutdown('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.purge"></a>
+<a name="balena.models.device.purge"></a>
 
 ##### device.purge(uuidOrId) ⇒ <code>Promise</code>
 This function clears the user application's `/data` directory.
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Purge device  
 **Access**: public  
 
@@ -2963,22 +2963,22 @@ This function clears the user application's `/data` directory.
 
 **Example**  
 ```js
-resin.models.device.purge('7cf02a6');
+balena.models.device.purge('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.purge(123);
+balena.models.device.purge(123);
 ```
 **Example**  
 ```js
-resin.models.device.purge('7cf02a6', function(error) {
+balena.models.device.purge('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.update"></a>
+<a name="balena.models.device.update"></a>
 
 ##### device.update(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Trigger an update check on the supervisor  
 **Access**: public  
 
@@ -2990,32 +2990,32 @@ resin.models.device.purge('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.update('7cf02a6', {
+balena.models.device.update('7cf02a6', {
 	force: true
 });
 ```
 **Example**  
 ```js
-resin.models.device.update(123, {
+balena.models.device.update(123, {
 	force: true
 });
 ```
 **Example**  
 ```js
-resin.models.device.update('7cf02a6', {
+balena.models.device.update('7cf02a6', {
 	force: true
 }, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.getDisplayName"></a>
+<a name="balena.models.device.getDisplayName"></a>
 
 ##### device.getDisplayName(deviceTypeSlug) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get display name for a device  
 **Access**: public  
 **Fulfil**: <code>String</code> - device display name  
-**See**: [module:resin.models.device.getSupportedDeviceTypes](module:resin.models.device.getSupportedDeviceTypes) for a list of supported devices  
+**See**: [module:balena.models.device.getSupportedDeviceTypes](module:balena.models.device.getSupportedDeviceTypes) for a list of supported devices  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3023,27 +3023,27 @@ resin.models.device.update('7cf02a6', {
 
 **Example**  
 ```js
-resin.models.device.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
+balena.models.device.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
 	console.log(deviceTypeName);
 	// Raspberry Pi
 });
 ```
 **Example**  
 ```js
-resin.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
+balena.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
 	if (error) throw error;
 	console.log(deviceTypeName);
 	// Raspberry Pi
 });
 ```
-<a name="resin.models.device.getDeviceSlug"></a>
+<a name="balena.models.device.getDeviceSlug"></a>
 
 ##### device.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get device slug  
 **Access**: public  
 **Fulfil**: <code>String</code> - device slug name  
-**See**: [module:resin.models.device.getSupportedDeviceTypes](module:resin.models.device.getSupportedDeviceTypes) for a list of supported devices  
+**See**: [module:balena.models.device.getSupportedDeviceTypes](module:balena.models.device.getSupportedDeviceTypes) for a list of supported devices  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3051,48 +3051,48 @@ resin.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeNam
 
 **Example**  
 ```js
-resin.models.device.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
+balena.models.device.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
 	console.log(deviceTypeSlug);
 	// raspberry-pi
 });
 ```
 **Example**  
 ```js
-resin.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
+balena.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
 	if (error) throw error;
 	console.log(deviceTypeSlug);
 	// raspberry-pi
 });
 ```
-<a name="resin.models.device.getSupportedDeviceTypes"></a>
+<a name="balena.models.device.getSupportedDeviceTypes"></a>
 
 ##### device.getSupportedDeviceTypes() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get supported device types  
 **Access**: public  
 **Fulfil**: <code>String[]</code> - supported device types  
 **Example**  
 ```js
-resin.models.device.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
+balena.models.device.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
 	supportedDeviceTypes.forEach(function(supportedDeviceType) {
-		console.log('Resin supports:', supportedDeviceType);
+		console.log('Balena supports:', supportedDeviceType);
 	});
 });
 ```
 **Example**  
 ```js
-resin.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
+balena.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
 	if (error) throw error;
 
 	supportedDeviceTypes.forEach(function(supportedDeviceType) {
-		console.log('Resin supports:', supportedDeviceType);
+		console.log('Balena supports:', supportedDeviceType);
 	});
 });
 ```
-<a name="resin.models.device.getManifestBySlug"></a>
+<a name="balena.models.device.getManifestBySlug"></a>
 
 ##### device.getManifestBySlug(slug) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by slug  
 **Access**: public  
 **Fulfil**: <code>Object</code> - device manifest  
@@ -3103,21 +3103,21 @@ resin.models.device.getSupportedDeviceTypes(function(error, supportedDeviceTypes
 
 **Example**  
 ```js
-resin.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
+balena.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
 	console.log(manifest);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
+balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
 	if (error) throw error;
 	console.log(manifest);
 });
 ```
-<a name="resin.models.device.getManifestByApplication"></a>
+<a name="balena.models.device.getManifestByApplication"></a>
 
 ##### device.getManifestByApplication(nameOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by application name  
 **Access**: public  
 **Fulfil**: <code>Object</code> - device manifest  
@@ -3128,41 +3128,41 @@ resin.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) 
 
 **Example**  
 ```js
-resin.models.device.getManifestByApplication('MyApp').then(function(manifest) {
+balena.models.device.getManifestByApplication('MyApp').then(function(manifest) {
 	console.log(manifest);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getManifestByApplication(123).then(function(manifest) {
+balena.models.device.getManifestByApplication(123).then(function(manifest) {
 	console.log(manifest);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getManifestByApplication('MyApp', function(error, manifest) {
+balena.models.device.getManifestByApplication('MyApp', function(error, manifest) {
 	if (error) throw error;
 	console.log(manifest);
 });
 ```
-<a name="resin.models.device.generateUniqueKey"></a>
+<a name="balena.models.device.generateUniqueKey"></a>
 
 ##### device.generateUniqueKey() ⇒ <code>String</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Generate a random key, useful for both uuid and api key.  
 **Returns**: <code>String</code> - A generated key  
 **Access**: public  
 **Example**  
 ```js
-randomKey = resin.models.device.generateUniqueKey();
+randomKey = balena.models.device.generateUniqueKey();
 // randomKey is a randomly generated key that can be used as either a uuid or an api key
 console.log(randomKey);
 ```
-<a name="resin.models.device.register"></a>
+<a name="balena.models.device.register"></a>
 
 ##### device.register(applicationNameOrId, [uuid]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
-**Summary**: Register a new device with a Resin.io application.  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Register a new device with a Balena application.  
 **Access**: public  
 **Fulfil**: <code>Object</code> Device registration info ({ id: "...", uuid: "...", api_key: "..." })  
 
@@ -3173,30 +3173,30 @@ console.log(randomKey);
 
 **Example**  
 ```js
-var uuid = resin.models.device.generateUniqueKey();
-resin.models.device.register('MyApp', uuid).then(function(registrationInfo) {
+var uuid = balena.models.device.generateUniqueKey();
+balena.models.device.register('MyApp', uuid).then(function(registrationInfo) {
 	console.log(registrationInfo);
 });
 ```
 **Example**  
 ```js
-var uuid = resin.models.device.generateUniqueKey();
-resin.models.device.register(123, uuid).then(function(registrationInfo) {
+var uuid = balena.models.device.generateUniqueKey();
+balena.models.device.register(123, uuid).then(function(registrationInfo) {
 	console.log(registrationInfo);
 });
 ```
 **Example**  
 ```js
-var uuid = resin.models.device.generateUniqueKey();
-resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
+var uuid = balena.models.device.generateUniqueKey();
+balena.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 	if (error) throw error;
 	console.log(registrationInfo);
 });
 ```
-<a name="resin.models.device.generateDeviceKey"></a>
+<a name="balena.models.device.generateDeviceKey"></a>
 
 ##### device.generateDeviceKey(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Generate a device key  
 **Access**: public  
 
@@ -3206,27 +3206,27 @@ resin.models.device.register('MyApp', uuid, function(error, registrationInfo) {
 
 **Example**  
 ```js
-resin.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
+balena.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
 	console.log(deviceApiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
+balena.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
 	console.log(deviceApiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
+balena.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
 	if (error) throw error;
 	console.log(deviceApiKey);
 });
 ```
-<a name="resin.models.device.hasDeviceUrl"></a>
+<a name="balena.models.device.hasDeviceUrl"></a>
 
 ##### device.hasDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device is web accessible with device utls  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - has device url  
@@ -3237,7 +3237,7 @@ resin.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
 
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
+balena.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
 	if (hasDeviceUrl) {
 		console.log('The device has device URL enabled');
 	}
@@ -3245,7 +3245,7 @@ resin.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
 ```
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
+balena.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 	if (hasDeviceUrl) {
 		console.log('The device has device URL enabled');
 	}
@@ -3253,7 +3253,7 @@ resin.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 ```
 **Example**  
 ```js
-resin.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
+balena.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
 	if (error) throw error;
 
 	if (hasDeviceUrl) {
@@ -3261,10 +3261,10 @@ resin.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
 	}
 });
 ```
-<a name="resin.models.device.getDeviceUrl"></a>
+<a name="balena.models.device.getDeviceUrl"></a>
 
 ##### device.getDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device url  
 **Access**: public  
 **Fulfil**: <code>String</code> - device url  
@@ -3275,27 +3275,27 @@ resin.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
 
 **Example**  
 ```js
-resin.models.device.getDeviceUrl('7cf02a6').then(function(url) {
+balena.models.device.getDeviceUrl('7cf02a6').then(function(url) {
 	console.log(url);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getDeviceUrl(123).then(function(url) {
+balena.models.device.getDeviceUrl(123).then(function(url) {
 	console.log(url);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getDeviceUrl('7cf02a6', function(error, url) {
+balena.models.device.getDeviceUrl('7cf02a6', function(error, url) {
 	if (error) throw error;
 	console.log(url);
 });
 ```
-<a name="resin.models.device.enableDeviceUrl"></a>
+<a name="balena.models.device.enableDeviceUrl"></a>
 
 ##### device.enableDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Enable device url for a device  
 **Access**: public  
 
@@ -3305,22 +3305,22 @@ resin.models.device.getDeviceUrl('7cf02a6', function(error, url) {
 
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl('7cf02a6');
+balena.models.device.enableDeviceUrl('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl(123);
+balena.models.device.enableDeviceUrl(123);
 ```
 **Example**  
 ```js
-resin.models.device.enableDeviceUrl('7cf02a6', function(error) {
+balena.models.device.enableDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.disableDeviceUrl"></a>
+<a name="balena.models.device.disableDeviceUrl"></a>
 
 ##### device.disableDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Disable device url for a device  
 **Access**: public  
 
@@ -3330,24 +3330,24 @@ resin.models.device.enableDeviceUrl('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl('7cf02a6');
+balena.models.device.disableDeviceUrl('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl(123);
+balena.models.device.disableDeviceUrl(123);
 ```
 **Example**  
 ```js
-resin.models.device.disableDeviceUrl('7cf02a6', function(error) {
+balena.models.device.disableDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.ping"></a>
+<a name="balena.models.device.ping"></a>
 
 ##### device.ping(uuidOrId) ⇒ <code>Promise</code>
 This is useful to signal that the supervisor is alive and responding.
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Ping a device  
 **Access**: public  
 
@@ -3357,22 +3357,22 @@ This is useful to signal that the supervisor is alive and responding.
 
 **Example**  
 ```js
-resin.models.device.ping('7cf02a6');
+balena.models.device.ping('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.ping(123);
+balena.models.device.ping(123);
 ```
 **Example**  
 ```js
-resin.models.device.ping('7cf02a6', function(error) {
+balena.models.device.ping('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.getStatus"></a>
+<a name="balena.models.device.getStatus"></a>
 
 ##### device.getStatus(device) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the status of a device  
 **Access**: public  
 **Fulfil**: <code>String</code> - device status  
@@ -3383,21 +3383,21 @@ resin.models.device.ping('7cf02a6', function(error) {
 
 **Example**  
 ```js
-resin.models.device.getStatus(device).then(function(status) {
+balena.models.device.getStatus(device).then(function(status) {
 	console.log(status);
 });
 ```
 **Example**  
 ```js
-resin.models.device.getStatus(device, function(error, status) {
+balena.models.device.getStatus(device, function(error, status) {
 	if (error) throw error;
 	console.log(status);
 });
 ```
-<a name="resin.models.device.grantSupportAccess"></a>
+<a name="balena.models.device.grantSupportAccess"></a>
 
 ##### device.grantSupportAccess(uuidOrId, expiryTimestamp) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Grant support access to a device until a specified time  
 **Access**: public  
 
@@ -3408,22 +3408,22 @@ resin.models.device.getStatus(device, function(error, status) {
 
 **Example**  
 ```js
-resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
 ```
 **Example**  
 ```js
-resin.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
+balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 ```
 **Example**  
 ```js
-resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
+balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.revokeSupportAccess"></a>
+<a name="balena.models.device.revokeSupportAccess"></a>
 
 ##### device.revokeSupportAccess(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Revoke support access to a device  
 **Access**: public  
 
@@ -3433,24 +3433,24 @@ resin.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, func
 
 **Example**  
 ```js
-resin.models.device.revokeSupportAccess('7cf02a6');
+balena.models.device.revokeSupportAccess('7cf02a6');
 ```
 **Example**  
 ```js
-resin.models.device.revokeSupportAccess(123);
+balena.models.device.revokeSupportAccess(123);
 ```
 **Example**  
 ```js
-resin.models.device.revokeSupportAccess('7cf02a6', function(error) {
+balena.models.device.revokeSupportAccess('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.device.lastOnline"></a>
+<a name="balena.models.device.lastOnline"></a>
 
 ##### device.lastOnline(device) ⇒ <code>String</code>
 If the device has never been online this method returns the string `Connecting...`.
 
-**Kind**: static method of [<code>device</code>](#resin.models.device)  
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a string showing when a device was last set as online  
 **Access**: public  
 
@@ -3460,27 +3460,27 @@ If the device has never been online this method returns the string `Connecting..
 
 **Example**  
 ```js
-resin.models.device.get('7cf02a6').then(function(device) {
-	resin.models.device.lastOnline(device);
+balena.models.device.get('7cf02a6').then(function(device) {
+	balena.models.device.lastOnline(device);
 })
 ```
-<a name="resin.models.apiKey"></a>
+<a name="balena.models.apiKey"></a>
 
 #### models.apiKey : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.apiKey](#resin.models.apiKey) : <code>object</code>
-    * [.create(name, [description])](#resin.models.apiKey.create) ⇒ <code>Promise</code>
-    * [.getAll([options])](#resin.models.apiKey.getAll) ⇒ <code>Promise</code>
-    * [.update(id, apiKeyInfo)](#resin.models.apiKey.update) ⇒ <code>Promise</code>
-    * [.revoke(id)](#resin.models.apiKey.revoke) ⇒ <code>Promise</code>
+* [.apiKey](#balena.models.apiKey) : <code>object</code>
+    * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
+    * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
+    * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
 
-<a name="resin.models.apiKey.create"></a>
+<a name="balena.models.apiKey.create"></a>
 
 ##### apiKey.create(name, [description]) ⇒ <code>Promise</code>
 This method registers a new api key for the current user with the name given.
 
-**Kind**: static method of [<code>apiKey</code>](#resin.models.apiKey)  
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Creates a new user API key  
 **Access**: public  
 **Fulfil**: <code>String</code> - API key  
@@ -3492,27 +3492,27 @@ This method registers a new api key for the current user with the name given.
 
 **Example**  
 ```js
-resin.models.apiKey.create(apiKeyName).then(function(apiKey) {
+balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
+balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-resin.models.apiKey.create(apiKeyName, function(error, apiKey) {
+balena.models.apiKey.create(apiKeyName, function(error, apiKey) {
 	if (error) throw error;
 	console.log(apiKey);
 });
 ```
-<a name="resin.models.apiKey.getAll"></a>
+<a name="balena.models.apiKey.getAll"></a>
 
 ##### apiKey.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>apiKey</code>](#resin.models.apiKey)  
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Get all API keys  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - apiKeys  
@@ -3523,21 +3523,21 @@ resin.models.apiKey.create(apiKeyName, function(error, apiKey) {
 
 **Example**  
 ```js
-resin.models.apiKey.getAll().then(function(apiKeys) {
+balena.models.apiKey.getAll().then(function(apiKeys) {
 	console.log(apiKeys);
 });
 ```
 **Example**  
 ```js
-resin.models.apiKey.getAll(function(error, apiKeys) {
+balena.models.apiKey.getAll(function(error, apiKeys) {
 	if (error) throw error;
 	console.log(apiKeys);
 });
 ```
-<a name="resin.models.apiKey.update"></a>
+<a name="balena.models.apiKey.update"></a>
 
 ##### apiKey.update(id, apiKeyInfo) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>apiKey</code>](#resin.models.apiKey)  
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Update the details of an API key  
 **Access**: public  
 
@@ -3548,27 +3548,27 @@ resin.models.apiKey.getAll(function(error, apiKeys) {
 
 **Example**  
 ```js
-resin.models.apiKey.update(123, { name: 'updatedName' });
+balena.models.apiKey.update(123, { name: 'updatedName' });
 ```
 **Example**  
 ```js
-resin.models.apiKey.update(123, { description: 'updated description' });
+balena.models.apiKey.update(123, { description: 'updated description' });
 ```
 **Example**  
 ```js
-resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
+balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
 ```
 **Example**  
 ```js
-resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
+balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
 	if (error) throw error;
 	console.log(apiKeys);
 });
 ```
-<a name="resin.models.apiKey.revoke"></a>
+<a name="balena.models.apiKey.revoke"></a>
 
 ##### apiKey.revoke(id) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>apiKey</code>](#resin.models.apiKey)  
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Revoke an API key  
 **Access**: public  
 
@@ -3578,29 +3578,29 @@ resin.models.apiKey.update(123, { name: 'updatedName', description: 'updated des
 
 **Example**  
 ```js
-resin.models.apiKey.revoke(123);
+balena.models.apiKey.revoke(123);
 ```
 **Example**  
 ```js
-resin.models.apiKey.revoke(123, function(error) {
+balena.models.apiKey.revoke(123, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.key"></a>
+<a name="balena.models.key"></a>
 
 #### models.key : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.key](#resin.models.key) : <code>object</code>
-    * [.getAll([options])](#resin.models.key.getAll) ⇒ <code>Promise</code>
-    * [.get(id)](#resin.models.key.get) ⇒ <code>Promise</code>
-    * [.remove(id)](#resin.models.key.remove) ⇒ <code>Promise</code>
-    * [.create(title, key)](#resin.models.key.create) ⇒ <code>Promise</code>
+* [.key](#balena.models.key) : <code>object</code>
+    * [.getAll([options])](#balena.models.key.getAll) ⇒ <code>Promise</code>
+    * [.get(id)](#balena.models.key.get) ⇒ <code>Promise</code>
+    * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
+    * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
 
-<a name="resin.models.key.getAll"></a>
+<a name="balena.models.key.getAll"></a>
 
 ##### key.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>key</code>](#resin.models.key)  
+**Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Get all ssh keys  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - ssh keys  
@@ -3611,21 +3611,21 @@ resin.models.apiKey.revoke(123, function(error) {
 
 **Example**  
 ```js
-resin.models.key.getAll().then(function(keys) {
+balena.models.key.getAll().then(function(keys) {
 	console.log(keys);
 });
 ```
 **Example**  
 ```js
-resin.models.key.getAll(function(error, keys) {
+balena.models.key.getAll(function(error, keys) {
 	if (error) throw error;
 	console.log(keys);
 });
 ```
-<a name="resin.models.key.get"></a>
+<a name="balena.models.key.get"></a>
 
 ##### key.get(id) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>key</code>](#resin.models.key)  
+**Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Get a single ssh key  
 **Access**: public  
 **Fulfil**: <code>Object</code> - ssh key  
@@ -3636,21 +3636,21 @@ resin.models.key.getAll(function(error, keys) {
 
 **Example**  
 ```js
-resin.models.key.get(51).then(function(key) {
+balena.models.key.get(51).then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.key.get(51, function(error, key) {
+balena.models.key.get(51, function(error, key) {
 	if (error) throw error;
 	console.log(key);
 });
 ```
-<a name="resin.models.key.remove"></a>
+<a name="balena.models.key.remove"></a>
 
 ##### key.remove(id) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>key</code>](#resin.models.key)  
+**Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Remove ssh key  
 **Access**: public  
 
@@ -3660,18 +3660,18 @@ resin.models.key.get(51, function(error, key) {
 
 **Example**  
 ```js
-resin.models.key.remove(51);
+balena.models.key.remove(51);
 ```
 **Example**  
 ```js
-resin.models.key.remove(51, function(error) {
+balena.models.key.remove(51, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.key.create"></a>
+<a name="balena.models.key.create"></a>
 
 ##### key.create(title, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>key</code>](#resin.models.key)  
+**Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Create a ssh key  
 **Access**: public  
 **Fulfil**: <code>Object</code> - ssh key  
@@ -3683,36 +3683,36 @@ resin.models.key.remove(51, function(error) {
 
 **Example**  
 ```js
-resin.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
+balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
+balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 	if (error) throw error;
 	console.log(key);
 });
 ```
-<a name="resin.models.os"></a>
+<a name="balena.models.os"></a>
 
 #### models.os : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.os](#resin.models.os) : <code>object</code>
-    * [.getDownloadSize(deviceType, [version])](#resin.models.os.getDownloadSize) ⇒ <code>Promise</code>
-    * [.getSupportedVersions(deviceType)](#resin.models.os.getSupportedVersions) ⇒ <code>Promise</code>
-    * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#resin.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-    * [.getLastModified(deviceType, [version])](#resin.models.os.getLastModified) ⇒ <code>Promise</code>
-    * [.download(deviceType, [version])](#resin.models.os.download) ⇒ <code>Promise</code>
-    * [.getConfig(nameOrId, options)](#resin.models.os.getConfig) ⇒ <code>Promise</code>
+* [.os](#balena.models.os) : <code>object</code>
+    * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
+    * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
+    * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
+    * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
+    * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
+    * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
 
-<a name="resin.models.os.getDownloadSize"></a>
+<a name="balena.models.os.getDownloadSize"></a>
 
 ##### os.getDownloadSize(deviceType, [version]) ⇒ <code>Promise</code>
 **Note!** Currently only the raw (uncompressed) size is reported.
 
-**Kind**: static method of [<code>os</code>](#resin.models.os)  
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get OS download size estimate  
 **Access**: public  
 **Fulfil**: <code>Number</code> - OS image download size, in bytes.  
@@ -3724,19 +3724,19 @@ resin.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 
 **Example**  
 ```js
-resin.models.os.getDownloadSize('raspberry-pi').then(function(size) {
+balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 	console.log('The OS download size for raspberry-pi', size);
 });
 
-resin.models.os.getDownloadSize('raspberry-pi', function(error, size) {
+balena.models.os.getDownloadSize('raspberry-pi', function(error, size) {
 	if (error) throw error;
 	console.log('The OS download size for raspberry-pi', size);
 });
 ```
-<a name="resin.models.os.getSupportedVersions"></a>
+<a name="balena.models.os.getSupportedVersions"></a>
 
 ##### os.getSupportedVersions(deviceType) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#resin.models.os)  
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get OS supported versions  
 **Access**: public  
 **Fulfil**: <code>Object</code> - the versions information, of the following structure:
@@ -3753,19 +3753,19 @@ that is _not_ pre-release, can be `null`
 
 **Example**  
 ```js
-resin.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
+balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
 	console.log('Supported OS versions for raspberry-pi', osVersions);
 });
 
-resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
+balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
 	if (error) throw error;
 	console.log('Supported OS versions for raspberry-pi', osVersions);
 });
 ```
-<a name="resin.models.os.getMaxSatisfyingVersion"></a>
+<a name="balena.models.os.getMaxSatisfyingVersion"></a>
 
 ##### os.getMaxSatisfyingVersion(deviceType, versionOrRange) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#resin.models.os)  
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the max OS version satisfying the given range  
 **Access**: public  
 **Fulfil**: <code>String\|null</code> - the version number, or `null` if no matching versions are found  
@@ -3777,19 +3777,19 @@ resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions)
 
 **Example**  
 ```js
-resin.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
+balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
 	console.log('Supported OS versions for raspberry-pi', osVersions);
 });
 
-resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
+balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
 	if (error) throw error;
 	console.log('Supported OS versions for raspberry-pi', osVersions);
 });
 ```
-<a name="resin.models.os.getLastModified"></a>
+<a name="balena.models.os.getLastModified"></a>
 
 ##### os.getLastModified(deviceType, [version]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#resin.models.os)  
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the OS image last modified date  
 **Access**: public  
 **Fulfil**: <code>Date</code> - last modified date  
@@ -3797,27 +3797,27 @@ resin.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions)
 | Param | Type | Description |
 | --- | --- | --- |
 | deviceType | <code>String</code> | device type slug |
-| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest'. Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `resin.model.os.getMaxSatisfyingVersion`. |
+| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest'. Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
 
 **Example**  
 ```js
-resin.models.os.getLastModified('raspberry-pi').then(function(date) {
+balena.models.os.getLastModified('raspberry-pi').then(function(date) {
 	console.log('The raspberry-pi image was last modified in ' + date);
 });
 
-resin.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
+balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
 	console.log('The raspberry-pi image was last modified in ' + date);
 });
 
-resin.models.os.getLastModified('raspberry-pi', function(error, date) {
+balena.models.os.getLastModified('raspberry-pi', function(error, date) {
 	if (error) throw error;
 	console.log('The raspberry-pi image was last modified in ' + date);
 });
 ```
-<a name="resin.models.os.download"></a>
+<a name="balena.models.os.download"></a>
 
 ##### os.download(deviceType, [version]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#resin.models.os)  
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Download an OS image  
 **Access**: public  
 **Fulfil**: <code>ReadableStream</code> - download stream  
@@ -3825,20 +3825,20 @@ resin.models.os.getLastModified('raspberry-pi', function(error, date) {
 | Param | Type | Description |
 | --- | --- | --- |
 | deviceType | <code>String</code> | device type slug |
-| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest' Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `resin.model.os.getMaxSatisfyingVersion`. |
+| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest' Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
 
 **Example**  
 ```js
-resin.models.os.download('raspberry-pi').then(function(stream) {
+balena.models.os.download('raspberry-pi').then(function(stream) {
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 });
 
-resin.models.os.download('raspberry-pi', function(error, stream) {
+balena.models.os.download('raspberry-pi', function(error, stream) {
 	if (error) throw error;
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 });
 ```
-<a name="resin.models.os.getConfig"></a>
+<a name="balena.models.os.getConfig"></a>
 
 ##### os.getConfig(nameOrId, options) ⇒ <code>Promise</code>
 Builds the config.json for a device in the given application, with the given
@@ -3847,7 +3847,7 @@ options.
 Note that an OS version is required. For versions < 2.7.8, config
 generation is only supported when using a session token, not an API key.
 
-**Kind**: static method of [<code>os</code>](#resin.models.os)  
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get an applications config.json  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application configuration as a JSON object.  
@@ -3867,73 +3867,73 @@ generation is only supported when using a session token, not an API key.
 
 **Example**  
 ```js
-resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 
-resin.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+balena.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 
-resin.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
+balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
 	if (error) throw error;
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 ```
-<a name="resin.models.config"></a>
+<a name="balena.models.config"></a>
 
 #### models.config : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.config](#resin.models.config) : <code>object</code>
-    * [.getAll()](#resin.models.config.getAll) ⇒ <code>Promise</code>
-    * [.getDeviceTypes()](#resin.models.config.getDeviceTypes) ⇒ <code>Promise</code>
-    * [.getDeviceOptions(deviceType)](#resin.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+* [.config](#balena.models.config) : <code>object</code>
+    * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
+    * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+    * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
 
-<a name="resin.models.config.getAll"></a>
+<a name="balena.models.config.getAll"></a>
 
 ##### config.getAll() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>config</code>](#resin.models.config)  
+**Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get all configuration  
 **Access**: public  
 **Fulfil**: <code>Object</code> - configuration  
 **Example**  
 ```js
-resin.models.config.getAll().then(function(config) {
+balena.models.config.getAll().then(function(config) {
 	console.log(config);
 });
 ```
 **Example**  
 ```js
-resin.models.config.getAll(function(error, config) {
+balena.models.config.getAll(function(error, config) {
 	if (error) throw error;
 	console.log(config);
 });
 ```
-<a name="resin.models.config.getDeviceTypes"></a>
+<a name="balena.models.config.getDeviceTypes"></a>
 
 ##### config.getDeviceTypes() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>config</code>](#resin.models.config)  
+**Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get device types  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - device types  
 **Example**  
 ```js
-resin.models.config.getDeviceTypes().then(function(deviceTypes) {
+balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 	console.log(deviceTypes);
 });
 ```
 **Example**  
 ```js
-resin.models.config.getDeviceTypes(function(error, deviceTypes) {
+balena.models.config.getDeviceTypes(function(error, deviceTypes) {
 	if (error) throw error;
 	console.log(deviceTypes);
 })
 ```
-<a name="resin.models.config.getDeviceOptions"></a>
+<a name="balena.models.config.getDeviceOptions"></a>
 
 ##### config.getDeviceOptions(deviceType) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>config</code>](#resin.models.config)  
+**Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get configuration/initialization options for a device type  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - configuration options  
@@ -3944,49 +3944,49 @@ resin.models.config.getDeviceTypes(function(error, deviceTypes) {
 
 **Example**  
 ```js
-resin.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
+balena.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 	console.log(options);
 });
 ```
 **Example**  
 ```js
-resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
+balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 	if (error) throw error;
 	console.log(options);
 });
 ```
-<a name="resin.models.release"></a>
+<a name="balena.models.release"></a>
 
 #### models.release : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.release](#resin.models.release) : <code>object</code>
-    * [.tags](#resin.models.release.tags) : <code>object</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-        * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
-        * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
-        * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
-    * [.get(id, [options])](#resin.models.release.get) ⇒ <code>Promise</code>
-    * [.getWithImageDetails(id, [options])](#resin.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.release.getAllByApplication) ⇒ <code>Promise</code>
+* [.release](#balena.models.release) : <code>object</code>
+    * [.tags](#balena.models.release.tags) : <code>object</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByRelease(id, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
+        * [.set(releaseId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+        * [.remove(releaseId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+    * [.get(id, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
+    * [.getWithImageDetails(id, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
 
-<a name="resin.models.release.tags"></a>
+<a name="balena.models.release.tags"></a>
 
 ##### release.tags : <code>object</code>
-**Kind**: static namespace of [<code>release</code>](#resin.models.release)  
+**Kind**: static namespace of [<code>release</code>](#balena.models.release)  
 
-* [.tags](#resin.models.release.tags) : <code>object</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByRelease(id, [options])](#resin.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-    * [.getAll([options])](#resin.models.release.tags.getAll) ⇒ <code>Promise</code>
-    * [.set(releaseId, tagKey, value)](#resin.models.release.tags.set) ⇒ <code>Promise</code>
-    * [.remove(releaseId, tagKey)](#resin.models.release.tags.remove) ⇒ <code>Promise</code>
+* [.tags](#balena.models.release.tags) : <code>object</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByRelease(id, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
+    * [.set(releaseId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+    * [.remove(releaseId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.release.tags.getAllByApplication"></a>
+<a name="balena.models.release.tags.getAllByApplication"></a>
 
 ###### tags.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags for an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - release tags  
@@ -3998,27 +3998,27 @@ resin.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 
 **Example**  
 ```js
-resin.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
+balena.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.release.tags.getAllByApplication(999999).then(function(tags) {
+balena.models.release.tags.getAllByApplication(999999).then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
+balena.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.release.tags.getAllByRelease"></a>
+<a name="balena.models.release.tags.getAllByRelease"></a>
 
 ###### tags.getAllByRelease(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags for a release  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - release tags  
@@ -4030,21 +4030,21 @@ resin.models.release.tags.getAllByApplication('MyApp', function(error, tags) {
 
 **Example**  
 ```js
-resin.models.release.tags.getAllByRelease(123).then(function(tags) {
+balena.models.release.tags.getAllByRelease(123).then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.release.tags.getAllByRelease(123, function(error, tags) {
+balena.models.release.tags.getAllByRelease(123, function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.release.tags.getAll"></a>
+<a name="balena.models.release.tags.getAll"></a>
 
 ###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - release tags  
@@ -4055,21 +4055,21 @@ resin.models.release.tags.getAllByRelease(123, function(error, tags) {
 
 **Example**  
 ```js
-resin.models.release.tags.getAll().then(function(tags) {
+balena.models.release.tags.getAll().then(function(tags) {
 	console.log(tags);
 });
 ```
 **Example**  
 ```js
-resin.models.release.tags.getAll(function(error, tags) {
+balena.models.release.tags.getAll(function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
 ```
-<a name="resin.models.release.tags.set"></a>
+<a name="balena.models.release.tags.set"></a>
 
 ###### tags.set(releaseId, tagKey, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Set a release tag  
 **Access**: public  
 
@@ -4081,18 +4081,18 @@ resin.models.release.tags.getAll(function(error, tags) {
 
 **Example**  
 ```js
-resin.models.release.tags.set(123, 'EDITOR', 'vim');
+balena.models.release.tags.set(123, 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-resin.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
+balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.release.tags.remove"></a>
+<a name="balena.models.release.tags.remove"></a>
 
 ###### tags.remove(releaseId, tagKey) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#resin.models.release.tags)  
+**Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Remove a release tag  
 **Access**: public  
 
@@ -4103,18 +4103,18 @@ resin.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
 
 **Example**  
 ```js
-resin.models.release.tags.remove(123, 'EDITOR');
+balena.models.release.tags.remove(123, 'EDITOR');
 ```
 **Example**  
 ```js
-resin.models.release.tags.remove(123, 'EDITOR', function(error) {
+balena.models.release.tags.remove(123, 'EDITOR', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.models.release.get"></a>
+<a name="balena.models.release.get"></a>
 
 ##### release.get(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>release</code>](#resin.models.release)  
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get a specific release  
 **Access**: public  
 **Fulfil**: <code>Object</code> - release  
@@ -4126,18 +4126,18 @@ resin.models.release.tags.remove(123, 'EDITOR', function(error) {
 
 **Example**  
 ```js
-resin.models.release.get(123).then(function(release) {
+balena.models.release.get(123).then(function(release) {
 		console.log(release);
 });
 ```
 **Example**  
 ```js
-resin.models.release.get(123, function(error, release) {
+balena.models.release.get(123, function(error, release) {
 		if (error) throw error;
 		console.log(release);
 });
 ```
-<a name="resin.models.release.getWithImageDetails"></a>
+<a name="balena.models.release.getWithImageDetails"></a>
 
 ##### release.getWithImageDetails(id, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
@@ -4145,7 +4145,7 @@ larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want significantly more control, or to see the
 raw model directly, use `release.get(id, options)` instead.
 
-**Kind**: static method of [<code>release</code>](#resin.models.release)  
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get a specific release with the details of the images built  
 **Access**: public  
 **Fulfil**: <code>Object</code> - release with image details  
@@ -4159,28 +4159,28 @@ raw model directly, use `release.get(id, options)` instead.
 
 **Example**  
 ```js
-resin.models.release.getWithImageDetails(123).then(function(release) {
+balena.models.release.getWithImageDetails(123).then(function(release) {
 		console.log(release);
 });
 ```
 **Example**  
 ```js
-resin.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
+balena.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
 .then(function(release) {
 		console.log(release.images[0].build_log);
 });
 ```
 **Example**  
 ```js
-resin.models.release.getWithImageDetails(123, function(error, release) {
+balena.models.release.getWithImageDetails(123, function(error, release) {
 		if (error) throw error;
 		console.log(release);
 });
 ```
-<a name="resin.models.release.getAllByApplication"></a>
+<a name="balena.models.release.getAllByApplication"></a>
 
 ##### release.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>release</code>](#resin.models.release)  
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get all releases from an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - releases  
@@ -4192,53 +4192,53 @@ resin.models.release.getWithImageDetails(123, function(error, release) {
 
 **Example**  
 ```js
-resin.models.release.getAllByApplication('MyApp').then(function(releases) {
+balena.models.release.getAllByApplication('MyApp').then(function(releases) {
 		console.log(releases);
 });
 ```
 **Example**  
 ```js
-resin.models.release.getAllByApplication(123).then(function(releases) {
+balena.models.release.getAllByApplication(123).then(function(releases) {
 		console.log(releases);
 });
 ```
 **Example**  
 ```js
-resin.models.release.getAllByApplication('MyApp', function(error, releases) {
+balena.models.release.getAllByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
 		console.log(releases);
 });
 ```
-<a name="resin.models.service"></a>
+<a name="balena.models.service"></a>
 
 #### models.service : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.service](#resin.models.service) : <code>object</code>
-    * [.var](#resin.models.service.var) : <code>object</code>
-        * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
-        * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
-        * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
-        * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.service.getAllByApplication) ⇒ <code>Promise</code>
+* [.service](#balena.models.service) : <code>object</code>
+    * [.var](#balena.models.service.var) : <code>object</code>
+        * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+        * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+        * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
 
-<a name="resin.models.service.var"></a>
+<a name="balena.models.service.var"></a>
 
 ##### service.var : <code>object</code>
-**Kind**: static namespace of [<code>service</code>](#resin.models.service)  
+**Kind**: static namespace of [<code>service</code>](#balena.models.service)  
 
-* [.var](#resin.models.service.var) : <code>object</code>
-    * [.getAllByService(id, [options])](#resin.models.service.var.getAllByService) ⇒ <code>Promise</code>
-    * [.getAllByApplication(nameOrId, [options])](#resin.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(id, key)](#resin.models.service.var.get) ⇒ <code>Promise</code>
-    * [.set(id, key, value)](#resin.models.service.var.set) ⇒ <code>Promise</code>
-    * [.remove(id, key)](#resin.models.service.var.remove) ⇒ <code>Promise</code>
+* [.var](#balena.models.service.var) : <code>object</code>
+    * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+    * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+    * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
 
-<a name="resin.models.service.var.getAllByService"></a>
+<a name="balena.models.service.var.getAllByService"></a>
 
 ###### var.getAllByService(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>var</code>](#resin.models.service.var)  
+**Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get all variables for a service  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - service variables  
@@ -4250,21 +4250,21 @@ resin.models.release.getAllByApplication('MyApp', function(error, releases) {
 
 **Example**  
 ```js
-resin.models.service.var.getAllByService(999999).then(function(vars) {
+balena.models.service.var.getAllByService(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.service.var.getAllByService(999999, function(error, vars) {
+balena.models.service.var.getAllByService(999999, function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.service.var.getAllByApplication"></a>
+<a name="balena.models.service.var.getAllByApplication"></a>
 
 ###### var.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>var</code>](#resin.models.service.var)  
+**Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get all service variables by application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - service variables  
@@ -4276,27 +4276,27 @@ resin.models.service.var.getAllByService(999999, function(error, vars) {
 
 **Example**  
 ```js
-resin.models.service.var.getAllByApplication('MyApp').then(function(vars) {
+balena.models.service.var.getAllByApplication('MyApp').then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.service.var.getAllByApplication(999999).then(function(vars) {
+balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
 **Example**  
 ```js
-resin.models.service.var.getAllByApplication('MyApp', function(error, vars) {
+balena.models.service.var.getAllByApplication('MyApp', function(error, vars) {
 	if (error) throw error;
 	console.log(vars)
 });
 ```
-<a name="resin.models.service.var.get"></a>
+<a name="balena.models.service.var.get"></a>
 
 ###### var.get(id, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>var</code>](#resin.models.service.var)  
+**Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get the value of a specific service variable  
 **Access**: public  
 **Fulfil**: <code>String\|undefined</code> - the variable value (or undefined)  
@@ -4308,21 +4308,21 @@ resin.models.service.var.getAllByApplication('MyApp', function(error, vars) {
 
 **Example**  
 ```js
-resin.models.service.var.get(999999, 'VAR').then(function(value) {
+balena.models.service.var.get(999999, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-resin.models.service.var.get(999999, 'VAR', function(error, value) {
+balena.models.service.var.get(999999, 'VAR', function(error, value) {
 	if (error) throw error;
 	console.log(value)
 });
 ```
-<a name="resin.models.service.var.set"></a>
+<a name="balena.models.service.var.set"></a>
 
 ###### var.set(id, key, value) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>var</code>](#resin.models.service.var)  
+**Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Set the value of a specific service variable  
 **Access**: public  
 
@@ -4334,21 +4334,21 @@ resin.models.service.var.get(999999, 'VAR', function(error, value) {
 
 **Example**  
 ```js
-resin.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
+balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
+balena.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.service.var.remove"></a>
+<a name="balena.models.service.var.remove"></a>
 
 ###### var.remove(id, key) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>var</code>](#resin.models.service.var)  
+**Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Clear the value of a specific service variable  
 **Access**: public  
 
@@ -4359,21 +4359,21 @@ resin.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
 
 **Example**  
 ```js
-resin.models.service.var.remove(999999, 'VAR').then(function() {
+balena.models.service.var.remove(999999, 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-resin.models.service.var.remove(999999, 'VAR', function(error) {
+balena.models.service.var.remove(999999, 'VAR', function(error) {
 	if (error) throw error;
 	...
 });
 ```
-<a name="resin.models.service.getAllByApplication"></a>
+<a name="balena.models.service.getAllByApplication"></a>
 
 ##### service.getAllByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>service</code>](#resin.models.service)  
+**Kind**: static method of [<code>service</code>](#balena.models.service)  
 **Summary**: Get all services from an application  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - services  
@@ -4385,36 +4385,36 @@ resin.models.service.var.remove(999999, 'VAR', function(error) {
 
 **Example**  
 ```js
-resin.models.service.getAllByApplication('MyApp').then(function(services) {
+balena.models.service.getAllByApplication('MyApp').then(function(services) {
 		console.log(services);
 });
 ```
 **Example**  
 ```js
-resin.models.service.getAllByApplication(123).then(function(services) {
+balena.models.service.getAllByApplication(123).then(function(services) {
 		console.log(services);
 });
 ```
 **Example**  
 ```js
-resin.models.service.getAllByApplication('MyApp', function(error, services) {
+balena.models.service.getAllByApplication('MyApp', function(error, services) {
 		if (error) throw error;
 		console.log(services);
 });
 ```
-<a name="resin.models.image"></a>
+<a name="balena.models.image"></a>
 
 #### models.image : <code>object</code>
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.image](#resin.models.image) : <code>object</code>
-    * [.get(id, [options])](#resin.models.image.get) ⇒ <code>Promise</code>
-    * [.getLogs(id)](#resin.models.image.getLogs) ⇒ <code>Promise</code>
+* [.image](#balena.models.image) : <code>object</code>
+    * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
+    * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
 
-<a name="resin.models.image.get"></a>
+<a name="balena.models.image.get"></a>
 
 ##### image.get(id, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>image</code>](#resin.models.image)  
+**Kind**: static method of [<code>image</code>](#balena.models.image)  
 **Summary**: Get a specific image  
 **Access**: public  
 **Fulfil**: <code>Object</code> - image  
@@ -4426,21 +4426,21 @@ resin.models.service.getAllByApplication('MyApp', function(error, services) {
 
 **Example**  
 ```js
-resin.models.image.get(123).then(function(image) {
+balena.models.image.get(123).then(function(image) {
 		console.log(image);
 });
 ```
 **Example**  
 ```js
-resin.models.image.get(123, function(error, image) {
+balena.models.image.get(123, function(error, image) {
 		if (error) throw error;
 		console.log(image);
 });
 ```
-<a name="resin.models.image.getLogs"></a>
+<a name="balena.models.image.getLogs"></a>
 
 ##### image.getLogs(id) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>image</code>](#resin.models.image)  
+**Kind**: static method of [<code>image</code>](#balena.models.image)  
 **Summary**: Get the logs for an image  
 **Access**: public  
 **Fulfil**: <code>string</code> - logs  
@@ -4451,96 +4451,96 @@ resin.models.image.get(123, function(error, image) {
 
 **Example**  
 ```js
-resin.models.image.getLogs(123).then(function(logs) {
+balena.models.image.getLogs(123).then(function(logs) {
 		console.log(logs);
 });
 ```
 **Example**  
 ```js
-resin.models.image.getLogs(123, function(error, logs) {
+balena.models.image.getLogs(123, function(error, logs) {
 		if (error) throw error;
 		console.log(logs);
 });
 ```
-<a name="resin.models.billing"></a>
+<a name="balena.models.billing"></a>
 
 #### models.billing : <code>object</code>
-**Note!** The billing methods are available on Resin.io exclusively.
+**Note!** The billing methods are available on Balena.io exclusively.
 
-**Kind**: static namespace of [<code>models</code>](#resin.models)  
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
 
-* [.billing](#resin.models.billing) : <code>object</code>
-    * [.getAccount()](#resin.models.billing.getAccount) ⇒ <code>Promise</code>
-    * [.getPlan()](#resin.models.billing.getPlan) ⇒ <code>Promise</code>
-    * [.getBillingInfo()](#resin.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-    * [.updateBillingInfo()](#resin.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
-    * [.getInvoices()](#resin.models.billing.getInvoices) ⇒ <code>Promise</code>
-    * [.downloadInvoice()](#resin.models.billing.downloadInvoice) ⇒ <code>Promise</code>
+* [.billing](#balena.models.billing) : <code>object</code>
+    * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
+    * [.getPlan()](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
+    * [.getBillingInfo()](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+    * [.updateBillingInfo()](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+    * [.getInvoices()](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
+    * [.downloadInvoice()](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
 
-<a name="resin.models.billing.getAccount"></a>
+<a name="balena.models.billing.getAccount"></a>
 
 ##### billing.getAccount() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>billing</code>](#resin.models.billing)  
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the user's billing account  
 **Access**: public  
 **Fulfil**: <code>Object</code> - billing account  
 **Example**  
 ```js
-resin.models.billing.getAccount().then(function(billingAccount) {
+balena.models.billing.getAccount().then(function(billingAccount) {
 	console.log(billingAccount);
 });
 ```
 **Example**  
 ```js
-resin.models.billing.getAccount(function(error, billingAccount) {
+balena.models.billing.getAccount(function(error, billingAccount) {
 	if (error) throw error;
 	console.log(billingAccount);
 });
 ```
-<a name="resin.models.billing.getPlan"></a>
+<a name="balena.models.billing.getPlan"></a>
 
 ##### billing.getPlan() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>billing</code>](#resin.models.billing)  
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the current billing plan  
 **Access**: public  
 **Fulfil**: <code>Object</code> - billing plan  
 **Example**  
 ```js
-resin.models.billing.getPlan().then(function(billingPlan) {
+balena.models.billing.getPlan().then(function(billingPlan) {
 	console.log(billingPlan);
 });
 ```
 **Example**  
 ```js
-resin.models.billing.getPlan(function(error, billingPlan) {
+balena.models.billing.getPlan(function(error, billingPlan) {
 	if (error) throw error;
 	console.log(billingPlan);
 });
 ```
-<a name="resin.models.billing.getBillingInfo"></a>
+<a name="balena.models.billing.getBillingInfo"></a>
 
 ##### billing.getBillingInfo() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>billing</code>](#resin.models.billing)  
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the current billing information  
 **Access**: public  
 **Fulfil**: <code>Object</code> - billing information  
 **Example**  
 ```js
-resin.models.billing.getBillingInfo().then(function(billingInfo) {
+balena.models.billing.getBillingInfo().then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
 **Example**  
 ```js
-resin.models.billing.getBillingInfo(function(error, billingInfo) {
+balena.models.billing.getBillingInfo(function(error, billingInfo) {
 	if (error) throw error;
 	console.log(billingInfo);
 });
 ```
-<a name="resin.models.billing.updateBillingInfo"></a>
+<a name="balena.models.billing.updateBillingInfo"></a>
 
 ##### billing.updateBillingInfo() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>billing</code>](#resin.models.billing)  
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Update the current billing information  
 **Access**: public  
 **Fulfil**: <code>Object</code> - billing information  
@@ -4551,41 +4551,41 @@ resin.models.billing.getBillingInfo(function(error, billingInfo) {
 
 **Example**  
 ```js
-resin.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }).then(function(billingInfo) {
+balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
 **Example**  
 ```js
-resin.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }, function(error, billingInfo) {
+balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }, function(error, billingInfo) {
 	if (error) throw error;
 	console.log(billingInfo);
 });
 ```
-<a name="resin.models.billing.getInvoices"></a>
+<a name="balena.models.billing.getInvoices"></a>
 
 ##### billing.getInvoices() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>billing</code>](#resin.models.billing)  
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the available invoices  
 **Access**: public  
 **Fulfil**: <code>Object</code> - invoices  
 **Example**  
 ```js
-resin.models.billing.getInvoices().then(function(invoices) {
+balena.models.billing.getInvoices().then(function(invoices) {
 	console.log(invoices);
 });
 ```
 **Example**  
 ```js
-resin.models.billing.getInvoices(function(error, invoices) {
+balena.models.billing.getInvoices(function(error, invoices) {
 	if (error) throw error;
 	console.log(invoices);
 });
 ```
-<a name="resin.models.billing.downloadInvoice"></a>
+<a name="balena.models.billing.downloadInvoice"></a>
 
 ##### billing.downloadInvoice() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>billing</code>](#resin.models.billing)  
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Download a specific invoice  
 **Access**: public  
 **Fulfil**: <code>Blob\|ReadableStream</code> - blob on the browser, download stream on node  
@@ -4597,55 +4597,55 @@ resin.models.billing.getInvoices(function(error, invoices) {
 **Example**  
 ```js
 # Browser
-resin.models.billing.downloadInvoice('0000').then(function(blob) {
+balena.models.billing.downloadInvoice('0000').then(function(blob) {
 	console.log(blob);
 });
 # Node
-resin.models.billing.downloadInvoice('0000').then(function(stream) {
+balena.models.billing.downloadInvoice('0000').then(function(stream) {
 	stream.pipe(fs.createWriteStream('foo/bar/invoice-0000.pdf'));
 });
 ```
-<a name="resin.auth"></a>
+<a name="balena.auth"></a>
 
-### resin.auth : <code>object</code>
-**Kind**: static namespace of [<code>resin</code>](#resin)  
+### balena.auth : <code>object</code>
+**Kind**: static namespace of [<code>balena</code>](#balena)  
 
-* [.auth](#resin.auth) : <code>object</code>
-    * [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
-        * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
-        * [.isPassed()](#resin.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
-        * [.challenge(code)](#resin.auth.twoFactor.challenge) ⇒ <code>Promise</code>
-    * [.whoami()](#resin.auth.whoami) ⇒ <code>Promise</code>
-    * [.authenticate(credentials)](#resin.auth.authenticate) ⇒ <code>Promise</code>
-    * [.login(credentials)](#resin.auth.login) ⇒ <code>Promise</code>
-    * [.loginWithToken(authToken)](#resin.auth.loginWithToken) ⇒ <code>Promise</code>
-    * [.isLoggedIn()](#resin.auth.isLoggedIn) ⇒ <code>Promise</code>
-    * [.getToken()](#resin.auth.getToken) ⇒ <code>Promise</code>
-    * [.getUserId()](#resin.auth.getUserId) ⇒ <code>Promise</code>
-    * [.getEmail()](#resin.auth.getEmail) ⇒ <code>Promise</code>
-    * [.logout()](#resin.auth.logout) ⇒ <code>Promise</code>
-    * [.register([credentials])](#resin.auth.register) ⇒ <code>Promise</code>
+* [.auth](#balena.auth) : <code>object</code>
+    * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
+        * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
+        * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+        * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+    * [.whoami()](#balena.auth.whoami) ⇒ <code>Promise</code>
+    * [.authenticate(credentials)](#balena.auth.authenticate) ⇒ <code>Promise</code>
+    * [.login(credentials)](#balena.auth.login) ⇒ <code>Promise</code>
+    * [.loginWithToken(authToken)](#balena.auth.loginWithToken) ⇒ <code>Promise</code>
+    * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
+    * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
+    * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
+    * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
+    * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
+    * [.register([credentials])](#balena.auth.register) ⇒ <code>Promise</code>
 
-<a name="resin.auth.twoFactor"></a>
+<a name="balena.auth.twoFactor"></a>
 
 #### auth.twoFactor : <code>object</code>
-**Kind**: static namespace of [<code>auth</code>](#resin.auth)  
+**Kind**: static namespace of [<code>auth</code>](#balena.auth)  
 
-* [.twoFactor](#resin.auth.twoFactor) : <code>object</code>
-    * [.isEnabled()](#resin.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
-    * [.isPassed()](#resin.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
-    * [.challenge(code)](#resin.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+* [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
+    * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
+    * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+    * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
 
-<a name="resin.auth.twoFactor.isEnabled"></a>
+<a name="balena.auth.twoFactor.isEnabled"></a>
 
 ##### twoFactor.isEnabled() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>twoFactor</code>](#resin.auth.twoFactor)  
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
 **Summary**: Check if two factor authentication is enabled  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - whether 2fa is enabled  
 **Example**  
 ```js
-resin.auth.twoFactor.isEnabled().then(function(isEnabled) {
+balena.auth.twoFactor.isEnabled().then(function(isEnabled) {
 	if (isEnabled) {
 		console.log('2FA is enabled for this account');
 	}
@@ -4653,7 +4653,7 @@ resin.auth.twoFactor.isEnabled().then(function(isEnabled) {
 ```
 **Example**  
 ```js
-resin.auth.twoFactor.isEnabled(function(error, isEnabled) {
+balena.auth.twoFactor.isEnabled(function(error, isEnabled) {
 	if (error) throw error;
 
 	if (isEnabled) {
@@ -4661,16 +4661,16 @@ resin.auth.twoFactor.isEnabled(function(error, isEnabled) {
 	}
 });
 ```
-<a name="resin.auth.twoFactor.isPassed"></a>
+<a name="balena.auth.twoFactor.isPassed"></a>
 
 ##### twoFactor.isPassed() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>twoFactor</code>](#resin.auth.twoFactor)  
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
 **Summary**: Check if two factor authentication challenge was passed  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - whether 2fa challenge was passed  
 **Example**  
 ```js
-resin.auth.twoFactor.isPassed().then(function(isPassed) {
+balena.auth.twoFactor.isPassed().then(function(isPassed) {
 	if (isPassed) {
 		console.log('2FA challenge passed');
 	}
@@ -4678,7 +4678,7 @@ resin.auth.twoFactor.isPassed().then(function(isPassed) {
 ```
 **Example**  
 ```js
-resin.auth.twoFactor.isPassed(function(error, isPassed) {
+balena.auth.twoFactor.isPassed(function(error, isPassed) {
 	if (error) throw error;
 
 	if (isPassed) {
@@ -4686,10 +4686,10 @@ resin.auth.twoFactor.isPassed(function(error, isPassed) {
 	}
 });
 ```
-<a name="resin.auth.twoFactor.challenge"></a>
+<a name="balena.auth.twoFactor.challenge"></a>
 
 ##### twoFactor.challenge(code) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>twoFactor</code>](#resin.auth.twoFactor)  
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
 **Summary**: Challenge two factor authentication  
 **Access**: public  
 
@@ -4699,26 +4699,26 @@ resin.auth.twoFactor.isPassed(function(error, isPassed) {
 
 **Example**  
 ```js
-resin.auth.twoFactor.challenge('1234');
+balena.auth.twoFactor.challenge('1234');
 ```
 **Example**  
 ```js
-resin.auth.twoFactor.challenge('1234', function(error) {
+balena.auth.twoFactor.challenge('1234', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.auth.whoami"></a>
+<a name="balena.auth.whoami"></a>
 
 #### auth.whoami() ⇒ <code>Promise</code>
-This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
+This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Return current logged in username  
 **Access**: public  
 **Fulfil**: <code>(String\|undefined)</code> - username, if it exists  
 **Example**  
 ```js
-resin.auth.whoami().then(function(username) {
+balena.auth.whoami().then(function(username) {
 	if (!username) {
 		console.log('I\'m not logged in!');
 	} else {
@@ -4728,7 +4728,7 @@ resin.auth.whoami().then(function(username) {
 ```
 **Example**  
 ```js
-resin.auth.whoami(function(error, username) {
+balena.auth.whoami(function(error, username) {
 	if (error) throw error;
 
 	if (!username) {
@@ -4738,16 +4738,16 @@ resin.auth.whoami(function(error, username) {
 	}
 });
 ```
-<a name="resin.auth.authenticate"></a>
+<a name="balena.auth.authenticate"></a>
 
 #### auth.authenticate(credentials) ⇒ <code>Promise</code>
-You should use [module:resin.auth.login](module:resin.auth.login) when possible,
+You should use [module:balena.auth.login](module:balena.auth.login) when possible,
 as it takes care of saving the token and email as well.
 
 Notice that if `credentials` contains extra keys, they'll be discarted
 by the server automatically.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Authenticate with the server  
 **Access**: protected  
 **Fulfil**: <code>String</code> - session token  
@@ -4760,24 +4760,24 @@ by the server automatically.
 
 **Example**  
 ```js
-resin.auth.authenticate(credentials).then(function(token) {
+balena.auth.authenticate(credentials).then(function(token) {
 	console.log('My token is:', token);
 });
 ```
 **Example**  
 ```js
-resin.auth.authenticate(credentials, function(error, token) {
+balena.auth.authenticate(credentials, function(error, token) {
 	if (error) throw error;
 	console.log('My token is:', token);
 });
 ```
-<a name="resin.auth.login"></a>
+<a name="balena.auth.login"></a>
 
 #### auth.login(credentials) ⇒ <code>Promise</code>
 If the login is successful, the token is persisted between sessions.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
-**Summary**: Login to Resin.io  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
+**Summary**: Login  
 **Access**: public  
 
 | Param | Type | Description |
@@ -4788,21 +4788,21 @@ If the login is successful, the token is persisted between sessions.
 
 **Example**  
 ```js
-resin.auth.login(credentials);
+balena.auth.login(credentials);
 ```
 **Example**  
 ```js
-resin.auth.login(credentials, function(error) {
+balena.auth.login(credentials, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.auth.loginWithToken"></a>
+<a name="balena.auth.loginWithToken"></a>
 
 #### auth.loginWithToken(authToken) ⇒ <code>Promise</code>
-Login to resin with a session token or api key instead of with credentials.
+Login to balena with a session token or api key instead of with credentials.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
-**Summary**: Login to Resin.io with a token or api key  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
+**Summary**: Login with a token or api key  
 **Access**: public  
 
 | Param | Type | Description |
@@ -4811,24 +4811,24 @@ Login to resin with a session token or api key instead of with credentials.
 
 **Example**  
 ```js
-resin.auth.loginWithToken(authToken);
+balena.auth.loginWithToken(authToken);
 ```
 **Example**  
 ```js
-resin.auth.loginWithToken(authToken, function(error) {
+balena.auth.loginWithToken(authToken, function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.auth.isLoggedIn"></a>
+<a name="balena.auth.isLoggedIn"></a>
 
 #### auth.isLoggedIn() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Check if you're logged in  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - is logged in  
 **Example**  
 ```js
-resin.auth.isLoggedIn().then(function(isLoggedIn) {
+balena.auth.isLoggedIn().then(function(isLoggedIn) {
 	if (isLoggedIn) {
 		console.log('I\'m in!');
 	} else {
@@ -4838,7 +4838,7 @@ resin.auth.isLoggedIn().then(function(isLoggedIn) {
 ```
 **Example**  
 ```js
-resin.auth.isLoggedIn(function(error, isLoggedIn) {
+balena.auth.isLoggedIn(function(error, isLoggedIn) {
 	if (error) throw error;
 
 	if (isLoggedIn) {
@@ -4848,93 +4848,93 @@ resin.auth.isLoggedIn(function(error, isLoggedIn) {
 	}
 });
 ```
-<a name="resin.auth.getToken"></a>
+<a name="balena.auth.getToken"></a>
 
 #### auth.getToken() ⇒ <code>Promise</code>
-This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
+This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Get current logged in user's raw API key or session token  
 **Access**: public  
 **Fulfil**: <code>String</code> - raw API key or session token  
 **Example**  
 ```js
-resin.auth.getToken().then(function(token) {
+balena.auth.getToken().then(function(token) {
 	console.log(token);
 });
 ```
 **Example**  
 ```js
-resin.auth.getToken(function(error, token) {
+balena.auth.getToken(function(error, token) {
 	if (error) throw error;
 	console.log(token);
 });
 ```
-<a name="resin.auth.getUserId"></a>
+<a name="balena.auth.getUserId"></a>
 
 #### auth.getUserId() ⇒ <code>Promise</code>
-This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
+This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Get current logged in user's id  
 **Access**: public  
 **Fulfil**: <code>Number</code> - user id  
 **Example**  
 ```js
-resin.auth.getUserId().then(function(userId) {
+balena.auth.getUserId().then(function(userId) {
 	console.log(userId);
 });
 ```
 **Example**  
 ```js
-resin.auth.getUserId(function(error, userId) {
+balena.auth.getUserId(function(error, userId) {
 	if (error) throw error;
 	console.log(userId);
 });
 ```
-<a name="resin.auth.getEmail"></a>
+<a name="balena.auth.getEmail"></a>
 
 #### auth.getEmail() ⇒ <code>Promise</code>
-This will only work if you used [module:resin.auth.login](module:resin.auth.login) to log in.
+This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
 
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Get current logged in user's email  
 **Access**: public  
 **Fulfil**: <code>String</code> - user email  
 **Example**  
 ```js
-resin.auth.getEmail().then(function(email) {
+balena.auth.getEmail().then(function(email) {
 	console.log(email);
 });
 ```
 **Example**  
 ```js
-resin.auth.getEmail(function(error, email) {
+balena.auth.getEmail(function(error, email) {
 	if (error) throw error;
 	console.log(email);
 });
 ```
-<a name="resin.auth.logout"></a>
+<a name="balena.auth.logout"></a>
 
 #### auth.logout() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
-**Summary**: Logout from Resin.io  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
+**Summary**: Logout  
 **Access**: public  
 **Example**  
 ```js
-resin.auth.logout();
+balena.auth.logout();
 ```
 **Example**  
 ```js
-resin.auth.logout(function(error) {
+balena.auth.logout(function(error) {
 	if (error) throw error;
 });
 ```
-<a name="resin.auth.register"></a>
+<a name="balena.auth.register"></a>
 
 #### auth.register([credentials]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>auth</code>](#resin.auth)  
-**Summary**: Register to Resin.io  
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
+**Summary**: Register a user account  
 **Access**: public  
 **Fulfil**: <code>String</code> - session token  
 
@@ -4946,7 +4946,7 @@ resin.auth.logout(function(error) {
 
 **Example**  
 ```js
-resin.auth.register({
+balena.auth.register({
 	email: 'johndoe@gmail.com',
 	password: 'secret'
 }).then(function(token) {
@@ -4955,7 +4955,7 @@ resin.auth.register({
 ```
 **Example**  
 ```js
-resin.auth.register({
+balena.auth.register({
 	email: 'johndoe@gmail.com',
 	password: 'secret'
 }, function(error, token) {
@@ -4963,29 +4963,29 @@ resin.auth.register({
 	console.log(token);
 });
 ```
-<a name="resin.logs"></a>
+<a name="balena.logs"></a>
 
-### resin.logs : <code>object</code>
-**Kind**: static namespace of [<code>resin</code>](#resin)  
+### balena.logs : <code>object</code>
+**Kind**: static namespace of [<code>balena</code>](#balena)  
 
-* [.logs](#resin.logs) : <code>object</code>
-    * [.subscribe(uuidOrId, [options])](#resin.logs.subscribe) ⇒ <code>Promise</code>
-    * [.history(uuidOrId, [options])](#resin.logs.history) ⇒ <code>Promise</code>
-    * [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
-        * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
-        * ["line"](#resin.logs.LogSubscription.event_line)
-        * ["error"](#resin.logs.LogSubscription.event_error)
+* [.logs](#balena.logs) : <code>object</code>
+    * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise</code>
+    * [.history(uuidOrId, [options])](#balena.logs.history) ⇒ <code>Promise</code>
+    * [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
+        * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
+        * ["line"](#balena.logs.LogSubscription.event_line)
+        * ["error"](#balena.logs.LogSubscription.event_error)
 
-<a name="resin.logs.subscribe"></a>
+<a name="balena.logs.subscribe"></a>
 
 #### logs.subscribe(uuidOrId, [options]) ⇒ <code>Promise</code>
 Connects to the stream of devices logs, returning a LogSubscription, which
 can be used to listen for logs as they appear, line by line.
 
-**Kind**: static method of [<code>logs</code>](#resin.logs)  
+**Kind**: static method of [<code>logs</code>](#balena.logs)  
 **Summary**: Subscribe to device logs  
 **Access**: public  
-**Fulfil**: [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Fulfil**: [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
 **Todo**
 
 - [ ] We should consider making this a readable stream.
@@ -4999,7 +4999,7 @@ can be used to listen for logs as they appear, line by line.
 
 **Example**  
 ```js
-resin.logs.subscribe('7cf02a6').then(function(logs) {
+balena.logs.subscribe('7cf02a6').then(function(logs) {
 	logs.on('line', function(line) {
 		console.log(line);
 	});
@@ -5007,7 +5007,7 @@ resin.logs.subscribe('7cf02a6').then(function(logs) {
 ```
 **Example**  
 ```js
-resin.logs.subscribe(123).then(function(logs) {
+balena.logs.subscribe(123).then(function(logs) {
 	logs.on('line', function(line) {
 		console.log(line);
 	});
@@ -5015,7 +5015,7 @@ resin.logs.subscribe(123).then(function(logs) {
 ```
 **Example**  
 ```js
-resin.logs.subscribe('7cf02a6', function(error, logs) {
+balena.logs.subscribe('7cf02a6', function(error, logs) {
 	if (error) throw error;
 
 	logs.on('line', function(line) {
@@ -5023,12 +5023,12 @@ resin.logs.subscribe('7cf02a6', function(error, logs) {
 	});
 });
 ```
-<a name="resin.logs.history"></a>
+<a name="balena.logs.history"></a>
 
 #### logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
 Get an array of the latest log messages for a given device.
 
-**Kind**: static method of [<code>logs</code>](#resin.logs)  
+**Kind**: static method of [<code>logs</code>](#balena.logs)  
 **Summary**: Get device logs history  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - history lines  
@@ -5041,7 +5041,7 @@ Get an array of the latest log messages for a given device.
 
 **Example**  
 ```js
-resin.logs.history('7cf02a6').then(function(lines) {
+balena.logs.history('7cf02a6').then(function(lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
@@ -5049,7 +5049,7 @@ resin.logs.history('7cf02a6').then(function(lines) {
 ```
 **Example**  
 ```js
-resin.logs.history(123).then(function(lines) {
+balena.logs.history(123).then(function(lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
@@ -5057,7 +5057,7 @@ resin.logs.history(123).then(function(lines) {
 ```
 **Example**  
 ```js
-resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
+balena.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
 	if (error) throw error;
 
 	lines.forEach(function(line) {
@@ -5065,35 +5065,35 @@ resin.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
 	});
 });
 ```
-<a name="resin.logs.LogSubscription"></a>
+<a name="balena.logs.LogSubscription"></a>
 
 #### logs.LogSubscription : <code>EventEmitter</code>
 The log subscription emits events as log data arrives.
-You can get a LogSubscription for a given device by calling `resin.logs.subscribe(deviceId)`
+You can get a LogSubscription for a given device by calling `balena.logs.subscribe(deviceId)`
 
-**Kind**: static typedef of [<code>logs</code>](#resin.logs)  
+**Kind**: static typedef of [<code>logs</code>](#balena.logs)  
 
-* [.LogSubscription](#resin.logs.LogSubscription) : <code>EventEmitter</code>
-    * [.unsubscribe()](#resin.logs.LogSubscription.unsubscribe)
-    * ["line"](#resin.logs.LogSubscription.event_line)
-    * ["error"](#resin.logs.LogSubscription.event_error)
+* [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
+    * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
+    * ["line"](#balena.logs.LogSubscription.event_line)
+    * ["error"](#balena.logs.LogSubscription.event_error)
 
-<a name="resin.logs.LogSubscription.unsubscribe"></a>
+<a name="balena.logs.LogSubscription.unsubscribe"></a>
 
 ##### LogSubscription.unsubscribe()
 Disconnect from the logs feed and stop receiving any future events on this emitter.
 
-**Kind**: static method of [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Kind**: static method of [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
 **Summary**: Unsubscribe from device logs  
 **Access**: public  
 **Example**  
 ```js
 logs.unsubscribe();
 ```
-<a name="resin.logs.LogSubscription.event_line"></a>
+<a name="balena.logs.LogSubscription.event_line"></a>
 
 ##### "line"
-**Kind**: event emitted by [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Kind**: event emitted by [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
 **Summary**: Event fired when a new line of log output is available  
 **Example**  
 ```js
@@ -5101,10 +5101,10 @@ logs.on('line', function(line) {
 	console.log(line);
 });
 ```
-<a name="resin.logs.LogSubscription.event_error"></a>
+<a name="balena.logs.LogSubscription.event_error"></a>
 
 ##### "error"
-**Kind**: event emitted by [<code>LogSubscription</code>](#resin.logs.LogSubscription)  
+**Kind**: event emitted by [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
 **Summary**: Event fired when an error has occured reading the device logs  
 **Example**  
 ```js
@@ -5112,19 +5112,19 @@ logs.on('error', function(error) {
 	console.error(error);
 });
 ```
-<a name="resin.settings"></a>
+<a name="balena.settings"></a>
 
-### resin.settings : <code>object</code>
-**Kind**: static namespace of [<code>resin</code>](#resin)  
+### balena.settings : <code>object</code>
+**Kind**: static namespace of [<code>balena</code>](#balena)  
 
-* [.settings](#resin.settings) : <code>object</code>
-    * [.get([key])](#resin.settings.get) ⇒ <code>Promise</code>
-    * [.getAll()](#resin.settings.getAll) ⇒ <code>Promise</code>
+* [.settings](#balena.settings) : <code>object</code>
+    * [.get([key])](#balena.settings.get) ⇒ <code>Promise</code>
+    * [.getAll()](#balena.settings.getAll) ⇒ <code>Promise</code>
 
-<a name="resin.settings.get"></a>
+<a name="balena.settings.get"></a>
 
 #### settings.get([key]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>settings</code>](#resin.settings)  
+**Kind**: static method of [<code>settings</code>](#balena.settings)  
 **Summary**: Get a single setting. **Only implemented in Node.js**  
 **Access**: public  
 **Fulfil**: <code>\*</code> - setting value  
@@ -5135,69 +5135,69 @@ logs.on('error', function(error) {
 
 **Example**  
 ```js
-resin.settings.get('apiUrl').then(function(apiUrl) {
+balena.settings.get('apiUrl').then(function(apiUrl) {
 	console.log(apiUrl);
 });
 ```
 **Example**  
 ```js
-resin.settings.get('apiUrl', function(error, apiUrl) {
+balena.settings.get('apiUrl', function(error, apiUrl) {
 	if (error) throw error;
 	console.log(apiUrl);
 });
 ```
-<a name="resin.settings.getAll"></a>
+<a name="balena.settings.getAll"></a>
 
 #### settings.getAll() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>settings</code>](#resin.settings)  
+**Kind**: static method of [<code>settings</code>](#balena.settings)  
 **Summary**: Get all settings **Only implemented in Node.js**  
 **Access**: public  
 **Fulfil**: <code>Object</code> - settings  
 **Example**  
 ```js
-resin.settings.getAll().then(function(settings) {
+balena.settings.getAll().then(function(settings) {
 	console.log(settings);
 });
 ```
 **Example**  
 ```js
-resin.settings.getAll(function(error, settings) {
+balena.settings.getAll(function(error, settings) {
 	if (error) throw error;
 	console.log(settings);
 });
 ```
-<a name="resin.setSharedOptions"></a>
+<a name="balena.setSharedOptions"></a>
 
-### resin.setSharedOptions()
-Set options that are used by calls to `resin.fromSharedOptions()`.
+### balena.setSharedOptions()
+Set options that are used by calls to `balena.fromSharedOptions()`.
 The options accepted are the same as those used in the main SDK factory function.
 If you use this method, it should be called as soon as possible during app
 startup and before any calls to `fromSharedOptions()` are made.
 
-**Kind**: static method of [<code>resin</code>](#resin)  
+**Kind**: static method of [<code>balena</code>](#balena)  
 **Summary**: Set shared default options  
 **Access**: public  
 **Params**: <code>Object</code> opts - The shared default options  
 **Example**  
 ```js
-resin.setSharedOptions({
-	apiUrl: 'https://api.resin.io/',
-	imageMakerUrl: 'https://img.resin.io/',
+balena.setSharedOptions({
+	apiUrl: 'https://api.balena-cloud.com/',
+	imageMakerUrl: 'https://img.balena-cloud.com/',
 	isBrowser: true,
 });
 ```
-<a name="resin.fromSharedOptions"></a>
+<a name="balena.fromSharedOptions"></a>
 
-### resin.fromSharedOptions()
+### balena.fromSharedOptions()
 Create an SDK instance using shared default options set using the `setSharedOptions()` method.
 If options have not been set using this method, then this method will use the
 same defaults as the main SDK factory function.
 
-**Kind**: static method of [<code>resin</code>](#resin)  
+**Kind**: static method of [<code>balena</code>](#balena)  
 **Summary**: Create an SDK instance using shared default options  
 **Access**: public  
 **Params**: <code>Object</code> opts - The shared default options  
 **Example**  
 ```js
-const sdk = resin.fromSharedOptions();
+const sdk = balena.fromSharedOptions();
 ```

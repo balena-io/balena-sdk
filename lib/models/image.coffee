@@ -1,5 +1,5 @@
 ###
-Copyright 2017 Resin.io
+Copyright 2017 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 ###
 
 once = require('lodash/once')
-errors = require('resin-errors')
+errors = require('balena-errors')
 
 { findCallback, mergePineOptions } = require('../util')
 
@@ -30,7 +30,7 @@ getImageModel = (deps, opts) ->
 	# @name get
 	# @public
 	# @function
-	# @memberof resin.models.image
+	# @memberof balena.models.image
 	#
 	# @param {Number} id - image id
 	# @param {Object} [options={}] - extra pine options to use
@@ -38,12 +38,12 @@ getImageModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.image.get(123).then(function(image) {
+	# balena.models.image.get(123).then(function(image) {
 	#		console.log(image);
 	# });
 	#
 	# @example
-	# resin.models.image.get(123, function(error, image) {
+	# balena.models.image.get(123, function(error, image) {
 	#		if (error) throw error;
 	#		console.log(image);
 	# });
@@ -73,7 +73,7 @@ getImageModel = (deps, opts) ->
 			, options
 		.tap (image) ->
 			if not image?
-				throw new errors.ResinImageNotFound(id)
+				throw new errors.BalenaImageNotFound(id)
 		.asCallback(callback)
 
 	###*
@@ -81,19 +81,19 @@ getImageModel = (deps, opts) ->
 	# @name getLogs
 	# @public
 	# @function
-	# @memberof resin.models.image
+	# @memberof balena.models.image
 	#
 	# @param {Number} id - image id
 	# @fulfil {string} - logs
 	# @returns {Promise}
 	#
 	# @example
-	# resin.models.image.getLogs(123).then(function(logs) {
+	# balena.models.image.getLogs(123).then(function(logs) {
 	#		console.log(logs);
 	# });
 	#
 	# @example
-	# resin.models.image.getLogs(123, function(error, logs) {
+	# balena.models.image.getLogs(123, function(error, logs) {
 	#		if (error) throw error;
 	#		console.log(logs);
 	# });

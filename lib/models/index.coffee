@@ -1,5 +1,5 @@
 ###
-Copyright 2016 Resin.io
+Copyright 2016 Balena
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,62 +20,62 @@ modelsTemplate =
 
 	###*
 	# @namespace application
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	application: require('./application')
 
 	###*
 	# @namespace device
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	device: require('./device')
 
 	###*
 	# @namespace apiKey
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	apiKey: require('./api-key').default
 
 	###*
 	# @namespace key
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	key: require('./key')
 
 	###*
 	# @namespace os
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	os: require('./os')
 
 	###*
 	# @namespace config
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	config: require('./config')
 
 	###*
 	# @namespace release
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	release: require('./release')
 
 	###*
 	# @namespace service
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	service: require('./service')
 
 	###*
 	# @namespace image
-	# @memberof resin.models
+	# @memberof balena.models
 	###
 	image: require('./image')
 
 	###*
 	# @namespace billing
-	# @memberof resin.models
-	# @description **Note!** The billing methods are available on Resin.io exclusively.
+	# @memberof balena.models
+	# @description **Note!** The billing methods are available on Balena.io exclusively.
 	###
 	billing: require('./billing')
 

@@ -22,7 +22,7 @@ export type NavigationResource<T = WithId> = T[] | PineDeferred;
  */
 export type ReverseNavigationResource<T = WithId> = T[] | undefined;
 
-// based on https://github.com/resin-io/pinejs-client-js/blob/master/core.d.ts
+// based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
 type RawFilter =
 	| string
