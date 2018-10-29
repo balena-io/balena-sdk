@@ -63,7 +63,8 @@ describe 'Application Model', ->
 						deviceType: 'generic'
 						parent: parentApplication.id
 				.then ->
-					resin.models.application.getAll()
+					# application.getAll() doesn't return dependent apps
+					resin.pine.get(resource: 'application')
 				.then ([ parentApplication, childApplication ]) ->
 					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
