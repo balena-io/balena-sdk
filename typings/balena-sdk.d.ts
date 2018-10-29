@@ -227,9 +227,14 @@ declare namespace BalenaSdk {
 
 	interface ApplicationMember {
 		id: number;
-		role_title: string;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 		is_member_of__application: NavigationResource<Application>;
 		user: NavigationResource<User>;
+	}
+
+	interface ApplicationMembershipRole {
+		id: number;
+		name: string;
 	}
 
 	interface ApplicationType {
