@@ -46,6 +46,11 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
+            * [.willTrackNewReleases(nameOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
+            * [.isTrackingLatestRelease(nameOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
+            * [.pinToRelease(nameOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
+            * [.getTargetReleaseHash(nameOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
+            * [.trackLatestRelease(nameOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
             * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
             * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
             * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -122,6 +127,10 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
             * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
             * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+            * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
+            * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
+            * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
+            * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -153,6 +162,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.get(id, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
             * [.getWithImageDetails(id, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getLatestByApplication(nameOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -329,6 +339,11 @@ balena.models.device.get(123).catch(function (error) {
         * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
+        * [.willTrackNewReleases(nameOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
+        * [.isTrackingLatestRelease(nameOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
+        * [.pinToRelease(nameOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
+        * [.getTargetReleaseHash(nameOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
+        * [.trackLatestRelease(nameOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
         * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
         * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
         * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -405,6 +420,10 @@ balena.models.device.get(123).catch(function (error) {
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
         * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+        * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
+        * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
+        * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
+        * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -436,6 +455,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(id, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
         * [.getWithImageDetails(id, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getLatestByApplication(nameOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -490,6 +510,11 @@ balena.models.device.get(123).catch(function (error) {
     * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
+    * [.willTrackNewReleases(nameOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
+    * [.isTrackingLatestRelease(nameOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
+    * [.pinToRelease(nameOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
+    * [.getTargetReleaseHash(nameOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
+    * [.trackLatestRelease(nameOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
     * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
     * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
     * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -1274,6 +1299,162 @@ balena.models.application.reboot(123, function(error) {
 	if (error) throw error;
 });
 ```
+<a name="balena.models.application.willTrackNewReleases"></a>
+
+##### application.willTrackNewReleases(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Get whether the application is configured to receive updates whenever a new release is available  
+**Access**: public  
+**Fulfil**: <code>Boolean</code> - is tracking the latest release  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+balena.models.application.willTrackNewReleases('MyApp').then(function(isEnabled) {
+	console.log(isEnabled);
+});
+```
+**Example**  
+```js
+balena.models.application.willTrackNewReleases(123).then(function(isEnabled) {
+	console.log(isEnabled);
+});
+```
+**Example**  
+```js
+balena.models.application.willTrackNewReleases('MyApp', function(error, isEnabled) {
+	console.log(isEnabled);
+});
+```
+<a name="balena.models.application.isTrackingLatestRelease"></a>
+
+##### application.isTrackingLatestRelease(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Get whether the application is up to date and is tracking the latest release for updates  
+**Access**: public  
+**Fulfil**: <code>Boolean</code> - is tracking the latest release  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+balena.models.application.isTrackingLatestRelease('MyApp').then(function(isEnabled) {
+	console.log(isEnabled);
+});
+```
+**Example**  
+```js
+balena.models.application.isTrackingLatestRelease(123).then(function(isEnabled) {
+	console.log(isEnabled);
+});
+```
+**Example**  
+```js
+balena.models.application.isTrackingLatestRelease('MyApp', function(error, isEnabled) {
+	console.log(isEnabled);
+});
+```
+<a name="balena.models.application.pinToRelease"></a>
+
+##### application.pinToRelease(nameOrId, fullReleaseHash) ⇒ <code>Promise</code>
+Configures the application to run a particular release
+and not get updated when the latest release changes.
+
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Set a specific application to run a particular release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+| fullReleaseHash | <code>String</code> | the hash of a successful release (string) |
+
+**Example**  
+```js
+balena.models.application.pinToRelease('MyApp', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.pinToRelease('MyApp', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.getTargetReleaseHash"></a>
+
+##### application.getTargetReleaseHash(nameOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Get the hash of the current release for a specific application  
+**Access**: public  
+**Fulfil**: <code>String</code> - The release hash of the current release  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+balena.models.application.getTargetReleaseHash('MyApp').then(function(release) {
+	console.log(release);
+});
+```
+**Example**  
+```js
+balena.models.application.getTargetReleaseHash(123).then(function(release) {
+	console.log(release);
+});
+```
+**Example**  
+```js
+balena.models.application.getTargetReleaseHash('MyApp', function(release) {
+	console.log(release);
+});
+```
+<a name="balena.models.application.trackLatestRelease"></a>
+
+##### application.trackLatestRelease(nameOrId) ⇒ <code>Promise</code>
+The application's current release will be updated with each new successfully built release.
+
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Configure a specific application to track the latest available release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**  
+```js
+balena.models.application.trackLatestRelease('MyApp').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.trackLatestRelease(123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.trackLatestRelease('MyApp', function(error) {
+	if (error) throw error;
+	...
+});
+```
 <a name="balena.models.application.enableDeviceUrls"></a>
 
 ##### application.enableDeviceUrls(nameOrId) ⇒ <code>Promise</code>
@@ -1452,6 +1633,10 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
     * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+    * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
+    * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
+    * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
+    * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
 
 <a name="balena.models.device.tags"></a>
 
@@ -3464,6 +3649,114 @@ balena.models.device.get('7cf02a6').then(function(device) {
 	balena.models.device.lastOnline(device);
 })
 ```
+<a name="balena.models.device.isTrackingApplicationRelease"></a>
+
+##### device.isTrackingApplicationRelease(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get whether the device is configured to track the current application release  
+**Access**: public  
+**Fulfil**: <code>Boolean</code> - is tracking the current application release  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEnabled) {
+	console.log(isEnabled);
+});
+```
+**Example**  
+```js
+balena.models.device.isTrackingApplicationRelease('7cf02a6', function(error, isEnabled) {
+	console.log(isEnabled);
+});
+```
+<a name="balena.models.device.getTargetReleaseHash"></a>
+
+##### device.getTargetReleaseHash(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the hash of the currently tracked release for a specific device  
+**Access**: public  
+**Fulfil**: <code>String</code> - The release hash of the currently tracked release  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.getTargetReleaseHash('7cf02a6').then(function(release) {
+	console.log(release);
+});
+```
+**Example**  
+```js
+balena.models.device.getTargetReleaseHash('7cf02a6', function(release) {
+	console.log(release);
+});
+```
+<a name="balena.models.device.pinToRelease"></a>
+
+##### device.pinToRelease(uuidOrId, fullReleaseHashOrId) ⇒ <code>Promise</code>
+Configures the device to run a particular release
+and not get updated when the current application release changes.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Set a specific device to run a particular release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| fullReleaseHashOrId | <code>String</code> \| <code>Number</code> | the hash of a successful release (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.device.trackApplicationRelease"></a>
+
+##### device.trackApplicationRelease(uuidOrId) ⇒ <code>Promise</code>
+The device's current release will be updated with each new successfully built release.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Configure a specific device to track the current application release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
+	if (error) throw error;
+	...
+});
+```
 <a name="balena.models.apiKey"></a>
 
 #### models.apiKey : <code>object</code>
@@ -3970,6 +4263,7 @@ balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
     * [.get(id, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
     * [.getWithImageDetails(id, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getLatestByApplication(nameOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags"></a>
 
@@ -4205,6 +4499,38 @@ balena.models.release.getAllByApplication(123).then(function(releases) {
 **Example**  
 ```js
 balena.models.release.getAllByApplication('MyApp', function(error, releases) {
+		if (error) throw error;
+		console.log(releases);
+});
+```
+<a name="balena.models.release.getLatestByApplication"></a>
+
+##### release.getLatestByApplication(nameOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
+**Summary**: Get the latest successful release for an application  
+**Access**: public  
+**Fulfil**: <code>Object\|undefined</code> - release  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.release.getLatestByApplication('MyApp').then(function(releases) {
+		console.log(releases);
+});
+```
+**Example**  
+```js
+balena.models.release.getLatestByApplication(123).then(function(releases) {
+		console.log(releases);
+});
+```
+**Example**  
+```js
+balena.models.release.getLatestByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
 		console.log(releases);
 });

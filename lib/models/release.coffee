@@ -192,6 +192,47 @@ getReleaseModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
+	# @summary Get the latest successful release for an application
+	# @name getLatestByApplication
+	# @public
+	# @function
+	# @memberof balena.models.release
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object|undefined} - release
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.release.getLatestByApplication('MyApp').then(function(releases) {
+	#		console.log(releases);
+	# });
+	#
+	# @example
+	# balena.models.release.getLatestByApplication(123).then(function(releases) {
+	#		console.log(releases);
+	# });
+	#
+	# @example
+	# balena.models.release.getLatestByApplication('MyApp', function(error, releases) {
+	#		if (error) throw error;
+	#		console.log(releases);
+	# });
+	###
+	exports.getLatestByApplication = (nameOrId, options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		exports.getAllByApplication(nameOrId,
+			mergePineOptions
+				$top: 1
+				$filter:
+					status: 'success'
+			, options
+		)
+		.get(0)
+		.asCallback(callback)
+
+	###*
 	# @namespace balena.models.release.tags
 	# @memberof balena.models.release
 	###

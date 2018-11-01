@@ -643,6 +643,14 @@ declare namespace BalenaSdk {
 				purge(appId: number): Promise<void>;
 				generateApiKey(nameOrId: string | number): Promise<string>;
 				generateProvisioningKey(nameOrId: string | number): Promise<string>;
+				willTrackNewReleases(nameOrId: string | number): Promise<boolean>;
+				isTrackingLatestRelease(nameOrId: string | number): Promise<boolean>;
+				pinToRelease(
+					nameOrId: string | number,
+					fullReleaseHash: string,
+				): Promise<void>;
+				getTargetReleaseHash(nameOrId: string | number): Promise<string>;
+				trackLatestRelease(nameOrId: string | number): Promise<void>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
@@ -703,6 +711,10 @@ declare namespace BalenaSdk {
 			release: {
 				get(id: number, options?: PineOptionsFor<Release>): Promise<Release>;
 				getAllByApplication(
+					nameOrId: string | number,
+					options?: PineOptionsFor<Release>,
+				): Promise<Release[]>;
+				getLatestByApplication(
 					nameOrId: string | number,
 					options?: PineOptionsFor<Release>,
 				): Promise<Release[]>;
@@ -844,6 +856,15 @@ declare namespace BalenaSdk {
 				ping(uuidOrId: string | number): Promise<void>;
 				getStatus(device: object): string;
 				lastOnline(device: Device): string;
+				isTrackingApplicationRelease(
+					uuidOrId: string | number,
+				): Promise<boolean>;
+				getTargetReleaseHash(uuidOrId: string | number): Promise<string>;
+				pinToRelease(
+					uuidOrId: string | number,
+					fullReleaseHashOrId: string | number,
+				): Promise<void>;
+				trackApplicationRelease(uuidOrId: string | number): Promise<void>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,

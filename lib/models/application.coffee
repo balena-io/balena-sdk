@@ -44,6 +44,7 @@ getApplicationModel = (deps, opts) ->
 	auth = require('../auth')(deps, opts)
 
 	deviceModel = once -> require('./device')(deps, opts)
+	releaseModel = once -> require('./release')(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 
@@ -676,6 +677,201 @@ getApplicationModel = (deps, opts) ->
 				throw new errors.BalenaSupervisorLockedError()
 
 			throw err
+		.asCallback(callback)
+
+	###*
+	# @summary Get whether the application is configured to receive updates whenever a new release is available
+	# @name willTrackNewReleases
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {Boolean} - is tracking the latest release
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.willTrackNewReleases('MyApp').then(function(isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	#
+	# @example
+	# balena.models.application.willTrackNewReleases(123).then(function(isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	#
+	# @example
+	# balena.models.application.willTrackNewReleases('MyApp', function(error, isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	###
+	exports.willTrackNewReleases = (nameOrId, callback) ->
+		exports.get(nameOrId, $select: 'should_track_latest_release')
+		.get('should_track_latest_release')
+		.asCallback(callback)
+
+	###*
+	# @summary Get whether the application is up to date and is tracking the latest release for updates
+	# @name isTrackingLatestRelease
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {Boolean} - is tracking the latest release
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.isTrackingLatestRelease('MyApp').then(function(isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	#
+	# @example
+	# balena.models.application.isTrackingLatestRelease(123).then(function(isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	#
+	# @example
+	# balena.models.application.isTrackingLatestRelease('MyApp', function(error, isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	###
+	exports.isTrackingLatestRelease = (nameOrId, callback) ->
+		Promise.all([
+			exports.get(nameOrId, $select: ['commit', 'should_track_latest_release'])
+			releaseModel().getLatestByApplication(nameOrId, $select: 'commit')
+		])
+		.then ([application, latestRelease]) ->
+			return application.should_track_latest_release &&
+			(!latestRelease || application.commit == latestRelease.commit)
+		.asCallback(callback)
+
+	###*
+	# @summary Set a specific application to run a particular release
+	# @name pinToRelease
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @description Configures the application to run a particular release
+	# and not get updated when the latest release changes.
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String} fullReleaseHash - the hash of a successful release (string)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.pinToRelease('MyApp', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.application.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.application.pinToRelease('MyApp', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.pinToRelease = (nameOrId, fullReleaseHash, callback) ->
+		getId(nameOrId)
+		.then (applicationId) ->
+			pine.patch
+				resource: 'application'
+				id: applicationId
+				body:
+					commit: fullReleaseHash
+					should_track_latest_release: false
+		.asCallback(callback)
+
+	###*
+	# @summary Get the hash of the current release for a specific application
+	# @name getTargetReleaseHash
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @fulfil {String} - The release hash of the current release
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.getTargetReleaseHash('MyApp').then(function(release) {
+	# 	console.log(release);
+	# });
+	#
+	# @example
+	# balena.models.application.getTargetReleaseHash(123).then(function(release) {
+	# 	console.log(release);
+	# });
+	#
+	# @example
+	# balena.models.application.getTargetReleaseHash('MyApp', function(release) {
+	# 	console.log(release);
+	# });
+	###
+	exports.getTargetReleaseHash = (nameOrId, callback) ->
+		exports.get(nameOrId, $select: 'commit')
+		.get('commit')
+		.asCallback(callback)
+
+	###*
+	# @summary Configure a specific application to track the latest available release
+	# @name trackLatestRelease
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @description The application's current release will be updated with each new successfully built release.
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.trackLatestRelease('MyApp').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.application.trackLatestRelease(123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.application.trackLatestRelease('MyApp', function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.trackLatestRelease = (nameOrId, callback) ->
+		releaseModel().getLatestByApplication(nameOrId,
+			$select: ['commit', 'belongs_to__application']
+		)
+		.then (latestRelease) ->
+			if not latestRelease
+				return Promise.props(
+					applicationId: getId(nameOrId)
+					commit: null
+				)
+
+			return {
+				applicationId: latestRelease.belongs_to__application.__id
+				commit: latestRelease.commit
+			}
+		.then ({ applicationId, commit }) ->
+			body =
+				should_track_latest_release: true
+
+			if commit
+				body.commit = commit
+
+			return pine.patch
+				resource: 'application'
+				id: applicationId
+				body: body
 		.asCallback(callback)
 
 	###*
