@@ -1918,6 +1918,169 @@ getDeviceModel = (deps, opts) ->
 		return timeSince(lce)
 
 	###*
+	# @summary Get whether the device is configured to track the current application release
+	# @name isTrackingApplicationRelease
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @fulfil {Boolean} - is tracking the current application release
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	#
+	# @example
+	# balena.models.device.isTrackingApplicationRelease('7cf02a6', function(error, isEnabled) {
+	# 	console.log(isEnabled);
+	# });
+	###
+	exports.isTrackingApplicationRelease = (uuidOrId, callback) ->
+		exports.get(uuidOrId, $select: 'should_be_running__release')
+		.then ({ should_be_running__release }) ->
+			return not should_be_running__release
+		.asCallback(callback)
+
+	###*
+	# @summary Get the hash of the currently tracked release for a specific device
+	# @name getTargetReleaseHash
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @fulfil {String} - The release hash of the currently tracked release
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.getTargetReleaseHash('7cf02a6').then(function(release) {
+	# 	console.log(release);
+	# });
+	#
+	# @example
+	# balena.models.device.getTargetReleaseHash('7cf02a6', function(release) {
+	# 	console.log(release);
+	# });
+	###
+	exports.getTargetReleaseHash = (uuidOrId, callback) ->
+		exports.get(uuidOrId,
+			$select: 'id'
+			$expand:
+				should_be_running__release:
+					$select: 'commit'
+				belongs_to__application:
+					$select: 'commit'
+		)
+		.then ({ should_be_running__release, belongs_to__application }) ->
+			if not isEmpty(should_be_running__release)
+				return should_be_running__release[0].commit
+			belongs_to__application[0].commit
+		.asCallback(callback)
+
+	###*
+	# @summary Set a specific device to run a particular release
+	# @name pinToRelease
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @description Configures the device to run a particular release
+	# and not get updated when the current application release changes.
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @param {String|Number} fullReleaseHashOrId - the hash of a successful release (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.device.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.pinToRelease = (uuidOrId, fullReleaseHashOrId, callback) ->
+		Promise.try ->
+			if isId(uuidOrId) and isId(fullReleaseHashOrId)
+				return {
+					deviceId: uuidOrId
+					releaseId: fullReleaseHashOrId
+				}
+
+			releaseFilterProperty = if isId(fullReleaseHashOrId) then 'id' else 'commit'
+			exports.get(uuidOrId,
+				$select: 'id'
+				$expand:
+					belongs_to__application:
+						$select: 'id'
+						$expand:
+							owns__release:
+								$top: 1
+								$select: 'id'
+								$filter:
+									"#{releaseFilterProperty}": fullReleaseHashOrId
+									status: 'success'
+								$orderby: 'created_at desc'
+			)
+			.then ({ id, belongs_to__application }) ->
+				app = belongs_to__application[0]
+				release = app.owns__release[0]
+				if not release
+					throw new errors.BalenaReleaseNotFound(fullReleaseHashOrId)
+				return {
+					deviceId: id
+					releaseId: release.id
+				}
+		.then ({ deviceId, releaseId }) ->
+			pine.patch
+				resource: 'device'
+				id: deviceId
+				body: should_be_running__release: releaseId
+		.asCallback(callback)
+
+	###*
+	# @summary Configure a specific device to track the current application release
+	# @name trackApplicationRelease
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @description The device's current release will be updated with each new successfully built release.
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.trackApplicationRelease = (uuidOrId, callback) ->
+		getId(uuidOrId).then (deviceId) ->
+			return pine.patch
+				resource: 'device'
+				id: deviceId
+				body: should_be_running__release: null
+		.asCallback(callback)
+
+	###*
 	# @namespace balena.models.device.tags
 	# @memberof balena.models.device
 	###

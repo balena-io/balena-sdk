@@ -1070,6 +1070,84 @@ describe 'Device Model', ->
 					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
 					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
+
+		describe 'balena.models.device.isTrackingApplicationRelease()', ->
+
+			it 'should be tracking the latest release, using the device id', ->
+				promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+				m.chai.expect(promise).to.eventually.be.true
+
+			it 'should be tracking the latest release, using the device uuid', ->
+				promise = balena.models.device.isTrackingApplicationRelease(@device.uuid)
+				m.chai.expect(promise).to.eventually.be.true
+
+		describe 'balena.models.device.getTargetReleaseHash()', ->
+
+			it 'should retrieve the commit hash of the tracked application release, using the device id', ->
+				promise = balena.models.device.getTargetReleaseHash(@device.id)
+				m.chai.expect(promise).to.eventually.equal('new-release-commit')
+
+			it 'should retrieve the commit hash of the tracked application release, using the device uuid', ->
+				promise = balena.models.device.getTargetReleaseHash(@device.uuid)
+				m.chai.expect(promise).to.eventually.equal('new-release-commit')
+
+		describe 'balena.models.device.pinToRelease()', ->
+
+			it 'should set the device to a specific release, using the device id & release commit', ->
+				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+				.then =>
+					promise = balena.models.device.getTargetReleaseHash(@device.id)
+					m.chai.expect(promise).to.eventually.equal('old-release-commit')
+				.then =>
+					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+					m.chai.expect(promise).to.eventually.be.false
+
+			it 'should set the device to a specific release, using the device id & release id', ->
+				balena.models.device.pinToRelease(@device.id, @oldRelease.id)
+				.then =>
+					promise = balena.models.device.getTargetReleaseHash(@device.id)
+					m.chai.expect(promise).to.eventually.equal('old-release-commit')
+				.then =>
+					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+					m.chai.expect(promise).to.eventually.be.false
+
+			it 'should set the device to a specific release, using the device uuid & release commit', ->
+				balena.models.device.pinToRelease(@device.uuid, 'old-release-commit')
+				.then =>
+					promise = balena.models.device.getTargetReleaseHash(@device.id)
+					m.chai.expect(promise).to.eventually.equal('old-release-commit')
+				.then =>
+					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+					m.chai.expect(promise).to.eventually.be.false
+
+			it 'should set the device to a specific release, using the device uuid & release id', ->
+				balena.models.device.pinToRelease(@device.uuid, @oldRelease.id)
+				.then =>
+					promise = balena.models.device.getTargetReleaseHash(@device.id)
+					m.chai.expect(promise).to.eventually.equal('old-release-commit')
+				.then =>
+					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+					m.chai.expect(promise).to.eventually.be.false
+
+		describe 'balena.models.device.trackApplicationRelease()', ->
+
+			it 'should set the device to track the current application release, using the device id', ->
+				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+				.then =>
+					balena.models.device.trackApplicationRelease(@device.id)
+				.then =>
+					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+					m.chai.expect(promise).to.eventually.be.true
+
+			it 'should set the device to track the current application release, using the device uuid', ->
+				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+				.then =>
+					balena.models.device.trackApplicationRelease(@device.uuid)
+				.then =>
+					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+					m.chai.expect(promise).to.eventually.be.true
+
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		beforeEach ->

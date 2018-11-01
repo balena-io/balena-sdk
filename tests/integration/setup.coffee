@@ -169,6 +169,7 @@ exports.givenMulticontainerApplication = ->
 		.spread (webService, dbService, [oldRelease, newRelease]) =>
 			@webService = webService
 			@dbService = dbService
+			@oldRelease = oldRelease
 			@currentRelease = newRelease
 
 			uuid = balena.models.device.generateUniqueKey()

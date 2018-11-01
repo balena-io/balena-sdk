@@ -438,3 +438,146 @@ describe 'Application Model', ->
 
 					m.chai.expect(promise).to.eventually.be.false
 
+		describe 'given two releases', ->
+
+			beforeEach ->
+				userId = @application.user.__id
+
+				balena.pine.post
+					resource: 'release'
+					body:
+						belongs_to__application: @application.id
+						is_created_by__user: userId
+						commit: 'old-release-commit'
+						status: 'success'
+						source: 'cloud'
+						composition: {}
+						start_timestamp: 1234
+				.then =>
+					balena.pine.post
+						resource: 'release'
+						body:
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'new-release-commit'
+							status: 'success'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 54321
+
+			describe 'balena.models.application.willTrackNewReleases()', ->
+
+				it 'should be configured to track new releases by default', ->
+					promise = balena.models.application.willTrackNewReleases(@application.id)
+					m.chai.expect(promise).to.eventually.be.true
+
+				it 'should be false when should_track_latest_release is false', ->
+					balena.pine.patch
+						resource: 'application'
+						id: @application.id
+						body: should_track_latest_release: false
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						balena.pine.patch
+							resource: 'application'
+							id: @application.id
+							body: should_track_latest_release: true
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+				it 'should be true regardless of the current commit', ->
+					balena.pine.patch
+						resource: 'application'
+						id: @application.id
+						body: commit: 'old-release-commit'
+					.then =>
+						promise = balena.models.application.willTrackNewReleases(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+			describe 'balena.models.application.isTrackingLatestRelease()', ->
+
+				it 'should be tracking the latest release by default', ->
+					promise = balena.models.application.isTrackingLatestRelease(@application.id)
+					m.chai.expect(promise).to.eventually.be.true
+
+				it 'should be false when should_track_latest_release is false', ->
+					balena.pine.patch
+						resource: 'application'
+						id: @application.id
+						body: should_track_latest_release: false
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						balena.pine.patch
+							resource: 'application'
+							id: @application.id
+							body: should_track_latest_release: true
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+				it 'should be false when the current commit is not of the latest release', ->
+					balena.pine.patch
+						resource: 'application'
+						id: @application.id
+						body: commit: 'old-release-commit'
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						balena.pine.patch
+							resource: 'application'
+							id: @application.id
+							body: commit: 'new-release-commit'
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+			describe 'balena.models.application.getTargetReleaseHash()', ->
+
+				it 'should retrieve the commit hash of the current release', ->
+					promise = balena.models.application.getTargetReleaseHash(@application.id)
+					m.chai.expect(promise).to.eventually.equal('new-release-commit')
+
+			describe 'balena.models.application.pinToRelease()', ->
+
+				it 'should set the application to specific release & disable latest release tracking', ->
+					balena.models.application.pinToRelease(@application.id, 'old-release-commit')
+					.then =>
+						promise = balena.models.application.getTargetReleaseHash(@application.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.application.willTrackNewReleases(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+
+			describe 'balena.models.application.trackLatestRelease()', ->
+
+				it 'should re-enable latest release tracking', ->
+					balena.models.application.pinToRelease(@application.id, 'old-release-commit')
+					.then =>
+						promise = balena.models.application.getTargetReleaseHash(@application.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.application.willTrackNewReleases(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						balena.models.application.trackLatestRelease(@application.id)
+					.then =>
+						promise = balena.models.application.getTargetReleaseHash(@application.id)
+						m.chai.expect(promise).to.eventually.equal('new-release-commit')
+					.then =>
+						promise = balena.models.application.willTrackNewReleases(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.true

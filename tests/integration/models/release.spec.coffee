@@ -122,6 +122,58 @@ describe 'Release Model', ->
 							build_log: 'web log'
 						]
 
+	describe 'given a multicontainer application with successful & failed releases', ->
+
+		givenMulticontainerApplication()
+
+		beforeEach ->
+			application = @application
+			userId = @application.user.__id
+
+			balena.pine.post
+				resource: 'release'
+				body:
+					belongs_to__application: application.id
+					is_created_by__user: userId
+					commit: 'errored-then-fixed-release-commit'
+					status: 'error'
+					source: 'cloud'
+					composition: {}
+					start_timestamp: 64321
+			.then ->
+				balena.pine.post
+					resource: 'release'
+					body:
+						belongs_to__application: application.id
+						is_created_by__user: userId
+						commit: 'errored-then-fixed-release-commit'
+						status: 'success'
+						source: 'cloud'
+						composition: {}
+						start_timestamp: 74321
+			.then ->
+				balena.pine.post
+					resource: 'release'
+					body:
+						belongs_to__application: application.id
+						is_created_by__user: userId
+						commit: 'failed-release-commit'
+						status: 'failed'
+						source: 'cloud'
+						composition: {}
+						start_timestamp: 84321
+
+		describe 'balena.models.release.getLatestByApplication()', ->
+
+			it 'should get the latest release', ->
+				balena.models.release.getLatestByApplication(@application.id)
+				.then (release) =>
+					m.chai.expect(release).to.deep.match
+						status: 'success',
+						source: 'cloud',
+						commit: 'errored-then-fixed-release-commit',
+						belongs_to__application: __id: @application.id
+
 		describe 'balena.models.release.tags', ->
 
 			appTagTestOptions =
