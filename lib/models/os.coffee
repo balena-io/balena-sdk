@@ -346,15 +346,15 @@ getOsModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+	# balena.models.os.getConfig('MyApp', { version: '2.12.7+rev1.prod' }).then(function(config) {
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	#
-	# balena.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+	# balena.models.os.getConfig(123, { version: '2.12.7+rev1.prod' }).then(function(config) {
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	#
-	# balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
+	# balena.models.os.getConfig('MyApp', { version: '2.12.7+rev1.prod' }, function(error, config) {
 	# 	if (error) throw error;
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
@@ -363,9 +363,6 @@ getOsModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		Promise.try ->
-			if !options.version
-				throw new Error('An OS version is required when calling os.getConfig')
-
 			defaultOpts =
 				network: 'ethernet'
 

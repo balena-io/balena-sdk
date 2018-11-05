@@ -4160,15 +4160,15 @@ generation is only supported when using a session token, not an API key.
 
 **Example**  
 ```js
-balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+balena.models.os.getConfig('MyApp', { version: '2.12.7+rev1.prod' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 
-balena.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function(config) {
+balena.models.os.getConfig(123, { version: '2.12.7+rev1.prod' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
 
-balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
+balena.models.os.getConfig('MyApp', { version: '2.12.7+rev1.prod' }, function(error, config) {
 	if (error) throw error;
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
