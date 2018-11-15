@@ -40,7 +40,12 @@ type ResourceObjFilter<T> = {
 	[k in keyof T]?: object | number | string | boolean
 };
 
+type Filter<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+
 interface FilterArray<T> extends Array<Filter<T>> {}
+
+type FilterOperationValue<T> = Filter<T> | FilterArray<T>;
+type FilterFunctionValue<T> = Filter<T> | FilterArray<T>;
 
 type FilterExpressions<T> = {
 	$raw?: RawFilter;
@@ -56,9 +61,51 @@ type FilterExpressions<T> = {
 
 	$any?: Lambda<T>;
 	$all?: Lambda<T>;
-};
 
-type Filter<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+	// Filter operations
+	$ne?: FilterOperationValue<T>;
+	$eq?: FilterOperationValue<T>;
+	$gt?: FilterOperationValue<T>;
+	$ge?: FilterOperationValue<T>;
+	$lt?: FilterOperationValue<T>;
+	$le?: FilterOperationValue<T>;
+	$add?: FilterOperationValue<T>;
+	$sub?: FilterOperationValue<T>;
+	$mul?: FilterOperationValue<T>;
+	$div?: FilterOperationValue<T>;
+	$mod?: FilterOperationValue<T>;
+
+	// Filter functions
+	$contains?: FilterFunctionValue<T>;
+	$endswith?: FilterFunctionValue<T>;
+	$startswith?: FilterFunctionValue<T>;
+	$length?: FilterFunctionValue<T>;
+	$indexof?: FilterFunctionValue<T>;
+	$substring?: FilterFunctionValue<T>;
+	$tolower?: FilterFunctionValue<T>;
+	$toupper?: FilterFunctionValue<T>;
+	$trim?: FilterFunctionValue<T>;
+	$concat?: FilterFunctionValue<T>;
+	$year?: FilterFunctionValue<T>;
+	$month?: FilterFunctionValue<T>;
+	$day?: FilterFunctionValue<T>;
+	$hour?: FilterFunctionValue<T>;
+	$minute?: FilterFunctionValue<T>;
+	$second?: FilterFunctionValue<T>;
+	$fractionalseconds?: FilterFunctionValue<T>;
+	$date?: FilterFunctionValue<T>;
+	$time?: FilterFunctionValue<T>;
+	$totaloffsetminutes?: FilterFunctionValue<T>;
+	$now?: FilterFunctionValue<T>;
+	$maxdatetime?: FilterFunctionValue<T>;
+	$mindatetime?: FilterFunctionValue<T>;
+	$totalseconds?: FilterFunctionValue<T>;
+	$round?: FilterFunctionValue<T>;
+	$floor?: FilterFunctionValue<T>;
+	$ceiling?: FilterFunctionValue<T>;
+	$isof?: FilterFunctionValue<T>;
+	$cast?: FilterFunctionValue<T>;
+};
 
 type BaseExpandFor<T> = { [k in keyof T]?: object } | StringKeyof<T>;
 
