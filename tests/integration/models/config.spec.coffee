@@ -14,10 +14,8 @@ describe 'Config Model', ->
 
 		it 'should include the pubnub keys', ->
 			balena.models.config.getAll().get('pubnub').then (pubnubKeys) ->
-				m.chai.expect(_.isString(pubnubKeys.publish_key)).to.be.true
-				m.chai.expect(_.isString(pubnubKeys.subscribe_key)).to.be.true
-				m.chai.expect(pubnubKeys.publish_key).to.have.length(42)
-				m.chai.expect(pubnubKeys.subscribe_key).to.have.length(42)
+				m.chai.expect(pubnubKeys.publish_key).to.be.a('string').that.has.length(0)
+				m.chai.expect(pubnubKeys.subscribe_key).to.be.a('string').that.has.length(0)
 
 		it 'should include the mixpanel token', ->
 			balena.models.config.getAll().get('mixpanelToken').then (mixpanelToken) ->
