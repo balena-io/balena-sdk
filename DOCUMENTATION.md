@@ -51,6 +51,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.pinToRelease(nameOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
             * [.getTargetReleaseHash(nameOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.trackLatestRelease(nameOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
+            * [.disableTrackLatestRelease(nameOrId)](#balena.models.application.disableTrackLatestRelease) ⇒ <code>Promise</code>
             * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
             * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
             * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -344,6 +345,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.pinToRelease(nameOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
         * [.getTargetReleaseHash(nameOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.trackLatestRelease(nameOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
+        * [.disableTrackLatestRelease(nameOrId)](#balena.models.application.disableTrackLatestRelease) ⇒ <code>Promise</code>
         * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
         * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
         * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -515,6 +517,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.pinToRelease(nameOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
     * [.getTargetReleaseHash(nameOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.trackLatestRelease(nameOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
+    * [.disableTrackLatestRelease(nameOrId)](#balena.models.application.disableTrackLatestRelease) ⇒ <code>Promise</code>
     * [.enableDeviceUrls(nameOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
     * [.disableDeviceUrls(nameOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
     * [.grantSupportAccess(nameOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
@@ -1451,6 +1454,38 @@ balena.models.application.trackLatestRelease(123).then(function() {
 **Example**  
 ```js
 balena.models.application.trackLatestRelease('MyApp', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.disableTrackLatestRelease"></a>
+
+##### application.disableTrackLatestRelease(nameOrId) ⇒ <code>Promise</code>
+The application's current release will not be updated by successfully built releases.
+
+**Kind**: static method of [<code>application</code>](#balena.models.application)
+**Summary**: Configure a specific application to stop tracking the latest available release
+**Access**: public
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> | application name (string) or id (number) |
+
+**Example**
+```js
+balena.models.application.disableTrackLatestRelease('MyApp').then(function() {
+	...
+});
+```
+**Example**
+```js
+balena.models.application.disableTrackLatestRelease(123).then(function() {
+	...
+});
+```
+**Example**
+```js
+balena.models.application.disableTrackLatestRelease('MyApp', function(error) {
 	if (error) throw error;
 	...
 });

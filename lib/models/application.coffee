@@ -875,6 +875,62 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
+	# @summary Configure a specific application to stop tracking the latest available release
+	# @name disableTrackLatestRelease
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @description The application's current release will not be updated by successfully built releases.
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.disableTrackLatestRelease('MyApp').then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.application.disableTrackLatestRelease(123).then(function() {
+	# 	...
+	# });
+	#
+	# @example
+	# balena.models.application.disableTrackLatestRelease('MyApp', function(error) {
+	# 	if (error) throw error;
+	# 	...
+	# });
+	###
+	exports.disableTrackLatestRelease = (nameOrId, callback) ->
+		releaseModel().getLatestByApplication(nameOrId,
+			$select: ['commit', 'belongs_to__application']
+		)
+		.then (latestRelease) ->
+			if not latestRelease
+				return Promise.props(
+					applicationId: getId(nameOrId)
+					commit: null
+				)
+
+			return {
+				applicationId: latestRelease.belongs_to__application.__id
+				commit: latestRelease.commit
+			}
+		.then ({ applicationId, commit }) ->
+			body =
+				should_track_latest_release: false
+
+			if commit
+				body.commit = commit
+
+			return pine.patch
+				resource: 'application'
+				id: applicationId
+				body: body
+		.asCallback(callback)
+
+	###*
 	# @summary Enable device urls for all devices that belong to an application
 	# @name enableDeviceUrls
 	# @public

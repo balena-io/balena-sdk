@@ -581,3 +581,22 @@ describe 'Application Model', ->
 					.then =>
 						promise = balena.models.application.isTrackingLatestRelease(@application.id)
 						m.chai.expect(promise).to.eventually.be.true
+
+			describe 'balena.models.application.disableTrackLatestRelease()', ->
+
+				it 'should disable latest release tracking', ->
+					balena.models.application.trackLatestRelease(@application.id)
+					.then =>
+						promise = balena.models.application.willTrackNewReleases(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.true
+					.then =>
+						balena.models.application.disableTrackLatestRelease(@application.id)
+					.then =>
+						promise = balena.models.application.willTrackNewReleases(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
+					.then =>
+						promise = balena.models.application.isTrackingLatestRelease(@application.id)
+						m.chai.expect(promise).to.eventually.be.false
