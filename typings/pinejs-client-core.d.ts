@@ -40,24 +40,27 @@ type ResourceObjFilter<T> = {
 	[k in keyof T]?: object | number | string | boolean
 };
 
-type Filter<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+type Filter<T> = FilterObj<T>;
+type FilterObj<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+type FilterBaseType = string | number | null | boolean | Date;
+type NestedFilter<T> = FilterObj<T> | FilterArray<T> | FilterBaseType;
 
-interface FilterArray<T> extends Array<Filter<T>> {}
+interface FilterArray<T> extends Array<NestedFilter<T>> {}
 
-type FilterOperationValue<T> = Filter<T> | FilterArray<T>;
-type FilterFunctionValue<T> = Filter<T> | FilterArray<T>;
+type FilterOperationValue<T> = NestedFilter<T>;
+type FilterFunctionValue<T> = NestedFilter<T>;
 
 type FilterExpressions<T> = {
 	$raw?: RawFilter;
 
 	$?: string | string[];
 
-	$and?: Filter<T> | FilterArray<T>;
-	$or?: Filter<T> | FilterArray<T>;
+	$and?: NestedFilter<T>;
+	$or?: NestedFilter<T>;
 
-	$in?: Filter<T> | FilterArray<T>;
+	$in?: NestedFilter<T>;
 
-	$not?: Filter<T> | FilterArray<T>;
+	$not?: NestedFilter<T>;
 
 	$any?: Lambda<T>;
 	$all?: Lambda<T>;
