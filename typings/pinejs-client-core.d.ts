@@ -40,25 +40,75 @@ type ResourceObjFilter<T> = {
 	[k in keyof T]?: object | number | string | boolean
 };
 
-interface FilterArray<T> extends Array<Filter<T>> {}
+type Filter<T> = FilterObj<T>;
+type FilterObj<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+type FilterBaseType = string | number | null | boolean | Date;
+type NestedFilter<T> = FilterObj<T> | FilterArray<T> | FilterBaseType;
+
+interface FilterArray<T> extends Array<NestedFilter<T>> {}
+
+type FilterOperationValue<T> = NestedFilter<T>;
+type FilterFunctionValue<T> = NestedFilter<T>;
 
 type FilterExpressions<T> = {
 	$raw?: RawFilter;
 
 	$?: string | string[];
 
-	$and?: Filter<T> | FilterArray<T>;
-	$or?: Filter<T> | FilterArray<T>;
+	$and?: NestedFilter<T>;
+	$or?: NestedFilter<T>;
 
-	$in?: Filter<T> | FilterArray<T>;
+	$in?: NestedFilter<T>;
 
-	$not?: Filter<T> | FilterArray<T>;
+	$not?: NestedFilter<T>;
 
 	$any?: Lambda<T>;
 	$all?: Lambda<T>;
-};
 
-type Filter<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+	// Filter operations
+	$ne?: FilterOperationValue<T>;
+	$eq?: FilterOperationValue<T>;
+	$gt?: FilterOperationValue<T>;
+	$ge?: FilterOperationValue<T>;
+	$lt?: FilterOperationValue<T>;
+	$le?: FilterOperationValue<T>;
+	$add?: FilterOperationValue<T>;
+	$sub?: FilterOperationValue<T>;
+	$mul?: FilterOperationValue<T>;
+	$div?: FilterOperationValue<T>;
+	$mod?: FilterOperationValue<T>;
+
+	// Filter functions
+	$contains?: FilterFunctionValue<T>;
+	$endswith?: FilterFunctionValue<T>;
+	$startswith?: FilterFunctionValue<T>;
+	$length?: FilterFunctionValue<T>;
+	$indexof?: FilterFunctionValue<T>;
+	$substring?: FilterFunctionValue<T>;
+	$tolower?: FilterFunctionValue<T>;
+	$toupper?: FilterFunctionValue<T>;
+	$trim?: FilterFunctionValue<T>;
+	$concat?: FilterFunctionValue<T>;
+	$year?: FilterFunctionValue<T>;
+	$month?: FilterFunctionValue<T>;
+	$day?: FilterFunctionValue<T>;
+	$hour?: FilterFunctionValue<T>;
+	$minute?: FilterFunctionValue<T>;
+	$second?: FilterFunctionValue<T>;
+	$fractionalseconds?: FilterFunctionValue<T>;
+	$date?: FilterFunctionValue<T>;
+	$time?: FilterFunctionValue<T>;
+	$totaloffsetminutes?: FilterFunctionValue<T>;
+	$now?: FilterFunctionValue<T>;
+	$maxdatetime?: FilterFunctionValue<T>;
+	$mindatetime?: FilterFunctionValue<T>;
+	$totalseconds?: FilterFunctionValue<T>;
+	$round?: FilterFunctionValue<T>;
+	$floor?: FilterFunctionValue<T>;
+	$ceiling?: FilterFunctionValue<T>;
+	$isof?: FilterFunctionValue<T>;
+	$cast?: FilterFunctionValue<T>;
+};
 
 type BaseExpandFor<T> = { [k in keyof T]?: object } | StringKeyof<T>;
 
