@@ -131,6 +131,51 @@ getApplicationModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
+	# @summary Get applications and their deives, along with each device's
+	# associated services' essential details
+	# @name getAllWithDeviceServiceDetails
+	# @public
+	# @function
+	# @memberof balena.models.application
+	#
+	# @description
+	# This method does not map exactly to the underlying model: it runs a
+	# larger prebuilt query, and reformats it into an easy to use and
+	# understand format. If you want more control, or to see the raw model
+	# directly, use `application.getAll(options)` instead.
+	#
+	# @param {Object} [options={}] - extra pine options to use
+	# @fulfil {Object[]} - applications
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.application.getAllWithDeviceServiceDetails().then(function(applications) {
+	# 	console.log(applications);
+	# })
+	#
+	# @example
+	# balena.models.application.getAllWithDeviceServiceDetails(function(error, applications) {
+	# 	if (error) throw error;
+	# 	console.log(applications);
+	# });
+	###
+	exports.getAllWithDeviceServiceDetails = (options = {}, callback) ->
+		callback = findCallback(arguments)
+
+		serviceOptions = mergePineOptions
+			$expand: [
+				owns__device: getCurrentServiceDetailsPineOptions()
+			]
+		, options
+
+		exports.getAll(serviceOptions)
+		.then (apps) ->
+			return apps.map (app) ->
+				app.owns__device = app.owns__device.map(generateCurrentServiceDetails)
+				return app
+		.asCallback(callback)
+
+	###*
 	# @summary Get a single application
 	# @name get
 	# @public
