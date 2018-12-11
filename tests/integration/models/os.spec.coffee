@@ -127,7 +127,7 @@ describe 'OS model', ->
 		describe 'given a specific OS version', ->
 
 			it 'should get a result for ResinOS v1', ->
-				promise = balena.models.os.getDownloadSize('raspberry-pi', '1.24.0')
+				promise = balena.models.os.getDownloadSize('raspberry-pi', '1.26.1')
 				m.chai.expect(promise).to.eventually.be.a('number')
 
 			it 'should get a result for ResinOS v2', ->
@@ -136,7 +136,7 @@ describe 'OS model', ->
 
 			it 'should cache download sizes independently for each version', ->
 				Promise.all [
-					balena.models.os.getDownloadSize('raspberry-pi', '1.24.0')
+					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1')
 					balena.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod')
 				]
 				.then ([ os1Size, os2Size ]) ->
@@ -161,7 +161,7 @@ describe 'OS model', ->
 				m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
 			it 'should be able to query for a specific version', ->
-				promise = balena.models.os.getLastModified('raspberrypi', '1.24.0')
+				promise = balena.models.os.getLastModified('raspberrypi', '1.26.1')
 				m.chai.expect(promise).to.eventually.be.an.instanceof(Date)
 
 			it 'should be able to query for a version containing a plus', ->
