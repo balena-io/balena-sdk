@@ -950,7 +950,7 @@ understand format. If you want more control, or to see the raw model
 directly, use `application.getAll(options)` instead.
 
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Get applications and their deives, along with each device's
+**Summary**: Get applications and their devices, along with each device's
 associated services' essential details  
 **Access**: public  
 **Fulfil**: <code>Object[]</code> - applications  
@@ -1013,7 +1013,7 @@ understand format. If you want more control, or to see the raw model
 directly, use `application.get(uuidOrId, options)` instead.
 
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Get a single application and its deives, along with each device's
+**Summary**: Get a single application and its devices, along with each device's
 associated services' essential details  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application  
