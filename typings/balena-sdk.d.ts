@@ -627,6 +627,15 @@ declare namespace BalenaSdk {
 					options?: PineOptionsFor<Application>,
 				): Promise<Application>;
 				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
+				getAllWithDeviceServiceDetails(
+					options?: PineOptionsFor<Application>,
+				): Promise<
+					Array<
+						Application & {
+							owns__device: DeviceWithServiceDetails[];
+						}
+					>
+				>;
 				has(nameOrId: string | number): Promise<boolean>;
 				hasAny(): Promise<boolean>;
 				remove(nameOrId: string | number): Promise<void>;
