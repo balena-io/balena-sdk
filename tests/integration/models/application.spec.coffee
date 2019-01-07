@@ -111,7 +111,7 @@ describe 'Application Model', ->
 					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
 					m.chai.expect(error).to.have.property('statusCode', 400)
 					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4')
+					.that.contains('It is necessary that each app name that is of an organization, has a Length (Type) that is greater than or equal to 4')
 
 			it 'should be able to create an application using a device type alias', ->
 				balena.models.application.create
@@ -170,9 +170,9 @@ describe 'Application Model', ->
 						m.chai.expect(applications[0].id).to.equal(@application.id)
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.getAll($expand: 'user')
+					balena.models.application.getAll($expand: 'organization')
 					.then (applications) ->
-						m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+						m.chai.expect(applications[0].organization[0].name).to.equal(credentials.username)
 
 			describe 'balena.models.application.get()', ->
 
@@ -193,9 +193,9 @@ describe 'Application Model', ->
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.get(@application.id, $expand: 'user')
+					balena.models.application.get(@application.id, $expand: 'organization')
 					.then (application) ->
-						m.chai.expect(application.user[0].username).to.equal(credentials.username)
+						m.chai.expect(application.organization[0].name).to.equal(credentials.username)
 
 			describe 'balena.models.application.has()', ->
 

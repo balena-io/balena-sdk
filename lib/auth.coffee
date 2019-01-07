@@ -18,7 +18,7 @@ errors = require('balena-errors')
 Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
-	{ auth, request} = deps
+	{ auth, pine, request } = deps
 	{ apiUrl } = opts
 	twoFactor = require('./2fa')(deps, opts)
 	exports = {}
@@ -279,6 +279,46 @@ getAuth = (deps, opts) ->
 	exports.getUserId = (callback) ->
 		getUserDetails()
 		.get('id')
+		.asCallback(callback)
+
+	###*
+	# @summary Get current logged in user's personal organization id
+	# @name getPersonalOrganizationId
+	# @public
+	# @function
+	# @memberof resin.auth
+	#
+	# @description This will only work if you used {@link module:resin.auth.login} to log in.
+	#
+	# @fulfil {Number} - user's personal organization id
+	# @returns {Promise}
+	#
+	# @example
+	# resin.auth.getPersonalOrganizationId().then(function(organizationId) {
+	# 	console.log(organizationId);
+	# });
+	#
+	# @example
+	# resin.auth.getPersonalOrganizationId(function(error, organizationId) {
+	# 	if (error) throw error;
+	# 	console.log(organizationId);
+	# });
+	###
+	exports.getPersonalOrganizationId = (callback) ->
+		getUserDetails()
+		.then ({ id, organizationId }) ->
+			if organizationId
+				return organizationId
+
+			pine.get
+				resource: 'user'
+				id: id
+				options: $select: [ 'owns__organization' ]
+
+			.get('owns__organization')
+			.get('__id')
+			.tap (organizationId) ->
+				userDetailsCache?.organizationId = organizationId
 		.asCallback(callback)
 
 	###*

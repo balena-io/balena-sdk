@@ -115,8 +115,11 @@ getApplicationModel = (deps, opts) ->
 	exports.getAll = (options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		auth.getUserId()
-		.then (userId) ->
+		Promise.props(
+			userId: auth.getUserId()
+			organizationId: auth.getPersonalOrganizationId()
+		)
+		.then ({ userId, organizationId }) ->
 			return pine.get
 				resource: 'my_application'
 				options:
@@ -290,14 +293,14 @@ getApplicationModel = (deps, opts) ->
 
 
 	###*
-	# @summary Get a single application using the appname and owner's username
+	# @summary Get a single application using the appname and owner's username or organization name
 	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof balena.models.application
 	#
 	# @param {String} appName - application name
-	# @param {String} owner - The owner's username
+	# @param {String} owner - The owner's username or organization name
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
