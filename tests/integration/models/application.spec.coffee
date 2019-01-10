@@ -1,7 +1,7 @@
 _ = require('lodash')
 m = require('mochainon')
 
-{ balena, givenLoggedInUser, credentials } = require('../setup')
+{ balena, givenLoggedInUser, givenMulticontainerApplication, credentials } = require('../setup')
 {
 	itShouldGetAllTagsByResource
 	itShouldGetAllTags
@@ -581,3 +581,65 @@ describe 'Application Model', ->
 					.then =>
 						promise = balena.models.application.isTrackingLatestRelease(@application.id)
 						m.chai.expect(promise).to.eventually.be.true
+
+	describe 'given a multicontainer application with a single offline device', ->
+
+		givenMulticontainerApplication()
+
+		itShouldBeAnApplicationWIthDeviceServiceDetails = (application) ->
+			# Commit is empty on newly created application, so ignoring it
+			m.chai.expect(_.omit(application, 'owns__device', 'commit')).to.deep.equal(_.omit(@application, 'owns__device', 'commit'))
+
+			# Check commit value after release
+			m.chai.expect(application.commit).to.equal('new-release-commit')
+
+			m.chai.expect(application.owns__device).to.have.lengthOf(1)
+			m.chai.expect(application.owns__device[0]).to.deep.match
+				device_name: @device.device_name
+				uuid: @device.uuid
+				is_on__commit: @currentRelease.commit
+				current_services:
+					web: [
+						id: @newWebInstall.id
+						service_id: @webService.id
+						image_id: @newWebImage.id
+						commit: 'new-release-commit'
+						status: 'downloading'
+						download_progress: 50
+					,
+						id: @oldWebInstall.id
+						service_id: @webService.id
+						image_id: @oldWebImage.id
+						commit: 'old-release-commit'
+						status: 'running'
+						download_progress: 100
+					]
+					db: [
+						id: @newDbInstall.id
+						service_id: @dbService.id
+						image_id: @newDbImage.id
+						commit: 'new-release-commit'
+						status: 'running'
+						download_progress: 100
+					]
+
+			# Should filter out deleted image installs
+			m.chai.expect(application.owns__device[0].current_services.db).to.have.lengthOf(1)
+
+			# Should have an empty list of gateway downloads
+			m.chai.expect(application.owns__device[0].current_gateway_downloads).to.have.lengthOf(0)
+
+		describe 'balena.models.application.getWithDeviceServiceDetails()', ->
+
+			it 'should retrieve application and it\'s devices along with service details', ->
+				balena.models.application.getWithDeviceServiceDetails(@application.id)
+				.then (applicationDetails) =>
+					itShouldBeAnApplicationWIthDeviceServiceDetails.call(this, applicationDetails)
+
+		describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
+
+			it 'should retrieve applications and their devices, along with service details', ->
+				balena.models.application.getAllWithDeviceServiceDetails(@application.id)
+				.then (applications) =>
+					m.chai.expect(applications).to.have.lengthOf(1)
+					itShouldBeAnApplicationWIthDeviceServiceDetails.call(this, applications[0])
