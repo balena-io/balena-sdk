@@ -14,16 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-assign = require('lodash/assign')
-mapValues = require('lodash/mapValues')
-defaults = require('lodash/defaults')
-getRequest = require('balena-request')
-BalenaAuth = require('balena-auth')['default']
-getPine = require('balena-pine')
-errors = require('balena-errors')
-
-{ notImplemented, globalEnv } = require('./util')
-deprecationWarnings = require('./util/deprecation-warnings')
+{ globalEnv } = require('./util/global-env')
 
 # These constants are used to create globals for sharing defualt options between
 # multiple instances of the SDK.
@@ -41,33 +32,42 @@ BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 #
 # If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
 ###
-sdkTemplate =
-
-	###*
-	# @namespace models
-	# @memberof balena
-	###
-	models: require('./models')
-
-	###*
-	# @namespace auth
-	# @memberof balena
-	###
-	auth: require('./auth')
-
-	###*
-	# @namespace logs
-	# @memberof balena
-	###
-	logs: require('./logs')
-
-	###*
-	# @namespace settings
-	# @memberof balena
-	###
-	settings: require('./settings')
 
 getSdk = (opts = {}) ->
+	assign = require('lodash/assign')
+	mapValues = require('lodash/mapValues')
+	defaults = require('lodash/defaults')
+	getRequest = require('balena-request')
+	BalenaAuth = require('balena-auth')['default']
+	getPine = require('balena-pine')
+	errors = require('balena-errors')
+	{ notImplemented } = require('./util')
+
+	sdkTemplate =
+		###*
+		# @namespace models
+		# @memberof balena
+		###
+		models: require('./models')
+
+		###*
+		# @namespace auth
+		# @memberof balena
+		###
+		auth: require('./auth')
+
+		###*
+		# @namespace logs
+		# @memberof balena
+		###
+		logs: require('./logs')
+
+		###*
+		# @namespace settings
+		# @memberof balena
+		###
+		settings: require('./settings')
+
 	defaults opts,
 		apiUrl: 'https://api.balena-cloud.com/'
 		imageMakerUrl: 'https://img.balena-cloud.com/'

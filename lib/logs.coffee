@@ -23,7 +23,8 @@ ndjson = require('ndjson')
 	AbortController: AbortControllerPonyfill
 } = require('abortcontroller-polyfill/dist/cjs-ponyfill')
 
-{ findCallback, globalEnv } = require('./util')
+{ findCallback } = require('./util')
+{ globalEnv } = require('./util/global-env')
 
 AbortController = globalEnv?.AbortController || AbortControllerPonyfill
 
