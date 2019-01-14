@@ -112,6 +112,8 @@
     "promise-memoize": "^1.2.0",
     "resin-device-status": "^1.0.1",
     "resin-register-device": "^5.0.0",
+    "resin-request": "^9.0.2",
+    "resin-auth": "^2.0.0",
     "semver": "^5.3.0"
   },
   "lint-staged": {
