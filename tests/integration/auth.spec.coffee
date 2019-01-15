@@ -174,10 +174,10 @@ describe 'SDK authentication', ->
 					m.chai.expect(userId).to.be.a('number')
 					m.chai.expect(userId).to.be.greaterThan(0)
 
-		describe 'resin.auth.getPersonalOrganizationId()', ->
+		describe 'balena.auth.getPersonalOrganizationId()', ->
 
 			it 'should eventually be an organization id', ->
-				resin.auth.getPersonalOrganizationId()
+				balena.auth.getPersonalOrganizationId()
 				.then (organizationId) ->
 					m.chai.expect(organizationId).to.be.a('number')
 					m.chai.expect(organizationId).to.be.greaterThan(0)
@@ -225,10 +225,10 @@ describe 'SDK authentication', ->
 					m.chai.expect(userId).to.be.a('number')
 					m.chai.expect(userId).to.be.greaterThan(0)
 
-		describe 'resin.auth.getPersonalOrganizationId()', ->
+		describe 'balena.auth.getPersonalOrganizationId()', ->
 
 			it 'should eventually be an organization id', ->
-				resin.auth.getPersonalOrganizationId()
+				balena.auth.getPersonalOrganizationId()
 				.then (organizationId) ->
 					m.chai.expect(organizationId).to.be.a('number')
 					m.chai.expect(organizationId).to.be.greaterThan(0)
