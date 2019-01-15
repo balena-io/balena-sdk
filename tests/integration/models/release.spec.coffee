@@ -128,40 +128,37 @@ describe 'Release Model', ->
 
 			before ->
 				application = @application
-				userId = @application.user.__id
 
-				balena.pine.post
-					resource: 'release'
-					body:
-						belongs_to__application: application.id
-						is_created_by__user: userId
-						commit: 'errored-then-fixed-release-commit'
-						status: 'error'
-						source: 'cloud'
-						composition: {}
-						start_timestamp: 64321
-				.then ->
-					balena.pine.post
-						resource: 'release'
-						body:
-							belongs_to__application: application.id
+				balena.auth.getUserId()
+				.then (userId) =>
+					Promise.mapSeries [
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'errored-then-fixed-release-commit'
+							status: 'error'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 64321
+						,
+							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'errored-then-fixed-release-commit'
 							status: 'success'
 							source: 'cloud'
 							composition: {}
 							start_timestamp: 74321
-				.then ->
-					balena.pine.post
-						resource: 'release'
-						body:
-							belongs_to__application: application.id
+						,
+							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'failed-release-commit'
 							status: 'failed'
 							source: 'cloud'
 							composition: {}
 							start_timestamp: 84321
+					], (body) ->
+						balena.pine.post
+							resource: 'release'
+							body: body
 
 			it 'should get the latest release', ->
 				balena.models.release.getLatestByApplication(@application.id)

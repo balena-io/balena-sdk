@@ -45,7 +45,7 @@ describe 'Balena SDK', ->
 		ignoreUserInfoCalls = (fn) ->
 			(arg) ->
 				if /\/user\/v1\/whoami/.test(arg.url) or
-				/\/v5\/user\(\d+\)\?\$select=owns__organization/.test(arg.url)
+				new RegExp("/#{balena.pine.API_VERSION}/user\\(\\d+\\)\\?\\$select=owns__organization").test(arg.url)
 					return arg
 				return fn(arg)
 
