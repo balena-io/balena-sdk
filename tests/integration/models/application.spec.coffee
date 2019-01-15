@@ -111,7 +111,7 @@ describe 'Application Model', ->
 					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
 					m.chai.expect(error).to.have.property('statusCode', 400)
 					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each app name that is of an organization, has a Length (Type) that is greater than or equal to 4')
+					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30')
 
 			it 'should be able to create an application using a device type alias', ->
 				balena.models.application.create
@@ -464,29 +464,34 @@ describe 'Application Model', ->
 			givenAnApplication(beforeEach)
 
 			beforeEach ->
-				userId = @application.user.__id
+				balena.pine.get
+					resource: 'organization'
+					id: @application.organization.__id
+					options: $expand: 'is_owned_by__user'
+				.then (organization) =>
+					userId = organization.is_owned_by__user[0].id
 
-				balena.pine.post
-					resource: 'release'
-					body:
-						belongs_to__application: @application.id
-						is_created_by__user: userId
-						commit: 'old-release-commit'
-						status: 'success'
-						source: 'cloud'
-						composition: {}
-						start_timestamp: 1234
-				.then =>
 					balena.pine.post
 						resource: 'release'
 						body:
 							belongs_to__application: @application.id
 							is_created_by__user: userId
-							commit: 'new-release-commit'
+							commit: 'old-release-commit'
 							status: 'success'
 							source: 'cloud'
 							composition: {}
-							start_timestamp: 54321
+							start_timestamp: 1234
+					.then =>
+						balena.pine.post
+							resource: 'release'
+							body:
+								belongs_to__application: @application.id
+								is_created_by__user: userId
+								commit: 'new-release-commit'
+								status: 'success'
+								source: 'cloud'
+								composition: {}
+								start_timestamp: 54321
 
 			describe 'balena.models.application.willTrackNewReleases()', ->
 
