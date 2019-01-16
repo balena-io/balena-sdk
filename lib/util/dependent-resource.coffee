@@ -28,7 +28,7 @@ errors = require('balena-errors')
 	isId
 	mergePineOptions
 	unauthorizedError
-	uniqueKeyViolated
+	isUniqueKeyViolationResponse
 } = require('../util')
 
 exports.buildDependentResource = (
@@ -114,7 +114,7 @@ exports.buildDependentResource = (
 					if not isId(parentParam)
 						return
 					getResourceId(parentParam)
-				.catch uniqueKeyViolated, ->
+				.catch isUniqueKeyViolationResponse, ->
 					pine.patch
 						resource: resourceName
 						options:
