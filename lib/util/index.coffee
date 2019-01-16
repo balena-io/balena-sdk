@@ -84,9 +84,14 @@ exports.noApplicationForKeyResponse =
 	statusCode: 500
 	body: 'No application found to associate with the api key'
 
-exports.uniqueKeyViolated =
-	code: 'BalenaRequestError'
-	body: 'Unique key constraint violated'
+exports.isUniqueKeyViolationResponse = ({code, body}) ->
+	code == 'BalenaRequestError' &&
+	(
+		# api translated response
+		body == 'Unique key constraint violated' ||
+		# pine response (tested on pine 10)
+		/^".*" must be unique\.$/.test(body)
+	)
 
 exports.treatAsMissingApplication = (nameOrId) ->
 	return (err) ->

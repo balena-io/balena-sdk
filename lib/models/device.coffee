@@ -40,7 +40,7 @@ deviceStatus = require('resin-device-status')
 	treatAsMissingDevice,
 	LOCKED_STATUS_CODE,
 	timeSince,
-	uniqueKeyViolated
+	isUniqueKeyViolationResponse
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
@@ -2785,7 +2785,7 @@ getDeviceModel = (deps, opts) ->
 						service_install: serviceInstallId
 						name: key
 						value: value
-				.catch uniqueKeyViolated, ->
+				.catch isUniqueKeyViolationResponse, ->
 					pine.patch
 						resource: 'device_service_environment_variable'
 						options:
