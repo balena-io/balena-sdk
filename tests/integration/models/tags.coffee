@@ -135,10 +135,7 @@ exports.itShouldSetTags = (opts) ->
 		promise = model.set(@resource.id, 'io.resin.test', 'secret')
 		m.chai.expect(promise).to.be.rejectedWith('Tag keys beginning with io.resin. are reserved.')
 
-	# This should be implemented in time for the balena API release, but
-	# we want to be able to release the SDK before that happens
-	# After the rename is complete, we should un-skip this
-	it.skip 'should not allow creating a balena tag', ->
+	it 'should not allow creating a balena tag', ->
 		promise = model.set(@resource.id, 'io.balena.test', 'secret')
 		m.chai.expect(promise).to.be.rejectedWith('Tag keys beginning with io.balena. are reserved.')
 
