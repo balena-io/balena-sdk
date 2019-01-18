@@ -467,9 +467,14 @@ declare namespace BalenaSdk {
 	interface Image {
 		id: number;
 		build_log: string;
+		content_hash?: string | null;
+		project_type?: string | null;
+		status: string;
+		created_at: string;
 		is_a_build_of__service: NavigationResource<Service>;
 		start_timestamp?: string | null;
 		end_timestamp?: string | null;
+		push_timestamp?: string | null;
 		image_size?: number | null;
 		dockerfile: string;
 		error_message?: string | null;
