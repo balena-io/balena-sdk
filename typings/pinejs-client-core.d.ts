@@ -134,7 +134,7 @@ export interface PineOptions extends ODataOptionsBase {
 export interface PineOptionsFor<T> extends ODataOptionsBase {
 	$select?: Array<StringKeyof<T>> | StringKeyof<T> | '*';
 	$filter?: Filter<T>;
-	$expand?: Expand<T> | string;
+	$expand?: Expand<T>;
 }
 
 interface PineParamsBase {
@@ -144,12 +144,7 @@ interface PineParamsBase {
 	id?: number;
 	url?: string;
 	passthrough?: AnyObject;
-	passthroughByMethod?: {
-		GET: AnyObject;
-		POST: AnyObject;
-		PATCH: AnyObject;
-		DELETE: AnyObject;
-	};
+	passthroughByMethod?: { [method in ODataMethod]: AnyObject };
 	customOptions?: AnyObject;
 }
 
