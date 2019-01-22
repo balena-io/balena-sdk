@@ -121,8 +121,8 @@ export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 interface ODataOptionsBase {
 	$orderby?: OrderBy;
-	$top?: string;
-	$skip?: string;
+	$top?: number;
+	$skip?: number;
 	$select?: string | string[] | '*';
 }
 
