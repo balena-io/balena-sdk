@@ -1,9 +1,5 @@
 // If we can't guarantee global state, don't fake it: fail instead.
-let globalEnv:
-	| undefined
-	| typeof window
-	| typeof self
-	| typeof global;
+let globalEnv: undefined | typeof window | typeof self | typeof global;
 // Use window (web)/self (web worker)/global (node) as appropriate
 if (typeof window !== 'undefined') {
 	globalEnv = window;
