@@ -15,11 +15,13 @@ limitations under the License.
 ###
 
 Promise = require('bluebird')
-reject = require('lodash/reject')
+assign = require('lodash/assign')
+defaults = require('lodash/defaults')
+includes = require('lodash/includes')
 once = require('lodash/once')
 partition = require('lodash/partition')
+reject = require('lodash/reject')
 semver = require('semver')
-_ = require('lodash')
 
 errors = require('balena-errors')
 
@@ -100,7 +102,7 @@ getOsModel = (deps, opts) ->
 
 		# TODO: Once we integrate balena-semver, balena-semver should learn to handle this itself
 		semverVersionOrRange = fixNonSemver(versionOrRange)
-		if _.includes(semverVersions, semverVersionOrRange)
+		if includes(semverVersions, semverVersionOrRange)
 			# If the _exact_ version you're looking for exists, it's not a range, and
 			# we should return it exactly, not any old equivalent version.
 			return unfixNonSemver(semverVersionOrRange)
@@ -369,7 +371,7 @@ getOsModel = (deps, opts) ->
 			defaultOpts =
 				network: 'ethernet'
 
-			_.defaults(options, defaultOpts)
+			defaults(options, defaultOpts)
 
 			applicationModel()._getId(nameOrId)
 			.then (applicationId) ->
@@ -377,7 +379,7 @@ getOsModel = (deps, opts) ->
 					method: 'POST'
 					url: '/download-config'
 					baseUrl: apiUrl
-					body: _.assign(options, appId: applicationId)
+					body: assign(options, appId: applicationId)
 			.get('body')
 			.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
 		.asCallback(callback)

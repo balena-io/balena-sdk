@@ -28,6 +28,7 @@
     "no-namespace": [true, "allow-declarations"],
     "no-string-literal": false,
     "object-literal-key-quotes": [true, "as-needed"],
+    "import-blacklist": [true, "lodash"],
     "interface-name": [false],
     "interface-over-type-literal": false,
     "variable-name": [
