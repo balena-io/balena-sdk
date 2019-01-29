@@ -41,7 +41,7 @@ gulp.task 'test', ->
 			require: ['ts-node/register'],
 			compilers: 'coffee:coffeescript/register',
 			timeout: 5 * 60 * 1000,
-			slow: 10 * 1000
+			slow: 1000
 		}))
 
 gulp.task 'build', (callback) ->
