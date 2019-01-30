@@ -1,5 +1,4 @@
 import * as Promise from 'bluebird';
-import * as _ from 'lodash';
 import * as BalenaSdk from '../../typings/balena-sdk';
 
 export const IS_BROWSER: boolean;
