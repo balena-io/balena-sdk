@@ -769,6 +769,44 @@ describe 'Device Model', ->
 				.then ({ is_accessible_by_support_until__date }) ->
 					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
+		describe 'balena.models.device.hasLockOverride()', ->
+			it 'should be false by default for a device retrieved by uuid', ->
+				balena.models.device.hasLockOverride(@device.uuid)
+				.then (hasLockOverride) ->
+					m.chai.expect(hasLockOverride).to.be.false
+			it 'should be false by default for a device retrieved by id', ->
+				balena.models.device.hasLockOverride(@device.id)
+				.then (hasLockOverride) ->
+					m.chai.expect(hasLockOverride).to.be.false
+
+		describe 'balena.models.device.enableLockOverride()', ->
+			it 'should be able to enable lock override by uuid', ->
+				balena.models.device.enableLockOverride(@device.uuid)
+				.then =>
+					balena.models.device.hasLockOverride(@device.uuid)
+				.then (hasLockOverride) ->
+					m.chai.expect(hasLockOverride).to.be.true
+			it 'should be able to enable lock override by id', ->
+				balena.models.device.enableLockOverride(@device.id)
+				.then =>
+					balena.models.device.hasLockOverride(@device.id)
+				.then (hasLockOverride) ->
+					m.chai.expect(hasLockOverride).to.be.true
+
+		describe 'balena.models.device.disableLockOverride()', ->
+			it 'should be able to disable lock override by uuid', ->
+				balena.models.device.disableLockOverride(@device.uuid)
+				.then =>
+					balena.models.device.hasLockOverride(@device.uuid)
+				.then (hasLockOverride) ->
+					m.chai.expect(hasLockOverride).to.be.false
+			it 'should be able to disable lock override by id', ->
+				balena.models.device.disableLockOverride(@device.id)
+				.then =>
+					balena.models.device.hasLockOverride(@device.id)
+				.then (hasLockOverride) ->
+					m.chai.expect(hasLockOverride).to.be.false
+
 		describe 'balena.models.device.tags', ->
 
 			appTagTestOptions =

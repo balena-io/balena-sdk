@@ -573,18 +573,24 @@ declare namespace BalenaSdk {
 
 	interface BalenaSDK {
 		auth: {
-			register: (credentials: {
-				email: string;
-				password: string;
-			}) => Promise<string>;
-			authenticate: (credentials: {
-				email: string;
-				password: string;
-			}) => Promise<string>;
-			login: (credentials: {
-				email: string;
-				password: string;
-			}) => Promise<void>;
+			register: (
+				credentials: {
+					email: string;
+					password: string;
+				},
+			) => Promise<string>;
+			authenticate: (
+				credentials: {
+					email: string;
+					password: string;
+				},
+			) => Promise<string>;
+			login: (
+				credentials: {
+					email: string;
+					password: string;
+				},
+			) => Promise<void>;
 			loginWithToken: (authToken: string) => Promise<void>;
 			logout: () => Promise<void>;
 			getToken: () => Promise<string>;
@@ -839,6 +845,9 @@ declare namespace BalenaSdk {
 					expiryTimestamp: number,
 				): Promise<void>;
 				revokeSupportAccess(uuidOrId: string | number): Promise<void>;
+				enableLockOverride(uuidOrId: string | number): Promise<void>;
+				disableLockOverride(uuidOrId: string | number): Promise<void>;
+				hasLockOverride(uuidOrId: string | number): Promise<boolean>;
 				reboot(
 					uuidOrId: string | number,
 					{ force }: { force?: boolean },
