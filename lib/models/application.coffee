@@ -448,7 +448,7 @@ getApplicationModel = (deps, opts) ->
 			if not deviceManifest?
 				throw new errors.BalenaInvalidDeviceType(deviceType)
 
-		return Promise.props([
+		return Promise.all([
 			deviceManifestPromise
 			applicationTypePromise
 			parentAppPromise
