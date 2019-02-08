@@ -1760,6 +1760,96 @@ getDeviceModel = (deps, opts) ->
 						uuid: uuid
 		.asCallback(callback)
 
+	setLockOverriden = (uuidOrId, shouldOverride, callback) ->
+		getId(uuidOrId).then (deviceId) ->
+			value = if shouldOverride then '1' else '0'
+			return request.send
+				method: 'POST'
+				url: "/device/#{deviceId}/lock-override"
+				baseUrl: apiUrl
+				body:
+					value: value
+		.asCallback(callback)
+
+	###*
+	# @summary Enable lock override
+	# @name enableLockOverride
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.enableLockOverride('7cf02a6');
+	#
+	# @example
+	# balena.models.device.enableLockOverride(123);
+	#
+	# @example
+	# balena.models.device.enableLockOverride('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.enableLockOverride = (uuidOrId, callback) ->
+		setLockOverriden(uuidOrId, true, callback)
+
+	###*
+	# @summary Disable lock override
+	# @name disableLockOverride
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.disableLockOverride('7cf02a6');
+	#
+	# @example
+	# balena.models.device.disableLockOverride(123);
+	#
+	# @example
+	# balena.models.device.disableLockOverride('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.disableLockOverride = (uuidOrId, callback) ->
+		setLockOverriden(uuidOrId, false, callback)
+
+	###*
+	# @summary Check if a device has the lock override enabled
+	# @name hasLockOverride
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.hasLockOverride('7cf02a6');
+	#
+	# @example
+	# balena.models.device.hasLockOverride(123);
+	#
+	# @example
+	# balena.models.device.hasLockOverride('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.hasLockOverride = (uuidOrId, callback) ->
+		getId(uuidOrId).then (deviceId) ->
+			return request.send
+				method: 'GET'
+				url: "/device/#{deviceId}/lock-override"
+				baseUrl: apiUrl
+		.then ({ body }) ->
+			return body == '1'
+		.asCallback(callback)
+
 	###*
 	# @summary Ping a device
 	# @name ping

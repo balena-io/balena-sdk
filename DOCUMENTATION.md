@@ -123,6 +123,9 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
             * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+            * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
+            * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
+            * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -417,6 +420,9 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
         * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+        * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
+        * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
+        * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -1662,6 +1668,9 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
     * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+    * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
+    * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
+    * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -3558,6 +3567,81 @@ balena.models.device.disableDeviceUrl(123);
 **Example**  
 ```js
 balena.models.device.disableDeviceUrl('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.enableLockOverride"></a>
+
+##### device.enableLockOverride(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Enable lock override  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.enableLockOverride('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.enableLockOverride(123);
+```
+**Example**  
+```js
+balena.models.device.enableLockOverride('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.disableLockOverride"></a>
+
+##### device.disableLockOverride(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Disable lock override  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.disableLockOverride('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.disableLockOverride(123);
+```
+**Example**  
+```js
+balena.models.device.disableLockOverride('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.hasLockOverride"></a>
+
+##### device.hasLockOverride(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Check if a device has the lock override enabled  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.hasLockOverride('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.hasLockOverride(123);
+```
+**Example**  
+```js
+balena.models.device.hasLockOverride('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
