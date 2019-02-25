@@ -1,5 +1,4 @@
-// backwards compatible alternative for: Extract<keyof T, string>
-type StringKeyof<T> = keyof T & string;
+import { AnyObject, PropsOfType, StringKeyof } from './utils';
 
 export interface WithId {
 	id: number;
@@ -21,6 +20,10 @@ export type NavigationResource<T = WithId> = T[] | PineDeferred;
  * in that case it holds a deferred to the original resource.
  */
 export type ReverseNavigationResource<T = WithId> = T[] | undefined;
+
+export type AssociatedResource<T = WithId> =
+	| NavigationResource<T>
+	| ReverseNavigationResource<T>;
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
@@ -114,30 +117,48 @@ type BaseExpandFor<T> = { [k in keyof T]?: object } | StringKeyof<T>;
 
 export type Expand<T> = BaseExpandFor<T> | Array<BaseExpandFor<T>>;
 
-export interface PineOptions {
-	$select?: string[] | string | '*';
-	$filter?: object;
-	$expand?: object | string;
+export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+interface ODataOptionsBase {
 	$orderby?: OrderBy;
 	$top?: number;
 	$skip?: number;
+	$select?: string | string[] | '*';
 }
 
-export interface PineOptionsFor<T> extends PineOptions {
+export interface PineOptions extends ODataOptionsBase {
+	$filter?: object;
+	$expand?: object | string;
+}
+
+export interface PineOptionsFor<T> extends ODataOptionsBase {
 	$select?: Array<StringKeyof<T>> | StringKeyof<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
 }
 
-export interface PineParams {
-	resource: string;
+interface PineParamsBase {
+	apiPrefix?: string;
+	method?: ODataMethod;
+	resource?: string;
 	id?: number;
-	body?: object;
+	url?: string;
+	passthrough?: AnyObject;
+	passthroughByMethod?: { [method in ODataMethod]: AnyObject };
+	customOptions?: AnyObject;
+}
+
+export interface PineParams extends PineParamsBase {
+	body?: AnyObject;
 	options?: PineOptions;
 }
 
-export interface PineParamsFor<T> extends PineParams {
-	body?: Partial<T>;
+export type SubmitBody<T> = {
+	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k]
+};
+
+export interface PineParamsFor<T> extends PineParamsBase {
+	body?: SubmitBody<T>;
 	options?: PineOptionsFor<T>;
 }
 
