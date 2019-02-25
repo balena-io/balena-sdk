@@ -1,4 +1,5 @@
 import * as Promise from 'bluebird';
+import { Omit } from './utils';
 
 /* tslint:disable:no-namespace */
 declare namespace BalenaRequest {
@@ -14,8 +15,17 @@ declare namespace BalenaRequest {
 		body: any;
 	}
 
+	type BalenaRequestResponseOf<T> = Omit<BalenaRequestResponse, 'body'> & {
+		body: T;
+	};
+
+	interface BalenaRequestSend {
+		(options: BalenaRequestOptions): Promise<BalenaRequestResponse>;
+		<T>(options: BalenaRequestOptions): Promise<BalenaRequestResponseOf<T>>;
+	}
+
 	interface BalenaRequest {
-		send: (options: BalenaRequestOptions) => Promise<BalenaRequestResponse>;
+		send: BalenaRequestSend;
 	}
 }
 
