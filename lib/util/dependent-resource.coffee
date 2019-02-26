@@ -99,13 +99,6 @@ exports.buildDependentResource = (
 						"#{parentResourceName}": parentId
 						"#{resourceKeyField}": key
 						value: value
-				.tap (result) ->
-					# On Pine 6, when the post adds nothing to the DB
-					# then the associated parent resource was not found.
-					# If we never checked that the resource actually exists
-					# then we should reject an appropriate error.
-					if isId(parentParam) && isEmpty(result)
-						throw new ResourceNotFoundError(parentParam)
 				.tapCatch unauthorizedError, ->
 					# On Pine 7, when the post throws a 401
 					# then the associated parent resource might not exist.
