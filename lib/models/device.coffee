@@ -40,7 +40,6 @@ deviceStatus = require('resin-device-status')
 	treatAsMissingDevice,
 	LOCKED_STATUS_CODE,
 	timeSince,
-	isUniqueKeyViolationResponse
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 
@@ -66,6 +65,7 @@ getDeviceModel = (deps, opts) ->
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	auth = require('../auth')(deps, opts)
+	upsert = require('../util/upsert').getUpsertHelper(deps)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 
@@ -2779,21 +2779,17 @@ getDeviceModel = (deps, opts) ->
 				.get(0)
 				.get('id')
 			.then (serviceInstallId) ->
-				pine.post
+				upsert
 					resource: 'device_service_environment_variable'
 					body:
 						service_install: serviceInstallId
 						name: key
 						value: value
-				.catch isUniqueKeyViolationResponse, ->
-					pine.patch
-						resource: 'device_service_environment_variable'
-						options:
-							$filter:
-								service_install: serviceInstallId
-								name: key
-						body:
-							value: value
+				,
+				[
+					'service_install'
+					'name'
+				]
 			.asCallback(callback)
 
 		###*

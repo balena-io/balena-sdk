@@ -1,7 +1,9 @@
 import * as BalenaSdk from '../../typings/balena-sdk';
 
 /** Use with: `findCallback(arguments)`. */
-export function findCallback(args: IArguments): (() => void);
+export function findCallback(args: IArguments): () => void;
+
+export function isUniqueKeyViolationResponse(err: Error): boolean;
 
 /**
  * Merging two sets of pine options sensibly is more complicated than it sounds.
