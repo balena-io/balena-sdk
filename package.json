@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@resin.io/types-mochainon": "^2.0.1",
-    "@types/lodash": "^4.14.85",
+    "@types/lodash": "4.14.121",
     "@types/mocha": "^5.2.5",
     "balena-config-karma": "^2.3.1",
     "browserify": "^14.3.0",
