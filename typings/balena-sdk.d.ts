@@ -89,6 +89,7 @@ declare namespace BalenaSdk {
 
 		arch: string;
 		state?: string;
+		community?: boolean;
 		private?: boolean;
 
 		isDependent?: boolean;
