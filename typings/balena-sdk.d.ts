@@ -452,6 +452,19 @@ declare namespace BalenaSdk {
 		note?: string;
 	}
 
+	interface SupervisorStatus {
+		api_port: string;
+		ip_address: string;
+		os_version: string;
+		supervisor_version: string;
+		update_pending: boolean;
+		update_failed: boolean;
+		update_downloaded: boolean;
+		status?: string | null;
+		commit?: string | null;
+		download_progress?: string | null;
+	}
+
 	interface ServiceInstance {
 		created_at: string;
 		id: number;
@@ -874,6 +887,9 @@ declare namespace BalenaSdk {
 					uuidOrId: string | number,
 					{ force }: { force?: boolean },
 				): Promise<void>;
+				getSupervisorState(
+					uuidOrId: string | number,
+				): Promise<SupervisorStatus>;
 				getDisplayName(deviceTypeName: string): string;
 				getDeviceSlug(deviceTypeName: string): string;
 				generateUniqueKey(): string;

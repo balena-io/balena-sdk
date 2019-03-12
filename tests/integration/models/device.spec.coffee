@@ -1028,6 +1028,16 @@ describe 'Device Model', ->
 					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
 					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
+		describe 'balena.models.device.getSupervisorState()', ->
+
+			it 'should be rejected if the device does not exist', ->
+				promise = balena.models.device.getSupervisorState('asdfghjkl')
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+			it 'should be rejected if the device exists but is inaccessible', ->
+				promise = balena.models.device.getSupervisorState(@device.id)
+				m.chai.expect(promise).to.be.rejectedWith('No online device(s) found')
+
 	describe 'given a multicontainer application with a single offline device', ->
 
 		givenMulticontainerApplication()
