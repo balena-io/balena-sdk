@@ -524,6 +524,12 @@ declare namespace BalenaSdk {
 		versions: string[];
 	};
 
+	type OsUpdateVersions = {
+		versions: string[];
+		recommended: string | undefined;
+		current: string | undefined;
+	};
+
 	interface ServiceInstall {
 		id: number;
 		should_be_running: boolean;
@@ -571,6 +577,17 @@ declare namespace BalenaSdk {
 
 	interface ReleaseTag extends ResourceTagBase {
 		release: NavigationResource<Release>;
+	}
+
+	// See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
+	interface OsUpdateActionResult {
+		// 'update_done' will be obsolete with https://github.com/balena-io/resin-proxy/pull/334
+		status: 'idle' | 'in_progress' | 'update_done' | 'done';
+		parameters?: {
+			target_version: string;
+		};
+		error?: string;
+		fatal?: boolean;
 	}
 
 	interface BalenaSDK {
@@ -887,6 +904,11 @@ declare namespace BalenaSdk {
 					fullReleaseHashOrId: string | number,
 				): Promise<void>;
 				trackApplicationRelease(uuidOrId: string | number): Promise<void>;
+				startOsUpdate(
+					uuid: string,
+					targetOsVersion: string,
+				): Promise<OsUpdateActionResult>;
+				getOsUpdateStatus(uuid: string): Promise<OsUpdateActionResult>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
@@ -1020,6 +1042,15 @@ declare namespace BalenaSdk {
 				): string;
 				getLastModified(deviceType: string, version?: string): Promise<Date>;
 				download(deviceType: string, version?: string): Promise<Readable>;
+				isSupportedOsUpdate(
+					deviceType: string,
+					currentVersion: string,
+					targetVersion: string,
+				): Promise<boolean>;
+				getSupportedOsUpdateVersions(
+					deviceType: string,
+					currentVersion: string,
+				): Promise<OsUpdateVersions>;
 			};
 		};
 

@@ -14,18 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+errors = require('balena-errors')
 Promise = require('bluebird')
 assign = require('lodash/assign')
 defaults = require('lodash/defaults')
+find = require('lodash/find')
+first = require('lodash/first')
 includes = require('lodash/includes')
 once = require('lodash/once')
 partition = require('lodash/partition')
 reject = require('lodash/reject')
+rSemver = require('resin-semver')
 semver = require('semver')
 
-errors = require('balena-errors')
-
-{ onlyIf, getImgMakerHelper, findCallback, notFoundResponse, treatAsMissingApplication, deviceTypes: deviceTypesUtil, osVersionRCompare, isDevelopmentVersion } = require('../util')
+{
+	onlyIf
+	getImgMakerHelper
+	findCallback
+	notFoundResponse
+	treatAsMissingApplication
+	deviceTypes: deviceTypesUtil
+	osVersionRCompare
+	isDevelopmentVersion
+} = require('../util')
+{ hupActionHelper } = require('../util/device-actions/os-update/utils')
 
 BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
@@ -45,6 +57,12 @@ getOsModel = (deps, opts) ->
 		getDeviceTypes()
 		.then (types) ->
 			!!deviceTypesUtil.findBySlug(types, deviceType)
+
+	validateDeviceType = (deviceType) ->
+		isValidDeviceType(deviceType)
+		.then (isValid) ->
+			if not isValid
+				throw new errors.BalenaInvalidDeviceType('No such device type')
 
 	getDownloadSize = imgMakerHelper.buildApiRequester
 		buildUrl: ({ deviceType, version }) -> "/size_estimate?deviceType=#{deviceType}&version=#{version}"
@@ -138,10 +156,8 @@ getOsModel = (deps, opts) ->
 	exports.getDownloadSize = (deviceType, version = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return isValidDeviceType(deviceType)
-			.then (isValid) ->
-				if not isValid
-					throw new errors.BalenaInvalidDeviceType('No such device type')
+		return validateDeviceType(deviceType)
+			.then ->
 				getDownloadSize(deviceType, version)
 			.asCallback(callback)
 
@@ -175,10 +191,8 @@ getOsModel = (deps, opts) ->
 	exports.getSupportedVersions = (deviceType, callback) ->
 		callback = findCallback(arguments)
 
-		return isValidDeviceType(deviceType)
-			.then (isValid) ->
-				if not isValid
-					throw new errors.BalenaInvalidDeviceType('No such device type')
+		return validateDeviceType(deviceType)
+			.then  ->
 				getOsVersions(deviceType)
 			.asCallback(callback)
 
@@ -220,10 +234,8 @@ getOsModel = (deps, opts) ->
 	exports.getMaxSatisfyingVersion = (deviceType, versionOrRange = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return isValidDeviceType(deviceType)
-			.then (isValid) ->
-				if not isValid
-					throw new errors.BalenaInvalidDeviceType('No such device type')
+		return validateDeviceType(deviceType)
+			.then ->
 				exports.getSupportedVersions(deviceType)
 			.then (osVersions) ->
 				exports._getMaxSatisfyingVersion(versionOrRange, osVersions)
@@ -261,11 +273,9 @@ getOsModel = (deps, opts) ->
 	exports.getLastModified = (deviceType, version = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return isValidDeviceType(deviceType)
-			.then (isValid) ->
-				if not isValid
-					throw new errors.BalenaInvalidDeviceType('No such device type')
-				return normalizeVersion(version)
+		return validateDeviceType(deviceType)
+			.then ->
+				normalizeVersion(version)
 			.then (version) ->
 				imgMakerHelper.request
 					method: 'HEAD'
@@ -304,11 +314,9 @@ getOsModel = (deps, opts) ->
 	exports.download = onlyIf(not isBrowser) (deviceType, version = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return isValidDeviceType(deviceType)
-			.then (isValid) ->
-				if not isValid
-					throw new errors.BalenaInvalidDeviceType('No such device type')
-				return normalizeVersion(version)
+		return validateDeviceType(deviceType)
+			.then ->
+				normalizeVersion(version)
 			.then (version) ->
 				imgMakerHelper.stream
 					url: deviceImageUrl(deviceType, version)
@@ -382,6 +390,85 @@ getOsModel = (deps, opts) ->
 					body: assign(options, appId: applicationId)
 			.get('body')
 			.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+		.asCallback(callback)
+
+	###*
+	# @summary Returns whether the provided device type supports OS updates between the provided balenaOS versions
+	# @name isSupportedOsUpdate
+	# @public
+	# @function
+	# @memberof balena.models.os
+	#
+	# @param {String} deviceType - device type slug
+	# @param {String} currentVersion - semver-compatible version for the starting OS version
+	# @param {String} targetVersion - semver-compatible version for the target OS version
+	# @fulfil {Boolean} - whether upgrading the OS to the target version is supported
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(isSupported) {
+	# 	console.log(isSupported);
+	# });
+	#
+	# balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod', function(error, config) {
+	# 	if (error) throw error;
+	# 	console.log(isSupported);
+	# });
+	###
+	exports.isSupportedOsUpdate = (deviceType, currentVersion, targetVersion, callback) ->
+		validateDeviceType(deviceType)
+		.then ->
+			hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)
+		.asCallback(callback)
+
+	###*
+	# @summary Returns the supported OS update targets for the provided device type
+	# @name getSupportedOsUpdateVersions
+	# @public
+	# @function
+	# @memberof balena.models.os
+	#
+	# @param {String} deviceType - device type slug
+	# @param {String} currentVersion - semver-compatible version for the starting OS version
+	# @fulfil {Object} - the versions information, of the following structure:
+	# * versions - an array of strings,
+	# containing exact version numbers that OS update is supported
+	# * recommended - the recommended version, i.e. the most recent version
+	# that is _not_ pre-release, can be `null`
+	# * current - the provided current version after normalization
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod').then(function(isSupported) {
+	# 	console.log(isSupported);
+	# });
+	#
+	# balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod', function(error, config) {
+	# 	if (error) throw error;
+	# 	console.log(isSupported);
+	# });
+	###
+	exports.getSupportedOsUpdateVersions = (deviceType, currentVersion, callback) ->
+		exports.getSupportedVersions(deviceType)
+		.then ({ versions: allVersions }) ->
+			# use rSemver.compare to find the current version in the OS list
+			# to benefit from the baked-in normalization
+			current = find(allVersions, (v) -> rSemver.compare(v, currentVersion) == 0)
+
+			versions = allVersions.filter (v) ->
+				# avoid the extra call to validateDeviceType,
+				# since getSupportedVersions is already does that
+				hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v)
+
+			recommended = first(
+				reject(versions, rSemver.prerelease)
+			)
+
+			return {
+				versions
+				recommended
+				current
+			}
 		.asCallback(callback)
 
 	return exports

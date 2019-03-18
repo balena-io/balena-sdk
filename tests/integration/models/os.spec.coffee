@@ -1,6 +1,7 @@
 _ = require('lodash')
 m = require('mochainon')
 Promise = require('bluebird')
+rSemver = require('resin-semver')
 
 { balena, givenLoggedInUser, IS_BROWSER } = require('../setup')
 
@@ -208,6 +209,71 @@ describe 'OS model', ->
 			it 'should be rejected with an error message', ->
 				promise = balena.models.os.download('foo-bar-baz')
 				m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+	describe 'balena.models.os.isSupportedOsUpdate()', ->
+
+		describe 'given an invalid device slug', ->
+
+			it 'should be rejected with an error message', ->
+				promise = balena.models.os.isSupportedOsUpdate('foo-bar-baz', '2.0.0+rev1.prod', '2.29.2+rev1.prod')
+				m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+		describe 'given a valid device slug', ->
+
+			describe 'given a unsupported low starting version number', ->
+
+				it 'should return false', ->
+					m.chai.expect(balena.models.os.isSupportedOsUpdate('raspberrypi3', '2.0.0+rev0.prod', '2.2.0+rev2.prod'))
+					.to.eventually.equal(false)
+
+			describe 'given a unsupported low target version number', ->
+
+				it 'should return false', ->
+					m.chai.expect(balena.models.os.isSupportedOsUpdate('raspberrypi3', '2.0.0+rev1.prod', '2.1.0+rev1.prod'))
+					.to.eventually.equal(false)
+
+			describe 'given a dev starting version number', ->
+
+				it 'should return false', ->
+					m.chai.expect(balena.models.os.isSupportedOsUpdate('raspberrypi3', '2.0.0+rev1.dev', '2.2.0+rev2.prod'))
+					.to.eventually.equal(false)
+
+			describe 'given a dev target version number', ->
+
+				it 'should return false', ->
+					m.chai.expect(balena.models.os.isSupportedOsUpdate('raspberrypi3', '2.0.0+rev1.prod', '2.1.0+rev1.dev'))
+					.to.eventually.equal(false)
+
+			describe 'given a supported os update path', ->
+
+				it 'should return true', ->
+					m.chai.expect(balena.models.os.isSupportedOsUpdate('raspberrypi3', '2.0.0+rev1.prod', '2.2.0+rev2.prod'))
+					.to.eventually.equal(true)
+
+	describe 'balena.models.os.getSupportedOsUpdateVersions()', ->
+
+		describe 'given an invalid device slug', ->
+
+			it 'should be rejected with an error message', ->
+				promise = balena.models.os.getSupportedOsUpdateVersions('foo-bar-baz', '2.9.6+rev1.prod')
+				m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+		describe 'given a valid device slug', ->
+
+			it 'should return the list of supported hup targets', ->
+				balena.models.os.getSupportedOsUpdateVersions('raspberrypi3', '2.9.6+rev1.prod')
+				.then ({ current, recommended, versions }) ->
+					m.chai.expect(current).to.equal('2.9.6+rev1.prod')
+					m.chai.expect(recommended).to.be.a('string')
+					m.chai.expect(versions).to.be.an('array')
+					m.chai.expect(versions).to.not.have.length(0)
+					_.each versions, (v) ->
+						m.chai.expect(v).to.be.a('string')
+						m.chai.expect(rSemver.gte(v, current)).to.be.true
+
+					m.chai.expect(versions.length > 2).to.be.true
+					sortedVersions = versions.slice().sort(rSemver.rcompare)
+					m.chai.expect(versions).to.deep.equal(sortedVersions)
 
 	describe 'when logged in as a user with a single application', ->
 

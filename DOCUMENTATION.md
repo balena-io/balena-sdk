@@ -135,6 +135,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
             * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
+            * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
+            * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -152,6 +154,8 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+            * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
+            * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -432,6 +436,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
         * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
+        * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
+        * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -449,6 +455,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+        * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
+        * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -1680,6 +1688,8 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
     * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
+    * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
+    * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
 
 <a name="balena.models.device.tags"></a>
 
@@ -3875,6 +3885,57 @@ balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
 	...
 });
 ```
+<a name="balena.models.device.startOsUpdate"></a>
+
+##### device.startOsUpdate(uuid, targetOsVersion) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Start an OS update on a device  
+**Access**: public  
+**Fulfil**: <code>Object</code> - action response  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | full device uuid |
+| targetOsVersion | <code>String</code> | semver-compatible version for the target device Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number, a "prod" variant and greater than the one running on the device. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
+
+**Example**  
+```js
+balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
+	console.log(result.status);
+});
+```
+**Example**  
+```js
+balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod', function(error, status) {
+	if (error) throw error;
+	console.log(result.status);
+});
+```
+<a name="balena.models.device.getOsUpdateStatus"></a>
+
+##### device.getOsUpdateStatus(uuid) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the OS update status of a device  
+**Access**: public  
+**Fulfil**: <code>Object</code> - action response  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>String</code> | full device uuid |
+
+**Example**  
+```js
+balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
+	console.log(result.status);
+});
+```
+**Example**  
+```js
+balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
+	if (error) throw error;
+	console.log(result.status);
+});
+```
 <a name="balena.models.apiKey"></a>
 
 #### models.apiKey : <code>object</code>
@@ -4117,6 +4178,8 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
     * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
     * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+    * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
+    * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
 
 <a name="balena.models.os.getDownloadSize"></a>
 
@@ -4289,6 +4352,60 @@ balena.models.os.getConfig(123, { version: ''2.12.7+rev1.prod'' }).then(function
 balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }, function(error, config) {
 	if (error) throw error;
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
+});
+```
+<a name="balena.models.os.isSupportedOsUpdate"></a>
+
+##### os.isSupportedOsUpdate(deviceType, currentVersion, targetVersion) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
+**Summary**: Returns whether the provided device type supports OS updates between the provided balenaOS versions  
+**Access**: public  
+**Fulfil**: <code>Boolean</code> - whether upgrading the OS to the target version is supported  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>String</code> | device type slug |
+| currentVersion | <code>String</code> | semver-compatible version for the starting OS version |
+| targetVersion | <code>String</code> | semver-compatible version for the target OS version |
+
+**Example**  
+```js
+balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(isSupported) {
+	console.log(isSupported);
+});
+
+balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod', function(error, config) {
+	if (error) throw error;
+	console.log(isSupported);
+});
+```
+<a name="balena.models.os.getSupportedOsUpdateVersions"></a>
+
+##### os.getSupportedOsUpdateVersions(deviceType, currentVersion) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
+**Summary**: Returns the supported OS update targets for the provided device type  
+**Access**: public  
+**Fulfil**: <code>Object</code> - the versions information, of the following structure:
+* versions - an array of strings,
+containing exact version numbers that OS update is supported
+* recommended - the recommended version, i.e. the most recent version
+that is _not_ pre-release, can be `null`
+* current - the provided current version after normalization  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>String</code> | device type slug |
+| currentVersion | <code>String</code> | semver-compatible version for the starting OS version |
+
+**Example**  
+```js
+balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod').then(function(isSupported) {
+	console.log(isSupported);
+});
+
+balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod', function(error, config) {
+	if (error) throw error;
+	console.log(isSupported);
 });
 ```
 <a name="balena.models.config"></a>
