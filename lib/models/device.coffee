@@ -24,25 +24,31 @@ find = require('lodash/find')
 some = require('lodash/some')
 includes = require('lodash/includes')
 map = require('lodash/map')
+rSemver = require('resin-semver')
 semver = require('semver')
 errors = require('balena-errors')
 deviceStatus = require('resin-device-status')
 
 {
-	onlyIf,
-	isId,
-	findCallback,
-	getCurrentServiceDetailsPineOptions,
-	generateCurrentServiceDetails,
-	mergePineOptions,
-	notFoundResponse,
-	noDeviceForKeyResponse,
-	treatAsMissingDevice,
-	LOCKED_STATUS_CODE,
-	timeSince,
+	onlyIf
+	isId
+	findCallback
+	getCurrentServiceDetailsPineOptions
+	getOsUpdateHelper: _getOsUpdateHelper
+	generateCurrentServiceDetails
+	mergePineOptions
+	notFoundResponse
+	noDeviceForKeyResponse
+	treatAsMissingDevice
+	LOCKED_STATUS_CODE
+	timeSince
 	isUniqueKeyViolationResponse
 } = require('../util')
-{ normalizeDeviceOsVersion } = require('../util/device-os-version')
+{ hupActionHelper } = require('../util/device-actions/os-update/utils')
+{
+	getDeviceOsSemverWithVariant
+	normalizeDeviceOsVersion
+} = require('../util/device-os-version')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -60,11 +66,12 @@ CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
 getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
-	{ apiUrl, dashboardUrl } = opts
+	{ apiUrl, dashboardUrl, deviceUrlsBase } = opts
 
 	registerDevice = require('resin-register-device')({ request })
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
+	osModel = once -> require('./os')(deps, opts)
 	auth = require('../auth')(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
@@ -98,6 +105,15 @@ getDeviceModel = (deps, opts) ->
 	# Infer dashboardUrl from apiUrl if former is undefined
 	if not dashboardUrl?
 		dashboardUrl = apiUrl.replace(/api/, 'dashboard')
+
+	getDeviceUrlsBase = once Promise.method ->
+		if deviceUrlsBase?
+			return deviceUrlsBase
+		return configModel().getAll().get('deviceUrlsBase')
+
+	getOsUpdateHelper = once ->
+		getDeviceUrlsBase().then (deviceUrlsBase) ->
+			_getOsUpdateHelper(deviceUrlsBase, request)
 
 	# Internal method for uuid/id disambiguation
 	# Note that this throws an exception for missing uuids, but not missing ids
@@ -1691,7 +1707,7 @@ getDeviceModel = (deps, opts) ->
 			if not hasDeviceUrl
 				throw new Error("Device is not web accessible: #{uuidOrId}")
 
-			configModel().getAll().get('deviceUrlsBase').then (deviceUrlsBase) ->
+			getDeviceUrlsBase().then (deviceUrlsBase) ->
 				exports.get(uuidOrId, $select: 'uuid').get('uuid').then (uuid) ->
 					return "https://#{uuid}.#{deviceUrlsBase}"
 		.asCallback(callback)
@@ -2168,6 +2184,140 @@ getDeviceModel = (deps, opts) ->
 				resource: 'device'
 				id: deviceId
 				body: should_be_running__release: null
+		.asCallback(callback)
+
+	###*
+	# @summary Check whether the provided device can update to the target os version
+	# @name _checkOsUpdateTarget
+	# @private
+	# @function
+	# @memberof balena.models.device
+	#
+	# @description
+	# utility method exported for testability
+	#
+	# @param {Object} device - A device object
+	# @param {String} targetOsVersion - semver-compatible version for the target device
+	# @throws Exception if update isn't supported
+	# @returns {undefined}
+	###
+	exports._checkOsUpdateTarget = ({ uuid, device_type, is_online, os_version, os_variant }, targetOsVersion) ->
+		if not uuid
+			throw new Error('The uuid of the device is not available')
+
+		if not is_online
+			throw new Error("The device is offline: #{uuid}")
+
+		if not os_version
+			throw new Error("The current os version of the device is not available: #{uuid}")
+
+		if not device_type
+			throw new Error("The device type of the device is not available: #{uuid}")
+
+		# error the property is missing
+		if os_variant == undefined
+			throw new Error("The os variant of the device is not available: #{uuid}")
+
+		currentOsVersion = getDeviceOsSemverWithVariant({
+			os_version
+			os_variant
+		})
+
+		# if the os_version couldn't be parsed
+		# rely on getHUPActionType to throw an error
+		currentOsVersion = currentOsVersion || os_version
+
+		# this will throw an error if the action isn't available
+		hupActionHelper.getHUPActionType(device_type, currentOsVersion, targetOsVersion)
+		return
+
+	###*
+	# @summary Start an OS update on a device
+	# @name startOsUpdate
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String} uuid - full device uuid
+	# @param {String} targetOsVersion - semver-compatible version for the target device
+	# Unsupported (unpublished) version will result in rejection.
+	# The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
+	# To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
+	# @fulfil {Object} - action response
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
+	# 	console.log(result.status);
+	# });
+	#
+	# @example
+	# balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod', function(error, status) {
+	# 	if (error) throw error;
+	# 	console.log(result.status);
+	# });
+	###
+	exports.startOsUpdate = (uuid, targetOsVersion, callback) ->
+		Promise.try ->
+			if not targetOsVersion
+				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
+
+			exports.get(uuid, $select: [
+				'device_type'
+				'is_online'
+				'os_version'
+				'os_variant'
+			])
+		.then (device) ->
+			device.uuid = uuid
+			# this will throw an error if the action isn't available
+			exports._checkOsUpdateTarget(device, targetOsVersion)
+
+			osModel().getSupportedVersions(device.device_type)
+		.then ({ versions: allVersions }) ->
+			if !some(allVersions, (v) -> rSemver.compare(v, targetOsVersion) == 0)
+				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
+
+			getOsUpdateHelper()
+		.then (osUpdateHelper) ->
+			osUpdateHelper.startOsUpdate(uuid, targetOsVersion)
+		.asCallback(callback)
+
+	###*
+	# @summary Get the OS update status of a device
+	# @name getOsUpdateStatus
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String} uuid - full device uuid
+	# @fulfil {Object} - action response
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
+	# 	console.log(result.status);
+	# });
+	#
+	# @example
+	# balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
+	# 	if (error) throw error;
+	# 	console.log(result.status);
+	# });
+	###
+	exports.getOsUpdateStatus = (uuid, callback) ->
+		getOsUpdateHelper().then (osUpdateHelper) ->
+			osUpdateHelper.getOsUpdateStatus(uuid)
+		.catch (err) ->
+			if err.statusCode != 400
+				throw err
+
+			# as an attempt to reduce the requests for this method
+			# check whether the device exists only when the request rejects
+			# so that it's rejected with the appropriate BalenaDeviceNotFound error
+			return exports.get(uuid, $select: 'id')
+			# if the device exists, then re-throw the original error
+			.throw(err)
 		.asCallback(callback)
 
 	###*

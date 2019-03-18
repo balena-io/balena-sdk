@@ -1,4 +1,6 @@
+includes = require('lodash/includes')
 isEmpty = require('lodash/isEmpty')
+rSemver = require('resin-semver')
 { isProvisioned } = require('.')
 
 exports.normalizeDeviceOsVersion = (device) ->
@@ -6,3 +8,20 @@ exports.normalizeDeviceOsVersion = (device) ->
 		device.os_version = 'Resin OS 1.0.0-pre'
 
 	return
+
+exports.getDeviceOsSemverWithVariant = ({ os_version, os_variant }) ->
+	if !os_version
+		return null
+
+	versionInfo = rSemver.parse(os_version)
+	if !versionInfo
+		return null
+
+	version = versionInfo.version
+	if os_variant and !includes(versionInfo.build.concat(versionInfo.prerelease), os_variant)
+		versionInfo.build.push(os_variant)
+
+	if !isEmpty(versionInfo.build)
+		version = "#{version}+#{versionInfo.build.join('.')}"
+
+	return version

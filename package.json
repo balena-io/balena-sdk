@@ -100,6 +100,7 @@
     "abortcontroller-polyfill": "^1.1.9",
     "balena-auth": "^3.0.0",
     "balena-errors": "^4.0.0",
+    "balena-hup-action-utils": "~1.0.0",
     "balena-pine": "^9.0.0",
     "balena-request": "^10.0.0",
     "balena-settings-client": "^4.0.0",
@@ -112,6 +113,7 @@
     "promise-memoize": "^1.2.0",
     "resin-device-status": "^1.0.1",
     "resin-register-device": "^5.0.0",
+    "resin-semver": "^1.5.0",
     "semver": "^5.3.0"
   },
   "lint-staged": {

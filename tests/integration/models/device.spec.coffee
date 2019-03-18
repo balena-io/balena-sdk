@@ -807,6 +807,87 @@ describe 'Device Model', ->
 				.then (hasLockOverride) ->
 					m.chai.expect(hasLockOverride).to.be.false
 
+		describe 'balena.models.device.getOsUpdateStatus()', ->
+
+			it 'should be able to get the current OS update status', ->
+				balena.models.device.getOsUpdateStatus(@device.uuid)
+				.then (status) ->
+					m.chai.expect(status).to.deep.match({
+						status: 'idle'
+					})
+
+			it 'should be rejected if the device does not exist', ->
+				promise = balena.models.device.getOsUpdateStatus('asdfghjkl')
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+		describe 'balena.models.device.startOsUpdate()', ->
+
+			it 'should not be able to start an OS update without providing a targetOsVersion parameter', ->
+				promise = balena.models.device.startOsUpdate(@device.uuid)
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'BalenaInvalidParameterError')
+
+			it 'should not be able to start an OS update for an offline device', ->
+				promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
+				m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.uuid}")
+
+			it 'should be rejected if the device does not exist', ->
+				promise = balena.models.device.startOsUpdate('asdfghjkl', '2.29.2+rev1.prod')
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+			it 'should not be able to start an OS update for a device that has not yet reported its current version', ->
+				balena.pine.patch
+					resource: 'device'
+					id: @device.id
+					body: is_online: true
+				.then =>
+					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
+					m.chai.expect(promise).to.be.rejectedWith("The current os version of the device is not available: #{@device.uuid}")
+
+			it 'should not be able to start an OS update when the target os version is not specified', ->
+				balena.pine.patch
+					resource: 'device'
+					id: @device.id
+					body:
+						is_online: true
+						os_variant: 'prod'
+						os_version: 'Resin OS 2.7.8+rev1'
+				.then =>
+					promise = balena.models.device.startOsUpdate(@device.uuid)
+					m.chai.expect(promise).to.be.rejectedWith("undefined is not a valid value for parameter 'targetOsVersion'")
+					.and.eventually.have.property('code', 'BalenaInvalidParameterError')
+
+			it 'should not be able to start an OS update when the target os version does not exist', ->
+				balena.pine.patch
+					resource: 'device'
+					id: @device.id
+					body:
+						is_online: true
+						os_variant: 'prod'
+						os_version: 'Resin OS 2.7.8+rev1'
+				.then =>
+					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.1+rev1.prod')
+					m.chai.expect(promise).to.be.rejectedWith("2.29.1+rev1.prod is not a valid value for parameter 'targetOsVersion'")
+					.and.eventually.have.property('code', 'BalenaInvalidParameterError')
+
+			# just to confirm that the above checks do not give false positives,
+			# allow the request to reach the actions server and document the current error
+			it 'should not be able to start an OS update for a fake device', ->
+				balena.pine.patch
+					resource: 'device'
+					id: @device.id
+					body:
+						is_online: true
+						os_variant: 'prod'
+						os_version: 'Resin OS 2.7.8+rev1'
+				.then =>
+					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
+					m.chai.expect(promise).to.be.rejected
+					.then (error) ->
+						m.chai.expect(error).to.have.property('statusCode', 500)
+						m.chai.expect(error).to.have.property('message', 'Request error: [object Object]')
+						m.chai.expect(error.code).to.not.equal('BalenaInvalidParameterError')
+
 		describe 'balena.models.device.tags', ->
 
 			appTagTestOptions =
@@ -1369,3 +1450,409 @@ describe 'Device Model', ->
 				m.chai.expect(
 					balena.models.device.lastOnline(mockDevice)
 				).to.equal('5 minutes ago')
+
+		describe 'balena.models.device._checkOsUpdateTarget()', ->
+
+			uuid = balena.models.device.generateUniqueKey()
+
+			it 'should throw when the current os version is invalid', ->
+				[
+					['Resin OS ', 'dev']
+					['Resin OS ', 'prod']
+					['Resin OS 2.0-beta.8', '']
+				].forEach ([os_version, os_variant]) ->
+					mockDevice = {
+						uuid
+						device_type: 'raspberrypi3'
+						is_online: true
+						os_version
+						os_variant
+					}
+
+					m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+						mockDevice
+						'2.29.2+rev1.prod'
+					)).to.throw('Invalid current balenaOS version')
+
+			it 'should throw when the device is offline', ->
+				[
+					['Resin OS 1.21.0', '', '1.28.0']
+					['Resin OS 1.30.1', '', '2.5.0+rev1']
+					['balenaOS 2.26.0+rev1', 'prod', '2.29.2+rev1.prod']
+				].forEach ([os_version, os_variant, target_os_version]) ->
+					mockDevice = {
+						uuid
+						device_type: 'raspberrypi3'
+						is_online: false
+						os_version
+						os_variant
+					}
+
+					m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+						mockDevice
+						target_os_version
+					)).to.throw('The device is offline')
+
+			it 'should throw when the device is running a dev version', ->
+				[
+					['Resin OS 2.0.0+rev3 (dev)', 'dev']
+					['Resin OS 2.0.0+rev3 (dev)', '']
+					['Resin OS 2.0.0+rev5 (dev)', '']
+					['Resin OS 2.0.2+rev2', 'dev']
+					['Resin OS 2.0.3+rev1', 'dev']
+					['Resin OS 2.0.4+rev1', 'dev']
+					['Resin OS 2.0.5', 'dev']
+					['Resin OS 2.0.5+rev1', 'dev']
+					['Resin OS 2.0.6+rev1', 'dev']
+					['Resin OS 2.0.6+rev2', 'dev']
+					['Resin OS 2.1.0+rev1', 'dev']
+					['Resin OS 2.2.0+rev1', 'dev']
+					['Resin OS 2.9.7+rev1', 'dev']
+					['Resin OS 2.12.0+rev1', 'dev']
+					['Resin OS 2.12.1+rev1', 'dev']
+					['Resin OS 2.12.3', 'dev']
+					['Resin OS 2.12.3+rev1', 'dev']
+					['balenaOS 2.26.0', 'dev']
+					['balenaOS 2.26.0+rev1', 'dev']
+					['balenaOS 2.28.0+rev1', 'dev']
+				].forEach ([os_version, os_variant]) ->
+					mockDevice = {
+						uuid
+						device_type: 'raspberrypi3'
+						is_online: true
+						os_version
+						os_variant
+					}
+
+					m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+						mockDevice
+						'2.29.2+rev1.prod'
+					)).to.throw('Updates cannot be performed on development balenaOS variants')
+
+			it 'should throw when the device is running a pre-release version', ->
+				[
+					['Resin OS 2.0.0-beta.1', '']
+					['Resin OS 2.0.0-beta.3', '']
+					['Resin OS 2.0.0-beta11.rev1', '']
+					['Resin OS 2.0.0-beta.8', '']
+					['Resin OS 2.0.0-beta.8', 'prod']
+					['balenaOS 2.0.0-beta12.rev1', 'prod']
+					['Resin OS 2.0.0-rc1.rev1', '']
+					['Resin OS 2.0.0-rc1.rev2', 'prod']
+					['Resin OS 2.0.0-rc1.rev2', '']
+					['Resin OS 2.0.0-rc6.rev1 (prod)', '']
+					['Resin OS 2.0.1-beta.4', '']
+					['Resin OS 2.0.2-beta.2', '']
+					['Resin OS 2.0.2-beta.7', '']
+					['Resin OS 2.9.0-multi1+rev1', 'dev']
+					['balenaOS 2.28.0-beta1.rev1', 'prod']
+				].forEach ([os_version, os_variant]) ->
+					mockDevice = {
+						uuid
+						device_type: 'raspberrypi3'
+						is_online: true
+						os_version
+						os_variant
+					}
+
+					m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+						mockDevice
+						'2.29.2+rev1.prod'
+					)).to.throw('Updates cannot be performed on pre-release balenaOS versions')
+
+			describe 'v1 -> v1 hup', ->
+
+				[
+					'raspberrypi3'
+					'intel-nuc'
+				].forEach (device_type) ->
+
+					describe "given a #{device_type}", ->
+
+						it 'should throw when current os version is < 1.8.0', ->
+							[
+								['Resin OS 1.2.1', '']
+								['Resin OS 1.6.0', '']
+								['Resin OS 1.7.2', '']
+							].forEach ([os_version, os_variant]) ->
+								mockDevice = {
+									uuid
+									device_type
+									is_online: true
+									os_version
+									os_variant
+								}
+
+								m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+									mockDevice
+									'1.26.0'
+								)).to.throw('Current OS version must be >= 1.8.0')
+
+						it 'should throw when the target os version is below the min supported v1 version', ->
+							[
+								['Resin OS 1.8.0', '']
+								['Resin OS 1.10.0', '']
+								['Resin OS 1.19.0', '']
+								['Resin OS 1.21.0', '']
+							].forEach ([os_version, os_variant]) ->
+								mockDevice = {
+									uuid
+									device_type
+									is_online: true
+									os_version
+									os_variant
+								}
+
+								m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+									mockDevice
+									'1.25.0'
+								)).to.throw('Target OS version must be >= 1.26.0')
+
+						it 'should not throw when it is a valid v1 -> v1 hup', ->
+							[
+								['Resin OS 1.8.0', '']
+								['Resin OS 1.10.0', '']
+								['Resin OS 1.19.0', '']
+								['Resin OS 1.21.0', '']
+							].forEach ([os_version, os_variant]) ->
+								mockDevice = {
+									uuid
+									device_type
+									is_online: true
+									os_version
+									os_variant
+								}
+
+								m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+									mockDevice
+									'1.28.0'
+								)).to.not.throw()
+
+			describe 'v1 -> v2 hup', ->
+
+				describe 'given a raspberrypi3', ->
+
+					it 'should throw when current os version is < 1.8.0', ->
+						[
+							['Resin OS 1.2.1', '']
+							['Resin OS 1.6.0', '']
+							['Resin OS 1.7.2', '']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'raspberrypi3'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.5.0+rev1'
+							)).to.throw('Current OS version must be >= 1.8.0')
+
+					it 'should not throw when it is a valid v1 -> v2 hup', ->
+						[
+							['Resin OS 1.8.0', '']
+							['Resin OS 1.10.0', '']
+							['Resin OS 1.19.0', '']
+							['Resin OS 1.21.0', '']
+							['Resin OS 1.26.1', '']
+							['Resin OS 1.30.1', '']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'raspberrypi3'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.5.0+rev1'
+							)).to.not.throw()
+
+				describe 'given a beaglebone-black', ->
+
+					it 'should throw when current os version is < 1.30.1', ->
+						[
+							['Resin OS 1.2.1', '']
+							['Resin OS 1.6.0', '']
+							['Resin OS 1.7.2', '']
+							['Resin OS 1.8.0', '']
+							['Resin OS 1.10.0', '']
+							['Resin OS 1.19.0', '']
+							['Resin OS 1.21.0', '']
+							['Resin OS 1.26.1', '']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'beaglebone-black'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.5.0+rev1'
+							)).to.throw('Current OS version must be >= 1.30.1')
+
+					it 'should not throw when it is a valid v1 -> v2 hup', ->
+						[
+							['Resin OS 1.30.1', '']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'beaglebone-black'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.5.0+rev1'
+							)).to.not.throw()
+
+			describe 'v2 -> v2 hup', ->
+
+				describe 'given a raspberrypi3', ->
+
+					it 'should throw when current os version is < 2.0.0+rev1', ->
+						[
+							['Resin OS 2.0.0.rev0 (prod)', 'prod']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'raspberrypi3'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.1.0+rev1.prod'
+							)).to.throw('Current OS version must be >= 2.0.0+rev1')
+
+					it 'should not throw when it is a valid v2 -> v2 hup', ->
+						[
+							['Resin OS 2.0.0.rev1 (prod)', 'prod']
+							['Resin OS 2.0.0.rev1 (prod)', '']
+							['Resin OS 2.0.0+rev2', 'prod']
+							['Resin OS 2.0.0+rev2 (prod)', 'prod']
+							['Resin OS 2.0.0+rev2 (prod)', '']
+							['Resin OS 2.0.0+rev3', 'prod']
+							['Resin OS 2.0.0+rev3 (prod)', 'prod']
+							['Resin OS 2.0.0+rev3 (prod)', '']
+							['Resin OS 2.0.0+rev4 (prod)', 'prod']
+							['Resin OS 2.0.0+rev4 (prod)', '']
+							['Resin OS 2.0.0+rev5 (prod)', 'prod']
+							['Resin OS 2.0.1.rev1', '']
+							['Resin OS 2.0.2+rev2', '']
+							['Resin OS 2.0.3+rev1', 'prod']
+							['Resin OS 2.0.4+rev1', 'prod']
+							['Resin OS 2.0.4+rev2', 'prod']
+							['Resin OS 2.0.5+rev1', 'prod']
+							['Resin OS 2.0.6+rev1', 'prod']
+							['Resin OS 2.0.6+rev2', 'prod']
+							['Resin OS 2.0.6+rev2', '']
+							['Resin OS 2.1.0+rev1', 'prod']
+							['Resin OS 2.2.0+rev1', 'prod']
+							['Resin OS 2.9.7+rev1', 'prod']
+							['Resin OS 2.12.0+rev1', 'prod']
+							['Resin OS 2.12.1+rev1', 'prod']
+							['balenaOS 2.26.0+rev1', 'prod']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'raspberrypi3'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.29.2+rev1.prod'
+							)).to.not.throw()
+
+				describe 'given a jetson-tx2', ->
+
+					it 'should throw when current os version is < 2.7.4', ->
+						[
+							['Resin OS 2.0.0.rev1 (prod)', 'prod']
+							['Resin OS 2.0.0.rev1 (prod)', '']
+							['Resin OS 2.0.0+rev2', 'prod']
+							['Resin OS 2.0.0+rev2 (prod)', 'prod']
+							['Resin OS 2.0.0+rev2 (prod)', '']
+							['Resin OS 2.0.0.rev1 (prod)', 'prod']
+							['Resin OS 2.0.0.rev1 (prod)', '']
+							['Resin OS 2.0.0+rev2', 'prod']
+							['Resin OS 2.0.0+rev2 (prod)', 'prod']
+							['Resin OS 2.0.0+rev2 (prod)', '']
+							['Resin OS 2.0.0+rev3', 'prod']
+							['Resin OS 2.0.0+rev3 (prod)', 'prod']
+							['Resin OS 2.0.0+rev3 (prod)', '']
+							['Resin OS 2.0.0+rev4 (prod)', 'prod']
+							['Resin OS 2.0.0+rev4 (prod)', '']
+							['Resin OS 2.0.0+rev5 (prod)', 'prod']
+							['Resin OS 2.0.1.rev1', '']
+							['Resin OS 2.0.2+rev2', '']
+							['Resin OS 2.0.3+rev1', 'prod']
+							['Resin OS 2.0.4+rev1', 'prod']
+							['Resin OS 2.0.4+rev2', 'prod']
+							['Resin OS 2.0.5+rev1', 'prod']
+							['Resin OS 2.0.6+rev1', 'prod']
+							['Resin OS 2.0.6+rev2', 'prod']
+							['Resin OS 2.0.6+rev2', '']
+							['Resin OS 2.1.0+rev1', 'prod']
+							['Resin OS 2.2.0+rev1', 'prod']
+							['Resin OS 2.3.0+rev1', 'prod']
+							['Resin OS 2.3.0+rev2', 'prod']
+							['Resin OS 2.4.1+rev1', 'prod']
+							['Resin OS 2.4.2+rev1', 'prod']
+							['Resin OS 2.6.0+rev1', 'prod']
+							['Resin OS 2.7.2+rev1', 'prod']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'jetson-tx2'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.29.2+rev1.prod'
+							)).to.throw('Current OS version must be >= 2.7.4')
+
+					it 'should not throw when it is a valid v2 -> v2 hup', ->
+						[
+							['Resin OS 2.7.4+rev1', 'prod']
+							['Resin OS 2.7.4+rev2', 'prod']
+							['Resin OS 2.7.5+rev1', 'prod']
+							['Resin OS 2.7.5+rev2', 'prod']
+							['Resin OS 2.7.6+rev1', 'prod']
+							['Resin OS 2.7.8+rev1', 'prod']
+							['Resin OS 2.7.8+rev2', 'prod']
+							['Resin OS 2.9.7+rev1', 'prod']
+							['Resin OS 2.12.0+rev1', 'prod']
+							['Resin OS 2.12.1+rev1', 'prod']
+							['balenaOS 2.26.0+rev1', 'prod']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'jetson-tx2'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.29.2+rev1.prod'
+							)).to.not.throw()
