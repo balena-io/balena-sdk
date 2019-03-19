@@ -108,16 +108,24 @@ Run the test suite by doing:
 $ npm test
 ```
 
+In order to make the develop & test cycle faster, you can use [mocha's `.only` & `.skip`](https://mochajs.org/#exclusive-tests) variants
+to only run the subset of the test cases that is relevant to your changes/additions. You should make sure to remove those from
+your code before you push and make sure that the complete test suite completes successfully.
+
 Contribute
 ----------
 
 - Issue Tracker: [github.com/balena-io/balena-sdk/issues](https://github.com/balena-io/balena-sdk/issues)
 - Source Code: [github.com/balena-io/balena-sdk](https://github.com/balena-io/balena-sdk)
 
-Before submitting a PR, please make sure that you include tests, and that [coffeelint](http://www.coffeelint.org/) runs without any warning:
+Before submitting a PR, please make sure that you
+* don't have uncommited changes on the documentation or the build output
+* don't have any `.only` or `.skip` in your tests
+* include typings for new methods
+* include tests and that they pass
 
 ```sh
-$ gulp lint
+$ npm test
 ```
 
 License
