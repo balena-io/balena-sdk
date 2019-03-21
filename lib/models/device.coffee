@@ -52,7 +52,7 @@ deviceStatus = require('resin-device-status')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
-# prerelase supervisor version, which precedes 1.8.0 but comes after 1.8.0-alpha.0
+# prerelease supervisor version, which precedes 1.8.0 but comes after 1.8.0-alpha.0
 # according to semver.
 MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0'
 
@@ -1359,6 +1359,46 @@ getDeviceModel = (deps, opts) ->
 					appId: device.belongs_to__application[0].id
 					data:
 						force: Boolean(options.force)
+		.asCallback(callback)
+
+	###*
+	# @summary Get the supervisor state on a device
+	# @name getSupervisorState
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
+	#	 	console.log(state);
+	# });
+	#
+	# @example
+	# balena.models.device.getSupervisorState(123).then(function(state) {
+	#	 	console.log(state);
+	# });
+	#
+	# @example
+	# balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
+	# 		if (error) throw error;
+	#	 	console.log(state);
+	# });
+	###
+	exports.getSupervisorState = (uuidOrId, callback) ->
+		exports.get uuidOrId,
+			$select: 'uuid'
+		.then ({ uuid }) ->
+			return request.send
+				method: 'POST'
+				url: '/supervisor/v1/device'
+				baseUrl: apiUrl
+				body:
+					uuid: uuid
+					method: 'GET'
+		.get('body')
 		.asCallback(callback)
 
 	###*
