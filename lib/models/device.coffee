@@ -1362,6 +1362,42 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
+	# @summary Get the target supervisor state on a device
+	# @name getSupervisorTargetState
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.getSupervisorTargetState('7cf02a6').then(function(state) {
+	# 	console.log(state);
+	# });
+	#
+	# @example
+	# balena.models.device.getSupervisorTargetState(123).then(function(state) {
+	# 	console.log(state);
+	# });
+	#
+	# @example
+	# balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
+	# 	if (error) throw error;
+	# 	console.log(state);
+	# });
+	###
+	exports.getSupervisorTargetState = (uuidOrId, callback) ->
+		exports.get uuidOrId,
+			$select: 'uuid'
+		.then ({ uuid }) ->
+			return request.send
+				url: "/device/v2/#{uuid}/state"
+				baseUrl: apiUrl
+		.get('body')
+		.asCallback(callback)
+
+	###*
 	# @summary Get the supervisor state on a device
 	# @name getSupervisorState
 	# @public
@@ -1373,18 +1409,18 @@ getDeviceModel = (deps, opts) ->
 	#
 	# @example
 	# balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
-	#	 	console.log(state);
+	#	console.log(state);
 	# });
 	#
 	# @example
 	# balena.models.device.getSupervisorState(123).then(function(state) {
-	#	 	console.log(state);
+	# 	console.log(state);
 	# });
 	#
 	# @example
 	# balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
-	# 		if (error) throw error;
-	#	 	console.log(state);
+	# 	if (error) throw error;
+	# 	console.log(state);
 	# });
 	###
 	exports.getSupervisorState = (uuidOrId, callback) ->

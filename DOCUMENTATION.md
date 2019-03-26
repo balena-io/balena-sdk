@@ -111,6 +111,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
             * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+            * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
             * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
             * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
@@ -413,6 +414,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
         * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+        * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
         * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
         * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
@@ -1666,6 +1668,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
     * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+    * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
     * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
     * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
@@ -3249,6 +3252,36 @@ balena.models.device.update('7cf02a6', {
 	if (error) throw error;
 });
 ```
+<a name="balena.models.device.getSupervisorTargetState"></a>
+
+##### device.getSupervisorTargetState(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the target supervisor state on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.getSupervisorTargetState('7cf02a6').then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
+balena.models.device.getSupervisorTargetState(123).then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
+balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
+	if (error) throw error;
+	console.log(state);
+});
+```
 <a name="balena.models.device.getSupervisorState"></a>
 
 ##### device.getSupervisorState(uuidOrId) ⇒ <code>Promise</code>
@@ -3263,20 +3296,20 @@ balena.models.device.update('7cf02a6', {
 **Example**  
 ```js
 balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
-	 	console.log(state);
+	console.log(state);
 });
 ```
 **Example**  
 ```js
 balena.models.device.getSupervisorState(123).then(function(state) {
-	 	console.log(state);
+	console.log(state);
 });
 ```
 **Example**  
 ```js
 balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
-		if (error) throw error;
-	 	console.log(state);
+	if (error) throw error;
+	console.log(state);
 });
 ```
 <a name="balena.models.device.getDisplayName"></a>
