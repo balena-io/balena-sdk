@@ -100,7 +100,7 @@
     "abortcontroller-polyfill": "^1.1.9",
     "balena-auth": "^3.0.0",
     "balena-errors": "^4.0.0",
-    "balena-hup-action-utils": "~1.0.0",
+    "balena-hup-action-utils": "~1.1.0",
     "balena-pine": "^9.0.0",
     "balena-request": "^10.0.0",
     "balena-settings-client": "^4.0.0",
