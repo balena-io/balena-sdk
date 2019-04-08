@@ -1,4 +1,5 @@
 m = require('mochainon')
+Promise = require('bluebird')
 _ = require('lodash')
 
 {
