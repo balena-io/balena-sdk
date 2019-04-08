@@ -469,7 +469,7 @@ describe 'Application Model', ->
 					id: @application.organization.__id
 					options:
 						$expand:
-							user__is_member_of__organization:
+							organization_membership:
 								$filter:
 									organization_membership_role:
 										$any:
@@ -477,7 +477,7 @@ describe 'Application Model', ->
 											$expr: omr: name: 'personal'
 
 				.then (organization) =>
-					userId = organization.user__is_member_of__organization[0].user.__id
+					userId = organization.organization_membership[0].user.__id
 
 					balena.pine.post
 						resource: 'release'

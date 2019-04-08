@@ -45,7 +45,7 @@ describe 'Balena SDK', ->
 		ignoreUserInfoCalls = (fn) ->
 			(arg) ->
 				if /\/user\/v1\/whoami/.test(arg.url) or
-				new RegExp("/#{balena.pine.API_VERSION}/user\\(\\d+\\)\\?\\$select=owns__organization").test(arg.url)
+				new RegExp("/#{balena.pine.API_VERSION}/organization_membership\\?\\$select=is_member_of__organization&\\$filter=\\(user eq \\d+\\) and \\(organization_membership_role/any\\(omr:omr/name eq 'personal'\\)\\)").test(arg.url)
 					return arg
 				return fn(arg)
 

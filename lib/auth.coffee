@@ -311,7 +311,7 @@ getAuth = (deps, opts) ->
 				return organizationId
 
 			pine.get
-				resource: 'user__is_member_of__organization'
+				resource: 'organization_membership'
 				options:
 					$select: [ 'is_member_of__organization' ]
 					$filter:
