@@ -167,9 +167,7 @@ declare namespace BalenaSdk {
 
 		application: ReverseNavigationResource<Application>;
 		owns__team: ReverseNavigationResource<Team>;
-		user__is_member_of__organization: ReverseNavigationResource<
-			OrganizationMember
-		>;
+		organization_membership: ReverseNavigationResource<OrganizationMember>;
 	}
 
 	interface Team {
@@ -219,9 +217,7 @@ declare namespace BalenaSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
-		user__is_member_of__organization: ReverseNavigationResource<
-			OrganizationMember
-		>;
+		organization_membership: ReverseNavigationResource<OrganizationMember>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
 		// this is what the api route returns
