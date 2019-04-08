@@ -1059,7 +1059,8 @@ describe 'Device Model', ->
 						configVarModel.remove(@device.id, 'BALENA_B_BY_APPLICATION')
 					]
 
-		describe 'balena.models.device.envVar', ->
+		# TODO: Remove this before merge
+		describe.skip 'balena.models.device.envVar', ->
 
 			givenAnApplicationWithADevice(before)
 
