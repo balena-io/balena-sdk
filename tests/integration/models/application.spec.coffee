@@ -465,19 +465,17 @@ describe 'Application Model', ->
 
 			beforeEach ->
 				balena.pine.get
-					resource: 'organization'
-					id: @application.organization.__id
+					resource: 'organization_membership'
 					options:
-						$expand:
-							organization_membership:
-								$filter:
-									organization_membership_role:
-										$any:
-											$alias: 'omr'
-											$expr: omr: name: 'personal'
-
-				.then (organization) =>
-					userId = organization.organization_membership[0].user.__id
+						$select: [ 'user' ]
+						$filter:
+							is_member_of__organization: @application.organization.__id
+							organization_membership_role:
+								$any:
+									$alias: 'omr'
+									$expr: omr: name: 'personal'
+				.then ([organizationMembership]) =>
+					userId = organizationMembership.user.__id
 
 					balena.pine.post
 						resource: 'release'
