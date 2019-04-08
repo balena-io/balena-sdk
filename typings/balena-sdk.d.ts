@@ -178,7 +178,6 @@ declare namespace BalenaSdk {
 		user__is_member_of__organization: ReverseNavigationResource<
 			OrganizationMember
 		>;
-		is_owned_by__user: ReverseNavigationResource<User>;
 	}
 
 	interface Team {
@@ -227,8 +226,6 @@ declare namespace BalenaSdk {
 		public_key?: boolean;
 		twoFactorRequired?: boolean;
 		username: string;
-
-		owns__organization: NavigationResource<Organization>;
 
 		user__is_member_of__organization: ReverseNavigationResource<
 			OrganizationMember

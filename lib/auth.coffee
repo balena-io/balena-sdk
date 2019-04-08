@@ -311,11 +311,17 @@ getAuth = (deps, opts) ->
 				return organizationId
 
 			pine.get
-				resource: 'user'
-				id: id
-				options: $select: [ 'owns__organization' ]
-
-			.get('owns__organization')
+				resource: 'user__is_member_of__organization'
+				options:
+					$select: [ 'is_member_of__organization' ]
+					$filter:
+						user: id
+						organization_membership_role:
+							$any:
+								$alias: 'omr'
+								$expr: omr: name: 'personal'
+			.get(0)
+			.get('is_member_of__organization')
 			.get('__id')
 			.tap (organizationId) ->
 				userDetailsCache?.organizationId = organizationId
