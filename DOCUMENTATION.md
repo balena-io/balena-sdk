@@ -5580,10 +5580,6 @@ can be used to listen for logs as they appear, line by line.
 **Summary**: Subscribe to device logs  
 **Access**: public  
 **Fulfil**: [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
-**Todo**
-
-- [ ] We should consider making this a readable stream.
-
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |

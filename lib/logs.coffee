@@ -140,9 +140,6 @@ getLogs = (deps, opts) ->
 	# @fulfil {balena.logs.LogSubscription}
 	# @returns {Promise}
 	#
-	# @todo
-	# We should consider making this a readable stream.
-	#
 	# @example
 	# balena.logs.subscribe('7cf02a6').then(function(logs) {
 	# 	logs.on('line', function(line) {
@@ -167,6 +164,7 @@ getLogs = (deps, opts) ->
 	# });
 	###
 	exports.subscribe = (uuidOrId, options, callback) ->
+		# TODO: We should consider making this a readable stream.
 		callback = findCallback(arguments)
 
 		deviceModel.get(uuidOrId, $select: 'uuid')
