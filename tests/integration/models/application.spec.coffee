@@ -64,7 +64,10 @@ describe 'Application Model', ->
 						parent: parentApplication.id
 				.then ->
 					# application.getAll() doesn't return dependent apps
-					balena.pine.get(resource: 'application')
+					balena.pine.get
+						resource: 'application'
+						options:
+							$orderby: id: 'asc'
 				.then ([ parentApplication, childApplication ]) ->
 					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
