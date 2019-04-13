@@ -271,6 +271,7 @@ declare namespace BalenaSdk {
 		id: number;
 		composition: string | null;
 		source: string;
+		build_log: string | null;
 		end_timestamp: string;
 		push_timestamp: string | null;
 		start_timestamp: string;
