@@ -1028,6 +1028,31 @@ describe 'Device Model', ->
 					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
 					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
 
+		describe 'balena.models.device.getSupervisorTargetState()', ->
+
+			it 'should be rejected if the device does not exist', ->
+				promise = balena.models.device.getSupervisorTargetState('asdfghjkl')
+				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+			it 'should reflect the device\'s target state', ->
+				balena.models.device.getSupervisorTargetState(@device.id).then (state) =>
+					# first, check the name
+					m.chai.expect(state.local.name).to.be.a('string')
+					m.chai.expect(state.local.name).to.equal(@device.device_name)
+
+					# next, check application types and some values
+					m.chai.expect(state.local.apps).to.be.an('object')
+					m.chai.expect(state.local.apps[@application.id].name).to.equal(@application.app_name)
+					m.chai.expect(state.local.apps[@application.id].name).to.be.a('string')
+					m.chai.expect(state.local.apps[@application.id].services).to.be.an('object')
+					m.chai.expect(state.local.apps[@application.id].volumes).to.be.an('object')
+					m.chai.expect(state.local.apps[@application.id].networks).to.be.an('object')
+
+					# finally, check configuration type and values
+					m.chai.expect(state.local.config).to.be.an('object')
+					m.chai.expect(state.local.config['RESIN_SUPERVISOR_NATIVE_LOGGER']).to.equal('true')
+					m.chai.expect(state.local.config['RESIN_SUPERVISOR_POLL_INTERVAL']).to.equal('900000')
+
 		describe 'balena.models.device.getSupervisorState()', ->
 
 			it 'should be rejected if the device does not exist', ->
