@@ -68,7 +68,7 @@ getDeviceModel = (deps, opts) ->
 	{ pine, request } = deps
 	{ apiUrl, dashboardUrl, deviceUrlsBase } = opts
 
-	registerDevice = require('resin-register-device')({ request })
+	registerDevice = require('balena-register-device')({ request })
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	osModel = once -> require('./os')(deps, opts)
