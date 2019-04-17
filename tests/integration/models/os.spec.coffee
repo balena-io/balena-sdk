@@ -90,15 +90,24 @@ describe 'OS model', ->
 
 		describe 'given a valid device slug', ->
 
+			expectSorted = (array, comparator) ->
+				# re-sorting could fail when the system is not using a stable
+				# sorting algorithm, in which case items of the same value
+				# might swap positions in the array
+				array.forEach (item, i) ->
+					if i == 0
+						return
+
+					previousItem = array[i - 1]
+					m.chai.expect(comparator(previousItem, item)).to.be.lte(0)
+
 			areValidVersions = (osVersions) ->
 				m.chai.expect(osVersions).to.be.an('object')
 				m.chai.expect(osVersions).to.have.property('versions').that.is.an('array')
 				m.chai.expect(osVersions.versions).to.not.have.lengthOf(0)
 
-				sortedVersions = osVersions.versions.slice().sort(osVersionRCompare)
-				m.chai.expect(osVersions.versions).to.deep.equal(sortedVersions)
+				expectSorted(osVersions.versions, osVersionRCompare)
 
-				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
 				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
 				m.chai.expect(osVersions).to.have.property('recommended').that.is.a('string')
 				m.chai.expect(osVersions).to.have.property('default').that.is.a('string')
