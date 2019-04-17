@@ -91,13 +91,20 @@ describe 'OS model', ->
 		describe 'given a valid device slug', ->
 
 			areValidVersions = (osVersions) ->
-				sortedVersions = _.clone(osVersions.versions)
-				sortedVersions.sort(osVersionRCompare)
-				return osVersions and
-					osVersions.versions and osVersions.versions.length and
-					_.isEqual(osVersions.versions, sortedVersions)
-					osVersions.latest and osVersions.recommended and osVersions.default and
-					osVersions.default is osVersions.recommended
+				m.chai.expect(osVersions).to.be.an('object')
+				m.chai.expect(osVersions).to.have.property('versions').that.is.an('array')
+				m.chai.expect(osVersions.versions).to.not.have.lengthOf(0)
+
+				sortedVersions = osVersions.versions.slice().sort(osVersionRCompare)
+				m.chai.expect(osVersions.versions).to.deep.equal(sortedVersions)
+
+				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
+				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
+				m.chai.expect(osVersions).to.have.property('recommended').that.is.a('string')
+				m.chai.expect(osVersions).to.have.property('default').that.is.a('string')
+				m.chai.expect(osVersions.default).to.equal(osVersions.recommended)
+
+				return true
 
 			it 'should eventually return the valid versions object', ->
 				promise = balena.models.os.getSupportedVersions('raspberry-pi')
