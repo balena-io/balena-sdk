@@ -63,13 +63,23 @@ getOsModel = (deps, opts) ->
 			if not isValid
 				throw new errors.BalenaInvalidDeviceType('No such device type')
 
-	getDownloadSize = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType, version }) -> "/size_estimate?deviceType=#{deviceType}&version=#{version}"
-		postProcess: ({ body }) -> body.size
+	getDownloadSize = (deviceType, version) ->
+		request.send
+			method: 'GET'
+			url: "/device-types/v1/#{deviceType}/images/#{version}/download-size"
+			baseUrl: apiUrl
+			sendToken: false
+		.get('body')
+		.get('size')
 
-	getOsVersions = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
-		postProcess: ({ body: { versions, latest } }) ->
+	getOsVersions = (deviceType) ->
+		request.send
+			method: 'GET'
+			url: "/device-types/v1/#{deviceType}/images"
+			baseUrl: apiUrl
+			sendToken: false
+		.get('body')
+		.then ({ versions, latest }) ->
 
 			versions.sort(bSemver.rcompare)
 			potentialRecommendedVersions = reject versions, (version) ->
