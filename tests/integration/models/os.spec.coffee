@@ -90,14 +90,30 @@ describe 'OS model', ->
 
 		describe 'given a valid device slug', ->
 
+			expectSorted = (array, comparator) ->
+				# re-sorting could fail when the system is not using a stable
+				# sorting algorithm, in which case items of the same value
+				# might swap positions in the array
+				array.forEach (item, i) ->
+					if i == 0
+						return
+
+					previousItem = array[i - 1]
+					m.chai.expect(comparator(previousItem, item)).to.be.lte(0)
+
 			areValidVersions = (osVersions) ->
-				sortedVersions = _.clone(osVersions.versions)
-				sortedVersions.sort(osVersionRCompare)
-				return osVersions and
-					osVersions.versions and osVersions.versions.length and
-					_.isEqual(osVersions.versions, sortedVersions)
-					osVersions.latest and osVersions.recommended and osVersions.default and
-					osVersions.default is osVersions.recommended
+				m.chai.expect(osVersions).to.be.an('object')
+				m.chai.expect(osVersions).to.have.property('versions').that.is.an('array')
+				m.chai.expect(osVersions.versions).to.not.have.lengthOf(0)
+
+				expectSorted(osVersions.versions, osVersionRCompare)
+
+				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
+				m.chai.expect(osVersions).to.have.property('recommended').that.is.a('string')
+				m.chai.expect(osVersions).to.have.property('default').that.is.a('string')
+				m.chai.expect(osVersions.default).to.equal(osVersions.recommended)
+
+				return true
 
 			it 'should eventually return the valid versions object', ->
 				promise = balena.models.os.getSupportedVersions('raspberry-pi')
