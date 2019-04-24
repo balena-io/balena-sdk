@@ -132,7 +132,7 @@ describe 'SDK authentication', ->
 
 	describe 'when logged in with credentials', ->
 
-		givenLoggedInUser()
+		givenLoggedInUser(beforeEach)
 
 		describe 'balena.auth.isLoggedIn()', ->
 
@@ -169,7 +169,7 @@ describe 'SDK authentication', ->
 
 	describe 'when logged in with API key', ->
 
-		givenLoggedInUserWithApiKey()
+		givenLoggedInUserWithApiKey(beforeEach)
 
 		describe 'balena.auth.isLoggedIn()', ->
 

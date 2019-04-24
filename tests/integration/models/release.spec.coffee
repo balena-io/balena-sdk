@@ -1,7 +1,13 @@
 m = require('mochainon')
 _ = require('lodash')
 
-{ balena, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
+{
+	balena
+	credentials
+	givenAnApplication
+	givenLoggedInUser
+	givenMulticontainerApplication
+} = require('../setup')
 
 {
 	itShouldGetAllTagsByResource
@@ -12,17 +18,11 @@ _ = require('lodash')
 
 describe 'Release Model', ->
 
-	givenLoggedInUser()
+	givenLoggedInUser(before)
 
 	describe 'given an application with no releases', ->
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		givenAnApplication(before)
 
 		describe 'balena.models.release.get()', ->
 
@@ -56,7 +56,7 @@ describe 'Release Model', ->
 
 	describe 'given a multicontainer application with two releases', ->
 
-		givenMulticontainerApplication()
+		givenMulticontainerApplication(before)
 
 		describe 'balena.models.release.get()', ->
 
@@ -124,46 +124,46 @@ describe 'Release Model', ->
 
 	describe 'given a multicontainer application with successful & failed releases', ->
 
-		givenMulticontainerApplication()
+		describe 'balena.models.release.getLatestByApplication()', ->
 
-		beforeEach ->
-			application = @application
-			userId = @application.user.__id
+			givenMulticontainerApplication(before)
 
-			balena.pine.post
-				resource: 'release'
-				body:
-					belongs_to__application: application.id
-					is_created_by__user: userId
-					commit: 'errored-then-fixed-release-commit'
-					status: 'error'
-					source: 'cloud'
-					composition: {}
-					start_timestamp: 64321
-			.then ->
+			before ->
+				application = @application
+				userId = @application.user.__id
+
 				balena.pine.post
 					resource: 'release'
 					body:
 						belongs_to__application: application.id
 						is_created_by__user: userId
 						commit: 'errored-then-fixed-release-commit'
-						status: 'success'
+						status: 'error'
 						source: 'cloud'
 						composition: {}
-						start_timestamp: 74321
-			.then ->
-				balena.pine.post
-					resource: 'release'
-					body:
-						belongs_to__application: application.id
-						is_created_by__user: userId
-						commit: 'failed-release-commit'
-						status: 'failed'
-						source: 'cloud'
-						composition: {}
-						start_timestamp: 84321
-
-		describe 'balena.models.release.getLatestByApplication()', ->
+						start_timestamp: 64321
+				.then ->
+					balena.pine.post
+						resource: 'release'
+						body:
+							belongs_to__application: application.id
+							is_created_by__user: userId
+							commit: 'errored-then-fixed-release-commit'
+							status: 'success'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 74321
+				.then ->
+					balena.pine.post
+						resource: 'release'
+						body:
+							belongs_to__application: application.id
+							is_created_by__user: userId
+							commit: 'failed-release-commit'
+							status: 'failed'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 84321
 
 			it 'should get the latest release', ->
 				balena.models.release.getLatestByApplication(@application.id)
@@ -175,6 +175,8 @@ describe 'Release Model', ->
 						belongs_to__application: __id: @application.id
 
 		describe 'balena.models.release.tags', ->
+
+			givenMulticontainerApplication(beforeEach)
 
 			appTagTestOptions =
 				model: balena.models.release.tags

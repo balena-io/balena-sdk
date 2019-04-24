@@ -293,7 +293,7 @@ describe 'OS model', ->
 
 	describe 'when logged in as a user with a single application', ->
 
-		givenLoggedInUser()
+		givenLoggedInUser(beforeEach)
 
 		beforeEach ->
 			balena.models.application.create

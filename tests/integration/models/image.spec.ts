@@ -1,26 +1,17 @@
 import * as m from 'mochainon';
 import {
 	balena,
+	givenAnApplication,
 	givenLoggedInUser,
 	givenMulticontainerApplication,
 } from '../setup';
 const { expect } = m.chai;
 
 describe('Image Model', function() {
-	givenLoggedInUser();
+	givenLoggedInUser(before);
 
 	describe('given an application with no releases', function() {
-		beforeEach(function() {
-			return balena.models.application
-				.create({
-					name: 'FooBar',
-					applicationType: 'microservices-starter',
-					deviceType: 'raspberry-pi',
-				})
-				.then(application => {
-					this.application = application;
-				});
-		});
+		givenAnApplication(before);
 
 		describe('balena.models.image.get()', function() {
 			it('should be rejected if the image id does not exist', function() {
@@ -38,7 +29,7 @@ describe('Image Model', function() {
 	});
 
 	describe('given a multicontainer application with two releases', function() {
-		givenMulticontainerApplication();
+		givenMulticontainerApplication(before);
 
 		describe('balena.models.image.get()', function() {
 			it('should get the requested image', function() {

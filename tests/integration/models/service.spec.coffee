@@ -1,21 +1,21 @@
 m = require('mochainon')
 _ = require('lodash')
 
-{ balena, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
+{
+	balena
+	credentials
+	givenAnApplication
+	givenLoggedInUser
+	givenMulticontainerApplication
+} = require('../setup')
 
 describe 'Service Model', ->
 
-	givenLoggedInUser()
+	givenLoggedInUser(before)
 
 	describe 'given an application with no services', ->
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		givenAnApplication(before)
 
 		describe 'balena.models.service.getAllByApplication()', ->
 
@@ -37,7 +37,7 @@ describe 'Service Model', ->
 
 	describe 'given a multicontainer application with two services', ->
 
-		givenMulticontainerApplication()
+		givenMulticontainerApplication(before)
 
 		describe 'balena.models.service.getAllByApplication()', ->
 
@@ -60,21 +60,28 @@ describe 'Service Model', ->
 
 			varModel = balena.models.service.var
 
-			it 'can create and retrieve a variable', ->
-				varModel.set(@webService.id, 'EDITOR', 'vim')
-				.then =>
-					varModel.get(@webService.id, 'EDITOR')
+			it 'can create a variable', ->
+				promise = varModel.set(@webService.id, 'EDITOR', 'vim')
+				m.chai.expect(promise).to.not.be.rejected
+
+			it '...can retrieve a created variable', ->
+				varModel.get(@webService.id, 'EDITOR')
 				.then (result) ->
 					m.chai.expect(result).to.equal('vim')
 
-			it 'can create, update and retrieve a variable', ->
-				varModel.set(@webService.id, 'EDITOR', 'vim')
-				.then =>
-					varModel.set(@webService.id, 'EDITOR', 'emacs')
+			it '...can update and retrieve a variable', ->
+				varModel.set(@webService.id, 'EDITOR', 'emacs')
 				.then =>
 					varModel.get(@webService.id, 'EDITOR')
 				.then (result) ->
 					m.chai.expect(result).to.equal('emacs')
+
+			it '...can delete and then fail to retrieve a variable', ->
+				varModel.remove(@webService.id, 'EDITOR')
+				.then =>
+					varModel.get(@webService.id, 'EDITOR')
+				.then (result) ->
+					m.chai.expect(result).to.equal(undefined)
 
 			it 'can create and then retrieve multiple variables', ->
 				Promise.all [
@@ -86,23 +93,25 @@ describe 'Service Model', ->
 				.then (result) ->
 					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
 					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+				.then =>
+					Promise.all [
+						varModel.remove(@webService.id, 'A')
+						varModel.remove(@webService.id, 'B')
+					]
 
 			it 'can create and then retrieve multiple variables by application', ->
 				Promise.all [
-					varModel.set(@webService.id, 'A', 'a')
-					varModel.set(@webService.id, 'B', 'b')
+					varModel.set(@webService.id, 'A_BY_APPLICATION', 'a')
+					varModel.set(@webService.id, 'B_BY_APPLICATION', 'b')
 				]
 				.then =>
 					varModel.getAllByApplication(@application.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' }).value).equal('a')
+					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' }).value).equal('b')
+				.then =>
+					Promise.all [
+						varModel.remove(@webService.id, 'A_BY_APPLICATION')
+						varModel.remove(@webService.id, 'B_BY_APPLICATION')
+					]
 
-			it 'can create, delete and then fail to retrieve a variable', ->
-				varModel.set(@webService.id, 'EDITOR', 'vim')
-				.then =>
-					varModel.remove(@webService.id, 'EDITOR')
-				.then =>
-					varModel.get(@webService.id, 'EDITOR')
-				.then (result) ->
-					m.chai.expect(result).to.equal(undefined)

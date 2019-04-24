@@ -33,10 +33,22 @@ export const balena: BalenaSdk.BalenaSDK;
 
 export const resetUser: () => Promise<void>;
 
-export const givenLoggedInUserWithApiKey: () => void;
+export const givenLoggedInUserWithApiKey: (
+	beforeFn: Mocha.HookFunction,
+) => void;
 
-export const givenLoggedInUser: () => void;
+export const givenLoggedInUser: (beforeFn: Mocha.HookFunction) => void;
 
 export const loginPaidUser: () => Promise<void>;
 
-export const givenMulticontainerApplication: () => void;
+export const givenAnApplication: (beforeFn: Mocha.HookFunction) => void;
+export const givenADevice: (beforeFn: Mocha.HookFunction) => void;
+export const givenAnApplicationWithADevice: (
+	beforeFn: Mocha.HookFunction,
+) => void;
+export const givenMulticontainerApplication: (
+	beforeFn: Mocha.HookFunction,
+) => void;
+export const givenMulticontainerApplicationWithADevice: (
+	beforeFn: Mocha.HookFunction,
+) => void;
