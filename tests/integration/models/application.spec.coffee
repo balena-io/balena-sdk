@@ -383,8 +383,10 @@ describe 'Application Model', ->
 						.then =>
 							configVarModel.getAllByApplication(@application[appParam])
 						.then (result) ->
-							m.chai.expect(_.find(result, { name: "BALENA_A_#{appParamUpper}" }).value).equal('a')
-							m.chai.expect(_.find(result, { name: "BALENA_B_#{appParamUpper}" }).value).equal('b')
+							m.chai.expect(_.find(result, { name: "BALENA_A_#{appParamUpper}" })).to.be.an('object')
+								.that.has.property('value', 'a')
+							m.chai.expect(_.find(result, { name: "BALENA_B_#{appParamUpper}" })).to.be.an('object')
+								.that.has.property('value', 'b')
 						.then =>
 							Promise.all [
 								configVarModel.remove(@application[appParam], "BALENA_A_#{appParamUpper}")
@@ -428,8 +430,10 @@ describe 'Application Model', ->
 						.then =>
 							envVarModel.getAllByApplication(@application[appParam])
 						.then (result) ->
-							m.chai.expect(_.find(result, { name: "A_BY_#{appParam}" }).value).equal('a')
-							m.chai.expect(_.find(result, { name: "B_BY_#{appParam}" }).value).equal('b')
+							m.chai.expect(_.find(result, { name: "A_BY_#{appParam}" })).to.be.an('object')
+								.that.has.property('value', 'a')
+							m.chai.expect(_.find(result, { name: "B_BY_#{appParam}" })).to.be.an('object')
+								.that.has.property('value', 'b')
 						.then =>
 							Promise.all [
 								envVarModel.remove(@application[appParam], "A_BY_#{appParam}")

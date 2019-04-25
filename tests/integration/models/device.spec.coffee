@@ -1020,8 +1020,10 @@ describe 'Device Model', ->
 					.then =>
 						configVarModel.getAllByDevice(@device[deviceParam])
 					.then (result) ->
-						m.chai.expect(_.find(result, { name: "BALENA_A_#{deviceParamUpper}" }).value).equal('a')
-						m.chai.expect(_.find(result, { name: "BALENA_B_#{deviceParamUpper}" }).value).equal('b')
+						m.chai.expect(_.find(result, { name: "BALENA_A_#{deviceParamUpper}" })).to.be.an('object')
+							.that.has.property('value', 'a')
+						m.chai.expect(_.find(result, { name: "BALENA_B_#{deviceParamUpper}" })).to.be.an('object')
+							.that.has.property('value', 'b')
 					.then =>
 						Promise.all [
 							configVarModel.remove(@device[deviceParam], "BALENA_A_#{deviceParamUpper}")
@@ -1036,8 +1038,10 @@ describe 'Device Model', ->
 				.then =>
 					configVarModel.getAllByApplication(@application.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'BALENA_A_BY_APPLICATION' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'BALENA_B_BY_APPLICATION' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'BALENA_A_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'a')
+					m.chai.expect(_.find(result, { name: 'BALENA_B_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'b')
 				.then =>
 					Promise.all [
 						configVarModel.remove(@device.id, 'BALENA_A_BY_APPLICATION')
@@ -1083,8 +1087,10 @@ describe 'Device Model', ->
 					.then =>
 						envVarModel.getAllByDevice(@device[deviceParam])
 					.then (result) ->
-						m.chai.expect(_.find(result, { name: "A_BY_#{deviceParam}" }).value).equal('a')
-						m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" }).value).equal('b')
+						m.chai.expect(_.find(result, { name: "A_BY_#{deviceParam}" })).to.be.an('object')
+							.that.has.property('value', 'a')
+						m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" })).to.be.an('object')
+							.that.has.property('value', 'b')
 					.then =>
 						Promise.all [
 							envVarModel.remove(@device[deviceParam], "A_BY_#{deviceParam}")
@@ -1099,8 +1105,10 @@ describe 'Device Model', ->
 				.then =>
 					envVarModel.getAllByApplication(@application.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'a')
+					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'b')
 				.then =>
 					Promise.all [
 						envVarModel.remove(@device.id, 'A_BY_APPLICATION')
@@ -1292,8 +1300,10 @@ describe 'Device Model', ->
 						.then =>
 							varModel.getAllByDevice(@device[deviceParam])
 						.then (result) ->
-							m.chai.expect(_.find(result, { name: "A_BY_#{deviceParam}" }).value).equal('a')
-							m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" }).value).equal('b')
+							m.chai.expect(_.find(result, { name: "A_BY_#{deviceParam}" })).to.be.an('object')
+								.that.has.property('value', 'a')
+							m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" })).to.be.an('object')
+								.that.has.property('value', 'b')
 						.then =>
 							Promise.all [
 								varModel.remove(@device[deviceParam], @webService.id, "A_BY_#{deviceParam}")
@@ -1308,8 +1318,10 @@ describe 'Device Model', ->
 					.then =>
 						varModel.getAllByApplication(@application.id)
 					.then (result) ->
-						m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' }).value).equal('a')
-						m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' }).value).equal('b')
+						m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' })).to.be.an('object')
+							.that.has.property('value', 'a')
+						m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
+							.that.has.property('value', 'b')
 					.then =>
 						Promise.all [
 							varModel.remove(@device.id, @webService.id, 'A_BY_APPLICATION')

@@ -91,8 +91,10 @@ describe 'Service Model', ->
 				.then =>
 					varModel.getAllByService(@webService.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'A' })).to.be.an('object')
+						.that.has.property('value', 'a')
+					m.chai.expect(_.find(result, { name: 'B' })).to.be.an('object')
+						.that.has.property('value', 'b')
 				.then =>
 					Promise.all [
 						varModel.remove(@webService.id, 'A')
@@ -107,8 +109,10 @@ describe 'Service Model', ->
 				.then =>
 					varModel.getAllByApplication(@application.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'a')
+					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'b')
 				.then =>
 					Promise.all [
 						varModel.remove(@webService.id, 'A_BY_APPLICATION')
