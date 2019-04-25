@@ -9,7 +9,7 @@ Promise = require('bluebird')
 	givenAnApplication
 	givenAnApplicationWithADevice
 	givenLoggedInUser
-	givenMulticontainerApplicationWithADevice
+	givenMulticontainerApplication
 	sdkOpts
 	IS_BROWSER
 } = require('../setup')
@@ -1148,11 +1148,13 @@ describe 'Device Model', ->
 				promise = balena.models.device.getSupervisorState(@device.id)
 				m.chai.expect(promise).to.be.rejectedWith('No online device(s) found')
 
-	describe 'given a multicontainer application with a single offline device', ->
+	describe 'given a multicontainer application', ->
 
-		describe '[contained scenario]', ->
+		givenMulticontainerApplication(before)
 
-			givenMulticontainerApplicationWithADevice(before)
+		describe 'given a single offline device', ->
+
+			givenADevice(before)
 
 			describe 'balena.models.device.getWithServiceDetails()', ->
 
@@ -1342,65 +1344,65 @@ describe 'Device Model', ->
 					promise = balena.models.device.getTargetReleaseHash(@device.uuid)
 					m.chai.expect(promise).to.eventually.equal('new-release-commit')
 
-		describe 'balena.models.device.pinToRelease()', ->
+		describe 'given a newly registered offline device', ->
 
-			givenMulticontainerApplicationWithADevice(beforeEach)
+			givenADevice(beforeEach)
 
-			it 'should set the device to a specific release, using the device id & release commit', ->
-				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
+			describe 'balena.models.device.pinToRelease()', ->
 
-			it 'should set the device to a specific release, using the device id & release id', ->
-				balena.models.device.pinToRelease(@device.id, @oldRelease.id)
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
+				it 'should set the device to a specific release, using the device id & release commit', ->
+					balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
 
-			it 'should set the device to a specific release, using the device uuid & release commit', ->
-				balena.models.device.pinToRelease(@device.uuid, 'old-release-commit')
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
+				it 'should set the device to a specific release, using the device id & release id', ->
+					balena.models.device.pinToRelease(@device.id, @oldRelease.id)
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
 
-			it 'should set the device to a specific release, using the device uuid & release id', ->
-				balena.models.device.pinToRelease(@device.uuid, @oldRelease.id)
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
+				it 'should set the device to a specific release, using the device uuid & release commit', ->
+					balena.models.device.pinToRelease(@device.uuid, 'old-release-commit')
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
 
-		describe 'balena.models.device.trackApplicationRelease()', ->
+				it 'should set the device to a specific release, using the device uuid & release id', ->
+					balena.models.device.pinToRelease(@device.uuid, @oldRelease.id)
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
 
-			givenMulticontainerApplicationWithADevice(beforeEach)
+			describe 'balena.models.device.trackApplicationRelease()', ->
 
-			it 'should set the device to track the current application release, using the device id', ->
-				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
-				.then =>
-					balena.models.device.trackApplicationRelease(@device.id)
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.true
+				it 'should set the device to track the current application release, using the device id', ->
+					balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+					.then =>
+						balena.models.device.trackApplicationRelease(@device.id)
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.true
 
-			it 'should set the device to track the current application release, using the device uuid', ->
-				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
-				.then =>
-					balena.models.device.trackApplicationRelease(@device.uuid)
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.true
+				it 'should set the device to track the current application release, using the device uuid', ->
+					balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+					.then =>
+						balena.models.device.trackApplicationRelease(@device.uuid)
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.true
 
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
