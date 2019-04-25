@@ -3,7 +3,6 @@ _ = require('lodash')
 
 {
 	balena
-	credentials
 	givenAnApplication
 	givenLoggedInUser
 	givenMulticontainerApplication

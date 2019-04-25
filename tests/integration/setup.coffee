@@ -5,6 +5,7 @@ _ = require('lodash')
 chai.use(require('chai-samsam'))
 
 exports.IS_BROWSER = IS_BROWSER = window?
+exports.credentials = {}
 
 if IS_BROWSER
 	require('js-polyfills/es6')
