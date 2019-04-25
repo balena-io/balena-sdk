@@ -591,7 +591,12 @@ describe 'Application Model', ->
 
 		itShouldBeAnApplicationWIthDeviceServiceDetails = (application) ->
 			# Commit is empty on newly created application, so ignoring it
-			m.chai.expect(_.omit(application, 'owns__device', 'commit')).to.deep.equal(_.omit(@application, 'owns__device', 'commit'))
+			omittedFields = [
+				'owns__device'
+				'commit'
+				'__metadata'
+			]
+			m.chai.expect(_.omit(application, omittedFields)).to.deep.equal(_.omit(@application, omittedFields))
 
 			# Check commit value after release
 			m.chai.expect(application.commit).to.equal('new-release-commit')
