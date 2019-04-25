@@ -26,6 +26,8 @@ else
 		imageMakerUrl: settings.get('imageMakerUrl')
 		dataDirectory: settings.get('dataDirectory')
 
+opts.TEST_API_URL = 'https://api.balena-staging.com'
+
 _.assign opts,
 	apiKey: null
 	isBrowser: IS_BROWSER,
