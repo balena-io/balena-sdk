@@ -1,6 +1,6 @@
 includes = require('lodash/includes')
 isEmpty = require('lodash/isEmpty')
-rSemver = require('resin-semver')
+bSemver = require('balena-semver')
 { isProvisioned } = require('.')
 
 exports.normalizeDeviceOsVersion = (device) ->
@@ -13,7 +13,7 @@ exports.getDeviceOsSemverWithVariant = ({ os_version, os_variant }) ->
 	if !os_version
 		return null
 
-	versionInfo = rSemver.parse(os_version)
+	versionInfo = bSemver.parse(os_version)
 	if !versionInfo
 		return null
 
