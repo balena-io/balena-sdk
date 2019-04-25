@@ -1,7 +1,7 @@
 m = require('mochainon')
 _ = require('lodash')
 
-{ balena, credentials, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
+{ balena, givenLoggedInUser, givenMulticontainerApplication } = require('../setup')
 
 describe 'Service Model', ->
 

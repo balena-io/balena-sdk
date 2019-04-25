@@ -36,9 +36,6 @@ module.exports = (config) ->
 		'TEST_USERNAME'
 		'TEST_PAID_EMAIL'
 		'TEST_PAID_PASSWORD'
-		'TEST_REGISTER_EMAIL'
-		'TEST_REGISTER_PASSWORD'
-		'TEST_REGISTER_USERNAME'
 	]
 
 	config.set(karmaConfig)
