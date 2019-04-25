@@ -10,10 +10,8 @@ m = require('mochainon')
 	givenMulticontainerApplicationWithADevice
 } = require('../setup')
 {
+	itShouldSetGetAndRemoveTags
 	itShouldGetAllTagsByResource
-	itShouldGetAllTags
-	itShouldSetTags
-	itShouldRemoveTags
 } = require('./tags')
 
 describe 'Application Model', ->
@@ -285,28 +283,6 @@ describe 'Application Model', ->
 					promise = balena.models.application.generateProvisioningKey(999999)
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
-			describe 'balena.models.application.tags', ->
-
-				tagTestOptions =
-					model: balena.models.application.tags
-					resourceName: 'application'
-					uniquePropertyName: 'app_name'
-
-				beforeEach ->
-					tagTestOptions.resourceProvider = => @application
-
-				describe 'balena.models.application.tags.getAllByApplication()', ->
-					itShouldGetAllTagsByResource(tagTestOptions)
-
-				describe 'balena.models.application.tags.getAll()', ->
-					itShouldGetAllTags(tagTestOptions)
-
-				describe 'balena.models.application.tags.set()', ->
-					itShouldSetTags(tagTestOptions)
-
-				describe 'balena.models.application.tags.remove()', ->
-					itShouldRemoveTags(tagTestOptions)
-
 			describe 'balena.models.application.grantSupportAccess()', ->
 				it 'should throw an error if the expiry time stamp is in the past', ->
 					expiryTimestamp = Date.now() - 3600 * 1000
@@ -344,6 +320,22 @@ describe 'Application Model', ->
 		describe '[contained scenario]', ->
 
 			givenAnApplication(before)
+
+			describe 'balena.models.application.tags', ->
+
+				tagTestOptions =
+					model: balena.models.application.tags
+					modelNamespace: 'balena.models.application.tags'
+					resourceName: 'application'
+					uniquePropertyName: 'app_name'
+
+				beforeEach ->
+					tagTestOptions.resourceProvider = => @application
+
+				itShouldSetGetAndRemoveTags(tagTestOptions)
+
+				describe 'balena.models.application.tags.getAllByApplication()', ->
+					itShouldGetAllTagsByResource(tagTestOptions)
 
 			describe 'balena.models.application.configVar', ->
 

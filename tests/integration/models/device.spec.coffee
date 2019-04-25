@@ -15,10 +15,8 @@ Promise = require('bluebird')
 } = require('../setup')
 
 {
+	itShouldSetGetAndRemoveTags
 	itShouldGetAllTagsByResource
-	itShouldGetAllTags
-	itShouldSetTags
-	itShouldRemoveTags
 } = require('./tags')
 
 makeRequest = (url) ->
@@ -946,15 +944,17 @@ describe 'Device Model', ->
 
 			givenAnApplication(before)
 
-			givenADevice(beforeEach)
+			givenADevice(before)
 
 			appTagTestOptions =
 				model: balena.models.device.tags
+				modelNamespace: 'balena.models.device.tags'
 				resourceName: 'application'
 				uniquePropertyName: 'app_name'
 
 			deviceTagTestOptions =
 				model: balena.models.device.tags
+				modelNamespace: 'balena.models.device.tags'
 				resourceName: 'device'
 				uniquePropertyName: 'uuid'
 
@@ -965,20 +965,14 @@ describe 'Device Model', ->
 				# device.tags.getAllByApplication() test
 				appTagTestOptions.setTagResourceProvider = => @device
 
+			itShouldSetGetAndRemoveTags(deviceTagTestOptions)
+
 			describe 'balena.models.device.tags.getAllByApplication()', ->
 				itShouldGetAllTagsByResource(appTagTestOptions)
 
 			describe 'balena.models.device.tags.getAllByDevice()', ->
 				itShouldGetAllTagsByResource(deviceTagTestOptions)
 
-			describe 'balena.models.device.tags.getAll()', ->
-				itShouldGetAllTags(deviceTagTestOptions)
-
-			describe 'balena.models.device.tags.set()', ->
-				itShouldSetTags(deviceTagTestOptions)
-
-			describe 'balena.models.device.tags.remove()', ->
-				itShouldRemoveTags(deviceTagTestOptions)
 
 		describe 'balena.models.device.configVar', ->
 

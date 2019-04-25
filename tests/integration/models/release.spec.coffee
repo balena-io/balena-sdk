@@ -10,10 +10,8 @@ _ = require('lodash')
 } = require('../setup')
 
 {
+	itShouldSetGetAndRemoveTags
 	itShouldGetAllTagsByResource
-	itShouldGetAllTags
-	itShouldSetTags
-	itShouldRemoveTags
 } = require('./tags')
 
 describe 'Release Model', ->
@@ -176,15 +174,17 @@ describe 'Release Model', ->
 
 		describe 'balena.models.release.tags', ->
 
-			givenMulticontainerApplication(beforeEach)
+			givenMulticontainerApplication(before)
 
 			appTagTestOptions =
 				model: balena.models.release.tags
+				modelNamespace: 'balena.models.release.tags'
 				resourceName: 'application'
 				uniquePropertyName: 'app_name'
 
 			releaseTagTestOptions =
 				model: balena.models.release.tags
+				modelNamespace: 'balena.models.release.tags'
 				resourceName: 'release'
 				uniquePropertyName: null
 
@@ -195,17 +195,10 @@ describe 'Release Model', ->
 				# release.tags.getAllByApplication() test
 				appTagTestOptions.setTagResourceProvider = => @currentRelease
 
+			itShouldSetGetAndRemoveTags(releaseTagTestOptions)
+
 			describe 'balena.models.release.tags.getAllByApplication()', ->
 				itShouldGetAllTagsByResource(appTagTestOptions)
 
 			describe 'balena.models.release.tags.getAllByRelease()', ->
 				itShouldGetAllTagsByResource(releaseTagTestOptions)
-
-			describe 'balena.models.release.tags.getAll()', ->
-				itShouldGetAllTags(releaseTagTestOptions)
-
-			describe 'balena.models.release.tags.set()', ->
-				itShouldSetTags(releaseTagTestOptions)
-
-			describe 'balena.models.release.tags.remove()', ->
-				itShouldRemoveTags(releaseTagTestOptions)
