@@ -402,12 +402,12 @@ before ->
 		_.assign(exports.credentials, result)
 	.finally -> console.log()
 
-teardown = Promise.method ->
-	process.stderr.write('********** teardown! **********\n')
+teardown = _.once Promise.method ->
+	process.stderr.write('stderr: ********** teardown **********\n')
 	console.log('********** teardown **********')
 	if !shouldDeleteTestUser
 		console.log('Nothing to clean.')
-		process.stderr.write('Nothing to clean!\n')
+		process.stderr.write('stderr: Nothing to clean\n')
 		return
 
 	balena.auth.login
@@ -424,11 +424,17 @@ teardown = Promise.method ->
 		.then(balena.auth.logout)
 	.catch(message: 'Request error: Unauthorized', ->)
 
-after ->
-	teardown()
+after teardown
 
-process.on 'SIGINT', ->
-	process.stderr.write('Received SIGINT, cleaning up. Please wait.\n')
-	teardown()
-	.then ->
-		process.stderr.write('Cleaning up finished\n')
+sigTearDown = (signalName) ->
+	return ->
+		process.stderr.write("Received #{signalName}, cleaning up. Please wait.\n")
+		teardown()
+		.then ->
+			process.stderr.write('Cleaning up finished\n')
+
+[
+	'SIGINT'
+	'SIGTERM'
+].forEach (signalName) ->
+	process.on signalName, sigTearDown(signalName)
