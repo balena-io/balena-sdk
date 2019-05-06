@@ -10,7 +10,7 @@ eventuallyExpectProperty = (promise, prop) ->
 describe 'Billing Model', ->
 
 	describe 'Free Account', ->
-		givenLoggedInUser()
+		givenLoggedInUser(beforeEach)
 
 		describe 'balena.models.billing.getAccount()', ->
 			it 'should not return a billing account info object', ->

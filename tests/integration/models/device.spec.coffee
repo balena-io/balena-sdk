@@ -3,13 +3,20 @@ m = require('mochainon')
 superagent = require('superagent')
 Promise = require('bluebird')
 
-{ balena, givenLoggedInUser, givenMulticontainerApplication, sdkOpts, IS_BROWSER } = require('../setup')
+{
+	balena
+	givenADevice
+	givenAnApplication
+	givenAnApplicationWithADevice
+	givenLoggedInUser
+	givenMulticontainerApplication
+	sdkOpts
+	IS_BROWSER
+} = require('../setup')
 
 {
+	itShouldSetGetAndRemoveTags
 	itShouldGetAllTagsByResource
-	itShouldGetAllTags
-	itShouldSetTags
-	itShouldRemoveTags
 } = require('./tags')
 
 makeRequest = (url) ->
@@ -24,7 +31,7 @@ makeRequest = (url) ->
 
 describe 'Device Model', ->
 
-	givenLoggedInUser()
+	givenLoggedInUser(before)
 
 	describe 'given no applications', ->
 
@@ -101,62 +108,60 @@ describe 'Device Model', ->
 
 	describe 'given a single application without devices', ->
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		describe '[read operations]', ->
 
-		describe 'balena.models.device.getAll()', ->
+			givenAnApplication(before)
 
-			it 'should become an empty array', ->
-				promise = balena.models.device.getAll()
-				m.chai.expect(promise).to.become([])
+			describe 'balena.models.device.getAll()', ->
 
-		describe 'balena.models.device.getAllByApplication()', ->
+				it 'should become an empty array', ->
+					promise = balena.models.device.getAll()
+					m.chai.expect(promise).to.become([])
 
-			it 'should become an empty array', ->
-				promise = balena.models.device.getAllByApplication(@application.id)
-				m.chai.expect(promise).to.become([])
+			describe 'balena.models.device.getAllByApplication()', ->
 
-		describe 'balena.models.device.generateUniqueKey()', ->
+				it 'should become an empty array', ->
+					promise = balena.models.device.getAllByApplication(@application.id)
+					m.chai.expect(promise).to.become([])
 
-			it 'should generate a valid uuid', ->
-				uuid = balena.models.device.generateUniqueKey()
+			describe 'balena.models.device.generateUniqueKey()', ->
 
-				m.chai.expect(uuid).to.be.a('string')
-				m.chai.expect(uuid).to.have.length(62)
-				m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
+				it 'should generate a valid uuid', ->
+					uuid = balena.models.device.generateUniqueKey()
 
-			it 'should generate different uuids', ->
-				one = balena.models.device.generateUniqueKey()
-				two = balena.models.device.generateUniqueKey()
-				three = balena.models.device.generateUniqueKey()
+					m.chai.expect(uuid).to.be.a('string')
+					m.chai.expect(uuid).to.have.length(62)
+					m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
 
-				m.chai.expect(one).to.not.equal(two)
-				m.chai.expect(two).to.not.equal(three)
+				it 'should generate different uuids', ->
+					one = balena.models.device.generateUniqueKey()
+					two = balena.models.device.generateUniqueKey()
+					three = balena.models.device.generateUniqueKey()
 
-		describe 'balena.models.device.getManifestByApplication()', ->
+					m.chai.expect(one).to.not.equal(two)
+					m.chai.expect(two).to.not.equal(three)
 
-			it 'should return the appropriate manifest for an application name', ->
-				balena.models.device.getManifestByApplication(@application.app_name).then (manifest) =>
-					m.chai.expect(manifest.slug).to.equal(@application.device_type)
+			describe 'balena.models.device.getManifestByApplication()', ->
 
-			it 'should return the appropriate manifest for an application id', ->
-				balena.models.device.getManifestByApplication(@application.id).then (manifest) =>
-					m.chai.expect(manifest.slug).to.equal(@application.device_type)
+				it 'should return the appropriate manifest for an application name', ->
+					balena.models.device.getManifestByApplication(@application.app_name).then (manifest) =>
+						m.chai.expect(manifest.slug).to.equal(@application.device_type)
 
-			it 'should be rejected if the application name does not exist', ->
-				promise = balena.models.device.getManifestByApplication('HelloWorldApp')
-				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+				it 'should return the appropriate manifest for an application id', ->
+					balena.models.device.getManifestByApplication(@application.id).then (manifest) =>
+						m.chai.expect(manifest.slug).to.equal(@application.device_type)
 
-			it 'should be rejected if the application id does not exist', ->
-				promise = balena.models.device.getManifestByApplication(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+				it 'should be rejected if the application name does not exist', ->
+					promise = balena.models.device.getManifestByApplication('HelloWorldApp')
+					m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+				it 'should be rejected if the application id does not exist', ->
+					promise = balena.models.device.getManifestByApplication(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 		describe 'balena.models.device.register()', ->
+
+			givenAnApplication(beforeEach)
 
 			it 'should be able to register a device to a valid application name', ->
 				uuid = balena.models.device.generateUniqueKey()
@@ -190,247 +195,244 @@ describe 'Device Model', ->
 
 	describe 'given a single application with a single offline device', ->
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		describe '[read operations]', ->
 
-				uuid = balena.models.device.generateUniqueKey()
-				balena.models.device.register(application.app_name, uuid)
-				.then (deviceInfo) ->
-					balena.models.device.get(deviceInfo.uuid)
-				.then (device) =>
-					@device = device
+			givenAnApplicationWithADevice(before)
 
-		describe 'balena.models.device.getAll()', ->
+			describe 'balena.models.device.getAll()', ->
 
-			it 'should become the device', ->
-				balena.models.device.getAll().then (devices) =>
-					m.chai.expect(devices).to.have.length(1)
-					m.chai.expect(devices[0].id).to.equal(@device.id)
+				it 'should become the device', ->
+					balena.models.device.getAll().then (devices) =>
+						m.chai.expect(devices).to.have.length(1)
+						m.chai.expect(devices[0].id).to.equal(@device.id)
 
-			it 'should support arbitrary pinejs options', ->
-				balena.models.device.getAll($select: [ 'id' ])
-				.then ([ device ]) =>
-					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.device_name).to.equal(undefined)
+				it 'should support arbitrary pinejs options', ->
+					balena.models.device.getAll($select: [ 'id' ])
+					.then ([ device ]) =>
+						m.chai.expect(device.id).to.equal(@device.id)
+						m.chai.expect(device.device_name).to.equal(undefined)
 
-		describe 'balena.models.device.getAllByApplication()', ->
+			describe 'balena.models.device.getAllByApplication()', ->
 
-			it 'should get the device given the right application name', ->
-				balena.models.device.getAllByApplication(@application.app_name).then (devices) =>
-					m.chai.expect(devices).to.have.length(1)
-					m.chai.expect(devices[0].id).to.equal(@device.id)
+				it 'should get the device given the right application name', ->
+					balena.models.device.getAllByApplication(@application.app_name).then (devices) =>
+						m.chai.expect(devices).to.have.length(1)
+						m.chai.expect(devices[0].id).to.equal(@device.id)
 
-			it 'should get the device given the right application id', ->
-				balena.models.device.getAllByApplication(@application.id).then (devices) =>
-					m.chai.expect(devices).to.have.length(1)
-					m.chai.expect(devices[0].id).to.equal(@device.id)
+				it 'should get the device given the right application id', ->
+					balena.models.device.getAllByApplication(@application.id).then (devices) =>
+						m.chai.expect(devices).to.have.length(1)
+						m.chai.expect(devices[0].id).to.equal(@device.id)
 
-			it 'should be rejected if the application name does not exist', ->
-				promise = balena.models.device.getAllByApplication('HelloWorldApp')
-				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+				it 'should be rejected if the application name does not exist', ->
+					promise = balena.models.device.getAllByApplication('HelloWorldApp')
+					m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
-			it 'should be rejected if the application id does not exist', ->
-				promise = balena.models.device.getAllByApplication(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+				it 'should be rejected if the application id does not exist', ->
+					promise = balena.models.device.getAllByApplication(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
-			it 'should support arbitrary pinejs options', ->
-				balena.models.device.getAllByApplication(@application.id, $select: [ 'id' ])
-				.then ([ device ]) =>
-					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.device_name).to.equal(undefined)
+				it 'should support arbitrary pinejs options', ->
+					balena.models.device.getAllByApplication(@application.id, $select: [ 'id' ])
+					.then ([ device ]) =>
+						m.chai.expect(device.id).to.equal(@device.id)
+						m.chai.expect(device.device_name).to.equal(undefined)
 
-		describe 'balena.models.device.getAllByParentDevice()', ->
-			beforeEach ->
-				Promise.props
-					userId: balena.auth.getUserId()
-					childApplication: balena.models.application.create
-						name: 'ChildApp'
-						applicationType: 'microservices-starter'
-						deviceType: @application.device_type
-						parent: @application.id
-				.then ({ userId, @childApplication }) =>
-					# We don't use the built-in .register or resin-register-device,
-					# because they don't yet support parent devices.
-					balena.pine.post
-						resource: 'device'
-						body:
-							belongs_to__user: userId
-							belongs_to__application: @childApplication.id
-							device_type: @childApplication.device_type
-							uuid: balena.models.device.generateUniqueKey()
-							is_managed_by__device: @device.id
-				.then (device) =>
-					@childDevice = device
+			describe 'balena.models.device.get()', ->
 
-			it 'should get the device given the right parent uuid', ->
-				balena.models.device.getAllByParentDevice(@device.uuid).then (childDevices) =>
-					m.chai.expect(childDevices).to.have.length(1)
-					m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
+				it 'should be able to get the device by uuid', ->
+					balena.models.device.get(@device.uuid).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
 
-			it 'should get the device given the right parent id', ->
-				balena.models.device.getAllByParentDevice(@device.id).then (childDevices) =>
-					m.chai.expect(childDevices).to.have.length(1)
-					m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
+				it 'should be able to get the device by id', ->
+					balena.models.device.get(@device.id).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
 
-			it 'should be empty if the parent device has no children', ->
-				promise = balena.models.device.getAllByParentDevice(@childDevice.id).then (childDevices) ->
-					m.chai.expect(childDevices).to.have.length(0)
+				it 'should be rejected if the device name does not exist', ->
+					promise = balena.models.device.get('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			it 'should be rejected if the parent device does not exist', ->
-				promise = balena.models.device.getAllByParentDevice('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.get(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
-			it 'should support arbitrary pinejs options', ->
-				balena.models.device.getAllByParentDevice(@device.id, $select: [ 'id' ])
-				.then ([ childDevice ]) =>
-					m.chai.expect(childDevice.id).to.equal(@childDevice.id)
-					m.chai.expect(childDevice.device_name).to.equal(undefined)
+				it 'should be able to use a shorter uuid', ->
+					balena.models.device.get(@device.uuid.slice(0, 8)).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
 
-		describe 'balena.models.device.get()', ->
+				it 'should support arbitrary pinejs options', ->
+					balena.models.device.get(@device.id, $select: [ 'id' ])
+					.then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
+						m.chai.expect(device.device_name).to.equal(undefined)
 
-			it 'should be able to get the device by uuid', ->
-				balena.models.device.get(@device.uuid).then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
+			describe 'balena.models.device.getByName()', ->
 
-			it 'should be able to get the device by id', ->
-				balena.models.device.get(@device.id).then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
+				it 'should be able to get the device', ->
+					balena.models.device.getByName(@device.device_name).then (devices) =>
+						m.chai.expect(devices).to.have.length(1)
+						m.chai.expect(devices[0].id).to.equal(@device.id)
 
-			it 'should be rejected if the device name does not exist', ->
-				promise = balena.models.device.get('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should be rejected if the device does not exist', ->
+					promise = balena.models.device.getByName('HelloWorldDevice')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: HelloWorldDevice')
 
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.get(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+				it 'should support arbitrary pinejs options', ->
+					balena.models.device.getByName(@device.device_name, $select: [ 'id' ])
+					.then ([ device ]) =>
+						m.chai.expect(device.id).to.equal(@device.id)
+						m.chai.expect(device.device_name).to.equal(undefined)
 
-			it 'should be able to use a shorter uuid', ->
-				balena.models.device.get(@device.uuid.slice(0, 8)).then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
+			describe 'balena.models.device.getName()', ->
 
-			it 'should support arbitrary pinejs options', ->
-				balena.models.device.get(@device.id, $select: [ 'id' ])
-				.then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.device_name).to.equal(undefined)
+				it 'should get the correct name by uuid', ->
+					promise = balena.models.device.getName(@device.uuid)
+					m.chai.expect(promise).to.eventually.equal(@device.device_name)
 
-		describe 'balena.models.device.getByName()', ->
+				it 'should get the correct name by id', ->
+					promise = balena.models.device.getName(@device.id)
+					m.chai.expect(promise).to.eventually.equal(@device.device_name)
 
-			it 'should be able to get the device', ->
-				balena.models.device.getByName(@device.device_name).then (devices) =>
-					m.chai.expect(devices).to.have.length(1)
-					m.chai.expect(devices[0].id).to.equal(@device.id)
+				it 'should be rejected if the device uuid does not exist', ->
+					promise = balena.models.device.getName('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			it 'should be rejected if the device does not exist', ->
-				promise = balena.models.device.getByName('HelloWorldDevice')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: HelloWorldDevice')
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getName(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
-			it 'should support arbitrary pinejs options', ->
-				balena.models.device.getByName(@device.device_name, $select: [ 'id' ])
-				.then ([ device ]) =>
-					m.chai.expect(device.id).to.equal(@device.id)
-					m.chai.expect(device.device_name).to.equal(undefined)
+			describe 'balena.models.device.getApplicationName()', ->
 
-		describe 'balena.models.device.getName()', ->
+				it 'should get the correct application name from a device uuid', ->
+					promise = balena.models.device.getApplicationName(@device.uuid)
+					m.chai.expect(promise).to.eventually.equal(@application.app_name)
 
-			it 'should get the correct name by uuid', ->
-				promise = balena.models.device.getName(@device.uuid)
-				m.chai.expect(promise).to.eventually.equal(@device.device_name)
+				it 'should get the correct application name from a device id', ->
+					promise = balena.models.device.getApplicationName(@device.id)
+					m.chai.expect(promise).to.eventually.equal(@application.app_name)
 
-			it 'should get the correct name by id', ->
-				promise = balena.models.device.getName(@device.id)
-				m.chai.expect(promise).to.eventually.equal(@device.device_name)
+				it 'should be rejected if the device uuid does not exist', ->
+					promise = balena.models.device.getApplicationName('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			it 'should be rejected if the device uuid does not exist', ->
-				promise = balena.models.device.getName('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getApplicationName(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.getName(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+			describe 'balena.models.device.has()', ->
 
-		describe 'balena.models.device.getApplicationName()', ->
+				it 'should eventually be true if the device uuid exists', ->
+					promise = balena.models.device.has(@device.uuid)
+					m.chai.expect(promise).to.eventually.be.true
 
-			it 'should get the correct application name from a device uuid', ->
-				promise = balena.models.device.getApplicationName(@device.uuid)
-				m.chai.expect(promise).to.eventually.equal(@application.app_name)
+				it 'should eventually be true if the device id exists', ->
+					promise = balena.models.device.has(@device.id)
+					m.chai.expect(promise).to.eventually.be.true
 
-			it 'should get the correct application name from a device id', ->
-				promise = balena.models.device.getApplicationName(@device.id)
-				m.chai.expect(promise).to.eventually.equal(@application.app_name)
+				it 'should return false if the device id is undefined', ->
+					promise = balena.models.application.has(undefined)
+					m.chai.expect(promise).to.eventually.be.false
 
-			it 'should be rejected if the device uuid does not exist', ->
-				promise = balena.models.device.getApplicationName('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should eventually be false if the device uuid does not exist', ->
+					promise = balena.models.device.has('asdfghjkl')
+					m.chai.expect(promise).to.eventually.be.false
 
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.getApplicationName(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+				it 'should eventually be false if the device id does not exist', ->
+					promise = balena.models.device.has(999999)
+					m.chai.expect(promise).to.eventually.be.false
 
-		describe 'balena.models.device.has()', ->
+			describe 'balena.models.device.isOnline()', ->
 
-			it 'should eventually be true if the device uuid exists', ->
-				promise = balena.models.device.has(@device.uuid)
-				m.chai.expect(promise).to.eventually.be.true
+				it 'should eventually be false if the device uuid is offline', ->
+					promise = balena.models.device.isOnline(@device.uuid)
+					m.chai.expect(promise).to.eventually.be.false
 
-			it 'should eventually be true if the device id exists', ->
-				promise = balena.models.device.has(@device.id)
-				m.chai.expect(promise).to.eventually.be.true
+				it 'should eventually be false if the device id is offline', ->
+					promise = balena.models.device.isOnline(@device.id)
+					m.chai.expect(promise).to.eventually.be.false
 
-			it 'should return false if the device id is undefined', ->
-				promise = balena.models.application.has(undefined)
-				m.chai.expect(promise).to.eventually.be.false
+				it 'should be rejected if the device uuid does not exist', ->
+					promise = balena.models.device.isOnline('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			it 'should eventually be false if the device uuid does not exist', ->
-				promise = balena.models.device.has('asdfghjkl')
-				m.chai.expect(promise).to.eventually.be.false
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.isOnline(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
-			it 'should eventually be false if the device id does not exist', ->
-				promise = balena.models.device.has(999999)
-				m.chai.expect(promise).to.eventually.be.false
+			describe 'balena.models.device.getLocalIPAddresses()', ->
 
-		describe 'balena.models.device.isOnline()', ->
+				it 'should be rejected with an offline error if the device uuid is offline', ->
+					promise = balena.models.device.getLocalIPAddresses(@device.uuid)
+					m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.uuid}")
 
-			it 'should eventually be false if the device uuid is offline', ->
-				promise = balena.models.device.isOnline(@device.uuid)
-				m.chai.expect(promise).to.eventually.be.false
+				it 'should be rejected with an offline error if the device id is offline', ->
+					promise = balena.models.device.getLocalIPAddresses(@device.id)
+					m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.id}")
 
-			it 'should eventually be false if the device id is offline', ->
-				promise = balena.models.device.isOnline(@device.id)
-				m.chai.expect(promise).to.eventually.be.false
+				it 'should be rejected if the device uuid does not exist', ->
+					promise = balena.models.device.getLocalIPAddresses('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			it 'should be rejected if the device uuid does not exist', ->
-				promise = balena.models.device.isOnline('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getLocalIPAddresses(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.isOnline(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+			describe 'balena.models.device.getAllByParentDevice()', ->
 
-		describe 'balena.models.device.getLocalIPAddresses()', ->
+				before ->
+					Promise.props
+						userId: balena.auth.getUserId()
+						childApplication: balena.models.application.create
+							name: 'ChildApp'
+							applicationType: 'microservices-starter'
+							deviceType: @application.device_type
+							parent: @application.id
+					.then ({ userId, @childApplication }) =>
+						# We don't use the built-in .register or resin-register-device,
+						# because they don't yet support parent devices.
+						balena.pine.post
+							resource: 'device'
+							body:
+								belongs_to__user: userId
+								belongs_to__application: @childApplication.id
+								device_type: @childApplication.device_type
+								uuid: balena.models.device.generateUniqueKey()
+								is_managed_by__device: @device.id
+					.then (device) =>
+						@childDevice = device
 
-			it 'should be rejected with an offline error if the device uuid is offline', ->
-				promise = balena.models.device.getLocalIPAddresses(@device.uuid)
-				m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.uuid}")
+				after ->
+					balena.models.application.remove 'ChildApp'
 
-			it 'should be rejected with an offline error if the device id is offline', ->
-				promise = balena.models.device.getLocalIPAddresses(@device.id)
-				m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.id}")
+				it 'should get the device given the right parent uuid', ->
+					balena.models.device.getAllByParentDevice(@device.uuid).then (childDevices) =>
+						m.chai.expect(childDevices).to.have.length(1)
+						m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
 
-			it 'should be rejected if the device uuid does not exist', ->
-				promise = balena.models.device.getLocalIPAddresses('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should get the device given the right parent id', ->
+					balena.models.device.getAllByParentDevice(@device.id).then (childDevices) =>
+						m.chai.expect(childDevices).to.have.length(1)
+						m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
 
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.getLocalIPAddresses(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+				it 'should be empty if the parent device has no children', ->
+					promise = balena.models.device.getAllByParentDevice(@childDevice.id).then (childDevices) ->
+						m.chai.expect(childDevices).to.have.length(0)
+
+				it 'should be rejected if the parent device does not exist', ->
+					promise = balena.models.device.getAllByParentDevice('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+				it 'should support arbitrary pinejs options', ->
+					balena.models.device.getAllByParentDevice(@device.id, $select: [ 'id' ])
+					.then ([ childDevice ]) =>
+						m.chai.expect(childDevice.id).to.equal(@childDevice.id)
+						m.chai.expect(childDevice.device_name).to.equal(undefined)
 
 		describe 'balena.models.device.remove()', ->
+
+			givenAnApplication(before)
+
+			givenADevice(beforeEach)
 
 			it 'should be able to remove the device by uuid', ->
 				balena.models.device.remove(@device.uuid)
@@ -460,23 +462,27 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.rename()', ->
 
+			givenAnApplication(before)
+
+			givenADevice(beforeEach)
+
 			it 'should be able to rename the device by uuid', ->
-				balena.models.device.rename(@device.uuid, 'FooBarDevice').then =>
+				balena.models.device.rename(@device.uuid, 'FooBarDeviceByUuid').then =>
 					balena.models.device.getName(@device.uuid)
 				.then (name) ->
-					m.chai.expect(name).to.equal('FooBarDevice')
+					m.chai.expect(name).to.equal('FooBarDeviceByUuid')
 
 			it 'should be able to rename the device by id', ->
-				balena.models.device.rename(@device.id, 'FooBarDevice').then =>
+				balena.models.device.rename(@device.id, 'FooBarDeviceById').then =>
 					balena.models.device.getName(@device.id)
 				.then (name) ->
-					m.chai.expect(name).to.equal('FooBarDevice')
+					m.chai.expect(name).to.equal('FooBarDeviceById')
 
 			it 'should be able to rename the device using a shorter uuid', ->
-				balena.models.device.rename(@device.uuid.slice(0, 7), 'FooBarDevice').then =>
+				balena.models.device.rename(@device.uuid.slice(0, 7), 'FooBarDeviceByShortUuid').then =>
 					balena.models.device.getName(@device.uuid)
 				.then (name) ->
-					m.chai.expect(name).to.equal('FooBarDevice')
+					m.chai.expect(name).to.equal('FooBarDeviceByShortUuid')
 
 			it 'should be rejected if the device uuid does not exist', ->
 				promise = balena.models.device.rename('asdfghjkl', 'Foo Bar')
@@ -487,6 +493,8 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
 		describe 'balena.models.device.setCustomLocation()', ->
+
+			givenAnApplicationWithADevice(before)
 
 			it 'should be able to set the location of a device by uuid', ->
 				balena.models.device.setCustomLocation @device.uuid,
@@ -500,27 +508,29 @@ describe 'Device Model', ->
 
 			it 'should be able to set the location of a device by id', ->
 				balena.models.device.setCustomLocation @device.id,
-					latitude: 41.383333
-					longitude: 2.183333
+					latitude: 42.383333
+					longitude: 2.283333
 				.then =>
 					balena.models.device.get(@device.id)
 				.then (device) ->
-					m.chai.expect(device.custom_latitude).to.equal('41.383333')
-					m.chai.expect(device.custom_longitude).to.equal('2.183333')
+					m.chai.expect(device.custom_latitude).to.equal('42.383333')
+					m.chai.expect(device.custom_longitude).to.equal('2.283333')
 
 			it 'should be rejected if the device uuid does not exist', ->
 				promise = balena.models.device.setCustomLocation 'asdfghjkl',
-					latitude: 41.383333
-					longitude: 2.183333
+					latitude: 43.383333
+					longitude: 2.383333
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
 			it 'should be rejected if the device id does not exist', ->
 				promise = balena.models.device.setCustomLocation 999999,
-					latitude: 41.383333
-					longitude: 2.183333
+					latitude: 44.383333
+					longitude: 2.483333
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
 		describe 'balena.models.device.unsetCustomLocation()', ->
+
+			givenAnApplicationWithADevice(before)
 
 			beforeEach ->
 				balena.models.device.setCustomLocation @device.id,
@@ -551,6 +561,10 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.note()', ->
 
+			givenAnApplication(before)
+
+			givenADevice(beforeEach)
+
 			it 'should be able to note a device by uuid', ->
 				balena.models.device.note(@device.uuid, 'What you do today can improve all your tomorrows').then =>
 					balena.models.device.get(@device.uuid)
@@ -573,6 +587,8 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.hasDeviceUrl()', ->
 
+			givenAnApplicationWithADevice(before)
+
 			it 'should be rejected if the device uuid does not exist', ->
 				promise = balena.models.device.hasDeviceUrl('asdfghjkl')
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
@@ -593,7 +609,7 @@ describe 'Device Model', ->
 
 			describe 'given device url is enabled', ->
 
-				beforeEach ->
+				before ->
 					balena.models.device.enableDeviceUrl(@device.id)
 
 				it 'should eventually be true given a device uuid', ->
@@ -606,13 +622,17 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.getDeviceUrl()', ->
 
-			it 'should be rejected if the device uuid does not exist', ->
-				promise = balena.models.device.getDeviceUrl('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+			givenAnApplicationWithADevice(before)
 
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.getDeviceUrl(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+			describe 'given a newly created device', ->
+
+				it 'should be rejected if the device uuid does not exist', ->
+					promise = balena.models.device.getDeviceUrl('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getDeviceUrl(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
 			describe 'given device url is disabled', ->
 
@@ -626,7 +646,7 @@ describe 'Device Model', ->
 
 			describe 'given device url is enabled', ->
 
-				beforeEach ->
+				before ->
 					balena.models.device.enableDeviceUrl(@device.id)
 
 				it 'should eventually return the correct device url given a shorter uuid', ->
@@ -668,6 +688,10 @@ describe 'Device Model', ->
 
 			describe 'given the device url is disabled', ->
 
+				givenAnApplication(before)
+
+				givenADevice(beforeEach)
+
 				it 'should be able to enable web access using a uuid', ->
 					balena.models.device.enableDeviceUrl(@device.uuid).then =>
 						promise = balena.models.device.hasDeviceUrl(@device.id)
@@ -695,6 +719,10 @@ describe 'Device Model', ->
 
 			describe 'given device url is enabled', ->
 
+				givenAnApplication(before)
+
+				givenADevice(beforeEach)
+
 				beforeEach ->
 					balena.models.device.enableDeviceUrl(@device.id)
 
@@ -714,6 +742,8 @@ describe 'Device Model', ->
 						m.chai.expect(promise).to.eventually.be.false
 
 		describe 'balena.models.device.generateDeviceKey()', ->
+
+			givenAnApplicationWithADevice(before)
 
 			it 'should be able to generate a device key by uuid', ->
 				balena.models.device.generateDeviceKey(@device.uuid).then (deviceApiKey) ->
@@ -739,6 +769,9 @@ describe 'Device Model', ->
 					m.chai.expect(deviceApiKey).to.have.length(32)
 
 		describe 'balena.models.device.grantSupportAccess()', ->
+
+			givenAnApplicationWithADevice(before)
+
 			it 'should throw an error if the expiry time stamp is in the past', ->
 				expiryTimestamp = Date.now() - 3600 * 1000
 
@@ -760,32 +793,46 @@ describe 'Device Model', ->
 				m.chai.expect(promise).to.eventually.equal(expiryTimestamp)
 
 		describe 'balena.models.device.revokeSupportAccess()', ->
-			it 'should revoke support access', ->
+
+			givenAnApplicationWithADevice(before)
+
+			before ->
 				balena.models.device.grantSupportAccess(@device.id, Date.now() + 3600 * 1000)
-				.then =>
-					balena.models.device.revokeSupportAccess(@device.id)
+
+			it 'should revoke support access', ->
+				balena.models.device.revokeSupportAccess(@device.id)
 				.then =>
 					balena.models.device.get(@device.id)
 				.then ({ is_accessible_by_support_until__date }) ->
 					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
 		describe 'balena.models.device.hasLockOverride()', ->
+
+			givenAnApplicationWithADevice(before)
+
 			it 'should be false by default for a device retrieved by uuid', ->
 				balena.models.device.hasLockOverride(@device.uuid)
 				.then (hasLockOverride) ->
 					m.chai.expect(hasLockOverride).to.be.false
+
 			it 'should be false by default for a device retrieved by id', ->
 				balena.models.device.hasLockOverride(@device.id)
 				.then (hasLockOverride) ->
 					m.chai.expect(hasLockOverride).to.be.false
 
 		describe 'balena.models.device.enableLockOverride()', ->
+
+			givenAnApplication(before)
+
+			givenADevice(beforeEach)
+
 			it 'should be able to enable lock override by uuid', ->
 				balena.models.device.enableLockOverride(@device.uuid)
 				.then =>
 					balena.models.device.hasLockOverride(@device.uuid)
 				.then (hasLockOverride) ->
 					m.chai.expect(hasLockOverride).to.be.true
+
 			it 'should be able to enable lock override by id', ->
 				balena.models.device.enableLockOverride(@device.id)
 				.then =>
@@ -794,12 +841,21 @@ describe 'Device Model', ->
 					m.chai.expect(hasLockOverride).to.be.true
 
 		describe 'balena.models.device.disableLockOverride()', ->
+
+			givenAnApplication(before)
+
+			givenADevice(beforeEach)
+
+			beforeEach ->
+				balena.models.device.enableLockOverride(@device.uuid)
+
 			it 'should be able to disable lock override by uuid', ->
 				balena.models.device.disableLockOverride(@device.uuid)
 				.then =>
 					balena.models.device.hasLockOverride(@device.uuid)
 				.then (hasLockOverride) ->
 					m.chai.expect(hasLockOverride).to.be.false
+
 			it 'should be able to disable lock override by id', ->
 				balena.models.device.disableLockOverride(@device.id)
 				.then =>
@@ -808,6 +864,8 @@ describe 'Device Model', ->
 					m.chai.expect(hasLockOverride).to.be.false
 
 		describe 'balena.models.device.getOsUpdateStatus()', ->
+
+			givenAnApplicationWithADevice(before)
 
 			it 'should be able to get the current OS update status', ->
 				balena.models.device.getOsUpdateStatus(@device.uuid)
@@ -822,65 +880,59 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.startOsUpdate()', ->
 
-			it 'should not be able to start an OS update without providing a targetOsVersion parameter', ->
-				promise = balena.models.device.startOsUpdate(@device.uuid)
-				m.chai.expect(promise).to.be.rejected
-					.and.eventually.have.property('code', 'BalenaInvalidParameterError')
+			givenAnApplicationWithADevice(before)
 
-			it 'should not be able to start an OS update for an offline device', ->
-				promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
-				m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.uuid}")
+			describe 'given an offline device w/o os info', ->
 
-			it 'should be rejected if the device does not exist', ->
-				promise = balena.models.device.startOsUpdate('asdfghjkl', '2.29.2+rev1.prod')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+				it 'should be rejected if the device does not exist', ->
+					promise = balena.models.device.startOsUpdate('asdfghjkl', '2.29.2+rev1.prod')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
 
-			it 'should not be able to start an OS update for a device that has not yet reported its current version', ->
-				balena.pine.patch
-					resource: 'device'
-					id: @device.id
-					body: is_online: true
-				.then =>
+				it 'should not be able to start an OS update without providing a targetOsVersion parameter', ->
+					promise = balena.models.device.startOsUpdate(@device.uuid)
+					m.chai.expect(promise).to.be.rejected
+						.and.eventually.have.property('code', 'BalenaInvalidParameterError')
+
+				it 'should not be able to start an OS update for an offline device', ->
+					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
+					m.chai.expect(promise).to.be.rejectedWith("The device is offline: #{@device.uuid}")
+
+			describe 'given an online device w/o os info', ->
+
+				before ->
+					balena.pine.patch
+						resource: 'device'
+						id: @device.id
+						body: is_online: true
+
+				it 'should not be able to start an OS update for a device that has not yet reported its current version', ->
 					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
 					m.chai.expect(promise).to.be.rejectedWith("The current os version of the device is not available: #{@device.uuid}")
 
-			it 'should not be able to start an OS update when the target os version is not specified', ->
-				balena.pine.patch
-					resource: 'device'
-					id: @device.id
-					body:
-						is_online: true
-						os_variant: 'prod'
-						os_version: 'Resin OS 2.7.8+rev1'
-				.then =>
+			describe 'given an online device with os info', ->
+
+				before ->
+					balena.pine.patch
+						resource: 'device'
+						id: @device.id
+						body:
+							is_online: true
+							os_variant: 'prod'
+							os_version: 'Resin OS 2.7.8+rev1'
+
+				it 'should not be able to start an OS update when the target os version is not specified', ->
 					promise = balena.models.device.startOsUpdate(@device.uuid)
 					m.chai.expect(promise).to.be.rejectedWith("undefined is not a valid value for parameter 'targetOsVersion'")
 					.and.eventually.have.property('code', 'BalenaInvalidParameterError')
 
-			it 'should not be able to start an OS update when the target os version does not exist', ->
-				balena.pine.patch
-					resource: 'device'
-					id: @device.id
-					body:
-						is_online: true
-						os_variant: 'prod'
-						os_version: 'Resin OS 2.7.8+rev1'
-				.then =>
+				it 'should not be able to start an OS update when the target os version does not exist', ->
 					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.1+rev1.prod')
 					m.chai.expect(promise).to.be.rejectedWith("2.29.1+rev1.prod is not a valid value for parameter 'targetOsVersion'")
 					.and.eventually.have.property('code', 'BalenaInvalidParameterError')
 
-			# just to confirm that the above checks do not give false positives,
-			# allow the request to reach the actions server and document the current error
-			it 'should not be able to start an OS update for a fake device', ->
-				balena.pine.patch
-					resource: 'device'
-					id: @device.id
-					body:
-						is_online: true
-						os_variant: 'prod'
-						os_version: 'Resin OS 2.7.8+rev1'
-				.then =>
+				# just to confirm that the above checks do not give false positives,
+				# allow the request to reach the actions server and document the current error
+				it 'should not be able to start an OS update for a fake device', ->
 					promise = balena.models.device.startOsUpdate(@device.uuid, '2.29.2+rev1.prod')
 					m.chai.expect(promise).to.be.rejected
 					.then (error) ->
@@ -890,13 +942,19 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.tags', ->
 
+			givenAnApplication(before)
+
+			givenADevice(before)
+
 			appTagTestOptions =
 				model: balena.models.device.tags
+				modelNamespace: 'balena.models.device.tags'
 				resourceName: 'application'
 				uniquePropertyName: 'app_name'
 
 			deviceTagTestOptions =
 				model: balena.models.device.tags
+				modelNamespace: 'balena.models.device.tags'
 				resourceName: 'device'
 				uniquePropertyName: 'uuid'
 
@@ -907,128 +965,153 @@ describe 'Device Model', ->
 				# device.tags.getAllByApplication() test
 				appTagTestOptions.setTagResourceProvider = => @device
 
+			itShouldSetGetAndRemoveTags(deviceTagTestOptions)
+
 			describe 'balena.models.device.tags.getAllByApplication()', ->
 				itShouldGetAllTagsByResource(appTagTestOptions)
 
 			describe 'balena.models.device.tags.getAllByDevice()', ->
 				itShouldGetAllTagsByResource(deviceTagTestOptions)
 
-			describe 'balena.models.device.tags.getAll()', ->
-				itShouldGetAllTags(deviceTagTestOptions)
-
-			describe 'balena.models.device.tags.set()', ->
-				itShouldSetTags(deviceTagTestOptions)
-
-			describe 'balena.models.device.tags.remove()', ->
-				itShouldRemoveTags(deviceTagTestOptions)
 
 		describe 'balena.models.device.configVar', ->
+
+			givenAnApplicationWithADevice(before)
 
 			configVarModel = balena.models.device.configVar
 
 			['id', 'uuid'].forEach (deviceParam) ->
+				deviceParamUpper = deviceParam.toUpperCase()
 
-				it "can create and retrieve a variable by #{deviceParam}", ->
-					configVarModel.set(@device[deviceParam], 'BALENA_EDITOR', 'vim')
-					.then =>
-						configVarModel.get(@device[deviceParam], 'BALENA_EDITOR')
+				it "can create a variable by #{deviceParam}", ->
+					promise = configVarModel.set(@device[deviceParam], "BALENA_EDITOR_#{deviceParamUpper}", 'vim')
+					m.chai.expect(promise).to.not.be.rejected
+
+				it "...can retrieve a created variable by #{deviceParam}", ->
+					configVarModel.get(@device[deviceParam], "BALENA_EDITOR_#{deviceParamUpper}")
 					.then (result) ->
 						m.chai.expect(result).to.equal('vim')
 
-				it "can create, update and retrieve a variable by #{deviceParam}", ->
-					configVarModel.set(@device[deviceParam], 'BALENA_EDITOR', 'vim')
+				it "...can update and retrieve a variable by #{deviceParam}", ->
+					configVarModel.set(@device[deviceParam], "BALENA_EDITOR_#{deviceParamUpper}", 'emacs')
 					.then =>
-						configVarModel.set(@device[deviceParam], 'BALENA_EDITOR', 'emacs')
-					.then =>
-						configVarModel.get(@device[deviceParam], 'BALENA_EDITOR')
+						configVarModel.get(@device[deviceParam], "BALENA_EDITOR_#{deviceParamUpper}")
 					.then (result) ->
 						m.chai.expect(result).to.equal('emacs')
 
-				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+				it "...can delete and then fail to retrieve a variable by #{deviceParam}", ->
+					configVarModel.remove(@device[deviceParam], "BALENA_EDITOR_#{deviceParamUpper}")
+					.then =>
+						configVarModel.get(@device[deviceParam], "BALENA_EDITOR_#{deviceParamUpper}")
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
+				it "can create and then retrieve multiple variables by #{deviceParamUpper}", ->
 					Promise.all [
-						configVarModel.set(@device[deviceParam], 'BALENA_A', 'a')
-						configVarModel.set(@device[deviceParam], 'BALENA_B', 'b')
+						configVarModel.set(@device[deviceParam], "BALENA_A_#{deviceParamUpper}", 'a')
+						configVarModel.set(@device[deviceParam], "BALENA_B_#{deviceParamUpper}", 'b')
 					]
 					.then =>
 						configVarModel.getAllByDevice(@device[deviceParam])
 					.then (result) ->
-						m.chai.expect(_.find(result, { name: 'BALENA_A' }).value).equal('a')
-						m.chai.expect(_.find(result, { name: 'BALENA_B' }).value).equal('b')
-
-				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
-					configVarModel.set(@device[deviceParam], 'BALENA_EDITOR', 'vim')
+						m.chai.expect(_.find(result, { name: "BALENA_A_#{deviceParamUpper}" })).to.be.an('object')
+							.that.has.property('value', 'a')
+						m.chai.expect(_.find(result, { name: "BALENA_B_#{deviceParamUpper}" })).to.be.an('object')
+							.that.has.property('value', 'b')
 					.then =>
-						configVarModel.remove(@device[deviceParam], 'BALENA_EDITOR')
-					.then =>
-						configVarModel.get(@device[deviceParam], 'BALENA_EDITOR')
-					.then (result) ->
-						m.chai.expect(result).to.equal(undefined)
+						Promise.all [
+							configVarModel.remove(@device[deviceParam], "BALENA_A_#{deviceParamUpper}")
+							configVarModel.remove(@device[deviceParam], "BALENA_B_#{deviceParamUpper}")
+						]
 
 			it 'can create and then retrieve multiple variables by application', ->
 				Promise.all [
-					configVarModel.set(@device.id, 'BALENA_A', 'a')
-					configVarModel.set(@device.id, 'BALENA_B', 'b')
+					configVarModel.set(@device.id, 'BALENA_A_BY_APPLICATION', 'a')
+					configVarModel.set(@device.id, 'BALENA_B_BY_APPLICATION', 'b')
 				]
 				.then =>
 					configVarModel.getAllByApplication(@application.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'BALENA_A' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'BALENA_B' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'BALENA_A_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'a')
+					m.chai.expect(_.find(result, { name: 'BALENA_B_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'b')
+				.then =>
+					Promise.all [
+						configVarModel.remove(@device.id, 'BALENA_A_BY_APPLICATION')
+						configVarModel.remove(@device.id, 'BALENA_B_BY_APPLICATION')
+					]
 
 		describe 'balena.models.device.envVar', ->
+
+			givenAnApplicationWithADevice(before)
 
 			envVarModel = balena.models.device.envVar
 
 			['id', 'uuid'].forEach (deviceParam) ->
 
-				it "can create and retrieve a variable by #{deviceParam}", ->
-					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
-					.then =>
-						envVarModel.get(@device[deviceParam], 'EDITOR')
+				it "can create a variable by #{deviceParam}", ->
+					promise = envVarModel.set(@device[deviceParam], "EDITOR_BY_#{deviceParam}", 'vim')
+					m.chai.expect(promise).to.not.be.rejected
+
+				it "...can retrieve a created variable by #{deviceParam}", ->
+					envVarModel.get(@device[deviceParam], "EDITOR_BY_#{deviceParam}")
 					.then (result) ->
 						m.chai.expect(result).to.equal('vim')
 
-				it "can create, update and retrieve a variable by #{deviceParam}", ->
-					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+				it "...can update and retrieve a variable by #{deviceParam}", ->
+					envVarModel.set(@device[deviceParam], "EDITOR_BY_#{deviceParam}", 'emacs')
 					.then =>
-						envVarModel.set(@device[deviceParam], 'EDITOR', 'emacs')
-					.then =>
-						envVarModel.get(@device[deviceParam], 'EDITOR')
+						envVarModel.get(@device[deviceParam], "EDITOR_BY_#{deviceParam}")
 					.then (result) ->
 						m.chai.expect(result).to.equal('emacs')
 
+				it "...can delete and then fail to retrieve a variable by #{deviceParam}", ->
+					envVarModel.remove(@device[deviceParam], "EDITOR_BY_#{deviceParam}")
+					.then =>
+						envVarModel.get(@device[deviceParam], "EDITOR_BY_#{deviceParam}")
+					.then (result) ->
+						m.chai.expect(result).to.equal(undefined)
+
 				it "can create and then retrieve multiple variables by #{deviceParam}", ->
 					Promise.all [
-						envVarModel.set(@device[deviceParam], 'A', 'a')
-						envVarModel.set(@device[deviceParam], 'B', 'b')
+						envVarModel.set(@device[deviceParam], "A_BY_#{deviceParam}", 'a')
+						envVarModel.set(@device[deviceParam], "B_BY_#{deviceParam}", 'b')
 					]
 					.then =>
 						envVarModel.getAllByDevice(@device[deviceParam])
 					.then (result) ->
-						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
-						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
-
-				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
-					envVarModel.set(@device[deviceParam], 'EDITOR', 'vim')
+						m.chai.expect(_.find(result, { name: "A_BY_#{deviceParam}" })).to.be.an('object')
+							.that.has.property('value', 'a')
+						m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" })).to.be.an('object')
+							.that.has.property('value', 'b')
 					.then =>
-						envVarModel.remove(@device[deviceParam], 'EDITOR')
-					.then =>
-						envVarModel.get(@device[deviceParam], 'EDITOR')
-					.then (result) ->
-						m.chai.expect(result).to.equal(undefined)
+						Promise.all [
+							envVarModel.remove(@device[deviceParam], "A_BY_#{deviceParam}")
+							envVarModel.remove(@device[deviceParam], "B_BY_#{deviceParam}")
+						]
 
 			it 'can create and then retrieve multiple variables by application', ->
 				Promise.all [
-					envVarModel.set(@device.id, 'A', 'a')
-					envVarModel.set(@device.id, 'B', 'b')
+					envVarModel.set(@device.id, 'A_BY_APPLICATION', 'a')
+					envVarModel.set(@device.id, 'B_BY_APPLICATION', 'b')
 				]
 				.then =>
 					envVarModel.getAllByApplication(@application.id)
 				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+					m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'a')
+					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
+						.that.has.property('value', 'b')
+				.then =>
+					Promise.all [
+						envVarModel.remove(@device.id, 'A_BY_APPLICATION')
+						envVarModel.remove(@device.id, 'B_BY_APPLICATION')
+					]
 
 		describe 'balena.models.device.getSupervisorTargetState()', ->
+
+			givenAnApplicationWithADevice(before)
 
 			it 'should be rejected if the device does not exist', ->
 				promise = balena.models.device.getSupervisorTargetState('asdfghjkl')
@@ -1055,6 +1138,8 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.getSupervisorState()', ->
 
+			givenAnApplicationWithADevice(before)
+
 			it 'should be rejected if the device does not exist', ->
 				promise = balena.models.device.getSupervisorState('asdfghjkl')
 				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
@@ -1063,259 +1148,271 @@ describe 'Device Model', ->
 				promise = balena.models.device.getSupervisorState(@device.id)
 				m.chai.expect(promise).to.be.rejectedWith('No online device(s) found')
 
-	describe 'given a multicontainer application with a single offline device', ->
+	describe 'given a multicontainer application', ->
 
-		givenMulticontainerApplication()
+		givenMulticontainerApplication(before)
 
-		describe 'balena.models.device.getWithServiceDetails()', ->
+		describe 'given a single offline device', ->
 
-			it 'should be able to get the device by uuid', ->
-				balena.models.device.getWithServiceDetails(@device.uuid).then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
+			givenADevice(before)
 
-			it 'should be able to get the device by id', ->
-				balena.models.device.getWithServiceDetails(@device.id).then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
+			describe 'balena.models.device.getWithServiceDetails()', ->
 
-			it 'should retrieve the current service details', ->
-				balena.models.device.getWithServiceDetails(@device.id).then (deviceDetails) =>
-					m.chai.expect(deviceDetails).to.deep.match
-						device_name: @device.device_name
-						uuid: @device.uuid
-						is_on__commit: @currentRelease.commit
-						current_services:
-							web: [
-								id: @newWebInstall.id
-								service_id: @webService.id
-								image_id: @newWebImage.id
-								commit: 'new-release-commit'
-								status: 'downloading'
-								download_progress: 50
-							,
-								id: @oldWebInstall.id
-								service_id: @webService.id
-								image_id: @oldWebImage.id
-								commit: 'old-release-commit'
-								status: 'running'
-								download_progress: 100
-							]
-							db: [
-								id: @newDbInstall.id
-								service_id: @dbService.id
-								image_id: @newDbImage.id
-								commit: 'new-release-commit'
-								status: 'running'
-								download_progress: 100
-							]
+				it 'should be able to get the device by uuid', ->
+					balena.models.device.getWithServiceDetails(@device.uuid).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
 
-					# Should filter out deleted image installs
-					m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1)
+				it 'should be able to get the device by id', ->
+					balena.models.device.getWithServiceDetails(@device.id).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
 
-					# Should have an empty list of gateway downloads
-					m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0)
+				it 'should retrieve the current service details', ->
+					balena.models.device.getWithServiceDetails(@device.id).then (deviceDetails) =>
+						m.chai.expect(deviceDetails).to.deep.match
+							device_name: @device.device_name
+							uuid: @device.uuid
+							is_on__commit: @currentRelease.commit
+							current_services:
+								web: [
+									id: @newWebInstall.id
+									service_id: @webService.id
+									image_id: @newWebImage.id
+									commit: 'new-release-commit'
+									status: 'downloading'
+									download_progress: 50
+								,
+									id: @oldWebInstall.id
+									service_id: @webService.id
+									image_id: @oldWebImage.id
+									commit: 'old-release-commit'
+									status: 'running'
+									download_progress: 100
+								]
+								db: [
+									id: @newDbInstall.id
+									service_id: @dbService.id
+									image_id: @newDbImage.id
+									commit: 'new-release-commit'
+									status: 'running'
+									download_progress: 100
+								]
 
-			it 'should return gateway downloads, if available', ->
-				Promise.all [
-					balena.pine.post
-						resource: 'gateway_download'
-						body:
-							image: @newWebImage.id
-							status: 'downloading'
-							is_downloaded_by__device: @device.id
-							download_progress: 50
-				,
-					balena.pine.post
-						resource: 'gateway_download'
-						body:
-							image: @oldWebImage.id
-							status: 'deleted'
-							is_downloaded_by__device: @device.id
-							download_progress: 100
-				]
-				.then =>
-					balena.models.device.getWithServiceDetails(@device.id)
-				.then (deviceDetails) =>
-					m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1)
-					m.chai.expect(deviceDetails.current_gateway_downloads[0]).to.deep.match
-						service_id: @webService.id
-						image_id: @newWebImage.id
-						status: 'downloading'
-						download_progress: 50
+						# Should filter out deleted image installs
+						m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1)
 
-			it 'should allow options to change the device fields returned', ->
-				balena.models.device.getWithServiceDetails @device.id,
-					$select: ['id', 'uuid']
-					$expand:
-						belongs_to__application:
-							$select: ['id', 'app_name']
-				.then (deviceDetails) =>
+						# Should have an empty list of gateway downloads
+						m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0)
 
-					m.chai.expect(deviceDetails.device_name).to.be.undefined
-
-					m.chai.expect(deviceDetails.current_services).not.to.be.undefined
-
-					m.chai.expect(deviceDetails.belongs_to__application[0]).to.deep.match
-						id: @application.id
-						app_name: @application.app_name
-
-			it 'should be rejected if the device name does not exist', ->
-				promise = balena.models.device.getWithServiceDetails('asdfghjkl')
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
-
-			it 'should be rejected if the device id does not exist', ->
-				promise = balena.models.device.getWithServiceDetails(999999)
-				m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
-
-			it 'should be able to use a shorter uuid', ->
-				balena.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
-					m.chai.expect(device.id).to.equal(@device.id)
-
-
-		describe 'balena.models.device.serviceVar', ->
-
-			varModel = balena.models.device.serviceVar
-
-			['id', 'uuid'].forEach (deviceParam) ->
-
-				it "can create and retrieve a variable by #{deviceParam}", ->
-					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
-					.then =>
-						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
-					.then (result) ->
-						m.chai.expect(result).to.equal('vim')
-
-				it "can create, update and retrieve a variable by #{deviceParam}", ->
-					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
-					.then =>
-						varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'emacs')
-					.then =>
-						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
-					.then (result) ->
-						m.chai.expect(result).to.equal('emacs')
-
-				it "can create and then retrieve multiple variables by #{deviceParam}", ->
+				it 'should return gateway downloads, if available', ->
 					Promise.all [
-						varModel.set(@device[deviceParam], @webService.id, 'A', 'a')
-						varModel.set(@device[deviceParam], @dbService.id, 'B', 'b')
+						balena.pine.post
+							resource: 'gateway_download'
+							body:
+								image: @newWebImage.id
+								status: 'downloading'
+								is_downloaded_by__device: @device.id
+								download_progress: 50
+					,
+						balena.pine.post
+							resource: 'gateway_download'
+							body:
+								image: @oldWebImage.id
+								status: 'deleted'
+								is_downloaded_by__device: @device.id
+								download_progress: 100
 					]
 					.then =>
-						varModel.getAllByDevice(@device[deviceParam])
-					.then (result) ->
-						m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
-						m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+						balena.models.device.getWithServiceDetails(@device.id)
+					.then (deviceDetails) =>
+						m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1)
+						m.chai.expect(deviceDetails.current_gateway_downloads[0]).to.deep.match
+							service_id: @webService.id
+							image_id: @newWebImage.id
+							status: 'downloading'
+							download_progress: 50
 
-				it "can create, delete and then fail to retrieve a variable by #{deviceParam}", ->
-					varModel.set(@device[deviceParam], @webService.id, 'EDITOR', 'vim')
+				it 'should allow options to change the device fields returned', ->
+					balena.models.device.getWithServiceDetails @device.id,
+						$select: ['id', 'uuid']
+						$expand:
+							belongs_to__application:
+								$select: ['id', 'app_name']
+					.then (deviceDetails) =>
+
+						m.chai.expect(deviceDetails.device_name).to.be.undefined
+
+						m.chai.expect(deviceDetails.current_services).not.to.be.undefined
+
+						m.chai.expect(deviceDetails.belongs_to__application[0]).to.deep.match
+							id: @application.id
+							app_name: @application.app_name
+
+				it 'should be rejected if the device name does not exist', ->
+					promise = balena.models.device.getWithServiceDetails('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getWithServiceDetails(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+				it 'should be able to use a shorter uuid', ->
+					balena.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
+
+			describe 'balena.models.device.serviceVar', ->
+
+				varModel = balena.models.device.serviceVar
+
+				['id', 'uuid'].forEach (deviceParam) ->
+
+					it "can create a variable by #{deviceParam}", ->
+						promise = varModel.set(@device[deviceParam], @webService.id, "EDITOR_BY_#{deviceParam}", 'vim')
+						m.chai.expect(promise).to.not.be.rejected
+
+					it "...can retrieve a created variable by #{deviceParam}", ->
+						varModel.get(@device[deviceParam], @webService.id, "EDITOR_BY_#{deviceParam}")
+						.then (result) ->
+							m.chai.expect(result).to.equal('vim')
+
+					it "...can update and retrieve a variable by #{deviceParam}", ->
+						varModel.set(@device[deviceParam], @webService.id, "EDITOR_BY_#{deviceParam}", 'emacs')
+						.then =>
+							varModel.get(@device[deviceParam], @webService.id, "EDITOR_BY_#{deviceParam}")
+						.then (result) ->
+							m.chai.expect(result).to.equal('emacs')
+
+					it "...can delete and then fail to retrieve a variable by #{deviceParam}", ->
+						varModel.remove(@device[deviceParam], @webService.id, "EDITOR_BY_#{deviceParam}")
+						.then =>
+							varModel.get(@device[deviceParam], @webService.id, "EDITOR_BY_#{deviceParam}")
+						.then (result) ->
+							m.chai.expect(result).to.equal(undefined)
+
+					it "can create and then retrieve multiple variables by #{deviceParam}", ->
+						Promise.all [
+							varModel.set(@device[deviceParam], @webService.id, "A_BY_#{deviceParam}", 'a')
+							varModel.set(@device[deviceParam], @dbService.id, "B_BY_#{deviceParam}", 'b')
+						]
+						.then =>
+							varModel.getAllByDevice(@device[deviceParam])
+						.then (result) ->
+							m.chai.expect(_.find(result, { name: "A_BY_#{deviceParam}" })).to.be.an('object')
+								.that.has.property('value', 'a')
+							m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" })).to.be.an('object')
+								.that.has.property('value', 'b')
+						.then =>
+							Promise.all [
+								varModel.remove(@device[deviceParam], @webService.id, "A_BY_#{deviceParam}")
+								varModel.remove(@device[deviceParam], @dbService.id, "B_BY_#{deviceParam}")
+							]
+
+				it 'can create and then retrieve multiple variables by application', ->
+					Promise.all [
+						varModel.set(@device.id, @webService.id, 'A_BY_APPLICATION', 'a')
+						varModel.set(@device.id, @dbService.id, 'B_BY_APPLICATION', 'b')
+					]
 					.then =>
-						varModel.remove(@device[deviceParam], @webService.id, 'EDITOR')
-					.then =>
-						varModel.get(@device[deviceParam], @webService.id, 'EDITOR')
+						varModel.getAllByApplication(@application.id)
 					.then (result) ->
-						m.chai.expect(result).to.equal(undefined)
+						m.chai.expect(_.find(result, { name: 'A_BY_APPLICATION' })).to.be.an('object')
+							.that.has.property('value', 'a')
+						m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
+							.that.has.property('value', 'b')
+					.then =>
+						Promise.all [
+							varModel.remove(@device.id, @webService.id, 'A_BY_APPLICATION')
+							varModel.remove(@device.id, @dbService.id, 'B_BY_APPLICATION')
+						]
 
-			it 'can create and then retrieve multiple variables by application', ->
-				Promise.all [
-					varModel.set(@device.id, @webService.id, 'A', 'a')
-					varModel.set(@device.id, @dbService.id, 'B', 'b')
-				]
-				.then =>
-					varModel.getAllByApplication(@application.id)
-				.then (result) ->
-					m.chai.expect(_.find(result, { name: 'A' }).value).equal('a')
-					m.chai.expect(_.find(result, { name: 'B' }).value).equal('b')
+			describe 'balena.models.device.isTrackingApplicationRelease()', ->
 
-
-		describe 'balena.models.device.isTrackingApplicationRelease()', ->
-
-			it 'should be tracking the latest release, using the device id', ->
-				promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-				m.chai.expect(promise).to.eventually.be.true
-
-			it 'should be tracking the latest release, using the device uuid', ->
-				promise = balena.models.device.isTrackingApplicationRelease(@device.uuid)
-				m.chai.expect(promise).to.eventually.be.true
-
-		describe 'balena.models.device.getTargetReleaseHash()', ->
-
-			it 'should retrieve the commit hash of the tracked application release, using the device id', ->
-				promise = balena.models.device.getTargetReleaseHash(@device.id)
-				m.chai.expect(promise).to.eventually.equal('new-release-commit')
-
-			it 'should retrieve the commit hash of the tracked application release, using the device uuid', ->
-				promise = balena.models.device.getTargetReleaseHash(@device.uuid)
-				m.chai.expect(promise).to.eventually.equal('new-release-commit')
-
-		describe 'balena.models.device.pinToRelease()', ->
-
-			it 'should set the device to a specific release, using the device id & release commit', ->
-				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
-
-			it 'should set the device to a specific release, using the device id & release id', ->
-				balena.models.device.pinToRelease(@device.id, @oldRelease.id)
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
-
-			it 'should set the device to a specific release, using the device uuid & release commit', ->
-				balena.models.device.pinToRelease(@device.uuid, 'old-release-commit')
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
-
-			it 'should set the device to a specific release, using the device uuid & release id', ->
-				balena.models.device.pinToRelease(@device.uuid, @oldRelease.id)
-				.then =>
-					promise = balena.models.device.getTargetReleaseHash(@device.id)
-					m.chai.expect(promise).to.eventually.equal('old-release-commit')
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
-					m.chai.expect(promise).to.eventually.be.false
-
-		describe 'balena.models.device.trackApplicationRelease()', ->
-
-			it 'should set the device to track the current application release, using the device id', ->
-				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
-				.then =>
-					balena.models.device.trackApplicationRelease(@device.id)
-				.then =>
+				it 'should be tracking the latest release, using the device id', ->
 					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
 					m.chai.expect(promise).to.eventually.be.true
 
-			it 'should set the device to track the current application release, using the device uuid', ->
-				balena.models.device.pinToRelease(@device.id, 'old-release-commit')
-				.then =>
-					balena.models.device.trackApplicationRelease(@device.uuid)
-				.then =>
-					promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+				it 'should be tracking the latest release, using the device uuid', ->
+					promise = balena.models.device.isTrackingApplicationRelease(@device.uuid)
 					m.chai.expect(promise).to.eventually.be.true
 
+			describe 'balena.models.device.getTargetReleaseHash()', ->
+
+				it 'should retrieve the commit hash of the tracked application release, using the device id', ->
+					promise = balena.models.device.getTargetReleaseHash(@device.id)
+					m.chai.expect(promise).to.eventually.equal('new-release-commit')
+
+				it 'should retrieve the commit hash of the tracked application release, using the device uuid', ->
+					promise = balena.models.device.getTargetReleaseHash(@device.uuid)
+					m.chai.expect(promise).to.eventually.equal('new-release-commit')
+
+		describe 'given a newly registered offline device', ->
+
+			givenADevice(beforeEach)
+
+			describe 'balena.models.device.pinToRelease()', ->
+
+				it 'should set the device to a specific release, using the device id & release commit', ->
+					balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
+
+				it 'should set the device to a specific release, using the device id & release id', ->
+					balena.models.device.pinToRelease(@device.id, @oldRelease.id)
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
+
+				it 'should set the device to a specific release, using the device uuid & release commit', ->
+					balena.models.device.pinToRelease(@device.uuid, 'old-release-commit')
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
+
+				it 'should set the device to a specific release, using the device uuid & release id', ->
+					balena.models.device.pinToRelease(@device.uuid, @oldRelease.id)
+					.then =>
+						promise = balena.models.device.getTargetReleaseHash(@device.id)
+						m.chai.expect(promise).to.eventually.equal('old-release-commit')
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.false
+
+			describe 'balena.models.device.trackApplicationRelease()', ->
+
+				it 'should set the device to track the current application release, using the device id', ->
+					balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+					.then =>
+						balena.models.device.trackApplicationRelease(@device.id)
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+				it 'should set the device to track the current application release, using the device uuid', ->
+					balena.models.device.pinToRelease(@device.id, 'old-release-commit')
+					.then =>
+						balena.models.device.trackApplicationRelease(@device.uuid)
+					.then =>
+						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
+						m.chai.expect(promise).to.eventually.be.true
 
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'TestApp'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		givenAnApplication(before)
 
-				# Preceeding 1 is so that this can't start with a 0, so we get reversible parsing later
-				@shortUuid = '1' + Date.now().toString().slice(-6)
-				uuid = @shortUuid + balena.models.device.generateUniqueKey().slice(7)
-				balena.models.device.register(application.app_name, uuid)
+		before ->
+			# Preceeding 1 is so that this can't start with a 0, so we get reversible parsing later
+			@shortUuid = '1' + Date.now().toString().slice(-6)
+			uuid = @shortUuid + balena.models.device.generateUniqueKey().slice(7)
+			balena.models.device.register(@application.app_name, uuid)
 			.then (deviceInfo) =>
 				@deviceInfo = deviceInfo
 
@@ -1331,22 +1428,17 @@ describe 'Device Model', ->
 
 	describe 'given a single application with two offline devices that share the same uuid root', ->
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		givenAnApplication(before)
 
-				@uuidRoot = 'aaaaaaaaaaaaaaaa'
-				uuid1 = @uuidRoot + balena.models.device.generateUniqueKey().slice(16)
-				uuid2 = @uuidRoot + balena.models.device.generateUniqueKey().slice(16)
+		before ->
+			@uuidRoot = 'aaaaaaaaaaaaaaaa'
+			uuid1 = @uuidRoot + balena.models.device.generateUniqueKey().slice(16)
+			uuid2 = @uuidRoot + balena.models.device.generateUniqueKey().slice(16)
 
-				Promise.all [
-					balena.models.device.register(application.app_name, uuid1)
-					balena.models.device.register(application.app_name, uuid2)
-				]
+			Promise.all [
+				balena.models.device.register(@application.app_name, uuid1)
+				balena.models.device.register(@application.app_name, uuid2)
+			]
 
 		describe 'balena.models.device.get()', ->
 
@@ -1389,6 +1481,13 @@ describe 'Device Model', ->
 				balena.models.device.register(results.application1.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
+
+		afterEach ->
+			Promise.map [
+				@application1.id
+				@application2.id
+				@application3.id
+			], balena.models.application.remove
 
 		describe 'balena.models.device.move()', ->
 
@@ -1436,6 +1535,12 @@ describe 'Device Model', ->
 				balena.models.device.register(results.application1.app_name, uuid)
 				.then (deviceInfo) =>
 					@deviceInfo = deviceInfo
+
+		afterEach ->
+			Promise.map [
+				@application1.id
+				@application2.id
+			], balena.models.application.remove
 
 		describe 'balena.models.device.move()', ->
 

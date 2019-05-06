@@ -7,7 +7,7 @@ PUBLIC_KEY = require('../../data/public-key')
 
 describe 'Key Model', ->
 
-	givenLoggedInUser()
+	givenLoggedInUser(beforeEach)
 
 	describe 'given no keys', ->
 

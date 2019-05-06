@@ -40,7 +40,7 @@ describe 'Balena SDK', ->
 		afterEach ->
 			balena.interceptors = []
 
-		givenLoggedInUser()
+		givenLoggedInUser(beforeEach)
 
 		ignoreWhoamiCalls = (fn) ->
 			(arg) ->

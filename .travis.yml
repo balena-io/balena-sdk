@@ -15,7 +15,7 @@ matrix:
     - node_js:
       - '8'
 before_install:
-- npm -g install npm@4
+- npm -g install npm@6
 script:
 # Skip tests entirely, unless it's a pull request
 # If we end up deploying, a deploy runs the tests anyway

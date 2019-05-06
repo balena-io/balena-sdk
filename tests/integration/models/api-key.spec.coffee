@@ -9,7 +9,7 @@ eventuallyExpectProperty = (promise, prop) ->
 
 describe 'API Key model', ->
 
-	givenLoggedInUser()
+	givenLoggedInUser(beforeEach)
 
 	describe 'balena.models.apiKey.create()', ->
 

@@ -84,8 +84,8 @@ exports.resetUser = ->
 
 exports.credentials = buildCredentials()
 
-exports.givenLoggedInUserWithApiKey = ->
-	beforeEach ->
+exports.givenLoggedInUserWithApiKey = (beforeFn) ->
+	beforeFn ->
 		balena.auth.login
 			email: exports.credentials.email
 			password: exports.credentials.password
@@ -101,17 +101,19 @@ exports.givenLoggedInUserWithApiKey = ->
 		.then(balena.auth.loginWithToken)
 		.then(exports.resetUser)
 
-	afterEach ->
+	afterFn = if beforeFn == beforeEach then afterEach else after
+	afterFn ->
 		exports.resetUser()
 
-exports.givenLoggedInUser = ->
-	beforeEach ->
+exports.givenLoggedInUser = (beforeFn) ->
+	beforeFn ->
 		balena.auth.login
 			email: exports.credentials.email
 			password: exports.credentials.password
 		.then(exports.resetUser)
 
-	afterEach ->
+	afterFn = if beforeFn == beforeEach then afterEach else after
+	afterFn ->
 		exports.resetUser()
 
 exports.loginPaidUser = ->
@@ -119,15 +121,123 @@ exports.loginPaidUser = ->
 		email: exports.credentials.paid.email
 		password: exports.credentials.paid.password
 
-exports.givenMulticontainerApplication = ->
-	beforeEach ->
-		balena.models.application.create
-			name: 'FooBar'
-			applicationType: 'microservices-starter'
-			deviceType: 'raspberry-pi'
+resetApplications = ->
+	balena.pine.delete
+		resource: 'application'
+
+exports.givenAnApplication = (beforeFn) ->
+	beforeFn ->
+		# calling this.skip() doesn't trigger afterEach,
+		# so we need to reset in here as well
+		# See: https://github.com/mochajs/mocha/issues/3740
+		resetApplications()
+		.then ->
+			balena.models.application.create
+				name: 'FooBar'
+				applicationType: 'microservices-starter'
+				deviceType: 'raspberry-pi'
 		.then (application) =>
 			@application = application
-			userId = application.user.__id
+
+	afterFn = if beforeFn == beforeEach then afterEach else after
+	afterFn resetApplications
+
+resetDevices = ->
+	balena.pine.delete
+		resource: 'device'
+
+exports.givenADevice = (beforeFn) ->
+	beforeFn ->
+		# calling this.skip() doesn't trigger afterEach,
+		# so we need to reset in here as well
+		# See: https://github.com/mochajs/mocha/issues/3740
+		resetDevices()
+		.then =>
+			uuid = balena.models.device.generateUniqueKey()
+			balena.models.device.register(@application.app_name, uuid)
+		.tap (deviceInfo) =>
+			if !@currentRelease || !@currentRelease.commit
+				return
+
+			balena.pine.patch
+				resource: 'device'
+				body:
+					is_on__commit: @currentRelease.commit
+				options:
+					$filter:
+						uuid: deviceInfo.uuid
+		.then (deviceInfo) ->
+			balena.models.device.get(deviceInfo.uuid)
+		.then (device) =>
+			@device = device
+		.tap (device) =>
+			if !@currentRelease || !@currentRelease.commit
+				return
+
+			Promise.all [
+				# Create image installs for the images on the device
+				balena.pine.post
+					resource: 'image_install'
+					body:
+						installs__image: @oldWebImage.id
+						is_provided_by__release: @oldRelease.id
+						device: device.id
+						download_progress: 100
+						status: 'running'
+						install_date: '2017-10-01'
+			,
+				balena.pine.post
+					resource: 'image_install'
+					body:
+						installs__image: @newWebImage.id
+						is_provided_by__release: @currentRelease.id
+						device: device.id
+						download_progress: 50,
+						status: 'downloading'
+						install_date: '2017-10-30'
+			,
+				balena.pine.post
+					resource: 'image_install'
+					body:
+						installs__image: @oldDbImage.id
+						is_provided_by__release: @oldRelease.id
+						device: device.id
+						download_progress: 100,
+						status: 'Deleted',
+						install_date: '2017-09-30'
+			,
+				balena.pine.post
+					resource: 'image_install'
+					body:
+						installs__image: @newDbImage.id
+						is_provided_by__release: @currentRelease.id
+						device: device.id
+						download_progress: 100,
+						status: 'running',
+						install_date: '2017-10-30'
+			]
+			.spread (oldWebInstall, newWebInstall, oldDbInstall, newDbInstall) =>
+				@oldWebInstall = oldWebInstall
+				@newWebInstall = newWebInstall
+				@newDbInstall = newDbInstall
+
+	afterFn = if beforeFn == beforeEach then afterEach else after
+	afterFn resetDevices
+
+exports.givenAnApplicationWithADevice = (beforeFn) ->
+	exports.givenAnApplication(beforeFn)
+	exports.givenADevice(beforeFn)
+
+exports.givenMulticontainerApplicationWithADevice = (beforeFn) ->
+	exports.givenMulticontainerApplication(beforeFn)
+	exports.givenADevice(beforeFn)
+
+exports.givenMulticontainerApplication = (beforeFn) ->
+	exports.givenAnApplication(beforeFn)
+
+	beforeFn ->
+		Promise.try =>
+			userId = @application.user.__id
 
 			Promise.all [
 				# Register web & DB services
@@ -172,24 +282,7 @@ exports.givenMulticontainerApplication = ->
 			@oldRelease = oldRelease
 			@currentRelease = newRelease
 
-			uuid = balena.models.device.generateUniqueKey()
-
 			Promise.all [
-				# Register the device itself, running the new release
-				balena.models.device.register(@application.app_name, uuid)
-				.tap (deviceInfo) ->
-					balena.pine.patch
-						resource: 'device'
-						body:
-							is_on__commit: newRelease.commit
-						options:
-							$filter:
-								uuid: deviceInfo.uuid
-				.then (deviceInfo) ->
-					balena.models.device.get(deviceInfo.uuid)
-				.tap (device) =>
-					@device = device
-			,
 				# Register an old & new web image build from the old and new
 				# releases, a db build in the new release only
 				balena.pine.post
@@ -236,7 +329,7 @@ exports.givenMulticontainerApplication = ->
 						push_timestamp: 54321
 						status: 'success'
 			]
-			.spread (device, oldWebImage, newWebImage, oldDbImage, newDbImage) =>
+			.spread (oldWebImage, newWebImage, oldDbImage, newDbImage) =>
 				@oldWebImage = oldWebImage
 				@newWebImage = newWebImage
 				@oldDbImage = oldDbImage
@@ -268,61 +361,8 @@ exports.givenMulticontainerApplication = ->
 							image: newDbImage.id
 							is_part_of__release: newRelease.id
 				,
-					# Create image installs for the images on the device
-					balena.pine.post
-						resource: 'image_install'
-						body:
-							installs__image: oldWebImage.id
-							is_provided_by__release: oldRelease.id
-							device: device.id
-							download_progress: 100
-							status: 'running'
-							install_date: '2017-10-01'
-				,
-					balena.pine.post
-						resource: 'image_install'
-						body:
-							installs__image: newWebImage.id
-							is_provided_by__release: newRelease.id
-							device: device.id
-							download_progress: 50,
-							status: 'downloading'
-							install_date: '2017-10-30'
-				,
-					balena.pine.post
-						resource: 'image_install'
-						body:
-							installs__image: oldDbImage.id
-							is_provided_by__release: oldRelease.id
-							device: device.id
-							download_progress: 100,
-							status: 'Deleted',
-							install_date: '2017-09-30'
-				,
-					balena.pine.post
-						resource: 'image_install'
-						body:
-							installs__image: newDbImage.id
-							is_provided_by__release: newRelease.id
-							device: device.id
-							download_progress: 100,
-							status: 'running',
-							install_date: '2017-10-30'
-				,
-					# Create service installs for the services running on the device
-					balena.pine.post
-						resource: 'service_install'
-						body:
-							installs__service: webService.id
-							device: device.id
-				,
-					balena.pine.post
-						resource: 'service_install'
-						body:
-							installs__service: dbService.id
-							device: device.id
 				]
-			.then ([..., oldWebInstall, newWebInstall, oldDbInstall, newDbInstall, _w, _db]) =>
-				@oldWebInstall = oldWebInstall
-				@newWebInstall = newWebInstall
-				@newDbInstall = newDbInstall
+
+	afterFn = if beforeFn == beforeEach then afterEach else after
+	afterFn ->
+		@currentRelease = null

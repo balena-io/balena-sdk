@@ -15,7 +15,7 @@ sendLogMessages = (uuid, deviceApiKey, messages) ->
 
 describe 'Logs', ->
 
-	givenLoggedInUser()
+	givenLoggedInUser(beforeEach)
 
 	describe 'given a device', ->
 
