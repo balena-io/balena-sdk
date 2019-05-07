@@ -1,6 +1,7 @@
 _ = require('lodash')
 m = require('mochainon')
 Promise = require('bluebird')
+bSemver = require('balena-semver')
 
 {
 	mergePineOptions
@@ -218,29 +219,29 @@ describe 'ImgMakerHelper', ->
 
 		m.chai.expect(@requestStub.send).to.be.calledOnce
 
-describe 'osVersionRCompare', ->
+itShouldCompareVersionsProperly = (rcompare) ->
 
 	it 'compares simple semver correctly', ->
-		m.chai.expect(osVersionRCompare('1.0.0', '1.1.0')).to.equal(1)
-		m.chai.expect(osVersionRCompare('2.0.0', '1.0.0')).to.equal(-1)
-		m.chai.expect(osVersionRCompare('3.0.0', '3.0.0')).to.equal(0)
+		m.chai.expect(rcompare('1.0.0', '1.1.0')).to.equal(1)
+		m.chai.expect(rcompare('2.0.0', '1.0.0')).to.equal(-1)
+		m.chai.expect(rcompare('3.0.0', '3.0.0')).to.equal(0)
 
 	it 'puts prerelease below real releases', ->
-		m.chai.expect(osVersionRCompare('2.0.0-rc6+rev2', '2.0.0+rev1')).to.equal(1)
-		m.chai.expect(osVersionRCompare('2.0.0-rc6.rev2', '2.0.0+rev1')).to.equal(1)
+		m.chai.expect(rcompare('2.0.0-rc6+rev2', '2.0.0+rev1')).to.equal(1)
+		m.chai.expect(rcompare('2.0.0-rc6.rev2', '2.0.0+rev1')).to.equal(1)
 
 	it 'sorts by rev if the semver otherwise matches', ->
-		m.chai.expect(osVersionRCompare('2.0.6+rev3.prod', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionRCompare('2.0.6+rev3.prod', '2.0.6+rev3.prod')).to.equal(0)
-		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.6+rev3.prod')).to.equal(1)
+		m.chai.expect(rcompare('2.0.6+rev3.prod', '2.0.0+rev1')).to.equal(-1)
+		m.chai.expect(rcompare('2.0.6+rev3.prod', '2.0.6+rev3.prod')).to.equal(0)
+		m.chai.expect(rcompare('2.0.0+rev1', '2.0.6+rev3.prod')).to.equal(1)
 
 	it 'sorts any rev above no rev', ->
-		m.chai.expect(osVersionRCompare('2.0.0', '2.0.0+rev1')).to.equal(1)
+		m.chai.expect(rcompare('2.0.0', '2.0.0+rev1')).to.equal(1)
 
 	it 'sorts by non-rev build metadata for matching revs', ->
-		m.chai.expect(osVersionRCompare('2.0.6+rev3.dev', '2.0.0+rev1')).to.equal(-1)
-		m.chai.expect(osVersionRCompare('2.0.0+dev.rev2', '2.0.6+rev3.prod')).to.equal(1)
-		m.chai.expect(osVersionRCompare('2.0.0+rev1', '2.0.6+rev3.dev')).to.equal(1)
+		m.chai.expect(rcompare('2.0.6+rev3.dev', '2.0.0+rev1')).to.equal(-1)
+		m.chai.expect(rcompare('2.0.0+dev.rev2', '2.0.6+rev3.prod')).to.equal(1)
+		m.chai.expect(rcompare('2.0.0+rev1', '2.0.6+rev3.dev')).to.equal(1)
 
 	it 'correctly sorts a full list', ->
 		m.chai.expect([
@@ -251,7 +252,7 @@ describe 'osVersionRCompare', ->
 			'2.0.0'
 			'1.24.0+rev100'
 			'2.0.6+rev3.dev'
-		].sort(osVersionRCompare)).to.deep.equal [
+		].sort(rcompare)).to.deep.equal [
 			'2.0.6+rev3.prod'
 			'2.0.6+rev3.dev'
 			'2.0.0+rev1'
@@ -260,6 +261,18 @@ describe 'osVersionRCompare', ->
 			'1.24.0+rev100'
 			'1.0.0'
 		]
+
+describe 'version comparisons', ->
+
+	# we keep this to ensure balena-semver has the exact same behavior
+	# and will drop it in a later PR
+	describe 'osVersionRCompare', ->
+
+		itShouldCompareVersionsProperly(osVersionRCompare)
+
+	describe 'bSemver.rcompare', ->
+
+		itShouldCompareVersionsProperly(bSemver.rcompare)
 
 describe 'getDeviceOsSemverWithVariant', ->
 

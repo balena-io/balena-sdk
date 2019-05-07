@@ -106,6 +106,9 @@ describe 'OS model', ->
 				m.chai.expect(osVersions).to.have.property('versions').that.is.an('array')
 				m.chai.expect(osVersions.versions).to.not.have.lengthOf(0)
 
+				expectSorted(osVersions.versions, bSemver.rcompare)
+				# we keep this to ensure balena-semver has the exact same behavior
+				# and will drop it in a later PR
 				expectSorted(osVersions.versions, osVersionRCompare)
 
 				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
