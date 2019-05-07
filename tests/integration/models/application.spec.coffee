@@ -1,4 +1,5 @@
 _ = require('lodash')
+Promise = require('bluebird')
 m = require('mochainon')
 
 {
@@ -464,22 +465,9 @@ describe 'Application Model', ->
 			givenAnApplication(beforeEach)
 
 			beforeEach ->
-				balena.pine.get
-					resource: 'organization_membership'
-					options:
-						$select: [ 'user' ]
-						$filter:
-							is_member_of__organization: @application.organization.__id
-							organization_membership_role:
-								$any:
-									$alias: 'omr'
-									$expr: omr: name: 'personal'
-				.then ([organizationMembership]) =>
-					userId = organizationMembership.user.__id
-
-					balena.pine.post
-						resource: 'release'
-						body:
+				balena.auth.getUserId()
+				.then (userId) =>
+					Promise.mapSeries [
 							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'old-release-commit'
@@ -487,17 +475,18 @@ describe 'Application Model', ->
 							source: 'cloud'
 							composition: {}
 							start_timestamp: 1234
-					.then =>
+						,
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'new-release-commit'
+							status: 'success'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 54321
+					], (body) ->
 						balena.pine.post
 							resource: 'release'
-							body:
-								belongs_to__application: @application.id
-								is_created_by__user: userId
-								commit: 'new-release-commit'
-								status: 'success'
-								source: 'cloud'
-								composition: {}
-								start_timestamp: 54321
+							body: body
 
 			describe 'balena.models.application.willTrackNewReleases()', ->
 
