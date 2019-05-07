@@ -5,7 +5,7 @@ bSemver = require('balena-semver')
 
 { balena, givenLoggedInUser, IS_BROWSER } = require('../setup')
 
-{ osVersionRCompare } = require('../../../build/util')
+{ osVersionRCompare } = require('../../osVersionRCompare')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)

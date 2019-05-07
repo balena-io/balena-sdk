@@ -1,5 +1,4 @@
 errors = require('balena-errors')
-semver = require('semver')
 assign = require('lodash/assign')
 cloneDeep = require('lodash/cloneDeep')
 groupBy = require('lodash/groupBy')
@@ -97,44 +96,11 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 		replacementErr.stack = err.stack
 		throw replacementErr
 
-safeSemver = (version) ->
-	version.replace(/(\.[0-9]+)\.rev/, '$1+rev')
-
-exports.osVersionRCompare = (versionA, versionB) ->
-	versionA = safeSemver(versionA)
-	versionB = safeSemver(versionB)
-	semverResult = semver.rcompare(versionA, versionB)
-	if semverResult != 0
-		return semverResult
-
-	revA = getRev(versionA)
-	revB = getRev(versionB)
-
-	if revA isnt revB
-		return revB - revA
-
-	devA = exports.isDevelopmentVersion(versionA)
-	devB = exports.isDevelopmentVersion(versionB)
-	if devA isnt devB
-		return devA - devB
-
-	return versionA.localeCompare(versionB)
-
 exports.isDevelopmentVersion = (version) ->
 	/(\.|\+|-)dev/.test(version)
 
 exports.isProvisioned = (device) ->
 	!isEmpty(device.supervisor_version) and !isEmpty(device.last_connectivity_event)
-
-getRev = (osVersion) ->
-	rev = semver.parse(osVersion).build
-	.map((metadataPart) -> /rev(\d+)/.exec(metadataPart)?[1])
-	.filter((x) -> x?)[0]
-
-	if rev?
-		parseInt(rev, 10)
-	else
-		0
 
 # Merging two sets of pine options sensibly is more complicated than it sounds.
 #

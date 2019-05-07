@@ -6,11 +6,13 @@ bSemver = require('balena-semver')
 {
 	mergePineOptions
 	getImgMakerHelper
-	osVersionRCompare
 } = require('../build/util')
 {
 	getDeviceOsSemverWithVariant
 } = require('../build/util/device-os-version')
+{
+	osVersionRCompare
+} = require('./osVersionRCompare')
 
 describe 'Pine option merging', ->
 
