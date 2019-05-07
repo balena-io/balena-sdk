@@ -72,14 +72,18 @@ describe 'Application Model', ->
 						name: 'FooBarChild'
 						deviceType: 'generic'
 						parent: parentApplication.id
-				.then ->
-					# application.getAll() doesn't return dependent apps
-					balena.pine.get
-						resource: 'application'
-						options:
-							$orderby: id: 'asc'
+					.then (childApplication) ->
+						m.chai.expect(childApplication.depends_on__application).to.be.an('object')
+						m.chai.expect(childApplication.depends_on__application).to.have.property('__id', parentApplication.id)
+						# application.getAll() doesn't return dependent apps
+						balena.pine.get
+							resource: 'application'
+							options:
+								$filter: id: $in: [parentApplication.id, childApplication.id]
+								$orderby: id: 'asc'
 				.then ([ parentApplication, childApplication ]) ->
-					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
+					m.chai.expect(childApplication.depends_on__application).to.be.an('object')
+					m.chai.expect(childApplication.depends_on__application).to.have.property('__id', parentApplication.id)
 
 			it 'should be rejected if the application type is invalid', ->
 				promise = balena.models.application.create
