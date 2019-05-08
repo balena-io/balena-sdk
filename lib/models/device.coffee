@@ -24,7 +24,7 @@ find = require('lodash/find')
 some = require('lodash/some')
 includes = require('lodash/includes')
 map = require('lodash/map')
-rSemver = require('resin-semver')
+bSemver = require('balena-semver')
 semver = require('semver')
 errors = require('balena-errors')
 deviceStatus = require('resin-device-status')
@@ -2351,7 +2351,7 @@ getDeviceModel = (deps, opts) ->
 
 			osModel().getSupportedVersions(device.device_type)
 		.then ({ versions: allVersions }) ->
-			if !some(allVersions, (v) -> rSemver.compare(v, targetOsVersion) == 0)
+			if !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
 
 			getOsUpdateHelper()

@@ -1,7 +1,7 @@
 _ = require('lodash')
 m = require('mochainon')
 Promise = require('bluebird')
-rSemver = require('resin-semver')
+bSemver = require('balena-semver')
 
 { balena, givenLoggedInUser, IS_BROWSER } = require('../setup')
 
@@ -285,10 +285,10 @@ describe 'OS model', ->
 					m.chai.expect(versions).to.not.have.length(0)
 					_.each versions, (v) ->
 						m.chai.expect(v).to.be.a('string')
-						m.chai.expect(rSemver.gte(v, current)).to.be.true
+						m.chai.expect(bSemver.gte(v, current)).to.be.true
 
 					m.chai.expect(versions.length > 2).to.be.true
-					sortedVersions = versions.slice().sort(rSemver.rcompare)
+					sortedVersions = versions.slice().sort(bSemver.rcompare)
 					m.chai.expect(versions).to.deep.equal(sortedVersions)
 
 	describe 'when logged in as a user with a single application', ->

@@ -24,7 +24,7 @@ includes = require('lodash/includes')
 once = require('lodash/once')
 partition = require('lodash/partition')
 reject = require('lodash/reject')
-rSemver = require('resin-semver')
+bSemver = require('balena-semver')
 semver = require('semver')
 
 {
@@ -451,9 +451,9 @@ getOsModel = (deps, opts) ->
 	exports.getSupportedOsUpdateVersions = (deviceType, currentVersion, callback) ->
 		exports.getSupportedVersions(deviceType)
 		.then ({ versions: allVersions }) ->
-			# use rSemver.compare to find the current version in the OS list
+			# use bSemver.compare to find the current version in the OS list
 			# to benefit from the baked-in normalization
-			current = find(allVersions, (v) -> rSemver.compare(v, currentVersion) == 0)
+			current = find(allVersions, (v) -> bSemver.compare(v, currentVersion) == 0)
 
 			versions = allVersions.filter (v) ->
 				# avoid the extra call to validateDeviceType,
@@ -461,7 +461,7 @@ getOsModel = (deps, opts) ->
 				hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v)
 
 			recommended = first(
-				reject(versions, rSemver.prerelease)
+				reject(versions, bSemver.prerelease)
 			)
 
 			return {
