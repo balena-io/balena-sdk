@@ -98,12 +98,29 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.getStatus()', ->
 
+			it 'should return inactive for inactive devices', ->
+				promise = balena.models.device.getStatus
+					is_active: false
+				m.chai.expect(promise).to.eventually.equal('inactive')
+
+			it 'should return configuring for devices that have never sent a connectivity event', ->
+				promise = balena.models.device.getStatus
+					is_active: true
+					last_connectivity_event: null
+				m.chai.expect(promise).to.eventually.equal('configuring')
+
 			it 'should return offline for offline devices', ->
-				promise = balena.models.device.getStatus({ is_online: false })
+				promise = balena.models.device.getStatus
+					is_active: true
+					last_connectivity_event: '2019-05-13T16:14'
+					is_online: false
 				m.chai.expect(promise).to.eventually.equal('offline')
 
 			it 'should return idle for idle devices', ->
-				promise = balena.models.device.getStatus({ is_online: true })
+				promise = balena.models.device.getStatus
+					is_active: true
+					last_connectivity_event: '2019-05-13T16:14'
+					is_online: true
 				m.chai.expect(promise).to.eventually.equal('idle')
 
 	describe 'given a single application without devices', ->
