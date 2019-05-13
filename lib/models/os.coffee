@@ -34,7 +34,6 @@ semver = require('semver')
 	notFoundResponse
 	treatAsMissingApplication
 	deviceTypes: deviceTypesUtil
-	osVersionRCompare
 	isDevelopmentVersion
 } = require('../util')
 { hupActionHelper } = require('../util/device-actions/os-update/utils')
@@ -72,7 +71,7 @@ getOsModel = (deps, opts) ->
 		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
 		postProcess: ({ body: { versions, latest } }) ->
 
-			versions.sort(osVersionRCompare)
+			versions.sort(bSemver.rcompare)
 			potentialRecommendedVersions = reject versions, (version) ->
 				semver.prerelease(version) or isDevelopmentVersion(version)
 			recommended = potentialRecommendedVersions?[0] || null

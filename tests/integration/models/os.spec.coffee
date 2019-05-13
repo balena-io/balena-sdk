@@ -5,7 +5,7 @@ bSemver = require('balena-semver')
 
 { balena, givenLoggedInUser, IS_BROWSER } = require('../setup')
 
-{ osVersionRCompare } = require('../../../build/util')
+{ osVersionRCompare } = require('../../osVersionRCompare')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
@@ -106,6 +106,9 @@ describe 'OS model', ->
 				m.chai.expect(osVersions).to.have.property('versions').that.is.an('array')
 				m.chai.expect(osVersions.versions).to.not.have.lengthOf(0)
 
+				expectSorted(osVersions.versions, bSemver.rcompare)
+				# we keep this to ensure balena-semver has the exact same behavior
+				# and will drop it in a later PR
 				expectSorted(osVersions.versions, osVersionRCompare)
 
 				m.chai.expect(osVersions).to.have.property('latest').that.is.a('string')
