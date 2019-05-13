@@ -27,7 +27,7 @@ map = require('lodash/map')
 rSemver = require('resin-semver')
 semver = require('semver')
 errors = require('balena-errors')
-deviceStatus = require('resin-device-status')
+deviceStatus = require('balena-device-status')
 
 {
 	onlyIf
