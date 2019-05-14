@@ -10,9 +10,6 @@ bSemver = require('balena-semver')
 {
 	getDeviceOsSemverWithVariant
 } = require('../build/util/device-os-version')
-{
-	osVersionRCompare
-} = require('./osVersionRCompare')
 
 describe 'Pine option merging', ->
 
@@ -265,12 +262,6 @@ itShouldCompareVersionsProperly = (rcompare) ->
 		]
 
 describe 'version comparisons', ->
-
-	# we keep this to ensure balena-semver has the exact same behavior
-	# and will drop it in a later PR
-	describe 'osVersionRCompare', ->
-
-		itShouldCompareVersionsProperly(osVersionRCompare)
 
 	describe 'bSemver.rcompare', ->
 
