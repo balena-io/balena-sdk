@@ -120,7 +120,14 @@ getOsModel = (deps, opts) ->
 		else
 			version
 
-	# utility method exported for testability
+	###*
+	# @summary Get the max OS version satisfying the given range.
+	# @description Utility method exported for testability.
+	# @name _getMaxSatisfyingVersion
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
 	exports._getMaxSatisfyingVersion = (versionOrRange, osVersions) ->
 		if versionOrRange in [ 'default', 'latest', 'recommended' ]
 			return osVersions[versionOrRange]

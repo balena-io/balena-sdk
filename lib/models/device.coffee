@@ -2270,7 +2270,7 @@ getDeviceModel = (deps, opts) ->
 	# @memberof balena.models.device
 	#
 	# @description
-	# utility method exported for testability
+	# Utility method exported for testability
 	#
 	# @param {Object} device - A device object
 	# @param {String} targetOsVersion - semver-compatible version for the target device
