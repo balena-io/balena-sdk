@@ -26,6 +26,7 @@ partition = require('lodash/partition')
 reject = require('lodash/reject')
 bSemver = require('balena-semver')
 semver = require('semver')
+promiseMemoize = require('promise-memoize')
 
 {
 	onlyIf
@@ -39,6 +40,11 @@ semver = require('semver')
 { hupActionHelper } = require('../util/device-actions/os-update/utils')
 
 BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
+
+DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL = 10 * 60 * 1000 # 10 minutes
+
+withDeviceTypesEndpointCaching = (fn) ->
+	promiseMemoize(fn, { maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL })
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
@@ -63,7 +69,17 @@ getOsModel = (deps, opts) ->
 			if not isValid
 				throw new errors.BalenaInvalidDeviceType('No such device type')
 
-	getDownloadSize = (deviceType, version) ->
+	exports = {}
+
+	###*
+	# @summary Get OS versions download size
+	# @description Utility method exported for testability.
+	# @name _getDownloadSize
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._getDownloadSize = withDeviceTypesEndpointCaching (deviceType, version) ->
 		request.send
 			method: 'GET'
 			url: "/device-types/v1/#{deviceType}/images/#{version}/download-size"
@@ -72,7 +88,15 @@ getOsModel = (deps, opts) ->
 		.get('body')
 		.get('size')
 
-	getOsVersions = (deviceType) ->
+	###*
+	# @summary Get OS versions
+	# @description Utility method exported for testability.
+	# @name _getOsVersions
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._getOsVersions = withDeviceTypesEndpointCaching (deviceType) ->
 		request.send
 			method: 'GET'
 			url: "/device-types/v1/#{deviceType}/images"
@@ -93,6 +117,18 @@ getOsModel = (deps, opts) ->
 				default: recommended or latest
 			}
 
+	###*
+	# @summary Clears the cached results from the `device-types/v1` endpoint.
+	# @description Utility method exported for testability.
+	# @name _clearDeviceTypesEndpointCaches
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._clearDeviceTypesEndpointCaches = ->
+		exports._getDownloadSize.clear()
+		exports._getOsVersions.clear()
+
 	normalizeVersion = (v) ->
 		if not v
 			throw new Error("Invalid version: #{v}")
@@ -105,8 +141,6 @@ getOsModel = (deps, opts) ->
 
 	deviceImageUrl = (deviceType, version) ->
 		"/image/#{deviceType}/?version=#{encodeURIComponent(version)}"
-
-	exports = {}
 
 	fixNonSemver = (version) ->
 		if version?
@@ -174,7 +208,7 @@ getOsModel = (deps, opts) ->
 
 		return validateDeviceType(deviceType)
 			.then ->
-				getDownloadSize(deviceType, version)
+				exports._getDownloadSize(deviceType, version)
 			.asCallback(callback)
 
 	###*
@@ -209,7 +243,7 @@ getOsModel = (deps, opts) ->
 
 		return validateDeviceType(deviceType)
 			.then  ->
-				getOsVersions(deviceType)
+				exports._getOsVersions(deviceType)
 			.asCallback(callback)
 
 	###*

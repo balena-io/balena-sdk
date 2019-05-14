@@ -121,11 +121,36 @@ describe 'OS model', ->
 				promise = balena.models.os.getSupportedVersions('raspberrypi')
 				m.chai.expect(promise).to.eventually.satisfy(areValidVersions)
 
+			it 'should cache the results', ->
+				balena.models.os.getSupportedVersions('raspberry-pi')
+				.then (result1) ->
+					balena.models.os.getSupportedVersions('raspberry-pi')
+					.then (result2) ->
+						m.chai.expect(result1).to.equal(result2)
+
+			it 'should cache the supported versions independently for each device type', ->
+				Promise.all [
+					balena.models.os.getSupportedVersions('raspberry-pi')
+					balena.models.os.getSupportedVersions('raspberrypi3')
+				]
+				.then ([ deviceType1Versions, deviceType2Versions ]) ->
+					m.chai.expect(deviceType1Versions).not.to.equal(deviceType2Versions)
+
 		describe 'given an invalid device slug', ->
 
 			it 'should be rejected with an error message', ->
 				promise = balena.models.os.getSupportedVersions('foo-bar-baz')
 				m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+	describe 'balena.models.os._getOsVersions()', ->
+
+		it 'should cache the results', ->
+			p1 = balena.models.os._getOsVersions('raspberry-pi')
+			p1.then (result1) ->
+				p2 = balena.models.os._getOsVersions('raspberry-pi')
+				p2.then (result2) ->
+					m.chai.expect(result1).to.equal(result2)
+					m.chai.expect(p1).to.equal(p2)
 
 	describe 'balena.models.os.getDownloadSize()', ->
 
@@ -149,6 +174,13 @@ describe 'OS model', ->
 				promise = balena.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod')
 				m.chai.expect(promise).to.eventually.be.a('number')
 
+			it 'should cache the results', ->
+				balena.models.os.getDownloadSize('raspberry-pi', '1.26.1')
+				.then (result1) ->
+					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1')
+					.then (result2) ->
+						m.chai.expect(result1).to.equal(result2)
+
 			it 'should cache download sizes independently for each version', ->
 				Promise.all [
 					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1')
@@ -162,6 +194,36 @@ describe 'OS model', ->
 			it 'should be rejected with an error message', ->
 				promise = balena.models.os.getDownloadSize('foo-bar-baz')
 				m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+	describe 'balena.models.os._getDownloadSize()', ->
+
+		it 'should cache the results', ->
+			p1 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
+			p1.then (result1) ->
+				p2 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
+				p2.then (result2) ->
+					m.chai.expect(result1).to.equal(result2)
+					m.chai.expect(p1).to.equal(p2)
+
+	describe 'balena.models.os._clearDeviceTypesEndpointCaches()', ->
+
+		it 'should clear the result cache of balena.models.os._getOsVersions()', ->
+			p1 = balena.models.os._getOsVersions('raspberry-pi')
+			p1.then (result1) ->
+				balena.models.os._clearDeviceTypesEndpointCaches()
+				p2 = balena.models.os._getOsVersions('raspberry-pi')
+				p2.then (result2) ->
+					m.chai.expect(result1).to.deep.equal(result2)
+					m.chai.expect(p1).to.not.equal(p2)
+
+		it 'should clear the result cache of balena.models.os._getDownloadSize()', ->
+			p1 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
+			p1.then (result1) ->
+				balena.models.os._clearDeviceTypesEndpointCaches()
+				p2 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
+				p2.then (result2) ->
+					m.chai.expect(result1).to.deep.equal(result2)
+					m.chai.expect(p1).to.not.equal(p2)
 
 	describe 'balena.models.os.getLastModified()', ->
 
