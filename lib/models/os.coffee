@@ -26,6 +26,7 @@ partition = require('lodash/partition')
 reject = require('lodash/reject')
 bSemver = require('balena-semver')
 semver = require('semver')
+promiseMemoize = require('promise-memoize')
 
 {
 	onlyIf
@@ -39,6 +40,11 @@ semver = require('semver')
 { hupActionHelper } = require('../util/device-actions/os-update/utils')
 
 BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
+
+DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL = 10 * 60 * 1000 # 10 minutes
+
+withDeviceTypesEndpointCaching = (fn) ->
+	promiseMemoize(fn, { maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL })
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
@@ -63,13 +69,41 @@ getOsModel = (deps, opts) ->
 			if not isValid
 				throw new errors.BalenaInvalidDeviceType('No such device type')
 
-	getDownloadSize = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType, version }) -> "/size_estimate?deviceType=#{deviceType}&version=#{version}"
-		postProcess: ({ body }) -> body.size
+	exports = {}
 
-	getOsVersions = imgMakerHelper.buildApiRequester
-		buildUrl: ({ deviceType }) -> "/image/#{deviceType}/versions"
-		postProcess: ({ body: { versions, latest } }) ->
+	###*
+	# @summary Get OS versions download size
+	# @description Utility method exported for testability.
+	# @name _getDownloadSize
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._getDownloadSize = withDeviceTypesEndpointCaching (deviceType, version) ->
+		request.send
+			method: 'GET'
+			url: "/device-types/v1/#{deviceType}/images/#{version}/download-size"
+			baseUrl: apiUrl
+			sendToken: false
+		.get('body')
+		.get('size')
+
+	###*
+	# @summary Get OS versions
+	# @description Utility method exported for testability.
+	# @name _getOsVersions
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._getOsVersions = withDeviceTypesEndpointCaching (deviceType) ->
+		request.send
+			method: 'GET'
+			url: "/device-types/v1/#{deviceType}/images"
+			baseUrl: apiUrl
+			sendToken: false
+		.get('body')
+		.then ({ versions, latest }) ->
 
 			versions.sort(bSemver.rcompare)
 			potentialRecommendedVersions = reject versions, (version) ->
@@ -82,6 +116,18 @@ getOsModel = (deps, opts) ->
 				latest
 				default: recommended or latest
 			}
+
+	###*
+	# @summary Clears the cached results from the `device-types/v1` endpoint.
+	# @description Utility method exported for testability.
+	# @name _clearDeviceTypesEndpointCaches
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._clearDeviceTypesEndpointCaches = ->
+		exports._getDownloadSize.clear()
+		exports._getOsVersions.clear()
 
 	normalizeVersion = (v) ->
 		if not v
@@ -96,8 +142,6 @@ getOsModel = (deps, opts) ->
 	deviceImageUrl = (deviceType, version) ->
 		"/image/#{deviceType}/?version=#{encodeURIComponent(version)}"
 
-	exports = {}
-
 	fixNonSemver = (version) ->
 		if version?
 			version?.replace(/\.rev(\d+)/, '+FIXED-rev$1')
@@ -110,7 +154,14 @@ getOsModel = (deps, opts) ->
 		else
 			version
 
-	# utility method exported for testability
+	###*
+	# @summary Get the max OS version satisfying the given range.
+	# @description Utility method exported for testability.
+	# @name _getMaxSatisfyingVersion
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
 	exports._getMaxSatisfyingVersion = (versionOrRange, osVersions) ->
 		if versionOrRange in [ 'default', 'latest', 'recommended' ]
 			return osVersions[versionOrRange]
@@ -157,7 +208,7 @@ getOsModel = (deps, opts) ->
 
 		return validateDeviceType(deviceType)
 			.then ->
-				getDownloadSize(deviceType, version)
+				exports._getDownloadSize(deviceType, version)
 			.asCallback(callback)
 
 	###*
@@ -192,7 +243,7 @@ getOsModel = (deps, opts) ->
 
 		return validateDeviceType(deviceType)
 			.then  ->
-				getOsVersions(deviceType)
+				exports._getOsVersions(deviceType)
 			.asCallback(callback)
 
 	###*
