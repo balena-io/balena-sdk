@@ -115,15 +115,12 @@ getApplicationModel = (deps, opts) ->
 	exports.getAll = (options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		auth.getUserId()
-		.then (userId) ->
-			return pine.get
-				resource: 'my_application'
-				options:
-					mergePineOptions
-						$orderby: 'app_name asc'
-					, options
-
+		return pine.get
+			resource: 'my_application'
+			options:
+				mergePineOptions
+					$orderby: 'app_name asc'
+				, options
 		.map (application) ->
 			normalizeApplication(application)
 			return application
