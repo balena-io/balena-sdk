@@ -18,3 +18,5 @@ export function mergePineOptions<T = BalenaSdk.PineOptions>(
 	defaults: T,
 	extras: T,
 ): T;
+
+export function isProvisioned(device: BalenaSdk.Device): boolean;
