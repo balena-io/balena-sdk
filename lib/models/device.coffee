@@ -346,7 +346,8 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get a single device along with its associated services' essential details
+	# @summary Get a single device along with its associated services' details,
+	# including their associated commit
 	# @name getWithServiceDetails
 	# @public
 	# @function
@@ -383,7 +384,7 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			mergePineOptions(getCurrentServiceDetailsPineOptions(), options)
+			mergePineOptions(getCurrentServiceDetailsPineOptions(true), options)
 		.then(generateCurrentServiceDetails)
 		.asCallback(callback)
 

@@ -66,10 +66,13 @@ declare namespace BalenaSdk {
 		id: number;
 		image_id: number;
 		service_id: number;
-		commit: string;
 		download_progress: number;
-		install_date: string;
 		status: string;
+		install_date: string;
+	}
+
+	interface CurrentServiceWithCommit extends CurrentService {
+		commit: string;
 	}
 
 	interface CurrentGatewayDownload {
@@ -80,9 +83,11 @@ declare namespace BalenaSdk {
 		status: string;
 	}
 
-	interface DeviceWithServiceDetails extends Device {
+	interface DeviceWithServiceDetails<
+		TCurrentService extends CurrentService = CurrentService
+	> extends Device {
 		current_services: {
-			[serviceName: string]: CurrentService[];
+			[serviceName: string]: TCurrentService[];
 		};
 
 		current_gateway_downloads: CurrentGatewayDownload[];
@@ -717,7 +722,7 @@ declare namespace BalenaSdk {
 					options?: PineOptionsFor<Application>,
 				): Promise<
 					Application & {
-						owns__device: DeviceWithServiceDetails[];
+						owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
 					}
 				>;
 				getAppByOwner(
@@ -731,7 +736,7 @@ declare namespace BalenaSdk {
 				): Promise<
 					Array<
 						Application & {
-							owns__device: DeviceWithServiceDetails[];
+							owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
 						}
 					>
 				>;
@@ -879,7 +884,7 @@ declare namespace BalenaSdk {
 				getWithServiceDetails(
 					nameOrId: string | number,
 					options?: PineOptionsFor<Device>,
-				): Promise<DeviceWithServiceDetails>;
+				): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(
 					nameOrId: string | number,

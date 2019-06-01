@@ -140,6 +140,8 @@ getApplicationModel = (deps, opts) ->
 	# larger prebuilt query, and reformats it into an easy to use and
 	# understand format. If you want more control, or to see the raw model
 	# directly, use `application.getAll(options)` instead.
+	# **NOTE:** In contrast with device.getWithServiceDetails() the service details
+	# in the result of this method do not include the associated commit.
 	#
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - applications
@@ -161,7 +163,7 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device: getCurrentServiceDetailsPineOptions()
+				owns__device: getCurrentServiceDetailsPineOptions(false)
 			]
 		, options
 
@@ -246,6 +248,8 @@ getApplicationModel = (deps, opts) ->
 	# larger prebuilt query, and reformats it into an easy to use and
 	# understand format. If you want more control, or to see the raw model
 	# directly, use `application.get(uuidOrId, options)` instead.
+	# **NOTE:** In contrast with device.getWithServiceDetails() the service details
+	# in the result of this method do not include the associated commit.
 	#
 	# @param {String|Number} nameOrId - application name (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
@@ -273,7 +277,7 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device: getCurrentServiceDetailsPineOptions()
+				owns__device: getCurrentServiceDetailsPineOptions(false)
 			]
 		, options
 
