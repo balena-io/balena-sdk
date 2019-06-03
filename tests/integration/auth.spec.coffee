@@ -83,7 +83,7 @@ describe 'SDK authentication', ->
 				m.chai.expect(promise).to.be.rejected
 					.and.eventually.have.property('code', 'BalenaNotLoggedIn')
 
-		describe 'balena.auth.register()', ->
+		describe.skip 'balena.auth.register()', ->
 
 			beforeEach ->
 				balena.auth.login
