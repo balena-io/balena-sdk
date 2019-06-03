@@ -2100,6 +2100,26 @@ getDeviceModel = (deps, opts) ->
 		return timeSince(lce)
 
 	###*
+	# @summary Get the OS version (version number and variant combined) running on a device
+	# @name getOsVersion
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {Object} device - A device object
+	# @returns {String}
+	#
+	# @example
+	# balena.models.device.get('7cf02a6').then(function(device) {
+	# 	console.log(device.os_version); // => 'balenaOS 2.26.0+rev1'
+	# 	console.log(device.os_variant); // => 'prod'
+	# 	balena.models.device.getOsVersion(device); // => '2.26.0+rev1.prod'
+	# })
+	###
+	exports.getOsVersion = (device) ->
+		getDeviceOsSemverWithVariant(device)
+
+	###*
 	# @summary Get whether the device is configured to track the current application release
 	# @name isTrackingApplicationRelease
 	# @public

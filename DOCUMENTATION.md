@@ -133,6 +133,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
             * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
             * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+            * [.getOsVersion(device)](#balena.models.device.getOsVersion) ⇒ <code>String</code>
             * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
             * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
@@ -436,6 +437,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
         * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+        * [.getOsVersion(device)](#balena.models.device.getOsVersion) ⇒ <code>String</code>
         * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
         * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
@@ -1690,6 +1692,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
     * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
+    * [.getOsVersion(device)](#balena.models.device.getOsVersion) ⇒ <code>String</code>
     * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
     * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
@@ -3841,6 +3844,25 @@ If the device has never been online this method returns the string `Connecting..
 ```js
 balena.models.device.get('7cf02a6').then(function(device) {
 	balena.models.device.lastOnline(device);
+})
+```
+<a name="balena.models.device.getOsVersion"></a>
+
+##### device.getOsVersion(device) ⇒ <code>String</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the OS version (version number and variant combined) running on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| device | <code>Object</code> | A device object |
+
+**Example**  
+```js
+balena.models.device.get('7cf02a6').then(function(device) {
+	console.log(device.os_version); // => 'balenaOS 2.26.0+rev1'
+	console.log(device.os_variant); // => 'prod'
+	balena.models.device.getOsVersion(device); // => '2.26.0+rev1.prod'
 })
 ```
 <a name="balena.models.device.isTrackingApplicationRelease"></a>

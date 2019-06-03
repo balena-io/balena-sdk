@@ -963,6 +963,7 @@ declare namespace BalenaSdk {
 				ping(uuidOrId: string | number): Promise<void>;
 				getStatus(device: object): string;
 				lastOnline(device: Device): string;
+				getOsVersion(device: Device): string;
 				isTrackingApplicationRelease(
 					uuidOrId: string | number,
 				): Promise<boolean>;
