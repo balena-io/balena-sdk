@@ -200,11 +200,7 @@ exports.getCurrentServiceDetailsPineOptions = ->
 			]
 			$filter:
 				# We filter out deleted images entirely
-				$ne:
-					[
-						$tolower: $: 'status'
-						'deleted'
-					]
+				status: $ne: 'deleted'
 			$expand:
 				image:
 					$select: ['id']
@@ -221,11 +217,7 @@ exports.getCurrentServiceDetailsPineOptions = ->
 			]
 			$filter:
 				# We filter out deleted gateway downloads entirely
-				$ne:
-					[
-						$tolower: $: 'status'
-						'deleted'
-					]
+				status: $ne: 'deleted'
 			$expand:
 				image:
 					$select: ['id']
