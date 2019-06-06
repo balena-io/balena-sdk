@@ -203,7 +203,7 @@ exports.givenADevice = (beforeFn) ->
 						is_provided_by__release: @oldRelease.id
 						device: device.id
 						download_progress: 100,
-						status: 'Deleted',
+						status: 'deleted',
 						install_date: '2017-09-30'
 			,
 				balena.pine.post

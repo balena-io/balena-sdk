@@ -608,7 +608,7 @@ describe 'Application Model', ->
 
 		givenMulticontainerApplicationWithADevice(before)
 
-		itShouldBeAnApplicationWithDeviceServiceDetails = (application) ->
+		itShouldBeAnApplicationWithDeviceServiceDetails = (application, expectCommit = false) ->
 			# Commit is empty on newly created application, so ignoring it
 			omittedFields = [
 				'owns__device'
@@ -620,8 +620,7 @@ describe 'Application Model', ->
 			# Check commit value after release
 			m.chai.expect(application.commit).to.equal('new-release-commit')
 
-			m.chai.expect(application.owns__device).to.have.lengthOf(1)
-			m.chai.expect(application.owns__device[0]).to.deep.match
+			deviceExpectation =
 				device_name: @device.device_name
 				uuid: @device.uuid
 				is_on__commit: @currentRelease.commit
@@ -650,6 +649,14 @@ describe 'Application Model', ->
 						download_progress: 100
 					]
 
+			if !expectCommit
+				_.forEach deviceExpectation.current_services, (currentServicesByName) ->
+					currentServicesByName.forEach (currentServicesOfName) ->
+						delete currentServicesOfName.commit
+
+			m.chai.expect(application.owns__device).to.have.lengthOf(1)
+			m.chai.expect(application.owns__device[0]).to.deep.match(deviceExpectation)
+
 			# Should filter out deleted image installs
 			m.chai.expect(application.owns__device[0].current_services.db).to.have.lengthOf(1)
 
@@ -658,15 +665,42 @@ describe 'Application Model', ->
 
 		describe 'balena.models.application.getWithDeviceServiceDetails()', ->
 
-			it 'should retrieve application and it\'s devices along with service details', ->
+			it 'should retrieve the application and it\'s devices along with service details', ->
 				balena.models.application.getWithDeviceServiceDetails(@application.id)
 				.then (applicationDetails) =>
-					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails)
+					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails, false)
 
 		describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
 
-			it 'should retrieve applications and their devices, along with service details', ->
+			it 'should retrieve all applications and their devices, along with service details', ->
 				balena.models.application.getAllWithDeviceServiceDetails(@application.id)
 				.then (applications) =>
 					m.chai.expect(applications).to.have.lengthOf(1)
-					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applications[0])
+					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applications[0], false)
+
+		describe 'when expanding the release of the image installs', ->
+
+			extraServiceDetailOptions =
+				$expand:
+					owns__device:
+						$expand:
+							image_install:
+								$expand:
+									is_provided_by__release:
+										$select: ['id', 'commit']
+
+			describe 'balena.models.application.getWithDeviceServiceDetails()', ->
+
+				it 'should retrieve the application and it\'s devices along with service details including their commit', ->
+
+					balena.models.application.getWithDeviceServiceDetails(@application.id, extraServiceDetailOptions)
+					.then (applicationDetails) =>
+						itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails, true)
+
+			describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
+
+				it 'should retrieve all applications and their devices, along with service details including their commit', ->
+					balena.models.application.getAllWithDeviceServiceDetails(extraServiceDetailOptions)
+					.then (applications) =>
+						m.chai.expect(applications).to.have.lengthOf(1)
+						itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applications[0], true)

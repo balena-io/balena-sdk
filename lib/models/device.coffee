@@ -27,7 +27,7 @@ map = require('lodash/map')
 bSemver = require('balena-semver')
 semver = require('semver')
 errors = require('balena-errors')
-deviceStatus = require('resin-device-status')
+deviceStatus = require('balena-device-status')
 
 {
 	onlyIf
@@ -42,7 +42,6 @@ deviceStatus = require('resin-device-status')
 	treatAsMissingDevice
 	LOCKED_STATUS_CODE
 	timeSince
-	isUniqueKeyViolationResponse
 } = require('../util')
 { hupActionHelper } = require('../util/device-actions/os-update/utils')
 {
@@ -73,6 +72,7 @@ getDeviceModel = (deps, opts) ->
 	applicationModel = once -> require('./application')(deps, opts)
 	osModel = once -> require('./os')(deps, opts)
 	auth = require('../auth')(deps, opts)
+	upsert = require('../util/upsert').getUpsertHelper(deps)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 
@@ -346,7 +346,8 @@ getDeviceModel = (deps, opts) ->
 		.asCallback(callback)
 
 	###*
-	# @summary Get a single device along with its associated services' essential details
+	# @summary Get a single device along with its associated services' details,
+	# including their associated commit
 	# @name getWithServiceDetails
 	# @public
 	# @function
@@ -383,7 +384,7 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			mergePineOptions(getCurrentServiceDetailsPineOptions(), options)
+			mergePineOptions(getCurrentServiceDetailsPineOptions(true), options)
 		.then(generateCurrentServiceDetails)
 		.asCallback(callback)
 
@@ -3115,21 +3116,17 @@ getDeviceModel = (deps, opts) ->
 				.get(0)
 				.get('id')
 			.then (serviceInstallId) ->
-				pine.post
+				upsert
 					resource: 'device_service_environment_variable'
 					body:
 						service_install: serviceInstallId
 						name: key
 						value: value
-				.catch isUniqueKeyViolationResponse, ->
-					pine.patch
-						resource: 'device_service_environment_variable'
-						options:
-							$filter:
-								service_install: serviceInstallId
-								name: key
-						body:
-							value: value
+				,
+				[
+					'service_install'
+					'name'
+				]
 			.asCallback(callback)
 
 		###*

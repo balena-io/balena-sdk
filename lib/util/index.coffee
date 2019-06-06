@@ -189,63 +189,66 @@ convertExpandToObject = (expandOption) ->
 		return cloneDeep(expandOption)
 
 # Pine options necessary for getting raw service data for a device
-exports.getCurrentServiceDetailsPineOptions = ->
-	$expand:
-		image_install:
-			$select: [
-				'id'
-				'download_progress'
-				'status'
-				'install_date'
-			]
-			$filter:
-				# We filter out deleted images entirely
-				$ne:
-					[
-						$tolower: $: 'status'
-						'deleted'
-					]
-			$expand:
-				image:
-					$select: ['id']
-					$expand:
-						is_a_build_of__service:
-							$select: ['id', 'service_name']
-				is_provided_by__release:
-					$select: ['id', 'commit']
-		gateway_download:
-			$select: [
-				'id'
-				'download_progress'
-				'status'
-			]
-			$filter:
-				# We filter out deleted gateway downloads entirely
-				$ne:
-					[
-						$tolower: $: 'status'
-						'deleted'
-					]
-			$expand:
-				image:
-					$select: ['id']
-					$expand:
-						is_a_build_of__service:
-							$select: ['id', 'service_name']
+exports.getCurrentServiceDetailsPineOptions = (expandRelease) ->
+	pineOptions =
+		$expand:
+			image_install:
+				$select: [
+					'id'
+					'download_progress'
+					'status'
+					'install_date'
+				]
+				$filter:
+					# We filter out deleted images entirely
+					status: $ne: 'deleted'
+				$expand:
+					image:
+						$select: ['id']
+						$expand:
+							is_a_build_of__service:
+								$select: ['id', 'service_name']
+			gateway_download:
+				$select: [
+					'id'
+					'download_progress'
+					'status'
+				]
+				$filter:
+					# We filter out deleted gateway downloads entirely
+					status: $ne: 'deleted'
+				$expand:
+					image:
+						$select: ['id']
+						$expand:
+							is_a_build_of__service:
+								$select: ['id', 'service_name']
+
+	if expandRelease
+		pineOptions.$expand.image_install.$expand.is_provided_by__release =
+			$select: ['id', 'commit']
+
+	return pineOptions
 
 # Builds summary data for an image install or gateway download
 getSingleInstallSummary = (rawData) ->
 	image = rawData.image[0]
 	service = image.is_a_build_of__service[0]
 
-	# ? because gateway downloads don't have releases
-	release = rawData.is_provided_by__release?[0]
+	releaseInfo = {}
+	# for the case that the release wasn't expanded or
+	# this is about gateway downloads which don't have releases
+	if rawData.is_provided_by__release?
+		release = rawData.is_provided_by__release[0]
+		releaseInfo =
+			commit: release?.commit
 
-	return Object.assign {}, omit(rawData, ['image', 'is_provided_by__release']),
+	return Object.assign omit(rawData, ['image', 'is_provided_by__release']),
 		service_name: service.service_name
 		image_id: image.id
 		service_id: service.id
-		commit: release?.commit
+	,
+		releaseInfo
 
 # Converts raw service data into a more usable structure and attaches it to the
 # device object under the `current_services` key

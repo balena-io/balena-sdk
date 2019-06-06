@@ -28,8 +28,8 @@ errors = require('balena-errors')
 	isId
 	mergePineOptions
 	unauthorizedError
-	isUniqueKeyViolationResponse
 } = require('../util')
+{ getUpsertHelper } = require('../util/upsert')
 
 exports.buildDependentResource = (
 	{ pine }
@@ -41,6 +41,8 @@ exports.buildDependentResource = (
 		ResourceNotFoundError # e.g. DeviceNotFoundError
 	}
 ) ->
+	upsert = getUpsertHelper({ pine })
+
 	exports = {
 		getAll: (options = {}, callback) ->
 			callback = findCallback(arguments)
@@ -93,19 +95,17 @@ exports.buildDependentResource = (
 				else
 					getResourceId(parentParam)
 			.then (parentId) ->
-				pine.post
+				upsert
 					resource: resourceName
 					body:
 						"#{parentResourceName}": parentId
 						"#{resourceKeyField}": key
 						value: value
-				.tap (result) ->
-					# On Pine 6, when the post adds nothing to the DB
-					# then the associated parent resource was not found.
-					# If we never checked that the resource actually exists
-					# then we should reject an appropriate error.
-					if isId(parentParam) && isEmpty(result)
-						throw new ResourceNotFoundError(parentParam)
+				,
+				[
+					parentResourceName
+					resourceKeyField
+				]
 				.tapCatch unauthorizedError, ->
 					# On Pine 7, when the post throws a 401
 					# then the associated parent resource might not exist.
@@ -114,15 +114,6 @@ exports.buildDependentResource = (
 					if not isId(parentParam)
 						return
 					getResourceId(parentParam)
-				.catch isUniqueKeyViolationResponse, ->
-					pine.patch
-						resource: resourceName
-						options:
-							$filter:
-								"#{parentResourceName}": parentId
-								"#{resourceKeyField}": key
-						body:
-							value: value
 			.asCallback(callback)
 
 		remove: (parentParam, key, callback) ->

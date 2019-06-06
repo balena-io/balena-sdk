@@ -10,8 +10,10 @@ declare namespace BalenaPine {
 		get<T>(params: PineClient.PineParamsWithIdFor<T>): Promise<T>;
 		get<T>(params: PineClient.PineParamsFor<T>): Promise<T[]>;
 		get<T, Result>(params: PineClient.PineParamsFor<T>): Promise<Result>;
-		post<T>(params: PineClient.PineParams): Promise<T>;
-		patch<T>(params: PineClient.PineParams): Promise<T>;
+		post<T>(params: PineClient.PineParamsFor<T>): Promise<T>;
+		patch<T>(
+			params: PineClient.PineParamsWithIdFor<T> | PineClient.PineParamsFor<T>,
+		): Promise<string>;
 	}
 }
 

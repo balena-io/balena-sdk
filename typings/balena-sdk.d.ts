@@ -11,7 +11,16 @@ import * as Pine from './pinejs-client-core';
 declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
+	/**
+	 * When not selected-out holds a deferred.
+	 * When expanded hold an array with a single element.
+	 */
 	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
+	/**
+	 * When expanded holds an array, otherwise the property is not present.
+	 * Selecting is not suggested,
+	 * in that case it holds a deferred to the original resource.
+	 */
 	type ReverseNavigationResource<T = WithId> = Pine.ReverseNavigationResource<
 		T
 	>;
@@ -19,6 +28,7 @@ declare namespace BalenaSdk {
 	type PineExpandFor<T> = Pine.Expand<T>;
 	type PineOptions = Pine.PineOptions;
 	type PineOptionsFor<T> = Pine.PineOptionsFor<T>;
+	type PineSubmitBody<T> = Pine.SubmitBody<T>;
 	type PineParams = Pine.PineParams;
 	type PineParamsFor<T> = Pine.PineParamsFor<T>;
 	type PineParamsWithIdFor<T> = Pine.PineParamsWithIdFor<T>;
@@ -56,10 +66,13 @@ declare namespace BalenaSdk {
 		id: number;
 		image_id: number;
 		service_id: number;
-		commit: string;
 		download_progress: number;
-		install_date: string;
 		status: string;
+		install_date: string;
+	}
+
+	interface CurrentServiceWithCommit extends CurrentService {
+		commit: string;
 	}
 
 	interface CurrentGatewayDownload {
@@ -70,9 +83,11 @@ declare namespace BalenaSdk {
 		status: string;
 	}
 
-	interface DeviceWithServiceDetails extends Device {
+	interface DeviceWithServiceDetails<
+		TCurrentService extends CurrentService = CurrentService
+	> extends Device {
 		current_services: {
-			[serviceName: string]: CurrentService[];
+			[serviceName: string]: TCurrentService[];
 		};
 
 		current_gateway_downloads: CurrentGatewayDownload[];
@@ -707,7 +722,7 @@ declare namespace BalenaSdk {
 					options?: PineOptionsFor<Application>,
 				): Promise<
 					Application & {
-						owns__device: DeviceWithServiceDetails[];
+						owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
 					}
 				>;
 				getAppByOwner(
@@ -721,7 +736,7 @@ declare namespace BalenaSdk {
 				): Promise<
 					Array<
 						Application & {
-							owns__device: DeviceWithServiceDetails[];
+							owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
 						}
 					>
 				>;
@@ -869,7 +884,7 @@ declare namespace BalenaSdk {
 				getWithServiceDetails(
 					nameOrId: string | number,
 					options?: PineOptionsFor<Device>,
-				): Promise<DeviceWithServiceDetails>;
+				): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
 				getAllByApplication(
 					nameOrId: string | number,
@@ -961,7 +976,7 @@ declare namespace BalenaSdk {
 				enableTcpPing(uuidOrId: string | number): Promise<void>;
 				disableTcpPing(uuidOrId: string | number): Promise<void>;
 				ping(uuidOrId: string | number): Promise<void>;
-				getStatus(device: object): Promise<string>;
+				getStatus(device: DeviceWithServiceDetails): Promise<string>;
 				lastOnline(device: Device): string;
 				getOsVersion(device: Device): string;
 				isTrackingApplicationRelease(
@@ -1129,6 +1144,7 @@ declare namespace BalenaSdk {
 		};
 
 		pine: BalenaPine.Pine;
+
 		interceptors: Interceptor[];
 	}
 
