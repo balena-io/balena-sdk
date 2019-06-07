@@ -10,3 +10,7 @@ export type PropsOfType<T, P> = {
 export type StringKeyof<T> = keyof T & string;
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+export interface Dictionary<T> {
+	[key: string]: T;
+}
