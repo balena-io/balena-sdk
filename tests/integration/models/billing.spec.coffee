@@ -62,11 +62,21 @@ describe 'Billing Model', ->
 		describe 'balena.models.billing.updateBillingInfo()', ->
 			it 'should throw when no parameters are provided', ->
 				promise = balena.models.billing.updateBillingInfo()
-				m.chai.expect(promise).to.be.rejectedWith('Token not provided.')
+				m.chai.expect(promise).to.be.rejected
+				.then (error) ->
+					m.chai.expect(error).to.have.property('statusCode', 400)
 
-			it 'should throw when an token_id is not provided', ->
+			it 'should throw when an empty parameter object is provided', ->
+				promise = balena.models.billing.updateBillingInfo({})
+				m.chai.expect(promise).to.be.rejected
+				.then (error) ->
+					m.chai.expect(error).to.have.property('statusCode', 400)
+
+			it 'should throw when the token_id is empty', ->
 				promise = balena.models.billing.updateBillingInfo({ token_id: '' })
-				m.chai.expect(promise).to.be.rejectedWith('Token not provided.')
+				m.chai.expect(promise).to.be.rejected
+				.then (error) ->
+					m.chai.expect(error).to.have.property('statusCode', 400)
 
 		describe 'balena.models.billing.getInvoices()', ->
 			it 'should return no invoices', ->
