@@ -1,5 +1,6 @@
 _ = require('lodash')
 m = require('mochainon')
+parallel = require('mocha.parallel')
 
 {
 	balena
@@ -20,107 +21,113 @@ describe 'Application Model', ->
 
 	describe 'given no applications', ->
 
-		describe 'balena.models.application.getAll()', ->
+		parallel '[read operations]', ->
 
-			it 'should eventually become an empty array', ->
-				promise = balena.models.application.getAll()
-				m.chai.expect(promise).to.become([])
+			describe 'balena.models.application.getAll()', ->
 
-		describe 'balena.models.application.getAppByOwner()', ->
+				it 'should eventually become an empty array', ->
+					promise = balena.models.application.getAll()
+					m.chai.expect(promise).to.become([])
 
-			it 'should eventually reject', ->
-				promise = balena.models.application.getAppByOwner('testapp', 'FooBar')
-				m.chai.expect(promise).to.be.rejected
+			describe 'balena.models.application.getAppByOwner()', ->
 
-		describe 'balena.models.application.hasAny()', ->
+				it 'should eventually reject', ->
+					promise = balena.models.application.getAppByOwner('testapp', 'FooBar')
+					m.chai.expect(promise).to.be.rejected
 
-			it 'should eventually be false', ->
-				promise = balena.models.application.hasAny()
-				m.chai.expect(promise).to.eventually.be.false
+			describe 'balena.models.application.hasAny()', ->
+
+				it 'should eventually be false', ->
+					promise = balena.models.application.hasAny()
+					m.chai.expect(promise).to.eventually.be.false
 
 		describe 'balena.models.application.create()', ->
 
-			afterEach ->
-				balena.pine.delete
-					resource: 'application'
+			describe '[mutating operations]', ->
 
-			it 'should be able to create an application w/o providing an application type', ->
-				balena.models.application.create
-					name: 'FooBar'
-					deviceType: 'raspberry-pi'
-				.then ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
-
-			it 'should be able to create an application with a specific application type', ->
-				balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				.then ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
-
-			it 'should be able to create a child application', ->
-				balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				.then (parentApplication) ->
-					balena.models.application.create
-						name: 'FooBarChild'
-						deviceType: 'generic'
-						parent: parentApplication.id
-				.then ->
-					# application.getAll() doesn't return dependent apps
-					balena.pine.get
+				afterEach ->
+					balena.pine.delete
 						resource: 'application'
-						options:
-							$orderby: id: 'asc'
-				.then ([ parentApplication, childApplication ]) ->
-					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
-			it 'should be rejected if the application type is invalid', ->
-				promise = balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'non-existing'
-					deviceType: 'raspberry-pi'
-				m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
+				it 'should be able to create an application w/o providing an application type', ->
+					balena.models.application.create
+						name: 'FooBar'
+						deviceType: 'raspberry-pi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
 
-			it 'should be rejected if the device type is invalid', ->
-				promise = balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'foobarbaz'
-				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
+				it 'should be able to create an application with a specific application type', ->
+					balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberry-pi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
 
-			it 'should be rejected if the device type is discontinued', ->
-				promise = balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'edge'
-				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
+				it 'should be able to create a child application', ->
+					balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberry-pi'
+					.then (parentApplication) ->
+						balena.models.application.create
+							name: 'FooBarChild'
+							deviceType: 'generic'
+							parent: parentApplication.id
+					.then ->
+						# application.getAll() doesn't return dependent apps
+						balena.pine.get
+							resource: 'application'
+							options:
+								$orderby: id: 'asc'
+					.then ([ parentApplication, childApplication ]) ->
+						m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
-			it 'should be rejected if the name has less than four characters', ->
-				promise = balena.models.application.create
-					name: 'Foo'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				m.chai.expect(promise).to.be.rejected
-				.then (error) ->
-					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
-					m.chai.expect(error).to.have.property('statusCode', 400)
-					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4')
+				it 'should be able to create an application using a device type alias', ->
+					balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberrypi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
 
-			it 'should be able to create an application using a device type alias', ->
-				balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberrypi'
-				.then ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
+			parallel '[rejected operations]', ->
+
+				it 'should be rejected if the application type is invalid', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'non-existing'
+						deviceType: 'raspberry-pi'
+					m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
+
+				it 'should be rejected if the device type is invalid', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'foobarbaz'
+					m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
+
+				it 'should be rejected if the device type is discontinued', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'edge'
+					m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
+
+				it 'should be rejected if the name has less than four characters', ->
+					promise = balena.models.application.create
+						name: 'Foo'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberry-pi'
+					m.chai.expect(promise).to.be.rejected
+					.then (error) ->
+						m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
+						m.chai.expect(error).to.have.property('statusCode', 400)
+						m.chai.expect(error).to.have.property('message')
+						.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4')
 
 	describe 'given a single application', ->
 
@@ -128,96 +135,103 @@ describe 'Application Model', ->
 
 			givenAnApplication(before)
 
-			describe 'balena.models.application.hasAny()', ->
+			ctx = null
 
-				it 'should eventually be true', ->
-					promise = balena.models.application.hasAny()
-					m.chai.expect(promise).to.eventually.be.true
+			before ->
+				ctx = @
 
-			describe 'balena.models.application.create()', ->
+			parallel '', ->
 
-				it 'should reject if trying to create an app with the same name', ->
-					promise = balena.models.application.create
-						name: 'FooBar'
-						applicationType: 'microservices-starter'
-						deviceType: 'beaglebone-black'
-					m.chai.expect(promise).to.be.rejectedWith('Application name must be unique')
+				describe 'balena.models.application.hasAny()', ->
 
-			describe 'balena.models.application.hasAny()', ->
+					it 'should eventually be true', ->
+						promise = balena.models.application.hasAny()
+						m.chai.expect(promise).to.eventually.be.true
 
-				it 'should eventually be true', ->
-					promise = balena.models.application.hasAny()
-					m.chai.expect(promise).to.eventually.be.true
+				describe 'balena.models.application.create()', ->
 
-			describe 'balena.models.application.getAppByOwner()', ->
+					it 'should reject if trying to create an app with the same name', ->
+						promise = balena.models.application.create
+							name: 'FooBar'
+							applicationType: 'microservices-starter'
+							deviceType: 'beaglebone-black'
+						m.chai.expect(promise).to.be.rejectedWith('Application name must be unique')
 
-				it 'should find the created application', ->
-					balena.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
-						m.chai.expect(application.id).to.equal(@application.id)
+				describe 'balena.models.application.hasAny()', ->
 
-				it 'should not find the created application with a different username', ->
-					promise = balena.models.application.getAppByOwner('FooBar', 'test_username')
-					m.chai.expect(promise).to.eventually.be.rejectedWith('Application not found: test_username/foobar')
+					it 'should eventually be true', ->
+						promise = balena.models.application.hasAny()
+						m.chai.expect(promise).to.eventually.be.true
 
-			describe 'balena.models.application.getAll()', ->
+				describe 'balena.models.application.getAppByOwner()', ->
 
-				it 'should return an array with length 1', ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
+					it 'should find the created application', ->
+						balena.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
+							m.chai.expect(application.id).to.equal(ctx.application.id)
 
-				it 'should eventually become an array containing the application', ->
-					balena.models.application.getAll().then (applications) =>
-						m.chai.expect(applications[0].id).to.equal(@application.id)
+					it 'should not find the created application with a different username', ->
+						promise = balena.models.application.getAppByOwner('FooBar', 'test_username')
+						m.chai.expect(promise).to.eventually.be.rejectedWith('Application not found: test_username/foobar')
 
-				it 'should support arbitrary pinejs options', ->
-					balena.models.application.getAll($expand: 'user')
-					.then (applications) ->
-						m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+				describe 'balena.models.application.getAll()', ->
 
-			describe 'balena.models.application.get()', ->
+					it 'should return an array with length 1', ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
 
-				it 'should be able to get an application by name', ->
-					promise = balena.models.application.get(@application.app_name)
-					m.chai.expect(promise).to.become(@application)
+					it 'should eventually become an array containing the application', ->
+						balena.models.application.getAll().then (applications) =>
+							m.chai.expect(applications[0].id).to.equal(ctx.application.id)
 
-				it 'should be able to get an application by id', ->
-					promise = balena.models.application.get(@application.id)
-					m.chai.expect(promise).to.become(@application)
+					it 'should support arbitrary pinejs options', ->
+						balena.models.application.getAll($expand: 'user')
+						.then (applications) ->
+							m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
 
-				it 'should be rejected if the application name does not exist', ->
-					promise = balena.models.application.get('HelloWorldApp')
-					m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+				describe 'balena.models.application.get()', ->
 
-				it 'should be rejected if the application id does not exist', ->
-					promise = balena.models.application.get(999999)
-					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+					it 'should be able to get an application by name', ->
+						promise = balena.models.application.get(ctx.application.app_name)
+						m.chai.expect(promise).to.become(ctx.application)
 
-				it 'should support arbitrary pinejs options', ->
-					balena.models.application.get(@application.id, $expand: 'user')
-					.then (application) ->
-						m.chai.expect(application.user[0].username).to.equal(credentials.username)
+					it 'should be able to get an application by id', ->
+						promise = balena.models.application.get(ctx.application.id)
+						m.chai.expect(promise).to.become(ctx.application)
 
-			describe 'balena.models.application.has()', ->
+					it 'should be rejected if the application name does not exist', ->
+						promise = balena.models.application.get('HelloWorldApp')
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
 
-				it 'should eventually be true if the application name exists', ->
-					promise = balena.models.application.has(@application.app_name)
-					m.chai.expect(promise).to.eventually.be.true
+					it 'should be rejected if the application id does not exist', ->
+						promise = balena.models.application.get(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
-				it 'should eventually be true if the application id exists', ->
-					promise = balena.models.application.has(@application.id)
-					m.chai.expect(promise).to.eventually.be.true
+					it 'should support arbitrary pinejs options', ->
+						balena.models.application.get(ctx.application.id, $expand: 'user')
+						.then (application) ->
+							m.chai.expect(application.user[0].username).to.equal(credentials.username)
 
-				it 'should return false if the application id is undefined', ->
-					promise = balena.models.application.has(undefined)
-					m.chai.expect(promise).to.eventually.be.false
+				describe 'balena.models.application.has()', ->
 
-				it 'should eventually be false if the application name does not exist', ->
-					promise = balena.models.application.has('HelloWorldApp')
-					m.chai.expect(promise).to.eventually.be.false
+					it 'should eventually be true if the application name exists', ->
+						promise = balena.models.application.has(ctx.application.app_name)
+						m.chai.expect(promise).to.eventually.be.true
 
-				it 'should eventually be false if the application id does not exist', ->
-					promise = balena.models.application.has(999999)
-					m.chai.expect(promise).to.eventually.be.false
+					it 'should eventually be true if the application id exists', ->
+						promise = balena.models.application.has(ctx.application.id)
+						m.chai.expect(promise).to.eventually.be.true
+
+					it 'should return false if the application id is undefined', ->
+						promise = balena.models.application.has(undefined)
+						m.chai.expect(promise).to.eventually.be.false
+
+					it 'should eventually be false if the application name does not exist', ->
+						promise = balena.models.application.has('HelloWorldApp')
+						m.chai.expect(promise).to.eventually.be.false
+
+					it 'should eventually be false if the application id does not exist', ->
+						promise = balena.models.application.has(999999)
+						m.chai.expect(promise).to.eventually.be.false
 
 		describe '[mutating operations]', ->
 
@@ -608,6 +622,11 @@ describe 'Application Model', ->
 
 		givenMulticontainerApplicationWithADevice(before)
 
+		ctx = null
+
+		before ->
+			ctx = this
+
 		itShouldBeAnApplicationWithDeviceServiceDetails = (application, expectCommit = false) ->
 			# Commit is empty on newly created application, so ignoring it
 			omittedFields = [
@@ -663,44 +682,46 @@ describe 'Application Model', ->
 			# Should have an empty list of gateway downloads
 			m.chai.expect(application.owns__device[0].current_gateway_downloads).to.have.lengthOf(0)
 
-		describe 'balena.models.application.getWithDeviceServiceDetails()', ->
-
-			it 'should retrieve the application and it\'s devices along with service details', ->
-				balena.models.application.getWithDeviceServiceDetails(@application.id)
-				.then (applicationDetails) =>
-					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails, false)
-
-		describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
-
-			it 'should retrieve all applications and their devices, along with service details', ->
-				balena.models.application.getAllWithDeviceServiceDetails(@application.id)
-				.then (applications) =>
-					m.chai.expect(applications).to.have.lengthOf(1)
-					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applications[0], false)
-
-		describe 'when expanding the release of the image installs', ->
-
-			extraServiceDetailOptions =
-				$expand:
-					owns__device:
-						$expand:
-							image_install:
-								$expand:
-									is_provided_by__release:
-										$select: ['id', 'commit']
+		parallel '', ->
 
 			describe 'balena.models.application.getWithDeviceServiceDetails()', ->
 
-				it 'should retrieve the application and it\'s devices along with service details including their commit', ->
-
-					balena.models.application.getWithDeviceServiceDetails(@application.id, extraServiceDetailOptions)
+				it 'should retrieve the application and it\'s devices along with service details', ->
+					balena.models.application.getWithDeviceServiceDetails(ctx.application.id)
 					.then (applicationDetails) =>
-						itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails, true)
+						itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applicationDetails, false)
 
 			describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
 
-				it 'should retrieve all applications and their devices, along with service details including their commit', ->
-					balena.models.application.getAllWithDeviceServiceDetails(extraServiceDetailOptions)
+				it 'should retrieve all applications and their devices, along with service details', ->
+					balena.models.application.getAllWithDeviceServiceDetails(ctx.application.id)
 					.then (applications) =>
 						m.chai.expect(applications).to.have.lengthOf(1)
-						itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applications[0], true)
+						itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applications[0], false)
+
+			describe 'when expanding the release of the image installs', ->
+
+				extraServiceDetailOptions =
+					$expand:
+						owns__device:
+							$expand:
+								image_install:
+									$expand:
+										is_provided_by__release:
+											$select: ['id', 'commit']
+
+				describe 'balena.models.application.getWithDeviceServiceDetails()', ->
+
+					it 'should retrieve the application and it\'s devices along with service details including their commit', ->
+
+						balena.models.application.getWithDeviceServiceDetails(ctx.application.id, extraServiceDetailOptions)
+						.then (applicationDetails) =>
+							itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applicationDetails, true)
+
+				describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
+
+					it 'should retrieve all applications and their devices, along with service details including their commit', ->
+						balena.models.application.getAllWithDeviceServiceDetails(extraServiceDetailOptions)
+						.then (applications) =>
+							m.chai.expect(applications).to.have.lengthOf(1)
+							itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applications[0], true)
