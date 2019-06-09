@@ -1,5 +1,6 @@
 _ = require('lodash')
 m = require('mochainon')
+parallel = require('mocha.parallel')
 superagent = require('superagent')
 Promise = require('bluebird')
 
@@ -33,7 +34,7 @@ describe 'Device Model', ->
 
 	givenLoggedInUser(before)
 
-	describe 'given no applications', ->
+	parallel 'given no applications', ->
 
 		describe 'balena.models.device.getDisplayName()', ->
 
@@ -129,52 +130,59 @@ describe 'Device Model', ->
 
 			givenAnApplication(before)
 
-			describe 'balena.models.device.getAll()', ->
+			ctx = null
 
-				it 'should become an empty array', ->
-					promise = balena.models.device.getAll()
-					m.chai.expect(promise).to.become([])
+			before ->
+				ctx = @
 
-			describe 'balena.models.device.getAllByApplication()', ->
+			parallel '', ->
 
-				it 'should become an empty array', ->
-					promise = balena.models.device.getAllByApplication(@application.id)
-					m.chai.expect(promise).to.become([])
+				describe 'balena.models.device.getAll()', ->
 
-			describe 'balena.models.device.generateUniqueKey()', ->
+					it 'should become an empty array', ->
+						promise = balena.models.device.getAll()
+						m.chai.expect(promise).to.become([])
 
-				it 'should generate a valid uuid', ->
-					uuid = balena.models.device.generateUniqueKey()
+				describe 'balena.models.device.getAllByApplication()', ->
 
-					m.chai.expect(uuid).to.be.a('string')
-					m.chai.expect(uuid).to.have.length(62)
-					m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
+					it 'should become an empty array', ->
+						promise = balena.models.device.getAllByApplication(ctx.application.id)
+						m.chai.expect(promise).to.become([])
 
-				it 'should generate different uuids', ->
-					one = balena.models.device.generateUniqueKey()
-					two = balena.models.device.generateUniqueKey()
-					three = balena.models.device.generateUniqueKey()
+				describe 'balena.models.device.generateUniqueKey()', ->
 
-					m.chai.expect(one).to.not.equal(two)
-					m.chai.expect(two).to.not.equal(three)
+					it 'should generate a valid uuid', ->
+						uuid = balena.models.device.generateUniqueKey()
 
-			describe 'balena.models.device.getManifestByApplication()', ->
+						m.chai.expect(uuid).to.be.a('string')
+						m.chai.expect(uuid).to.have.length(62)
+						m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
 
-				it 'should return the appropriate manifest for an application name', ->
-					balena.models.device.getManifestByApplication(@application.app_name).then (manifest) =>
-						m.chai.expect(manifest.slug).to.equal(@application.device_type)
+					it 'should generate different uuids', ->
+						one = balena.models.device.generateUniqueKey()
+						two = balena.models.device.generateUniqueKey()
+						three = balena.models.device.generateUniqueKey()
 
-				it 'should return the appropriate manifest for an application id', ->
-					balena.models.device.getManifestByApplication(@application.id).then (manifest) =>
-						m.chai.expect(manifest.slug).to.equal(@application.device_type)
+						m.chai.expect(one).to.not.equal(two)
+						m.chai.expect(two).to.not.equal(three)
 
-				it 'should be rejected if the application name does not exist', ->
-					promise = balena.models.device.getManifestByApplication('HelloWorldApp')
-					m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+				describe 'balena.models.device.getManifestByApplication()', ->
 
-				it 'should be rejected if the application id does not exist', ->
-					promise = balena.models.device.getManifestByApplication(999999)
-					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+					it 'should return the appropriate manifest for an application name', ->
+						balena.models.device.getManifestByApplication(ctx.application.app_name).then (manifest) =>
+							m.chai.expect(manifest.slug).to.equal(ctx.application.device_type)
+
+					it 'should return the appropriate manifest for an application id', ->
+						balena.models.device.getManifestByApplication(ctx.application.id).then (manifest) =>
+							m.chai.expect(manifest.slug).to.equal(ctx.application.device_type)
+
+					it 'should be rejected if the application name does not exist', ->
+						promise = balena.models.device.getManifestByApplication('HelloWorldApp')
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+					it 'should be rejected if the application id does not exist', ->
+						promise = balena.models.device.getManifestByApplication(999999)
+						m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 		describe 'balena.models.device.register()', ->
 
