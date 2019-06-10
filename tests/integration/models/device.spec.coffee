@@ -133,7 +133,7 @@ describe 'Device Model', ->
 			ctx = null
 
 			before ->
-				ctx = @
+				ctx = this
 
 			parallel '', ->
 

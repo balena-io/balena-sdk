@@ -138,7 +138,7 @@ describe 'Application Model', ->
 			ctx = null
 
 			before ->
-				ctx = @
+				ctx = this
 
 			parallel '', ->
 
