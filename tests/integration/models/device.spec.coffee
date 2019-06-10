@@ -169,11 +169,11 @@ describe 'Device Model', ->
 				describe 'balena.models.device.getManifestByApplication()', ->
 
 					it 'should return the appropriate manifest for an application name', ->
-						balena.models.device.getManifestByApplication(ctx.application.app_name).then (manifest) =>
+						balena.models.device.getManifestByApplication(ctx.application.app_name).then (manifest) ->
 							m.chai.expect(manifest.slug).to.equal(ctx.application.device_type)
 
 					it 'should return the appropriate manifest for an application id', ->
-						balena.models.device.getManifestByApplication(ctx.application.id).then (manifest) =>
+						balena.models.device.getManifestByApplication(ctx.application.id).then (manifest) ->
 							m.chai.expect(manifest.slug).to.equal(ctx.application.device_type)
 
 					it 'should be rejected if the application name does not exist', ->

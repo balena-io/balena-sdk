@@ -166,7 +166,7 @@ describe 'Application Model', ->
 				describe 'balena.models.application.getAppByOwner()', ->
 
 					it 'should find the created application', ->
-						balena.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
+						balena.models.application.getAppByOwner('FooBar', credentials.username).then (application) ->
 							m.chai.expect(application.id).to.equal(ctx.application.id)
 
 					it 'should not find the created application with a different username', ->
@@ -180,7 +180,7 @@ describe 'Application Model', ->
 						m.chai.expect(promise).to.eventually.have.length(1)
 
 					it 'should eventually become an array containing the application', ->
-						balena.models.application.getAll().then (applications) =>
+						balena.models.application.getAll().then (applications) ->
 							m.chai.expect(applications[0].id).to.equal(ctx.application.id)
 
 					it 'should support arbitrary pinejs options', ->
@@ -688,14 +688,14 @@ describe 'Application Model', ->
 
 				it 'should retrieve the application and it\'s devices along with service details', ->
 					balena.models.application.getWithDeviceServiceDetails(ctx.application.id)
-					.then (applicationDetails) =>
+					.then (applicationDetails) ->
 						itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applicationDetails, false)
 
 			describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
 
 				it 'should retrieve all applications and their devices, along with service details', ->
 					balena.models.application.getAllWithDeviceServiceDetails(ctx.application.id)
-					.then (applications) =>
+					.then (applications) ->
 						m.chai.expect(applications).to.have.lengthOf(1)
 						itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applications[0], false)
 
@@ -715,13 +715,13 @@ describe 'Application Model', ->
 					it 'should retrieve the application and it\'s devices along with service details including their commit', ->
 
 						balena.models.application.getWithDeviceServiceDetails(ctx.application.id, extraServiceDetailOptions)
-						.then (applicationDetails) =>
+						.then (applicationDetails) ->
 							itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applicationDetails, true)
 
 				describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
 
 					it 'should retrieve all applications and their devices, along with service details including their commit', ->
 						balena.models.application.getAllWithDeviceServiceDetails(extraServiceDetailOptions)
-						.then (applications) =>
+						.then (applications) ->
 							m.chai.expect(applications).to.have.lengthOf(1)
 							itShouldBeAnApplicationWithDeviceServiceDetails.call(ctx, applications[0], true)
