@@ -831,7 +831,7 @@ declare namespace BalenaSdk {
 				getLatestByApplication(
 					nameOrId: string | number,
 					options?: PineOptionsFor<Release>,
-				): Promise<Release[]>;
+				): Promise<Release>;
 				getWithImageDetails(
 					nameOrId: string | number,
 					options?: {
