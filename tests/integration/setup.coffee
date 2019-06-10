@@ -403,11 +403,15 @@ before ->
 	.finally -> console.log()
 
 teardown = _.once Promise.method ->
-	process.stderr.write('stderr: ********** teardown **********\n')
 	console.log('********** teardown **********')
+	if !IS_BROWSER
+		process.stderr.write('stderr: ********** teardown **********\n')
+
 	if !shouldDeleteTestUser
 		console.log('Nothing to clean.')
-		process.stderr.write('stderr: Nothing to clean\n')
+		if !IS_BROWSER
+			process.stderr.write('stderr: Nothing to clean\n')
+
 		return
 
 	balena.auth.login
@@ -433,8 +437,9 @@ sigTearDown = (signalName) ->
 		.then ->
 			process.stderr.write('Cleaning up finished\n')
 
-[
-	'SIGINT'
-	'SIGTERM'
-].forEach (signalName) ->
-	process.on signalName, sigTearDown(signalName)
+if !IS_BROWSER
+	[
+		'SIGINT'
+		'SIGTERM'
+	].forEach (signalName) ->
+		process.on signalName, sigTearDown(signalName)
