@@ -29,9 +29,10 @@
   "scripts": {
     "clean": "rimraf build",
     "test": "npm run build && npm run test:all",
-    "test:all": "npm run test:node && npm run test:browser",
+    "test:all": "npm run test:ts-compatibility && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
     "test:browser": "karma start",
+    "test:ts-compatibility": "npx typescript@~3.4.0 --noEmit --project ./tsconfig.dist.json",
     "build": "npm run lint && npm run clean && tsc && gulp build && npm run docs",
     "docs": "jsdoc2md \"build/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",

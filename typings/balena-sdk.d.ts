@@ -7,6 +7,7 @@ import { Readable } from 'stream';
 import * as BalenaPine from './balena-pine';
 import { BalenaRequest } from './balena-request';
 import * as Pine from './pinejs-client-core';
+import { Dictionary } from './utils';
 
 declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
