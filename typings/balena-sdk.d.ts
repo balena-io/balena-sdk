@@ -175,7 +175,8 @@ declare namespace BalenaSdk {
 
 		application: ReverseNavigationResource<Application>;
 		owns__team: ReverseNavigationResource<Team>;
-		organization_membership: ReverseNavigationResource<OrganizationMember>;
+		/** includes__organization_membership */
+		organization_membership: ReverseNavigationResource<OrganizationMembership>;
 	}
 
 	interface Team {
@@ -185,12 +186,10 @@ declare namespace BalenaSdk {
 
 		belongs_to__organization: NavigationResource<Organization>;
 
-		team__has_access_to__application: ReverseNavigationResource<
-			TeamApplication
-		>;
-		user_organization_membership__is_member_of__team: ReverseNavigationResource<
-			TeamMember
-		>;
+		/** includes__organization_membership */
+		team_membership: ReverseNavigationResource<TeamMembership>;
+		/** grants_access_to__application */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface SocialServiceAccount {
@@ -225,7 +224,10 @@ declare namespace BalenaSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
-		organization_membership: ReverseNavigationResource<OrganizationMember>;
+		/** organization_membership */
+		includes__organization_membership: ReverseNavigationResource<
+			OrganizationMembership
+		>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
 		// this is what the api route returns
@@ -239,30 +241,32 @@ declare namespace BalenaSdk {
 		name: OrganizationMembershipRoles;
 	}
 
-	interface OrganizationMember {
+	/** organization_membership */
+	interface OrganizationMembership {
 		id: number;
 		created_at: string;
 
+		user: NavigationResource<User>;
+		/** organization */
+		is_member_of__organization: NavigationResource<Organization>;
 		organization_membership_role: NavigationResource<
 			OrganizationMembershipRole
 		>;
-		is_member_of__organization: NavigationResource<Organization>;
-		user: NavigationResource<User>;
 
-		user_organization_membership__is_member_of__team: ReverseNavigationResource<
-			TeamMember
-		>;
-		user_organization_membership__grants_access_to__application: ReverseNavigationResource<
+		/** grants_access_to__application */
+		organization_membership_application_access: ReverseNavigationResource<
 			OrganizationMemberApplicationAccess
 		>;
+		team_membership: ReverseNavigationResource<TeamMembership>;
 	}
 
-	interface TeamMember {
+	/** team_membership */
+	interface TeamMembership {
 		id: number;
 		created_at: string;
 
+		organization_membership: NavigationResource<OrganizationMembership>;
 		is_member_of__team: NavigationResource<Team>;
-		user_organization_membership: NavigationResource<OrganizationMember>;
 	}
 
 	interface ApiKey {
@@ -296,12 +300,12 @@ declare namespace BalenaSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
-		team__has_access_to__application: ReverseNavigationResource<
-			TeamApplication
-		>;
-		user_organization_membership__grants_access_to__application: ReverseNavigationResource<
+		/** is_accessible_by__organization_membership */
+		organization_membership_application_access: ReverseNavigationResource<
 			OrganizationMemberApplicationAccess
 		>;
+		/** is_accessible_by__team */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface ApplicationType {
@@ -326,17 +330,21 @@ declare namespace BalenaSdk {
 		name: ApplicationMembershipRoles;
 	}
 
+	/** organization_membership_application_access */
 	interface OrganizationMemberApplicationAccess {
 		id: number;
-		user_organization_membership: NavigationResource<OrganizationMember>;
+		organization_membership: NavigationResource<OrganizationMembership>;
+		/** application */
 		grants_access_to__application: NavigationResource<Application>;
 		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 
-	interface TeamApplication {
+	/** team_application_access */
+	interface TeamApplicationAccess {
 		id: number;
 		team: NavigationResource<Team>;
-		has_access_to__application: NavigationResource<Application>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
 		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 
