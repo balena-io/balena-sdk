@@ -295,13 +295,13 @@ declare namespace BalenaSdk {
 		status: ReleaseStatus;
 		update_timestamp: string | null;
 
-		contains__image: null | Array<{
-			id: number;
-			image: NavigationResource<Image>;
-		}>;
 		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
 
+		contains__image: ReverseNavigationResource<{
+			id: number;
+			image: NavigationResource<Image>;
+		}>;
 		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
@@ -458,6 +458,7 @@ declare namespace BalenaSdk {
 		device_environment_variable: ReverseNavigationResource<DeviceVariable>;
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
+		service_install: ReverseNavigationResource<ServiceInstall>;
 	}
 
 	interface SupervisorRelease {
@@ -504,6 +505,7 @@ declare namespace BalenaSdk {
 		project_type?: string | null;
 		status: string;
 		created_at: string;
+		is_stored_at__image_location: string;
 		is_a_build_of__service: NavigationResource<Service>;
 		start_timestamp?: string | null;
 		end_timestamp?: string | null;
@@ -568,6 +570,10 @@ declare namespace BalenaSdk {
 		installs__service: NavigationResource<Service>;
 		service: Service[];
 		application: NavigationResource<Application>;
+
+		device_service_environment_variable: ReverseNavigationResource<
+			DeviceServiceEnvironmentVariable
+		>;
 	}
 
 	interface EnvironmentVariableBase {

@@ -40,7 +40,7 @@ type OrderByValues = 'asc' | 'desc';
 type OrderBy = string | string[] | { [index: string]: OrderByValues };
 
 type ResourceObjFilter<T> = {
-	[k in keyof T]?: object | number | string | boolean
+	[k in keyof T]?: object | number | string | boolean;
 };
 
 type Filter<T> = FilterObj<T>;
@@ -154,7 +154,7 @@ export interface PineParams extends PineParamsBase {
 }
 
 export type SubmitBody<T> = {
-	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k]
+	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
 };
 
 export interface PineParamsFor<T> extends PineParamsBase {
