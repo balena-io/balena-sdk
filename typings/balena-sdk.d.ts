@@ -295,13 +295,13 @@ declare namespace BalenaSdk {
 		status: ReleaseStatus;
 		update_timestamp: string | null;
 
-		contains__image: null | Array<{
-			id: number;
-			image: NavigationResource<Image>;
-		}>;
 		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
 
+		contains__image: ReverseNavigationResource<{
+			id: number;
+			image: NavigationResource<Image>;
+		}>;
 		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
