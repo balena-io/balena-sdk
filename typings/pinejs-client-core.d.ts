@@ -25,22 +25,53 @@ export type AssociatedResource<T = WithId> =
 	| NavigationResource<T>
 	| ReverseNavigationResource<T>;
 
+type InferAssociatedResourceType<T> = T extends (AssociatedResource & any[])
+	? T[number]
+	: never;
+
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
 type RawFilter =
 	| string
 	| Array<string | Filter<any>>
 	| { $string: string; [index: string]: Filter<any> | string };
+
+type LambdaExpression<T> = {
+	[alias: string]: Filter<T>;
+};
+
 type Lambda<T> = {
 	$alias: string;
-	$expr: Filter<T>;
+	$expr:
+		| LambdaExpression<T>
+		// It seems that TS atm mixes things up after adding the following UNION rules
+		// and allows having secondary filter props inside the $expr:LambdaExpression<T>
+		// that are not props of the T
+		// See: https://github.com/balena-io/balena-sdk/issues/714
+		| { 1: 1 }
+		| { $and: Array<LambdaExpression<T>> }
+		| { $or: Array<LambdaExpression<T>> }
+		| { $not: LambdaExpression<T> };
 };
 
 type OrderByValues = 'asc' | 'desc';
 type OrderBy = string | string[] | { [index: string]: OrderByValues };
 
+type AssociatedResourceFilter<T> = T extends NonNullable<
+	ReverseNavigationResource
+>
+	? FilterObj<InferAssociatedResourceType<T>>
+	: (FilterObj<InferAssociatedResourceType<T>> | number | null);
+
+type ResourceObjFilterPropValue<
+	T,
+	k extends keyof T
+> = T[k] extends AssociatedResource
+	? AssociatedResourceFilter<T[k]>
+	: (T[k] | FilterExpressions<T[k]> | null);
+
 type ResourceObjFilter<T> = {
-	[k in keyof T]?: object | number | string | boolean;
+	[k in keyof T]?: ResourceObjFilterPropValue<T, k>;
 };
 
 type Filter<T> = FilterObj<T>;
@@ -50,8 +81,59 @@ type NestedFilter<T> = FilterObj<T> | FilterArray<T> | FilterBaseType;
 
 interface FilterArray<T> extends Array<NestedFilter<T>> {}
 
-type FilterOperationValue<T> = NestedFilter<T>;
+type FilterOperationValue<T> =
+	| NestedFilter<T>
+	| FilterFunctionExpressions<NestedFilter<T>>;
 type FilterFunctionValue<T> = NestedFilter<T>;
+
+type FilterFunctionExpressions<T> = Pick<
+	FilterExpressions<T>,
+	FilterFunctionKey
+>;
+
+type FilterOperationKey =
+	| '$ne'
+	| '$eq'
+	| '$gt'
+	| '$ge'
+	| '$lt'
+	| '$le'
+	| '$add'
+	| '$sub'
+	| '$mul'
+	| '$div'
+	| '$mod';
+
+type FilterFunctionKey =
+	| '$contains'
+	| '$endswith'
+	| '$startswith'
+	| '$length'
+	| '$indexof'
+	| '$substring'
+	| '$tolower'
+	| '$toupper'
+	| '$trim'
+	| '$concat'
+	| '$year'
+	| '$month'
+	| '$day'
+	| '$hour'
+	| '$minute'
+	| '$second'
+	| '$fractionalseconds'
+	| '$date'
+	| '$time'
+	| '$totaloffsetminutes'
+	| '$now'
+	| '$maxdatetime'
+	| '$mindatetime'
+	| '$totalseconds'
+	| '$round'
+	| '$floor'
+	| '$ceiling'
+	| '$isof'
+	| '$cast';
 
 type FilterExpressions<T> = {
 	$raw?: RawFilter;
@@ -113,7 +195,13 @@ type FilterExpressions<T> = {
 	$cast?: FilterFunctionValue<T>;
 };
 
-type BaseExpandFor<T> = { [k in keyof T]?: object } | StringKeyof<T>;
+type BaseExpandFor<T> =
+	| {
+			[k in PropsOfType<T, AssociatedResource>]?: PineOptionsFor<
+				InferAssociatedResourceType<T[k]>
+			>;
+	  }
+	| StringKeyof<T>;
 
 export type Expand<T> = BaseExpandFor<T> | Array<BaseExpandFor<T>>;
 
