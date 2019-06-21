@@ -29,6 +29,13 @@ type InferAssociatedResourceType<T> = T extends (AssociatedResource & any[])
 	? T[number]
 	: never;
 
+export type SelectableProps<T> = Exclude<
+	StringKeyof<T>,
+	PropsOfType<T, ReverseNavigationResource>
+>;
+
+export type ExpandableProps<T> = PropsOfType<T, AssociatedResource>;
+
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
 type RawFilter =
@@ -195,13 +202,11 @@ type FilterExpressions<T> = {
 	$cast?: FilterFunctionValue<T>;
 };
 
-type BaseExpandFor<T> =
-	| {
-			[k in PropsOfType<T, AssociatedResource>]?: PineOptionsFor<
-				InferAssociatedResourceType<T[k]>
-			>;
-	  }
-	| StringKeyof<T>;
+type ResourceExpandFor<T> = {
+	[k in ExpandableProps<T>]?: PineOptionsFor<InferAssociatedResourceType<T[k]>>;
+};
+
+type BaseExpandFor<T> = ResourceExpandFor<T> | ExpandableProps<T>;
 
 export type Expand<T> = BaseExpandFor<T> | Array<BaseExpandFor<T>>;
 
@@ -220,7 +225,7 @@ export interface PineOptions extends ODataOptionsBase {
 }
 
 export interface PineOptionsFor<T> extends ODataOptionsBase {
-	$select?: Array<StringKeyof<T>> | StringKeyof<T> | '*';
+	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
 }
