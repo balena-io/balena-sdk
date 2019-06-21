@@ -288,7 +288,7 @@ getAuth = (deps, opts) ->
 	# @function
 	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:balena.auth.login} to log in.
+	# @description This will only work if you used {@link balena.auth.login} to log in.
 	#
 	# @fulfil {Number} - user's personal organization id
 	# @returns {Promise}
