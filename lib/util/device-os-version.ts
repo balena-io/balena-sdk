@@ -31,7 +31,7 @@ export const getDeviceOsSemverWithVariant = ({
 	const build = versionInfo.build.slice();
 	if (
 		os_variant &&
-		!includes(build.concat(versionInfo.prerelease), os_variant)
+		!includes([...build, ...versionInfo.prerelease], os_variant)
 	) {
 		build.push(os_variant);
 	}
