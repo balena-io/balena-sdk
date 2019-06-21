@@ -59,7 +59,7 @@ getAuth = (deps, opts) ->
 	# @function
 	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:balena.auth.login} to log in.
+	# @description This will only work if you used {@link balena.auth.login} to log in.
 	#
 	# @fulfil {(String|undefined)} - username, if it exists
 	# @returns {Promise}
@@ -97,7 +97,7 @@ getAuth = (deps, opts) ->
 	# @function
 	# @memberof balena.auth
 	#
-	# @description You should use {@link module:balena.auth.login} when possible,
+	# @description You should use {@link balena.auth.login} when possible,
 	# as it takes care of saving the token and email as well.
 	#
 	# Notice that if `credentials` contains extra keys, they'll be discarted
@@ -229,7 +229,7 @@ getAuth = (deps, opts) ->
 	# @function
 	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:balena.auth.login} to log in.
+	# @description This will only work if you used {@link balena.auth.login} to log in.
 	#
 	# @fulfil {String} - raw API key or session token
 	# @returns {Promise}
@@ -260,7 +260,7 @@ getAuth = (deps, opts) ->
 	# @function
 	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:balena.auth.login} to log in.
+	# @description This will only work if you used {@link balena.auth.login} to log in.
 	#
 	# @fulfil {Number} - user id
 	# @returns {Promise}
@@ -288,7 +288,7 @@ getAuth = (deps, opts) ->
 	# @function
 	# @memberof balena.auth
 	#
-	# @description This will only work if you used {@link module:balena.auth.login} to log in.
+	# @description This will only work if you used {@link balena.auth.login} to log in.
 	#
 	# @fulfil {String} - user email
 	# @returns {Promise}

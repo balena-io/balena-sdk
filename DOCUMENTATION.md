@@ -3327,7 +3327,7 @@ balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
 **Summary**: Get display name for a device  
 **Access**: public  
 **Fulfil**: <code>String</code> - device display name  
-**See**: [module:balena.models.device.getSupportedDeviceTypes](module:balena.models.device.getSupportedDeviceTypes) for a list of supported devices  
+**See**: [#balena.models.device.getSupportedDeviceTypes](#balena.models.device.getSupportedDeviceTypes) for a list of supported devices  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3355,7 +3355,7 @@ balena.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeNa
 **Summary**: Get device slug  
 **Access**: public  
 **Fulfil**: <code>String</code> - device slug name  
-**See**: [module:balena.models.device.getSupportedDeviceTypes](module:balena.models.device.getSupportedDeviceTypes) for a list of supported devices  
+**See**: [#balena.models.device.getSupportedDeviceTypes](#balena.models.device.getSupportedDeviceTypes) for a list of supported devices  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -5364,7 +5364,7 @@ balena.auth.twoFactor.challenge('1234', function(error) {
 <a name="balena.auth.whoami"></a>
 
 #### auth.whoami() ⇒ <code>Promise</code>
-This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
+This will only work if you used [#balena.auth.login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Return current logged in username  
@@ -5395,7 +5395,7 @@ balena.auth.whoami(function(error, username) {
 <a name="balena.auth.authenticate"></a>
 
 #### auth.authenticate(credentials) ⇒ <code>Promise</code>
-You should use [module:balena.auth.login](module:balena.auth.login) when possible,
+You should use [#balena.auth.login](#balena.auth.login) when possible,
 as it takes care of saving the token and email as well.
 
 Notice that if `credentials` contains extra keys, they'll be discarted
@@ -5505,7 +5505,7 @@ balena.auth.isLoggedIn(function(error, isLoggedIn) {
 <a name="balena.auth.getToken"></a>
 
 #### auth.getToken() ⇒ <code>Promise</code>
-This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
+This will only work if you used [#balena.auth.login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Get current logged in user's raw API key or session token  
@@ -5527,7 +5527,7 @@ balena.auth.getToken(function(error, token) {
 <a name="balena.auth.getUserId"></a>
 
 #### auth.getUserId() ⇒ <code>Promise</code>
-This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
+This will only work if you used [#balena.auth.login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Get current logged in user's id  
@@ -5549,7 +5549,7 @@ balena.auth.getUserId(function(error, userId) {
 <a name="balena.auth.getEmail"></a>
 
 #### auth.getEmail() ⇒ <code>Promise</code>
-This will only work if you used [module:balena.auth.login](module:balena.auth.login) to log in.
+This will only work if you used [#balena.auth.login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Get current logged in user's email  

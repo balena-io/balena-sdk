@@ -1445,7 +1445,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
-	# @see {@link module:balena.models.device.getSupportedDeviceTypes} for a list of supported devices
+	# @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 	#
 	# @param {String} deviceTypeSlug - device type slug
 	# @fulfil {String} - device display name
@@ -1481,7 +1481,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
-	# @see {@link module:balena.models.device.getSupportedDeviceTypes} for a list of supported devices
+	# @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 	#
 	# @param {String} deviceTypeName - device type name
 	# @fulfil {String} - device slug name
