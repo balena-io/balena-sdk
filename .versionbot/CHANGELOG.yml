@@ -1,2612 +1,2670 @@
 - commits:
-  - author: Gergely Imreh
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Gergely Imreh <gergely@balena.io>
-    hash: 6d05cf3c1856f1bedcf46f6f0cd2cab8e5308020
-    subject: Upgrade hup-action-utils to 3.0.0
-  date: "2019-06-25T10:00:31Z"
+    - subject: Add machine-readable changelog
+      hash: 99d0c74e9ae0709c4aa3709f397b61aa8d5a45d8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Gergely Imreh <gergely@balena.io>
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      author: Gergely Imreh
+  version: 12.4.1
+  date: 2019-06-25T10:29:36.571Z
+- commits:
+    - author: Gergely Imreh
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      hash: 6d05cf3c1856f1bedcf46f6f0cd2cab8e5308020
+      subject: Upgrade hup-action-utils to 3.0.0
+  date: '2019-06-25T10:00:31Z'
   version: 12.4.0
 - commits:
-  - author: Gergely Imreh
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Gergely Imreh <gergely@balena.io>
-    hash: 54fd81a9efbeb63505521758b25a242b73d64d6c
-    subject: Upgrade balena-hup-action-utils to 2.0.0
-  date: "2019-06-24T13:58:02Z"
+    - author: Gergely Imreh
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      hash: 54fd81a9efbeb63505521758b25a242b73d64d6c
+      subject: Upgrade balena-hup-action-utils to 2.0.0
+  date: '2019-06-24T13:58:02Z'
   version: 12.3.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#712'
-      see: https://github.com/balena-io/balena-sdk/issues/714
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: f76e3bd1e63d898834a749b5e1cbffd66bb6b4f6
-    subject: Fully type nested $expands & improve nested $filter checks
-  date: "2019-06-24T09:45:41Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#712'
+        see: 'https://github.com/balena-io/balena-sdk/issues/714'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: f76e3bd1e63d898834a749b5e1cbffd66bb6b4f6
+      subject: Fully type nested $expands & improve nested $filter checks
+  date: '2019-06-24T09:45:41Z'
   version: 12.2.0
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      TypeScript will emit the same code, but imo this was
-      was a nice way to avoid the Array<string | number>
-      cast (that's what the new typings say for the
-      prerelease prop).
-    footers:
-      change-type: patch
-      see: https://www.typescriptlang.org/play/#src=%5B...build%2C%20...versionInfo.prerelease%5D
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: eb870bfe00d0da3af8fd0ae0b801ff05b0a2b1c4
-    subject: 'util/device-os-version: Make compatible w/ newer typings'
-  date: "2019-06-21T13:17:54Z"
+    - author: Thodoris Greasidis
+      body: |-
+        TypeScript will emit the same code, but imo this was
+        was a nice way to avoid the Array<string | number>
+        cast (that's what the new typings say for the
+        prerelease prop).
+      footers:
+        change-type: patch
+        see: >-
+          https://www.typescriptlang.org/play/#src=%5B...build%2C%20...versionInfo.prerelease%5D
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: eb870bfe00d0da3af8fd0ae0b801ff05b0a2b1c4
+      subject: 'util/device-os-version: Make compatible w/ newer typings'
+  date: '2019-06-21T13:17:54Z'
   version: 12.1.4
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      chagen-type: minor
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 99d4f50f0d580d81be409939dd7eac6fbe733126
-    subject: Add missing model typings for Device Image & ServiceInstall
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 1add4bf73a8590b53aaa9ee84932f88d6d85ab44
-    subject: Normalize Release.contains__image typings
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 3708ed7ccf3a59e995d0da3a46dec93661f5e78c
-    subject: Re-run prettier on the typings
-  date: "2019-06-20T16:21:45Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        chagen-type: minor
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 99d4f50f0d580d81be409939dd7eac6fbe733126
+      subject: Add missing model typings for Device Image & ServiceInstall
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 1add4bf73a8590b53aaa9ee84932f88d6d85ab44
+      subject: Normalize Release.contains__image typings
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 3708ed7ccf3a59e995d0da3a46dec93661f5e78c
+      subject: Re-run prettier on the typings
+  date: '2019-06-20T16:21:45Z'
   version: 12.1.3
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: d2b9a1ffcd622d260809fac627ad8d39cb6fa281
-    subject: Fix downstream typing errors due to `Dictionary` helper
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 4ee8f0f1913875614e9185daa8e1694aeb0d41f1
-    subject: Test the typings against the min TS supported version
-  date: "2019-06-11T12:36:49Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: d2b9a1ffcd622d260809fac627ad8d39cb6fa281
+      subject: Fix downstream typing errors due to `Dictionary` helper
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 4ee8f0f1913875614e9185daa8e1694aeb0d41f1
+      subject: Test the typings against the min TS supported version
+  date: '2019-06-11T12:36:49Z'
   version: 12.1.2
 - commits:
-  - author: Stevche Radevski
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Stevche Radevski <stevche@balena.io>
-    hash: 97697dbe2383f32ec063c4f1ea6a9c7702e0de2a
-    subject: Fix Release "getLatestByApplication" typings
-  date: "2019-06-10T14:49:14Z"
+    - author: Stevche Radevski
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      hash: 97697dbe2383f32ec063c4f1ea6a9c7702e0de2a
+      subject: Fix Release "getLatestByApplication" typings
+  date: '2019-06-10T14:49:14Z'
   version: 12.1.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      depends-on: https://github.com/balena-io/resin-api/pull/1886
-      resolves: '#688'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: c508e51c99f583230b5e19f9874e3c80c80ce896
-    subject: 'typings: Add `is_host_os` to the application type model'
-  date: "2019-06-08T08:39:02Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        depends-on: 'https://github.com/balena-io/resin-api/pull/1886'
+        resolves: '#688'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: c508e51c99f583230b5e19f9874e3c80c80ce896
+      subject: 'typings: Add `is_host_os` to the application type model'
+  date: '2019-06-08T08:39:02Z'
   version: 12.1.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 5ad4a59c3248294962176523dabd04d8c1ce4b12
-    subject: Fix the billing.updateBillingInfo tests
-  date: "2019-06-07T14:17:12Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 5ad4a59c3248294962176523dabd04d8c1ce4b12
+      subject: Fix the billing.updateBillingInfo tests
+  date: '2019-06-07T14:17:12Z'
   version: 12.0.1
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      I don't expect this to actually break anything, since both
-      the cloud api & the open-balena-api are on pine 10. Still
-      Decided to wait for a major release to do this change
-    footers:
-      change-type: major
-      resolves: '#626'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 395ef2890309931401f37e1dec27d3afd3587a09
-    subject: '**BREAKING** Drop pine 6 emulated upsert logic on dependent resources'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#627'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: bd156132b34149b860360acf2e15ba3050b50324
-    subject: 'util: Create a generic upsert pine helper method'
-  - author: Thodoris Greasidis
-    body: |-
-      Also moves anything non model related to the pine
-      typings file and re-exporting.
-    footers:
-      change-type: minor
-      resolves: '#480'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: e4e70ed35df577ae0b97fbf1cb76fa575653559a
-    subject: Fully type the body of post & patch requests
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: a0ba7c62bc15337f8a3d98898262c48806ab30c5
-    subject: Use more up-to-date Omit typings
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: ba9177d8f910b928e848d3d371e2b79ca09244a0
-    subject: Upgrade Typescript to v3.4.5
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 7f447638f6f17bd97d90a218a87201e6d0c43b2a
-    subject: 'util/device-os-version: Convert to TypeScript'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#693'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 9ab7821c1584fb1e965f787ccfaa74e8eb585044
-    subject: 'getCurrentServiceDetailsPineOptions: Drop $tolower to make it faster'
-  - author: Thodoris Greasidis
-    body: |-
-      This removed the commit field from the results of
-      application.getWithDeviceServiceDetails() &
-      application.getAllWithDeviceServiceDetails(), which
-      allows to drop the release $expand, in order to make
-      those requests lighter for the API.
-      We still keep the abstract object creation logic
-      though, so that consumers depending on that field
-      can just add the removed $expand on their provided
-      pine options argument.
-    footers:
-      change-type: major
-      resolves: '#694'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 04930bd6ffea2df8d26d3a90118dab445a3361ae
-    subject: '**BREAKING** Drop the commit from application ServiceDetail results'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: major
-      connects-to: '#684'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 51e3addfa73e6ce62d02d2f6c50d7171e7f5498d
-    subject: '**BREAKING**: Drop resin-device-status in favor of balena-device-status'
-  date: "2019-06-06T11:56:41Z"
+    - author: Thodoris Greasidis
+      body: |-
+        I don't expect this to actually break anything, since both
+        the cloud api & the open-balena-api are on pine 10. Still
+        Decided to wait for a major release to do this change
+      footers:
+        change-type: major
+        resolves: '#626'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 395ef2890309931401f37e1dec27d3afd3587a09
+      subject: '**BREAKING** Drop pine 6 emulated upsert logic on dependent resources'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#627'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: bd156132b34149b860360acf2e15ba3050b50324
+      subject: 'util: Create a generic upsert pine helper method'
+    - author: Thodoris Greasidis
+      body: |-
+        Also moves anything non model related to the pine
+        typings file and re-exporting.
+      footers:
+        change-type: minor
+        resolves: '#480'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: e4e70ed35df577ae0b97fbf1cb76fa575653559a
+      subject: Fully type the body of post & patch requests
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: a0ba7c62bc15337f8a3d98898262c48806ab30c5
+      subject: Use more up-to-date Omit typings
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: ba9177d8f910b928e848d3d371e2b79ca09244a0
+      subject: Upgrade Typescript to v3.4.5
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 7f447638f6f17bd97d90a218a87201e6d0c43b2a
+      subject: 'util/device-os-version: Convert to TypeScript'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#693'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 9ab7821c1584fb1e965f787ccfaa74e8eb585044
+      subject: 'getCurrentServiceDetailsPineOptions: Drop $tolower to make it faster'
+    - author: Thodoris Greasidis
+      body: |-
+        This removed the commit field from the results of
+        application.getWithDeviceServiceDetails() &
+        application.getAllWithDeviceServiceDetails(), which
+        allows to drop the release $expand, in order to make
+        those requests lighter for the API.
+        We still keep the abstract object creation logic
+        though, so that consumers depending on that field
+        can just add the removed $expand on their provided
+        pine options argument.
+      footers:
+        change-type: major
+        resolves: '#694'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 04930bd6ffea2df8d26d3a90118dab445a3361ae
+      subject: '**BREAKING** Drop the commit from application ServiceDetail results'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: major
+        connects-to: '#684'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 51e3addfa73e6ce62d02d2f6c50d7171e7f5498d
+      subject: '**BREAKING**: Drop resin-device-status in favor of balena-device-status'
+  date: '2019-06-06T11:56:41Z'
   version: 12.0.0
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      This temporarily disables the user registration tests,
-      given the current rate limiting and the upcoming
-      changes, so that we can have properly passing SDK
-      PRs until we find a way to implement the tests.
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: c2c41eff3e2fbdc6b0e47ee4b87b86a5a541c9a3
-    subject: Temporarily skip the auth.register() tests
-  date: "2019-06-04T10:10:09Z"
+    - author: Thodoris Greasidis
+      body: |-
+        This temporarily disables the user registration tests,
+        given the current rate limiting and the upcoming
+        changes, so that we can have properly passing SDK
+        PRs until we find a way to implement the tests.
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: c2c41eff3e2fbdc6b0e47ee4b87b86a5a541c9a3
+      subject: Temporarily skip the auth.register() tests
+  date: '2019-06-04T10:10:09Z'
   version: 11.18.2
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#699'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: c3b19a0d64ed1203cb76f111654907bd0650a2f5
-    subject: Fix device.getStatus() return type typings
-  date: "2019-06-03T12:16:36Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#699'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: c3b19a0d64ed1203cb76f111654907bd0650a2f5
+      subject: Fix device.getStatus() return type typings
+  date: '2019-06-03T12:16:36Z'
   version: 11.18.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#698'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 4c8983db7096df1dce1e5ecdf72d6aa109a9fdfa
-    subject: Add device.getOsVersion() that returns the complete os release version
-  date: "2019-06-03T11:47:56Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#698'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 4c8983db7096df1dce1e5ecdf72d6aa109a9fdfa
+      subject: Add device.getOsVersion() that returns the complete os release version
+  date: '2019-06-03T11:47:56Z'
   version: 11.18.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#689'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 49ae4e506a6baace5872278065a7b7505fde0f7a
-    subject: 'application.getAll(): Drop unnecessary getUserId() call'
-  date: "2019-05-28T10:26:17Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#689'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 49ae4e506a6baace5872278065a7b7505fde0f7a
+      subject: 'application.getAll(): Drop unnecessary getUserId() call'
+  date: '2019-05-28T10:26:17Z'
   version: 11.17.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      depends-on: https://github.com/balena-io/resin-api/issues/1829
-      hq: https://github.com/balena-io/balena/issues/1744
-      resolves: '#664'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: c70883a224e0bb87c01b440e15a05fdf85e21477
-    subject: Use the open-balena-api endpoints for device type & version info
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 15289743458dafba1a5b0022214bc9101c1ae5d9
-    subject: Update jsdocs for private methods
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 9a3809d1fc6a7a173ea4325986b77f0a3592c6b5
-    subject: Add caching to requests to the device types endpoint
-  date: "2019-05-15T10:34:17Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        depends-on: 'https://github.com/balena-io/resin-api/issues/1829'
+        hq: 'https://github.com/balena-io/balena/issues/1744'
+        resolves: '#664'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: c70883a224e0bb87c01b440e15a05fdf85e21477
+      subject: Use the open-balena-api endpoints for device type & version info
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 15289743458dafba1a5b0022214bc9101c1ae5d9
+      subject: Update jsdocs for private methods
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 9a3809d1fc6a7a173ea4325986b77f0a3592c6b5
+      subject: Add caching to requests to the device types endpoint
+  date: '2019-05-15T10:34:17Z'
   version: 11.17.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#686'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 9572d7583dc62fd5a417a04a647ba5ccc079fc23
-    subject: Drop osVersionRCompare tests
-  date: "2019-05-14T11:07:45Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#686'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 9572d7583dc62fd5a417a04a647ba5ccc079fc23
+      subject: Drop osVersionRCompare tests
+  date: '2019-05-14T11:07:45Z'
   version: 11.16.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      connects-to: '#681'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: f82be7f7eb4f23b039686c7572a9ae5d17ac16d3
-    subject: Test with both osVersionRCompare & balena-semver
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#681'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: c9a5b16f16e939fda96dd599dc308d3190bae8ab
-    subject: Use balena-semver insteat of the custom osVersionRCompare
-  date: "2019-05-13T13:27:13Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        connects-to: '#681'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: f82be7f7eb4f23b039686c7572a9ae5d17ac16d3
+      subject: Test with both osVersionRCompare & balena-semver
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#681'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: c9a5b16f16e939fda96dd599dc308d3190bae8ab
+      subject: Use balena-semver insteat of the custom osVersionRCompare
+  date: '2019-05-13T13:27:13Z'
   version: 11.16.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#680'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: b192105b14816e4de3d3a06bf71826a267dea3c9
-    subject: Upgrade resin-semver to balena-semver
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#680'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 7ac23704da236f608cac39bf4eb3f4ccb415dc1e
-    subject: Bump balena-hup-action-utils to remove resin-semver child dependency
-  date: "2019-05-08T10:30:40Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#680'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: b192105b14816e4de3d3a06bf71826a267dea3c9
+      subject: Upgrade resin-semver to balena-semver
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#680'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 7ac23704da236f608cac39bf4eb3f4ccb415dc1e
+      subject: Bump balena-hup-action-utils to remove resin-semver child dependency
+  date: '2019-05-08T10:30:40Z'
   version: 11.15.0
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      Dropped the time the test suit needs to run on prod
-      from almost 90 mins to 42mins.
-    footers:
-      change-type: patch
-      resolves: '#670'
-      see: https://app.frontapp.com/open/cnv_13stakz
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 9d61225d833b3fc365ec32918e124642469e8d32
-    subject: 'tests: Batch test case states, to make the tests faster'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: d964e75d7a19f502139273d025f6c702bf4923f3
-    subject: Fix envvar getAllByX tests throwing on missing envvars
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 690b8f5b6ebbc0dceaab266bfac2c33ebd7a742b
-    subject: 'tests: Batch device tests re-creating a multicontainer app'
-  - author: Thodoris Greasidis
-    body: |-
-      Dropped the time required for the tag related tests
-      to run on staging on node from 10mins to 2mins.
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 62d02068a5fbde62d70c09a6221c7ba175905b4d
-    subject: 'tests: Batch tag test cases, to make them faster'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 798bf672da250d53204230a0f0ca54ec7e759940
-    subject: 'tests: Bump npm to v6 on travis & appveyor to make npm i faster'
-  date: "2019-05-06T13:06:11Z"
+    - author: Thodoris Greasidis
+      body: |-
+        Dropped the time the test suit needs to run on prod
+        from almost 90 mins to 42mins.
+      footers:
+        change-type: patch
+        resolves: '#670'
+        see: 'https://app.frontapp.com/open/cnv_13stakz'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 9d61225d833b3fc365ec32918e124642469e8d32
+      subject: 'tests: Batch test case states, to make the tests faster'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: d964e75d7a19f502139273d025f6c702bf4923f3
+      subject: Fix envvar getAllByX tests throwing on missing envvars
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 690b8f5b6ebbc0dceaab266bfac2c33ebd7a742b
+      subject: 'tests: Batch device tests re-creating a multicontainer app'
+    - author: Thodoris Greasidis
+      body: |-
+        Dropped the time required for the tag related tests
+        to run on staging on node from 10mins to 2mins.
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 62d02068a5fbde62d70c09a6221c7ba175905b4d
+      subject: 'tests: Batch tag test cases, to make them faster'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 798bf672da250d53204230a0f0ca54ec7e759940
+      subject: 'tests: Bump npm to v6 on travis & appveyor to make npm i faster'
+  date: '2019-05-06T13:06:11Z'
   version: 11.14.3
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#672'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 040b20aeb2db29b569e3ac9f46bac72a9e199aeb
-    subject: Fix the tests for pine translated resources
-  date: "2019-04-25T14:31:41Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#672'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 040b20aeb2db29b569e3ac9f46bac72a9e199aeb
+      subject: Fix the tests for pine translated resources
+  date: '2019-04-25T14:31:41Z'
   version: 11.14.2
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      Without this the tests might fail on staging when the
-      versions array contains items of the same normalized
-      semver value, depending on the length of the array.
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 6c9c949302a26cf1976f04880a5c6feec5f0c7ad
-    subject: Fix getSupportedVersions tests when using unstable sorting
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#667'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 0cd729c5b258131b5326fd55d790182645cc45d9
-    subject: Improve the verbosity of os.getSupportedVersions tests
-  date: "2019-04-23T07:34:25Z"
+    - author: Thodoris Greasidis
+      body: |-
+        Without this the tests might fail on staging when the
+        versions array contains items of the same normalized
+        semver value, depending on the length of the array.
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 6c9c949302a26cf1976f04880a5c6feec5f0c7ad
+      subject: Fix getSupportedVersions tests when using unstable sorting
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#667'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 0cd729c5b258131b5326fd55d790182645cc45d9
+      subject: Improve the verbosity of os.getSupportedVersions tests
+  date: '2019-04-23T07:34:25Z'
   version: 11.14.1
 - commits:
-  - author: Matthew McGinn
-    body: Add typings for the device.getSupervisorTargetState method
-    footers:
-      change-type: minor
-      hq: balena-io/balena#1663
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 7aad0d0953236feb7f1f34a9aca51972af099079
-    subject: 'diagnostics: add getSupervisorTargetState support'
-  date: "2019-04-13T21:58:20Z"
+    - author: Matthew McGinn
+      body: Add typings for the device.getSupervisorTargetState method
+      footers:
+        change-type: minor
+        hq: 'balena-io/balena#1663'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 7aad0d0953236feb7f1f34a9aca51972af099079
+      subject: 'diagnostics: add getSupervisorTargetState support'
+  date: '2019-04-13T21:58:20Z'
   version: 11.14.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      depends-on: https://github.com/balena-io-modules/resin-register-device/pull/37
-      resolves: '#661'
-      see: https://github.com/balena-io/balena-sdk/issues/663
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: cb0ddf990f3ffd40747b48e8dfdaeee35ba48c91
-    subject: Use balena-register-device instead of resin-register-device
-  date: "2019-04-13T12:09:25Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        depends-on: 'https://github.com/balena-io-modules/resin-register-device/pull/37'
+        resolves: '#661'
+        see: 'https://github.com/balena-io/balena-sdk/issues/663'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: cb0ddf990f3ffd40747b48e8dfdaeee35ba48c91
+      subject: Use balena-register-device instead of resin-register-device
+  date: '2019-04-13T12:09:25Z'
   version: 11.13.0
 - commits:
-  - author: Stevche Radevski
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Stevche Radevski <stevche@balena.io>
-    hash: 9f58daace2cad559cf4e4266293fe5f2cdd377b4
-    subject: Add "build_log" field to "Release" model typings
-  date: "2019-04-13T10:15:12Z"
+    - author: Stevche Radevski
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      hash: 9f58daace2cad559cf4e4266293fe5f2cdd377b4
+      subject: Add "build_log" field to "Release" model typings
+  date: '2019-04-13T10:15:12Z'
   version: 11.12.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#658'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 43e99f0f02875eea2371b2742e34cf6bd19f031b
-    subject: 'tests: Add a missing the orderby on a pine request'
-  date: "2019-04-11T12:25:55Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#658'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 43e99f0f02875eea2371b2742e34cf6bd19f031b
+      subject: 'tests: Add a missing the orderby on a pine request'
+  date: '2019-04-11T12:25:55Z'
   version: 11.11.2
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#656'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 934d4d8d8c3e42a69655a29f721830e0a12b158e
-    subject: Remove @todos from the generated docs
-  date: "2019-04-11T08:34:38Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#656'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 934d4d8d8c3e42a69655a29f721830e0a12b158e
+      subject: Remove @todos from the generated docs
+  date: '2019-04-11T08:34:38Z'
   version: 11.11.1
 - commits:
-  - author: Gergely Imreh
-    body: |-
-      These device types are added in the upstream module:
-      * `cl-som-imx8`
-      * `imx7-var-som`
-      * `imx8m-var-dart`
-      * `nitrogen6xq2g`
-      * `npe-x500-m3`
-      * `n510-tx2`
-      * `orange-pi-one`
-      * `orange-pi-zero`
-      * `spacely-tx2`
-      * `var-som-mx6`
-    footers:
-      change-type: minor
-      signed-off-by: Gergely Imreh <gergely@balena.io>
-    hash: e96258240e076cc198a7e988021a3bee30f9ade3
-    subject: 'host os updates: vendor latest utils with new device types'
-  date: "2019-04-02T14:56:42Z"
+    - author: Gergely Imreh
+      body: |-
+        These device types are added in the upstream module:
+        * `cl-som-imx8`
+        * `imx7-var-som`
+        * `imx8m-var-dart`
+        * `nitrogen6xq2g`
+        * `npe-x500-m3`
+        * `n510-tx2`
+        * `orange-pi-one`
+        * `orange-pi-zero`
+        * `spacely-tx2`
+        * `var-som-mx6`
+      footers:
+        change-type: minor
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      hash: e96258240e076cc198a7e988021a3bee30f9ade3
+      subject: 'host os updates: vendor latest utils with new device types'
+  date: '2019-04-02T14:56:42Z'
   version: 11.11.0
 - commits:
-  - author: Matthew McGinn
-    body: ""
-    footers:
-      change-type: minor
-      hq: balena-io/balena#1663
-      signed-off-by: Matthew McGinn <mamcgi@gmail.com>
-    hash: f0c5dbf1c4db166b8be3a8d1f43e8cd36cd805d0
-    subject: Add getSupervisorState device method
-  date: "2019-03-21T12:09:13Z"
+    - author: Matthew McGinn
+      body: ''
+      footers:
+        change-type: minor
+        hq: 'balena-io/balena#1663'
+        signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+      hash: f0c5dbf1c4db166b8be3a8d1f43e8cd36cd805d0
+      subject: Add getSupervisorState device method
+  date: '2019-03-21T12:09:13Z'
   version: 11.10.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 2fb05525db7cb756fda949dc82d5c2dcd3f01e9d
-    subject: 'README: Add note about using .only & .skip'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: b457c77f5562718d2709527a987abb0eceba82f0
-    subject: Add GitHub CODEOWNERS & issue & PR TEMPLATE files
-  date: "2019-03-19T14:59:58Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 2fb05525db7cb756fda949dc82d5c2dcd3f01e9d
+      subject: 'README: Add note about using .only & .skip'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: b457c77f5562718d2709527a987abb0eceba82f0
+      subject: Add GitHub CODEOWNERS & issue & PR TEMPLATE files
+  date: '2019-03-19T14:59:58Z'
   version: 11.9.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 0e4e09db28004dd0477a8ca56014509dde58b56a
-    subject: Add generic result typings for balena-request send()
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#578'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: dca7e9d24bb3bccf42582c3a6e1ff5821e08ba28
-    subject: Add OS update methods
-  date: "2019-03-18T14:06:13Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 0e4e09db28004dd0477a8ca56014509dde58b56a
+      subject: Add generic result typings for balena-request send()
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#578'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: dca7e9d24bb3bccf42582c3a6e1ff5821e08ba28
+      subject: Add OS update methods
+  date: '2019-03-18T14:06:13Z'
   version: 11.9.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      hq: https://github.com/balena-io/balena/issues/1736
-      resolves: '#646'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: eb6cc82eebf3b92e7c1080b2a8b2471f0a7d4b60
-    subject: Add `community` to the device type typings
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#645'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: b8700cff6ee789c6dba39ffff4c3a0275d2281a3
-    subject: Add `private` to the device type typings
-  date: "2019-03-06T06:34:33Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        hq: 'https://github.com/balena-io/balena/issues/1736'
+        resolves: '#646'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: eb6cc82eebf3b92e7c1080b2a8b2471f0a7d4b60
+      subject: Add `community` to the device type typings
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#645'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: b8700cff6ee789c6dba39ffff4c3a0275d2281a3
+      subject: Add `private` to the device type typings
+  date: '2019-03-06T06:34:33Z'
   version: 11.8.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#642'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 93e068395320981b91d5558df493def4640eaa12
-    subject: Pin @types/lodash to 4.14.121 as the last TS 2.6 compatible release
-  date: "2019-03-05T12:18:53Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#642'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 93e068395320981b91d5558df493def4640eaa12
+      subject: Pin @types/lodash to 4.14.121 as the last TS 2.6 compatible release
+  date: '2019-03-05T12:18:53Z'
   version: 11.7.1
 - commits:
-  - author: Kakhaber
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#635'
-    hash: 3d8eb01cf92d6112a9f0a7f4769a17f85303adbd
-    subject: 'Device: Add lock override methods'
-  date: "2019-02-08T09:48:35Z"
+    - author: Kakhaber
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#635'
+      hash: 3d8eb01cf92d6112a9f0a7f4769a17f85303adbd
+      subject: 'Device: Add lock override methods'
+  date: '2019-02-08T09:48:35Z'
   version: 11.7.0
 - commits:
-  - author: Pagan Gazzard
-    body: ""
-    footers:
-      change-type: patch
-    hash: e44991d67e0f43448f965027b1c31df0265e8389
-    subject: Fix incorrect use of `Promise.props`
-  date: "2019-02-06T17:57:56Z"
+    - author: Pagan Gazzard
+      body: ''
+      footers:
+        change-type: patch
+      hash: e44991d67e0f43448f965027b1c31df0265e8389
+      subject: Fix incorrect use of `Promise.props`
+  date: '2019-02-06T17:57:56Z'
   version: 11.6.4
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: bd62f907fa705b5408a0ccfd8c89d561bf41c59b
-    subject: Run newer prettier to sources
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#631'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 229d8f0f83296e9f74bf73ff7427402841eaa318
-    subject: Import lodash methods independently to reduce bundle size
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: d11de5fbaebb0517398df129bc3ba2863c99f78f
-    subject: 'mocha: Reduce `slow` option value to 1 second'
-  date: "2019-01-30T11:24:33Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: bd62f907fa705b5408a0ccfd8c89d561bf41c59b
+      subject: Run newer prettier to sources
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#631'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 229d8f0f83296e9f74bf73ff7427402841eaa318
+      subject: Import lodash methods independently to reduce bundle size
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: d11de5fbaebb0517398df129bc3ba2863c99f78f
+      subject: 'mocha: Reduce `slow` option value to 1 second'
+  date: '2019-01-30T11:24:33Z'
   version: 11.6.3
 - commits:
-  - author: Pagan Gazzard
-    body: ""
-    footers:
-      change-type: patch
-    hash: 99ce3d292070111c7cc42c5a6a274d78d355b85c
-    subject: Lazy-load the sdk code, so only setting shared options can be faster
-  date: "2019-01-22T11:25:03Z"
+    - author: Pagan Gazzard
+      body: ''
+      footers:
+        change-type: patch
+      hash: 99ce3d292070111c7cc42c5a6a274d78d355b85c
+      subject: 'Lazy-load the sdk code, so only setting shared options can be faster'
+  date: '2019-01-22T11:25:03Z'
   version: 11.6.2
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#624'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 1ef0455438401eeb39971789eb95812103992fb0
-    subject: 'tests/tags: Enable skipped test about setting io.balena tags'
-  date: "2019-01-18T10:57:09Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#624'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 1ef0455438401eeb39971789eb95812103992fb0
+      subject: 'tests/tags: Enable skipped test about setting io.balena tags'
+  date: '2019-01-18T10:57:09Z'
   version: 11.6.1
 - commits:
-  - author: Stevche Radevski
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#619'
-      signed-off-by: Stevche Radevski <stevche@balena.io>
-    hash: af835b5d99ed6c6b083aeec1efaae13dbdb7bca4
-    subject: Add missing typings for Image compared to the SBVR definition
-  date: "2019-01-18T07:41:01Z"
+    - author: Stevche Radevski
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#619'
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      hash: af835b5d99ed6c6b083aeec1efaae13dbdb7bca4
+      subject: Add missing typings for Image compared to the SBVR definition
+  date: '2019-01-18T07:41:01Z'
   version: 11.6.0
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      Properly detects unique violation errors so that upserts
-      wort both on balenaCloud & open-balena-api / plain pine
-      instances. Adds support for tags on the open-balena-api
-      and fixes a device service envvar issue.
-    footers:
-      change-type: minor
-      resolves: '#622'
-      see: https://github.com/balena-io/open-balena-api/pull/45
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 3528f2f6bb0e7bad9579aa01e55c205f1a6dd5ac
-    subject: Support tags on the open-balena-api
-  date: "2019-01-16T13:51:46Z"
+    - author: Thodoris Greasidis
+      body: |-
+        Properly detects unique violation errors so that upserts
+        wort both on balenaCloud & open-balena-api / plain pine
+        instances. Adds support for tags on the open-balena-api
+        and fixes a device service envvar issue.
+      footers:
+        change-type: minor
+        resolves: '#622'
+        see: 'https://github.com/balena-io/open-balena-api/pull/45'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 3528f2f6bb0e7bad9579aa01e55c205f1a6dd5ac
+      subject: Support tags on the open-balena-api
+  date: '2019-01-16T13:51:46Z'
   version: 11.5.0
 - commits:
-  - author: Kakhaber
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#614'
-    hash: 9d8a038841e512392292d65eddcd24c6fcc71083
-    subject: 'application.spec: Added test cases for apps with service details'
-  date: "2019-01-11T13:31:24Z"
+    - author: Kakhaber
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#614'
+      hash: 9d8a038841e512392292d65eddcd24c6fcc71083
+      subject: 'application.spec: Added test cases for apps with service details'
+  date: '2019-01-11T13:31:24Z'
   version: 11.4.0
 - commits:
-  - author: Kakhaber
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#610'
-    hash: 93672758155df3d1fb77753dbe0182411619a0e2
-    subject: 'sdk.models.application: getAllWithDeviceServiceDetails method added'
-  - author: Kakhaber
-    body: ""
-    hash: a74350bc0fdc21210b38bc2eba3d2dbc18109771
-    subject: Documentation updated
-  date: "2018-12-28T15:00:36Z"
+    - author: Kakhaber
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#610'
+      hash: 93672758155df3d1fb77753dbe0182411619a0e2
+      subject: 'sdk.models.application: getAllWithDeviceServiceDetails method added'
+    - author: Kakhaber
+      body: ''
+      hash: a74350bc0fdc21210b38bc2eba3d2dbc18109771
+      subject: Documentation updated
+  date: '2018-12-28T15:00:36Z'
   version: 11.3.0
 - commits:
-  - author: Kakhaber
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#612'
-    hash: b4738050e9eece5225d2ef0495d317453db478e9
-    subject: 'tests: Update the latest raspberry-pi v1 OS release'
-  date: "2018-12-11T11:08:15Z"
+    - author: Kakhaber
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#612'
+      hash: b4738050e9eece5225d2ef0495d317453db478e9
+      subject: 'tests: Update the latest raspberry-pi v1 OS release'
+  date: '2018-12-11T11:08:15Z'
   version: 11.2.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#602'
-      see: https://github.com/balena-io/pinejs-client-js/blob/7e582491765f9037a75754dfa2d0227e3365de33/core.ts#L973-L1036
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: f60321c280a685b415a9e34e34b97e65ba718e4c
-    subject: Extend filter typings to include more comparator functions
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#608'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: bb3bfb23d810f9903338e61f7303f4afa353b652
-    subject: 'typings: Make base types valid as Filter array values'
-  date: "2018-11-19T11:46:57Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#602'
+        see: >-
+          https://github.com/balena-io/pinejs-client-js/blob/7e582491765f9037a75754dfa2d0227e3365de33/core.ts#L973-L1036
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: f60321c280a685b415a9e34e34b97e65ba718e4c
+      subject: Extend filter typings to include more comparator functions
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#608'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: bb3bfb23d810f9903338e61f7303f4afa353b652
+      subject: 'typings: Make base types valid as Filter array values'
+  date: '2018-11-19T11:46:57Z'
   version: 11.2.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#604'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: e71dd9208513f249e78a0223794c330d53710cc4
-    subject: 'tests/config: Fix PubNub key tests now after we stop using it'
-  date: "2018-11-15T14:08:44Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#604'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: e71dd9208513f249e78a0223794c330d53710cc4
+      subject: 'tests/config: Fix PubNub key tests now after we stop using it'
+  date: '2018-11-15T14:08:44Z'
   version: 11.1.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 6f4f17cb1733cac92ecae18565e8cd7f2999b4d8
-    subject: 'tests/integration/setup: Fix release creation race condition'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#434'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 2c1f6023507324b8bc22ee76276fac356864d6ad
-    subject: Add release tracking methods
-  date: "2018-11-01T16:06:54Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 6f4f17cb1733cac92ecae18565e8cd7f2999b4d8
+      subject: 'tests/integration/setup: Fix release creation race condition'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#434'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 2c1f6023507324b8bc22ee76276fac356864d6ad
+      subject: Add release tracking methods
+  date: '2018-11-01T16:06:54Z'
   version: 11.1.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      depends-on: https://github.com/resin-io/resin-api/issues/1536
-      hq: https://github.com/resin-io/balena/pull/1140
-      resolves: '#591'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 49bcc85cba650ebd0c4f0b69bb7b0f24e9a6acac
-    subject: Use the Opensource API endpoints for fetching the device types
-  - author: Thodoris Greasidis
-    body: Use the Opensource API endpoints for fetching the device types
-    hash: 8073e3bfb73718b3af47022fe4b9849c53688d4a
-    subject: 'Merge pull request #594 from resin-io/591-oss-api-device-types'
-  - author: Tim Perry
-    body: ""
-    hash: 1b608b54b9d56f677811233f41716f918c561db5
-    subject: Allow overriding apiVersion in the SDK options
-  - author: Thodoris Greasidis
-    body: |-
-      With this change the application.getAll() will use the my_application
-      endpoint instead of defining pine filters. This will also stops it from
-      returning dependent applications.
-    footers:
-      change-type: major
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: f853254dd31505f1ff2399b17ae5d38fb42d8b92
-    subject: 'application.getAll: Use the my_application endpoint'
-  - author: Thodoris Greasidis
-    body: 'application.getAll: Use the my_application endpoint'
-    hash: 9d8305bf46fe0a731dc14bcd6f7c183802729f7f
-    subject: 'Merge pull request #595 from resin-io/use-my_applications-endpoint'
-  - author: Tim Perry
-    body: ""
-    hash: 4466132584cd0396dd7bf22551f59b0268dc27ea
-    subject: Update child app tests to match recent app.getAll changes
-  - author: Tim Perry
-    body: Update child app tests to match recent app.getAll changes
-    hash: dc993547e602b13eb281acca5a9ae7c726aa36de
-    subject: 'Merge pull request #600 from resin-io/fix-child-app-test'
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Tim Perry <tim@balena.io>
-    hash: caa1acb57e8ab367ef2743d2f3ddbc0de740c74e
-    subject: Rename everything 'resin' in the SDK to 'balena'
-  - author: Tim Perry
-    body: ""
-    hash: 3c5070f994d73df6e4254486b52e1c3667c9cc88
-    subject: Temporarily disable io.balena tag reservation tests
-  - author: Tim Perry
-    body: ""
-    hash: 3311fba85f70cbbb7d12d9c03d185fd9a5362047
-    subject: Drop gitter from the readme
-  - author: Tim Perry
-    body: Rename the SDK
-    hash: ee958fb9547eb3eebcbb6d593ee38b7053e7b550
-    subject: 'Merge pull request #593 from resin-io/587-the-big-rename'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      depends-on: https://github.com/resin-io/resin-api/pull/1570
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 9b697086a5c1cc0ffba9cea1fb7c17807985ce02
-    subject: 'app.getAppByOwner: Use the slug for filtering'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      depends-on: https://github.com/resin-io/resin-api/pull/1570
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 3f74e1ab1a0283c833f3ab1fb429145445dddf26
-    subject: 'typings: Add application.slug'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 1034c8e9ec0be821774b0cf3449ea436a5301831
-    subject: 'typings: Drop application.git_repository'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: major
-      resolves: '#'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: a5f29a00aca3d67aeb6fb138ffa9b1bfa48e20ae
-    subject: Use the v5 api endpoint
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 8886cbdc805a08652c8d10bc6ca0386ed493a435
-    subject: 'typings: Add typings for the application_membership_role resource'
-  - author: Thodoris Greasidis
-    body: 'app.getAppByOwner: Use the slug for filtering'
-    hash: 0a7a8113e23bcb4fbf61db81c5c399aec7e7d21c
-    subject: 'Merge pull request #596 from resin-io/oss-flow-slug'
-  date: "2018-10-29T19:37:23Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        depends-on: 'https://github.com/resin-io/resin-api/issues/1536'
+        hq: 'https://github.com/resin-io/balena/pull/1140'
+        resolves: '#591'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 49bcc85cba650ebd0c4f0b69bb7b0f24e9a6acac
+      subject: Use the Opensource API endpoints for fetching the device types
+    - author: Thodoris Greasidis
+      body: Use the Opensource API endpoints for fetching the device types
+      hash: 8073e3bfb73718b3af47022fe4b9849c53688d4a
+      subject: 'Merge pull request #594 from resin-io/591-oss-api-device-types'
+    - author: Tim Perry
+      body: ''
+      hash: 1b608b54b9d56f677811233f41716f918c561db5
+      subject: Allow overriding apiVersion in the SDK options
+    - author: Thodoris Greasidis
+      body: |-
+        With this change the application.getAll() will use the my_application
+        endpoint instead of defining pine filters. This will also stops it from
+        returning dependent applications.
+      footers:
+        change-type: major
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: f853254dd31505f1ff2399b17ae5d38fb42d8b92
+      subject: 'application.getAll: Use the my_application endpoint'
+    - author: Thodoris Greasidis
+      body: 'application.getAll: Use the my_application endpoint'
+      hash: 9d8305bf46fe0a731dc14bcd6f7c183802729f7f
+      subject: 'Merge pull request #595 from resin-io/use-my_applications-endpoint'
+    - author: Tim Perry
+      body: ''
+      hash: 4466132584cd0396dd7bf22551f59b0268dc27ea
+      subject: Update child app tests to match recent app.getAll changes
+    - author: Tim Perry
+      body: Update child app tests to match recent app.getAll changes
+      hash: dc993547e602b13eb281acca5a9ae7c726aa36de
+      subject: 'Merge pull request #600 from resin-io/fix-child-app-test'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Tim Perry <tim@balena.io>
+      hash: caa1acb57e8ab367ef2743d2f3ddbc0de740c74e
+      subject: Rename everything 'resin' in the SDK to 'balena'
+    - author: Tim Perry
+      body: ''
+      hash: 3c5070f994d73df6e4254486b52e1c3667c9cc88
+      subject: Temporarily disable io.balena tag reservation tests
+    - author: Tim Perry
+      body: ''
+      hash: 3311fba85f70cbbb7d12d9c03d185fd9a5362047
+      subject: Drop gitter from the readme
+    - author: Tim Perry
+      body: Rename the SDK
+      hash: ee958fb9547eb3eebcbb6d593ee38b7053e7b550
+      subject: 'Merge pull request #593 from resin-io/587-the-big-rename'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        depends-on: 'https://github.com/resin-io/resin-api/pull/1570'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 9b697086a5c1cc0ffba9cea1fb7c17807985ce02
+      subject: 'app.getAppByOwner: Use the slug for filtering'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        depends-on: 'https://github.com/resin-io/resin-api/pull/1570'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 3f74e1ab1a0283c833f3ab1fb429145445dddf26
+      subject: 'typings: Add application.slug'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 1034c8e9ec0be821774b0cf3449ea436a5301831
+      subject: 'typings: Drop application.git_repository'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: major
+        resolves: '#'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: a5f29a00aca3d67aeb6fb138ffa9b1bfa48e20ae
+      subject: Use the v5 api endpoint
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 8886cbdc805a08652c8d10bc6ca0386ed493a435
+      subject: 'typings: Add typings for the application_membership_role resource'
+    - author: Thodoris Greasidis
+      body: 'app.getAppByOwner: Use the slug for filtering'
+      hash: 0a7a8113e23bcb4fbf61db81c5c399aec7e7d21c
+      subject: 'Merge pull request #596 from resin-io/oss-flow-slug'
+  date: '2018-10-29T19:37:23Z'
   version: 11.0.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 1d7c820c84776535a7fc8ec632cca69210131732
-    subject: Print a deprecation warning message when using the unrenamed SDK
-  date: "2018-10-29T18:26:38Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 1d7c820c84776535a7fc8ec632cca69210131732
+      subject: Print a deprecation warning message when using the unrenamed SDK
+  date: '2018-10-29T18:26:38Z'
   version: 10.1.1
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#583'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 29bb89c95fcbdc94e4cb5808ac2f8af3410277e3
-    subject: 'chore: Upgrade to balena-config-karma to v2.3.1 to support TS tests'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#583'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: eacfbd1904af3b71c5d3eed89decbeed6b5b8ebb
-    subject: 'tests: Add support for TypeScript test cases'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: minor
-      resolves: '#583'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 65986102fddd6fac5153a0daa18b5909a2b92b49
-    subject: 'tests: Convert image spec to TypeScript'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: e340d1f097d56ae33f28346b4271b9baaf651cbb
-    subject: 'tslint: Allow namespaces in declaration files'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: 26b6d176f4aed6e2ae359ab7c91ff4d0ae600dd8
-    subject: 'tests: Replace eventually.match checks to work in newer chai version'
-  date: "2018-10-29T10:17:19Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#583'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 29bb89c95fcbdc94e4cb5808ac2f8af3410277e3
+      subject: 'chore: Upgrade to balena-config-karma to v2.3.1 to support TS tests'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#583'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: eacfbd1904af3b71c5d3eed89decbeed6b5b8ebb
+      subject: 'tests: Add support for TypeScript test cases'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: minor
+        resolves: '#583'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 65986102fddd6fac5153a0daa18b5909a2b92b49
+      subject: 'tests: Convert image spec to TypeScript'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: e340d1f097d56ae33f28346b4271b9baaf651cbb
+      subject: 'tslint: Allow namespaces in declaration files'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: 26b6d176f4aed6e2ae359ab7c91ff4d0ae600dd8
+      subject: 'tests: Replace eventually.match checks to work in newer chai version'
+  date: '2018-10-29T10:17:19Z'
   version: 10.1.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#598'
-      signed-off-by: Thodoris Greasidis <thodoris@balena.io>
-    hash: bbd6b3c9d705f0925ef363373c09b280663035b3
-    subject: 'application.spec: Fix failing app creation test w/ too short name'
-  date: "2018-10-24T09:29:58Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#598'
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      hash: bbd6b3c9d705f0925ef363373c09b280663035b3
+      subject: 'application.spec: Fix failing app creation test w/ too short name'
+  date: '2018-10-24T09:29:58Z'
   version: 10.0.9
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#579'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: a9bd431461fe27da7b1f7b0e052b6427d5b97c69
-    subject: 'tests-billing: Update paid billing tests for the dynamic billing era'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      see: https://www.flowdock.com/app/rulemotion/d-build-pipelines/threads/9uGmnNegP9XOIqgJ1Yw2rPVc02Z
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: a4b0937187bb8944d7ef2ab22606db920eb16d79
-    subject: 'chore: Do not run tests on prepack, to be compliant with resinCI'
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#581'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 6c93bcc919bb2052e59f93cf5b527506345e6207
-    subject: 'chore: Rely only on ResinCI for publishing to npm'
-  date: "2018-09-27T13:03:46Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#579'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: a9bd431461fe27da7b1f7b0e052b6427d5b97c69
+      subject: 'tests-billing: Update paid billing tests for the dynamic billing era'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        see: >-
+          https://www.flowdock.com/app/rulemotion/d-build-pipelines/threads/9uGmnNegP9XOIqgJ1Yw2rPVc02Z
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: a4b0937187bb8944d7ef2ab22606db920eb16d79
+      subject: 'chore: Do not run tests on prepack, to be compliant with resinCI'
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#581'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 6c93bcc919bb2052e59f93cf5b527506345e6207
+      subject: 'chore: Rely only on ResinCI for publishing to npm'
+  date: '2018-09-27T13:03:46Z'
   version: 10.0.8
 - commits:
-  - author: Tim Perry
-    body: |-
-      Fixes #462
-      Report ResinNotLoggedIn only when error 401 (unauthorised) is received
-      or when user token is null or undefined (that either means user is
-      already logged out or causes logging out with the next request). Every
-      other case rethrow the original error to report the problem better.
-    footers:
-      change-type: patch
-      signed-off-by: amdomanska <aga@resin.io>
-    hash: aab77943eeb7b1f64fc7ab6c70ed124f05e3a56c
-    subject: Report authentication errors more accurately
-  - author: amdomanska
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: amdomanska <aga@resin.io>
-    hash: 25c1c218430e33151fd8fc9fe323a5d003dcdae4
-    subject: Change name and logic of normalizeAuthError method
-  date: "2018-08-20T16:11:14Z"
+    - author: Tim Perry
+      body: |-
+        Fixes #462
+        Report ResinNotLoggedIn only when error 401 (unauthorised) is received
+        or when user token is null or undefined (that either means user is
+        already logged out or causes logging out with the next request). Every
+        other case rethrow the original error to report the problem better.
+      footers:
+        change-type: patch
+        signed-off-by: amdomanska <aga@resin.io>
+      hash: aab77943eeb7b1f64fc7ab6c70ed124f05e3a56c
+      subject: Report authentication errors more accurately
+    - author: amdomanska
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: amdomanska <aga@resin.io>
+      hash: 25c1c218430e33151fd8fc9fe323a5d003dcdae4
+      subject: Change name and logic of normalizeAuthError method
+  date: '2018-08-20T16:11:14Z'
   version: 10.0.7
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 70c430b995e18df5626e2190f39ed87337d20ec2
-    subject: Add support for 'all' in logs requests
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 20555ada6b021d3efa6cf02f66ffb7475191c996
-    subject: Include 'all' & default in the jsdoc type for logs.history/subscribe
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 6acfdd5524d1b7299cd1dbaa30a1b6412d966827
-    subject: Use 'all' in the logging tests to confirm it behaves correctly
-  date: "2018-08-17T18:08:40Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 70c430b995e18df5626e2190f39ed87337d20ec2
+      subject: Add support for 'all' in logs requests
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 20555ada6b021d3efa6cf02f66ffb7475191c996
+      subject: Include 'all' & default in the jsdoc type for logs.history/subscribe
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 6acfdd5524d1b7299cd1dbaa30a1b6412d966827
+      subject: Use 'all' in the logging tests to confirm it behaves correctly
+  date: '2018-08-17T18:08:40Z'
   version: 10.0.6
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 9a081131b37f5d6284dd6bffc2c14f5b3657735d
-    subject: Update logs tests to match the new API subscribe behaviour
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#567'
-      see: https://github.com/resin-io/resin-sdk/blob/f5de14600579f8e0df1c4b550b4fd185611ea123/tests/integration/models/application.spec.coffee#L196
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 26e5e87207ee90c4a426c39e886ab73c9593b288
-    subject: 'typings: Allow numeric parameters to models.application.has()'
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: e2cef996c0e38ed86f89a1a1c7a7ee307adda4df
-    subject: Update app creation test expected error message after API changes
-  date: "2018-08-17T13:59:43Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 9a081131b37f5d6284dd6bffc2c14f5b3657735d
+      subject: Update logs tests to match the new API subscribe behaviour
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#567'
+        see: >-
+          https://github.com/resin-io/resin-sdk/blob/f5de14600579f8e0df1c4b550b4fd185611ea123/tests/integration/models/application.spec.coffee#L196
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 26e5e87207ee90c4a426c39e886ab73c9593b288
+      subject: 'typings: Allow numeric parameters to models.application.has()'
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: e2cef996c0e38ed86f89a1a1c7a7ee307adda4df
+      subject: Update app creation test expected error message after API changes
+  date: '2018-08-17T13:59:43Z'
   version: 10.0.5
 - commits:
-  - author: Aga Domanska
-    body: 'Fixes #565'
-    footers:
-      change-type: patch
-      signed-off-by: amdomanska <aga@resin.io>
-    hash: c9aaaca9d22118d9b2a251b08c185a5d531ff7a4
-    subject: update test command in readme
-  date: "2018-08-10T17:58:49Z"
+    - author: Aga Domanska
+      body: 'Fixes #565'
+      footers:
+        change-type: patch
+        signed-off-by: amdomanska <aga@resin.io>
+      hash: c9aaaca9d22118d9b2a251b08c185a5d531ff7a4
+      subject: update test command in readme
+  date: '2018-08-10T17:58:49Z'
   version: 10.0.4
 - commits:
-  - author: Tim Perry
-    body: "Fixes #559\r\n\r"
-    footers:
-      change-type: patch
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 76fbbb1c3926b2e6add5d13fee1a16326f0cde90
-    subject: Fix bug in log stream setup error reporting
-  date: "2018-08-09T16:25:22Z"
+    - author: Tim Perry
+      body: "Fixes #559\r\n\r"
+      footers:
+        change-type: patch
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 76fbbb1c3926b2e6add5d13fee1a16326f0cde90
+      subject: Fix bug in log stream setup error reporting
+  date: '2018-08-09T16:25:22Z'
   version: 10.0.3
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#561'
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 46930ee55501728a03e5b5ac276f66c0ffdc2a66
-    subject: 'typings: Properly type User to Application navigation'
-  date: "2018-08-08T15:04:17Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#561'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 46930ee55501728a03e5b5ac276f66c0ffdc2a66
+      subject: 'typings: Properly type User to Application navigation'
+  date: '2018-08-08T15:04:17Z'
   version: 10.0.2
 - commits:
-  - author: Thodoris Greasidis
-    body: Reverts aa9a2e198e9c5e6d2fe67f4df7ddca61627dd669
-    footers:
-      change-type: patch
-      resolves: '#557'
-      see: https://github.com/resin-io/resin-api/issues/1122
-      signed-off-by: Thodoris Greasidis <thodoris@resin.io>
-    hash: 429855e636ec668fa3389f6bf645ca9a19789039
-    subject: Restore disabled key generation tests for not found app/device
-  date: "2018-08-06T13:49:56Z"
+    - author: Thodoris Greasidis
+      body: Reverts aa9a2e198e9c5e6d2fe67f4df7ddca61627dd669
+      footers:
+        change-type: patch
+        resolves: '#557'
+        see: 'https://github.com/resin-io/resin-api/issues/1122'
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      hash: 429855e636ec668fa3389f6bf645ca9a19789039
+      subject: Restore disabled key generation tests for not found app/device
+  date: '2018-08-06T13:49:56Z'
   version: 10.0.1
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: d473bb5ea359659666d8d3630f6cc553e5746ffe
-    subject: Create device.getWithServiceDetails(), to show multicontainer state
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 22d9685a22e0a3069ee09e66e733ddbdefdf9784
-    subject: '*BREAKING*: Move to API v4 (''multicontainer'')'
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 267edf2c5c0622ed07bc2727629e8ff1faaa5124
-    subject: Move from image_install.is_running to .status
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: e148a2ce9691e9cfa914fb126ad82fde65c005fa
-    subject: Add support for is_provided_by__release
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 8fd8b277f3579d92723e78414613c001ab911cf5
-    subject: Add content hashes to images
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 6b76bce443fa75dfce80796fcd1eeb3ade7b080e
-    subject: Multicontainer getServiceDetails tweaks after review
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: cc2a51fd785f38a09daf5d3df89d8a2f40b2943c
-    subject: Test that service details include the image install id
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 81b6ab2bba1a0b5b0f51731081cc202d70980957
-    subject: '*BREAKING*: Change models.build to models.release'
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 2a61ab246a99409e289956e3696015cd763f125c
-    subject: Refactor out multicontainer app test setup
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 97e3ae49c517cc43d26bab8b0eb1d73acbac672a
-    subject: Filter out deleted image installs in device.getWithServiceDetails
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: a3f63c98b28b47487acb322ed456a5ee0bbb0c6f
-    subject: Add release.getWithImageDetails to easily get full release details
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 5c96086d391232222cf703043dba2c96121af88f
-    subject: Allow options to expand resources in getWithImageDetails
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 5f20bf655ce98324624d600ce447d8a856d35df1
-    subject: Add models.image methods to look up individual image builds
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 1547b176ed4c87cb1cafa5b2f092b79f34d2c86a
-    subject: Make sure getWithServiceDetails supports callbacks too
-  - author: Tim Perry
-    body: Current_release is the pinned release, not the current live commit
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: b9f81439b32f6e53ab20d3ca141ad41c838f2f5e
-    subject: Change device.current_release to device.is_on__commit
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 790c186377cd20f2816d51bdcbbd31961d3615e8
-    subject: Fix tests - API now requires push timestamps for all successful images
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 811fedee3c5bb16425bb10efa371f699611803ea
-    subject: '*BREAKING*: Change device.name to device.device_name everywhere'
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: f5e81ca990eb29b52ae4e46c5573b23ca5a2f5bf
-    subject: Add support for merging expand.$filter options
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: b33567aebcd8175e9577b3a51a27f509016789d8
-    subject: Fix app owner lookup test to properly check the result
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 5a1768b22c616e41a5770e0e8e35cfceddfa4035
-    subject: Tidy up and simplify the apps tests a little
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 98b80b930a0f3c159c086a723411d1bc8e4b8ced
-    subject: Support pine wildcards and orderby
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: cc21c90564f4de87b6085d74d2380133f9ec2c50
-    subject: Update type definitions for multicontainer
-  - author: Lucian Buzzo
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: bad0be3fb496d0ecc67270b1c10c4e9f74c0a5a4
-    subject: declare computed term `current service` as its own interface
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: ac6071e2c4dfac794b3bed5cb2c6c42c3c2af16a
-    subject: Update tests to pass against latest MC changes
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 6c309a695df9c7d50c6a7c788e4d9beae9cd0b12
-    subject: Add service id to current_services
-  - author: Tim Perry
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 6bc888d0447e102a41c4fe6a7b5903c3f72bea3f
-    subject: Add image id to current_services
-  - author: Lucian Buzzo
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: e4a5d6802df73d01597bd991d08d059ba315a8b1
-    subject: add method to application model for fetching device service details
-  - author: Tim Perry
-    body: |-
-      We'd like to find a nice way to manage package locking, but right now it
-      doesn't exist, afaict, so this way at least we'll reproduce the same
-      problems that our end users do.
-    footers:
-      connects-to: '#326'
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 48046c710d2b69903b1ea7a5e4567247922b27f1
-    subject: Remove yarn, disable package-lock, and handle prettier update
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 934df96ee358d24ebea4efabc3017485d2c0b59e
-    subject: '*BREAKING*: Remove sdk.models.environmentVariables'
-  - author: Lucian Buzzo
-    body: ""
-    footers:
-      signed-off-by: Tim Perry <tim@resin.io>
-    hash: 235db744a5b277c7b1a9562e0b844d4966889173
-    subject: Fix a few small bugs
-  date: "2018-08-02T13:05:31Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: d473bb5ea359659666d8d3630f6cc553e5746ffe
+      subject: 'Create device.getWithServiceDetails(), to show multicontainer state'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 22d9685a22e0a3069ee09e66e733ddbdefdf9784
+      subject: '*BREAKING*: Move to API v4 (''multicontainer'')'
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 267edf2c5c0622ed07bc2727629e8ff1faaa5124
+      subject: Move from image_install.is_running to .status
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: e148a2ce9691e9cfa914fb126ad82fde65c005fa
+      subject: Add support for is_provided_by__release
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 8fd8b277f3579d92723e78414613c001ab911cf5
+      subject: Add content hashes to images
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 6b76bce443fa75dfce80796fcd1eeb3ade7b080e
+      subject: Multicontainer getServiceDetails tweaks after review
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: cc2a51fd785f38a09daf5d3df89d8a2f40b2943c
+      subject: Test that service details include the image install id
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 81b6ab2bba1a0b5b0f51731081cc202d70980957
+      subject: '*BREAKING*: Change models.build to models.release'
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 2a61ab246a99409e289956e3696015cd763f125c
+      subject: Refactor out multicontainer app test setup
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 97e3ae49c517cc43d26bab8b0eb1d73acbac672a
+      subject: Filter out deleted image installs in device.getWithServiceDetails
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: a3f63c98b28b47487acb322ed456a5ee0bbb0c6f
+      subject: Add release.getWithImageDetails to easily get full release details
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 5c96086d391232222cf703043dba2c96121af88f
+      subject: Allow options to expand resources in getWithImageDetails
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 5f20bf655ce98324624d600ce447d8a856d35df1
+      subject: Add models.image methods to look up individual image builds
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 1547b176ed4c87cb1cafa5b2f092b79f34d2c86a
+      subject: Make sure getWithServiceDetails supports callbacks too
+    - author: Tim Perry
+      body: 'Current_release is the pinned release, not the current live commit'
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: b9f81439b32f6e53ab20d3ca141ad41c838f2f5e
+      subject: Change device.current_release to device.is_on__commit
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 790c186377cd20f2816d51bdcbbd31961d3615e8
+      subject: Fix tests - API now requires push timestamps for all successful images
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 811fedee3c5bb16425bb10efa371f699611803ea
+      subject: '*BREAKING*: Change device.name to device.device_name everywhere'
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: f5e81ca990eb29b52ae4e46c5573b23ca5a2f5bf
+      subject: Add support for merging expand.$filter options
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: b33567aebcd8175e9577b3a51a27f509016789d8
+      subject: Fix app owner lookup test to properly check the result
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 5a1768b22c616e41a5770e0e8e35cfceddfa4035
+      subject: Tidy up and simplify the apps tests a little
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 98b80b930a0f3c159c086a723411d1bc8e4b8ced
+      subject: Support pine wildcards and orderby
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: cc21c90564f4de87b6085d74d2380133f9ec2c50
+      subject: Update type definitions for multicontainer
+    - author: Lucian Buzzo
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: bad0be3fb496d0ecc67270b1c10c4e9f74c0a5a4
+      subject: declare computed term `current service` as its own interface
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: ac6071e2c4dfac794b3bed5cb2c6c42c3c2af16a
+      subject: Update tests to pass against latest MC changes
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 6c309a695df9c7d50c6a7c788e4d9beae9cd0b12
+      subject: Add service id to current_services
+    - author: Tim Perry
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 6bc888d0447e102a41c4fe6a7b5903c3f72bea3f
+      subject: Add image id to current_services
+    - author: Lucian Buzzo
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: e4a5d6802df73d01597bd991d08d059ba315a8b1
+      subject: add method to application model for fetching device service details
+    - author: Tim Perry
+      body: |-
+        We'd like to find a nice way to manage package locking, but right now it
+        doesn't exist, afaict, so this way at least we'll reproduce the same
+        problems that our end users do.
+      footers:
+        connects-to: '#326'
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 48046c710d2b69903b1ea7a5e4567247922b27f1
+      subject: 'Remove yarn, disable package-lock, and handle prettier update'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 934df96ee358d24ebea4efabc3017485d2c0b59e
+      subject: '*BREAKING*: Remove sdk.models.environmentVariables'
+    - author: Lucian Buzzo
+      body: ''
+      footers:
+        signed-off-by: Tim Perry <tim@resin.io>
+      hash: 235db744a5b277c7b1a9562e0b844d4966889173
+      subject: Fix a few small bugs
+  date: '2018-08-02T13:05:31Z'
   version: 10.0.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: b7ea6a4079fde88ca14455664eec5f5ffd0f899f
-    subject: Add logs history & subscribe options to the TS typings
-  date: "2018-07-20T17:47:53Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: b7ea6a4079fde88ca14455664eec5f5ffd0f899f
+      subject: Add logs history & subscribe options to the TS typings
+  date: '2018-07-20T17:47:53Z'
   version: 9.0.4
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 5eb1f15c6c246a27e359d262dfb676c0fec7bf1d
-    subject: Support the count option in logs.subscribe
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: ba9ccb03dbb866dbe6ab7b4341b8d9783d67ef12
-    subject: Narrow the LogMessage typings to match the new API format
-  date: "2018-07-20T14:52:52Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 5eb1f15c6c246a27e359d262dfb676c0fec7bf1d
+      subject: Support the count option in logs.subscribe
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: ba9ccb03dbb866dbe6ab7b4341b8d9783d67ef12
+      subject: Narrow the LogMessage typings to match the new API format
+  date: '2018-07-20T14:52:52Z'
   version: 9.0.3
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#544'
-    hash: cc45b1c9721f91f03c51d778a43b6e5b898a15d4
-    subject: Use a new npm token to fix travis deploys
-  date: "2018-07-18T15:55:27Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#544'
+      hash: cc45b1c9721f91f03c51d778a43b6e5b898a15d4
+      subject: Use a new npm token to fix travis deploys
+  date: '2018-07-18T15:55:27Z'
   version: 9.0.2
 - commits:
-  - author: Thodoris Greasidis
-    body: v3.5.22 uses TS 2.8 conditional types
-    footers:
-      change-type: patch
-    hash: 6e35071d00aaa3776d12b61d534aae4634d460d9
-    subject: Pin bluebird typings to the latest working version
-  date: "2018-07-18T13:45:59Z"
+    - author: Thodoris Greasidis
+      body: v3.5.22 uses TS 2.8 conditional types
+      footers:
+        change-type: patch
+      hash: 6e35071d00aaa3776d12b61d534aae4634d460d9
+      subject: Pin bluebird typings to the latest working version
+  date: '2018-07-18T13:45:59Z'
   version: 9.0.1
 - commits:
-  - author: Thodoris Greasidis
-    body: The model states that each image is a build of exactly one service
-    hash: 3ed2cbf5082220901d2c4ca1540fd6940d941a18
-    subject: Fix build-image relation
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-    hash: 87614d8c2c909429da3c35db7dd15fa06f77bc38
-    subject: Read logs from the API, for modern supervisors
-  - author: Tim Perry
-    body: ""
-    hash: 2a9180b5e507a55d40242022a7dc9766ff9c9eb3
-    subject: Fix bug in api log detection
-  - author: Tim Perry
-    body: ""
-    hash: b112af89bb60c99ecd173584f123b0126a6d97d7
-    subject: Ensure log streaming updates its subscription window
-  - author: Tim Perry
-    body: ""
-    hash: 7d9335a465037a645cb3e07f8a91eec3af16ec8a
-    subject: Include system & stderr data in api log messages
-  - author: Tim Perry
-    body: ""
-    hash: 77d446bcd14786dbe655cd01ad576aacfa61e3b0
-    subject: Logging review markups, mainly $select-ing more & clarify code
-  date: "2018-02-01T06:05:57Z"
+    - author: Thodoris Greasidis
+      body: The model states that each image is a build of exactly one service
+      hash: 3ed2cbf5082220901d2c4ca1540fd6940d941a18
+      subject: Fix build-image relation
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+      hash: 87614d8c2c909429da3c35db7dd15fa06f77bc38
+      subject: 'Read logs from the API, for modern supervisors'
+    - author: Tim Perry
+      body: ''
+      hash: 2a9180b5e507a55d40242022a7dc9766ff9c9eb3
+      subject: Fix bug in api log detection
+    - author: Tim Perry
+      body: ''
+      hash: b112af89bb60c99ecd173584f123b0126a6d97d7
+      subject: Ensure log streaming updates its subscription window
+    - author: Tim Perry
+      body: ''
+      hash: 7d9335a465037a645cb3e07f8a91eec3af16ec8a
+      subject: Include system & stderr data in api log messages
+    - author: Tim Perry
+      body: ''
+      hash: 77d446bcd14786dbe655cd01ad576aacfa61e3b0
+      subject: 'Logging review markups, mainly $select-ing more & clarify code'
+  date: '2018-02-01T06:05:57Z'
   version: 9.0.0-beta8
 - commits:
-  - author: Ariel Flesler
-    body: |-
-      This is no longer supported in an upcoming change to how logs
-      are implemented. Log clearing should be done client-side instead
-      by log consumers.
-    footers:
-      change-type: major
-    hash: 3fd953c54f523595bbf7094a52b95c11ae1a383d
-    subject: '*BREAKING*: Remove log clearing methods (logs.clear & logs.historySinceClear)'
-  - author: Ariel Flesler
-    body: ""
-    footers:
-      change-type: major
-    hash: c311575062b865a7924feb6f0ae339cc62d97850
-    subject: resin.logs.history() now uses the new API's custom endpoint
-  - author: Ariel Flesler
-    body: ""
-    footers:
-      change-type: major
-    hash: b84af1857520b5cd4c2ca4fac1b284372acf4faa
-    subject: resin.logs.subscribe() now uses the API's streaming endpoint
-  - author: Tim Perry
-    body: ""
-    hash: 5b27ce7a9d917ce436755b540f9dfd2bf986a96d
-    subject: Small logs tweaks & tidyup
-  - author: Tim Perry
-    body: ""
-    hash: b65a91e92ef7deed69b95f06c5efd4d879f173da
-    subject: Fix log unsubscribing in new API logs implementation
-  - author: Tim Perry
-    body: ""
-    hash: 454eaa7de748a123041ce5f59da19a43eb3e962a
-    subject: Add tests for the new API logs
-  - author: Tim Perry
-    body: ""
-    hash: 10da7c7edcfd9849fd51dbe4c5aab0c713dec6c4
-    subject: Use headless Chrome in tests, to allow 'const' in some deps
-  - author: Tim Perry
-    body: ""
-    hash: 3693b6c66af5297bfe0db58a249ed3663c0c05ed
-    subject: Only use the AbortController ponyfill if a global one isn't available
-  - author: Tim Perry
-    body: ""
-    hash: 3dc5ebb46b2e41867960a3b5826d29a248a5cffd
-    subject: Drop some promise warnings with careful error catching in log subcriptions
-  - author: Tim Perry
-    body: ""
-    hash: 975e53c2f395635e6e3e3375dc7e57821b0b0926
-    subject: Update readable-stream & resin-request to avoid streaming warnings
-  - author: Tim Perry
-    body: ""
-    hash: 7f46d30ab507cd71ec3556a6fe4dda4e603d2e16
-    subject: Remove now-unused resin-device-logs
-  - author: Tim Perry
-    body: ""
-    hash: 33bd972bd96a6b931e00d9f6a33b7df168f297e6
-    subject: Some extra logging test tweaks to ensure they're as reliable as possible
-  date: "2018-07-09T19:59:53Z"
+    - author: Ariel Flesler
+      body: |-
+        This is no longer supported in an upcoming change to how logs
+        are implemented. Log clearing should be done client-side instead
+        by log consumers.
+      footers:
+        change-type: major
+      hash: 3fd953c54f523595bbf7094a52b95c11ae1a383d
+      subject: >-
+        *BREAKING*: Remove log clearing methods (logs.clear &
+        logs.historySinceClear)
+    - author: Ariel Flesler
+      body: ''
+      footers:
+        change-type: major
+      hash: c311575062b865a7924feb6f0ae339cc62d97850
+      subject: resin.logs.history() now uses the new API's custom endpoint
+    - author: Ariel Flesler
+      body: ''
+      footers:
+        change-type: major
+      hash: b84af1857520b5cd4c2ca4fac1b284372acf4faa
+      subject: resin.logs.subscribe() now uses the API's streaming endpoint
+    - author: Tim Perry
+      body: ''
+      hash: 5b27ce7a9d917ce436755b540f9dfd2bf986a96d
+      subject: Small logs tweaks & tidyup
+    - author: Tim Perry
+      body: ''
+      hash: b65a91e92ef7deed69b95f06c5efd4d879f173da
+      subject: Fix log unsubscribing in new API logs implementation
+    - author: Tim Perry
+      body: ''
+      hash: 454eaa7de748a123041ce5f59da19a43eb3e962a
+      subject: Add tests for the new API logs
+    - author: Tim Perry
+      body: ''
+      hash: 10da7c7edcfd9849fd51dbe4c5aab0c713dec6c4
+      subject: 'Use headless Chrome in tests, to allow ''const'' in some deps'
+    - author: Tim Perry
+      body: ''
+      hash: 3693b6c66af5297bfe0db58a249ed3663c0c05ed
+      subject: Only use the AbortController ponyfill if a global one isn't available
+    - author: Tim Perry
+      body: ''
+      hash: 3dc5ebb46b2e41867960a3b5826d29a248a5cffd
+      subject: >-
+        Drop some promise warnings with careful error catching in log
+        subcriptions
+    - author: Tim Perry
+      body: ''
+      hash: 975e53c2f395635e6e3e3375dc7e57821b0b0926
+      subject: Update readable-stream & resin-request to avoid streaming warnings
+    - author: Tim Perry
+      body: ''
+      hash: 7f46d30ab507cd71ec3556a6fe4dda4e603d2e16
+      subject: Remove now-unused resin-device-logs
+    - author: Tim Perry
+      body: ''
+      hash: 33bd972bd96a6b931e00d9f6a33b7df168f297e6
+      subject: Some extra logging test tweaks to ensure they're as reliable as possible
+  date: '2018-07-09T19:59:53Z'
   version: 9.0.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 71a556f94d8fcf1f9a59ff4c658c4551d8724ec9
-    subject: Print a 'please update' warning if any legacy logs methods are used,
-      as they'll soon stop working
-  date: "2018-07-09T19:01:32Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 71a556f94d8fcf1f9a59ff4c658c4551d8724ec9
+      subject: >-
+        Print a 'please update' warning if any legacy logs methods are used, as
+        they'll soon stop working
+  date: '2018-07-09T19:01:32Z'
   version: 8.2.4
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 833f0d192a97cd66d598f3463aa51ef16bc34dcf
-    subject: Upgrade uglify & include (now-supported) streaming dependencies
-  - author: Tim Perry
-    body: ""
-    hash: ae7f58b08d1002432f03142371f120c3b3d7f7e0
-    subject: Update yarn.lock
-  date: "2018-07-02T11:04:34Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 833f0d192a97cd66d598f3463aa51ef16bc34dcf
+      subject: Upgrade uglify & include (now-supported) streaming dependencies
+    - author: Tim Perry
+      body: ''
+      hash: ae7f58b08d1002432f03142371f120c3b3d7f7e0
+      subject: Update yarn.lock
+  date: '2018-07-02T11:04:34Z'
   version: 8.2.3
 - commits:
-  - author: Ariel Flesler
-    body: ""
-    footers:
-      change-type: patch
-    hash: 63f36ea0e02007663249e22edb16e2095142f4ee
-    subject: Mark resin.logs.clear() & resin.logs.historySinceClear() as deprecated
-  - author: Ariel Flesler
-    body: ""
-    footers:
-      change-type: patch
-    hash: b7eb24af232194355eb25eb88b020ca46c5587d6
-    subject: Delete an outdated test
-  - author: Tim Perry
-    body: ""
-    hash: aa9a2e198e9c5e6d2fe67f4df7ddca61627dd669
-    subject: Temporarily disable tests broken by https://github.com/resin-io/resin-api/issues/1122
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 4d4e51c0b32e9d2743f5c9c94365c757434df9ef
-    subject: Disable half the builds (node 8 on appveyor, 6 on travis) to reduce API
-      load
-  date: "2018-06-25T18:44:35Z"
+    - author: Ariel Flesler
+      body: ''
+      footers:
+        change-type: patch
+      hash: 63f36ea0e02007663249e22edb16e2095142f4ee
+      subject: Mark resin.logs.clear() & resin.logs.historySinceClear() as deprecated
+    - author: Ariel Flesler
+      body: ''
+      footers:
+        change-type: patch
+      hash: b7eb24af232194355eb25eb88b020ca46c5587d6
+      subject: Delete an outdated test
+    - author: Tim Perry
+      body: ''
+      hash: aa9a2e198e9c5e6d2fe67f4df7ddca61627dd669
+      subject: >-
+        Temporarily disable tests broken by
+        https://github.com/resin-io/resin-api/issues/1122
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 4d4e51c0b32e9d2743f5c9c94365c757434df9ef
+      subject: >-
+        Disable half the builds (node 8 on appveyor, 6 on travis) to reduce API
+        load
+  date: '2018-06-25T18:44:35Z'
   version: 8.2.2
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      resolves: '#499'
-    hash: f0fe98ccce7f7ba6f67939120d55b592973f25d8
-    subject: Fix ResourceNotFound detection on tag upserts for newer pine
-  - author: Thodoris Greasidis
-    body: ""
-    hash: dbcefedadbffe748ea4cfc5ca936e0427e9d185c
-    subject: Update the billing tests
-  - author: Thodoris Greasidis
-    body: ""
-    hash: 4ee157e159caa839d2e6ce56d2f96a4ba41e9e3b
-    subject: Skip failing env var tests after MC deployment
-  date: "2018-05-09T14:53:05Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        resolves: '#499'
+      hash: f0fe98ccce7f7ba6f67939120d55b592973f25d8
+      subject: Fix ResourceNotFound detection on tag upserts for newer pine
+    - author: Thodoris Greasidis
+      body: ''
+      hash: dbcefedadbffe748ea4cfc5ca936e0427e9d185c
+      subject: Update the billing tests
+    - author: Thodoris Greasidis
+      body: ''
+      hash: 4ee157e159caa839d2e6ce56d2f96a4ba41e9e3b
+      subject: Skip failing env var tests after MC deployment
+  date: '2018-05-09T14:53:05Z'
   version: 8.2.1
 - commits:
-  - author: MoranF
-    body: 'Connects-To: #469'
-    footers:
-      change-type: minor
-    hash: b1d7c28264c83defc04e05f5bb5091130772200c
-    subject: Include createApiKey in type definitions
-  date: "2018-02-14T12:03:23Z"
+    - author: MoranF
+      body: 'Connects-To: #469'
+      footers:
+        change-type: minor
+      hash: b1d7c28264c83defc04e05f5bb5091130772200c
+      subject: Include createApiKey in type definitions
+  date: '2018-02-14T12:03:23Z'
   version: 8.2.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 9c9c36d845fa6837fa95a41d2bdb001e1708f174
-    subject: Make small corrections to typings for device.register
-  date: "2018-02-14T08:54:43Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 9c9c36d845fa6837fa95a41d2bdb001e1708f174
+      subject: Make small corrections to typings for device.register
+  date: '2018-02-14T08:54:43Z'
   version: 8.1.5
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 8b65bbd85e2b37a951657d7a70db9a2d8b750335
-    subject: Update tests to stop using various recently removed device types
-  date: "2018-02-13T18:18:23Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 8b65bbd85e2b37a951657d7a70db9a2d8b750335
+      subject: Update tests to stop using various recently removed device types
+  date: '2018-02-13T18:18:23Z'
   version: 8.1.4
 - commits:
-  - author: Lucian Buzzo
-    body: 'Fixes #458'
-    footers:
-      change-type: patch
-    hash: 98bacba7ad36ef58fc8c1198e9b21b6d27535339
-    subject: Fix bug when merging expand options
-  date: "2018-01-30T16:41:16Z"
+    - author: Lucian Buzzo
+      body: 'Fixes #458'
+      footers:
+        change-type: patch
+      hash: 98bacba7ad36ef58fc8c1198e9b21b6d27535339
+      subject: Fix bug when merging expand options
+  date: '2018-01-30T16:41:16Z'
   version: 8.1.3
 - commits:
-  - author: Alexis Svinartchouk
-    body: 'Connects-To: #465'
-    footers:
-      change-type: patch
-    hash: 89a86f2bf2a92a06b8d54584484c9c38b66c669f
-    subject: Update resin-register-device to ^5.0.0
-  date: "2018-01-26T15:04:53Z"
+    - author: Alexis Svinartchouk
+      body: 'Connects-To: #465'
+      footers:
+        change-type: patch
+      hash: 89a86f2bf2a92a06b8d54584484c9c38b66c669f
+      subject: Update resin-register-device to ^5.0.0
+  date: '2018-01-26T15:04:53Z'
   version: 8.1.2
 - commits:
-  - author: Tim Perry
-    body: |-
-      We now have full api key support in loginWithToken, which should
-      be used instead.
-    footers:
-      change-type: patch
-    hash: dae9fbd3a5cef38548c91d30b7d3e3fb31ba77c5
-    subject: Deprecate passing an api key to the SDK constructor
-  - author: Tim Perry
-    body: ""
-    hash: 21a7dbfd730c82ebe0bd87757b84f08046e6db5b
-    subject: Mark api key as deprecated in the SDK typings
-  date: "2018-01-19T10:41:54Z"
+    - author: Tim Perry
+      body: |-
+        We now have full api key support in loginWithToken, which should
+        be used instead.
+      footers:
+        change-type: patch
+      hash: dae9fbd3a5cef38548c91d30b7d3e3fb31ba77c5
+      subject: Deprecate passing an api key to the SDK constructor
+    - author: Tim Perry
+      body: ''
+      hash: 21a7dbfd730c82ebe0bd87757b84f08046e6db5b
+      subject: Mark api key as deprecated in the SDK typings
+  date: '2018-01-19T10:41:54Z'
   version: 8.1.1
 - commits:
-  - author: MoranF
-    body: 'Connects-To: #456'
-    footers:
-      change-type: minor
-    hash: 84cda146be612a246e0e665564c90e34f6e745e6
-    subject: Export a method for generating a new API key
-  date: "2018-01-18T15:39:15Z"
+    - author: MoranF
+      body: 'Connects-To: #456'
+      footers:
+        change-type: minor
+      hash: 84cda146be612a246e0e665564c90e34f6e745e6
+      subject: Export a method for generating a new API key
+  date: '2018-01-18T15:39:15Z'
   version: 8.1.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: f00eb1ff0a5bac647f32e2465ae5dd782bb3b86d
-    subject: Never internally select:[], since that not valid
-  - author: Tim Perry
-    body: ""
-    hash: 2f5b1fabf9262396a83ebdb48684cf565ee803aa
-    subject: Fix silent noop assertion in getAppByOwner test
-  date: "2018-01-18T00:28:57Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: f00eb1ff0a5bac647f32e2465ae5dd782bb3b86d
+      subject: 'Never internally select:[], since that not valid'
+    - author: Tim Perry
+      body: ''
+      hash: 2f5b1fabf9262396a83ebdb48684cf565ee803aa
+      subject: Fix silent noop assertion in getAppByOwner test
+  date: '2018-01-18T00:28:57Z'
   version: 8.0.3
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 4cc90e442267963b03d6980b13682fc2432c2d18
-    subject: Ensure optional properties are included in log message types
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 85b85ea1b40cdba0a9815840d241225111f879ab
-    subject: Ensure options params are optional in the typings
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 4eb67a17207b3340120c17bbcaa1730e84b111d7
-    subject: Add typings for application info
-  date: "2018-01-11T15:47:39Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 4cc90e442267963b03d6980b13682fc2432c2d18
+      subject: Ensure optional properties are included in log message types
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 85b85ea1b40cdba0a9815840d241225111f879ab
+      subject: Ensure options params are optional in the typings
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 4eb67a17207b3340120c17bbcaa1730e84b111d7
+      subject: Add typings for application info
+  date: '2018-01-11T15:47:39Z'
   version: 8.0.2
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 38648ed77cb268c92e022ec9ca9196c55c039dfd
-    subject: Upgrade typescript to 2.6
-  - author: Tim Perry
-    body: ""
-    hash: 00ec43f73f1ea19340660aaeb412e951fe387480
-    subject: Fix typo in test name
-  date: "2018-01-10T15:38:30Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 38648ed77cb268c92e022ec9ca9196c55c039dfd
+      subject: Upgrade typescript to 2.6
+    - author: Tim Perry
+      body: ''
+      hash: 00ec43f73f1ea19340660aaeb412e951fe387480
+      subject: Fix typo in test name
+  date: '2018-01-10T15:38:30Z'
   version: 8.0.1
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      Resolves #425
-      Change-Type: major
-    hash: d338ea4847e1d5a96a8ad91a1bc0924b02e59d1a
-    subject: Change the getDashboardUrl to use the device UUID
-  - author: MoranF
-    body: 'Connects-To: #364'
-    footers:
-      change-type: major
-    hash: f1369f0ca3353d044c429efe0d021488480298d7
-    subject: '*BREAKING*: Stop exposing sdk.token object.'
-  date: "2018-01-08T17:34:35Z"
+    - author: Thodoris Greasidis
+      body: |-
+        Resolves #425
+        Change-Type: major
+      hash: d338ea4847e1d5a96a8ad91a1bc0924b02e59d1a
+      subject: Change the getDashboardUrl to use the device UUID
+    - author: MoranF
+      body: 'Connects-To: #364'
+      footers:
+        change-type: major
+      hash: f1369f0ca3353d044c429efe0d021488480298d7
+      subject: '*BREAKING*: Stop exposing sdk.token object.'
+  date: '2018-01-08T17:34:35Z'
   version: 8.0.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#450'
-    hash: c878115e9cdc785c3765b474698f972341090b02
-    subject: Fix tag updating when the build get's minified
-  - author: Tim Perry
-    body: ""
-    hash: 81c913c61c83135a90d96505cfb54dc7edd8929d
-    subject: Re-enable test disabled due to a proxy bug (https://github.com/resin-io/resin-proxy/issues/134)
-  date: "2018-01-05T17:19:30Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#450'
+      hash: c878115e9cdc785c3765b474698f972341090b02
+      subject: Fix tag updating when the build get's minified
+    - author: Tim Perry
+      body: ''
+      hash: 81c913c61c83135a90d96505cfb54dc7edd8929d
+      subject: >-
+        Re-enable test disabled due to a proxy bug
+        (https://github.com/resin-io/resin-proxy/issues/134)
+  date: '2018-01-05T17:19:30Z'
   version: 7.2.4
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 1f74411f8e8939c2782298c4b110a61fcec5505a
-    subject: Expand the type definitions further to cover all remaining methods
-  - author: Tim Perry
-    body: ""
-    hash: 818dfc90dda24bf9043cdeb3958738d44dc705c0
-    subject: Update device.update and device.register docs to correctly show optional
-      args
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 2cb44de73109ea14aa30d5ad6cfd2d7320dcdb8d
-    subject: Include resin-request typings too
-  date: "2017-12-22T10:38:59Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 1f74411f8e8939c2782298c4b110a61fcec5505a
+      subject: Expand the type definitions further to cover all remaining methods
+    - author: Tim Perry
+      body: ''
+      hash: 818dfc90dda24bf9043cdeb3958738d44dc705c0
+      subject: >-
+        Update device.update and device.register docs to correctly show optional
+        args
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 2cb44de73109ea14aa30d5ad6cfd2d7320dcdb8d
+      subject: Include resin-request typings too
+  date: '2017-12-22T10:38:59Z'
   version: 7.2.3
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 238a0440db629cbb3afb4ffab8e9f13d8b9abed6
-    subject: Prettify on build, to help run it locally, and ensure it's caught in
-      CI
-  date: "2017-12-21T17:49:53Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 238a0440db629cbb3afb4ffab8e9f13d8b9abed6
+      subject: 'Prettify on build, to help run it locally, and ensure it''s caught in CI'
+  date: '2017-12-21T17:49:53Z'
   version: 7.2.2
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 562445bb569cfffa218f8efeabbbab7fe809a23d
-    subject: Type lots of extra previously untyped methods & features
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 1197c0ae9accd0bb839c8189fa5ab1093c2abf04
-    subject: Make sure types are published correctly
-  - author: Tim Perry
-    body: ""
-    hash: 572721cc368ca1c4148c00c2d41709babb9c3b4d
-    subject: Pin the typescript version to match the UI
-  - author: Tim Perry
-    body: ""
-    hash: 2e84555a89b26666232062038472f319eeb82742
-    subject: Add more resin.auth method typings
-  - author: Tim Perry
-    body: ""
-    hash: ed7a50c68540200c0991b32e6c63c98d88239db2
-    subject: Add typings for key generation functions
-  date: "2017-12-21T10:59:00Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 562445bb569cfffa218f8efeabbbab7fe809a23d
+      subject: Type lots of extra previously untyped methods & features
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 1197c0ae9accd0bb839c8189fa5ab1093c2abf04
+      subject: Make sure types are published correctly
+    - author: Tim Perry
+      body: ''
+      hash: 572721cc368ca1c4148c00c2d41709babb9c3b4d
+      subject: Pin the typescript version to match the UI
+    - author: Tim Perry
+      body: ''
+      hash: 2e84555a89b26666232062038472f319eeb82742
+      subject: Add more resin.auth method typings
+    - author: Tim Perry
+      body: ''
+      hash: ed7a50c68540200c0991b32e6c63c98d88239db2
+      subject: Add typings for key generation functions
+  date: '2017-12-21T10:59:00Z'
   version: 7.2.1
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-    hash: d029ccf92c864d6bc1a4e037f088b51bd5c3bb6b
-    subject: Include SDK typescript types in the SDK itself
-  - author: Tim Perry
-    body: ""
-    hash: f70d789396ddaf2e2eb23c87f5837433b7bfc31c
-    subject: Lint type definitions
-  - author: Tim Perry
-    body: ""
-    hash: 098b4dbfa1efd455acee8cfd65dcaac539f73b14
-    subject: Add resin-token typings
-  - author: Tim Perry
-    body: ""
-    hash: daba178c2080ab150815d842f476c3ccf96f8413
-    subject: Tiny types reordering for clarity
-  - author: Thodoris Greasidis
-    body: ""
-    hash: 84afc79e2353efd0eb69df5483aa3590cc2b0cfe
-    subject: Add resource tag typings
-  - author: Thodoris Greasidis
-    body: ""
-    hash: 86ca9929573d0f2f8c93fe2326e5ab5ed6bad8ba
-    subject: Format typings using prettier
-  - author: Tim Perry
-    body: ""
-    hash: 5d1dabc74fa4ad3295a35edb50a152cff8413bf4
-    subject: Ensure intentionally-failing tests make a non-rate-limited request
-  - author: Tim Perry
-    body: ""
-    hash: e5d4dc219746c446e989033b30940bc60465f0e5
-    subject: Dodge more rate limits by not hardcoding usernames
-  date: "2017-12-19T18:15:37Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+      hash: d029ccf92c864d6bc1a4e037f088b51bd5c3bb6b
+      subject: Include SDK typescript types in the SDK itself
+    - author: Tim Perry
+      body: ''
+      hash: f70d789396ddaf2e2eb23c87f5837433b7bfc31c
+      subject: Lint type definitions
+    - author: Tim Perry
+      body: ''
+      hash: 098b4dbfa1efd455acee8cfd65dcaac539f73b14
+      subject: Add resin-token typings
+    - author: Tim Perry
+      body: ''
+      hash: daba178c2080ab150815d842f476c3ccf96f8413
+      subject: Tiny types reordering for clarity
+    - author: Thodoris Greasidis
+      body: ''
+      hash: 84afc79e2353efd0eb69df5483aa3590cc2b0cfe
+      subject: Add resource tag typings
+    - author: Thodoris Greasidis
+      body: ''
+      hash: 86ca9929573d0f2f8c93fe2326e5ab5ed6bad8ba
+      subject: Format typings using prettier
+    - author: Tim Perry
+      body: ''
+      hash: 5d1dabc74fa4ad3295a35edb50a152cff8413bf4
+      subject: Ensure intentionally-failing tests make a non-rate-limited request
+    - author: Tim Perry
+      body: ''
+      hash: e5d4dc219746c446e989033b30940bc60465f0e5
+      subject: Dodge more rate limits by not hardcoding usernames
+  date: '2017-12-19T18:15:37Z'
   version: 7.2.0
 - commits:
-  - author: Thodoris Greasidis
-    body: |-
-      Resolves #430
-      Change-Type: minor
-    hash: f6a713eddff26ae76f701ba2a67c94b3f2bc289b
-    subject: Add Application & Device Tag methods
-  date: "2017-11-29T13:03:30Z"
+    - author: Thodoris Greasidis
+      body: |-
+        Resolves #430
+        Change-Type: minor
+      hash: f6a713eddff26ae76f701ba2a67c94b3f2bc289b
+      subject: Add Application & Device Tag methods
+  date: '2017-11-29T13:03:30Z'
   version: 7.1.0
 - commits:
-  - author: Thodoris Greasidis
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#353'
-    hash: 0f0f9ea934589a1692b261ca4a1665471cfdcff4
-    subject: Start using Typescript
-  date: "2017-11-29T09:45:18Z"
+    - author: Thodoris Greasidis
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#353'
+      hash: 0f0f9ea934589a1692b261ca4a1665471cfdcff4
+      subject: Start using Typescript
+  date: '2017-11-29T09:45:18Z'
   version: 7.0.3
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 3535a3a0bc96be258efb2a4dd077d4cd601f10a3
-    subject: Ensure browser console.logs appear in test output, to help debugging
-  - author: Tim Perry
-    body: |-
-      This makes it easier to share test config between environments: you need
-      a username & password that exists on both, but you don't need literally
-      the same database, which is nice.
-    footers:
-      change-type: patch
-    hash: 7801028ff1a482c84c6ff3e53a7c5dbc5b95bc31
-    subject: Stop requiring tests to be configured with the test user id
-  - author: Tim Perry
-    body: ""
-    hash: 9172cafd08b8538058b2a1ad93bde094b7482fc1
-    subject: Test that user id is a *positive* integer, not just any number
-  - author: Thodoris Greasidis
-    body: |-
-      That's a temporary measurement to make the CI pass again.
-      See: https://github.com/resin-io/resin-proxy/issues/134
-    hash: 56f32e01c707e68f2093fe27dd546bb2599e8a6b
-    subject: Temporarily disable the getDeviceUrl test for offline devices
-  date: "2017-11-28T17:53:08Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 3535a3a0bc96be258efb2a4dd077d4cd601f10a3
+      subject: 'Ensure browser console.logs appear in test output, to help debugging'
+    - author: Tim Perry
+      body: |-
+        This makes it easier to share test config between environments: you need
+        a username & password that exists on both, but you don't need literally
+        the same database, which is nice.
+      footers:
+        change-type: patch
+      hash: 7801028ff1a482c84c6ff3e53a7c5dbc5b95bc31
+      subject: Stop requiring tests to be configured with the test user id
+    - author: Tim Perry
+      body: ''
+      hash: 9172cafd08b8538058b2a1ad93bde094b7482fc1
+      subject: 'Test that user id is a *positive* integer, not just any number'
+    - author: Thodoris Greasidis
+      body: |-
+        That's a temporary measurement to make the CI pass again.
+        See: https://github.com/resin-io/resin-proxy/issues/134
+      hash: 56f32e01c707e68f2093fe27dd546bb2599e8a6b
+      subject: Temporarily disable the getDeviceUrl test for offline devices
+  date: '2017-11-28T17:53:08Z'
   version: 7.0.2
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 40ec232b9df240420e5c2ad7924ad079d02cf10e
-    subject: Ensure os.getMaxSatisfyingVersion returns exact results for exact matches
-  - author: Tim Perry
-    body: ""
-    hash: 5e5f7a3932ba5ae619f181860336d6daff11a4db
-    subject: Test behaviour with specific versions that have no _exact_ match
-  date: "2017-10-17T16:15:23Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 40ec232b9df240420e5c2ad7924ad079d02cf10e
+      subject: >-
+        Ensure os.getMaxSatisfyingVersion returns exact results for exact
+        matches
+    - author: Tim Perry
+      body: ''
+      hash: 5e5f7a3932ba5ae619f181860336d6daff11a4db
+      subject: Test behaviour with specific versions that have no _exact_ match
+  date: '2017-10-17T16:15:23Z'
   version: 7.0.1
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-      connects-to: '#358'
-    hash: 4391099864a32cccd85b88869c120c72fc5d2726
-    subject: '*BREAKING*: Don''t allow creating applications with discontinued device
-      types'
-  - author: Tim Perry
-    body: ""
-    footers:
-      breaking: Don't allow creating devices with discontinued device types
-    hash: beae7c54e0cb7dad280e404b1476952c5dcb8e40
-    subject: 'Merge pull request #398 from resin-io/358-discontinued-device-types'
-  - author: Tim Perry
-    body: |-
-      These were slightly convenient, but hacky and inconsistent with any data
-      retrieved manually with $expands. One day we might bring these back, but
-      for now it's much cleaner for everybody if we keep this simple.
-    footers:
-      change-type: major
-    hash: 8ad02b89498d79c022356815658e67eac04d50c6
-    subject: '*BREAKING*: Remove application.online_devices and application.device_length'
-  - author: Tim Perry
-    body: |-
-      Both of these were generated from expanded data we'd like to remove, and
-      somewhat messily at that. You can easily generate them by hand by
-      expanding application yourself and looking at the name and
-      id there by hand.
-    footers:
-      change-type: major
-    hash: 0e704c905f4c3aff778a1edbce7f5a06ab2d2e30
-    subject: '*BREAKING*: Remove device.application_name and device.dashboard_url'
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-    hash: d809e8286a4fdb42e86b4c71cf4f018330bc5eea
-    subject: '*BREAKING*: Don''t expand relationships by default. Pass { expand: ''...''
-      } options to opt in instead.'
-  - author: Tim Perry
-    body: ""
-    hash: b7e9445a73367075a330b3a0cee2831305201859
-    subject: Update yarn.lock
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 89afe7bb5648e93d86d6c1bf9fe10886a824cd7a
-    subject: Make device.move throw ResinInvalidDeviceType for incompatible device
-      types (not just Error)
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-    hash: c1b14973151604a4b3762bf82e74350ea77ebdb7
-    subject: '*BREAKING*: Rename getAppWithOwner to getAppByOwner'
-  - author: Tim Perry
-    body: Break everything we can pre-v3
-    hash: 9f7b23458488bd2e5b5bfe5eafbf1eb34d5e8390
-    subject: 'Merge pull request #407 from resin-io/breaking-improvements'
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-    hash: 84ad402c4f522c92d2c0257816306d8cee05d3a0
-    subject: '*BREAKING*: Remove (already deprecated) models.application.getApiKey()'
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-    hash: a340c22bfb078f525ddeb8feffdc20021827cec4
-    subject: Change device registration to use a provisioning key
-  - author: Tim Perry
-    body: Replace generateApiKey with generateProvisioningKey
-    hash: 37151cbaed2b532ab6187c60aad502d0cd52962d
-    subject: 'Merge pull request #410 from resin-io/remove-generate-api-key'
-  - author: Tim Perry
-    body: |-
-      Node 4 may well still work with the SDK for quite a while, but we'll no
-      longer actively test against it, and it's quite possible that it may
-      stop working entirely in any future release.
-    footers:
-      change-type: major
-    hash: 116762c7d3b07bc8c0ec2bf5c01860ec1e75c884
-    subject: '*BREAKING*: Stop actively supporting node 4.'
-  - author: Tim Perry
-    body: '*BREAKING*: Stop actively supporting node 4.'
-    hash: 3240147e936df770459f8c60ad9629c8713b9894
-    subject: 'Merge pull request #417 from resin-io/deprecate-node-4'
-  - author: Tim Perry
-    body: ""
-    hash: 10166ee01746cffc73a2b64da29235810318d854
-    subject: Ignore all .env files
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-    hash: 7974dc2b9d3415cf9b66a3451a1621c65c7376f9
-    subject: '*BREAKING*: Upgrade to API v3. Main change is that all relationships
-      & result properties now include verbs (e.g. device.application is now device.belongs_to__application).'
-  - author: Tim Perry
-    body: option)
-    footers:
-      change-type: major
-    hash: 0059047cfd8f3505b6999484e17c01a2fa3f1567
-    subject: '*BREAKING*: Tie the SDK to a specific API version (removing `apiVersion`'
-  - author: Tim Perry
-    body: Move to API v3
-    hash: d6f99f3122c642102d89d6057186e5ca2e561957
-    subject: 'Merge pull request #418 from resin-io/api-v3'
-  - author: Tim Perry
-    body: ""
-    hash: c0e9e7c98919adfffd827da1c528b4c3acb5da08
-    subject: Fix device interacting methods broken by non-automatic relationships
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 8e74381aa8918aab848ff5f469c4b485391329cc
-    subject: Make device.update options optional
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: b949de69a4823d348a8042d7232427077faef55c
-    subject: Fix breaking bugs in device.enable/disableTcpPing
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: major
-    hash: ea7e818f963c46554405248190362a073d75d3f6
-    subject: '*BREAKING*: Remove device.ensureSupervisorCompatibility - use semver
-      directly instead'
-  date: "2017-10-12T16:03:24Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+        connects-to: '#358'
+      hash: 4391099864a32cccd85b88869c120c72fc5d2726
+      subject: >-
+        *BREAKING*: Don't allow creating applications with discontinued device
+        types
+    - author: Tim Perry
+      body: ''
+      footers:
+        breaking: Don't allow creating devices with discontinued device types
+      hash: beae7c54e0cb7dad280e404b1476952c5dcb8e40
+      subject: 'Merge pull request #398 from resin-io/358-discontinued-device-types'
+    - author: Tim Perry
+      body: |-
+        These were slightly convenient, but hacky and inconsistent with any data
+        retrieved manually with $expands. One day we might bring these back, but
+        for now it's much cleaner for everybody if we keep this simple.
+      footers:
+        change-type: major
+      hash: 8ad02b89498d79c022356815658e67eac04d50c6
+      subject: >-
+        *BREAKING*: Remove application.online_devices and
+        application.device_length
+    - author: Tim Perry
+      body: |-
+        Both of these were generated from expanded data we'd like to remove, and
+        somewhat messily at that. You can easily generate them by hand by
+        expanding application yourself and looking at the name and
+        id there by hand.
+      footers:
+        change-type: major
+      hash: 0e704c905f4c3aff778a1edbce7f5a06ab2d2e30
+      subject: '*BREAKING*: Remove device.application_name and device.dashboard_url'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+      hash: d809e8286a4fdb42e86b4c71cf4f018330bc5eea
+      subject: >-
+        *BREAKING*: Don't expand relationships by default. Pass { expand: '...'
+        } options to opt in instead.
+    - author: Tim Perry
+      body: ''
+      hash: b7e9445a73367075a330b3a0cee2831305201859
+      subject: Update yarn.lock
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 89afe7bb5648e93d86d6c1bf9fe10886a824cd7a
+      subject: >-
+        Make device.move throw ResinInvalidDeviceType for incompatible device
+        types (not just Error)
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+      hash: c1b14973151604a4b3762bf82e74350ea77ebdb7
+      subject: '*BREAKING*: Rename getAppWithOwner to getAppByOwner'
+    - author: Tim Perry
+      body: Break everything we can pre-v3
+      hash: 9f7b23458488bd2e5b5bfe5eafbf1eb34d5e8390
+      subject: 'Merge pull request #407 from resin-io/breaking-improvements'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+      hash: 84ad402c4f522c92d2c0257816306d8cee05d3a0
+      subject: '*BREAKING*: Remove (already deprecated) models.application.getApiKey()'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+      hash: a340c22bfb078f525ddeb8feffdc20021827cec4
+      subject: Change device registration to use a provisioning key
+    - author: Tim Perry
+      body: Replace generateApiKey with generateProvisioningKey
+      hash: 37151cbaed2b532ab6187c60aad502d0cd52962d
+      subject: 'Merge pull request #410 from resin-io/remove-generate-api-key'
+    - author: Tim Perry
+      body: |-
+        Node 4 may well still work with the SDK for quite a while, but we'll no
+        longer actively test against it, and it's quite possible that it may
+        stop working entirely in any future release.
+      footers:
+        change-type: major
+      hash: 116762c7d3b07bc8c0ec2bf5c01860ec1e75c884
+      subject: '*BREAKING*: Stop actively supporting node 4.'
+    - author: Tim Perry
+      body: '*BREAKING*: Stop actively supporting node 4.'
+      hash: 3240147e936df770459f8c60ad9629c8713b9894
+      subject: 'Merge pull request #417 from resin-io/deprecate-node-4'
+    - author: Tim Perry
+      body: ''
+      hash: 10166ee01746cffc73a2b64da29235810318d854
+      subject: Ignore all .env files
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+      hash: 7974dc2b9d3415cf9b66a3451a1621c65c7376f9
+      subject: >-
+        *BREAKING*: Upgrade to API v3. Main change is that all relationships &
+        result properties now include verbs (e.g. device.application is now
+        device.belongs_to__application).
+    - author: Tim Perry
+      body: option)
+      footers:
+        change-type: major
+      hash: 0059047cfd8f3505b6999484e17c01a2fa3f1567
+      subject: '*BREAKING*: Tie the SDK to a specific API version (removing `apiVersion`'
+    - author: Tim Perry
+      body: Move to API v3
+      hash: d6f99f3122c642102d89d6057186e5ca2e561957
+      subject: 'Merge pull request #418 from resin-io/api-v3'
+    - author: Tim Perry
+      body: ''
+      hash: c0e9e7c98919adfffd827da1c528b4c3acb5da08
+      subject: Fix device interacting methods broken by non-automatic relationships
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 8e74381aa8918aab848ff5f469c4b485391329cc
+      subject: Make device.update options optional
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: b949de69a4823d348a8042d7232427077faef55c
+      subject: Fix breaking bugs in device.enable/disableTcpPing
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: major
+      hash: ea7e818f963c46554405248190362a073d75d3f6
+      subject: >-
+        *BREAKING*: Remove device.ensureSupervisorCompatibility - use semver
+        directly instead
+  date: '2017-10-12T16:03:24Z'
   version: 7.0.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-    hash: ee4be33f452142808044e3e5c78d6067054bd8c3
-    subject: Add application.generateProvisioningKey()
-  - author: Tim Perry
-    body: ""
-    footers:
-      connects-to: '#415'
-    hash: 461076a35a5ca74a934857b256cb63889a5dfee2
-    subject: Make sure we're running the test suite against Node 8
-  date: "2017-10-12T10:11:05Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+      hash: ee4be33f452142808044e3e5c78d6067054bd8c3
+      subject: Add application.generateProvisioningKey()
+    - author: Tim Perry
+      body: ''
+      footers:
+        connects-to: '#415'
+      hash: 461076a35a5ca74a934857b256cb63889a5dfee2
+      subject: Make sure we're running the test suite against Node 8
+  date: '2017-10-12T10:11:05Z'
   version: 6.15.0
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 423d79ea1a716eeee7ccd61ed2bcc6663236313c
-    subject: Stop requests that don't need auth from failing if you have an invalid
-      token
-  date: "2017-10-06T07:23:57Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 423d79ea1a716eeee7ccd61ed2bcc6663236313c
+      subject: >-
+        Stop requests that don't need auth from failing if you have an invalid
+        token
+  date: '2017-10-06T07:23:57Z'
   version: 6.14.8
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: 14948b16b41b2b5b9bfa34eb74e5d81bfaffb9f1
-    subject: Change GLOBAL to global to avoid deprecation warning with shared options
-  - author: Tim Perry
-    body: ""
-    hash: f6bcd2404406aa2f1838ce8ee42d5a1e3ccc3bc8
-    subject: Remove leftover console.log
-  - author: Tim Perry
-    body: ""
-    hash: c7ca7bdf14b1774e7af21d35fd0f1c77df54599d
-    subject: Add a positive test for envVars.device.getAll()
-  - author: Tim Perry
-    body: ""
-    hash: 9b9929132b572fa39f7781b1836f529322cae835
-    subject: Improve global detection to handle web workers, and clarify logic
-  - author: Tim Perry
-    body: ""
-    hash: f23473ebf5fc967bcd403b617a08bbecf7be6e1e
-    subject: Make resin.spec tests runnable independently
-  - author: Tim Perry
-    body: ""
-    hash: 2941a3bd1e7c40874b59c046a67cbe442cd80418
-    subject: Explain why null globalEnv exists
-  date: "2017-09-29T15:08:50Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: 14948b16b41b2b5b9bfa34eb74e5d81bfaffb9f1
+      subject: Change GLOBAL to global to avoid deprecation warning with shared options
+    - author: Tim Perry
+      body: ''
+      hash: f6bcd2404406aa2f1838ce8ee42d5a1e3ccc3bc8
+      subject: Remove leftover console.log
+    - author: Tim Perry
+      body: ''
+      hash: c7ca7bdf14b1774e7af21d35fd0f1c77df54599d
+      subject: Add a positive test for envVars.device.getAll()
+    - author: Tim Perry
+      body: ''
+      hash: 9b9929132b572fa39f7781b1836f529322cae835
+      subject: 'Improve global detection to handle web workers, and clarify logic'
+    - author: Tim Perry
+      body: ''
+      hash: f23473ebf5fc967bcd403b617a08bbecf7be6e1e
+      subject: Make resin.spec tests runnable independently
+    - author: Tim Perry
+      body: ''
+      hash: 2941a3bd1e7c40874b59c046a67cbe442cd80418
+      subject: Explain why null globalEnv exists
+  date: '2017-09-29T15:08:50Z'
   version: 6.14.7
 - commits:
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-    hash: e47ec9760b0ade27ce9c3704feff5217e6c7e936
-    subject: Ensure that npm published files are always built afresh first
-  date: "2017-09-28T10:38:55Z"
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+      hash: e47ec9760b0ade27ce9c3704feff5217e6c7e936
+      subject: Ensure that npm published files are always built afresh first
+  date: '2017-09-28T10:38:55Z'
   version: 6.14.6
 - commits:
-  - author: Lucian Buzzo
-    body: 'Connects to #339'
-    footers:
-      change-type: patch
-    hash: aceb6f1749bfa10fc6a69126f95e2ea4c18911bc
-    subject: Fix failing application name test
-  - author: Lucian Buzzo
-    body: 'Connects to #337'
-    footers:
-      change-type: minor
-      connects-to: '#400'
-    hash: 7bd80ba407a93b2d0cadeedc7e0c187713ac2bb2
-    subject: Add application methods for enabling and disabling all device URLs
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#306'
-    hash: 793cb540be6800c45cff00f938ed878c2b06d0ee
-    subject: Refactor integration tests into separate files for clarity
-  - author: Tim Perry
-    body: ""
-    hash: 4d2d398865d3f1e0426558d75d467affc1dd34de
-    subject: Simplifications and clarifications throughout the test suite
-  - author: Pagan Gazzard
-    body: ""
-    hash: aaf7dc599b9f8bf86e90a1332b69521b0ed29699
-    subject: Ignore the .env file when publishing
-  - author: Pagan Gazzard
-    body: ""
-    hash: 478ff4a5fea8ac7bc388ddfcb4d6e522223d2428
-    subject: Fix the travis bash publish condition
-  - author: Tim Perry
-    body: ""
-    hash: 7619aa56320ebf5b69dbff5040613ad307806d61
-    subject: Use random UUIDs throughout the tests, to hopefully increase test stability
-  - author: Tim Perry
-    body: ""
-    hash: 7db26981bfde51d75cbd12ce73128b5515af08dc
-    subject: Document log subscriptions in detail (and include .unsubscribe())
-  - author: Tim Perry
-    body: ""
-    hash: 3b891f86eccfd79d214994f2606587118d8f0168
-    subject: Fix coffeescript version to avoid test breakages in 1.12.6
-  - author: Tim Perry
-    body: ""
-    hash: cea92e91a66998736e025a68cc7da0d2719c72ad
-    subject: Fix travis bug that made test failures silent
-  - author: Pagan Gazzard
-    body: ""
-    hash: 5114212d21e471c6cd6afd12209c4bf79cd0d39b
-    subject: Consistently order image versions.
-  - author: Pagan Gazzard
-    body: ""
-    footers:
-      change-type: patch
-      connect-to: '#383'
-    hash: 3b7d27a8dd1f62c78250efeaa9c51ebdac5e4ffe
-    subject: Always choose a production image as the recommended version.
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#385'
-    hash: 5cb1d9da33b6071500622fe8c15258519b6d3a12
-    subject: Manually handhold travis, so it runs the right tests/deploys at the right
-      times
-  - author: Lucian Buzzo
-    body: 'Connects to #321'
-    footers:
-      change-type: patch
-      connects-to: '#380'
-    hash: ccf61ba0bb07970010779f637223d5f49ae4d91a
-    subject: Don't refresh tokens when making requests to the image maker
-  - author: Lucian Buzzo
-    body: 'Connects to #319'
-    footers:
-      change-type: minor
-    hash: 8284e51a03ca4182734bc627a0f24506ea57dcb1
-    subject: Allow config options when using the models.os.getConfig() method.
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-    hash: 42f7d1e84c3d5e93c1270fca45476017f28e6786
-    subject: Stop config.* methods from refreshing the token (as they don't use it)
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#374'
-    hash: cce6000d0fdd68017bc1004809155b6315906300
-    subject: Fix documentation for device.getDashboardUrl()
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-    hash: 265a6c86ae0099692ee0c21973c44e52cad953f0
-    subject: Build & deploy all version tagged branches
-  - author: Lucian Buzzo
-    body: 'Connects to #311'
-    footers:
-      change-type: minor
-    hash: fc417d41f88b23b8807b1c308fd66921e4d49eac
-    subject: Add a method for downloading an applications config.json file
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#367'
-    hash: cb66aab5ef1e0aba1b04cf9f9389f4f9f1de45bd
-    subject: 'Travis now runs builds against commits on master, in addition to PRs,
-      to solve #309'
-  - author: Eugene Mirotin
-    body: ""
-    footers:
-      change-type: minor
-    hash: 18943b44d2d28e5b9948037b352bc05452cdd226
-    subject: update browserify
-  - author: Eugene Mirotin
-    body: ""
-    footers:
-      change-type: patch
-    hash: dc6929f53a45b4d447f5116883ea1f728fb06f32
-    subject: update yarn.lock
-  - author: Eugene Mirotin
-    body: ""
-    footers:
-      change-type: patch
-      connects-to: '#356'
-    hash: 04291ef009bf059b63edee917ada10b124d5aecd
-    subject: add polyfills for phantom tests
-  - author: Pagan Gazzard
-    body: ""
-    hash: df1b9f5340383018b56c3fa13003d3dc023541d3
-    subject: Add a `device.generateDeviceKey` that can generate a device specific
-      key for use by a device
-  - author: Pagan Gazzard
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#349'
-      signed-off-by: Cameron Diver <cameron@resin.io>
-    hash: 36d1d177f36783349dc345afeeac7eaefe6a459b
-    subject: Catch the error for a missing device and rethrow as ResinDeviceNotFound
-  - author: Tim Perry
-    body: ""
-    hash: b14470d84678bae6c7b8ef2c970ed0ce2a103e46
-    subject: Drop unnecessary direct pinejs-client-dep dependency
-  - author: Tim Perry
-    body: ""
-    hash: 7f4dafd2a1720beb2992024b3ca2d81495833894
-    subject: Sort OS versions taking their rev into account, if present
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-      connects-to: '#342'
-      depends-on: https://github.com/resin-io/resin-api/pull/340
-      hq: https://github.com/resin-io/hq/issues/585
-    hash: 5e3e69ed8e195ac7cca1dbf7e4d8fd56b188ea21
-    subject: Automatically publish tagged master commits to npm
-  - author: Tim Perry
-    body: ""
-    footers:
-      change-type: minor
-    hash: c7b6bd60f74660f3df05ec436269b75913afc13c
-    subject: Update the readme, since imageMakerUrl is now also used in browsers
-  - author: Tim Perry
-    body: ""
-    hash: 83d0bb87185877880cb7ee5181b6c82d4fc3ba57
-    subject: Tiny readme tweak
-  - author: Tim Perry
-    body: |-
-      Also refactor some of the image maker request memoization code for
-      clarity, and fix a test that depended on 2.0.0+rev1 being on prod (it's
-      been pulled: it's now rev2 only)
-    hash: bf07624131b599d0904131437c423b9770815b99
-    subject: Encode plus symbols in version numbers when estimating image size
-  - author: Tim Perry
-    body: ""
-    hash: 94d1e5e8d8ef788d63fbbc4cabc6a3fc9e14874b
-    subject: Test that ensure our image maker caching is effective
-  - author: Tim Perry
-    body: ""
-    hash: 132a68f824ac3f0e2b2e21755ce9a966ee505483
-    subject: Fix hound config to match normal normal build linting
-  - author: Tim Perry
-    body: ""
-    hash: d59984641712670b8a570ceb38d92e77e5db7c37
-    subject: Encode plus symbols in version numbers when downloading OS images
-  - author: Tim Perry
-    body: ""
-    hash: eb903aefe345d1c7f9fcc90fae755c7a53dcc9ea
-    subject: Handle non-semver OS versions
-  - author: Tim Perry
-    body: ""
-    hash: 5c6699c3bed6b4865a1dbf96b466f162131fa59a
-    subject: Update changelog
-  - author: Tim Perry
-    body: ""
-    hash: b64692e197c0ddeb9646acfd024aa16ca8fa36c3
-    subject: Change browser token to 'resin-token' by upgrading resin-token
-  - author: Tim Perry
-    body: ""
-    hash: ffa38bd78c360f4b0e17610137a70a0816e26fec
-    subject: Add device.setCustomLocation and device.unsetCustomLocation
-  - author: Tim Perry
-    body: ""
-    hash: f70473fff8d48eec3d4adb2e51c5730cc44b4530
-    subject: Expose internal pine instance
-  - author: Tim Perry
-    body: ""
-    hash: 9e4866c35b344af627d28ce3db047662ae71067a
-    subject: Upgrade resin-pine (to ensure pinejs-client is up to date)
-  - author: Eugene Mirotin
-    body: ""
-    hash: 6b990c0ec479e465a5f374de1a6a7cf52bcfe81b
-    subject: a set of OS downloading utils
-  - author: Eugene Mirotin
-    body: ""
-    hash: ad04a4254d6e9ac11fe77c30f3e784dba34133d4
-    subject: update dependencies
-  - author: Eugene Mirotin
-    body: ""
-    hash: 9076a360f3daf00667d975604896a2f6d66acdbe
-    subject: Fixed resin.models.os.getLastModified
-  - author: Eugene Mirotin
-    body: ""
-    hash: f05dae7dfd9cfd0b6bb7fdb2eda1547d1e8ec531
-    subject: replace memoizee with promise-memoize
-  - author: Tim Perry
-    body: ""
-    hash: fd8c9bb2523955b434289ab2eeee96f3eddaa197
-    subject: Don't try to use a non-existent lodash instance
-  - author: Tim Perry
-    body: ""
-    hash: 1ff7a4b4005168109c96cc594c0ee70c4d963d5d
-    subject: Avoid duplicating application_name logic for devices
-  - author: Tim Perry
-    body: ""
-    hash: 78394d100035d5ba4edf49070a4c5694b04b2e43
-    subject: Add parent id support for app creation and device querying
-  - author: Tim Perry
-    body: ""
-    hash: 35363e97ae4a4445bbc6f7e7fa8e5716260e26e2
-    subject: Ensure passwords are always submitted as strings when authenticating
-  - author: Tim Perry
-    body: ""
-    hash: f9d52b4f81111c1f923e57591fda0e20c87887b3
-    subject: Add build.get()
-  - author: Tim Perry
-    body: ""
-    hash: c5390ced64fe5a071a5e83e41de5149de8e8fb1b
-    subject: Allow pine options in build.getAllByApplication, and include update_timestamp
-  - author: Tim Perry
-    body: ""
-    hash: 723d147bb1af324ce4b7d4391097378ad94daf9f
-    subject: Allow pine options in build.get
-  - author: Tim Perry
-    body: ""
-    hash: 56b27a547a1c7d1cf8263751b69ccf036e821008
-    subject: Allow arbitrary pinejs options in application.get/getAll
-  - author: Tim Perry
-    body: ""
-    hash: 25441c2e39061fbcb7f8f4ab62ff63b0aea58dbf
-    subject: Allow arbitrary pinejs options in all device get methods
-  - author: Tim Perry
-    body: ""
-    hash: c2958efb0a66249f05201bf86678815fb414312a
-    subject: Update yarn.lock
-  - author: Tim Perry
-    body: ""
-    hash: 6d4baeb85573daad6d111372a87a75844c48598d
-    subject: Allow pinejs options in models.key.getAll
-  - author: Eugene Mirotin
-    body: ""
-    hash: 156004e4628edefdb099af73b3ccd2049ac3905d
-    subject: update device-logs module and expose the clear function
-  - author: Eugene Mirotin
-    body: ""
-    hash: 1c4c95472915d632c2fdb30a9163ce9339e10cdb
-    subject: add support for history options
-  - author: Tim Perry
-    body: |-
-      Previous both device.has and device.get would throw a confusing error.
-      Now, device and application .has and .get (used internally by many
-      methods) throw a clear error (e.g. "Application not found: null"), which
-      allows .has to handle this and still return a boolean correctly
-      everywhere.
-    hash: 5cfd8b8dcc607643b044390607e7bca81cdab1f6
-    subject: Ensure .has and .get handle null/undefined arguments clearly
-  - author: Tim Perry
-    body: ""
-    hash: 8a3d29cd0789d1cb41a32ae21e9a28c03ee5eaa7
-    subject: Mark browser build as generated, plus some small tweaks from review
-  - author: Tim Perry
-    body: ""
-    hash: 2a344b66e98181465b94341ed2bfa5f87e33b239
-    subject: Add util method to merge extra provided pine options
-  - author: Tim Perry
-    body: ""
-    hash: 401419e5aee7d28e8c094ee0b6ba97e218d75587
-    subject: Also support orderby in pine option merging
-  - author: Tim Perry
-    body: ""
-    hash: 9a6192361f0864965eae2f7d4d326ac11c9b2370
-    subject: Tweaked & improved code readability in pine options merging after review
-  - author: Tim Perry
-    body: ""
-    hash: e79d43ed47aa423403ff5b3f55fe47bc19a8567e
-    subject: Add envVars.device.getAllByApplication
-  - author: Tim Perry
-    body: ""
-    hash: 9b7ef05e20b26634aa216961a22ce63e73a81811
-    subject: Make all device envvars consistently return names as .name
-  - author: Tim Perry
-    body: ""
-    hash: d92c974fb5e16f801bc247201508d3ea0bae2086
-    subject: Add tests for envVars.device.getAllByApplication
-  - author: Tim Perry
-    body: ""
-    hash: 39afb141758d1256b45aa0219530151c27646c4d
-    subject: Stop using deprecated format of pinejs filter
-  - author: Tim Perry
-    body: ""
-    hash: f403783aa35995ad652f5765cf0a890e1ca5288c
-    subject: Expose request and token deps
-  - author: Tim Perry
-    body: ""
-    hash: 835ca117385212310e53875ed6a7e88f27dab98f
-    subject: Use internal request/token instance in the tests, now that it's available
-  - author: Tim Perry
-    body: ""
-    hash: 19d909126f6d3b170b6757e4452cef755055d19c
-    subject: Update to include new resin-request and resin-errors releases
-  - author: Tim Perry
-    body: ""
-    hash: e1f2bda36e7d27068409c249698ea1955fe29626
-    subject: Fix incorrect method name in documentation
-  - author: Tim Perry
-    body: ""
-    hash: 6bbff3eaf98a3ae8fcd48c3a77f6383ac190f566
-    subject: Expose interception hooks support from resin-request
-  - author: Tim Perry
-    body: ""
-    hash: f625c5c225b81fdfa5617fc331e5176eb01b988b
-    subject: Update yarn.lock
-  - author: Tim Perry
-    body: ""
-    hash: 2d5c831dc2a94c2d1a9087aef2992347b0eae240
-    subject: Document interception hooks
-  - author: Tim Perry
-    body: ""
-    hash: 5d5ddfe3f459e34868f529a66759753f24602724
-    subject: Tiny tweak to clarify code a little, from review
-  - author: Tim Perry
-    body: ""
-    hash: c351379a20f6a7f36ce3d0aaa9c7af98d8017648
-    subject: Allow ids in application methods
-  - author: Tim Perry
-    body: ""
-    hash: 70e1699bb8650c7c504c5021cd9b1224aa6573d2
-    subject: Allow ids in device methods
-  - author: Tim Perry
-    body: ""
-    hash: edd4f96fc60f92ff3c1445f1bf43dd0030720ecb
-    subject: Allow ids in env var methods
-  - author: Tim Perry
-    body: ""
-    hash: 4d5ffa7819d9d1290dd422df80f4e12cb7f9baeb
-    subject: Allow ids in build method
-  - author: Tim Perry
-    body: ""
-    hash: 6b59f4349da477dc47fa7783e454eb064fead677
-    subject: Allow ids in log methods
-  - author: Tim Perry
-    body: ""
-    hash: 3fb080fd06c65c79ffe30c29a5270c9aa1a37483
-    subject: Add changelog entry
-  - author: Tim Perry
-    body: ""
-    hash: d0b1bff8fe0b06bf8d9e18d68b552a7b2b154f55
-    subject: Don't make unnecessary requests when using ids for application/device
-      methods
-  - author: Tim Perry
-    body: ""
-    hash: f2ee851c26df9ff55dc9244e86b6dfe2a1ffc6e7
-    subject: Update docs with new ids options for all methods
-  - author: Tim Perry
-    body: ""
-    hash: 76b6c77005a3ff0d0d347eb31d7ab9e32dda529b
-    subject: Remove (already deprecated) device.restart()
-  - author: Tim Perry
-    body: ""
-    hash: 7b5572d04623a886869e9affed8a5484e6d225ee
-    subject: Use bluebird sugar to clarify id support and 404 to NotFound error mapping
-  - author: Tim Perry
-    body: ""
-    hash: 6ffe213b8f1ebbf9dc42068381250ec80bef2515
-    subject: Remove unused callback arg for getId
-  - author: Tim Perry
-    body: ""
-    hash: 514862c1e982ccd712422bea6fcd3e422184310f
-    subject: Add .generateApiKey and deprecate .getApiKey
-  - author: gaudi
-    body: This makes all options truly optional eg. you can now - require('resin-sdk')();
-    footers:
-      change-type: Patch
-    hash: 5c5439ce098e113c85893fd89f824df1c2d29115
-    subject: Add defaults for single factory function
-  - author: Eugene Mirotin
-    body: ""
-    hash: 98876eb2b347e467abf7535fb08d00363271dd34
-    subject: return resin-settings-client to dependencies
-  - author: Eugene Mirotin
-    body: ""
-    hash: 63970a0a97e6b727ee460bec6dff2ebe1e8cadc7
-    subject: fix the device methods that were using settings.get('apiUrl')
-  - author: Eugene Mirotin
-    body: ""
-    hash: 8309c74632a9e0400ffc50b526127378b2c0c11a
-    subject: changelog
-  - author: Tim Perry
-    body: ""
-    hash: 500ca9266d1217ea1b651c89f4053ca342639091
-    subject: Build minified and unminified bundles
-  - author: Tim Perry
-    body: ""
-    hash: 89281b4dfc8c19572a33b057bca0c6470b36b333
-    subject: Add bundling instructions so downstream projects can exclude unused deps
-  - author: Eugene Mirotin
-    body: |-
-      switch to the factory pattern
-      allow loading test env from the .env file
-      lazy-load all the models
-      update to mocha v3
-      fix deprecation warnings
-      granular lodash imports
-      use a more modern .asCallback name
-      add yarn.lock
-      use /v2/ api for tests
-      add CS preamble
-    hash: 436b349737bc61ecef8430552a21e44e23e54f24
-    subject: Make the SDK universal module
-  - author: Tim Perry
-    body: |-
-      Define Karma preprocessor order explicitly
-      Before this, the tests ran on Linux, but not OSX/Windows (because the
-      `env` preprocessor order isn't define, and it was valid to run it
-      before Browserify, which apparently doesn't work).
-    hash: 3084d7c8fde9d272e31fe5817002c5bc3bfd2802
-    subject: Enable request retries
-  - author: Tim Perry
-    body: ""
-    hash: ef5f378f67903b593fedd8666403eaee0a4c7c44
-    subject: Update to support the new device registration flow
-  - author: Tim Perry
-    body: ""
-    hash: 4781162bedc4eccc9ea714eef0686f340a341e60
-    subject: Enable getLastModified tests, as CORS PR has now been deployed
-  - author: Tim Perry
-    body: ""
-    hash: b6bb2612750f2d8e7fc20e4ac3e67593c5c7a02f
-    subject: Do some magic to safely stop tests running on npm install
-  - author: Eugene Mirotin
-    body: ""
-    hash: 945d7d95f026a8219795010e7354a8334d867985
-    subject: rebuild & docs & remove extra dependency & update yarn.lock
-  - author: Pagan Gazzard
-    body: ""
-    hash: 9fd60480901ad72990802c82986b389cca8177b9
-    subject: Switch to using a module for requiring npm4, which means we can publish
-      on windows again
-  - author: Tim Perry
-    body: |-
-      This now uses the new injection dependency approach, so we build each
-      of these libraries and glue them together, rather than them internally
-      instantiating their own local versions of one another.
-    hash: 62a8fb536243129fb86e20cd19ea474d6e383dcd
-    subject: Upgrade to new resin-request, resin-pine and resin-register-device
-  - author: Tim Perry
-    body: |-
-      One bug solved en route here, highlighted by minification: we depended on the
-      function name of errors thrown by Resin-Request, which isn't dependable
-      (e.g. in prescence of minification). We now depend on .code instead,
-      which should work reliably.
-    hash: 50bac71b7ba3d97b350660ad33605d0e64bd8700
-    subject: 'Build a minified UMD browser release (manual merge of #248)'
-  - author: Tim Perry
-    body: ""
-    hash: cbdfa8a712d5ec074e68f3fba50c115aad5a34f7
-    subject: Build minified and unminified bundles
-  - author: Tim Perry
-    body: ""
-    hash: 202b5bc76ee9a1393007bf88637fb99b07988803
-    subject: Add bundling instructions so downstream projects can exclude unused deps
-  - author: Tim Perry
-    body: Build minified and unminified bundles
-    hash: 25077601b3d7d05694b36eaa66303f1ddef96ef1
-    subject: 'Merge pull request #253 from resin-io/non-min-bundle'
-  - author: Pablo Carranza Velez
-    body: ""
-    hash: f505ff09f62150dafa70e0f1dc9cfba3128ca569
-    subject: Update jsdoc-to-markdown to 2.0.1
-  - author: Pablo Carranza Velez
-    body: ""
-    hash: d64fb05777983e8a78aae87db4a7474ff67c358a
-    subject: Fix the expected error message in OS download test
-  - author: Pablo Carranza Velez
-    body: ""
-    hash: c4168cd8113f64a886cade73e8443d59c84e43d4
-    subject: Allow passing an optional force option to device reboot and shutdown
-  - author: Kostas Lekkas
-    body: ""
-    hash: d856c926e86367364fa27111eef8cde5db0c03ca
-    subject: Augment returned device object with device dashboard url
-  - author: Kostas Lekkas
-    body: ""
-    hash: ce95306ad441376299e4c5969c814589176daf7c
-    subject: Update pine filter expression to latest format
-  - author: Kostas Lekkas
-    body: ""
-    hash: 689cd2975db812dd757c1c6ac353432959b71887
-    subject: Generate JS
-  - author: Pagan Gazzard
-    body: ""
-    hash: bf9a1aaac568a9e49d8adb340d645d074fa4318b
-    subject: Add a warning to the readme about the test account getting reset.
-  - author: gaudi
-    body: ""
-    hash: 2b9fe1fb86ec3ebcdee4ef924faac33a7c56a5cd
-    subject: return full uuid for getDeviceUrl
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 20f85698cbf7885e08170f034d3bd37a774ec070
-    subject: Upgrade `resin-device-logs` to v3.0.0
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 92420f77604ae603fba83df7d669647546b8de35
-    subject: Rebuild CoffeeScript
-  - author: Juan Cruz Viotti
-    body: |-
-      If the user passes a shorter uuid, and then we use this shorter uuid as
-      a pine filter, it will match nothing, causing no errors but no real
-      action, which can be very hard to debug.
-      As a fix, we call `resin.models.device.get()` with the shorter uuid, and
-      access the resulting `.uuid` field, which is ensured to be the full one,
-      before passing it to pine.
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: caf59ecbe7c283162a07f51f1a58b868ee995e0a
-    subject: Make sure shorter uuids are expanded before passing to pine
-  - author: Juan Cruz Viotti
-    body: |-
-      If a user passed a shorted uuid to `resin.models.device.move()`, the
-      operation would fail without an error message (the device would still be
-      on the older app) since the uuid was not being expanded into a full
-      uuid before being used in the `pine`, which only understands full uuids.
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 16eecb6dc4f2bcce5afe27c6bae746e97b23f962
-    subject: Expand shorter uuids in resin.models.device.move()
-  - author: Kostas Lekkas
-    body: 'Fixes #212'
-    hash: 6d577e94ce043f33f42b074b30e926a17261c1a0
-    subject: Increase timeout for requests that result in container actions
-  - author: Juan Cruz Viotti
-    body: |-
-      Now that we upgraded Appveyor to run parallel builds, we must ensure
-      each matrix entry is ran with a different Resin.io account to prevent
-      conflicts between both.
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 4542eec98eeee43f0770c470fa052650377411a6
-    subject: Use different accounts for Appveyor environment matrix
-  - author: Kostas Lekkas
-    body: ""
-    hash: 8e5617e6b54851bb31d1f1f712685a9d5f57eb09
-    subject: Change supervisor semver check to >= 1.8.0-alpha.0 for /apps endpoint
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 4e73a2c2c371514fc990c90e55a845a9d0259c38
-    subject: Handle ambiguity errors in application.get()
-  - author: Kostas Lekkas
-    body: ""
-    hash: bb29733e502fef5e0751fd458970a9fb99e550f1
-    subject: Implement resin.models.device.getApplicationInfo()
-  - author: Kostas Lekkas
-    body: ""
-    hash: d2e21e26a37e549d224d3298c2f2417147993714
-    subject: Implement resin.models.device.stopApplication()
-  - author: Kostas Lekkas
-    body: ""
-    hash: 09b3bf5add5237985d4530518c4dc22319f59038
-    subject: Implement resin.models.device.startApplication()
-  - author: Kostas Lekkas
-    body: ""
-    hash: 35b06d06d0cf091de62cfcfba145866ef2b57395
-    subject: Deprecate resin.models.device.restart() in favor of .restartApplication()
-  - author: Kostas Lekkas
-    body: ""
-    hash: 2fea80f66d9fa782a2c5f7bfeecec1c41178d973
-    subject: Check supervisor version in all /v1/apps endpoints
-  - author: Kostas Lekkas
-    body: ""
-    hash: a68b32ba1721ca51ed5923c1f5db08a8da0459c0
-    subject: Fix supervisor API call for resin.models.device.getApplicationInfo()
-  - author: Kostas Lekkas
-    body: ""
-    hash: 0c0f964ff42aaeafbdd615ef0abf46c8c02314d9
-    subject: Set minimum supervisor /apps API version to 1.8.0
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 14eff75284028f58f2af2a8867b48e74677faa83
-    subject: Implement resin.models.device.ping()
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 1ee05475b51abe9a8d890a38e7423502accbba83
-    subject: Implement resin.models.device.update()
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 0cbec94839c3458fa1bdc7cf9930fbf417783ab9
-    subject: Implement resin.models.device.shutdown()
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 4e73a2c2c371514fc990c90e55a845a9d0259c38
-    subject: Implement resin.models.device.purge()
-  - author: Juan Cruz Viotti
-    body: ""
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: bb29733e502fef5e0751fd458970a9fb99e550f1
-    subject: Implement resin.models.device.enableTcpPing()
-  - author: Juan Cruz Viotti
-    body: |-
-      Sadly this functions don't have integration tests given that we'd need a
-      real device to assert its functionality
-    footers:
-      signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
-    hash: 03d04caf1782a255d9a562186e1fde8a8c09c88d
-    subject: Implement resin.models.device.disableTcpPing()
-  - hash: 2b7d79420f5a0a1dac8a392f4510d63af653ea7d
-  - hash: 0f23ff34a17de8ef86b5edd9ca23b58eb2532fbb
-  - hash: fef74fcbf4b2c2cfbd1a9cbe26d9169eb9dc1f44
-  - hash: 1198adf5ca68a5e7d712aea6eba59c787328489d
-  - hash: 0dccf3989af662c13d13b8bfa912fac9816f1771
-  - hash: 1162d435dce347f80c4abaad49ec9fcf342118c8
-  - hash: 39343b00cf336b37e6496a953285050e0c1ac2b6
-  - hash: 9eb3d565e4c28ea9842152840db9cb59d3a4bb0c
-  - hash: 65f88f49b225647b08b1250a3eb8ec0251e45cd9
-  - hash: bff86984b3cf0d8a11a7ce97fdda523b0a57304d
-  - hash: 9a07005d286d0e503f7b8dd66e6e01c4f2c5f4d1
-  - hash: e9c10373c147e27689216978f72ebed95ef8d283
-  - hash: 1858cf5606547b758ddcec75a2c20b97926dd218
-  - hash: ccfbc0524890ac357db03c6dfcb504b47ac25f54
-  - hash: 8e86f9d66acb4cd3025fb426e63db94e05a3372c
-  - hash: d9ed7acb5055f4efbe930d30a79b7ba30f0273e3
-  - hash: defc9faba904279aa291ec43dff287734c3315e2
-  - hash: 9073b36fd06c2b3223c268e2086a72180158222c
-  - hash: e4ac6eb393522d889e78513fc64b58f291fde8f2
-  - hash: 4a7a85fad1d430caf55e8f923dc67deb9e115885
-  - hash: e942ce8a179ddd041182a51206f739499e214579
-  - hash: 07ea7c487bb9d1adce35f944acca6ce4c63a20a5
-  - hash: 1e6ea6a6a02fb8c014b560d44e9f424c88672c3b
-  - hash: 0170de4e330e52f3d26a95e7491f6a722a186dd0
-  - hash: 9f6df991cd022f0e4cfbb7ac15fcea47b357dee2
-  - hash: dfa7108ccd498d0f4f5c82c7f5892fc6014575a0
-  - hash: 41b107293de78604cd3ded4a45b4d183a45c0de4
-  - hash: 515e1b3eb44ee018fd90f02d105a6e446aa49b66
-  - hash: 403851dd3922d59e836855368659c8aa77d672e4
-  date: "2017-09-27T11:53:04Z"
+    - author: Lucian Buzzo
+      body: 'Connects to #339'
+      footers:
+        change-type: patch
+      hash: aceb6f1749bfa10fc6a69126f95e2ea4c18911bc
+      subject: Fix failing application name test
+    - author: Lucian Buzzo
+      body: 'Connects to #337'
+      footers:
+        change-type: minor
+        connects-to: '#400'
+      hash: 7bd80ba407a93b2d0cadeedc7e0c187713ac2bb2
+      subject: Add application methods for enabling and disabling all device URLs
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#306'
+      hash: 793cb540be6800c45cff00f938ed878c2b06d0ee
+      subject: Refactor integration tests into separate files for clarity
+    - author: Tim Perry
+      body: ''
+      hash: 4d2d398865d3f1e0426558d75d467affc1dd34de
+      subject: Simplifications and clarifications throughout the test suite
+    - author: Pagan Gazzard
+      body: ''
+      hash: aaf7dc599b9f8bf86e90a1332b69521b0ed29699
+      subject: Ignore the .env file when publishing
+    - author: Pagan Gazzard
+      body: ''
+      hash: 478ff4a5fea8ac7bc388ddfcb4d6e522223d2428
+      subject: Fix the travis bash publish condition
+    - author: Tim Perry
+      body: ''
+      hash: 7619aa56320ebf5b69dbff5040613ad307806d61
+      subject: >-
+        Use random UUIDs throughout the tests, to hopefully increase test
+        stability
+    - author: Tim Perry
+      body: ''
+      hash: 7db26981bfde51d75cbd12ce73128b5515af08dc
+      subject: Document log subscriptions in detail (and include .unsubscribe())
+    - author: Tim Perry
+      body: ''
+      hash: 3b891f86eccfd79d214994f2606587118d8f0168
+      subject: Fix coffeescript version to avoid test breakages in 1.12.6
+    - author: Tim Perry
+      body: ''
+      hash: cea92e91a66998736e025a68cc7da0d2719c72ad
+      subject: Fix travis bug that made test failures silent
+    - author: Pagan Gazzard
+      body: ''
+      hash: 5114212d21e471c6cd6afd12209c4bf79cd0d39b
+      subject: Consistently order image versions.
+    - author: Pagan Gazzard
+      body: ''
+      footers:
+        change-type: patch
+        connect-to: '#383'
+      hash: 3b7d27a8dd1f62c78250efeaa9c51ebdac5e4ffe
+      subject: Always choose a production image as the recommended version.
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#385'
+      hash: 5cb1d9da33b6071500622fe8c15258519b6d3a12
+      subject: >-
+        Manually handhold travis, so it runs the right tests/deploys at the
+        right times
+    - author: Lucian Buzzo
+      body: 'Connects to #321'
+      footers:
+        change-type: patch
+        connects-to: '#380'
+      hash: ccf61ba0bb07970010779f637223d5f49ae4d91a
+      subject: Don't refresh tokens when making requests to the image maker
+    - author: Lucian Buzzo
+      body: 'Connects to #319'
+      footers:
+        change-type: minor
+      hash: 8284e51a03ca4182734bc627a0f24506ea57dcb1
+      subject: Allow config options when using the models.os.getConfig() method.
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+      hash: 42f7d1e84c3d5e93c1270fca45476017f28e6786
+      subject: Stop config.* methods from refreshing the token (as they don't use it)
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#374'
+      hash: cce6000d0fdd68017bc1004809155b6315906300
+      subject: Fix documentation for device.getDashboardUrl()
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+      hash: 265a6c86ae0099692ee0c21973c44e52cad953f0
+      subject: Build & deploy all version tagged branches
+    - author: Lucian Buzzo
+      body: 'Connects to #311'
+      footers:
+        change-type: minor
+      hash: fc417d41f88b23b8807b1c308fd66921e4d49eac
+      subject: Add a method for downloading an applications config.json file
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#367'
+      hash: cb66aab5ef1e0aba1b04cf9f9389f4f9f1de45bd
+      subject: >-
+        Travis now runs builds against commits on master, in addition to PRs, to
+        solve #309
+    - author: Eugene Mirotin
+      body: ''
+      footers:
+        change-type: minor
+      hash: 18943b44d2d28e5b9948037b352bc05452cdd226
+      subject: update browserify
+    - author: Eugene Mirotin
+      body: ''
+      footers:
+        change-type: patch
+      hash: dc6929f53a45b4d447f5116883ea1f728fb06f32
+      subject: update yarn.lock
+    - author: Eugene Mirotin
+      body: ''
+      footers:
+        change-type: patch
+        connects-to: '#356'
+      hash: 04291ef009bf059b63edee917ada10b124d5aecd
+      subject: add polyfills for phantom tests
+    - author: Pagan Gazzard
+      body: ''
+      hash: df1b9f5340383018b56c3fa13003d3dc023541d3
+      subject: >-
+        Add a `device.generateDeviceKey` that can generate a device specific key
+        for use by a device
+    - author: Pagan Gazzard
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#349'
+        signed-off-by: Cameron Diver <cameron@resin.io>
+      hash: 36d1d177f36783349dc345afeeac7eaefe6a459b
+      subject: Catch the error for a missing device and rethrow as ResinDeviceNotFound
+    - author: Tim Perry
+      body: ''
+      hash: b14470d84678bae6c7b8ef2c970ed0ce2a103e46
+      subject: Drop unnecessary direct pinejs-client-dep dependency
+    - author: Tim Perry
+      body: ''
+      hash: 7f4dafd2a1720beb2992024b3ca2d81495833894
+      subject: 'Sort OS versions taking their rev into account, if present'
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+        connects-to: '#342'
+        depends-on: 'https://github.com/resin-io/resin-api/pull/340'
+        hq: 'https://github.com/resin-io/hq/issues/585'
+      hash: 5e3e69ed8e195ac7cca1dbf7e4d8fd56b188ea21
+      subject: Automatically publish tagged master commits to npm
+    - author: Tim Perry
+      body: ''
+      footers:
+        change-type: minor
+      hash: c7b6bd60f74660f3df05ec436269b75913afc13c
+      subject: 'Update the readme, since imageMakerUrl is now also used in browsers'
+    - author: Tim Perry
+      body: ''
+      hash: 83d0bb87185877880cb7ee5181b6c82d4fc3ba57
+      subject: Tiny readme tweak
+    - author: Tim Perry
+      body: |-
+        Also refactor some of the image maker request memoization code for
+        clarity, and fix a test that depended on 2.0.0+rev1 being on prod (it's
+        been pulled: it's now rev2 only)
+      hash: bf07624131b599d0904131437c423b9770815b99
+      subject: Encode plus symbols in version numbers when estimating image size
+    - author: Tim Perry
+      body: ''
+      hash: 94d1e5e8d8ef788d63fbbc4cabc6a3fc9e14874b
+      subject: Test that ensure our image maker caching is effective
+    - author: Tim Perry
+      body: ''
+      hash: 132a68f824ac3f0e2b2e21755ce9a966ee505483
+      subject: Fix hound config to match normal normal build linting
+    - author: Tim Perry
+      body: ''
+      hash: d59984641712670b8a570ceb38d92e77e5db7c37
+      subject: Encode plus symbols in version numbers when downloading OS images
+    - author: Tim Perry
+      body: ''
+      hash: eb903aefe345d1c7f9fcc90fae755c7a53dcc9ea
+      subject: Handle non-semver OS versions
+    - author: Tim Perry
+      body: ''
+      hash: 5c6699c3bed6b4865a1dbf96b466f162131fa59a
+      subject: Update changelog
+    - author: Tim Perry
+      body: ''
+      hash: b64692e197c0ddeb9646acfd024aa16ca8fa36c3
+      subject: Change browser token to 'resin-token' by upgrading resin-token
+    - author: Tim Perry
+      body: ''
+      hash: ffa38bd78c360f4b0e17610137a70a0816e26fec
+      subject: Add device.setCustomLocation and device.unsetCustomLocation
+    - author: Tim Perry
+      body: ''
+      hash: f70473fff8d48eec3d4adb2e51c5730cc44b4530
+      subject: Expose internal pine instance
+    - author: Tim Perry
+      body: ''
+      hash: 9e4866c35b344af627d28ce3db047662ae71067a
+      subject: Upgrade resin-pine (to ensure pinejs-client is up to date)
+    - author: Eugene Mirotin
+      body: ''
+      hash: 6b990c0ec479e465a5f374de1a6a7cf52bcfe81b
+      subject: a set of OS downloading utils
+    - author: Eugene Mirotin
+      body: ''
+      hash: ad04a4254d6e9ac11fe77c30f3e784dba34133d4
+      subject: update dependencies
+    - author: Eugene Mirotin
+      body: ''
+      hash: 9076a360f3daf00667d975604896a2f6d66acdbe
+      subject: Fixed resin.models.os.getLastModified
+    - author: Eugene Mirotin
+      body: ''
+      hash: f05dae7dfd9cfd0b6bb7fdb2eda1547d1e8ec531
+      subject: replace memoizee with promise-memoize
+    - author: Tim Perry
+      body: ''
+      hash: fd8c9bb2523955b434289ab2eeee96f3eddaa197
+      subject: Don't try to use a non-existent lodash instance
+    - author: Tim Perry
+      body: ''
+      hash: 1ff7a4b4005168109c96cc594c0ee70c4d963d5d
+      subject: Avoid duplicating application_name logic for devices
+    - author: Tim Perry
+      body: ''
+      hash: 78394d100035d5ba4edf49070a4c5694b04b2e43
+      subject: Add parent id support for app creation and device querying
+    - author: Tim Perry
+      body: ''
+      hash: 35363e97ae4a4445bbc6f7e7fa8e5716260e26e2
+      subject: Ensure passwords are always submitted as strings when authenticating
+    - author: Tim Perry
+      body: ''
+      hash: f9d52b4f81111c1f923e57591fda0e20c87887b3
+      subject: Add build.get()
+    - author: Tim Perry
+      body: ''
+      hash: c5390ced64fe5a071a5e83e41de5149de8e8fb1b
+      subject: >-
+        Allow pine options in build.getAllByApplication, and include
+        update_timestamp
+    - author: Tim Perry
+      body: ''
+      hash: 723d147bb1af324ce4b7d4391097378ad94daf9f
+      subject: Allow pine options in build.get
+    - author: Tim Perry
+      body: ''
+      hash: 56b27a547a1c7d1cf8263751b69ccf036e821008
+      subject: Allow arbitrary pinejs options in application.get/getAll
+    - author: Tim Perry
+      body: ''
+      hash: 25441c2e39061fbcb7f8f4ab62ff63b0aea58dbf
+      subject: Allow arbitrary pinejs options in all device get methods
+    - author: Tim Perry
+      body: ''
+      hash: c2958efb0a66249f05201bf86678815fb414312a
+      subject: Update yarn.lock
+    - author: Tim Perry
+      body: ''
+      hash: 6d4baeb85573daad6d111372a87a75844c48598d
+      subject: Allow pinejs options in models.key.getAll
+    - author: Eugene Mirotin
+      body: ''
+      hash: 156004e4628edefdb099af73b3ccd2049ac3905d
+      subject: update device-logs module and expose the clear function
+    - author: Eugene Mirotin
+      body: ''
+      hash: 1c4c95472915d632c2fdb30a9163ce9339e10cdb
+      subject: add support for history options
+    - author: Tim Perry
+      body: |-
+        Previous both device.has and device.get would throw a confusing error.
+        Now, device and application .has and .get (used internally by many
+        methods) throw a clear error (e.g. "Application not found: null"), which
+        allows .has to handle this and still return a boolean correctly
+        everywhere.
+      hash: 5cfd8b8dcc607643b044390607e7bca81cdab1f6
+      subject: Ensure .has and .get handle null/undefined arguments clearly
+    - author: Tim Perry
+      body: ''
+      hash: 8a3d29cd0789d1cb41a32ae21e9a28c03ee5eaa7
+      subject: 'Mark browser build as generated, plus some small tweaks from review'
+    - author: Tim Perry
+      body: ''
+      hash: 2a344b66e98181465b94341ed2bfa5f87e33b239
+      subject: Add util method to merge extra provided pine options
+    - author: Tim Perry
+      body: ''
+      hash: 401419e5aee7d28e8c094ee0b6ba97e218d75587
+      subject: Also support orderby in pine option merging
+    - author: Tim Perry
+      body: ''
+      hash: 9a6192361f0864965eae2f7d4d326ac11c9b2370
+      subject: Tweaked & improved code readability in pine options merging after review
+    - author: Tim Perry
+      body: ''
+      hash: e79d43ed47aa423403ff5b3f55fe47bc19a8567e
+      subject: Add envVars.device.getAllByApplication
+    - author: Tim Perry
+      body: ''
+      hash: 9b7ef05e20b26634aa216961a22ce63e73a81811
+      subject: Make all device envvars consistently return names as .name
+    - author: Tim Perry
+      body: ''
+      hash: d92c974fb5e16f801bc247201508d3ea0bae2086
+      subject: Add tests for envVars.device.getAllByApplication
+    - author: Tim Perry
+      body: ''
+      hash: 39afb141758d1256b45aa0219530151c27646c4d
+      subject: Stop using deprecated format of pinejs filter
+    - author: Tim Perry
+      body: ''
+      hash: f403783aa35995ad652f5765cf0a890e1ca5288c
+      subject: Expose request and token deps
+    - author: Tim Perry
+      body: ''
+      hash: 835ca117385212310e53875ed6a7e88f27dab98f
+      subject: >-
+        Use internal request/token instance in the tests, now that it's
+        available
+    - author: Tim Perry
+      body: ''
+      hash: 19d909126f6d3b170b6757e4452cef755055d19c
+      subject: Update to include new resin-request and resin-errors releases
+    - author: Tim Perry
+      body: ''
+      hash: e1f2bda36e7d27068409c249698ea1955fe29626
+      subject: Fix incorrect method name in documentation
+    - author: Tim Perry
+      body: ''
+      hash: 6bbff3eaf98a3ae8fcd48c3a77f6383ac190f566
+      subject: Expose interception hooks support from resin-request
+    - author: Tim Perry
+      body: ''
+      hash: f625c5c225b81fdfa5617fc331e5176eb01b988b
+      subject: Update yarn.lock
+    - author: Tim Perry
+      body: ''
+      hash: 2d5c831dc2a94c2d1a9087aef2992347b0eae240
+      subject: Document interception hooks
+    - author: Tim Perry
+      body: ''
+      hash: 5d5ddfe3f459e34868f529a66759753f24602724
+      subject: 'Tiny tweak to clarify code a little, from review'
+    - author: Tim Perry
+      body: ''
+      hash: c351379a20f6a7f36ce3d0aaa9c7af98d8017648
+      subject: Allow ids in application methods
+    - author: Tim Perry
+      body: ''
+      hash: 70e1699bb8650c7c504c5021cd9b1224aa6573d2
+      subject: Allow ids in device methods
+    - author: Tim Perry
+      body: ''
+      hash: edd4f96fc60f92ff3c1445f1bf43dd0030720ecb
+      subject: Allow ids in env var methods
+    - author: Tim Perry
+      body: ''
+      hash: 4d5ffa7819d9d1290dd422df80f4e12cb7f9baeb
+      subject: Allow ids in build method
+    - author: Tim Perry
+      body: ''
+      hash: 6b59f4349da477dc47fa7783e454eb064fead677
+      subject: Allow ids in log methods
+    - author: Tim Perry
+      body: ''
+      hash: 3fb080fd06c65c79ffe30c29a5270c9aa1a37483
+      subject: Add changelog entry
+    - author: Tim Perry
+      body: ''
+      hash: d0b1bff8fe0b06bf8d9e18d68b552a7b2b154f55
+      subject: >-
+        Don't make unnecessary requests when using ids for application/device
+        methods
+    - author: Tim Perry
+      body: ''
+      hash: f2ee851c26df9ff55dc9244e86b6dfe2a1ffc6e7
+      subject: Update docs with new ids options for all methods
+    - author: Tim Perry
+      body: ''
+      hash: 76b6c77005a3ff0d0d347eb31d7ab9e32dda529b
+      subject: Remove (already deprecated) device.restart()
+    - author: Tim Perry
+      body: ''
+      hash: 7b5572d04623a886869e9affed8a5484e6d225ee
+      subject: >-
+        Use bluebird sugar to clarify id support and 404 to NotFound error
+        mapping
+    - author: Tim Perry
+      body: ''
+      hash: 6ffe213b8f1ebbf9dc42068381250ec80bef2515
+      subject: Remove unused callback arg for getId
+    - author: Tim Perry
+      body: ''
+      hash: 514862c1e982ccd712422bea6fcd3e422184310f
+      subject: Add .generateApiKey and deprecate .getApiKey
+    - author: gaudi
+      body: >-
+        This makes all options truly optional eg. you can now -
+        require('resin-sdk')();
+      footers:
+        change-type: Patch
+      hash: 5c5439ce098e113c85893fd89f824df1c2d29115
+      subject: Add defaults for single factory function
+    - author: Eugene Mirotin
+      body: ''
+      hash: 98876eb2b347e467abf7535fb08d00363271dd34
+      subject: return resin-settings-client to dependencies
+    - author: Eugene Mirotin
+      body: ''
+      hash: 63970a0a97e6b727ee460bec6dff2ebe1e8cadc7
+      subject: fix the device methods that were using settings.get('apiUrl')
+    - author: Eugene Mirotin
+      body: ''
+      hash: 8309c74632a9e0400ffc50b526127378b2c0c11a
+      subject: changelog
+    - author: Tim Perry
+      body: ''
+      hash: 500ca9266d1217ea1b651c89f4053ca342639091
+      subject: Build minified and unminified bundles
+    - author: Tim Perry
+      body: ''
+      hash: 89281b4dfc8c19572a33b057bca0c6470b36b333
+      subject: Add bundling instructions so downstream projects can exclude unused deps
+    - author: Eugene Mirotin
+      body: |-
+        switch to the factory pattern
+        allow loading test env from the .env file
+        lazy-load all the models
+        update to mocha v3
+        fix deprecation warnings
+        granular lodash imports
+        use a more modern .asCallback name
+        add yarn.lock
+        use /v2/ api for tests
+        add CS preamble
+      hash: 436b349737bc61ecef8430552a21e44e23e54f24
+      subject: Make the SDK universal module
+    - author: Tim Perry
+      body: |-
+        Define Karma preprocessor order explicitly
+        Before this, the tests ran on Linux, but not OSX/Windows (because the
+        `env` preprocessor order isn't define, and it was valid to run it
+        before Browserify, which apparently doesn't work).
+      hash: 3084d7c8fde9d272e31fe5817002c5bc3bfd2802
+      subject: Enable request retries
+    - author: Tim Perry
+      body: ''
+      hash: ef5f378f67903b593fedd8666403eaee0a4c7c44
+      subject: Update to support the new device registration flow
+    - author: Tim Perry
+      body: ''
+      hash: 4781162bedc4eccc9ea714eef0686f340a341e60
+      subject: 'Enable getLastModified tests, as CORS PR has now been deployed'
+    - author: Tim Perry
+      body: ''
+      hash: b6bb2612750f2d8e7fc20e4ac3e67593c5c7a02f
+      subject: Do some magic to safely stop tests running on npm install
+    - author: Eugene Mirotin
+      body: ''
+      hash: 945d7d95f026a8219795010e7354a8334d867985
+      subject: rebuild & docs & remove extra dependency & update yarn.lock
+    - author: Pagan Gazzard
+      body: ''
+      hash: 9fd60480901ad72990802c82986b389cca8177b9
+      subject: >-
+        Switch to using a module for requiring npm4, which means we can publish
+        on windows again
+    - author: Tim Perry
+      body: |-
+        This now uses the new injection dependency approach, so we build each
+        of these libraries and glue them together, rather than them internally
+        instantiating their own local versions of one another.
+      hash: 62a8fb536243129fb86e20cd19ea474d6e383dcd
+      subject: 'Upgrade to new resin-request, resin-pine and resin-register-device'
+    - author: Tim Perry
+      body: >-
+        One bug solved en route here, highlighted by minification: we depended
+        on the
+
+        function name of errors thrown by Resin-Request, which isn't dependable
+
+        (e.g. in prescence of minification). We now depend on .code instead,
+
+        which should work reliably.
+      hash: 50bac71b7ba3d97b350660ad33605d0e64bd8700
+      subject: 'Build a minified UMD browser release (manual merge of #248)'
+    - author: Tim Perry
+      body: ''
+      hash: cbdfa8a712d5ec074e68f3fba50c115aad5a34f7
+      subject: Build minified and unminified bundles
+    - author: Tim Perry
+      body: ''
+      hash: 202b5bc76ee9a1393007bf88637fb99b07988803
+      subject: Add bundling instructions so downstream projects can exclude unused deps
+    - author: Tim Perry
+      body: Build minified and unminified bundles
+      hash: 25077601b3d7d05694b36eaa66303f1ddef96ef1
+      subject: 'Merge pull request #253 from resin-io/non-min-bundle'
+    - author: Pablo Carranza Velez
+      body: ''
+      hash: f505ff09f62150dafa70e0f1dc9cfba3128ca569
+      subject: Update jsdoc-to-markdown to 2.0.1
+    - author: Pablo Carranza Velez
+      body: ''
+      hash: d64fb05777983e8a78aae87db4a7474ff67c358a
+      subject: Fix the expected error message in OS download test
+    - author: Pablo Carranza Velez
+      body: ''
+      hash: c4168cd8113f64a886cade73e8443d59c84e43d4
+      subject: Allow passing an optional force option to device reboot and shutdown
+    - author: Kostas Lekkas
+      body: ''
+      hash: d856c926e86367364fa27111eef8cde5db0c03ca
+      subject: Augment returned device object with device dashboard url
+    - author: Kostas Lekkas
+      body: ''
+      hash: ce95306ad441376299e4c5969c814589176daf7c
+      subject: Update pine filter expression to latest format
+    - author: Kostas Lekkas
+      body: ''
+      hash: 689cd2975db812dd757c1c6ac353432959b71887
+      subject: Generate JS
+    - author: Pagan Gazzard
+      body: ''
+      hash: bf9a1aaac568a9e49d8adb340d645d074fa4318b
+      subject: Add a warning to the readme about the test account getting reset.
+    - author: gaudi
+      body: ''
+      hash: 2b9fe1fb86ec3ebcdee4ef924faac33a7c56a5cd
+      subject: return full uuid for getDeviceUrl
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 20f85698cbf7885e08170f034d3bd37a774ec070
+      subject: Upgrade `resin-device-logs` to v3.0.0
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 92420f77604ae603fba83df7d669647546b8de35
+      subject: Rebuild CoffeeScript
+    - author: Juan Cruz Viotti
+      body: |-
+        If the user passes a shorter uuid, and then we use this shorter uuid as
+        a pine filter, it will match nothing, causing no errors but no real
+        action, which can be very hard to debug.
+        As a fix, we call `resin.models.device.get()` with the shorter uuid, and
+        access the resulting `.uuid` field, which is ensured to be the full one,
+        before passing it to pine.
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: caf59ecbe7c283162a07f51f1a58b868ee995e0a
+      subject: Make sure shorter uuids are expanded before passing to pine
+    - author: Juan Cruz Viotti
+      body: |-
+        If a user passed a shorted uuid to `resin.models.device.move()`, the
+        operation would fail without an error message (the device would still be
+        on the older app) since the uuid was not being expanded into a full
+        uuid before being used in the `pine`, which only understands full uuids.
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 16eecb6dc4f2bcce5afe27c6bae746e97b23f962
+      subject: Expand shorter uuids in resin.models.device.move()
+    - author: Kostas Lekkas
+      body: 'Fixes #212'
+      hash: 6d577e94ce043f33f42b074b30e926a17261c1a0
+      subject: Increase timeout for requests that result in container actions
+    - author: Juan Cruz Viotti
+      body: |-
+        Now that we upgraded Appveyor to run parallel builds, we must ensure
+        each matrix entry is ran with a different Resin.io account to prevent
+        conflicts between both.
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 4542eec98eeee43f0770c470fa052650377411a6
+      subject: Use different accounts for Appveyor environment matrix
+    - author: Kostas Lekkas
+      body: ''
+      hash: 8e5617e6b54851bb31d1f1f712685a9d5f57eb09
+      subject: Change supervisor semver check to >= 1.8.0-alpha.0 for /apps endpoint
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 4e73a2c2c371514fc990c90e55a845a9d0259c38
+      subject: Handle ambiguity errors in application.get()
+    - author: Kostas Lekkas
+      body: ''
+      hash: bb29733e502fef5e0751fd458970a9fb99e550f1
+      subject: Implement resin.models.device.getApplicationInfo()
+    - author: Kostas Lekkas
+      body: ''
+      hash: d2e21e26a37e549d224d3298c2f2417147993714
+      subject: Implement resin.models.device.stopApplication()
+    - author: Kostas Lekkas
+      body: ''
+      hash: 09b3bf5add5237985d4530518c4dc22319f59038
+      subject: Implement resin.models.device.startApplication()
+    - author: Kostas Lekkas
+      body: ''
+      hash: 35b06d06d0cf091de62cfcfba145866ef2b57395
+      subject: >-
+        Deprecate resin.models.device.restart() in favor of
+        .restartApplication()
+    - author: Kostas Lekkas
+      body: ''
+      hash: 2fea80f66d9fa782a2c5f7bfeecec1c41178d973
+      subject: Check supervisor version in all /v1/apps endpoints
+    - author: Kostas Lekkas
+      body: ''
+      hash: a68b32ba1721ca51ed5923c1f5db08a8da0459c0
+      subject: Fix supervisor API call for resin.models.device.getApplicationInfo()
+    - author: Kostas Lekkas
+      body: ''
+      hash: 0c0f964ff42aaeafbdd615ef0abf46c8c02314d9
+      subject: Set minimum supervisor /apps API version to 1.8.0
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 14eff75284028f58f2af2a8867b48e74677faa83
+      subject: Implement resin.models.device.ping()
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 1ee05475b51abe9a8d890a38e7423502accbba83
+      subject: Implement resin.models.device.update()
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 0cbec94839c3458fa1bdc7cf9930fbf417783ab9
+      subject: Implement resin.models.device.shutdown()
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 4e73a2c2c371514fc990c90e55a845a9d0259c38
+      subject: Implement resin.models.device.purge()
+    - author: Juan Cruz Viotti
+      body: ''
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: bb29733e502fef5e0751fd458970a9fb99e550f1
+      subject: Implement resin.models.device.enableTcpPing()
+    - author: Juan Cruz Viotti
+      body: |-
+        Sadly this functions don't have integration tests given that we'd need a
+        real device to assert its functionality
+      footers:
+        signed-off-by: Juan Cruz Viotti <jviottidc@gmail.com>
+      hash: 03d04caf1782a255d9a562186e1fde8a8c09c88d
+      subject: Implement resin.models.device.disableTcpPing()
+    - hash: 2b7d79420f5a0a1dac8a392f4510d63af653ea7d
+    - hash: 0f23ff34a17de8ef86b5edd9ca23b58eb2532fbb
+    - hash: fef74fcbf4b2c2cfbd1a9cbe26d9169eb9dc1f44
+    - hash: 1198adf5ca68a5e7d712aea6eba59c787328489d
+    - hash: 0dccf3989af662c13d13b8bfa912fac9816f1771
+    - hash: 1162d435dce347f80c4abaad49ec9fcf342118c8
+    - hash: 39343b00cf336b37e6496a953285050e0c1ac2b6
+    - hash: 9eb3d565e4c28ea9842152840db9cb59d3a4bb0c
+    - hash: 65f88f49b225647b08b1250a3eb8ec0251e45cd9
+    - hash: bff86984b3cf0d8a11a7ce97fdda523b0a57304d
+    - hash: 9a07005d286d0e503f7b8dd66e6e01c4f2c5f4d1
+    - hash: e9c10373c147e27689216978f72ebed95ef8d283
+    - hash: 1858cf5606547b758ddcec75a2c20b97926dd218
+    - hash: ccfbc0524890ac357db03c6dfcb504b47ac25f54
+    - hash: 8e86f9d66acb4cd3025fb426e63db94e05a3372c
+    - hash: d9ed7acb5055f4efbe930d30a79b7ba30f0273e3
+    - hash: defc9faba904279aa291ec43dff287734c3315e2
+    - hash: 9073b36fd06c2b3223c268e2086a72180158222c
+    - hash: e4ac6eb393522d889e78513fc64b58f291fde8f2
+    - hash: 4a7a85fad1d430caf55e8f923dc67deb9e115885
+    - hash: e942ce8a179ddd041182a51206f739499e214579
+    - hash: 07ea7c487bb9d1adce35f944acca6ce4c63a20a5
+    - hash: 1e6ea6a6a02fb8c014b560d44e9f424c88672c3b
+    - hash: 0170de4e330e52f3d26a95e7491f6a722a186dd0
+    - hash: 9f6df991cd022f0e4cfbb7ac15fcea47b357dee2
+    - hash: dfa7108ccd498d0f4f5c82c7f5892fc6014575a0
+    - hash: 41b107293de78604cd3ded4a45b4d183a45c0de4
+    - hash: 515e1b3eb44ee018fd90f02d105a6e446aa49b66
+    - hash: 403851dd3922d59e836855368659c8aa77d672e4
+  date: '2017-09-27T11:53:04Z'
   version: 0.0.0
