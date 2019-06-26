@@ -33,6 +33,8 @@ declare namespace BalenaSdk {
 	type PineParams = Pine.PineParams;
 	type PineParamsFor<T> = Pine.PineParamsFor<T>;
 	type PineParamsWithIdFor<T> = Pine.PineParamsWithIdFor<T>;
+	type PineSelectableProps<T> = Pine.SelectableProps<T>;
+	type PineExpandableProps<T> = Pine.ExpandableProps<T>;
 
 	interface Interceptor {
 		request?(response: any): Promise<any>;
