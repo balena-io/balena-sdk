@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'pinejs-client-code.d.ts: Restrict the selectable & expandable properties'
+      hash: 3b059359e440cdd66b3d7235bba6bc1563704abd
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.5.0
+  date: 2019-06-26T12:41:54.720Z
+- commits:
     - subject: 'docs: fix up broken self-referential links'
       hash: 03820624d2b9997b94cb8226e1cd0ece33d0abc6
       body: ''
