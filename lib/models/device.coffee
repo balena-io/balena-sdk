@@ -2096,7 +2096,7 @@ getDeviceModel = (deps, opts) ->
 			return 'Connecting...'
 
 		if device.is_online
-			return "Currently online (for #{timeSince(lce, false)})"
+			return "Online (for #{timeSince(lce, false)})"
 
 		return timeSince(lce)
 
