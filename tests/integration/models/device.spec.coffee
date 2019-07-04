@@ -1597,7 +1597,7 @@ describe 'Device Model', ->
 
 				m.chai.expect(
 					balena.models.device.lastOnline(mockDevice)
-				).to.equal('Currently online (for 5 minutes)')
+				).to.equal('Online (for 5 minutes)')
 
 			it 'should return the correct time string if the device is offline', ->
 				mockDevice =
