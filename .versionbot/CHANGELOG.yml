@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update balena-hup-action-utils to 4.0.0
+      hash: e335505470a9ad9b05b3a67e1c19740b16170d9c
+      body: |
+        Update balena-hup-action-utils from 3.0.0 to 4.0.0, and
+        update the relevant OS update tests.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Gergely Imreh <gergely@balena.io>
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      author: Gergely Imreh
+  version: 12.7.0
+  date: 2019-07-11T16:56:31.673Z
+- commits:
     - subject: Rename "currently online" to "online" for device lastOnline status
       hash: 8c69970dc2b569b6d3aa277d56d2225a95c0b102
       body: ''
