@@ -1,4 +1,69 @@
 - commits:
+    - subject: Add support for pine.upsert()
+      hash: 1b264659546a60b491a4caaddc6c01e1adc0157e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io-modules/balena-pine/pull/53'
+        depends-on: 'https://github.com/balena-io-modules/balena-pine/pull/53'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add `is_public` to the application model'
+      hash: 02725c1c91d8795465d15028894cad90a4da76f9
+      body: ''
+      footer:
+        Resolves: '#676'
+        resolves: '#676'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'tests: Update child app tests to work after the public app changes'
+      hash: 8a16416a823fff269c407f132dba3c9ee6e853d0
+      body: ''
+      footer:
+        Resolves: '#677'
+        resolves: '#677'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Drop owns__organization from the model
+      hash: dc2425cd72d341c28693df1b9d27a6002884205d
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        See: 'https://github.com/balena-io/resin-api/pull/1674'
+        see: 'https://github.com/balena-io/resin-api/pull/1674'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add support for the organizations model
+      hash: 82c5d924b839194b938c18d5bded9a8486d47236
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+        signed-off-by: Thodoris Greasidis <thodoris@resin.io>
+      author: Thodoris Greasidis
+    - subject: '**DROP-ME**: Use the /resin endpoint'
+      hash: 1f26e457c9ef379998e1c666b3df3c698bf18ec0
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.0.0
+  date: 2019-07-12T20:56:55.966Z
+- commits:
     - subject: 'pinejs-client-code.d.ts: Restrict the selectable & expandable properties'
       hash: 3b059359e440cdd66b3d7235bba6bc1563704abd
       body: ''
