@@ -1,4 +1,18 @@
 - commits:
+    - subject: Support retrieving  releases & managing release tags by commit
+      hash: 29675d19069ca551d2d883971867e9772f6c5418
+      body: ''
+      footer:
+        Resolves: '#464'
+        resolves: '#464'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.7.0
+  date: 2019-07-15T10:45:58.267Z
+- commits:
     - subject: Rename "currently online" to "online" for device lastOnline status
       hash: 8c69970dc2b569b6d3aa277d56d2225a95c0b102
       body: ''
