@@ -24,15 +24,23 @@ describe 'Release Model', ->
 
 		describe 'balena.models.release.get()', ->
 
-			it 'should be rejected if the release id does not exist', ->
+			it 'should be rejected if the release id does not exist by id', ->
 				promise = balena.models.release.get(123)
 				m.chai.expect(promise).to.be.rejectedWith('Release not found: 123')
 
+			it 'should be rejected if the release id does not exist by commit', ->
+				promise = balena.models.release.get('7cf02a6')
+				m.chai.expect(promise).to.be.rejectedWith('Release not found: 7cf02a6')
+
 		describe 'balena.models.release.getWithImageDetails()', ->
 
-			it 'should be rejected if the release id does not exist', ->
+			it 'should be rejected if the release id does not exist by id', ->
 				promise = balena.models.release.getWithImageDetails(123)
 				m.chai.expect(promise).to.be.rejectedWith('Release not found: 123')
+
+			it 'should be rejected if the release id does not exist by commit', ->
+				promise = balena.models.release.getWithImageDetails('7cf02a6')
+				m.chai.expect(promise).to.be.rejectedWith('Release not found: 7cf02a6')
 
 		describe 'balena.models.release.getAllByApplication()', ->
 
@@ -58,8 +66,28 @@ describe 'Release Model', ->
 
 		describe 'balena.models.release.get()', ->
 
-			it 'should get the requested release', ->
+			it 'should get the requested release by id', ->
 				balena.models.release.get(@currentRelease.id)
+				.then (release) =>
+					m.chai.expect(release).to.deep.match
+						status: 'success',
+						source: 'cloud',
+						commit: 'new-release-commit',
+						id: @currentRelease.id
+						belongs_to__application: __id: @application.id
+
+			it 'should get the requested release by commit', ->
+				balena.models.release.get(@currentRelease.commit)
+				.then (release) =>
+					m.chai.expect(release).to.deep.match
+						status: 'success',
+						source: 'cloud',
+						commit: 'new-release-commit',
+						id: @currentRelease.id
+						belongs_to__application: __id: @application.id
+
+			it 'should get the requested release by shorter commit', ->
+				balena.models.release.get(@currentRelease.commit.slice(0, 7))
 				.then (release) =>
 					m.chai.expect(release).to.deep.match
 						status: 'success',
@@ -91,8 +119,40 @@ describe 'Release Model', ->
 
 		describe 'balena.models.release.getWithImageDetails()', ->
 
-			it 'should get the release with associated images attached', ->
+			it 'should get the release with associated images attached by id', ->
 				balena.models.release.getWithImageDetails(@currentRelease.id)
+				.then (release) ->
+					m.chai.expect(release).to.deep.match
+						commit: 'new-release-commit'
+						status: 'success'
+						source: 'cloud'
+						images: [
+							{ service_name: 'db' }
+							{ service_name: 'web' }
+						]
+						user:
+							username: credentials.username
+
+					m.chai.expect(release.images[0].build_log).to.be.undefined
+
+			it 'should get the release with associated images attached by commit', ->
+				balena.models.release.getWithImageDetails(@currentRelease.commit)
+				.then (release) ->
+					m.chai.expect(release).to.deep.match
+						commit: 'new-release-commit'
+						status: 'success'
+						source: 'cloud'
+						images: [
+							{ service_name: 'db' }
+							{ service_name: 'web' }
+						]
+						user:
+							username: credentials.username
+
+					m.chai.expect(release.images[0].build_log).to.be.undefined
+
+			it 'should get the release with associated images attached by shorter commit', ->
+				balena.models.release.getWithImageDetails(@currentRelease.commit.slice(0, 7))
 				.then (release) ->
 					m.chai.expect(release).to.deep.match
 						commit: 'new-release-commit'
@@ -119,6 +179,66 @@ describe 'Release Model', ->
 							service_name: 'web'
 							build_log: 'web log'
 						]
+
+	describe 'given an application with two releases that share the same commit root', ->
+
+		givenAnApplication(before)
+
+		before ->
+			application = @application
+			userId = @application.user.__id
+
+			balena.pine.post
+				resource: 'release'
+				body:
+					belongs_to__application: application.id
+					is_created_by__user: userId
+					commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc'
+					status: 'success'
+					source: 'cloud'
+					composition: {}
+					start_timestamp: 64321
+			.then ->
+				balena.pine.post
+					resource: 'release'
+					body:
+						belongs_to__application: application.id
+						is_created_by__user: userId
+						commit: 'feb236123bf740d48900c19027d4a02127d4a021'
+						status: 'success'
+						source: 'cloud'
+						composition: {}
+						start_timestamp: 74321
+
+		describe 'balena.models.release.get()', ->
+
+			it 'should be rejected with an error if there is an ambiguation between shorter commits', ->
+				promise = balena.models.release.get('feb23612')
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'BalenaAmbiguousRelease')
+
+			it 'should get the requested release by the full commit', ->
+				balena.models.release.get('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
+				.then (release) ->
+					m.chai.expect(release).to.deep.match
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc'
+						status: 'success'
+						source: 'cloud'
+
+		describe 'balena.models.release.getWithImageDetails()', ->
+
+			it 'should be rejected with an error if there is an ambiguation between shorter commits', ->
+				promise = balena.models.release.getWithImageDetails('feb23612')
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'BalenaAmbiguousRelease')
+
+			it 'should get the release with associated images attached by the full commit', ->
+				balena.models.release.getWithImageDetails('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
+				.then (release) ->
+					m.chai.expect(release).to.deep.match
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc'
+						status: 'success'
+						source: 'cloud'
 
 	describe 'given a multicontainer application with successful & failed releases', ->
 
@@ -186,7 +306,7 @@ describe 'Release Model', ->
 				model: balena.models.release.tags
 				modelNamespace: 'balena.models.release.tags'
 				resourceName: 'release'
-				uniquePropertyName: null
+				uniquePropertyName: 'commit'
 
 			beforeEach ->
 				appTagTestOptions.resourceProvider = => @application

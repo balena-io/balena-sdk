@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+isEmpty = require('lodash/isEmpty')
 once = require('lodash/once')
 omit = require('lodash/omit')
 errors = require('balena-errors')
 Promise = require('bluebird')
 
-{ findCallback, mergePineOptions } = require('../util')
+{ isId, findCallback, mergePineOptions } = require('../util')
 
 getReleaseModel = (deps, opts) ->
 	{ pine } = deps
@@ -31,7 +32,7 @@ getReleaseModel = (deps, opts) ->
 		resourceName: 'release_tag'
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'release',
-		getResourceId: (id) -> exports.get(id, $select: 'id').get('id')
+		getResourceId: (commitOrId) -> exports.get(commitOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.BalenaReleaseNotFound
 	}
 
@@ -44,7 +45,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release
 	#
-	# @param {Number} id - release id
+	# @param {String|Number} commitOrId - release commit (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - release
 	# @returns {Promise}
@@ -55,21 +56,46 @@ getReleaseModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# balena.models.release.get('7cf02a6').then(function(release) {
+	#		console.log(release);
+	# });
+	#
+	# @example
 	# balena.models.release.get(123, function(error, release) {
 	#		if (error) throw error;
 	#		console.log(release);
 	# });
 	###
-	exports.get = (id, options = {}, callback) ->
+	exports.get = (commitOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		return pine.get
-			resource: 'release'
-			id: id
-			options: mergePineOptions({}, options)
-		.tap (release) ->
-			if not release?
-				throw new errors.BalenaReleaseNotFound(id)
+		return Promise.try ->
+			if not commitOrId?
+				throw new errors.BalenaReleaseNotFound(commitOrId)
+
+			if isId(commitOrId)
+				pine.get
+					resource: 'release'
+					id: commitOrId
+					options: mergePineOptions({}, options)
+				.tap (release) ->
+					if not release?
+						throw new errors.BalenaReleaseNotFound(commitOrId)
+			else
+				pine.get
+					resource: 'release'
+					options:
+						mergePineOptions
+							$filter:
+								commit: $startswith: commitOrId
+						, options
+				.tap (releases) ->
+					if isEmpty(releases)
+						throw new errors.BalenaReleaseNotFound(commitOrId)
+
+					if releases.length > 1
+						throw new errors.BalenaAmbiguousRelease(commitOrId)
+				.get(0)
 		.asCallback(callback)
 
 	###*
@@ -85,7 +111,7 @@ getReleaseModel = (deps, opts) ->
 	# understand format. If you want significantly more control, or to see the
 	# raw model directly, use `release.get(id, options)` instead.
 	#
-	# @param {Number} id - release id
+	# @param {String|Number} commitOrId - release commit (string) or id (number)
 	# @param {Object} [options={}] - a map of extra pine options
 	# @param {Boolean} [options.release={}] - extra pine options for releases
 	# @param {Object} [options.image={}] - extra pine options for images
@@ -94,6 +120,11 @@ getReleaseModel = (deps, opts) ->
 	#
 	# @example
 	# balena.models.release.getWithImageDetails(123).then(function(release) {
+	#		console.log(release);
+	# });
+	#
+	# @example
+	# balena.models.release.getWithImageDetails('7cf02a6').then(function(release) {
 	#		console.log(release);
 	# });
 	#
@@ -109,10 +140,10 @@ getReleaseModel = (deps, opts) ->
 	#		console.log(release);
 	# });
 	###
-	exports.getWithImageDetails = (id, options = {}, callback) ->
+	exports.getWithImageDetails = (commitOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		return exports.get id, mergePineOptions
+		return exports.get commitOrId, mergePineOptions
 			$expand:
 				contains__image:
 					$expand:
@@ -286,7 +317,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release.tags
 	#
-	# @param {Number} id - release id
+	# @param {String|Number} commitOrId - release commit (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - release tags
 	# @returns {Promise}
@@ -297,15 +328,20 @@ getReleaseModel = (deps, opts) ->
 	# });
 	#
 	# @example
+	# balena.models.release.tags.getAllByRelease('7cf02a6').then(function(tags) {
+	# 	console.log(tags);
+	# });
+	#
+	# @example
 	# balena.models.release.tags.getAllByRelease(123, function(error, tags) {
 	# 	if (error) throw error;
 	# 	console.log(tags)
 	# });
 	###
-	exports.tags.getAllByRelease = (id, options = {}, callback) ->
+	exports.tags.getAllByRelease = (commitOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.get(id,
+		exports.get(commitOrId,
 			$select: 'id'
 			$expand:
 				release_tag:
@@ -347,7 +383,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release.tags
 	#
-	# @param {Number} releaseId - release id
+	# @param {String|Number} commitOrId - release commit (string) or id (number)
 	# @param {String} tagKey - tag key
 	# @param {String|undefined} value - tag value
 	#
@@ -355,6 +391,9 @@ getReleaseModel = (deps, opts) ->
 	#
 	# @example
 	# balena.models.release.tags.set(123, 'EDITOR', 'vim');
+	#
+	# @example
+	# balena.models.release.tags.set('7cf02a6', 'EDITOR', 'vim');
 	#
 	# @example
 	# balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
@@ -370,12 +409,15 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release.tags
 	#
-	# @param {Number} releaseId - release id
+	# @param {String|Number} commitOrId - release commit (string) or id (number)
 	# @param {String} tagKey - tag key
 	# @returns {Promise}
 	#
 	# @example
 	# balena.models.release.tags.remove(123, 'EDITOR');
+	#
+	# @example
+	# balena.models.release.tags.remove('7cf02a6', 'EDITOR');
 	#
 	# @example
 	# balena.models.release.tags.remove(123, 'EDITOR', function(error) {

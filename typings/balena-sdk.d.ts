@@ -832,7 +832,10 @@ declare namespace BalenaSdk {
 				revoke: (id: number) => Promise<void>;
 			};
 			release: {
-				get(id: number, options?: PineOptionsFor<Release>): Promise<Release>;
+				get(
+					commitOrId: string | number,
+					options?: PineOptionsFor<Release>,
+				): Promise<Release>;
 				getAllByApplication(
 					nameOrId: string | number,
 					options?: PineOptionsFor<Release>,
@@ -842,7 +845,7 @@ declare namespace BalenaSdk {
 					options?: PineOptionsFor<Release>,
 				): Promise<Release>;
 				getWithImageDetails(
-					nameOrId: string | number,
+					commitOrId: string | number,
 					options?: {
 						release?: PineOptionsFor<Release>;
 						image?: PineOptionsFor<Image>;
@@ -864,12 +867,19 @@ declare namespace BalenaSdk {
 						options?: PineOptionsFor<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
 					getAllByRelease(
-						id: number,
+						commitOrId: string | number,
 						options?: PineOptionsFor<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
 					getAll(options?: PineOptionsFor<ReleaseTag>): Promise<ReleaseTag[]>;
-					set(releaseId: number, tagKey: string, value: string): Promise<void>;
-					remove(releaseId: number, tagKey: string): Promise<void>;
+					set(
+						commitOrReleaseId: string | number,
+						tagKey: string,
+						value: string,
+					): Promise<void>;
+					remove(
+						commitOrReleaseId: string | number,
+						tagKey: string,
+					): Promise<void>;
 				};
 			};
 			billing: {
