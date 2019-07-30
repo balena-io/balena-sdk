@@ -36,6 +36,7 @@ deviceStatus = require('balena-device-status')
 	getCurrentServiceDetailsPineOptions
 	getOsUpdateHelper: _getOsUpdateHelper
 	generateCurrentServiceDetails
+	deviceTypes: deviceTypesUtil
 	mergePineOptions
 	notFoundResponse
 	noDeviceForKeyResponse
@@ -873,10 +874,9 @@ getDeviceModel = (deps, opts) ->
 			deviceTypes: configModel().getDeviceTypes()
 			application: applicationModel().get(applicationNameOrId, $select: [ 'id', 'device_type' ])
 		.then ({ application, device, deviceTypes }) ->
-			deviceDeviceType = find(deviceTypes, { slug: device.device_type })
-			appDeviceType = find(deviceTypes, { slug: application.device_type })
-			isCompatibleMove = deviceDeviceType.arch is appDeviceType.arch and
-				(!!deviceDeviceType.isDependent is !!appDeviceType.isDependent)
+			osDeviceType = deviceTypesUtil.getBySlug(deviceTypes, device.device_type)
+			targetAppDeviceType = deviceTypesUtil.getBySlug(deviceTypes, application.device_type)
+			isCompatibleMove = deviceTypesUtil.isDeviceTypeCompatibleWith(osDeviceType, targetAppDeviceType)
 			if not isCompatibleMove
 				throw new errors.BalenaInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
 
