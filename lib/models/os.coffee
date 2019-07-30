@@ -58,16 +58,10 @@ getOsModel = (deps, opts) ->
 	getDeviceTypes = once ->
 		configModel().getDeviceTypes()
 
-	isValidDeviceType = (deviceType) ->
+	getValidatedDeviceType = (deviceTypeSlug) ->
 		getDeviceTypes()
 		.then (types) ->
-			!!deviceTypesUtil.findBySlug(types, deviceType)
-
-	validateDeviceType = (deviceType) ->
-		isValidDeviceType(deviceType)
-		.then (isValid) ->
-			if not isValid
-				throw new errors.BalenaInvalidDeviceType('No such device type')
+			deviceTypesUtil.getBySlug(types, deviceTypeSlug)
 
 	exports = {}
 
@@ -206,7 +200,7 @@ getOsModel = (deps, opts) ->
 	exports.getDownloadSize = (deviceType, version = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return validateDeviceType(deviceType)
+		return getValidatedDeviceType(deviceType)
 			.then ->
 				exports._getDownloadSize(deviceType, version)
 			.asCallback(callback)
@@ -241,7 +235,7 @@ getOsModel = (deps, opts) ->
 	exports.getSupportedVersions = (deviceType, callback) ->
 		callback = findCallback(arguments)
 
-		return validateDeviceType(deviceType)
+		return getValidatedDeviceType(deviceType)
 			.then  ->
 				exports._getOsVersions(deviceType)
 			.asCallback(callback)
@@ -284,7 +278,7 @@ getOsModel = (deps, opts) ->
 	exports.getMaxSatisfyingVersion = (deviceType, versionOrRange = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return validateDeviceType(deviceType)
+		return getValidatedDeviceType(deviceType)
 			.then ->
 				exports.getSupportedVersions(deviceType)
 			.then (osVersions) ->
@@ -323,7 +317,7 @@ getOsModel = (deps, opts) ->
 	exports.getLastModified = (deviceType, version = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return validateDeviceType(deviceType)
+		return getValidatedDeviceType(deviceType)
 			.then ->
 				normalizeVersion(version)
 			.then (version) ->
@@ -364,7 +358,7 @@ getOsModel = (deps, opts) ->
 	exports.download = onlyIf(not isBrowser) (deviceType, version = 'latest', callback) ->
 		callback = findCallback(arguments)
 
-		return validateDeviceType(deviceType)
+		return getValidatedDeviceType(deviceType)
 			.then ->
 				normalizeVersion(version)
 			.then (version) ->
@@ -466,7 +460,7 @@ getOsModel = (deps, opts) ->
 	# });
 	###
 	exports.isSupportedOsUpdate = (deviceType, currentVersion, targetVersion, callback) ->
-		validateDeviceType(deviceType)
+		getValidatedDeviceType(deviceType)
 		.then ->
 			hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)
 		.asCallback(callback)
@@ -506,7 +500,7 @@ getOsModel = (deps, opts) ->
 			current = find(allVersions, (v) -> bSemver.compare(v, currentVersion) == 0)
 
 			versions = allVersions.filter (v) ->
-				# avoid the extra call to validateDeviceType,
+				# avoid the extra call to getValidatedDeviceType,
 				# since getSupportedVersions is already does that
 				hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v)
 
@@ -520,6 +514,27 @@ getOsModel = (deps, opts) ->
 				current
 			}
 		.asCallback(callback)
+
+	###*
+	# @summary Returns whether the specified OS architecture is compatible with the target architecture
+	# @name isArchitectureCompatibleWith
+	# @public
+	# @function
+	# @memberof balena.models.os
+	#
+	# @param {String} osArchitecture - The OS's architecture as specified in its device type
+	# @param {String} applicationArchitecture - The application's architecture as specified in its device type
+	# @returns {Boolean} - Whether the specified OS architecture is capable of running
+	# applications build for the target architecture
+	#
+	# @example
+	# const result1 = balena.models.os.isArchitectureCompatibleWith('aarch64', 'armv7hf');
+	# console.log(result1);
+	#
+	# const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
+	# console.log(result2);
+	###
+	exports.isArchitectureCompatibleWith = deviceTypesUtil.isOsArchitectureCompatibleWith
 
 	return exports
 
