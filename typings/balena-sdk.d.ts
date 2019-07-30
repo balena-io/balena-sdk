@@ -1143,7 +1143,7 @@ declare namespace BalenaSdk {
 				getMaxSatisfyingVersion(
 					deviceType: string,
 					versionOrRange: string,
-				): string;
+				): Promise<string>;
 				getLastModified(deviceType: string, version?: string): Promise<Date>;
 				download(deviceType: string, version?: string): Promise<Readable>;
 				isSupportedOsUpdate(
