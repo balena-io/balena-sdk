@@ -977,8 +977,8 @@ declare namespace BalenaSdk {
 				getSupervisorTargetState(
 					uuidOrId: string | number,
 				): Promise<DeviceState.DeviceState>;
-				getDisplayName(deviceTypeName: string): string;
-				getDeviceSlug(deviceTypeName: string): string;
+				getDisplayName(deviceTypeName: string): Promise<string>;
+				getDeviceSlug(deviceTypeName: string): Promise<string>;
 				generateUniqueKey(): string;
 				register(
 					applicationNameOrId: string | number,
@@ -1143,7 +1143,7 @@ declare namespace BalenaSdk {
 				getMaxSatisfyingVersion(
 					deviceType: string,
 					versionOrRange: string,
-				): string;
+				): Promise<string>;
 				getLastModified(deviceType: string, version?: string): Promise<Date>;
 				download(deviceType: string, version?: string): Promise<Readable>;
 				isSupportedOsUpdate(
