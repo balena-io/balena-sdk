@@ -1,4 +1,32 @@
 - commits:
+    - subject: 'typings: Fix return type of os.getMaxSatisfyingVersion'
+      hash: 971650fafc8e189a341cff3a20df6a9611815b01
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Fix return type of device.getDisplayName & device.getDeviceSlug'
+      hash: 4eca1aceb1e218d007791267d60a9b4a2c5e2e53
+      body: |
+        I've tracked this back to the original commit that the
+        typings for these methods were added and I can only
+        hypothesize that they got in wrong by accident.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://github.com/balena-io/balena-sdk/commit/1f74411f8e8939c2782298c4b110a61fcec5505a
+        see: >-
+          https://github.com/balena-io/balena-sdk/commit/1f74411f8e8939c2782298c4b110a61fcec5505a
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.7.1
+  date: 2019-07-30T21:42:43.552Z
+- commits:
     - subject: Support retrieving  releases & managing release tags by commit
       hash: 29675d19069ca551d2d883971867e9772f6c5418
       body: ''
