@@ -1,4 +1,27 @@
 - commits:
+    - subject: Allow moving aarch64 devices to armv7hf applications
+      hash: 3d8049f4f7831039baf7ffa28ed569be002884fa
+      body: ''
+      footer:
+        Resolves: '#727'
+        resolves: '#727'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add os.isArchitectureCompatibleWith method
+      hash: b41d391a18c44e8c0b8b17f2327ceb1012dc5ff8
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.8.0
+  date: 2019-07-31T11:07:50.403Z
+- commits:
     - subject: 'typings: Fix return type of os.getMaxSatisfyingVersion'
       hash: 971650fafc8e189a341cff3a20df6a9611815b01
       body: ''
