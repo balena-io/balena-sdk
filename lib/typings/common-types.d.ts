@@ -37,6 +37,7 @@ interface DeviceTypeOptions {
 type DeviceType = {
 	slug: string;
 	name: string;
+	arch: string;
 	aliases: string[];
 
 	isDependent?: boolean;

@@ -159,6 +159,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
+            * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -463,6 +464,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
+        * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
@@ -4273,6 +4275,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
     * [.getConfig(nameOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
+    * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
 
 <a name="balena.models.os.getDownloadSize"></a>
 
@@ -4500,6 +4503,28 @@ balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod',
 	if (error) throw error;
 	console.log(isSupported);
 });
+```
+<a name="balena.models.os.isArchitectureCompatibleWith"></a>
+
+##### os.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture) ⇒ <code>Boolean</code>
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
+**Summary**: Returns whether the specified OS architecture is compatible with the target architecture  
+**Returns**: <code>Boolean</code> - - Whether the specified OS architecture is capable of running
+applications build for the target architecture  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| osArchitecture | <code>String</code> | The OS's architecture as specified in its device type |
+| applicationArchitecture | <code>String</code> | The application's architecture as specified in its device type |
+
+**Example**  
+```js
+const result1 = balena.models.os.isArchitectureCompatibleWith('aarch64', 'armv7hf');
+console.log(result1);
+
+const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
+console.log(result2);
 ```
 <a name="balena.models.config"></a>
 

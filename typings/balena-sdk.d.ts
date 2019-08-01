@@ -1155,6 +1155,10 @@ declare namespace BalenaSdk {
 					deviceType: string,
 					currentVersion: string,
 				): Promise<OsUpdateVersions>;
+				isArchitectureCompatibleWith(
+					osArchitecture: string,
+					applicationArchitecture: string,
+				): boolean;
 			};
 		};
 

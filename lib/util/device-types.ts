@@ -1,3 +1,5 @@
+import * as errors from 'balena-errors';
+
 // copied from the @resin-io/device-types
 // because that has the run-time dependency on coffee-script
 
@@ -9,13 +11,23 @@ const find = <T>(array: T[], predicate: (el: T) => boolean) => {
 	}
 };
 
-const includes = <T>(array: T[], el: T) => array && array.indexOf(el) >= 0;
+const includes = <T>(array: T[] | undefined, el: T) =>
+	array != null && array.indexOf(el) >= 0;
 
 const dtPredicate = (slug: string) => (deviceType: DeviceType) =>
 	deviceType.slug === slug || includes(deviceType.aliases, slug);
 
 export const findBySlug = (deviceTypes: DeviceType[], slug: string) =>
 	find(deviceTypes, dtPredicate(slug));
+
+export const getBySlug = (deviceTypes: DeviceType[], slug: string) => {
+	const deviceType = findBySlug(deviceTypes, slug);
+	if (!deviceType) {
+		throw new errors.BalenaInvalidDeviceType('No such device type');
+	}
+
+	return deviceType;
+};
 
 export const normalizeDeviceType = (
 	deviceTypes: DeviceType[],
@@ -27,3 +39,21 @@ export const normalizeDeviceType = (
 		return deviceType.slug;
 	}
 };
+
+const archCompatibilityMap: Partial<Dictionary<string[]>> = {
+	aarch64: ['armv7hf'],
+};
+
+export const isOsArchitectureCompatibleWith = (
+	osArchitecture: string,
+	applicationArchitecture: string,
+) =>
+	osArchitecture === applicationArchitecture ||
+	includes(archCompatibilityMap[osArchitecture], applicationArchitecture);
+
+export const isDeviceTypeCompatibleWith = (
+	osDeviceType: DeviceType,
+	targetAppDeviceType: DeviceType,
+) =>
+	isOsArchitectureCompatibleWith(osDeviceType.arch, targetAppDeviceType.arch) &&
+	!!osDeviceType.isDependent === !!targetAppDeviceType.isDependent;
