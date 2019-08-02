@@ -80,7 +80,6 @@ getDeviceModel = (deps, opts) ->
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	osModel = once -> require('./os')(deps, opts)
-	upsert = require('../util/upsert').getUpsertHelper(deps)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 
@@ -3264,17 +3263,13 @@ getDeviceModel = (deps, opts) ->
 				.get(0)
 				.get('id')
 			.then (serviceInstallId) ->
-				upsert
+				pine.upsert
 					resource: 'device_service_environment_variable'
-					body:
+					id:
 						service_install: serviceInstallId
 						name: key
+					body:
 						value: value
-				,
-				[
-					'service_install'
-					'name'
-				]
 			.asCallback(callback)
 
 		###*
