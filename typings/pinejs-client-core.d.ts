@@ -1,4 +1,4 @@
-import { AnyObject, PropsOfType, StringKeyof } from './utils';
+import { AnyObject, Omit, PropsOfType, StringKeyof } from './utils';
 
 export interface WithId {
 	id: number;
@@ -257,4 +257,11 @@ export interface PineParamsFor<T> extends PineParamsBase {
 
 export interface PineParamsWithIdFor<T> extends PineParamsFor<T> {
 	id: number;
+}
+
+export interface UpsertPineParamsFor<T>
+	extends Omit<PineParamsFor<T>, 'id' | 'method' | 'options'> {
+	id: SubmitBody<T>;
+	resource: string;
+	body: SubmitBody<T>;
 }
