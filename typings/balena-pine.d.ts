@@ -6,14 +6,15 @@ declare namespace BalenaPine {
 	interface Pine {
 		delete<T>(
 			params: PineClient.PineParamsWithIdFor<T> | PineClient.PineParamsFor<T>,
-		): Promise<string>;
+		): Promise<'OK'>;
 		get<T>(params: PineClient.PineParamsWithIdFor<T>): Promise<T>;
 		get<T>(params: PineClient.PineParamsFor<T>): Promise<T[]>;
 		get<T, Result>(params: PineClient.PineParamsFor<T>): Promise<Result>;
 		post<T>(params: PineClient.PineParamsFor<T>): Promise<T>;
 		patch<T>(
 			params: PineClient.PineParamsWithIdFor<T> | PineClient.PineParamsFor<T>,
-		): Promise<string>;
+		): Promise<'OK'>;
+		upsert<T>(params: PineClient.UpsertPineParamsFor<T>): Promise<T | 'OK'>;
 	}
 }
 
