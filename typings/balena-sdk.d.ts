@@ -168,6 +168,30 @@ declare namespace BalenaSdk {
 		choicesLabels?: { [key: string]: string };
 	}
 
+	interface Organization {
+		id: number;
+		created_at: string;
+		name: string;
+
+		application: ReverseNavigationResource<Application>;
+		owns__team: ReverseNavigationResource<Team>;
+		/** includes__organization_membership */
+		organization_membership: ReverseNavigationResource<OrganizationMembership>;
+	}
+
+	interface Team {
+		id: number;
+		created_at: string;
+		name: string;
+
+		belongs_to__organization: NavigationResource<Organization>;
+
+		/** includes__organization_membership */
+		team_membership: ReverseNavigationResource<TeamMembership>;
+		/** grants_access_to__application */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
+	}
+
 	interface SocialServiceAccount {
 		provider: string;
 		display_name: string;
@@ -200,14 +224,49 @@ declare namespace BalenaSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
-		application: ReverseNavigationResource<Application>;
+		/** organization_membership */
+		includes__organization_membership: ReverseNavigationResource<
+			OrganizationMembership
+		>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
-		>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
+	}
+
+	type OrganizationMembershipRoles = 'personal' | 'administrator' | 'member';
+
+	interface OrganizationMembershipRole {
+		id: number;
+		name: OrganizationMembershipRoles;
+	}
+
+	/** organization_membership */
+	interface OrganizationMembership {
+		id: number;
+		created_at: string;
+
+		user: NavigationResource<User>;
+		/** organization */
+		is_member_of__organization: NavigationResource<Organization>;
+		organization_membership_role: NavigationResource<
+			OrganizationMembershipRole
+		>;
+
+		/** grants_access_to__application */
+		organization_membership_application_access: ReverseNavigationResource<
+			OrganizationMemberApplicationAccess
+		>;
+		team_membership: ReverseNavigationResource<TeamMembership>;
+	}
+
+	/** team_membership */
+	interface TeamMembership {
+		id: number;
+		created_at: string;
+
+		organization_membership: NavigationResource<OrganizationMembership>;
+		is_member_of__team: NavigationResource<Team>;
 	}
 
 	interface ApiKey {
@@ -229,8 +288,8 @@ declare namespace BalenaSdk {
 		should_track_latest_release: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
-		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
+		organization: NavigationResource<Organization>;
 
 		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
@@ -240,21 +299,12 @@ declare namespace BalenaSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
+		/** is_accessible_by__organization_membership */
+		organization_membership_application_access: ReverseNavigationResource<
+			OrganizationMemberApplicationAccess
 		>;
-	}
-
-	interface ApplicationMember {
-		id: number;
-		application_membership_role: NavigationResource<ApplicationMembershipRole>;
-		is_member_of__application: NavigationResource<Application>;
-		user: NavigationResource<User>;
-	}
-
-	interface ApplicationMembershipRole {
-		id: number;
-		name: string;
+		/** is_accessible_by__team */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface ApplicationType {
@@ -270,6 +320,31 @@ declare namespace BalenaSdk {
 		needs__os_version_range: string | null;
 		maximum_device_count: number | null;
 		is_host_os: boolean;
+	}
+
+	type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
+
+	interface ApplicationMembershipRole {
+		id: number;
+		name: ApplicationMembershipRoles;
+	}
+
+	/** organization_membership_application_access */
+	interface OrganizationMemberApplicationAccess {
+		id: number;
+		organization_membership: NavigationResource<OrganizationMembership>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
+	}
+
+	/** team_application_access */
+	interface TeamApplicationAccess {
+		id: number;
+		team: NavigationResource<Team>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 
 	type ReleaseStatus =
@@ -453,6 +528,7 @@ declare namespace BalenaSdk {
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
+		belongs_to__organization: NavigationResource<Organization>;
 		should_be_running__release: NavigationResource<Release>;
 		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
 		is_managed_by__device: NavigationResource<Device>;
@@ -699,6 +775,7 @@ declare namespace BalenaSdk {
 			whoami: () => Promise<string | undefined>;
 			isLoggedIn: () => Promise<boolean>;
 			getUserId: () => Promise<number>;
+			getPersonalOrganizationId: () => Promise<number>;
 			getEmail: () => Promise<string>;
 
 			twoFactor: {
