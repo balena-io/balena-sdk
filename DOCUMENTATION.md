@@ -190,7 +190,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan()](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
             * [.getBillingInfo()](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-            * [.updateBillingInfo()](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+            * [.updateBillingInfo(billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
             * [.getInvoices()](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
             * [.downloadInvoice()](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
     * [.auth](#balena.auth) : <code>object</code>
@@ -495,7 +495,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan()](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
         * [.getBillingInfo()](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-        * [.updateBillingInfo()](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+        * [.updateBillingInfo(billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
         * [.getInvoices()](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
         * [.downloadInvoice()](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
 
@@ -5178,7 +5178,7 @@ balena.models.image.getLogs(123, function(error, logs) {
     * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
     * [.getPlan()](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
     * [.getBillingInfo()](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-    * [.updateBillingInfo()](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+    * [.updateBillingInfo(billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
     * [.getInvoices()](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
     * [.downloadInvoice()](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
 
@@ -5244,15 +5244,17 @@ balena.models.billing.getBillingInfo(function(error, billingInfo) {
 ```
 <a name="balena.models.billing.updateBillingInfo"></a>
 
-##### billing.updateBillingInfo() ⇒ <code>Promise</code>
+##### billing.updateBillingInfo(billingInfo) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Update the current billing information  
 **Access**: public  
 **Fulfil**: <code>Object</code> - billing information  
 
-| Type | Description |
-| --- | --- |
-| <code>Object</code> | an object containing a billing info token_id |
+| Param | Type | Description |
+| --- | --- | --- |
+| billingInfo | <code>Object</code> | an object containing a billing info token_id |
+| billingInfo.token_id | <code>String</code> | the token id generated for the billing info form |
+| [billingInfo.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
 
 **Example**  
 ```js
@@ -5648,6 +5650,7 @@ balena.auth.logout(function(error) {
 | [credentials] | <code>Object</code> | <code>{}</code> | in the form of username, password and email |
 | credentials.email | <code>String</code> |  | the email |
 | credentials.password | <code>String</code> |  | the password |
+| [credentials.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> |  | the captcha response |
 
 **Example**  
 ```js

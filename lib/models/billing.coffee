@@ -112,7 +112,9 @@ getBillingModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.billing
 	#
-	# @param {Object} - an object containing a billing info token_id
+	# @param {Object} billingInfo - an object containing a billing info token_id
+	# @param {String} billingInfo.token_id - the token id generated for the billing info form
+	# @param {(String|undefined)} [billingInfo.'g-recaptcha-response'] - the captcha response
 	# @fulfil {Object} - billing information
 	# @returns {Promise}
 	#
