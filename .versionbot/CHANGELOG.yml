@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add typings & docs for the captcha parameters
+      hash: 2064fc045bda61b91ad8ab2091685d91ae4b37af
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.9.0
+  date: 2019-08-21T11:12:40.645Z
+- commits:
     - subject: Allow moving aarch64 devices to armv7hf applications
       hash: 3d8049f4f7831039baf7ffa28ed569be002884fa
       body: ''
