@@ -364,6 +364,7 @@ declare namespace BalenaSdk {
 
 	interface TokenBillingSubmitInfo {
 		token_id: string;
+		'g-recaptcha-response'?: string;
 	}
 
 	interface BillingPlanInfo {
@@ -682,6 +683,7 @@ declare namespace BalenaSdk {
 			register: (credentials: {
 				email: string;
 				password: string;
+				'g-recaptcha-response'?: string;
 			}) => Promise<string>;
 			authenticate: (credentials: {
 				email: string;

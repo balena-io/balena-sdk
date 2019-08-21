@@ -340,6 +340,7 @@ getAuth = (deps, opts) ->
 	# @param {Object} [credentials={}] - in the form of username, password and email
 	# @param {String} credentials.email - the email
 	# @param {String} credentials.password - the password
+	# @param {(String|undefined)} [credentials.'g-recaptcha-response'] - the captcha response
 	#
 	# @fulfil {String} - session token
 	# @returns {Promise}
