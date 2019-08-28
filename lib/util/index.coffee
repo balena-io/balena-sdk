@@ -4,7 +4,6 @@ cloneDeep = require('lodash/cloneDeep')
 groupBy = require('lodash/groupBy')
 includes = require('lodash/includes')
 isArray = require('lodash/isArray')
-isEmpty = require('lodash/isEmpty')
 isFunction = require('lodash/isFunction')
 isNumber = require('lodash/isNumber')
 isString = require('lodash/isString')
@@ -14,7 +13,6 @@ omit = require('lodash/omit')
 throttle = require('lodash/throttle')
 memoizee = require('memoizee')
 moment = require('moment')
-
 
 exports.deviceTypes = require('./device-types')
 exports.getImgMakerHelper = require('./img-maker')
@@ -98,9 +96,6 @@ exports.treatAsMissingDevice = (uuidOrId) ->
 
 exports.isDevelopmentVersion = (version) ->
 	/(\.|\+|-)dev/.test(version)
-
-exports.isProvisioned = (device) ->
-	!isEmpty(device.supervisor_version) and !isEmpty(device.last_connectivity_event)
 
 # Merging two sets of pine options sensibly is more complicated than it sounds.
 #

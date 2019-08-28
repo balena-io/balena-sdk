@@ -957,6 +957,15 @@ declare namespace BalenaSdk {
 					expiryTimestamp: number,
 				): Promise<void>;
 				revokeSupportAccess(uuidOrId: string | number): Promise<void>;
+				enableLocalMode(uuidOrId: string | number): Promise<void>;
+				disableLocalMode(uuidOrId: string | number): Promise<void>;
+				isInLocalMode(uuidOrId: string | number): Promise<boolean>;
+				getLocalModeSupport(
+					devive: Device,
+				): {
+					supported: boolean;
+					message: string;
+				};
 				enableLockOverride(uuidOrId: string | number): Promise<void>;
 				disableLockOverride(uuidOrId: string | number): Promise<void>;
 				hasLockOverride(uuidOrId: string | number): Promise<boolean>;
