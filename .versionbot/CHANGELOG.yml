@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add local mode related methods
+      hash: 56b66d6f05c8c4997a2b7319929f5275120a59ae
+      body: ''
+      footer:
+        Resolves: '#732'
+        resolves: '#732'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.10.0
+  date: 2019-09-02T10:56:55.215Z
+- commits:
     - subject: Add typings & docs for the captcha parameters
       hash: 2064fc045bda61b91ad8ab2091685d91ae4b37af
       body: ''
