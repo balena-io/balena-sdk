@@ -125,6 +125,10 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
             * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+            * [.enableLocalMode(uuidOrId)](#balena.models.device.enableLocalMode) ⇒ <code>Promise</code>
+            * [.disableLocalMode(uuidOrId)](#balena.models.device.disableLocalMode) ⇒ <code>Promise</code>
+            * [.isInLocalMode(uuidOrId)](#balena.models.device.isInLocalMode) ⇒ <code>Promise</code>
+            * [.getLocalModeSupport(device)](#balena.models.device.getLocalModeSupport) ⇒ <code>Object</code>
             * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
             * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
             * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
@@ -430,6 +434,10 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
         * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+        * [.enableLocalMode(uuidOrId)](#balena.models.device.enableLocalMode) ⇒ <code>Promise</code>
+        * [.disableLocalMode(uuidOrId)](#balena.models.device.disableLocalMode) ⇒ <code>Promise</code>
+        * [.isInLocalMode(uuidOrId)](#balena.models.device.isInLocalMode) ⇒ <code>Promise</code>
+        * [.getLocalModeSupport(device)](#balena.models.device.getLocalModeSupport) ⇒ <code>Object</code>
         * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
         * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
         * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
@@ -1690,6 +1698,10 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
     * [.disableDeviceUrl(uuidOrId)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
+    * [.enableLocalMode(uuidOrId)](#balena.models.device.enableLocalMode) ⇒ <code>Promise</code>
+    * [.disableLocalMode(uuidOrId)](#balena.models.device.disableLocalMode) ⇒ <code>Promise</code>
+    * [.isInLocalMode(uuidOrId)](#balena.models.device.isInLocalMode) ⇒ <code>Promise</code>
+    * [.getLocalModeSupport(device)](#balena.models.device.getLocalModeSupport) ⇒ <code>Object</code>
     * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
     * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
     * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
@@ -3655,6 +3667,112 @@ balena.models.device.disableDeviceUrl(123);
 balena.models.device.disableDeviceUrl('7cf02a6', function(error) {
 	if (error) throw error;
 });
+```
+<a name="balena.models.device.enableLocalMode"></a>
+
+##### device.enableLocalMode(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Enable local mode  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.enableLocalMode('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.enableLocalMode(123);
+```
+**Example**  
+```js
+balena.models.device.enableLocalMode('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.disableLocalMode"></a>
+
+##### device.disableLocalMode(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Disable local mode  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.disableLocalMode('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.disableLocalMode(123);
+```
+**Example**  
+```js
+balena.models.device.disableLocalMode('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.isInLocalMode"></a>
+
+##### device.isInLocalMode(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Check if local mode is enabled on the device  
+**Access**: public  
+**Fulfil**: <code>Boolean</code> - has device url  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.isInLocalMode('7cf02a6').then(function(isInLocalMode) {
+	if (isInLocalMode) {
+		console.log('The device has local mode enabled');
+	}
+});
+```
+**Example**  
+```js
+balena.models.device.isInLocalMode(123).then(function(isInLocalMode) {
+	if (isInLocalMode) {
+		console.log('The device has local mode enabled');
+	}
+});
+```
+**Example**  
+```js
+balena.models.device.isInLocalMode('7cf02a6', function(error, isInLocalMode) {
+	if (error) throw error;
+
+	if (isInLocalMode) {
+		console.log('The device has local mode enabled');
+	}
+});
+```
+<a name="balena.models.device.getLocalModeSupport"></a>
+
+##### device.getLocalModeSupport(device) ⇒ <code>Object</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Returns whether local mode is supported along with a message describing the reason why local mode is not supported.  
+**Returns**: <code>Object</code> - Local mode support info ({ supported: true/false, message: "..." })  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| device | <code>Object</code> | A device object |
+
+**Example**  
+```js
+balena.models.device.get('7cf02a6').then(function(device) {
+	balena.models.device.getLocalModeSupport(device);
+})
 ```
 <a name="balena.models.device.enableLockOverride"></a>
 

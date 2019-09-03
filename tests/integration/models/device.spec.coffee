@@ -823,6 +823,112 @@ describe 'Device Model', ->
 				.then ({ is_accessible_by_support_until__date }) ->
 					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
+		describe 'Given a device with a production image', ->
+
+			givenAnApplication(before)
+			givenADevice(before, {
+				is_online: true
+				os_variant: 'prod'
+				os_version: 'Resin OS 2.7.8+rev1'
+				supervisor_version: '6.4.2'
+				last_connectivity_event: '2019-05-13T16:14'
+			})
+
+			describe 'balena.models.device.getLocalModeSupport()', ->
+
+				it 'should identify the device as not supported', ->
+					m.chai.expect(balena.models.device.getLocalModeSupport(@device))
+					.to.deep.equal({
+						supported: false
+						message: 'Local mode is only supported on development OS versions'
+					})
+
+			describe 'balena.models.device.isInLocalMode()', ->
+
+				it 'should be false by default for a device retrieved by uuid', ->
+					balena.models.device.isInLocalMode(@device.uuid)
+					.then (isInLocalMode) ->
+						m.chai.expect(isInLocalMode).to.be.false
+
+				it 'should be false by default for a device retrieved by id', ->
+					balena.models.device.isInLocalMode(@device.id)
+					.then (isInLocalMode) ->
+						m.chai.expect(isInLocalMode).to.be.false
+
+			describe 'balena.models.device.enableLocalMode()', ->
+
+				it 'should not be able to enable local mode by uuid', ->
+					promise = balena.models.device.enableLocalMode(@device.uuid)
+					m.chai.expect(promise).to.be.rejectedWith('Local mode is only supported on development OS versions')
+
+				it 'should not be able to enable local mode by id', ->
+					promise = balena.models.device.enableLocalMode(@device.id)
+					m.chai.expect(promise).to.be.rejectedWith('Local mode is only supported on development OS versions')
+
+		describe 'Given a device with a development image', ->
+
+			givenAnApplication(before)
+			givenADevice(before, {
+				is_online: true
+				os_variant: 'dev'
+				os_version: 'Resin OS 2.7.8+rev1'
+				supervisor_version: '6.4.2'
+				last_connectivity_event: '2019-05-13T16:14'
+			})
+
+			describe 'balena.models.device.getLocalModeSupport()', ->
+
+				it 'should identify the device as supported', ->
+					m.chai.expect(balena.models.device.getLocalModeSupport(@device))
+					.to.deep.equal({
+						supported: true
+						message: 'Supported'
+					})
+
+			describe '[mutating operations]', ->
+
+				['id', 'uuid'].forEach (deviceParam) ->
+
+					describe 'balena.models.device.isInLocalMode()', ->
+
+						it "should be false by default for a device retrieved by #{deviceParam}", ->
+							balena.models.device.isInLocalMode(@device[deviceParam])
+							.then (isInLocalMode) ->
+								m.chai.expect(isInLocalMode).to.be.false
+
+						it "should be rejected if a device with that #{deviceParam} does not exist", ->
+							deviceParamValue = if deviceParam == 'id' then 999999 else 'asdfghjkl'
+							promise = balena.models.device.isInLocalMode(deviceParamValue)
+							m.chai.expect(promise).to.be.rejectedWith("Device not found: #{deviceParamValue}")
+
+					describe 'balena.models.device.enableLocalMode()', ->
+
+						it "should be able to enable local mode by #{deviceParam}", ->
+							balena.models.device.enableLocalMode(@device[deviceParam])
+							.then =>
+								balena.models.device.isInLocalMode(@device[deviceParam])
+							.then (isInLocalMode) ->
+								m.chai.expect(isInLocalMode).to.be.true
+
+						it "should be rejected if a device with that #{deviceParam} does not exist", ->
+							deviceParamValue = if deviceParam == 'id' then 999999 else 'asdfghjkl'
+							promise = balena.models.device.enableLocalMode(deviceParamValue)
+							m.chai.expect(promise).to.be.rejectedWith("Device not found: #{deviceParamValue}")
+
+					describe 'balena.models.device.disableLocalMode()', ->
+
+						it "should be able to disable local mode by #{deviceParam}", ->
+							balena.models.device.disableLocalMode(@device[deviceParam])
+							.then =>
+								balena.models.device.isInLocalMode(@device[deviceParam])
+							.then (isInLocalMode) ->
+								m.chai.expect(isInLocalMode).to.be.false
+
+						it "should be rejected if a device with that #{deviceParam} does not exist", ->
+							deviceParamValue = if deviceParam == 'id' then 999999 else 'asdfghjkl'
+							promise = balena.models.device.disableLocalMode(deviceParamValue)
+							m.chai.expect(promise).to.be.rejectedWith("Device not found: #{deviceParamValue}")
+
 		describe 'balena.models.device.hasLockOverride()', ->
 
 			givenAnApplicationWithADevice(before)
@@ -1649,6 +1755,116 @@ describe 'Device Model', ->
 				m.chai.expect(
 					balena.models.device.lastOnline(mockDevice)
 				).to.equal('5 minutes ago')
+
+		describe 'balena.models.device.getLocalModeSupport()', ->
+
+			it 'should identify a device w/o a supervisor_version as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'dev'
+					os_version: 'Resin OS 2.7.8+rev1'
+					supervisor_version: ''
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Device is not yet fully provisioned'
+				})
+
+			it 'should identify a device w/o a last_connectivity_event as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'dev'
+					os_version: 'Resin OS 2.7.8+rev1'
+					supervisor_version: '6.4.2'
+					last_connectivity_event: null
+				})).to.deep.equal({
+					supported: false
+					message: 'Device is not yet fully provisioned'
+				})
+
+			it 'should identify a device w/o an os_version as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'dev'
+					os_version: null
+					supervisor_version: '6.4.2'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Device OS version does not support local mode'
+				})
+
+			it 'should identify a device with an invalid os_version as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'dev'
+					os_version: 'ResinOS 2.7.8.9+rev1'
+					supervisor_version: '6.4.2'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Device OS version does not support local mode'
+				})
+
+			it 'should identify a device with a v1 OS as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: ''
+					os_version: 'Resin OS 1.26.0'
+					supervisor_version: '6.4.2'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Device OS version does not support local mode'
+				})
+
+			it 'should identify a device with an old supervisor as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'dev'
+					os_version: 'Resin OS 2.0.0+rev1'
+					supervisor_version: '3.99.99'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Device supervisor version does not support local mode'
+				})
+
+			it 'should identify a device w/o an os_variant as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: ''
+					os_version: 'Resin OS 2.7.8+rev1'
+					supervisor_version: '6.4.2'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Local mode is only supported on development OS versions'
+				})
+
+			it 'should identify a device with a production image as not supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'prod'
+					os_version: 'Resin OS 2.7.8+rev1'
+					supervisor_version: '6.4.2'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: false
+					message: 'Local mode is only supported on development OS versions'
+				})
+
+			it 'should identify a device with a development image as supported', ->
+				m.chai.expect(balena.models.device.getLocalModeSupport({
+					is_online: true
+					os_variant: 'dev'
+					os_version: 'Resin OS 2.7.8+rev1'
+					supervisor_version: '6.4.2'
+					last_connectivity_event: '2019-05-13T16:14'
+				})).to.deep.equal({
+					supported: true
+					message: 'Supported'
+				})
 
 		describe 'balena.models.device.getOsVersion()', ->
 

@@ -146,7 +146,7 @@ resetDevices = ->
 	balena.pine.delete
 		resource: 'device'
 
-exports.givenADevice = (beforeFn) ->
+exports.givenADevice = (beforeFn, extraDeviceProps) ->
 	beforeFn ->
 		# calling this.skip() doesn't trigger afterEach,
 		# so we need to reset in here as well
@@ -163,6 +163,16 @@ exports.givenADevice = (beforeFn) ->
 				resource: 'device'
 				body:
 					is_on__commit: @currentRelease.commit
+				options:
+					$filter:
+						uuid: deviceInfo.uuid
+		.tap (deviceInfo) ->
+			if !extraDeviceProps
+				return
+
+			balena.pine.patch
+				resource: 'device'
+				body: extraDeviceProps
 				options:
 					$filter:
 						uuid: deviceInfo.uuid

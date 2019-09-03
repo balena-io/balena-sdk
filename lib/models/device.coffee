@@ -49,6 +49,12 @@ deviceStatus = require('balena-device-status')
 	getDeviceOsSemverWithVariant
 	normalizeDeviceOsVersion
 } = require('../util/device-os-version')
+{
+	checkLocalModeSupported
+	getLocalModeSupport
+	LOCAL_MODE_ENV_VAR
+	LOCAL_MODE_SUPPORT_PROPERTIES
+} = require('../util/local-mode')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -1852,6 +1858,119 @@ getDeviceModel = (deps, opts) ->
 					$filter:
 						uuid: uuid
 		.asCallback(callback)
+
+	###*
+	# @summary Enable local mode
+	# @name enableLocalMode
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.enableLocalMode('7cf02a6');
+	#
+	# @example
+	# balena.models.device.enableLocalMode(123);
+	#
+	# @example
+	# balena.models.device.enableLocalMode('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.enableLocalMode = (uuidOrId, callback) ->
+		selectedProps = [
+			'id',
+			LOCAL_MODE_SUPPORT_PROPERTIES...
+		]
+		exports.get(uuidOrId, $select: selectedProps)
+		.then (device) ->
+			checkLocalModeSupported(device)
+			exports.configVar.set(device.id, LOCAL_MODE_ENV_VAR, '1')
+		.asCallback(callback)
+
+	###*
+	# @summary Disable local mode
+	# @name disableLocalMode
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.disableLocalMode('7cf02a6');
+	#
+	# @example
+	# balena.models.device.disableLocalMode(123);
+	#
+	# @example
+	# balena.models.device.disableLocalMode('7cf02a6', function(error) {
+	# 	if (error) throw error;
+	# });
+	###
+	exports.disableLocalMode = (uuidOrId, callback) ->
+		exports.configVar.set(uuidOrId, LOCAL_MODE_ENV_VAR, '0')
+		.asCallback(callback)
+
+	###*
+	# @summary Check if local mode is enabled on the device
+	# @name isInLocalMode
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
+	# @fulfil {Boolean} - has device url
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.device.isInLocalMode('7cf02a6').then(function(isInLocalMode) {
+	# 	if (isInLocalMode) {
+	# 		console.log('The device has local mode enabled');
+	# 	}
+	# });
+	#
+	# @example
+	# balena.models.device.isInLocalMode(123).then(function(isInLocalMode) {
+	# 	if (isInLocalMode) {
+	# 		console.log('The device has local mode enabled');
+	# 	}
+	# });
+	#
+	# @example
+	# balena.models.device.isInLocalMode('7cf02a6', function(error, isInLocalMode) {
+	# 	if (error) throw error;
+	#
+	# 	if (isInLocalMode) {
+	# 		console.log('The device has local mode enabled');
+	# 	}
+	# });
+	###
+	exports.isInLocalMode = (uuidOrId, callback) ->
+		exports.configVar.get(uuidOrId, LOCAL_MODE_ENV_VAR)
+		.then (value) -> value == '1'
+		.asCallback(callback)
+
+	###*
+	# @summary Returns whether local mode is supported along with a message describing the reason why local mode is not supported.
+	# @name getLocalModeSupport
+	# @public
+	# @function
+	# @memberof balena.models.device
+	#
+	# @param {Object} device - A device object
+	# @returns {Object} Local mode support info ({ supported: true/false, message: "..." })
+	#
+	# @example
+	# balena.models.device.get('7cf02a6').then(function(device) {
+	# 	balena.models.device.getLocalModeSupport(device);
+	# })
+	###
+	exports.getLocalModeSupport = getLocalModeSupport
 
 	setLockOverriden = (uuidOrId, shouldOverride, callback) ->
 		getId(uuidOrId).then (deviceId) ->

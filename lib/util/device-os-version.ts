@@ -1,8 +1,8 @@
 import bSemver = require('balena-semver');
 import includes = require('lodash/includes');
 import isEmpty = require('lodash/isEmpty');
-import { isProvisioned } from '.';
 import * as BalenaSdk from '../../typings/balena-sdk';
+import { isProvisioned } from './device';
 
 export const normalizeDeviceOsVersion = (device: BalenaSdk.Device) => {
 	if (
