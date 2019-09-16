@@ -8,6 +8,7 @@ declare namespace BalenaRequest {
 		baseUrl?: string;
 		url: string;
 		apiKey?: string;
+		sendToken?: boolean;
 		body?: any;
 	}
 
