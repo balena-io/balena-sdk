@@ -2,7 +2,12 @@ Promise = require('bluebird')
 m = require('mochainon')
 rindle = require('rindle')
 
-{ balena, sdkOpts, givenLoggedInUser } = require('./setup')
+{
+	balena
+	givenAnApplication
+	givenLoggedInUser
+	sdkOpts
+} = require('./setup')
 
 sendLogMessages = (uuid, deviceApiKey, messages) ->
 	balena.request.send
@@ -15,21 +20,21 @@ sendLogMessages = (uuid, deviceApiKey, messages) ->
 
 describe 'Logs', ->
 
-	givenLoggedInUser(beforeEach)
+	givenLoggedInUser(before)
 
 	describe 'given a device', ->
 
+		givenAnApplication(before)
+
 		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				deviceType: 'raspberry-pi'
-				applicationType: 'microservices-starter'
-			.then (application) =>
-				@application = application
-				@uuid = balena.models.device.generateUniqueKey()
-				balena.models.device.register(application.id, @uuid)
+			@uuid = balena.models.device.generateUniqueKey()
+			balena.models.device.register(@application.id, @uuid)
 			.then (registrationInfo) =>
 				@deviceApiKey = registrationInfo.api_key
+
+		afterEach ->
+			balena.pine.delete
+				resource: 'device'
 
 		describe 'balena.logs.history()', ->
 
