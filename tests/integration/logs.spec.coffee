@@ -117,12 +117,12 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines).to.have.lengthOf(2)
 					m.chai.expect(lines).to.deep.match [{
 						message: 'Old message'
 					}, {
 						message: 'Slightly newer message'
 					}]
+					m.chai.expect(lines).to.have.lengthOf(2)
 
 			it 'should limit historical logs by count', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -145,8 +145,10 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
+					m.chai.expect(lines).to.deep.match [{
+						message: 'Slightly newer message'
+					}]
 					m.chai.expect(lines).to.have.lengthOf(1)
-					m.chai.expect(lines[0].message).to.equal('Slightly newer message')
 
 			it 'should stream new logs after historical logs', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -173,12 +175,12 @@ describe 'Logs', ->
 							.catch(reject)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines).to.have.lengthOf(2)
 					m.chai.expect(lines).to.deep.match [{
 						message: 'Existing message'
 					}, {
 						message: 'New message'
 					}]
+					m.chai.expect(lines).to.have.lengthOf(2)
 
 			it 'should allow unsubscribing from logs', ->
 				balena.logs.subscribe(@uuid)
