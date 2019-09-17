@@ -89,7 +89,7 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(0)
+					m.chai.expect(lines).to.have.lengthOf(0)
 
 			it 'should load historical logs if requested', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -112,7 +112,7 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(2)
+					m.chai.expect(lines).to.have.lengthOf(2)
 					m.chai.expect(lines).to.deep.match [{
 						message: 'Old message'
 					}, {
@@ -168,7 +168,7 @@ describe 'Logs', ->
 							.catch(reject)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(2)
+					m.chai.expect(lines).to.have.lengthOf(2)
 					m.chai.expect(lines).to.deep.match [{
 						message: 'Existing message'
 					}, {
@@ -195,4 +195,4 @@ describe 'Logs', ->
 						.then ->
 							resolve(lines)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(0)
+					m.chai.expect(lines).to.have.lengthOf(0)
