@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'tests/logs.spec: Increase the delay of logs.subscribe()'
+      hash: 8b6b8be9fa49c9bfae032549617dd0d302ec734e
+      body: |
+        That's in an effort to make the CI tests more stable.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'tests/logs.spec: Refactor to use the same app for all test cases'
+      hash: f9f615c6ef882b455eda18d42e9a732df502f972
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings/balena-request: Add the missing sendToken option'
+      hash: 01ed583eeab3a21e95a3aa8c8e094e028bc40c91
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.10.1
+  date: 2019-09-17T14:36:18.076Z
+- commits:
     - subject: Add local mode related methods
       hash: 56b66d6f05c8c4997a2b7319929f5275120a59ae
       body: ''
