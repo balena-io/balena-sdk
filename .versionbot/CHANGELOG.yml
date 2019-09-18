@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'tests/logs.spec: Refactor to use the same app for all test cases'
+      hash: 0830988a70f0b61bd44abd8867725f064bebcbf7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings/balena-request: Add the missing sendToken option'
+      hash: 63147fad7a408f8b967b864d36f1356f45fe0ec0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.10.1
+  date: 2019-09-18T05:48:38.256Z
+- commits:
     - subject: Add local mode related methods
       hash: 56b66d6f05c8c4997a2b7319929f5275120a59ae
       body: ''
