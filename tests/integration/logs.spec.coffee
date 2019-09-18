@@ -2,7 +2,12 @@ Promise = require('bluebird')
 m = require('mochainon')
 rindle = require('rindle')
 
-{ balena, sdkOpts, givenLoggedInUser } = require('./setup')
+{
+	balena
+	givenAnApplication
+	givenLoggedInUser
+	sdkOpts
+} = require('./setup')
 
 sendLogMessages = (uuid, deviceApiKey, messages) ->
 	balena.request.send
@@ -15,21 +20,21 @@ sendLogMessages = (uuid, deviceApiKey, messages) ->
 
 describe 'Logs', ->
 
-	givenLoggedInUser(beforeEach)
+	givenLoggedInUser(before)
 
 	describe 'given a device', ->
 
+		givenAnApplication(before)
+
 		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				deviceType: 'raspberry-pi'
-				applicationType: 'microservices-starter'
-			.then (application) =>
-				@application = application
-				@uuid = balena.models.device.generateUniqueKey()
-				balena.models.device.register(application.id, @uuid)
+			@uuid = balena.models.device.generateUniqueKey()
+			balena.models.device.register(@application.id, @uuid)
 			.then (registrationInfo) =>
 				@deviceApiKey = registrationInfo.api_key
+
+		afterEach ->
+			balena.pine.delete
+				resource: 'device'
 
 		describe 'balena.logs.history()', ->
 
@@ -84,12 +89,12 @@ describe 'Logs', ->
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(2000)
+						Promise.delay(10000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(0)
+					m.chai.expect(lines).to.have.lengthOf(0)
 
 			it 'should load historical logs if requested', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -107,17 +112,17 @@ describe 'Logs', ->
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(2000)
+						Promise.delay(10000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(2)
 					m.chai.expect(lines).to.deep.match [{
 						message: 'Old message'
 					}, {
 						message: 'Slightly newer message'
 					}]
+					m.chai.expect(lines).to.have.lengthOf(2)
 
 			it 'should limit historical logs by count', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -135,13 +140,15 @@ describe 'Logs', ->
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(2000)
+						Promise.delay(10000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
+					m.chai.expect(lines).to.deep.match [{
+						message: 'Slightly newer message'
+					}]
 					m.chai.expect(lines).to.have.lengthOf(1)
-					m.chai.expect(lines[0].message).to.equal('Slightly newer message')
 
 			it 'should stream new logs after historical logs', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -162,18 +169,18 @@ describe 'Logs', ->
 								message: 'New message',
 								timestamp: Date.now()
 							}]
-							.delay(2000)
+							.delay(10000)
 							.then ->
 								resolve(lines)
 							.catch(reject)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(2)
 					m.chai.expect(lines).to.deep.match [{
 						message: 'Existing message'
 					}, {
 						message: 'New message'
 					}]
+					m.chai.expect(lines).to.have.lengthOf(2)
 
 			it 'should allow unsubscribing from logs', ->
 				balena.logs.subscribe(@uuid)
@@ -195,4 +202,4 @@ describe 'Logs', ->
 						.then ->
 							resolve(lines)
 				.then (lines) ->
-					m.chai.expect(lines.length).to.equal(0)
+					m.chai.expect(lines).to.have.lengthOf(0)
