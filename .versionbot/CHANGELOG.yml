@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'Revert "tests/logs.spec: Increase the delay of logs.subscribe()"'
+      hash: 7719216546171f8fb954bc3d991bff8c5d6690f8
+      body: |
+        This reverts commit
+        8b6b8be9fa49c9bfae032549617dd0d302ec734e
+        which was added in attempt to make the log related
+        tests more stable. It doesn't look like it's needed any
+        more.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.10.2
+  date: 2019-09-18T10:28:37.953Z
+- commits:
     - subject: 'tests/logs.spec: Increase the delay of logs.subscribe()'
       hash: 8b6b8be9fa49c9bfae032549617dd0d302ec734e
       body: |
