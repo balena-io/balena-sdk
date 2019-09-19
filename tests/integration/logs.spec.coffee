@@ -89,7 +89,7 @@ describe 'Logs', ->
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(10000)
+						Promise.delay(2000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
@@ -112,7 +112,7 @@ describe 'Logs', ->
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(10000)
+						Promise.delay(2000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
@@ -140,7 +140,7 @@ describe 'Logs', ->
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(10000)
+						Promise.delay(2000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
@@ -169,7 +169,7 @@ describe 'Logs', ->
 								message: 'New message',
 								timestamp: Date.now()
 							}]
-							.delay(10000)
+							.delay(2000)
 							.then ->
 								resolve(lines)
 							.catch(reject)
