@@ -443,21 +443,30 @@ describe 'OS model', ->
 
 		describe 'balena.models.os.isArchitectureCompatibleWith()', ->
 
-			it 'should return false when comparing arm and i386 architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('armv7hf', 'i386')).to.equal(false)
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('aarch64', 'i386')).to.equal(false)
-
-			it 'should return false when comparing i386 and arm architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('i386', 'armv7hf')).to.equal(false)
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('i386', 'aarch64')).to.equal(false)
-
-			it 'should return false when comparing arm and amd64 architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64')).to.equal(false)
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('aarch64', 'amd64')).to.equal(false)
-
-			it 'should return false when comparing amd64 and arm architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('amd64', 'armv7hf')).to.equal(false)
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('amd64', 'aarch64')).to.equal(false)
+			[
+				['armv7hf', 'i386']
+				['aarch64', 'i386']
+				['i386', 'armv7hf']
+				['i386', 'aarch64']
+				['armv7hf', 'amd64']
+				['aarch64', 'amd64']
+				['amd64', 'armv7hf']
+				['amd64', 'aarch64']
+				['amd64', 'i386']
+				['i386', 'amd64']
+				# arm architectures
+				['armv5e', 'rpi']
+				['armv5e', 'armv7hf']
+				['armv5e', 'aarch64']
+				['rpi', 'armv5e']
+				['rpi', 'armv7hf']
+				['rpi', 'aarch64']
+				['armv7hf', 'armv5e']
+				['armv7hf', 'aarch64']
+				['aarch64', 'armv5e']
+			].forEach ([deviceArch, appArch]) ->
+				it "should return false when comparing #{deviceArch} and #{appArch} architectures", ->
+					m.chai.expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(false)
 
 			it 'should return true when comparing the same architecture slugs', ->
 				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('rpi', 'rpi')).to.equal(true)
@@ -468,14 +477,10 @@ describe 'OS model', ->
 				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('i386-nlp', 'i386-nlp')).to.equal(true)
 				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('amd64', 'amd64')).to.equal(true)
 
-			it 'should return true when comparing aarch64 and armv7hf architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('aarch64', 'armv7hf')).to.equal(true)
-
-			it 'should return false when comparing armv7hf and aarch64 architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('armv7hf', 'aarch64')).to.equal(false)
-
-			it 'should return false when comparing amd64 and i386 architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('amd64', 'i386')).to.equal(false)
-
-			it 'should return false when comparing i386 and amd64 architectures', ->
-				m.chai.expect(balena.models.os.isArchitectureCompatibleWith('i386', 'amd64')).to.equal(false)
+			[
+				['aarch64', 'armv7hf']
+				['aarch64', 'rpi']
+				['armv7hf', 'rpi']
+			].forEach ([deviceArch, appArch]) ->
+				it "should return true when comparing #{deviceArch} and #{appArch} architectures", ->
+					m.chai.expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(true)

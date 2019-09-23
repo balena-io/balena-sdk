@@ -1671,47 +1671,59 @@ describe 'Device Model', ->
 				promise = balena.models.device.move(@deviceInfo.uuid, @application2.app_name)
 				m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
 
-	describe 'given an armv7hf and an aarch64 application with a device on each', ->
+	describe 'given applications of different architectures with a device on each', ->
 
 		before ->
 			Promise.props
-				application1: balena.models.application.create
+				rpi: balena.models.application.create
+					name: 'FooBarArmv6'
+					applicationType: 'microservices-starter'
+					deviceType: 'raspberry-pi'
+				armv7hf: balena.models.application.create
 					name: 'FooBar32'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
-				application2: balena.models.application.create
+				aarch64: balena.models.application.create
 					name: 'BarBaz64'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3-64'
 			.then (apps) =>
-				@application1 = apps.application1
-				@application2 = apps.application2
+				@apps = apps
 
-				Promise.all([
-					balena.models.device.register(@application1.id, balena.models.device.generateUniqueKey())
-					balena.models.device.register(@application2.id, balena.models.device.generateUniqueKey())
-				])
-			.then ([device1Info, device2Info]) =>
-				@device1Info = device1Info
-				@device2Info = device2Info
+				Promise.props _.mapValues apps, (app) ->
+					balena.models.device.register(app.id, balena.models.device.generateUniqueKey())
+			.then (devices) =>
+				@devices = devices
 
 		after ->
-			Promise.map [
-				@application1.id
-				@application2.id
-			], balena.models.application.remove
+			Promise.props _.mapValues(@apps, 'id'),
+				balena.models.application.remove
 
 		describe 'balena.models.device.move()', ->
 
-			it 'should be rejected with an incompatibility error when trying to move an armv7hf device to an aarch64 application', ->
-				promise = balena.models.device.move(@device1Info.uuid, @application2.app_name)
-				m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{@application2.app_name}")
+			[
+				['rpi', 'armv7hf']
+				['rpi', 'aarch64']
+				['armv7hf', 'aarch64']
+			].forEach ([deviceArch, appArch]) ->
+				it "should be rejected with an incompatibility error when trying to move an #{deviceArch} device to an #{appArch} application", ->
+					device = @devices[deviceArch]
+					app = @apps[appArch]
+					promise = balena.models.device.move(device.uuid, app.app_name)
+					m.chai.expect(promise).to.be.rejectedWith("Incompatible application: #{app.app_name}")
 
-			it 'should be able to move an aarch64 device to an armv7hf application', ->
-				balena.models.device.move(@device2Info.id, @application1.id).then =>
-					balena.models.device.getApplicationName(@device2Info.id)
-				.then (applicationName) =>
-					m.chai.expect(applicationName).to.equal(@application1.app_name)
+			[
+				['aarch64', 'armv7hf']
+				['aarch64', 'rpi']
+				['armv7hf', 'rpi']
+			].forEach ([deviceArch, appArch]) ->
+				it "should be able to move an #{deviceArch} device to an #{appArch} application", ->
+					device = @devices[deviceArch]
+					app = @apps[appArch]
+					balena.models.device.move(device.id, app.id).then ->
+						balena.models.device.getApplicationName(device.id)
+					.then (applicationName) ->
+						m.chai.expect(applicationName).to.equal(app.app_name)
 
 	describe 'helpers', ->
 
