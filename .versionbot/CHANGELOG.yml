@@ -1,4 +1,18 @@
 - commits:
+    - subject: Allow mixing armv7 & aarch64 devices in RPi 1 / zero apps
+      hash: 73b693e134e3336edd773a989db527c84472e65e
+      body: ''
+      footer:
+        Resolves: '#734'
+        resolves: '#734'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.11.0
+  date: 2019-09-19T18:32:17.953Z
+- commits:
     - subject: 'Revert "tests/logs.spec: Increase the delay of logs.subscribe()"'
       hash: 7719216546171f8fb954bc3d991bff8c5d6690f8
       body: |
