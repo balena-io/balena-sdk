@@ -19,8 +19,8 @@ describe 'Config Model', ->
 
 		it 'should include the mixpanel token', ->
 			balena.models.config.getAll().get('mixpanelToken').then (mixpanelToken) ->
-				m.chai.expect(_.isString(mixpanelToken)).to.be.true
-				m.chai.expect(mixpanelToken).to.have.length(32)
+				m.chai.expect(mixpanelToken).to.be.a('string')
+				m.chai.expect(mixpanelToken).to.equal('balena-main')
 
 	describe 'balena.models.config.getDeviceTypes()', ->
 
