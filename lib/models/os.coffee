@@ -30,7 +30,6 @@ promiseMemoize = require('promise-memoize')
 
 {
 	onlyIf
-	getImgMakerHelper
 	findCallback
 	notFoundResponse
 	treatAsMissingApplication
@@ -48,9 +47,7 @@ withDeviceTypesEndpointCaching = (fn) ->
 
 getOsModel = (deps, opts) ->
 	{ request } = deps
-	{ apiUrl, isBrowser, imageMakerUrl } = opts
-
-	imgMakerHelper = getImgMakerHelper(imageMakerUrl, request)
+	{ apiUrl, isBrowser } = opts
 
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
@@ -134,7 +131,7 @@ getOsModel = (deps, opts) ->
 		return vNormalized
 
 	deviceImageUrl = (deviceType, version) ->
-		"/image/#{deviceType}/?version=#{encodeURIComponent(version)}"
+		"/download?deviceType=#{deviceType}&version=#{version}"
 
 	fixNonSemver = (version) ->
 		if version?
@@ -321,9 +318,11 @@ getOsModel = (deps, opts) ->
 			.then ->
 				normalizeVersion(version)
 			.then (version) ->
-				imgMakerHelper.request
+				request.send
 					method: 'HEAD'
 					url: deviceImageUrl(deviceType, version)
+					baseUrl: apiUrl
+					sendToken: false
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.then (response) ->
@@ -360,10 +359,16 @@ getOsModel = (deps, opts) ->
 
 		return getValidatedDeviceType(deviceType)
 			.then ->
-				normalizeVersion(version)
+				if version == 'latest'
+					return exports._getOsVersions(deviceType).get('latest')
+
+				return normalizeVersion(version)
 			.then (version) ->
-				imgMakerHelper.stream
+				request.stream
+					method: 'GET'
 					url: deviceImageUrl(deviceType, version)
+					baseUrl: apiUrl
+					sendToken: false
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.asCallback(callback)
