@@ -13,7 +13,6 @@ if IS_BROWSER
 
 	opts =
 		apiUrl: env.TEST_API_URL || 'https://api.balena-cloud.com'
-		imageMakerUrl: 'https://img.balena-cloud.com'
 
 else
 	getSdk = require('../..')
@@ -22,7 +21,6 @@ else
 
 	opts =
 		apiUrl: env.TEST_API_URL || settings.get('apiUrl')
-		imageMakerUrl: settings.get('imageMakerUrl')
 		dataDirectory: settings.get('dataDirectory')
 
 _.assign opts,

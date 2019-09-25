@@ -7,7 +7,6 @@ export const getSdk: BalenaSdk.SdkConstructor;
 
 export const sdkOpts: {
 	apiUrl: string;
-	imageMakerUrl: string;
 	dataDirectory: string;
 	apiKey: string | null;
 	isBrowser: boolean;

@@ -6004,7 +6004,6 @@ startup and before any calls to `fromSharedOptions()` are made.
 ```js
 balena.setSharedOptions({
 	apiUrl: 'https://api.balena-cloud.com/',
-	imageMakerUrl: 'https://img.balena-cloud.com/',
 	isBrowser: true,
 });
 ```
