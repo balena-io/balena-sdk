@@ -805,13 +805,25 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.isTrackingLatestRelease = (nameOrId, callback) ->
-		Promise.all([
-			exports.get(nameOrId, $select: ['commit', 'should_track_latest_release'])
-			releaseModel().getLatestByApplication(nameOrId, $select: 'commit')
-		])
-		.then ([application, latestRelease]) ->
+		exports.get(nameOrId, {
+			$select: ['should_track_latest_release']
+			$expand:
+				should_be_running__release: $select: ['id']
+				owns__release:
+					$select: 'id'
+					$top: 1
+					$filter:
+						status: 'success'
+					$orderby: 'created_at desc'
+		})
+		.then (application) ->
+			trackedRelease = application.should_be_running__release[0]
+			latestRelease = application.owns__release[0]
 			return application.should_track_latest_release &&
-			(!latestRelease || application.commit == latestRelease.commit)
+			(
+				!latestRelease ||
+				trackedRelease && trackedRelease.id == latestRelease.id
+			)
 		.asCallback(callback)
 
 	###*
@@ -847,12 +859,20 @@ getApplicationModel = (deps, opts) ->
 	exports.pinToRelease = (nameOrId, fullReleaseHash, callback) ->
 		getId(nameOrId)
 		.then (applicationId) ->
-			pine.patch
-				resource: 'application'
-				id: applicationId
-				body:
-					commit: fullReleaseHash
-					should_track_latest_release: false
+			releaseModel().get(fullReleaseHash, {
+				$select: 'id'
+				$top: 1
+				$filter:
+					belongs_to__application: applicationId
+					status: 'success'
+			})
+			.then (release) ->
+				pine.patch
+					resource: 'application'
+					id: applicationId
+					body:
+						should_be_running__release: release.id
+						should_track_latest_release: false
 		.asCallback(callback)
 
 	###*
@@ -882,8 +902,12 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.getTargetReleaseHash = (nameOrId, callback) ->
-		exports.get(nameOrId, $select: 'commit')
-		.get('commit')
+		exports.get(nameOrId, {
+			$select: 'id'
+			$expand: should_be_running__release: $select: ['commit']
+		})
+		.then (application) ->
+			application.should_be_running__release[0]?.commit
 		.asCallback(callback)
 
 	###*
@@ -915,30 +939,27 @@ getApplicationModel = (deps, opts) ->
 	# });
 	###
 	exports.trackLatestRelease = (nameOrId, callback) ->
-		releaseModel().getLatestByApplication(nameOrId,
-			$select: ['commit', 'belongs_to__application']
-		)
-		.then (latestRelease) ->
-			if not latestRelease
-				return Promise.props(
-					applicationId: getId(nameOrId)
-					commit: null
-				)
-
-			return {
-				applicationId: latestRelease.belongs_to__application.__id
-				commit: latestRelease.commit
-			}
-		.then ({ applicationId, commit }) ->
+		exports.get(nameOrId, {
+			$select: 'id'
+			$expand:
+				owns__release:
+					$select: 'id'
+					$top: 1
+					$filter:
+						status: 'success'
+					$orderby: 'created_at desc'
+		})
+		.then (application) ->
 			body =
 				should_track_latest_release: true
 
-			if commit
-				body.commit = commit
+			latestRelease = application.owns__release[0]
+			if latestRelease
+				body.should_be_running__release = latestRelease.id
 
 			return pine.patch
 				resource: 'application'
-				id: applicationId
+				id: application.id
 				body: body
 		.asCallback(callback)
 
