@@ -28,6 +28,8 @@ else
 		builderUrl: env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.')
 		dataDirectory: settings.get('dataDirectory')
 
+opts.apiUrl = 'https://api.balena-staging.com'
+
 _.assign opts,
 	apiKey: null
 	isBrowser: IS_BROWSER,
