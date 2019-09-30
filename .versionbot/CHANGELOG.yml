@@ -1,4 +1,40 @@
 - commits:
+    - subject: Deprecate the imageMakerUrl constructor option
+      hash: b067c3f8a9ac607bb575acf4da4fed4dac8b8c6e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Drop the image maker helper
+      hash: ee228e578c28058ff9e4f48ebf14f361b961435d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Use the cloud API endpoint for downloading unconfigured images
+      hash: 41e33765042409d93e82b5597502c5aeac098bfa
+      body: ''
+      footer:
+        Resolves: '#665'
+        resolves: '#665'
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/resin-api/issues/1828'
+        depends-on: 'https://github.com/balena-io/resin-api/issues/1828'
+        HQ: 'https://github.com/balena-io/balena/issues/1744'
+        hq: 'https://github.com/balena-io/balena/issues/1744'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.12.0
+  date: 2019-09-28T08:22:15.212Z
+- commits:
     - subject: 'tests/config: Update the mixpanelToken expected value'
       hash: b06e10f757c35d1ea786153938ac577a0029d6e8
       body: ''
