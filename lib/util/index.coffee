@@ -15,7 +15,6 @@ memoizee = require('memoizee')
 moment = require('moment')
 
 exports.deviceTypes = require('./device-types')
-exports.getImgMakerHelper = require('./img-maker')
 exports.getOsUpdateHelper = require('./device-actions/os-update').getOsUpdateHelper
 
 exports.notImplemented = notImplemented = ->
