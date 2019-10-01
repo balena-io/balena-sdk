@@ -27,8 +27,6 @@ errors = require('balena-errors')
 {
 	isId,
 	findCallback,
-	getCurrentServiceDetailsPineOptions,
-	generateCurrentServiceDetails,
 	mergePineOptions,
 	notFoundResponse,
 	noApplicationForKeyResponse,
@@ -36,6 +34,10 @@ errors = require('balena-errors')
 	LOCKED_STATUS_CODE
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
+{
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
+} = require('../util/device-service-details')
 
 getApplicationModel = (deps, opts) ->
 	{ request, pine } = deps

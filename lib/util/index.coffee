@@ -1,15 +1,10 @@
 errors = require('balena-errors')
 assign = require('lodash/assign')
 cloneDeep = require('lodash/cloneDeep')
-groupBy = require('lodash/groupBy')
-includes = require('lodash/includes')
 isArray = require('lodash/isArray')
 isFunction = require('lodash/isFunction')
 isNumber = require('lodash/isNumber')
 isString = require('lodash/isString')
-mapKeys = require('lodash/mapKeys')
-mapValues = require('lodash/mapValues')
-omit = require('lodash/omit')
 throttle = require('lodash/throttle')
 memoizee = require('memoizee')
 moment = require('moment')
@@ -181,87 +176,3 @@ convertExpandToObject = (expandOption) ->
 				throw new Error("Unknown pine expand options: #{invalidKeys}")
 
 		return cloneDeep(expandOption)
-
-# Pine options necessary for getting raw service data for a device
-exports.getCurrentServiceDetailsPineOptions = (expandRelease) ->
-	pineOptions =
-		$expand:
-			image_install:
-				$select: [
-					'id'
-					'download_progress'
-					'status'
-					'install_date'
-				]
-				$filter:
-					# We filter out deleted images entirely
-					status: $ne: 'deleted'
-				$expand:
-					image:
-						$select: ['id']
-						$expand:
-							is_a_build_of__service:
-								$select: ['id', 'service_name']
-			gateway_download:
-				$select: [
-					'id'
-					'download_progress'
-					'status'
-				]
-				$filter:
-					# We filter out deleted gateway downloads entirely
-					status: $ne: 'deleted'
-				$expand:
-					image:
-						$select: ['id']
-						$expand:
-							is_a_build_of__service:
-								$select: ['id', 'service_name']
-
-	if expandRelease
-		pineOptions.$expand.image_install.$expand.is_provided_by__release =
-			$select: ['id', 'commit']
-
-	return pineOptions
-
-# Builds summary data for an image install or gateway download
-getSingleInstallSummary = (rawData) ->
-	image = rawData.image[0]
-	service = image.is_a_build_of__service[0]
-
-	releaseInfo = {}
-	# for the case that the release wasn't expanded or
-	# this is about gateway downloads which don't have releases
-	if rawData.is_provided_by__release?
-		release = rawData.is_provided_by__release[0]
-		releaseInfo =
-			commit: release?.commit
-
-	return Object.assign omit(rawData, ['image', 'is_provided_by__release']),
-		service_name: service.service_name
-		image_id: image.id
-		service_id: service.id
-	,
-		releaseInfo
-
-# Converts raw service data into a more usable structure and attaches it to the
-# device object under the `current_services` key
-exports.generateCurrentServiceDetails = (rawData) ->
-	installs = rawData.image_install.map(getSingleInstallSummary)
-	downloads = rawData.gateway_download.map(getSingleInstallSummary)
-
-	# Strip expanded fields (we reformat and re-add them below)
-	device = omit(rawData, [
-		'image_install'
-		'gateway_download'
-	])
-
-	device.current_services = mapValues groupBy(installs, 'service_name'), (service_containers) ->
-		service_containers.map (container) ->
-			omit(container, 'service_name')
-		.sort (a, b) ->
-			b.install_date.localeCompare(a.install_date)
-
-	device.current_gateway_downloads = downloads
-
-	return device
