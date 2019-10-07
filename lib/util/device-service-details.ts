@@ -1,9 +1,7 @@
-import groupBy = require('lodash/groupBy');
-import mapValues = require('lodash/mapValues');
-import omit = require('lodash/omit');
 import {
 	CurrentGatewayDownload,
 	CurrentService,
+	Device,
 	DeviceWithImageInstalls,
 	DeviceWithServiceDetails,
 	GatewayDownload,
@@ -65,13 +63,19 @@ export const getCurrentServiceDetailsPineOptions = (expandRelease: boolean) => {
 	return pineOptions;
 };
 
-function getSingleInstallSummary(rawData: ImageInstall): CurrentService;
+interface WithServiceName {
+	service_name: string;
+}
+
+function getSingleInstallSummary(
+	rawData: ImageInstall,
+): CurrentService & WithServiceName;
 function getSingleInstallSummary(
 	rawData: GatewayDownload,
-): CurrentGatewayDownload;
+): CurrentGatewayDownload & WithServiceName;
 function getSingleInstallSummary(
 	rawData: ImageInstall | GatewayDownload,
-): CurrentService | CurrentGatewayDownload {
+): (CurrentService | CurrentGatewayDownload) & WithServiceName {
 	const image = (rawData.image as Image[])[0];
 	const service = (image.is_a_build_of__service as Service[])[0];
 
@@ -82,16 +86,21 @@ function getSingleInstallSummary(
 	) {
 		const release = (rawData.is_provided_by__release as Release[])[0];
 		releaseInfo = {
-			commit: release != null ? release.commit : void 0,
+			commit: release != null ? release.commit : undefined,
 		};
 	}
 
+	// prefer over omit for performance reasons
+	delete rawData.image;
+	if ('is_provided_by__release' in rawData) {
+		delete rawData.is_provided_by__release;
+	}
+
 	return Object.assign(
-		omit(rawData, ['image', 'is_provided_by__release']) as
-			| CurrentService
-			| CurrentGatewayDownload,
+		rawData,
 		{
 			service_id: service.id,
+			// add this extra property to make grouping the services easier
 			service_name: service.service_name,
 			image_id: image.id,
 		},
@@ -110,26 +119,38 @@ export const generateCurrentServiceDetails = (
 		getSingleInstallSummary(gd),
 	);
 
-	const device = omit(rawDevice, [
-		'image_install',
-		'gateway_download',
-	]) as DeviceWithServiceDetails;
+	// prefer over omit for performance reasons
+	delete rawDevice.image_install;
+	delete rawDevice.gateway_download;
 
-	device.current_services = mapValues(
-		groupBy(installs, 'service_name'),
-		serviceContainers => {
-			return serviceContainers
-				.map(container => {
-					return omit(container, 'service_name') as Omit<
-						typeof container,
-						'service_name'
-					>;
-				})
-				.sort((a, b) => {
-					return b.install_date.localeCompare(a.install_date);
-				});
-		},
-	);
+	const device = (rawDevice as Device) as DeviceWithServiceDetails;
+
+	// Essentially a groupBy(installs, 'service_name')
+	// but try making it a bit faster for the sake of large fleets
+	const currentServicesGroupedByName: Record<string, CurrentService[]> = {};
+	installs.forEach(container => {
+		let serviceContainerGroup =
+			currentServicesGroupedByName[container.service_name];
+		if (!serviceContainerGroup) {
+			serviceContainerGroup = currentServicesGroupedByName[
+				container.service_name
+			] = [];
+		}
+
+		// remove the extra property that we added for the grouping
+		delete container.service_name;
+		serviceContainerGroup.push(container);
+	});
+
+	for (const serviceName in currentServicesGroupedByName) {
+		if (currentServicesGroupedByName.hasOwnProperty(serviceName)) {
+			currentServicesGroupedByName[serviceName].sort((a, b) => {
+				return b.install_date.localeCompare(a.install_date);
+			});
+		}
+	}
+
+	device.current_services = currentServicesGroupedByName;
 	device.current_gateway_downloads = downloads;
 	return device;
 };
