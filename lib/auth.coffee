@@ -18,9 +18,9 @@ errors = require('balena-errors')
 Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
-	{ auth, request} = deps
+	{ auth: authBase, request} = deps
 	{ apiUrl } = opts
-	twoFactor = require('./2fa')(deps, opts)
+
 	exports = {}
 
 	normalizeAuthError = (err) ->
@@ -30,6 +30,27 @@ getAuth = (deps, opts) ->
 			return new errors.BalenaNotLoggedIn()
 		else
 			return err
+
+	authSubscribers = []
+
+	exports._onChange = (fn) ->
+		authSubscribers.push(fn)
+		# an ubsubscribe function
+		return ->
+			indexOfFn = authSubscribers.indexOf(fn)
+			authSubscribers.splice(indexOfFn, 1)
+
+	wrapAuthFn = (fn) ->
+		return ->
+			fn.apply(authBase, arguments)
+			.finally -> Promise.map(authSubscribers, (fn) -> fn())
+
+	auth = Object.assign({}, authBase, {
+		setKey: wrapAuthFn(authBase.setKey)
+		removeKey: wrapAuthFn(authBase.removeKey)
+	})
+
+	twoFactor = require('./2fa')(Object.assign({}, deps, { auth }), opts)
 
 	###*
 	# @namespace balena.auth.twoFactor
