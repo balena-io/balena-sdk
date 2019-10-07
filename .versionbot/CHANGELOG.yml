@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert the device service details utils to TypeScript
+      hash: 5a322f524965cd5a74ab6245b98e306329cb10ac
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.12.1
+  date: 2019-10-01T17:33:55.760Z
+- commits:
     - subject: Deprecate the imageMakerUrl constructor option
       hash: b067c3f8a9ac607bb575acf4da4fed4dac8b8c6e
       body: ''
