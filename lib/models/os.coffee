@@ -87,7 +87,6 @@ getOsModel = (deps, opts) ->
 			method: 'GET'
 			url: "/device-types/v1/#{deviceType}/images/#{version}/download-size"
 			baseUrl: apiUrl
-			sendToken: false
 		.get('body')
 		.get('size')
 
@@ -104,7 +103,6 @@ getOsModel = (deps, opts) ->
 			method: 'GET'
 			url: "/device-types/v1/#{deviceType}/images"
 			baseUrl: apiUrl
-			sendToken: false
 		.get('body')
 		.then ({ versions, latest }) ->
 

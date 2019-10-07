@@ -100,7 +100,6 @@ getConfigModel = (deps, opts) ->
 			method: 'GET'
 			url: '/device-types/v1'
 			baseUrl: apiUrl
-			sendToken: false
 		.get('body')
 		.tap (deviceTypes) ->
 			if not deviceTypes?
