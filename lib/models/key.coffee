@@ -21,9 +21,7 @@ errors = require('balena-errors')
 { findCallback, mergePineOptions } = require('../util')
 
 getKeyModel = (deps, opts) ->
-	{ pine } = deps
-
-	auth = require('../auth')(deps, opts)
+	{ pine, sdkInstance: { auth } } = deps
 
 	exports = {}
 

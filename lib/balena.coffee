@@ -35,7 +35,7 @@ BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 
 getSdk = (opts = {}) ->
 	assign = require('lodash/assign')
-	mapValues = require('lodash/mapValues')
+	forEach = require('lodash/forEach')
 	defaults = require('lodash/defaults')
 	getRequest = require('balena-request')
 	BalenaAuth = require('balena-auth')['default']
@@ -43,29 +43,29 @@ getSdk = (opts = {}) ->
 	errors = require('balena-errors')
 	{ notImplemented } = require('./util')
 
+	###*
+	# @namespace models
+	# @memberof balena
+	###
+
+	###*
+	# @namespace auth
+	# @memberof balena
+	###
+
+	###*
+	# @namespace logs
+	# @memberof balena
+	###
+
+	###*
+	# @namespace settings
+	# @memberof balena
+	###
 	sdkTemplate =
-		###*
-		# @namespace models
-		# @memberof balena
-		###
-		models: require('./models')
-
-		###*
-		# @namespace auth
-		# @memberof balena
-		###
 		auth: require('./auth')
-
-		###*
-		# @namespace logs
-		# @memberof balena
-		###
+		models: require('./models')
 		logs: require('./logs')
-
-		###*
-		# @namespace settings
-		# @memberof balena
-		###
 		settings: require('./settings')
 
 	defaults opts,
@@ -91,14 +91,16 @@ getSdk = (opts = {}) ->
 	request = getRequest(assign({}, opts, { auth }))
 	pine = getPine(assign({}, opts, { auth, request }))
 
+	sdk = {}
 	deps = {
 		settings
 		request
 		auth
 		pine
+		sdkInstance: sdk
 	}
 
-	sdk = mapValues(sdkTemplate, (moduleFactory) -> moduleFactory(deps, opts))
+	forEach(sdkTemplate, (moduleFactory, moduleName) -> sdk[moduleName] = moduleFactory(deps, opts))
 
 	###*
 	# @typedef Interceptor

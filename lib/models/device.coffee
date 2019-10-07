@@ -73,14 +73,13 @@ MIN_SUPERVISOR_MC_API = '7.0.0'
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
 getDeviceModel = (deps, opts) ->
-	{ pine, request } = deps
+	{ pine, request, sdkInstance: { auth } } = deps
 	{ apiUrl, dashboardUrl, deviceUrlsBase } = opts
 
 	registerDevice = require('balena-register-device')({ request })
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 	osModel = once -> require('./os')(deps, opts)
-	auth = require('../auth')(deps, opts)
 	upsert = require('../util/upsert').getUpsertHelper(deps)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
