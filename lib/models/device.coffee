@@ -33,9 +33,7 @@ deviceStatus = require('balena-device-status')
 	onlyIf
 	isId
 	findCallback
-	getCurrentServiceDetailsPineOptions
 	getOsUpdateHelper: _getOsUpdateHelper
-	generateCurrentServiceDetails
 	deviceTypes: deviceTypesUtil
 	mergePineOptions
 	notFoundResponse
@@ -49,6 +47,10 @@ deviceStatus = require('balena-device-status')
 	getDeviceOsSemverWithVariant
 	normalizeDeviceOsVersion
 } = require('../util/device-os-version')
+{
+	getCurrentServiceDetailsPineOptions,
+	generateCurrentServiceDetails,
+} = require('../util/device-service-details')
 {
 	checkLocalModeSupported
 	getLocalModeSupport

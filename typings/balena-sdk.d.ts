@@ -464,6 +464,11 @@ declare namespace BalenaSdk {
 		service_install: ReverseNavigationResource<ServiceInstall>;
 	}
 
+	interface DeviceWithImageInstalls extends Device {
+		image_install: ReverseNavigationResource<ImageInstall>;
+		gateway_download: ReverseNavigationResource<GatewayDownload>;
+	}
+
 	interface SupervisorRelease {
 		created_at: string;
 		id: number;
@@ -565,6 +570,24 @@ declare namespace BalenaSdk {
 		recommended: string | undefined;
 		current: string | undefined;
 	};
+
+	interface ImageInstall {
+		id: number;
+		download_progress: number;
+		status: string;
+		install_date: string;
+
+		image: NavigationResource<Image>;
+		is_provided_by__release: NavigationResource<Release>;
+	}
+
+	interface GatewayDownload {
+		id: number;
+		download_progress: number;
+		status: string;
+
+		image: NavigationResource<Image>;
+	}
 
 	interface ServiceInstall {
 		id: number;
