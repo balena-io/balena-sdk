@@ -27,6 +27,8 @@ getReleaseModel = (deps, opts) ->
 	applicationModel = once -> require('./application')(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
+	{ BuilderHelper } = require('../util/builder')
+	builderHelper = new BuilderHelper(deps, opts)
 
 	tagsModel = buildDependentResource { pine }, {
 		resourceName: 'release_tag'
@@ -261,6 +263,47 @@ getReleaseModel = (deps, opts) ->
 			, options
 		)
 		.get(0)
+		.asCallback(callback)
+
+	###*
+	# @summary Create a new release built from the source in the provided url
+	# @name createFromUrl
+	# @public
+	# @function
+	# @memberof balena.models.release
+	#
+	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {Object} urlDeployOptions - builder options
+	# @param {String} urlDeployOptions.url - a url with a tarball of the project to build
+	# @param {Boolean} [urlDeployOptions.shouldFlatten=true] - Should be true when the tarball includes an extra root folder with all the content
+	# @fulfil {number} - release ID
+	# @returns {Promise}
+	#
+	# @example
+	# balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
+	#		console.log(releaseId);
+	# });
+	#
+	# @example
+	# balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
+	#		console.log(releaseId);
+	# });
+	#
+	# @example
+	# balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
+	#		if (error) throw error;
+	#		console.log(releaseId);
+	# });
+	###
+	exports.createFromUrl = (nameOrId, urlDeployOptions, callback) ->
+		applicationModel().get(nameOrId,
+			$select: 'app_name'
+			$expand:
+				user:
+					$select: 'username'
+		)
+		.then ({ app_name, user }) ->
+			builderHelper.buildFromUrl(user[0].username, app_name, urlDeployOptions)
 		.asCallback(callback)
 
 	###*

@@ -70,6 +70,7 @@ getSdk = (opts = {}) ->
 
 	defaults opts,
 		apiUrl: 'https://api.balena-cloud.com/'
+		builderUrl: 'https://builder.balena-cloud.com/'
 		# deprecated
 		imageMakerUrl: 'https://img.balena-cloud.com/'
 		isBrowser: window?
@@ -234,6 +235,7 @@ getSdk = (opts = {}) ->
 # @example
 # balena.setSharedOptions({
 # 	apiUrl: 'https://api.balena-cloud.com/',
+# 	builderUrl: 'https://builder.balena-cloud.com/',
 # 	isBrowser: true,
 # });
 ###

@@ -179,6 +179,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
             * [.getLatestByApplication(nameOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
+            * [.createFromUrl(nameOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -488,6 +489,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
         * [.getLatestByApplication(nameOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
+        * [.createFromUrl(nameOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -4735,6 +4737,7 @@ balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
     * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
     * [.getLatestByApplication(nameOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
+    * [.createFromUrl(nameOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags"></a>
 
@@ -5030,6 +5033,40 @@ balena.models.release.getLatestByApplication(123).then(function(releases) {
 balena.models.release.getLatestByApplication('MyApp', function(error, releases) {
 		if (error) throw error;
 		console.log(releases);
+});
+```
+<a name="balena.models.release.createFromUrl"></a>
+
+##### release.createFromUrl(nameOrId, urlDeployOptions) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
+**Summary**: Create a new release built from the source in the provided url  
+**Access**: public  
+**Fulfil**: <code>number</code> - release ID  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrId | <code>String</code> \| <code>Number</code> |  | application name (string) or id (number) |
+| urlDeployOptions | <code>Object</code> |  | builder options |
+| urlDeployOptions.url | <code>String</code> |  | a url with a tarball of the project to build |
+| [urlDeployOptions.shouldFlatten] | <code>Boolean</code> | <code>true</code> | Should be true when the tarball includes an extra root folder with all the content |
+
+**Example**  
+```js
+balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
+		console.log(releaseId);
+});
+```
+**Example**  
+```js
+balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
+		console.log(releaseId);
+});
+```
+**Example**  
+```js
+balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
+		if (error) throw error;
+		console.log(releaseId);
 });
 ```
 <a name="balena.models.service"></a>
@@ -6004,6 +6041,7 @@ startup and before any calls to `fromSharedOptions()` are made.
 ```js
 balena.setSharedOptions({
 	apiUrl: 'https://api.balena-cloud.com/',
+	builderUrl: 'https://builder.balena-cloud.com/',
 	isBrowser: true,
 });
 ```

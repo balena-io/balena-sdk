@@ -7,6 +7,7 @@ _ = require('lodash')
 	givenAnApplication
 	givenLoggedInUser
 	givenMulticontainerApplication
+	IS_BROWSER
 } = require('../setup')
 
 {
@@ -59,6 +60,71 @@ describe 'Release Model', ->
 			it 'should be rejected if the application id does not exist', ->
 				promise = balena.models.release.getAllByApplication(999999)
 				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+		describe 'balena.models.release.createFromUrl()', ->
+			# There is a CORS header that only allows us to run this from dashboard.balena-cloud.com
+			return if IS_BROWSER
+
+			TEST_SOURCE_URL = 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz'
+
+			it 'should be rejected if the application name does not exist', ->
+				promise = balena.models.release.createFromUrl('HelloWorldApp', { url: TEST_SOURCE_URL })
+				m.chai.expect(promise).to.be.rejectedWith('Application not found: HelloWorldApp')
+
+			it 'should be rejected if the application id does not exist', ->
+				promise = balena.models.release.createFromUrl(999999, { url: TEST_SOURCE_URL })
+				m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
+
+			it 'should be rejected when the provided tarball url is not found', ->
+				promise = balena.models.release.createFromUrl(@application.id, { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz' })
+				m.chai.expect(promise).to.be.rejected
+				.then (error) ->
+					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
+					m.chai.expect(error).to.have.property('statusCode', 404)
+					m.chai.expect(error).to.have.property('message').that.contains('Failed to fetch tarball from passed URL')
+
+			it 'should be rejected when the provided url is not a tarball', ->
+				promise = balena.models.release.createFromUrl(@application.id, { url: 'https://github.com/balena-io-projects/simple-server-node' })
+				m.chai.expect(promise).to.be.rejected
+				.then (error) ->
+					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
+					m.chai.expect(error).to.have.property('statusCode', 504)
+					m.chai.expect(error).to.have.property('message').that.contains('The request was unsuccessful')
+
+			describe '[mutating operations]', ->
+
+				afterEach ->
+					balena.pine.delete
+						resource: 'release'
+						options:
+							$filter:
+								belongs_to__application: @application.id
+
+				it 'should be able to create a release using a tarball url given an application name', ->
+					balena.models.release.createFromUrl(@application.app_name, { url: TEST_SOURCE_URL })
+					.then (releaseId) =>
+						m.chai.expect(releaseId).to.be.a('number')
+						balena.models.release.get(releaseId)
+						.then (release) =>
+							m.chai.expect(release).to.deep.match
+								status: 'running',
+								source: 'cloud',
+								id: releaseId
+								belongs_to__application: __id: @application.id
+							m.chai.expect(release).to.have.property('commit').that.is.a('string')
+
+				it 'should be able to create a release using a tarball url given an application id', ->
+					balena.models.release.createFromUrl(@application.id, { url: TEST_SOURCE_URL })
+					.then (releaseId) =>
+						m.chai.expect(releaseId).to.be.a('number')
+						balena.models.release.get(releaseId)
+						.then (release) =>
+							m.chai.expect(release).to.deep.match
+								status: 'running',
+								source: 'cloud',
+								id: releaseId
+								belongs_to__application: __id: @application.id
+							m.chai.expect(release).to.have.property('commit').that.is.a('string')
 
 	describe 'given a multicontainer application with two releases', ->
 
