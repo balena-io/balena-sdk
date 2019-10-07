@@ -142,6 +142,16 @@ describe 'OS model', ->
 				promise = balena.models.os.getSupportedVersions('foo-bar-baz')
 				m.chai.expect(promise).to.be.rejectedWith('No such device type')
 
+	describe 'balena.models.os._getDeviceTypes()', ->
+
+		it 'should cache the results', ->
+			p1 = balena.models.os._getDeviceTypes()
+			p1.then (result1) ->
+				p2 = balena.models.os._getDeviceTypes()
+				p2.then (result2) ->
+					m.chai.expect(result1).to.equal(result2)
+					m.chai.expect(p1).to.equal(p2)
+
 	describe 'balena.models.os._getOsVersions()', ->
 
 		it 'should cache the results', ->
@@ -206,6 +216,23 @@ describe 'OS model', ->
 					m.chai.expect(p1).to.equal(p2)
 
 	describe 'balena.models.os._clearDeviceTypesEndpointCaches()', ->
+
+		it 'should clear the result cache of balena.models.os._getDeviceTypes()', ->
+			p1 = balena.models.os._getDeviceTypes()
+			p1.then (result1) ->
+				balena.models.os._clearDeviceTypesEndpointCaches()
+				p2 = balena.models.os._getDeviceTypes()
+				p2.then (result2) ->
+					# the endpoint doesn't sort the device types atm
+					[
+						result1
+						result2
+					].forEach (dtArray) ->
+						dtArray.sort (a, b) ->
+							a.slug.localeCompare(b.slug)
+
+					m.chai.expect(result1).to.deep.equal(result2)
+					m.chai.expect(p1).to.not.equal(p2)
 
 		it 'should clear the result cache of balena.models.os._getOsVersions()', ->
 			p1 = balena.models.os._getOsVersions('raspberry-pi')

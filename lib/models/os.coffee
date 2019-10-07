@@ -52,15 +52,23 @@ getOsModel = (deps, opts) ->
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 
-	getDeviceTypes = once ->
+	exports = {}
+
+	###*
+	# @summary Get device types with caching
+	# @description Utility method exported for testability.
+	# @name _getDeviceTypes
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._getDeviceTypes = withDeviceTypesEndpointCaching ->
 		configModel().getDeviceTypes()
 
 	getValidatedDeviceType = (deviceTypeSlug) ->
-		getDeviceTypes()
+		exports._getDeviceTypes()
 		.then (types) ->
 			deviceTypesUtil.getBySlug(types, deviceTypeSlug)
-
-	exports = {}
 
 	###*
 	# @summary Get OS versions download size
@@ -117,6 +125,7 @@ getOsModel = (deps, opts) ->
 	# @memberof balena.models.os
 	###
 	exports._clearDeviceTypesEndpointCaches = ->
+		exports._getDeviceTypes.clear()
 		exports._getDownloadSize.clear()
 		exports._getOsVersions.clear()
 
