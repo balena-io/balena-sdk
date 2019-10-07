@@ -3,10 +3,97 @@ m = require('mochainon')
 Promise = require('bluebird')
 bSemver = require('balena-semver')
 
-{ balena, givenLoggedInUser, IS_BROWSER } = require('../setup')
+{ balena, credentials, givenLoggedInUser, IS_BROWSER } = require('../setup')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
+
+itShouldClear_getDeviceTypesCache = (stepFn) ->
+	it 'should clear the result cache of balena.models.os._getDeviceTypes()', ->
+		p1 = balena.models.os._getDeviceTypes()
+		p1.tap(stepFn)
+		.then (result1) ->
+			p2 = balena.models.os._getDeviceTypes()
+			p2.then (result2) ->
+				# the endpoint doesn't sort the device types atm
+				[
+					result1
+					result2
+				].forEach (dtArray) ->
+					dtArray.sort (a, b) ->
+						a.slug.localeCompare(b.slug)
+
+				m.chai.expect(result1).to.deep.equal(result2)
+				m.chai.expect(p1).to.not.equal(p2)
+
+itShouldClear_getOsVersionsCache = (stepFn) ->
+	it 'should clear the result cache of balena.models.os._getOsVersions()', ->
+		p1 = balena.models.os._getOsVersions('raspberry-pi')
+		p1.tap(stepFn)
+		.then (result1) ->
+			p2 = balena.models.os._getOsVersions('raspberry-pi')
+			p2.then (result2) ->
+				m.chai.expect(result1).to.deep.equal(result2)
+				m.chai.expect(p1).to.not.equal(p2)
+
+itShouldClear_getDownloadSizeCache = (stepFn) ->
+	it 'should clear the result cache of balena.models.os._getDownloadSize()', ->
+		p1 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
+		p1.tap(stepFn)
+		.then (result1) ->
+			p2 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
+			p2.then (result2) ->
+				m.chai.expect(result1).to.deep.equal(result2)
+				m.chai.expect(p1).to.not.equal(p2)
+
+describeAllAuthUserChanges = (itFnWithStep) ->
+	describe 'when not logged in', ->
+
+		beforeEach ->
+			balena.auth.logout()
+
+		describe 'balena.auth.logout()', ->
+
+			itFnWithStep ->
+				balena.auth.logout()
+
+		describe 'balena.auth.login()', ->
+
+			itFnWithStep ->
+				balena.auth.login
+					email: credentials.email
+					password: credentials.password
+
+		describe 'balena.auth.loginWithToken()', ->
+
+			itFnWithStep ->
+				balena.auth.authenticate(credentials)
+				.then(balena.auth.loginWithToken)
+
+	describe 'when logged in with credentials', ->
+
+		givenLoggedInUser(beforeEach)
+
+		afterEach ->
+			balena.auth.logout()
+
+		describe 'balena.auth.logout()', ->
+
+			itFnWithStep ->
+				balena.auth.logout()
+
+		describe 'balena.auth.login()', ->
+
+			itFnWithStep ->
+				balena.auth.login
+					email: credentials.email
+					password: credentials.password
+
+		describe 'balena.auth.loginWithToken()', ->
+
+			itFnWithStep ->
+				balena.auth.authenticate(credentials)
+				.then(balena.auth.loginWithToken)
 
 describe 'OS model', ->
 
@@ -152,6 +239,8 @@ describe 'OS model', ->
 					m.chai.expect(result1).to.equal(result2)
 					m.chai.expect(p1).to.equal(p2)
 
+		describeAllAuthUserChanges itShouldClear_getDeviceTypesCache
+
 	describe 'balena.models.os._getOsVersions()', ->
 
 		it 'should cache the results', ->
@@ -161,6 +250,8 @@ describe 'OS model', ->
 				p2.then (result2) ->
 					m.chai.expect(result1).to.equal(result2)
 					m.chai.expect(p1).to.equal(p2)
+
+		describeAllAuthUserChanges itShouldClear_getOsVersionsCache
 
 	describe 'balena.models.os.getDownloadSize()', ->
 
@@ -215,42 +306,18 @@ describe 'OS model', ->
 					m.chai.expect(result1).to.equal(result2)
 					m.chai.expect(p1).to.equal(p2)
 
+		describeAllAuthUserChanges itShouldClear_getDownloadSizeCache
+
 	describe 'balena.models.os._clearDeviceTypesEndpointCaches()', ->
 
-		it 'should clear the result cache of balena.models.os._getDeviceTypes()', ->
-			p1 = balena.models.os._getDeviceTypes()
-			p1.then (result1) ->
-				balena.models.os._clearDeviceTypesEndpointCaches()
-				p2 = balena.models.os._getDeviceTypes()
-				p2.then (result2) ->
-					# the endpoint doesn't sort the device types atm
-					[
-						result1
-						result2
-					].forEach (dtArray) ->
-						dtArray.sort (a, b) ->
-							a.slug.localeCompare(b.slug)
+		itShouldClear_getDeviceTypesCache ->
+			balena.models.os._clearDeviceTypesEndpointCaches()
 
-					m.chai.expect(result1).to.deep.equal(result2)
-					m.chai.expect(p1).to.not.equal(p2)
+		itShouldClear_getOsVersionsCache ->
+			balena.models.os._clearDeviceTypesEndpointCaches()
 
-		it 'should clear the result cache of balena.models.os._getOsVersions()', ->
-			p1 = balena.models.os._getOsVersions('raspberry-pi')
-			p1.then (result1) ->
-				balena.models.os._clearDeviceTypesEndpointCaches()
-				p2 = balena.models.os._getOsVersions('raspberry-pi')
-				p2.then (result2) ->
-					m.chai.expect(result1).to.deep.equal(result2)
-					m.chai.expect(p1).to.not.equal(p2)
-
-		it 'should clear the result cache of balena.models.os._getDownloadSize()', ->
-			p1 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
-			p1.then (result1) ->
-				balena.models.os._clearDeviceTypesEndpointCaches()
-				p2 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1')
-				p2.then (result2) ->
-					m.chai.expect(result1).to.deep.equal(result2)
-					m.chai.expect(p1).to.not.equal(p2)
+		itShouldClear_getDownloadSizeCache ->
+			balena.models.os._clearDeviceTypesEndpointCaches()
 
 	describe 'balena.models.os.getLastModified()', ->
 
