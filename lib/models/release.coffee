@@ -299,11 +299,11 @@ getReleaseModel = (deps, opts) ->
 		applicationModel().get(nameOrId,
 			$select: 'app_name'
 			$expand:
-				user:
-					$select: 'username'
+				organization:
+					$select: 'name'
 		)
-		.then ({ app_name, user }) ->
-			builderHelper.buildFromUrl(user[0].username, app_name, urlDeployOptions)
+		.then ({ app_name, organization }) ->
+			builderHelper.buildFromUrl(organization[0].name, app_name, urlDeployOptions)
 		.asCallback(callback)
 
 	###*
