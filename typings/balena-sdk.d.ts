@@ -701,6 +701,11 @@ declare namespace BalenaSdk {
 		}
 	}
 
+	export interface BuilderUrlDeployOptions {
+		url: string;
+		shouldFlatten?: boolean;
+	}
+
 	interface BalenaSDK {
 		auth: {
 			register: (credentials: {
@@ -886,6 +891,10 @@ declare namespace BalenaSdk {
 						}
 					>
 				>;
+				createFromUrl(
+					nameOrId: string | number,
+					urlDeployOptions: BuilderUrlDeployOptions,
+				): Promise<number>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
@@ -1216,6 +1225,7 @@ declare namespace BalenaSdk {
 		 * @deprecated Not used
 		 */
 		imageMakerUrl?: string;
+		builderUrl?: string;
 		dataDirectory?: string;
 		isBrowser?: boolean;
 		debug?: boolean;
