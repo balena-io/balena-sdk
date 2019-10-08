@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add release.createFromUrl method
+      hash: a1ebd1ffec855f7ec61dcf60272debcdb793845a
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.14.0
+  date: 2019-10-07T19:30:16.483Z
+- commits:
     - subject: Optimize the app & device methods that fill service details
       hash: 206fc17e1457fdd46a9c5aaa17badf4c449a4d65
       body: ''
