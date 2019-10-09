@@ -69,37 +69,6 @@ declare namespace BalenaSdk {
 		supportedSocialProviders: string[];
 	}
 
-	interface CurrentService {
-		id: number;
-		image_id: number;
-		service_id: number;
-		download_progress: number;
-		status: string;
-		install_date: string;
-	}
-
-	interface CurrentServiceWithCommit extends CurrentService {
-		commit: string;
-	}
-
-	interface CurrentGatewayDownload {
-		id: number;
-		image_id: number;
-		service_id: number;
-		download_progress: number;
-		status: string;
-	}
-
-	interface DeviceWithServiceDetails<
-		TCurrentService extends CurrentService = CurrentService
-	> extends Device {
-		current_services: {
-			[serviceName: string]: TCurrentService[];
-		};
-
-		current_gateway_downloads: CurrentGatewayDownload[];
-	}
-
 	interface GaConfig {
 		site: string;
 		id: string;
@@ -181,6 +150,37 @@ declare namespace BalenaSdk {
 		when?: Dictionary<number | string | boolean>;
 		choices?: string[] | number[];
 		choicesLabels?: Dictionary<string>;
+	}
+
+	interface CurrentService {
+		id: number;
+		image_id: number;
+		service_id: number;
+		download_progress: number;
+		status: string;
+		install_date: string;
+	}
+
+	interface CurrentServiceWithCommit extends CurrentService {
+		commit: string;
+	}
+
+	interface CurrentGatewayDownload {
+		id: number;
+		image_id: number;
+		service_id: number;
+		download_progress: number;
+		status: string;
+	}
+
+	interface DeviceWithServiceDetails<
+		TCurrentService extends CurrentService = CurrentService
+	> extends Device {
+		current_services: {
+			[serviceName: string]: TCurrentService[];
+		};
+
+		current_gateway_downloads: CurrentGatewayDownload[];
 	}
 
 	interface Organization {
