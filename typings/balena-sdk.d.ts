@@ -43,6 +43,7 @@ declare namespace BalenaSdk {
 		responseError?(error: Error): Promise<any>;
 	}
 
+	/* types for the /config endppoint */
 	interface Config {
 		deployment: string | null;
 		deviceUrlsBase: string;
@@ -58,7 +59,7 @@ declare namespace BalenaSdk {
 		mixpanelToken?: string;
 		intercomAppId?: string;
 		recurlyPublicKey?: string;
-		deviceTypes: DeviceType[];
+		deviceTypes: DeviceTypeJson.DeviceType[];
 		DEVICE_ONLINE_ICON: string;
 		DEVICE_OFFLINE_ICON: string;
 		signupCodeRequired: boolean;
@@ -70,73 +71,77 @@ declare namespace BalenaSdk {
 		id: string;
 	}
 
-	interface DeviceType {
-		slug: string;
-		name: string;
+	/* types for the /device-types/v1 endppoints */
+	export namespace DeviceTypeJson {
+		interface DeviceType {
+			slug: string;
+			name: string;
 
-		arch: string;
-		state?: string;
-		community?: boolean;
-		private?: boolean;
+			arch: string;
+			state?: string;
+			community?: boolean;
+			private?: boolean;
 
-		isDependent?: boolean;
-		instructions?: string[] | DeviceTypeInstructions;
-		gettingStartedLink?: string | DeviceTypeGettingStartedLink;
-		stateInstructions?: { [key: string]: string[] };
-		options?: DeviceTypeOptions[];
-		initialization?: {
-			options?: DeviceInitializationOptions[];
-			operations: Array<{
-				command: string;
-			}>;
-		};
-		supportsBlink?: boolean;
-		yocto: {
-			fstype?: string;
-			deployArtifact: string;
-		};
-		/** Holds the latest balenaOS version */
-		buildId?: string;
+			isDependent?: boolean;
+			instructions?: string[] | DeviceTypeInstructions;
+			gettingStartedLink?: string | DeviceTypeGettingStartedLink;
+			stateInstructions?: { [key: string]: string[] };
+			options?: DeviceTypeOptions[];
+			initialization?: {
+				options?: DeviceInitializationOptions[];
+				operations: Array<{
+					command: string;
+				}>;
+			};
+			supportsBlink?: boolean;
+			yocto: {
+				fstype?: string;
+				deployArtifact: string;
+			};
+			/** Holds the latest balenaOS version */
+			buildId?: string;
+		}
+
+		interface DeviceTypeInstructions {
+			linux: string[];
+			osx: string[];
+			windows: string[];
+		}
+
+		interface DeviceTypeGettingStartedLink {
+			linux: string;
+			osx: string;
+			windows: string;
+			[key: string]: string;
+		}
+
+		interface DeviceTypeOptions {
+			options: DeviceTypeOptionsGroup[];
+			collapsed: boolean;
+			isCollapsible: boolean;
+			isGroup: boolean;
+			message: string;
+			name: string;
+		}
+
+		interface DeviceInitializationOptions {
+			message: string;
+			type: string;
+			name: string;
+		}
+
+		interface DeviceTypeOptionsGroup {
+			default: number | string;
+			message: string;
+			name: string;
+			type: string;
+			min?: number;
+			choices?: string[] | number[];
+			choicesLabels?: { [key: string]: string };
+		}
 	}
 
-	interface DeviceTypeInstructions {
-		linux: string[];
-		osx: string[];
-		windows: string[];
-	}
-
-	interface DeviceTypeGettingStartedLink {
-		linux: string;
-		osx: string;
-		windows: string;
-		[key: string]: string;
-	}
-
-	interface DeviceTypeOptions {
-		options: DeviceTypeOptionsGroup[];
-		collapsed: boolean;
-		isCollapsible: boolean;
-		isGroup: boolean;
-		message: string;
-		name: string;
-	}
-
-	interface DeviceInitializationOptions {
-		message: string;
-		type: string;
-		name: string;
-	}
-
-	interface DeviceTypeOptionsGroup {
-		default: number | string;
-		message: string;
-		name: string;
-		type: string;
-		min?: number;
-		choices?: string[] | number[];
-		choicesLabels?: { [key: string]: string };
-	}
-
+	/* types for the DeviceWithServiceDetails objects */
 	interface CurrentService {
 		id: number;
 		image_id: number;
@@ -281,7 +286,7 @@ declare namespace BalenaSdk {
 		device_type: string;
 		slug: string;
 		id: number;
-		device_type_info?: DeviceType;
+		device_type_info?: DeviceTypeJson.DeviceType;
 		has_dependent?: boolean;
 		is_accessible_by_support_until__date: string;
 		should_track_latest_release: boolean;
@@ -1045,10 +1050,10 @@ declare namespace BalenaSdk {
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
-				getManifestBySlug(slugOrName: string): Promise<DeviceType>;
+				getManifestBySlug(slugOrName: string): Promise<DeviceTypeJson.DeviceType>;
 				getManifestByApplication(
 					nameOrId: string | number,
-				): Promise<DeviceType>;
+				): Promise<DeviceTypeJson.DeviceType>;
 				move(
 					uuidOrId: string | number,
 					applicationNameOrId: string | number,
@@ -1248,10 +1253,10 @@ declare namespace BalenaSdk {
 			};
 			config: {
 				getAll: () => Promise<Config>;
-				getDeviceTypes: () => Promise<DeviceType[]>;
+				getDeviceTypes: () => Promise<DeviceTypeJson.DeviceType[]>;
 				getDeviceOptions(
 					deviceType: string,
-				): Promise<Array<DeviceTypeOptions | DeviceInitializationOptions>>;
+				): Promise<Array<DeviceTypeJson.DeviceTypeOptions | DeviceTypeJson.DeviceInitializationOptions>>;
 			};
 			image: {
 				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;
