@@ -27,7 +27,7 @@ import type { hupActionHelper as hupActionHelperType } from '../util/device-acti
 
 import { BalenaRequestStreamResult } from '../../typings/balena-request';
 import {
-	DeviceType,
+	DeviceTypeJson,
 	ImgConfigOptions,
 	OsUpdateVersions,
 	OsVersions,
@@ -83,7 +83,7 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 */
 	const _getDeviceTypes = withDeviceTypesEndpointCaching<
-		() => Promise<DeviceType[]>
+		() => Promise<DeviceTypeJson.DeviceType[]>
 	>(() => configModel().getDeviceTypes());
 
 	const getValidatedDeviceType = (deviceTypeSlug: string) =>
