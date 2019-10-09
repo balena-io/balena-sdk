@@ -47,6 +47,7 @@ declare namespace BalenaSdk {
 		responseError?(error: Error): Promise<any>;
 	}
 
+	/* types for the /config endppoint */
 	interface Config {
 		deployment: string | null;
 		deviceUrlsBase: string;
@@ -62,7 +63,7 @@ declare namespace BalenaSdk {
 		mixpanelToken?: string;
 		intercomAppId?: string;
 		recurlyPublicKey?: string;
-		deviceTypes: DeviceType[];
+		deviceTypes: DeviceTypeJson.DeviceType[];
 		DEVICE_ONLINE_ICON: string;
 		DEVICE_OFFLINE_ICON: string;
 		signupCodeRequired: boolean;
@@ -74,84 +75,88 @@ declare namespace BalenaSdk {
 		id: string;
 	}
 
-	interface DeviceType {
-		slug: string;
-		name: string;
-		aliases: string[];
+	/* types for the /device-types/v1 endppoints */
+	export namespace DeviceTypeJson {
+		interface DeviceType {
+			slug: string;
+			name: string;
+			aliases: string[];
 
-		arch: string;
-		state?: string;
-		community?: boolean;
-		private?: boolean;
+			arch: string;
+			state?: string;
+			community?: boolean;
+			private?: boolean;
 
-		isDependent?: boolean;
-		imageDownloadAlerts?: DeviceTypeDownloadAlert[];
-		instructions?: string[] | DeviceTypeInstructions;
-		gettingStartedLink?: string | DeviceTypeGettingStartedLink;
-		stateInstructions?: { [key: string]: string[] };
-		options?: DeviceTypeOptions[];
-		initialization?: {
-			options?: DeviceInitializationOptions[];
-			operations: Array<{
-				command: string;
-			}>;
-		};
-		supportsBlink?: boolean;
-		yocto: {
-			fstype?: string;
-			deployArtifact: string;
-		};
-		/** Holds the latest balenaOS version */
-		buildId?: string;
-		logoUrl?: string;
+			isDependent?: boolean;
+			imageDownloadAlerts?: DeviceTypeDownloadAlert[];
+			instructions?: string[] | DeviceTypeInstructions;
+			gettingStartedLink?: string | DeviceTypeGettingStartedLink;
+			stateInstructions?: { [key: string]: string[] };
+			options?: DeviceTypeOptions[];
+			initialization?: {
+				options?: DeviceInitializationOptions[];
+				operations: Array<{
+					command: string;
+				}>;
+			};
+			supportsBlink?: boolean;
+			yocto: {
+				fstype?: string;
+				deployArtifact: string;
+			};
+			/** Holds the latest balenaOS version */
+			buildId?: string;
+			logoUrl?: string;
+		}
+
+		interface DeviceTypeDownloadAlert {
+			type: string;
+			message: string;
+		}
+
+		interface DeviceTypeInstructions {
+			linux: string[];
+			osx: string[];
+			windows: string[];
+		}
+
+		interface DeviceTypeGettingStartedLink {
+			linux: string;
+			osx: string;
+			windows: string;
+			[key: string]: string;
+		}
+
+		interface DeviceTypeOptions {
+			options: DeviceTypeOptionsGroup[];
+			collapsed: boolean;
+			isCollapsible: boolean;
+			isGroup: boolean;
+			message: string;
+			name: string;
+		}
+
+		interface DeviceInitializationOptions {
+			message: string;
+			type: string;
+			name: string;
+		}
+
+		interface DeviceTypeOptionsGroup {
+			default: number | string;
+			message: string;
+			name: string;
+			type: string;
+			min?: number;
+			max?: number;
+			hidden?: boolean;
+			when?: Dictionary<number | string | boolean>;
+			choices?: string[] | number[];
+			choicesLabels?: Dictionary<string>;
+		}
 	}
 
-	interface DeviceTypeDownloadAlert {
-		type: string;
-		message: string;
-	}
-
-	interface DeviceTypeInstructions {
-		linux: string[];
-		osx: string[];
-		windows: string[];
-	}
-
-	interface DeviceTypeGettingStartedLink {
-		linux: string;
-		osx: string;
-		windows: string;
-		[key: string]: string;
-	}
-
-	interface DeviceTypeOptions {
-		options: DeviceTypeOptionsGroup[];
-		collapsed: boolean;
-		isCollapsible: boolean;
-		isGroup: boolean;
-		message: string;
-		name: string;
-	}
-
-	interface DeviceInitializationOptions {
-		message: string;
-		type: string;
-		name: string;
-	}
-
-	interface DeviceTypeOptionsGroup {
-		default: number | string;
-		message: string;
-		name: string;
-		type: string;
-		min?: number;
-		max?: number;
-		hidden?: boolean;
-		when?: Dictionary<number | string | boolean>;
-		choices?: string[] | number[];
-		choicesLabels?: Dictionary<string>;
-	}
-
+	/* types for the DeviceWithServiceDetails objects */
 	interface CurrentService {
 		id: number;
 		image_id: number;
@@ -1082,10 +1087,12 @@ declare namespace BalenaSdk {
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
-				getManifestBySlug(slugOrName: string): Promise<DeviceType>;
+				getManifestBySlug(
+					slugOrName: string,
+				): Promise<DeviceTypeJson.DeviceType>;
 				getManifestByApplication(
 					nameOrId: string | number,
-				): Promise<DeviceType>;
+				): Promise<DeviceTypeJson.DeviceType>;
 				move(
 					uuidOrId: string | number,
 					applicationNameOrId: string | number,
@@ -1286,10 +1293,15 @@ declare namespace BalenaSdk {
 			};
 			config: {
 				getAll: () => Promise<Config>;
-				getDeviceTypes: () => Promise<DeviceType[]>;
+				getDeviceTypes: () => Promise<DeviceTypeJson.DeviceType[]>;
 				getDeviceOptions(
 					deviceType: string,
-				): Promise<Array<DeviceTypeOptions | DeviceInitializationOptions>>;
+				): Promise<
+					Array<
+						| DeviceTypeJson.DeviceTypeOptions
+						| DeviceTypeJson.DeviceInitializationOptions
+					>
+				>;
 			};
 			image: {
 				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;

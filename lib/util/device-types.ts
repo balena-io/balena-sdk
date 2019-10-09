@@ -1,6 +1,8 @@
 import * as errors from 'balena-errors';
-import { DeviceType } from '../../typings/balena-sdk';
+import { DeviceTypeJson } from '../../typings/balena-sdk';
 import { Dictionary } from '../../typings/utils';
+
+type DeviceType = DeviceTypeJson.DeviceType;
 
 // copied from the @resin-io/device-types
 // because that has the run-time dependency on coffee-script
