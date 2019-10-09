@@ -76,6 +76,7 @@ declare namespace BalenaSdk {
 		interface DeviceType {
 			slug: string;
 			name: string;
+			aliases: string[];
 
 			arch: string;
 			state?: string;
@@ -137,7 +138,7 @@ declare namespace BalenaSdk {
 			type: string;
 			min?: number;
 			choices?: string[] | number[];
-			choicesLabels?: { [key: string]: string };
+			choicesLabels?: Dictionary<string>;
 		}
 	}
 
@@ -1050,7 +1051,9 @@ declare namespace BalenaSdk {
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
-				getManifestBySlug(slugOrName: string): Promise<DeviceTypeJson.DeviceType>;
+				getManifestBySlug(
+					slugOrName: string,
+				): Promise<DeviceTypeJson.DeviceType>;
 				getManifestByApplication(
 					nameOrId: string | number,
 				): Promise<DeviceTypeJson.DeviceType>;
@@ -1250,7 +1253,12 @@ declare namespace BalenaSdk {
 				getDeviceTypes: () => Promise<DeviceTypeJson.DeviceType[]>;
 				getDeviceOptions(
 					deviceType: string,
-				): Promise<Array<DeviceTypeJson.DeviceTypeOptions | DeviceTypeJson.DeviceInitializationOptions>>;
+				): Promise<
+					Array<
+						| DeviceTypeJson.DeviceTypeOptions
+						| DeviceTypeJson.DeviceInitializationOptions
+					>
+				>;
 			};
 			image: {
 				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;
