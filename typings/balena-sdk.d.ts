@@ -604,6 +604,26 @@ declare namespace BalenaSdk {
 		service_install: ReverseNavigationResource<ServiceInstall>;
 	}
 
+	/** device_type */
+	interface DeviceType {
+		id: number;
+		slug: string;
+		name: string;
+		is_private: string;
+
+		is_accessible_privately_by__organization: ReverseNavigationResource<
+			Organization
+		>;
+		describes_device: ReverseNavigationResource<Device>;
+	}
+
+	/** organization__has_private_access_to__device_type */
+	interface OrganizationPrivateDeviceTypeAccess {
+		id: number;
+		organization: NavigationResource<Organization>;
+		has_private_access_to__device_type: NavigationResource<DeviceType>;
+	}
+
 	interface DeviceWithImageInstalls extends Device {
 		image_install: ReverseNavigationResource<ImageInstall>;
 		gateway_download: ReverseNavigationResource<GatewayDownload>;
