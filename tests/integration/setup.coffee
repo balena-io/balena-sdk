@@ -141,8 +141,16 @@ exports.givenAnApplication = (beforeFn) ->
 				name: 'FooBar'
 				applicationType: 'microservices-starter'
 				deviceType: 'raspberry-pi'
-		.then (application) =>
-			@application = application
+		.then (@application) =>
+			chai.expect(@application.is_for__device_type).to.be.an('object')
+			.that.has.property('__id').that.is.a('number')
+
+			balena.pine.get
+				resource: 'device_type'
+				id: @application.is_for__device_type.__id
+		.then (@applicationDeviceType) =>
+			chai.expect(@applicationDeviceType).to.be.an('object')
+			.that.has.property('slug').that.is.a('string')
 
 	afterFn = if beforeFn == beforeEach then afterEach else after
 	afterFn resetApplications

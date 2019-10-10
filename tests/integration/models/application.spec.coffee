@@ -112,9 +112,19 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'raspberry-pi'
-					.then ->
-						promise = balena.models.application.getAll()
-						m.chai.expect(promise).to.eventually.have.length(1)
+					.then (app) ->
+						m.chai.expect(app).to.have.property('id').that.is.a('number')
+						m.chai.expect(app.is_for__device_type).to.be.an('object')
+						.that.has.property('__id').that.is.a('number')
+
+						balena.models.application.getAll
+							$expand: 'is_for__device_type'
+						.then (apps) ->
+							m.chai.expect(apps).to.have.length(1)
+							m.chai.expect(apps[0]).to.have.property('id', app.id)
+							m.chai.expect(apps[0]).to.have.property('is_for__device_type').that.is.an('array')
+							m.chai.expect(apps[0].is_for__device_type).to.have.length(1)
+							m.chai.expect(apps[0].is_for__device_type[0]).to.have.property('slug', 'raspberry-pi')
 
 				it 'should be able to create a child application', ->
 					balena.models.application.create
@@ -124,6 +134,7 @@ describe 'Application Model', ->
 					.then (parentApplication) ->
 						balena.models.application.create
 							name: 'FooBarChild'
+							applicationType: 'microservices-starter'
 							deviceType: 'generic'
 							parent: parentApplication.id
 						.then (childApplication) ->
