@@ -42,94 +42,147 @@ describe 'Application Model', ->
 
 		describe 'balena.models.application.create()', ->
 
-			afterEach ->
-				balena.pine.delete
-					resource: 'application'
+			describe '[read operations]', ->
 
-			it 'should be able to create an application w/o providing an application type', ->
-				balena.models.application.create
-					name: 'FooBar'
-					deviceType: 'raspberry-pi'
-				.then ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
+				it 'should be rejected if the application type is invalid', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'non-existing'
+						deviceType: 'raspberry-pi'
+					m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
 
-			it 'should be able to create an application with a specific application type', ->
-				balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				.then ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
+				it 'should be rejected if the device type is invalid', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'foobarbaz'
+					m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
 
-			it 'should be able to create a child application', ->
-				balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				.then (parentApplication) ->
+				it 'should be rejected if the device type is discontinued', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'edge'
+					m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
+
+				it 'should be rejected if the name has less than four characters', ->
+					promise = balena.models.application.create
+						name: 'Foo'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberry-pi'
+					m.chai.expect(promise).to.be.rejected
+					.then (error) ->
+						m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
+						m.chai.expect(error).to.have.property('statusCode', 400)
+						m.chai.expect(error).to.have.property('message')
+						.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30')
+
+				it 'should be rejected if the user does not have access to find the organization by name', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						deviceType: 'raspberry-pi'
+						# add some extra invalid characters to the organization's handle just to be sure
+						organization: 'balena-test-non-existing-organization-handle-!@#'
+					m.chai.expect(promise).to.be.rejectedWith('Organization not found: balena-test-non-existing-organization-handle-!@#')
+
+				it 'should be rejected if the user does not have access to find the organization by id', ->
+					promise = balena.models.application.create
+						name: 'FooBar'
+						deviceType: 'raspberry-pi'
+						# This test will fail if org 1 adds the SDK's test user as a member...
+						organization: 1
+					m.chai.expect(promise).to.be.rejectedWith('Organization not found: 1')
+
+			describe '[mutating operations]', ->
+
+				afterEach ->
+					balena.pine.delete
+						resource: 'application'
+
+				it 'should be able to create an application w/o providing an application type', ->
 					balena.models.application.create
-						name: 'FooBarChild'
-						deviceType: 'generic'
-						parent: parentApplication.id
-					.then (childApplication) ->
+						name: 'FooBar'
+						deviceType: 'raspberry-pi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
+
+				it 'should be able to create an application with a specific application type', ->
+					balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberry-pi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
+
+				it 'should be able to create a child application', ->
+					balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberry-pi'
+					.then (parentApplication) ->
+						balena.models.application.create
+							name: 'FooBarChild'
+							deviceType: 'generic'
+							parent: parentApplication.id
+						.then (childApplication) ->
+							m.chai.expect(childApplication.depends_on__application).to.be.an('object')
+							m.chai.expect(childApplication.depends_on__application).to.have.property('__id', parentApplication.id)
+							# application.getAll() doesn't return dependent apps
+							balena.pine.get
+								resource: 'application'
+								options:
+									$select: [
+										'id'
+										'depends_on__application'
+									]
+									$filter: id: $in: [parentApplication.id, childApplication.id]
+									$orderby: id: 'asc'
+					.then ([ parentApplication, childApplication ]) ->
 						m.chai.expect(childApplication.depends_on__application).to.be.an('object')
 						m.chai.expect(childApplication.depends_on__application).to.have.property('__id', parentApplication.id)
-						# application.getAll() doesn't return dependent apps
-						balena.pine.get
-							resource: 'application'
-							options:
-								$select: [
-									'id'
-									'depends_on__application'
-								]
-								$filter: id: $in: [parentApplication.id, childApplication.id]
-								$orderby: id: 'asc'
-				.then ([ parentApplication, childApplication ]) ->
-					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
 
-			it 'should be rejected if the application type is invalid', ->
-				promise = balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'non-existing'
-					deviceType: 'raspberry-pi'
-				m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
+				it 'should be able to create an application using a device type alias', ->
+					balena.models.application.create
+						name: 'FooBar'
+						applicationType: 'microservices-starter'
+						deviceType: 'raspberrypi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
 
-			it 'should be rejected if the device type is invalid', ->
-				promise = balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'foobarbaz'
-				m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
+				it "should be able to create an application using the user's personal org id", ->
+					balena.auth.getPersonalOrganizationId()
+					.then (orgId) ->
+						balena.models.application.create
+							name: 'FooBar'
+							deviceType: 'raspberrypi'
+							organization: orgId
+					.then ->
+						Promise.all([
+							balena.models.application.getAll()
+							balena.auth.getPersonalOrganizationId()
+						])
+					.then ([apps, orgId]) ->
+						m.chai.expect(apps).to.have.length(1)
+						m.chai.expect(apps[0]).to.have.nested.property('organization.__id', orgId)
 
-			it 'should be rejected if the device type is discontinued', ->
-				promise = balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'edge'
-				m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
-
-			it 'should be rejected if the name has less than four characters', ->
-				promise = balena.models.application.create
-					name: 'Foo'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				m.chai.expect(promise).to.be.rejected
-				.then (error) ->
-					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
-					m.chai.expect(error).to.have.property('statusCode', 400)
-					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30')
-
-			it 'should be able to create an application using a device type alias', ->
-				balena.models.application.create
-					name: 'FooBar'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberrypi'
-				.then ->
-					promise = balena.models.application.getAll()
-					m.chai.expect(promise).to.eventually.have.length(1)
+				it "should be able to create an application using the user's personal org name", ->
+					balena.auth.whoami()
+					.then (orgName) ->
+						balena.models.application.create
+							name: 'FooBar'
+							deviceType: 'raspberrypi'
+							organization: orgName
+					.then ->
+						Promise.all([
+							balena.models.application.getAll()
+							balena.auth.getPersonalOrganizationId()
+						])
+					.then ([apps, orgId]) ->
+						m.chai.expect(apps).to.have.length(1)
+						m.chai.expect(apps[0]).to.have.nested.property('organization.__id', orgId)
 
 	describe 'given a single application', ->
 
@@ -185,9 +238,9 @@ describe 'Application Model', ->
 						m.chai.expect(applications[0].id).to.equal(@application.id)
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.getAll($expand: 'organization')
+					balena.models.application.getAll($expand: organization: $select: 'handle')
 					.then (applications) ->
-						m.chai.expect(applications[0].organization[0].name).to.equal(credentials.username)
+						m.chai.expect(applications[0].organization[0].handle).to.equal(credentials.username)
 
 			describe 'balena.models.application.get()', ->
 
@@ -217,9 +270,9 @@ describe 'Application Model', ->
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.get(@application.id, $expand: 'organization')
+					balena.models.application.get(@application.id, $expand: organization: $select: 'handle')
 					.then (application) ->
-						m.chai.expect(application.organization[0].name).to.equal(credentials.username)
+						m.chai.expect(application.organization[0].handle).to.equal(credentials.username)
 
 			describe 'balena.models.application.has()', ->
 

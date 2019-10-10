@@ -862,6 +862,7 @@ declare namespace BalenaSdk {
 					applicationType?: string;
 					deviceType: string;
 					parent?: number | string;
+					organization?: number | string;
 				}): Promise<Application>;
 				get(
 					nameOrId: string | number,
