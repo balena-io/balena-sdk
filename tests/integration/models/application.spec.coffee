@@ -98,6 +98,14 @@ describe 'Application Model', ->
 					balena.pine.delete
 						resource: 'application'
 
+				it 'should be able to create an application w/o providing an application type', ->
+					balena.models.application.create
+						name: 'FooBar'
+						deviceType: 'raspberry-pi'
+					.then ->
+						promise = balena.models.application.getAll()
+						m.chai.expect(promise).to.eventually.have.length(1)
+
 				it 'should be able to create an application with a specific application type', ->
 					balena.models.application.create
 						name: 'FooBar'
@@ -133,6 +141,7 @@ describe 'Application Model', ->
 				it 'should be able to create an application using a device type alias', ->
 					balena.models.application.create
 						name: 'FooBar'
+						applicationType: 'microservices-starter'
 						deviceType: 'raspberrypi'
 					.then ->
 						promise = balena.models.application.getAll()
