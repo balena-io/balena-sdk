@@ -401,6 +401,7 @@ getApplicationModel = (deps, opts) ->
 	# @param {String} [options.applicationType] - application type slug e.g. microservices-starter
 	# @param {String} options.deviceType - device type slug
 	# @param {(Number|String)} [options.parent] - parent application name or id
+	# @param {(String|Number|null)} [options.organization] - name (string) or id (number) of the organization that the application will belong to or null
 	#
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -421,7 +422,7 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(application);
 	# });
 	###
-	exports.create = ({ name, applicationType, deviceType, parent }, callback) ->
+	exports.create = ({ name, applicationType, deviceType, parent, organization }, callback) ->
 		callback = findCallback(arguments)
 
 		applicationTypePromise = if !applicationType
@@ -449,15 +450,32 @@ getApplicationModel = (deps, opts) ->
 			if not deviceManifest?
 				throw new errors.BalenaInvalidDeviceType(deviceType)
 
+		organizationPromise = if !organization
+			Promise.resolve()
+		else
+			orgFilterProperty = if isId(organization) then 'id' else 'name'
+			pine.get
+				resource: 'organization'
+				options:
+					$top: 1
+					$select: ['id']
+					$filter: "#{orgFilterProperty}": organization
+			.then ([org]) ->
+				if !org
+					throw new errors.BalenaOrganizationNotFound(organization)
+				org.id
+
 		return Promise.all([
 			deviceManifestPromise
 			applicationTypePromise
 			parentAppPromise
+			organizationPromise
 		])
 		.then ([
 			deviceManifest
 			applicationTypeId
 			parentApplication
+			organizationId
 		]) ->
 			if deviceManifest.state == 'DISCONTINUED'
 				throw new errors.BalenaDiscontinuedDeviceType(deviceType)
@@ -469,6 +487,10 @@ getApplicationModel = (deps, opts) ->
 			if applicationTypeId
 				assign extraOptions,
 					application_type: applicationTypeId
+
+			if organizationId
+				assign extraOptions,
+					organization: organizationId
 
 			return pine.post
 				resource: 'application'
