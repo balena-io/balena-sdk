@@ -876,12 +876,18 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.move = (uuidOrId, applicationNameOrId, callback) ->
 		Promise.props
-			device: exports.get(uuidOrId, $select: [ 'uuid', 'device_type' ])
+			device: exports.get(uuidOrId, {
+				$select: 'uuid'
+				$expand: is_of__device_type: $select: 'slug'
+			})
 			deviceTypes: configModel().getDeviceTypes()
-			application: applicationModel().get(applicationNameOrId, $select: [ 'id', 'device_type' ])
+			application: applicationModel().get(applicationNameOrId, {
+				$select: 'id'
+				$expand: is_for__device_type: $select: 'slug'
+			})
 		.then ({ application, device, deviceTypes }) ->
-			osDeviceType = deviceTypesUtil.getBySlug(deviceTypes, device.device_type)
-			targetAppDeviceType = deviceTypesUtil.getBySlug(deviceTypes, application.device_type)
+			osDeviceType = deviceTypesUtil.getBySlug(deviceTypes, device.is_of__device_type[0].slug)
+			targetAppDeviceType = deviceTypesUtil.getBySlug(deviceTypes, application.is_for__device_type[0].slug)
 			isCompatibleMove = deviceTypesUtil.isDeviceTypeCompatibleWith(osDeviceType, targetAppDeviceType)
 			if not isCompatibleMove
 				throw new errors.BalenaInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
@@ -1612,9 +1618,12 @@ getDeviceModel = (deps, opts) ->
 	# });
 	###
 	exports.getManifestByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId, $select: 'device_type')
-		.get('device_type')
-		.then(exports.getManifestBySlug)
+		applicationModel().get(nameOrId, {
+			$select: 'id'
+			$expand: is_for__device_type: $select: 'slug'
+		})
+		.then ({ is_for__device_type: [deviceType] }) ->
+			exports.getManifestBySlug(deviceType.slug)
 		.asCallback(callback)
 
 	###*
@@ -1671,14 +1680,17 @@ getDeviceModel = (deps, opts) ->
 		Promise.props
 			userId: auth.getUserId()
 			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
-			application: applicationModel().get(applicationNameOrId, $select: ['id', 'device_type'])
+			application: applicationModel().get(applicationNameOrId, {
+				$select: 'id'
+				$expand: is_for__device_type: $select: 'slug'
+			})
 		.then ({ userId, apiKey, application }) ->
 
 			return registerDevice.register
 				userId: userId
 				applicationId: application.id
 				uuid: uuid
-				deviceType: application.device_type
+				deviceType: application.is_for__device_type[0].slug
 				provisioningApiKey: apiKey
 				apiEndpoint: apiUrl
 
@@ -2420,7 +2432,7 @@ getDeviceModel = (deps, opts) ->
 	# @throws Exception if update isn't supported
 	# @returns {undefined}
 	###
-	exports._checkOsUpdateTarget = ({ uuid, device_type, is_online, os_version, os_variant }, targetOsVersion) ->
+	exports._checkOsUpdateTarget = ({ uuid, is_of__device_type, is_online, os_version, os_variant }, targetOsVersion) ->
 		if not uuid
 			throw new Error('The uuid of the device is not available')
 
@@ -2430,7 +2442,8 @@ getDeviceModel = (deps, opts) ->
 		if not os_version
 			throw new Error("The current os version of the device is not available: #{uuid}")
 
-		if not device_type
+		deviceType = is_of__device_type?[0]?.slug
+		if not deviceType
 			throw new Error("The device type of the device is not available: #{uuid}")
 
 		# error the property is missing
@@ -2447,7 +2460,7 @@ getDeviceModel = (deps, opts) ->
 		currentOsVersion = currentOsVersion || os_version
 
 		# this will throw an error if the action isn't available
-		hupActionHelper.getHUPActionType(device_type, currentOsVersion, targetOsVersion)
+		hupActionHelper.getHUPActionType(deviceType, currentOsVersion, targetOsVersion)
 		return
 
 	# TODO: This is a temporary solution for ESR, as the ESR-supported versions are not part of the SDK yet. It should be removed once the getSupportedVersions is updated to support ESR as well.
@@ -2509,18 +2522,20 @@ getDeviceModel = (deps, opts) ->
 			if not targetOsVersion
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
 
-			exports.get(uuid, $select: [
-				'device_type'
-				'is_online'
-				'os_version'
-				'os_variant'
-			])
+			exports.get(uuid, {
+				$select: [
+					'is_online'
+					'os_version'
+					'os_variant'
+				]
+				$expand: is_of__device_type: $select: 'slug'
+			})
 		.then (device) ->
 			device.uuid = uuid
 			# this will throw an error if the action isn't available
 			exports._checkOsUpdateTarget(device, targetOsVersion)
 
-			osModel().getSupportedVersions(device.device_type)
+			osModel().getSupportedVersions(device.is_of__device_type[0].slug)
 		.then ({ versions: allVersions }) ->
 			if !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
