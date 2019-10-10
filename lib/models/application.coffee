@@ -470,10 +470,25 @@ getApplicationModel = (deps, opts) ->
 		else
 			Promise.resolve()
 
-		deviceManifestPromise = deviceModel().getManifestBySlug(deviceType)
-		.tap (deviceManifest) ->
+		deviceTypeIdPromise = deviceModel().getManifestBySlug(deviceType)
+		.then (deviceManifest) ->
 			if not deviceManifest?
 				throw new errors.BalenaInvalidDeviceType(deviceType)
+
+			if deviceManifest.state == 'DISCONTINUED'
+				throw new errors.BalenaDiscontinuedDeviceType(deviceType)
+
+			pine.get
+				resource: 'device_type'
+				options:
+					$select: [ 'id' ]
+					$filter:
+						# this way we get the un-aliased device type slug
+						slug: deviceManifest.slug
+		.then ([dt]) ->
+			if not dt?
+				throw new errors.BalenaInvalidDeviceType(deviceType)
+			return dt.id
 
 		organizationPromise = if !organization
 			Promise.resolve()
@@ -491,39 +506,36 @@ getApplicationModel = (deps, opts) ->
 				org.id
 
 		return Promise.all([
-			deviceManifestPromise
+			deviceTypeIdPromise
 			applicationTypePromise
 			parentAppPromise
 			organizationPromise
 		])
 		.then ([
-			deviceManifest
+			deviceTypeId
 			applicationTypeId
 			parentApplication
 			organizationId
 		]) ->
-			if deviceManifest.state == 'DISCONTINUED'
-				throw new errors.BalenaDiscontinuedDeviceType(deviceType)
+			body =
+				app_name: name
+				is_for__device_type: deviceTypeId
 
-			extraOptions = if parentApplication
-				depends_on__application: parentApplication.id
-			else {}
+			if parentApplication
+				assign body,
+					depends_on__application: parentApplication.id
 
 			if applicationTypeId
-				assign extraOptions,
+				assign body,
 					application_type: applicationTypeId
 
 			if organizationId
-				assign extraOptions,
+				assign body,
 					organization: organizationId
 
 			return pine.post
 				resource: 'application'
-				body:
-					assign
-						app_name: name
-						device_type: deviceManifest.slug
-					, extraOptions
+				body: body
 		.asCallback(callback)
 
 	###*
