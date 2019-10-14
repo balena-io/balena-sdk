@@ -1,0 +1,7 @@
+{
+	"*.ts": [
+		"prettier --write",
+		"tslint -t stylish --fix",
+		"git add"
+	]
+}

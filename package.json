@@ -39,7 +39,6 @@
     "coffeelint": "coffeelint -f coffeelint.json -r \"lib\" \"tests\" \"gulpfile.coffee\"",
     "tslint": "tslint -t stylish -c tslint.json \"typings/**/*.d.ts\" \"lib/**/*.ts\" \"tests/**/*.ts\"",
     "lint": "npm run prettify && npm run coffeelint && npm run tslint",
-    "precommit": "lint-staged",
     "prepublish": "require-npm4-to-publish",
     "prepack": "npm run build",
     "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
@@ -69,12 +68,12 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.4",
-    "husky": "^0.14.3",
+    "husky": "^3.0.0",
     "js-polyfills": "^0.1.33",
     "jsdoc-to-markdown": "^3.0.0",
     "karma": "^3.0.0",
     "karma-env-preprocessor": "^0.1.1",
-    "lint-staged": "^5.0.0",
+    "lint-staged": "^9.0.0",
     "mocha": "^3.0.0",
     "mochainon": "^2.0.0",
     "prettier": "^1.11.1",
@@ -116,11 +115,5 @@
     "ndjson": "^1.5.0",
     "promise-memoize": "^1.2.0",
     "semver": "^5.3.0"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "tslint -t stylish"
-    ]
   }
 }
