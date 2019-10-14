@@ -168,6 +168,16 @@ declare namespace BalenaSdk {
 		choicesLabels?: { [key: string]: string };
 	}
 
+	interface Organization {
+		id: number;
+		created_at: string;
+		name: string;
+
+		application: ReverseNavigationResource<Application>;
+		/** includes__organization_membership */
+		organization_membership: ReverseNavigationResource<OrganizationMembership>;
+	}
+
 	interface SocialServiceAccount {
 		provider: string;
 		display_name: string;
@@ -208,6 +218,26 @@ declare namespace BalenaSdk {
 		>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
+	}
+
+	type OrganizationMembershipRoles = 'personal' | 'administrator' | 'member';
+
+	interface OrganizationMembershipRole {
+		id: number;
+		name: OrganizationMembershipRoles;
+	}
+
+	/** organization_membership */
+	interface OrganizationMembership {
+		id: number;
+		created_at: string;
+
+		user: NavigationResource<User>;
+		/** organization */
+		is_member_of__organization: NavigationResource<Organization>;
+		organization_membership_role: NavigationResource<
+			OrganizationMembershipRole
+		>;
 	}
 
 	interface ApiKey {
