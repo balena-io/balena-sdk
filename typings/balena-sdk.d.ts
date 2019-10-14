@@ -271,13 +271,6 @@ declare namespace BalenaSdk {
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
 	}
 
-	interface ApplicationMember {
-		id: number;
-		application_membership_role: NavigationResource<ApplicationMembershipRole>;
-		is_member_of__application: NavigationResource<Application>;
-		user: NavigationResource<User>;
-	}
-
 	interface ApplicationMembershipRole {
 		id: number;
 		name: string;
