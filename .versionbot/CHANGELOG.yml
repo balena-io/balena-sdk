@@ -1,4 +1,58 @@
 - commits:
+    - subject: Support retrieving private device types
+      hash: 9f592d27f6a40e7221212fbde5d5c5e6fd1298b5
+      body: ''
+      footer:
+        Resolves: '#751'
+        resolves: '#751'
+        HQ: 'https://github.com/balena-io/balena/pull/1740'
+        hq: 'https://github.com/balena-io/balena/pull/1740'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Clear the device type caches when the user changes
+      hash: 4db3792fa87a715e04465c1a7e3b3c28c9f437af
+      body: ''
+      footer:
+        Connects-to: '#751'
+        connects-to: '#751'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Use the same auth instance in all modules of the sdk instance
+      hash: e70e7aea5bf4a3771d83399e124579a1c6c22476
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'models/application: Drop unused auth module import'
+      hash: 74021faadbd386cd4e8eee08c91d0269ebde7eb0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Unify the caching for all device type endpoints
+      hash: b3057a61e3438b784be171043aab74a454542ceb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.15.0
+  date: 2019-10-14T10:51:56.442Z
+- commits:
     - subject: Add release.createFromUrl method
       hash: a1ebd1ffec855f7ec61dcf60272debcdb793845a
       body: ''
