@@ -26,7 +26,7 @@ partition = require('lodash/partition')
 reject = require('lodash/reject')
 bSemver = require('balena-semver')
 semver = require('semver')
-promiseMemoize = require('promise-memoize')
+memoizee = require('memoizee')
 
 {
 	onlyIf
@@ -50,7 +50,12 @@ getOsModel = (deps, opts) ->
 	applicationModel = once -> require('./application')(deps, opts)
 
 	withDeviceTypesEndpointCaching = (fn) ->
-		memoizedFn = promiseMemoize(fn, { maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL })
+		memoizedFn = memoizee(fn, {
+			maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL
+			primitive: true
+			promise: true
+		})
+
 		pubsub.subscribe 'auth.keyChange', ->
 			memoizedFn.clear()
 
