@@ -269,9 +269,6 @@ declare namespace BalenaSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
-		>;
 	}
 
 	interface ApplicationMember {
