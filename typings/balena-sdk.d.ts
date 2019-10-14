@@ -221,7 +221,6 @@ declare namespace BalenaSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
-		application: ReverseNavigationResource<Application>;
 		/** includes__organization_membership */
 		organization_membership: ReverseNavigationResource<OrganizationMembership>;
 		creates__release: ReverseNavigationResource<Release>;
