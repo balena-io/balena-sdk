@@ -767,6 +767,7 @@ declare namespace BalenaSdk {
 			whoami: () => Promise<string | undefined>;
 			isLoggedIn: () => Promise<boolean>;
 			getUserId: () => Promise<number>;
+			getPersonalOrganizationId: () => Promise<number>;
 			getEmail: () => Promise<string>;
 
 			twoFactor: {
