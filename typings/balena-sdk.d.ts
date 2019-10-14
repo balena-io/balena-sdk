@@ -485,6 +485,7 @@ declare namespace BalenaSdk {
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 
 		belongs_to__application: NavigationResource<Application>;
+		belongs_to__organization: NavigationResource<Organization>;
 		belongs_to__user: NavigationResource<User>;
 		should_be_running__release: NavigationResource<Release>;
 		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
