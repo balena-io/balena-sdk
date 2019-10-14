@@ -18,7 +18,7 @@ errors = require('balena-errors')
 Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
-	{ auth: authBase, request} = deps
+	{ auth: authBase, pubsub, request } = deps
 	{ apiUrl } = opts
 
 	exports = {}
@@ -31,23 +31,14 @@ getAuth = (deps, opts) ->
 		else
 			return err
 
-	authSubscribers = []
-
-	exports._onChange = (fn) ->
-		authSubscribers.push(fn)
-		# an unsubscribe function
-		return ->
-			indexOfFn = authSubscribers.indexOf(fn)
-			authSubscribers.splice(indexOfFn, 1)
-
-	wrapAuthFn = (fn) ->
+	wrapAuthFn = (eventName, fn) ->
 		return ->
 			fn.apply(authBase, arguments)
-			.finally -> Promise.map(authSubscribers, (fn) -> fn())
+			.finally -> pubsub.publish(eventName)
 
 	auth = Object.assign({}, authBase, {
-		setKey: wrapAuthFn(authBase.setKey)
-		removeKey: wrapAuthFn(authBase.removeKey)
+		setKey: wrapAuthFn('auth.keyChange', authBase.setKey)
+		removeKey: wrapAuthFn('auth.keyChange', authBase.removeKey)
 	})
 
 	twoFactor = require('./2fa')(Object.assign({}, deps, { auth }), opts)

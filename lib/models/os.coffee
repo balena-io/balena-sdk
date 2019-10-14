@@ -43,7 +43,7 @@ BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL = 10 * 60 * 1000 # 10 minutes
 
 getOsModel = (deps, opts) ->
-	{ request, sdkInstance: { auth } } = deps
+	{ request, pubsub } = deps
 	{ apiUrl, isBrowser } = opts
 
 	configModel = once -> require('./config')(deps, opts)
@@ -51,7 +51,7 @@ getOsModel = (deps, opts) ->
 
 	withDeviceTypesEndpointCaching = (fn) ->
 		memoizedFn = promiseMemoize(fn, { maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL })
-		auth._onChange ->
+		pubsub.subscribe 'auth.keyChange', ->
 			memoizedFn.clear()
 
 		return memoizedFn

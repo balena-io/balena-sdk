@@ -42,6 +42,7 @@ getSdk = (opts = {}) ->
 	getPine = require('balena-pine')
 	errors = require('balena-errors')
 	{ notImplemented } = require('./util')
+	{ PubSub } = require('./util/pubsub')
 
 	###*
 	# @namespace models
@@ -90,6 +91,7 @@ getSdk = (opts = {}) ->
 	auth = new BalenaAuth(opts)
 	request = getRequest(assign({}, opts, { auth }))
 	pine = getPine(assign({}, opts, { auth, request }))
+	pubsub = new PubSub()
 
 	sdk = {}
 	deps = {
@@ -97,6 +99,7 @@ getSdk = (opts = {}) ->
 		request
 		auth
 		pine
+		pubsub
 		sdkInstance: sdk
 	}
 
