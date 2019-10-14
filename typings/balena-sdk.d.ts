@@ -179,6 +179,18 @@ declare namespace BalenaSdk {
 		application: ReverseNavigationResource<Application>;
 		/** includes__organization_membership */
 		organization_membership: ReverseNavigationResource<OrganizationMembership>;
+		owns__team: ReverseNavigationResource<Team>;
+	}
+
+	interface Team {
+		id: number;
+		created_at: string;
+		name: string;
+
+		belongs_to__organization: NavigationResource<Organization>;
+
+		/** includes__organization_membership */
+		team_membership: ReverseNavigationResource<TeamMembership>;
 	}
 
 	interface SocialServiceAccount {
@@ -241,6 +253,16 @@ declare namespace BalenaSdk {
 		organization_membership_application_access: ReverseNavigationResource<
 			OrganizationMemberApplicationAccess
 		>;
+		team_membership: ReverseNavigationResource<TeamMembership>;
+	}
+
+	/** team_membership */
+	interface TeamMembership {
+		id: number;
+		created_at: string;
+
+		organization_membership: NavigationResource<OrganizationMembership>;
+		is_member_of__team: NavigationResource<Team>;
 	}
 
 	interface ApiKey {
