@@ -188,6 +188,8 @@ declare namespace BalenaSdk {
 
 		/** includes__organization_membership */
 		team_membership: ReverseNavigationResource<TeamMembership>;
+		/** grants_access_to__application */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface SocialServiceAccount {
@@ -301,6 +303,8 @@ declare namespace BalenaSdk {
 		organization_membership_application_access: ReverseNavigationResource<
 			OrganizationMemberApplicationAccess
 		>;
+		/** is_accessible_by__team */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface ApplicationType {
@@ -329,6 +333,15 @@ declare namespace BalenaSdk {
 	interface OrganizationMemberApplicationAccess {
 		id: number;
 		organization_membership: NavigationResource<OrganizationMembership>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
+	}
+
+	/** team_application_access */
+	interface TeamApplicationAccess {
+		id: number;
+		team: NavigationResource<Team>;
 		/** application */
 		grants_access_to__application: NavigationResource<Application>;
 		application_membership_role: NavigationResource<ApplicationMembershipRole>;
