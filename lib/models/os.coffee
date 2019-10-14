@@ -42,25 +42,37 @@ BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/
 
 DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL = 10 * 60 * 1000 # 10 minutes
 
-withDeviceTypesEndpointCaching = (fn) ->
-	promiseMemoize(fn, { maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL })
-
 getOsModel = (deps, opts) ->
-	{ request } = deps
+	{ request, pubsub } = deps
 	{ apiUrl, isBrowser } = opts
 
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
 
-	getDeviceTypes = once ->
+	withDeviceTypesEndpointCaching = (fn) ->
+		memoizedFn = promiseMemoize(fn, { maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL })
+		pubsub.subscribe 'auth.keyChange', ->
+			memoizedFn.clear()
+
+		return memoizedFn
+
+	exports = {}
+
+	###*
+	# @summary Get device types with caching
+	# @description Utility method exported for testability.
+	# @name _getDeviceTypes
+	# @private
+	# @function
+	# @memberof balena.models.os
+	###
+	exports._getDeviceTypes = withDeviceTypesEndpointCaching ->
 		configModel().getDeviceTypes()
 
 	getValidatedDeviceType = (deviceTypeSlug) ->
-		getDeviceTypes()
+		exports._getDeviceTypes()
 		.then (types) ->
 			deviceTypesUtil.getBySlug(types, deviceTypeSlug)
-
-	exports = {}
 
 	###*
 	# @summary Get OS versions download size
@@ -75,7 +87,7 @@ getOsModel = (deps, opts) ->
 			method: 'GET'
 			url: "/device-types/v1/#{deviceType}/images/#{version}/download-size"
 			baseUrl: apiUrl
-			sendToken: false
+			# optionaly authenticated, so we send the token in all cases
 		.get('body')
 		.get('size')
 
@@ -92,7 +104,7 @@ getOsModel = (deps, opts) ->
 			method: 'GET'
 			url: "/device-types/v1/#{deviceType}/images"
 			baseUrl: apiUrl
-			sendToken: false
+			# optionaly authenticated, so we send the token in all cases
 		.get('body')
 		.then ({ versions, latest }) ->
 
@@ -117,6 +129,7 @@ getOsModel = (deps, opts) ->
 	# @memberof balena.models.os
 	###
 	exports._clearDeviceTypesEndpointCaches = ->
+		exports._getDeviceTypes.clear()
 		exports._getDownloadSize.clear()
 		exports._getOsVersions.clear()
 

@@ -43,8 +43,6 @@ getApplicationModel = (deps, opts) ->
 	{ request, pine } = deps
 	{ apiUrl } = opts
 
-	auth = require('../auth')(deps, opts)
-
 	deviceModel = once -> require('./device')(deps, opts)
 	releaseModel = once -> require('./release')(deps, opts)
 
