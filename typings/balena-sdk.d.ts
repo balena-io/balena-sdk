@@ -238,6 +238,11 @@ declare namespace BalenaSdk {
 		organization_membership_role: NavigationResource<
 			OrganizationMembershipRole
 		>;
+
+		/** grants_access_to__application */
+		organization_membership_application_access: ReverseNavigationResource<
+			OrganizationMemberApplicationAccess
+		>;
 	}
 
 	interface ApiKey {
@@ -270,11 +275,10 @@ declare namespace BalenaSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
-	}
-
-	interface ApplicationMembershipRole {
-		id: number;
-		name: string;
+		/** is_accessible_by__organization_membership */
+		organization_membership_application_access: ReverseNavigationResource<
+			OrganizationMemberApplicationAccess
+		>;
 	}
 
 	interface ApplicationType {
@@ -290,6 +294,22 @@ declare namespace BalenaSdk {
 		needs__os_version_range: string | null;
 		maximum_device_count: number | null;
 		is_host_os: boolean;
+	}
+
+	type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
+
+	interface ApplicationMembershipRole {
+		id: number;
+		name: ApplicationMembershipRoles;
+	}
+
+	/** organization_membership_application_access */
+	interface OrganizationMemberApplicationAccess {
+		id: number;
+		organization_membership: NavigationResource<OrganizationMembership>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 
 	type ReleaseStatus =
