@@ -316,14 +316,14 @@ getApplicationModel = (deps, opts) ->
 
 
 	###*
-	# @summary Get a single application using the appname and owner's username
+	# @summary Get a single application using the appname and owner's username or organization handle
 	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof balena.models.application
 	#
 	# @param {String} appName - application name
-	# @param {String} owner - The owner's username
+	# @param {String} owner - The owner's username or organization handle
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
