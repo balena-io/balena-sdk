@@ -100,6 +100,7 @@ getConfigModel = (deps, opts) ->
 			method: 'GET'
 			url: '/device-types/v1'
 			baseUrl: apiUrl
+			# optionaly authenticated, so we send the token in all cases
 		.get('body')
 		.tap (deviceTypes) ->
 			if not deviceTypes?
