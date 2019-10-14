@@ -1,4 +1,25 @@
 - commits:
+    - subject: '.lintstagedrc: Auto commit the prettier & tslint changes'
+      hash: 6bdc36d8f087f77a29bce4c320f91f171f1dbde3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Bump husky lint-staged versions
+      hash: e7c74a62782946774f8149770746e4665629d8a8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.15.1
+  date: 2019-10-14T18:38:06.462Z
+- commits:
     - subject: Support retrieving private device types
       hash: 9f592d27f6a40e7221212fbde5d5c5e6fd1298b5
       body: ''
