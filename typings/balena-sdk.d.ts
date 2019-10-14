@@ -209,6 +209,10 @@ declare namespace BalenaSdk {
 		username: string;
 
 		application: ReverseNavigationResource<Application>;
+		/** organization_membership */
+		includes__organization_membership: ReverseNavigationResource<
+			OrganizationMembership
+		>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
 		user__is_member_of__application: ReverseNavigationResource<
