@@ -35,7 +35,7 @@ getAuth = (deps, opts) ->
 
 	exports._onChange = (fn) ->
 		authSubscribers.push(fn)
-		# an ubsubscribe function
+		# an unsubscribe function
 		return ->
 			indexOfFn = authSubscribers.indexOf(fn)
 			authSubscribers.splice(indexOfFn, 1)
