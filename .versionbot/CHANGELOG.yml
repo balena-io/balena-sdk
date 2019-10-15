@@ -1,4 +1,18 @@
 - commits:
+    - subject: Drop promise-memoize in favor of memoizee
+      hash: d6303c71f399813b11c2a6f32905e9ea522385ee
+      body: ''
+      footer:
+        Resolves: '#751'
+        resolves: '#751'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.15.2
+  date: 2019-10-14T22:40:25.712Z
+- commits:
     - subject: '.lintstagedrc: Auto commit the prettier & tslint changes'
       hash: 6bdc36d8f087f77a29bce4c320f91f171f1dbde3
       body: ''
