@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix running the builder tests on a different balena deployment
+      hash: 936776a64a1f10f9251ea3897677da7d1abc5e8a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.15.3
+  date: 2019-10-15T08:07:04.652Z
+- commits:
     - subject: Drop promise-memoize in favor of memoizee
       hash: d6303c71f399813b11c2a6f32905e9ea522385ee
       body: ''
