@@ -11,16 +11,20 @@ if IS_BROWSER
 	getSdk = window.balenaSdk
 	env = window.__env__
 
+	apiUrl = env.TEST_API_URL || 'https://api.balena-cloud.com'
 	opts =
-		apiUrl: env.TEST_API_URL || 'https://api.balena-cloud.com'
+		apiUrl: apiUrl
+		builderUrl: env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.')
 
 else
 	getSdk = require('../..')
 	settings = require('balena-settings-client')
 	env = process.env
 
+	apiUrl = env.TEST_API_URL || settings.get('apiUrl')
 	opts =
-		apiUrl: env.TEST_API_URL || settings.get('apiUrl')
+		apiUrl: apiUrl
+		builderUrl: env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.')
 		dataDirectory: settings.get('dataDirectory')
 
 _.assign opts,
