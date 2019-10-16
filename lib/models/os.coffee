@@ -340,7 +340,7 @@ getOsModel = (deps, opts) ->
 					method: 'HEAD'
 					url: deviceImageUrl(deviceType, version)
 					baseUrl: apiUrl
-					sendToken: false
+					# optionaly authenticated, so we send the token in all cases
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.then (response) ->
@@ -386,7 +386,7 @@ getOsModel = (deps, opts) ->
 					method: 'GET'
 					url: deviceImageUrl(deviceType, version)
 					baseUrl: apiUrl
-					sendToken: false
+					# optionaly authenticated, so we send the token in all cases
 			.catch notFoundResponse, ->
 				throw new Error('No such version for the device type')
 			.asCallback(callback)
