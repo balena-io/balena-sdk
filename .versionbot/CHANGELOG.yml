@@ -1,4 +1,18 @@
 - commits:
+    - subject: Support downloading unconfigured private device type images
+      hash: fd14c774cb0d9031f9d77bab0e640abc0e674e25
+      body: ''
+      footer:
+        Resolves: '#760'
+        resolves: '#760'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.16.0
+  date: 2019-10-16T11:52:28.633Z
+- commits:
     - subject: Fix running the builder tests on a different balena deployment
       hash: 936776a64a1f10f9251ea3897677da7d1abc5e8a
       body: ''
