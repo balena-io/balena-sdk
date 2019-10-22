@@ -39,11 +39,11 @@ describe 'Device Model', ->
 
 			it 'should get the display name for a known slug', ->
 				promise = balena.models.device.getDisplayName('raspberry-pi')
-				m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 and Zero)')
+				m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 / Zero / Zero W)')
 
 			it 'should get the display name given a device type alias', ->
 				promise = balena.models.device.getDisplayName('raspberrypi')
-				m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 and Zero)')
+				m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 / Zero / Zero W)')
 
 			it 'should eventually be undefined if the slug is invalid', ->
 				promise = balena.models.device.getDisplayName('asdf')
@@ -52,7 +52,7 @@ describe 'Device Model', ->
 		describe 'balena.models.device.getDeviceSlug()', ->
 
 			it 'should eventually be the slug from a display name', ->
-				promise = balena.models.device.getDeviceSlug('Raspberry Pi (v1 and Zero)')
+				promise = balena.models.device.getDeviceSlug('Raspberry Pi (v1 / Zero / Zero W)')
 				m.chai.expect(promise).to.eventually.equal('raspberry-pi')
 
 			it 'should eventually be the slug if passing already a slug', ->
