@@ -3,7 +3,13 @@ m = require('mochainon')
 Promise = require('bluebird')
 bSemver = require('balena-semver')
 
-{ balena, credentials, givenLoggedInUser, IS_BROWSER } = require('../setup')
+{
+	balena
+	credentials
+	givenAnApplication,
+	givenLoggedInUser
+	IS_BROWSER
+} = require('../setup')
 
 eventuallyExpectProperty = (promise, prop) ->
 	m.chai.expect(promise).to.eventually.have.property(prop)
@@ -449,24 +455,10 @@ describe 'OS model', ->
 
 		givenLoggedInUser(beforeEach)
 
-		beforeEach ->
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-			.then (application) =>
-				@application = application
+		givenAnApplication(beforeEach)
 
 		describe 'balena.models.os.getConfig()', ->
 			DEFAULT_OS_VERSION = '2.12.7+rev1.prod'
-
-			beforeEach ->
-				balena.models.application.create
-					name: 'TestApp'
-					applicationType: 'microservices-starter'
-					deviceType: 'raspberry-pi'
-				.then (application) =>
-					@application = application
 
 			it 'should fail if no version option is provided', ->
 				m.chai.expect(balena.models.os.getConfig(@application.id))
@@ -504,7 +496,15 @@ describe 'OS model', ->
 					eventuallyExpectProperty(promise, 'listenPort')
 				]
 
-			it 'should be able to configure image parameters', ->
+			it 'should be rejected if the version is invalid', ->
+				promise = balena.models.os.getConfig(@application.id, { version: 'v1+foo' })
+				m.chai.expect(promise).to.be.rejectedWith('balenaOS versions <= 1.2.0 are no longer supported, please update')
+
+			it 'should be rejected if the version is <= 1.2.0', ->
+				promise = balena.models.os.getConfig(@application.id, { version: '1.2.0' })
+				m.chai.expect(promise).to.be.rejectedWith('balenaOS versions <= 1.2.0 are no longer supported, please update')
+
+			it 'should be able to configure v1 image parameters', ->
 				configOptions =
 					appUpdatePollInterval: 72
 					network: 'wifi'
@@ -513,17 +513,36 @@ describe 'OS model', ->
 					ip: '1.2.3.4'
 					gateway: '5.6.7.8'
 					netmask: '9.10.11.12'
-					version: 'v1+foo'
-				promise = balena.models.os.getConfig(@application.id, configOptions)
-				Promise.all [
-					# NOTE: the interval is converted to ms in the config object
-					eventuallyExpectProperty(promise, 'appUpdatePollInterval').that.equals(configOptions.appUpdatePollInterval * 60 * 1000)
-					eventuallyExpectProperty(promise, 'wifiKey').that.equals(configOptions.wifiKey)
-					eventuallyExpectProperty(promise, 'wifiSsid').that.equals(configOptions.wifiSsid)
-					eventuallyExpectProperty(promise, 'files')
+					version: '1.26.1'
+				balena.models.os.getConfig(@application.id, configOptions)
+				.then (config) ->
+					m.chai.expect(config).to.deep.match
+						# NOTE: the interval is converted to ms in the config object
+						appUpdatePollInterval: configOptions.appUpdatePollInterval * 60 * 1000
+						wifiKey: configOptions.wifiKey
+						wifiSsid: configOptions.wifiSsid
+					m.chai.expect(config).to.have.property('files')
 						.that.has.property('network/network.config')
 						.that.includes("#{configOptions.ip}/#{configOptions.netmask}/#{configOptions.gateway}")
-				]
+
+			it 'should be able to configure v2 image parameters', ->
+				configOptions =
+					appUpdatePollInterval: 72
+					network: 'wifi'
+					wifiKey: 'foobar'
+					wifiSsid: 'foobarbaz'
+					ip: '1.2.3.4'
+					gateway: '5.6.7.8'
+					netmask: '9.10.11.12'
+					version: '2.0.8+rev1.prod'
+				balena.models.os.getConfig(@application.id, configOptions)
+				.then (config) ->
+					m.chai.expect(config).to.deep.match
+						# NOTE: the interval is converted to ms in the config object
+						appUpdatePollInterval: configOptions.appUpdatePollInterval * 60 * 1000
+						wifiKey: configOptions.wifiKey
+						wifiSsid: configOptions.wifiSsid
+					m.chai.expect(config).to.not.have.property('files')
 
 			it 'should be rejected if the application id does not exist', ->
 				promise = balena.models.os.getConfig(999999, { version: DEFAULT_OS_VERSION })
