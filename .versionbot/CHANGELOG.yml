@@ -1,4 +1,38 @@
 - commits:
+    - subject: 'test: Fix os.getConfig tests w/ invalid version'
+      hash: 7f31a5dcc07570764e2c6ee6304e3f77df9af260
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'tests/device: Update the expected RPi1 DT display name'
+      hash: 000d02978729db8a63b89b26c9bd35641d726ea7
+      body: ''
+      footer:
+        See: 'https://ci.appveyor.com/project/resin-io/resin-sdk/builds/28295305'
+        see: 'https://ci.appveyor.com/project/resin-io/resin-sdk/builds/28295305'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'tests/logs: Improve the logged details when the lengths do not match'
+      hash: ec1900f499df088123624740581b459938387d71
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 'https://ci.appveyor.com/project/resin-io/resin-sdk/builds/28039038'
+        see: 'https://ci.appveyor.com/project/resin-io/resin-sdk/builds/28039038'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.16.1
+  date: 2019-10-30T14:04:58.985Z
+- commits:
     - subject: Support downloading unconfigured private device type images
       hash: fd14c774cb0d9031f9d77bab0e640abc0e674e25
       body: ''
