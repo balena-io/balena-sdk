@@ -1,6 +1,4 @@
 Promise = require('bluebird')
-m = require('mochainon')
-rindle = require('rindle')
 
 {
 	balena
@@ -8,6 +6,7 @@ rindle = require('rindle')
 	givenLoggedInUser
 	sdkOpts
 } = require('./setup')
+{ assertDeepMatchAndLength } = require('../util')
 
 sendLogMessages = (uuid, deviceApiKey, messages) ->
 	balena.request.send
@@ -49,12 +48,12 @@ describe 'Logs', ->
 				.delay(2000)
 				.then =>
 					balena.logs.history(@uuid)
-				.then (logs) ->
-					m.chai.expect(logs).to.deep.match [{
+				.then (lines) ->
+					assertDeepMatchAndLength(lines, [{
 						message: 'First message'
 					}, {
 						message: 'Second message'
-					}]
+					}])
 
 			it 'should limit logs by count', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -67,9 +66,10 @@ describe 'Logs', ->
 				.delay(2000)
 				.then =>
 					balena.logs.history(@uuid, { count: 1 })
-				.then (logs) ->
-					m.chai.expect(logs).to.have.lengthOf(1)
-					m.chai.expect(logs[0].message).to.equal('Second message')
+				.then (lines) ->
+					assertDeepMatchAndLength(lines, [{
+						message: 'Second message'
+					}])
 
 		describe 'balena.logs.subscribe()', ->
 
@@ -94,7 +94,7 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines).to.have.lengthOf(0)
+					assertDeepMatchAndLength(lines, [])
 
 			it 'should load historical logs if requested', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -117,12 +117,11 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines).to.deep.match [{
+					assertDeepMatchAndLength(lines, [{
 						message: 'Old message'
 					}, {
 						message: 'Slightly newer message'
-					}]
-					m.chai.expect(lines).to.have.lengthOf(2)
+					}])
 
 			it 'should limit historical logs by count', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -145,10 +144,9 @@ describe 'Logs', ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines).to.deep.match [{
+					assertDeepMatchAndLength(lines, [{
 						message: 'Slightly newer message'
-					}]
-					m.chai.expect(lines).to.have.lengthOf(1)
+					}])
 
 			it 'should stream new logs after historical logs', ->
 				sendLogMessages @uuid, @deviceApiKey, [{
@@ -175,12 +173,11 @@ describe 'Logs', ->
 							.catch(reject)
 					.finally(logs.unsubscribe)
 				.then (lines) ->
-					m.chai.expect(lines).to.deep.match [{
+					assertDeepMatchAndLength(lines, [{
 						message: 'Existing message'
 					}, {
 						message: 'New message'
-					}]
-					m.chai.expect(lines).to.have.lengthOf(2)
+					}])
 
 			it 'should allow unsubscribing from logs', ->
 				balena.logs.subscribe(@uuid)
@@ -202,4 +199,4 @@ describe 'Logs', ->
 						.then ->
 							resolve(lines)
 				.then (lines) ->
-					m.chai.expect(lines).to.have.lengthOf(0)
+					assertDeepMatchAndLength(lines, [])
