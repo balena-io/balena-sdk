@@ -708,7 +708,7 @@ getDeviceModel = (deps, opts) ->
 		exports.get(uuidOrId).then (device) ->
 			return request.send
 				method: 'POST'
-				url: '/blink'
+				url: '/supervisor/v1/blink'
 				baseUrl: apiUrl
 				body:
 					uuid: device.uuid
