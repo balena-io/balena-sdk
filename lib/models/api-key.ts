@@ -115,7 +115,9 @@ const getApiKeysModel = function(
 	 */
 	exports.getAll = function(
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.ApiKey> = {},
-		callback: (error?: Error, apiKeys?: BalenaSdk.ApiKey[]) => void,
+		callback:
+			| ((error?: Error, apiKeys?: BalenaSdk.ApiKey[]) => void)
+			| undefined,
 	): Promise<BalenaSdk.ApiKey[]> {
 		callback = findCallback(arguments);
 		return pine

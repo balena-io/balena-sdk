@@ -1,178 +1,271 @@
-errors = require('balena-errors')
-assign = require('lodash/assign')
-cloneDeep = require('lodash/cloneDeep')
-isArray = require('lodash/isArray')
-isFunction = require('lodash/isFunction')
-isNumber = require('lodash/isNumber')
-isString = require('lodash/isString')
-throttle = require('lodash/throttle')
-memoizee = require('memoizee')
-moment = require('moment')
+import * as errors from 'balena-errors';
+import assign = require('lodash/assign');
+import cloneDeep = require('lodash/cloneDeep');
+import isArray = require('lodash/isArray');
+import isFunction = require('lodash/isFunction');
+import isNumber = require('lodash/isNumber');
+import isString = require('lodash/isString');
+import throttle = require('lodash/throttle');
+import * as memoizee from 'memoizee';
+import * as moment from 'moment';
+import BalenaSdk = require('../../typings/balena-sdk');
+import { getOsUpdateHelper as updateHelper } from './device-actions/os-update';
+import * as dt from './device-types';
 
-exports.deviceTypes = require('./device-types')
-exports.getOsUpdateHelper = require('./device-actions/os-update').getOsUpdateHelper
+export interface ErrorResponse {
+	code: string;
+	statusCode?: number;
+	body?: string;
+}
 
-exports.notImplemented = notImplemented = ->
-	throw new Error('The method is not implemented.')
+export const getOsUpdateHelper = updateHelper;
+export const deviceTypes = dt;
 
-exports.onlyIf = (condition) -> (fn) -> if condition then fn else notImplemented
+export const notImplemented = () => {
+	throw new Error('The method is not implemented.');
+};
 
-exports.now = now = throttle(
-	-> moment(),
-	1000,
-	{ leading: true },
-)
+export const onlyIf = (condition: boolean) => (fn: () => void) => {
+	if (condition) {
+		return fn;
+	} else {
+		return notImplemented;
+	}
+};
 
-exports.dateToMoment = dateToMoment = memoizee((date) ->
-	return moment(date)
-, { max: 1000, primitive: true })
+export const now = throttle(() => moment(), 1000, { leading: true });
 
-exports.timeSince = (input, suffix = true) ->
-	date = dateToMoment(input)
+export const dateToMoment = memoizee((date: Date) => moment(date), {
+	max: 1000,
+	primitive: true,
+});
 
-	# We do this to avoid out-of-sync times causing this to return
-	# e.g. 'in a few seconds'.
-	# if the date is in the future .min will make it at maximum, the time since now
-	# which results in 'a few seconds ago'.
-	time = now()
-	return moment.min(time, date).from(time, !suffix)
+export const timeSince = (input: Date, suffix = true) => {
+	const date = dateToMoment(input);
 
+	// We do this to avoid out-of-sync times causing this to return
+	// e.g. 'in a few seconds'.
+	// if the date is in the future .min will make it at maximum, the time since now
+	// which results in 'a few seconds ago'.
+	const time = now();
+	return moment.min(time, date).from(time, !suffix);
+};
 
-exports.isId = isNumber
+export const isId = isNumber;
 
-exports.LOCKED_STATUS_CODE = 423
+export const LOCKED_STATUS_CODE = 423;
 
-# Use with: `findCallback(arguments)`.
-exports.findCallback = (args) ->
-	lastArg = args[args.length - 1]
-	if isFunction(lastArg)
-		return lastArg
-	return null
+// Use with: `findCallback(arguments)`.
+export const findCallback = (args: IArguments) => {
+	const lastArg = args[args.length - 1];
+	if (isFunction(lastArg)) {
+		return lastArg;
+	}
 
-exports.unauthorizedError =
-	code: 'BalenaRequestError'
-	statusCode: 401
+	return;
+};
 
-exports.notFoundResponse =
-	code: 'BalenaRequestError'
-	statusCode: 404
+export const unauthorizedError: ErrorResponse = {
+	code: 'BalenaRequestError',
+	statusCode: 401,
+};
 
-exports.noDeviceForKeyResponse =
-	code: 'BalenaRequestError'
-	statusCode: 500
-	body: 'No device found to associate with the api key'
+export const notFoundResponse: ErrorResponse = {
+	code: 'BalenaRequestError',
+	statusCode: 404,
+};
 
-exports.noApplicationForKeyResponse =
-	code: 'BalenaRequestError'
-	statusCode: 500
-	body: 'No application found to associate with the api key'
+export const noDeviceForKeyResponse: ErrorResponse = {
+	code: 'BalenaRequestError',
+	statusCode: 500,
+	body: 'No device found to associate with the api key',
+};
 
-exports.isUniqueKeyViolationResponse = ({code, body}) ->
-	code == 'BalenaRequestError' &&
-	(
-		# api translated response
-		body == 'Unique key constraint violated' ||
-		# pine response (tested on pine 10)
-		/^".*" must be unique\.$/.test(body)
-	)
+export const noApplicationForKeyResponse: ErrorResponse = {
+	code: 'BalenaRequestError',
+	statusCode: 500,
+	body: 'No application found to associate with the api key',
+};
 
-exports.treatAsMissingApplication = (nameOrId) ->
-	return (err) ->
-		replacementErr = new errors.BalenaApplicationNotFound(nameOrId)
-		replacementErr.stack = err.stack
-		throw replacementErr
+export const isUniqueKeyViolationResponse = ({ code, body }: ErrorResponse) =>
+	code === 'BalenaRequestError' &&
+	!!body &&
+	// api translated response
+	(body === 'Unique key constraint violated' ||
+		// pine response (tested on pine 10)
+		/^".*" must be unique\.$/.test(body));
 
-exports.treatAsMissingDevice = (uuidOrId) ->
-	return (err) ->
-		replacementErr = new errors.BalenaDeviceNotFound(uuidOrId)
-		replacementErr.stack = err.stack
-		throw replacementErr
+export const treatAsMissingApplication = (nameOrId: string | number) => (
+	err: Error,
+) => {
+	const replacementErr = new errors.BalenaApplicationNotFound(nameOrId);
+	replacementErr.stack = err.stack || '';
+	throw replacementErr;
+};
 
-exports.isDevelopmentVersion = (version) ->
-	/(\.|\+|-)dev/.test(version)
+export const treatAsMissingDevice = (uuidOrId: string | number) => (
+	err: Error,
+) => {
+	const replacementErr = new errors.BalenaDeviceNotFound(uuidOrId);
+	replacementErr.stack = err.stack || '';
+	throw replacementErr;
+};
 
-# Merging two sets of pine options sensibly is more complicated than it sounds.
-#
-# The general rules are:
-# * select, orderby, top and skip override (select this, instead of the default)
-# * filters are combined (i.e. both filters must match)
-# * expands are combined (include both expansions), and this recurses down.
-#   * That means $expands within expands are combined
-#   * And $selects within expands override
-# * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
-exports.mergePineOptions = (defaults, extras) ->
-	if not extras
-		return defaults
+export const isDevelopmentVersion = (version: string) =>
+	/(\.|\+|-)dev/.test(version);
 
-	result = cloneDeep(defaults)
+// Merging two sets of pine options sensibly is more complicated than it sounds.
+//
+// The general rules are:
+// * select, orderby, top and skip override (select this, instead of the default)
+// * filters are combined (i.e. both filters must match)
+// * expands are combined (include both expansions), and this recurses down.
+//   * That means $expands within expands are combined
+//   * And $selects within expands override
+// * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
+export const mergePineOptions = <T = BalenaSdk.PineOptions>(
+	defaults: T,
+	extras: T,
+): T => {
+	if (!extras) {
+		return defaults;
+	}
 
-	for own option, value of extras
-		switch option
-			when '$select'
-				if value?
-					if not isArray(value)
-						value = [value]
+	const result = cloneDeep(defaults);
 
-				result[option] = value
+	for (const option of Object.keys(extras || {})) {
+		// @ts-ignore
+		let value = extras[option];
+		switch (option) {
+			case '$select':
+				if (value != null) {
+					if (!isArray(value)) {
+						value = [value];
+					}
+				}
 
-			when '$orderby', '$top', '$skip'
-				result[option] = value
+				// @ts-ignore
+				result[option] = value;
+				break;
 
-			when '$filter'
-				if defaults.$filter
-					result.$filter = $and: [ defaults.$filter, value ]
-				else
-					result.$filter = value
+			case '$orderby':
+			case '$top':
+			case '$skip':
+				// @ts-ignore
+				result[option] = value;
+				break;
 
-			when '$expand'
-				result.$expand = mergeExpandOptions(defaults.$expand, value)
+			case '$filter':
+				// @ts-ignore
+				if (defaults.$filter) {
+					// @ts-ignore
+					result.$filter = { $and: [defaults.$filter, value] };
+				} else {
+					// @ts-ignore
+					result.$filter = value;
+				}
+				break;
 
-			else
-				throw new Error("Unknown pine option: #{option}")
+			case '$expand':
+				// @ts-ignore
+				result.$expand = mergeExpandOptions(defaults.$expand, value);
+				break;
 
-	return result
+			default:
+				throw new Error(`Unknown pine option: ${option}`);
+		}
+	}
 
-mergeExpandOptions = (defaultExpand, extraExpand) ->
-	if not defaultExpand? then return extraExpand
+	return result;
+};
 
-	defaultExpand = convertExpandToObject(defaultExpand)
-	extraExpand = convertExpandToObject(extraExpand)
+// In order not to introduce a breaking change, we export each element independently and all together as a default export.
+export default {
+	getOsUpdateHelper,
+	deviceTypes,
+	notImplemented,
+	onlyIf,
+	now,
+	dateToMoment,
+	timeSince,
+	isId,
+	LOCKED_STATUS_CODE,
+	findCallback,
+	unauthorizedError,
+	notFoundResponse,
+	noDeviceForKeyResponse,
+	noApplicationForKeyResponse,
+	isUniqueKeyViolationResponse,
+	treatAsMissingApplication,
+	treatAsMissingDevice,
+	isDevelopmentVersion,
+	mergePineOptions,
+};
 
-	for own expandKey, extraExpandOptions of extraExpand
-		expandOptions = defaultExpand[expandKey] ||= {}
+const mergeExpandOptions = (defaultExpand: any, extraExpand: any) => {
+	if (defaultExpand == null) {
+		return extraExpand;
+	}
 
-		if extraExpandOptions.$select
-			expandOptions.$select = extraExpandOptions.$select
+	defaultExpand = convertExpandToObject(defaultExpand);
+	extraExpand = convertExpandToObject(extraExpand);
 
-		if extraExpandOptions.$filter
-			if expandOptions.$filter
-				expandOptions.$filter = $and: [ expandOptions.$filter, extraExpandOptions.$filter ]
-			else
-				expandOptions.$filter = extraExpandOptions.$filter
+	for (const expandKey of Object.keys(extraExpand || {})) {
+		const extraExpandOptions = extraExpand[expandKey];
+		const expandOptions =
+			defaultExpand[expandKey] || (defaultExpand[expandKey] = {});
 
-		if extraExpandOptions.$expand
-			expandOptions.$expand = mergeExpandOptions(expandOptions.$expand, extraExpandOptions.$expand)
+		if (extraExpandOptions.$select) {
+			expandOptions.$select = extraExpandOptions.$select;
+		}
 
-	return defaultExpand
+		if (extraExpandOptions.$filter) {
+			if (expandOptions.$filter) {
+				expandOptions.$filter = {
+					$and: [expandOptions.$filter, extraExpandOptions.$filter],
+				};
+			} else {
+				expandOptions.$filter = extraExpandOptions.$filter;
+			}
+		}
 
-# Converts a valid expand object in any format into a new object
-# containing (at most) $expand, $filter and $select keys
-convertExpandToObject = (expandOption) ->
-	if not expandOption?
-		return {}
-	else if isString(expandOption)
-		return "#{expandOption}": {}
-	else if isArray(expandOption)
-		# Reduce the array into a single object
-		return expandOption.reduce (result, option) ->
-			assign(result, if isString(option) then { "#{option}": {} } else option)
-		, {}
-	else
-		# Check the options in this object are the ones we know how to merge
-		for own expandKey, expandRelationshipOptions of expandOption
-			invalidKeys = Object.keys(expandRelationshipOptions).filter (key) ->
-				key != '$select' and key != '$expand' and key != '$filter'
-			if invalidKeys.length > 0
-				throw new Error("Unknown pine expand options: #{invalidKeys}")
+		if (extraExpandOptions.$expand) {
+			expandOptions.$expand = mergeExpandOptions(
+				expandOptions.$expand,
+				extraExpandOptions.$expand,
+			);
+		}
+	}
 
-		return cloneDeep(expandOption)
+	return defaultExpand;
+};
+
+// Converts a valid expand object in any format into a new object
+// containing (at most) $expand, $filter and $select keys
+const convertExpandToObject = (expandOption: any) => {
+	if (expandOption == null) {
+		return {};
+	} else if (isString(expandOption)) {
+		return { [expandOption]: {} };
+	} else if (isArray(expandOption)) {
+		// Reduce the array into a single object
+		return expandOption.reduce(
+			(result, option) =>
+				assign(result, isString(option) ? { [option]: {} } : option),
+			{},
+		);
+	} else {
+		// Check the options in this object are the ones we know how to merge
+		for (const expandKey of Object.keys(expandOption || {})) {
+			const expandRelationshipOptions = expandOption[expandKey];
+			const invalidKeys = Object.keys(expandRelationshipOptions).filter(
+				key => key !== '$select' && key !== '$expand' && key !== '$filter',
+			);
+			if (invalidKeys.length > 0) {
+				throw new Error(`Unknown pine expand options: ${invalidKeys}`);
+			}
+		}
+
+		return cloneDeep(expandOption);
+	}
+};
