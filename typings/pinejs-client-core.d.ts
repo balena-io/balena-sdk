@@ -258,3 +258,87 @@ export interface PineParamsFor<T> extends PineParamsBase {
 export interface PineParamsWithIdFor<T> extends PineParamsFor<T> {
 	id: number;
 }
+
+// interface Application {
+// 	app_name: string;
+// 	device_type: string;
+// 	git_repository: string;
+// 	commit: string;
+// 	id: number;
+// 	device_type_info?: any;
+// 	has_dependent?: boolean;
+// 	is_accessible_by_support_until__date: string;
+// 	should_track_latest_release: boolean;
+
+// 	depends_on__application: NavigationResource<Application>;
+
+// 	owns__device: ReverseNavigationResource<Device>;
+// 	is_depended_on_by__application: ReverseNavigationResource<Application>;
+// }
+
+// interface Device {
+// 	is_on__commit: string;
+// 	created_at: string;
+// 	device_type: string;
+// 	id: number;
+// 	name: string;
+// 	os_version: string;
+// 	os_variant?: string;
+// 	status_sort_index?: number;
+// 	uuid: string;
+// 	ip_address: string | null;
+// 	vpn_address: string | null;
+// 	last_connectivity_event: string;
+// 	is_in_local_mode?: boolean;
+// 	app_name?: string;
+// 	state?: { key: string; name: string };
+// 	status: string;
+// 	provisioning_state: string;
+// 	is_online: boolean;
+// 	is_connected_to_vpn: boolean;
+// 	is_locked_until__date: string;
+// 	supervisor_version: string;
+// 	should_be_managed_by__supervisor_release: number;
+// 	is_web_accessible: boolean;
+// 	has_dependent: boolean;
+// 	note: string;
+// 	location: string;
+// 	latitude?: string;
+// 	longitude?: string;
+// 	custom_latitude?: string;
+// 	custom_longitude?: string;
+// 	is_accessible_by_support_until__date: string;
+// 	download_progress?: number;
+// 	provisioning_progress?: number;
+// 	local_id?: string;
+
+// 	belongs_to__application: NavigationResource<Application>;
+// 	is_managed_by__device: NavigationResource<Device>;
+
+// 	device_environment_variable: ReverseNavigationResource<
+// 		DeviceEnvironmentVariable
+// 	>;
+// 	manages__device: ReverseNavigationResource<Device>;
+// }
+
+// interface EnvironmentVariableBase {
+// 	id: number;
+// 	name: string;
+// 	value: string;
+// }
+
+// interface EnvironmentVariable extends EnvironmentVariableBase {
+// 	application: NavigationResource<Application>;
+// }
+
+// interface DeviceEnvironmentVariable extends EnvironmentVariableBase {
+// 	env_var_name: string;
+// 	value: string;
+
+// 	device: NavigationResource<Device>;
+// }
+
+// type exp1 = BaseExpandFor<Application>;
+// type filt1 = ResourceObjFilterPropValue<Application, 'app_name'>;
+// type filt2 = ResourceObjFilterPropValue<Application, 'owns__device'>;
+// type l1 = Lambda<Application>;
