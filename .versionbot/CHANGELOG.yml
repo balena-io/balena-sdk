@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update blink to the newer api for device actions
+      hash: 4a4e367477e54c74941ed09d619c5cd93bdb024d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.16.2
+  date: 2019-10-31T11:18:54.918Z
+- commits:
     - subject: 'test: Fix os.getConfig tests w/ invalid version'
       hash: 7f31a5dcc07570764e2c6ee6304e3f77df9af260
       body: ''
