@@ -34,7 +34,7 @@ export type SelectableProps<T> = Exclude<
 	PropsOfType<T, ReverseNavigationResource>
 >;
 
-export type ExpandableProps<T> = PropsOfType<T, AssociatedResource>;
+export type ExpandableProps<T> = PropsOfType<T, AssociatedResource> & string;
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
@@ -82,7 +82,7 @@ type ResourceObjFilter<T> = {
 };
 
 type Filter<T> = FilterObj<T>;
-type FilterObj<T> = ResourceObjFilter<T> & FilterExpressions<T>;
+type FilterObj<T> = ResourceObjFilter<T> | FilterExpressions<T>;
 type FilterBaseType = string | number | null | boolean | Date;
 type NestedFilter<T> = FilterObj<T> | FilterArray<T> | FilterBaseType;
 
@@ -202,7 +202,7 @@ type FilterExpressions<T> = {
 	$cast?: FilterFunctionValue<T>;
 };
 
-type ResourceExpandFor<T> = {
+export type ResourceExpandFor<T> = {
 	[k in ExpandableProps<T>]?: PineOptionsFor<InferAssociatedResourceType<T[k]>>;
 };
 

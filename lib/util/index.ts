@@ -8,7 +8,7 @@ import isString = require('lodash/isString');
 import throttle = require('lodash/throttle');
 import * as memoizee from 'memoizee';
 import * as moment from 'moment';
-import BalenaSdk = require('../../typings/balena-sdk');
+import * as Pine from '../../typings/pinejs-client-core';
 import { getOsUpdateHelper as updateHelper } from './device-actions/os-update';
 import * as dt from './device-types';
 
@@ -123,52 +123,54 @@ export const isDevelopmentVersion = (version: string) =>
 //   * That means $expands within expands are combined
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
-export const mergePineOptions = <T = BalenaSdk.PineOptions>(
-	defaults: T,
-	extras: T,
-): T => {
+export const mergePineOptions = <R extends {}>(
+	defaults: Pine.PineOptionsFor<R>,
+	extras: Pine.PineOptionsFor<R>,
+): Pine.PineOptionsFor<R> => {
 	if (!extras) {
 		return defaults;
 	}
 
 	const result = cloneDeep(defaults);
 
-	for (const option of Object.keys(extras || {})) {
-		// @ts-ignore
-		let value = extras[option];
+	for (const option of Object.keys(extras) as Array<keyof typeof extras>) {
 		switch (option) {
 			case '$select':
-				if (value != null) {
-					if (!isArray(value)) {
-						value = [value];
+				let extraSelect = extras.$select;
+				if (extraSelect != null) {
+					if (!isArray(extraSelect) && extraSelect !== '*') {
+						extraSelect = [extraSelect];
 					}
 				}
 
-				// @ts-ignore
-				result[option] = value;
+				result.$select = extraSelect;
 				break;
 
 			case '$orderby':
 			case '$top':
 			case '$skip':
 				// @ts-ignore
-				result[option] = value;
+				result[option] = extras[option];
 				break;
 
 			case '$filter':
-				// @ts-ignore
-				if (defaults.$filter) {
-					// @ts-ignore
-					result.$filter = { $and: [defaults.$filter, value] };
+				const extraFilter = extras.$filter;
+				if (!extraFilter) {
+					// the result already holds the defaults
+					break;
+				}
+				const defaultFilter = defaults.$filter;
+				if (!defaultFilter) {
+					result.$filter = extraFilter;
 				} else {
-					// @ts-ignore
-					result.$filter = value;
+					result.$filter = {
+						$and: [defaultFilter, extraFilter],
+					};
 				}
 				break;
 
 			case '$expand':
-				// @ts-ignore
-				result.$expand = mergeExpandOptions(defaults.$expand, value);
+				result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
 				break;
 
 			default:
@@ -179,30 +181,10 @@ export const mergePineOptions = <T = BalenaSdk.PineOptions>(
 	return result;
 };
 
-// In order not to introduce a breaking change, we export each element independently and all together as a default export.
-export default {
-	getOsUpdateHelper,
-	deviceTypes,
-	notImplemented,
-	onlyIf,
-	now,
-	dateToMoment,
-	timeSince,
-	isId,
-	LOCKED_STATUS_CODE,
-	findCallback,
-	unauthorizedError,
-	notFoundResponse,
-	noDeviceForKeyResponse,
-	noApplicationForKeyResponse,
-	isUniqueKeyViolationResponse,
-	treatAsMissingApplication,
-	treatAsMissingDevice,
-	isDevelopmentVersion,
-	mergePineOptions,
-};
-
-const mergeExpandOptions = (defaultExpand: any, extraExpand: any) => {
+const mergeExpandOptions = <T>(
+	defaultExpand: Pine.Expand<T> | undefined,
+	extraExpand: Pine.Expand<T> | undefined,
+): Pine.Expand<T> | undefined => {
 	if (defaultExpand == null) {
 		return extraExpand;
 	}
@@ -210,10 +192,12 @@ const mergeExpandOptions = (defaultExpand: any, extraExpand: any) => {
 	defaultExpand = convertExpandToObject(defaultExpand);
 	extraExpand = convertExpandToObject(extraExpand);
 
-	for (const expandKey of Object.keys(extraExpand || {})) {
-		const extraExpandOptions = extraExpand[expandKey];
-		const expandOptions =
-			defaultExpand[expandKey] || (defaultExpand[expandKey] = {});
+	for (const expandKey of Object.keys(extraExpand || {}) as Array<
+		keyof typeof extraExpand
+	>) {
+		const extraExpandOptions = extraExpand[expandKey]! || {};
+		defaultExpand[expandKey] = defaultExpand[expandKey] || {};
+		const expandOptions = defaultExpand[expandKey]!;
 
 		if (extraExpandOptions.$select) {
 			expandOptions.$select = extraExpandOptions.$select;
@@ -242,11 +226,15 @@ const mergeExpandOptions = (defaultExpand: any, extraExpand: any) => {
 
 // Converts a valid expand object in any format into a new object
 // containing (at most) $expand, $filter and $select keys
-const convertExpandToObject = (expandOption: any) => {
+const convertExpandToObject = <T extends {}>(
+	expandOption: Pine.Expand<T> | undefined,
+): Pine.ResourceExpandFor<T> => {
 	if (expandOption == null) {
 		return {};
 	} else if (isString(expandOption)) {
-		return { [expandOption]: {} };
+		return {
+			[expandOption]: {},
+		} as Pine.ResourceExpandFor<T>;
 	} else if (isArray(expandOption)) {
 		// Reduce the array into a single object
 		return expandOption.reduce(
@@ -256,9 +244,12 @@ const convertExpandToObject = (expandOption: any) => {
 		);
 	} else {
 		// Check the options in this object are the ones we know how to merge
-		for (const expandKey of Object.keys(expandOption || {})) {
+		for (const expandKey of Object.keys(expandOption) as Array<
+			keyof Pine.ResourceExpandFor<T>
+		>) {
 			const expandRelationshipOptions = expandOption[expandKey];
-			const invalidKeys = Object.keys(expandRelationshipOptions).filter(
+
+			const invalidKeys = Object.keys(expandRelationshipOptions! || {}).filter(
 				key => key !== '$select' && key !== '$expand' && key !== '$filter',
 			);
 			if (invalidKeys.length > 0) {
@@ -268,4 +259,27 @@ const convertExpandToObject = (expandOption: any) => {
 
 		return cloneDeep(expandOption);
 	}
+};
+
+// In order not to introduce a breaking change, we export each element independently and all together as a default export.
+export default {
+	getOsUpdateHelper,
+	deviceTypes,
+	notImplemented,
+	onlyIf,
+	now,
+	dateToMoment,
+	timeSince,
+	isId,
+	LOCKED_STATUS_CODE,
+	findCallback,
+	unauthorizedError,
+	notFoundResponse,
+	noDeviceForKeyResponse,
+	noApplicationForKeyResponse,
+	isUniqueKeyViolationResponse,
+	treatAsMissingApplication,
+	treatAsMissingDevice,
+	isDevelopmentVersion,
+	mergePineOptions,
 };
