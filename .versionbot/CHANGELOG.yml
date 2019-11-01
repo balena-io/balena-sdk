@@ -1,4 +1,34 @@
 - commits:
+    - subject: Make callbacks optional for api key model
+      hash: 7f3785412a2f9fdc7f67f4dfb3369835bf92dfb2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+    - subject: Convert utils index Coffeescript to Typescript
+      hash: da912518a55f92cb26c1faa97b8efe29a61c3fd7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+    - subject: Move utils index file from .coffee to .ts
+      hash: 097c091b3620f0488986dc926c87e7a1a4f7c700
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.16.3
+  date: 2019-10-31T16:10:39.919Z
+- commits:
     - subject: Update blink to the newer api for device actions
       hash: 4a4e367477e54c74941ed09d619c5cd93bdb024d
       body: ''
