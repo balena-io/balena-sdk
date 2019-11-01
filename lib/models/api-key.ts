@@ -65,9 +65,7 @@ const getApiKeysModel = function(
 	exports.create = function(
 		name: string,
 		description: string | null = null,
-		_callback:
-			| ((error?: Error, result?: string) => void)
-			| undefined = undefined,
+		_callback?: (error?: Error, result?: string) => void,
 	): Promise<string> {
 		_callback = findCallback(arguments);
 
@@ -115,7 +113,7 @@ const getApiKeysModel = function(
 	 */
 	exports.getAll = function(
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.ApiKey> = {},
-		callback: (error?: Error, apiKeys?: BalenaSdk.ApiKey[]) => void,
+		callback?: (error?: Error, apiKeys?: BalenaSdk.ApiKey[]) => void,
 	): Promise<BalenaSdk.ApiKey[]> {
 		callback = findCallback(arguments);
 		return pine
@@ -168,7 +166,7 @@ const getApiKeysModel = function(
 	exports.update = function(
 		id: number,
 		apiKeyInfo: { name?: string; description?: string },
-		callback: (error?: Error) => void,
+		callback?: (error?: Error) => void,
 	): Promise<void> {
 		return Promise.try<void>(() => {
 			if (!apiKeyInfo) {
@@ -220,7 +218,7 @@ const getApiKeysModel = function(
 	 */
 	exports.revoke = function(
 		id: number,
-		callback: (error?: Error) => void,
+		callback?: (error?: Error) => void,
 	): Promise<void> {
 		return pine
 			.delete({
