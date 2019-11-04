@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add ESR versions to getSupportedVersions function result
+      hash: cde4611fd4a0edc125cbb705608a4cf36ea6a055
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.17.0
+  date: 2019-11-04T09:56:02.567Z
+- commits:
     - subject: Make callbacks optional for api key model
       hash: 7f3785412a2f9fdc7f67f4dfb3369835bf92dfb2
       body: ''
