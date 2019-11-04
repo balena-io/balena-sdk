@@ -4435,7 +4435,9 @@ containing exact version numbers supported by the current environment
 * recommended - the recommended version, i.e. the most recent version
 that is _not_ pre-release, can be `null`
 * latest - the most recent version, including pre-releases
-* default - recommended (if available) or latest otherwise  
+* default - recommended (if available) or latest otherwise
+* esr - if esr is supported, an object with three entries: next, current, and sunset.
+Each entry (release line) is of the same structure (versions, recommended, latest, default)  
 
 | Param | Type | Description |
 | --- | --- | --- |

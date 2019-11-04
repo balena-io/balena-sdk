@@ -206,6 +206,12 @@ describe 'OS model', ->
 
 				return true
 
+			areValidEsrVersions = (osVersions) ->
+				m.chai.expect(osVersions).to.have.property('esr').that.is.an('object')
+				areValidVersions(osVersions.esr.next)
+				areValidVersions(osVersions.esr.current)
+				areValidVersions(osVersions.esr.sunset)
+
 			it 'should eventually return the valid versions object', ->
 				promise = balena.models.os.getSupportedVersions('raspberry-pi')
 				m.chai.expect(promise).to.eventually.satisfy(areValidVersions)
@@ -234,6 +240,15 @@ describe 'OS model', ->
 			it 'should be rejected with an error message', ->
 				promise = balena.models.os.getSupportedVersions('foo-bar-baz')
 				m.chai.expect(promise).to.be.rejectedWith('No such device type')
+
+		describe 'given a user that supports ESR', ->
+			# TODO: This should be production plan user
+			givenLoggedInUser(before)
+
+			it 'should eventually return a version set that includes ESR versions', ->
+				promise = balena.models.os.getSupportedVersions('raspberrypi3')
+				m.chai.expect(promise).to.eventually.satisfy(areValidEsrVersions)
+
 
 	describe 'balena.models.os._getDeviceTypes()', ->
 

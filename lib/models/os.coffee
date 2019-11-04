@@ -29,6 +29,10 @@ semver = require('semver')
 memoizee = require('memoizee')
 
 {
+	_getOsVersions
+} = require('../models_ts/os')
+
+{
 	onlyIf
 	findCallback
 	notFoundResponse
@@ -105,25 +109,7 @@ getOsModel = (deps, opts) ->
 	# @memberof balena.models.os
 	###
 	exports._getOsVersions = withDeviceTypesEndpointCaching (deviceType) ->
-		request.send
-			method: 'GET'
-			url: "/device-types/v1/#{deviceType}/images"
-			baseUrl: apiUrl
-			# optionaly authenticated, so we send the token in all cases
-		.get('body')
-		.then ({ versions, latest }) ->
-
-			versions.sort(bSemver.rcompare)
-			potentialRecommendedVersions = reject versions, (version) ->
-				semver.prerelease(version) or isDevelopmentVersion(version)
-			recommended = potentialRecommendedVersions?[0] || null
-
-			return {
-				versions
-				recommended
-				latest
-				default: recommended or latest
-			}
+		_getOsVersions(deviceType, {request: request, apiUrl: apiUrl})
 
 	###*
 	# @summary Clears the cached results from the `device-types/v1` endpoint.
@@ -235,6 +221,9 @@ getOsModel = (deps, opts) ->
 	# that is _not_ pre-release, can be `null`
 	# * latest - the most recent version, including pre-releases
 	# * default - recommended (if available) or latest otherwise
+	# * esr - if esr is supported, an object with three entries: next, current, and sunset.
+	# Each entry (release line) is of the same structure (versions, recommended, latest, default)
+	#
 	# @returns {Promise}
 	#
 	# @example

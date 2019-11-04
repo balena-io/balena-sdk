@@ -558,12 +558,22 @@ declare namespace BalenaSdk {
 		version: string;
 	};
 
-	type OsVersions = {
+	export interface OsVersionSet {
 		latest: string;
 		recommended: string;
 		default: string;
 		versions: string[];
-	};
+	}
+
+	export interface EsrVersions {
+		next: OsVersionSet;
+		current: OsVersionSet;
+		sunset: OsVersionSet;
+	}
+
+	export interface OsVersions extends OsVersionSet {
+		esr?: EsrVersions;
+	}
 
 	type OsUpdateVersions = {
 		versions: string[];
