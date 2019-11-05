@@ -254,6 +254,14 @@ export interface ParamsObjWithId<T> extends ParamsObj<T> {
 	id: number;
 }
 
+export interface ParamsObjWithSelect<T> extends ParamsObj<T> {
+	options: ODataOptionsWithSelect<T>;
+}
+
+export interface ParamsObjWithFilter<T> extends ParamsObj<T> {
+	options: ODataOptions<T> & Required<Pick<ODataOptions<T>, '$filter'>>;
+}
+
 export interface UpsertParams<T>
 	extends Omit<ParamsObj<T>, 'id' | 'method' | 'options'> {
 	id: SubmitBody<T>;
