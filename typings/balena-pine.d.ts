@@ -5,7 +5,7 @@ import * as PineClient from './pinejs-client-core';
 declare namespace BalenaPine {
 	interface Pine {
 		delete<T>(
-			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObj<T>,
+			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObjWithFilter<T>,
 		): Promise<'OK'>;
 		get<T>(
 			params: PineClient.ParamsObjWithSelect<T> & PineClient.WithId,
@@ -18,7 +18,7 @@ declare namespace BalenaPine {
 		): Promise<Result>;
 		post<T>(params: PineClient.ParamsObj<T>): Promise<T>;
 		patch<T>(
-			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObj<T>,
+			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObjWithFilter<T>,
 		): Promise<'OK'>;
 		upsert<T>(params: PineClient.UpsertParams<T>): Promise<T | 'OK'>;
 	}
