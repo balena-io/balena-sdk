@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add typings tests for the pine options
+      hash: d5ee83c1ed16a9e505184303645d217927ae719f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.16.4
+  date: 2019-11-06T11:43:09.407Z
+- commits:
     - subject: Make callbacks optional for api key model
       hash: 7f3785412a2f9fdc7f67f4dfb3369835bf92dfb2
       body: ''
