@@ -149,4 +149,7 @@ getKeyModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getKeyModel
+module.exports =
+	default: getKeyModel
+	UserPublicKeyFields: UserPublicKeyFields
+
