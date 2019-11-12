@@ -98,6 +98,8 @@ describe 'Application Model', ->
 				afterEach ->
 					balena.pine.delete
 						resource: 'application'
+						options:
+							$filter: 1: 1
 
 				it 'should be able to create an application w/o providing an application type', ->
 					balena.models.application.create
