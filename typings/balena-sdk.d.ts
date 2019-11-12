@@ -450,6 +450,7 @@ declare namespace BalenaSdk {
 		uuid: string;
 		vpn_address: string | null;
 		should_be_managed_by__supervisor_release: number;
+		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
