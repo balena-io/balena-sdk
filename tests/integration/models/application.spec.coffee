@@ -127,6 +127,8 @@ describe 'Application Model', ->
 				afterEach ->
 					balena.pine.delete
 						resource: 'application'
+						options:
+							$filter: 1: 1
 
 				[
 					'id',

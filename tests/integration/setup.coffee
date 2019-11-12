@@ -76,9 +76,13 @@ exports.resetUser = ->
 		Promise.all [
 			balena.pine.delete
 				resource: 'application'
+				options:
+					$filter: 1: 1
 
 			balena.pine.delete
 				resource: 'user__has__public_key'
+				options:
+					$filter: 1: 1
 
 			balena.pine.delete
 				resource: 'api_key'
@@ -130,6 +134,8 @@ exports.loginPaidUser = ->
 resetApplications = ->
 	balena.pine.delete
 		resource: 'application'
+		options:
+			$filter: 1: 1
 
 exports.givenInitialOrganization = (beforeFn) ->
 	beforeFn ->
@@ -167,6 +173,8 @@ exports.givenAnApplication = (beforeFn) ->
 resetDevices = ->
 	balena.pine.delete
 		resource: 'device'
+		options:
+			$filter: 1: 1
 
 exports.givenADevice = (beforeFn, extraDeviceProps) ->
 	beforeFn ->
