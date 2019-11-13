@@ -104,9 +104,9 @@ export const isDevelopmentVersion = (version: string) =>
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 export const mergePineOptions = <R extends {}>(
-	defaults: Pine.PineOptions<R>,
-	extras: Pine.PineOptions<R> | undefined,
-): Pine.PineOptions<R> => {
+	defaults: Pine.ODataOptions<R>,
+	extras: Pine.ODataOptions<R> | undefined,
+): Pine.ODataOptions<R> => {
 	if (!extras) {
 		return defaults;
 	}
