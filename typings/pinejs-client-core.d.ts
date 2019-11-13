@@ -12,7 +12,7 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
-export type NavigationResource<T = WithId> = T[] | PineDeferred;
+export type NavigationResource<T = WithId> = [T] | PineDeferred;
 
 /**
  * When expanded holds an array, otherwise the property is not present.
