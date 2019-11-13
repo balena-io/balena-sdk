@@ -227,16 +227,15 @@ interface ODataOptionsBase {
 	$select?: string | string[] | '*';
 }
 
-export interface PineOptions extends ODataOptionsBase {
-	$filter?: object;
-	$expand?: object | string;
-}
-
 export interface PineOptionsFor<T> extends ODataOptionsBase {
 	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
 }
+
+export type SubmitBody<T> = {
+	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
+};
 
 interface PineParamsBase {
 	apiPrefix?: string;
@@ -248,15 +247,6 @@ interface PineParamsBase {
 	passthroughByMethod?: { [method in ODataMethod]: AnyObject };
 	customOptions?: AnyObject;
 }
-
-export interface PineParams extends PineParamsBase {
-	body?: AnyObject;
-	options?: PineOptions;
-}
-
-export type SubmitBody<T> = {
-	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
-};
 
 export interface PineParamsFor<T> extends PineParamsBase {
 	body?: SubmitBody<T>;
