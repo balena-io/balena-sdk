@@ -25,7 +25,7 @@ export type AssociatedResource<T = WithId> =
 	| NavigationResource<T>
 	| ReverseNavigationResource<T>;
 
-type InferAssociatedResourceType<T> = T extends (AssociatedResource & any[])
+type InferAssociatedResourceType<T> = T extends AssociatedResource & any[]
 	? T[number]
 	: never;
 
@@ -68,14 +68,14 @@ type AssociatedResourceFilter<T> = T extends NonNullable<
 	ReverseNavigationResource
 >
 	? FilterObj<InferAssociatedResourceType<T>>
-	: (FilterObj<InferAssociatedResourceType<T>> | number | null);
+	: FilterObj<InferAssociatedResourceType<T>> | number | null;
 
 type ResourceObjFilterPropValue<
 	T,
 	k extends keyof T
 > = T[k] extends AssociatedResource
 	? AssociatedResourceFilter<T[k]>
-	: (T[k] | FilterExpressions<T[k]> | null);
+	: T[k] | FilterExpressions<T[k]> | null;
 
 type ResourceObjFilter<T> = {
 	[k in keyof T]?: ResourceObjFilterPropValue<T, k>;
