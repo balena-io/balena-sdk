@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import * as BalenaSdk from '../typings/balena-sdk';
+import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
 
 // This file is in .prettierignore, since otherwise
 // the $ExpectError commentswould move to the wrong place
@@ -525,6 +526,53 @@ export const appOptionsEValid20: BalenaSdk.PineOptionsFor<
 		'depends_on__application',
 	],
 };
+
+// valid OptionalNavigationResource $selects & $expands
+
+// $ExpectType "is_created_by__user" | "belongs_to__application" | "contains__image" | "should_be_running_on__application" | "is_running_on__device" | "should_be_running_on__device" | "release_tag"
+export type ReleaseExpandableProps = BalenaSdk.PineExpandableProps<BalenaSdk.Release>;
+// $ExpectType Release
+export type DeviceIsRunningReleaseAssociatedResourceType = InferAssociatedResourceType<BalenaSdk.Device['is_running__release']>;
+
+export const appOptionsEValid30: BalenaSdk.PineOptionsFor<
+	BalenaSdk.Application
+> = {
+	$expand: [
+		{
+			owns__device: {
+				$select: ['note', 'device_name', 'uuid', 'is_running__release'],
+				$expand: {
+					device_environment_variable: {
+						$select: ['name', 'value'],
+					},
+				},
+			},
+		},
+		'depends_on__application',
+	],
+};
+
+export const appOptionsEValid31: BalenaSdk.PineOptionsFor<
+	BalenaSdk.Application
+> = {
+	$expand: [
+		{
+			owns__device: {
+				$select: ['note', 'device_name', 'uuid'],
+				$expand: {
+					is_running__release: {
+						$select: ['id', 'commit'],
+					},
+					device_environment_variable: {
+						$select: ['name', 'value'],
+					},
+				},
+			},
+		},
+		'depends_on__application',
+	],
+};
+
 
 // valid filters
 
