@@ -13,6 +13,11 @@ export interface PineDeferred {
  * When expanded hold an array with a single element.
  */
 export type NavigationResource<T = WithId> = [T] | PineDeferred;
+export type OptionalNavigationResource<T = WithId> =
+	| []
+	| [T]
+	| PineDeferred
+	| null;
 
 /**
  * When expanded holds an array, otherwise the property is not present.
@@ -23,9 +28,11 @@ export type ReverseNavigationResource<T = WithId> = T[] | undefined;
 
 export type AssociatedResource<T = WithId> =
 	| NavigationResource<T>
+	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
 
-type InferAssociatedResourceType<T> = T extends AssociatedResource & any[]
+export type InferAssociatedResourceType<T> = T extends AssociatedResource &
+	any[]
 	? T[number]
 	: never;
 
