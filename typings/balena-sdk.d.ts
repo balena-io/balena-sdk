@@ -34,10 +34,10 @@ declare namespace BalenaSdk {
 	>;
 	type PineFilter<T> = Pine.Filter<T>;
 	type PineExpand<T> = Pine.Expand<T>;
-	type PineOptions<T> = Pine.PineOptions<T>;
+	type PineOptions<T> = Pine.ODataOptions<T>;
 	type PineSubmitBody<T> = Pine.SubmitBody<T>;
-	type PineParams<T> = Pine.PineParams<T>;
-	type PineParamsWithId<T> = Pine.PineParamsWithId<T>;
+	type PineParams<T> = Pine.ParamsObj<T>;
+	type PineParamsWithId<T> = Pine.ParamsObjWithId<T>;
 	type PineSelectableProps<T> = Pine.SelectableProps<T>;
 	type PineExpandableProps<T> = Pine.ExpandableProps<T>;
 
