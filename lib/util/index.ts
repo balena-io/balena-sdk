@@ -108,10 +108,18 @@ export const isDevelopmentVersion = (version: string) =>
 //   * That means $expands within expands are combined
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
-export const mergePineOptions = <R extends {}>(
+export function mergePineOptions<R extends {}>(
+	defaults: Pine.ODataOptionsWithSelect<R>,
+	extras: Pine.ODataOptions<R>,
+): Pine.ODataOptionsWithSelect<R>;
+export function mergePineOptions<R extends {}>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R>,
-): Pine.ODataOptions<R> => {
+): Pine.ODataOptions<R>;
+export function mergePineOptions<R extends {}>(
+	defaults: Pine.ODataOptions<R>,
+	extras: Pine.ODataOptions<R>,
+): Pine.ODataOptions<R> {
 	if (!extras) {
 		return defaults;
 	}
@@ -164,7 +172,7 @@ export const mergePineOptions = <R extends {}>(
 	}
 
 	return result;
-};
+}
 
 const mergeExpandOptions = <T>(
 	defaultExpand: Pine.Expand<T> | undefined,
