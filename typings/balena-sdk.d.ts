@@ -21,6 +21,9 @@ declare namespace BalenaSdk {
 	 * When expanded hold an array with a single element.
 	 */
 	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
+	type OptionalNavigationResource<T = WithId> = Pine.OptionalNavigationResource<
+		T
+	>;
 	/**
 	 * When expanded holds an array, otherwise the property is not present.
 	 * Selecting is not suggested,
@@ -304,9 +307,9 @@ declare namespace BalenaSdk {
 
 		application_type: NavigationResource<ApplicationType>;
 		is_for__device_type: NavigationResource<DeviceType>;
-		depends_on__application: NavigationResource<Application>;
+		depends_on__application: OptionalNavigationResource<Application>;
 		organization: NavigationResource<Organization>;
-		should_be_running__release: NavigationResource<Release>;
+		should_be_running__release: OptionalNavigationResource<Release>;
 
 		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
@@ -387,7 +390,7 @@ declare namespace BalenaSdk {
 		update_timestamp: string | null;
 		end_timestamp: string;
 
-		is_created_by__user: NavigationResource<User>;
+		is_created_by__user: OptionalNavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
 
 		contains__image: ReverseNavigationResource<{
@@ -547,7 +550,6 @@ declare namespace BalenaSdk {
 		supervisor_version: string;
 		uuid: string;
 		vpn_address: string | null;
-		should_be_managed_by__supervisor_release: number;
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 		/** This is a computed term */
 		overall_status: DeviceOverallStatus.DeviceOverallStatus;
@@ -555,12 +557,18 @@ declare namespace BalenaSdk {
 		overall_progress: number | null;
 
 		is_of__device_type: NavigationResource<DeviceType>;
+		// the schema has this as a nullable, but for simplicity we have it as non-optional
 		belongs_to__application: NavigationResource<Application>;
-		belongs_to__user: NavigationResource<User>;
-		is_running__release: NavigationResource<Release>;
-		should_be_running__release: NavigationResource<Release>;
-		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
-		is_managed_by__device: NavigationResource<Device>;
+		belongs_to__user: OptionalNavigationResource<User>;
+		is_running__release: OptionalNavigationResource<Release>;
+		should_be_running__release: OptionalNavigationResource<Release>;
+		is_managed_by__service_instance: OptionalNavigationResource<
+			ServiceInstance
+		>;
+		is_managed_by__device: OptionalNavigationResource<Device>;
+		should_be_managed_by__supervisor_release: OptionalNavigationResource<
+			SupervisorRelease
+		>;
 
 		device_config_variable: ReverseNavigationResource<DeviceVariable>;
 		device_environment_variable: ReverseNavigationResource<DeviceVariable>;
