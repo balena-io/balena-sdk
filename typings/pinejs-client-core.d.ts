@@ -211,7 +211,7 @@ interface FilterExpressions<T> {
 }
 
 export type ResourceExpand<T> = {
-	[k in ExpandableProps<T>]?: PineOptions<InferAssociatedResourceType<T[k]>>;
+	[k in ExpandableProps<T>]?: ODataOptions<InferAssociatedResourceType<T[k]>>;
 };
 
 type BaseExpand<T> = ResourceExpand<T> | ExpandableProps<T>;
@@ -220,45 +220,39 @@ export type Expand<T> = BaseExpand<T> | Array<BaseExpand<T>>;
 
 export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-interface ODataOptionsBase {
-	$orderby?: OrderBy;
-	$top?: number;
-	$skip?: number;
-	$select?: string | string[] | '*';
-}
-
-export interface PineOptions<T> extends ODataOptionsBase {
+export interface ODataOptions<T> {
 	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
+	$orderby?: OrderBy;
+	$top?: number;
+	$skip?: number;
 }
 
 export type SubmitBody<T> = {
 	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
 };
 
-interface PineParamsBase {
+export interface ParamsObj<T> {
+	resource?: string;
+	body?: SubmitBody<T>;
+	id?: number;
+	options?: ODataOptions<T>;
+
 	apiPrefix?: string;
 	method?: ODataMethod;
-	resource?: string;
-	id?: number;
 	url?: string;
 	passthrough?: AnyObject;
 	passthroughByMethod?: { [method in ODataMethod]: AnyObject };
 	customOptions?: AnyObject;
 }
 
-export interface PineParams<T> extends PineParamsBase {
-	body?: SubmitBody<T>;
-	options?: PineOptions<T>;
-}
-
-export interface PineParamsWithId<T> extends PineParams<T> {
+export interface ParamsObjWithId<T> extends ParamsObj<T> {
 	id: number;
 }
 
-export interface UpsertPineParams<T>
-	extends Omit<PineParams<T>, 'id' | 'method' | 'options'> {
+export interface UpsertParams<T>
+	extends Omit<ParamsObj<T>, 'id' | 'method' | 'options'> {
 	id: SubmitBody<T>;
 	resource: string;
 	body: SubmitBody<T>;
