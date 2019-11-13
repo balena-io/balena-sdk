@@ -284,7 +284,6 @@ declare namespace BalenaSdk {
 		| null;
 
 	interface Release {
-		log: string;
 		commit: string;
 		created_at: string;
 		id: number;
@@ -292,7 +291,6 @@ declare namespace BalenaSdk {
 		source: string;
 		build_log: string | null;
 		end_timestamp: string;
-		push_timestamp: string | null;
 		start_timestamp: string;
 		status: ReleaseStatus;
 		update_timestamp: string | null;
@@ -450,6 +448,7 @@ declare namespace BalenaSdk {
 		uuid: string;
 		vpn_address: string | null;
 		should_be_managed_by__supervisor_release: number;
+		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
