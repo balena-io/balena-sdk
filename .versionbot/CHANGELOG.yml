@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'typings: Remove no longer existing fields from the Release'
+      hash: d52855cbeb2a7753f1113c0406e0feac3df3d7e0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add the api_heartbeat_state field to the Device resource'
+      hash: a2100636a4e10e9835413bbe09ff34b237c4828a
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.17.0
+  date: 2019-11-13T15:40:47.325Z
+- commits:
     - subject: Add typings tests for the pine options
       hash: d5ee83c1ed16a9e505184303645d217927ae719f
       body: ''
