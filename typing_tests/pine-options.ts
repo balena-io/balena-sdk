@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import * as BalenaSdk from '../typings/balena-sdk';
 import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
+import { AnyObject } from '../typings/utils';
 
 // This file is in .prettierignore, since otherwise
 // the $ExpectError commentswould move to the wrong place
@@ -665,4 +666,59 @@ export const appOptionsEFValid1: BalenaSdk.PineOptionsFor<
 		},
 		'depends_on__application',
 	],
+};
+
+export const anyObjectOptionsValid1: BalenaSdk.PineOptionsFor<
+	AnyObject
+> = {
+	$select: ['id', 'app_name'],
+	$expand: {
+		owns__device: {
+			$filter: {
+				device_name: null,
+				note: 'note',
+				device_environment_variable: {
+					$any: {
+						$alias: 'dev',
+						$expr: {
+							dev: {
+								name: 'name',
+							},
+						},
+					},
+				},
+			},
+			$expand: {
+				device_environment_variable: {
+					$filter: {
+						name: 'name',
+						value: null,
+					},
+				},
+			},
+		},
+	},
+	$filter: {
+		app_name: 'test',
+		application_type: {
+			$any: {
+				$alias: 'o',
+				$expr: {
+					o: {
+						name: 'test',
+					},
+				},
+			},
+		},
+		owns__device: {
+			$any: {
+				$alias: 'd',
+				$expr: {
+					d: {
+						device_name: 'test',
+					},
+				},
+			},
+		},
+	},
 };
