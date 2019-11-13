@@ -3,6 +3,13 @@ Promise = require('bluebird')
 m = require('mochainon')
 
 {
+	ApplicationFields
+} = require('../../../lib/models/application')
+{
+	DeviceFields
+} = require('../../../lib/models/device')
+
+{
 	balena
 	credentials
 	givenADevice
@@ -117,7 +124,7 @@ describe 'Application Model', ->
 						.that.has.property('__id').that.is.a('number')
 
 						balena.models.application.getAll
-							$expand: 'is_for__device_type'
+							$expand: is_for__device_type: $select: 'slug'
 						.then (apps) ->
 							m.chai.expect(apps).to.have.length(1)
 							m.chai.expect(apps[0]).to.have.property('id', app.id)
@@ -143,6 +150,10 @@ describe 'Application Model', ->
 							balena.pine.get
 								resource: 'application'
 								options:
+									$select: [
+										'id'
+										'depends_on__application'
+									]
 									$filter: id: $in: [parentApplication.id, childApplication.id]
 									$orderby: id: 'asc'
 					.then ([ parentApplication, childApplication ]) ->
@@ -167,12 +178,14 @@ describe 'Application Model', ->
 							organization: orgId
 					.then ->
 						Promise.all([
-							balena.models.application.getAll()
+							balena.models.application.getAll(
+								$expand: organization: $select: 'id'
+							)
 							balena.auth.getPersonalOrganizationId()
 						])
 					.then ([apps, orgId]) ->
 						m.chai.expect(apps).to.have.length(1)
-						m.chai.expect(apps[0]).to.have.nested.property('organization.__id', orgId)
+						m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', orgId)
 
 				it "should be able to create an application using the user's personal org name", ->
 					balena.auth.whoami()
@@ -183,12 +196,14 @@ describe 'Application Model', ->
 							organization: orgName
 					.then ->
 						Promise.all([
-							balena.models.application.getAll()
+							balena.models.application.getAll(
+								$expand: organization: $select: 'id'
+							)
 							balena.auth.getPersonalOrganizationId()
 						])
 					.then ([apps, orgId]) ->
 						m.chai.expect(apps).to.have.length(1)
-						m.chai.expect(apps[0]).to.have.nested.property('organization.__id', orgId)
+						m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', orgId)
 
 	describe 'given a single application', ->
 
@@ -238,19 +253,21 @@ describe 'Application Model', ->
 						m.chai.expect(applications[0].id).to.equal(@application.id)
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.getAll($expand: 'organization')
+					balena.models.application.getAll($expand: organization: $select: 'name')
 					.then (applications) ->
 						m.chai.expect(applications[0].organization[0].name).to.equal(credentials.username)
 
 			describe 'balena.models.application.get()', ->
 
 				it 'should be able to get an application by name', ->
-					promise = balena.models.application.get(@application.app_name)
-					m.chai.expect(promise).to.become(@application)
+					balena.models.application.get(@application.app_name)
+					.then (app) =>
+						m.chai.expect(app).to.deep.match(_.pick(@application, ApplicationFields))
 
 				it 'should be able to get an application by id', ->
-					promise = balena.models.application.get(@application.id)
-					m.chai.expect(promise).to.become(@application)
+					balena.models.application.get(@application.id)
+					.then (app) =>
+						m.chai.expect(app).to.deep.match(_.pick(@application, ApplicationFields))
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.application.get('HelloWorldApp')
@@ -261,7 +278,7 @@ describe 'Application Model', ->
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.get(@application.id, $expand: 'organization')
+					balena.models.application.get(@application.id, $expand: organization: $select: 'name')
 					.then (application) ->
 						m.chai.expect(application.organization[0].name).to.equal(credentials.username)
 
@@ -366,7 +383,7 @@ describe 'Application Model', ->
 					expiryTime = Date.now() + 3600 * 1000
 					promise = balena.models.application.grantSupportAccess(@application.id, expiryTime)
 					.then =>
-						balena.models.application.get(@application.id)
+						balena.models.application.get(@application.id, $select: 'is_accessible_by_support_until__date')
 					.then (app) ->
 						Date.parse(app.is_accessible_by_support_until__date)
 
@@ -379,7 +396,7 @@ describe 'Application Model', ->
 					.then =>
 						balena.models.application.revokeSupportAccess(@application.id)
 					.then =>
-						balena.models.application.get(@application.id)
+						balena.models.application.get(@application.id, $select: 'is_accessible_by_support_until__date')
 					.then (app) ->
 						app.is_accessible_by_support_until__date
 
@@ -678,13 +695,14 @@ describe 'Application Model', ->
 		givenMulticontainerApplicationWithADevice(before)
 
 		itShouldBeAnApplicationWithDeviceServiceDetails = (application, expectCommit = false) ->
-			# Commit is empty on newly created application, so ignoring it
-			omittedFields = [
-				'owns__device'
+			# we will check the omitted fields right after
+			firstSetOfCheckedFields = _.difference(ApplicationFields, [
 				'should_be_running__release'
-				'__metadata'
-			]
-			m.chai.expect(_.omit(application, omittedFields)).to.deep.equal(_.omit(@application, omittedFields))
+				'owns__device'
+			])
+
+			m.chai.expect(_.pick(application, firstSetOfCheckedFields))
+			.to.deep.equal(_.pick(@application, firstSetOfCheckedFields))
 
 			# Check the app's target release after the release got created
 			m.chai.expect(application.should_be_running__release.__id).to.equal(@currentRelease.id)
@@ -753,6 +771,7 @@ describe 'Application Model', ->
 			extraServiceDetailOptions =
 				$expand:
 					owns__device:
+						$select: DeviceFields
 						$expand:
 							image_install:
 								$expand:
