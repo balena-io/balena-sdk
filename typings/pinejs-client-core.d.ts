@@ -229,6 +229,9 @@ export interface ODataOptions<T> {
 	$skip?: number;
 }
 
+export type ODataOptionsWithSelect<T> = ODataOptions<T> &
+	Required<Pick<ODataOptions<T>, '$select'>>;
+
 export type SubmitBody<T> = {
 	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
 };
