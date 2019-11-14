@@ -768,8 +768,8 @@ declare namespace BalenaSdk {
 		id: number;
 		should_be_running: boolean;
 		device: NavigationResource<Device>;
+		/** service */
 		installs__service: NavigationResource<Service>;
-		service: Service[];
 		application: NavigationResource<Application>;
 
 		device_service_environment_variable: ReverseNavigationResource<
