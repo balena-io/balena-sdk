@@ -612,19 +612,20 @@ declare namespace BalenaSdk {
 
 	interface Image {
 		id: number;
+		created_at: string;
 		build_log: string;
+		contract: string | null;
 		content_hash?: string | null;
 		project_type?: string | null;
 		status: string;
-		created_at: string;
 		is_stored_at__image_location: string;
-		is_a_build_of__service: NavigationResource<Service>;
 		start_timestamp?: string | null;
 		end_timestamp?: string | null;
 		push_timestamp?: string | null;
 		image_size?: number | null;
 		dockerfile: string;
 		error_message?: string | null;
+		is_a_build_of__service: NavigationResource<Service>;
 	}
 
 	interface LogMessage {
@@ -697,8 +698,8 @@ declare namespace BalenaSdk {
 		id: number;
 		should_be_running: boolean;
 		device: NavigationResource<Device>;
+		/** service */
 		installs__service: NavigationResource<Service>;
-		service: Service[];
 		application: NavigationResource<Application>;
 
 		device_service_environment_variable: ReverseNavigationResource<
