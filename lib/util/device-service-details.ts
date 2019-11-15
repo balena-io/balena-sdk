@@ -7,14 +7,14 @@ import {
 	GatewayDownload,
 	Image,
 	ImageInstall,
-	PineOptionsFor,
+	PineOptions,
 	Release,
 	Service,
 } from '../../typings/balena-sdk';
 
 // Pine options necessary for getting raw service data for a device
 export const getCurrentServiceDetailsPineOptions = (expandRelease: boolean) => {
-	const pineOptions: PineOptionsFor<DeviceWithImageInstalls> = {
+	const pineOptions: PineOptions<DeviceWithImageInstalls> = {
 		$expand: {
 			image_install: {
 				$select: ['id', 'download_progress', 'status', 'install_date'],
