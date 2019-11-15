@@ -5,16 +5,16 @@ import * as PineClient from './pinejs-client-core';
 declare namespace BalenaPine {
 	interface Pine {
 		delete<T>(
-			params: PineClient.PineParamsWithIdFor<T> | PineClient.PineParamsFor<T>,
+			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObj<T>,
 		): Promise<'OK'>;
-		get<T>(params: PineClient.PineParamsWithIdFor<T>): Promise<T>;
-		get<T>(params: PineClient.PineParamsFor<T>): Promise<T[]>;
-		get<T, Result>(params: PineClient.PineParamsFor<T>): Promise<Result>;
-		post<T>(params: PineClient.PineParamsFor<T>): Promise<T>;
+		get<T>(params: PineClient.ParamsObjWithId<T>): Promise<T>;
+		get<T>(params: PineClient.ParamsObj<T>): Promise<T[]>;
+		get<T, Result>(params: PineClient.ParamsObj<T>): Promise<Result>;
+		post<T>(params: PineClient.ParamsObj<T>): Promise<T>;
 		patch<T>(
-			params: PineClient.PineParamsWithIdFor<T> | PineClient.PineParamsFor<T>,
+			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObj<T>,
 		): Promise<'OK'>;
-		upsert<T>(params: PineClient.UpsertPineParamsFor<T>): Promise<T | 'OK'>;
+		upsert<T>(params: PineClient.UpsertParams<T>): Promise<T | 'OK'>;
 	}
 }
 
