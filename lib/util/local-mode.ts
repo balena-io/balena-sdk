@@ -15,10 +15,7 @@ export const LOCAL_MODE_SUPPORT_PROPERTIES = [
 ] as const;
 
 export const checkLocalModeSupported = (
-	device: Pick<
-		BalenaSdk.Device,
-		(typeof LOCAL_MODE_SUPPORT_PROPERTIES)[number]
-	>,
+	device: Pick<BalenaSdk.Device, typeof LOCAL_MODE_SUPPORT_PROPERTIES[number]>,
 ): void => {
 	if (!isProvisioned(device)) {
 		throw new Error('Device is not yet fully provisioned');

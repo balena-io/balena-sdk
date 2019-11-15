@@ -12,7 +12,12 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
-export type NavigationResource<T = WithId> = T[] | PineDeferred;
+export type NavigationResource<T = WithId> = [T] | PineDeferred;
+export type OptionalNavigationResource<T = WithId> =
+	| []
+	| [T]
+	| PineDeferred
+	| null;
 
 /**
  * When expanded holds an array, otherwise the property is not present.
@@ -23,9 +28,11 @@ export type ReverseNavigationResource<T = WithId> = T[] | undefined;
 
 export type AssociatedResource<T = WithId> =
 	| NavigationResource<T>
+	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
 
-type InferAssociatedResourceType<T> = T extends (AssociatedResource & any[])
+export type InferAssociatedResourceType<T> = T extends AssociatedResource &
+	any[]
 	? T[number]
 	: never;
 
@@ -68,14 +75,14 @@ type AssociatedResourceFilter<T> = T extends NonNullable<
 	ReverseNavigationResource
 >
 	? FilterObj<InferAssociatedResourceType<T>>
-	: (FilterObj<InferAssociatedResourceType<T>> | number | null);
+	: FilterObj<InferAssociatedResourceType<T>> | number | null;
 
 type ResourceObjFilterPropValue<
 	T,
 	k extends keyof T
 > = T[k] extends AssociatedResource
 	? AssociatedResourceFilter<T[k]>
-	: (T[k] | FilterExpressions<T[k]> | null);
+	: T[k] | FilterExpressions<T[k]> | null;
 
 type ResourceObjFilter<T> = {
 	[k in keyof T]?: ResourceObjFilterPropValue<T, k>;
