@@ -221,7 +221,7 @@ export type Expand<T> = BaseExpand<T> | Array<BaseExpand<T>>;
 export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface ODataOptions<T> {
-	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
+	$select?: Array<SelectableProps<T>> | SelectableProps<T>;
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
 	$orderby?: OrderBy;
