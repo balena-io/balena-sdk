@@ -204,7 +204,9 @@ const mergeExpandOptions = <T>(
 		keyof typeof extraExpand
 	>) {
 		const extraExpandOptions = extraExpand[expandKey]! || {};
-		defaultExpand[expandKey] = defaultExpand[expandKey] || {};
+		defaultExpand[expandKey] =
+			defaultExpand[expandKey] ||
+			({} as typeof defaultExpand[typeof expandKey]);
 		const expandOptions = defaultExpand[expandKey]!;
 
 		if (extraExpandOptions.$select) {
