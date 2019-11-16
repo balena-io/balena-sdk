@@ -229,6 +229,9 @@ export interface ODataOptions<T> {
 	$skip?: number;
 }
 
+export type ODataOptionsWithFilter<T> = ODataOptions<T> &
+	Required<Pick<ODataOptions<T>, '$filter'>>;
+
 export type SubmitBody<T> = {
 	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
 };
@@ -252,7 +255,7 @@ export interface ParamsObjWithId<T> extends ParamsObj<T> {
 }
 
 export interface ParamsObjWithFilter<T> extends ParamsObj<T> {
-	options: ODataOptions<T> & Required<Pick<ODataOptions<T>, '$filter'>>;
+	options: ODataOptionsWithFilter<T>;
 }
 
 export interface UpsertParams<T>
