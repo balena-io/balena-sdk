@@ -211,7 +211,9 @@ type FilterExpressions<T> = {
 };
 
 export type ResourceExpand<T> = {
-	[k in ExpandableProps<T>]?: ODataOptions<InferAssociatedResourceType<T[k]>>;
+	[k in ExpandableProps<T>]?: ODataOptionsWithSelect<
+		InferAssociatedResourceType<T[k]>
+	>;
 };
 
 export type Expand<T> = ResourceExpand<T> | Array<ResourceExpand<T>>;

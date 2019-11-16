@@ -14,7 +14,79 @@ export const unkown$selectPropsFixed: BalenaSdk.PineOptions<BalenaSdk.Applicatio
 	$select: ['id', 'app_name'],
 };
 
+export const noTopSelect: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = { // $ExpectError
+	$expand: {
+		owns__device: {
+			$select: 'id',
+		},
+	},
+	$filter: {
+		id: 5,
+	},
+};
+
+export const noTopSelect2: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = { // $ExpectError
+	$filter: {
+		id: 5,
+	},
+};
+
+export const noTopSelectFixed: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
+	$select: 'id',
+	$filter: {
+		id: 5,
+	},
+};
+
+export const noNestedSelect: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
+	$select: 'id',
+	$expand: { // $ExpectError
+		owns__device: {
+			$filter: {
+				id: 5,
+			},
+		},
+	},
+	$filter: {
+		id: 5,
+	},
+};
+
+export const noNestedSelect2: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
+	$select: 'id',
+	$expand: { // $ExpectError
+		owns__device: {
+			$expand: {
+				device_environment_variable: {
+					$select: ['name', 'value'],
+				},
+			},
+		},
+	},
+};
+
+export const noNestedSelectFixed: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
+	$select: 'id',
+	$expand: {
+		owns__device: {
+			$select: 'id',
+			$expand: {
+				device_environment_variable: {
+					$select: ['name', 'value'],
+				},
+			},
+			$filter: {
+				id: 5,
+			},
+		},
+	},
+	$filter: {
+		id: 5,
+	},
+};
+
 export const unkown$selectPropsInside$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: { // $ExpectError
 		owns__device: {
 			$select: ['asdf', 'note', 'device_name', 'uuid'],
@@ -23,6 +95,17 @@ export const unkown$selectPropsInside$expand: BalenaSdk.PineOptions<BalenaSdk.Ap
 };
 
 export const unkown$expandProps: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
+	$expand: {
+		asdf: { $select: ['id'] }, // $ExpectError
+		owns__device: {
+			$select: ['note', 'device_name', 'uuid'],
+		},
+	},
+};
+
+export const unkown$expandPropsNoSelect: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: {
 		asdf: {}, // $ExpectError
 		owns__device: {
@@ -32,6 +115,7 @@ export const unkown$expandProps: BalenaSdk.PineOptions<BalenaSdk.Application> = 
 };
 
 export const unkownODataPropInside$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: {
 		owns__device: {
 			asdf: {}, // $ExpectError
@@ -41,6 +125,7 @@ export const unkownODataPropInside$expand: BalenaSdk.PineOptions<BalenaSdk.Appli
 };
 
 export const unkown$expandPropsFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -49,8 +134,10 @@ export const unkown$expandPropsFixed: BalenaSdk.PineOptions<BalenaSdk.Applicatio
 };
 
 export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: {
 		owns__device: {
+			$select: 'id',
 			$expand: {
 				asdf: { // $ExpectError
 					$select: ['asdf'],
@@ -64,6 +151,7 @@ export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOpti
 };
 
 export const unkown$selectPropInsideNested$expandWith$select2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: { // $ExpectError
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -77,6 +165,7 @@ export const unkown$selectPropInsideNested$expandWith$select2: BalenaSdk.PineOpt
 };
 
 export const unkown$selectPropInsideNested$expandWith$select2Fixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -89,7 +178,8 @@ export const unkown$selectPropInsideNested$expandWith$select2Fixed: BalenaSdk.Pi
 	},
 };
 
-export const unkown$expandPropInArray$expands: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+export const arrayString$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [ // $ExpectError
 		{
 			owns__device: {
@@ -102,11 +192,47 @@ export const unkown$expandPropInArray$expands: BalenaSdk.PineOptions<BalenaSdk.A
 			},
 		},
 		'depends_on__application',
-		'asdf',
+	],
+};
+
+export const array$expandFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
+	$expand: [
+		{
+			owns__device: {
+				$select: ['note', 'device_name', 'uuid'],
+				$expand: {
+					device_environment_variable: {
+						$select: ['name', 'value'],
+					},
+				},
+			},
+		},
+		{ depends_on__application: { $select: 'id' } },
+	],
+};
+
+
+export const unkown$expandPropInArray$expands: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
+	$expand: [
+		{
+			owns__device: {
+				$select: ['note', 'device_name', 'uuid'],
+				$expand: {
+					device_environment_variable: {
+						$select: ['name', 'value'],
+					},
+				},
+			},
+		},
+		{ depends_on__application: { $select: 'id' } },
+		{ asdf: { $select: 'id' } }, // $ExpectError
 	],
 };
 
 export const unkownODataPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -119,11 +245,12 @@ export const unkownODataPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Appl
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unkown$selectPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [ // $ExpectError
 		{
 			owns__device: {
@@ -135,11 +262,12 @@ export const unkown$selectPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Ap
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unkownNested$expandPropInsideArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -152,11 +280,12 @@ export const unkownNested$expandPropInsideArray$expand: BalenaSdk.PineOptions<Ba
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -171,11 +300,12 @@ export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.Pin
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [ // $ExpectError
 		{
 			owns__device: {
@@ -187,11 +317,12 @@ export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptions<Ba
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [ // $ExpectError
 		{
 			owns__device: {
@@ -206,11 +337,12 @@ export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptions<BalenaSdk.
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [ // $ExpectError
 		{
 			owns__device: {
@@ -225,11 +357,12 @@ export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptions<BalenaSdk.
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -247,7 +380,7 @@ export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptions<BalenaSdk.
 				$select: 'id',
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
@@ -306,9 +439,11 @@ export const unkownPropIn$filterFixed: BalenaSdk.PineOptions<
 export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [ // $ExpectError
 		{
 			owns__device: {
+				$select: 'id',
 				$filter: {
 					device_name: null,
 					note: 'note',
@@ -325,16 +460,18 @@ export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptions<
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
+				$select: 'id',
 				$filter: {
 					device_name: null,
 					note: 'note',
@@ -354,16 +491,18 @@ export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptio
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unknown$any$filterPropInsideArray$expandFixed: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
+				$select: 'id',
 				$filter: {
 					device_name: null,
 					note: 'note',
@@ -380,16 +519,18 @@ export const unknown$any$filterPropInsideArray$expandFixed: BalenaSdk.PineOption
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
+				$select: 'id',
 				$filter: {
 					device_name: null,
 					note: 'note',
@@ -406,6 +547,7 @@ export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptions<
 				},
 				$expand: {
 					device_environment_variable: {
+						$select: ['name', 'value'],
 						$filter: {
 							name: 'name',
 							value: null,
@@ -415,7 +557,7 @@ export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptions<
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
@@ -424,9 +566,11 @@ export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptions<
 export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
+				$select: 'id',
 				$filter: {
 					device_name: null,
 					note: 'note',
@@ -446,6 +590,7 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 				},
 				$expand: {
 					device_environment_variable: {
+						$select: ['name', 'value'],
 						$filter: {
 							name: 'name',
 							value: null,
@@ -455,7 +600,7 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
@@ -478,6 +623,7 @@ export const deviceOptionsEValid2: BalenaSdk.PineOptions<
 export const appOptionsEValid2: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -485,23 +631,10 @@ export const appOptionsEValid2: BalenaSdk.PineOptions<
 	},
 };
 
-export const appOptionsEValid4: BalenaSdk.PineOptions<
-	BalenaSdk.Application
-> = {
-	$expand: {
-		owns__device: {
-			$expand: {
-				device_environment_variable: {
-					$select: ['name', 'value'],
-				},
-			},
-		},
-	},
-};
-
 export const appOptionsEValid5: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -517,6 +650,7 @@ export const appOptionsEValid5: BalenaSdk.PineOptions<
 export const appOptionsEValid20: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -528,7 +662,7 @@ export const appOptionsEValid20: BalenaSdk.PineOptions<
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
@@ -542,6 +676,7 @@ export type DeviceIsRunningReleaseAssociatedResourceType = InferAssociatedResour
 export const appOptionsEValid30: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -553,13 +688,14 @@ export const appOptionsEValid30: BalenaSdk.PineOptions<
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
 export const appOptionsEValid31: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
@@ -574,7 +710,7 @@ export const appOptionsEValid31: BalenaSdk.PineOptions<
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
@@ -641,9 +777,11 @@ export const appOptionsEValidf2: BalenaSdk.PineOptions<
 export const appOptionsEFValid1: BalenaSdk.PineOptions<
 	BalenaSdk.Application
 > = {
+	$select: 'id',
 	$expand: [
 		{
 			owns__device: {
+				$select: 'id',
 				$filter: {
 					device_name: null,
 					note: 'note',
@@ -660,6 +798,7 @@ export const appOptionsEFValid1: BalenaSdk.PineOptions<
 				},
 				$expand: {
 					device_environment_variable: {
+						$select: ['name', 'value'],
 						$filter: {
 							name: 'name',
 							value: null,
@@ -668,7 +807,7 @@ export const appOptionsEFValid1: BalenaSdk.PineOptions<
 				},
 			},
 		},
-		'depends_on__application',
+		{ depends_on__application: { $select: 'id' } },
 	],
 };
 
@@ -678,6 +817,7 @@ export const anyObjectOptionsValid1: BalenaSdk.PineOptions<
 	$select: ['id', 'app_name'],
 	$expand: {
 		owns__device: {
+			$select: ['note', 'device_name', 'uuid'],
 			$filter: {
 				device_name: null,
 				note: 'note',
@@ -694,6 +834,7 @@ export const anyObjectOptionsValid1: BalenaSdk.PineOptions<
 			},
 			$expand: {
 				device_environment_variable: {
+					$select: ['name', 'value'],
 					$filter: {
 						name: 'name',
 						value: null,
