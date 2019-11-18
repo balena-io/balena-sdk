@@ -19,6 +19,13 @@ errors = require('balena-errors')
 
 { findCallback, mergePineOptions } = require('../util')
 
+ServiceFields = [
+	'id'
+	'created_at'
+	'service_name'
+	'application'
+]
+
 getServiceModel = (deps, opts) ->
 	{ pine } = deps
 	applicationModel = once -> require('./application').default(deps, opts)
@@ -41,7 +48,9 @@ getServiceModel = (deps, opts) ->
 		pine.get
 			resource: 'service'
 			id: id
-			options: options
+			options: mergePineOptions
+				$select: ServiceFields
+			, options
 		.tap (service) ->
 			if not service?
 				throw new errors.BalenaServiceNotFound(id)
@@ -83,6 +92,7 @@ getServiceModel = (deps, opts) ->
 				resource: 'service'
 				options:
 					mergePineOptions
+						$select: ServiceFields
 						$filter: application: id
 					, options
 		.asCallback(callback)

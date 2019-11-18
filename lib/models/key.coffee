@@ -20,6 +20,14 @@ errors = require('balena-errors')
 
 { findCallback, mergePineOptions } = require('../util')
 
+UserPublicKeyFields = [
+	'id'
+	'user'
+	'title'
+	'public_key'
+	'created_at'
+]
+
 getKeyModel = (deps, opts) ->
 	{ pine, sdkInstance: { auth } } = deps
 
@@ -51,7 +59,9 @@ getKeyModel = (deps, opts) ->
 		callback = findCallback(arguments)
 		return pine.get
 			resource: 'user__has__public_key'
-			options: mergePineOptions({}, options)
+			options: mergePineOptions
+				$select: UserPublicKeyFields
+			, options
 		.asCallback(callback)
 
 	###*
@@ -80,6 +90,8 @@ getKeyModel = (deps, opts) ->
 		return pine.get
 			resource: 'user__has__public_key'
 			id: id
+			options:
+				$select: UserPublicKeyFields
 		.tap (key) ->
 			if isEmpty(key)
 				throw new errors.BalenaKeyNotFound(id)

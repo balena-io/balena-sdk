@@ -35,14 +35,27 @@ errors = require('balena-errors')
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 {
-	getCurrentServiceDetailsPineOptions,
+	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } = require('../util/device-service-details')
+
+ApplicationFields = [
+	'id'
+	'actor'
+	'app_name'
+	'slug'
+	'should_track_latest_release'
+	'depends_on__application'
+	'should_be_running__release'
+	'application_type'
+	'is_for__device_type'
+]
 
 getApplicationModel = (deps, opts) ->
 	{ request, pine } = deps
 	{ apiUrl } = opts
 
+	DeviceFields = once -> require('./device').DeviceFields
 	deviceModel = once -> require('./device').default(deps, opts)
 	releaseModel = once -> require('./release').default(deps, opts)
 
@@ -119,6 +132,7 @@ getApplicationModel = (deps, opts) ->
 			resource: 'my_application'
 			options:
 				mergePineOptions
+					$select: ApplicationFields
 					$orderby: 'app_name asc'
 				, options
 		.map (application) ->
@@ -163,7 +177,9 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device: getCurrentServiceDetailsPineOptions(false)
+				owns__device:
+					$select: DeviceFields()
+					$expand: getCurrentServiceDetailsPineExpand(false)
 			]
 		, options
 
@@ -213,7 +229,10 @@ getApplicationModel = (deps, opts) ->
 				pine.get
 					resource: 'application'
 					id: nameOrId
-					options: mergePineOptions({}, options)
+					options:
+						mergePineOptions
+							$select: ApplicationFields
+						, options
 				.tap (application) ->
 					if not application?
 						throw new errors.BalenaApplicationNotFound(nameOrId)
@@ -222,6 +241,7 @@ getApplicationModel = (deps, opts) ->
 					resource: 'application'
 					options:
 						mergePineOptions
+							$select: ApplicationFields
 							$filter:
 								app_name: nameOrId
 						, options
@@ -277,7 +297,9 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device: getCurrentServiceDetailsPineOptions(false)
+				owns__device:
+					$select: DeviceFields()
+					$expand: getCurrentServiceDetailsPineExpand(false)
 			]
 		, options
 
@@ -318,6 +340,7 @@ getApplicationModel = (deps, opts) ->
 			resource: 'application'
 			options:
 				mergePineOptions
+					$select: ApplicationFields
 					$filter:
 						slug: "#{owner}/#{appName}"
 				, options
@@ -456,6 +479,7 @@ getApplicationModel = (deps, opts) ->
 			pine.get
 				resource: 'device_type'
 				options:
+					$top: 1
 					$select: [ 'id' ]
 					$filter:
 						# this way we get the un-aliased device type slug
