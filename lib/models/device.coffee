@@ -72,6 +72,54 @@ MIN_SUPERVISOR_MC_API = '7.0.0'
 # affected in particular.
 CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000
 
+DeviceFields = [
+	'id'
+	'created_at'
+	'actor'
+	'device_name'
+	'uuid'
+	'note'
+	'local_id'
+	'status'
+	'is_online'
+	'last_connectivity_event'
+	'is_connected_to_vpn'
+	'last_vpn_event'
+	'ip_address'
+	'vpn_address'
+	'public_address'
+	'os_version'
+	'os_variant'
+	'supervisor_version'
+	'provisioning_progress'
+	'provisioning_state'
+	'download_progress'
+	'logs_channel'
+	'is_locked_until__date'
+	'api_heartbeat_state'
+	'is_of__device_type'
+	'belongs_to__application'
+	'is_managed_by__device'
+	'should_be_running__release'
+	'is_running__release'
+	'is_managed_by__service_instance'
+]
+
+DeviceServiceEnvironmentVariableFields = [
+	'id'
+	'created_at'
+	'value'
+	'name'
+	'service_install'
+]
+
+ServiceInstallFields = [
+	'id'
+	'created_at'
+	'device'
+	'installs__service'
+]
+
 getDeviceModel = (deps, opts) ->
 	{ pine, request, sdkInstance: { auth } } = deps
 	{ apiUrl, dashboardUrl, deviceUrlsBase } = opts
@@ -211,6 +259,7 @@ getDeviceModel = (deps, opts) ->
 			resource: 'device'
 			options:
 				mergePineOptions
+					$select: DeviceFields
 					$orderby: 'device_name asc'
 				, options
 
@@ -330,7 +379,10 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device'
 					id: uuidOrId
-					options: options
+					options:
+						mergePineOptions
+							$select: DeviceFields
+						, options
 				.tap (device) ->
 					if not device?
 						throw new errors.BalenaDeviceNotFound(uuidOrId)
@@ -339,6 +391,7 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device'
 					options:
 						mergePineOptions
+							$select: DeviceFields
 							$filter:
 								uuid: $startswith: uuidOrId
 						, options
@@ -3088,6 +3141,7 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device_service_environment_variable'
 					options: mergePineOptions
+						$select: DeviceServiceEnvironmentVariableFields
 						$filter:
 							service_install:
 								$any:
@@ -3134,6 +3188,7 @@ getDeviceModel = (deps, opts) ->
 					resource: 'device_service_environment_variable'
 					options:
 						mergePineOptions
+							$select: DeviceServiceEnvironmentVariableFields
 							$filter:
 								service_install:
 									$any:
@@ -3185,6 +3240,7 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'device_service_environment_variable'
 					options:
+						$select: DeviceServiceEnvironmentVariableFields
 						$filter:
 							service_install:
 								$any:
@@ -3242,6 +3298,7 @@ getDeviceModel = (deps, opts) ->
 				pine.get
 					resource: 'service_install'
 					options:
+						$select: ServiceInstallFields
 						$filter:
 							device: deviceFilter
 							service: serviceId
@@ -3311,3 +3368,7 @@ getDeviceModel = (deps, opts) ->
 
 module.exports =
 	default: getDeviceModel
+	DeviceFields: DeviceFields
+	DeviceServiceEnvironmentVariableFields: DeviceServiceEnvironmentVariableFields
+	ServiceInstallFields: ServiceInstallFields
+

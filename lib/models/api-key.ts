@@ -23,6 +23,14 @@ import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { findCallback, mergePineOptions } from '../util';
 
+const ApiKeyFields: Array<keyof BalenaSdk.ApiKey> = [
+	'id',
+	'created_at',
+	'name',
+	'description',
+	'is_of__actor',
+];
+
 const getApiKeysModel = function(
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
@@ -121,6 +129,7 @@ const getApiKeysModel = function(
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
+						$select: ApiKeyFields,
 						// the only way to reason whether
 						// it's a named user api key is whether
 						// it has a name
