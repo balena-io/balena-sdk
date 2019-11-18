@@ -1393,10 +1393,6 @@ declare namespace BalenaSdk {
 		 * @deprecated Use balena.auth.loginWithToken(apiKey) instead
 		 */
 		apiKey?: string;
-		/**
-		 * @deprecated Not used
-		 */
-		imageMakerUrl?: string;
 		builderUrl?: string;
 		dataDirectory?: string;
 		isBrowser?: boolean;
