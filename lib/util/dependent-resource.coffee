@@ -38,8 +38,15 @@ exports.buildDependentResource = (
 		parentResourceName # e.g. device
 		getResourceId # e.g. getId(uuidOrId)
 		ResourceNotFoundError # e.g. DeviceNotFoundError
+		ExtraFields = ['id', 'value']
 	}
 ) ->
+	Fields = [
+		ExtraFields...
+		resourceKeyField
+		parentResourceName
+	]
+
 	exports = {
 		getAll: (options = {}, callback) ->
 			callback = findCallback(arguments)
@@ -48,6 +55,7 @@ exports.buildDependentResource = (
 				resource: resourceName
 				options:
 					mergePineOptions
+						$select: Fields
 						$orderby: "#{resourceKeyField} asc"
 					, options
 			.asCallback(callback)
@@ -71,6 +79,7 @@ exports.buildDependentResource = (
 				pine.get
 					resource: resourceName
 					options:
+						$select: Fields
 						$filter:
 							"#{parentResourceName}": id
 							"#{resourceKeyField}": key

@@ -22,9 +22,30 @@ Promise = require('bluebird')
 
 { isId, findCallback, mergePineOptions } = require('../util')
 
+ReleaseFields = [
+	'id'
+	'created_at'
+	'commit'
+	'composition'
+	'status'
+	'source'
+	'build_log'
+	'start_timestamp'
+	'update_timestamp'
+	'end_timestamp'
+	'belongs_to__application'
+]
+
+ReleaseTagFields = [
+	'id'
+	'tag_key'
+	'value'
+	'release'
+]
+
 getReleaseModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = once -> require('./application')(deps, opts)
+	applicationModel = once -> require('./application').default(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 	{ BuilderHelper } = require('../util/builder')
@@ -79,7 +100,10 @@ getReleaseModel = (deps, opts) ->
 				pine.get
 					resource: 'release'
 					id: commitOrId
-					options: mergePineOptions({}, options)
+					options:
+						mergePineOptions
+							$select: ReleaseFields
+						, options
 				.tap (release) ->
 					if not release?
 						throw new errors.BalenaReleaseNotFound(commitOrId)
@@ -88,6 +112,7 @@ getReleaseModel = (deps, opts) ->
 					resource: 'release'
 					options:
 						mergePineOptions
+							$select: ReleaseFields
 							$filter:
 								commit: $startswith: commitOrId
 						, options
@@ -148,6 +173,7 @@ getReleaseModel = (deps, opts) ->
 		return exports.get commitOrId, mergePineOptions
 			$expand:
 				contains__image:
+					$select: 'image'
 					$expand:
 						image:
 							mergePineOptions
@@ -218,6 +244,7 @@ getReleaseModel = (deps, opts) ->
 				resource: 'release'
 				options:
 					mergePineOptions
+						$select: ReleaseFields
 						$filter:
 							belongs_to__application: id
 						$orderby: 'created_at desc'
@@ -389,6 +416,7 @@ getReleaseModel = (deps, opts) ->
 			$expand:
 				release_tag:
 					mergePineOptions
+						$select: ReleaseTagFields
 						$orderby: 'tag_key asc'
 					, options
 		)
@@ -471,4 +499,6 @@ getReleaseModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getReleaseModel
+module.exports =
+	default: getReleaseModel
+	ReleaseFields: ReleaseFields

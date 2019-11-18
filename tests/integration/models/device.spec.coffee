@@ -518,7 +518,10 @@ describe 'Device Model', ->
 					latitude: 41.383333
 					longitude: 2.183333
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('41.383333')
 					m.chai.expect(device.custom_longitude).to.equal('2.183333')
@@ -528,7 +531,10 @@ describe 'Device Model', ->
 					latitude: 42.383333
 					longitude: 2.283333
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('42.383333')
 					m.chai.expect(device.custom_longitude).to.equal('2.283333')
@@ -556,14 +562,20 @@ describe 'Device Model', ->
 
 			it 'should be able to unset the location of a device by uuid', ->
 				balena.models.device.unsetCustomLocation(@device.uuid).then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('')
 					m.chai.expect(device.custom_longitude).to.equal('')
 
 			it 'should be able to unset the location of a device by id', ->
 				balena.models.device.unsetCustomLocation(@device.id).then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('')
 					m.chai.expect(device.custom_longitude).to.equal('')
@@ -803,7 +815,7 @@ describe 'Device Model', ->
 				expiryTimestamp = Date.now() + 3600 * 1000
 				promise = balena.models.device.grantSupportAccess(@device.id, expiryTimestamp)
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: 'is_accessible_by_support_until__date')
 				.then ({ is_accessible_by_support_until__date }) ->
 					Date.parse(is_accessible_by_support_until__date)
 
@@ -819,7 +831,7 @@ describe 'Device Model', ->
 			it 'should revoke support access', ->
 				balena.models.device.revokeSupportAccess(@device.id)
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: 'is_accessible_by_support_until__date')
 				.then ({ is_accessible_by_support_until__date }) ->
 					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 

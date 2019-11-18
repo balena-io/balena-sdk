@@ -34,6 +34,8 @@ describe 'Logs', ->
 		afterEach ->
 			balena.pine.delete
 				resource: 'device'
+				options:
+					$filter: uuid: @uuid
 
 		describe 'balena.logs.history()', ->
 

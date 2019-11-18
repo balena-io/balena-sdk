@@ -211,23 +211,29 @@ type FilterExpressions<T> = {
 };
 
 export type ResourceExpand<T> = {
-	[k in ExpandableProps<T>]?: ODataOptions<InferAssociatedResourceType<T[k]>>;
+	[k in ExpandableProps<T>]?: ODataOptionsWithSelect<
+		InferAssociatedResourceType<T[k]>
+	>;
 };
 
-type BaseExpand<T> = ResourceExpand<T> | ExpandableProps<T>;
-
-export type Expand<T> = BaseExpand<T> | Array<BaseExpand<T>>;
+export type Expand<T> = ResourceExpand<T> | Array<ResourceExpand<T>>;
 
 export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface ODataOptions<T> {
-	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
+	$select?: Array<SelectableProps<T>> | SelectableProps<T>;
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
 	$orderby?: OrderBy;
 	$top?: number;
 	$skip?: number;
 }
+
+export type ODataOptionsWithSelect<T> = ODataOptions<T> &
+	Required<Pick<ODataOptions<T>, '$select'>>;
+
+export type ODataOptionsWithFilter<T> = ODataOptions<T> &
+	Required<Pick<ODataOptions<T>, '$filter'>>;
 
 export type SubmitBody<T> = {
 	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
@@ -249,6 +255,14 @@ export interface ParamsObj<T> {
 
 export interface ParamsObjWithId<T> extends ParamsObj<T> {
 	id: number;
+}
+
+export interface ParamsObjWithSelect<T> extends ParamsObj<T> {
+	options: ODataOptionsWithSelect<T>;
+}
+
+export interface ParamsObjWithFilter<T> extends ParamsObj<T> {
+	options: ODataOptionsWithFilter<T>;
 }
 
 export interface UpsertParams<T>
