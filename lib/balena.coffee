@@ -72,8 +72,6 @@ getSdk = (opts = {}) ->
 	defaults opts,
 		apiUrl: 'https://api.balena-cloud.com/'
 		builderUrl: 'https://builder.balena-cloud.com/'
-		# deprecated
-		imageMakerUrl: 'https://img.balena-cloud.com/'
 		isBrowser: window?
 		# API version is configurable but only do so if you know what you're doing,
 		# as the SDK is directly tied to a specific version.
