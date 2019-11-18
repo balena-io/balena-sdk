@@ -32,7 +32,7 @@
     "test:all": "npm run test:ts-compatibility && npm run test:typings && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
     "test:browser": "karma start",
-    "test:ts-compatibility": "npx typescript@~3.4.0 --noEmit --project ./tsconfig.dist.json",
+    "test:ts-compatibility": "npx typescript@~3.7.2 --noEmit --project ./tsconfig.dist.json",
     "test:typings": "dtslint --localTs node_modules/typescript/lib --expectOnly typing_tests",
     "build": "npm run lint && npm run clean && tsc && gulp build && npm run docs",
     "docs": "jsdoc2md \"build/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
@@ -90,7 +90,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0",
     "tslint-no-unused-expression-chai": "^0.1.3",
-    "typescript": "^3.4.5",
+    "typescript": "^3.7.2",
     "uglify-es": "^3.3.9",
     "vinyl-source-buffer": "^1.1.1",
     "watch": "^1.0.2"
