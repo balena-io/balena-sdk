@@ -1,3 +1,4 @@
+_ = require('lodash')
 m = require('mochainon')
 
 { balena, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
@@ -119,3 +120,22 @@ describe 'Balena SDK', ->
 			mockBalena = getSdk.fromSharedOptions()
 			m.chai.expect(mockBalena).to.include.keys(validKeys)
 
+	describe 'constructor options', ->
+
+		describe 'Given an apiKey', ->
+
+			givenLoggedInUser(before)
+
+			before ->
+				balena.models.apiKey.create('apiKey', 'apiKeyDescription')
+				.then (@testApiKey) =>
+					m.chai.expect(@testApiKey).to.be.a('string')
+					balena.auth.logout()
+
+			it 'should not be used in API requests', ->
+				m.chai.expect(@testApiKey).to.be.a('string')
+				testSdkOpts = _.assign({}, sdkOpts, { apiKey: @testApiKey })
+				testSdk = getSdk(testSdkOpts)
+				promise = testSdk.models.apiKey.getAll()
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'BalenaNotLoggedIn')
