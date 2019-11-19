@@ -1343,10 +1343,6 @@ declare namespace BalenaSdk {
 
 	interface SdkOptions {
 		apiUrl?: string;
-		/**
-		 * @deprecated Use balena.auth.loginWithToken(apiKey) instead
-		 */
-		apiKey?: string;
 		builderUrl?: string;
 		dataDirectory?: string;
 		isBrowser?: boolean;
