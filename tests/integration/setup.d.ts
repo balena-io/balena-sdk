@@ -8,7 +8,6 @@ export const getSdk: BalenaSdk.SdkConstructor;
 export const sdkOpts: {
 	apiUrl: string;
 	dataDirectory: string;
-	apiKey: string | null;
 	isBrowser: boolean;
 	retries: number;
 };
