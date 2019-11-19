@@ -28,6 +28,7 @@
   },
   "scripts": {
     "clean": "rimraf build",
+    "test:fast": "gulp build-node && npm run test:node",
     "test": "npm run build && npm run test:all",
     "test:all": "npm run test:ts-compatibility && npm run test:typings && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
