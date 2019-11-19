@@ -87,6 +87,11 @@ getSdk = (opts = {}) ->
 		defaults opts,
 			dataDirectory: settings.get('dataDirectory')
 
+	if 'apiKey' of opts
+		# to prevent exposing it to balena-request directly
+		# which would add it as a query sting option
+		opts.apiKey = null
+
 	auth = new BalenaAuth(opts)
 	request = getRequest(assign({}, opts, { auth }))
 	pine = getPine(assign({}, opts, { auth, request }))
