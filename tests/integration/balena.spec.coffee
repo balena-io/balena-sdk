@@ -64,35 +64,38 @@ describe 'Balena SDK', ->
 
 		describe 'for request', ->
 			it 'should be able to intercept requests', ->
-				balena.interceptors.push request: m.sinon.mock().returnsArg(0)
+				requestInterceptor = m.sinon.mock().returnsArg(0)
+				balena.interceptors.push request: requestInterceptor
 
 				promise = balena.models.application.getAll()
 
 				promise.then ->
-					m.chai.expect(balena.interceptors[0].request.called).to.equal true,
+					m.chai.expect(requestInterceptor.called).to.equal true,
 						'Interceptor request hook should be called'
 
 		describe 'for requestError', ->
 			it 'should intercept request errors from other interceptors', ->
-				balena.interceptors.push request:
-					m.sinon.mock().throws(new Error('rejected'))
-				balena.interceptors.push requestError:
-					m.sinon.mock().throws(new Error('replacement error'))
+				requestInterceptor = m.sinon.mock().throws(new Error('rejected'))
+				requestErrorInterceptor = m.sinon.mock().throws(new Error('replacement error'))
+
+				balena.interceptors.push request: requestInterceptor
+				balena.interceptors.push requestError: requestErrorInterceptor
 
 				promise = balena.models.application.getAll()
 
 				m.chai.expect(promise).to.be.rejectedWith('replacement error')
 				.then ->
-					m.chai.expect(balena.interceptors[1].requestError.called).to.equal true,
+					m.chai.expect(requestErrorInterceptor.called).to.equal true,
 						'Interceptor requestError hook should be called'
 
 		describe 'for response', ->
 			it 'should be able to intercept responses', ->
-				balena.interceptors.push response: m.sinon.mock().returnsArg(0)
+				responseInterceptor = m.sinon.mock().returnsArg(0)
+				balena.interceptors.push response: responseInterceptor
 				promise = balena.models.application.getAll()
 
 				promise.then ->
-					m.chai.expect(balena.interceptors[0].response.called).to.equal true,
+					m.chai.expect(responseInterceptor.called).to.equal true,
 						'Interceptor response hook should be called'
 
 		describe 'for responseError', ->
