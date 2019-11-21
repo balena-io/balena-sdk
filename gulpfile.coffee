@@ -45,7 +45,7 @@ gulp.task 'test', ->
 		}))
 
 gulp.task 'build', (callback) ->
-	runSequence('build-node', 'build-browser', callback)
+	runSequence('build-node', 'pack-browser', callback)
 
 
 gulp.task 'build-node', ->
@@ -53,7 +53,7 @@ gulp.task 'build-node', ->
 		.pipe(coffee(header: true, bare: true)).on('error', gutil.log)
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
-gulp.task 'build-browser', ['build-node'], ->
+gulp.task 'pack-browser', ->
 	bundle = browserify
 		entries: OPTIONS.files.browserEntry,
 		basedir: OPTIONS.directories.build
@@ -76,3 +76,5 @@ gulp.task 'build-browser', ['build-node'], ->
 		.pipe(minify())
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
+gulp.task 'build-browser', (callback) ->
+	runSequence('build-node', 'pack-browser', callback)
