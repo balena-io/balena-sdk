@@ -160,6 +160,23 @@ getSdk = (opts = {}) ->
 		get: -> request.interceptors,
 		set: (interceptors) -> request.interceptors = interceptors
 
+	versionHeaderInterceptor =
+		request: (request) ->
+			url = request.url
+
+			if typeof url != 'string'
+				return request
+
+			if typeof request.baseUrl == 'string'
+				url = request.baseUrl + url
+
+			if url.indexOf(opts.apiUrl) == 0
+				request.headers['X-Balena-Client'] = "balena-sdk/#{version}"
+
+			return request
+
+	sdk.interceptors.push(versionHeaderInterceptor)
+
 	###*
 	# @summary Balena request instance
 	# @member {Object} request
