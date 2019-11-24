@@ -406,7 +406,7 @@ getApplicationModel = (deps, opts) ->
 	# @returns {Promise}
 	#
 	# @example
-	# balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
+	# balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi' }).then(function(application) {
 	# 	console.log(application);
 	# });
 	#
