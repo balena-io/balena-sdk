@@ -214,9 +214,19 @@ export type ResourceExpand<T> = {
 	[k in ExpandableProps<T>]?: ODataOptions<InferAssociatedResourceType<T[k]>>;
 };
 
+type ResourceExpandWithSelect<T> = {
+	[k in ExpandableProps<T>]?: ODataOptionsWithSelect<
+		InferAssociatedResourceType<T[k]>
+	>;
+};
+
 type BaseExpand<T> = ResourceExpand<T> | ExpandableProps<T>;
 
 export type Expand<T> = BaseExpand<T> | Array<BaseExpand<T>>;
+
+type ExpandWithSelect<T> =
+	| ResourceExpandWithSelect<T>
+	| Array<ResourceExpandWithSelect<T>>;
 
 export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -228,6 +238,11 @@ export interface ODataOptions<T> {
 	$top?: number;
 	$skip?: number;
 }
+
+export type ODataOptionsWithSelect<T> = Omit<ODataOptions<T>, '$expand'> &
+	Required<Pick<ODataOptions<T>, '$select'>> & {
+		$expand?: ExpandWithSelect<T>;
+	};
 
 export type ODataOptionsWithFilter<T> = ODataOptions<T> &
 	Required<Pick<ODataOptions<T>, '$filter'>>;
