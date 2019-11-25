@@ -46,7 +46,7 @@ deviceStatus = require('balena-device-status')
 	normalizeDeviceOsVersion
 } = require('../util/device-os-version')
 {
-	getCurrentServiceDetailsPineOptions,
+	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } = require('../util/device-service-details')
 {
@@ -394,7 +394,7 @@ getDeviceModel = (deps, opts) ->
 		callback = findCallback(arguments)
 
 		exports.get uuidOrId,
-			mergePineOptions(getCurrentServiceDetailsPineOptions(true), options)
+			mergePineOptions($expand: getCurrentServiceDetailsPineExpand(true), options)
 		.then(generateCurrentServiceDetails)
 		.asCallback(callback)
 
