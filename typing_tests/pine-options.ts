@@ -4,7 +4,7 @@ import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
 import { AnyObject } from '../typings/utils';
 
 // This file is in .prettierignore, since otherwise
-// the $ExpectError commentswould move to the wrong place
+// the $ExpectError comments would move to the wrong place
 
 export const unkown$selectProps: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$select: ['asdf', 'id', 'app_name', 'id'], // $ExpectError

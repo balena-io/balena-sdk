@@ -35,6 +35,7 @@ declare namespace BalenaSdk {
 	type PineFilter<T> = Pine.Filter<T>;
 	type PineExpand<T> = Pine.Expand<T>;
 	type PineOptions<T> = Pine.ODataOptions<T>;
+	type PineOptionsWithSelect<T> = Pine.ODataOptionsWithSelect<T>;
 	type PineOptionsWithFilter<T> = Pine.ODataOptionsWithFilter<T>;
 	type PineSubmitBody<T> = Pine.SubmitBody<T>;
 	type PineParams<T> = Pine.ParamsObj<T>;
