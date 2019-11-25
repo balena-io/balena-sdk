@@ -34,7 +34,7 @@ errors = require('balena-errors')
 } = require('../util')
 { normalizeDeviceOsVersion } = require('../util/device-os-version')
 {
-	getCurrentServiceDetailsPineOptions,
+	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } = require('../util/device-service-details')
 
@@ -188,7 +188,8 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device: getCurrentServiceDetailsPineOptions(false)
+				owns__device:
+					$expand: getCurrentServiceDetailsPineExpand(false)
 			]
 		, options
 
@@ -302,7 +303,8 @@ getApplicationModel = (deps, opts) ->
 
 		serviceOptions = mergePineOptions
 			$expand: [
-				owns__device: getCurrentServiceDetailsPineOptions(true)
+				owns__device:
+					$expand: getCurrentServiceDetailsPineExpand(true)
 			]
 		, options
 
