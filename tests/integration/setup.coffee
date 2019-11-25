@@ -153,6 +153,8 @@ exports.givenAnApplication = (beforeFn) ->
 			balena.pine.get
 				resource: 'device_type'
 				id: @application.is_for__device_type.__id
+				options:
+					$select: 'slug'
 		.then (@applicationDeviceType) =>
 			chai.expect(@applicationDeviceType).to.be.an('object')
 			.that.has.property('slug').that.is.a('string')
