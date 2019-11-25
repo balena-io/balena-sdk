@@ -21,7 +21,7 @@ errors = require('balena-errors')
 
 getServiceModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = once -> require('./application')(deps, opts)
+	applicationModel = once -> require('./application').default(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 
@@ -241,4 +241,5 @@ getServiceModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getServiceModel
+module.exports =
+	default: getServiceModel

@@ -208,4 +208,5 @@ getBillingModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getBillingModel
+module.exports =
+	default: getBillingModel

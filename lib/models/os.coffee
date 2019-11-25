@@ -46,8 +46,8 @@ getOsModel = (deps, opts) ->
 	{ request, pubsub } = deps
 	{ apiUrl, isBrowser } = opts
 
-	configModel = once -> require('./config')(deps, opts)
-	applicationModel = once -> require('./application')(deps, opts)
+	configModel = once -> require('./config').default(deps, opts)
+	applicationModel = once -> require('./application').default(deps, opts)
 
 	withDeviceTypesEndpointCaching = (fn) ->
 		memoizedFn = memoizee(fn, {
@@ -561,4 +561,5 @@ getOsModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getOsModel
+module.exports =
+	default: getOsModel
