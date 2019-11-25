@@ -983,6 +983,12 @@ declare namespace BalenaSdk {
 				startApplication(uuidOrId: string | number): Promise<void>;
 				stopApplication(uuidOrId: string | number): Promise<void>;
 				restartApplication(uuidOrId: string | number): Promise<void>;
+				startService(uuidOrId: string | number, imageId: number): Promise<void>;
+				stopService(uuidOrId: string | number, imageId: number): Promise<void>;
+				restartService(
+					uuidOrId: string | number,
+					imageId: number,
+				): Promise<void>;
 				grantSupportAccess(
 					uuidOrId: string | number,
 					expiryTimestamp: number,

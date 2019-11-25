@@ -1167,7 +1167,7 @@ balena.models.application.hasAny(function(error, hasAny) {
 
 **Example**  
 ```js
-balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi').then(function(application) {
+balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
