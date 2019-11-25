@@ -123,7 +123,7 @@ describe 'Application Model', ->
 						.that.has.property('__id').that.is.a('number')
 
 						balena.models.application.getAll
-							$expand: 'is_for__device_type'
+							$expand: is_for__device_type: $select: 'slug'
 						.then (apps) ->
 							m.chai.expect(apps).to.have.length(1)
 							m.chai.expect(apps[0]).to.have.property('id', app.id)
@@ -181,6 +181,7 @@ describe 'Application Model', ->
 								organization: initialOrg[prop]
 							.then ->
 								balena.models.application.getAll(
+									$select: 'id',
 									$expand: organization: $select: 'id'
 								)
 							.then (apps) ->
@@ -384,7 +385,7 @@ describe 'Application Model', ->
 					expiryTime = Date.now() + 3600 * 1000
 					promise = balena.models.application.grantSupportAccess(@application.id, expiryTime)
 					.then =>
-						balena.models.application.get(@application.id)
+						balena.models.application.get(@application.id, $select: 'is_accessible_by_support_until__date')
 					.then (app) ->
 						Date.parse(app.is_accessible_by_support_until__date)
 
@@ -397,7 +398,7 @@ describe 'Application Model', ->
 					.then =>
 						balena.models.application.revokeSupportAccess(@application.id)
 					.then =>
-						balena.models.application.get(@application.id)
+						balena.models.application.get(@application.id, $select: 'is_accessible_by_support_until__date')
 					.then (app) ->
 						app.is_accessible_by_support_until__date
 
