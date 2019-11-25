@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'typings: Add device startService, stopService & restartService'
+      hash: f8335b5619100abfe9b4661570da34c718fc0790
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add missing bracket in application.create() example
+      hash: 5cbec0c7365142204d87a4225f9cbf4d0826f1dd
+      body: ''
+      footer:
+        Resolves: '#571'
+        resolves: '#571'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.17.1
+  date: 2019-11-24T08:31:12.929Z
+- commits:
     - subject: 'typings: Remove no longer existing fields from the Release'
       hash: d52855cbeb2a7753f1113c0406e0feac3df3d7e0
       body: ''
