@@ -225,6 +225,8 @@ declare namespace BalenaSdk {
 		created_at: string;
 		name: string;
 		description: string | null;
+
+		is_of__actor: PineDeferred;
 	}
 
 	interface Application {
@@ -296,16 +298,16 @@ declare namespace BalenaSdk {
 		| null;
 
 	interface Release {
-		commit: string;
-		created_at: string;
 		id: number;
+		created_at: string;
+		commit: string;
 		composition: string | null;
+		status: ReleaseStatus;
 		source: string;
 		build_log: string | null;
-		end_timestamp: string;
 		start_timestamp: string;
-		status: ReleaseStatus;
 		update_timestamp: string | null;
+		end_timestamp: string;
 
 		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
@@ -515,8 +517,8 @@ declare namespace BalenaSdk {
 	}
 
 	interface ServiceInstance {
-		created_at: string;
 		id: number;
+		created_at: string;
 		service_type: string;
 		ip_address: string;
 		last_heartbeat: string;
@@ -524,6 +526,7 @@ declare namespace BalenaSdk {
 
 	interface Service {
 		id: number;
+		created_at: string;
 		service_name: string;
 		application: NavigationResource<Application>;
 	}
