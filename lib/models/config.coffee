@@ -22,7 +22,7 @@ getConfigModel = (deps, opts) ->
 	{ request } = deps
 	{ apiUrl } = opts
 
-	deviceModel = once -> require('./device')(deps, opts)
+	deviceModel = once -> require('./device').default(deps, opts)
 
 	exports = {}
 
@@ -138,4 +138,5 @@ getConfigModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getConfigModel
+module.exports =
+	default: getConfigModel
