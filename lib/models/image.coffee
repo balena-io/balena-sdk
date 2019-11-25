@@ -21,7 +21,7 @@ errors = require('balena-errors')
 
 getImageModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = once -> require('./application')(deps, opts)
+	applicationModel = once -> require('./application').default(deps, opts)
 
 	exports = {}
 
@@ -105,4 +105,5 @@ getImageModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getImageModel
+module.exports =
+	default: getImageModel

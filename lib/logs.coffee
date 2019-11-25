@@ -31,7 +31,7 @@ AbortController = globalEnv?.AbortController || AbortControllerPonyfill
 getLogs = (deps, opts) ->
 	{ request } = deps
 
-	deviceModel = require('./models/device')(deps, opts)
+	deviceModel = require('./models/device').default(deps, opts)
 
 	exports = {}
 

@@ -22,13 +22,13 @@ modelsTemplate =
 	# @namespace application
 	# @memberof balena.models
 	###
-	application: require('./application')
+	application: require('./application').default
 
 	###*
 	# @namespace device
 	# @memberof balena.models
 	###
-	device: require('./device')
+	device: require('./device').default
 
 	###*
 	# @namespace apiKey
@@ -40,44 +40,44 @@ modelsTemplate =
 	# @namespace key
 	# @memberof balena.models
 	###
-	key: require('./key')
+	key: require('./key').default
 
 	###*
 	# @namespace os
 	# @memberof balena.models
 	###
-	os: require('./os')
+	os: require('./os').default
 
 	###*
 	# @namespace config
 	# @memberof balena.models
 	###
-	config: require('./config')
+	config: require('./config').default
 
 	###*
 	# @namespace release
 	# @memberof balena.models
 	###
-	release: require('./release')
+	release: require('./release').default
 
 	###*
 	# @namespace service
 	# @memberof balena.models
 	###
-	service: require('./service')
+	service: require('./service').default
 
 	###*
 	# @namespace image
 	# @memberof balena.models
 	###
-	image: require('./image')
+	image: require('./image').default
 
 	###*
 	# @namespace billing
 	# @memberof balena.models
 	# @description **Note!** The billing methods are available on Balena.io exclusively.
 	###
-	billing: require('./billing')
+	billing: require('./billing').default
 
 module.exports = (deps, opts) ->
 	mapValues(modelsTemplate, (v) -> v(deps, opts))

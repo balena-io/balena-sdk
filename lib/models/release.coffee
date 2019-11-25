@@ -24,7 +24,7 @@ Promise = require('bluebird')
 
 getReleaseModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = once -> require('./application')(deps, opts)
+	applicationModel = once -> require('./application').default(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 	{ BuilderHelper } = require('../util/builder')
@@ -471,4 +471,6 @@ getReleaseModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getReleaseModel
+module.exports =
+	default: getReleaseModel
+
