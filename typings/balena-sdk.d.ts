@@ -171,11 +171,6 @@ declare namespace BalenaSdk {
 	interface SocialServiceAccount {
 		provider: string;
 		display_name: string;
-		created_at: string;
-		id: number;
-		remote_id: string;
-
-		belongs_to__user: NavigationResource<User>;
 	}
 
 	interface User {
