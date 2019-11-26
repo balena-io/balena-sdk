@@ -1,4 +1,14 @@
 - commits:
+    - subject: Tighten the types of the JWT's `social_service_account` entry
+      hash: 9694e020593cf9dc3fb2b86d4d9b17cd1585e555
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.17.2
+  date: 2019-11-26T13:21:03.558Z
+- commits:
     - subject: 'typings: Add device startService, stopService & restartService'
       hash: f8335b5619100abfe9b4661570da34c718fc0790
       body: ''
