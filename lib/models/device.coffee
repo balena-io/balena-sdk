@@ -2448,6 +2448,34 @@ getDeviceModel = (deps, opts) ->
 		hupActionHelper.getHUPActionType(device_type, currentOsVersion, targetOsVersion)
 		return
 
+	# TODO: This is a temporary solution for ESR, as the ESR-supported versions are not part of the SDK yet. It should be removed once the getSupportedVersions is updated to support ESR as well.
+	exports._startOsUpdate = (uuid, targetOsVersion, skipCheck, callback) ->
+		Promise.try ->
+			if not targetOsVersion
+				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
+
+			exports.get(uuid, $select: [
+				'device_type'
+				'is_online'
+				'os_version'
+				'os_variant'
+			])
+		.then (device) ->
+			device.uuid = uuid
+			# this will throw an error if the action isn't available
+			exports._checkOsUpdateTarget(device, targetOsVersion)
+			if skipCheck
+				return {}
+
+			return osModel().getSupportedVersions(device.device_type)
+		.then ({ versions: allVersions }) ->
+			if !skipCheck && !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
+				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
+
+			getOsUpdateHelper()
+		.then (osUpdateHelper) ->
+			osUpdateHelper.startOsUpdate(uuid, targetOsVersion)
+		.asCallback(callback)
 	###*
 	# @summary Start an OS update on a device
 	# @name startOsUpdate
