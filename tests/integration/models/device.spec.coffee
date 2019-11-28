@@ -38,12 +38,12 @@ describe 'Device Model', ->
 		describe 'balena.models.device.getDisplayName()', ->
 
 			it 'should get the display name for a known slug', ->
-				promise = balena.models.device.getDisplayName('raspberry-pi')
-				m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 / Zero / Zero W)')
+				promise = balena.models.device.getDisplayName('raspberry-pi2')
+				m.chai.expect(promise).to.eventually.equal('Raspberry Pi 2')
 
 			it 'should get the display name given a device type alias', ->
-				promise = balena.models.device.getDisplayName('raspberrypi')
-				m.chai.expect(promise).to.eventually.equal('Raspberry Pi (v1 / Zero / Zero W)')
+				promise = balena.models.device.getDisplayName('raspberrypi2')
+				m.chai.expect(promise).to.eventually.equal('Raspberry Pi 2')
 
 			it 'should eventually be undefined if the slug is invalid', ->
 				promise = balena.models.device.getDisplayName('asdf')
@@ -52,20 +52,20 @@ describe 'Device Model', ->
 		describe 'balena.models.device.getDeviceSlug()', ->
 
 			it 'should eventually be the slug from a display name', ->
-				promise = balena.models.device.getDeviceSlug('Raspberry Pi (v1 / Zero / Zero W)')
-				m.chai.expect(promise).to.eventually.equal('raspberry-pi')
+				promise = balena.models.device.getDeviceSlug('Raspberry Pi 2')
+				m.chai.expect(promise).to.eventually.equal('raspberry-pi2')
 
 			it 'should eventually be the slug if passing already a slug', ->
-				promise = balena.models.device.getDeviceSlug('raspberry-pi')
-				m.chai.expect(promise).to.eventually.equal('raspberry-pi')
+				promise = balena.models.device.getDeviceSlug('raspberry-pi2')
+				m.chai.expect(promise).to.eventually.equal('raspberry-pi2')
 
 			it 'should eventually be undefined if the display name is invalid', ->
 				promise = balena.models.device.getDeviceSlug('asdf')
 				m.chai.expect(promise).to.eventually.be.undefined
 
 			it 'should eventually be the slug if passing an alias', ->
-				promise = balena.models.device.getDeviceSlug('raspberrypi')
-				m.chai.expect(promise).to.eventually.equal('raspberry-pi')
+				promise = balena.models.device.getDeviceSlug('raspberrypi2')
+				m.chai.expect(promise).to.eventually.equal('raspberry-pi2')
 
 		describe 'balena.models.device.getSupportedDeviceTypes()', ->
 
