@@ -1,4 +1,16 @@
 - commits:
+    - subject: Split the startOsUpdate method to improve testability
+      hash: f64a6a6b426d317082bc2dec0715e985da2707e3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.17.4
+  date: 2019-11-28T13:41:53.277Z
+- commits:
     - subject: 'tests: Use RPi2 for the device.getDisplayName() tests'
       hash: 2dce0eca62ce32d6c55505453b4ce719394c4c6b
       body: |
