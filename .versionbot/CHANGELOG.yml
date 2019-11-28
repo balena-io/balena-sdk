@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'tests: Use RPi2 for the device.getDisplayName() tests'
+      hash: 2dce0eca62ce32d6c55505453b4ce719394c4c6b
+      body: |
+        At some point we changed the name field of RPI1 and
+        had to update these tests to use the new one. We
+        also recently reverted some OS releases, which as a
+        result bought back the old name and broke the tests
+        again. So, I decided to just use RPi2 for this tests
+        since we don't expect its name to change soon but
+        also its one of the few devices that also has an alias.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.17.3
+  date: 2019-11-28T12:54:10.604Z
+- commits:
     - subject: Tighten the types of the JWT's `social_service_account` entry
       hash: 9694e020593cf9dc3fb2b86d4d9b17cd1585e555
       body: ''
