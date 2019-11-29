@@ -362,7 +362,9 @@ declare namespace BalenaSdk {
 
 	interface BillingPlanInfo {
 		name: string;
+		code: string;
 		tier: string;
+		currentPeriodEndDate?: string;
 		billing: BillingPlanBillingInfo;
 		intervalUnit?: string;
 		intervalLength?: string;
@@ -392,6 +394,7 @@ declare namespace BalenaSdk {
 			code: string;
 			unitCostCents: string;
 			quantity: string;
+			isQuantifiable?: boolean;
 		}>;
 	}
 
