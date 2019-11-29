@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'typings: Add missing BillingPlanInfo fields'
+      hash: 316414dad162c7a8b9345614167d648b6e814ea4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.17.5
+  date: 2019-11-29T15:09:04.418Z
+- commits:
     - subject: Split the startOsUpdate method to improve testability
       hash: f64a6a6b426d317082bc2dec0715e985da2707e3
       body: ''
