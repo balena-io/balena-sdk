@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'typings: Add more missing BillingPlanInfo fields & fix inaccurate one'
+      hash: 5deac641a27a95d11f974c34b910d5e610a14dd4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.17.6
+  date: 2019-11-29T22:17:24.232Z
+- commits:
     - subject: 'typings: Add missing BillingPlanInfo fields'
       hash: 316414dad162c7a8b9345614167d648b6e814ea4
       body: ''
