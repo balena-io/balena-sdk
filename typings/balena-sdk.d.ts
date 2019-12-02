@@ -362,13 +362,18 @@ declare namespace BalenaSdk {
 
 	interface BillingPlanInfo {
 		name: string;
+		title: string;
 		code: string;
 		tier: string;
 		currentPeriodEndDate?: string;
-		billing: BillingPlanBillingInfo;
 		intervalUnit?: string;
 		intervalLength?: string;
 		addonPlan?: BillingAddonPlanInfo;
+		billing: BillingPlanBillingInfo;
+		support: {
+			name: string;
+			title: string;
+		};
 	}
 
 	interface BillingAddonPlanInfo {
@@ -385,7 +390,6 @@ declare namespace BalenaSdk {
 
 	interface BillingPlanBillingInfo {
 		currency: string;
-		currencySymbol?: string;
 		totalCostCents: string;
 
 		charges: Array<{
