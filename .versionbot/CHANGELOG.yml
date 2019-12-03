@@ -1,4 +1,45 @@
 - commits:
+    - subject: Add the SDK's version in the request headers
+      hash: de62c8f391181c04fc534799110ae595c0783848
+      body: ''
+      footer:
+        Resolves: '#776'
+        resolves: '#776'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'package.json: Add `test:fast` variant'
+      hash: d58629932f82912f91ceff750e719a1fea32333f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add a version field on the SDK instance
+      hash: c5c98a79487a2cc52abf1e890e29cbcccb6bc94a
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Remove redundant coffee rebuild on npm run build
+      hash: 26ec66f669bd529880a87894a47fc705c05ad7bb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.18.0
+  date: 2019-12-03T15:11:10.650Z
+- commits:
     - subject: 'typings: Add more missing BillingPlanInfo fields & fix inaccurate one'
       hash: 5deac641a27a95d11f974c34b910d5e610a14dd4
       body: ''
