@@ -1,10 +1,11 @@
 m = require('mochainon')
 
+packageJSON = require('../../package.json')
 { balena, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
 
 describe 'Balena SDK', ->
 
-	validKeys = ['auth', 'models', 'logs', 'settings']
+	validKeys = ['auth', 'models', 'logs', 'settings', 'version']
 
 	describe 'factory function', ->
 
@@ -25,6 +26,12 @@ describe 'Balena SDK', ->
 			it 'should return an object with valid keys', ->
 				mockBalena = getSdk(sdkOpts)
 				m.chai.expect(mockBalena).to.include.keys(validKeys)
+
+		describe 'version', ->
+
+			it 'should match the package.json version', ->
+				mockBalena = getSdk()
+				m.chai.expect(mockBalena).to.have.property('version', packageJSON.version)
 
 	it 'should expose a balena-pine instance', ->
 		m.chai.expect(balena.pine).to.exist

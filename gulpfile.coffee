@@ -6,6 +6,7 @@ gutil = require('gulp-util')
 coffeelint = require('gulp-coffeelint')
 coffee = require('gulp-coffee')
 insert = require('gulp-insert')
+replace = require('gulp-replace')
 runSequence = require('run-sequence')
 browserify = require('browserify')
 uglify = require('gulp-uglify')
@@ -47,6 +48,10 @@ gulp.task 'test', ->
 gulp.task 'build', (callback) ->
 	runSequence('build-node', 'pack-browser', callback)
 
+gulp.task 'inject-version', ->
+	gulp.src(["#{OPTIONS.directories.build}util/sdk-version.js"])
+		.pipe(replace('__REPLACE_WITH_PACKAGE_JSON_VERSION__', packageJSON.version))
+		.pipe(gulp.dest("#{OPTIONS.directories.build}util/"))
 
 gulp.task 'build-node', ->
 	gulp.src(OPTIONS.files.app)
