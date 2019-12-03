@@ -1220,6 +1220,8 @@ declare namespace BalenaSdk {
 		pine: BalenaPine.Pine;
 
 		interceptors: Interceptor[];
+
+		version: string;
 	}
 
 	interface SdkOptions {

@@ -1,10 +1,13 @@
 m = require('mochainon')
 
+packageJSON = require('../../package.json')
 { balena, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
+
+DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/'
 
 describe 'Balena SDK', ->
 
-	validKeys = ['auth', 'models', 'logs', 'settings']
+	validKeys = ['auth', 'models', 'logs', 'settings', 'version']
 
 	describe 'factory function', ->
 
@@ -26,6 +29,12 @@ describe 'Balena SDK', ->
 				mockBalena = getSdk(sdkOpts)
 				m.chai.expect(mockBalena).to.include.keys(validKeys)
 
+		describe 'version', ->
+
+			it 'should match the package.json version', ->
+				mockBalena = getSdk()
+				m.chai.expect(mockBalena).to.have.property('version', packageJSON.version)
+
 	it 'should expose a balena-pine instance', ->
 		m.chai.expect(balena.pine).to.exist
 
@@ -34,11 +43,17 @@ describe 'Balena SDK', ->
 
 	describe 'interception Hooks', ->
 
-		beforeEach ->
-			balena.interceptors = []
+		originalInterceptors = null
+
+		before ->
+			originalInterceptors = balena.interceptors.slice()
+			balena.interceptors = originalInterceptors.slice()
 
 		afterEach ->
-			balena.interceptors = []
+			# register this afterEach first, so that we
+			# are able to clear the mock interceptor, before
+			# all other requests that might happen in afterEach
+			balena.interceptors = originalInterceptors.slice()
 
 		givenLoggedInUser(beforeEach)
 
@@ -57,35 +72,38 @@ describe 'Balena SDK', ->
 
 		describe 'for request', ->
 			it 'should be able to intercept requests', ->
-				balena.interceptors.push request: m.sinon.mock().returnsArg(0)
+				requestInterceptor = m.sinon.mock().returnsArg(0)
+				balena.interceptors.push request: requestInterceptor
 
 				promise = balena.models.application.getAll()
 
 				promise.then ->
-					m.chai.expect(balena.interceptors[0].request.called).to.equal true,
+					m.chai.expect(requestInterceptor.called).to.equal true,
 						'Interceptor request hook should be called'
 
 		describe 'for requestError', ->
 			it 'should intercept request errors from other interceptors', ->
-				balena.interceptors.push request:
-					m.sinon.mock().throws(new Error('rejected'))
-				balena.interceptors.push requestError:
-					m.sinon.mock().throws(new Error('replacement error'))
+				requestInterceptor = m.sinon.mock().throws(new Error('rejected'))
+				requestErrorInterceptor = m.sinon.mock().throws(new Error('replacement error'))
+
+				balena.interceptors.push request: requestInterceptor
+				balena.interceptors.push requestError: requestErrorInterceptor
 
 				promise = balena.models.application.getAll()
 
 				m.chai.expect(promise).to.be.rejectedWith('replacement error')
 				.then ->
-					m.chai.expect(balena.interceptors[1].requestError.called).to.equal true,
+					m.chai.expect(requestErrorInterceptor.called).to.equal true,
 						'Interceptor requestError hook should be called'
 
 		describe 'for response', ->
 			it 'should be able to intercept responses', ->
-				balena.interceptors.push response: m.sinon.mock().returnsArg(0)
+				responseInterceptor = m.sinon.mock().returnsArg(0)
+				balena.interceptors.push response: responseInterceptor
 				promise = balena.models.application.getAll()
 
 				promise.then ->
-					m.chai.expect(balena.interceptors[0].response.called).to.equal true,
+					m.chai.expect(responseInterceptor.called).to.equal true,
 						'Interceptor response hook should be called'
 
 		describe 'for responseError', ->
@@ -101,6 +119,137 @@ describe 'Balena SDK', ->
 				.then ->
 					m.chai.expect(called).to.equal true,
 						'responseError should be called when request fails'
+
+		describe 'version header', ->
+
+			getVersionHeaderResponseInterceptor =  ->
+				responseInterceptor = (response) ->
+					responseInterceptor.callCount++
+					m.chai.expect(response.request.headers)
+						.to.have.property('X-Balena-Client', "#{packageJSON.name}/#{packageJSON.version}")
+					return response
+
+				responseInterceptor.callCount = 0
+
+				return responseInterceptor
+
+			getVersionHeaderResponseErrorInterceptor = ->
+				responseInterceptor = (err) ->
+					responseInterceptor.callCount++
+					m.chai.expect(err.requestOptions.headers)
+						.to.not.have.property('X-Balena-Client')
+					throw err
+
+				responseInterceptor.callCount = 0
+
+				return responseInterceptor
+
+			describe 'model requests', ->
+
+				it 'should include the version header', ->
+					responseInterceptor = getVersionHeaderResponseInterceptor()
+					balena.interceptors.push response: responseInterceptor
+
+					promise = balena.models.application.getAll()
+
+					promise.then ->
+						m.chai.expect(responseInterceptor.callCount).to.equal 1,
+							'Interceptor response hook should be called'
+
+			describe 'pine requests', ->
+
+				it 'should include the version header', ->
+					responseInterceptor = getVersionHeaderResponseInterceptor()
+					balena.interceptors.push response: responseInterceptor
+
+					promise = balena.pine.get({
+						resource: 'application'
+					})
+
+					promise.then ->
+						m.chai.expect(responseInterceptor.callCount).to.equal 1,
+							'Interceptor response hook should be called'
+
+			describe 'plain requests', ->
+
+				describe 'with a relative url & without a baseUrl', ->
+
+					it 'should not include the version header', ->
+						responseInterceptor = getVersionHeaderResponseErrorInterceptor()
+						balena.interceptors.push responseError: responseInterceptor
+
+						promise = balena.request.send
+							method: 'GET'
+							url: '/v5/application'
+
+						m.chai.expect(promise).to.be.rejected
+						.then ->
+							m.chai.expect(responseInterceptor.callCount).to.equal 1,
+								'Interceptor response hook should be called'
+
+				describe 'with a baseUrl option', ->
+
+					describe 'to the API', ->
+
+						it 'should include the version header', ->
+							responseInterceptor = getVersionHeaderResponseInterceptor()
+							balena.interceptors.push response: responseInterceptor
+
+							promise = balena.request.send
+								method: 'GET'
+								url: '/v5/application'
+								baseUrl: sdkOpts.apiUrl
+
+							promise.then ->
+								m.chai.expect(responseInterceptor.callCount).to.equal 1,
+									'Interceptor response hook should be called'
+
+					describe 'to a differnet server', ->
+
+						it 'should not include the version header', ->
+							responseInterceptor = getVersionHeaderResponseErrorInterceptor()
+							balena.interceptors.push responseError: responseInterceptor
+
+							promise = balena.request.send
+								method: 'GET'
+								url: '/v5/application'
+								baseUrl: DIFFERENT_TEST_SERVER_URL
+
+							m.chai.expect(promise).to.be.rejected
+							.then ->
+								m.chai.expect(responseInterceptor.callCount).to.equal 1,
+									'Interceptor response hook should be called'
+
+				describe 'with a complete url option', ->
+
+					describe 'to the API', ->
+
+						it 'should include the version header', ->
+							responseInterceptor = getVersionHeaderResponseInterceptor()
+							balena.interceptors.push response: responseInterceptor
+
+							promise = balena.request.send
+								method: 'GET'
+								url: "#{sdkOpts.apiUrl}/v5/application"
+
+							promise.then ->
+								m.chai.expect(responseInterceptor.callCount).to.equal 1,
+									'Interceptor response hook should be called'
+
+					describe 'to a differnet server', ->
+
+						it 'should not include the version header', ->
+							responseInterceptor = getVersionHeaderResponseErrorInterceptor()
+							balena.interceptors.push responseError: responseInterceptor
+
+							promise = balena.request.send
+								method: 'GET'
+								url: "#{DIFFERENT_TEST_SERVER_URL}/v5/application"
+
+							m.chai.expect(promise).to.be.rejected
+							.then ->
+								m.chai.expect(responseInterceptor.callCount).to.equal 1,
+									'Interceptor response hook should be called'
 
 	describe 'getSdk.setSharedOptions()', ->
 		it 'should set a global containing shared options', ->
