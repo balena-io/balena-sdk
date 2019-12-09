@@ -293,14 +293,14 @@ getApplicationModel = (deps, opts) ->
 
 
 	###*
-	# @summary Get a single application using the appname and owner's username or organization name
+	# @summary Get a single application using the appname and owner's username or organization handle
 	# @name getAppByOwner
 	# @public
 	# @function
 	# @memberof balena.models.application
 	#
 	# @param {String} appName - application name
-	# @param {String} owner - The owner's username or organization name
+	# @param {String} owner - The owner's username or organization handle
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -403,7 +403,7 @@ getApplicationModel = (deps, opts) ->
 	# @param {String} [options.applicationType] - application type slug e.g. microservices-starter
 	# @param {String} options.deviceType - device type slug
 	# @param {(Number|String)} [options.parent] - parent application name or id
-	# @param {(String|Number|null)} [options.organization] - name (string) or id (number) of the organization that the application will belong to or null
+	# @param {(String|Number|null)} [options.organization] - handle (string) or id (number) of the organization that the application will belong to or null
 	#
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -470,7 +470,7 @@ getApplicationModel = (deps, opts) ->
 		organizationPromise = if !organization
 			Promise.resolve()
 		else
-			orgFilterProperty = if isId(organization) then 'id' else 'name'
+			orgFilterProperty = if isId(organization) then 'id' else 'handle'
 			pine.get
 				resource: 'organization'
 				options:

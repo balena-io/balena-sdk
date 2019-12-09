@@ -184,6 +184,7 @@ declare namespace BalenaSdk {
 		id: number;
 		created_at: string;
 		name: string;
+		handle: string;
 
 		application: ReverseNavigationResource<Application>;
 		/** includes__organization_membership */
@@ -198,7 +199,7 @@ declare namespace BalenaSdk {
 
 		belongs_to__organization: NavigationResource<Organization>;
 
-		/** includes__organization_membership */
+		/** includes__user */
 		team_membership: ReverseNavigationResource<TeamMembership>;
 		/** grants_access_to__application */
 		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
@@ -235,6 +236,12 @@ declare namespace BalenaSdk {
 		includes__organization_membership: ReverseNavigationResource<
 			OrganizationMembership
 		>;
+		/** is_member_of__application */
+		user_application_membership: ReverseNavigationResource<
+			ApplicationMembership
+		>;
+		/** is_member_of__team */
+		team_membership: ReverseNavigationResource<TeamMembership>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
 		// this is what the api route returns
@@ -259,12 +266,6 @@ declare namespace BalenaSdk {
 		organization_membership_role: NavigationResource<
 			OrganizationMembershipRole
 		>;
-
-		/** grants_access_to__application */
-		organization_membership_application_access: ReverseNavigationResource<
-			OrganizationMemberApplicationAccess
-		>;
-		team_membership: ReverseNavigationResource<TeamMembership>;
 	}
 
 	/** team_membership */
@@ -272,7 +273,8 @@ declare namespace BalenaSdk {
 		id: number;
 		created_at: string;
 
-		organization_membership: NavigationResource<OrganizationMembership>;
+		user: NavigationResource<User>;
+		/** team */
 		is_member_of__team: NavigationResource<Team>;
 	}
 
@@ -308,9 +310,9 @@ declare namespace BalenaSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
-		/** is_accessible_by__organization_membership */
-		organization_membership_application_access: ReverseNavigationResource<
-			OrganizationMemberApplicationAccess
+		/** includes__user */
+		user__is_member_of__application: ReverseNavigationResource<
+			ApplicationMembership
 		>;
 		/** is_accessible_by__team */
 		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
@@ -338,12 +340,12 @@ declare namespace BalenaSdk {
 		name: ApplicationMembershipRoles;
 	}
 
-	/** organization_membership_application_access */
-	interface OrganizationMemberApplicationAccess {
+	/** user__is_member_of__application */
+	interface ApplicationMembership {
 		id: number;
-		organization_membership: NavigationResource<OrganizationMembership>;
+		user: NavigationResource<User>;
 		/** application */
-		grants_access_to__application: NavigationResource<Application>;
+		is_member_of__application: NavigationResource<Application>;
 		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 

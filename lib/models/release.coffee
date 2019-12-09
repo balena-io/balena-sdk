@@ -300,10 +300,10 @@ getReleaseModel = (deps, opts) ->
 			$select: 'app_name'
 			$expand:
 				organization:
-					$select: 'name'
+					$select: 'handle'
 		)
 		.then ({ app_name, organization }) ->
-			builderHelper.buildFromUrl(organization[0].name, app_name, urlDeployOptions)
+			builderHelper.buildFromUrl(organization[0].handle, app_name, urlDeployOptions)
 		.asCallback(callback)
 
 	###*

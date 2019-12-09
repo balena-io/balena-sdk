@@ -80,9 +80,9 @@ describe 'Application Model', ->
 					promise = balena.models.application.create
 						name: 'FooBar'
 						deviceType: 'raspberry-pi'
-						# add some extra invalid chart to the org name just to be sure
-						organization: 'balena-test-non-existing-organization-name-!@#'
-					m.chai.expect(promise).to.be.rejectedWith('Organization not found: balena-test-non-existing-organization-name-!@#')
+						# add some extra invalid characters to the organization's handle just to be sure
+						organization: 'balena-test-non-existing-organization-handle-!@#'
+					m.chai.expect(promise).to.be.rejectedWith('Organization not found: balena-test-non-existing-organization-handle-!@#')
 
 				it 'should be rejected if the user does not have access to find the organization by id', ->
 					promise = balena.models.application.create
@@ -248,9 +248,9 @@ describe 'Application Model', ->
 						m.chai.expect(applications[0].id).to.equal(@application.id)
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.getAll($expand: organization: $select: 'name')
+					balena.models.application.getAll($expand: organization: $select: 'handle')
 					.then (applications) ->
-						m.chai.expect(applications[0].organization[0].name).to.equal(credentials.username)
+						m.chai.expect(applications[0].organization[0].handle).to.equal(credentials.username)
 
 			describe 'balena.models.application.get()', ->
 
@@ -271,9 +271,9 @@ describe 'Application Model', ->
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.get(@application.id, $expand: organization: $select: 'name')
+					balena.models.application.get(@application.id, $expand: organization: $select: 'handle')
 					.then (application) ->
-						m.chai.expect(application.organization[0].name).to.equal(credentials.username)
+						m.chai.expect(application.organization[0].handle).to.equal(credentials.username)
 
 			describe 'balena.models.application.has()', ->
 
