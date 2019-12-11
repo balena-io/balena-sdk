@@ -221,6 +221,7 @@ declare namespace BalenaSdk {
 		device_type_info?: DeviceType;
 		has_dependent?: boolean;
 		is_accessible_by_support_until__date: string;
+		is_host: boolean;
 		should_track_latest_release: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
