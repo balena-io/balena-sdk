@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'typings: Add is_host field to the Application'
+      hash: 84f65867e1d4773b311cfe723a45d72aef5bfadf
+      body: ''
+      footer:
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2291'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2291'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.19.0
+  date: 2019-12-11T12:20:23.097Z
+- commits:
     - subject: Add the SDK's version in the request headers
       hash: de62c8f391181c04fc534799110ae595c0783848
       body: ''
