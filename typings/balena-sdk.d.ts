@@ -164,8 +164,11 @@ declare namespace BalenaSdk {
 		name: string;
 		type: string;
 		min?: number;
+		max?: number;
+		hidden?: boolean;
+		when?: Dictionary<number | string | boolean>;
 		choices?: string[] | number[];
-		choicesLabels?: { [key: string]: string };
+		choicesLabels?: Dictionary<string>;
 	}
 
 	interface SocialServiceAccount {
