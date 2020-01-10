@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add missing typings to device type options
+      hash: 39976f131b9661840e380f80d470b17e4aa88379
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.20.0
+  date: 2019-12-26T16:25:34.270Z
+- commits:
     - subject: 'typings: Add is_host field to the Application'
       hash: 84f65867e1d4773b311cfe723a45d72aef5bfadf
       body: ''
