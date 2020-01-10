@@ -21,6 +21,9 @@ interface DeviceTypeOptionsGroup {
 	name: string;
 	type: string;
 	min?: number;
+	max?: number;
+	hidden?: boolean;
+	when?: Dictionary<number | string | boolean>;
 	choices?: string[] | number[];
 	choicesLabels?: Dictionary<string>;
 }
