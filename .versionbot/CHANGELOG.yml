@@ -1,4 +1,25 @@
 - commits:
+    - subject: Drop the internal common-types in favor of the exported typings
+      hash: 7822892ba8057538cf0c49b8aca192515da2e071
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add missing props in DeviceType'
+      hash: 97666bd0cc20f01292c24ad2fffe8ee5b4a6ce85
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.20.1
+  date: 2020-01-13T22:59:40.076Z
+- commits:
     - subject: Add missing typings to device type options
       hash: 39976f131b9661840e380f80d470b17e4aa88379
       body: ''
