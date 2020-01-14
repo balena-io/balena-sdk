@@ -104,6 +104,7 @@ declare namespace BalenaSdk {
 	interface DeviceType {
 		slug: string;
 		name: string;
+		aliases: string[];
 
 		arch: string;
 		state?: string;
