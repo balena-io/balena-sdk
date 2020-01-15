@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update device type typings to match the returned data
+      hash: 4401276ca7cdd69d36cdaf75f7ecfb392d85d76f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.20.2
+  date: 2020-01-15T10:49:23.270Z
+- commits:
     - subject: Drop the internal common-types in favor of the exported typings
       hash: 7822892ba8057538cf0c49b8aca192515da2e071
       body: ''
