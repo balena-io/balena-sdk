@@ -112,6 +112,7 @@ declare namespace BalenaSdk {
 		private?: boolean;
 
 		isDependent?: boolean;
+		imageDownloadAlerts?: DeviceTypeDownloadAlert[];
 		instructions?: string[] | DeviceTypeInstructions;
 		gettingStartedLink?: string | DeviceTypeGettingStartedLink;
 		stateInstructions?: { [key: string]: string[] };
@@ -129,6 +130,11 @@ declare namespace BalenaSdk {
 		};
 		/** Holds the latest balenaOS version */
 		buildId?: string;
+	}
+
+	interface DeviceTypeDownloadAlert {
+		type: string;
+		message: string;
 	}
 
 	interface DeviceTypeInstructions {
