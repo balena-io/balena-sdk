@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update dependencies
+      hash: 0bd5c5a35262699ccfff8a03199236f3a4f4192a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.20.3
+  date: 2020-01-16T13:53:41.078Z
+- commits:
     - subject: Update device type typings to match the returned data
       hash: 4401276ca7cdd69d36cdaf75f7ecfb392d85d76f
       body: ''
