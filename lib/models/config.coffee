@@ -33,12 +33,16 @@ getConfigModel = (deps, opts) ->
 		# there are plans to move this to `resin-device-types` so it
 		# should be a matter of time for this to be removed.
 		return map deviceTypes, (deviceType) ->
+			if deviceType.state is 'DISCONTINUED'
+				deviceType.name = deviceType.name.replace(/(\(PREVIEW|EXPERIMENTAL\))/, '(DISCONTINUED)')
 			if deviceType.state is 'PREVIEW'
 				deviceType.state = 'ALPHA'
 				deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)')
 			if deviceType.state is 'EXPERIMENTAL'
+				# Keep 'BETA' as the state until the next major, just in case someone is using this
+				# TODO: In the next major change it to 'NEW'
 				deviceType.state = 'BETA'
-				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(BETA)')
+				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(NEW)')
 			return deviceType
 
 	###*

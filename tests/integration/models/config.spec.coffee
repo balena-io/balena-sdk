@@ -3,6 +3,45 @@ m = require('mochainon')
 
 { balena } = require('../setup')
 
+expectDeviceTypeArray = (deviceTypes) ->
+	m.chai.expect(deviceTypes).to.be.an('array')
+	m.chai.expect(deviceTypes).to.not.have.length(0)
+
+	for deviceType in deviceTypes
+		m.chai.expect(deviceType.slug).to.exist
+		m.chai.expect(deviceType.name).to.exist
+		m.chai.expect(deviceType.arch).to.exist
+
+REPLACED_STATES = [
+	'PREVIEW'
+	'EXPERIMENTAL'
+]
+
+REPLACED_NAME_SUFFIXES = [
+	'(PREVIEW)'
+	'(EXPERIMENTAL)'
+	'(BETA)'
+]
+
+itNormalizesDeviceTypes = ->
+	it 'changes old device type states', ->
+		for deviceType in @deviceTypes
+			m.chai.expect(deviceType.state).to.satisfy (dtState) ->
+				_.every(REPLACED_STATES, (replacedState) -> dtState != replacedState)
+
+	it 'changes old device type name suffixes', ->
+		for deviceType in @deviceTypes
+			m.chai.expect(deviceType.name).to.satisfy (dtName) ->
+				_.every(REPLACED_NAME_SUFFIXES, (replacedSuffix) -> !_.endsWith(dtName, replacedSuffix))
+
+	it 'properly replaces the names of device types with old states', ->
+		for deviceType in @deviceTypes
+			if deviceType.state == 'PREVIEW'
+				m.chai.expect(deviceType.name).to.satisfy (dtName) -> _.endsWith(dtName, '(ALPHA)')
+
+			if deviceType.state == 'BETA'
+				m.chai.expect(deviceType.name).to.satisfy (dtName) -> _.endsWith(dtName, '(NEW)')
+
 describe 'Config Model', ->
 
 	describe 'balena.models.config.getAll()', ->
@@ -22,16 +61,29 @@ describe 'Config Model', ->
 				m.chai.expect(mixpanelToken).to.be.a('string')
 				m.chai.expect(mixpanelToken).to.equal('balena-main')
 
+		it 'should include the deviceTypes', ->
+			balena.models.config.getAll().get('deviceTypes').then (deviceTypes) ->
+				expectDeviceTypeArray(deviceTypes)
+
+		describe 'device type normalization', ->
+			before ->
+				balena.models.config.getAll().get('deviceTypes').then (@deviceTypes) =>
+					return
+
+			itNormalizesDeviceTypes()
+
 	describe 'balena.models.config.getDeviceTypes()', ->
 
 		it 'should become the device types', ->
 			balena.models.config.getDeviceTypes().then (deviceTypes) ->
-				m.chai.expect(deviceTypes).to.not.have.length(0)
+				expectDeviceTypeArray(deviceTypes)
 
-				for deviceType in deviceTypes
-					m.chai.expect(deviceType.slug).to.exist
-					m.chai.expect(deviceType.name).to.exist
-					m.chai.expect(deviceType.arch).to.exist
+		describe 'device type normalization', ->
+			before ->
+				balena.models.config.getDeviceTypes().then (@deviceTypes) =>
+					return
+
+			itNormalizesDeviceTypes()
 
 	describe 'balena.models.config.getDeviceOptions()', ->
 
