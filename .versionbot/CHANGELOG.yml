@@ -1,4 +1,27 @@
 - commits:
+    - subject: Unpin Bluebird typings version
+      hash: f0c6dac19da795e68cf9f042b46a0b41138e04a0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Fix device.getWithServiceDetails to properly handle all service names
+      hash: e871a3c938db14f68ceb30cbf34c5f9e418f5fb0
+      body: ''
+      footer:
+        Resolves: '#799'
+        resolves: '#799'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.20.4
+  date: 2020-01-21T20:00:11.435Z
+- commits:
     - subject: Update dependencies
       hash: 0bd5c5a35262699ccfff8a03199236f3a4f4192a
       body: ''
