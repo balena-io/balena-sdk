@@ -1527,6 +1527,68 @@ describe 'Device Model', ->
 						promise = balena.models.device.isTrackingApplicationRelease(@device.id)
 						m.chai.expect(promise).to.eventually.be.true
 
+	describe 'given a multicontainer application with weird service names', ->
+
+		givenMulticontainerApplication(before)
+
+		before ->
+			Promise.all([
+				balena.pine.patch
+					resource: 'service'
+					id: @webService.id
+					body:
+						service_name: 'hasOwnProperty'
+				balena.pine.patch
+					resource: 'service'
+					id: @dbService.id
+					body:
+						service_name: '__proto__'
+			])
+
+		describe 'given a single offline device', ->
+
+			givenADevice(before)
+
+			describe 'balena.models.device.getWithServiceDetails()', ->
+
+				it.only 'should retrieve the current service details', ->
+					balena.models.device.getWithServiceDetails(@device.id).then (deviceDetails) =>
+						m.chai.expect(deviceDetails).to.deep.match
+							device_name: @device.device_name
+							uuid: @device.uuid
+							is_on__commit: @currentRelease.commit
+
+						m.chai.expect(Object.keys(deviceDetails.current_services).sort()).to.deep.equal([
+							'__proto__'
+							'hasOwnProperty'
+						])
+
+						# it seems that deep.match doesn't work with objects with a custom __proto__ property
+						m.chai.expect(deviceDetails.current_services.hasOwnProperty).to.deep.match [
+								id: @newWebInstall.id
+								service_id: @webService.id
+								image_id: @newWebImage.id
+								commit: 'new-release-commit'
+								status: 'downloading'
+								download_progress: 50
+							,
+								id: @oldWebInstall.id
+								service_id: @webService.id
+								image_id: @oldWebImage.id
+								commit: 'old-release-commit'
+								status: 'running'
+								download_progress: 100
+							]
+
+						m.chai.expect(deviceDetails.current_services.__proto__).to.deep.match [
+								id: @newDbInstall.id
+								service_id: @dbService.id
+								image_id: @newDbImage.id
+								commit: 'new-release-commit'
+								status: 'running'
+								download_progress: 100
+							]
+
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
 
 		givenAnApplication(before)
