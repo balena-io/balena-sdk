@@ -39,8 +39,7 @@ gulp.task 'test', ->
 	gulp.src(OPTIONS.files.tests, read: false)
 		.pipe(mocha({
 			reporter: 'spec',
-			require: ['ts-node/register'],
-			compilers: 'coffee:coffeescript/register',
+			require: ['ts-node/register/transpile-only', 'coffeescript/register'],
 			timeout: 5 * 60 * 1000,
 			slow: 1000
 		}))
