@@ -126,24 +126,30 @@ export const generateCurrentServiceDetails = (
 	const device = (rawDevice as Device) as DeviceWithServiceDetails;
 
 	// Essentially a groupBy(installs, 'service_name')
-	// but try making it a bit faster for the sake of large fleets
-	const currentServicesGroupedByName: Record<string, CurrentService[]> = {};
-	installs.forEach(container => {
-		let serviceContainerGroup =
-			currentServicesGroupedByName[container.service_name];
-		if (!serviceContainerGroup) {
-			serviceContainerGroup = currentServicesGroupedByName[
-				container.service_name
-			] = [];
+	// but try making it a bit faster for the sake of large fleets.
+	// Uses Object.create(null) so that there are no inherited properties
+	// which could match service names
+	const currentServicesGroupedByName: Record<
+		string,
+		CurrentService[]
+	> = Object.create(null);
+	for (const container of installs) {
+		const { service_name } = container;
+		let serviceContainerGroup: CurrentService[];
+		if (currentServicesGroupedByName[service_name] == null) {
+			serviceContainerGroup = [];
+			currentServicesGroupedByName[service_name] = serviceContainerGroup;
+		} else {
+			serviceContainerGroup = currentServicesGroupedByName[service_name];
 		}
 
 		// remove the extra property that we added for the grouping
 		delete container.service_name;
 		serviceContainerGroup.push(container);
-	});
+	}
 
 	for (const serviceName in currentServicesGroupedByName) {
-		if (currentServicesGroupedByName.hasOwnProperty(serviceName)) {
+		if (currentServicesGroupedByName[serviceName]) {
 			currentServicesGroupedByName[serviceName].sort((a, b) => {
 				return b.install_date.localeCompare(a.install_date);
 			});
