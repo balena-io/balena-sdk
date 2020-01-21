@@ -77,7 +77,7 @@
     "jsdoc-to-markdown": "^3.0.4",
     "karma": "^3.1.4",
     "karma-env-preprocessor": "^0.1.1",
-    "lint-staged": "^9.5.0",
+    "lint-staged": "^10.0.1",
     "mocha": "^3.5.3",
     "mochainon": "^2.0.0",
     "prettier": "^1.19.1",
