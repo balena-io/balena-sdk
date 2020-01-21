@@ -72,7 +72,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.8",
-    "husky": "^3.1.0",
+    "husky": "^4.0.10",
     "js-polyfills": "^0.1.42",
     "jsdoc-to-markdown": "^3.0.4",
     "karma": "^3.1.4",
