@@ -1551,7 +1551,7 @@ describe 'Device Model', ->
 
 			describe 'balena.models.device.getWithServiceDetails()', ->
 
-				it.only 'should retrieve the current service details', ->
+				it 'should retrieve the current service details', ->
 					balena.models.device.getWithServiceDetails(@device.id).then (deviceDetails) =>
 						m.chai.expect(deviceDetails).to.deep.match
 							device_name: @device.device_name
