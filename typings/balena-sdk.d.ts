@@ -945,7 +945,9 @@ declare namespace BalenaSdk {
 					billingInfo: TokenBillingSubmitInfo,
 				): Promise<BillingInfo>;
 				getInvoices(): Promise<InvoiceInfo[]>;
-				downloadInvoice(invoiceNumber: string): Promise<Blob>;
+				downloadInvoice(
+					invoiceNumber: string,
+				): Promise<Blob | BalenaRequestStreamResult>;
 			};
 			device: {
 				get(
