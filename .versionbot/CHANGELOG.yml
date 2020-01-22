@@ -1,4 +1,34 @@
 - commits:
+    - subject: Change EXPERIMENTAL device type name normalization to NEW
+      hash: c7dd610abde0054d7470b516c1744039e4f69714
+      body: ''
+      footer:
+        Resolves: '#798'
+        resolves: '#798'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Remove .only from tests
+      hash: 21a3ead6296d66fe0186994f5c8522dae4a3a1f9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Update dependencies
+      hash: b9c9ce8a22c788838bbfeec9591c1d9f6166c6ff
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.21.0
+  date: 2020-01-22T13:32:43.315Z
+- commits:
     - subject: Unpin Bluebird typings version
       hash: f0c6dac19da795e68cf9f042b46a0b41138e04a0
       body: ''
