@@ -1,4 +1,5 @@
 import * as Promise from 'bluebird';
+import { Readable } from 'stream';
 import { Omit } from './utils';
 
 /* tslint:disable:no-namespace */
@@ -25,8 +26,15 @@ declare namespace BalenaRequest {
 		<T>(options: BalenaRequestOptions): Promise<BalenaRequestResponseOf<T>>;
 	}
 
+	interface BalenaRequestStreamResult extends Readable {
+		mime: string;
+	}
+
 	interface BalenaRequest {
 		send: BalenaRequestSend;
+		stream: (
+			options: BalenaRequestOptions,
+		) => Promise<BalenaRequestStreamResult>;
 	}
 }
 
