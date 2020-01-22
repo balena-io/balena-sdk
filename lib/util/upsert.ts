@@ -52,7 +52,7 @@ export const getUpsertHelper = ({ pine }: { pine: BalenaPine.Pine }) => {
 						...params.options,
 						$filter: pick(body, naturalKeyProps) as PineClient.Filter<T>,
 					},
-					body: omit(body, naturalKeyProps),
+					body: omit(body, naturalKeyProps) as PineClient.SubmitBody<T>,
 				};
 				return pine.patch<T>(patchParams);
 			});
