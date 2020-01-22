@@ -28,7 +28,22 @@ export const credentials: {
 	};
 };
 
-export const balena: BalenaSdk.BalenaSDK;
+export { BalenaSdk };
+
+export const balena: BalenaSdk.BalenaSDK & {
+	models: {
+		os: {
+			_getDeviceTypes: typeof balena.models.config.getDeviceTypes;
+			_getOsVersions: typeof balena.models.os.getSupportedVersions;
+			_getDownloadSize: typeof balena.models.os.getDownloadSize;
+			_getMaxSatisfyingVersion: (
+				versionOrRange: string,
+				osVersions: BalenaSdk.OsVersions,
+			) => string | null;
+			_clearDeviceTypesEndpointCaches: () => void;
+		};
+	};
+};
 
 export const resetUser: () => Promise<void>;
 
