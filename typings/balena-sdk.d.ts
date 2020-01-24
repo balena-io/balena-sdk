@@ -535,14 +535,23 @@ declare namespace BalenaSdk {
 		error_message?: string | null;
 	}
 
-	interface LogMessage {
+	interface BaseLog {
 		message: string;
-		isSystem: boolean;
 		createdAt: number;
 		timestamp: number;
-		serviceId?: number;
 		isStdErr: boolean;
 	}
+
+	interface ServiceLog extends BaseLog {
+		isSystem: false;
+		serviceId: number;
+	}
+
+	interface SystemLog extends BaseLog {
+		isSystem: true;
+	}
+
+	type LogMessage = ServiceLog | SystemLog;
 
 	interface LogsSubscription extends EventEmitter {
 		unsubscribe(): void;
