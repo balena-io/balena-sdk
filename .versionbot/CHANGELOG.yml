@@ -1,4 +1,14 @@
 - commits:
+    - subject: Improve logs typings
+      hash: 46a2b9523f43d4d5f92df0feed6b66c217f596d2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.21.1
+  date: 2020-01-24T21:47:53.113Z
+- commits:
     - subject: Change EXPERIMENTAL device type name normalization to NEW
       hash: c7dd610abde0054d7470b516c1744039e4f69714
       body: ''
