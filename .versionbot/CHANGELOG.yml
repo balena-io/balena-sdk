@@ -1,4 +1,43 @@
 - commits:
+    - subject: Convert some of the tests to TypeScript
+      hash: 2267b01bb6772ae3fedc7880939b222f9c537497
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Properly type billing.downloadInvoice result
+      hash: ff14a2237387d21157e2bc7d4c8e3133021b6d92
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Properly type os.download result
+      hash: 3fbbd231998ef8c36e233bda2969415b31d1d851
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add typings for balena-request stream
+      hash: 34a5c97102d17a47309444dc79a9f695f712e85d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.21.2
+  date: 2020-01-24T23:23:03.461Z
+- commits:
     - subject: Improve logs typings
       hash: 46a2b9523f43d4d5f92df0feed6b66c217f596d2
       body: ''
