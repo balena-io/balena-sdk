@@ -44,7 +44,7 @@
     "lint": "npm run prettify && npm run coffeelint && npm run tslint",
     "prepublish": "require-npm4-to-publish",
     "prepack": "npm run build",
-    "prettify": "prettier --write \"lib/**/*.ts\" \"typings/**/*.d.ts\"",
+    "prettify": "prettier --write \"lib/**/*.ts\" \"tests/**/*.ts\" \"typings/**/*.d.ts\"",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
   },
   "author": "Juan Cruz Viotti <juan@balena.io>",

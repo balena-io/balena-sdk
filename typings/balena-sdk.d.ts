@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 import { Readable } from 'stream';
 
 import * as BalenaPine from './balena-pine';
-import { BalenaRequest } from './balena-request';
+import { BalenaRequest, BalenaRequestStreamResult } from './balena-request';
 import * as Pine from './pinejs-client-core';
 import { Dictionary } from './utils';
 
@@ -945,7 +945,9 @@ declare namespace BalenaSdk {
 					billingInfo: TokenBillingSubmitInfo,
 				): Promise<BillingInfo>;
 				getInvoices(): Promise<InvoiceInfo[]>;
-				downloadInvoice(invoiceNumber: string): Promise<Blob>;
+				downloadInvoice(
+					invoiceNumber: string,
+				): Promise<Blob | BalenaRequestStreamResult>;
 			};
 			device: {
 				get(
@@ -1215,7 +1217,10 @@ declare namespace BalenaSdk {
 					versionOrRange: string,
 				): Promise<string>;
 				getLastModified(deviceType: string, version?: string): Promise<Date>;
-				download(deviceType: string, version?: string): Promise<Readable>;
+				download(
+					deviceType: string,
+					version?: string,
+				): Promise<BalenaRequestStreamResult>;
 				isSupportedOsUpdate(
 					deviceType: string,
 					currentVersion: string,
