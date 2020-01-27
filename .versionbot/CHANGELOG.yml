@@ -1,4 +1,27 @@
 - commits:
+    - subject: Allow retrieving applications by application case insensitive slug
+      hash: d3d97a37409af2186a02f39a7c63c75258693dec
+      body: |
+        This allows users to disambiguate shared
+        applications that have the same name in a more
+        user friendly way than using the application id.
+        The application slug equals
+        `${owner}/${app_name}`.toLowerCase() on the
+        cloud api and it's just app_name.toLowerCase() in
+        open balena, so we can be sure that the $or will
+        never return more than one items when a slug is
+        provided.
+      footer:
+        Resolves: '#795'
+        resolves: '#795'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.22.0
+  date: 2020-01-27T13:11:29.883Z
+- commits:
     - subject: 'release.createFromUrl: Fix the non tar url error handling'
       hash: 02cecb869972f22e0a6befcf2112a3ac01eea4b0
       body: ''
