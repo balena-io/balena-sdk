@@ -6,7 +6,7 @@ type BalenaBuilderRequestError = errors.BalenaError & {
 	body: BuilderBuildFromUrlErrorResponse;
 };
 
-interface BuilderBuildFromUrlResponse {
+interface BuilderBuildFromUrlSuccessResponse {
 	started: true;
 	releaseId: number;
 }
@@ -16,6 +16,10 @@ interface BuilderBuildFromUrlErrorResponse {
 	error: string;
 	message: string;
 }
+
+type BuilderBuildFromUrlResponse =
+	| BuilderBuildFromUrlSuccessResponse
+	| BuilderBuildFromUrlErrorResponse;
 
 const isBuilderError = (error: any): error is BalenaBuilderRequestError =>
 	error.code === 'BalenaRequestError' &&
@@ -46,6 +50,9 @@ export class BuilderHelper {
 				),
 			})
 			.then(resp => {
+				if (!resp.body.started) {
+					throw new errors.BalenaError(resp.body.message);
+				}
 				return resp.body.releaseId;
 			})
 			.catch(isBuilderError, (err: BalenaBuilderRequestError) => {

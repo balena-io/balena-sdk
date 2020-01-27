@@ -87,9 +87,8 @@ describe 'Release Model', ->
 				promise = balena.models.release.createFromUrl(@application.id, { url: 'https://github.com/balena-io-projects/simple-server-node' })
 				m.chai.expect(promise).to.be.rejected
 				.then (error) ->
-					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
-					m.chai.expect(error).to.have.property('statusCode', 504)
-					m.chai.expect(error).to.have.property('message').that.contains('The request was unsuccessful')
+					m.chai.expect(error).to.have.property('code', 'BalenaError')
+					m.chai.expect(error).to.have.property('message').that.contains('Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?')
 
 			describe '[mutating operations]', ->
 
