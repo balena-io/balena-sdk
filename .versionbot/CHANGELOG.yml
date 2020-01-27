@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'release.createFromUrl: Fix the non tar url error handling'
+      hash: 02cecb869972f22e0a6befcf2112a3ac01eea4b0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Depends-on: 'https://github.com/balena-io/balena-builder/pull/699'
+        depends-on: 'https://github.com/balena-io/balena-builder/pull/699'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.21.3
+  date: 2020-01-25T00:39:23.339Z
+- commits:
     - subject: Convert some of the tests to TypeScript
       hash: 2267b01bb6772ae3fedc7880939b222f9c537497
       body: ''
