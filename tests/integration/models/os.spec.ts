@@ -564,42 +564,25 @@ describe('OS model', function() {
 				);
 			});
 
-			it('should be able to get an application config by id', function() {
-				const promise = balena.models.os.getConfig(this.application.id, {
-					version: DEFAULT_OS_VERSION,
+			['id', 'app_name', 'slug'].forEach(prop => {
+				it(`should be able to get an application config by ${prop}`, function() {
+					const promise = balena.models.os.getConfig(this.application[prop], {
+						version: DEFAULT_OS_VERSION,
+					});
+					return Bluebird.all([
+						eventuallyExpectProperty(promise, 'applicationId'),
+						eventuallyExpectProperty(promise, 'apiKey'),
+						eventuallyExpectProperty(promise, 'userId'),
+						eventuallyExpectProperty(promise, 'username'),
+						eventuallyExpectProperty(promise, 'deviceType'),
+						eventuallyExpectProperty(promise, 'apiEndpoint'),
+						eventuallyExpectProperty(promise, 'registryEndpoint'),
+						eventuallyExpectProperty(promise, 'vpnEndpoint'),
+						eventuallyExpectProperty(promise, 'pubnubSubscribeKey'),
+						eventuallyExpectProperty(promise, 'pubnubPublishKey'),
+						eventuallyExpectProperty(promise, 'listenPort'),
+					]);
 				});
-				return Bluebird.all([
-					eventuallyExpectProperty(promise, 'applicationId'),
-					eventuallyExpectProperty(promise, 'apiKey'),
-					eventuallyExpectProperty(promise, 'userId'),
-					eventuallyExpectProperty(promise, 'username'),
-					eventuallyExpectProperty(promise, 'deviceType'),
-					eventuallyExpectProperty(promise, 'apiEndpoint'),
-					eventuallyExpectProperty(promise, 'registryEndpoint'),
-					eventuallyExpectProperty(promise, 'vpnEndpoint'),
-					eventuallyExpectProperty(promise, 'pubnubSubscribeKey'),
-					eventuallyExpectProperty(promise, 'pubnubPublishKey'),
-					eventuallyExpectProperty(promise, 'listenPort'),
-				]);
-			});
-
-			it('should be able to get an application config by name', function() {
-				const promise = balena.models.os.getConfig(this.application.app_name, {
-					version: DEFAULT_OS_VERSION,
-				});
-				return Bluebird.all([
-					eventuallyExpectProperty(promise, 'applicationId'),
-					eventuallyExpectProperty(promise, 'apiKey'),
-					eventuallyExpectProperty(promise, 'userId'),
-					eventuallyExpectProperty(promise, 'username'),
-					eventuallyExpectProperty(promise, 'deviceType'),
-					eventuallyExpectProperty(promise, 'apiEndpoint'),
-					eventuallyExpectProperty(promise, 'registryEndpoint'),
-					eventuallyExpectProperty(promise, 'vpnEndpoint'),
-					eventuallyExpectProperty(promise, 'pubnubSubscribeKey'),
-					eventuallyExpectProperty(promise, 'pubnubPublishKey'),
-					eventuallyExpectProperty(promise, 'listenPort'),
-				]);
 			});
 
 			it('should be rejected if the version is invalid', function() {

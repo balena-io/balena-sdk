@@ -45,13 +45,15 @@ describe 'Release Model', ->
 
 		describe 'balena.models.release.getAllByApplication()', ->
 
-			it 'should eventually become an empty array given an application name', ->
-				promise = balena.models.release.getAllByApplication(@application.app_name)
-				m.chai.expect(promise).to.become([])
+			[
+				'id'
+				'app_name'
+				'slug'
+			].forEach (prop) ->
 
-			it 'should eventually become an empty array given an application id', ->
-				promise = balena.models.release.getAllByApplication(@application.id)
-				m.chai.expect(promise).to.become([])
+				it "should eventually become an empty array given an application #{prop}", ->
+					promise = balena.models.release.getAllByApplication(@application[prop])
+					m.chai.expect(promise).to.become([])
 
 			it 'should be rejected if the application name does not exist', ->
 				promise = balena.models.release.getAllByApplication('HelloWorldApp')
@@ -99,31 +101,24 @@ describe 'Release Model', ->
 							$filter:
 								belongs_to__application: @application.id
 
-				it 'should be able to create a release using a tarball url given an application name', ->
-					balena.models.release.createFromUrl(@application.app_name, { url: TEST_SOURCE_URL })
-					.then (releaseId) =>
-						m.chai.expect(releaseId).to.be.a('number')
-						balena.models.release.get(releaseId)
-						.then (release) =>
-							m.chai.expect(release).to.deep.match
-								status: 'running',
-								source: 'cloud',
-								id: releaseId
-								belongs_to__application: __id: @application.id
-							m.chai.expect(release).to.have.property('commit').that.is.a('string')
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should be able to create a release using a tarball url given an application id', ->
-					balena.models.release.createFromUrl(@application.id, { url: TEST_SOURCE_URL })
-					.then (releaseId) =>
-						m.chai.expect(releaseId).to.be.a('number')
-						balena.models.release.get(releaseId)
-						.then (release) =>
-							m.chai.expect(release).to.deep.match
-								status: 'running',
-								source: 'cloud',
-								id: releaseId
-								belongs_to__application: __id: @application.id
-							m.chai.expect(release).to.have.property('commit').that.is.a('string')
+					it "should be able to create a release using a tarball url given an application #{prop}", ->
+						balena.models.release.createFromUrl(@application[prop], { url: TEST_SOURCE_URL })
+						.then (releaseId) =>
+							m.chai.expect(releaseId).to.be.a('number')
+							balena.models.release.get(releaseId)
+							.then (release) =>
+								m.chai.expect(release).to.deep.match
+									status: 'running',
+									source: 'cloud',
+									id: releaseId
+									belongs_to__application: __id: @application.id
+								m.chai.expect(release).to.have.property('commit').that.is.a('string')
 
 	describe 'given a multicontainer application with two releases', ->
 
@@ -348,14 +343,20 @@ describe 'Release Model', ->
 							composition: {}
 							start_timestamp: 84321
 
-			it 'should get the latest release', ->
-				balena.models.release.getLatestByApplication(@application.id)
-				.then (release) =>
-					m.chai.expect(release).to.deep.match
-						status: 'success',
-						source: 'cloud',
-						commit: 'errored-then-fixed-release-commit',
-						belongs_to__application: __id: @application.id
+			[
+				'id'
+				'app_name'
+				'slug'
+			].forEach (prop) ->
+
+				it "should get the latest release by application #{prop}", ->
+					balena.models.release.getLatestByApplication(@application[prop])
+					.then (release) =>
+						m.chai.expect(release).to.deep.match
+							status: 'success',
+							source: 'cloud',
+							commit: 'errored-then-fixed-release-commit',
+							belongs_to__application: __id: @application.id
 
 		describe 'balena.models.release.tags', ->
 
@@ -365,13 +366,13 @@ describe 'Release Model', ->
 				model: balena.models.release.tags
 				modelNamespace: 'balena.models.release.tags'
 				resourceName: 'application'
-				uniquePropertyName: 'app_name'
+				uniquePropertyNames: ['app_name', 'slug']
 
 			releaseTagTestOptions =
 				model: balena.models.release.tags
 				modelNamespace: 'balena.models.release.tags'
 				resourceName: 'release'
-				uniquePropertyName: 'commit'
+				uniquePropertyNames: ['commit']
 
 			beforeEach ->
 				appTagTestOptions.resourceProvider = => @application

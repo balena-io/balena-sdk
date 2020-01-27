@@ -52,7 +52,7 @@ getApplicationModel = (deps, opts) ->
 		resourceName: 'application_tag'
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'application',
-		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		getResourceId: (nameOrSlugOrId) -> exports.get(nameOrSlugOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 
@@ -60,14 +60,14 @@ getApplicationModel = (deps, opts) ->
 		resourceName: 'application_config_variable'
 		resourceKeyField: 'name'
 		parentResourceName: 'application',
-		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		getResourceId: (nameOrSlugOrId) -> exports.get(nameOrSlugOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 	envVarModel = buildDependentResource { pine }, {
 		resourceName: 'application_environment_variable'
 		resourceKeyField: 'name'
 		parentResourceName: 'application',
-		getResourceId: (nameOrId) -> exports.get(nameOrId, $select: 'id').get('id')
+		getResourceId: (nameOrSlugOrId) -> exports.get(nameOrSlugOrId, $select: 'id').get('id')
 		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 
@@ -75,12 +75,12 @@ getApplicationModel = (deps, opts) ->
 
 	# Internal method for name/id disambiguation
 	# Note that this throws an exception for missing names, but not missing ids
-	getId = (nameOrId) ->
+	getId = (nameOrSlugOrId) ->
 		Promise.try ->
-			if isId(nameOrId)
-				return nameOrId
+			if isId(nameOrSlugOrId)
+				return nameOrSlugOrId
 			else
-				exports.get(nameOrId, $select: 'id').get('id')
+				exports.get(nameOrSlugOrId, $select: 'id').get('id')
 
 	exports._getId = getId
 
@@ -181,7 +181,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -202,35 +202,37 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(application);
 	# });
 	###
-	exports.get = (nameOrId, options = {}, callback) ->
+	exports.get = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
 		Promise.try ->
-			if not nameOrId?
-				throw new errors.BalenaApplicationNotFound(nameOrId)
+			if not nameOrSlugOrId?
+				throw new errors.BalenaApplicationNotFound(nameOrSlugOrId)
 
-			if isId(nameOrId)
+			if isId(nameOrSlugOrId)
 				pine.get
 					resource: 'application'
-					id: nameOrId
+					id: nameOrSlugOrId
 					options: mergePineOptions({}, options)
 				.tap (application) ->
 					if not application?
-						throw new errors.BalenaApplicationNotFound(nameOrId)
+						throw new errors.BalenaApplicationNotFound(nameOrSlugOrId)
 			else
 				pine.get
 					resource: 'application'
 					options:
 						mergePineOptions
 							$filter:
-								app_name: nameOrId
+								$or:
+									app_name: nameOrSlugOrId
+									slug: nameOrSlugOrId.toLowerCase()
 						, options
 				.tap (applications) ->
 					if isEmpty(applications)
-						throw new errors.BalenaApplicationNotFound(nameOrId)
+						throw new errors.BalenaApplicationNotFound(nameOrSlugOrId)
 
 					if size(applications) > 1
-						throw new errors.BalenaAmbiguousApplication(nameOrId)
+						throw new errors.BalenaAmbiguousApplication(nameOrSlugOrId)
 				.get(0)
 		.tap(normalizeApplication)
 		.asCallback(callback)
@@ -251,7 +253,7 @@ getApplicationModel = (deps, opts) ->
 	# **NOTE:** In contrast with device.getWithServiceDetails() the service details
 	# in the result of this method do not include the associated commit.
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - application
 	# @returns {Promise}
@@ -272,7 +274,7 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(device);
 	# });
 	###
-	exports.getWithDeviceServiceDetails = (nameOrId, options = {}, callback) ->
+	exports.getWithDeviceServiceDetails = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
 		serviceOptions = mergePineOptions
@@ -281,7 +283,7 @@ getApplicationModel = (deps, opts) ->
 			]
 		, options
 
-		exports.get(nameOrId, serviceOptions)
+		exports.get(nameOrSlugOrId, serviceOptions)
 		.then (app) ->
 			if app and app.owns__device
 				app.owns__device = app.owns__device.map(generateCurrentServiceDetails)
@@ -337,7 +339,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {Boolean} - has application
 	# @returns {Promise}
 	#
@@ -357,8 +359,8 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(hasApp);
 	# });
 	###
-	exports.has = (nameOrId, callback) ->
-		exports.get(nameOrId, $select: ['id']).return(true)
+	exports.has = (nameOrSlugOrId, callback) ->
+		exports.get(nameOrSlugOrId, $select: ['id']).return(true)
 		.catch errors.BalenaApplicationNotFound, ->
 			return false
 		.asCallback(callback)
@@ -486,7 +488,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
@@ -500,12 +502,12 @@ getApplicationModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.remove = (nameOrId, callback) ->
-		getId(nameOrId).then (applicationId) ->
+	exports.remove = (nameOrSlugOrId, callback) ->
+		getId(nameOrSlugOrId).then (applicationId) ->
 			return pine.delete
 				resource: 'application'
 				id: applicationId
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -515,7 +517,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
@@ -529,14 +531,14 @@ getApplicationModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.restart = (nameOrId, callback) ->
-		getId(nameOrId).then (applicationId) ->
+	exports.restart = (nameOrSlugOrId, callback) ->
+		getId(nameOrSlugOrId).then (applicationId) ->
 			return request.send
 				method: 'POST'
 				url: "/application/#{applicationId}/restart"
 				baseUrl: apiUrl
 		.return(undefined)
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -551,7 +553,7 @@ getApplicationModel = (deps, opts) ->
 	# version (2.4.0+) then generateProvisioningKey should work just as well, but
 	# be more secure.
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {String} - api key
 	# @returns {Promise}
 	#
@@ -571,10 +573,10 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(apiKey);
 	# });
 	###
-	exports.generateApiKey = (nameOrId, callback) ->
+	exports.generateApiKey = (nameOrSlugOrId, callback) ->
 		# Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 		# doesn't exist. TODO: Can use getId once https://github.com/balena-io/balena-api/issues/110 is resolved
-		exports.get(nameOrId, $select: 'id').then ({ id }) ->
+		exports.get(nameOrSlugOrId, $select: 'id').then ({ id }) ->
 			return request.send
 				method: 'POST'
 				url: "/application/#{id}/generate-api-key"
@@ -589,7 +591,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {String} - device provisioning key
 	# @returns {Promise}
 	#
@@ -609,13 +611,13 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(key);
 	# });
 	###
-	exports.generateProvisioningKey = (nameOrId, callback) ->
-		getId(nameOrId).then (applicationId) ->
+	exports.generateProvisioningKey = (nameOrSlugOrId, callback) ->
+		getId(nameOrSlugOrId).then (applicationId) ->
 			return request.send
 				method: 'POST'
 				url: "/api-key/application/#{applicationId}/provisioning"
 				baseUrl: apiUrl
-		.catch(noApplicationForKeyResponse, treatAsMissingApplication(nameOrId))
+		.catch(noApplicationForKeyResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.get('body')
 		.asCallback(callback)
 
@@ -732,7 +734,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {Boolean} - is tracking the latest release
 	# @returns {Promise}
 	#
@@ -751,8 +753,8 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(isEnabled);
 	# });
 	###
-	exports.willTrackNewReleases = (nameOrId, callback) ->
-		exports.get(nameOrId, $select: 'should_track_latest_release')
+	exports.willTrackNewReleases = (nameOrSlugOrId, callback) ->
+		exports.get(nameOrSlugOrId, $select: 'should_track_latest_release')
 		.get('should_track_latest_release')
 		.asCallback(callback)
 
@@ -763,7 +765,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {Boolean} - is tracking the latest release
 	# @returns {Promise}
 	#
@@ -782,10 +784,10 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(isEnabled);
 	# });
 	###
-	exports.isTrackingLatestRelease = (nameOrId, callback) ->
+	exports.isTrackingLatestRelease = (nameOrSlugOrId, callback) ->
 		Promise.all([
-			exports.get(nameOrId, $select: ['commit', 'should_track_latest_release'])
-			releaseModel().getLatestByApplication(nameOrId, $select: 'commit')
+			exports.get(nameOrSlugOrId, $select: ['commit', 'should_track_latest_release'])
+			releaseModel().getLatestByApplication(nameOrSlugOrId, $select: 'commit')
 		])
 		.then ([application, latestRelease]) ->
 			return application.should_track_latest_release &&
@@ -802,7 +804,7 @@ getApplicationModel = (deps, opts) ->
 	# @description Configures the application to run a particular release
 	# and not get updated when the latest release changes.
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {String} fullReleaseHash - the hash of a successful release (string)
 	# @returns {Promise}
 	#
@@ -822,8 +824,8 @@ getApplicationModel = (deps, opts) ->
 	# 	...
 	# });
 	###
-	exports.pinToRelease = (nameOrId, fullReleaseHash, callback) ->
-		getId(nameOrId)
+	exports.pinToRelease = (nameOrSlugOrId, fullReleaseHash, callback) ->
+		getId(nameOrSlugOrId)
 		.then (applicationId) ->
 			pine.patch
 				resource: 'application'
@@ -840,7 +842,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {String} - The release hash of the current release
 	# @returns {Promise}
 	#
@@ -859,8 +861,8 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(release);
 	# });
 	###
-	exports.getTargetReleaseHash = (nameOrId, callback) ->
-		exports.get(nameOrId, $select: 'commit')
+	exports.getTargetReleaseHash = (nameOrSlugOrId, callback) ->
+		exports.get(nameOrSlugOrId, $select: 'commit')
 		.get('commit')
 		.asCallback(callback)
 
@@ -873,7 +875,7 @@ getApplicationModel = (deps, opts) ->
 	#
 	# @description The application's current release will be updated with each new successfully built release.
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
@@ -892,14 +894,14 @@ getApplicationModel = (deps, opts) ->
 	# 	...
 	# });
 	###
-	exports.trackLatestRelease = (nameOrId, callback) ->
-		releaseModel().getLatestByApplication(nameOrId,
+	exports.trackLatestRelease = (nameOrSlugOrId, callback) ->
+		releaseModel().getLatestByApplication(nameOrSlugOrId,
 			$select: ['commit', 'belongs_to__application']
 		)
 		.then (latestRelease) ->
 			if not latestRelease
 				return Promise.props(
-					applicationId: getId(nameOrId)
+					applicationId: getId(nameOrSlugOrId)
 					commit: null
 				)
 
@@ -927,7 +929,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
@@ -941,8 +943,8 @@ getApplicationModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.enableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, $select: 'id').then ({ id }) ->
+	exports.enableDeviceUrls = (nameOrSlugOrId, callback) ->
+		exports.get(nameOrSlugOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -959,7 +961,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
@@ -973,8 +975,8 @@ getApplicationModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.disableDeviceUrls = (nameOrId, callback) ->
-		exports.get(nameOrId, $select: 'id').then ({ id }) ->
+	exports.disableDeviceUrls = (nameOrSlugOrId, callback) ->
+		exports.get(nameOrSlugOrId, $select: 'id').then ({ id }) ->
 			return pine.patch
 				resource: 'device'
 				body:
@@ -991,7 +993,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 	# @returns {Promise}
 	#
@@ -1006,16 +1008,16 @@ getApplicationModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.grantSupportAccess = (nameOrId, expiryTimestamp, callback) ->
+	exports.grantSupportAccess = (nameOrSlugOrId, expiryTimestamp, callback) ->
 		if not expiryTimestamp? or expiryTimestamp <= Date.now()
 			throw new errors.BalenaInvalidParameterError('expiryTimestamp', expiryTimestamp)
 
-		getId(nameOrId).then (applicationId) ->
+		getId(nameOrSlugOrId).then (applicationId) ->
 			return pine.patch
 				resource: 'application'
 				id: applicationId
 				body: is_accessible_by_support_until__date: expiryTimestamp
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -1025,7 +1027,7 @@ getApplicationModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.application
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @returns {Promise}
 	#
 	# @example
@@ -1039,13 +1041,13 @@ getApplicationModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.revokeSupportAccess = (nameOrId, callback) ->
-		getId(nameOrId).then (applicationId) ->
+	exports.revokeSupportAccess = (nameOrSlugOrId, callback) ->
+		getId(nameOrSlugOrId).then (applicationId) ->
 			return pine.patch
 				resource: 'application'
 				id: applicationId
 				body: is_accessible_by_support_until__date: null
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -1061,7 +1063,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.tags
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - application tags
 		# @returns {Promise}
@@ -1115,7 +1117,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.tags
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} tagKey - tag key
 		# @param {String|undefined} value - tag value
 		#
@@ -1141,7 +1143,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.tags
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} tagKey - tag key
 		# @returns {Promise}
 		#
@@ -1168,7 +1170,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.configVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - application config variables
 		# @returns {Promise}
@@ -1198,7 +1200,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.configVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} key - config variable name
 		# @fulfil {String|undefined} - the config variable value (or undefined)
 		# @returns {Promise}
@@ -1228,7 +1230,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.configVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} key - config variable name
 		# @param {String} value - config variable value
 		# @returns {Promise}
@@ -1258,7 +1260,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.configVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} key - config variable name
 		# @returns {Promise}
 		#
@@ -1293,7 +1295,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.envVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - application environment variables
 		# @returns {Promise}
@@ -1323,7 +1325,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.envVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} key - environment variable name
 		# @fulfil {String|undefined} - the environment variable value (or undefined)
 		# @returns {Promise}
@@ -1353,7 +1355,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.envVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} key - environment variable name
 		# @param {String} value - environment variable value
 		# @returns {Promise}
@@ -1383,7 +1385,7 @@ getApplicationModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.application.envVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {String} key - environment variable name
 		# @returns {Promise}
 		#

@@ -405,7 +405,7 @@ getOsModel = (deps, opts) ->
 	# Note that an OS version is required. For versions < 2.7.8, config
 	# generation is only supported when using a session token, not an API key.
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number).
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number).
 	# @param {Object} options - OS configuration options to use.
 	# @param {String} options.version - Required: the OS version of the image.
 	# @param {String} [options.network='ethernet'] - The network type that
@@ -436,7 +436,7 @@ getOsModel = (deps, opts) ->
 	# 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	# });
 	###
-	exports.getConfig = (nameOrId, options = {}, callback) ->
+	exports.getConfig = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
 		Promise.try ->
@@ -448,7 +448,7 @@ getOsModel = (deps, opts) ->
 
 			defaults(options, defaultOpts)
 
-			applicationModel()._getId(nameOrId)
+			applicationModel()._getId(nameOrSlugOrId)
 			.then (applicationId) ->
 				request.send
 					method: 'POST'
@@ -456,7 +456,7 @@ getOsModel = (deps, opts) ->
 					baseUrl: apiUrl
 					body: assign(options, appId: applicationId)
 			.get('body')
-			.catch(notFoundResponse, treatAsMissingApplication(nameOrId))
+			.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*

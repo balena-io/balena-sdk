@@ -225,7 +225,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
@@ -246,10 +246,10 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(devices);
 	# });
 	###
-	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
+	exports.getAllByApplication = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, $select: 'id').then ({ id }) ->
+		applicationModel().get(nameOrSlugOrId, $select: 'id').then ({ id }) ->
 			exports.getAll(mergePineOptions(
 				$filter: belongs_to__application: id
 				options
@@ -857,7 +857,7 @@ getDeviceModel = (deps, opts) ->
 	# @memberof balena.models.device
 	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
-	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
+	# @param {String|Number} applicationNameOrSlugOrId - application name (string), slug (string) or id (number)
 	#
 	# @returns {Promise}
 	#
@@ -875,17 +875,17 @@ getDeviceModel = (deps, opts) ->
 	# 	if (error) throw error;
 	# });
 	###
-	exports.move = (uuidOrId, applicationNameOrId, callback) ->
+	exports.move = (uuidOrId, applicationNameOrSlugOrId, callback) ->
 		Promise.props
 			device: exports.get(uuidOrId, $select: [ 'uuid', 'device_type' ])
 			deviceTypes: configModel().getDeviceTypes()
-			application: applicationModel().get(applicationNameOrId, $select: [ 'id', 'device_type' ])
+			application: applicationModel().get(applicationNameOrSlugOrId, $select: [ 'id', 'device_type' ])
 		.then ({ application, device, deviceTypes }) ->
 			osDeviceType = deviceTypesUtil.getBySlug(deviceTypes, device.device_type)
 			targetAppDeviceType = deviceTypesUtil.getBySlug(deviceTypes, application.device_type)
 			isCompatibleMove = deviceTypesUtil.isDeviceTypeCompatibleWith(osDeviceType, targetAppDeviceType)
 			if not isCompatibleMove
-				throw new errors.BalenaInvalidDeviceType("Incompatible application: #{applicationNameOrId}")
+				throw new errors.BalenaInvalidDeviceType("Incompatible application: #{applicationNameOrSlugOrId}")
 
 			return pine.patch
 				resource: 'device'
@@ -1592,7 +1592,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @fulfil {Object} - device manifest
 	# @returns {Promise}
 	#
@@ -1612,8 +1612,8 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(manifest);
 	# });
 	###
-	exports.getManifestByApplication = (nameOrId, callback) ->
-		applicationModel().get(nameOrId, $select: 'device_type')
+	exports.getManifestByApplication = (nameOrSlugOrId, callback) ->
+		applicationModel().get(nameOrSlugOrId, $select: 'device_type')
 		.get('device_type')
 		.then(exports.getManifestBySlug)
 		.asCallback(callback)
@@ -1641,7 +1641,7 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
-	# @param {String|Number} applicationNameOrId - application name (string) or id (number)
+	# @param {String|Number} applicationNameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {String} [uuid] - device uuid
 	#
 	# @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
@@ -1666,13 +1666,13 @@ getDeviceModel = (deps, opts) ->
 	# 	console.log(registrationInfo);
 	# });
 	###
-	exports.register = (applicationNameOrId, uuid, callback) ->
+	exports.register = (applicationNameOrSlugOrId, uuid, callback) ->
 		callback = findCallback(arguments)
 
 		Promise.props
 			userId: auth.getUserId()
-			apiKey: applicationModel().generateProvisioningKey(applicationNameOrId)
-			application: applicationModel().get(applicationNameOrId, $select: ['id', 'device_type'])
+			apiKey: applicationModel().generateProvisioningKey(applicationNameOrSlugOrId)
+			application: applicationModel().get(applicationNameOrSlugOrId, $select: ['id', 'device_type'])
 		.then ({ userId, apiKey, application }) ->
 
 			return registerDevice.register
@@ -2577,7 +2577,7 @@ getDeviceModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.device.tags
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - device tags
 		# @returns {Promise}
@@ -2598,8 +2598,8 @@ getDeviceModel = (deps, opts) ->
 		# 	console.log(tags)
 		# });
 		###
-		getAllByApplication: (nameOrId, options = {}, callback) ->
-			applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
+		getAllByApplication: (nameOrSlugOrId, options = {}, callback) ->
+			applicationModel().get(nameOrSlugOrId, $select: 'id').get('id').then (id) ->
 				tagsModel.getAll(
 					mergePineOptions
 						$filter:
@@ -2755,7 +2755,7 @@ getDeviceModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.device.configVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - device config variables
 		# @returns {Promise}
@@ -2776,10 +2776,10 @@ getDeviceModel = (deps, opts) ->
 		# 	console.log(vars)
 		# });
 		###
-		getAllByApplication: (nameOrId, options = {}, callback) ->
+		getAllByApplication: (nameOrSlugOrId, options = {}, callback) ->
 			callback = findCallback(arguments)
 
-			applicationModel().get(nameOrId, $select: 'id')
+			applicationModel().get(nameOrSlugOrId, $select: 'id')
 			.get('id')
 			.then (id) ->
 				configVarModel.getAll(
@@ -2927,7 +2927,7 @@ getDeviceModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.device.envVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - device environment variables
 		# @returns {Promise}
@@ -2948,10 +2948,10 @@ getDeviceModel = (deps, opts) ->
 		# 	console.log(vars)
 		# });
 		###
-		getAllByApplication: (nameOrId, options = {}, callback) ->
+		getAllByApplication: (nameOrSlugOrId, options = {}, callback) ->
 			callback = findCallback(arguments)
 
-			applicationModel().get(nameOrId, $select: 'id')
+			applicationModel().get(nameOrSlugOrId, $select: 'id')
 			.get('id')
 			.then (id) ->
 				envVarModel.getAll(
@@ -3114,7 +3114,7 @@ getDeviceModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.device.serviceVar
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - service variables
 		# @returns {Promise}
@@ -3135,10 +3135,10 @@ getDeviceModel = (deps, opts) ->
 		# 	console.log(vars)
 		# });
 		###
-		getAllByApplication: (nameOrId, options = {}, callback) ->
+		getAllByApplication: (nameOrSlugOrId, options = {}, callback) ->
 			callback = findCallback(arguments)
 
-			applicationModel().get(nameOrId, $select: 'id')
+			applicationModel().get(nameOrSlugOrId, $select: 'id')
 			.get('id')
 			.then (id) ->
 				pine.get

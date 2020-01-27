@@ -160,13 +160,15 @@ describe 'Device Model', ->
 
 			describe 'balena.models.device.getManifestByApplication()', ->
 
-				it 'should return the appropriate manifest for an application name', ->
-					balena.models.device.getManifestByApplication(@application.app_name).then (manifest) =>
-						m.chai.expect(manifest.slug).to.equal(@application.device_type)
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should return the appropriate manifest for an application id', ->
-					balena.models.device.getManifestByApplication(@application.id).then (manifest) =>
-						m.chai.expect(manifest.slug).to.equal(@application.device_type)
+					it "should return the appropriate manifest for an application #{prop}", ->
+						balena.models.device.getManifestByApplication(@application[prop]).then (manifest) =>
+							m.chai.expect(manifest.slug).to.equal(@application.device_type)
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.device.getManifestByApplication('HelloWorldApp')
@@ -180,19 +182,18 @@ describe 'Device Model', ->
 
 			givenAnApplication(beforeEach)
 
-			it 'should be able to register a device to a valid application name', ->
-				uuid = balena.models.device.generateUniqueKey()
-				balena.models.device.register(@application.app_name, uuid)
-				.then =>
-					promise = balena.models.device.getAllByApplication(@application.app_name)
-					m.chai.expect(promise).to.eventually.have.length(1)
+			[
+				'id'
+				'app_name'
+				'slug'
+			].forEach (prop) ->
 
-			it 'should be able to register a device to a valid application id', ->
-				uuid = balena.models.device.generateUniqueKey()
-				balena.models.device.register(@application.id, uuid)
-				.then =>
-					promise = balena.models.device.getAllByApplication(@application.app_name)
-					m.chai.expect(promise).to.eventually.have.length(1)
+				it "should be able to register a device to a valid application #{prop}", ->
+					uuid = balena.models.device.generateUniqueKey()
+					balena.models.device.register(@application[prop], uuid)
+					.then =>
+						promise = balena.models.device.getAllByApplication(@application.app_name)
+						m.chai.expect(promise).to.eventually.have.length(1)
 
 			it 'should become valid device registration info', ->
 				uuid = balena.models.device.generateUniqueKey()
@@ -231,15 +232,16 @@ describe 'Device Model', ->
 
 			describe 'balena.models.device.getAllByApplication()', ->
 
-				it 'should get the device given the right application name', ->
-					balena.models.device.getAllByApplication(@application.app_name).then (devices) =>
-						m.chai.expect(devices).to.have.length(1)
-						m.chai.expect(devices[0].id).to.equal(@device.id)
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should get the device given the right application id', ->
-					balena.models.device.getAllByApplication(@application.id).then (devices) =>
-						m.chai.expect(devices).to.have.length(1)
-						m.chai.expect(devices[0].id).to.equal(@device.id)
+					it "should get the device given the right application #{prop}", ->
+						balena.models.device.getAllByApplication(@application[prop]).then (devices) =>
+							m.chai.expect(devices).to.have.length(1)
+							m.chai.expect(devices[0].id).to.equal(@device.id)
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.device.getAllByApplication('HelloWorldApp')
@@ -1073,13 +1075,13 @@ describe 'Device Model', ->
 				model: balena.models.device.tags
 				modelNamespace: 'balena.models.device.tags'
 				resourceName: 'application'
-				uniquePropertyName: 'app_name'
+				uniquePropertyNames: ['app_name', 'slug']
 
 			deviceTagTestOptions =
 				model: balena.models.device.tags
 				modelNamespace: 'balena.models.device.tags'
 				resourceName: 'device'
-				uniquePropertyName: 'uuid'
+				uniquePropertyNames: ['uuid']
 
 			beforeEach ->
 				appTagTestOptions.resourceProvider = => @application
@@ -1676,17 +1678,17 @@ describe 'Device Model', ->
 
 		describe 'balena.models.device.move()', ->
 
-			it 'should be able to move a device by device uuid and application name', ->
-				balena.models.device.move(@deviceInfo.uuid, @application2.app_name).then =>
-					balena.models.device.getApplicationName(@deviceInfo.uuid)
-				.then (applicationName) =>
-					m.chai.expect(applicationName).to.equal(@application2.app_name)
+			[
+				'id'
+				'app_name'
+				'slug'
+			].forEach (prop) ->
 
-			it 'should be able to move a device by device id and application id', ->
-				balena.models.device.move(@deviceInfo.id, @application2.id).then =>
-					balena.models.device.getApplicationName(@deviceInfo.id)
-				.then (applicationName) =>
-					m.chai.expect(applicationName).to.equal(@application2.app_name)
+				it "should be able to move a device by device uuid and application #{prop}", ->
+					balena.models.device.move(@deviceInfo.uuid, @application2[prop]).then =>
+						balena.models.device.getApplicationName(@deviceInfo.uuid)
+					.then (applicationName) =>
+						m.chai.expect(applicationName).to.equal(@application2.app_name)
 
 			it 'should be able to move a device using shorter uuids', ->
 				balena.models.device.move(@deviceInfo.uuid.slice(0, 7), @application2.id).then =>

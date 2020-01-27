@@ -176,12 +176,21 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.get()', ->
 
-				it 'should be able to get an application by name', ->
-					promise = balena.models.application.get(@application.app_name)
-					m.chai.expect(promise).to.become(@application)
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should be able to get an application by id', ->
-					promise = balena.models.application.get(@application.id)
+					it "should be able to get an application by #{prop}", ->
+						promise = balena.models.application.get(@application[prop])
+						m.chai.expect(promise).to.become(@application)
+
+				it 'should be able to get an application by slug regardless of casing', ->
+					if @application.app_name == @application.slug.toUpperCase()
+						throw new Error('This tests expects the application name to not be fully upper case')
+
+					promise = balena.models.application.get(@application.slug.toUpperCase())
 					m.chai.expect(promise).to.become(@application)
 
 				it 'should be rejected if the application name does not exist', ->
@@ -199,13 +208,15 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.has()', ->
 
-				it 'should eventually be true if the application name exists', ->
-					promise = balena.models.application.has(@application.app_name)
-					m.chai.expect(promise).to.eventually.be.true
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should eventually be true if the application id exists', ->
-					promise = balena.models.application.has(@application.id)
-					m.chai.expect(promise).to.eventually.be.true
+					it "should eventually be true if the application #{prop} exists", ->
+						promise = balena.models.application.has(@application[prop])
+						m.chai.expect(promise).to.eventually.be.true
 
 				it 'should return false if the application id is undefined', ->
 					promise = balena.models.application.has(undefined)
@@ -225,15 +236,16 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.remove()', ->
 
-				it 'should be able to remove an existing application by name', ->
-					balena.models.application.remove(@application.app_name).then ->
-						promise = balena.models.application.getAll()
-						m.chai.expect(promise).to.eventually.have.length(0)
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should be able to remove an existing application by id', ->
-					balena.models.application.remove(@application.id).then ->
-						promise = balena.models.application.getAll()
-						m.chai.expect(promise).to.eventually.have.length(0)
+					it "should be able to remove an existing application by #{prop}", ->
+						balena.models.application.remove(@application[prop]).then ->
+							promise = balena.models.application.getAll()
+							m.chai.expect(promise).to.eventually.have.length(0)
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.application.remove('HelloWorldApp')
@@ -245,15 +257,16 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.generateApiKey()', ->
 
-				it 'should be able to generate an API key by name', ->
-					balena.models.application.generateApiKey(@application.app_name).then (apiKey) ->
-						m.chai.expect(_.isString(apiKey)).to.be.true
-						m.chai.expect(apiKey).to.have.length(32)
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
 
-				it 'should be able to generate an API key by id', ->
-					balena.models.application.generateApiKey(@application.id).then (apiKey) ->
-						m.chai.expect(_.isString(apiKey)).to.be.true
-						m.chai.expect(apiKey).to.have.length(32)
+					it "should be able to generate an API key by #{prop}", ->
+						balena.models.application.generateApiKey(@application[prop]).then (apiKey) ->
+							m.chai.expect(_.isString(apiKey)).to.be.true
+							m.chai.expect(apiKey).to.have.length(32)
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.application.generateApiKey('HelloWorldApp')
@@ -265,15 +278,15 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.generateProvisioningKey()', ->
 
-				it 'should be able to generate a provisioning key by name', ->
-					balena.models.application.generateProvisioningKey(@application.app_name).then (key) ->
-						m.chai.expect(_.isString(key)).to.be.true
-						m.chai.expect(key).to.have.length(32)
-
-				it 'should be able to generate an API key by id', ->
-					balena.models.application.generateProvisioningKey(@application.id).then (key) ->
-						m.chai.expect(_.isString(key)).to.be.true
-						m.chai.expect(key).to.have.length(32)
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
+					it "should be able to generate a provisioning key by #{prop}", ->
+						balena.models.application.generateProvisioningKey(@application[prop]).then (key) ->
+							m.chai.expect(_.isString(key)).to.be.true
+							m.chai.expect(key).to.have.length(32)
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.application.generateProvisioningKey('HelloWorldApp')
@@ -327,7 +340,7 @@ describe 'Application Model', ->
 					model: balena.models.application.tags
 					modelNamespace: 'balena.models.application.tags'
 					resourceName: 'application'
-					uniquePropertyName: 'app_name'
+					uniquePropertyNames: ['app_name', 'slug']
 
 				beforeEach ->
 					tagTestOptions.resourceProvider = => @application

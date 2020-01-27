@@ -19,8 +19,6 @@ const getAllByResourceFactory = function(
 		>;
 };
 
-const NO_UNIQUE_PROP_LABEL = 'unique property';
-
 interface TagModelBase {
 	getAll(
 		options?: BalenaSdk.PineOptionsFor<BalenaSdk.ResourceTagBase>,
@@ -33,13 +31,13 @@ export interface Options {
 	model: TagModelBase;
 	modelNamespace: string;
 	resourceName: string;
-	uniquePropertyName: string;
+	uniquePropertyNames: string[];
 	resourceProvider: () => { id: number };
 	setTagResourceProvider: () => { id: number };
 }
 
 exports.itShouldGetAllTagsByResource = function(opts: Options) {
-	const { model, resourceName, uniquePropertyName } = opts;
+	const { model, resourceName, uniquePropertyNames = [] } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	beforeEach(function() {
@@ -62,16 +60,13 @@ exports.itShouldGetAllTagsByResource = function(opts: Options) {
 		);
 	});
 
-	it(`should be rejected if the ${resourceName} ${uniquePropertyName ||
-		NO_UNIQUE_PROP_LABEL} does not exist`, function() {
-		if (!uniquePropertyName) {
-			return this.skip();
-		}
-
-		const promise = getAllByResource('123456789');
-		return expect(promise).to.be.rejectedWith(
-			`${_.startCase(resourceName)} not found: 123456789`,
-		);
+	uniquePropertyNames.forEach(uniquePropertyName => {
+		it(`should be rejected if the ${resourceName} ${uniquePropertyName} does not exist`, function() {
+			const promise = getAllByResource('123456789');
+			return expect(promise).to.be.rejectedWith(
+				`${_.startCase(resourceName)} not found: 123456789`,
+			);
+		});
 	});
 
 	describe('given a tag', function() {
@@ -95,34 +90,35 @@ exports.itShouldGetAllTagsByResource = function(opts: Options) {
 			});
 		});
 
-		it(`should retrieve the tag by ${resourceName} ${uniquePropertyName ||
-			NO_UNIQUE_PROP_LABEL}`, function() {
-			if (!uniquePropertyName) {
-				return this.skip();
-			}
-
-			return getAllByResource(this.resource[uniquePropertyName]).then(function(
-				tags,
-			) {
-				expect(tags).to.have.length(1);
-				expect(tags[0].tag_key).to.equal('EDITOR');
-				expect(tags[0].value).to.equal('vim');
+		uniquePropertyNames.forEach(uniquePropertyName => {
+			it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, function() {
+				return getAllByResource(this.resource[uniquePropertyName]).then(
+					function(tags) {
+						expect(tags).to.have.length(1);
+						expect(tags[0].tag_key).to.equal('EDITOR');
+						expect(tags[0].value).to.equal('vim');
+					},
+				);
 			});
 		});
 	});
 };
 
 exports.itShouldSetGetAndRemoveTags = function(opts: Options) {
-	const { model, resourceName, uniquePropertyName, modelNamespace } = opts;
+	const {
+		model,
+		resourceName,
+		uniquePropertyNames = [],
+		modelNamespace,
+	} = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	beforeEach(function() {
 		return (this.resource = opts.resourceProvider());
 	});
 
-	['id', uniquePropertyName].forEach(param =>
-		describe(`given a ${resourceName} ${param ||
-			NO_UNIQUE_PROP_LABEL}`, function() {
+	['id', ...uniquePropertyNames].forEach(param =>
+		describe(`given a ${resourceName} ${param}`, function() {
 			it(`should be rejected if the ${resourceName} id does not exist`, function() {
 				if (!param) {
 					return this.skip();
