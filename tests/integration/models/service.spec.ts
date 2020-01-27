@@ -17,18 +17,13 @@ describe('Service Model', function() {
 		givenAnApplication(before);
 
 		describe('balena.models.service.getAllByApplication()', function() {
-			it('should eventually become an empty array given an application name', function() {
-				const promise = balena.models.service.getAllByApplication(
-					this.application.app_name,
-				);
-				return expect(promise).to.become([]);
-			});
-
-			it('should eventually become an empty array given an application id', function() {
-				const promise = balena.models.service.getAllByApplication(
-					this.application.id,
-				);
-				return expect(promise).to.become([]);
+			['id', 'app_name', 'slug'].forEach(prop => {
+				it(`should eventually become an empty array given an application ${prop}`, function() {
+					const promise = balena.models.service.getAllByApplication(
+						this.application[prop],
+					);
+					return expect(promise).to.become([]);
+				});
 			});
 
 			it('should be rejected if the application name does not exist', function() {

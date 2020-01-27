@@ -188,7 +188,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - releases
 	# @returns {Promise}
@@ -209,10 +209,10 @@ getReleaseModel = (deps, opts) ->
 	#		console.log(releases);
 	# });
 	###
-	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
+	exports.getAllByApplication = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, $select: 'id')
+		applicationModel().get(nameOrSlugOrId, $select: 'id')
 		.then ({ id }) ->
 			return pine.get
 				resource: 'release'
@@ -231,7 +231,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object|undefined} - release
 	# @returns {Promise}
@@ -252,10 +252,10 @@ getReleaseModel = (deps, opts) ->
 	#		console.log(releases);
 	# });
 	###
-	exports.getLatestByApplication = (nameOrId, options = {}, callback) ->
+	exports.getLatestByApplication = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		exports.getAllByApplication(nameOrId,
+		exports.getAllByApplication(nameOrSlugOrId,
 			mergePineOptions
 				$top: 1
 				$filter:
@@ -272,7 +272,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} urlDeployOptions - builder options
 	# @param {String} urlDeployOptions.url - a url with a tarball of the project to build
 	# @param {Boolean} [urlDeployOptions.shouldFlatten=true] - Should be true when the tarball includes an extra root folder with all the content
@@ -295,8 +295,8 @@ getReleaseModel = (deps, opts) ->
 	#		console.log(releaseId);
 	# });
 	###
-	exports.createFromUrl = (nameOrId, urlDeployOptions, callback) ->
-		applicationModel().get(nameOrId,
+	exports.createFromUrl = (nameOrSlugOrId, urlDeployOptions, callback) ->
+		applicationModel().get(nameOrSlugOrId,
 			$select: 'app_name'
 			$expand:
 				user:
@@ -319,7 +319,7 @@ getReleaseModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.release.tags
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - release tags
 	# @returns {Promise}
@@ -340,8 +340,8 @@ getReleaseModel = (deps, opts) ->
 	# 	console.log(tags)
 	# });
 	###
-	exports.tags.getAllByApplication = (nameOrId, options = {}, callback) ->
-		applicationModel().get(nameOrId, $select: 'id').get('id').then (id) ->
+	exports.tags.getAllByApplication = (nameOrSlugOrId, options = {}, callback) ->
+		applicationModel().get(nameOrSlugOrId, $select: 'id').get('id').then (id) ->
 			tagsModel.getAll(
 				mergePineOptions
 					$filter:

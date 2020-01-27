@@ -53,7 +53,7 @@ getServiceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.service
 	#
-	# @param {String|Number} nameOrId - application name (string) or id (number)
+	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - services
 	# @returns {Promise}
@@ -74,10 +74,10 @@ getServiceModel = (deps, opts) ->
 	#		console.log(services);
 	# });
 	###
-	exports.getAllByApplication = (nameOrId, options = {}, callback) ->
+	exports.getAllByApplication = (nameOrSlugOrId, options = {}, callback) ->
 		callback = findCallback(arguments)
 
-		applicationModel().get(nameOrId, $select: 'id')
+		applicationModel().get(nameOrSlugOrId, $select: 'id')
 		.then ({ id }) ->
 			return pine.get
 				resource: 'service'
@@ -124,7 +124,7 @@ getServiceModel = (deps, opts) ->
 		# @function
 		# @memberof balena.models.service.var
 		#
-		# @param {String|Number} nameOrId - application name (string) or id (number)
+		# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		# @param {Object} [options={}] - extra pine options to use
 		# @fulfil {Object[]} - service variables
 		# @returns {Promise}
@@ -145,10 +145,10 @@ getServiceModel = (deps, opts) ->
 		# 	console.log(vars)
 		# });
 		###
-		getAllByApplication: (nameOrId, options = {}, callback) ->
+		getAllByApplication: (nameOrSlugOrId, options = {}, callback) ->
 			callback = findCallback(arguments)
 
-			applicationModel().get(nameOrId, $select: 'id')
+			applicationModel().get(nameOrSlugOrId, $select: 'id')
 			.get('id')
 			.then (id) ->
 				varModel.getAll(
