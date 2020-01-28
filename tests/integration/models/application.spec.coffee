@@ -681,7 +681,7 @@ describe 'Application Model', ->
 			it 'should retrieve the application and it\'s devices along with service details', ->
 				balena.models.application.getWithDeviceServiceDetails(@application.id)
 				.then (applicationDetails) =>
-					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails, false)
+					itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applicationDetails, true)
 
 		describe 'balena.models.application.getAllWithDeviceServiceDetails()', ->
 

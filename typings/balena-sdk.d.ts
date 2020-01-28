@@ -783,7 +783,9 @@ declare namespace BalenaSdk {
 					options?: PineOptionsFor<Application>,
 				): Promise<
 					Application & {
-						owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
+						owns__device: Array<
+							DeviceWithServiceDetails<CurrentServiceWithCommit>
+						>;
 					}
 				>;
 				getAppByOwner(
