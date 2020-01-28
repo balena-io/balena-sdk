@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'app.getWithDeviceServiceDetails: Add the release commit in the services'
+      hash: 9bb9e9a2f43d8fd2ca246885e897652c22872a99
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'device.getWithServiceDetails: Remove unused ''id'' selection'
+      hash: a5f48c4429dfda23e8ddd52ced2c59cf3d068ef4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.0
+  date: 2020-01-28T16:14:34.823Z
+- commits:
     - subject: Allow retrieving applications by application case insensitive slug
       hash: d3d97a37409af2186a02f39a7c63c75258693dec
       body: |
