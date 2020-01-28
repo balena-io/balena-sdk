@@ -34,7 +34,7 @@ export const getCurrentServiceDetailsPineOptions = (expandRelease: boolean) => {
 					},
 					...(expandRelease && {
 						is_provided_by__release: {
-							$select: ['id', 'commit'],
+							$select: ['commit'],
 						},
 					}),
 				},
