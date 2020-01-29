@@ -566,6 +566,8 @@ describe 'Application Model', ->
 						balena.pine.post
 							resource: 'release'
 							body: body
+				.then (releases) =>
+					[@oldRelease, @newRelease] = releases
 
 			describe 'balena.models.application.willTrackNewReleases()', ->
 
@@ -594,7 +596,7 @@ describe 'Application Model', ->
 					balena.pine.patch
 						resource: 'application'
 						id: @application.id
-						body: commit: 'old-release-commit'
+						body: should_be_running__release: @oldRelease.id
 					.then =>
 						promise = balena.models.application.willTrackNewReleases(@application.id)
 						m.chai.expect(promise).to.eventually.be.true
@@ -626,7 +628,7 @@ describe 'Application Model', ->
 					balena.pine.patch
 						resource: 'application'
 						id: @application.id
-						body: commit: 'old-release-commit'
+						body: should_be_running__release: @oldRelease.id
 					.then =>
 						promise = balena.models.application.isTrackingLatestRelease(@application.id)
 						m.chai.expect(promise).to.eventually.be.false
@@ -634,7 +636,7 @@ describe 'Application Model', ->
 						balena.pine.patch
 							resource: 'application'
 							id: @application.id
-							body: commit: 'new-release-commit'
+							body: should_be_running__release: @newRelease.id
 					.then =>
 						promise = balena.models.application.isTrackingLatestRelease(@application.id)
 						m.chai.expect(promise).to.eventually.be.true
@@ -692,18 +694,19 @@ describe 'Application Model', ->
 			# Commit is empty on newly created application, so ignoring it
 			omittedFields = [
 				'owns__device'
-				'commit'
+				'should_be_running__release'
 				'__metadata'
 			]
 			m.chai.expect(_.omit(application, omittedFields)).to.deep.equal(_.omit(@application, omittedFields))
 
-			# Check commit value after release
-			m.chai.expect(application.commit).to.equal('new-release-commit')
+			# Check the app's target release after the release got created
+			m.chai.expect(application.should_be_running__release.__id).to.equal(@currentRelease.id)
 
 			deviceExpectation =
 				device_name: @device.device_name
 				uuid: @device.uuid
-				is_on__commit: @currentRelease.commit
+				is_running__release:
+					__id: @currentRelease.id
 				current_services:
 					web: [
 						id: @newWebInstall.id

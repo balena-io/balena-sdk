@@ -293,7 +293,6 @@ declare namespace BalenaSdk {
 		app_name: string;
 		device_type: string;
 		slug: string;
-		commit: string;
 		is_accessible_by_support_until__date: string;
 		is_host: boolean;
 		should_track_latest_release: boolean;
@@ -302,6 +301,7 @@ declare namespace BalenaSdk {
 		application_type: NavigationResource<ApplicationType>;
 		depends_on__application: NavigationResource<Application>;
 		organization: NavigationResource<Organization>;
+		should_be_running__release: NavigationResource<Release>;
 
 		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
@@ -389,6 +389,9 @@ declare namespace BalenaSdk {
 			id: number;
 			image: NavigationResource<Image>;
 		}>;
+		should_be_running_on__application: ReverseNavigationResource<Application>;
+		is_running_on__device: ReverseNavigationResource<Device>;
+		should_be_running_on__device: ReverseNavigationResource<Device>;
 		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
@@ -521,7 +524,6 @@ declare namespace BalenaSdk {
 		is_connected_to_vpn: boolean;
 		is_in_local_mode?: boolean;
 		is_locked_until__date: string;
-		is_on__commit: string;
 		is_web_accessible: boolean;
 		is_active: boolean;
 		is_online: boolean;
@@ -550,6 +552,7 @@ declare namespace BalenaSdk {
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
+		is_running__release: NavigationResource<Release>;
 		should_be_running__release: NavigationResource<Release>;
 		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
 		is_managed_by__device: NavigationResource<Device>;
