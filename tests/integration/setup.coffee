@@ -167,7 +167,7 @@ exports.givenADevice = (beforeFn, extraDeviceProps) ->
 			balena.pine.patch
 				resource: 'device'
 				body:
-					is_on__commit: @currentRelease.commit
+					is_running__release: @currentRelease.id
 				options:
 					$filter:
 						uuid: deviceInfo.uuid

@@ -2342,12 +2342,15 @@ getDeviceModel = (deps, opts) ->
 				should_be_running__release:
 					$select: 'commit'
 				belongs_to__application:
-					$select: 'commit'
+					$select: 'id'
+					$expand: should_be_running__release: $select: ['commit']
 		)
 		.then ({ should_be_running__release, belongs_to__application }) ->
 			if not isEmpty(should_be_running__release)
 				return should_be_running__release[0].commit
-			belongs_to__application[0].commit
+			targetRelease = belongs_to__application[0].should_be_running__release[0]
+			if targetRelease
+				return targetRelease.commit
 		.asCallback(callback)
 
 	###*
