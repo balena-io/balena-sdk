@@ -263,22 +263,32 @@ exports.itShouldSetGetAndRemoveTags = function(opts: Options) {
 		});
 
 		describe(`${modelNamespace}.getAll()`, function() {
-			it('should retrieve all the tags', () =>
-				model.getAll().then(function(tags) {
+			it('should retrieve all the tags', function() {
+				return model.getAll().then(tags => {
 					tags = _.sortBy(tags, 'tag_key');
-					expect(tags).to.have.length(2);
-					expect(tags[0].tag_key).to.equal('EDITOR');
-					expect(tags[0].value).to.equal('vim');
-					expect(tags[1].tag_key).to.equal('LANGUAGE');
-					expect(tags[1].value).to.equal('js');
-				}));
+					expect(tags.length).to.be.gte(2);
+					// exclude tags that the user can access b/c of public apps
+					const tagsOfUsersResource = tags.filter(
+						t => t[resourceName].__id === this.resource.id,
+					);
+					expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
+					expect(tagsOfUsersResource[0].value).to.equal('vim');
+					expect(tagsOfUsersResource[1].tag_key).to.equal('LANGUAGE');
+					expect(tagsOfUsersResource[1].value).to.equal('js');
+				});
+			});
 
-			it('should retrieve the filtered tag', () =>
-				model.getAll({ $filter: { tag_key: 'EDITOR' } }).then(function(tags) {
-					expect(tags).to.have.length(1);
-					expect(tags[0].tag_key).to.equal('EDITOR');
-					expect(tags[0].value).to.equal('vim');
-				}));
+			it('should retrieve the filtered tag', function() {
+				return model.getAll({ $filter: { tag_key: 'EDITOR' } }).then(tags => {
+					expect(tags.length).to.be.gte(1);
+					// exclude tags that the user can access b/c of public apps
+					const tagsOfUsersResource = tags.filter(
+						t => t[resourceName].__id === this.resource.id,
+					);
+					expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
+					expect(tagsOfUsersResource[0].value).to.equal('vim');
+				});
+			});
 		});
 
 		describe(`${modelNamespace}.set()`, () =>
