@@ -1,4 +1,14 @@
 - commits:
+    - subject: Remove unused code
+      hash: 76318307bafe3f90ce71f0c7ec292c375a2085ea
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.23.1
+  date: 2020-02-06T15:08:43.400Z
+- commits:
     - subject: 'app.getWithDeviceServiceDetails: Add the release commit in the services'
       hash: 9bb9e9a2f43d8fd2ca246885e897652c22872a99
       body: ''
