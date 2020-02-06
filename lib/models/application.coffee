@@ -20,7 +20,6 @@ assign = require('lodash/assign')
 forEach = require('lodash/forEach')
 isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
-filter = require('lodash/filter')
 size = require('lodash/size')
 errors = require('balena-errors')
 

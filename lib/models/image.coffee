@@ -14,14 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-once = require('lodash/once')
 errors = require('balena-errors')
 
 { findCallback, mergePineOptions } = require('../util')
 
 getImageModel = (deps, opts) ->
 	{ pine } = deps
-	applicationModel = once -> require('./application')(deps, opts)
 
 	exports = {}
 

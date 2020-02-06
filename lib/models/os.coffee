@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-errors = require('balena-errors')
 Promise = require('bluebird')
 assign = require('lodash/assign')
 defaults = require('lodash/defaults')
@@ -22,7 +21,6 @@ find = require('lodash/find')
 first = require('lodash/first')
 includes = require('lodash/includes')
 once = require('lodash/once')
-partition = require('lodash/partition')
 reject = require('lodash/reject')
 bSemver = require('balena-semver')
 semver = require('semver')

@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-Promise = require('bluebird')
 querystring = require('querystring')
-errors = require('balena-errors')
 { EventEmitter } = require('events')
 ndjson = require('ndjson')
 {
