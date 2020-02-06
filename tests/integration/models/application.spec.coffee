@@ -76,6 +76,7 @@ describe 'Application Model', ->
 					balena.pine.get
 						resource: 'application'
 						options:
+							$filter: is_public: false
 							$orderby: id: 'asc'
 				.then ([ parentApplication, childApplication ]) ->
 					m.chai.expect(childApplication.depends_on__application.__id).to.equal(parentApplication.id)
