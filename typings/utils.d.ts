@@ -1,6 +1,6 @@
-export type AnyObject = {
+export interface AnyObject {
 	[index: string]: any;
-};
+}
 
 export type PropsOfType<T, P> = {
 	[K in keyof T]: T[K] extends P ? K : never;

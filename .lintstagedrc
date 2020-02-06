@@ -1,6 +1,8 @@
 {
 	"*.ts": [
-		"prettier --write",
-		"tslint -t stylish --fix"
+		"resin-lint --typescript --fix"
+	],
+	"*.coffee": [
+		"resin-lint"
 	]
 }
