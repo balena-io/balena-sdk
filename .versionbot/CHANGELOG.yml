@@ -1,4 +1,24 @@
 - commits:
+    - subject: Disable balenaCI auto rebase
+      hash: a30a648568ab788b8bacdec9951771cb054cccf3
+      body: |
+        Having autorebase enabled could lead to having
+        more then one instances of the sdk tests running in
+        parallel, which will result all of them failing, b/c they
+        will use the same test user, and will also add
+        unnecessary load to the API. Once we get #582 fixed
+        we can remove this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 'https://github.com/balena-io/scripts/pull/80'
+        see: 'https://github.com/balena-io/scripts/pull/80'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.3
+  date: 2020-02-06T18:56:53.591Z
+- commits:
     - subject: Switch to resin-lint for linting
       hash: 4799ca69d5937c2415d4a1635cdf2625398e2ddb
       body: ''
