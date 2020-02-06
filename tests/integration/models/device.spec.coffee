@@ -434,7 +434,7 @@ describe 'Device Model', ->
 						m.chai.expect(childDevices[0].id).to.equal(@childDevice.id)
 
 				it 'should be empty if the parent device has no children', ->
-					promise = balena.models.device.getAllByParentDevice(@childDevice.id).then (childDevices) ->
+					balena.models.device.getAllByParentDevice(@childDevice.id).then (childDevices) ->
 						m.chai.expect(childDevices).to.have.length(0)
 
 				it 'should be rejected if the parent device does not exist', ->

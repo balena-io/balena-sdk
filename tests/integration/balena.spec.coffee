@@ -1,7 +1,7 @@
 m = require('mochainon')
 
 packageJSON = require('../../package.json')
-{ balena, getSdk, sdkOpts, credentials, givenLoggedInUser } = require('./setup')
+{ balena, getSdk, sdkOpts, givenLoggedInUser } = require('./setup')
 
 DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/'
 
@@ -266,4 +266,3 @@ describe 'Balena SDK', ->
 
 			mockBalena = getSdk.fromSharedOptions()
 			m.chai.expect(mockBalena).to.include.keys(validKeys)
-

@@ -20,8 +20,6 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 ###
 
 Promise = require('bluebird')
-isEmpty = require('lodash/isEmpty')
-errors = require('balena-errors')
 
 {
 	findCallback

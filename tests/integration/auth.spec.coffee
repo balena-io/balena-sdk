@@ -1,4 +1,3 @@
-_ = require('lodash')
 m = require('mochainon')
 
 { balena, sdkOpts, credentials, givenLoggedInUser, givenLoggedInUserWithApiKey } = require('./setup')

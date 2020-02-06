@@ -17,7 +17,6 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 isEmpty = require('lodash/isEmpty')
-isFinite = require('lodash/isFinite')
 once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
@@ -30,7 +29,6 @@ errors = require('balena-errors')
 deviceStatus = require('balena-device-status')
 
 {
-	onlyIf
 	isId
 	findCallback
 	getOsUpdateHelper: _getOsUpdateHelper
@@ -173,7 +171,7 @@ getDeviceModel = (deps, opts) ->
 	# @example
 	# dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 	###
-	exports.getDashboardUrl = getDashboardUrl = (uuid) ->
+	exports.getDashboardUrl = (uuid) ->
 		if typeof uuid != 'string' || isEmpty(uuid)
 			throw new Error('The uuid option should be a non empty string')
 

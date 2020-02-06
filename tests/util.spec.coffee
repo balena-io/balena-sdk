@@ -1,6 +1,5 @@
 _ = require('lodash')
 m = require('mochainon')
-Promise = require('bluebird')
 bSemver = require('balena-semver')
 
 {
