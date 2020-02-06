@@ -43,11 +43,11 @@ type RawFilter =
 	| Array<string | Filter<any>>
 	| { $string: string; [index: string]: Filter<any> | string };
 
-type LambdaExpression<T> = {
+interface LambdaExpression<T> {
 	[alias: string]: Filter<T>;
-};
+}
 
-type Lambda<T> = {
+interface Lambda<T> {
 	$alias: string;
 	$expr:
 		| LambdaExpression<T>
@@ -59,7 +59,7 @@ type Lambda<T> = {
 		| { $and: Array<LambdaExpression<T>> }
 		| { $or: Array<LambdaExpression<T>> }
 		| { $not: LambdaExpression<T> };
-};
+}
 
 type OrderByValues = 'asc' | 'desc';
 type OrderBy = string | string[] | { [index: string]: OrderByValues };
@@ -142,7 +142,7 @@ type FilterFunctionKey =
 	| '$isof'
 	| '$cast';
 
-type FilterExpressions<T> = {
+interface FilterExpressions<T> {
 	$raw?: RawFilter;
 
 	$?: string | string[];
@@ -200,7 +200,7 @@ type FilterExpressions<T> = {
 	$ceiling?: FilterFunctionValue<T>;
 	$isof?: FilterFunctionValue<T>;
 	$cast?: FilterFunctionValue<T>;
-};
+}
 
 export type ResourceExpandFor<T> = {
 	[k in ExpandableProps<T>]?: PineOptionsFor<InferAssociatedResourceType<T[k]>>;

@@ -30,7 +30,8 @@ BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 #
 # This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
 #
-# If you feel something is missing, not clear or could be improved, please don't hesitate to open an [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
+# If you feel something is missing, not clear or could be improved, please don't hesitate to open an
+# [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
 ###
 
 getSdk = (opts = {}) ->

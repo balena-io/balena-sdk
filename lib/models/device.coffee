@@ -2446,7 +2446,8 @@ getDeviceModel = (deps, opts) ->
 		hupActionHelper.getHUPActionType(device_type, currentOsVersion, targetOsVersion)
 		return
 
-	# TODO: This is a temporary solution for ESR, as the ESR-supported versions are not part of the SDK yet. It should be removed once the getSupportedVersions is updated to support ESR as well.
+	# TODO: This is a temporary solution for ESR, as the ESR-supported versions are not part of the SDK yet.
+	# 	It should be removed once the getSupportedVersions is updated to support ESR as well.
 	exports._startOsUpdate = (uuid, targetOsVersion, skipCheck, callback) ->
 		Promise.try ->
 			if not targetOsVersion

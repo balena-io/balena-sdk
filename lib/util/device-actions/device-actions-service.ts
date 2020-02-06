@@ -1,26 +1,26 @@
 import * as Promise from 'bluebird';
 import * as BalenaRequest from '../../../typings/balena-request';
 
-type MakeActionRequestParams = {
+interface MakeActionRequestParams {
 	uuid: string;
 	actionNameOrId: string | number;
 	params?: any;
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 	extraOptions: any;
-};
+}
 
-type StartActionParams = {
+interface StartActionParams {
 	uuid: string;
 	actionName: string;
 	params: any;
 	extraOptions?: any;
-};
+}
 
-type GetActionStatusParams = {
+interface GetActionStatusParams {
 	uuid: string;
 	actionId: string;
 	extraOptions?: any;
-};
+}
 
 const DEVICE_ACTIONS_API_VERSION = 'v1';
 

@@ -9,6 +9,7 @@ import { BalenaRequest, BalenaRequestStreamResult } from './balena-request';
 import * as Pine from './pinejs-client-core';
 import { Dictionary } from './utils';
 
+// tslint:disable-next-line:no-namespace
 declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
@@ -568,7 +569,7 @@ declare namespace BalenaSdk {
 		created_at: string;
 	}
 
-	type ImgConfigOptions = {
+	interface ImgConfigOptions {
 		network?: 'ethernet' | 'wifi';
 		appUpdatePollInterval?: number;
 		wifiKey?: string;
@@ -577,20 +578,20 @@ declare namespace BalenaSdk {
 		gateway?: string;
 		netmask?: string;
 		version: string;
-	};
+	}
 
-	type OsVersions = {
+	interface OsVersions {
 		latest: string;
 		recommended: string;
 		default: string;
 		versions: string[];
-	};
+	}
 
-	type OsUpdateVersions = {
+	interface OsUpdateVersions {
 		versions: string[];
 		recommended: string | undefined;
 		current: string | undefined;
-	};
+	}
 
 	interface ImageInstall {
 		id: number;
