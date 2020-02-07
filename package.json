@@ -104,7 +104,7 @@
     "balena-errors": "^4.2.1",
     "balena-hup-action-utils": "~3.0.0",
     "balena-pine": "^10.1.1",
-    "balena-register-device": "^6.0.0",
+    "balena-register-device": "^6.0.1",
     "balena-request": "^10.0.4",
     "balena-semver": "^2.1.0",
     "balena-settings-client": "^4.0.2",
