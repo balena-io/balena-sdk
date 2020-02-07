@@ -1,4 +1,19 @@
 - commits:
+    - subject: Re-enable balenaCI autoRebase
+      hash: 2c0bf1f1c3434ae565ca0fdeccc83a7b4cfcbf90
+      body: |
+        Revert "Disable balenaCI auto rebase"
+        This reverts commit
+        a30a648568ab788b8bacdec9951771cb054cccf3.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.6
+  date: 2020-02-07T14:00:23.338Z
+- commits:
     - subject: Fix the tag tests failing b/c of public apps
       hash: 6517c52c68edceff8a223e815590c1a8c8b35e17
       body: ''
