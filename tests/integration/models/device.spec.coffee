@@ -147,8 +147,8 @@ describe 'Device Model', ->
 					uuid = balena.models.device.generateUniqueKey()
 
 					m.chai.expect(uuid).to.be.a('string')
-					m.chai.expect(uuid).to.have.length(62)
-					m.chai.expect(uuid).to.match(/^[a-z0-9]{62}$/)
+					m.chai.expect(uuid).to.have.length(32)
+					m.chai.expect(uuid).to.match(/^[a-z0-9]{32}$/)
 
 				it 'should generate different uuids', ->
 					one = balena.models.device.generateUniqueKey()
@@ -671,12 +671,12 @@ describe 'Device Model', ->
 				it 'should eventually return the correct device url given a shorter uuid', ->
 					balena.models.device.getDeviceUrl(@device.uuid.slice(0, 7))
 					.then (deviceUrl) ->
-						m.chai.expect(deviceUrl).to.match(/[a-z0-9]{62}/)
+						m.chai.expect(deviceUrl).to.match(/[a-z0-9]{32}/)
 
 				it 'should eventually return the correct device url given an id', ->
 					balena.models.device.getDeviceUrl(@device.id)
 					.then (deviceUrl) ->
-						m.chai.expect(deviceUrl).to.match(/[a-z0-9]{62}/)
+						m.chai.expect(deviceUrl).to.match(/[a-z0-9]{32}/)
 
 				it 'should eventually be an absolute url given a uuid', ->
 					balena.models.device.getDeviceUrl(@device.uuid)
