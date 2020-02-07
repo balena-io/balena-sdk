@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update balena-register-device to 6.0.1
+      hash: bc84252585ca73e58ad799bd4f488de2d014b8a7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.23.7
+  date: 2020-02-07T16:54:53.697Z
+- commits:
     - subject: Re-enable balenaCI autoRebase
       hash: 2c0bf1f1c3434ae565ca0fdeccc83a7b4cfcbf90
       body: |
