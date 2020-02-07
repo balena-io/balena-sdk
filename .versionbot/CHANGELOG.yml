@@ -1,4 +1,25 @@
 - commits:
+    - subject: Fix the tag tests failing b/c of public apps
+      hash: 6517c52c68edceff8a223e815590c1a8c8b35e17
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Fix the dependent app test randomly failing b/c of public apps
+      hash: 5c9b25100a425762b19a262adcf35f34ea949363
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.5
+  date: 2020-02-07T12:26:23.492Z
+- commits:
     - subject: Fix the build failing on node v12
       hash: 3d6c6a7a32b4c6cde888cc7a266fc25158072143
       body: ''
