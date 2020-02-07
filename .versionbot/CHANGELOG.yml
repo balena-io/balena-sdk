@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix the build failing on node v12
+      hash: 3d6c6a7a32b4c6cde888cc7a266fc25158072143
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.4
+  date: 2020-02-07T11:51:13.318Z
+- commits:
     - subject: Disable balenaCI auto rebase
       hash: a30a648568ab788b8bacdec9951771cb054cccf3
       body: |
