@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
 assign = require('lodash/assign')
@@ -40,7 +41,7 @@ errors = require('balena-errors')
 
 getApplicationModel = (deps, opts) ->
 	{ request, pine } = deps
-	{ apiUrl } = opts
+	{ apiUrl, dashboardUrl } = opts
 
 	deviceModel = once -> require('./device')(deps, opts)
 	releaseModel = once -> require('./release')(deps, opts)
@@ -72,6 +73,10 @@ getApplicationModel = (deps, opts) ->
 
 	exports = {}
 
+	# Infer dashboardUrl from apiUrl if former is undefined
+	if not dashboardUrl?
+		dashboardUrl = apiUrl.replace(/api/, 'dashboard')
+
 	# Internal method for name/id disambiguation
 	# Note that this throws an exception for missing names, but not missing ids
 	getId = (nameOrSlugOrId) ->
@@ -88,6 +93,25 @@ getApplicationModel = (deps, opts) ->
 			forEach application.owns__device, (device) ->
 				normalizeDeviceOsVersion(device)
 		return application
+
+	###*
+	# @summary Get Dashboard URL for a specific application
+	# @function getDashboardUrl
+	# @memberof balena.models.application
+	#
+	# @param {Number} id - Application id
+	#
+	# @returns {String} - Dashboard URL for the specific application
+	# @throws Exception if the id is not a finite number
+	#
+	# @example
+	# dashboardApplicationUrl = balena.models.application.getDashboardUrl(1)
+	###
+	exports.getDashboardUrl = getDashboardUrl = (id) ->
+		if typeof id != 'number' || !Number.isFinite(id)
+			throw new Error('The id option should be a finite number')
+
+		return url.resolve(dashboardUrl, "/apps/#{id}")
 
 	###*
 	# @summary Get all applications
