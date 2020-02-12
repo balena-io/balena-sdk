@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'appveyor: Run node & browser tests in parallel'
+      hash: ba4cd4bb6f1b3bb5822a9e8bc9e07c7d872fc34b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.9
+  date: 2020-02-12T15:06:35.149Z
+- commits:
     - subject: 'appveyor: Set to test against node 8'
       hash: 24bb1e6a332bd21b1eb92805fd4d6094a0e02a0d
       body: |
