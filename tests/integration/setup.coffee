@@ -32,6 +32,9 @@ _.assign opts,
 	isBrowser: IS_BROWSER,
 	retries: 3
 
+console.log("Running SDK tests against: #{opts.apiUrl}")
+console.log("TEST_USERNAME: #{env?.TEST_USERNAME}")
+
 buildCredentials = ->
 	if not env
 		throw new Error('Missing environment object?!')

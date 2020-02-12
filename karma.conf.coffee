@@ -24,6 +24,13 @@ module.exports = (config) ->
 		'tests/**/*.spec.ts'
 	]
 
+	{ TEST_ONLY_ON_ENVIRONMENT } = process.env
+	if TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT != 'browser'
+		console.log("TEST_ONLY_ON_ENVIRONMENT is set to #{TEST_ONLY_ON_ENVIRONMENT}")
+		console.log('Skipping browser tests')
+		karmaConfig.files = []
+		karmaConfig.failOnEmptyTestSuite = false
+
 	karmaConfig.browserConsoleLogOptions =
 		level: 'log'
 		format: '%b %T: %m'
