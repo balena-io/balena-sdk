@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'appveyor: Set to test against node 8'
+      hash: 24bb1e6a332bd21b1eb92805fd4d6094a0e02a0d
+      body: |
+        The latest resin-lint doesn't work on node 6, which is
+        EOL. In the next major release we will also change
+        the engines field of the package.json and the node
+        typings.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.8
+  date: 2020-02-11T12:48:33.454Z
+- commits:
     - subject: Update balena-register-device to 6.0.1
       hash: bc84252585ca73e58ad799bd4f488de2d014b8a7
       body: ''
