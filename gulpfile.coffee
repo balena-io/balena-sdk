@@ -29,8 +29,15 @@ OPTIONS =
 		doc: 'doc/'
 		build: 'build/'
 
-gulp.task 'test', ->
+gulp.task 'test', (cb) ->
 	loadEnv()
+
+	{ TEST_ONLY_ON_ENVIRONMENT } = process.env
+	if TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT != 'node'
+		console.log("TEST_ONLY_ON_ENVIRONMENT is set to #{TEST_ONLY_ON_ENVIRONMENT}")
+		console.log('Skipping node tests')
+		return cb()
+
 	gulp.src(OPTIONS.files.tests, read: false)
 		.pipe(mocha({
 			reporter: 'spec',
