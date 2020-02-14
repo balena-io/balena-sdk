@@ -105,7 +105,10 @@ getApplicationModel = (deps, opts) ->
 	# @throws Exception if the id is not a finite number
 	#
 	# @example
-	# dashboardApplicationUrl = balena.models.application.getDashboardUrl(1)
+	# balena.models.application.get('MyApp').then(function(application) {
+	# 	const dashboardApplicationUrl = balena.models.application.getDashboardUrl(application.id);
+	# 	console.log(dashboardApplicationUrl);
+	# });
 	###
 	exports.getDashboardUrl = getDashboardUrl = (id) ->
 		if typeof id != 'number' || !Number.isFinite(id)
