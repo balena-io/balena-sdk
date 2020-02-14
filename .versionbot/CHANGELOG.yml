@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update the documentation based on the newer jsdoc generator version
+      hash: 82087fafac07e3e7830de9ee9ffc50c1a225628f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.23.10
+  date: 2020-02-14T14:26:43.625Z
+- commits:
     - subject: 'appveyor: Run node & browser tests in parallel'
       hash: ba4cd4bb6f1b3bb5822a9e8bc9e07c7d872fc34b
       body: ''
