@@ -33,6 +33,7 @@ If you feel something is missing, not clear or could be improved, please don't h
                 * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
                 * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
                 * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+            * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
             * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
@@ -343,6 +344,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
             * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
             * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+        * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
         * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
@@ -531,6 +533,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
         * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
         * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+    * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
     * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
@@ -947,6 +950,28 @@ balena.models.application.envVar.remove(999999, 'VAR').then(function() {
 balena.models.application.envVar.remove('MyApp', 'VAR', function(error) {
 	if (error) throw error;
 	...
+});
+```
+<a name="balena.models.application.getDashboardUrl"></a>
+
+##### application.getDashboardUrl(id) ⇒ <code>String</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Get Dashboard URL for a specific application  
+**Returns**: <code>String</code> - - Dashboard URL for the specific application  
+**Throws**:
+
+- Exception if the id is not a finite number
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | Application id |
+
+**Example**  
+```js
+balena.models.application.get('MyApp').then(function(application) {
+	const dashboardApplicationUrl = balena.models.application.getDashboardUrl(application.id);
+	console.log(dashboardApplicationUrl);
 });
 ```
 <a name="balena.models.application.getAll"></a>

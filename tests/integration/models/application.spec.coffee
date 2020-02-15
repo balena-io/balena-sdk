@@ -8,6 +8,7 @@ m = require('mochainon')
 	givenAnApplication
 	givenLoggedInUser
 	givenMulticontainerApplicationWithADevice
+	sdkOpts
 } = require('../setup')
 {
 	itShouldSetGetAndRemoveTags
@@ -718,3 +719,21 @@ describe 'Application Model', ->
 					.then (applications) =>
 						m.chai.expect(applications).to.have.lengthOf(1)
 						itShouldBeAnApplicationWithDeviceServiceDetails.call(this, applications[0], true)
+
+	describe 'helpers', ->
+
+		describe 'balena.models.application.getDashboardUrl()', ->
+
+			it 'should return the respective DashboardUrl when an application id is provided', ->
+				dashboardUrl = sdkOpts.apiUrl.replace(/api/, 'dashboard')
+				m.chai.expect(
+					balena.models.application.getDashboardUrl(1)
+				).to.equal("#{dashboardUrl}/apps/1")
+
+			it 'should throw when an application id is not a number', ->
+				m.chai.expect( -> balena.models.application.getDashboardUrl('my-app'))
+				.to.throw()
+
+			it 'should throw when an application id is not provided', ->
+				m.chai.expect( -> balena.models.application.getDashboardUrl())
+				.to.throw()
