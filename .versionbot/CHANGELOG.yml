@@ -1,4 +1,29 @@
 - commits:
+    - subject: >-
+        Update `application.getDashboardUrl` example with `application.get` call
+        to get application id
+      hash: 6ee68d27acbae91ea4723cc44c483285a87b8722
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Co-Authored-By: Thodoris Greasidis <thgreasi@gmail.com>
+        co-authored-by: Thodoris Greasidis <thgreasi@gmail.com>
+        Signed-off-by: Thomas Manning <thomasm@balena.io>
+        signed-off-by: Thomas Manning <thomasm@balena.io>
+      author: Thomas Manning
+    - subject: Added `getDashboardUrl(id)` to application model
+      hash: 35315184a3c7694ec5515befe70fe67679d6b5d3
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thomas Manning <thomasm@balena.io>
+        signed-off-by: Thomas Manning <thomasm@balena.io>
+      author: Thomas Manning
+  version: 12.24.0
+  date: 2020-02-14T10:48:43.827Z
+- commits:
     - subject: 'appveyor: Run node & browser tests in parallel'
       hash: ba4cd4bb6f1b3bb5822a9e8bc9e07c7d872fc34b
       body: ''
