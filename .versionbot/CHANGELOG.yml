@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'auth.getEmail: Fix confusing call expression'
+      hash: 1709302f777b0b386eecef2ecbc779e4cd87f925
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.24.3
+  date: 2020-02-17T17:02:42.975Z
+- commits:
     - subject: Fix concealing network errors in auth.whoami() and auth.isLoggedIn()
       hash: 9ef0c2ad3daa69018f551e62883b045140da9cac
       body: ''
