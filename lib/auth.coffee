@@ -98,8 +98,8 @@ getAuth = (deps, opts) ->
 	###
 	exports.whoami = (callback) ->
 		getUserDetails()
-		.then (userDetails) -> userDetails.username || undefined
-		.catchReturn(undefined)
+		.then (userDetails) -> userDetails?.username || undefined
+		.catchReturn(errors.BalenaNotLoggedIn, undefined)
 		.asCallback(callback)
 
 	###*
@@ -231,7 +231,7 @@ getAuth = (deps, opts) ->
 	exports.isLoggedIn = (callback) ->
 		getUserDetails()
 		.return(true)
-		.catchReturn(false)
+		.catchReturn(errors.BalenaNotLoggedIn, false)
 		.asCallback(callback)
 
 	###*
