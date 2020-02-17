@@ -128,6 +128,51 @@ describe 'SDK authentication', ->
 
 				m.chai.expect(promise).to.be.rejectedWith('This email is already taken')
 
+		describe 'given an invalid token', ->
+
+			describe 'balena.auth.loginWithToken()', ->
+
+				it 'should be not rejected', ->
+					balena.auth.authenticate(credentials)
+					.then((token) -> balena.auth.loginWithToken("#{token}malformingsuffix"))
+					.then(balena.auth.getToken)
+					.then (key) ->
+						m.chai.expect(key).to.be.a('string')
+
+	describe 'when logged in with an invalid token', ->
+
+		before ->
+			balena.auth.logout()
+			.then ->
+				balena.auth.authenticate(credentials)
+			.then (token) ->
+				balena.auth.loginWithToken("#{token}malformingsuffix")
+
+		describe 'balena.auth.isLoggedIn()', ->
+
+			it 'should eventually be false', ->
+				promise = balena.auth.isLoggedIn()
+				m.chai.expect(promise).to.eventually.be.false
+
+		describe 'balena.auth.whoami()', ->
+
+			it 'should eventually be false', ->
+				promise = balena.auth.whoami()
+				m.chai.expect(promise).to.eventually.be.undefined
+
+		describe 'balena.auth.getEmail()', ->
+
+			it 'should be rejected with an error', ->
+				promise = balena.auth.getEmail()
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'BalenaNotLoggedIn')
+
+		describe 'balena.auth.getUserId()', ->
+
+			it 'should be rejected with an error', ->
+				promise = balena.auth.getUserId()
+				m.chai.expect(promise).to.be.rejected
+					.and.eventually.have.property('code', 'BalenaNotLoggedIn')
 
 	describe 'when logged in with credentials', ->
 
