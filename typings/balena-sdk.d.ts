@@ -426,6 +426,20 @@ declare namespace BalenaSdk {
 		state: 'pending' | 'paid' | 'failed' | 'past_due';
 	}
 
+	export interface DeviceOverallStatusMap {
+		readonly CONFIGURING: 'configuring';
+		readonly IDLE: 'idle';
+		readonly OFFLINE: 'offline';
+		readonly INACTIVE: 'inactive';
+		readonly POST_PROVISIONING: 'post-provisioning';
+		readonly UPDATING: 'updating';
+		readonly ORDERED: 'ordered';
+		readonly PREPARING: 'preparing';
+		readonly SHIPPED: 'shipped';
+	}
+
+	export type DeviceOverallStatus = DeviceOverallStatusMap[keyof DeviceOverallStatusMap];
+
 	interface Device {
 		app_name: string;
 		created_at: string;
@@ -463,6 +477,7 @@ declare namespace BalenaSdk {
 		vpn_address: string | null;
 		should_be_managed_by__supervisor_release: number;
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
+		overall_status: DeviceOverallStatus;
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
@@ -1171,6 +1186,7 @@ declare namespace BalenaSdk {
 						key: string,
 					): Promise<void>;
 				};
+				overallStatus: DeviceOverallStatusMap;
 			};
 			service: {
 				getAllByApplication(

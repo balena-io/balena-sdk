@@ -106,7 +106,21 @@ getDeviceModel = (deps, opts) ->
 		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
-	exports = {}
+	overallStatus = {
+		CONFIGURING: 'configuring',
+		IDLE: 'idle',
+		OFFLINE: 'offline',
+		INACTIVE: 'inactive',
+		POST_PROVISIONING: 'post-provisioning',
+		UPDATING: 'updating',
+		ORDERED: 'ordered',
+		PREPARING: 'preparing',
+		SHIPPED: 'shipped',
+	}
+
+	exports = {
+		overallStatus
+	}
 
 	# Infer dashboardUrl from apiUrl if former is undefined
 	if not dashboardUrl?
