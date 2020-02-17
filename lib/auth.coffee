@@ -318,7 +318,7 @@ getAuth = (deps, opts) ->
 	###
 	exports.getEmail = (callback) ->
 		getUserDetails()
-		.get ('email')
+		.get('email')
 		.asCallback(callback)
 
 	###*
