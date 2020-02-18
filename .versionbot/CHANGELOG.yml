@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix a test case name typo for auth.whoami()
+      hash: 534746a0c70dc3b16d86cded21c0f6567e11f1d5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.24.4
+  date: 2020-02-17T19:32:40.783Z
+- commits:
     - subject: 'auth.getEmail: Fix confusing call expression'
       hash: 1709302f777b0b386eecef2ecbc779e4cd87f925
       body: ''
