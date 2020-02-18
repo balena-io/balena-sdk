@@ -156,7 +156,7 @@ describe 'SDK authentication', ->
 
 		describe 'balena.auth.whoami()', ->
 
-			it 'should eventually be false', ->
+			it 'should eventually be undefined', ->
 				promise = balena.auth.whoami()
 				m.chai.expect(promise).to.eventually.be.undefined
 
