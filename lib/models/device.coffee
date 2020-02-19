@@ -55,6 +55,9 @@ deviceStatus = require('balena-device-status')
 	LOCAL_MODE_ENV_VAR
 	LOCAL_MODE_SUPPORT_PROPERTIES
 } = require('../util/local-mode')
+{
+	OverallStatus
+} = require('./device-ts')
 
 # The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 # be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -106,20 +109,8 @@ getDeviceModel = (deps, opts) ->
 		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
-	overallStatus = {
-		CONFIGURING: 'configuring',
-		IDLE: 'idle',
-		OFFLINE: 'offline',
-		INACTIVE: 'inactive',
-		POST_PROVISIONING: 'post-provisioning',
-		UPDATING: 'updating',
-		ORDERED: 'ordered',
-		PREPARING: 'preparing',
-		SHIPPED: 'shipped',
-	}
-
 	exports = {
-		overallStatus
+		OverallStatus
 	}
 
 	# Infer dashboardUrl from apiUrl if former is undefined
