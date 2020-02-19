@@ -1,4 +1,27 @@
 - commits:
+    - subject: Add device statuses enum to device resource
+      hash: 60341d288a798ddb6f0f6ef0a7a96c89c49e1df6
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+    - subject: Add device status enum and typings
+      hash: 5ac13f7fd6d1f50c3ad14340b908115b17d02d01
+      body: |
+        Adds the typings for the overall_status calculated term
+        and exports an enum with the possible status values
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.25.0
+  date: 2020-02-19T13:58:12.690Z
+- commits:
     - subject: Fix a test case name typo for auth.whoami()
       hash: 534746a0c70dc3b16d86cded21c0f6567e11f1d5
       body: ''
