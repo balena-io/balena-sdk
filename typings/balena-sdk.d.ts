@@ -6,6 +6,7 @@ import { Readable } from 'stream';
 
 import * as BalenaPine from './balena-pine';
 import { BalenaRequest, BalenaRequestStreamResult } from './balena-request';
+import * as DeviceOverallStatus from './device-overall-status';
 import * as Pine from './pinejs-client-core';
 import { Dictionary } from './utils';
 
@@ -13,6 +14,8 @@ import { Dictionary } from './utils';
 declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
+	type DeviceOverallStatus = DeviceOverallStatus.DeviceOverallStatus;
+
 	/**
 	 * When not selected-out holds a deferred.
 	 * When expanded hold an array with a single element.
@@ -463,6 +466,8 @@ declare namespace BalenaSdk {
 		vpn_address: string | null;
 		should_be_managed_by__supervisor_release: number;
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
+		/** This is a computed term */
+		overall_status: DeviceOverallStatus.DeviceOverallStatus;
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
@@ -1171,6 +1176,7 @@ declare namespace BalenaSdk {
 						key: string,
 					): Promise<void>;
 				};
+				OverallStatus: typeof DeviceOverallStatus.DeviceOverallStatus;
 			};
 			service: {
 				getAllByApplication(
