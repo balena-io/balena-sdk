@@ -70,7 +70,7 @@ modelsTemplate =
 	# @namespace image
 	# @memberof balena.models
 	###
-	image: require('./image')
+	image: require('./image').default
 
 	###*
 	# @namespace billing

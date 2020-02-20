@@ -5311,14 +5311,14 @@ balena.models.service.getAllByApplication('MyApp', function(error, services) {
 **Example**  
 ```js
 balena.models.image.get(123).then(function(image) {
-		console.log(image);
+	console.log(image);
 });
 ```
 **Example**  
 ```js
 balena.models.image.get(123, function(error, image) {
-		if (error) throw error;
-		console.log(image);
+	if (error) throw error;
+	console.log(image);
 });
 ```
 <a name="balena.models.image.getLogs"></a>
@@ -5336,14 +5336,14 @@ balena.models.image.get(123, function(error, image) {
 **Example**  
 ```js
 balena.models.image.getLogs(123).then(function(logs) {
-		console.log(logs);
+	console.log(logs);
 });
 ```
 **Example**  
 ```js
 balena.models.image.getLogs(123, function(error, logs) {
-		if (error) throw error;
-		console.log(logs);
+	if (error) throw error;
+	console.log(logs);
 });
 ```
 <a name="balena.models.billing"></a>
