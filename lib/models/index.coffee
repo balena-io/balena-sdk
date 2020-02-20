@@ -64,7 +64,7 @@ modelsTemplate =
 	# @namespace service
 	# @memberof balena.models
 	###
-	service: require('./service')
+	service: require('./service').default
 
 	###*
 	# @namespace image
