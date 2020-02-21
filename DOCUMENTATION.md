@@ -5270,20 +5270,20 @@ balena.models.service.var.remove(999999, 'VAR', function(error) {
 **Example**  
 ```js
 balena.models.service.getAllByApplication('MyApp').then(function(services) {
-		console.log(services);
+	console.log(services);
 });
 ```
 **Example**  
 ```js
 balena.models.service.getAllByApplication(123).then(function(services) {
-		console.log(services);
+	console.log(services);
 });
 ```
 **Example**  
 ```js
 balena.models.service.getAllByApplication('MyApp', function(error, services) {
-		if (error) throw error;
-		console.log(services);
+	if (error) throw error;
+	console.log(services);
 });
 ```
 <a name="balena.models.image"></a>
