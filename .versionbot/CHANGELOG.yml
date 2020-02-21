@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert service model to typescript
+      hash: 4c07b2795177ea53d51455e8bfd0ebcd8c5f0aea
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.25.1
+  date: 2020-02-21T12:22:23.185Z
+- commits:
     - subject: Add device statuses enum to device resource
       hash: 60341d288a798ddb6f0f6ef0a7a96c89c49e1df6
       body: ''
