@@ -468,6 +468,8 @@ declare namespace BalenaSdk {
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 		/** This is a computed term */
 		overall_status: DeviceOverallStatus.DeviceOverallStatus;
+		/** This is a computed term */
+		overall_progress: number | null;
 
 		belongs_to__application: NavigationResource<Application>;
 		belongs_to__user: NavigationResource<User>;
