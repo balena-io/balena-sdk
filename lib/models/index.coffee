@@ -77,7 +77,7 @@ modelsTemplate =
 	# @memberof balena.models
 	# @description **Note!** The billing methods are available on Balena.io exclusively.
 	###
-	billing: require('./billing')
+	billing: require('./billing').default
 
 module.exports = (deps, opts) ->
 	mapValues(modelsTemplate, (v) -> v(deps, opts))
