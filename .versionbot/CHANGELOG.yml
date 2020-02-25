@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add overall_progress typings to device model
+      hash: ce72fcc923d6aab204ac42e0dd651cfc04972d35
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.26.0
+  date: 2020-02-24T18:19:33.479Z
+- commits:
     - subject: Convert service model to typescript
       hash: 4c07b2795177ea53d51455e8bfd0ebcd8c5f0aea
       body: ''
