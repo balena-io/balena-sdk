@@ -88,7 +88,7 @@ export const unkown$selectPropInsideNested$expandWith$select2Fixed: BalenaSdk.Pi
 };
 
 export const unkown$expandPropInArray$expands: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
-	$expand: [ // $ExpectError
+	$expand: [
 		{
 			owns__device: {
 				$select: ['note', 'device_name', 'uuid'],
@@ -100,7 +100,7 @@ export const unkown$expandPropInArray$expands: BalenaSdk.PineOptionsFor<BalenaSd
 			},
 		},
 		'depends_on__application',
-		'asdf',
+		'asdf', // $ExpectError
 	],
 };
 
@@ -122,10 +122,10 @@ export const unkownODataPropInArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.A
 };
 
 export const unkown$selectPropInArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
-	$expand: [ // $ExpectError
+	$expand: [
 		{
 			owns__device: {
-				$select: ['asdf', 'note', 'device_name', 'uuid'],
+				$select: ['asdf', 'note', 'device_name', 'uuid'], // $ExpectError
 				$expand: {
 					device_environment_variable: {
 						$select: ['name', 'value'],
@@ -174,11 +174,11 @@ export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.Pin
 };
 
 export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
-	$expand: [ // $ExpectError
+	$expand: [
 		{
 			owns__device: {
 				$select: ['note', 'device_name', 'uuid'],
-				$expand: {
+				$expand: { // $ExpectError
 					device_environment_variable: {
 						$select: ['name', 'value', 'asdf'],
 					},
@@ -190,12 +190,12 @@ export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptionsFor
 };
 
 export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
-	$expand: [ // $ExpectError
+	$expand: [
 		{
 			owns__device: {
-				$select: ['asdf', 'note', 'device_name', 'uuid'],
+				$select: ['asdf', 'note', 'device_name', 'uuid'], // $ExpectError
 				$expand: {
-					asdf: {
+					asdf: { // $ExpectError
 						$select: ['asdf'],
 					},
 					device_environment_variable: {
@@ -209,12 +209,12 @@ export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptionsFor<BalenaS
 };
 
 export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
-	$expand: [ // $ExpectError
+	$expand: [
 		{
 			owns__device: {
 				$select: ['note', 'device_name', 'uuid'],
 				$expand: {
-					asdf: {
+					asdf: { // $ExpectError
 						$select: ['asdf'],
 					},
 					device_environment_variable: {
@@ -254,16 +254,16 @@ export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptionsFor<BalenaS
 export const invalid$filterPropType: BalenaSdk.PineOptionsFor<
 	BalenaSdk.Application
 > = {
-	$filter: { // $ExpectError
-		id: 'asdf',
+	$filter: {
+		id: 'asdf', // $ExpectError
 	},
 };
 
 export const invalid$filterPropType2: BalenaSdk.PineOptionsFor<
 	BalenaSdk.Application
 > = {
-	$filter: { // $ExpectError
-		app_name: 5,
+	$filter: {
+		app_name: 5, // $ExpectError
 	},
 };
 
@@ -304,7 +304,7 @@ export const unkownPropIn$filterFixed: BalenaSdk.PineOptionsFor<
 export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptionsFor<
 	BalenaSdk.Application
 > = {
-	$expand: [ // $ExpectError
+	$expand: [
 		{
 			owns__device: {
 				$filter: {
@@ -315,7 +315,7 @@ export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptionsFor<
 							$alias: 'dev',
 							$expr: {
 								dev: {
-									asdf: 'asdf',
+									asdf: 'asdf', // $ExpectError
 								},
 							},
 						},
@@ -342,9 +342,7 @@ export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptio
 							$expr: {
 								dev: {
 									name: 'name',
-									// this should be failing, but it isn't :(
-									// See: https://github.com/microsoft/TypeScript/issues/32000
-									asdf: 'asdf', // $ExpectError-Skip
+									asdf: 'asdf', // $ExpectError
 								},
 							},
 						},
@@ -434,9 +432,7 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 							$expr: {
 								dev: {
 									name: 'name',
-									// this should be failing, but it isn't :(
-									// See: https://github.com/microsoft/TypeScript/issues/32000
-									asdf: 'asdf', // $ExpectError-Skip
+									asdf: 'asdf', // $ExpectError
 								},
 							},
 						},
