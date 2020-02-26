@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'typings_tests/pine-options: Update to work with TypeScript v3.8'
+      hash: d1b5d8f7aaa2f9a7a0550b5beec3d4c5cad94e46
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'Bump TypeScript version to ^3.8.2, so that''s used in tests'
+      hash: e26847c39563f1a8b9cfe61bc3e7cd9aec062240
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.26.2
+  date: 2020-02-26T13:33:22.641Z
+- commits:
     - subject: 'application: Fix linter warning'
       hash: dbab534a5a6327daf41827926b8e0d3220f4d13b
       body: ''
