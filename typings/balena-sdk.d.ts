@@ -134,6 +134,7 @@ declare namespace BalenaSdk {
 		};
 		/** Holds the latest balenaOS version */
 		buildId?: string;
+		logoUrl?: string;
 	}
 
 	interface DeviceTypeDownloadAlert {
