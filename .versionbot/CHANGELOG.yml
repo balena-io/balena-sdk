@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'application: Fix linter warning'
+      hash: dbab534a5a6327daf41827926b8e0d3220f4d13b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.26.1
+  date: 2020-02-26T12:37:33.341Z
+- commits:
     - subject: Add overall_progress typings to device model
       hash: ce72fcc923d6aab204ac42e0dd651cfc04972d35
       body: ''
