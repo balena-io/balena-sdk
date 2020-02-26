@@ -110,7 +110,7 @@ getApplicationModel = (deps, opts) ->
 	# 	console.log(dashboardApplicationUrl);
 	# });
 	###
-	exports.getDashboardUrl = getDashboardUrl = (id) ->
+	exports.getDashboardUrl = (id) ->
 		if typeof id != 'number' || !Number.isFinite(id)
 			throw new Error('The id option should be a finite number')
 
