@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dtslint to v3.1.0
+      hash: 397eb13fa633b7d2e7ce0b36bfd91d1248a8b66b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.26.3
+  date: 2020-02-26T19:36:13.412Z
+- commits:
     - subject: 'typings_tests/pine-options: Update to work with TypeScript v3.8'
       hash: d1b5d8f7aaa2f9a7a0550b5beec3d4c5cad94e46
       body: ''
