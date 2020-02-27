@@ -60,7 +60,7 @@
     "chai-samsam": "0.0.2",
     "coffeescript": "~1.12.7",
     "dotenv": "^4.0.0",
-    "dtslint": "^1.0.3",
+    "dtslint": "^3.1.0",
     "gulp": "^4.0.2",
     "gulp-coffee": "^3.0.3",
     "gulp-mocha": "^6.0.0",
