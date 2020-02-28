@@ -1,4 +1,14 @@
 - commits:
+    - subject: Remove unnecessary lodash/forEach usage
+      hash: 66427ea38ba0e5a9339c794fb13b3a092470d0c4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.26.6
+  date: 2020-02-28T15:48:09.332Z
+- commits:
     - subject: Convert the billing model to typescript
       hash: 4b969d9fef54bfb4f77a4a5dd5a262a5579ea7d2
       body: ''
