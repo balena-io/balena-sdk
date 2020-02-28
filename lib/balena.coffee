@@ -37,7 +37,6 @@ BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 getSdk = (opts = {}) ->
 	version = require('./util/sdk-version').default
 	assign = require('lodash/assign')
-	forEach = require('lodash/forEach')
 	defaults = require('lodash/defaults')
 	getRequest = require('balena-request')
 	BalenaAuth = require('balena-auth')['default']
@@ -105,7 +104,8 @@ getSdk = (opts = {}) ->
 		sdkInstance: sdk
 	}
 
-	forEach(sdkTemplate, (moduleFactory, moduleName) -> sdk[moduleName] = moduleFactory(deps, opts))
+	for moduleName, moduleFactory of sdkTemplate
+		sdk[moduleName] = moduleFactory(deps, opts)
 
 	###*
 	# @typedef Interceptor
