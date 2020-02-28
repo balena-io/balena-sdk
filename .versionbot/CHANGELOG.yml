@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert the billing model to typescript
+      hash: 4b969d9fef54bfb4f77a4a5dd5a262a5579ea7d2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.26.5
+  date: 2020-02-28T11:50:40.050Z
+- commits:
     - subject: Convert image model to typescript
       hash: 2b4241f6d644ca10ad69a89415a085f4192defaa
       body: ''
