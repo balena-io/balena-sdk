@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert image model to typescript
+      hash: 2b4241f6d644ca10ad69a89415a085f4192defaa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.26.4
+  date: 2020-02-27T17:01:43.725Z
+- commits:
     - subject: Update dtslint to v3.1.0
       hash: 397eb13fa633b7d2e7ce0b36bfd91d1248a8b66b
       body: ''
