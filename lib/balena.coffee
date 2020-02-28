@@ -42,7 +42,6 @@ getSdk = (opts = {}) ->
 	BalenaAuth = require('balena-auth')['default']
 	getPine = require('balena-pine')
 	errors = require('balena-errors')
-	{ notImplemented } = require('./util')
 	{ PubSub } = require('./util/pubsub')
 
 	###*
@@ -81,6 +80,7 @@ getSdk = (opts = {}) ->
 		apiVersion: 'v5'
 
 	if opts.isBrowser
+		{ notImplemented } = require('./util')
 		settings =
 			get: notImplemented
 			getAll: notImplemented
