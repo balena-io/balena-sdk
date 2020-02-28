@@ -11,6 +11,7 @@ declare namespace BalenaRequest {
 		apiKey?: string;
 		sendToken?: boolean;
 		body?: any;
+		responseFormat?: 'none' | 'blob' | 'json' | 'text';
 	}
 
 	interface BalenaRequestResponse extends Response {
