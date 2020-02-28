@@ -25,7 +25,8 @@ export const notImplemented = () => {
 	throw new Error('The method is not implemented.');
 };
 
-export const onlyIf = (condition: boolean) => (fn: () => void) => {
+// tslint:disable-next-line:ban-types
+export const onlyIf = <T extends Function>(condition: boolean) => (fn: T) => {
 	if (condition) {
 		return fn;
 	} else {
