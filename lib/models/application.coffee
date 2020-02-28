@@ -18,7 +18,6 @@ url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
 assign = require('lodash/assign')
-forEach = require('lodash/forEach')
 isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 size = require('lodash/size')
@@ -90,7 +89,7 @@ getApplicationModel = (deps, opts) ->
 
 	normalizeApplication = (application) ->
 		if isArray(application.owns__device)
-			forEach application.owns__device, (device) ->
+			application.owns__device.forEach (device) ->
 				normalizeDeviceOsVersion(device)
 		return application
 
