@@ -42,7 +42,6 @@ getSdk = (opts = {}) ->
 	BalenaAuth = require('balena-auth')['default']
 	getPine = require('balena-pine')
 	errors = require('balena-errors')
-	{ notImplemented } = require('./util')
 	{ PubSub } = require('./util/pubsub')
 
 	###*
@@ -65,10 +64,10 @@ getSdk = (opts = {}) ->
 	# @memberof balena
 	###
 	sdkTemplate =
-		auth: require('./auth')
-		models: require('./models')
-		logs: require('./logs')
-		settings: require('./settings')
+		auth: -> require('./auth')
+		models: -> require('./models')
+		logs: -> require('./logs')
+		settings: -> require('./settings')
 
 	defaults opts,
 		apiUrl: 'https://api.balena-cloud.com/'
@@ -81,6 +80,7 @@ getSdk = (opts = {}) ->
 		apiVersion: 'v5'
 
 	if opts.isBrowser
+		{ notImplemented } = require('./util')
 		settings =
 			get: notImplemented
 			getAll: notImplemented
@@ -104,8 +104,17 @@ getSdk = (opts = {}) ->
 		sdkInstance: sdk
 	}
 
-	for moduleName, moduleFactory of sdkTemplate
-		sdk[moduleName] = moduleFactory(deps, opts)
+	Object.keys(sdkTemplate).forEach (moduleName) ->
+		Object.defineProperty(sdk, moduleName, {
+			enumerable: true,
+			configurable: true,
+			get: ->
+				moduleFactory = sdkTemplate[moduleName]()
+				# We need the delete first as the current property is read-only
+				# and the delete removes that restriction
+				delete this[moduleName]
+				return (this[moduleName] = moduleFactory(deps, opts))
+		})
 
 	###*
 	# @typedef Interceptor
