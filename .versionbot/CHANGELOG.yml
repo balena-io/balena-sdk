@@ -1,4 +1,21 @@
 - commits:
+    - subject: Lazy-load the models props
+      hash: 673eaf2a28805082e5c4b3d7938661599b6cefee
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Lazy-load the sdk template props
+      hash: fab4b80dc6fe0886fbd72382b4a4daa824b15d45
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.26.7
+  date: 2020-02-29T20:57:13.525Z
+- commits:
     - subject: Remove unnecessary lodash/forEach usage
       hash: 66427ea38ba0e5a9339c794fb13b3a092470d0c4
       body: ''
