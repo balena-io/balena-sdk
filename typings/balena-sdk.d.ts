@@ -584,6 +584,7 @@ declare namespace BalenaSdk {
 		ip?: string;
 		gateway?: string;
 		netmask?: string;
+		deviceType?: string;
 		version: string;
 	}
 
