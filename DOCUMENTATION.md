@@ -11,7 +11,7 @@ If you feel something is missing, not clear or could be improved, please don't h
 **Kind**: global namespace  
 
 * [balena](#balena) : <code>object</code>
-    * [.interceptors](#balena.interceptors) : <code>[ &#x27;Array&#x27; ].&lt;Interceptor&gt;</code>
+    * [.interceptors](#balena.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
         * [.Interceptor](#balena.interceptors.Interceptor) : <code>object</code>
     * [.request](#balena.request) : <code>Object</code>
     * [.pine](#balena.pine) : <code>Object</code>
@@ -230,7 +230,7 @@ If you feel something is missing, not clear or could be improved, please don't h
 
 <a name="balena.interceptors"></a>
 
-### balena.interceptors : <code>[ &#x27;Array&#x27; ].&lt;Interceptor&gt;</code>
+### balena.interceptors : <code>Array.&lt;Interceptor&gt;</code>
 The current array of interceptors to use. Interceptors intercept requests made
 internally and are executed in the order they appear in this array for requests,
 and in the reverse order for responses.
