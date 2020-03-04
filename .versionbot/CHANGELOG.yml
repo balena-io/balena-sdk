@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add missing deviceType typings to ImgConfigOptions
+      hash: a1cf210a3116e3549789177cadfb3a62b363f82e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.27.0
+  date: 2020-03-03T13:16:53.402Z
+- commits:
     - subject: Lazy-load the models props
       hash: 673eaf2a28805082e5c4b3d7938661599b6cefee
       body: ''
