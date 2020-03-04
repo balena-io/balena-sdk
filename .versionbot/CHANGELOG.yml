@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update dependencies
+      hash: 3241df2d214d00122a86822d5df4f5e08c716af2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.27.1
+  date: 2020-03-04T12:05:42.622Z
+- commits:
     - subject: Add missing deviceType typings to ImgConfigOptions
       hash: a1cf210a3116e3549789177cadfb3a62b363f82e
       body: ''
