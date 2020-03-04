@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'typings: Add DeviceType logoUrl property'
+      hash: f36c24adea886b3d1370c805351bdfa0bc273017
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2394'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2394'
+        HQ: 'https://github.com/balena-io/balena/issues/1818'
+        hq: 'https://github.com/balena-io/balena/issues/1818'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.28.0
+  date: 2020-03-04T14:40:43.381Z
+- commits:
     - subject: Update dependencies
       hash: 3241df2d214d00122a86822d5df4f5e08c716af2
       body: ''
