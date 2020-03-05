@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert OS model to typescript
+      hash: a9d2af4eb4066c4f3e8acf0a6d586818d255173e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.28.1
+  date: 2020-03-05T16:30:40.690Z
+- commits:
     - subject: 'typings: Add DeviceType logoUrl property'
       hash: f36c24adea886b3d1370c805351bdfa0bc273017
       body: ''
