@@ -80,7 +80,7 @@ getDeviceModel = (deps, opts) ->
 	registerDevice = require('balena-register-device')({ request })
 	configModel = once -> require('./config')(deps, opts)
 	applicationModel = once -> require('./application')(deps, opts)
-	osModel = once -> require('./os')(deps, opts)
+	osModel = once -> require('./os').default(deps, opts)
 	upsert = require('../util/upsert').getUpsertHelper(deps)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
