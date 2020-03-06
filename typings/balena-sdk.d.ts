@@ -274,8 +274,8 @@ declare namespace BalenaSdk {
 		is_public: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
-		user: NavigationResource<User>;
 		depends_on__application: NavigationResource<Application>;
+		organization: NavigationResource<Organization>;
 
 		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
