@@ -82,13 +82,6 @@ describe 'SDK authentication', ->
 				m.chai.expect(promise).to.be.rejected
 					.and.eventually.have.property('code', 'BalenaNotLoggedIn')
 
-		describe 'balena.auth.getPersonalOrganizationId()', ->
-
-			it 'should be rejected with an error', ->
-				promise = balena.auth.getPersonalOrganizationId()
-				m.chai.expect(promise).to.be.rejected
-					.and.eventually.have.property('code', 'BalenaNotLoggedIn')
-
 		describe.skip 'balena.auth.register()', ->
 
 			beforeEach ->
@@ -218,14 +211,6 @@ describe 'SDK authentication', ->
 					m.chai.expect(userId).to.be.a('number')
 					m.chai.expect(userId).to.be.greaterThan(0)
 
-		describe 'balena.auth.getPersonalOrganizationId()', ->
-
-			it 'should eventually be an organization id', ->
-				balena.auth.getPersonalOrganizationId()
-				.then (organizationId) ->
-					m.chai.expect(organizationId).to.be.a('number')
-					m.chai.expect(organizationId).to.be.greaterThan(0)
-
 	describe 'when logged in with API key', ->
 
 		givenLoggedInUserWithApiKey(beforeEach)
@@ -268,11 +253,3 @@ describe 'SDK authentication', ->
 				.then (userId) ->
 					m.chai.expect(userId).to.be.a('number')
 					m.chai.expect(userId).to.be.greaterThan(0)
-
-		describe 'balena.auth.getPersonalOrganizationId()', ->
-
-			it 'should eventually be an organization id', ->
-				balena.auth.getPersonalOrganizationId()
-				.then (organizationId) ->
-					m.chai.expect(organizationId).to.be.a('number')
-					m.chai.expect(organizationId).to.be.greaterThan(0)

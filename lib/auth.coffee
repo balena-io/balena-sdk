@@ -18,7 +18,7 @@ errors = require('balena-errors')
 Promise = require('bluebird')
 
 getAuth = (deps, opts) ->
-	{ auth: authBase, pine, pubsub, request } = deps
+	{ auth: authBase, pubsub, request } = deps
 	{ apiUrl } = opts
 
 	exports = {}
@@ -291,52 +291,6 @@ getAuth = (deps, opts) ->
 	exports.getUserId = (callback) ->
 		getUserDetails()
 		.get('id')
-		.asCallback(callback)
-
-	###*
-	# @summary Get current logged in user's personal organization id
-	# @name getPersonalOrganizationId
-	# @public
-	# @function
-	# @memberof balena.auth
-	#
-	# @description This will only work if you used {@link balena.auth.login} to log in.
-	#
-	# @fulfil {Number} - user's personal organization id
-	# @returns {Promise}
-	#
-	# @example
-	# balena.auth.getPersonalOrganizationId().then(function(organizationId) {
-	# 	console.log(organizationId);
-	# });
-	#
-	# @example
-	# balena.auth.getPersonalOrganizationId(function(error, organizationId) {
-	# 	if (error) throw error;
-	# 	console.log(organizationId);
-	# });
-	###
-	exports.getPersonalOrganizationId = (callback) ->
-		getUserDetails()
-		.then ({ id, organizationId }) ->
-			if organizationId
-				return organizationId
-
-			pine.get
-				resource: 'organization_membership'
-				options:
-					$select: [ 'is_member_of__organization' ]
-					$filter:
-						user: id
-						organization_membership_role:
-							$any:
-								$alias: 'omr'
-								$expr: omr: name: 'personal'
-			.get(0)
-			.get('is_member_of__organization')
-			.get('__id')
-			.tap (organizationId) ->
-				userDetailsCache?.organizationId = organizationId
 		.asCallback(callback)
 
 	###*

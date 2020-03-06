@@ -57,18 +57,15 @@ describe 'Balena SDK', ->
 
 		givenLoggedInUser(beforeEach)
 
-		ignoreUserInfoCalls = (fn) ->
+		ignoreWhoamiCalls = (fn) ->
 			(arg) ->
-				if /\/user\/v1\/whoami/.test(arg.url) or
-				# coffeelint: disable=max_line_length
-				new RegExp("/#{balena.pine.API_VERSION}/organization_membership\\?\\$select=is_member_of__organization&\\$filter=\\(user eq \\d+\\) and \\(organization_membership_role/any\\(omr:omr/name eq 'personal'\\)\\)").test(arg.url)
-				# coffeelint: enable=max_line_length
+				if /\/user\/v1\/whoami/.test(arg.url)
 					return arg
 				return fn(arg)
 
 		it "should update if the array is set directly (not only if it's mutated)", ->
 			interceptor = m.sinon.mock().returnsArg(0)
-			balena.interceptors = [ { request: ignoreUserInfoCalls(interceptor) } ]
+			balena.interceptors = [ { request: ignoreWhoamiCalls(interceptor) } ]
 			balena.models.application.getAll().then ->
 				m.chai.expect(interceptor.called).to.equal true,
 					'Interceptor set directly should have its request hook called'
