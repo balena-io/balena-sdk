@@ -32,14 +32,12 @@ declare namespace BalenaSdk {
 	type ReverseNavigationResource<T = WithId> = Pine.ReverseNavigationResource<
 		T
 	>;
-	type PineFilterFor<T> = Pine.Filter<T>;
-	type PineExpandFor<T> = Pine.Expand<T>;
-	type PineOptions<T> = Pine.PineOptionsFor<T>;
-	type PineOptionsFor<T> = Pine.PineOptionsFor<T>;
+	type PineFilter<T> = Pine.Filter<T>;
+	type PineExpand<T> = Pine.Expand<T>;
+	type PineOptions<T> = Pine.PineOptions<T>;
 	type PineSubmitBody<T> = Pine.SubmitBody<T>;
-	type PineParams<T> = Pine.PineParamsFor<T>;
-	type PineParamsFor<T> = Pine.PineParamsFor<T>;
-	type PineParamsWithIdFor<T> = Pine.PineParamsWithIdFor<T>;
+	type PineParams<T> = Pine.PineParams<T>;
+	type PineParamsWithId<T> = Pine.PineParamsWithId<T>;
 	type PineSelectableProps<T> = Pine.SelectableProps<T>;
 	type PineExpandableProps<T> = Pine.ExpandableProps<T>;
 
@@ -903,11 +901,11 @@ declare namespace BalenaSdk {
 				}): Promise<Application>;
 				get(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<Application>;
 				getWithDeviceServiceDetails(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<
 					Application & {
 						owns__device: Array<
@@ -918,11 +916,11 @@ declare namespace BalenaSdk {
 				getAppByOwner(
 					appName: string,
 					owner: string,
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<Application>;
-				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
+				getAll(options?: PineOptions<Application>): Promise<Application[]>;
 				getAllWithDeviceServiceDetails(
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<
 					Array<
 						Application & {
@@ -957,10 +955,10 @@ declare namespace BalenaSdk {
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationTag>,
+						options?: PineOptions<ApplicationTag>,
 					): Promise<ApplicationTag[]>;
 					getAll(
-						options?: PineOptionsFor<ApplicationTag>,
+						options?: PineOptions<ApplicationTag>,
 					): Promise<ApplicationTag[]>;
 					set(
 						nameOrId: string | number,
@@ -972,7 +970,7 @@ declare namespace BalenaSdk {
 				configVar: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationVariable>,
+						options?: PineOptions<ApplicationVariable>,
 					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
@@ -988,7 +986,7 @@ declare namespace BalenaSdk {
 				envVar: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationVariable>,
+						options?: PineOptions<ApplicationVariable>,
 					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
@@ -1004,7 +1002,7 @@ declare namespace BalenaSdk {
 			};
 			apiKey: {
 				create: (name: string, description?: string | null) => Promise<string>;
-				getAll: (options?: PineOptionsFor<ApiKey>) => Promise<ApiKey[]>;
+				getAll: (options?: PineOptions<ApiKey>) => Promise<ApiKey[]>;
 				update: (
 					id: number,
 					apiKeyInfo: { name?: string; description?: string | null },
@@ -1014,21 +1012,21 @@ declare namespace BalenaSdk {
 			release: {
 				get(
 					commitOrId: string | number,
-					options?: PineOptionsFor<Release>,
+					options?: PineOptions<Release>,
 				): Promise<Release>;
 				getAllByApplication(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Release>,
+					options?: PineOptions<Release>,
 				): Promise<Release[]>;
 				getLatestByApplication(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Release>,
+					options?: PineOptions<Release>,
 				): Promise<Release>;
 				getWithImageDetails(
 					commitOrId: string | number,
 					options?: {
-						release?: PineOptionsFor<Release>;
-						image?: PineOptionsFor<Image>;
+						release?: PineOptions<Release>;
+						image?: PineOptions<Image>;
 					},
 				): Promise<
 					Array<
@@ -1048,13 +1046,13 @@ declare namespace BalenaSdk {
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ReleaseTag>,
+						options?: PineOptions<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
 					getAllByRelease(
 						commitOrId: string | number,
-						options?: PineOptionsFor<ReleaseTag>,
+						options?: PineOptions<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
-					getAll(options?: PineOptionsFor<ReleaseTag>): Promise<ReleaseTag[]>;
+					getAll(options?: PineOptions<ReleaseTag>): Promise<ReleaseTag[]>;
 					set(
 						commitOrReleaseId: string | number,
 						tagKey: string,
@@ -1081,24 +1079,24 @@ declare namespace BalenaSdk {
 			device: {
 				get(
 					uuidOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device>;
 				getByName(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device[]>;
 				getWithServiceDetails(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
-				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
+				getAll(options?: PineOptions<Device>): Promise<Device[]>;
 				getAllByApplication(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device[]>;
 				getAllByParentDevice(
 					parentUuidOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device[]>;
 				getName(uuidOrId: string | number): Promise<string>;
 				getApplicationName(uuidOrId: string | number): Promise<string>;
@@ -1219,13 +1217,13 @@ declare namespace BalenaSdk {
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceTag>,
+						options?: PineOptions<DeviceTag>,
 					): Promise<DeviceTag[]>;
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceTag>,
+						options?: PineOptions<DeviceTag>,
 					): Promise<DeviceTag[]>;
-					getAll(options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
+					getAll(options?: PineOptions<DeviceTag>): Promise<DeviceTag[]>;
 					set(
 						uuidOrId: string | number,
 						tagKey: string,
@@ -1236,11 +1234,11 @@ declare namespace BalenaSdk {
 				configVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
@@ -1256,11 +1254,11 @@ declare namespace BalenaSdk {
 				envVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
@@ -1276,11 +1274,11 @@ declare namespace BalenaSdk {
 				serviceVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceServiceEnvironmentVariable>,
+						options?: PineOptions<DeviceServiceEnvironmentVariable>,
 					): Promise<DeviceServiceEnvironmentVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceServiceEnvironmentVariable>,
+						options?: PineOptions<DeviceServiceEnvironmentVariable>,
 					): Promise<DeviceServiceEnvironmentVariable[]>;
 					set(
 						uuidOrId: string | number,
@@ -1304,16 +1302,16 @@ declare namespace BalenaSdk {
 			service: {
 				getAllByApplication(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Service>,
+					options?: PineOptions<Service>,
 				): Promise<Service[]>;
 				var: {
 					getAllByService(
 						id: number,
-						options?: PineOptionsFor<ServiceEnvironmentVariable>,
+						options?: PineOptions<ServiceEnvironmentVariable>,
 					): Promise<ServiceEnvironmentVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ServiceEnvironmentVariable>,
+						options?: PineOptions<ServiceEnvironmentVariable>,
 					): Promise<ServiceEnvironmentVariable[]>;
 					set(id: number, key: string, value: string): Promise<void>;
 					get(id: number, key: string): Promise<string | undefined>;
@@ -1333,11 +1331,11 @@ declare namespace BalenaSdk {
 				>;
 			};
 			image: {
-				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;
+				get(id: number, options?: PineOptions<Image>): Promise<Image>;
 				getLogs(id: number): Promise<string>;
 			};
 			key: {
-				getAll(options?: PineOptionsFor<SSHKey>): Promise<SSHKey[]>;
+				getAll(options?: PineOptions<SSHKey>): Promise<SSHKey[]>;
 				get(id: string | number): Promise<SSHKey>;
 				remove(id: string | number): Promise<void>;
 				create(title: string, key: string): Promise<SSHKey>;
