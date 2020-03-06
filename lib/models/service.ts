@@ -30,7 +30,9 @@ const getServiceModel = (
 	opts: InjectedOptionsParam,
 ) => {
 	const { pine } = deps;
-	const applicationModel = once(() => require('./application')(deps, opts));
+	const applicationModel = once(() =>
+		require('./application').default(deps, opts),
+	);
 	const { buildDependentResource } = require('../util/dependent-resource');
 
 	const varModel = buildDependentResource(
