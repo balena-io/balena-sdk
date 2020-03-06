@@ -192,6 +192,20 @@ declare namespace BalenaSdk {
 		application: ReverseNavigationResource<Application>;
 		/** includes__organization_membership */
 		organization_membership: ReverseNavigationResource<OrganizationMembership>;
+		owns__team: ReverseNavigationResource<Team>;
+	}
+
+	interface Team {
+		id: number;
+		created_at: string;
+		name: string;
+
+		belongs_to__organization: NavigationResource<Organization>;
+
+		/** includes__user */
+		team_membership: ReverseNavigationResource<TeamMembership>;
+		/** grants_access_to__application */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface SocialServiceAccount {
@@ -227,6 +241,8 @@ declare namespace BalenaSdk {
 		user__is_member_of__application: ReverseNavigationResource<
 			ApplicationMembership
 		>;
+		/** is_member_of__team */
+		team_membership: ReverseNavigationResource<TeamMembership>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
 		// this is what the api route returns
@@ -251,6 +267,16 @@ declare namespace BalenaSdk {
 		organization_membership_role: NavigationResource<
 			OrganizationMembershipRole
 		>;
+	}
+
+	/** team_membership */
+	interface TeamMembership {
+		id: number;
+		created_at: string;
+
+		user: NavigationResource<User>;
+		/** team */
+		is_member_of__team: NavigationResource<Team>;
 	}
 
 	interface ApiKey {
@@ -289,6 +315,8 @@ declare namespace BalenaSdk {
 		user__is_member_of__application: ReverseNavigationResource<
 			ApplicationMembership
 		>;
+		/** is_accessible_by__team */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface ApplicationType {
@@ -319,6 +347,15 @@ declare namespace BalenaSdk {
 		user: NavigationResource<User>;
 		/** application */
 		is_member_of__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
+	}
+
+	/** team_application_access */
+	interface TeamApplicationAccess {
+		id: number;
+		team: NavigationResource<Team>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
 		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 
