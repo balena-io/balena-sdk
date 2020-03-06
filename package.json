@@ -33,7 +33,7 @@
     "test:all": "npm run test:ts-compatibility && npm run test:typings && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
     "test:browser": "karma start",
-    "test:ts-compatibility": "npx typescript@~3.4.0 --noEmit --project ./tsconfig.dist.json",
+    "test:ts-compatibility": "npx typescript@~3.8.2 --noEmit --project ./tsconfig.dist.json",
     "test:typings": "dtslint --localTs node_modules/typescript/lib --expectOnly typing_tests",
     "build:ts": "tsc && gulp inject-version",
     "build": "npm run lint && npm run clean && npm run build:ts && gulp build && npm run docs",
