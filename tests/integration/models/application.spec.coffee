@@ -1,4 +1,5 @@
 _ = require('lodash')
+Promise = require('bluebird')
 m = require('mochainon')
 
 {
@@ -119,7 +120,7 @@ describe 'Application Model', ->
 					m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
 					m.chai.expect(error).to.have.property('statusCode', 400)
 					m.chai.expect(error).to.have.property('message')
-					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4')
+					.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30')
 
 			it 'should be able to create an application using a device type alias', ->
 				balena.models.application.create
@@ -178,9 +179,9 @@ describe 'Application Model', ->
 						m.chai.expect(applications[0].id).to.equal(@application.id)
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.getAll($expand: 'user')
+					balena.models.application.getAll($expand: 'organization')
 					.then (applications) ->
-						m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+						m.chai.expect(applications[0].organization[0].name).to.equal(credentials.username)
 
 			describe 'balena.models.application.get()', ->
 
@@ -210,9 +211,9 @@ describe 'Application Model', ->
 					m.chai.expect(promise).to.be.rejectedWith('Application not found: 999999')
 
 				it 'should support arbitrary pinejs options', ->
-					balena.models.application.get(@application.id, $expand: 'user')
+					balena.models.application.get(@application.id, $expand: 'organization')
 					.then (application) ->
-						m.chai.expect(application.user[0].username).to.equal(credentials.username)
+						m.chai.expect(application.organization[0].name).to.equal(credentials.username)
 
 			describe 'balena.models.application.has()', ->
 
@@ -484,22 +485,17 @@ describe 'Application Model', ->
 			givenAnApplication(beforeEach)
 
 			beforeEach ->
-				userId = @application.user.__id
-
-				balena.pine.post
-					resource: 'release'
-					body:
-						belongs_to__application: @application.id
-						is_created_by__user: userId
-						commit: 'old-release-commit'
-						status: 'success'
-						source: 'cloud'
-						composition: {}
-						start_timestamp: 1234
-				.then =>
-					balena.pine.post
-						resource: 'release'
-						body:
+				balena.auth.getUserId()
+				.then (userId) =>
+					Promise.mapSeries [
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'old-release-commit'
+							status: 'success'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 1234
+						,
 							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'new-release-commit'
@@ -507,6 +503,10 @@ describe 'Application Model', ->
 							source: 'cloud'
 							composition: {}
 							start_timestamp: 54321
+					], (body) ->
+						balena.pine.post
+							resource: 'release'
+							body: body
 
 			describe 'balena.models.application.willTrackNewReleases()', ->
 
