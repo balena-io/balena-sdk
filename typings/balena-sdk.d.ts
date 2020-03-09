@@ -225,6 +225,8 @@ declare namespace BalenaSdk {
 		created_at: string;
 		name: string;
 		description: string | null;
+
+		is_of__actor: PineDeferred;
 	}
 
 	interface Application {
@@ -238,6 +240,7 @@ declare namespace BalenaSdk {
 		is_accessible_by_support_until__date: string;
 		is_host: boolean;
 		should_track_latest_release: boolean;
+		is_public: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
 		user: NavigationResource<User>;
@@ -295,16 +298,16 @@ declare namespace BalenaSdk {
 		| null;
 
 	interface Release {
-		commit: string;
-		created_at: string;
 		id: number;
+		created_at: string;
+		commit: string;
 		composition: string | null;
+		status: ReleaseStatus;
 		source: string;
 		build_log: string | null;
-		end_timestamp: string;
 		start_timestamp: string;
-		status: ReleaseStatus;
 		update_timestamp: string | null;
+		end_timestamp: string;
 
 		is_created_by__user: NavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
@@ -514,8 +517,8 @@ declare namespace BalenaSdk {
 	}
 
 	interface ServiceInstance {
-		created_at: string;
 		id: number;
+		created_at: string;
 		service_type: string;
 		ip_address: string;
 		last_heartbeat: string;
@@ -523,25 +526,27 @@ declare namespace BalenaSdk {
 
 	interface Service {
 		id: number;
+		created_at: string;
 		service_name: string;
 		application: NavigationResource<Application>;
 	}
 
 	interface Image {
 		id: number;
+		created_at: string;
 		build_log: string;
+		contract: string | null;
 		content_hash?: string | null;
 		project_type?: string | null;
 		status: string;
-		created_at: string;
 		is_stored_at__image_location: string;
-		is_a_build_of__service: NavigationResource<Service>;
 		start_timestamp?: string | null;
 		end_timestamp?: string | null;
 		push_timestamp?: string | null;
 		image_size?: number | null;
 		dockerfile: string;
 		error_message?: string | null;
+		is_a_build_of__service: NavigationResource<Service>;
 	}
 
 	interface BaseLog {
