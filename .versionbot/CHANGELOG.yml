@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'tests: Improve the dependent application test case'
+      hash: 952af473d75b2461c91943ac6968a60f80b8896c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.29.1
+  date: 2020-03-09T12:25:24.687Z
+- commits:
     - subject: 'typings: Add the contract field to the Image'
       hash: 3d67a5a47c48dc4b529ac67f47b1011e469fb063
       body: ''
