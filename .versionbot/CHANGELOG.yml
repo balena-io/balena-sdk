@@ -1,4 +1,16 @@
 - commits:
+    - subject: Unify the way that the models get exported
+      hash: f011c9ca04b2bb68cbf41505825b1bba97a71279
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.28.2
+  date: 2020-03-06T19:03:22.972Z
+- commits:
     - subject: Convert OS model to typescript
       hash: a9d2af4eb4066c4f3e8acf0a6d586818d255173e
       body: ''
