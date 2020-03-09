@@ -42,8 +42,8 @@ getApplicationModel = (deps, opts) ->
 	{ request, pine } = deps
 	{ apiUrl, dashboardUrl } = opts
 
-	deviceModel = once -> require('./device')(deps, opts)
-	releaseModel = once -> require('./release')(deps, opts)
+	deviceModel = once -> require('./device').default(deps, opts)
+	releaseModel = once -> require('./release').default(deps, opts)
 
 	{ buildDependentResource } = require('../util/dependent-resource')
 
@@ -1433,4 +1433,5 @@ getApplicationModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getApplicationModel
+module.exports =
+	default: getApplicationModel

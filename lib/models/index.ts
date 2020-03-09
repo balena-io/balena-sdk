@@ -21,13 +21,13 @@ const modelsTemplate = {
 	 * @namespace application
 	 * @memberof balena.models
 	 */
-	application: () => require('./application'),
+	application: () => require('./application').default,
 
 	/**
 	 * @namespace device
 	 * @memberof balena.models
 	 */
-	device: () => require('./device'),
+	device: () => require('./device').default,
 
 	/**
 	 * @namespace apiKey
@@ -39,7 +39,7 @@ const modelsTemplate = {
 	 * @namespace key
 	 * @memberof balena.models
 	 */
-	key: () => require('./key'),
+	key: () => require('./key').default,
 
 	/**
 	 * @namespace os
@@ -51,13 +51,13 @@ const modelsTemplate = {
 	 * @namespace config
 	 * @memberof balena.models
 	 */
-	config: () => require('./config'),
+	config: () => require('./config').default,
 
 	/**
 	 * @namespace release
 	 * @memberof balena.models
 	 */
-	release: () => require('./release'),
+	release: () => require('./release').default,
 
 	/**
 	 * @namespace service

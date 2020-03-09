@@ -78,8 +78,8 @@ getDeviceModel = (deps, opts) ->
 	{ apiUrl, dashboardUrl, deviceUrlsBase } = opts
 
 	registerDevice = require('balena-register-device')({ request })
-	configModel = once -> require('./config')(deps, opts)
-	applicationModel = once -> require('./application')(deps, opts)
+	configModel = once -> require('./config').default(deps, opts)
+	applicationModel = once -> require('./application').default(deps, opts)
 	osModel = once -> require('./os').default(deps, opts)
 	upsert = require('../util/upsert').getUpsertHelper(deps)
 
@@ -3328,4 +3328,5 @@ getDeviceModel = (deps, opts) ->
 
 	return exports
 
-module.exports = getDeviceModel
+module.exports =
+	default: getDeviceModel

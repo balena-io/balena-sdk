@@ -58,8 +58,10 @@ const getOsModel = function(
 	const { request, pubsub } = deps;
 	const { apiUrl, isBrowser } = opts;
 
-	const configModel = once(() => require('./config')(deps, opts));
-	const applicationModel = once(() => require('./application')(deps, opts));
+	const configModel = once(() => require('./config').default(deps, opts));
+	const applicationModel = once(() =>
+		require('./application').default(deps, opts),
+	);
 
 	// tslint:disable-next-line:ban-types
 	const withDeviceTypesEndpointCaching = <T extends Function>(fn: T) => {
