@@ -25,10 +25,10 @@ errors = require('balena-errors')
 
 {
 	isId,
+	isNoApplicationForKeyResponse,
+	isNotFoundResponse,
 	findCallback,
 	mergePineOptions,
-	notFoundResponse,
-	noApplicationForKeyResponse,
 	treatAsMissingApplication,
 	LOCKED_STATUS_CODE
 } = require('../util')
@@ -530,7 +530,7 @@ getApplicationModel = (deps, opts) ->
 			return pine.delete
 				resource: 'application'
 				id: applicationId
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
+		.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -561,7 +561,7 @@ getApplicationModel = (deps, opts) ->
 				url: "/application/#{applicationId}/restart"
 				baseUrl: apiUrl
 		.return(undefined)
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
+		.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -640,7 +640,7 @@ getApplicationModel = (deps, opts) ->
 				method: 'POST'
 				url: "/api-key/application/#{applicationId}/provisioning"
 				baseUrl: apiUrl
-		.catch(noApplicationForKeyResponse, treatAsMissingApplication(nameOrSlugOrId))
+		.catch(isNoApplicationForKeyResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.get('body')
 		.asCallback(callback)
 
@@ -1040,7 +1040,7 @@ getApplicationModel = (deps, opts) ->
 				resource: 'application'
 				id: applicationId
 				body: is_accessible_by_support_until__date: expiryTimestamp
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
+		.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*
@@ -1070,7 +1070,7 @@ getApplicationModel = (deps, opts) ->
 				resource: 'application'
 				id: applicationId
 				body: is_accessible_by_support_until__date: null
-		.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
+		.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId))
 		.asCallback(callback)
 
 	###*

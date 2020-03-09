@@ -30,12 +30,12 @@ deviceStatus = require('balena-device-status')
 
 {
 	isId
+	isNoDeviceForKeyResponse
+	isNotFoundResponse
 	findCallback
 	getOsUpdateHelper: _getOsUpdateHelper
 	deviceTypes: deviceTypesUtil
 	mergePineOptions
-	notFoundResponse
-	noDeviceForKeyResponse
 	treatAsMissingDevice
 	LOCKED_STATUS_CODE
 	timeSince
@@ -1034,7 +1034,7 @@ getDeviceModel = (deps, opts) ->
 				baseUrl: apiUrl
 				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
-		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
+		.catch(isNotFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
@@ -1231,7 +1231,7 @@ getDeviceModel = (deps, opts) ->
 
 				throw err
 		.get('body')
-		.catch(notFoundResponse, treatAsMissingDevice(uuidOrId))
+		.catch(isNotFoundResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*
@@ -1721,7 +1721,7 @@ getDeviceModel = (deps, opts) ->
 				url: "/api-key/device/#{deviceId}/device-key"
 				baseUrl: apiUrl
 		.get('body')
-		.catch(noDeviceForKeyResponse, treatAsMissingDevice(uuidOrId))
+		.catch(isNoDeviceForKeyResponse, treatAsMissingDevice(uuidOrId))
 		.asCallback(callback)
 
 	###*

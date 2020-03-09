@@ -31,7 +31,7 @@ import {
 	deviceTypes as deviceTypesUtil,
 	findCallback,
 	isDevelopmentVersion,
-	notFoundResponse,
+	isNotFoundResponse,
 	onlyIf,
 	treatAsMissingApplication,
 } from '../util';
@@ -401,7 +401,7 @@ const getOsModel = function(
 					// optionally authenticated, so we send the token in all cases
 				}),
 			)
-			.catch(notFoundResponse, () => {
+			.catch(isNotFoundResponse, () => {
 				throw new Error('No such version for the device type');
 			})
 			.then(response => new Date(response.headers.get('last-modified')!))
@@ -456,7 +456,7 @@ const getOsModel = function(
 					// optionally authenticated, so we send the token in all cases
 				}),
 			)
-			.catch(notFoundResponse, function() {
+			.catch(isNotFoundResponse, function() {
 				throw new Error('No such version for the device type');
 			})
 			.asCallback(callback);
@@ -534,7 +534,7 @@ const getOsModel = function(
 					}),
 				)
 				.get('body')
-				.catch(notFoundResponse, treatAsMissingApplication(nameOrSlugOrId));
+				.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId));
 		}).asCallback(callback);
 	};
 

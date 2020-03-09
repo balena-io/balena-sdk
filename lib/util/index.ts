@@ -66,27 +66,25 @@ export const findCallback = (args: IArguments) => {
 	return;
 };
 
-export const unauthorizedError: ErrorResponse = {
-	code: 'BalenaRequestError',
-	statusCode: 401,
-};
+const isBalenaRequestErrorResponseWithCode = (
+	error: Partial<errors.BalenaRequestError>,
+	statusCode: number,
+): error is errors.BalenaRequestError =>
+	error.code === 'BalenaRequestError' && error.statusCode === statusCode;
 
-export const notFoundResponse: ErrorResponse = {
-	code: 'BalenaRequestError',
-	statusCode: 404,
-};
+export const isUnauthorizedResponse = (err: Error) =>
+	isBalenaRequestErrorResponseWithCode(err, 401);
 
-export const noDeviceForKeyResponse: ErrorResponse = {
-	code: 'BalenaRequestError',
-	statusCode: 500,
-	body: 'No device found to associate with the api key',
-};
+export const isNotFoundResponse = (err: Error) =>
+	isBalenaRequestErrorResponseWithCode(err, 404);
 
-export const noApplicationForKeyResponse: ErrorResponse = {
-	code: 'BalenaRequestError',
-	statusCode: 500,
-	body: 'No application found to associate with the api key',
-};
+export const isNoDeviceForKeyResponse = (err: Error) =>
+	isBalenaRequestErrorResponseWithCode(err, 500) &&
+	err.body === 'No device found to associate with the api key';
+
+export const isNoApplicationForKeyResponse = (err: Error) =>
+	isBalenaRequestErrorResponseWithCode(err, 500) &&
+	err.body === 'No application found to associate with the api key';
 
 export const isUniqueKeyViolationResponse = ({ code, body }: ErrorResponse) =>
 	code === 'BalenaRequestError' &&
@@ -274,10 +272,10 @@ export default {
 	isId,
 	LOCKED_STATUS_CODE,
 	findCallback,
-	unauthorizedError,
-	notFoundResponse,
-	noDeviceForKeyResponse,
-	noApplicationForKeyResponse,
+	isUnauthorizedResponse,
+	isNotFoundResponse,
+	isNoDeviceForKeyResponse,
+	isNoApplicationForKeyResponse,
 	isUniqueKeyViolationResponse,
 	treatAsMissingApplication,
 	treatAsMissingDevice,
