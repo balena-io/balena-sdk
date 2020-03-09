@@ -80,6 +80,14 @@ export const isNoApplicationForKeyResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 500) &&
 	err.body === 'No application found to associate with the api key';
 
+export const treatAsMissingOrganization = (handleOrId: string | number) => (
+	err: Error,
+) => {
+	const replacementErr = new errors.BalenaOrganizationNotFound(handleOrId);
+	replacementErr.stack = err.stack || '';
+	throw replacementErr;
+};
+
 export const treatAsMissingApplication = (nameOrId: string | number) => (
 	err: Error,
 ) => {
