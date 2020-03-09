@@ -14,7 +14,7 @@ matrix:
 # what combinations to test
 environment:
   matrix:
-  - nodejs_version: 8
+  - nodejs_version: 10
     TEST_EMAIL: test2+juan@resin.io
     TEST_PASSWORD:
       secure: JyPzqbiGRJML/FHbP/8Ixg==
@@ -24,7 +24,7 @@ environment:
       secure: 5q1vra242X+0xjTU5msqOQ==
     TEST_REGISTER_USERNAME: test2_register_juan
     TEST_ONLY_ON_ENVIRONMENT: node
-  - nodejs_version: 8
+  - nodejs_version: 10
     TEST_EMAIL: sdk+tests+thgreasi@resin.io
     TEST_PASSWORD:
       secure: O8/sOQP/5A4Ykiu/T6Uvyw==
