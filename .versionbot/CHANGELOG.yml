@@ -1,4 +1,36 @@
 - commits:
+    - subject: 'typings: Add the contract field to the Image'
+      hash: 3d67a5a47c48dc4b529ac67f47b1011e469fb063
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add is_of__actor on the ApiKey'
+      hash: 26b4e3f0dd462c93649b79e94030e0497bfef525
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add `is_public` to the application model'
+      hash: 298de17d5c6ddce2c3c923ad9b22b73dbfe832f8
+      body: ''
+      footer:
+        Resolves: '#676'
+        resolves: '#676'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.29.0
+  date: 2020-03-09T11:30:13.587Z
+- commits:
     - subject: Unify the way that the models get exported
       hash: f011c9ca04b2bb68cbf41505825b1bba97a71279
       body: ''
