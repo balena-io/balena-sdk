@@ -1,4 +1,16 @@
 - commits:
+    - subject: Switch to a team for the CODEOWNERS file
+      hash: c58efd982e81048bbd58d7e5705b9e527b1d6d17
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.29.2
+  date: 2020-03-09T13:21:15.153Z
+- commits:
     - subject: 'tests: Improve the dependent application test case'
       hash: 952af473d75b2461c91943ac6968a60f80b8896c
       body: ''
