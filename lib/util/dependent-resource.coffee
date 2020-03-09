@@ -27,7 +27,6 @@ Promise = require('bluebird')
 	isUnauthorizedResponse
 	mergePineOptions
 } = require('../util')
-{ getUpsertHelper } = require('../util/upsert')
 
 exports.buildDependentResource = (
 	{ pine }
@@ -39,8 +38,6 @@ exports.buildDependentResource = (
 		ResourceNotFoundError # e.g. DeviceNotFoundError
 	}
 ) ->
-	upsert = getUpsertHelper({ pine })
-
 	exports = {
 		getAll: (options = {}, callback) ->
 			callback = findCallback(arguments)
@@ -93,17 +90,13 @@ exports.buildDependentResource = (
 				else
 					getResourceId(parentParam)
 			.then (parentId) ->
-				upsert
+				pine.upsert
 					resource: resourceName
-					body:
+					id:
 						"#{parentResourceName}": parentId
 						"#{resourceKeyField}": key
+					body:
 						value: value
-				,
-				[
-					parentResourceName
-					resourceKeyField
-				]
 				.tapCatch isUnauthorizedResponse, ->
 					# On Pine 7, when the post throws a 401
 					# then the associated parent resource might not exist.

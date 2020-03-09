@@ -12,12 +12,6 @@ import * as Pine from '../../typings/pinejs-client-core';
 import { getOsUpdateHelper as updateHelper } from './device-actions/os-update';
 import * as dt from './device-types';
 
-export interface ErrorResponse {
-	code: string;
-	statusCode?: number;
-	body?: string;
-}
-
 export const getOsUpdateHelper = updateHelper;
 export const deviceTypes = dt;
 
@@ -85,14 +79,6 @@ export const isNoDeviceForKeyResponse = (err: Error) =>
 export const isNoApplicationForKeyResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 500) &&
 	err.body === 'No application found to associate with the api key';
-
-export const isUniqueKeyViolationResponse = ({ code, body }: ErrorResponse) =>
-	code === 'BalenaRequestError' &&
-	!!body &&
-	// api translated response
-	(body === 'Unique key constraint violated' ||
-		// pine response (tested on pine 10)
-		/^".*" must be unique\.$/.test(body));
 
 export const treatAsMissingApplication = (nameOrId: string | number) => (
 	err: Error,
@@ -276,7 +262,6 @@ export default {
 	isNotFoundResponse,
 	isNoDeviceForKeyResponse,
 	isNoApplicationForKeyResponse,
-	isUniqueKeyViolationResponse,
 	treatAsMissingApplication,
 	treatAsMissingDevice,
 	isDevelopmentVersion,
