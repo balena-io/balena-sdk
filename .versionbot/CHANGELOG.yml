@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'balena-action-hup-utils: bump to 4.0.0 to allow dev upgrades'
+      hash: 3e4ae83e83e03dc319ac08536882db02088c6dca
+      body: ''
+      footer:
+        Connects-to: 'https://github.com/balena-io/balena/issues/1322'
+        connects-to: 'https://github.com/balena-io/balena/issues/1322'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 12.30.0
+  date: 2020-03-10T14:34:02.985Z
+- commits:
     - subject: Change the error filters to functions
       hash: 27745bc0a48eb58e1a87feff6ebd6743d88e2c6e
       body: |
