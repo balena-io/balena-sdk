@@ -99,7 +99,7 @@
     "balena-auth": "^3.0.1",
     "balena-device-status": "^3.2.1",
     "balena-errors": "^4.2.1",
-    "balena-hup-action-utils": "~3.0.0",
+    "balena-hup-action-utils": "~4.0.0",
     "balena-pine": "^10.1.1",
     "balena-register-device": "^6.0.1",
     "balena-request": "^10.0.8",

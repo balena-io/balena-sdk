@@ -2087,25 +2087,43 @@ describe 'Device Model', ->
 						target_os_version
 					)).to.throw('The device is offline')
 
-			it 'should throw when the device is running a dev version', ->
+			it 'should throw for upgrades from prod -> dev', ->
+				[
+					['Resin OS 2.0.0+rev3 (prod)', 'prod']
+					['Resin OS 2.0.0+rev3 (prod)', '']
+					['Resin OS 2.0.4+rev1', 'prod']
+					['Resin OS 2.0.5', 'prod']
+					['Resin OS 2.12.1+rev1', 'prod']
+					['Resin OS 2.12.3', 'prod']
+					['Resin OS 2.12.3+rev1', 'prod']
+					['balenaOS 2.26.0', 'prod']
+					['balenaOS 2.28.0+rev1', 'prod']
+				].forEach ([os_version, os_variant]) ->
+					mockDevice = {
+						uuid
+						device_type: 'raspberrypi3'
+						is_online: true
+						os_version
+						os_variant
+					}
+
+					m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+						mockDevice
+						'2.29.2+rev1.dev'
+					)).to.throw('Updates cannot be performed between development and production balenaOS variants')
+
+			it 'should throw for upgrades from dev -> prod', ->
 				[
 					['Resin OS 2.0.0+rev3 (dev)', 'dev']
-					['Resin OS 2.0.0+rev3 (dev)', '']
 					['Resin OS 2.0.0+rev5 (dev)', '']
-					['Resin OS 2.0.2+rev2', 'dev']
-					['Resin OS 2.0.3+rev1', 'dev']
 					['Resin OS 2.0.4+rev1', 'dev']
 					['Resin OS 2.0.5', 'dev']
 					['Resin OS 2.0.5+rev1', 'dev']
-					['Resin OS 2.0.6+rev1', 'dev']
 					['Resin OS 2.0.6+rev2', 'dev']
-					['Resin OS 2.1.0+rev1', 'dev']
-					['Resin OS 2.2.0+rev1', 'dev']
 					['Resin OS 2.9.7+rev1', 'dev']
 					['Resin OS 2.12.0+rev1', 'dev']
 					['Resin OS 2.12.1+rev1', 'dev']
 					['Resin OS 2.12.3', 'dev']
-					['Resin OS 2.12.3+rev1', 'dev']
 					['balenaOS 2.26.0', 'dev']
 					['balenaOS 2.26.0+rev1', 'dev']
 					['balenaOS 2.28.0+rev1', 'dev']
@@ -2121,7 +2139,7 @@ describe 'Device Model', ->
 					m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
 						mockDevice
 						'2.29.2+rev1.prod'
-					)).to.throw('Updates cannot be performed on development balenaOS variants')
+					)).to.throw('Updates cannot be performed between development and production balenaOS variants')
 
 			it 'should throw when the device is running a pre-release version', ->
 				[
@@ -2424,7 +2442,7 @@ describe 'Device Model', ->
 								'2.29.2+rev1.prod'
 							)).to.throw('Current OS version must be >= 2.7.4')
 
-					it 'should not throw when it is a valid v2 -> v2 hup', ->
+					it 'should not throw when it is a valid v2 -> v2 prod variant hup', ->
 						[
 							['Resin OS 2.7.4+rev1', 'prod']
 							['Resin OS 2.7.4+rev2', 'prod']
@@ -2449,4 +2467,23 @@ describe 'Device Model', ->
 							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
 								mockDevice
 								'2.29.2+rev1.prod'
+							)).to.not.throw()
+
+					it 'should not throw when it is a valid v2 -> v2 dev variant hup', ->
+						[
+							['Resin OS 2.7.4+rev1.dev', 'dev']
+							['Resin OS 2.9.7+rev2.dev', 'dev']
+							['balenaOS 2.26.0+rev1.dev', 'dev']
+						].forEach ([os_version, os_variant]) ->
+							mockDevice = {
+								uuid
+								device_type: 'jetson-tx2'
+								is_online: true
+								os_version
+								os_variant
+							}
+
+							m.chai.expect(-> balena.models.device._checkOsUpdateTarget(
+								mockDevice
+								'2.29.2+rev1.dev'
 							)).to.not.throw()
