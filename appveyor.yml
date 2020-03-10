@@ -15,10 +15,10 @@ matrix:
 environment:
   matrix:
   - nodejs_version: 8
-    TEST_EMAIL: test2+juan@resin.io
+    TEST_EMAIL: matthew+testsdk@balena.io
     TEST_PASSWORD:
       secure: JyPzqbiGRJML/FHbP/8Ixg==
-    TEST_USERNAME: test2_juan
+    TEST_USERNAME: matthew_testsdk
     TEST_REGISTER_EMAIL: test2+register+juan@resin.io
     TEST_REGISTER_PASSWORD:
       secure: 5q1vra242X+0xjTU5msqOQ==
