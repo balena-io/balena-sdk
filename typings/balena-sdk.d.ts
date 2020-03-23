@@ -1342,6 +1342,16 @@ declare namespace BalenaSdk {
 				remove(id: string | number): Promise<void>;
 				create(title: string, key: string): Promise<SSHKey>;
 			};
+			organization: {
+				create: (
+					options: PineSubmitBody<Organization>,
+				) => Promise<Organization>;
+				getAll: (
+					options?: PineOptions<Organization>,
+				) => Promise<Organization[]>;
+				get: (handleOrId: string | number) => Promise<Organization>;
+				remove: (handleOrId: string | number) => Promise<void>;
+			};
 			os: {
 				getConfig(
 					nameOrId: string | number,
