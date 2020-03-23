@@ -223,12 +223,14 @@ describe 'Application Model', ->
 			describe 'balena.models.application.getAppByOwner()', ->
 
 				it 'should find the created application', ->
-					balena.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
+					getInitialOrganization().then (initialOrg) ->
+						balena.models.application.getAppByOwner('FooBar', initialOrg.handle)
+					.then (application) =>
 						m.chai.expect(application.id).to.equal(@application.id)
 
-				it 'should not find the created application with a different username', ->
-					promise = balena.models.application.getAppByOwner('FooBar', 'test_username')
-					m.chai.expect(promise).to.eventually.be.rejectedWith('Application not found: test_username/foobar')
+				it 'should not find the created application with a different organization handle', ->
+					promise = balena.models.application.getAppByOwner('FooBar', 'test_org_handle')
+					m.chai.expect(promise).to.eventually.be.rejectedWith('Application not found: test_org_handle/foobar')
 
 			describe 'balena.models.application.getAll()', ->
 
