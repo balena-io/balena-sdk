@@ -257,7 +257,7 @@ declare namespace BalenaSdk {
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
 	}
 
-	type OrganizationMembershipRoles = 'personal' | 'administrator' | 'member';
+	type OrganizationMembershipRoles = 'administrator' | 'member';
 
 	interface OrganizationMembershipRole {
 		id: number;
