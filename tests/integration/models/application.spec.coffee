@@ -12,6 +12,9 @@ m = require('mochainon')
 	sdkOpts
 } = require('../setup')
 {
+	getInitialOrganization
+} = require('../utils')
+{
 	itShouldSetGetAndRemoveTags
 	itShouldGetAllTagsByResource
 } = require('./tags')
@@ -77,7 +80,7 @@ describe 'Application Model', ->
 						m.chai.expect(error).to.have.property('message')
 						.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30')
 
-				it 'should be rejected if the user does not have access to find the organization by name', ->
+				it 'should be rejected if the user does not have access to find the organization by handle', ->
 					promise = balena.models.application.create
 						name: 'FooBar'
 						deviceType: 'raspberry-pi'
@@ -165,41 +168,24 @@ describe 'Application Model', ->
 						promise = balena.models.application.getAll()
 						m.chai.expect(promise).to.eventually.have.length(1)
 
-				it "should be able to create an application using the user's personal org id", ->
-					balena.auth.getPersonalOrganizationId()
-					.then (orgId) ->
-						balena.models.application.create
-							name: 'FooBar'
-							deviceType: 'raspberrypi'
-							organization: orgId
-					.then ->
-						Promise.all([
-							balena.models.application.getAll(
-								$expand: organization: $select: 'id'
-							)
-							balena.auth.getPersonalOrganizationId()
-						])
-					.then ([apps, orgId]) ->
-						m.chai.expect(apps).to.have.length(1)
-						m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', orgId)
-
-				it "should be able to create an application using the user's personal org name", ->
-					balena.auth.whoami()
-					.then (orgName) ->
-						balena.models.application.create
-							name: 'FooBar'
-							deviceType: 'raspberrypi'
-							organization: orgName
-					.then ->
-						Promise.all([
-							balena.models.application.getAll(
-								$expand: organization: $select: 'id'
-							)
-							balena.auth.getPersonalOrganizationId()
-						])
-					.then ([apps, orgId]) ->
-						m.chai.expect(apps).to.have.length(1)
-						m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', orgId)
+				[
+					'id',
+					'handle',
+				].forEach (prop) ->
+					it "should be able to create an application using the user's initial organization #{prop}", ->
+						getInitialOrganization()
+						.then (initialOrg) ->
+							balena.models.application.create
+								name: 'FooBar'
+								deviceType: 'raspberrypi'
+								organization: initialOrg[prop]
+							.then ->
+								balena.models.application.getAll(
+									$expand: organization: $select: 'id'
+								)
+							.then (apps) ->
+								m.chai.expect(apps).to.have.length(1)
+								m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', initialOrg.id)
 
 	describe 'given a single application', ->
 
