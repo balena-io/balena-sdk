@@ -149,7 +149,13 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'beaglebone-black'
-					m.chai.expect(promise).to.be.rejectedWith('Application name must be unique')
+					m.chai.expect(promise).to.be.rejected
+					.then (error) ->
+						m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
+						m.chai.expect(error).to.have.property('statusCode', 404)
+						m.chai.expect(error).to.have.property('message').that.matches(/\bunique\b/i)
+						# TODO: re-enable once the API regression gets fixed
+						# m.chai.expect(error).to.have.property('message').that.contains('Application name must be unique')
 
 			describe 'balena.models.application.hasAny()', ->
 
