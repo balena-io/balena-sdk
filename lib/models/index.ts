@@ -42,6 +42,12 @@ const modelsTemplate = {
 	key: () => require('./key').default,
 
 	/**
+	 * @namespace organization
+	 * @memberof balena.models
+	 */
+	organization: () => require('./organization').default,
+
+	/**
 	 * @namespace os
 	 * @memberof balena.models
 	 */
