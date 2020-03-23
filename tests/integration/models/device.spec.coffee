@@ -230,6 +230,13 @@ describe 'Device Model', ->
 						m.chai.expect(device.id).to.equal(@device.id)
 						m.chai.expect(device.device_name).to.equal(undefined)
 
+				it 'should be able to retrieve computed terms', ->
+					balena.models.device.getAll($select: [ 'overall_status', 'overall_progress' ])
+					.then ([ device ]) ->
+						m.chai.expect(device).to.deep.match
+							overall_status: 'inactive'
+							overall_progress: null
+
 			describe 'balena.models.device.getAllByApplication()', ->
 
 				[
@@ -256,6 +263,13 @@ describe 'Device Model', ->
 					.then ([ device ]) =>
 						m.chai.expect(device.id).to.equal(@device.id)
 						m.chai.expect(device.device_name).to.equal(undefined)
+
+				it 'should be able to retrieve computed terms', ->
+					balena.models.device.getAllByApplication(@application.id, $select: [ 'overall_status', 'overall_progress' ])
+					.then ([ device ]) ->
+						m.chai.expect(device).to.deep.match
+							overall_status: 'inactive'
+							overall_progress: null
 
 			describe 'balena.models.device.get()', ->
 
@@ -284,6 +298,13 @@ describe 'Device Model', ->
 					.then (device) =>
 						m.chai.expect(device.id).to.equal(@device.id)
 						m.chai.expect(device.device_name).to.equal(undefined)
+
+				it 'should be able to retrieve computed terms', ->
+					balena.models.device.get(@device.uuid, $select: [ 'overall_status', 'overall_progress' ])
+					.then (device) ->
+						m.chai.expect(device).to.deep.match
+							overall_status: 'inactive'
+							overall_progress: null
 
 			describe 'balena.models.device.getByName()', ->
 
@@ -1272,6 +1293,28 @@ describe 'Device Model', ->
 			it 'should be rejected if the device exists but is inaccessible', ->
 				promise = balena.models.device.getSupervisorState(@device.id)
 				m.chai.expect(promise).to.be.rejectedWith('No online device(s) found')
+
+	describe 'given a single application with a single online device', ->
+
+		givenAnApplicationWithADevice(before)
+
+		before ->
+			balena.pine.patch
+				resource: 'device'
+				id: @device.id
+				body:
+					is_online: true
+					os_variant: 'prod'
+					os_version: 'Resin OS 2.7.8+rev1'
+
+		describe 'balena.models.device.get()', ->
+
+			it 'should be able to retrieve computed terms', ->
+				balena.models.device.get(@device.uuid, $select: [ 'overall_status', 'overall_progress' ])
+				.then (device) ->
+					m.chai.expect(device).to.deep.match
+						overall_status: 'idle'
+						overall_progress: null
 
 	describe 'given a multicontainer application', ->
 
