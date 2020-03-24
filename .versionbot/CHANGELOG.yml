@@ -1,4 +1,25 @@
 - commits:
+    - subject: Document the device overall_status and overall_progress fields
+      hash: b4a096371bb4256884bd9b1d6695b49ca400d786
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add device overall_status & overall_progress tests
+      hash: da10359294e308b15b9e8fa0ec9abea115c0c2fc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.30.2
+  date: 2020-03-24T19:18:53.139Z
+- commits:
     - subject: Make the unique application name test less strict
       hash: 8b120069d0eaf584ff849abe30c12392df0db7eb
       body: |
