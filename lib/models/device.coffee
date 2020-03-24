@@ -26,7 +26,6 @@ map = require('lodash/map')
 bSemver = require('balena-semver')
 semver = require('semver')
 errors = require('balena-errors')
-deviceStatus = require('balena-device-status')
 
 {
 	isId
@@ -2160,32 +2159,38 @@ getDeviceModel = (deps, opts) ->
 	# @memberof balena.models.device
 	#
 	# @description
-	# Computes the status of an already retrieved device object.
-	# It's recommended to use `balena.models.device.get(deviceUuid, { $select: ['overall_status'] })` instead,
+	# Convenience method for getting the overall status of a device.
+	# It's recommended to use `balena.models.device.get()` instead,
 	# in case that you need to retrieve more device fields than just the status.
 	#
-	# @see {@link balena.models.device.getWithServiceDetails} for retrieving the device object that this method accepts.
+	# @see {@link balena.models.device.get} for an example on selecting the `overall_status` field.
 	#
-	# @param {Object} device - A device object
+	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @fulfil {String} - device status
 	# @returns {Promise}
 	#
 	# @example
-	# balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
-	# 	return balena.models.device.getStatus(device);
-	# }).then(function(status) {
+	# balena.models.device.getStatus('7cf02a6').then(function(status) {
 	# 	console.log(status);
 	# });
 	#
 	# @example
-	# balena.models.device.getStatus(device, function(error, status) {
+	# balena.models.device.getStatus(123).then(function(status) {
+	# 	console.log(status);
+	# });
+	#
+	# @example
+	# balena.models.device.getStatus('7cf02a6', function(error, status) {
 	# 	if (error) throw error;
 	# 	console.log(status);
 	# });
 	###
-	exports.getStatus = (device, callback) ->
-		Promise.try ->
-			return deviceStatus.getStatus(device).key
+	exports.getStatus = (uuidOrId, callback) ->
+		if typeof uuidOrId != 'string' && typeof uuidOrId != 'number'
+			throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId)
+
+		exports.get(uuidOrId, $select: 'overall_status')
+		.then ({ overall_status }) -> overall_status
 		.asCallback(callback)
 
 	###*
