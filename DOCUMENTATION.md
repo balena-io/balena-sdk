@@ -3942,6 +3942,8 @@ balena.models.device.ping('7cf02a6', function(error) {
 
 ##### device.getStatus(device) ⇒ <code>Promise</code>
 Computes the status of an already retrieved device object.
+It's recommended to use `balena.models.device.get(deviceUuid, { $select: ['overall_status'] })` instead,
+in case that you need to retrieve more device fields than just the status.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the status of a device  
