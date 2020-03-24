@@ -3941,10 +3941,13 @@ balena.models.device.ping('7cf02a6', function(error) {
 <a name="balena.models.device.getStatus"></a>
 
 ##### device.getStatus(device) ⇒ <code>Promise</code>
+Computes the status of an already retrieved device object.
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the status of a device  
 **Access**: public  
 **Fulfil**: <code>String</code> - device status  
+**See**: [getWithServiceDetails](#balena.models.device.getWithServiceDetails) for retrieving the device object that this method accepts.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3952,7 +3955,9 @@ balena.models.device.ping('7cf02a6', function(error) {
 
 **Example**  
 ```js
-balena.models.device.getStatus(device).then(function(status) {
+balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	return balena.models.device.getStatus(device);
+}).then(function(status) {
 	console.log(status);
 });
 ```
