@@ -2432,6 +2432,12 @@ dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c
 <a name="balena.models.device.getAll"></a>
 
 ##### device.getAll([options]) ⇒ <code>Promise</code>
+This method returns all devices that the current user can access.
+In order to have the following computed properties in the result
+you have to explicitly define them in a `$select` in the extra options:
+* `overall_status`
+* `overall_progress`
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices  
 **Access**: public  
@@ -2449,6 +2455,12 @@ balena.models.device.getAll().then(function(devices) {
 ```
 **Example**  
 ```js
+balena.models.device.getAll({ $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
 balena.models.device.getAll(function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
@@ -2457,6 +2469,12 @@ balena.models.device.getAll(function(error, devices) {
 <a name="balena.models.device.getAllByApplication"></a>
 
 ##### device.getAllByApplication(nameOrSlugOrId, [options]) ⇒ <code>Promise</code>
+This method returns all devices of a specific application.
+In order to have the following computed properties in the result
+you have to explicitly define them in a `$select` in the extra options:
+* `overall_status`
+* `overall_progress`
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by application  
 **Access**: public  
@@ -2478,6 +2496,12 @@ balena.models.device.getAllByApplication('MyApp').then(function(devices) {
 balena.models.device.getAllByApplication(123).then(function(devices) {
 	console.log(devices);
 });
+```
+**Example**  
+```js
+balena.models.device.getAllByApplication('MyApp', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+	console.log(device);
+})
 ```
 **Example**  
 ```js
@@ -2521,6 +2545,12 @@ balena.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
 <a name="balena.models.device.get"></a>
 
 ##### device.get(uuidOrId, [options]) ⇒ <code>Promise</code>
+This method returns a single device by id or uuid.
+In order to have the following computed properties in the result
+you have to explicitly define them in a `$select` in the extra options:
+* `overall_status`
+* `overall_progress`
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a single device  
 **Access**: public  
@@ -2540,6 +2570,12 @@ balena.models.device.get('7cf02a6').then(function(device) {
 **Example**  
 ```js
 balena.models.device.get(123).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+balena.models.device.get('7cf02a6', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 	console.log(device);
 })
 ```

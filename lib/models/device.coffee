@@ -197,10 +197,22 @@ getDeviceModel = (deps, opts) ->
 	# @fulfil {Object[]} - devices
 	# @returns {Promise}
 	#
+	# @description
+	# This method returns all devices that the current user can access.
+	# In order to have the following computed properties in the result
+	# you have to explicitly define them in a `$select` in the extra options:
+	# * `overall_status`
+	# * `overall_progress`
+	#
 	# @example
 	# balena.models.device.getAll().then(function(devices) {
 	# 	console.log(devices);
 	# });
+	#
+	# @example
+	# balena.models.device.getAll({ $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+	# 	console.log(device);
+	# })
 	#
 	# @example
 	# balena.models.device.getAll(function(error, devices) {
@@ -228,6 +240,13 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
+	# @description
+	# This method returns all devices of a specific application.
+	# In order to have the following computed properties in the result
+	# you have to explicitly define them in a `$select` in the extra options:
+	# * `overall_status`
+	# * `overall_progress`
+	#
 	# @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object[]} - devices
@@ -242,6 +261,11 @@ getDeviceModel = (deps, opts) ->
 	# balena.models.device.getAllByApplication(123).then(function(devices) {
 	# 	console.log(devices);
 	# });
+	#
+	# @example
+	# balena.models.device.getAllByApplication('MyApp', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+	# 	console.log(device);
+	# })
 	#
 	# @example
 	# balena.models.device.getAllByApplication('MyApp', function(error, devices) {
@@ -302,6 +326,13 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
+	# @description
+	# This method returns a single device by id or uuid.
+	# In order to have the following computed properties in the result
+	# you have to explicitly define them in a `$select` in the extra options:
+	# * `overall_status`
+	# * `overall_progress`
+	#
 	# @param {String|Number} uuidOrId - device uuid (string) or id (number)
 	# @param {Object} [options={}] - extra pine options to use
 	# @fulfil {Object} - device
@@ -314,6 +345,11 @@ getDeviceModel = (deps, opts) ->
 	#
 	# @example
 	# balena.models.device.get(123).then(function(device) {
+	# 	console.log(device);
+	# })
+	#
+	# @example
+	# balena.models.device.get('7cf02a6', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 	# 	console.log(device);
 	# })
 	#
