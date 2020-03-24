@@ -96,33 +96,6 @@ describe 'Device Model', ->
 				balena.models.device.getManifestBySlug('raspberrypi').then (manifest) ->
 					m.chai.expect(manifest.slug).to.equal('raspberry-pi')
 
-		describe 'balena.models.device.getStatus()', ->
-
-			it 'should return inactive for inactive devices', ->
-				promise = balena.models.device.getStatus
-					is_active: false
-				m.chai.expect(promise).to.eventually.equal('inactive')
-
-			it 'should return configuring for devices that have never sent a connectivity event', ->
-				promise = balena.models.device.getStatus
-					is_active: true
-					last_connectivity_event: null
-				m.chai.expect(promise).to.eventually.equal('configuring')
-
-			it 'should return offline for offline devices', ->
-				promise = balena.models.device.getStatus
-					is_active: true
-					last_connectivity_event: '2019-05-13T16:14'
-					is_online: false
-				m.chai.expect(promise).to.eventually.equal('offline')
-
-			it 'should return idle for idle devices', ->
-				promise = balena.models.device.getStatus
-					is_active: true
-					last_connectivity_event: '2019-05-13T16:14'
-					is_online: true
-				m.chai.expect(promise).to.eventually.equal('idle')
-
 	describe 'given a single application without devices', ->
 
 		describe '[read operations]', ->
@@ -1305,6 +1278,53 @@ describe 'Device Model', ->
 			it 'should be rejected if the device exists but is inaccessible', ->
 				promise = balena.models.device.getSupervisorState(@device.id)
 				m.chai.expect(promise).to.be.rejectedWith('No online device(s) found')
+
+		describe 'balena.models.device.getStatus()', ->
+
+			givenAnApplicationWithADevice(before)
+
+			# This tests that we give a sensible error for users of older SDK versions
+			# that haven't migrated their code.
+			it 'should throw when passing an object as a parameter', ->
+				balena.models.device.get(@device.id).then (device) ->
+					m.chai.expect( -> balena.models.device.getStatus(device))
+					.to.throw("[object Object] is not a valid value for parameter 'uuidOrId'")
+
+			describe 'Given an inactive device', ->
+
+				['id', 'uuid'].forEach (prop) ->
+					it "should return inactive when retrieving by #{prop}", ->
+						promise = balena.models.device.getStatus(@device[prop])
+						m.chai.expect(promise).to.eventually.equal('inactive')
+
+			describe 'Given an online device', ->
+
+				before ->
+					balena.pine.patch
+						resource: 'device'
+						id: @device.id
+						body:
+							# this also activates the device
+							is_online: true
+
+				['id', 'uuid'].forEach (prop) ->
+					it "should return idle when retrieving by #{prop}", ->
+						promise = balena.models.device.getStatus(@device[prop])
+						m.chai.expect(promise).to.eventually.equal('idle')
+
+			describe 'Given an offline device', ->
+
+				before ->
+					balena.pine.patch
+						resource: 'device'
+						id: @device.id
+						body:
+							is_online: false
+
+				['id', 'uuid'].forEach (prop) ->
+					it "should return offline when retrieving by #{prop}", ->
+						promise = balena.models.device.getStatus(@device[prop])
+						m.chai.expect(promise).to.eventually.equal('offline')
 
 	describe 'given a single application with a single online device', ->
 
