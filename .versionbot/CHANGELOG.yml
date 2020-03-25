@@ -1,4 +1,33 @@
 - commits:
+    - subject: 'device.getStatus: Suggest selecting the overall_status field directly'
+      hash: b98c6b906442a75885b29d5f242f6cf5e5b1ba90
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Better document the device.getStatus() method
+      hash: b953a85a3215bd2ee64a1da9e64755cc54c4d535
+      body: |
+        Did not deprecate it since the plan is to change it in
+        the next major to just be a convenience method for a
+        get() with the overall_status field, so that users can still
+        find it easily.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/KlyXZlJ86S-nvOuJbuOdpbmo54i
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/KlyXZlJ86S-nvOuJbuOdpbmo54i
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.30.3
+  date: 2020-03-25T13:04:23.390Z
+- commits:
     - subject: Document the device overall_status and overall_progress fields
       hash: b4a096371bb4256884bd9b1d6695b49ca400d786
       body: ''
