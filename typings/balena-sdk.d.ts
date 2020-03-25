@@ -319,6 +319,14 @@ declare namespace BalenaSdk {
 		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
+	interface ReleaseWithImageDetails extends Release {
+		images: Array<{
+			id: number;
+			service_name: string;
+		}>;
+		user: User;
+	}
+
 	interface BillingAccountAddressInfo {
 		address1: string;
 		address2: string;
@@ -905,11 +913,11 @@ declare namespace BalenaSdk {
 					options?: PineOptionsFor<Release>,
 				): Promise<Release>;
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptionsFor<Release>,
 				): Promise<Release[]>;
 				getLatestByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptionsFor<Release>,
 				): Promise<Release>;
 				getWithImageDetails(
@@ -918,24 +926,14 @@ declare namespace BalenaSdk {
 						release?: PineOptionsFor<Release>;
 						image?: PineOptionsFor<Image>;
 					},
-				): Promise<
-					Array<
-						Release & {
-							images: Array<{
-								id: number;
-								service_name: string;
-							}>;
-							user: User;
-						}
-					>
-				>;
+				): Promise<ReleaseWithImageDetails>;
 				createFromUrl(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					urlDeployOptions: BuilderUrlDeployOptions,
 				): Promise<number>;
 				tags: {
 					getAllByApplication(
-						nameOrId: string | number,
+						nameOrSlugOrId: string | number,
 						options?: PineOptionsFor<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
 					getAllByRelease(
