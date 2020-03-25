@@ -2148,12 +2148,21 @@ getDeviceModel = (deps, opts) ->
 	# @function
 	# @memberof balena.models.device
 	#
+	# @description
+	# Computes the status of an already retrieved device object.
+	# It's recommended to use `balena.models.device.get(deviceUuid, { $select: ['overall_status'] })` instead,
+	# in case that you need to retrieve more device fields than just the status.
+	#
+	# @see {@link balena.models.device.getWithServiceDetails} for retrieving the device object that this method accepts.
+	#
 	# @param {Object} device - A device object
 	# @fulfil {String} - device status
 	# @returns {Promise}
 	#
 	# @example
-	# balena.models.device.getStatus(device).then(function(status) {
+	# balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+	# 	return balena.models.device.getStatus(device);
+	# }).then(function(status) {
 	# 	console.log(status);
 	# });
 	#
