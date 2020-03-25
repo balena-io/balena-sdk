@@ -588,6 +588,8 @@ declare namespace BalenaSdk {
 		public_key: string;
 		id: number;
 		created_at: string;
+
+		user: NavigationResource<User>;
 	}
 
 	interface ImgConfigOptions {

@@ -6,6 +6,7 @@ import * as BalenaSdk from '../typings/balena-sdk';
 import { PubSub } from './util/pubsub';
 
 export interface InjectedDependenciesParam {
+	sdkInstance: BalenaSdk.BalenaSDK;
 	settings: {
 		get(key: string): Promise<string>;
 		getAll(): Promise<{ [key: string]: string }>;
