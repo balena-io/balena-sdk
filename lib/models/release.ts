@@ -369,14 +369,14 @@ const getReleaseModel = function (
 			.get(nameOrSlugOrId, {
 				$select: 'app_name',
 				$expand: {
-					user: {
-						$select: 'username',
+					organization: {
+						$select: 'handle',
 					},
 				},
 			})
-			.then(({ app_name, user }) =>
+			.then(({ app_name, organization }) =>
 				builderHelper().buildFromUrl(
-					(user as BalenaSdk.User[])[0].username,
+					(organization as BalenaSdk.Organization[])[0].handle,
 					app_name,
 					urlDeployOptions,
 				),
