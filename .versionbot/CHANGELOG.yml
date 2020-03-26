@@ -1,4 +1,36 @@
 - commits:
+    - subject: Convert the Release model to TypeScript
+      hash: 2542bb8a5be40303bc28ebb6b1cf8de5e7f37b2e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Depends-on: 'https://github.com/balena-io-modules/balena-errors/pull/39'
+        depends-on: 'https://github.com/balena-io-modules/balena-errors/pull/39'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Bump balena-errors to 4.3.0
+      hash: ec40f4e018b2f2782d17c1226a111fb8a330313d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Fix the release.getWithImageDetails typings
+      hash: 0b67e88c778720a16f6ad3fce239f29b7295b0ec
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.30.4
+  date: 2020-03-25T22:14:33.057Z
+- commits:
     - subject: 'device.getStatus: Suggest selecting the overall_status field directly'
       hash: b98c6b906442a75885b29d5f242f6cf5e5b1ba90
       body: ''
