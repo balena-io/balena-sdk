@@ -414,7 +414,7 @@ const getAuth = function(
 	 * @function
 	 * @memberof balena.auth
 	 *
-	 * @param {Object} [credentials={}] - in the form of username, password and email
+	 * @param {Object} credentials - in the form of username, password and email
 	 * @param {String} credentials.email - the email
 	 * @param {String} credentials.password - the password
 	 * @param {(String|undefined)} [credentials.'g-recaptcha-response'] - the captcha response
@@ -452,7 +452,7 @@ const getAuth = function(
 				method: 'POST',
 				url: '/user/register',
 				baseUrl: apiUrl,
-				body: credentials ?? {},
+				body: credentials,
 				sendToken: false,
 			})
 			.get('body')
