@@ -214,7 +214,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
         * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
         * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
-        * [.register([credentials])](#balena.auth.register) ⇒ <code>Promise</code>
+        * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
     * [.logs](#balena.logs) : <code>object</code>
         * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise</code>
         * [.history(uuidOrId, [options])](#balena.logs.history) ⇒ <code>Promise</code>
@@ -5553,7 +5553,7 @@ balena.models.billing.downloadInvoice('0000').then(function(stream) {
     * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
     * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
     * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
-    * [.register([credentials])](#balena.auth.register) ⇒ <code>Promise</code>
+    * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
 
 <a name="balena.auth.twoFactor"></a>
 
@@ -5861,18 +5861,18 @@ balena.auth.logout(function(error) {
 ```
 <a name="balena.auth.register"></a>
 
-#### auth.register([credentials]) ⇒ <code>Promise</code>
+#### auth.register(credentials) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Register a user account  
 **Access**: public  
 **Fulfil**: <code>String</code> - session token  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [credentials] | <code>Object</code> | <code>{}</code> | in the form of username, password and email |
-| credentials.email | <code>String</code> |  | the email |
-| credentials.password | <code>String</code> |  | the password |
-| [credentials.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> |  | the captcha response |
+| Param | Type | Description |
+| --- | --- | --- |
+| credentials | <code>Object</code> | in the form of username, password and email |
+| credentials.email | <code>String</code> | the email |
+| credentials.password | <code>String</code> | the password |
+| [credentials.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
 
 **Example**  
 ```js
