@@ -4976,20 +4976,20 @@ balena.models.release.tags.remove(123, 'EDITOR', function(error) {
 **Example**  
 ```js
 balena.models.release.get(123).then(function(release) {
-		console.log(release);
+	console.log(release);
 });
 ```
 **Example**  
 ```js
 balena.models.release.get('7cf02a6').then(function(release) {
-		console.log(release);
+	console.log(release);
 });
 ```
 **Example**  
 ```js
 balena.models.release.get(123, function(error, release) {
-		if (error) throw error;
-		console.log(release);
+	if (error) throw error;
+	console.log(release);
 });
 ```
 <a name="balena.models.release.getWithImageDetails"></a>
@@ -5015,27 +5015,27 @@ raw model directly, use `release.get(id, options)` instead.
 **Example**  
 ```js
 balena.models.release.getWithImageDetails(123).then(function(release) {
-		console.log(release);
+	console.log(release);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getWithImageDetails('7cf02a6').then(function(release) {
-		console.log(release);
+	console.log(release);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
 .then(function(release) {
-		console.log(release.images[0].build_log);
+	console.log(release.images[0].build_log);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getWithImageDetails(123, function(error, release) {
-		if (error) throw error;
-		console.log(release);
+	if (error) throw error;
+	console.log(release);
 });
 ```
 <a name="balena.models.release.getAllByApplication"></a>
@@ -5054,20 +5054,20 @@ balena.models.release.getWithImageDetails(123, function(error, release) {
 **Example**  
 ```js
 balena.models.release.getAllByApplication('MyApp').then(function(releases) {
-		console.log(releases);
+	console.log(releases);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getAllByApplication(123).then(function(releases) {
-		console.log(releases);
+	console.log(releases);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getAllByApplication('MyApp', function(error, releases) {
-		if (error) throw error;
-		console.log(releases);
+	if (error) throw error;
+	console.log(releases);
 });
 ```
 <a name="balena.models.release.getLatestByApplication"></a>
@@ -5086,20 +5086,20 @@ balena.models.release.getAllByApplication('MyApp', function(error, releases) {
 **Example**  
 ```js
 balena.models.release.getLatestByApplication('MyApp').then(function(releases) {
-		console.log(releases);
+	console.log(releases);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getLatestByApplication(123).then(function(releases) {
-		console.log(releases);
+	console.log(releases);
 });
 ```
 **Example**  
 ```js
 balena.models.release.getLatestByApplication('MyApp', function(error, releases) {
-		if (error) throw error;
-		console.log(releases);
+	if (error) throw error;
+	console.log(releases);
 });
 ```
 <a name="balena.models.release.createFromUrl"></a>
@@ -5120,20 +5120,20 @@ balena.models.release.getLatestByApplication('MyApp', function(error, releases) 
 **Example**  
 ```js
 balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
-		console.log(releaseId);
+	console.log(releaseId);
 });
 ```
 **Example**  
 ```js
 balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
-		console.log(releaseId);
+	console.log(releaseId);
 });
 ```
 **Example**  
 ```js
 balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
-		if (error) throw error;
-		console.log(releaseId);
+	if (error) throw error;
+	console.log(releaseId);
 });
 ```
 <a name="balena.models.service"></a>

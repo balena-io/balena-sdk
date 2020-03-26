@@ -124,7 +124,7 @@ export const isDevelopmentVersion = (version: string) =>
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 export const mergePineOptions = <R extends {}>(
 	defaults: Pine.PineOptionsFor<R>,
-	extras: Pine.PineOptionsFor<R>,
+	extras: Pine.PineOptionsFor<R> | undefined,
 ): Pine.PineOptionsFor<R> => {
 	if (!extras) {
 		return defaults;
