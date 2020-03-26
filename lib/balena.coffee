@@ -64,7 +64,7 @@ getSdk = (opts = {}) ->
 	# @memberof balena
 	###
 	sdkTemplate =
-		auth: -> require('./auth')
+		auth: -> require('./auth').default
 		models: -> require('./models')
 		logs: -> require('./logs')
 		settings: -> require('./settings')
