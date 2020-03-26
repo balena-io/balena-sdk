@@ -4386,7 +4386,7 @@ balena.models.key.getAll(function(error, keys) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>String</code> \| <code>Number</code> | key id |
+| id | <code>Number</code> | key id |
 
 **Example**  
 ```js
@@ -4410,7 +4410,7 @@ balena.models.key.get(51, function(error, key) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>String</code> \| <code>Number</code> | key id |
+| id | <code>Number</code> | key id |
 
 **Example**  
 ```js

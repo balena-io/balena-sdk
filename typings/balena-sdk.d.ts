@@ -588,6 +588,8 @@ declare namespace BalenaSdk {
 		public_key: string;
 		id: number;
 		created_at: string;
+
+		user: NavigationResource<User>;
 	}
 
 	interface ImgConfigOptions {
@@ -1217,8 +1219,8 @@ declare namespace BalenaSdk {
 			};
 			key: {
 				getAll(options?: PineOptionsFor<SSHKey>): Promise<SSHKey[]>;
-				get(id: string | number): Promise<SSHKey>;
-				remove(id: string | number): Promise<void>;
+				get(id: number): Promise<SSHKey>;
+				remove(id: number): Promise<string>;
 				create(title: string, key: string): Promise<SSHKey>;
 			};
 			os: {
