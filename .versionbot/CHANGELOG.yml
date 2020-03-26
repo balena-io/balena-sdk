@@ -1,4 +1,25 @@
 - commits:
+    - subject: Convert lib/auth to TypeScript
+      hash: 51871cf25061926e5aaccf9a3b4b0f6c6b0207b7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Convert lib/2fa to TypeScript
+      hash: ac0c064075eda60584d00a0c7828f9db11198c86
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.30.6
+  date: 2020-03-26T14:34:03.660Z
+- commits:
     - subject: Convert the Key model to TypeScript
       hash: 69d794d6889005f7583e244ba708a024f7863225
       body: ''
