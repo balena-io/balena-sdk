@@ -1,4 +1,25 @@
 - commits:
+    - subject: Convert the Key model to TypeScript
+      hash: 69d794d6889005f7583e244ba708a024f7863225
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Fix the key model documentation & typings
+      hash: 501f5a0942a813dc69a78702c2c3f0aa04a1c6ad
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.30.5
+  date: 2020-03-26T11:38:46.161Z
+- commits:
     - subject: Convert the Release model to TypeScript
       hash: 2542bb8a5be40303bc28ebb6b1cf8de5e7f37b2e
       body: ''
