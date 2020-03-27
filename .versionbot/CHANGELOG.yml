@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add is_invalidated field typings to the Release resource
+      hash: 0770fabaf741433c497feae939112b513cdd2383
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.31.0
+  date: 2020-03-26T18:33:03.386Z
+- commits:
     - subject: Convert lib/auth to TypeScript
       hash: 51871cf25061926e5aaccf9a3b4b0f6c6b0207b7
       body: ''
