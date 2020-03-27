@@ -305,6 +305,7 @@ declare namespace BalenaSdk {
 		status: ReleaseStatus;
 		source: string;
 		build_log: string | null;
+		is_invalidated: boolean;
 		start_timestamp: string;
 		update_timestamp: string | null;
 		end_timestamp: string;
