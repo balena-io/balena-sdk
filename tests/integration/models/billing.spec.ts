@@ -282,7 +282,7 @@ describe('Billing Model', function() {
 		describe('balena.models.billing.getInvoices()', () =>
 			givenABillingAccountIt('should return an array of invoice objects', () =>
 				balena.models.billing.getInvoices().then(function(invoices) {
-					expect(_.isArray(invoices)).to.be.true;
+					expect(Array.isArray(invoices)).to.be.true;
 					expect(invoices.length).to.not.equal(0);
 
 					const invoice = invoices[0];

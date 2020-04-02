@@ -1,7 +1,6 @@
 import * as errors from 'balena-errors';
 import assign = require('lodash/assign');
 import cloneDeep = require('lodash/cloneDeep');
-import isArray = require('lodash/isArray');
 import isFunction = require('lodash/isFunction');
 import isNumber = require('lodash/isNumber');
 import isString = require('lodash/isString');
@@ -137,7 +136,7 @@ export const mergePineOptions = <R extends {}>(
 			case '$select':
 				let extraSelect = extras.$select;
 				if (extraSelect != null) {
-					if (!isArray(extraSelect) && extraSelect !== '*') {
+					if (!Array.isArray(extraSelect) && extraSelect !== '*') {
 						extraSelect = [extraSelect];
 					}
 				}
@@ -234,7 +233,7 @@ const convertExpandToObject = <T extends {}>(
 		return {
 			[expandOption]: {},
 		} as Pine.ResourceExpandFor<T>;
-	} else if (isArray(expandOption)) {
+	} else if (Array.isArray(expandOption)) {
 		// Reduce the array into a single object
 		return expandOption.reduce(
 			(result, option) =>
