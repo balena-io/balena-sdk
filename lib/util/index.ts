@@ -1,7 +1,6 @@
 import * as errors from 'balena-errors';
 import assign = require('lodash/assign');
 import cloneDeep = require('lodash/cloneDeep');
-import isFunction = require('lodash/isFunction');
 import isNumber = require('lodash/isNumber');
 import isString = require('lodash/isString');
 import throttle = require('lodash/throttle');
@@ -58,7 +57,7 @@ export const LOCKED_STATUS_CODE = 423;
 // Use with: `findCallback(arguments)`.
 export const findCallback = (args: IArguments) => {
 	const lastArg = args[args.length - 1];
-	if (isFunction(lastArg)) {
+	if (typeof lastArg === 'function') {
 		return lastArg;
 	}
 
