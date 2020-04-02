@@ -18,7 +18,6 @@ url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
 assign = require('lodash/assign')
-isArray = require('lodash/isArray')
 isEmpty = require('lodash/isEmpty')
 size = require('lodash/size')
 errors = require('balena-errors')
@@ -88,7 +87,7 @@ getApplicationModel = (deps, opts) ->
 	exports._getId = getId
 
 	normalizeApplication = (application) ->
-		if isArray(application.owns__device)
+		if Array.isArray(application.owns__device)
 			application.owns__device.forEach (device) ->
 				normalizeDeviceOsVersion(device)
 		return application

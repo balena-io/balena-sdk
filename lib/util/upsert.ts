@@ -1,7 +1,6 @@
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
 import find = require('lodash/find');
-import isArray = require('lodash/isArray');
 import isEmpty = require('lodash/isEmpty');
 import omit = require('lodash/omit');
 import pick = require('lodash/pick');
@@ -15,7 +14,7 @@ export const getUpsertHelper = ({ pine }: { pine: BalenaPine.Pine }) => {
 		naturalKeyProps: Array<keyof T & string>,
 	) =>
 		Promise.try(() => {
-			if (!isArray(naturalKeyProps) || isEmpty(naturalKeyProps)) {
+			if (!Array.isArray(naturalKeyProps) || isEmpty(naturalKeyProps)) {
 				throw new errors.BalenaInvalidParameterError(
 					'naturalKeyProps',
 					'The properties that consist the natural key of the model were not provided',

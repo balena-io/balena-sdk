@@ -134,12 +134,12 @@ describe('Config Model', function() {
 		it('should become the device options', () =>
 			balena.models.config
 				.getDeviceOptions('raspberry-pi')
-				.then(options => expect(_.isArray(options)).to.be.true));
+				.then(options => expect(Array.isArray(options)).to.be.true));
 
 		it('should become the device options given a device type alias', () =>
 			balena.models.config
 				.getDeviceOptions('raspberrypi')
-				.then(options => expect(_.isArray(options)).to.be.true));
+				.then(options => expect(Array.isArray(options)).to.be.true));
 
 		it('should reject if device type is invalid', function() {
 			const promise = balena.models.config.getDeviceOptions('foobarbaz');

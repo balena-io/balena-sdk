@@ -71,7 +71,7 @@ describe 'Device Model', ->
 
 			it 'should return a non empty array', ->
 				balena.models.device.getSupportedDeviceTypes().then (deviceTypes) ->
-					m.chai.expect(_.isArray(deviceTypes)).to.be.true
+					m.chai.expect(Array.isArray(deviceTypes)).to.be.true
 					m.chai.expect(deviceTypes).to.not.have.length(0)
 
 			it 'should return all valid display names', ->

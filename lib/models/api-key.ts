@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import isString = require('lodash/isString');
 import pick = require('lodash/pick');
 
 import * as BalenaSdk from '../../typings/balena-sdk';
@@ -72,7 +71,7 @@ const getApiKeysModel = function(
 		const apiKeyBody: { name: string; description?: string | null } = {
 			name,
 		};
-		if (isString(description) && !!description) {
+		if (typeof description === 'string' && !!description) {
 			apiKeyBody.description = description;
 		}
 		return request
