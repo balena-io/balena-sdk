@@ -1,8 +1,8 @@
 {
 	"*.ts": [
-		"resin-lint --typescript --fix"
+		"balena-lint --typescript --fix"
 	],
 	"*.coffee": [
-		"resin-lint"
+		"balena-lint"
 	]
 }
