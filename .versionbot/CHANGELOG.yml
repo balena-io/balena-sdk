@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update to balena-lint 4.x
+      hash: cb51c1ff1bb7dc06dccf5f8dfbd6cb82284c6e79
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.1
+  date: 2020-03-31T16:21:54.263Z
+- commits:
     - subject: Add is_invalidated field typings to the Release resource
       hash: 0770fabaf741433c497feae939112b513cdd2383
       body: ''
