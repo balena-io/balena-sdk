@@ -1,4 +1,28 @@
 - commits:
+    - subject: Use native function type check
+      hash: c3d427c2502ffb6fa63fcbe43e1d371af7a8e8fe
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Use native array type check
+      hash: c579fd79d55ad39987cf4a69382c988ad4f4706c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Use native string type check
+      hash: 082b27cab1f54a9861ceef7da417051fccf93351
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.2
+  date: 2020-04-02T14:28:48.846Z
+- commits:
     - subject: Update to balena-lint 4.x
       hash: cb51c1ff1bb7dc06dccf5f8dfbd6cb82284c6e79
       body: ''
