@@ -17,7 +17,6 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
-isEmpty = require('lodash/isEmpty')
 errors = require('balena-errors')
 
 {
@@ -250,7 +249,7 @@ getApplicationModel = (deps, opts) ->
 									slug: nameOrSlugOrId.toLowerCase()
 						, options
 				.tap (applications) ->
-					if isEmpty(applications)
+					if applications.length == 0
 						throw new errors.BalenaApplicationNotFound(nameOrSlugOrId)
 
 					if applications.length > 1
@@ -344,7 +343,7 @@ getApplicationModel = (deps, opts) ->
 						slug: "#{owner}/#{appName}"
 				, options
 		.tap (applications) ->
-			if isEmpty(applications)
+			if applications.length == 0
 				throw new errors.BalenaApplicationNotFound("#{owner}/#{appName}")
 			if applications.length > 1
 				throw new errors.BalenaAmbiguousApplication("#{owner}/#{appName}")
@@ -408,7 +407,7 @@ getApplicationModel = (deps, opts) ->
 	###
 	exports.hasAny = (callback) ->
 		exports.getAll($select: ['id']).then (applications) ->
-			return not isEmpty(applications)
+			return applications.length != 0
 		.asCallback(callback)
 
 	###*
