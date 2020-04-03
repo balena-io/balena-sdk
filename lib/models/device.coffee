@@ -19,7 +19,6 @@ Promise = require('bluebird')
 once = require('lodash/once')
 without = require('lodash/without')
 some = require('lodash/some')
-map = require('lodash/map')
 bSemver = require('balena-semver')
 semver = require('semver')
 errors = require('balena-errors')
@@ -1581,7 +1580,7 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getSupportedDeviceTypes = (callback) ->
 		configModel().getDeviceTypes().then (deviceTypes) ->
-			return map(deviceTypes, 'name')
+			return deviceTypes.map((dt) -> dt.name)
 		.asCallback(callback)
 
 	###*

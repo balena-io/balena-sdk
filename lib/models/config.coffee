@@ -16,7 +16,6 @@ limitations under the License.
 
 once = require('lodash/once')
 union = require('lodash/union')
-map = require('lodash/map')
 
 getConfigModel = (deps, opts) ->
 	{ request } = deps
@@ -32,7 +31,7 @@ getConfigModel = (deps, opts) ->
 		# This logic is literally copy and pasted from balena UI, but
 		# there are plans to move this to `resin-device-types` so it
 		# should be a matter of time for this to be removed.
-		return map deviceTypes, (deviceType) ->
+		return deviceTypes.map (deviceType) ->
 			if deviceType.state is 'DISCONTINUED'
 				deviceType.name = deviceType.name.replace(/(\(PREVIEW|EXPERIMENTAL\))/, '(DISCONTINUED)')
 			if deviceType.state is 'PREVIEW'
