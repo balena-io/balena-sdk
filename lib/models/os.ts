@@ -20,7 +20,6 @@ import * as bSemver from 'balena-semver';
 import defaults = require('lodash/defaults');
 import find = require('lodash/find');
 import once = require('lodash/once');
-import reject = require('lodash/reject');
 import * as memoizee from 'memoizee';
 import * as semver from 'semver';
 
@@ -128,12 +127,11 @@ const getOsModel = function(
 				// optionally authenticated, so we send the token in all cases
 			})
 			.get('body')
-			.then(({ versions, latest }) => {
+			.then(({ versions, latest }: { versions: any[]; latest: any }) => {
 				versions.sort(bSemver.rcompare);
-				const potentialRecommendedVersions = reject(
-					versions,
+				const potentialRecommendedVersions = versions.filter(
 					version =>
-						semver.prerelease(version) || isDevelopmentVersion(version),
+						!(semver.prerelease(version) || isDevelopmentVersion(version)),
 				);
 				const recommended =
 					(potentialRecommendedVersions != null
@@ -620,7 +618,7 @@ const getOsModel = function(
 					hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v),
 				);
 
-				const recommended = reject(versions, bSemver.prerelease)[0] as
+				const recommended = versions.filter(v => !bSemver.prerelease(v))[0] as
 					| string
 					| undefined;
 
