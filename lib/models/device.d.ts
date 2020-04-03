@@ -6,4 +6,5 @@ export default function(
 	opts: any,
 ): {
 	get: (uuidOrId: number | string, options: Dictionary<any>) => Bluebird<any>;
+	getManifestBySlug: (slug: string) => Bluebird<any>;
 };
