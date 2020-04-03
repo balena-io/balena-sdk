@@ -18,7 +18,6 @@ url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
 without = require('lodash/without')
-some = require('lodash/some')
 bSemver = require('balena-semver')
 semver = require('semver')
 errors = require('balena-errors')
@@ -1608,11 +1607,9 @@ getDeviceModel = (deps, opts) ->
 	exports.getManifestBySlug = (slug, callback) ->
 		return configModel().getDeviceTypes().then (deviceTypes) ->
 			return deviceTypes.find (deviceType) ->
-				return some [
-					deviceType.name is slug
-					deviceType.slug is slug
+				return deviceType.name is slug or
+					deviceType.slug is slug or
 					deviceType.aliases?.includes(slug)
-				]
 		.then (deviceManifest) ->
 			if not deviceManifest?
 				throw new errors.BalenaInvalidDeviceType(slug)
@@ -2514,7 +2511,7 @@ getDeviceModel = (deps, opts) ->
 
 			return osModel().getSupportedVersions(device.device_type)
 		.then ({ versions: allVersions }) ->
-			if !skipCheck && !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
+			if !skipCheck && !allVersions.some((v) -> bSemver.compare(v, targetOsVersion) == 0)
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
 
 			getOsUpdateHelper()
@@ -2565,7 +2562,7 @@ getDeviceModel = (deps, opts) ->
 
 			osModel().getSupportedVersions(device.device_type)
 		.then ({ versions: allVersions }) ->
-			if !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
+			if !allVersions.some((v) -> bSemver.compare(v, targetOsVersion) == 0)
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
 
 			getOsUpdateHelper()
