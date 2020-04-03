@@ -226,13 +226,13 @@ const convertExpandToObject = <T extends {}>(
 	if (expandOption == null) {
 		return {};
 	}
+
 	if (typeof expandOption === 'string') {
 		return {
 			[expandOption]: {},
 		} as Pine.ResourceExpandFor<T>;
 	}
-	// Cast to the correct type based upon the checks above as the `typeof string` check misses some string cases?
-	expandOption = expandOption as Required<Exclude<typeof expandOption, string>>;
+
 	if (Array.isArray(expandOption)) {
 		// Reduce the array into a single object
 		return expandOption.reduce(
@@ -243,23 +243,23 @@ const convertExpandToObject = <T extends {}>(
 				),
 			{},
 		);
-	} else {
-		// Check the options in this object are the ones we know how to merge
-		for (const expandKey of Object.keys(expandOption) as Array<
-			keyof Pine.ResourceExpandFor<T>
-		>) {
-			const expandRelationshipOptions = expandOption[expandKey];
-
-			const invalidKeys = Object.keys(expandRelationshipOptions! || {}).filter(
-				key => key !== '$select' && key !== '$expand' && key !== '$filter',
-			);
-			if (invalidKeys.length > 0) {
-				throw new Error(`Unknown pine expand options: ${invalidKeys}`);
-			}
-		}
-
-		return cloneDeep(expandOption);
 	}
+
+	// Check the options in this object are the ones we know how to merge
+	for (const expandKey of Object.keys(expandOption) as Array<
+		keyof typeof expandOption
+	>) {
+		const expandRelationshipOptions = expandOption[expandKey];
+
+		const invalidKeys = Object.keys(expandRelationshipOptions! || {}).filter(
+			key => key !== '$select' && key !== '$expand' && key !== '$filter',
+		);
+		if (invalidKeys.length > 0) {
+			throw new Error(`Unknown pine expand options: ${invalidKeys}`);
+		}
+	}
+
+	return cloneDeep(expandOption);
 };
 
 // In order not to introduce a breaking change, we export each element independently and all together as a default export.
