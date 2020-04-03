@@ -77,7 +77,7 @@ const getReleaseModel = function(
 	 */
 	function get(
 		commitOrId: string | number,
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 		callback?: (error?: Error, result?: BalenaSdk.Release) => void,
 	): Promise<BalenaSdk.Release> {
 		callback = findCallback(arguments);
@@ -171,8 +171,8 @@ const getReleaseModel = function(
 	function getWithImageDetails(
 		commitOrId: string | number,
 		options: {
-			release?: BalenaSdk.PineOptionsFor<BalenaSdk.Release>;
-			image?: BalenaSdk.PineOptionsFor<BalenaSdk.Image>;
+			release?: BalenaSdk.PineOptions<BalenaSdk.Release>;
+			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
 		} = {},
 		callback?: (
 			error?: Error,
@@ -274,7 +274,7 @@ const getReleaseModel = function(
 	 */
 	function getAllByApplication(
 		nameOrSlugOrId: string | number,
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 		callback?: (error?: Error, result?: BalenaSdk.Release[]) => void,
 	): Promise<BalenaSdk.Release[]> {
 		callback = findCallback(arguments);
@@ -328,7 +328,7 @@ const getReleaseModel = function(
 	 */
 	function getLatestByApplication(
 		nameOrSlugOrId: string | number,
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 		callback?: (error?: Error, result?: BalenaSdk.Release) => void,
 	): Promise<BalenaSdk.Release> {
 		callback = findCallback(arguments);
@@ -438,7 +438,7 @@ const getReleaseModel = function(
 		 */
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
-			options: BalenaSdk.PineOptionsFor<BalenaSdk.ReleaseTag> = {},
+			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 			callback?: (error?: Error, result?: BalenaSdk.ReleaseTag[]) => void,
 		): Promise<BalenaSdk.ReleaseTag[]> {
 			return applicationModel()
@@ -497,7 +497,7 @@ const getReleaseModel = function(
 		 */
 		getAllByRelease(
 			commitOrId: string | number,
-			options: BalenaSdk.PineOptionsFor<BalenaSdk.ReleaseTag> = {},
+			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 			callback?: (error?: Error, result?: BalenaSdk.ReleaseTag[]) => void,
 		): Promise<BalenaSdk.ReleaseTag[]> {
 			callback = findCallback(arguments);

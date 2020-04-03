@@ -52,7 +52,7 @@ const getKeyModel = function(
 	 * });
 	 */
 	function getAll(
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.SSHKey> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.SSHKey> = {},
 		callback?: (error?: Error, result?: BalenaSdk.SSHKey[]) => void,
 	): Promise<BalenaSdk.SSHKey[]> {
 		callback = findCallback(arguments);
