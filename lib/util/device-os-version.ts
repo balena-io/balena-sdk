@@ -1,5 +1,4 @@
 import bSemver = require('balena-semver');
-import includes = require('lodash/includes');
 import isEmpty = require('lodash/isEmpty');
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { isProvisioned } from './device';
@@ -31,7 +30,7 @@ export const getDeviceOsSemverWithVariant = ({
 	const build = versionInfo.build.slice();
 	if (
 		os_variant &&
-		!includes([...build, ...versionInfo.prerelease], os_variant)
+		![...build, ...versionInfo.prerelease].includes(os_variant)
 	) {
 		build.push(os_variant);
 	}

@@ -21,7 +21,6 @@ once = require('lodash/once')
 without = require('lodash/without')
 find = require('lodash/find')
 some = require('lodash/some')
-includes = require('lodash/includes')
 map = require('lodash/map')
 bSemver = require('balena-semver')
 semver = require('semver')
@@ -1615,7 +1614,7 @@ getDeviceModel = (deps, opts) ->
 				return some [
 					deviceType.name is slug
 					deviceType.slug is slug
-					includes(deviceType.aliases, slug)
+					deviceType.aliases?.includes(slug)
 				]
 		.then (deviceManifest) ->
 			if not deviceManifest?

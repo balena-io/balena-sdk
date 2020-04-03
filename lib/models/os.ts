@@ -20,7 +20,6 @@ import * as bSemver from 'balena-semver';
 import defaults = require('lodash/defaults');
 import find = require('lodash/find');
 import first = require('lodash/first');
-import includes = require('lodash/includes');
 import once = require('lodash/once');
 import reject = require('lodash/reject');
 import * as memoizee from 'memoizee';
@@ -218,7 +217,7 @@ const getOsModel = function(
 
 		// TODO: Once we integrate balena-semver, balena-semver should learn to handle this itself
 		const semverVersionOrRange = fixNonSemver(versionOrRange);
-		if (includes(semverVersions, semverVersionOrRange)) {
+		if (semverVersions.includes(semverVersionOrRange)) {
 			// If the _exact_ version you're looking for exists, it's not a range, and
 			// we should return it exactly, not any old equivalent version.
 			return unfixNonSemver(semverVersionOrRange);
