@@ -1,4 +1,14 @@
 - commits:
+    - subject: Convert lib/util/dependent-resource.coffee to javascript
+      hash: 45f0705b3563e739a949b39da83dcb89ea36a7a0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.3
+  date: 2020-04-03T12:19:54.219Z
+- commits:
     - subject: Use native function type check
       hash: c3d427c2502ffb6fa63fcbe43e1d371af7a8e8fe
       body: ''
