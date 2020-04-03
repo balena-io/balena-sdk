@@ -65,7 +65,7 @@ getSdk = (opts = {}) ->
 		auth: -> require('./auth').default
 		models: -> require('./models')
 		logs: -> require('./logs')
-		settings: -> require('./settings')
+		settings: -> require('./settings').default
 
 	opts = Object.assign({
 		apiUrl: 'https://api.balena-cloud.com/'
