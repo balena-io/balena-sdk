@@ -19,7 +19,6 @@ import * as Promise from 'bluebird';
 import * as bSemver from 'balena-semver';
 import defaults = require('lodash/defaults');
 import find = require('lodash/find');
-import first = require('lodash/first');
 import once = require('lodash/once');
 import reject = require('lodash/reject');
 import * as memoizee from 'memoizee';
@@ -621,7 +620,7 @@ const getOsModel = function(
 					hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v),
 				);
 
-				const recommended = first(reject(versions, bSemver.prerelease)) as
+				const recommended = reject(versions, bSemver.prerelease)[0] as
 					| string
 					| undefined;
 
