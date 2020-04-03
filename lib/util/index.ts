@@ -1,6 +1,5 @@
 import * as errors from 'balena-errors';
 import cloneDeep = require('lodash/cloneDeep');
-import isNumber = require('lodash/isNumber');
 import throttle = require('lodash/throttle');
 import * as memoizee from 'memoizee';
 import * as moment from 'moment';
@@ -48,7 +47,7 @@ export const timeSince = (input: Date, suffix = true) => {
 	return moment.min(time, date).from(time, !suffix);
 };
 
-export const isId = isNumber;
+export const isId = (v?: any): v is number => typeof v === 'number';
 
 export const LOCKED_STATUS_CODE = 423;
 
