@@ -1,6 +1,5 @@
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import find = require('lodash/find');
 import omit = require('lodash/omit');
 import pick = require('lodash/pick');
 import * as BalenaPine from '../../typings/balena-pine';
@@ -35,7 +34,7 @@ export const getUpsertHelper = ({ pine }: { pine: BalenaPine.Pine }) => {
 				);
 			}
 
-			const missingProp = find(naturalKeyProps, prop => !(prop in body));
+			const missingProp = naturalKeyProps.find(prop => !(prop in body));
 			if (missingProp) {
 				throw new errors.BalenaInvalidParameterError(
 					'naturalKeyProps',

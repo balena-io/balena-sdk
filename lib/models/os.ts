@@ -18,7 +18,6 @@ import * as Promise from 'bluebird';
 
 import * as bSemver from 'balena-semver';
 import defaults = require('lodash/defaults');
-import find = require('lodash/find');
 import once = require('lodash/once');
 import * as memoizee from 'memoizee';
 import * as semver from 'semver';
@@ -608,8 +607,7 @@ const getOsModel = function(
 			.then(({ versions: allVersions }) => {
 				// use bSemver.compare to find the current version in the OS list
 				// to benefit from the baked-in normalization
-				const current = find(
-					allVersions,
+				const current = allVersions.find(
 					v => bSemver.compare(v, currentVersion) === 0,
 				);
 

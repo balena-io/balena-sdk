@@ -18,7 +18,6 @@ url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
 without = require('lodash/without')
-find = require('lodash/find')
 some = require('lodash/some')
 map = require('lodash/map')
 bSemver = require('balena-semver')
@@ -1609,7 +1608,7 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getManifestBySlug = (slug, callback) ->
 		return configModel().getDeviceTypes().then (deviceTypes) ->
-			return find deviceTypes, (deviceType) ->
+			return deviceTypes.find (deviceType) ->
 				return some [
 					deviceType.name is slug
 					deviceType.slug is slug
