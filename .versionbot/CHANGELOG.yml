@@ -1,4 +1,91 @@
 - commits:
+    - subject: Switch to using native version of defaults
+      hash: 7a72699f32f16c8c3e2fcd5fa2b64b8007bc09e8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native some
+      hash: 09d81da5a6b79a841f00fe02c076c33d83defc94
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native map
+      hash: 51a87ea392e0e28fba22885876ef349c0ab8dad7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to native number type check
+      hash: f41fffb582662326fc5d09d8ce25627c04d74ddf
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native `find`
+      hash: fa37ff11f95516b862613721256b2d44531d7805
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native version of `isEmpty`
+      hash: c2386e152530c14a37c298547e14a122d0e5be58
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native version of `size`
+      hash: f1a4d781b1dccac34c9701869f4dd831baa93060
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native version of `reject`
+      hash: 96fe5eebefedcc8fc2fc0ca8dc37e2b8d54d109b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native version of `first`
+      hash: 6eb139540a3ff1f644f2c939d5fdf2b1d34edb74
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native includes
+      hash: 17b375d573829560b8ae6f16d63fdf2ceb7bf822
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Convert final isString to a native type check
+      hash: 7c11114753b7065fc43405102c1ea0f158dea663
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Switch to using native Object.assign
+      hash: 59a665cfd278a3ecf6d7626b931a458b867f306f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.4
+  date: 2020-04-03T16:12:18.680Z
+- commits:
     - subject: Convert lib/util/dependent-resource.coffee to javascript
       hash: 45f0705b3563e739a949b39da83dcb89ea36a7a0
       body: ''
