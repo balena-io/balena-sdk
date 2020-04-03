@@ -18,7 +18,6 @@ url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
 isEmpty = require('lodash/isEmpty')
-size = require('lodash/size')
 errors = require('balena-errors')
 
 {
@@ -254,7 +253,7 @@ getApplicationModel = (deps, opts) ->
 					if isEmpty(applications)
 						throw new errors.BalenaApplicationNotFound(nameOrSlugOrId)
 
-					if size(applications) > 1
+					if applications.length > 1
 						throw new errors.BalenaAmbiguousApplication(nameOrSlugOrId)
 				.get(0)
 		.tap(normalizeApplication)
@@ -347,7 +346,7 @@ getApplicationModel = (deps, opts) ->
 		.tap (applications) ->
 			if isEmpty(applications)
 				throw new errors.BalenaApplicationNotFound("#{owner}/#{appName}")
-			if size(applications) > 1
+			if applications.length > 1
 				throw new errors.BalenaAmbiguousApplication("#{owner}/#{appName}")
 		.get(0)
 		.tap(normalizeApplication)
