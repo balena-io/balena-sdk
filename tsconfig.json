@@ -15,12 +15,12 @@
         "typeRoots": [
             "node_modules/@types",
             "node_modules/@resin.io"
-        ]
+        ],
+        "allowJs": true
     },
     "include": [
         "typings/*.d.ts",
         "tests/typings/*.d.ts",
-        "lib/**/*.ts",
-        "lib/**/*.d.ts"
+        "lib/**/*",
     ]
 }
