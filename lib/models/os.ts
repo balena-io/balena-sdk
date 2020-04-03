@@ -17,7 +17,6 @@ limitations under the License.
 import * as Promise from 'bluebird';
 
 import * as bSemver from 'balena-semver';
-import defaults = require('lodash/defaults');
 import once = require('lodash/once');
 import * as memoizee from 'memoizee';
 import * as semver from 'semver';
@@ -513,9 +512,7 @@ const getOsModel = function(
 				throw new Error('An OS version is required when calling os.getConfig');
 			}
 
-			const defaultOpts = { network: 'ethernet' };
-
-			defaults(options, defaultOpts);
+			options.network = options.network ?? 'ethernet';
 
 			return applicationModel()
 				._getId(nameOrSlugOrId)
