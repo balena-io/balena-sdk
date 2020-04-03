@@ -17,7 +17,6 @@ limitations under the License.
 import * as Promise from 'bluebird';
 
 import * as bSemver from 'balena-semver';
-import assign = require('lodash/assign');
 import defaults = require('lodash/defaults');
 import find = require('lodash/find');
 import first = require('lodash/first');
@@ -530,7 +529,7 @@ const getOsModel = function(
 						method: 'POST',
 						url: '/download-config',
 						baseUrl: apiUrl,
-						body: assign(options, { appId: applicationId }),
+						body: Object.assign(options, { appId: applicationId }),
 					}),
 				)
 				.get('body')

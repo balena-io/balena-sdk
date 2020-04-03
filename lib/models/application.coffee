@@ -17,7 +17,6 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
-assign = require('lodash/assign')
 isEmpty = require('lodash/isEmpty')
 size = require('lodash/size')
 errors = require('balena-errors')
@@ -491,13 +490,13 @@ getApplicationModel = (deps, opts) ->
 			else {}
 
 			if applicationTypeId
-				assign extraOptions,
+				Object.assign extraOptions,
 					application_type: applicationTypeId
 
 			return pine.post
 				resource: 'application'
 				body:
-					assign
+					Object.assign
 						app_name: name
 						device_type: deviceManifest.slug
 					, extraOptions

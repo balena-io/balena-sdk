@@ -1,5 +1,4 @@
 import * as errors from 'balena-errors';
-import assign = require('lodash/assign');
 import cloneDeep = require('lodash/cloneDeep');
 import isNumber = require('lodash/isNumber');
 import isString = require('lodash/isString');
@@ -236,7 +235,7 @@ const convertExpandToObject = <T extends {}>(
 		// Reduce the array into a single object
 		return expandOption.reduce(
 			(result, option) =>
-				assign(result, isString(option) ? { [option]: {} } : option),
+				Object.assign(result, isString(option) ? { [option]: {} } : option),
 			{},
 		);
 	} else {

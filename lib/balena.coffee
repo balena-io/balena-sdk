@@ -36,7 +36,6 @@ BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 
 getSdk = (opts = {}) ->
 	version = require('./util/sdk-version').default
-	assign = require('lodash/assign')
 	defaults = require('lodash/defaults')
 	getRequest = require('balena-request')
 	BalenaAuth = require('balena-auth')['default']
@@ -90,8 +89,8 @@ getSdk = (opts = {}) ->
 			dataDirectory: settings.get('dataDirectory')
 
 	auth = new BalenaAuth(opts)
-	request = getRequest(assign({}, opts, { auth }))
-	pine = getPine(assign({}, opts, { auth, request }))
+	request = getRequest(Object.assign({}, opts, { auth }))
+	pine = getPine(Object.assign({}, opts, { auth, request }))
 	pubsub = new PubSub()
 
 	sdk = {}
