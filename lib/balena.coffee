@@ -64,7 +64,7 @@ getSdk = (opts = {}) ->
 	sdkTemplate =
 		auth: -> require('./auth').default
 		models: -> require('./models')
-		logs: -> require('./logs')
+		logs: -> require('./logs').default
 		settings: -> require('./settings').default
 
 	opts = Object.assign({
