@@ -104,9 +104,9 @@ export const isDevelopmentVersion = (version: string) =>
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 export const mergePineOptions = <R extends {}>(
-	defaults: Pine.PineOptionsFor<R>,
-	extras: Pine.PineOptionsFor<R> | undefined,
-): Pine.PineOptionsFor<R> => {
+	defaults: Pine.PineOptions<R>,
+	extras: Pine.PineOptions<R> | undefined,
+): Pine.PineOptions<R> => {
 	if (!extras) {
 		return defaults;
 	}
@@ -208,7 +208,7 @@ const mergeExpandOptions = <T>(
 // containing (at most) $expand, $filter and $select keys
 const convertExpandToObject = <T extends {}>(
 	expandOption: Pine.Expand<T> | undefined,
-): Pine.ResourceExpandFor<T> => {
+): Pine.ResourceExpand<T> => {
 	if (expandOption == null) {
 		return {};
 	}
@@ -216,7 +216,7 @@ const convertExpandToObject = <T extends {}>(
 	if (typeof expandOption === 'string') {
 		return {
 			[expandOption]: {},
-		} as Pine.ResourceExpandFor<T>;
+		} as Pine.ResourceExpand<T>;
 	}
 
 	if (Array.isArray(expandOption)) {

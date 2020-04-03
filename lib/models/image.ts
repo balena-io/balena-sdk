@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import { Image, PineOptionsFor } from '../../typings/balena-sdk';
+import { Image, PineOptions } from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { findCallback, mergePineOptions } from '../util';
 
@@ -51,7 +51,7 @@ const getImageModel = function(
 	 */
 	exports.get = function(
 		id: number,
-		options: PineOptionsFor<Image> = {},
+		options: PineOptions<Image> = {},
 		callback?: (error?: Error, result?: Image) => void,
 	): Promise<Image> {
 		callback = findCallback(arguments);
