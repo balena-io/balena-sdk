@@ -17,9 +17,6 @@ limitations under the License.
 url = require('url')
 Promise = require('bluebird')
 once = require('lodash/once')
-assign = require('lodash/assign')
-isEmpty = require('lodash/isEmpty')
-size = require('lodash/size')
 errors = require('balena-errors')
 
 {
@@ -252,10 +249,10 @@ getApplicationModel = (deps, opts) ->
 									slug: nameOrSlugOrId.toLowerCase()
 						, options
 				.tap (applications) ->
-					if isEmpty(applications)
+					if applications.length == 0
 						throw new errors.BalenaApplicationNotFound(nameOrSlugOrId)
 
-					if size(applications) > 1
+					if applications.length > 1
 						throw new errors.BalenaAmbiguousApplication(nameOrSlugOrId)
 				.get(0)
 		.tap(normalizeApplication)
@@ -346,9 +343,9 @@ getApplicationModel = (deps, opts) ->
 						slug: "#{owner}/#{appName}"
 				, options
 		.tap (applications) ->
-			if isEmpty(applications)
+			if applications.length == 0
 				throw new errors.BalenaApplicationNotFound("#{owner}/#{appName}")
-			if size(applications) > 1
+			if applications.length > 1
 				throw new errors.BalenaAmbiguousApplication("#{owner}/#{appName}")
 		.get(0)
 		.tap(normalizeApplication)
@@ -410,7 +407,7 @@ getApplicationModel = (deps, opts) ->
 	###
 	exports.hasAny = (callback) ->
 		exports.getAll($select: ['id']).then (applications) ->
-			return not isEmpty(applications)
+			return applications.length != 0
 		.asCallback(callback)
 
 	###*
@@ -491,13 +488,13 @@ getApplicationModel = (deps, opts) ->
 			else {}
 
 			if applicationTypeId
-				assign extraOptions,
+				Object.assign extraOptions,
 					application_type: applicationTypeId
 
 			return pine.post
 				resource: 'application'
 				body:
-					assign
+					Object.assign
 						app_name: name
 						device_type: deviceManifest.slug
 					, extraOptions

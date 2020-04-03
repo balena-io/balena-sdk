@@ -1,4 +1,3 @@
-import isEmpty = require('lodash/isEmpty');
 import * as BalenaSdk from '../../typings/balena-sdk';
 
 export const isProvisioned = (
@@ -8,7 +7,8 @@ export const isProvisioned = (
 	>,
 ) => {
 	return (
-		!isEmpty(device.supervisor_version) &&
-		!isEmpty(device.last_connectivity_event)
+		device.supervisor_version != null &&
+		device.supervisor_version.length > 0 &&
+		device.last_connectivity_event != null
 	);
 };

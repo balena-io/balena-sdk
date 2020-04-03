@@ -1,8 +1,5 @@
 import * as errors from 'balena-errors';
-import assign = require('lodash/assign');
 import cloneDeep = require('lodash/cloneDeep');
-import isNumber = require('lodash/isNumber');
-import isString = require('lodash/isString');
 import throttle = require('lodash/throttle');
 import * as memoizee from 'memoizee';
 import * as moment from 'moment';
@@ -50,7 +47,7 @@ export const timeSince = (input: Date, suffix = true) => {
 	return moment.min(time, date).from(time, !suffix);
 };
 
-export const isId = isNumber;
+export const isId = (v?: any): v is number => typeof v === 'number';
 
 export const LOCKED_STATUS_CODE = 423;
 
@@ -228,15 +225,22 @@ const convertExpandToObject = <T extends {}>(
 ): Pine.ResourceExpandFor<T> => {
 	if (expandOption == null) {
 		return {};
-	} else if (isString(expandOption)) {
+	}
+	if (typeof expandOption === 'string') {
 		return {
 			[expandOption]: {},
 		} as Pine.ResourceExpandFor<T>;
-	} else if (Array.isArray(expandOption)) {
+	}
+	// Cast to the correct type based upon the checks above as the `typeof string` check misses some string cases?
+	expandOption = expandOption as Required<Exclude<typeof expandOption, string>>;
+	if (Array.isArray(expandOption)) {
 		// Reduce the array into a single object
 		return expandOption.reduce(
 			(result, option) =>
-				assign(result, isString(option) ? { [option]: {} } : option),
+				Object.assign(
+					result,
+					typeof option === 'string' ? { [option]: {} } : option,
+				),
 			{},
 		);
 	} else {

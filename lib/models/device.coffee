@@ -16,13 +16,8 @@ limitations under the License.
 
 url = require('url')
 Promise = require('bluebird')
-isEmpty = require('lodash/isEmpty')
 once = require('lodash/once')
 without = require('lodash/without')
-find = require('lodash/find')
-some = require('lodash/some')
-includes = require('lodash/includes')
-map = require('lodash/map')
 bSemver = require('balena-semver')
 semver = require('semver')
 errors = require('balena-errors')
@@ -177,7 +172,7 @@ getDeviceModel = (deps, opts) ->
 	# dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 	###
 	exports.getDashboardUrl = (uuid) ->
-		if typeof uuid != 'string' || isEmpty(uuid)
+		if typeof uuid != 'string' || uuid.length == 0
 			throw new Error('The uuid option should be a non empty string')
 
 		return url.resolve(dashboardUrl, "/devices/#{uuid}/summary")
@@ -383,7 +378,7 @@ getDeviceModel = (deps, opts) ->
 								uuid: $startswith: uuidOrId
 						, options
 				.tap (devices) ->
-					if isEmpty(devices)
+					if devices.length == 0
 						throw new errors.BalenaDeviceNotFound(uuidOrId)
 
 					if devices.length > 1
@@ -464,7 +459,7 @@ getDeviceModel = (deps, opts) ->
 			$filter: device_name: name
 			options
 		)).tap (devices) ->
-			if isEmpty(devices)
+			if devices.length == 0
 				throw new errors.BalenaDeviceNotFound(name)
 		.asCallback(callback)
 
@@ -1584,7 +1579,7 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getSupportedDeviceTypes = (callback) ->
 		configModel().getDeviceTypes().then (deviceTypes) ->
-			return map(deviceTypes, 'name')
+			return deviceTypes.map((dt) -> dt.name)
 		.asCallback(callback)
 
 	###*
@@ -1611,12 +1606,10 @@ getDeviceModel = (deps, opts) ->
 	###
 	exports.getManifestBySlug = (slug, callback) ->
 		return configModel().getDeviceTypes().then (deviceTypes) ->
-			return find deviceTypes, (deviceType) ->
-				return some [
-					deviceType.name is slug
-					deviceType.slug is slug
-					includes(deviceType.aliases, slug)
-				]
+			return deviceTypes.find (deviceType) ->
+				return deviceType.name is slug or
+					deviceType.slug is slug or
+					deviceType.aliases?.includes(slug)
 		.then (deviceManifest) ->
 			if not deviceManifest?
 				throw new errors.BalenaInvalidDeviceType(slug)
@@ -2346,7 +2339,7 @@ getDeviceModel = (deps, opts) ->
 					$select: 'commit'
 		)
 		.then ({ should_be_running__release, belongs_to__application }) ->
-			if not isEmpty(should_be_running__release)
+			if should_be_running__release.length > 0
 				return should_be_running__release[0].commit
 			belongs_to__application[0].commit
 		.asCallback(callback)
@@ -2518,7 +2511,7 @@ getDeviceModel = (deps, opts) ->
 
 			return osModel().getSupportedVersions(device.device_type)
 		.then ({ versions: allVersions }) ->
-			if !skipCheck && !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
+			if !skipCheck && !allVersions.some((v) -> bSemver.compare(v, targetOsVersion) == 0)
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
 
 			getOsUpdateHelper()
@@ -2569,7 +2562,7 @@ getDeviceModel = (deps, opts) ->
 
 			osModel().getSupportedVersions(device.device_type)
 		.then ({ versions: allVersions }) ->
-			if !some(allVersions, (v) -> bSemver.compare(v, targetOsVersion) == 0)
+			if !allVersions.some((v) -> bSemver.compare(v, targetOsVersion) == 0)
 				throw new errors.BalenaInvalidParameterError('targetOsVersion', targetOsVersion)
 
 			getOsUpdateHelper()
@@ -3306,7 +3299,7 @@ getDeviceModel = (deps, opts) ->
 							device: deviceFilter
 							service: serviceId
 				.tap (serviceInstalls) ->
-					if isEmpty(serviceInstalls)
+					if serviceInstalls.length == 0
 						throw new errors.BalenaServiceNotFound(serviceId)
 					if serviceInstalls.length > 1
 						throw new errors.BalenaAmbiguousDevice(uuidOrId)

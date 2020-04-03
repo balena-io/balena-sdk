@@ -36,8 +36,6 @@ BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS'
 
 getSdk = (opts = {}) ->
 	version = require('./util/sdk-version').default
-	assign = require('lodash/assign')
-	defaults = require('lodash/defaults')
 	getRequest = require('balena-request')
 	BalenaAuth = require('balena-auth')['default']
 	getPine = require('balena-pine')
@@ -69,7 +67,7 @@ getSdk = (opts = {}) ->
 		logs: -> require('./logs')
 		settings: -> require('./settings')
 
-	defaults opts,
+	opts = Object.assign({
 		apiUrl: 'https://api.balena-cloud.com/'
 		builderUrl: 'https://builder.balena-cloud.com/'
 		# deprecated
@@ -78,6 +76,7 @@ getSdk = (opts = {}) ->
 		# API version is configurable but only do so if you know what you're doing,
 		# as the SDK is directly tied to a specific version.
 		apiVersion: 'v5'
+	}, opts)
 
 	if opts.isBrowser
 		{ notImplemented } = require('./util')
@@ -86,12 +85,11 @@ getSdk = (opts = {}) ->
 			getAll: notImplemented
 	else
 		settings = require('balena-settings-client')
-		defaults opts,
-			dataDirectory: settings.get('dataDirectory')
+		opts.dataDirectory ?= settings.get('dataDirectory')
 
 	auth = new BalenaAuth(opts)
-	request = getRequest(assign({}, opts, { auth }))
-	pine = getPine(assign({}, opts, { auth, request }))
+	request = getRequest(Object.assign({}, opts, { auth }))
+	pine = getPine(Object.assign({}, opts, { auth, request }))
 	pubsub = new PubSub()
 
 	sdk = {}

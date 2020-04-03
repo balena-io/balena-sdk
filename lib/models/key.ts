@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import isEmpty = require('lodash/isEmpty');
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { findCallback, mergePineOptions } from '../util';
@@ -97,7 +96,7 @@ const getKeyModel = function(
 				id,
 			})
 			.tap(function(key) {
-				if (isEmpty(key)) {
+				if (key == null) {
 					throw new errors.BalenaKeyNotFound(id);
 				}
 			})

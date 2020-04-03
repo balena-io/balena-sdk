@@ -1,13 +1,11 @@
 import bSemver = require('balena-semver');
-import includes = require('lodash/includes');
-import isEmpty = require('lodash/isEmpty');
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { isProvisioned } from './device';
 
 export const normalizeDeviceOsVersion = (device: BalenaSdk.Device) => {
 	if (
 		device.os_version != null &&
-		isEmpty(device.os_version) &&
+		device.os_version.length === 0 &&
 		isProvisioned(device)
 	) {
 		device.os_version = 'Resin OS 1.0.0-pre';
@@ -31,12 +29,12 @@ export const getDeviceOsSemverWithVariant = ({
 	const build = versionInfo.build.slice();
 	if (
 		os_variant &&
-		!includes([...build, ...versionInfo.prerelease], os_variant)
+		![...build, ...versionInfo.prerelease].includes(os_variant)
 	) {
 		build.push(os_variant);
 	}
 
-	if (!isEmpty(build)) {
+	if (build.length > 0) {
 		version = `${version}+${build.join('.')}`;
 	}
 

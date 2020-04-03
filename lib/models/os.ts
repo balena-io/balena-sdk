@@ -17,13 +17,7 @@ limitations under the License.
 import * as Promise from 'bluebird';
 
 import * as bSemver from 'balena-semver';
-import assign = require('lodash/assign');
-import defaults = require('lodash/defaults');
-import find = require('lodash/find');
-import first = require('lodash/first');
-import includes = require('lodash/includes');
 import once = require('lodash/once');
-import reject = require('lodash/reject');
 import * as memoizee from 'memoizee';
 import * as semver from 'semver';
 
@@ -131,12 +125,11 @@ const getOsModel = function(
 				// optionally authenticated, so we send the token in all cases
 			})
 			.get('body')
-			.then(({ versions, latest }) => {
+			.then(({ versions, latest }: { versions: any[]; latest: any }) => {
 				versions.sort(bSemver.rcompare);
-				const potentialRecommendedVersions = reject(
-					versions,
+				const potentialRecommendedVersions = versions.filter(
 					version =>
-						semver.prerelease(version) || isDevelopmentVersion(version),
+						!(semver.prerelease(version) || isDevelopmentVersion(version)),
 				);
 				const recommended =
 					(potentialRecommendedVersions != null
@@ -219,7 +212,7 @@ const getOsModel = function(
 
 		// TODO: Once we integrate balena-semver, balena-semver should learn to handle this itself
 		const semverVersionOrRange = fixNonSemver(versionOrRange);
-		if (includes(semverVersions, semverVersionOrRange)) {
+		if (semverVersions.includes(semverVersionOrRange)) {
 			// If the _exact_ version you're looking for exists, it's not a range, and
 			// we should return it exactly, not any old equivalent version.
 			return unfixNonSemver(semverVersionOrRange);
@@ -519,9 +512,7 @@ const getOsModel = function(
 				throw new Error('An OS version is required when calling os.getConfig');
 			}
 
-			const defaultOpts = { network: 'ethernet' };
-
-			defaults(options, defaultOpts);
+			options.network = options.network ?? 'ethernet';
 
 			return applicationModel()
 				._getId(nameOrSlugOrId)
@@ -530,7 +521,7 @@ const getOsModel = function(
 						method: 'POST',
 						url: '/download-config',
 						baseUrl: apiUrl,
-						body: assign(options, { appId: applicationId }),
+						body: Object.assign(options, { appId: applicationId }),
 					}),
 				)
 				.get('body')
@@ -613,8 +604,7 @@ const getOsModel = function(
 			.then(({ versions: allVersions }) => {
 				// use bSemver.compare to find the current version in the OS list
 				// to benefit from the baked-in normalization
-				const current = find(
-					allVersions,
+				const current = allVersions.find(
 					v => bSemver.compare(v, currentVersion) === 0,
 				);
 
@@ -623,7 +613,7 @@ const getOsModel = function(
 					hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v),
 				);
 
-				const recommended = first(reject(versions, bSemver.prerelease)) as
+				const recommended = versions.filter(v => !bSemver.prerelease(v))[0] as
 					| string
 					| undefined;
 

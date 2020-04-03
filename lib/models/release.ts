@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import isEmpty = require('lodash/isEmpty');
 import omit = require('lodash/omit');
 import once = require('lodash/once');
 import * as BalenaSdk from '../../typings/balena-sdk';
@@ -114,7 +113,7 @@ const getReleaseModel = function(
 						),
 					})
 					.tap(function(releases) {
-						if (isEmpty(releases)) {
+						if (releases.length === 0) {
 							throw new errors.BalenaReleaseNotFound(commitOrId);
 						}
 
