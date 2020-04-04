@@ -216,7 +216,7 @@ If you feel something is missing, not clear or could be improved, please don't h
         * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
         * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
     * [.logs](#balena.logs) : <code>object</code>
-        * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise</code>
+        * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise.&lt;LogSubscription&gt;</code>
         * [.history(uuidOrId, [options])](#balena.logs.history) ⇒ <code>Promise</code>
         * [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
             * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
@@ -5899,7 +5899,7 @@ balena.auth.register({
 **Kind**: static namespace of [<code>balena</code>](#balena)  
 
 * [.logs](#balena.logs) : <code>object</code>
-    * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise</code>
+    * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise.&lt;LogSubscription&gt;</code>
     * [.history(uuidOrId, [options])](#balena.logs.history) ⇒ <code>Promise</code>
     * [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
         * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
@@ -5908,7 +5908,7 @@ balena.auth.register({
 
 <a name="balena.logs.subscribe"></a>
 
-#### logs.subscribe(uuidOrId, [options]) ⇒ <code>Promise</code>
+#### logs.subscribe(uuidOrId, [options]) ⇒ <code>Promise.&lt;LogSubscription&gt;</code>
 Connects to the stream of devices logs, returning a LogSubscription, which
 can be used to listen for logs as they appear, line by line.
 
