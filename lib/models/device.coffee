@@ -85,7 +85,6 @@ getDeviceModel = (deps, opts) ->
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
 	configVarModel = buildDependentResource { pine }, {
@@ -93,7 +92,6 @@ getDeviceModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
 	envVarModel = buildDependentResource { pine }, {
@@ -101,7 +99,6 @@ getDeviceModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'device',
 		getResourceId: (uuidOrId) -> exports.get(uuidOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.BalenaDeviceNotFound
 	}
 
 	exports = {

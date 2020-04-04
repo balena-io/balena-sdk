@@ -48,7 +48,6 @@ getApplicationModel = (deps, opts) ->
 		resourceKeyField: 'tag_key'
 		parentResourceName: 'application',
 		getResourceId: (nameOrSlugOrId) -> exports.get(nameOrSlugOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 
 	configVarModel = buildDependentResource { pine }, {
@@ -56,14 +55,12 @@ getApplicationModel = (deps, opts) ->
 		resourceKeyField: 'name'
 		parentResourceName: 'application',
 		getResourceId: (nameOrSlugOrId) -> exports.get(nameOrSlugOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 	envVarModel = buildDependentResource { pine }, {
 		resourceName: 'application_environment_variable'
 		resourceKeyField: 'name'
 		parentResourceName: 'application',
 		getResourceId: (nameOrSlugOrId) -> exports.get(nameOrSlugOrId, $select: 'id').get('id')
-		ResourceNotFoundError: errors.BalenaApplicationNotFound
 	}
 
 	exports = {}
