@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'util/index: Refactor & fix convertExpandToObject typings'
+      hash: b996735cabf35477a772345337b09886b3a1443e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 12.31.5
+  date: 2020-04-04T11:09:24.115Z
+- commits:
     - subject: Switch to using native version of defaults
       hash: 7a72699f32f16c8c3e2fcd5fa2b64b8007bc09e8
       body: ''
