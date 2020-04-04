@@ -1,4 +1,28 @@
 - commits:
+    - subject: Convert lib/models/config.coffee to javascript
+      hash: 247a7a6b48307a77dc3fedfe51cfc367d5831128
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Convert lib/logs.coffee to javascript
+      hash: 8557a9e3dfa23410efb6690bb8229b2c5b474c42
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Convert lib/settings.coffee to javascript
+      hash: d6290c0d0679193623effd8f46372b16b1424b9b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.6
+  date: 2020-04-04T13:18:33.380Z
+- commits:
     - subject: 'util/index: Refactor & fix convertExpandToObject typings'
       hash: b996735cabf35477a772345337b09886b3a1443e
       body: ''
