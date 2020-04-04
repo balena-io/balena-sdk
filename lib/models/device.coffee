@@ -132,26 +132,18 @@ getDeviceModel = (deps, opts) ->
 	# @name ensureSupervisorCompatibility
 	# @private
 	# @function
-	# @memberof balena.models.device
 	#
 	# @param {String} version - version under check
 	# @param {String} minVersion - minimum accepted version
-	# @fulfil {} - is compatible
-	# @reject {Error} Will reject if the given version is < than the given minimum version
-	# @returns {Promise}
+	# @throws {Error} Will reject if the given version is < than the given minimum version
+	# @returns {void}
 	#
 	# @example
-	# balena.models.device.ensureSupervisorCompatibility(version, MIN_VERSION).then(function() {
-	# 	console.log('Is compatible');
-	# });
+	# ensureSupervisorCompatibility(version, MIN_VERSION)
+	# console.log('Is compatible');
 	#
-	# @example
-	# balena.models.device.ensureSupervisorCompatibility(version, MIN_VERSION, function(error) {
-	# 	if (error) throw error;
-	# 	console.log('Is compatible');
-	# });
 	###
-	ensureSupervisorCompatibility = Promise.method (version, minVersion) ->
+	ensureSupervisorCompatibility = (version, minVersion) ->
 		if semver.lt(version, minVersion)
 			throw new Error("Incompatible supervisor version: #{version} - must be >= #{minVersion}")
 
@@ -563,18 +555,18 @@ getDeviceModel = (deps, opts) ->
 			$select: ['id', 'supervisor_version']
 			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
-			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.belongs_to__application[0].id
-				return request.send
-					method: 'POST'
-					url: "/supervisor/v1/apps/#{appId}"
-					baseUrl: apiUrl
-					body:
-						deviceId: device.id
-						appId: appId
-						method: 'GET'
-			.get('body')
-			.asCallback(callback)
+			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API)
+			appId = device.belongs_to__application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}"
+				baseUrl: apiUrl
+				body:
+					deviceId: device.id
+					appId: appId
+					method: 'GET'
+		.get('body')
+		.asCallback(callback)
 
 	###*
 	# @summary Check if a device exists
@@ -964,16 +956,16 @@ getDeviceModel = (deps, opts) ->
 			$select: ['id', 'supervisor_version']
 			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
-			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.belongs_to__application[0].id
-				return request.send
-					method: 'POST'
-					url: "/supervisor/v1/apps/#{appId}/start"
-					baseUrl: apiUrl
-					body:
-						deviceId: device.id
-						appId: appId
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API)
+			appId = device.belongs_to__application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}/start"
+				baseUrl: apiUrl
+				body:
+					deviceId: device.id
+					appId: appId
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.get('containerId')
 		.asCallback(callback)
@@ -1014,16 +1006,16 @@ getDeviceModel = (deps, opts) ->
 			$select: ['id', 'supervisor_version']
 			$expand: belongs_to__application: $select: 'id'
 		.then (device) ->
-			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API).then ->
-				appId = device.belongs_to__application[0].id
-				return request.send
-					method: 'POST'
-					url: "/supervisor/v1/apps/#{appId}/stop"
-					baseUrl: apiUrl
-					body:
-						deviceId: device.id
-						appId: appId
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+			ensureSupervisorCompatibility(device.supervisor_version, MIN_SUPERVISOR_APPS_API)
+			appId = device.belongs_to__application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v1/apps/#{appId}/stop"
+				baseUrl: apiUrl
+				body:
+					deviceId: device.id
+					appId: appId
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.get('body')
 		.get('containerId')
 		.asCallback(callback)
@@ -1100,20 +1092,20 @@ getDeviceModel = (deps, opts) ->
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API
-			).then ->
-				appId = device.belongs_to__application[0].id
-				return request.send
-					method: 'POST'
-					url: "/supervisor/v2/applications/#{appId}/start-service"
-					baseUrl: apiUrl
-					body:
-						deviceId: device.id
-						appId: appId
-						data: {
-							appId
-							imageId
-						}
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+			)
+			appId = device.belongs_to__application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v2/applications/#{appId}/start-service"
+				baseUrl: apiUrl
+				body:
+					deviceId: device.id
+					appId: appId
+					data: {
+						appId
+						imageId
+					}
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.asCallback(callback)
 
 	###*
@@ -1151,20 +1143,20 @@ getDeviceModel = (deps, opts) ->
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API
-			).then ->
-				appId = device.belongs_to__application[0].id
-				return request.send
-					method: 'POST'
-					url: "/supervisor/v2/applications/#{appId}/stop-service"
-					baseUrl: apiUrl
-					body:
-						deviceId: device.id
-						appId: appId
-						data: {
-							appId
-							imageId
-						}
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+			)
+			appId = device.belongs_to__application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v2/applications/#{appId}/stop-service"
+				baseUrl: apiUrl
+				body:
+					deviceId: device.id
+					appId: appId
+					data: {
+						appId
+						imageId
+					}
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.asCallback(callback)
 
 	###*
@@ -1202,20 +1194,20 @@ getDeviceModel = (deps, opts) ->
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API
-			).then ->
-				appId = device.belongs_to__application[0].id
-				return request.send
-					method: 'POST'
-					url: "/supervisor/v2/applications/#{appId}/restart-service"
-					baseUrl: apiUrl
-					body:
-						deviceId: device.id
-						appId: appId
-						data: {
-							appId
-							imageId
-						}
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
+			)
+			appId = device.belongs_to__application[0].id
+			return request.send
+				method: 'POST'
+				url: "/supervisor/v2/applications/#{appId}/restart-service"
+				baseUrl: apiUrl
+				body:
+					deviceId: device.id
+					appId: appId
+					data: {
+						appId
+						imageId
+					}
+				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT
 		.asCallback(callback)
 
 	###*
