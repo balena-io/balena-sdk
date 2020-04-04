@@ -1,4 +1,14 @@
 - commits:
+    - subject: Stop passing unused `ResourceNotFoundError` parameter
+      hash: 7d9cec36e5faf6b3030318194f331e603b8af06c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.7
+  date: 2020-04-04T18:31:23.149Z
+- commits:
     - subject: Convert lib/models/config.coffee to javascript
       hash: 247a7a6b48307a77dc3fedfe51cfc367d5831128
       body: ''
