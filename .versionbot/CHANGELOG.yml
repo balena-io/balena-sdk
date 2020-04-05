@@ -1,4 +1,14 @@
 - commits:
+    - subject: Convert lib/models/application.coffee to javascript
+      hash: 31eacc732e27f44b8a6565445b8ed399855eaf61
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.8
+  date: 2020-04-04T21:04:13.180Z
+- commits:
     - subject: Stop passing unused `ResourceNotFoundError` parameter
       hash: 7d9cec36e5faf6b3030318194f331e603b8af06c
       body: ''
