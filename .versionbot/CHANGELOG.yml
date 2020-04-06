@@ -1,4 +1,14 @@
 - commits:
+    - subject: Convert lib/balena.coffee to javascript
+      hash: ec9fcec4bb1721aec0413f2faffea758ec421ed3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.11
+  date: 2020-04-06T13:39:43.263Z
+- commits:
     - subject: Convert lib/models/device.coffee to javascript
       hash: 0ec2dc8b26b19f21885d11d911b8a75a62b9a3d2
       body: ''
