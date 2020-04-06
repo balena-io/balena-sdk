@@ -1,4 +1,14 @@
 - commits:
+    - subject: Add lodash back to the import blacklist
+      hash: dd5a899b1a625066d851be9f72bf2b6a0639fe01
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.12
+  date: 2020-04-06T15:03:53.453Z
+- commits:
     - subject: Convert lib/balena.coffee to javascript
       hash: ec9fcec4bb1721aec0413f2faffea758ec421ed3
       body: ''
