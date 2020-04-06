@@ -1,4 +1,14 @@
 - commits:
+    - subject: Convert lib/models/device.coffee to javascript
+      hash: 0ec2dc8b26b19f21885d11d911b8a75a62b9a3d2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.10
+  date: 2020-04-06T09:20:43.061Z
+- commits:
     - subject: Remove promise wrapping for private ensureSupervisorCompatibility
       hash: d7d3b0a021b091ecd0b5c6227ca70811a4b2fa7e
       body: ''
