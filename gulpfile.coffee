@@ -1,7 +1,5 @@
 gulp = require('gulp')
 mocha = require('gulp-mocha')
-gutil = require('gulp-util')
-coffee = require('gulp-coffee')
 replace = require('gulp-replace')
 browserify = require('browserify')
 uglifyEs = require('uglify-es')
@@ -19,8 +17,6 @@ OPTIONS =
 	config:
 		browserLibraryName: 'balena-sdk'
 	files:
-		coffee: [ 'lib/**/*.coffee', 'tests/**/*.coffee', 'gulpfile.coffee' ]
-		app: 'lib/**/*.coffee'
 		tests: [ 'tests/**/*.spec.ts', 'tests/**/*.spec.coffee' ]
 		browserEntry: 'balena.js'
 		browserOutput: 'balena-browser.js'
@@ -51,11 +47,6 @@ gulp.task 'inject-version', ->
 		.pipe(replace('__REPLACE_WITH_PACKAGE_JSON_VERSION__', packageJSON.version))
 		.pipe(gulp.dest("#{OPTIONS.directories.build}util/"))
 
-gulp.task 'build-node', ->
-	gulp.src(OPTIONS.files.app)
-		.pipe(coffee(header: true, bare: true)).on('error', gutil.log)
-		.pipe(gulp.dest(OPTIONS.directories.build))
-
 gulp.task 'pack-browser', ->
 	bundle = browserify
 		entries: OPTIONS.files.browserEntry,
@@ -80,4 +71,4 @@ gulp.task 'pack-browser', ->
 		.pipe(gulp.dest(OPTIONS.directories.build))
 
 gulp.task 'build',
-	gulp.series(['build-node', 'pack-browser'])
+	gulp.series(['pack-browser'])
