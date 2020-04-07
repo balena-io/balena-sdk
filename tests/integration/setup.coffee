@@ -30,7 +30,6 @@ else
 		dataDirectory: settings.get('dataDirectory')
 
 _.assign opts,
-	apiKey: null
 	isBrowser: IS_BROWSER,
 	retries: 3
 
