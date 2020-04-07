@@ -1,4 +1,42 @@
 - commits:
+    - subject: Improve application typings
+      hash: 39464a38f36b358c7b60fc707083d59957c60079
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Improve config typings
+      hash: 58118adcaccb055d38438ec89c06f93b9a5962cf
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Improve device typings
+      hash: 26fd5a74a81f6890b3f337c1abbe09610f74c7fc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Improve settings typings
+      hash: 61db7584af07ec27b9754c73171c1f2ad8e6363a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Improve logs typings
+      hash: 74455a9958f84913773541d6c0c5d9685fa1de99
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 12.31.13
+  date: 2020-04-07T10:16:03.818Z
+- commits:
     - subject: Add lodash back to the import blacklist
       hash: dd5a899b1a625066d851be9f72bf2b6a0639fe01
       body: ''
