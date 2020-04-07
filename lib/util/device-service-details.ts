@@ -7,52 +7,50 @@ import {
 	GatewayDownload,
 	Image,
 	ImageInstall,
-	PineOptions,
+	PineExpand,
 	Release,
 	Service,
 } from '../../typings/balena-sdk';
 
-// Pine options necessary for getting raw service data for a device
-export const getCurrentServiceDetailsPineOptions = (expandRelease: boolean) => {
-	const pineOptions: PineOptions<DeviceWithImageInstalls> = {
-		$expand: {
-			image_install: {
-				$select: ['id', 'download_progress', 'status', 'install_date'],
-				$filter: {
-					status: {
-						$ne: 'deleted',
-					},
-				},
-				$expand: {
-					image: {
-						$select: ['id'],
-						$expand: {
-							is_a_build_of__service: {
-								$select: ['id', 'service_name'],
-							},
-						},
-					},
-					...(expandRelease && {
-						is_provided_by__release: {
-							$select: ['commit'],
-						},
-					}),
+// Pine expand options necessary for getting raw service data for a device
+export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
+	const pineExpand: PineExpand<DeviceWithImageInstalls> = {
+		image_install: {
+			$select: ['id', 'download_progress', 'status', 'install_date'],
+			$filter: {
+				status: {
+					$ne: 'deleted',
 				},
 			},
-			gateway_download: {
-				$select: ['id', 'download_progress', 'status'],
-				$filter: {
-					status: {
-						$ne: 'deleted',
+			$expand: {
+				image: {
+					$select: ['id'],
+					$expand: {
+						is_a_build_of__service: {
+							$select: ['id', 'service_name'],
+						},
 					},
 				},
-				$expand: {
-					image: {
-						$select: ['id'],
-						$expand: {
-							is_a_build_of__service: {
-								$select: ['id', 'service_name'],
-							},
+				...(expandRelease && {
+					is_provided_by__release: {
+						$select: ['commit'],
+					},
+				}),
+			},
+		},
+		gateway_download: {
+			$select: ['id', 'download_progress', 'status'],
+			$filter: {
+				status: {
+					$ne: 'deleted',
+				},
+			},
+			$expand: {
+				image: {
+					$select: ['id'],
+					$expand: {
+						is_a_build_of__service: {
+							$select: ['id', 'service_name'],
 						},
 					},
 				},
@@ -60,7 +58,7 @@ export const getCurrentServiceDetailsPineOptions = (expandRelease: boolean) => {
 		},
 	};
 
-	return pineOptions;
+	return pineExpand;
 };
 
 interface WithServiceName {
