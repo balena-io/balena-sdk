@@ -241,6 +241,7 @@ declare namespace BalenaSdk {
 		is_host: boolean;
 		should_track_latest_release: boolean;
 		is_public: boolean;
+		is_archived: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
 		user: NavigationResource<User>;
