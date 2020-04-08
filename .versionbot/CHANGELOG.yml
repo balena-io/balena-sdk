@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add is_archived to Application typings
+      hash: 8c537349fbf685ef03d3c72df96041a5ceceb82c
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 12.32.0
+  date: 2020-04-08T14:36:53.283Z
+- commits:
     - subject: Improve application typings
       hash: 39464a38f36b358c7b60fc707083d59957c60079
       body: ''
