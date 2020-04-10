@@ -135,7 +135,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
             * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-            * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+            * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
             * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
             * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
@@ -446,7 +446,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
         * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-        * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+        * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
         * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
@@ -1732,7 +1732,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
     * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-    * [.getStatus(device)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+    * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
     * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
@@ -3940,32 +3940,36 @@ balena.models.device.ping('7cf02a6', function(error) {
 ```
 <a name="balena.models.device.getStatus"></a>
 
-##### device.getStatus(device) ⇒ <code>Promise</code>
-Computes the status of an already retrieved device object.
-It's recommended to use `balena.models.device.get(deviceUuid, { $select: ['overall_status'] })` instead,
+##### device.getStatus(uuidOrId) ⇒ <code>Promise</code>
+Convenience method for getting the overall status of a device.
+It's recommended to use `balena.models.device.get()` instead,
 in case that you need to retrieve more device fields than just the status.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the status of a device  
 **Access**: public  
 **Fulfil**: <code>String</code> - device status  
-**See**: [getWithServiceDetails](#balena.models.device.getWithServiceDetails) for retrieving the device object that this method accepts.  
+**See**: [get](#balena.models.device.get) for an example on selecting the `overall_status` field.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| device | <code>Object</code> | A device object |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
 
 **Example**  
 ```js
-balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
-	return balena.models.device.getStatus(device);
-}).then(function(status) {
+balena.models.device.getStatus('7cf02a6').then(function(status) {
 	console.log(status);
 });
 ```
 **Example**  
 ```js
-balena.models.device.getStatus(device, function(error, status) {
+balena.models.device.getStatus(123).then(function(status) {
+	console.log(status);
+});
+```
+**Example**  
+```js
+balena.models.device.getStatus('7cf02a6', function(error, status) {
 	if (error) throw error;
 	console.log(status);
 });
