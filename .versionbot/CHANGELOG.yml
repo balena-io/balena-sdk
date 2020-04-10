@@ -1,4 +1,85 @@
 - commits:
+    - subject: '**BREAKING**: Change the device.getStatus() to expect a uuid or id arg'
+      hash: 766c8bf807ec199a0b19ba05f2f3e4e4290fb965
+      body: >
+        Keeping the method for discoverability & convenience reasons. I also
+        expect this to be easier for users
+
+        upgrading from an older version.
+      footer:
+        Change-type: major
+        change-type: major
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/KlyXZlJ86S-nvOuJbuOdpbmo54i
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/KlyXZlJ86S-nvOuJbuOdpbmo54i
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: '**BREAKING** Drop the imageMakerUrl constructor option'
+      hash: 58b4d7602fbc865d26f0cdff4d8bb43936c70dc9
+      body: |
+        This was deprecated and no longer used since
+        v12.12.0, so it's just removing it from the docs.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: '**BREAKING** typings: Drop Application properties not part of the model'
+      hash: 0fe3d6b982ddbfd5db046900af578290d98d95ac
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: '*BREAKING*: Stop actively supporting node 6 & 8'
+      hash: 7a383f5403510e266a6055c03e0c5f45ee7c7f18
+      body: |
+        Node 6 & 8 may well still work with the SDK for quite a
+        while, but we'll no longer actively test against them
+        since they are now characterized as EOL, and it's quite
+        possible that it may stop working entirely in any
+        future release.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Bump minimum supported Typescript to v3.8.2
+      hash: aa51823fc7138b7fb047464fdd9dae5448681ee7
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Make sure the config & os tests start unauthenticated
+      hash: 6f56c04b8c015e572b604d6e0652b22fc548fa15
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: '**BREAKING** Update to balena-pine 11.0.0'
+      hash: 1fcec15d072b8a8807e4d1f90fcae01948613195
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.0.0
+  date: 2020-04-10T22:29:34.487Z
+- commits:
     - subject: Fix the url encoded error message expectations
       hash: 54ca3af046f23b5764bb2ac48666af85f52b5a3b
       body: ''
