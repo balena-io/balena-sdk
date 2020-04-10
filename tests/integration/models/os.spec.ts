@@ -107,6 +107,10 @@ const describeAllAuthUserChanges = function(
 };
 
 describe('OS model', function() {
+	before(function() {
+		return balena.auth.logout();
+	});
+
 	describe('balena.models.os._getMaxSatisfyingVersion()', function() {
 		const osVersions = {
 			versions: [

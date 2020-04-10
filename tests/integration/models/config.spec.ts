@@ -63,6 +63,10 @@ const itNormalizesDeviceTypes = function() {
 };
 
 describe('Config Model', function() {
+	before(function() {
+		return balena.auth.logout();
+	});
+
 	describe('balena.models.config.getAll()', function() {
 		it('should return all the configuration', () =>
 			balena.models.config.getAll().then(function(config) {
