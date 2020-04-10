@@ -692,7 +692,7 @@ declare namespace BalenaSdk {
 
 	// See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
 	interface OsUpdateActionResult {
-		status: 'idle' | 'in_progress' | 'done';
+		status: 'idle' | 'in_progress' | 'done' | 'error' | 'configuring';
 		parameters?: {
 			target_version: string;
 		};
