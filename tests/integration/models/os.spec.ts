@@ -589,18 +589,28 @@ describe('OS model', function() {
 				const promise = balena.models.os.getConfig(this.application.id, {
 					version: 'v1+foo',
 				});
-				return expect(promise).to.be.rejectedWith(
-					'balenaOS versions <= 1.2.0 are no longer supported, please update',
-				);
+				return expect(promise).to.be.rejected.then(error => {
+					m.chai.expect(error).to.have.property('message');
+					m.chai
+						.expect(error.message.replace('&lt;', '<'))
+						.to.contain(
+							'balenaOS versions <= 1.2.0 are no longer supported, please update',
+						);
+				});
 			});
 
 			it('should be rejected if the version is <= 1.2.0', function() {
 				const promise = balena.models.os.getConfig(this.application.id, {
 					version: '1.2.0',
 				});
-				return expect(promise).to.be.rejectedWith(
-					'balenaOS versions <= 1.2.0 are no longer supported, please update',
-				);
+				return expect(promise).to.be.rejected.then(error => {
+					m.chai.expect(error).to.have.property('message');
+					m.chai
+						.expect(error.message.replace('&lt;', '<'))
+						.to.contain(
+							'balenaOS versions <= 1.2.0 are no longer supported, please update',
+						);
+				});
 			});
 
 			it('should be able to configure v1 image parameters', function() {
