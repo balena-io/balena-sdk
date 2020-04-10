@@ -230,13 +230,11 @@ declare namespace BalenaSdk {
 	}
 
 	interface Application {
+		id: number;
 		app_name: string;
 		device_type: string;
 		slug: string;
 		commit: string;
-		id: number;
-		device_type_info?: DeviceType;
-		has_dependent?: boolean;
 		is_accessible_by_support_until__date: string;
 		is_host: boolean;
 		should_track_latest_release: boolean;
@@ -1086,7 +1084,7 @@ declare namespace BalenaSdk {
 				enableTcpPing(uuidOrId: string | number): Promise<void>;
 				disableTcpPing(uuidOrId: string | number): Promise<void>;
 				ping(uuidOrId: string | number): Promise<void>;
-				getStatus(device: DeviceWithServiceDetails): Promise<string>;
+				getStatus(uuidOrId: string | number): Promise<string>;
 				lastOnline(device: Device): string;
 				getOsVersion(device: Device): string;
 				isTrackingApplicationRelease(
@@ -1274,10 +1272,6 @@ declare namespace BalenaSdk {
 		 * @deprecated Use balena.auth.loginWithToken(apiKey) instead
 		 */
 		apiKey?: string;
-		/**
-		 * @deprecated Not used
-		 */
-		imageMakerUrl?: string;
 		builderUrl?: string;
 		dataDirectory?: string;
 		isBrowser?: boolean;

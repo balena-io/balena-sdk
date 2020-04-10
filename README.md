@@ -25,7 +25,7 @@ $ npm install --save balena-sdk
 Platforms
 ---------
 
-We currently support NodeJS (6+) and the browser.
+We currently support NodeJS (10+) and the browser.
 
 The following features are node-only:
 - OS image streaming download (`balena.models.os.download`),
@@ -61,7 +61,6 @@ var balena = require('balena-sdk')({
 Where the factory method accepts the following options:
 * `apiUrl`, string, *optional*, is the balena API url. Defaults to `https://api.balena-cloud.com/`,
 * `builderUrl`, string, *optional* , is the balena builder url. Defaults to `https://builder.balena-cloud.com/`,
-* `imageMakerUrl`, string, *optional* *deprecated* , is the balena image maker url. Defaults to `https://img.balena-cloud.com/`,
 * `deviceUrlsBase`, string, *optional*, is the base balena device API url. Defaults to `balena-devices.com`,
 * `dataDirectory`, string, *optional*, *ignored in the browser*, is the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. Defaults to `$HOME/.balena`,
 * `isBrowser`, boolean, *optional*, is the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value,

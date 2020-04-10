@@ -749,3 +749,66 @@ describe 'Application Model', ->
 			it 'should throw when an application id is not provided', ->
 				m.chai.expect( -> balena.models.application.getDashboardUrl())
 				.to.throw()
+
+	describe 'given public apps', ->
+
+		publicApp = undefined
+
+		before ->
+			balena.pine.get
+				resource: 'application'
+				options:
+					$top: 1
+					$select: ['id', 'app_name', 'slug', 'is_public']
+					$filter: is_public: true
+			.then ([app]) ->
+				m.chai.expect(app).to.have.property('is_public', true)
+				publicApp = app
+
+		describe 'when not being logged in', ->
+			before ->
+				balena.auth.logout()
+
+			describe 'arbitrary pinejs queries', ->
+
+				it 'should be able to retrieve the available public apps', ->
+					if !publicApp
+						this.skip()
+						return
+
+					balena.pine.get
+						resource: 'application'
+						options:
+							$select: ['id', 'app_name', 'slug', 'is_public']
+					.then (apps) ->
+						m.chai.expect(apps.length).to.be.gte(1)
+
+						appIds = apps.map (app) -> app.id
+						m.chai.expect(appIds.includes(publicApp.id)).to.be.true
+
+						apps.forEach (app) ->
+							m.chai.expect(app).to.have.property('id').that.is.a('number')
+							m.chai.expect(app).to.have.property('app_name').that.is.a('string')
+							m.chai.expect(app).to.have.property('slug').that.is.a('string')
+							m.chai.expect(app).to.have.property('is_public', true)
+
+
+			describe 'balena.models.application.get()', ->
+
+				[
+					'id'
+					'app_name'
+					'slug'
+				].forEach (prop) ->
+
+					it "should be able to get a public application by #{prop}", ->
+						if !publicApp
+							this.skip()
+							return
+
+						balena.models.application.get(publicApp[prop])
+						.then (app) ->
+							m.chai.expect(app).to.have.property('id').that.is.a('number')
+							m.chai.expect(app).to.have.property('app_name').that.is.a('string')
+							m.chai.expect(app).to.have.property('slug').that.is.a('string')
+							m.chai.expect(app).to.have.property('is_public', true)
