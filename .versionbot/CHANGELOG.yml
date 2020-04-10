@@ -1,4 +1,34 @@
 - commits:
+    - subject: Fix the url encoded error message expectations
+      hash: 54ca3af046f23b5764bb2ac48666af85f52b5a3b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'osUpdate: add missing HUP status typings'
+      hash: 9bb776e8d48921e998ab2e7ba25510c5c63b04f2
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+    - subject: 'osUpdate: remove deprecated `update_done` HUP status from typings'
+      hash: c2887a94eefbf5ff8284e7ddea485b248e8bbfc9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 12.33.0
+  date: 2020-04-10T18:24:32.098Z
+- commits:
     - subject: Add is_archived to Application typings
       hash: 8c537349fbf685ef03d3c72df96041a5ceceb82c
       body: ''
