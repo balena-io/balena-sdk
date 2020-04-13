@@ -1366,23 +1366,23 @@ describe 'Device Model', ->
 									service_id: @webService.id
 									image_id: @newWebImage.id
 									commit: 'new-release-commit'
-									status: 'downloading'
+									status: 'Downloading'
 									download_progress: 50
 								,
 									id: @oldWebInstall.id
 									service_id: @webService.id
 									image_id: @oldWebImage.id
 									commit: 'old-release-commit'
-									status: 'running'
-									download_progress: 100
+									status: 'Running'
+									download_progress: null
 								]
 								db: [
 									id: @newDbInstall.id
 									service_id: @dbService.id
 									image_id: @newDbImage.id
 									commit: 'new-release-commit'
-									status: 'running'
-									download_progress: 100
+									status: 'Running'
+									download_progress: null
 								]
 
 						# Should filter out deleted image installs
@@ -1397,7 +1397,7 @@ describe 'Device Model', ->
 							resource: 'gateway_download'
 							body:
 								image: @newWebImage.id
-								status: 'downloading'
+								status: 'Downloading'
 								is_downloaded_by__device: @device.id
 								download_progress: 50
 					,
@@ -1416,7 +1416,7 @@ describe 'Device Model', ->
 						m.chai.expect(deviceDetails.current_gateway_downloads[0]).to.deep.match
 							service_id: @webService.id
 							image_id: @newWebImage.id
-							status: 'downloading'
+							status: 'Downloading'
 							download_progress: 50
 
 				it 'should allow options to change the device fields returned', ->
@@ -1634,15 +1634,15 @@ describe 'Device Model', ->
 								service_id: @webService.id
 								image_id: @newWebImage.id
 								commit: 'new-release-commit'
-								status: 'downloading'
+								status: 'Downloading'
 								download_progress: 50
 							,
 								id: @oldWebInstall.id
 								service_id: @webService.id
 								image_id: @oldWebImage.id
 								commit: 'old-release-commit'
-								status: 'running'
-								download_progress: 100
+								status: 'Running'
+								download_progress: null
 							]
 
 						m.chai.expect(deviceDetails.current_services.__proto__).to.deep.match [
@@ -1650,8 +1650,8 @@ describe 'Device Model', ->
 								service_id: @dbService.id
 								image_id: @newDbImage.id
 								commit: 'new-release-commit'
-								status: 'running'
-								download_progress: 100
+								status: 'Running'
+								download_progress: null
 							]
 
 	describe 'given a single application with a device id whose shorter uuid is only numbers', ->
