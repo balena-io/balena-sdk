@@ -657,23 +657,23 @@ describe 'Application Model', ->
 						service_id: @webService.id
 						image_id: @newWebImage.id
 						commit: 'new-release-commit'
-						status: 'downloading'
+						status: 'Downloading'
 						download_progress: 50
 					,
 						id: @oldWebInstall.id
 						service_id: @webService.id
 						image_id: @oldWebImage.id
 						commit: 'old-release-commit'
-						status: 'running'
-						download_progress: 100
+						status: 'Running'
+						download_progress: null
 					]
 					db: [
 						id: @newDbInstall.id
 						service_id: @dbService.id
 						image_id: @newDbImage.id
 						commit: 'new-release-commit'
-						status: 'running'
-						download_progress: 100
+						status: 'Running'
+						download_progress: null
 					]
 
 			if !expectCommit

@@ -197,8 +197,8 @@ exports.givenADevice = (beforeFn, extraDeviceProps) ->
 						installs__image: @oldWebImage.id
 						is_provided_by__release: @oldRelease.id
 						device: device.id
-						download_progress: 100
-						status: 'running'
+						download_progress: null
+						status: 'Running'
 						install_date: '2017-10-01'
 			,
 				balena.pine.post
@@ -208,7 +208,7 @@ exports.givenADevice = (beforeFn, extraDeviceProps) ->
 						is_provided_by__release: @currentRelease.id
 						device: device.id
 						download_progress: 50,
-						status: 'downloading'
+						status: 'Downloading'
 						install_date: '2017-10-30'
 			,
 				balena.pine.post
@@ -227,8 +227,8 @@ exports.givenADevice = (beforeFn, extraDeviceProps) ->
 						installs__image: @newDbImage.id
 						is_provided_by__release: @currentRelease.id
 						device: device.id
-						download_progress: 100,
-						status: 'running',
+						download_progress: null,
+						status: 'Running',
 						install_date: '2017-10-30'
 			]
 			.spread (oldWebInstall, newWebInstall, oldDbInstall, newDbInstall) =>
