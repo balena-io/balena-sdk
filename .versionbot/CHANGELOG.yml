@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'tests: Fix the mock image install incosnistencies'
+      hash: 9d3e3e064243024c42a02b89dc58930c9379a735
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 'https://github.com/balena-io/balena-api/pull/1920'
+        see: 'https://github.com/balena-io/balena-api/pull/1920'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.0.1
+  date: 2020-04-13T11:50:05.056Z
+- commits:
     - subject: '**BREAKING**: Change the device.getStatus() to expect a uuid or id arg'
       hash: 766c8bf807ec199a0b19ba05f2f3e4e4290fb965
       body: >
