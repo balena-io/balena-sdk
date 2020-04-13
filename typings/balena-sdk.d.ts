@@ -1086,6 +1086,7 @@ declare namespace BalenaSdk {
 				disableTcpPing(uuidOrId: string | number): Promise<void>;
 				ping(uuidOrId: string | number): Promise<void>;
 				getStatus(uuidOrId: string | number): Promise<string>;
+				getProgress(uuidOrId: string | number): Promise<number | null>;
 				lastOnline(device: Device): string;
 				getOsVersion(device: Device): string;
 				isTrackingApplicationRelease(

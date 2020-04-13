@@ -136,6 +136,7 @@ If you feel something is missing, not clear or could be improved, please don't h
             * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+            * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
             * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
             * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
@@ -447,6 +448,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+        * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
         * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
@@ -1733,6 +1735,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
+    * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
     * [.revokeSupportAccess(uuidOrId)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.lastOnline(device)](#balena.models.device.lastOnline) ⇒ <code>String</code>
@@ -3972,6 +3975,42 @@ balena.models.device.getStatus(123).then(function(status) {
 balena.models.device.getStatus('7cf02a6', function(error, status) {
 	if (error) throw error;
 	console.log(status);
+});
+```
+<a name="balena.models.device.getProgress"></a>
+
+##### device.getProgress(uuidOrId) ⇒ <code>Promise</code>
+Convenience method for getting the overall progress of a device.
+It's recommended to use `balena.models.device.get()` instead,
+in case that you need to retrieve more device fields than just the progress.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the progress of a device  
+**Access**: public  
+**Fulfil**: <code>Number\|Null</code> - device progress  
+**See**: [get](#balena.models.device.get) for an example on selecting the `overall_progress` field.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.getProgress('7cf02a6').then(function(progress) {
+	console.log(progress);
+});
+```
+**Example**  
+```js
+balena.models.device.getProgress(123).then(function(progress) {
+	console.log(progress);
+});
+```
+**Example**  
+```js
+balena.models.device.getProgress('7cf02a6', function(error, progress) {
+	if (error) throw error;
+	console.log(progress);
 });
 ```
 <a name="balena.models.device.grantSupportAccess"></a>
