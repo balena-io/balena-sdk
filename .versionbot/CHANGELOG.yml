@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add created_at typings to Application resource
+      hash: 20568c9a435f0d70309e7de4a769e328e3092a93
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 13.1.0
+  date: 2020-04-16T16:56:28.236Z
+- commits:
     - subject: Properly define the arguments of setSharedOptions in the docs
       hash: d1c132f3eaa2c5b403b1f5b457c49e3db39d07af
       body: ''
