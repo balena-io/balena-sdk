@@ -6126,7 +6126,6 @@ same defaults as the main SDK factory function.
 **Kind**: static method of [<code>balena</code>](#balena)  
 **Summary**: Create an SDK instance using shared default options  
 **Access**: public  
-**Params**: <code>Object</code> opts - The shared default options  
 **Example**  
 ```js
 const sdk = balena.fromSharedOptions();
