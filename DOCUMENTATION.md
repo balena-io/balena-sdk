@@ -225,7 +225,7 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.settings](#balena.settings) : <code>object</code>
         * [.get([key])](#balena.settings.get) ⇒ <code>Promise</code>
         * [.getAll()](#balena.settings.getAll) ⇒ <code>Promise</code>
-    * [.setSharedOptions()](#balena.setSharedOptions)
+    * [.setSharedOptions(options)](#balena.setSharedOptions)
     * [.fromSharedOptions()](#balena.fromSharedOptions)
 
 <a name="balena.interceptors"></a>
@@ -6098,7 +6098,7 @@ balena.settings.getAll(function(error, settings) {
 ```
 <a name="balena.setSharedOptions"></a>
 
-### balena.setSharedOptions()
+### balena.setSharedOptions(options)
 Set options that are used by calls to `balena.fromSharedOptions()`.
 The options accepted are the same as those used in the main SDK factory function.
 If you use this method, it should be called as soon as possible during app
@@ -6107,7 +6107,17 @@ startup and before any calls to `fromSharedOptions()` are made.
 **Kind**: static method of [<code>balena</code>](#balena)  
 **Summary**: Set shared default options  
 **Access**: public  
-**Params**: <code>Object</code> opts - The shared default options  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | <code>Object</code> |  | The shared default options |
+| [options.apiUrl] | <code>String</code> | <code>&#x27;https://api.balena-cloud.com/&#x27;</code> | the balena API url to use. |
+| [options.builderUrl] | <code>String</code> | <code>&#x27;https://builder.balena-cloud.com/&#x27;</code> | the balena builder url to use. |
+| [options.deviceUrlsBase] | <code>String</code> | <code>&#x27;balena-devices.com&#x27;</code> | the base balena device API url to use. |
+| [options.dataDirectory] | <code>String</code> | <code>&#x27;$HOME/.balena&#x27;</code> | *ignored in the browser*, the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. |
+| [options.isBrowser] | <code>Boolean</code> |  | the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value. |
+| [options.debug] | <code>Boolean</code> |  | when set will print some extra debug information. |
+
 **Example**  
 ```js
 balena.setSharedOptions({
@@ -6126,7 +6136,6 @@ same defaults as the main SDK factory function.
 **Kind**: static method of [<code>balena</code>](#balena)  
 **Summary**: Create an SDK instance using shared default options  
 **Access**: public  
-**Params**: <code>Object</code> opts - The shared default options  
 **Example**  
 ```js
 const sdk = balena.fromSharedOptions();
