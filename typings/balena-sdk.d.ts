@@ -231,6 +231,7 @@ declare namespace BalenaSdk {
 
 	interface Application {
 		id: number;
+		created_at: string;
 		app_name: string;
 		device_type: string;
 		slug: string;
