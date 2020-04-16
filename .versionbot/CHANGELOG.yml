@@ -1,4 +1,29 @@
 - commits:
+    - subject: Properly define the arguments of setSharedOptions in the docs
+      hash: d1c132f3eaa2c5b403b1f5b457c49e3db39d07af
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/3eCAs-qJlsqpC1eYlXTgV6dlK8-
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/3eCAs-qJlsqpC1eYlXTgV6dlK8-
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Fix the docs fromSharedOptions to not accept any argument
+      hash: 84956ceecee256386aac3b8a8417ad28c91ebbe3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.0.2
+  date: 2020-04-16T12:28:08.719Z
+- commits:
     - subject: 'tests: Fix the mock image install incosnistencies'
       hash: 9d3e3e064243024c42a02b89dc58930c9379a735
       body: ''
