@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add a device.getProgress convenience method
+      hash: 55f073214d9c57a9e886705ab66d0b71fb6715b8
+      body: ''
+      footer:
+        Resolves: '#790'
+        resolves: '#790'
+        Depends-on: 'https://github.com/balena-io/balena-api/issues/2515'
+        depends-on: 'https://github.com/balena-io/balena-api/issues/2515'
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-tech/threads/vFYF1_0T0MhlpvvnZHyko5BQRhK
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-tech/threads/vFYF1_0T0MhlpvvnZHyko5BQRhK
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.2.0
+  date: 2020-04-17T18:17:44.670Z
+- commits:
     - subject: Update dependencies
       hash: c71b5b7169f51e00ed9a6330f99f23ccb62a821e
       body: ''
