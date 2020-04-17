@@ -1346,6 +1346,18 @@ describe 'Device Model', ->
 
 			describe 'balena.models.device.getWithServiceDetails()', ->
 
+				it 'should be rejected if the device name does not exist', ->
+					promise = balena.models.device.getWithServiceDetails('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getWithServiceDetails(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+				it 'should be able to use a shorter uuid', ->
+					balena.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
+						m.chai.expect(device.id).to.equal(@device.id)
+
 				it 'should be able to get the device by uuid', ->
 					balena.models.device.getWithServiceDetails(@device.uuid).then (device) =>
 						m.chai.expect(device.id).to.equal(@device.id)
@@ -1391,6 +1403,22 @@ describe 'Device Model', ->
 						# Should have an empty list of gateway downloads
 						m.chai.expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0)
 
+				it 'should allow options to change the device fields returned', ->
+					balena.models.device.getWithServiceDetails @device.id,
+						$select: ['id', 'uuid']
+						$expand:
+							belongs_to__application:
+								$select: ['id', 'app_name']
+					.then (deviceDetails) =>
+
+						m.chai.expect(deviceDetails.device_name).to.be.undefined
+
+						m.chai.expect(deviceDetails.current_services).not.to.be.undefined
+
+						m.chai.expect(deviceDetails.belongs_to__application[0]).to.deep.match
+							id: @application.id
+							app_name: @application.app_name
+
 				it 'should return gateway downloads, if available', ->
 					Promise.all [
 						balena.pine.post
@@ -1418,34 +1446,6 @@ describe 'Device Model', ->
 							image_id: @newWebImage.id
 							status: 'Downloading'
 							download_progress: 50
-
-				it 'should allow options to change the device fields returned', ->
-					balena.models.device.getWithServiceDetails @device.id,
-						$select: ['id', 'uuid']
-						$expand:
-							belongs_to__application:
-								$select: ['id', 'app_name']
-					.then (deviceDetails) =>
-
-						m.chai.expect(deviceDetails.device_name).to.be.undefined
-
-						m.chai.expect(deviceDetails.current_services).not.to.be.undefined
-
-						m.chai.expect(deviceDetails.belongs_to__application[0]).to.deep.match
-							id: @application.id
-							app_name: @application.app_name
-
-				it 'should be rejected if the device name does not exist', ->
-					promise = balena.models.device.getWithServiceDetails('asdfghjkl')
-					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
-
-				it 'should be rejected if the device id does not exist', ->
-					promise = balena.models.device.getWithServiceDetails(999999)
-					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
-
-				it 'should be able to use a shorter uuid', ->
-					balena.models.device.getWithServiceDetails(@device.uuid.slice(0, 8)).then (device) =>
-						m.chai.expect(device.id).to.equal(@device.id)
 
 			describe 'balena.models.device.serviceVar', ->
 
@@ -1531,6 +1531,30 @@ describe 'Device Model', ->
 				it 'should retrieve the commit hash of the tracked application release, using the device uuid', ->
 					promise = balena.models.device.getTargetReleaseHash(@device.uuid)
 					m.chai.expect(promise).to.eventually.equal('new-release-commit')
+
+		describe 'given a single online device on the downloading state', ->
+
+			givenADevice(before, {
+				is_online: true
+				os_variant: 'prod'
+				os_version: 'Resin OS 2.7.8+rev1'
+				supervisor_version: '6.4.2'
+				last_connectivity_event: '2019-05-13T16:14'
+			})
+
+			describe 'balena.models.device.getStatus()', ->
+
+				it 'should properly retrieve the status', ->
+					promise = balena.models.device.getStatus(@device.uuid)
+					m.chai.expect(promise).to.eventually.equal('updating')
+
+			describe 'balena.models.device.getProgress()', ->
+
+				it 'should properly retrieve the progress', ->
+					balena.models.device.getProgress(@device.uuid)
+					.then (result) ->
+						m.chai.expect(result).to.be.a('number')
+						m.chai.expect(result).to.equal(75)
 
 		describe 'given a newly registered offline device', ->
 
