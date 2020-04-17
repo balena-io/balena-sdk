@@ -577,13 +577,10 @@ describe('OS model', function() {
 						eventuallyExpectProperty(promise, 'applicationId'),
 						eventuallyExpectProperty(promise, 'apiKey'),
 						eventuallyExpectProperty(promise, 'userId'),
-						eventuallyExpectProperty(promise, 'username'),
 						eventuallyExpectProperty(promise, 'deviceType'),
 						eventuallyExpectProperty(promise, 'apiEndpoint'),
 						eventuallyExpectProperty(promise, 'registryEndpoint'),
 						eventuallyExpectProperty(promise, 'vpnEndpoint'),
-						eventuallyExpectProperty(promise, 'pubnubSubscribeKey'),
-						eventuallyExpectProperty(promise, 'pubnubPublishKey'),
 						eventuallyExpectProperty(promise, 'listenPort'),
 					]);
 				});
