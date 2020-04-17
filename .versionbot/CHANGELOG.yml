@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update dependencies
+      hash: c71b5b7169f51e00ed9a6330f99f23ccb62a821e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 13.1.1
+  date: 2020-04-17T17:37:18.734Z
+- commits:
     - subject: Add created_at typings to Application resource
       hash: 20568c9a435f0d70309e7de4a769e328e3092a93
       body: ''
