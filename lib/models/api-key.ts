@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import pick = require('lodash/pick');
 
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
@@ -177,11 +176,15 @@ const getApiKeysModel = function(
 					apiKeyInfo.name,
 				);
 			}
+			const body = {
+				name: apiKeyInfo.name,
+				description: apiKeyInfo.description,
+			};
 			return pine
 				.patch<BalenaSdk.ApiKey>({
 					resource: 'api_key',
 					id,
-					body: pick(apiKeyInfo, ['name', 'description']),
+					body,
 					options: {
 						// the only way to reason whether
 						// it's a named user api key is whether
