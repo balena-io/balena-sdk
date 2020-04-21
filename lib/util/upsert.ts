@@ -1,7 +1,5 @@
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import omit = require('lodash/omit');
-import pick = require('lodash/pick');
 import * as BalenaPine from '../../typings/balena-pine';
 import * as PineClient from '../../typings/pinejs-client-core';
 import { isUniqueKeyViolationResponse } from './index';
@@ -43,13 +41,18 @@ export const getUpsertHelper = ({ pine }: { pine: BalenaPine.Pine }) => {
 			}
 
 			return pine.post<T>(params).catch(isUniqueKeyViolationResponse, () => {
+				const filter: { [key in keyof T]?: any } = {};
+				for (const naturalKeyProp of naturalKeyProps) {
+					filter[naturalKeyProp] = body[naturalKeyProp]!;
+					delete body[naturalKeyProp];
+				}
 				const patchParams = {
 					...params,
 					options: {
 						...params.options,
-						$filter: pick(body, naturalKeyProps) as PineClient.Filter<T>,
+						$filter: filter,
 					},
-					body: omit(body, naturalKeyProps) as PineClient.SubmitBody<T>,
+					body: body as PineClient.SubmitBody<T>,
 				};
 				return pine.patch<T>(patchParams);
 			});

@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
-import omit = require('lodash/omit');
 import once = require('lodash/once');
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
@@ -210,15 +209,13 @@ const getReleaseModel = function(
 			),
 		)
 			.then(function(rawRelease) {
-				const release = omit(rawRelease, [
-					'contains__image',
-					'is_created_by__user',
-				]) as BalenaSdk.ReleaseWithImageDetails;
+				const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
 
 				// Squash .contains__image[x].image[0] into a simple array
-				const images = (rawRelease.contains__image as Array<{
+				const images = (release.contains__image as Array<{
 					image: BalenaSdk.Image[];
 				}>).map(imageJoin => imageJoin.image[0]);
+				delete release.contains__image;
 
 				release.images = images
 					.map(function({ is_a_build_of__service, ...imageData }) {
@@ -231,7 +228,8 @@ const getReleaseModel = function(
 					})
 					.sort((a, b) => a.service_name.localeCompare(b.service_name));
 
-				release.user = (rawRelease.is_created_by__user as BalenaSdk.User[])[0];
+				release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
+				delete release.is_created_by__user;
 
 				return release as BalenaSdk.Release & {
 					images: Array<{
