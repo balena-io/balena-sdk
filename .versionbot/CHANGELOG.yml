@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update dependencies
+      hash: d91c5ba6693061798058dff28a2df53e6fc462c8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 13.2.2
+  date: 2020-04-21T11:44:38.358Z
+- commits:
     - subject: Remove lodash/pick usage
       hash: 895444c643571378b1a946f24f3432646b1281af
       body: ''
