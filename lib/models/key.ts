@@ -18,7 +18,7 @@ import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
-import { findCallback, mergePineOptions } from '../util';
+import { mergePineOptions } from '../util';
 
 const getKeyModel = function(
 	deps: InjectedDependenciesParam,
@@ -54,15 +54,11 @@ const getKeyModel = function(
 	 */
 	function getAll(
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.SSHKey> = {},
-		callback?: (error?: Error, result?: BalenaSdk.SSHKey[]) => void,
 	): Promise<BalenaSdk.SSHKey[]> {
-		callback = findCallback(arguments);
-		return pine
-			.get<BalenaSdk.SSHKey>({
-				resource: 'user__has__public_key',
-				options: mergePineOptions({}, options),
-			})
-			.asCallback(callback);
+		return pine.get<BalenaSdk.SSHKey>({
+			resource: 'user__has__public_key',
+			options: mergePineOptions({}, options),
+		});
 	}
 
 	/**
@@ -87,10 +83,7 @@ const getKeyModel = function(
 	 * 	console.log(key);
 	 * });
 	 */
-	function get(
-		id: number,
-		callback?: (error?: Error, result?: BalenaSdk.SSHKey) => void,
-	): Promise<BalenaSdk.SSHKey> {
+	function get(id: number): Promise<BalenaSdk.SSHKey> {
 		return pine
 			.get<BalenaSdk.SSHKey>({
 				resource: 'user__has__public_key',
@@ -100,8 +93,7 @@ const getKeyModel = function(
 				if (key == null) {
 					throw new errors.BalenaKeyNotFound(id);
 				}
-			})
-			.asCallback(callback);
+			});
 	}
 
 	/**
@@ -122,16 +114,11 @@ const getKeyModel = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function remove(
-		id: number,
-		callback?: (error?: Error) => void,
-	): Promise<string> {
-		return pine
-			.delete<BalenaSdk.SSHKey>({
-				resource: 'user__has__public_key',
-				id,
-			})
-			.asCallback(callback);
+	function remove(id: number): Promise<string> {
+		return pine.delete<BalenaSdk.SSHKey>({
+			resource: 'user__has__public_key',
+			id,
+		});
 	}
 
 	/**
@@ -158,11 +145,7 @@ const getKeyModel = function(
 	 * 	console.log(key);
 	 * });
 	 */
-	function create(
-		title: string,
-		key: string,
-		callback?: (error?: Error, result?: BalenaSdk.SSHKey) => void,
-	): Promise<BalenaSdk.SSHKey> {
+	function create(title: string, key: string): Promise<BalenaSdk.SSHKey> {
 		return Promise.try(() => {
 			// Avoid ugly whitespaces
 			key = key.trim();
@@ -177,7 +160,7 @@ const getKeyModel = function(
 					},
 				}),
 			);
-		}).asCallback(callback);
+		});
 	}
 
 	return {

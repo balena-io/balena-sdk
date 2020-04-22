@@ -23,15 +23,30 @@ describe 'Application Model', ->
 
 		describe 'balena.models.application.getAll()', ->
 
-			it 'should eventually become an empty array', ->
+			it 'should eventually become an empty array [Promise]', ->
 				promise = balena.models.application.getAll()
 				m.chai.expect(promise).to.become([])
 
+			it 'should eventually become an empty array [callback]', (done) ->
+				balena.models.application.getAll (err, applications) ->
+					m.chai.expect(err).to.be.null
+					m.chai.expect(applications).to.deep.equal([])
+					done()
+				return
+
 		describe 'balena.models.application.getAppByOwner()', ->
 
-			it 'should eventually reject', ->
+			it 'should eventually reject [Promise]', ->
 				promise = balena.models.application.getAppByOwner('testapp', 'FooBar')
 				m.chai.expect(promise).to.be.rejected
+
+			it 'should eventually reject [callback]', (done) ->
+				balena.models.application.getAppByOwner('testapp', 'FooBar',
+					(err) ->
+						m.chai.expect(err).to.not.be.undefined
+						done()
+				)
+				return
 
 		describe 'balena.models.application.hasAny()', ->
 
@@ -183,10 +198,20 @@ describe 'Application Model', ->
 					balena.models.application.getAll().then (applications) =>
 						m.chai.expect(applications[0].id).to.equal(@application.id)
 
-				it 'should support arbitrary pinejs options', ->
+				it 'should support arbitrary pinejs options [Promise]', ->
 					balena.models.application.getAll($expand: 'user')
 					.then (applications) ->
 						m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+
+				it 'should support arbitrary pinejs options [callback]', (done) ->
+					balena.models.application.getAll(
+						$expand: 'user',
+						(err, applications) ->
+							m.chai.expect(err).to.be.null
+							m.chai.expect(applications[0].user[0].username).to.equal(credentials.username)
+							done()
+					)
+					return
 
 			describe 'balena.models.application.get()', ->
 

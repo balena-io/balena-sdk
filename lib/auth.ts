@@ -124,13 +124,10 @@ const getAuth = function(
 	 * 	}
 	 * });
 	 */
-	function whoami(
-		callback?: (error?: Error, result?: string | undefined) => void,
-	): Promise<string | undefined> {
+	function whoami(): Promise<string | undefined> {
 		return getUserDetails()
 			.then(userDetails => userDetails?.username)
-			.catchReturn(errors.BalenaNotLoggedIn, undefined)
-			.asCallback(callback);
+			.catchReturn(errors.BalenaNotLoggedIn, undefined);
 	}
 
 	/**
@@ -164,13 +161,10 @@ const getAuth = function(
 	 * 	console.log('My token is:', token);
 	 * });
 	 */
-	function authenticate(
-		credentials: {
-			email: string;
-			password: string;
-		},
-		callback?: (error?: Error, result?: string) => void,
-	): Promise<string> {
+	function authenticate(credentials: {
+		email: string;
+		password: string;
+	}): Promise<string> {
 		return request
 			.send<string>({
 				method: 'POST',
@@ -182,8 +176,7 @@ const getAuth = function(
 				},
 				sendToken: false,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 	}
 
 	/**
@@ -209,17 +202,12 @@ const getAuth = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function login(
-		credentials: {
-			email: string;
-			password: string;
-		},
-		callback?: (error?: Error) => void,
-	): Promise<void> {
+	function login(credentials: {
+		email: string;
+		password: string;
+	}): Promise<void> {
 		userDetailsCache = null;
-		return authenticate(credentials)
-			.then(auth.setKey)
-			.asCallback(callback);
+		return authenticate(credentials).then(auth.setKey);
 	}
 
 	/**
@@ -242,12 +230,9 @@ const getAuth = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function loginWithToken(
-		authToken: string,
-		callback?: (error?: Error) => void,
-	): Promise<void> {
+	function loginWithToken(authToken: string): Promise<void> {
 		userDetailsCache = null;
-		return auth.setKey(authToken).asCallback(callback);
+		return auth.setKey(authToken);
 	}
 
 	/**
@@ -280,13 +265,10 @@ const getAuth = function(
 	 * 	}
 	 * });
 	 */
-	function isLoggedIn(
-		callback?: (error?: Error, result?: boolean) => void,
-	): Promise<boolean> {
+	function isLoggedIn(): Promise<boolean> {
 		return getUserDetails()
 			.return(true)
-			.catchReturn(errors.BalenaNotLoggedIn, false)
-			.asCallback(callback);
+			.catchReturn(errors.BalenaNotLoggedIn, false);
 	}
 
 	/**
@@ -312,15 +294,10 @@ const getAuth = function(
 	 * 	console.log(token);
 	 * });
 	 */
-	function getToken(
-		callback?: (error?: Error, result?: string) => void,
-	): Promise<string> {
-		return auth
-			.getKey()
-			.catch(function(err) {
-				throw normalizeAuthError(err);
-			})
-			.asCallback(callback);
+	function getToken(): Promise<string> {
+		return auth.getKey().catch(function(err) {
+			throw normalizeAuthError(err);
+		});
 	}
 
 	/**
@@ -346,12 +323,8 @@ const getAuth = function(
 	 * 	console.log(userId);
 	 * });
 	 */
-	function getUserId(
-		callback?: (error?: Error, result?: number) => void,
-	): Promise<number> {
-		return getUserDetails()
-			.get('id')
-			.asCallback(callback);
+	function getUserId(): Promise<number> {
+		return getUserDetails().get('id');
 	}
 
 	/**
@@ -377,12 +350,8 @@ const getAuth = function(
 	 * 	console.log(email);
 	 * });
 	 */
-	function getEmail(
-		callback?: (error?: Error, result?: string) => void,
-	): Promise<string> {
-		return getUserDetails()
-			.get('email')
-			.asCallback(callback);
+	function getEmail(): Promise<string> {
+		return getUserDetails().get('email');
 	}
 
 	/**
@@ -402,9 +371,9 @@ const getAuth = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function logout(callback?: (error?: Error) => void): Promise<void> {
+	function logout(): Promise<void> {
 		userDetailsCache = null;
-		return auth.removeKey().asCallback(callback);
+		return auth.removeKey();
 	}
 
 	/**
@@ -439,14 +408,11 @@ const getAuth = function(
 	 * 	console.log(token);
 	 * });
 	 */
-	function register(
-		credentials: {
-			email: string;
-			password: string;
-			'g-recaptcha-response'?: string;
-		},
-		callback?: (error?: Error, result?: string) => void,
-	): Promise<string> {
+	function register(credentials: {
+		email: string;
+		password: string;
+		'g-recaptcha-response'?: string;
+	}): Promise<string> {
 		return request
 			.send({
 				method: 'POST',
@@ -455,12 +421,13 @@ const getAuth = function(
 				body: credentials,
 				sendToken: false,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 	}
 
 	return {
-		twoFactor,
+		twoFactor: require('./util/callbacks').addCallbackSupportToModule(
+			twoFactor,
+		) as typeof twoFactor,
 		whoami,
 		authenticate,
 		login,

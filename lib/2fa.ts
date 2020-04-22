@@ -50,13 +50,8 @@ const get2fa = function(
 	 * 	}
 	 * });
 	 */
-	function isEnabled(
-		callback?: (error?: Error, result?: boolean) => void,
-	): Promise<boolean> {
-		return auth
-			.needs2FA()
-			.then(twoFactorRequired => twoFactorRequired != null)
-			.asCallback(callback);
+	function isEnabled(): Promise<boolean> {
+		return auth.needs2FA().then(twoFactorRequired => twoFactorRequired != null);
 	}
 
 	/**
@@ -85,13 +80,8 @@ const get2fa = function(
 	 * 	}
 	 * });
 	 */
-	function isPassed(
-		callback?: (error?: Error, result?: boolean) => void,
-	): Promise<boolean> {
-		return auth
-			.needs2FA()
-			.then(twoFactorRequired => !twoFactorRequired)
-			.asCallback(callback);
+	function isPassed(): Promise<boolean> {
+		return auth.needs2FA().then(twoFactorRequired => !twoFactorRequired);
 	}
 
 	/**
@@ -112,10 +102,7 @@ const get2fa = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function challenge(
-		code: string,
-		callback?: (error?: Error) => void,
-	): Promise<void> {
+	function challenge(code: string): Promise<void> {
 		return request
 			.send({
 				method: 'POST',
@@ -124,8 +111,7 @@ const get2fa = function(
 				body: { code },
 			})
 			.get('body')
-			.then(auth.setKey)
-			.asCallback(callback);
+			.then(auth.setKey);
 	}
 
 	return {

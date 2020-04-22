@@ -19,7 +19,7 @@ import * as Promise from 'bluebird';
 
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
-import { findCallback, mergePineOptions } from '../util';
+import { mergePineOptions } from '../util';
 
 const getApiKeysModel = function(
 	deps: InjectedDependenciesParam,
@@ -63,10 +63,7 @@ const getApiKeysModel = function(
 	exports.create = function(
 		name: string,
 		description: string | null = null,
-		_callback?: (error?: Error, result?: string) => void,
 	): Promise<string> {
-		_callback = findCallback(arguments);
-
 		const apiKeyBody: { name: string; description?: string | null } = {
 			name,
 		};
@@ -83,8 +80,7 @@ const getApiKeysModel = function(
 			.get('body')
 			.catch(function() {
 				throw new errors.BalenaNotLoggedIn();
-			})
-			.asCallback(_callback);
+			});
 	};
 
 	/**
@@ -111,28 +107,24 @@ const getApiKeysModel = function(
 	 */
 	exports.getAll = function(
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.ApiKey> = {},
-		callback?: (error?: Error, apiKeys?: BalenaSdk.ApiKey[]) => void,
 	): Promise<BalenaSdk.ApiKey[]> {
-		callback = findCallback(arguments);
-		return pine
-			.get<BalenaSdk.ApiKey>({
-				resource: 'api_key',
-				options: mergePineOptions(
-					{
-						// the only way to reason whether
-						// it's a named user api key is whether
-						// it has a name
-						$filter: {
-							name: {
-								$ne: null,
-							},
+		return pine.get<BalenaSdk.ApiKey>({
+			resource: 'api_key',
+			options: mergePineOptions(
+				{
+					// the only way to reason whether
+					// it's a named user api key is whether
+					// it has a name
+					$filter: {
+						name: {
+							$ne: null,
 						},
-						$orderby: 'name asc',
 					},
-					options,
-				),
-			})
-			.asCallback(callback);
+					$orderby: 'name asc',
+				},
+				options,
+			),
+		});
 	};
 
 	/**
@@ -164,7 +156,6 @@ const getApiKeysModel = function(
 	exports.update = function(
 		id: number,
 		apiKeyInfo: { name?: string; description?: string },
-		callback?: (error?: Error) => void,
 	): Promise<void> {
 		return Promise.try<void>(() => {
 			if (!apiKeyInfo) {
@@ -197,7 +188,7 @@ const getApiKeysModel = function(
 					},
 				})
 				.return();
-		}).asCallback(callback);
+		});
 	};
 
 	/**
@@ -218,10 +209,7 @@ const getApiKeysModel = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	exports.revoke = function(
-		id: number,
-		callback?: (error?: Error) => void,
-	): Promise<void> {
+	exports.revoke = function(id: number): Promise<void> {
 		return pine
 			.delete({
 				resource: 'api_key',
@@ -236,8 +224,7 @@ const getApiKeysModel = function(
 					},
 				},
 			})
-			.return()
-			.asCallback(callback);
+			.return();
 	};
 
 	return exports;

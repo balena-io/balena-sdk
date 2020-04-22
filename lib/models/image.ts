@@ -17,7 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import { Image, PineOptionsFor } from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
-import { findCallback, mergePineOptions } from '../util';
+import { mergePineOptions } from '../util';
 
 const getImageModel = function(
 	deps: InjectedDependenciesParam,
@@ -52,10 +52,7 @@ const getImageModel = function(
 	exports.get = function(
 		id: number,
 		options: PineOptionsFor<Image> = {},
-		callback?: (error?: Error, result?: Image) => void,
 	): Promise<Image> {
-		callback = findCallback(arguments);
-
 		return pine
 			.get({
 				resource: 'image',
@@ -85,8 +82,7 @@ const getImageModel = function(
 				if (image == null) {
 					throw new errors.BalenaImageNotFound(id);
 				}
-			})
-			.asCallback(callback);
+			});
 	};
 
 	/**
@@ -111,14 +107,8 @@ const getImageModel = function(
 	 * 	console.log(logs);
 	 * });
 	 */
-	exports.getLogs = (
-		id: number,
-		callback?: (error?: Error, result?: string) => void,
-	): Promise<string> =>
-		exports
-			.get(id, { $select: 'build_log' })
-			.get('build_log')
-			.asCallback(callback);
+	exports.getLogs = (id: number): Promise<string> =>
+		exports.get(id, { $select: 'build_log' }).get('build_log');
 
 	return exports;
 };
