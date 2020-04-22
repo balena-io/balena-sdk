@@ -1,4 +1,18 @@
 - commits:
+    - subject: Abstract callback support out of the method implementations
+      hash: 1d781a4d687fd582971460b1ea504aac5d7dd8f2
+      body: |
+        Also drops the node build size from 354kb to 345kb
+        and the minified browser build from 843kb to 840kb.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.2.4
+  date: 2020-04-22T13:30:28.692Z
+- commits:
     - subject: Fix the auth module lazy loading in device & key modules
       hash: 0062feb397323daee72b05c84210ab784041e7be
       body: ''
