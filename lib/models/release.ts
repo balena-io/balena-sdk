@@ -19,7 +19,7 @@ import * as Promise from 'bluebird';
 import once = require('lodash/once');
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
-import { findCallback, isId, mergePineOptions } from '../util';
+import { isId, mergePineOptions } from '../util';
 
 const getReleaseModel = function(
 	deps: InjectedDependenciesParam,
@@ -77,10 +77,7 @@ const getReleaseModel = function(
 	function get(
 		commitOrId: string | number,
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
-		callback?: (error?: Error, result?: BalenaSdk.Release) => void,
 	): Promise<BalenaSdk.Release> {
-		callback = findCallback(arguments);
-
 		return Promise.try(() => {
 			if (commitOrId == null) {
 				throw new errors.BalenaReleaseNotFound(commitOrId);
@@ -122,7 +119,7 @@ const getReleaseModel = function(
 					})
 					.get(0);
 			}
-		}).asCallback(callback);
+		});
 	}
 
 	/**
@@ -173,13 +170,7 @@ const getReleaseModel = function(
 			release?: BalenaSdk.PineOptionsFor<BalenaSdk.Release>;
 			image?: BalenaSdk.PineOptionsFor<BalenaSdk.Image>;
 		} = {},
-		callback?: (
-			error?: Error,
-			result?: BalenaSdk.ReleaseWithImageDetails,
-		) => void,
 	): Promise<BalenaSdk.ReleaseWithImageDetails> {
-		callback = findCallback(arguments);
-
 		return get(
 			commitOrId,
 			mergePineOptions(
@@ -207,39 +198,37 @@ const getReleaseModel = function(
 				},
 				options.release,
 			),
-		)
-			.then(function(rawRelease) {
-				const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
+		).then(function(rawRelease) {
+			const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
 
-				// Squash .contains__image[x].image[0] into a simple array
-				const images = (release.contains__image as Array<{
-					image: BalenaSdk.Image[];
-				}>).map(imageJoin => imageJoin.image[0]);
-				delete release.contains__image;
+			// Squash .contains__image[x].image[0] into a simple array
+			const images = (release.contains__image as Array<{
+				image: BalenaSdk.Image[];
+			}>).map(imageJoin => imageJoin.image[0]);
+			delete release.contains__image;
 
-				release.images = images
-					.map(function({ is_a_build_of__service, ...imageData }) {
-						const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
-							...imageData,
-							service_name: (is_a_build_of__service as BalenaSdk.Service[])[0]
-								.service_name,
-						};
-						return image;
-					})
-					.sort((a, b) => a.service_name.localeCompare(b.service_name));
+			release.images = images
+				.map(function({ is_a_build_of__service, ...imageData }) {
+					const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
+						...imageData,
+						service_name: (is_a_build_of__service as BalenaSdk.Service[])[0]
+							.service_name,
+					};
+					return image;
+				})
+				.sort((a, b) => a.service_name.localeCompare(b.service_name));
 
-				release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
-				delete release.is_created_by__user;
+			release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
+			delete release.is_created_by__user;
 
-				return release as BalenaSdk.Release & {
-					images: Array<{
-						id: number;
-						service_name: string;
-					}>;
-					user: BalenaSdk.User;
-				};
-			})
-			.asCallback(callback);
+			return release as BalenaSdk.Release & {
+				images: Array<{
+					id: number;
+					service_name: string;
+				}>;
+				user: BalenaSdk.User;
+			};
+		});
 	}
 
 	/**
@@ -273,10 +262,7 @@ const getReleaseModel = function(
 	function getAllByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
-		callback?: (error?: Error, result?: BalenaSdk.Release[]) => void,
 	): Promise<BalenaSdk.Release[]> {
-		callback = findCallback(arguments);
-
 		return applicationModel()
 			.get(nameOrSlugOrId, { $select: 'id' })
 			.then(({ id }) =>
@@ -292,8 +278,7 @@ const getReleaseModel = function(
 						options,
 					),
 				}),
-			)
-			.asCallback(callback);
+			);
 	}
 
 	/**
@@ -327,10 +312,7 @@ const getReleaseModel = function(
 	function getLatestByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
-		callback?: (error?: Error, result?: BalenaSdk.Release) => void,
 	): Promise<BalenaSdk.Release> {
-		callback = findCallback(arguments);
-
 		return getAllByApplication(
 			nameOrSlugOrId,
 			mergePineOptions(
@@ -342,9 +324,7 @@ const getReleaseModel = function(
 				},
 				options,
 			),
-		)
-			.get(0)
-			.asCallback(callback);
+		).get(0);
 	}
 
 	/**
@@ -380,7 +360,6 @@ const getReleaseModel = function(
 	function createFromUrl(
 		nameOrSlugOrId: string | number,
 		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
-		callback?: (error?: Error, result?: number) => void,
 	): Promise<number> {
 		return applicationModel()
 			.get(nameOrSlugOrId, {
@@ -397,8 +376,7 @@ const getReleaseModel = function(
 					app_name,
 					urlDeployOptions,
 				),
-			)
-			.asCallback(callback);
+			);
 	}
 
 	/**
@@ -437,7 +415,6 @@ const getReleaseModel = function(
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
 			options: BalenaSdk.PineOptionsFor<BalenaSdk.ReleaseTag> = {},
-			callback?: (error?: Error, result?: BalenaSdk.ReleaseTag[]) => void,
 		): Promise<BalenaSdk.ReleaseTag[]> {
 			return applicationModel()
 				.get(nameOrSlugOrId, { $select: 'id' })
@@ -461,8 +438,7 @@ const getReleaseModel = function(
 							options,
 						),
 					),
-				)
-				.asCallback(callback);
+				);
 		},
 
 		/**
@@ -496,18 +472,13 @@ const getReleaseModel = function(
 		getAllByRelease(
 			commitOrId: string | number,
 			options: BalenaSdk.PineOptionsFor<BalenaSdk.ReleaseTag> = {},
-			callback?: (error?: Error, result?: BalenaSdk.ReleaseTag[]) => void,
 		): Promise<BalenaSdk.ReleaseTag[]> {
-			callback = findCallback(arguments);
-
 			return get(commitOrId, {
 				$select: 'id',
 				$expand: {
 					release_tag: mergePineOptions({ $orderby: 'tag_key asc' }, options),
 				},
-			})
-				.then(release => release.release_tag as BalenaSdk.ReleaseTag[])
-				.asCallback(callback);
+			}).then(release => release.release_tag as BalenaSdk.ReleaseTag[]);
 		},
 
 		/**

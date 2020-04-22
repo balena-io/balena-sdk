@@ -54,17 +54,14 @@ const getBillingModel = function(
 	 * 	console.log(billingAccount);
 	 * });
 	 */
-	exports.getAccount = (
-		callback?: (error?: Error, result?: BillingAccountInfo) => void,
-	): Promise<BillingAccountInfo> =>
+	exports.getAccount = (): Promise<BillingAccountInfo> =>
 		request
 			.send({
 				method: 'GET',
 				url: '/user/billing/account',
 				baseUrl: apiUrl,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 
 	/**
 	 * @summary Get the current billing plan
@@ -87,17 +84,14 @@ const getBillingModel = function(
 	 * 	console.log(billingPlan);
 	 * });
 	 */
-	exports.getPlan = (
-		callback?: (error?: Error, result?: BillingPlanInfo) => void,
-	): Promise<BillingPlanInfo> =>
+	exports.getPlan = (): Promise<BillingPlanInfo> =>
 		request
 			.send({
 				method: 'GET',
 				url: '/user/billing/plan',
 				baseUrl: apiUrl,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 
 	/**
 	 * @summary Get the current billing information
@@ -120,17 +114,14 @@ const getBillingModel = function(
 	 * 	console.log(billingInfo);
 	 * });
 	 */
-	exports.getBillingInfo = (
-		callback?: (error?: Error, result?: BillingInfo) => void,
-	): Promise<BillingInfo> =>
+	exports.getBillingInfo = (): Promise<BillingInfo> =>
 		request
 			.send({
 				method: 'GET',
 				url: '/user/billing/info',
 				baseUrl: apiUrl,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 
 	/**
 	 * @summary Update the current billing information
@@ -158,7 +149,6 @@ const getBillingModel = function(
 	 */
 	exports.updateBillingInfo = (
 		billingInfo: TokenBillingSubmitInfo,
-		callback?: (error?: Error, result?: BillingInfo) => void,
 	): Promise<BillingInfo> =>
 		request
 			.send({
@@ -167,8 +157,7 @@ const getBillingModel = function(
 				baseUrl: apiUrl,
 				body: billingInfo,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 
 	/**
 	 * @summary Get the available invoices
@@ -191,17 +180,14 @@ const getBillingModel = function(
 	 * 	console.log(invoices);
 	 * });
 	 */
-	exports.getInvoices = (
-		callback?: (error?: Error, result?: InvoiceInfo[]) => void,
-	): Promise<InvoiceInfo[]> =>
+	exports.getInvoices = (): Promise<InvoiceInfo[]> =>
 		request
 			.send({
 				method: 'GET',
 				url: '/user/billing/invoices',
 				baseUrl: apiUrl,
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 
 	/**
 	 * @summary Download a specific invoice
@@ -226,21 +212,15 @@ const getBillingModel = function(
 	 */
 	exports.downloadInvoice = function(
 		invoiceNumber: string,
-		callback?: (
-			error?: Error,
-			result?: Blob | BalenaRequestStreamResult,
-		) => void,
 	): Promise<Blob | BalenaRequestStreamResult> {
 		const url = `/user/billing/invoices/${invoiceNumber}/download`;
 
 		if (!isBrowser) {
-			return request
-				.stream({
-					method: 'GET',
-					url,
-					baseUrl: apiUrl,
-				})
-				.asCallback(callback);
+			return request.stream({
+				method: 'GET',
+				url,
+				baseUrl: apiUrl,
+			});
 		}
 
 		return request
@@ -250,8 +230,7 @@ const getBillingModel = function(
 				baseUrl: apiUrl,
 				responseFormat: 'blob',
 			})
-			.get('body')
-			.asCallback(callback);
+			.get('body');
 	};
 
 	return exports;

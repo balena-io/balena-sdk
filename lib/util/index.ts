@@ -51,16 +51,6 @@ export const isId = (v?: any): v is number => typeof v === 'number';
 
 export const LOCKED_STATUS_CODE = 423;
 
-// Use with: `findCallback(arguments)`.
-export const findCallback = (args: IArguments) => {
-	const lastArg = args[args.length - 1];
-	if (typeof lastArg === 'function') {
-		return lastArg;
-	}
-
-	return;
-};
-
 const isBalenaRequestErrorResponseWithCode = (
 	error: Partial<errors.BalenaRequestError>,
 	statusCode: number,
@@ -273,7 +263,6 @@ export default {
 	timeSince,
 	isId,
 	LOCKED_STATUS_CODE,
-	findCallback,
 	isUnauthorizedResponse,
 	isNotFoundResponse,
 	isNoDeviceForKeyResponse,

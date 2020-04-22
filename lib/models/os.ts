@@ -23,7 +23,6 @@ import * as semver from 'semver';
 
 import {
 	deviceTypes as deviceTypesUtil,
-	findCallback,
 	isDevelopmentVersion,
 	isNotFoundResponse,
 	onlyIf,
@@ -253,13 +252,10 @@ const getOsModel = function(
 	const getDownloadSize = function(
 		deviceType: string,
 		version: string = 'latest',
-		callback?: (error?: Error, result?: number) => void,
 	): Promise<number> {
-		callback = findCallback(arguments);
-
-		return getValidatedDeviceType(deviceType)
-			.then(() => _getDownloadSize(deviceType, version))
-			.asCallback(callback);
+		return getValidatedDeviceType(deviceType).then(() =>
+			_getDownloadSize(deviceType, version),
+		);
 	};
 
 	/**
@@ -291,13 +287,10 @@ const getOsModel = function(
 	 */
 	const getSupportedVersions = function(
 		deviceType: string,
-		callback?: (error?: Error, result?: OsVersions) => void,
 	): Promise<OsVersions> {
-		callback = findCallback(arguments);
-
-		return getValidatedDeviceType(deviceType)
-			.then(() => _getOsVersions(deviceType))
-			.asCallback(callback);
+		return getValidatedDeviceType(deviceType).then(() =>
+			_getOsVersions(deviceType),
+		);
 	};
 
 	/**
@@ -338,14 +331,10 @@ const getOsModel = function(
 	const getMaxSatisfyingVersion = function(
 		deviceType: string,
 		versionOrRange: keyof OsVersions = 'latest',
-		callback?: (error?: Error, result?: string) => void,
 	): Promise<string> {
-		callback = findCallback(arguments);
-
 		return getValidatedDeviceType(deviceType)
 			.then(() => getSupportedVersions(deviceType))
-			.then(osVersions => _getMaxSatisfyingVersion(versionOrRange, osVersions))
-			.asCallback(callback);
+			.then(osVersions => _getMaxSatisfyingVersion(versionOrRange, osVersions));
 	};
 
 	/**
@@ -380,10 +369,7 @@ const getOsModel = function(
 	const getLastModified = function(
 		deviceType: string,
 		version: string = 'latest',
-		callback?: (error?: Error, result?: Date) => void,
 	): Promise<Date> {
-		callback = findCallback(arguments);
-
 		return getValidatedDeviceType(deviceType)
 			.then(() => normalizeVersion(version))
 			.then(ver =>
@@ -397,8 +383,7 @@ const getOsModel = function(
 			.catch(isNotFoundResponse, () => {
 				throw new Error('No such version for the device type');
 			})
-			.then(response => new Date(response.headers.get('last-modified')!))
-			.asCallback(callback);
+			.then(response => new Date(response.headers.get('last-modified')!));
 	};
 
 	/**
@@ -429,10 +414,7 @@ const getOsModel = function(
 	const download = onlyIf(!isBrowser)(function(
 		deviceType: string,
 		version: string = 'latest',
-		callback?: (error?: Error, result?: BalenaRequestStreamResult) => void,
 	): Promise<BalenaRequestStreamResult> {
-		callback = findCallback(arguments);
-
 		return getValidatedDeviceType(deviceType)
 			.then(() => {
 				if (version === 'latest') {
@@ -451,8 +433,7 @@ const getOsModel = function(
 			)
 			.catch(isNotFoundResponse, function() {
 				throw new Error('No such version for the device type');
-			})
-			.asCallback(callback);
+			});
 	});
 
 	/**
@@ -503,10 +484,7 @@ const getOsModel = function(
 	const getConfig = function(
 		nameOrSlugOrId: string | number,
 		options: ImgConfigOptions,
-		callback?: (error?: Error, result?: object) => void,
 	): Promise<object> {
-		callback = findCallback(arguments);
-
 		return Promise.try(() => {
 			if (!options?.version) {
 				throw new Error('An OS version is required when calling os.getConfig');
@@ -526,7 +504,7 @@ const getOsModel = function(
 				)
 				.get('body')
 				.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId));
-		}).asCallback(callback);
+		});
 	};
 
 	/**
@@ -556,17 +534,14 @@ const getOsModel = function(
 		deviceType: string,
 		currentVersion: string,
 		targetVersion: string,
-		callback?: (error?: Error, result?: boolean) => void,
 	): Promise<boolean> =>
-		getValidatedDeviceType(deviceType)
-			.then(() =>
-				hupActionHelper.isSupportedOsUpdate(
-					deviceType,
-					currentVersion,
-					targetVersion,
-				),
-			)
-			.asCallback(callback);
+		getValidatedDeviceType(deviceType).then(() =>
+			hupActionHelper.isSupportedOsUpdate(
+				deviceType,
+				currentVersion,
+				targetVersion,
+			),
+		);
 
 	/**
 	 * @summary Returns the supported OS update targets for the provided device type
@@ -598,32 +573,29 @@ const getOsModel = function(
 	const getSupportedOsUpdateVersions = (
 		deviceType: string,
 		currentVersion: string,
-		callback?: (error?: Error, result?: OsUpdateVersions) => void,
 	): Promise<OsUpdateVersions> =>
-		getSupportedVersions(deviceType)
-			.then(({ versions: allVersions }) => {
-				// use bSemver.compare to find the current version in the OS list
-				// to benefit from the baked-in normalization
-				const current = allVersions.find(
-					v => bSemver.compare(v, currentVersion) === 0,
-				);
+		getSupportedVersions(deviceType).then(({ versions: allVersions }) => {
+			// use bSemver.compare to find the current version in the OS list
+			// to benefit from the baked-in normalization
+			const current = allVersions.find(
+				v => bSemver.compare(v, currentVersion) === 0,
+			);
 
-				const versions = allVersions.filter(v =>
-					// avoid the extra call to getValidatedDeviceType, since getSupportedVersions already does that
-					hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v),
-				);
+			const versions = allVersions.filter(v =>
+				// avoid the extra call to getValidatedDeviceType, since getSupportedVersions already does that
+				hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v),
+			);
 
-				const recommended = versions.filter(v => !bSemver.prerelease(v))[0] as
-					| string
-					| undefined;
+			const recommended = versions.filter(v => !bSemver.prerelease(v))[0] as
+				| string
+				| undefined;
 
-				return {
-					versions,
-					recommended,
-					current,
-				};
-			})
-			.asCallback(callback);
+			return {
+				versions,
+				recommended,
+				current,
+			};
+		});
 
 	/**
 	 * @summary Returns whether the specified OS architecture is compatible with the target architecture

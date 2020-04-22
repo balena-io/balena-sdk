@@ -23,7 +23,7 @@ import {
 	ServiceEnvironmentVariable,
 } from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
-import { findCallback, mergePineOptions } from '../util';
+import { mergePineOptions } from '../util';
 
 const getServiceModel = (
 	deps: InjectedDependenciesParam,
@@ -95,10 +95,7 @@ const getServiceModel = (
 	exports.getAllByApplication = function(
 		nameOrSlugOrId: string | number,
 		options: PineOptionsFor<Service> = {},
-		callback?: (error?: Error, result?: Service[]) => void,
 	): Promise<Service[]> {
-		callback = findCallback(arguments);
-
 		return applicationModel()
 			.get(nameOrSlugOrId, { $select: 'id' })
 			.then(({ id }: { id: number }) =>
@@ -106,8 +103,7 @@ const getServiceModel = (
 					resource: 'service',
 					options: mergePineOptions({ $filter: { application: id } }, options),
 				}),
-			)
-			.asCallback(callback);
+			);
 	};
 
 	/**
@@ -171,10 +167,7 @@ const getServiceModel = (
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
 			options: PineOptionsFor<ServiceEnvironmentVariable> = {},
-			callback?: (error?: Error, result?: ServiceEnvironmentVariable[]) => void,
 		): ServiceEnvironmentVariable[] {
-			callback = findCallback(arguments);
-
 			return applicationModel()
 				.get(nameOrSlugOrId, { $select: 'id' })
 				.get('id')
@@ -199,8 +192,7 @@ const getServiceModel = (
 							options,
 						),
 					),
-				)
-				.asCallback(callback);
+				);
 		},
 
 		/**
