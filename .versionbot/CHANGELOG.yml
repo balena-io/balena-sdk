@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix the auth module lazy loading in device & key modules
+      hash: 0062feb397323daee72b05c84210ab784041e7be
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.2.3
+  date: 2020-04-21T17:59:19.087Z
+- commits:
     - subject: Update dependencies
       hash: d91c5ba6693061798058dff28a2df53e6fc462c8
       body: ''
