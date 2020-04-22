@@ -71,7 +71,22 @@ See the JSDoc markdown documentation for the returned `balena` object in [DOCUME
 Support
 -------
 
-If you're having any problem, please [raise an issue](https://github.com/balena-io/balena-sdk/issues/new) on GitHub and the balena team will be happy to help.
+If you face any issues, please [raise an issue](https://github.com/balena-io/balena-sdk/issues/new) on GitHub and the balena team will be happy to help.
+
+Deprecation policy
+------------------
+
+The balena SDK uses [semver versioning](https://semver.org/), with the
+concepts of major, minor and patch version releases.
+
+The latest release of the previous major version of the balena SDK will be
+supported for one year from the date when the next major version is released.
+For example, the balena SDK v12.33.4 (the latest v12 release) will be supported for
+one year from the date when v13.0.0 is released.
+
+At the end of this support period, the older major version is considered
+deprecated and you are highly encouraged to upgrade to the to latest major
+version.
 
 Tests
 -----
