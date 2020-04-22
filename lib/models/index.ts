@@ -83,7 +83,7 @@ export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
 	const models = {};
 
 	(Object.keys(modelsTemplate) as Array<keyof typeof modelsTemplate>).forEach(
-		moduleName => {
+		(moduleName) => {
 			Object.defineProperty(models, moduleName, {
 				enumerable: true,
 				configurable: true,

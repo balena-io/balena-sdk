@@ -21,7 +21,7 @@ import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { isId, mergePineOptions } from '../util';
 
-const getReleaseModel = function(
+const getReleaseModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
@@ -90,7 +90,7 @@ const getReleaseModel = function(
 						id: commitOrId,
 						options: mergePineOptions({}, options),
 					})
-					.tap(release => {
+					.tap((release) => {
 						if (release == null) {
 							throw new errors.BalenaReleaseNotFound(commitOrId);
 						}
@@ -108,7 +108,7 @@ const getReleaseModel = function(
 							options,
 						),
 					})
-					.tap(function(releases) {
+					.tap(function (releases) {
 						if (releases.length === 0) {
 							throw new errors.BalenaReleaseNotFound(commitOrId);
 						}
@@ -198,17 +198,17 @@ const getReleaseModel = function(
 				},
 				options.release,
 			),
-		).then(function(rawRelease) {
+		).then(function (rawRelease) {
 			const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
 
 			// Squash .contains__image[x].image[0] into a simple array
 			const images = (release.contains__image as Array<{
 				image: BalenaSdk.Image[];
-			}>).map(imageJoin => imageJoin.image[0]);
+			}>).map((imageJoin) => imageJoin.image[0]);
 			delete release.contains__image;
 
 			release.images = images
-				.map(function({ is_a_build_of__service, ...imageData }) {
+				.map(function ({ is_a_build_of__service, ...imageData }) {
 					const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
 						...imageData,
 						service_name: (is_a_build_of__service as BalenaSdk.Service[])[0]
@@ -478,7 +478,7 @@ const getReleaseModel = function(
 				$expand: {
 					release_tag: mergePineOptions({ $orderby: 'tag_key asc' }, options),
 				},
-			}).then(release => release.release_tag as BalenaSdk.ReleaseTag[]);
+			}).then((release) => release.release_tag as BalenaSdk.ReleaseTag[]);
 		},
 
 		/**

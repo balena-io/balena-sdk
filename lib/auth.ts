@@ -20,14 +20,14 @@ import * as Promise from 'bluebird';
 import _get2faModel from './2fa';
 import { InjectedDependenciesParam, InjectedOptionsParam } from './balena';
 
-const getAuth = function(
+const getAuth = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
 	const { auth: authBase, pubsub, request } = deps;
 	const { apiUrl } = opts;
 
-	const normalizeAuthError = function(err: errors.BalenaRequestError) {
+	const normalizeAuthError = function (err: errors.BalenaRequestError) {
 		if (err.statusCode === 401) {
 			return new errors.BalenaNotLoggedIn();
 		} else if (err.code === 'BalenaMalformedToken') {
@@ -41,7 +41,7 @@ const getAuth = function(
 		eventName: string,
 		fn: T,
 	): T =>
-		function() {
+		function () {
 			return fn
 				.apply(authBase, arguments)
 				.finally(() => pubsub.publish(eventName));
@@ -87,7 +87,7 @@ const getAuth = function(
 				.then(({ body }) => {
 					return (userDetailsCache = body);
 				})
-				.catch(function(err) {
+				.catch(function (err) {
 					throw normalizeAuthError(err);
 				});
 		});
@@ -126,7 +126,7 @@ const getAuth = function(
 	 */
 	function whoami(): Promise<string | undefined> {
 		return getUserDetails()
-			.then(userDetails => userDetails?.username)
+			.then((userDetails) => userDetails?.username)
 			.catchReturn(errors.BalenaNotLoggedIn, undefined);
 	}
 
@@ -295,7 +295,7 @@ const getAuth = function(
 	 * });
 	 */
 	function getToken(): Promise<string> {
-		return auth.getKey().catch(function(err) {
+		return auth.getKey().catch(function (err) {
 			throw normalizeAuthError(err);
 		});
 	}

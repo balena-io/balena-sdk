@@ -32,7 +32,7 @@ export const getUpsertHelper = ({ pine }: { pine: BalenaPine.Pine }) => {
 				);
 			}
 
-			const missingProp = naturalKeyProps.find(prop => !(prop in body));
+			const missingProp = naturalKeyProps.find((prop) => !(prop in body));
 			if (missingProp) {
 				throw new errors.BalenaInvalidParameterError(
 					'naturalKeyProps',

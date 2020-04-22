@@ -13,14 +13,14 @@ import {
 } from '../setup';
 const { expect } = m.chai;
 
-describe('Billing Model', function() {
-	describe('Free Account', function() {
+describe('Billing Model', function () {
+	describe('Free Account', function () {
 		givenLoggedInUser(beforeEach);
 
 		describe('balena.models.billing.getAccount()', () =>
-			it('should not return a billing account info object', function() {
+			it('should not return a billing account info object', function () {
 				const promise = balena.models.billing.getAccount();
-				return expect(promise).to.be.rejected.then(function(error) {
+				return expect(promise).to.be.rejected.then(function (error) {
 					expect(error).to.have.property('code', 'BalenaRequestError');
 					expect(error).to.have.property('statusCode', 404);
 					expect(error)
@@ -31,7 +31,7 @@ describe('Billing Model', function() {
 
 		describe('balena.models.billing.getPlan()', () =>
 			it('should return a free tier billing plan object', () =>
-				balena.models.billing.getPlan().then(plan =>
+				balena.models.billing.getPlan().then((plan) =>
 					expect(plan).to.deep.match({
 						title: 'Free',
 						name: 'Free plan',
@@ -66,53 +66,53 @@ describe('Billing Model', function() {
 				)));
 
 		describe('balena.models.billing.getBillingInfo()', () =>
-			it('should return a free tier billing info object', function() {
+			it('should return a free tier billing info object', function () {
 				const promise = balena.models.billing.getBillingInfo();
 				return expect(promise).to.become({});
 			}));
 
-		describe('balena.models.billing.updateBillingInfo()', function() {
-			it('should throw when no parameters are provided', function() {
+		describe('balena.models.billing.updateBillingInfo()', function () {
+			it('should throw when no parameters are provided', function () {
 				const promise = (balena.models.billing.updateBillingInfo as any)();
-				return expect(promise).to.be.rejected.then(error =>
+				return expect(promise).to.be.rejected.then((error) =>
 					expect(error).to.have.property('statusCode', 400),
 				);
 			});
 
-			it('should throw when an empty parameter object is provided', function() {
+			it('should throw when an empty parameter object is provided', function () {
 				const promise = balena.models.billing.updateBillingInfo({} as any);
-				return expect(promise).to.be.rejected.then(error =>
+				return expect(promise).to.be.rejected.then((error) =>
 					expect(error).to.have.property('statusCode', 400),
 				);
 			});
 
-			it('should throw when the token_id is empty', function() {
+			it('should throw when the token_id is empty', function () {
 				const promise = balena.models.billing.updateBillingInfo({
 					token_id: '',
 				});
-				return expect(promise).to.be.rejected.then(error =>
+				return expect(promise).to.be.rejected.then((error) =>
 					expect(error).to.have.property('statusCode', 400),
 				);
 			});
 		});
 
 		describe('balena.models.billing.getInvoices()', () =>
-			it('should return no invoices', function() {
+			it('should return no invoices', function () {
 				const promise = balena.models.billing.getInvoices();
 				return expect(promise).to.become([]);
 			}));
 
-		describe('balena.models.billing.downloadInvoice()', function() {
-			before(function() {
+		describe('balena.models.billing.downloadInvoice()', function () {
+			before(function () {
 				return balena.models.billing
 					.getInvoices()
-					.then(invoices => {
+					.then((invoices) => {
 						this.firstInvoiceNumber = invoices?.[0]?.invoice_number;
 					})
 					.catch(_.noop);
 			});
 
-			it('should not be able to download any invoice', function() {
+			it('should not be able to download any invoice', function () {
 				expect(this.firstInvoiceNumber).to.be.a('undefined');
 				const promise = balena.models.billing.downloadInvoice(
 					'anyinvoicenumber',
@@ -120,36 +120,36 @@ describe('Billing Model', function() {
 				return expect(promise).to.be.rejected;
 			});
 
-			it('should throw when an invoice number is not provided', function() {
+			it('should throw when an invoice number is not provided', function () {
 				const promise = (balena.models.billing.downloadInvoice as any)();
 				return expect(promise).to.be.rejected;
 			});
 
-			it('should throw when an empty string invoice number is provided', function() {
+			it('should throw when an empty string invoice number is provided', function () {
 				const promise = balena.models.billing.downloadInvoice('');
 				return expect(promise).to.be.rejected;
 			});
 
-			it('should throw when trying to retrieve an non-existing invoice', function() {
+			it('should throw when trying to retrieve an non-existing invoice', function () {
 				const promise = balena.models.billing.downloadInvoice('notfound');
 				return expect(promise).to.be.rejected;
 			});
 
-			it('should not return an invoice of a different user', function() {
+			it('should not return an invoice of a different user', function () {
 				const promise = balena.models.billing.downloadInvoice('1000');
 				return expect(promise).to.be.rejected;
 			});
 		});
 	});
 
-	describe('Paid Account', function() {
+	describe('Paid Account', function () {
 		let hasActiveBillingAccount = false;
 
 		const givenABillingAccountIt = (
 			description: string,
 			testFn: (...args: any[]) => any,
 		) =>
-			it(description, function() {
+			it(description, function () {
 				if (!hasActiveBillingAccount) {
 					return this.skip();
 				}
@@ -160,7 +160,7 @@ describe('Billing Model', function() {
 			loginPaidUser()
 				.then(() => balena.models.billing.getAccount())
 				.then(
-					accountInfo =>
+					(accountInfo) =>
 						(hasActiveBillingAccount =
 							(accountInfo != null ? accountInfo.account_state : undefined) ===
 							'active'),
@@ -171,7 +171,7 @@ describe('Billing Model', function() {
 		describe('balena.models.billing.getAccount()', () =>
 			givenABillingAccountIt(
 				'should return a paid tier billing account info object',
-				function() {
+				function () {
 					const promise = balena.models.billing.getAccount();
 					return expect(promise).to.become({
 						account_state: 'active',
@@ -197,7 +197,7 @@ describe('Billing Model', function() {
 			givenABillingAccountIt(
 				'should return a paid tier billing plan object',
 				() =>
-					balena.models.billing.getPlan().then(function(plan) {
+					balena.models.billing.getPlan().then(function (plan) {
 						expect(plan).to.deep.match({
 							title: 'Team member',
 							name: 'Team member plan',
@@ -249,7 +249,7 @@ describe('Billing Model', function() {
 
 		describe('balena.models.billing.getBillingInfo()', () =>
 			givenABillingAccountIt('should return a billing info object', () =>
-				balena.models.billing.getBillingInfo().then(function(billingInfo) {
+				balena.models.billing.getBillingInfo().then(function (billingInfo) {
 					expect(billingInfo).to.not.be.null;
 					// this is for local tests
 					if ((billingInfo as BalenaSdk.CardBillingInfo).card_type === 'Visa') {
@@ -281,26 +281,18 @@ describe('Billing Model', function() {
 
 		describe('balena.models.billing.getInvoices()', () =>
 			givenABillingAccountIt('should return an array of invoice objects', () =>
-				balena.models.billing.getInvoices().then(function(invoices) {
+				balena.models.billing.getInvoices().then(function (invoices) {
 					expect(Array.isArray(invoices)).to.be.true;
 					expect(invoices.length).to.not.equal(0);
 
 					const invoice = invoices[0];
-					expect(invoice)
-						.to.have.property('closed_at')
-						.that.is.a('string');
-					expect(invoice)
-						.to.have.property('created_at')
-						.that.is.a('string');
-					expect(invoice)
-						.to.have.property('due_on')
-						.that.is.a('string');
+					expect(invoice).to.have.property('closed_at').that.is.a('string');
+					expect(invoice).to.have.property('created_at').that.is.a('string');
+					expect(invoice).to.have.property('due_on').that.is.a('string');
 					expect(invoice)
 						.to.have.property('invoice_number')
 						.that.is.a('string');
-					expect(invoice)
-						.to.have.property('uuid')
-						.that.is.a('string');
+					expect(invoice).to.have.property('uuid').that.is.a('string');
 
 					expect(invoice).to.have.property('currency', 'USD');
 					expect(invoice).to.have.property('total_in_cents', '0');
@@ -309,11 +301,11 @@ describe('Billing Model', function() {
 				}),
 			));
 
-		describe('balena.models.billing.downloadInvoice()', function() {
-			before(function() {
+		describe('balena.models.billing.downloadInvoice()', function () {
+			before(function () {
 				return balena.models.billing
 					.getInvoices()
-					.then(invoices => {
+					.then((invoices) => {
 						this.firstInvoiceNumber = invoices?.[0]?.invoice_number;
 					})
 					.catch(_.noop);
@@ -322,10 +314,10 @@ describe('Billing Model', function() {
 			if (IS_BROWSER) {
 				givenABillingAccountIt(
 					'should be able to download an invoice on the browser',
-					function() {
+					function () {
 						return balena.models.billing
 							.downloadInvoice(this.firstInvoiceNumber)
-							.then(function(result: Blob) {
+							.then(function (result: Blob) {
 								expect(result).to.be.an.instanceof(Blob);
 								expect(result.size).to.not.equal(0);
 								expect(result.type).to.equal('application/pdf');
@@ -348,10 +340,10 @@ describe('Billing Model', function() {
 
 				return givenABillingAccountIt(
 					'should be able to download an invoice on node',
-					function() {
+					function () {
 						return balena.models.billing
 							.downloadInvoice(this.firstInvoiceNumber)
-							.then(function(result) {
+							.then(function (result) {
 								const stream = result as Exclude<typeof result, Blob>;
 								expect(stream.mime).to.equal('application/pdf');
 

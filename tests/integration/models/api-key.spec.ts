@@ -5,23 +5,23 @@ import * as m from 'mochainon';
 import { balena, givenLoggedInUser } from '../setup';
 const { expect } = m.chai;
 
-describe('API Key model', function() {
+describe('API Key model', function () {
 	givenLoggedInUser(beforeEach);
 
-	describe('balena.models.apiKey.create()', function() {
+	describe('balena.models.apiKey.create()', function () {
 		it('should be able to create a new api key', () =>
 			balena.models.apiKey
 				.create('apiKey')
-				.then(key => expect(key).to.be.a('string')));
+				.then((key) => expect(key).to.be.a('string')));
 
 		it('should be able to create a new api key with description', () =>
 			balena.models.apiKey
 				.create('apiKey', 'apiKeyDescription')
-				.then(function(key) {
+				.then(function (key) {
 					expect(key).to.be.a('string');
 					return balena.models.apiKey.getAll();
 				})
-				.then(function(apiKeys) {
+				.then(function (apiKeys) {
 					expect(apiKeys).to.be.an('array');
 					expect(apiKeys).to.have.lengthOf(1);
 					expect(apiKeys).to.deep.match([
@@ -33,15 +33,15 @@ describe('API Key model', function() {
 				}));
 	});
 
-	describe('balena.models.apiKey.getAll()', function() {
+	describe('balena.models.apiKey.getAll()', function () {
 		describe('given no named api keys', () =>
 			it('should retrieve an empty array', () =>
-				balena.models.apiKey.getAll().then(function(apiKeys) {
+				balena.models.apiKey.getAll().then(function (apiKeys) {
 					expect(apiKeys).to.be.an('array');
 					expect(apiKeys).to.have.lengthOf(0);
 				})));
 
-		describe('given two named api keys', function() {
+		describe('given two named api keys', function () {
 			beforeEach(() =>
 				Bluebird.all([
 					balena.models.apiKey.create('apiKey1'),
@@ -50,7 +50,7 @@ describe('API Key model', function() {
 			);
 
 			it('should be able to retrieve all api keys created', () =>
-				balena.models.apiKey.getAll().then(function(apiKeys) {
+				balena.models.apiKey.getAll().then(function (apiKeys) {
 					expect(apiKeys).to.be.an('array');
 					expect(apiKeys).to.have.lengthOf(2);
 					expect(apiKeys).to.deep.match([
@@ -63,21 +63,17 @@ describe('API Key model', function() {
 							description: 'apiKey2Description',
 						},
 					]);
-					_.forEach(apiKeys, function(apiKey) {
-						expect(apiKey)
-							.to.have.property('id')
-							.that.is.a('number');
-						expect(apiKey)
-							.to.have.property('created_at')
-							.that.is.a('string');
+					_.forEach(apiKeys, function (apiKey) {
+						expect(apiKey).to.have.property('id').that.is.a('number');
+						expect(apiKey).to.have.property('created_at').that.is.a('string');
 					});
 				}));
 		});
 	});
 
 	describe('balena.models.apiKey.update()', () =>
-		describe('given a named api key', function() {
-			beforeEach(function() {
+		describe('given a named api key', function () {
+			beforeEach(function () {
 				return balena.models.apiKey
 					.create('apiKeyToBeUpdated', 'apiKeyDescriptionToBeUpdated')
 					.then(() =>
@@ -91,7 +87,7 @@ describe('API Key model', function() {
 					});
 			});
 
-			it('should be able to update the name of an api key', function() {
+			it('should be able to update the name of an api key', function () {
 				return balena.models.apiKey
 					.update(this.apiKey.id, { name: 'updatedApiKeyName' })
 					.then(() => {
@@ -99,7 +95,7 @@ describe('API Key model', function() {
 							$filter: { id: this.apiKey.id },
 						});
 					})
-					.then(function(...args) {
+					.then(function (...args) {
 						const [apiKey] = Array.from(args[0]);
 						expect(apiKey).to.deep.match({
 							name: 'updatedApiKeyName',
@@ -108,7 +104,7 @@ describe('API Key model', function() {
 					});
 			});
 
-			it('should be able to update the description of an api key to a non empty string', function() {
+			it('should be able to update the description of an api key to a non empty string', function () {
 				return balena.models.apiKey
 					.update(this.apiKey.id, { description: 'updatedApiKeyDescription' })
 					.then(() => {
@@ -116,7 +112,7 @@ describe('API Key model', function() {
 							$filter: { id: this.apiKey.id },
 						});
 					})
-					.then(function(...args) {
+					.then(function (...args) {
 						const [apiKey] = Array.from(args[0]);
 						expect(apiKey).to.deep.match({
 							name: 'apiKeyToBeUpdated',
@@ -125,7 +121,7 @@ describe('API Key model', function() {
 					});
 			});
 
-			it('should be able to update the description of an api key to an empty string', function() {
+			it('should be able to update the description of an api key to an empty string', function () {
 				return balena.models.apiKey
 					.update(this.apiKey.id, { description: '' })
 					.then(() => {
@@ -133,7 +129,7 @@ describe('API Key model', function() {
 							$filter: { id: this.apiKey.id },
 						});
 					})
-					.then(function(...args) {
+					.then(function (...args) {
 						const [apiKey] = Array.from(args[0]);
 						expect(apiKey).to.deep.match({
 							name: 'apiKeyToBeUpdated',
@@ -142,18 +138,18 @@ describe('API Key model', function() {
 					});
 			});
 
-			it('should not be able to update the name of an api key to null', function() {
+			it('should not be able to update the name of an api key to null', function () {
 				return expect(
 					balena.models.apiKey.update(this.apiKey.id, { name: null as any }),
 				).to.be.rejected;
 			});
 
-			it('should not be able to update the name of an api key to an empty string', function() {
+			it('should not be able to update the name of an api key to an empty string', function () {
 				return expect(balena.models.apiKey.update(this.apiKey.id, { name: '' }))
 					.to.be.rejected;
 			});
 
-			it('should be able to update the description of an api key to null', function() {
+			it('should be able to update the description of an api key to null', function () {
 				return balena.models.apiKey
 					.update(this.apiKey.id, { description: null })
 					.then(() => {
@@ -161,7 +157,7 @@ describe('API Key model', function() {
 							$filter: { id: this.apiKey.id },
 						});
 					})
-					.then(function(...args) {
+					.then(function (...args) {
 						const [apiKey] = Array.from(args[0]);
 						expect(apiKey).to.deep.match({
 							name: 'apiKeyToBeUpdated',
@@ -170,7 +166,7 @@ describe('API Key model', function() {
 					});
 			});
 
-			it('should be able to update the name & description of an api key', function() {
+			it('should be able to update the name & description of an api key', function () {
 				return balena.models.apiKey
 					.update(this.apiKey.id, {
 						name: 'updatedApiKeyName',
@@ -181,7 +177,7 @@ describe('API Key model', function() {
 							$filter: { id: this.apiKey.id },
 						});
 					})
-					.then(function(...args) {
+					.then(function (...args) {
 						const [apiKey] = Array.from(args[0]);
 						expect(apiKey).to.deep.match({
 							name: 'updatedApiKeyName',
@@ -192,8 +188,8 @@ describe('API Key model', function() {
 		}));
 
 	describe('balena.models.apiKey.revoke()', () =>
-		describe('given a named api key', function() {
-			beforeEach(function() {
+		describe('given a named api key', function () {
+			beforeEach(function () {
 				return balena.models.apiKey
 					.create('apiKeyToBeRevoked')
 					.then(() =>
@@ -207,10 +203,10 @@ describe('API Key model', function() {
 					});
 			});
 
-			it('should be able to revoke an exising api key', function() {
+			it('should be able to revoke an exising api key', function () {
 				return expect(balena.models.apiKey.revoke(this.apiKey.id))
 					.to.not.be.rejected.then(() => balena.models.apiKey.getAll())
-					.then(function(apiKeys) {
+					.then(function (apiKeys) {
 						expect(apiKeys).to.be.an('array');
 						expect(apiKeys).to.have.lengthOf(0);
 					});

@@ -17,7 +17,7 @@ limitations under the License.
 import * as Promise from 'bluebird';
 import { InjectedDependenciesParam, InjectedOptionsParam } from './balena';
 
-const get2fa = function(
+const get2fa = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
@@ -51,7 +51,9 @@ const get2fa = function(
 	 * });
 	 */
 	function isEnabled(): Promise<boolean> {
-		return auth.needs2FA().then(twoFactorRequired => twoFactorRequired != null);
+		return auth
+			.needs2FA()
+			.then((twoFactorRequired) => twoFactorRequired != null);
 	}
 
 	/**
@@ -81,7 +83,7 @@ const get2fa = function(
 	 * });
 	 */
 	function isPassed(): Promise<boolean> {
-		return auth.needs2FA().then(twoFactorRequired => !twoFactorRequired);
+		return auth.needs2FA().then((twoFactorRequired) => !twoFactorRequired);
 	}
 
 	/**

@@ -20,7 +20,7 @@ export class PubSub {
 	};
 
 	public publish = (eventName: string) => {
-		this.subscriptions.forEach(subscription => {
+		this.subscriptions.forEach((subscription) => {
 			if (eventName === subscription.eventName) {
 				subscription.fn();
 			}

@@ -49,7 +49,7 @@ export class BuilderHelper {
 					urlDeployOptions,
 				),
 			})
-			.then(resp => {
+			.then((resp) => {
 				if (!resp.body.started) {
 					throw new errors.BalenaError(resp.body.message);
 				}
