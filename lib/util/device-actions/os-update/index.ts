@@ -4,7 +4,7 @@ import { DeviceActionsService } from '../device-actions-service';
 
 const OS_UPDATE_ACTION_NAME = 'resinhup';
 
-export const getOsUpdateHelper = function(
+export const getOsUpdateHelper = function (
 	deviceUrlsBase: string,
 	request: BalenaRequest.BalenaRequest,
 ) {

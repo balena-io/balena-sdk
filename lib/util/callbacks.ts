@@ -16,7 +16,7 @@ const isThenable = (a: any): a is PromiseLike<any> => {
 };
 
 const addCallbackSupport = <T extends (...args: any[]) => any>(fn: T): T => {
-	return function() {
+	return function () {
 		const callback = findCallback(arguments);
 		const result = fn.apply(this, arguments);
 		if (!callback || !isThenable(result)) {
@@ -55,7 +55,7 @@ export const addCallbackSupportToModuleFactory = <
 >(
 	moduleFactory: T,
 ): T => {
-	return function() {
+	return function () {
 		return addCallbackSupportToModule(moduleFactory.apply(this, arguments));
 	} as T;
 };

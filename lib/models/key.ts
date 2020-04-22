@@ -20,7 +20,7 @@ import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { mergePineOptions } from '../util';
 
-const getKeyModel = function(
+const getKeyModel = function (
 	deps: InjectedDependenciesParam,
 	_opts: InjectedOptionsParam,
 ) {
@@ -89,7 +89,7 @@ const getKeyModel = function(
 				resource: 'user__has__public_key',
 				id,
 			})
-			.tap(function(key) {
+			.tap(function (key) {
 				if (key == null) {
 					throw new errors.BalenaKeyNotFound(id);
 				}
@@ -150,7 +150,7 @@ const getKeyModel = function(
 			// Avoid ugly whitespaces
 			key = key.trim();
 
-			return sdkInstance.auth.getUserId().then(userId =>
+			return sdkInstance.auth.getUserId().then((userId) =>
 				pine.post<BalenaSdk.SSHKey>({
 					resource: 'user__has__public_key',
 					body: {

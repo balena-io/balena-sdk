@@ -111,11 +111,11 @@ function getSingleInstallSummary(
 export const generateCurrentServiceDetails = (
 	rawDevice: DeviceWithImageInstalls,
 ): DeviceWithServiceDetails => {
-	const installs = rawDevice.image_install!.map(ii =>
+	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
 	);
 
-	const downloads = rawDevice.gateway_download!.map(gd =>
+	const downloads = rawDevice.gateway_download!.map((gd) =>
 		getSingleInstallSummary(gd),
 	);
 

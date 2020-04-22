@@ -19,7 +19,7 @@ import { Image, PineOptionsFor } from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { mergePineOptions } from '../util';
 
-const getImageModel = function(
+const getImageModel = function (
 	deps: InjectedDependenciesParam,
 	_opts: InjectedOptionsParam,
 ) {
@@ -49,7 +49,7 @@ const getImageModel = function(
 	 * 	console.log(image);
 	 * });
 	 */
-	exports.get = function(
+	exports.get = function (
 		id: number,
 		options: PineOptionsFor<Image> = {},
 	): Promise<Image> {
@@ -78,7 +78,7 @@ const getImageModel = function(
 					options,
 				),
 			})
-			.tap(function(image) {
+			.tap(function (image) {
 				if (image == null) {
 					throw new errors.BalenaImageNotFound(id);
 				}

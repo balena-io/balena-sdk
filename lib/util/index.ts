@@ -242,7 +242,7 @@ const convertExpandToObject = <T extends {}>(
 		const expandRelationshipOptions = expandOption[expandKey];
 
 		const invalidKeys = Object.keys(expandRelationshipOptions! || {}).filter(
-			key => key !== '$select' && key !== '$expand' && key !== '$filter',
+			(key) => key !== '$select' && key !== '$expand' && key !== '$filter',
 		);
 		if (invalidKeys.length > 0) {
 			throw new Error(`Unknown pine expand options: ${invalidKeys}`);

@@ -21,7 +21,7 @@ import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
 import { mergePineOptions } from '../util';
 
-const getApiKeysModel = function(
+const getApiKeysModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
@@ -60,7 +60,7 @@ const getApiKeysModel = function(
 	 * 	console.log(apiKey);
 	 * });
 	 */
-	exports.create = function(
+	exports.create = function (
 		name: string,
 		description: string | null = null,
 	): Promise<string> {
@@ -78,7 +78,7 @@ const getApiKeysModel = function(
 				body: apiKeyBody,
 			})
 			.get('body')
-			.catch(function() {
+			.catch(function () {
 				throw new errors.BalenaNotLoggedIn();
 			});
 	};
@@ -105,7 +105,7 @@ const getApiKeysModel = function(
 	 * 	console.log(apiKeys);
 	 * });
 	 */
-	exports.getAll = function(
+	exports.getAll = function (
 		options: BalenaSdk.PineOptionsFor<BalenaSdk.ApiKey> = {},
 	): Promise<BalenaSdk.ApiKey[]> {
 		return pine.get<BalenaSdk.ApiKey>({
@@ -153,7 +153,7 @@ const getApiKeysModel = function(
 	 * 	console.log(apiKeys);
 	 * });
 	 */
-	exports.update = function(
+	exports.update = function (
 		id: number,
 		apiKeyInfo: { name?: string; description?: string },
 	): Promise<void> {
@@ -209,7 +209,7 @@ const getApiKeysModel = function(
 	 * 	if (error) throw error;
 	 * });
 	 */
-	exports.revoke = function(id: number): Promise<void> {
+	exports.revoke = function (id: number): Promise<void> {
 		return pine
 			.delete({
 				resource: 'api_key',
