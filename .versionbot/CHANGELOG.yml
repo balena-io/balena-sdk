@@ -1,4 +1,16 @@
 - commits:
+    - subject: Move to balena-lint v5
+      hash: 7b378c7d83bdd3ae9f9a8f03ccabd717ab52f72d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.2.5
+  date: 2020-04-22T13:59:38.383Z
+- commits:
     - subject: Abstract callback support out of the method implementations
       hash: 1d781a4d687fd582971460b1ea504aac5d7dd8f2
       body: |
