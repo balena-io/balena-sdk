@@ -26,7 +26,8 @@ const getKeyModel = function(
 ) {
 	const {
 		pine,
-		sdkInstance: { auth },
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
 	} = deps;
 
 	/**
@@ -166,7 +167,7 @@ const getKeyModel = function(
 			// Avoid ugly whitespaces
 			key = key.trim();
 
-			return auth.getUserId().then(userId =>
+			return sdkInstance.auth.getUserId().then(userId =>
 				pine.post<BalenaSdk.SSHKey>({
 					resource: 'user__has__public_key',
 					body: {
