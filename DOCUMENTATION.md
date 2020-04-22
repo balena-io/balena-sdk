@@ -117,6 +117,12 @@ const sdk = getSdk.fromSharedOptions();
                 * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
                 * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
                 * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+            * [.invite](#balena.models.application.invite) : <code>object</code>
+                * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+                * [.create(nameOrSlugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+                * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
+                * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
             * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
             * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
@@ -427,6 +433,12 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
             * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
             * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+        * [.invite](#balena.models.application.invite) : <code>object</code>
+            * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+            * [.create(nameOrSlugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+            * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
+            * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
         * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
         * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
@@ -617,6 +629,12 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
         * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
         * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+    * [.invite](#balena.models.application.invite) : <code>object</code>
+        * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+        * [.create(nameOrSlugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+        * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
+        * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
     * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
     * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
@@ -1032,6 +1050,159 @@ balena.models.application.envVar.remove(999999, 'VAR').then(function() {
 **Example**  
 ```js
 balena.models.application.envVar.remove('MyApp', 'VAR', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.invite"></a>
+
+##### application.invite : <code>object</code>
+**Kind**: static namespace of [<code>application</code>](#balena.models.application)  
+
+* [.invite](#balena.models.application.invite) : <code>object</code>
+    * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+    * [.create(nameOrSlugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+    * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
+    * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
+
+<a name="balena.models.application.invite.getAll"></a>
+
+###### invite.getAll([options]) ⇒ <code>Promise</code>
+This method returns all invites.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
+**Summary**: Get all invites  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - invites  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.invite.getAll().then(function(invites) {
+	console.log(invites);
+});
+```
+**Example**  
+```js
+balena.models.application.invite.getAll(function(error, invites) {
+	console.log(invites);
+});
+```
+<a name="balena.models.application.invite.getAllByApplication"></a>
+
+###### invite.getAllByApplication(nameOrSlugOrId, [options]) ⇒ <code>Promise</code>
+This method returns all invites for a specific application.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
+**Summary**: Get all invites by application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - invites  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.invite.getAllByApplication('MyApp').then(function(invites) {
+	console.log(invites);
+});
+```
+**Example**  
+```js
+balena.models.application.invite.getAllByApplication(123).then(function(invites) {
+	console.log(invites);
+});
+```
+**Example**  
+```js
+balena.models.application.invite.getAllByApplication(123, function(error, invites) {
+	console.log(invites);
+});
+```
+<a name="balena.models.application.invite.create"></a>
+
+###### invite.create(nameOrSlugOrId, options, [message]) ⇒ <code>Promise</code>
+This method invites a user by their email/username to an application.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
+**Summary**: Creates a new invite for an application  
+**Access**: public  
+**Fulfil**: <code>String</code> - application invite  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| options | <code>Object</code> |  | invite creation parameters |
+| options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
+| [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
+| [message] | <code>String</code> | <code></code> | the message to send along with the invite |
+
+**Example**  
+```js
+balena.models.application.invite.create('MyApp', { collabortor: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
+	console.log(invite);
+});
+```
+**Example**  
+```js
+balena.models.application.invite.create(53, { invitee: "invitee_username" }).then(function(invite) {
+	console.log(invite);
+});
+```
+**Example**  
+```js
+balena.models.application.invite.create(53, { invitee: "invitee_username" }, function(error, invite) {
+	console.log(invite);
+});
+```
+<a name="balena.models.application.invite.revoke"></a>
+
+###### invite.revoke(id) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
+**Summary**: Revoke an invite  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | application invite id |
+
+**Example**  
+```js
+balena.models.application.invite.revoke(123);
+```
+**Example**  
+```js
+balena.models.application.invite.revoke(123,function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.invite.accept"></a>
+
+###### invite.accept(invitationToken) ⇒ <code>Promise</code>
+This method adds the calling user to the application.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
+**Summary**: Accepts an invite  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| invitationToken | <code>String</code> | invite token |
+
+**Example**  
+```js
+balena.models.application.invite.accept("qwerty-invitation-token");
+```
+**Example**  
+```js
+balena.models.application.invite.accept("qwerty-invitation-token", function(error) {
 	if (error) throw error;
 	...
 });
