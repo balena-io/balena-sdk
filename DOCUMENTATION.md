@@ -1,6 +1,3 @@
-<a name="balena"></a>
-
-## balena : <code>object</code>
 Welcome to the Balena SDK documentation.
 
 This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
@@ -8,6 +5,41 @@ This document aims to describe all the functions supported by the SDK, as well a
 If you feel something is missing, not clear or could be improved, please don't hesitate to open an
 [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
 
+## Modules
+
+<dl>
+<dt><a href="#module_balena-sdk">balena-sdk</a></dt>
+<dd></dd>
+</dl>
+
+## Objects
+
+<dl>
+<dt><a href="#balena">balena</a> : <code>object</code></dt>
+<dd></dd>
+</dl>
+
+<a name="module_balena-sdk"></a>
+
+## balena-sdk
+<a name="exp_module_balena-sdk--getSdk"></a>
+
+### getSdk() ⏏
+The module exports a single factory function.
+
+**Kind**: Exported function  
+**Summary**: Creates a new SDK instance using the default or the provided options.  
+**Example**  
+```js
+const getSdk = require('balena-sdk');
+const balena = getSdk({
+	apiUrl: "https://api.balena-cloud.com/",
+	dataDirectory: "/opt/local/balena"
+});
+```
+<a name="balena"></a>
+
+## balena : <code>object</code>
 **Kind**: global namespace  
 
 * [balena](#balena) : <code>object</code>

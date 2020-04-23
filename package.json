@@ -38,7 +38,7 @@
     "test:typings": "dtslint --localTs node_modules/typescript/lib --expectOnly typing_tests",
     "build:ts": "tsc && gulp inject-version",
     "build": "npm run lint && npm run clean && npm run build:ts && gulp build && npm run docs",
-    "docs": "jsdoc2md \"build/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
+    "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs \"build/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "coffeelint": "balena-lint tests gulpfile.coffee",
     "tslint": "balena-lint -e js -e ts --typescript --fix typings lib tests",
