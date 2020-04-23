@@ -1,4 +1,17 @@
 - commits:
+    - subject: Refactor api-key tests to be faster
+      hash: ca2181bad86855877621fd3e25c0596fd428d5b0
+      body: |
+        Drops that specific test suit from 55 secs to 22 secs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.2.6
+  date: 2020-04-23T16:18:39.393Z
+- commits:
     - subject: Move to balena-lint v5
       hash: 7b378c7d83bdd3ae9f9a8f03ccabd717ab52f72d
       body: ''
