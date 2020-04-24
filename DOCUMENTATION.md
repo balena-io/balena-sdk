@@ -1,6 +1,3 @@
-<a name="balena"></a>
-
-## balena : <code>object</code>
 Welcome to the Balena SDK documentation.
 
 This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
@@ -8,6 +5,93 @@ This document aims to describe all the functions supported by the SDK, as well a
 If you feel something is missing, not clear or could be improved, please don't hesitate to open an
 [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
 
+## Modules
+
+<dl>
+<dt><a href="#module_balena-sdk">balena-sdk</a></dt>
+<dd></dd>
+</dl>
+
+## Objects
+
+<dl>
+<dt><a href="#balena">balena</a> : <code>object</code></dt>
+<dd></dd>
+</dl>
+
+<a name="module_balena-sdk"></a>
+
+## balena-sdk
+
+* [balena-sdk](#module_balena-sdk)
+    * [getSdk()](#exp_module_balena-sdk--getSdk) ⏏
+        * [~setSharedOptions(options)](#module_balena-sdk--getSdk..setSharedOptions)
+        * [~fromSharedOptions()](#module_balena-sdk--getSdk..fromSharedOptions)
+
+<a name="exp_module_balena-sdk--getSdk"></a>
+
+### getSdk() ⏏
+The module exports a single factory function.
+
+**Kind**: Exported function  
+**Summary**: Creates a new SDK instance using the default or the provided options.  
+**Example**  
+```js
+const getSdk = require('balena-sdk');
+const balena = getSdk({
+	apiUrl: "https://api.balena-cloud.com/",
+	dataDirectory: "/opt/local/balena"
+});
+```
+<a name="module_balena-sdk--getSdk..setSharedOptions"></a>
+
+#### getSdk~setSharedOptions(options)
+Set options that are used by calls to `getSdk.fromSharedOptions()`.
+The options accepted are the same as those used in the main SDK factory function.
+If you use this method, it should be called as soon as possible during app
+startup and before any calls to `fromSharedOptions()` are made.
+
+**Kind**: inner method of [<code>getSdk</code>](#exp_module_balena-sdk--getSdk)  
+**Summary**: Set shared default options  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | <code>Object</code> |  | The shared default options |
+| [options.apiUrl] | <code>String</code> | <code>&#x27;https://api.balena-cloud.com/&#x27;</code> | the balena API url to use. |
+| [options.builderUrl] | <code>String</code> | <code>&#x27;https://builder.balena-cloud.com/&#x27;</code> | the balena builder url to use. |
+| [options.deviceUrlsBase] | <code>String</code> | <code>&#x27;balena-devices.com&#x27;</code> | the base balena device API url to use. |
+| [options.dataDirectory] | <code>String</code> | <code>&#x27;$HOME/.balena&#x27;</code> | *ignored in the browser*, the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. |
+| [options.isBrowser] | <code>Boolean</code> |  | the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value. |
+| [options.debug] | <code>Boolean</code> |  | when set will print some extra debug information. |
+
+**Example**  
+```js
+const getSdk = require('balena-sdk');
+getSdk.setSharedOptions({
+	apiUrl: 'https://api.balena-cloud.com/',
+	builderUrl: 'https://builder.balena-cloud.com/',
+	isBrowser: true,
+});
+```
+<a name="module_balena-sdk--getSdk..fromSharedOptions"></a>
+
+#### getSdk~fromSharedOptions()
+Create an SDK instance using shared default options set using the `setSharedOptions()` method.
+If options have not been set using this method, then this method will use the
+same defaults as the main SDK factory function.
+
+**Kind**: inner method of [<code>getSdk</code>](#exp_module_balena-sdk--getSdk)  
+**Summary**: Create an SDK instance using shared default options  
+**Access**: public  
+**Example**  
+```js
+const getSdk = require('balena-sdk');
+const sdk = getSdk.fromSharedOptions();
+```
+<a name="balena"></a>
+
+## balena : <code>object</code>
 **Kind**: global namespace  
 
 * [balena](#balena) : <code>object</code>
@@ -226,8 +310,6 @@ If you feel something is missing, not clear or could be improved, please don't h
     * [.settings](#balena.settings) : <code>object</code>
         * [.get([key])](#balena.settings.get) ⇒ <code>Promise</code>
         * [.getAll()](#balena.settings.getAll) ⇒ <code>Promise</code>
-    * [.setSharedOptions(options)](#balena.setSharedOptions)
-    * [.fromSharedOptions()](#balena.fromSharedOptions)
 
 <a name="balena.interceptors"></a>
 
@@ -6134,48 +6216,4 @@ balena.settings.getAll(function(error, settings) {
 	if (error) throw error;
 	console.log(settings);
 });
-```
-<a name="balena.setSharedOptions"></a>
-
-### balena.setSharedOptions(options)
-Set options that are used by calls to `balena.fromSharedOptions()`.
-The options accepted are the same as those used in the main SDK factory function.
-If you use this method, it should be called as soon as possible during app
-startup and before any calls to `fromSharedOptions()` are made.
-
-**Kind**: static method of [<code>balena</code>](#balena)  
-**Summary**: Set shared default options  
-**Access**: public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| options | <code>Object</code> |  | The shared default options |
-| [options.apiUrl] | <code>String</code> | <code>&#x27;https://api.balena-cloud.com/&#x27;</code> | the balena API url to use. |
-| [options.builderUrl] | <code>String</code> | <code>&#x27;https://builder.balena-cloud.com/&#x27;</code> | the balena builder url to use. |
-| [options.deviceUrlsBase] | <code>String</code> | <code>&#x27;balena-devices.com&#x27;</code> | the base balena device API url to use. |
-| [options.dataDirectory] | <code>String</code> | <code>&#x27;$HOME/.balena&#x27;</code> | *ignored in the browser*, the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. |
-| [options.isBrowser] | <code>Boolean</code> |  | the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value. |
-| [options.debug] | <code>Boolean</code> |  | when set will print some extra debug information. |
-
-**Example**  
-```js
-balena.setSharedOptions({
-	apiUrl: 'https://api.balena-cloud.com/',
-	builderUrl: 'https://builder.balena-cloud.com/',
-	isBrowser: true,
-});
-```
-<a name="balena.fromSharedOptions"></a>
-
-### balena.fromSharedOptions()
-Create an SDK instance using shared default options set using the `setSharedOptions()` method.
-If options have not been set using this method, then this method will use the
-same defaults as the main SDK factory function.
-
-**Kind**: static method of [<code>balena</code>](#balena)  
-**Summary**: Create an SDK instance using shared default options  
-**Access**: public  
-**Example**  
-```js
-const sdk = balena.fromSharedOptions();
 ```
