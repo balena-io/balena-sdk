@@ -1,4 +1,25 @@
 - commits:
+    - subject: Document setSharedOptions & fromSharedOptions as static methods
+      hash: 4bdfb74e84edfb1eb70676a9504015c502595860
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Document the exported factory function
+      hash: d704782e186cd6583a77da1b2bfe6971de354253
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.2.7
+  date: 2020-04-23T20:23:08.574Z
+- commits:
     - subject: Refactor api-key tests to be faster
       hash: ca2181bad86855877621fd3e25c0596fd428d5b0
       body: |
