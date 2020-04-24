@@ -8,13 +8,11 @@ Balena SDK
 [![Build Status](https://travis-ci.org/balena-io/balena-sdk.svg?branch=master)](https://travis-ci.org/balena-io/balena-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/qbsivehgnq0vyrrb/branch/master?svg=true)](https://ci.appveyor.com/project/balena-io/balena-sdk/branch/master)
 
-Role
-----
+## Role
 
 The intention of this module is to provide developers a nice API to integrate their JavaScript applications with balena.
 
-Installation
-------------
+## Installation
 
 Install the balena SDK by running:
 
@@ -22,8 +20,7 @@ Install the balena SDK by running:
 $ npm install --save balena-sdk
 ```
 
-Platforms
----------
+## Platforms
 
 We currently support NodeJS (10+) and the browser.
 
@@ -46,8 +43,7 @@ In the browser the balena SDK doesn't use the following dependencies:
 
 For the future we're looking at ways to automatically exclude these in downstream bundles. See [#254](https://github.com/balena-io/balena-sdk/issues/254) for more information.
 
-Documentation
--------------
+## Documentation
 
 The module exports a single factory function. Use it like this:
 
@@ -68,13 +64,25 @@ Where the factory method accepts the following options:
 
 See the JSDoc markdown documentation for the returned `balena` object in [DOCUMENTATION.md](https://github.com/balena-io/balena-sdk/blob/master/DOCUMENTATION.md).
 
-Support
--------
+## Support
 
-If you're having any problem, please [raise an issue](https://github.com/balena-io/balena-sdk/issues/new) on GitHub and the balena team will be happy to help.
+If you face any issues, please [raise an issue](https://github.com/balena-io/balena-sdk/issues/new) on GitHub and the balena team will be happy to help.
 
-Tests
------
+## Deprecation policy
+
+The balena SDK uses [semver versioning](https://semver.org/), with the
+concepts of major, minor and patch version releases.
+
+The latest release of the previous major version of the balena SDK will be
+supported for one year from the date when the next major version is released.
+For example, the balena SDK v12.33.4 (the latest v12 release) will be supported for
+one year from the date when v13.0.0 is released.
+
+At the end of this support period, the older major version is considered
+deprecated and you are highly encouraged to upgrade to the to latest major
+version.
+
+## Tests
 
 In order to run the balena SDK test suite, set the following environment variables from an account that exists and doesn't have a billing account code:  
 **WARNING: This will delete all applications and public keys of the test user**
@@ -112,8 +120,7 @@ In order to make the develop & test cycle faster, you can use [mocha's `.only` &
 to only run the subset of the test cases that is relevant to your changes/additions. You should make sure to remove those from
 your code before you push and make sure that the complete test suite completes successfully.
 
-Contribute
-----------
+## Contribute
 
 - Issue Tracker: [github.com/balena-io/balena-sdk/issues](https://github.com/balena-io/balena-sdk/issues)
 - Source Code: [github.com/balena-io/balena-sdk](https://github.com/balena-io/balena-sdk)
@@ -128,7 +135,6 @@ Before submitting a PR, please make sure that you
 $ npm test
 ```
 
-License
--------
+## License
 
 The project is licensed under the Apache 2.0 license.
