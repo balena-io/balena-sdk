@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'Change README to ## sections'
+      hash: 909e7659f0a48c2be07d3e6af06d8bbe22d9c0c5
+      body: |
+        That's so that the docs can easily parse them and
+        extract the deprecation policy section.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Add a deprecation policy
+      hash: b3e2fc6b6096aad1345e034aa72b90c4335ca3bb
+      body: ''
+      footer:
+        Resolves: '#767'
+        resolves: '#767'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.0
+  date: 2020-04-24T11:20:52.686Z
+- commits:
     - subject: Document setSharedOptions & fromSharedOptions as static methods
       hash: 4bdfb74e84edfb1eb70676a9504015c502595860
       body: ''
