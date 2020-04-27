@@ -26,8 +26,7 @@ describe('Key Model', function () {
 					}));
 
 			it('should support a callback with no options', function (done) {
-				// tslint:disable-next-line:ban-types
-				(balena.models.key.getAll as Function)(function (
+				(balena.models.key.getAll as (...args: any[]) => any)(function (
 					_err: Error,
 					keys: BalenaSdk.SSHKey[],
 				) {
