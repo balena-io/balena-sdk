@@ -56,8 +56,9 @@ const getOsModel = function (
 		require('./application').default(deps, opts),
 	);
 
-	// tslint:disable-next-line:ban-types
-	const withDeviceTypesEndpointCaching = <T extends Function>(fn: T) => {
+	const withDeviceTypesEndpointCaching = <T extends (...args: any[]) => any>(
+		fn: T,
+	) => {
 		const memoizedFn = memoizee(fn, {
 			maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL,
 			primitive: true,
