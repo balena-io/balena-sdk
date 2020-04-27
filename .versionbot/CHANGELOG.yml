@@ -1,4 +1,25 @@
 - commits:
+    - subject: Stop using the Function TypeScript type
+      hash: 583b504dfb829d1d6ac70fa87f9fb71314524c78
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Fix the typings to work with upstream memoizee declarations
+      hash: 4ce39140e5bae7f521abdec8e945c7ed2032be70
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.1
+  date: 2020-04-27T17:51:07.339Z
+- commits:
     - subject: 'Change README to ## sections'
       hash: 909e7659f0a48c2be07d3e6af06d8bbe22d9c0c5
       body: |
