@@ -6,7 +6,7 @@ Balena SDK
 [![npm version](https://badge.fury.io/js/balena-sdk.svg)](http://badge.fury.io/js/balena-sdk)
 [![dependencies](https://david-dm.org/balena-io/balena-sdk.svg)](https://david-dm.org/balena-io/balena.sdk.svg)
 [![Build Status](https://travis-ci.org/balena-io/balena-sdk.svg?branch=master)](https://travis-ci.org/balena-io/balena-sdk)
-[![Build status](https://ci.appveyor.com/api/projects/status/qbsivehgnq0vyrrb/branch/master?svg=true)](https://ci.appveyor.com/project/balena-io/balena-sdk/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/gsloi9vj4jclg7j1/branch/master?svg=true)](https://ci.appveyor.com/project/resin-io/balena-sdk)
 
 ## Role
 
