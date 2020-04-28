@@ -33,6 +33,9 @@ const getServiceModel = (
 	const applicationModel = once(() =>
 		require('./application').default(deps, opts),
 	);
+
+	const { addCallbackSupportToModule } = require('../util/callbacks');
+
 	const { buildDependentResource } = require('../util/dependent-resource');
 
 	const varModel = buildDependentResource(
@@ -110,7 +113,7 @@ const getServiceModel = (
 	 * @namespace balena.models.service.var
 	 * @memberof balena.models.service
 	 */
-	exports.var = {
+	exports.var = addCallbackSupportToModule({
 		/**
 		 * @summary Get all variables for a service
 		 * @name getAllByService
@@ -268,7 +271,7 @@ const getServiceModel = (
 		 * });
 		 */
 		remove: varModel.remove,
-	};
+	});
 
 	return exports;
 };
