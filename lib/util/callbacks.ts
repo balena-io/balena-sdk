@@ -37,16 +37,29 @@ export const addCallbackSupportToModule = <T extends Dictionary<any>>(
 ): T => {
 	const result = {} as T;
 	for (const key of Object.keys(sdkModule) as Array<keyof typeof sdkModule>) {
+		// const propertyDescriptor = Object.getOwnPropertyDescriptor(sdkModule, key);
+
+		// // do not extend getters, since it would break lazy loading
+		// if (propertyDescriptor?.get != null) {
+		// 	Object.defineProperty(result, key, propertyDescriptor);
+		// 	continue;
+		// }
+
+		const isPublicProp = typeof key === 'string' && !key.startsWith('_');
 		const moduleProp = sdkModule[key];
-		const shouldAddCallback =
-			typeof key === 'string' &&
-			!key.startsWith('_') &&
-			typeof moduleProp === 'function';
+
+		// if (isPublicProp &&
+		// 	typeof moduleProp === 'object') {
+		// 	throw new Error('addCallbackSupportToModule was called on a module with a non-lazy loaded sub-namespace');
+		// }
+
+		const shouldAddCallback = isPublicProp && typeof moduleProp === 'function';
 
 		result[key] = shouldAddCallback
 			? addCallbackSupport(moduleProp)
 			: moduleProp;
 	}
+
 	return result;
 };
 
