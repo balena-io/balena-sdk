@@ -30,6 +30,8 @@ const getReleaseModel = function (
 		require('./application').default(deps, opts),
 	) as () => BalenaSdk.BalenaSDK['models']['application'];
 
+	const { addCallbackSupportToModule } = require('../util/callbacks');
+
 	const { buildDependentResource } = require('../util/dependent-resource');
 	const builderHelper = once(() => {
 		const { BuilderHelper } = require('../util/builder');
@@ -385,7 +387,7 @@ const getReleaseModel = function (
 	 * @namespace balena.models.release.tags
 	 * @memberof balena.models.release
 	 */
-	const tags = {
+	const tags = addCallbackSupportToModule({
 		/**
 		 * @summary Get all release tags for an application
 		 * @name getAllByApplication
@@ -556,7 +558,7 @@ const getReleaseModel = function (
 		 * });
 		 */
 		remove: tagsModel.remove,
-	};
+	});
 
 	return {
 		get,

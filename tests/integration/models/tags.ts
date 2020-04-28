@@ -13,10 +13,11 @@ const getAllByResourceFactory = function (
 	resourceName: string,
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
-	return (idOrUniqueParam: number | string) =>
-		(model as any)[propName](idOrUniqueParam) as Bluebird<
+	return function (idOrUniqueParam: number | string) {
+		return (model as any)[propName].apply(this, arguments) as Bluebird<
 			BalenaSdk.ResourceTagBase[]
 		>;
+	};
 };
 
 interface TagModelBase {
@@ -48,9 +49,20 @@ exports.itShouldGetAllTagsByResource = function (opts: Options) {
 		)());
 	});
 
-	it('should become an empty array by default', function () {
+	it('should become an empty array by default [Promise]', function () {
 		const promise = getAllByResource(this.resource.id);
 		return expect(promise).to.become([]);
+	});
+
+	it('should become an empty array by default [callback]', function (done) {
+		(getAllByResource as (...args: any[]) => any)(this.resource.id, function (
+			err,
+			tags,
+		) {
+			expect(err).to.be.null;
+			expect(tags).to.deep.equal([]);
+			done();
+		});
 	});
 
 	it(`should be rejected if the ${resourceName} id does not exist`, function () {
@@ -82,15 +94,7 @@ exports.itShouldGetAllTagsByResource = function (opts: Options) {
 			return model.remove(this.setTagResource.id, 'EDITOR');
 		});
 
-		it(`should retrieve the tag by ${resourceName} id`, function () {
-			return getAllByResource(this.resource.id).then(function (tags) {
-				expect(tags).to.have.length(1);
-				expect(tags[0].tag_key).to.equal('EDITOR');
-				expect(tags[0].value).to.equal('vim');
-			});
-		});
-
-		uniquePropertyNames.forEach((uniquePropertyName) => {
+		['id', ...uniquePropertyNames].forEach((uniquePropertyName) => {
 			it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, function () {
 				return getAllByResource(this.resource[uniquePropertyName]).then(
 					function (tags) {
@@ -99,6 +103,19 @@ exports.itShouldGetAllTagsByResource = function (opts: Options) {
 						expect(tags[0].value).to.equal('vim');
 					},
 				);
+			});
+		});
+
+		it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
+			(getAllByResource as (...args: any[]) => any)(this.resource.id, function (
+				err,
+				tags,
+			) {
+				expect(err).to.be.null;
+				expect(tags).to.have.length(1);
+				expect(tags[0].tag_key).to.equal('EDITOR');
+				expect(tags[0].value).to.equal('vim');
+				done();
 			});
 		});
 	});
