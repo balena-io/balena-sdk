@@ -29,7 +29,7 @@ describe 'Application Model', ->
 				promise = balena.models.application.getAll()
 				m.chai.expect(promise).to.become([])
 
-			it 'should eventually become an empty array [callback]', (done) ->
+			it.only 'should eventually become an empty array [callback]', (done) ->
 				balena.models.application.getAll (err, applications) ->
 					m.chai.expect(err).to.be.null
 					m.chai.expect(applications).to.deep.equal([])
@@ -464,7 +464,7 @@ describe 'Application Model', ->
 
 				itShouldSetGetAndRemoveTags(tagTestOptions)
 
-				describe 'balena.models.application.tags.getAllByApplication()', ->
+				describe.only 'balena.models.application.tags.getAllByApplication()', ->
 					itShouldGetAllTagsByResource(tagTestOptions)
 
 			describe 'balena.models.application.configVar', ->
