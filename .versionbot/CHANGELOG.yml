@@ -1,4 +1,14 @@
 - commits:
+    - subject: 'README: Update appveyor badge to point to the new balena-sdk project'
+      hash: 6700d18b133c8948a01109422ee4a1dbb8eb4870
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+  version: 13.3.2
+  date: 2020-04-27T19:08:35.446Z
+- commits:
     - subject: Stop using the Function TypeScript type
       hash: 583b504dfb829d1d6ac70fa87f9fb71314524c78
       body: ''
