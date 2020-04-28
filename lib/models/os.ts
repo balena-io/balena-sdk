@@ -21,15 +21,9 @@ import once = require('lodash/once');
 import * as memoizee from 'memoizee';
 import * as semver from 'semver';
 
-import {
-	deviceTypes as deviceTypesUtil,
-	isDevelopmentVersion,
-	isNotFoundResponse,
-	onlyIf,
-	treatAsMissingApplication,
-} from '../util';
-
-import { hupActionHelper } from '../util/device-actions/os-update/utils';
+import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
+import * as deviceTypesUtils from '../util/device-types';
+import type { hupActionHelper as hupActionHelperType } from '../util/device-actions/os-update/utils';
 
 import { BalenaRequestStreamResult } from '../../typings/balena-request';
 import {
@@ -54,6 +48,11 @@ const getOsModel = function (
 	const configModel = once(() => require('./config').default(deps, opts));
 	const applicationModel = once(() =>
 		require('./application').default(deps, opts),
+	);
+	const hupActionHelper = once(
+		() =>
+			require('../util/device-actions/os-update/utils')
+				.hupActionHelper as typeof hupActionHelperType,
 	);
 
 	const withDeviceTypesEndpointCaching = <T extends (...args: any[]) => any>(
@@ -84,7 +83,7 @@ const getOsModel = function (
 
 	const getValidatedDeviceType = (deviceTypeSlug: string) =>
 		_getDeviceTypes().then((types) =>
-			deviceTypesUtil.getBySlug(types, deviceTypeSlug),
+			deviceTypesUtils.getBySlug(types, deviceTypeSlug),
 		);
 
 	/**
@@ -107,6 +106,9 @@ const getOsModel = function (
 				.get('body')
 				.get('size'),
 	);
+
+	const isDevelopmentVersion = (version: string) =>
+		/(\.|\+|-)dev/.test(version);
 
 	/**
 	 * @summary Get OS versions
@@ -539,7 +541,7 @@ const getOsModel = function (
 		targetVersion: string,
 	): Promise<boolean> =>
 		getValidatedDeviceType(deviceType).then(() =>
-			hupActionHelper.isSupportedOsUpdate(
+			hupActionHelper().isSupportedOsUpdate(
 				deviceType,
 				currentVersion,
 				targetVersion,
@@ -586,7 +588,7 @@ const getOsModel = function (
 
 			const versions = allVersions.filter((v) =>
 				// avoid the extra call to getValidatedDeviceType, since getSupportedVersions already does that
-				hupActionHelper.isSupportedOsUpdate(deviceType, currentVersion, v),
+				hupActionHelper().isSupportedOsUpdate(deviceType, currentVersion, v),
 			);
 
 			const recommended = versions.filter((v) => !bSemver.prerelease(v))[0] as
@@ -620,7 +622,7 @@ const getOsModel = function (
 	 * console.log(result2);
 	 */
 	const isArchitectureCompatibleWith =
-		deviceTypesUtil.isOsArchitectureCompatibleWith;
+		deviceTypesUtils.isOsArchitectureCompatibleWith;
 
 	return {
 		_getDeviceTypes,

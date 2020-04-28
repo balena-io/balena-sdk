@@ -1,20 +1,12 @@
 import * as errors from 'balena-errors';
 import cloneDeep = require('lodash/cloneDeep');
-import throttle = require('lodash/throttle');
-import * as memoizee from 'memoizee';
-import * as moment from 'moment';
 import * as Pine from '../../typings/pinejs-client-core';
-import { getOsUpdateHelper as updateHelper } from './device-actions/os-update';
-import * as dt from './device-types';
 
 export interface ErrorResponse {
 	code: string;
 	statusCode?: number;
 	body?: string;
 }
-
-export const getOsUpdateHelper = updateHelper;
-export const deviceTypes = dt;
 
 export const notImplemented = () => {
 	throw new Error('The method is not implemented.');
@@ -28,24 +20,6 @@ export const onlyIf = <T extends (...args: any[]) => any>(
 	} else {
 		return notImplemented;
 	}
-};
-
-export const now = throttle(() => moment(), 1000, { leading: true });
-
-export const dateToMoment = memoizee((date: Date) => moment(date), {
-	max: 1000,
-	primitive: true,
-});
-
-export const timeSince = (input: Date, suffix = true) => {
-	const date = dateToMoment(input);
-
-	// We do this to avoid out-of-sync times causing this to return
-	// e.g. 'in a few seconds'.
-	// if the date is in the future .min will make it at maximum, the time since now
-	// which results in 'a few seconds ago'.
-	const time = now();
-	return moment.min(time, date).from(time, !suffix);
 };
 
 export const isId = (v?: any): v is number => typeof v === 'number';
@@ -95,9 +69,6 @@ export const treatAsMissingDevice = (uuidOrId: string | number) => (
 	replacementErr.stack = err.stack || '';
 	throw replacementErr;
 };
-
-export const isDevelopmentVersion = (version: string) =>
-	/(\.|\+|-)dev/.test(version);
 
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
@@ -251,26 +222,4 @@ const convertExpandToObject = <T extends {}>(
 	}
 
 	return cloneDeep(expandOption);
-};
-
-// In order not to introduce a breaking change, we export each element independently and all together as a default export.
-export default {
-	getOsUpdateHelper,
-	deviceTypes,
-	notImplemented,
-	onlyIf,
-	now,
-	dateToMoment,
-	timeSince,
-	isId,
-	LOCKED_STATUS_CODE,
-	isUnauthorizedResponse,
-	isNotFoundResponse,
-	isNoDeviceForKeyResponse,
-	isNoApplicationForKeyResponse,
-	isUniqueKeyViolationResponse,
-	treatAsMissingApplication,
-	treatAsMissingDevice,
-	isDevelopmentVersion,
-	mergePineOptions,
 };
