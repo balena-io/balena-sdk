@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix callback support on methods for dependent resources
+      hash: 9832cb1cf421d52f8e158aa0814b8a0a95d846c1
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.5
+  date: 2020-04-28T13:40:59.901Z
+- commits:
     - subject: 'Release: Lazy load the BuilderHelper'
       hash: e2f36e7b7f76f95fed2259ec9c043fb0120642f3
       body: ''
