@@ -1,4 +1,16 @@
 - commits:
+    - subject: Bump balena-register-device to v6.1.1 to send the api key as a header
+      hash: 297e41125a10132d22747f42e9d86d1e4b894483
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.3
+  date: 2020-04-28T08:23:26.090Z
+- commits:
     - subject: 'README: Update appveyor badge to point to the new balena-sdk project'
       hash: 6700d18b133c8948a01109422ee4a1dbb8eb4870
       body: ''
