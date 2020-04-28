@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'Release: Lazy load the BuilderHelper'
+      hash: e2f36e7b7f76f95fed2259ec9c043fb0120642f3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'Device: Lazy load balena-register-device'
+      hash: 8d3dfcd611aa616822be615d4ff470e92c8f3fd7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.4
+  date: 2020-04-28T10:53:28.566Z
+- commits:
     - subject: Bump balena-register-device to v6.1.1 to send the api key as a header
       hash: 297e41125a10132d22747f42e9d86d1e4b894483
       body: ''
