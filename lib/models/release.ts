@@ -31,8 +31,10 @@ const getReleaseModel = function (
 	) as () => BalenaSdk.BalenaSDK['models']['application'];
 
 	const { buildDependentResource } = require('../util/dependent-resource');
-	const { BuilderHelper } = require('../util/builder');
-	const builderHelper = new BuilderHelper(deps, opts);
+	const builderHelper = once(() => {
+		const { BuilderHelper } = require('../util/builder');
+		return new BuilderHelper(deps, opts);
+	});
 
 	const tagsModel = buildDependentResource(
 		{ pine },
@@ -371,7 +373,7 @@ const getReleaseModel = function (
 				},
 			})
 			.then(({ app_name, user }) =>
-				builderHelper.buildFromUrl(
+				builderHelper().buildFromUrl(
 					(user as BalenaSdk.User[])[0].username,
 					app_name,
 					urlDeployOptions,
