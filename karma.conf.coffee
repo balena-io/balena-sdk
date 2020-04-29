@@ -1,7 +1,7 @@
 _ = require('lodash')
 getKarmaConfig = require('balena-config-karma')
 packageJSON = require('./package.json')
-{ loadEnv } = require('./tests/util')
+{ loadEnv } = require('./tests/loadEnv')
 
 getKarmaConfig.DEFAULT_WEBPACK_CONFIG.externals = fs: true
 

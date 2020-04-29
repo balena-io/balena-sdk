@@ -1,8 +1,6 @@
 import * as m from 'mochainon';
 const { expect } = m.chai;
 
-export const loadEnv = () => require('dotenv').config({ silent: true });
-
 export const assertDeepMatchAndLength = (a: any, b: any) => {
 	[a, b].forEach((target) =>
 		expect(target).to.have.property('length').that.is.a('number'),

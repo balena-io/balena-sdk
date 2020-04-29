@@ -11,7 +11,7 @@ minify = uglifyComposer(uglifyEs, console)
 
 packageJSON = require('./package.json')
 
-{ loadEnv } = require('./tests/util')
+{ loadEnv } = require('./tests/loadEnv')
 
 OPTIONS =
 	config:
