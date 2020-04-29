@@ -22,7 +22,7 @@ import * as memoizee from 'memoizee';
 import * as semver from 'semver';
 
 import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
-import * as deviceTypesUtils from '../util/device-types';
+import type * as deviceTypesUtilsType from '../util/device-types';
 import type { hupActionHelper as hupActionHelperType } from '../util/device-actions/os-update/utils';
 
 import { BalenaRequestStreamResult } from '../../typings/balena-request';
@@ -48,6 +48,11 @@ const getOsModel = function (
 	const configModel = once(() => require('./config').default(deps, opts));
 	const applicationModel = once(() =>
 		require('./application').default(deps, opts),
+	);
+	const deviceTypesUtils = once(
+		// Hopefully TS 3.9 will allow us to drop this type cast
+		// and infer the types from the require
+		() => require('../util/device-types') as typeof deviceTypesUtilsType,
 	);
 	const hupActionHelper = once(
 		() =>
@@ -83,7 +88,7 @@ const getOsModel = function (
 
 	const getValidatedDeviceType = (deviceTypeSlug: string) =>
 		_getDeviceTypes().then((types) =>
-			deviceTypesUtils.getBySlug(types, deviceTypeSlug),
+			deviceTypesUtils().getBySlug(types, deviceTypeSlug),
 		);
 
 	/**
@@ -621,8 +626,12 @@ const getOsModel = function (
 	 * const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
 	 * console.log(result2);
 	 */
-	const isArchitectureCompatibleWith =
-		deviceTypesUtils.isOsArchitectureCompatibleWith;
+	const isArchitectureCompatibleWith: ReturnType<
+		typeof deviceTypesUtils
+	>['isOsArchitectureCompatibleWith'] = function (...args) {
+		// Wrap with a function so that we can lazy load the deviceTypesUtils
+		return deviceTypesUtils().isOsArchitectureCompatibleWith(...args);
+	};
 
 	return {
 		_getDeviceTypes,
