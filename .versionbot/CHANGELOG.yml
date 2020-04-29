@@ -1,4 +1,34 @@
 - commits:
+    - subject: 'karma.conf: Convert to JavaScript'
+      hash: a55fee6e8ab8d44f2db0ead2558d51809a3f2aa8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'gulpfile: Convert to JavaScript'
+      hash: 0d60f9ce33469b0787dc7a0147c2669564ddf456
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'tests/util: Convert to TypeScript'
+      hash: 275f0983b862c93210d4df09ca1cb79743c85fa9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.8
+  date: 2020-04-29T17:15:59.330Z
+- commits:
     - subject: 'models/os: Lazy load the deviceTypeUtils'
       hash: 03687f24cff5877468c5b203892d65e618d1d472
       body: ''
