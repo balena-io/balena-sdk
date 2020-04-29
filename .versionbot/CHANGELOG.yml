@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'models/os: Lazy load the deviceTypeUtils'
+      hash: 03687f24cff5877468c5b203892d65e618d1d472
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'models/device: Allow lazy loading balena-register-device'
+      hash: f9a678b0d45735cf2058896360dca029952b3034
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.7
+  date: 2020-04-29T13:14:29.485Z
+- commits:
     - subject: Split util function imports and lazy load them
       hash: a1ac901af374211bf369a307540cb39122e5f73f
       body: |
