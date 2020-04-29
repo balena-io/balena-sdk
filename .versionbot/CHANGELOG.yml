@@ -1,4 +1,24 @@
 - commits:
+    - subject: Split util function imports and lazy load them
+      hash: a1ac901af374211bf369a307540cb39122e5f73f
+      body: |
+        This allows us to avoid loading:
+        * lodash/throttle
+        * memoizee
+        * moment
+        * balena-hup-action-utils
+
+        in all files that import from the util.ts
+        and also adds lazy loading when possible.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.3.6
+  date: 2020-04-28T18:37:05.788Z
+- commits:
     - subject: Fix callback support on methods for dependent resources
       hash: 9832cb1cf421d52f8e158aa0814b8a0a95d846c1
       body: ''
