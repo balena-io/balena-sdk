@@ -16,6 +16,7 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
+import * as memoizee from 'memoizee';
 // TODO: change to type-only import when we bump TS to 3.8
 import _get2faModel from './2fa';
 import { InjectedDependenciesParam, InjectedOptionsParam } from './balena';
@@ -71,25 +72,26 @@ const getAuth = function (
 		email: string;
 	}
 
-	let userDetailsCache: WhoamiResult | null = null;
+	const userWhoami = () => {
+		return request
+			.send<WhoamiResult>({
+				method: 'GET',
+				url: '/user/v1/whoami',
+				baseUrl: apiUrl,
+			})
+			.then(({ body }) => body);
+	};
+
+	const memoizedUserWhoami = memoizee(userWhoami, {
+		primitive: true,
+		promise: true,
+	});
 
 	const getUserDetails = () =>
 		Promise.try(() => {
-			if (userDetailsCache) {
-				return userDetailsCache;
-			}
-			return request
-				.send<WhoamiResult>({
-					method: 'GET',
-					url: '/user/v1/whoami',
-					baseUrl: apiUrl,
-				})
-				.then(({ body }) => {
-					return (userDetailsCache = body);
-				})
-				.catch(function (err) {
-					throw normalizeAuthError(err);
-				});
+			return memoizedUserWhoami().catch(function (err) {
+				throw normalizeAuthError(err);
+			});
 		});
 
 	/**
@@ -206,7 +208,7 @@ const getAuth = function (
 		email: string;
 		password: string;
 	}): Promise<void> {
-		userDetailsCache = null;
+		memoizedUserWhoami.clear();
 		return authenticate(credentials).then(auth.setKey);
 	}
 
@@ -231,7 +233,7 @@ const getAuth = function (
 	 * });
 	 */
 	function loginWithToken(authToken: string): Promise<void> {
-		userDetailsCache = null;
+		memoizedUserWhoami.clear();
 		return auth.setKey(authToken);
 	}
 
@@ -372,7 +374,7 @@ const getAuth = function (
 	 * });
 	 */
 	function logout(): Promise<void> {
-		userDetailsCache = null;
+		memoizedUserWhoami.clear();
 		return auth.removeKey();
 	}
 
