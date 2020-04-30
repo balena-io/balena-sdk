@@ -87,8 +87,11 @@ const getAuth = function (
 		promise: true,
 	});
 
-	const getUserDetails = () =>
+	const getUserDetails = (noCache = false) =>
 		Promise.try(() => {
+			if (noCache) {
+				memoizedUserWhoami.clear();
+			}
 			return memoizedUserWhoami().catch(function (err) {
 				throw normalizeAuthError(err);
 			});
@@ -268,7 +271,7 @@ const getAuth = function (
 	 * });
 	 */
 	function isLoggedIn(): Promise<boolean> {
-		return getUserDetails()
+		return getUserDetails(true)
 			.return(true)
 			.catchReturn(errors.BalenaNotLoggedIn, false);
 	}
