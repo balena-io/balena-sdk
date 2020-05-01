@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'auth.isLoggedIn: Change to always confirm with the API'
+      hash: 024b9ac1a07c4d6b6522ff17b98eb721602bcd43
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Properly handle caching for concurrent auth method calls
+      hash: a6caa212858de3d42ae7a0325f152ed42432b914
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.4.0
+  date: 2020-04-30T18:17:18.765Z
+- commits:
     - subject: 'karma.conf: Convert to JavaScript'
       hash: a55fee6e8ab8d44f2db0ead2558d51809a3f2aa8
       body: ''
