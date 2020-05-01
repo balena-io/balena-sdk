@@ -1,4 +1,16 @@
 - commits:
+    - subject: Avoid moment v2.25.0 that's missing published files
+      hash: bc7be61f31d3280999e3760eba6341bb01cee6bd
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.4.1
+  date: 2020-05-01T16:53:28.375Z
+- commits:
     - subject: 'auth.isLoggedIn: Change to always confirm with the API'
       hash: 024b9ac1a07c4d6b6522ff17b98eb721602bcd43
       body: ''
