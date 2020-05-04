@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as bSemver from 'balena-semver';
 import once = require('lodash/once');
-import * as memoizee from 'memoizee';
 import * as semver from 'semver';
 
 import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
@@ -29,10 +28,9 @@ import type {
 	OsVersions,
 } from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import { getAuthDependentMemoize } from '../util/cache';
 
 const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
-
-const DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL = 10 * 60 * 1000; // 10 minutes
 
 const getOsModel = function (
 	deps: InjectedDependenciesParam,
@@ -62,19 +60,7 @@ const getOsModel = function (
 				.hupActionHelper,
 	);
 
-	const withDeviceTypesEndpointCaching = <T extends (...args: any[]) => any>(
-		fn: T,
-	) => {
-		const memoizedFn = memoizee(fn, {
-			maxAge: DEVICE_TYPES_ENDPOINT_CACHING_INTERVAL,
-			primitive: true,
-			promise: true,
-		});
-
-		pubsub.subscribe('auth.keyChange', () => memoizedFn.clear());
-
-		return memoizedFn;
-	};
+	const authDependentMemoizer = getAuthDependentMemoize(pubsub);
 
 	/**
 	 * @summary Get device types with caching
@@ -84,7 +70,7 @@ const getOsModel = function (
 	 * @function
 	 * @memberof balena.models.os
 	 */
-	const _getDeviceTypes = withDeviceTypesEndpointCaching<
+	const _getDeviceTypes = authDependentMemoizer<
 		() => Promise<DeviceTypeJson.DeviceType[]>
 	>(() => configModel().getDeviceTypes());
 
@@ -101,7 +87,7 @@ const getOsModel = function (
 	 * @function
 	 * @memberof balena.models.os
 	 */
-	const _getDownloadSize = withDeviceTypesEndpointCaching(
+	const _getDownloadSize = authDependentMemoizer(
 		async (deviceType: string, version: string) => {
 			const { body } = await request.send({
 				method: 'GET',
@@ -123,34 +109,32 @@ const getOsModel = function (
 	 * @function
 	 * @memberof balena.models.os
 	 */
-	const _getOsVersions = withDeviceTypesEndpointCaching(
-		async (deviceType: string) => {
-			const {
-				body: { versions, latest },
-			} = (await request.send({
-				method: 'GET',
-				url: `/device-types/v1/${deviceType}/images`,
-				baseUrl: apiUrl,
-			})) as {
-				body: { versions: any[]; latest: any };
-			};
-			versions.sort(bSemver.rcompare);
-			const potentialRecommendedVersions = versions.filter(
-				(version) =>
-					!(semver.prerelease(version) || isDevelopmentVersion(version)),
-			);
-			const recommended =
-				(potentialRecommendedVersions != null
-					? potentialRecommendedVersions[0]
-					: undefined) || null;
-			return {
-				versions,
-				recommended,
-				latest,
-				default: recommended || latest,
-			};
-		},
-	);
+	const _getOsVersions = authDependentMemoizer(async (deviceType: string) => {
+		const {
+			body: { versions, latest },
+		} = (await request.send({
+			method: 'GET',
+			url: `/device-types/v1/${deviceType}/images`,
+			baseUrl: apiUrl,
+		})) as {
+			body: { versions: any[]; latest: any };
+		};
+		versions.sort(bSemver.rcompare);
+		const potentialRecommendedVersions = versions.filter(
+			(version) =>
+				!(semver.prerelease(version) || isDevelopmentVersion(version)),
+		);
+		const recommended =
+			(potentialRecommendedVersions != null
+				? potentialRecommendedVersions[0]
+				: undefined) || null;
+		return {
+			versions,
+			recommended,
+			latest,
+			default: recommended || latest,
+		};
+	});
 
 	/**
 	 * @summary Clears the cached results from the `device-types/v1` endpoint.
