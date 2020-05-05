@@ -1,4 +1,14 @@
 - commits:
+    - subject: Avoid unnecessary `cloneDeep` usage
+      hash: c00a429771a0ea9c8c25e97f8f9819186db1fff0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 13.4.2
+  date: 2020-05-04T15:42:38.772Z
+- commits:
     - subject: Avoid moment v2.25.0 that's missing published files
       hash: bc7be61f31d3280999e3760eba6341bb01cee6bd
       body: ''
