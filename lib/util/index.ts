@@ -1,5 +1,4 @@
 import * as errors from 'balena-errors';
-import cloneDeep = require('lodash/cloneDeep');
 import * as Pine from '../../typings/pinejs-client-core';
 
 export interface ErrorResponse {
@@ -87,7 +86,7 @@ export const mergePineOptions = <R extends {}>(
 		return defaults;
 	}
 
-	const result = cloneDeep(defaults);
+	const result = { ...defaults };
 
 	for (const option of Object.keys(extras) as Array<keyof typeof extras>) {
 		switch (option) {
@@ -145,7 +144,8 @@ const mergeExpandOptions = <T>(
 		return extraExpand;
 	}
 
-	defaultExpand = convertExpandToObject(defaultExpand);
+	// We only need to clone the defaultExpand as it's the only one we mutate
+	defaultExpand = convertExpandToObject(defaultExpand, true);
 	extraExpand = convertExpandToObject(extraExpand);
 
 	for (const expandKey of Object.keys(extraExpand || {}) as Array<
@@ -184,6 +184,7 @@ const mergeExpandOptions = <T>(
 // containing (at most) $expand, $filter and $select keys
 const convertExpandToObject = <T extends {}>(
 	expandOption: Pine.Expand<T> | undefined,
+	cloneIfNeeded = false,
 ): Pine.ResourceExpandFor<T> => {
 	if (expandOption == null) {
 		return {};
@@ -221,5 +222,9 @@ const convertExpandToObject = <T extends {}>(
 		}
 	}
 
-	return cloneDeep(expandOption);
+	if (cloneIfNeeded) {
+		return { ...(expandOption as Pine.ResourceExpandFor<T>) };
+	}
+
+	return expandOption;
 };
