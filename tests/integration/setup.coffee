@@ -251,9 +251,7 @@ exports.givenMulticontainerApplication = (beforeFn) ->
 	exports.givenAnApplication(beforeFn)
 
 	beforeFn ->
-		Promise.try =>
-			userId = @application.user.__id
-
+		balena.auth.getUserId().then (userId) =>
 			Promise.all [
 				# Register web & DB services
 				balena.pine.post
