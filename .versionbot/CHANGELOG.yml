@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'README: Clarify the deprecation policy'
+      hash: fade14effe28d061efd48f9d63356430e737ca9c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/r-product/threads/A6-bJBldfUFnhG9vixTz-DLz9iB
+        see: >-
+          https://www.flowdock.com/app/rulemotion/r-product/threads/A6-bJBldfUFnhG9vixTz-DLz9iB
+        HQ: 'https://github.com/balena-io/balena/issues/2032'
+        hq: 'https://github.com/balena-io/balena/issues/2032'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.4.3
+  date: 2020-05-08T18:14:48.946Z
+- commits:
     - subject: Avoid unnecessary `cloneDeep` usage
       hash: c00a429771a0ea9c8c25e97f8f9819186db1fff0
       body: ''
