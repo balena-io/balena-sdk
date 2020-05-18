@@ -80,7 +80,7 @@ const getReleaseModel = function (
 	 */
 	function get(
 		commitOrId: string | number,
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release> {
 		return Promise.try(() => {
 			if (commitOrId == null) {
@@ -171,8 +171,8 @@ const getReleaseModel = function (
 	function getWithImageDetails(
 		commitOrId: string | number,
 		options: {
-			release?: BalenaSdk.PineOptionsFor<BalenaSdk.Release>;
-			image?: BalenaSdk.PineOptionsFor<BalenaSdk.Image>;
+			release?: BalenaSdk.PineOptions<BalenaSdk.Release>;
+			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
 		} = {},
 	): Promise<BalenaSdk.ReleaseWithImageDetails> {
 		return get(
@@ -265,7 +265,7 @@ const getReleaseModel = function (
 	 */
 	function getAllByApplication(
 		nameOrSlugOrId: string | number,
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release[]> {
 		return applicationModel()
 			.get(nameOrSlugOrId, { $select: 'id' })
@@ -315,7 +315,7 @@ const getReleaseModel = function (
 	 */
 	function getLatestByApplication(
 		nameOrSlugOrId: string | number,
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.Release> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release> {
 		return getAllByApplication(
 			nameOrSlugOrId,
@@ -418,7 +418,7 @@ const getReleaseModel = function (
 		 */
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
-			options: BalenaSdk.PineOptionsFor<BalenaSdk.ReleaseTag> = {},
+			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
 			return applicationModel()
 				.get(nameOrSlugOrId, { $select: 'id' })
@@ -475,7 +475,7 @@ const getReleaseModel = function (
 		 */
 		getAllByRelease(
 			commitOrId: string | number,
-			options: BalenaSdk.PineOptionsFor<BalenaSdk.ReleaseTag> = {},
+			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
 			return get(commitOrId, {
 				$select: 'id',

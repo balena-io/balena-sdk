@@ -6,15 +6,15 @@ import { AnyObject } from '../typings/utils';
 // This file is in .prettierignore, since otherwise
 // the $ExpectError commentswould move to the wrong place
 
-export const unkown$selectProps: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectProps: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$select: ['asdf', 'id', 'app_name', 'id'], // $ExpectError
 };
 
-export const unkown$selectPropsFixed: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropsFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$select: ['id', 'app_name'],
 };
 
-export const unkown$selectPropsInside$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropsInside$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: { // $ExpectError
 		owns__device: {
 			$select: ['asdf', 'note', 'device_name', 'uuid'],
@@ -22,7 +22,7 @@ export const unkown$selectPropsInside$expand: BalenaSdk.PineOptionsFor<BalenaSdk
 	},
 };
 
-export const unkown$expandProps: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$expandProps: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		asdf: {}, // $ExpectError
 		owns__device: {
@@ -31,7 +31,7 @@ export const unkown$expandProps: BalenaSdk.PineOptionsFor<BalenaSdk.Application>
 	},
 };
 
-export const unkownODataPropInside$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkownODataPropInside$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			asdf: {}, // $ExpectError
@@ -40,7 +40,7 @@ export const unkownODataPropInside$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Ap
 	},
 };
 
-export const unkown$expandPropsFixed: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$expandPropsFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -48,7 +48,7 @@ export const unkown$expandPropsFixed: BalenaSdk.PineOptionsFor<BalenaSdk.Applica
 	},
 };
 
-export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$expand: {
@@ -63,7 +63,7 @@ export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOpti
 	},
 };
 
-export const unkown$selectPropInsideNested$expandWith$select2: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropInsideNested$expandWith$select2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: { // $ExpectError
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -76,7 +76,7 @@ export const unkown$selectPropInsideNested$expandWith$select2: BalenaSdk.PineOpt
 	},
 };
 
-export const unkown$selectPropInsideNested$expandWith$select2Fixed: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropInsideNested$expandWith$select2Fixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -89,7 +89,7 @@ export const unkown$selectPropInsideNested$expandWith$select2Fixed: BalenaSdk.Pi
 	},
 };
 
-export const unkown$expandPropInArray$expands: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$expandPropInArray$expands: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -106,7 +106,7 @@ export const unkown$expandPropInArray$expands: BalenaSdk.PineOptionsFor<BalenaSd
 	],
 };
 
-export const unkownODataPropInArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkownODataPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -123,7 +123,7 @@ export const unkownODataPropInArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.A
 	],
 };
 
-export const unkown$selectPropInArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -139,7 +139,7 @@ export const unkown$selectPropInArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk
 	],
 };
 
-export const unkownNested$expandPropInsideArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkownNested$expandPropInsideArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -156,7 +156,7 @@ export const unkownNested$expandPropInsideArray$expand: BalenaSdk.PineOptionsFor
 	],
 };
 
-export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -175,7 +175,7 @@ export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.Pin
 	],
 };
 
-export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -191,7 +191,7 @@ export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptionsFor
 	],
 };
 
-export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -210,7 +210,7 @@ export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptionsFor<BalenaS
 	],
 };
 
-export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -229,7 +229,7 @@ export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptionsFor<BalenaS
 	],
 };
 
-export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptionsFor<BalenaSdk.Application> = {
+export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -251,27 +251,20 @@ export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptionsFor<BalenaS
 	],
 };
 
-
 // invalid filters
-export const invalid$filterPropType: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const invalid$filterPropType: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		id: 'asdf', // $ExpectError
 	},
 };
 
-export const invalid$filterPropType2: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const invalid$filterPropType2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		app_name: 5, // $ExpectError
 	},
 };
 
-export const invalid$filterOfReverseNavigationProp: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const invalid$filterOfReverseNavigationProp: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		app_name: 'test',
 		slug: null,
@@ -280,9 +273,7 @@ export const invalid$filterOfReverseNavigationProp: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const unkownPropIn$filter: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unkownPropIn$filter: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		id: 1,
 		app_name: 'test',
@@ -292,9 +283,7 @@ export const unkownPropIn$filter: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const unkownPropIn$filterFixed: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unkownPropIn$filterFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		id: 1,
 		app_name: 'test',
@@ -303,9 +292,7 @@ export const unkownPropIn$filterFixed: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -329,9 +316,7 @@ export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptionsFor<
 	],
 };
 
-export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -356,9 +341,7 @@ export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptio
 	],
 };
 
-export const unknown$any$filterPropInsideArray$expandFixed: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unknown$any$filterPropInsideArray$expandFixed: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -382,9 +365,7 @@ export const unknown$any$filterPropInsideArray$expandFixed: BalenaSdk.PineOption
 	],
 };
 
-export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -419,9 +400,7 @@ export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptionsFor<
 
 // this check that even though the unknown$any$filterPropInsideArray$expandPlural case doesn't work
 // it will at least not silence other errors
-export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -457,23 +436,17 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 
 // valid selects
 
-export const appOptionsEValid1: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid1: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$select: ['app_name'],
 };
 
-export const deviceOptionsEValid2: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Device
-> = {
+export const deviceOptionsEValid2: BalenaSdk.PineOptions<BalenaSdk.Device> = {
 	$select: ['note', 'device_name', 'uuid'],
 };
 
 // valid expands
 
-export const appOptionsEValid2: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -481,9 +454,7 @@ export const appOptionsEValid2: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const appOptionsEValid4: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid4: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$expand: {
@@ -495,9 +466,7 @@ export const appOptionsEValid4: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const appOptionsEValid5: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid5: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$select: ['note', 'device_name', 'uuid'],
@@ -510,9 +479,7 @@ export const appOptionsEValid5: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const appOptionsEValid20: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid20: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -531,13 +498,15 @@ export const appOptionsEValid20: BalenaSdk.PineOptionsFor<
 // valid OptionalNavigationResource $selects & $expands
 
 // $ExpectType "is_created_by__user" | "belongs_to__application" | "contains__image" | "should_be_running_on__application" | "is_running_on__device" | "should_be_running_on__device" | "release_tag"
-export type ReleaseExpandableProps = BalenaSdk.PineExpandableProps<BalenaSdk.Release>;
+export type ReleaseExpandableProps = BalenaSdk.PineExpandableProps<
+	BalenaSdk.Release
+>;
 // $ExpectType Release
-export type DeviceIsRunningReleaseAssociatedResourceType = InferAssociatedResourceType<BalenaSdk.Device['is_running__release']>;
+export type DeviceIsRunningReleaseAssociatedResourceType = InferAssociatedResourceType<
+	BalenaSdk.Device['is_running__release']
+>;
 
-export const appOptionsEValid30: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid30: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -553,9 +522,7 @@ export const appOptionsEValid30: BalenaSdk.PineOptionsFor<
 	],
 };
 
-export const appOptionsEValid31: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValid31: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -574,12 +541,9 @@ export const appOptionsEValid31: BalenaSdk.PineOptionsFor<
 	],
 };
 
-
 // valid filters
 
-export const appOptionsEValidf1: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValidf1: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		app_name: 'test',
 		slug: null,
@@ -587,9 +551,7 @@ export const appOptionsEValidf1: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const appOptionsEValidf2: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEValidf2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$filter: {
 		app_name: 'test',
 		slug: null,
@@ -634,9 +596,7 @@ export const appOptionsEValidf2: BalenaSdk.PineOptionsFor<
 	},
 };
 
-export const appOptionsEFValid1: BalenaSdk.PineOptionsFor<
-	BalenaSdk.Application
-> = {
+export const appOptionsEFValid1: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
 		{
 			owns__device: {
@@ -668,9 +628,7 @@ export const appOptionsEFValid1: BalenaSdk.PineOptionsFor<
 	],
 };
 
-export const anyObjectOptionsValid1: BalenaSdk.PineOptionsFor<
-	AnyObject
-> = {
+export const anyObjectOptionsValid1: BalenaSdk.PineOptions<AnyObject> = {
 	$select: ['id', 'app_name'],
 	$expand: {
 		owns__device: {
