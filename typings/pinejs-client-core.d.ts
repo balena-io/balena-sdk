@@ -210,13 +210,13 @@ interface FilterExpressions<T> {
 	$cast?: FilterFunctionValue<T>;
 }
 
-export type ResourceExpandFor<T> = {
-	[k in ExpandableProps<T>]?: PineOptionsFor<InferAssociatedResourceType<T[k]>>;
+export type ResourceExpand<T> = {
+	[k in ExpandableProps<T>]?: PineOptions<InferAssociatedResourceType<T[k]>>;
 };
 
-type BaseExpandFor<T> = ResourceExpandFor<T> | ExpandableProps<T>;
+type BaseExpand<T> = ResourceExpand<T> | ExpandableProps<T>;
 
-export type Expand<T> = BaseExpandFor<T> | Array<BaseExpandFor<T>>;
+export type Expand<T> = BaseExpand<T> | Array<BaseExpand<T>>;
 
 export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -227,7 +227,7 @@ interface ODataOptionsBase {
 	$select?: string | string[] | '*';
 }
 
-export interface PineOptionsFor<T> extends ODataOptionsBase {
+export interface PineOptions<T> extends ODataOptionsBase {
 	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
@@ -248,17 +248,17 @@ interface PineParamsBase {
 	customOptions?: AnyObject;
 }
 
-export interface PineParamsFor<T> extends PineParamsBase {
+export interface PineParams<T> extends PineParamsBase {
 	body?: SubmitBody<T>;
-	options?: PineOptionsFor<T>;
+	options?: PineOptions<T>;
 }
 
-export interface PineParamsWithIdFor<T> extends PineParamsFor<T> {
+export interface PineParamsWithId<T> extends PineParams<T> {
 	id: number;
 }
 
-export interface UpsertPineParamsFor<T>
-	extends Omit<PineParamsFor<T>, 'id' | 'method' | 'options'> {
+export interface UpsertPineParams<T>
+	extends Omit<PineParams<T>, 'id' | 'method' | 'options'> {
 	id: SubmitBody<T>;
 	resource: string;
 	body: SubmitBody<T>;

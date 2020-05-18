@@ -22,7 +22,7 @@ const getAllByResourceFactory = function (
 
 interface TagModelBase {
 	getAll(
-		options?: BalenaSdk.PineOptionsFor<BalenaSdk.ResourceTagBase>,
+		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
 	): Promise<BalenaSdk.ResourceTagBase[]>;
 	set(uuidOrId: string | number, tagKey: string, value: string): Promise<void>;
 	remove(uuidOrId: string | number, tagKey: string): Promise<void>;

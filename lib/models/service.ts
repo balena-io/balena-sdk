@@ -18,7 +18,7 @@ import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
 import once = require('lodash/once');
 import {
-	PineOptionsFor,
+	PineOptions,
 	Service,
 	ServiceEnvironmentVariable,
 } from '../../typings/balena-sdk';
@@ -53,7 +53,7 @@ const getServiceModel = (
 
 	// Not exported for now, but we could document & export it in the future
 	// if there are external use cases for this.
-	const get = (id: number, options: PineOptionsFor<Service> = {}) => {
+	const get = (id: number, options: PineOptions<Service> = {}) => {
 		return pine
 			.get({
 				resource: 'service',
@@ -97,7 +97,7 @@ const getServiceModel = (
 	 */
 	exports.getAllByApplication = function (
 		nameOrSlugOrId: string | number,
-		options: PineOptionsFor<Service> = {},
+		options: PineOptions<Service> = {},
 	): Promise<Service[]> {
 		return applicationModel()
 			.get(nameOrSlugOrId, { $select: 'id' })
@@ -169,7 +169,7 @@ const getServiceModel = (
 		 */
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
-			options: PineOptionsFor<ServiceEnvironmentVariable> = {},
+			options: PineOptions<ServiceEnvironmentVariable> = {},
 		): ServiceEnvironmentVariable[] {
 			return applicationModel()
 				.get(nameOrSlugOrId, { $select: 'id' })
