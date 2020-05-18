@@ -266,6 +266,28 @@ declare namespace BalenaSdk {
 		user: NavigationResource<User>;
 	}
 
+	interface Invitee {
+		id: number;
+		created_at: string;
+		email: string;
+	}
+
+	interface ApplicationInvite {
+		id: number;
+		message?: string;
+		created_at: string;
+		invitationToken: string;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
+		invitee: NavigationResource<Invitee>;
+		is_invited_to__application: NavigationResource<Application>;
+	}
+
+	interface ApplicationInviteOptions {
+		invitee: string;
+		roleName?: string;
+		message?: string;
+	}
+
 	interface ApplicationMembershipRole {
 		id: number;
 		name: string;
@@ -898,6 +920,21 @@ declare namespace BalenaSdk {
 						key: string,
 					): Promise<string | undefined>;
 					remove(nameOrId: string | number, key: string): Promise<void>;
+				};
+				invite: {
+					create: (
+						nameOrSlugOrId: string | number,
+						options: ApplicationInviteOptions,
+					) => Promise<ApplicationInvite>;
+					getAllByApplication: (
+						nameOrSlugOrId: string | number,
+						options?: PineOptionsFor<ApplicationInvite>,
+					) => Promise<ApplicationInvite[]>;
+					getAll: (
+						options?: PineOptionsFor<ApplicationInvite>,
+					) => Promise<ApplicationInvite>;
+					accept: (invitationToken: string) => Promise<void>;
+					revoke: (id: number) => Promise<void>;
 				};
 			};
 			apiKey: {
