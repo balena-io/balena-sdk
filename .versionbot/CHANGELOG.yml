@@ -1,4 +1,22 @@
 - commits:
+    - subject: Add SDK method to invite application members
+      hash: b4ce161fc10f9e5c8b2c30c7cbd364d45f2e4611
+      body: ''
+      footer:
+        Connects-to: 'https://github.com/balena-io/balena-ui/pull/3625'
+        connects-to: 'https://github.com/balena-io/balena-ui/pull/3625'
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2526'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2526'
+        HQ: 'https://github.com/balena-io/balena/issues/2121'
+        hq: 'https://github.com/balena-io/balena/issues/2121'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Amit Solanki <amit@balena.io>
+        signed-off-by: Amit Solanki <amit@balena.io>
+      author: Amit Solanki
+  version: 13.5.0
+  date: 2020-05-18T13:07:14.198Z
+- commits:
     - subject: 'README: Clarify the deprecation policy'
       hash: fade14effe28d061efd48f9d63356430e737ca9c
       body: ''
