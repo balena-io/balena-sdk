@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as Promise from 'bluebird';
-import { InjectedDependenciesParam, InjectedOptionsParam } from './balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const get2fa = function (
 	deps: InjectedDependenciesParam,

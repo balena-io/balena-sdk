@@ -4,10 +4,10 @@ bSemver = require('balena-semver')
 
 {
 	mergePineOptions
-} = require('../build/util')
+} = require('../es2015/util')
 {
 	getDeviceOsSemverWithVariant
-} = require('../build/util/device-os-version')
+} = require('../es2015/util/device-os-version')
 
 describe 'Pine option merging', ->
 

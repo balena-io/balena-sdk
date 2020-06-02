@@ -1,6 +1,6 @@
 import * as errors from 'balena-errors';
 import * as BalenaSdk from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 type BalenaBuilderRequestError = errors.BalenaError & {
 	body: BuilderBuildFromUrlErrorResponse;

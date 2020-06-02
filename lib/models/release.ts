@@ -18,7 +18,7 @@ import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
 import once = require('lodash/once');
 import * as BalenaSdk from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { isId, mergePineOptions } from '../util';
 
 const getReleaseModel = function (

@@ -30,7 +30,8 @@ node_modules
 .idea
 
 # Ignore all build output
-build/
+es2015
+es2018
 
 # Ignore package-lock.json, since our end users will
 package-lock.json
