@@ -9,11 +9,9 @@ m = require('mochainon')
 	givenAnApplication
 	givenLoggedInUser
 	givenMulticontainerApplicationWithADevice
+	givenInitialOrganization
 	sdkOpts
 } = require('../setup')
-{
-	getInitialOrganization
-} = require('../utils')
 {
 	itShouldSetGetAndRemoveTags
 	itShouldGetAllTagsByResource
@@ -60,6 +58,8 @@ describe 'Application Model', ->
 
 		describe 'balena.models.application.create()', ->
 
+			givenInitialOrganization(before)
+
 			describe '[read operations]', ->
 
 				it 'should be rejected if the application type is invalid', ->
@@ -67,6 +67,7 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'non-existing'
 						deviceType: 'raspberry-pi'
+						organization: @initialOrg.id
 					m.chai.expect(promise).to.be.rejectedWith('Invalid application type: non-existing')
 
 				it 'should be rejected if the device type is invalid', ->
@@ -74,6 +75,7 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'foobarbaz'
+						organization: @initialOrg.id
 					m.chai.expect(promise).to.be.rejectedWith('Invalid device type: foobarbaz')
 
 				it 'should be rejected if the device type is discontinued', ->
@@ -81,6 +83,7 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'edge'
+						organization: @initialOrg.id
 					m.chai.expect(promise).to.be.rejectedWith('Discontinued device type: edge')
 
 				it 'should be rejected if the name has less than four characters', ->
@@ -88,12 +91,20 @@ describe 'Application Model', ->
 						name: 'Foo'
 						applicationType: 'microservices-starter'
 						deviceType: 'raspberry-pi'
+						organization: @initialOrg.id
 					m.chai.expect(promise).to.be.rejected
 					.then (error) ->
 						m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
 						m.chai.expect(error).to.have.property('statusCode', 400)
 						m.chai.expect(error).to.have.property('message')
 						.that.contains('It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30')
+
+				it 'should be rejected if the user did not provide an organization parameter', ->
+					m.chai.expect ->
+						balena.models.application.create
+							name: 'FooBar'
+							deviceType: 'raspberry-pi'
+					.to.throw("undefined is not a valid value for parameter 'organization'")
 
 				it 'should be rejected if the user does not have access to find the organization by handle', ->
 					promise = balena.models.application.create
@@ -117,10 +128,29 @@ describe 'Application Model', ->
 					balena.pine.delete
 						resource: 'application'
 
+				[
+					'id',
+					'handle',
+				].forEach (prop) ->
+					it "should be able to create an application using the user's initial organization #{prop}", ->
+						balena.models.application.create
+							name: 'FooBar'
+							deviceType: 'raspberrypi'
+							organization: @initialOrg[prop]
+						.then ->
+							balena.models.application.getAll(
+								$select: 'id',
+								$expand: organization: $select: 'id'
+							)
+						.then (apps) =>
+							m.chai.expect(apps).to.have.length(1)
+							m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', @initialOrg.id)
+
 				it 'should be able to create an application w/o providing an application type', ->
 					balena.models.application.create
 						name: 'FooBar'
 						deviceType: 'raspberry-pi'
+						organization: @initialOrg.id
 					.then ->
 						promise = balena.models.application.getAll()
 						m.chai.expect(promise).to.eventually.have.length(1)
@@ -130,6 +160,7 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'raspberry-pi'
+						organization: @initialOrg.id
 					.then ->
 						promise = balena.models.application.getAll()
 						m.chai.expect(promise).to.eventually.have.length(1)
@@ -139,10 +170,12 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'raspberry-pi'
-					.then (parentApplication) ->
+						organization: @initialOrg.id
+					.then (parentApplication) =>
 						balena.models.application.create
 							name: 'FooBarChild'
 							deviceType: 'generic'
+							organization: @initialOrg.id
 							parent: parentApplication.id
 						.then (childApplication) ->
 							m.chai.expect(childApplication.depends_on__application).to.be.an('object')
@@ -166,28 +199,10 @@ describe 'Application Model', ->
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'raspberrypi'
+						organization: @initialOrg.id
 					.then ->
 						promise = balena.models.application.getAll()
 						m.chai.expect(promise).to.eventually.have.length(1)
-
-				[
-					'id',
-					'handle',
-				].forEach (prop) ->
-					it "should be able to create an application using the user's initial organization #{prop}", ->
-						getInitialOrganization()
-						.then (initialOrg) ->
-							balena.models.application.create
-								name: 'FooBar'
-								deviceType: 'raspberrypi'
-								organization: initialOrg[prop]
-							.then ->
-								balena.models.application.getAll(
-									$expand: organization: $select: 'id'
-								)
-							.then (apps) ->
-								m.chai.expect(apps).to.have.length(1)
-								m.chai.expect(apps[0]).to.have.nested.property('organization[0].id', initialOrg.id)
 
 	describe 'given a single application', ->
 
@@ -203,11 +218,14 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.create()', ->
 
+				givenInitialOrganization(before)
+
 				it 'should reject if trying to create an app with the same name', ->
 					promise = balena.models.application.create
 						name: 'FooBar'
 						applicationType: 'microservices-starter'
 						deviceType: 'beaglebone-black'
+						organization: @initialOrg.id
 					m.chai.expect(promise).to.be.rejected
 					.then (error) ->
 						m.chai.expect(error).to.have.property('code', 'BalenaRequestError')
@@ -224,8 +242,11 @@ describe 'Application Model', ->
 
 			describe 'balena.models.application.getAppByOwner()', ->
 
+				givenInitialOrganization(before)
+
 				it 'should find the created application', ->
-					balena.models.application.getAppByOwner('FooBar', credentials.username).then (application) =>
+					balena.models.application.getAppByOwner('FooBar', @initialOrg.handle)
+					.then (application) =>
 						m.chai.expect(application.id).to.equal(@application.id)
 
 				it 'should not find the created application with a different organization handle', ->
