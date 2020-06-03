@@ -6,6 +6,8 @@ chai.use(require('chai-samsam'))
 
 exports.IS_BROWSER = IS_BROWSER = window?
 
+{ getInitialOrganization } = require('./utils')
+
 if IS_BROWSER
 	require('js-polyfills/es6')
 	getSdk = window.balenaSdk
@@ -130,17 +132,25 @@ resetApplications = ->
 	balena.pine.delete
 		resource: 'application'
 
+exports.givenInitialOrganization = (beforeFn) ->
+	beforeFn ->
+		getInitialOrganization().then (initialOrg) =>
+			@initialOrg = initialOrg
+
 exports.givenAnApplication = (beforeFn) ->
+	exports.givenInitialOrganization(beforeFn)
+
 	beforeFn ->
 		# calling this.skip() doesn't trigger afterEach,
 		# so we need to reset in here as well
 		# See: https://github.com/mochajs/mocha/issues/3740
 		resetApplications()
-		.then ->
+		.then =>
 			balena.models.application.create
 				name: 'FooBar'
 				applicationType: 'microservices-starter'
 				deviceType: 'raspberry-pi'
+				organization: @initialOrg.id
 		.then (application) =>
 			@application = application
 

@@ -321,7 +321,6 @@ declare namespace BalenaSdk {
 		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
-
 	interface Invitee {
 		id: number;
 		created_at: string;
@@ -343,7 +342,6 @@ declare namespace BalenaSdk {
 		roleName?: ApplicationMembershipRoles;
 		message?: string;
 	}
-
 
 	interface ApplicationType {
 		id: number;
@@ -898,7 +896,7 @@ declare namespace BalenaSdk {
 					applicationType?: string;
 					deviceType: string;
 					parent?: number | string;
-					organization?: number | string;
+					organization: number | string;
 				}): Promise<Application>;
 				get(
 					nameOrId: string | number,

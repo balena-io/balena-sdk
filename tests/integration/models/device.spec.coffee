@@ -10,6 +10,7 @@ Promise = require('bluebird')
 	givenAnApplicationWithADevice
 	givenLoggedInUser
 	givenMulticontainerApplication
+	givenInitialOrganization
 	sdkOpts
 	IS_BROWSER
 } = require('../setup')
@@ -392,6 +393,8 @@ describe 'Device Model', ->
 
 			describe 'balena.models.device.getAllByParentDevice()', ->
 
+				givenInitialOrganization(before)
+
 				before ->
 					Promise.props
 						userId: balena.auth.getUserId()
@@ -399,6 +402,7 @@ describe 'Device Model', ->
 							name: 'ChildApp'
 							applicationType: 'microservices-starter'
 							deviceType: @application.device_type
+							organization: @initialOrg.id
 							parent: @application.id
 					.then ({ userId, @childApplication }) =>
 						# We don't use the built-in .register or resin-register-device,
@@ -1732,20 +1736,25 @@ describe 'Device Model', ->
 
 	describe 'given three compatible applications and a single device', ->
 
+		givenInitialOrganization(before)
+
 		beforeEach ->
 			Promise.props
 				application1: balena.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
+					organization: @initialOrg.id
 				application2: balena.models.application.create
 					name: 'BarBaz'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
+					organization: @initialOrg.id
 				application3: balena.models.application.create
 					name: 'BazFoo'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi2'
+					organization: @initialOrg.id
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
@@ -1791,16 +1800,20 @@ describe 'Device Model', ->
 
 	describe 'given two incompatible applications and a single device', ->
 
+		givenInitialOrganization(before)
+
 		beforeEach ->
 			Promise.props
 				application1: balena.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi'
+					organization: @initialOrg.id
 				application2: balena.models.application.create
 					name: 'BarBaz'
 					applicationType: 'microservices-starter'
 					deviceType: 'intel-nuc'
+					organization: @initialOrg.id
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
@@ -1824,20 +1837,25 @@ describe 'Device Model', ->
 
 	describe 'given applications of different architectures with a device on each', ->
 
+		givenInitialOrganization(before)
+
 		before ->
 			Promise.props
 				rpi: balena.models.application.create
 					name: 'FooBarArmv6'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi'
+					organization: @initialOrg.id
 				armv7hf: balena.models.application.create
 					name: 'FooBar32'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
+					organization: @initialOrg.id
 				aarch64: balena.models.application.create
 					name: 'BarBaz64'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3-64'
+					organization: @initialOrg.id
 			.then (apps) =>
 				@apps = apps
 
