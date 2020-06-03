@@ -247,6 +247,11 @@ const sdk = getSdk.fromSharedOptions();
             * [.get(id)](#balena.models.key.get) ⇒ <code>Promise</code>
             * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
             * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
+        * [.organization](#balena.models.organization) : <code>object</code>
+            * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
+            * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
+            * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
         * [.os](#balena.models.os) : <code>object</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
@@ -563,6 +568,11 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(id)](#balena.models.key.get) ⇒ <code>Promise</code>
         * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
         * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
+    * [.organization](#balena.models.organization) : <code>object</code>
+        * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
+        * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
+        * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
     * [.os](#balena.models.os) : <code>object</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
@@ -1361,19 +1371,19 @@ balena.models.application.getWithDeviceServiceDetails('7cf02a6', function(error,
 
 ##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Get a single application using the appname and owner's username  
+**Summary**: Get a single application using the appname and the handle of the owning organization  
 **Access**: public  
 **Fulfil**: <code>Object</code> - application  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | appName | <code>String</code> |  | application name |
-| owner | <code>String</code> |  | The owner's username |
+| owner | <code>String</code> |  | The handle of the owning organization |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
-balena.models.application.getAppByOwner('MyApp', 'MyUser').then(function(application) {
+balena.models.application.getAppByOwner('MyApp', 'MyOrg').then(function(application) {
 	console.log(application);
 });
 ```
@@ -1443,6 +1453,7 @@ balena.models.application.hasAny(function(error, hasAny) {
 | [options.applicationType] | <code>String</code> | application type slug e.g. microservices-starter |
 | options.deviceType | <code>String</code> | device type slug |
 | [options.parent] | <code>Number</code> \| <code>String</code> | parent application name or id |
+| options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
 
 **Example**  
 ```js
@@ -4742,6 +4753,124 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
 balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 	if (error) throw error;
 	console.log(key);
+});
+```
+<a name="balena.models.organization"></a>
+
+#### models.organization : <code>object</code>
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
+
+* [.organization](#balena.models.organization) : <code>object</code>
+    * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
+    * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
+    * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
+
+<a name="balena.models.organization.create"></a>
+
+##### organization.create(options) ⇒ <code>Promise</code>
+This method creates a new organization with the current user as an administrator.
+
+**Kind**: static method of [<code>organization</code>](#balena.models.organization)  
+**Summary**: Creates a new organization  
+**Access**: public  
+**Fulfil**: <code>String</code> - Organization  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | Organization parameters to use. |
+| options.name | <code>String</code> | Required: the name of the organization that will be created. |
+| [options.handle] | <code>String</code> | The handle of the organization that will be created. |
+
+**Example**  
+```js
+balena.models.organization.create({ name:'MyOrganization' }).then(function(organization) {
+	console.log(organization);
+});
+```
+**Example**  
+```js
+balena.models.organization.create({ name:'MyOrganization' }, function(error, organization) {
+	if (error) throw error;
+	console.log(organization);
+});
+```
+<a name="balena.models.organization.getAll"></a>
+
+##### organization.getAll([options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>organization</code>](#balena.models.organization)  
+**Summary**: Get all Organizations  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - organizations  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.getAll().then(function(organizations) {
+	console.log(organizations);
+});
+```
+**Example**  
+```js
+balena.models.organization.getAll(function(error, organizations) {
+	if (error) throw error;
+	console.log(organizations);
+});
+```
+<a name="balena.models.organization.get"></a>
+
+##### organization.get(handleOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>organization</code>](#balena.models.organization)  
+**Summary**: Get a single organization  
+**Access**: public  
+**Fulfil**: <code>Object</code> - organization  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| handleOrId | <code>String</code> \| <code>Number</code> |  | organization handle (string) or id (number). |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.get('myorganization').then(function(organization) {
+	console.log(organization);
+});
+```
+**Example**  
+```js
+balena.models.organization.get(123).then(function(organization) {
+	console.log(organization);
+});
+```
+**Example**  
+```js
+balena.models.organization.get('myorganization', function(error, organization) {
+	if (error) throw error;
+	console.log(organization);
+});
+```
+<a name="balena.models.organization.remove"></a>
+
+##### organization.remove(handleOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>organization</code>](#balena.models.organization)  
+**Summary**: Remove an Organization  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| handleOrId | <code>String</code> \| <code>Number</code> | organization handle (string) or id (number). |
+
+**Example**  
+```js
+balena.models.organization.remove(123);
+```
+**Example**  
+```js
+balena.models.organization.remove(123, function(error) {
+	if (error) throw error;
 });
 ```
 <a name="balena.models.os"></a>
