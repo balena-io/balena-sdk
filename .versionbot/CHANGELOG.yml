@@ -1,4 +1,16 @@
 - commits:
+    - subject: Switch to generating es2015 as that is already the minimum we support
+      hash: ad58c9c425743e0a59fa238fd57aad0d4a2a2d88
+      body: |
+        Due to modules we depend on we're already generating es2015 bundles so
+        updating our target allows for generating smaller, more modern output
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 13.6.0
+  date: 2020-06-04T13:17:36.916Z
+- commits:
     - subject: Add SDK method to invite application members
       hash: b4ce161fc10f9e5c8b2c30c7cbd364d45f2e4611
       body: ''
