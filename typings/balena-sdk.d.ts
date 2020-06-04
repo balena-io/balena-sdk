@@ -475,6 +475,7 @@ declare namespace BalenaSdk {
 		has_dependent: boolean;
 		id: number;
 		ip_address: string | null;
+		mac_address: string | null;
 		is_accessible_by_support_until__date: string;
 		is_connected_to_vpn: boolean;
 		is_in_local_mode?: boolean;
