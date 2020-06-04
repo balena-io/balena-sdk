@@ -8,7 +8,7 @@
         "preserveConstEnums": true,
         "strictNullChecks": true,
         "sourceMap": false,
-        "target": "es5",
+        "target": "es2015",
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "moduleResolution": "node",
