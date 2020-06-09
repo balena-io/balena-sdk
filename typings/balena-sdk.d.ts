@@ -484,6 +484,7 @@ declare namespace BalenaSdk {
 		is_active: boolean;
 		is_online: boolean;
 		last_connectivity_event: string;
+		last_vpn_event: string;
 		latitude?: string;
 		local_id?: string;
 		location: string;
