@@ -1041,6 +1041,7 @@ declare namespace BalenaSdk {
 				has(uuidOrId: string | number): Promise<boolean>;
 				isOnline(uuidOrId: string | number): Promise<boolean>;
 				getLocalIPAddressess(uuidOrId: string | number): Promise<string[]>;
+				getMACAddressess(uuidOrId: string | number): Promise<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
 				getManifestBySlug(slugOrName: string): Promise<DeviceType>;
