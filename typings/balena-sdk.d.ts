@@ -557,7 +557,6 @@ declare namespace BalenaSdk {
 		custom_longitude?: string;
 		device_name: string;
 		download_progress?: number;
-		has_dependent: boolean;
 		ip_address: string | null;
 		mac_address: string | null;
 		is_accessible_by_support_until__date: string;
