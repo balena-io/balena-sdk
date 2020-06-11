@@ -551,14 +551,13 @@ declare namespace BalenaSdk {
 	}
 
 	interface Device {
-		app_name: string;
+		id: number;
 		created_at: string;
 		custom_latitude?: string;
 		custom_longitude?: string;
 		device_name: string;
 		download_progress?: number;
 		has_dependent: boolean;
-		id: number;
 		ip_address: string | null;
 		is_accessible_by_support_until__date: string;
 		is_connected_to_vpn: boolean;
