@@ -1,4 +1,5 @@
 m = require('mochainon')
+Promise = require('bluebird')
 _ = require('lodash')
 
 {
@@ -246,29 +247,29 @@ describe 'Release Model', ->
 
 		before ->
 			application = @application
-			userId = @application.user.__id
-
-			balena.pine.post
-				resource: 'release'
-				body:
-					belongs_to__application: application.id
-					is_created_by__user: userId
-					commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc'
-					status: 'success'
-					source: 'cloud'
-					composition: {}
-					start_timestamp: 64321
-			.then ->
+			balena.auth.getUserId()
+			.then (userId) ->
 				balena.pine.post
 					resource: 'release'
 					body:
 						belongs_to__application: application.id
 						is_created_by__user: userId
-						commit: 'feb236123bf740d48900c19027d4a02127d4a021'
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc'
 						status: 'success'
 						source: 'cloud'
 						composition: {}
-						start_timestamp: 74321
+						start_timestamp: 64321
+				.then ->
+					balena.pine.post
+						resource: 'release'
+						body:
+							belongs_to__application: application.id
+							is_created_by__user: userId
+							commit: 'feb236123bf740d48900c19027d4a02127d4a021'
+							status: 'success'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 74321
 
 		describe 'balena.models.release.get()', ->
 
@@ -307,41 +308,36 @@ describe 'Release Model', ->
 			givenMulticontainerApplication(before)
 
 			before ->
-				application = @application
-				userId = @application.user.__id
-
-				balena.pine.post
-					resource: 'release'
-					body:
-						belongs_to__application: application.id
-						is_created_by__user: userId
-						commit: 'errored-then-fixed-release-commit'
-						status: 'error'
-						source: 'cloud'
-						composition: {}
-						start_timestamp: 64321
-				.then ->
-					balena.pine.post
-						resource: 'release'
-						body:
-							belongs_to__application: application.id
+				balena.auth.getUserId()
+				.then (userId) =>
+					Promise.mapSeries [
+							belongs_to__application: @application.id
+							is_created_by__user: userId
+							commit: 'errored-then-fixed-release-commit'
+							status: 'error'
+							source: 'cloud'
+							composition: {}
+							start_timestamp: 64321
+						,
+							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'errored-then-fixed-release-commit'
 							status: 'success'
 							source: 'cloud'
 							composition: {}
 							start_timestamp: 74321
-				.then ->
-					balena.pine.post
-						resource: 'release'
-						body:
-							belongs_to__application: application.id
+						,
+							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'failed-release-commit'
 							status: 'failed'
 							source: 'cloud'
 							composition: {}
 							start_timestamp: 84321
+					], (body) ->
+						balena.pine.post
+							resource: 'release'
+							body: body
 
 			[
 				'id'

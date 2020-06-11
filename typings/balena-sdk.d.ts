@@ -21,6 +21,9 @@ declare namespace BalenaSdk {
 	 * When expanded hold an array with a single element.
 	 */
 	type NavigationResource<T = WithId> = Pine.NavigationResource<T>;
+	type OptionalNavigationResource<T = WithId> = Pine.OptionalNavigationResource<
+		T
+	>;
 	/**
 	 * When expanded holds an array, otherwise the property is not present.
 	 * Selecting is not suggested,
@@ -29,14 +32,14 @@ declare namespace BalenaSdk {
 	type ReverseNavigationResource<T = WithId> = Pine.ReverseNavigationResource<
 		T
 	>;
-	type PineFilterFor<T> = Pine.Filter<T>;
-	type PineExpandFor<T> = Pine.Expand<T>;
-	type PineOptions = Pine.PineOptions;
-	type PineOptionsFor<T> = Pine.PineOptionsFor<T>;
+	type PineFilter<T> = Pine.Filter<T>;
+	type PineExpand<T> = Pine.Expand<T>;
+	type PineOptions<T> = Pine.ODataOptions<T>;
+	type PineOptionsWithSelect<T> = Pine.ODataOptionsWithSelect<T>;
+	type PineOptionsWithFilter<T> = Pine.ODataOptionsWithFilter<T>;
 	type PineSubmitBody<T> = Pine.SubmitBody<T>;
-	type PineParams = Pine.PineParams;
-	type PineParamsFor<T> = Pine.PineParamsFor<T>;
-	type PineParamsWithIdFor<T> = Pine.PineParamsWithIdFor<T>;
+	type PineParams<T> = Pine.ParamsObj<T>;
+	type PineParamsWithId<T> = Pine.ParamsObjWithId<T>;
 	type PineSelectableProps<T> = Pine.SelectableProps<T>;
 	type PineExpandableProps<T> = Pine.ExpandableProps<T>;
 
@@ -47,6 +50,7 @@ declare namespace BalenaSdk {
 		responseError?(error: Error): Promise<any>;
 	}
 
+	/* types for the /config endppoint */
 	interface Config {
 		deployment: string | null;
 		deviceUrlsBase: string;
@@ -62,13 +66,100 @@ declare namespace BalenaSdk {
 		mixpanelToken?: string;
 		intercomAppId?: string;
 		recurlyPublicKey?: string;
-		deviceTypes: DeviceType[];
+		deviceTypes: DeviceTypeJson.DeviceType[];
 		DEVICE_ONLINE_ICON: string;
 		DEVICE_OFFLINE_ICON: string;
 		signupCodeRequired: boolean;
 		supportedSocialProviders: string[];
 	}
 
+	interface GaConfig {
+		site: string;
+		id: string;
+	}
+
+	/* types for the /device-types/v1 endppoints */
+	export namespace DeviceTypeJson {
+		interface DeviceType {
+			slug: string;
+			name: string;
+			aliases: string[];
+
+			arch: string;
+			state?: string;
+			community?: boolean;
+			private?: boolean;
+
+			isDependent?: boolean;
+			imageDownloadAlerts?: DeviceTypeDownloadAlert[];
+			instructions?: string[] | DeviceTypeInstructions;
+			gettingStartedLink?: string | DeviceTypeGettingStartedLink;
+			stateInstructions?: { [key: string]: string[] };
+			options?: DeviceTypeOptions[];
+			initialization?: {
+				options?: DeviceInitializationOptions[];
+				operations: Array<{
+					command: string;
+				}>;
+			};
+			supportsBlink?: boolean;
+			yocto: {
+				fstype?: string;
+				deployArtifact: string;
+			};
+			/** Holds the latest balenaOS version */
+			buildId?: string;
+			logoUrl?: string;
+		}
+
+		interface DeviceTypeDownloadAlert {
+			type: string;
+			message: string;
+		}
+
+		interface DeviceTypeInstructions {
+			linux: string[];
+			osx: string[];
+			windows: string[];
+		}
+
+		interface DeviceTypeGettingStartedLink {
+			linux: string;
+			osx: string;
+			windows: string;
+			[key: string]: string;
+		}
+
+		interface DeviceTypeOptions {
+			options: DeviceTypeOptionsGroup[];
+			collapsed: boolean;
+			isCollapsible: boolean;
+			isGroup: boolean;
+			message: string;
+			name: string;
+		}
+
+		interface DeviceInitializationOptions {
+			message: string;
+			type: string;
+			name: string;
+		}
+
+		interface DeviceTypeOptionsGroup {
+			default: number | string;
+			message: string;
+			name: string;
+			type: string;
+			min?: number;
+			max?: number;
+			hidden?: boolean;
+			when?: Dictionary<number | string | boolean>;
+			choices?: string[] | number[];
+			choicesLabels?: Dictionary<string>;
+		}
+	}
+
+	/* types for the DeviceWithServiceDetails objects */
 	interface CurrentService {
 		id: number;
 		image_id: number;
@@ -100,87 +191,29 @@ declare namespace BalenaSdk {
 		current_gateway_downloads: CurrentGatewayDownload[];
 	}
 
-	interface GaConfig {
-		site: string;
-		id: string;
-	}
-
-	interface DeviceType {
-		slug: string;
+	interface Organization {
+		id: number;
+		created_at: string;
 		name: string;
-		aliases: string[];
+		handle: string;
 
-		arch: string;
-		state?: string;
-		community?: boolean;
-		private?: boolean;
-
-		isDependent?: boolean;
-		imageDownloadAlerts?: DeviceTypeDownloadAlert[];
-		instructions?: string[] | DeviceTypeInstructions;
-		gettingStartedLink?: string | DeviceTypeGettingStartedLink;
-		stateInstructions?: { [key: string]: string[] };
-		options?: DeviceTypeOptions[];
-		initialization?: {
-			options?: DeviceInitializationOptions[];
-			operations: Array<{
-				command: string;
-			}>;
-		};
-		supportsBlink?: boolean;
-		yocto: {
-			fstype?: string;
-			deployArtifact: string;
-		};
-		/** Holds the latest balenaOS version */
-		buildId?: string;
-		logoUrl?: string;
+		application: ReverseNavigationResource<Application>;
+		/** includes__organization_membership */
+		organization_membership: ReverseNavigationResource<OrganizationMembership>;
+		owns__team: ReverseNavigationResource<Team>;
 	}
 
-	interface DeviceTypeDownloadAlert {
-		type: string;
-		message: string;
-	}
-
-	interface DeviceTypeInstructions {
-		linux: string[];
-		osx: string[];
-		windows: string[];
-	}
-
-	interface DeviceTypeGettingStartedLink {
-		linux: string;
-		osx: string;
-		windows: string;
-		[key: string]: string;
-	}
-
-	interface DeviceTypeOptions {
-		options: DeviceTypeOptionsGroup[];
-		collapsed: boolean;
-		isCollapsible: boolean;
-		isGroup: boolean;
-		message: string;
+	interface Team {
+		id: number;
+		created_at: string;
 		name: string;
-	}
 
-	interface DeviceInitializationOptions {
-		message: string;
-		type: string;
-		name: string;
-	}
+		belongs_to__organization: NavigationResource<Organization>;
 
-	interface DeviceTypeOptionsGroup {
-		default: number | string;
-		message: string;
-		name: string;
-		type: string;
-		min?: number;
-		max?: number;
-		hidden?: boolean;
-		when?: Dictionary<number | string | boolean>;
-		choices?: string[] | number[];
-		choicesLabels?: Dictionary<string>;
+		/** includes__user */
+		team_membership: ReverseNavigationResource<TeamMembership>;
+		/** grants_access_to__application */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface SocialServiceAccount {
@@ -210,14 +243,48 @@ declare namespace BalenaSdk {
 		twoFactorRequired?: boolean;
 		username: string;
 
-		application: ReverseNavigationResource<Application>;
+		/** includes__organization_membership */
+		organization_membership: ReverseNavigationResource<OrganizationMembership>;
+		/** user_application_membership */
+		user__is_member_of__application: ReverseNavigationResource<
+			ApplicationMembership
+		>;
+		/** is_member_of__team */
+		team_membership: ReverseNavigationResource<TeamMembership>;
 		creates__release: ReverseNavigationResource<Release>;
 		owns__device: ReverseNavigationResource<Device>;
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
-		>;
 		// this is what the api route returns
 		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
+	}
+
+	type OrganizationMembershipRoles = 'administrator' | 'member';
+
+	interface OrganizationMembershipRole {
+		id: number;
+		name: OrganizationMembershipRoles;
+	}
+
+	/** organization_membership */
+	interface OrganizationMembership {
+		id: number;
+		created_at: string;
+
+		user: NavigationResource<User>;
+		/** organization */
+		is_member_of__organization: NavigationResource<Organization>;
+		organization_membership_role: NavigationResource<
+			OrganizationMembershipRole
+		>;
+	}
+
+	/** team_membership */
+	interface TeamMembership {
+		id: number;
+		created_at: string;
+
+		user: NavigationResource<User>;
+		/** team */
+		is_member_of__team: NavigationResource<Team>;
 	}
 
 	interface ApiKey {
@@ -233,9 +300,7 @@ declare namespace BalenaSdk {
 		id: number;
 		created_at: string;
 		app_name: string;
-		device_type: string;
 		slug: string;
-		commit: string;
 		is_accessible_by_support_until__date: string;
 		is_host: boolean;
 		should_track_latest_release: boolean;
@@ -243,8 +308,10 @@ declare namespace BalenaSdk {
 		is_archived: boolean;
 
 		application_type: NavigationResource<ApplicationType>;
-		user: NavigationResource<User>;
-		depends_on__application: NavigationResource<Application>;
+		is_for__device_type: NavigationResource<DeviceType>;
+		depends_on__application: OptionalNavigationResource<Application>;
+		organization: NavigationResource<Organization>;
+		should_be_running__release: OptionalNavigationResource<Release>;
 
 		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
 		application_environment_variable: ReverseNavigationResource<
@@ -254,16 +321,12 @@ declare namespace BalenaSdk {
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
 		is_depended_on_by__application: ReverseNavigationResource<Application>;
+		/** includes__user */
 		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMember
+			ApplicationMembership
 		>;
-	}
-
-	interface ApplicationMember {
-		id: number;
-		application_membership_role: NavigationResource<ApplicationMembershipRole>;
-		is_member_of__application: NavigationResource<Application>;
-		user: NavigationResource<User>;
+		/** is_accessible_by__team */
+		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 	}
 
 	interface Invitee {
@@ -284,13 +347,8 @@ declare namespace BalenaSdk {
 
 	interface ApplicationInviteOptions {
 		invitee: string;
-		roleName?: string;
+		roleName?: ApplicationMembershipRoles;
 		message?: string;
-	}
-
-	interface ApplicationMembershipRole {
-		id: number;
-		name: string;
 	}
 
 	interface ApplicationType {
@@ -306,6 +364,31 @@ declare namespace BalenaSdk {
 		needs__os_version_range: string | null;
 		maximum_device_count: number | null;
 		is_host_os: boolean;
+	}
+
+	type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
+
+	interface ApplicationMembershipRole {
+		id: number;
+		name: ApplicationMembershipRoles;
+	}
+
+	/** user__is_member_of__application */
+	interface ApplicationMembership {
+		id: number;
+		user: NavigationResource<User>;
+		/** application */
+		is_member_of__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
+	}
+
+	/** team_application_access */
+	interface TeamApplicationAccess {
+		id: number;
+		team: NavigationResource<Team>;
+		/** application */
+		grants_access_to__application: NavigationResource<Application>;
+		application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	}
 
 	type ReleaseStatus =
@@ -332,13 +415,16 @@ declare namespace BalenaSdk {
 		update_timestamp: string | null;
 		end_timestamp: string;
 
-		is_created_by__user: NavigationResource<User>;
+		is_created_by__user: OptionalNavigationResource<User>;
 		belongs_to__application: NavigationResource<Application>;
 
 		contains__image: ReverseNavigationResource<{
 			id: number;
 			image: NavigationResource<Image>;
 		}>;
+		should_be_running_on__application: ReverseNavigationResource<Application>;
+		is_running_on__device: ReverseNavigationResource<Device>;
+		should_be_running_on__device: ReverseNavigationResource<Device>;
 		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
@@ -465,22 +551,18 @@ declare namespace BalenaSdk {
 	}
 
 	interface Device {
-		app_name: string;
+		id: number;
 		created_at: string;
 		custom_latitude?: string;
 		custom_longitude?: string;
 		device_name: string;
-		device_type: string;
 		download_progress?: number;
-		has_dependent: boolean;
-		id: number;
 		ip_address: string | null;
 		mac_address: string | null;
 		is_accessible_by_support_until__date: string;
 		is_connected_to_vpn: boolean;
 		is_in_local_mode?: boolean;
 		is_locked_until__date: string;
-		is_on__commit: string;
 		is_web_accessible: boolean;
 		is_active: boolean;
 		is_online: boolean;
@@ -501,24 +583,51 @@ declare namespace BalenaSdk {
 		supervisor_version: string;
 		uuid: string;
 		vpn_address: string | null;
-		should_be_managed_by__supervisor_release: number;
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 		/** This is a computed term */
 		overall_status: DeviceOverallStatus.DeviceOverallStatus;
 		/** This is a computed term */
 		overall_progress: number | null;
 
+		is_of__device_type: NavigationResource<DeviceType>;
+		// the schema has this as a nullable, but for simplicity we have it as non-optional
 		belongs_to__application: NavigationResource<Application>;
-		belongs_to__user: NavigationResource<User>;
-		should_be_running__release: NavigationResource<Release>;
-		is_managed_by__service__instance: NavigationResource<ServiceInstance>;
-		is_managed_by__device: NavigationResource<Device>;
+		belongs_to__user: OptionalNavigationResource<User>;
+		is_running__release: OptionalNavigationResource<Release>;
+		should_be_running__release: OptionalNavigationResource<Release>;
+		is_managed_by__service_instance: OptionalNavigationResource<
+			ServiceInstance
+		>;
+		is_managed_by__device: OptionalNavigationResource<Device>;
+		should_be_managed_by__supervisor_release: OptionalNavigationResource<
+			SupervisorRelease
+		>;
 
 		device_config_variable: ReverseNavigationResource<DeviceVariable>;
 		device_environment_variable: ReverseNavigationResource<DeviceVariable>;
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
 		service_install: ReverseNavigationResource<ServiceInstall>;
+	}
+
+	/** device_type */
+	interface DeviceType {
+		id: number;
+		slug: string;
+		name: string;
+		is_private: string;
+
+		is_accessible_privately_by__organization: ReverseNavigationResource<
+			Organization
+		>;
+		describes_device: ReverseNavigationResource<Device>;
+	}
+
+	/** organization__has_private_access_to__device_type */
+	interface OrganizationPrivateDeviceTypeAccess {
+		id: number;
+		organization: NavigationResource<Organization>;
+		has_private_access_to__device_type: NavigationResource<DeviceType>;
 	}
 
 	interface DeviceWithImageInstalls extends Device {
@@ -530,10 +639,11 @@ declare namespace BalenaSdk {
 		created_at: string;
 		id: number;
 		supervisor_version: string;
-		device_type: string;
 		image_name: string;
 		is_public: boolean;
 		note?: string;
+
+		is_for__device_type: NavigationResource<DeviceType>;
 	}
 
 	interface SupervisorStatus {
@@ -664,8 +774,8 @@ declare namespace BalenaSdk {
 		id: number;
 		should_be_running: boolean;
 		device: NavigationResource<Device>;
+		/** service */
 		installs__service: NavigationResource<Service>;
-		service: Service[];
 		application: NavigationResource<Application>;
 
 		device_service_environment_variable: ReverseNavigationResource<
@@ -822,14 +932,15 @@ declare namespace BalenaSdk {
 					applicationType?: string;
 					deviceType: string;
 					parent?: number | string;
+					organization: number | string;
 				}): Promise<Application>;
 				get(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<Application>;
 				getWithDeviceServiceDetails(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<
 					Application & {
 						owns__device: Array<
@@ -840,11 +951,11 @@ declare namespace BalenaSdk {
 				getAppByOwner(
 					appName: string,
 					owner: string,
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<Application>;
-				getAll(options?: PineOptionsFor<Application>): Promise<Application[]>;
+				getAll(options?: PineOptions<Application>): Promise<Application[]>;
 				getAllWithDeviceServiceDetails(
-					options?: PineOptionsFor<Application>,
+					options?: PineOptions<Application>,
 				): Promise<
 					Array<
 						Application & {
@@ -879,10 +990,10 @@ declare namespace BalenaSdk {
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationTag>,
+						options?: PineOptions<ApplicationTag>,
 					): Promise<ApplicationTag[]>;
 					getAll(
-						options?: PineOptionsFor<ApplicationTag>,
+						options?: PineOptions<ApplicationTag>,
 					): Promise<ApplicationTag[]>;
 					set(
 						nameOrId: string | number,
@@ -894,7 +1005,7 @@ declare namespace BalenaSdk {
 				configVar: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationVariable>,
+						options?: PineOptions<ApplicationVariable>,
 					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
@@ -910,7 +1021,7 @@ declare namespace BalenaSdk {
 				envVar: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ApplicationVariable>,
+						options?: PineOptions<ApplicationVariable>,
 					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
@@ -930,10 +1041,10 @@ declare namespace BalenaSdk {
 					) => Promise<ApplicationInvite>;
 					getAllByApplication: (
 						nameOrSlugOrId: string | number,
-						options?: PineOptionsFor<ApplicationInvite>,
+						options?: PineOptions<ApplicationInvite>,
 					) => Promise<ApplicationInvite[]>;
 					getAll: (
-						options?: PineOptionsFor<ApplicationInvite>,
+						options?: PineOptions<ApplicationInvite>,
 					) => Promise<ApplicationInvite>;
 					accept: (invitationToken: string) => Promise<void>;
 					revoke: (id: number) => Promise<void>;
@@ -941,7 +1052,7 @@ declare namespace BalenaSdk {
 			};
 			apiKey: {
 				create: (name: string, description?: string | null) => Promise<string>;
-				getAll: (options?: PineOptionsFor<ApiKey>) => Promise<ApiKey[]>;
+				getAll: (options?: PineOptions<ApiKey>) => Promise<ApiKey[]>;
 				update: (
 					id: number,
 					apiKeyInfo: { name?: string; description?: string | null },
@@ -951,21 +1062,21 @@ declare namespace BalenaSdk {
 			release: {
 				get(
 					commitOrId: string | number,
-					options?: PineOptionsFor<Release>,
+					options?: PineOptions<Release>,
 				): Promise<Release>;
 				getAllByApplication(
 					nameOrSlugOrId: string | number,
-					options?: PineOptionsFor<Release>,
+					options?: PineOptions<Release>,
 				): Promise<Release[]>;
 				getLatestByApplication(
 					nameOrSlugOrId: string | number,
-					options?: PineOptionsFor<Release>,
+					options?: PineOptions<Release>,
 				): Promise<Release>;
 				getWithImageDetails(
 					commitOrId: string | number,
 					options?: {
-						release?: PineOptionsFor<Release>;
-						image?: PineOptionsFor<Image>;
+						release?: PineOptions<Release>;
+						image?: PineOptions<Image>;
 					},
 				): Promise<ReleaseWithImageDetails>;
 				createFromUrl(
@@ -975,13 +1086,13 @@ declare namespace BalenaSdk {
 				tags: {
 					getAllByApplication(
 						nameOrSlugOrId: string | number,
-						options?: PineOptionsFor<ReleaseTag>,
+						options?: PineOptions<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
 					getAllByRelease(
 						commitOrId: string | number,
-						options?: PineOptionsFor<ReleaseTag>,
+						options?: PineOptions<ReleaseTag>,
 					): Promise<ReleaseTag[]>;
-					getAll(options?: PineOptionsFor<ReleaseTag>): Promise<ReleaseTag[]>;
+					getAll(options?: PineOptions<ReleaseTag>): Promise<ReleaseTag[]>;
 					set(
 						commitOrReleaseId: string | number,
 						tagKey: string,
@@ -1008,24 +1119,24 @@ declare namespace BalenaSdk {
 			device: {
 				get(
 					uuidOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device>;
 				getByName(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device[]>;
 				getWithServiceDetails(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
-				getAll(options?: PineOptionsFor<Device>): Promise<Device[]>;
+				getAll(options?: PineOptions<Device>): Promise<Device[]>;
 				getAllByApplication(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device[]>;
 				getAllByParentDevice(
 					parentUuidOrId: string | number,
-					options?: PineOptionsFor<Device>,
+					options?: PineOptions<Device>,
 				): Promise<Device[]>;
 				getName(uuidOrId: string | number): Promise<string>;
 				getApplicationName(uuidOrId: string | number): Promise<string>;
@@ -1044,10 +1155,12 @@ declare namespace BalenaSdk {
 				getMACAddressess(uuidOrId: string | number): Promise<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Promise<string[]>;
-				getManifestBySlug(slugOrName: string): Promise<DeviceType>;
+				getManifestBySlug(
+					slugOrName: string,
+				): Promise<DeviceTypeJson.DeviceType>;
 				getManifestByApplication(
 					nameOrId: string | number,
-				): Promise<DeviceType>;
+				): Promise<DeviceTypeJson.DeviceType>;
 				move(
 					uuidOrId: string | number,
 					applicationNameOrId: string | number,
@@ -1146,13 +1259,13 @@ declare namespace BalenaSdk {
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceTag>,
+						options?: PineOptions<DeviceTag>,
 					): Promise<DeviceTag[]>;
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceTag>,
+						options?: PineOptions<DeviceTag>,
 					): Promise<DeviceTag[]>;
-					getAll(options?: PineOptionsFor<DeviceTag>): Promise<DeviceTag[]>;
+					getAll(options?: PineOptions<DeviceTag>): Promise<DeviceTag[]>;
 					set(
 						uuidOrId: string | number,
 						tagKey: string,
@@ -1163,11 +1276,11 @@ declare namespace BalenaSdk {
 				configVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
@@ -1183,11 +1296,11 @@ declare namespace BalenaSdk {
 				envVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceVariable>,
+						options?: PineOptions<DeviceVariable>,
 					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
@@ -1203,11 +1316,11 @@ declare namespace BalenaSdk {
 				serviceVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
-						options?: PineOptionsFor<DeviceServiceEnvironmentVariable>,
+						options?: PineOptions<DeviceServiceEnvironmentVariable>,
 					): Promise<DeviceServiceEnvironmentVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<DeviceServiceEnvironmentVariable>,
+						options?: PineOptions<DeviceServiceEnvironmentVariable>,
 					): Promise<DeviceServiceEnvironmentVariable[]>;
 					set(
 						uuidOrId: string | number,
@@ -1231,16 +1344,16 @@ declare namespace BalenaSdk {
 			service: {
 				getAllByApplication(
 					nameOrId: string | number,
-					options?: PineOptionsFor<Service>,
+					options?: PineOptions<Service>,
 				): Promise<Service[]>;
 				var: {
 					getAllByService(
 						id: number,
-						options?: PineOptionsFor<ServiceEnvironmentVariable>,
+						options?: PineOptions<ServiceEnvironmentVariable>,
 					): Promise<ServiceEnvironmentVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
-						options?: PineOptionsFor<ServiceEnvironmentVariable>,
+						options?: PineOptions<ServiceEnvironmentVariable>,
 					): Promise<ServiceEnvironmentVariable[]>;
 					set(id: number, key: string, value: string): Promise<void>;
 					get(id: number, key: string): Promise<string | undefined>;
@@ -1249,20 +1362,38 @@ declare namespace BalenaSdk {
 			};
 			config: {
 				getAll: () => Promise<Config>;
-				getDeviceTypes: () => Promise<DeviceType[]>;
+				getDeviceTypes: () => Promise<DeviceTypeJson.DeviceType[]>;
 				getDeviceOptions(
 					deviceType: string,
-				): Promise<Array<DeviceTypeOptions | DeviceInitializationOptions>>;
+				): Promise<
+					Array<
+						| DeviceTypeJson.DeviceTypeOptions
+						| DeviceTypeJson.DeviceInitializationOptions
+					>
+				>;
 			};
 			image: {
-				get(id: number, options?: PineOptionsFor<Image>): Promise<Image>;
+				get(id: number, options?: PineOptions<Image>): Promise<Image>;
 				getLogs(id: number): Promise<string>;
 			};
 			key: {
-				getAll(options?: PineOptionsFor<SSHKey>): Promise<SSHKey[]>;
+				getAll(options?: PineOptions<SSHKey>): Promise<SSHKey[]>;
 				get(id: number): Promise<SSHKey>;
 				remove(id: number): Promise<string>;
 				create(title: string, key: string): Promise<SSHKey>;
+			};
+			organization: {
+				create: (
+					options: PineSubmitBody<Organization>,
+				) => Promise<Organization>;
+				getAll: (
+					options?: PineOptions<Organization>,
+				) => Promise<Organization[]>;
+				get: (
+					handleOrId: string | number,
+					options?: PineOptions<Organization>,
+				) => Promise<Organization>;
+				remove: (handleOrId: string | number) => Promise<void>;
 			};
 			os: {
 				getConfig(
@@ -1310,10 +1441,6 @@ declare namespace BalenaSdk {
 
 	interface SdkOptions {
 		apiUrl?: string;
-		/**
-		 * @deprecated Use balena.auth.loginWithToken(apiKey) instead
-		 */
-		apiKey?: string;
 		builderUrl?: string;
 		dataDirectory?: string;
 		isBrowser?: boolean;

@@ -1,12 +1,6 @@
 import * as errors from 'balena-errors';
 import * as Pine from '../../typings/pinejs-client-core';
 
-export interface ErrorResponse {
-	code: string;
-	statusCode?: number;
-	body?: string;
-}
-
 export const notImplemented = () => {
 	throw new Error('The method is not implemented.');
 };
@@ -45,13 +39,13 @@ export const isNoApplicationForKeyResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 500) &&
 	err.body === 'No application found to associate with the api key';
 
-export const isUniqueKeyViolationResponse = ({ code, body }: ErrorResponse) =>
-	code === 'BalenaRequestError' &&
-	!!body &&
-	// api translated response
-	(body === 'Unique key constraint violated' ||
-		// pine response (tested on pine 10)
-		/^".*" must be unique\.$/.test(body));
+export const treatAsMissingOrganization = (handleOrId: string | number) => (
+	err: Error,
+) => {
+	const replacementErr = new errors.BalenaOrganizationNotFound(handleOrId);
+	replacementErr.stack = err.stack || '';
+	throw replacementErr;
+};
 
 export const treatAsMissingApplication = (nameOrId: string | number) => (
 	err: Error,
@@ -78,10 +72,18 @@ export const treatAsMissingDevice = (uuidOrId: string | number) => (
 //   * That means $expands within expands are combined
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
-export const mergePineOptions = <R extends {}>(
-	defaults: Pine.PineOptionsFor<R>,
-	extras: Pine.PineOptionsFor<R> | undefined,
-): Pine.PineOptionsFor<R> => {
+export function mergePineOptions<R extends {}>(
+	defaults: Pine.ODataOptionsWithSelect<R>,
+	extras: Pine.ODataOptions<R> | undefined,
+): Pine.ODataOptionsWithSelect<R>;
+export function mergePineOptions<R extends {}>(
+	defaults: Pine.ODataOptions<R>,
+	extras: Pine.ODataOptions<R> | undefined,
+): Pine.ODataOptions<R>;
+export function mergePineOptions<R extends {}>(
+	defaults: Pine.ODataOptions<R>,
+	extras: Pine.ODataOptions<R> | undefined,
+): Pine.ODataOptions<R> {
 	if (!extras) {
 		return defaults;
 	}
@@ -134,7 +136,7 @@ export const mergePineOptions = <R extends {}>(
 	}
 
 	return result;
-};
+}
 
 const mergeExpandOptions = <T>(
 	defaultExpand: Pine.Expand<T> | undefined,
@@ -185,7 +187,7 @@ const mergeExpandOptions = <T>(
 const convertExpandToObject = <T extends {}>(
 	expandOption: Pine.Expand<T> | undefined,
 	cloneIfNeeded = false,
-): Pine.ResourceExpandFor<T> => {
+): Pine.ResourceExpand<T> => {
 	if (expandOption == null) {
 		return {};
 	}
@@ -193,7 +195,7 @@ const convertExpandToObject = <T extends {}>(
 	if (typeof expandOption === 'string') {
 		return {
 			[expandOption]: {},
-		} as Pine.ResourceExpandFor<T>;
+		} as Pine.ResourceExpand<T>;
 	}
 
 	if (Array.isArray(expandOption)) {
@@ -223,7 +225,7 @@ const convertExpandToObject = <T extends {}>(
 	}
 
 	if (cloneIfNeeded) {
-		return { ...(expandOption as Pine.ResourceExpandFor<T>) };
+		return { ...(expandOption as Pine.ResourceExpand<T>) };
 	}
 
 	return expandOption;

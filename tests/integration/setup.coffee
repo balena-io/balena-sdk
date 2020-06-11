@@ -6,6 +6,8 @@ chai.use(require('chai-samsam'))
 
 exports.IS_BROWSER = IS_BROWSER = window?
 
+{ getInitialOrganization } = require('./utils')
+
 if IS_BROWSER
 	require('js-polyfills/es6')
 	getSdk = window.balenaSdk
@@ -28,7 +30,6 @@ else
 		dataDirectory: settings.get('dataDirectory')
 
 _.assign opts,
-	apiKey: null
 	isBrowser: IS_BROWSER,
 	retries: 3
 
@@ -75,9 +76,13 @@ exports.resetUser = ->
 		Promise.all [
 			balena.pine.delete
 				resource: 'application'
+				options:
+					$filter: 1: 1
 
 			balena.pine.delete
 				resource: 'user__has__public_key'
+				options:
+					$filter: 1: 1
 
 			balena.pine.delete
 				resource: 'api_key'
@@ -129,20 +134,40 @@ exports.loginPaidUser = ->
 resetApplications = ->
 	balena.pine.delete
 		resource: 'application'
+		options:
+			$filter: 1: 1
+
+exports.givenInitialOrganization = (beforeFn) ->
+	beforeFn ->
+		getInitialOrganization().then (initialOrg) =>
+			@initialOrg = initialOrg
 
 exports.givenAnApplication = (beforeFn) ->
+	exports.givenInitialOrganization(beforeFn)
+
 	beforeFn ->
 		# calling this.skip() doesn't trigger afterEach,
 		# so we need to reset in here as well
 		# See: https://github.com/mochajs/mocha/issues/3740
 		resetApplications()
-		.then ->
+		.then =>
 			balena.models.application.create
 				name: 'FooBar'
 				applicationType: 'microservices-starter'
 				deviceType: 'raspberry-pi'
-		.then (application) =>
-			@application = application
+				organization: @initialOrg.id
+		.then (@application) =>
+			chai.expect(@application.is_for__device_type).to.be.an('object')
+			.that.has.property('__id').that.is.a('number')
+
+			balena.pine.get
+				resource: 'device_type'
+				id: @application.is_for__device_type.__id
+				options:
+					$select: 'slug'
+		.then (@applicationDeviceType) =>
+			chai.expect(@applicationDeviceType).to.be.an('object')
+			.that.has.property('slug').that.is.a('string')
 
 	afterFn = if beforeFn == beforeEach then afterEach else after
 	afterFn resetApplications
@@ -150,6 +175,8 @@ exports.givenAnApplication = (beforeFn) ->
 resetDevices = ->
 	balena.pine.delete
 		resource: 'device'
+		options:
+			$filter: 1: 1
 
 exports.givenADevice = (beforeFn, extraDeviceProps) ->
 	beforeFn ->
@@ -167,7 +194,7 @@ exports.givenADevice = (beforeFn, extraDeviceProps) ->
 			balena.pine.patch
 				resource: 'device'
 				body:
-					is_on__commit: @currentRelease.commit
+					is_running__release: @currentRelease.id
 				options:
 					$filter:
 						uuid: deviceInfo.uuid
@@ -251,9 +278,7 @@ exports.givenMulticontainerApplication = (beforeFn) ->
 	exports.givenAnApplication(beforeFn)
 
 	beforeFn ->
-		Promise.try =>
-			userId = @application.user.__id
-
+		balena.auth.getUserId().then (userId) =>
 			Promise.all [
 				# Register web & DB services
 				balena.pine.post

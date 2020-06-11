@@ -10,6 +10,7 @@ Promise = require('bluebird')
 	givenAnApplicationWithADevice
 	givenLoggedInUser
 	givenMulticontainerApplication
+	givenInitialOrganization
 	sdkOpts
 	IS_BROWSER
 } = require('../setup')
@@ -141,7 +142,7 @@ describe 'Device Model', ->
 
 					it "should return the appropriate manifest for an application #{prop}", ->
 						balena.models.device.getManifestByApplication(@application[prop]).then (manifest) =>
-							m.chai.expect(manifest.slug).to.equal(@application.device_type)
+							m.chai.expect(manifest.slug).to.equal(@applicationDeviceType.slug)
 
 				it 'should be rejected if the application name does not exist', ->
 					promise = balena.models.device.getManifestByApplication('HelloWorldApp')
@@ -411,13 +412,16 @@ describe 'Device Model', ->
 
 			describe 'balena.models.device.getAllByParentDevice()', ->
 
+				givenInitialOrganization(before)
+
 				before ->
 					Promise.props
 						userId: balena.auth.getUserId()
 						childApplication: balena.models.application.create
 							name: 'ChildApp'
 							applicationType: 'microservices-starter'
-							deviceType: @application.device_type
+							deviceType: 'generic'
+							organization: @initialOrg.id
 							parent: @application.id
 					.then ({ userId, @childApplication }) =>
 						# We don't use the built-in .register or resin-register-device,
@@ -427,11 +431,11 @@ describe 'Device Model', ->
 							body:
 								belongs_to__user: userId
 								belongs_to__application: @childApplication.id
-								device_type: @childApplication.device_type
+								is_of__device_type: @childApplication.is_for__device_type.__id
 								uuid: balena.models.device.generateUniqueKey()
 								is_managed_by__device: @device.id
-					.then (device) =>
-						@childDevice = device
+					.then (@childDevice) =>
+						return
 
 				after ->
 					balena.models.application.remove 'ChildApp'
@@ -552,7 +556,10 @@ describe 'Device Model', ->
 					latitude: 41.383333
 					longitude: 2.183333
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('41.383333')
 					m.chai.expect(device.custom_longitude).to.equal('2.183333')
@@ -562,7 +569,10 @@ describe 'Device Model', ->
 					latitude: 42.383333
 					longitude: 2.283333
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('42.383333')
 					m.chai.expect(device.custom_longitude).to.equal('2.283333')
@@ -590,14 +600,20 @@ describe 'Device Model', ->
 
 			it 'should be able to unset the location of a device by uuid', ->
 				balena.models.device.unsetCustomLocation(@device.uuid).then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('')
 					m.chai.expect(device.custom_longitude).to.equal('')
 
 			it 'should be able to unset the location of a device by id', ->
 				balena.models.device.unsetCustomLocation(@device.id).then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: [
+						'custom_latitude'
+						'custom_longitude'
+					])
 				.then (device) ->
 					m.chai.expect(device.custom_latitude).to.equal('')
 					m.chai.expect(device.custom_longitude).to.equal('')
@@ -837,7 +853,7 @@ describe 'Device Model', ->
 				expiryTimestamp = Date.now() + 3600 * 1000
 				promise = balena.models.device.grantSupportAccess(@device.id, expiryTimestamp)
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: 'is_accessible_by_support_until__date')
 				.then ({ is_accessible_by_support_until__date }) ->
 					Date.parse(is_accessible_by_support_until__date)
 
@@ -853,7 +869,7 @@ describe 'Device Model', ->
 			it 'should revoke support access', ->
 				balena.models.device.revokeSupportAccess(@device.id)
 				.then =>
-					balena.models.device.get(@device.id)
+					balena.models.device.get(@device.id, $select: 'is_accessible_by_support_until__date')
 				.then ({ is_accessible_by_support_until__date }) ->
 					m.chai.expect(is_accessible_by_support_until__date).to.be.null
 
@@ -1409,7 +1425,8 @@ describe 'Device Model', ->
 						m.chai.expect(deviceDetails).to.deep.match
 							device_name: @device.device_name
 							uuid: @device.uuid
-							is_on__commit: @currentRelease.commit
+							is_running__release:
+								__id: @currentRelease.id
 							current_services:
 								web: [
 									id: @newWebInstall.id
@@ -1683,7 +1700,8 @@ describe 'Device Model', ->
 						m.chai.expect(deviceDetails).to.deep.match
 							device_name: @device.device_name
 							uuid: @device.uuid
-							is_on__commit: @currentRelease.commit
+							is_running__release:
+								__id: @currentRelease.id
 
 						m.chai.expect(Object.keys(deviceDetails.current_services).sort()).to.deep.equal([
 							'__proto__'
@@ -1770,20 +1788,25 @@ describe 'Device Model', ->
 
 	describe 'given three compatible applications and a single device', ->
 
+		givenInitialOrganization(before)
+
 		beforeEach ->
 			Promise.props
 				application1: balena.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
+					organization: @initialOrg.id
 				application2: balena.models.application.create
 					name: 'BarBaz'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
+					organization: @initialOrg.id
 				application3: balena.models.application.create
 					name: 'BazFoo'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi2'
+					organization: @initialOrg.id
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
@@ -1829,16 +1852,20 @@ describe 'Device Model', ->
 
 	describe 'given two incompatible applications and a single device', ->
 
+		givenInitialOrganization(before)
+
 		beforeEach ->
 			Promise.props
 				application1: balena.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi'
+					organization: @initialOrg.id
 				application2: balena.models.application.create
 					name: 'BarBaz'
 					applicationType: 'microservices-starter'
 					deviceType: 'intel-nuc'
+					organization: @initialOrg.id
 			.then (results) =>
 				@application1 = results.application1
 				@application2 = results.application2
@@ -1862,20 +1889,25 @@ describe 'Device Model', ->
 
 	describe 'given applications of different architectures with a device on each', ->
 
+		givenInitialOrganization(before)
+
 		before ->
 			Promise.props
 				rpi: balena.models.application.create
 					name: 'FooBarArmv6'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberry-pi'
+					organization: @initialOrg.id
 				armv7hf: balena.models.application.create
 					name: 'FooBar32'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3'
+					organization: @initialOrg.id
 				aarch64: balena.models.application.create
 					name: 'BarBaz64'
 					applicationType: 'microservices-starter'
 					deviceType: 'raspberrypi3-64'
+					organization: @initialOrg.id
 			.then (apps) =>
 				@apps = apps
 
@@ -2182,7 +2214,7 @@ describe 'Device Model', ->
 				].forEach ([os_version, os_variant]) ->
 					mockDevice = {
 						uuid
-						device_type: 'raspberrypi3'
+						is_of__device_type: [{ slug: 'raspberrypi3' }]
 						is_online: true
 						os_version
 						os_variant
@@ -2201,7 +2233,7 @@ describe 'Device Model', ->
 				].forEach ([os_version, os_variant, target_os_version]) ->
 					mockDevice = {
 						uuid
-						device_type: 'raspberrypi3'
+						is_of__device_type: [{ slug: 'raspberrypi3' }]
 						is_online: false
 						os_version
 						os_variant
@@ -2226,7 +2258,7 @@ describe 'Device Model', ->
 				].forEach ([os_version, os_variant]) ->
 					mockDevice = {
 						uuid
-						device_type: 'raspberrypi3'
+						is_of__device_type: [{ slug: 'raspberrypi3' }]
 						is_online: true
 						os_version
 						os_variant
@@ -2255,7 +2287,7 @@ describe 'Device Model', ->
 				].forEach ([os_version, os_variant]) ->
 					mockDevice = {
 						uuid
-						device_type: 'raspberrypi3'
+						is_of__device_type: [{ slug: 'raspberrypi3' }]
 						is_online: true
 						os_version
 						os_variant
@@ -2286,7 +2318,7 @@ describe 'Device Model', ->
 				].forEach ([os_version, os_variant]) ->
 					mockDevice = {
 						uuid
-						device_type: 'raspberrypi3'
+						is_of__device_type: [{ slug: 'raspberrypi3' }]
 						is_online: true
 						os_version
 						os_variant
@@ -2314,7 +2346,7 @@ describe 'Device Model', ->
 							].forEach ([os_version, os_variant]) ->
 								mockDevice = {
 									uuid
-									device_type
+									is_of__device_type: [{ slug: device_type }]
 									is_online: true
 									os_version
 									os_variant
@@ -2334,7 +2366,7 @@ describe 'Device Model', ->
 							].forEach ([os_version, os_variant]) ->
 								mockDevice = {
 									uuid
-									device_type
+									is_of__device_type: [{ slug: device_type }]
 									is_online: true
 									os_version
 									os_variant
@@ -2354,7 +2386,7 @@ describe 'Device Model', ->
 							].forEach ([os_version, os_variant]) ->
 								mockDevice = {
 									uuid
-									device_type
+									is_of__device_type: [{ slug: device_type }]
 									is_online: true
 									os_version
 									os_variant
@@ -2377,7 +2409,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'raspberrypi3'
+								is_of__device_type: [{ slug: 'raspberrypi3' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2399,7 +2431,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'raspberrypi3'
+								is_of__device_type: [{ slug: 'raspberrypi3' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2425,7 +2457,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'beaglebone-black'
+								is_of__device_type: [{ slug: 'beaglebone-black' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2442,7 +2474,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'beaglebone-black'
+								is_of__device_type: [{ slug: 'beaglebone-black' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2463,7 +2495,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'raspberrypi3'
+								is_of__device_type: [{ slug: 'raspberrypi3' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2505,7 +2537,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'raspberrypi3'
+								is_of__device_type: [{ slug: 'raspberrypi3' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2556,7 +2588,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'jetson-tx2'
+								is_of__device_type: [{ slug: 'jetson-tx2' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2583,7 +2615,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'jetson-tx2'
+								is_of__device_type: [{ slug: 'jetson-tx2' }]
 								is_online: true
 								os_version
 								os_variant
@@ -2602,7 +2634,7 @@ describe 'Device Model', ->
 						].forEach ([os_version, os_variant]) ->
 							mockDevice = {
 								uuid
-								device_type: 'jetson-tx2'
+								is_of__device_type: [{ slug: 'jetson-tx2' }]
 								is_online: true
 								os_version
 								os_variant

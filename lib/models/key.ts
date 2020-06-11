@@ -53,7 +53,7 @@ const getKeyModel = function (
 	 * });
 	 */
 	function getAll(
-		options: BalenaSdk.PineOptionsFor<BalenaSdk.SSHKey> = {},
+		options: BalenaSdk.PineOptions<BalenaSdk.SSHKey> = {},
 	): Promise<BalenaSdk.SSHKey[]> {
 		return pine.get<BalenaSdk.SSHKey>({
 			resource: 'user__has__public_key',
