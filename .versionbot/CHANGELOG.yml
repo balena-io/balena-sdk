@@ -1,4 +1,37 @@
 - commits:
+    - subject: 'models/device: Add a getMACAddresses() method'
+      hash: 7325bc7b7b73bbb59da60a8688d69ee8d03d931e
+      body: ''
+      footer:
+        Resolves: '#912'
+        resolves: '#912'
+        Change-type: minor
+        change-type: minor
+        HQ: 'https://github.com/balena-io/balena/issues/2195'
+        hq: 'https://github.com/balena-io/balena/issues/2195'
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2627'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2627'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add the mac_address field to the device'
+      hash: 77f4129792eb74dc286ca2472b81353ca37a5eca
+      body: ''
+      footer:
+        Resolves: '#912'
+        resolves: '#912'
+        Change-type: minor
+        change-type: minor
+        HQ: 'https://github.com/balena-io/balena/issues/2195'
+        hq: 'https://github.com/balena-io/balena/issues/2195'
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2627'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2627'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 13.8.0
+  date: 2020-06-10T17:56:55.101Z
+- commits:
     - subject: 'typings: Add device last_vpn_event'
       hash: 8c3c1076fc136349eb5676945778741f7faf4aab
       body: ''
