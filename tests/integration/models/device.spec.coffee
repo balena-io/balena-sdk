@@ -390,6 +390,25 @@ describe 'Device Model', ->
 					promise = balena.models.device.getLocalIPAddresses(999999)
 					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
 
+			describe 'balena.models.device.getMACAddresses()', ->
+
+				it 'should be rejected if the device uuid does not exist', ->
+					promise = balena.models.device.getMACAddresses('asdfghjkl')
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: asdfghjkl')
+
+				it 'should be rejected if the device id does not exist', ->
+					promise = balena.models.device.getMACAddresses(999999)
+					m.chai.expect(promise).to.be.rejectedWith('Device not found: 999999')
+
+				[
+					'id',
+					'uuid',
+				].forEach (field) ->
+					it "should retrieve a empty list of mac addresses by #{field}", ->
+						balena.models.device.getMACAddresses(@device[field])
+						.then (result) ->
+							m.chai.expect(result).to.deep.equal([])
+
 			describe 'balena.models.device.getAllByParentDevice()', ->
 
 				before ->
@@ -440,6 +459,25 @@ describe 'Device Model', ->
 					.then ([ childDevice ]) =>
 						m.chai.expect(childDevice.id).to.equal(@childDevice.id)
 						m.chai.expect(childDevice.device_name).to.equal(undefined)
+
+		describe 'balena.models.device.getMACAddresses()', ->
+
+			givenAnApplication(before)
+			givenADevice(before, {
+				mac_address: '00:11:22:33:44:55 66:77:88:99:AA:BB'
+			})
+
+			[
+				'id',
+				'uuid',
+			].forEach (field) ->
+				it "should be able to retrieve the device mac addresses by #{field}", ->
+					balena.models.device.getMACAddresses(@device[field])
+					.then (result) ->
+						m.chai.expect(result).to.deep.equal([
+							'00:11:22:33:44:55'
+							'66:77:88:99:AA:BB'
+						])
 
 		describe 'balena.models.device.remove()', ->
 
