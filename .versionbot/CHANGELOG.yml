@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'appveyor: Increase the node space size'
+      hash: 32358a89c057d71695fe8c6ac4753f26485df86e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Bump balena-config-karma to v3
+      hash: 28bdd073c11b60b209b2128693f487c3522df880
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.0.1
+  date: 2020-06-15T17:17:52.350Z
+- commits:
     - subject: 'typings: Drop the has_dependent field from the Device'
       hash: 3a7cde24c46f46865f59ee4d5915b99556ebcb7f
       body: ''
