@@ -117,6 +117,11 @@ const sdk = getSdk.fromSharedOptions();
                 * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
                 * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
                 * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+            * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
+                * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+                * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+                * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.application.invite) : <code>object</code>
                 * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
                 * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -439,6 +444,11 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
             * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
             * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+        * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
+            * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+            * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+            * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.application.invite) : <code>object</code>
             * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -641,6 +651,11 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(nameOrSlugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
         * [.set(nameOrSlugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
         * [.remove(nameOrSlugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+    * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
+        * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+        * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+        * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.application.invite) : <code>object</code>
         * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -1062,6 +1077,144 @@ balena.models.application.envVar.remove(999999, 'VAR').then(function() {
 **Example**  
 ```js
 balena.models.application.envVar.remove('MyApp', 'VAR', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.buildVar"></a>
+
+##### application.buildVar : <code>object</code>
+**Kind**: static namespace of [<code>application</code>](#balena.models.application)  
+
+* [.buildVar](#balena.models.application.buildVar) : <code>object</code>
+    * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+    * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+    * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+
+<a name="balena.models.application.buildVar.getAllByApplication"></a>
+
+###### buildVar.getAllByApplication(nameOrSlugOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
+**Summary**: Get all build environment variables for an application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - application build environment variables  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.buildVar.getAllByApplication('MyApp').then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.getAllByApplication(999999).then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.getAllByApplication('MyApp', function(error, vars) {
+	if (error) throw error;
+	console.log(vars)
+});
+```
+<a name="balena.models.application.buildVar.get"></a>
+
+###### buildVar.get(nameOrSlugOrId, key) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
+**Summary**: Get the value of a specific build environment variable  
+**Access**: public  
+**Fulfil**: <code>String\|undefined</code> - the build environment variable value (or undefined)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| key | <code>String</code> | build environment variable name |
+
+**Example**  
+```js
+balena.models.application.buildVar.get('MyApp', 'VAR').then(function(value) {
+	console.log(value);
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.get(999999, 'VAR').then(function(value) {
+	console.log(value);
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.get('MyApp', 'VAR', function(error, value) {
+	if (error) throw error;
+	console.log(value)
+});
+```
+<a name="balena.models.application.buildVar.set"></a>
+
+###### buildVar.set(nameOrSlugOrId, key, value) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
+**Summary**: Set the value of a specific build environment variable  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| key | <code>String</code> | build environment variable name |
+| value | <code>String</code> | build environment variable value |
+
+**Example**  
+```js
+balena.models.application.buildVar.set('MyApp', 'VAR', 'newvalue').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.set(999999, 'VAR', 'newvalue').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.set('MyApp', 'VAR', 'newvalue', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.buildVar.remove"></a>
+
+###### buildVar.remove(nameOrSlugOrId, key) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
+**Summary**: Clear the value of a specific build environment variable  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| key | <code>String</code> | build environment variable name |
+
+**Example**  
+```js
+balena.models.application.buildVar.remove('MyApp', 'VAR').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.remove(999999, 'VAR').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.application.buildVar.remove('MyApp', 'VAR', function(error) {
 	if (error) throw error;
 	...
 });

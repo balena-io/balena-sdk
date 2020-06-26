@@ -467,6 +467,22 @@ declare namespace BalenaSdk {
 					): Promise<string | undefined>;
 					remove(nameOrId: string | number, key: string): Promise<void>;
 				};
+				buildVar: {
+					getAllByApplication(
+						nameOrId: string | number,
+						options?: PineOptions<BuildVariable>,
+					): Promise<BuildVariable[]>;
+					set(
+						nameOrId: string | number,
+						key: string,
+						value: string,
+					): Promise<void>;
+					get(
+						nameOrId: string | number,
+						key: string,
+					): Promise<string | undefined>;
+					remove(nameOrId: string | number, key: string): Promise<void>;
+				};
 				invite: {
 					create: (
 						nameOrSlugOrId: string | number,
