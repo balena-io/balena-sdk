@@ -9,6 +9,7 @@ import { BalenaRequest, BalenaRequestStreamResult } from '../balena-request';
 import * as DeviceOverallStatus from './device-overall-status';
 import * as Pine from '../pinejs-client-core';
 import { Dictionary } from '../utils';
+import './device-state';
 import './device-type-json';
 import './models';
 
@@ -311,54 +312,6 @@ declare namespace BalenaSdk {
 		};
 		error?: string;
 		fatal?: boolean;
-	}
-
-	namespace DeviceState {
-		export interface ServiceInfo {
-			imageId: number;
-			serviceName: string;
-			image: string;
-			running: boolean;
-			environment: Dictionary<string>;
-			labels: Dictionary<string>;
-		}
-
-		export interface AppInfo {
-			name: string;
-			commit?: string;
-			releaseId?: number;
-			services: Dictionary<ServiceInfo>;
-			volumes: any;
-			networks: any;
-		}
-
-		export interface DependentAppInfo {
-			name: string;
-			parentApp: number;
-			config: Dictionary<string>;
-			commit?: string;
-			releaseId?: number;
-			imageId?: number;
-			image?: string;
-		}
-
-		export interface DeviceState {
-			local: {
-				name: string;
-				config: Dictionary<string>;
-				apps: Dictionary<AppInfo>;
-			};
-			dependent: {
-				apps: Dictionary<DependentAppInfo>;
-				devices: Dictionary<{
-					name: string;
-					apps: Dictionary<{
-						config: Dictionary<string>;
-						environment: Dictionary<string>;
-					}>;
-				}>;
-			};
-		}
 	}
 
 	export interface BuilderUrlDeployOptions {
