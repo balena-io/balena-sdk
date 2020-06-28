@@ -3,7 +3,7 @@
   "version": "14.0.1",
   "description": "The Balena JavaScript SDK",
   "main": "build/balena.js",
-  "types": "typings/balena-sdk.d.ts",
+  "types": "typings/balena-sdk/index.d.ts",
   "homepage": "https://github.com/balena-io/balena-sdk",
   "repository": {
     "type": "git",
