@@ -1,4 +1,34 @@
 - commits:
+    - subject: 'typings: Split the DeviceState namespace types to a different file'
+      hash: b790dd5466e0c9422c4bf3c5e2b488f523171d88
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Split the DeviceTypeJson namespace types to a different file'
+      hash: c32927b3a8a2a0e2fc3801c804f4dc99f9e30d05
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Split the SBVR model types to a different file'
+      hash: dcc2abf1d67a48a0a32aba9e6f5f196a6716a833
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.0.2
+  date: 2020-06-28T22:32:06.489Z
+- commits:
     - subject: 'appveyor: Increase the node space size'
       hash: 32358a89c057d71695fe8c6ac4753f26485df86e
       body: ''
@@ -3168,7 +3198,7 @@
       body: Add typings for the device.getSupervisorTargetState method
       footers:
         change-type: minor
-        hq: 'balena-io/balena#1663'
+        hq: balena-io/balena#1663
         signed-off-by: Thodoris Greasidis <thodoris@balena.io>
       hash: 7aad0d0953236feb7f1f34a9aca51972af099079
       subject: 'diagnostics: add getSupervisorTargetState support'
@@ -3245,7 +3275,7 @@
       body: ''
       footers:
         change-type: minor
-        hq: 'balena-io/balena#1663'
+        hq: balena-io/balena#1663
         signed-off-by: Matthew McGinn <mamcgi@gmail.com>
       hash: f0c5dbf1c4db166b8be3a8d1f43e8cd36cd805d0
       subject: Add getSupervisorState device method
