@@ -18,7 +18,7 @@ import * as errors from 'balena-errors';
 import * as Promise from 'bluebird';
 
 import * as BalenaSdk from '../../typings/balena-sdk';
-import { InjectedDependenciesParam } from '../balena';
+import { InjectedDependenciesParam } from '..';
 import {
 	isId,
 	isNotFoundResponse,

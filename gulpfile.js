@@ -6,6 +6,7 @@ const uglifyEs = require('uglify-es');
 const uglifyComposer = require('gulp-uglify/composer');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
+const minimist = require('minimist');
 
 const minify = uglifyComposer(uglifyEs, console);
 
@@ -13,19 +14,24 @@ const packageJSON = require('./package.json');
 
 const { loadEnv } = require('./tests/loadEnv');
 
+const cliOptions = minimist(process.argv.slice(2), {
+	string: 'buildDir',
+	default: { buildDir: 'es2015' },
+});
+
 const OPTIONS = {
 	config: {
 		browserLibraryName: 'balena-sdk',
 	},
 	files: {
 		tests: ['tests/**/*.spec.ts', 'tests/**/*.spec.coffee'],
-		browserEntry: 'balena.js',
+		browserEntry: 'index.js',
 		browserOutput: 'balena-browser.js',
 		browserMinifiedOutput: 'balena-browser.min.js',
 	},
 	directories: {
 		doc: 'doc/',
-		build: 'build/',
+		build: cliOptions.buildDir,
 	},
 };
 
@@ -53,9 +59,9 @@ gulp.task('test', function (cb) {
 
 gulp.task('inject-version', () =>
 	gulp
-		.src([`${OPTIONS.directories.build}util/sdk-version.js`])
+		.src([`${OPTIONS.directories.build}/util/sdk-version.js`])
 		.pipe(replace('__REPLACE_WITH_PACKAGE_JSON_VERSION__', packageJSON.version))
-		.pipe(gulp.dest(`${OPTIONS.directories.build}util/`)),
+		.pipe(gulp.dest(`${OPTIONS.directories.build}/util/`)),
 );
 
 gulp.task('pack-browser', function () {
@@ -80,5 +86,3 @@ gulp.task('pack-browser', function () {
 		.pipe(minify())
 		.pipe(gulp.dest(OPTIONS.directories.build));
 });
-
-gulp.task('build', gulp.series(['pack-browser']));

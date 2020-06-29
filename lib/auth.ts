@@ -19,7 +19,7 @@ import * as Promise from 'bluebird';
 import * as memoizee from 'memoizee';
 // TODO: change to type-only import when we bump TS to 3.8
 import _get2faModel from './2fa';
-import { InjectedDependenciesParam, InjectedOptionsParam } from './balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const getAuth = function (
 	deps: InjectedDependenciesParam,

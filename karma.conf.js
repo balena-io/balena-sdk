@@ -5,7 +5,7 @@ const { loadEnv } = require('./tests/loadEnv');
 
 getKarmaConfig.DEFAULT_WEBPACK_CONFIG.externals = { fs: true };
 
-const BROWSER_BUNDLE = 'build/balena-browser.js';
+const BROWSER_BUNDLE = 'es2015/balena-browser.js';
 
 module.exports = function (config) {
 	loadEnv();
@@ -15,7 +15,7 @@ module.exports = function (config) {
 	// do not pre-process the browser build
 	karmaConfig.preprocessors = _.omitBy(
 		karmaConfig.preprocessors,
-		(_value, key) => _.startsWith(key, 'build/'),
+		(_value, key) => key.startsWith('es2015/') || key.startsWith('es2018/'),
 	);
 	karmaConfig.preprocessors['tests/**/*.coffee'] = [
 		'webpack',

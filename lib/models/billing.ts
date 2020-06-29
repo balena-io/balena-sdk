@@ -23,7 +23,7 @@ import {
 	InvoiceInfo,
 	TokenBillingSubmitInfo,
 } from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 const getBillingModel = function (
 	deps: InjectedDependenciesParam,

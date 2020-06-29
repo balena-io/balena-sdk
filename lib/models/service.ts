@@ -22,7 +22,7 @@ import {
 	Service,
 	ServiceEnvironmentVariable,
 } from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
 
 const getServiceModel = (

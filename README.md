@@ -28,7 +28,7 @@ The following features are node-only:
 - OS image streaming download (`balena.models.os.download`),
 - balena settings client (`balena.settings`).
 
-In Node you can simply `require('balena-sdk')`, but in the browser things are more complicated. The balena SDK provides a bundled single file for browsers, which allows you to include a single file with all dependencies included, available as [balena-browser.min.js](https://unpkg.com/balena-sdk/build/balena-browser.min.js) (or [balena-browser.js](https://unpkg.com/balena-sdk/build/balena-browser.js) if you'd like the much larger unminified version). This uses the [UMD format](https://github.com/umdjs/umd), and will register itself as either a CommonJS or AMD module called `balena-sdk` if possible, or create a `balenaSdk` global if not.
+In Node you can simply `require('balena-sdk')`, but in the browser things are more complicated. The balena SDK provides a bundled single file for browsers, which allows you to include a single file with all dependencies included, available as [balena-browser.min.js](https://unpkg.com/balena-sdk/es2015/balena-browser.min.js) (or [balena-browser.js](https://unpkg.com/balena-sdk/es2015/balena-browser.js) if you'd like the much larger unminified version). This uses the [UMD format](https://github.com/umdjs/umd), and will register itself as either a CommonJS or AMD module called `balena-sdk` if possible, or create a `balenaSdk` global if not. You can also use the `es2018` version if desired.
 
 ### Bundling for browsers
 

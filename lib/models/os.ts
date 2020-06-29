@@ -32,7 +32,7 @@ import {
 	OsUpdateVersions,
 	OsVersions,
 } from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '../balena';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
 
