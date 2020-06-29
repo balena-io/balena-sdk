@@ -37,13 +37,12 @@ export const addCallbackSupportToModule = <T extends Dictionary<any>>(
 ): T => {
 	const result = {} as T;
 	for (const key of Object.keys(sdkModule) as Array<keyof typeof sdkModule>) {
-		// const propertyDescriptor = Object.getOwnPropertyDescriptor(sdkModule, key);
-
-		// // do not extend getters, since it would break lazy loading
-		// if (propertyDescriptor?.get != null) {
-		// 	Object.defineProperty(result, key, propertyDescriptor);
-		// 	continue;
-		// }
+		const propertyDescriptor = Object.getOwnPropertyDescriptor(sdkModule, key);
+		// do not extend getters, since it would break lazy loading
+		if (propertyDescriptor?.get != null) {
+			Object.defineProperty(result, key, propertyDescriptor);
+			continue;
+		}
 
 		const isPublicProp = typeof key === 'string' && !key.startsWith('_');
 		const moduleProp = sdkModule[key];
