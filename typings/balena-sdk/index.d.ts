@@ -4,17 +4,19 @@ import { EventEmitter } from 'events';
 
 import { Readable } from 'stream';
 
-import * as BalenaPine from './balena-pine';
-import { BalenaRequest, BalenaRequestStreamResult } from './balena-request';
+import * as BalenaPine from '../balena-pine';
+import { BalenaRequest, BalenaRequestStreamResult } from '../balena-request';
 import * as DeviceOverallStatus from './device-overall-status';
-import * as Pine from './pinejs-client-core';
-import { Dictionary } from './utils';
+import * as Pine from '../pinejs-client-core';
+import { Dictionary } from '../utils';
+import './device-state';
+import './device-type-json';
+import './models';
 
 // tslint:disable-next-line:no-namespace
 declare namespace BalenaSdk {
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
-	type DeviceOverallStatus = DeviceOverallStatus.DeviceOverallStatus;
 
 	/**
 	 * When not selected-out holds a deferred.
@@ -78,87 +80,6 @@ declare namespace BalenaSdk {
 		id: string;
 	}
 
-	/* types for the /device-types/v1 endppoints */
-	export namespace DeviceTypeJson {
-		interface DeviceType {
-			slug: string;
-			name: string;
-			aliases: string[];
-
-			arch: string;
-			state?: string;
-			community?: boolean;
-			private?: boolean;
-
-			isDependent?: boolean;
-			imageDownloadAlerts?: DeviceTypeDownloadAlert[];
-			instructions?: string[] | DeviceTypeInstructions;
-			gettingStartedLink?: string | DeviceTypeGettingStartedLink;
-			stateInstructions?: { [key: string]: string[] };
-			options?: DeviceTypeOptions[];
-			initialization?: {
-				options?: DeviceInitializationOptions[];
-				operations: Array<{
-					command: string;
-				}>;
-			};
-			supportsBlink?: boolean;
-			yocto: {
-				fstype?: string;
-				deployArtifact: string;
-			};
-			/** Holds the latest balenaOS version */
-			buildId?: string;
-			logoUrl?: string;
-		}
-
-		interface DeviceTypeDownloadAlert {
-			type: string;
-			message: string;
-		}
-
-		interface DeviceTypeInstructions {
-			linux: string[];
-			osx: string[];
-			windows: string[];
-		}
-
-		interface DeviceTypeGettingStartedLink {
-			linux: string;
-			osx: string;
-			windows: string;
-			[key: string]: string;
-		}
-
-		interface DeviceTypeOptions {
-			options: DeviceTypeOptionsGroup[];
-			collapsed: boolean;
-			isCollapsible: boolean;
-			isGroup: boolean;
-			message: string;
-			name: string;
-		}
-
-		interface DeviceInitializationOptions {
-			message: string;
-			type: string;
-			name: string;
-		}
-
-		interface DeviceTypeOptionsGroup {
-			default: number | string;
-			message: string;
-			name: string;
-			type: string;
-			min?: number;
-			max?: number;
-			hidden?: boolean;
-			when?: Dictionary<number | string | boolean>;
-			choices?: string[] | number[];
-			choicesLabels?: Dictionary<string>;
-		}
-	}
-
 	/* types for the DeviceWithServiceDetails objects */
 	interface CurrentService {
 		id: number;
@@ -191,241 +112,10 @@ declare namespace BalenaSdk {
 		current_gateway_downloads: CurrentGatewayDownload[];
 	}
 
-	interface Organization {
-		id: number;
-		created_at: string;
-		name: string;
-		handle: string;
-
-		application: ReverseNavigationResource<Application>;
-		/** includes__organization_membership */
-		organization_membership: ReverseNavigationResource<OrganizationMembership>;
-		owns__team: ReverseNavigationResource<Team>;
-	}
-
-	interface Team {
-		id: number;
-		created_at: string;
-		name: string;
-
-		belongs_to__organization: NavigationResource<Organization>;
-
-		/** includes__user */
-		team_membership: ReverseNavigationResource<TeamMembership>;
-		/** grants_access_to__application */
-		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
-	}
-
-	interface SocialServiceAccount {
-		provider: string;
-		display_name: string;
-	}
-
-	interface User {
-		account_type?: string;
-		actualUser?: number;
-		company?: string;
-		created_at: string;
-		email?: string;
-		features?: string[];
-		first_name?: string;
-		hasPasswordSet?: boolean;
-		has_disabled_newsletter?: boolean;
-		id: number;
-		intercomUserName?: string;
-		intercomUserHash?: string;
-		jwt_secret: string;
-		last_name?: string;
-		loginAs?: boolean;
-		needsPasswordReset?: boolean;
-		permissions?: string[];
-		public_key?: boolean;
-		twoFactorRequired?: boolean;
-		username: string;
-
-		/** includes__organization_membership */
-		organization_membership: ReverseNavigationResource<OrganizationMembership>;
-		/** user_application_membership */
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMembership
-		>;
-		/** is_member_of__team */
-		team_membership: ReverseNavigationResource<TeamMembership>;
-		creates__release: ReverseNavigationResource<Release>;
-		owns__device: ReverseNavigationResource<Device>;
-		// this is what the api route returns
-		social_service_account: ReverseNavigationResource<SocialServiceAccount>;
-	}
-
-	type OrganizationMembershipRoles = 'administrator' | 'member';
-
-	interface OrganizationMembershipRole {
-		id: number;
-		name: OrganizationMembershipRoles;
-	}
-
-	/** organization_membership */
-	interface OrganizationMembership {
-		id: number;
-		created_at: string;
-
-		user: NavigationResource<User>;
-		/** organization */
-		is_member_of__organization: NavigationResource<Organization>;
-		organization_membership_role: NavigationResource<
-			OrganizationMembershipRole
-		>;
-	}
-
-	/** team_membership */
-	interface TeamMembership {
-		id: number;
-		created_at: string;
-
-		user: NavigationResource<User>;
-		/** team */
-		is_member_of__team: NavigationResource<Team>;
-	}
-
-	interface ApiKey {
-		id: number;
-		created_at: string;
-		name: string;
-		description: string | null;
-
-		is_of__actor: PineDeferred;
-	}
-
-	interface Application {
-		id: number;
-		created_at: string;
-		app_name: string;
-		slug: string;
-		is_accessible_by_support_until__date: string;
-		is_host: boolean;
-		should_track_latest_release: boolean;
-		is_public: boolean;
-		is_archived: boolean;
-
-		application_type: NavigationResource<ApplicationType>;
-		is_for__device_type: NavigationResource<DeviceType>;
-		depends_on__application: OptionalNavigationResource<Application>;
-		organization: NavigationResource<Organization>;
-		should_be_running__release: OptionalNavigationResource<Release>;
-
-		application_config_variable: ReverseNavigationResource<ApplicationVariable>;
-		application_environment_variable: ReverseNavigationResource<
-			ApplicationVariable
-		>;
-		application_tag: ReverseNavigationResource<ApplicationTag>;
-		owns__device: ReverseNavigationResource<Device>;
-		owns__release: ReverseNavigationResource<Release>;
-		is_depended_on_by__application: ReverseNavigationResource<Application>;
-		/** includes__user */
-		user__is_member_of__application: ReverseNavigationResource<
-			ApplicationMembership
-		>;
-		/** is_accessible_by__team */
-		team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
-	}
-
-	interface Invitee {
-		id: number;
-		created_at: string;
-		email: string;
-	}
-
-	interface ApplicationInvite {
-		id: number;
-		message?: string;
-		created_at: string;
-		invitationToken: string;
-		application_membership_role: NavigationResource<ApplicationMembershipRole>;
-		invitee: NavigationResource<Invitee>;
-		is_invited_to__application: NavigationResource<Application>;
-	}
-
 	interface ApplicationInviteOptions {
 		invitee: string;
 		roleName?: ApplicationMembershipRoles;
 		message?: string;
-	}
-
-	interface ApplicationType {
-		id: number;
-		name: string;
-		slug: string;
-		description: string | null;
-		supports_gateway_mode: boolean;
-		supports_multicontainer: boolean;
-		supports_web_url: boolean;
-		is_legacy: boolean;
-		requires_payment: boolean;
-		needs__os_version_range: string | null;
-		maximum_device_count: number | null;
-		is_host_os: boolean;
-	}
-
-	type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
-
-	interface ApplicationMembershipRole {
-		id: number;
-		name: ApplicationMembershipRoles;
-	}
-
-	/** user__is_member_of__application */
-	interface ApplicationMembership {
-		id: number;
-		user: NavigationResource<User>;
-		/** application */
-		is_member_of__application: NavigationResource<Application>;
-		application_membership_role: NavigationResource<ApplicationMembershipRole>;
-	}
-
-	/** team_application_access */
-	interface TeamApplicationAccess {
-		id: number;
-		team: NavigationResource<Team>;
-		/** application */
-		grants_access_to__application: NavigationResource<Application>;
-		application_membership_role: NavigationResource<ApplicationMembershipRole>;
-	}
-
-	type ReleaseStatus =
-		| 'cancelled'
-		| 'error'
-		| 'failed'
-		| 'interrupted'
-		| 'local'
-		| 'running'
-		| 'success'
-		| 'timeout'
-		| null;
-
-	interface Release {
-		id: number;
-		created_at: string;
-		commit: string;
-		composition: string | null;
-		status: ReleaseStatus;
-		source: string;
-		build_log: string | null;
-		is_invalidated: boolean;
-		start_timestamp: string;
-		update_timestamp: string | null;
-		end_timestamp: string;
-
-		is_created_by__user: OptionalNavigationResource<User>;
-		belongs_to__application: NavigationResource<Application>;
-
-		contains__image: ReverseNavigationResource<{
-			id: number;
-			image: NavigationResource<Image>;
-		}>;
-		should_be_running_on__application: ReverseNavigationResource<Application>;
-		is_running_on__device: ReverseNavigationResource<Device>;
-		should_be_running_on__device: ReverseNavigationResource<Device>;
-		release_tag: ReverseNavigationResource<ReleaseTag>;
 	}
 
 	interface ReleaseWithImageDetails extends Release {
@@ -550,102 +240,6 @@ declare namespace BalenaSdk {
 		state: 'pending' | 'paid' | 'failed' | 'past_due';
 	}
 
-	interface Device {
-		id: number;
-		created_at: string;
-		custom_latitude?: string;
-		custom_longitude?: string;
-		device_name: string;
-		download_progress?: number;
-		ip_address: string | null;
-		mac_address: string | null;
-		is_accessible_by_support_until__date: string;
-		is_connected_to_vpn: boolean;
-		is_in_local_mode?: boolean;
-		is_locked_until__date: string;
-		is_web_accessible: boolean;
-		is_active: boolean;
-		is_online: boolean;
-		last_connectivity_event: string;
-		last_vpn_event: string;
-		latitude?: string;
-		local_id?: string;
-		location: string;
-		longitude?: string;
-		note: string;
-		os_variant?: string;
-		os_version: string;
-		provisioning_progress?: number;
-		provisioning_state: string;
-		state?: { key: string; name: string };
-		status: string;
-		status_sort_index?: number;
-		supervisor_version: string;
-		uuid: string;
-		vpn_address: string | null;
-		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
-		/** This is a computed term */
-		overall_status: DeviceOverallStatus.DeviceOverallStatus;
-		/** This is a computed term */
-		overall_progress: number | null;
-
-		is_of__device_type: NavigationResource<DeviceType>;
-		// the schema has this as a nullable, but for simplicity we have it as non-optional
-		belongs_to__application: NavigationResource<Application>;
-		belongs_to__user: OptionalNavigationResource<User>;
-		is_running__release: OptionalNavigationResource<Release>;
-		should_be_running__release: OptionalNavigationResource<Release>;
-		is_managed_by__service_instance: OptionalNavigationResource<
-			ServiceInstance
-		>;
-		is_managed_by__device: OptionalNavigationResource<Device>;
-		should_be_managed_by__supervisor_release: OptionalNavigationResource<
-			SupervisorRelease
-		>;
-
-		device_config_variable: ReverseNavigationResource<DeviceVariable>;
-		device_environment_variable: ReverseNavigationResource<DeviceVariable>;
-		device_tag: ReverseNavigationResource<DeviceTag>;
-		manages__device: ReverseNavigationResource<Device>;
-		service_install: ReverseNavigationResource<ServiceInstall>;
-	}
-
-	/** device_type */
-	interface DeviceType {
-		id: number;
-		slug: string;
-		name: string;
-		is_private: string;
-
-		is_accessible_privately_by__organization: ReverseNavigationResource<
-			Organization
-		>;
-		describes_device: ReverseNavigationResource<Device>;
-	}
-
-	/** organization__has_private_access_to__device_type */
-	interface OrganizationPrivateDeviceTypeAccess {
-		id: number;
-		organization: NavigationResource<Organization>;
-		has_private_access_to__device_type: NavigationResource<DeviceType>;
-	}
-
-	interface DeviceWithImageInstalls extends Device {
-		image_install: ReverseNavigationResource<ImageInstall>;
-		gateway_download: ReverseNavigationResource<GatewayDownload>;
-	}
-
-	interface SupervisorRelease {
-		created_at: string;
-		id: number;
-		supervisor_version: string;
-		image_name: string;
-		is_public: boolean;
-		note?: string;
-
-		is_for__device_type: NavigationResource<DeviceType>;
-	}
-
 	interface SupervisorStatus {
 		api_port: string;
 		ip_address: string;
@@ -657,39 +251,6 @@ declare namespace BalenaSdk {
 		status?: string | null;
 		commit?: string | null;
 		download_progress?: string | null;
-	}
-
-	interface ServiceInstance {
-		id: number;
-		created_at: string;
-		service_type: string;
-		ip_address: string;
-		last_heartbeat: string;
-	}
-
-	interface Service {
-		id: number;
-		created_at: string;
-		service_name: string;
-		application: NavigationResource<Application>;
-	}
-
-	interface Image {
-		id: number;
-		created_at: string;
-		build_log: string;
-		contract: string | null;
-		content_hash?: string | null;
-		project_type?: string | null;
-		status: string;
-		is_stored_at__image_location: string;
-		start_timestamp?: string | null;
-		end_timestamp?: string | null;
-		push_timestamp?: string | null;
-		image_size?: number | null;
-		dockerfile: string;
-		error_message?: string | null;
-		is_a_build_of__service: NavigationResource<Service>;
 	}
 
 	interface BaseLog {
@@ -718,15 +279,6 @@ declare namespace BalenaSdk {
 		count?: number | 'all';
 	}
 
-	interface SSHKey {
-		title: string;
-		public_key: string;
-		id: number;
-		created_at: string;
-
-		user: NavigationResource<User>;
-	}
-
 	interface ImgConfigOptions {
 		network?: 'ethernet' | 'wifi';
 		appUpdatePollInterval?: number;
@@ -752,77 +304,6 @@ declare namespace BalenaSdk {
 		current: string | undefined;
 	}
 
-	interface ImageInstall {
-		id: number;
-		download_progress: number;
-		status: string;
-		install_date: string;
-
-		image: NavigationResource<Image>;
-		is_provided_by__release: NavigationResource<Release>;
-	}
-
-	interface GatewayDownload {
-		id: number;
-		download_progress: number;
-		status: string;
-
-		image: NavigationResource<Image>;
-	}
-
-	interface ServiceInstall {
-		id: number;
-		should_be_running: boolean;
-		device: NavigationResource<Device>;
-		/** service */
-		installs__service: NavigationResource<Service>;
-		application: NavigationResource<Application>;
-
-		device_service_environment_variable: ReverseNavigationResource<
-			DeviceServiceEnvironmentVariable
-		>;
-	}
-
-	interface EnvironmentVariableBase {
-		id: number;
-		name: string;
-		value: string;
-	}
-
-	interface DeviceServiceEnvironmentVariable extends EnvironmentVariableBase {
-		service_install: NavigationResource<ServiceInstall>;
-	}
-
-	interface ServiceEnvironmentVariable extends EnvironmentVariableBase {
-		service: NavigationResource<Service>;
-	}
-
-	interface DeviceVariable extends EnvironmentVariableBase {
-		device: NavigationResource<Device>;
-	}
-
-	interface ApplicationVariable extends EnvironmentVariableBase {
-		application: NavigationResource<Application>;
-	}
-
-	interface ResourceTagBase {
-		id: number;
-		tag_key: string;
-		value: string;
-	}
-
-	interface ApplicationTag extends ResourceTagBase {
-		application: NavigationResource<Application>;
-	}
-
-	interface DeviceTag extends ResourceTagBase {
-		device: NavigationResource<Device>;
-	}
-
-	interface ReleaseTag extends ResourceTagBase {
-		release: NavigationResource<Release>;
-	}
-
 	// See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
 	interface OsUpdateActionResult {
 		status: 'idle' | 'in_progress' | 'done' | 'error' | 'configuring';
@@ -831,54 +312,6 @@ declare namespace BalenaSdk {
 		};
 		error?: string;
 		fatal?: boolean;
-	}
-
-	namespace DeviceState {
-		export interface ServiceInfo {
-			imageId: number;
-			serviceName: string;
-			image: string;
-			running: boolean;
-			environment: Dictionary<string>;
-			labels: Dictionary<string>;
-		}
-
-		export interface AppInfo {
-			name: string;
-			commit?: string;
-			releaseId?: number;
-			services: Dictionary<ServiceInfo>;
-			volumes: any;
-			networks: any;
-		}
-
-		export interface DependentAppInfo {
-			name: string;
-			parentApp: number;
-			config: Dictionary<string>;
-			commit?: string;
-			releaseId?: number;
-			imageId?: number;
-			image?: string;
-		}
-
-		export interface DeviceState {
-			local: {
-				name: string;
-				config: Dictionary<string>;
-				apps: Dictionary<AppInfo>;
-			};
-			dependent: {
-				apps: Dictionary<DependentAppInfo>;
-				devices: Dictionary<{
-					name: string;
-					apps: Dictionary<{
-						config: Dictionary<string>;
-						environment: Dictionary<string>;
-					}>;
-				}>;
-			};
-		}
 	}
 
 	export interface BuilderUrlDeployOptions {
