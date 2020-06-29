@@ -1,4 +1,14 @@
 - commits:
+    - subject: Generate optional build for es2018 as well as the default es2015
+      hash: 7fe50179bf47410a68105d9183396b4aa3603656
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 14.1.0
+  date: 2020-06-29T14:58:05.881Z
+- commits:
     - subject: 'typings: Split the DeviceState namespace types to a different file'
       hash: b790dd5466e0c9422c4bf3c5e2b488f523171d88
       body: ''
