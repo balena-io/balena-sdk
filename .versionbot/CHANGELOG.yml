@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'model: Add build_environment_variable'
+      hash: 230c5437daa659da7024123cc28ed63112d63120
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+  version: 14.2.1
+  date: 2020-07-01T15:27:33.241Z
+- commits:
     - subject: Add typings for plans & subscriptions
       hash: 71105ed9300a7977663a8751a5dca296e6586b3b
       body: ''
