@@ -355,7 +355,11 @@ export interface BalenaSDK {
 		twoFactor: {
 			isEnabled: () => Promise<boolean>;
 			isPassed: () => Promise<boolean>;
+			getSetupKey: () => Promise<string>;
+			enable: (code: string) => Promise<string>;
+			disable: (password: string) => Promise<string>;
 			challenge: (code: string) => Promise<void>;
+			verify: (code: string) => Promise<string>;
 		};
 	};
 
