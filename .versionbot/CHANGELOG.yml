@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add typings for plans & subscriptions
+      hash: 71105ed9300a7977663a8751a5dca296e6586b3b
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.2.0
+  date: 2020-07-01T11:35:27.231Z
+- commits:
     - subject: Generate optional build for es2018 as well as the default es2015
       hash: 7fe50179bf47410a68105d9183396b4aa3603656
       body: ''
