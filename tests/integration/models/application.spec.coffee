@@ -562,6 +562,53 @@ describe 'Application Model', ->
 								envVarModel.remove(@application[appParam], "B_BY_#{appParam}")
 							]
 
+			describe 'balena.models.application.buildEnvVar', ->
+
+				envVarModel = balena.models.application.buildVar
+
+				['id', 'app_name'].forEach (appParam) ->
+
+					it "can create a variable by #{appParam}", ->
+						promise = envVarModel.set(@application[appParam], "EDITOR_BY_#{appParam}", 'vim')
+						m.chai.expect(promise).to.not.be.rejected
+
+					it "...can retrieve a created variable by #{appParam}", ->
+						envVarModel.get(@application[appParam], "EDITOR_BY_#{appParam}")
+						.then (result) ->
+							m.chai.expect(result).to.equal('vim')
+
+					it "...can update and retrieve a variable by #{appParam}", ->
+						envVarModel.set(@application[appParam], "EDITOR_BY_#{appParam}", 'emacs')
+						.then =>
+							envVarModel.get(@application[appParam], "EDITOR_BY_#{appParam}")
+						.then (result) ->
+							m.chai.expect(result).to.equal('emacs')
+
+					it "...can delete and then fail to retrieve a variable by #{appParam}", ->
+						envVarModel.remove(@application[appParam], "EDITOR_BY_#{appParam}")
+						.then =>
+							envVarModel.get(@application[appParam], "EDITOR_BY_#{appParam}")
+						.then (result) ->
+							m.chai.expect(result).to.equal(undefined)
+
+					it "can create and then retrieve multiple variables by #{appParam}", ->
+						Promise.all [
+							envVarModel.set(@application[appParam], "A_BY_#{appParam}", 'a')
+							envVarModel.set(@application[appParam], "B_BY_#{appParam}", 'b')
+						]
+						.then =>
+							envVarModel.getAllByApplication(@application[appParam])
+						.then (result) ->
+							m.chai.expect(_.find(result, { name: "A_BY_#{appParam}" })).to.be.an('object')
+								.that.has.property('value', 'a')
+							m.chai.expect(_.find(result, { name: "B_BY_#{appParam}" })).to.be.an('object')
+								.that.has.property('value', 'b')
+						.then =>
+							Promise.all [
+								envVarModel.remove(@application[appParam], "A_BY_#{appParam}")
+								envVarModel.remove(@application[appParam], "B_BY_#{appParam}")
+							]
+
 		describe 'with a registered device', ->
 
 			givenAnApplication(beforeEach)

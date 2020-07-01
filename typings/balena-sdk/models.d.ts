@@ -134,6 +134,9 @@ declare module './index' {
 		application_environment_variable: ReverseNavigationResource<
 			ApplicationVariable
 		>;
+		build_environment_variable: ReverseNavigationResource<
+			BuildVariable
+		>;
 		application_tag: ReverseNavigationResource<ApplicationTag>;
 		owns__device: ReverseNavigationResource<Device>;
 		owns__release: ReverseNavigationResource<Release>;
@@ -433,6 +436,10 @@ declare module './index' {
 	}
 
 	export interface ApplicationVariable extends EnvironmentVariableBase {
+		application: NavigationResource<Application>;
+	}
+
+	interface BuildVariable extends EnvironmentVariableBase {
 		application: NavigationResource<Application>;
 	}
 
