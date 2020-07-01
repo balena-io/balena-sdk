@@ -453,4 +453,94 @@ declare module './index' {
 	export interface ReleaseTag extends ResourceTagBase {
 		release: NavigationResource<Release>;
 	}
+
+	// Billing model
+
+	export interface Feature {
+		id: number;
+		title: string;
+		slug: string;
+		billing_code: string | null;
+	}
+
+	export interface SupportFeature {
+		id: number;
+		feature: number;
+		support_tier: NavigationResource<SupportTier>;
+	}
+
+	export interface SupportTier {
+		id: number;
+		title: string;
+		slug: string;
+		includes_private_support: boolean;
+		includes__SLA: string;
+	}
+
+	export interface Plan {
+		id: number;
+		title: string;
+		billing_code: string | null;
+		monthly_price: number;
+		annual_price: number;
+		can_self_serve: boolean;
+		is_legacy: boolean;
+
+		plan_feature: ReverseNavigationResource<PlanFeature>;
+		offers__plan_addon: ReverseNavigationResource<PlanAddon>;
+		plan__has__discount_code: ReverseNavigationResource<PlanDiscountCode>;
+	}
+
+	export interface PlanAddon {
+		id: number;
+		base_price: number;
+		can_self_serve: boolean;
+		bills_dynamically: boolean;
+
+		offers__feature: NavigationResource<Feature>;
+	}
+
+	export interface PlanDiscountCode {
+		id: number;
+		discount_code: string;
+		plan: NavigationResource<Plan>;
+	}
+
+	export interface PlanFeature {
+		id: number;
+		quantity: number;
+		provides__feature: NavigationResource<Feature>;
+	}
+
+	export interface Subscription {
+		id: number;
+		starts_on__date: string;
+		ends_on__date: string | null;
+		discount_percentage: number;
+		billing_cycle: 'monthly' | 'quarterly' | 'annual';
+		origin: string;
+
+		is_for__organization: NavigationResource<Organization>;
+		is_for__plan: NavigationResource<Plan>;
+		discounts__plan_addon: ReverseNavigationResource<SubscriptionAddonDiscount>;
+		subscription_prepaid_addon: ReverseNavigationResource<
+			SubscriptionPrepaidAddon
+		>;
+	}
+
+	export interface SubscriptionPrepaidAddon {
+		id: number;
+		discount_percentage: number;
+		quantity: number;
+		starts_on__date: string;
+		expires_on__date: string | null;
+
+		is_for__plan_addon: NavigationResource<PlanAddon>;
+		is_for__subscription: NavigationResource<Subscription>;
+	}
+
+	export interface SubscriptionAddonDiscount {
+		discount_percentage: number;
+		discounts__plan_addon: NavigationResource<PlanAddon>;
+	}
 }
