@@ -14,14 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import * as Bluebird from 'bluebird';
 import once = require('lodash/once');
 import type { BalenaRequestStreamResult } from '../../typings/balena-request';
 import type {
 	BillingAccountInfo,
 	BillingInfo,
 	BillingPlanInfo,
-	Organization,
 	InvoiceInfo,
 	TokenBillingSubmitInfo,
 } from '../..';
@@ -40,10 +38,12 @@ const getBillingModel = function (
 		),
 	);
 
-	const getOrgId = (
-		organization: string | number,
-	): Bluebird<Pick<Organization, 'id'>> =>
-		organizationModel().get(organization, { $select: 'id' });
+	const getOrgId = async (organization: string | number): Promise<number> => {
+		const { id } = await organizationModel().get(organization, {
+			$select: 'id',
+		});
+		return id;
+	};
 
 	const exports = {
 		/**
@@ -56,7 +56,7 @@ const getBillingModel = function (
 		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
 		 *
 		 * @fulfil {Object} - billing account
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.billing.getAccount(orgId).then(function(billingAccount) {
@@ -70,18 +70,16 @@ const getBillingModel = function (
 		 * });
 		 */
 
-		getAccount: (
+		getAccount: async (
 			organization: string | number,
-		): Bluebird<BillingAccountInfo> => {
-			return getOrgId(organization)
-				.then(({ id }) =>
-					request.send({
-						method: 'GET',
-						url: `/billing/v1/account/${id}`,
-						baseUrl: apiUrl,
-					}),
-				)
-				.then(({ body }) => body);
+		): Promise<BillingAccountInfo> => {
+			const orgId = await getOrgId(organization);
+			const { body } = await request.send({
+				method: 'GET',
+				url: `/billing/v1/account/${orgId}`,
+				baseUrl: apiUrl,
+			});
+			return body;
 		},
 
 		/**
@@ -92,7 +90,7 @@ const getBillingModel = function (
 		 * @memberof balena.models.billing
 		 *
 		 * @fulfil {Object} - billing plan
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
 		 *
@@ -107,16 +105,17 @@ const getBillingModel = function (
 		 * 	console.log(billingPlan);
 		 * });
 		 */
-		getPlan: (organization: string | number): Bluebird<BillingPlanInfo> => {
-			return getOrgId(organization)
-				.then(({ id }) =>
-					request.send({
-						method: 'GET',
-						url: `/billing/v1/account/${id}/plan`,
-						baseUrl: apiUrl,
-					}),
-				)
-				.then(({ body }) => body);
+		getPlan: async (
+			organization: string | number,
+		): Promise<BillingPlanInfo> => {
+			const orgId = await getOrgId(organization);
+
+			const { body } = await request.send({
+				method: 'GET',
+				url: `/billing/v1/account/${orgId}/plan`,
+				baseUrl: apiUrl,
+			});
+			return body;
 		},
 
 		/**
@@ -129,7 +128,7 @@ const getBillingModel = function (
 		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
 		 *
 		 * @fulfil {Object} - billing information
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
@@ -142,16 +141,17 @@ const getBillingModel = function (
 		 * 	console.log(billingInfo);
 		 * });
 		 */
-		getBillingInfo: (organization: string | number): Bluebird<BillingInfo> => {
-			return getOrgId(organization)
-				.then(({ id }) =>
-					request.send({
-						method: 'GET',
-						url: `/billing/v1/account/${id}/info`,
-						baseUrl: apiUrl,
-					}),
-				)
-				.then(({ body }) => body);
+		getBillingInfo: async (
+			organization: string | number,
+		): Promise<BillingInfo> => {
+			const orgId = await getOrgId(organization);
+
+			const { body } = await request.send({
+				method: 'GET',
+				url: `/billing/v1/account/${orgId}/info`,
+				baseUrl: apiUrl,
+			});
+			return body;
 		},
 
 		/**
@@ -167,7 +167,7 @@ const getBillingModel = function (
 		 * @param {String} billingInfo.token_id - the token id generated for the billing info form
 		 * @param {(String|undefined)} [billingInfo.'g-recaptcha-response'] - the captcha response
 		 * @fulfil {Object} - billing information
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }).then(function(billingInfo) {
@@ -180,20 +180,19 @@ const getBillingModel = function (
 		 * 	console.log(billingInfo);
 		 * });
 		 */
-		updateBillingInfo: (
+		updateBillingInfo: async (
 			organization: string | number,
 			billingInfo: TokenBillingSubmitInfo,
-		): Bluebird<BillingInfo> => {
-			return getOrgId(organization)
-				.then(({ id }) =>
-					request.send({
-						method: 'PATCH',
-						url: `/billing/v1/account/${id}/info`,
-						baseUrl: apiUrl,
-						body: billingInfo,
-					}),
-				)
-				.then(({ body }) => body);
+		): Promise<BillingInfo> => {
+			const orgId = await getOrgId(organization);
+
+			const { body } = await request.send({
+				method: 'PATCH',
+				url: `/billing/v1/account/${orgId}/info`,
+				baseUrl: apiUrl,
+				body: billingInfo,
+			});
+			return body;
 		},
 
 		/**
@@ -206,7 +205,7 @@ const getBillingModel = function (
 		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
 		 *
 		 * @fulfil {Object} - invoices
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.billing.getInvoices(orgId).then(function(invoices) {
@@ -219,16 +218,16 @@ const getBillingModel = function (
 		 * 	console.log(invoices);
 		 * });
 		 */
-		getInvoices: (organization: string | number): Bluebird<InvoiceInfo[]> => {
-			return getOrgId(organization)
-				.then(({ id }) =>
-					request.send({
-						method: 'GET',
-						url: `/billing/v1/account/${id}/invoices`,
-						baseUrl: apiUrl,
-					}),
-				)
-				.then(({ body }) => body);
+		getInvoices: async (
+			organization: string | number,
+		): Promise<InvoiceInfo[]> => {
+			const orgId = await getOrgId(organization);
+			const { body } = await request.send({
+				method: 'GET',
+				url: `/billing/v1/account/${orgId}/invoices`,
+				baseUrl: apiUrl,
+			});
+			return body;
 		},
 
 		/**
@@ -242,7 +241,7 @@ const getBillingModel = function (
 		 * @param {String} - an invoice number
 		 *
 		 * @fulfil {Blob|ReadableStream} - blob on the browser, download stream on node
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * # Browser
@@ -254,29 +253,28 @@ const getBillingModel = function (
 		 * 	stream.pipe(fs.createWriteStream('foo/bar/invoice-0000.pdf'));
 		 * });
 		 */
-		downloadInvoice(
+		async downloadInvoice(
 			organization: string | number,
 			invoiceNumber: string,
-		): Bluebird<Blob | BalenaRequestStreamResult> {
-			return getOrgId(organization).then(({ id }) => {
-				const url = `/billing/v1/account/${id}/invoices/${invoiceNumber}/download`;
-				if (!isBrowser) {
-					return request.stream({
-						method: 'GET',
-						url,
-						baseUrl: apiUrl,
-					});
-				}
+		): Promise<Blob | BalenaRequestStreamResult> {
+			const orgId = await getOrgId(organization);
+			const url = `/billing/v1/account/${orgId}/invoices/${invoiceNumber}/download`;
 
-				return request
-					.send({
-						method: 'GET',
-						url,
-						baseUrl: apiUrl,
-						responseFormat: 'blob',
-					})
-					.then(({ body }) => body);
+			if (!isBrowser) {
+				return request.stream({
+					method: 'GET',
+					url,
+					baseUrl: apiUrl,
+				});
+			}
+
+			const { body } = await request.send({
+				method: 'GET',
+				url,
+				baseUrl: apiUrl,
+				responseFormat: 'blob',
 			});
+			return body;
 		},
 	};
 

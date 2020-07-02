@@ -1,5 +1,4 @@
 import type * as BalenaErrors from 'balena-errors';
-import type * as Bluebird from 'bluebird';
 import type { EventEmitter } from 'events';
 
 import type * as BalenaPine from '../balena-pine';
@@ -54,10 +53,10 @@ declare namespace BalenaSdk {
 	type PineWithSelectOnGet = BalenaPine.PineWithSelectOnGet;
 
 	interface Interceptor {
-		request?(response: any): Bluebird<any>;
-		response?(response: any): Bluebird<any>;
-		requestError?(error: Error): Bluebird<any>;
-		responseError?(error: Error): Bluebird<any>;
+		request?(response: any): Promise<any>;
+		response?(response: any): Promise<any>;
+		requestError?(error: Error): Promise<any>;
+		responseError?(error: Error): Promise<any>;
 	}
 
 	/* types for the /config endppoint */
@@ -333,33 +332,33 @@ declare namespace BalenaSdk {
 				email: string;
 				password: string;
 				'g-recaptcha-response'?: string;
-			}) => Bluebird<string>;
+			}) => Promise<string>;
 			authenticate: (credentials: {
 				email: string;
 				password: string;
-			}) => Bluebird<string>;
+			}) => Promise<string>;
 			login: (credentials: {
 				email: string;
 				password: string;
-			}) => Bluebird<void>;
-			loginWithToken: (authToken: string) => Bluebird<void>;
-			logout: () => Bluebird<void>;
-			getToken: () => Bluebird<string>;
-			whoami: () => Bluebird<string | undefined>;
-			isLoggedIn: () => Bluebird<boolean>;
-			getUserId: () => Bluebird<number>;
-			getEmail: () => Bluebird<string>;
+			}) => Promise<void>;
+			loginWithToken: (authToken: string) => Promise<void>;
+			logout: () => Promise<void>;
+			getToken: () => Promise<string>;
+			whoami: () => Promise<string | undefined>;
+			isLoggedIn: () => Promise<boolean>;
+			getUserId: () => Promise<number>;
+			getEmail: () => Promise<string>;
 
 			twoFactor: {
-				isEnabled: () => Bluebird<boolean>;
-				isPassed: () => Bluebird<boolean>;
-				challenge: (code: string) => Bluebird<void>;
+				isEnabled: () => Promise<boolean>;
+				isPassed: () => Promise<boolean>;
+				challenge: (code: string) => Promise<void>;
 			};
 		};
 
 		settings: {
-			get(key: string): Bluebird<string>;
-			getAll(): Bluebird<{ [key: string]: string }>;
+			get(key: string): Promise<string>;
+			getAll(): Promise<{ [key: string]: string }>;
 		};
 
 		request: BalenaRequest;
@@ -374,15 +373,15 @@ declare namespace BalenaSdk {
 					deviceType: string;
 					parent?: number | string;
 					organization: number | string;
-				}): Bluebird<Application>;
+				}): Promise<Application>;
 				get(
 					nameOrId: string | number,
 					options?: PineOptions<Application>,
-				): Bluebird<Application>;
+				): Promise<Application>;
 				getWithDeviceServiceDetails(
 					nameOrId: string | number,
 					options?: PineOptions<Application>,
-				): Bluebird<
+				): Promise<
 					Application & {
 						owns__device: Array<
 							DeviceWithServiceDetails<CurrentServiceWithCommit>
@@ -393,267 +392,264 @@ declare namespace BalenaSdk {
 					appName: string,
 					owner: string,
 					options?: PineOptions<Application>,
-				): Bluebird<Application>;
-				getAll(options?: PineOptions<Application>): Bluebird<Application[]>;
+				): Promise<Application>;
+				getAll(options?: PineOptions<Application>): Promise<Application[]>;
 				getAllWithDeviceServiceDetails(
 					options?: PineOptions<Application>,
-				): Bluebird<
+				): Promise<
 					Array<
 						Application & {
 							owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
 						}
 					>
 				>;
-				has(nameOrId: string | number): Bluebird<boolean>;
-				hasAny(): Bluebird<boolean>;
-				remove(nameOrId: string | number): Bluebird<void>;
-				restart(nameOrId: string | number): Bluebird<void>;
-				enableDeviceUrls(nameOrId: string | number): Bluebird<void>;
-				disableDeviceUrls(nameOrId: string | number): Bluebird<void>;
+				has(nameOrId: string | number): Promise<boolean>;
+				hasAny(): Promise<boolean>;
+				remove(nameOrId: string | number): Promise<void>;
+				restart(nameOrId: string | number): Promise<void>;
+				enableDeviceUrls(nameOrId: string | number): Promise<void>;
+				disableDeviceUrls(nameOrId: string | number): Promise<void>;
 				getDashboardUrl(nameOrId: number): string;
 				grantSupportAccess(
 					nameOrId: string | number,
 					expiryTimestamp: number,
-				): Bluebird<void>;
-				revokeSupportAccess(nameOrId: string | number): Bluebird<void>;
-				reboot(appId: number, { force }: { force?: boolean }): Bluebird<void>;
-				shutdown(appId: number, { force }: { force?: boolean }): Bluebird<void>;
-				purge(appId: number): Bluebird<void>;
-				generateApiKey(nameOrId: string | number): Bluebird<string>;
-				generateProvisioningKey(nameOrId: string | number): Bluebird<string>;
-				willTrackNewReleases(nameOrId: string | number): Bluebird<boolean>;
-				isTrackingLatestRelease(nameOrId: string | number): Bluebird<boolean>;
+				): Promise<void>;
+				revokeSupportAccess(nameOrId: string | number): Promise<void>;
+				reboot(appId: number, { force }: { force?: boolean }): Promise<void>;
+				shutdown(appId: number, { force }: { force?: boolean }): Promise<void>;
+				purge(appId: number): Promise<void>;
+				generateApiKey(nameOrId: string | number): Promise<string>;
+				generateProvisioningKey(nameOrId: string | number): Promise<string>;
+				willTrackNewReleases(nameOrId: string | number): Promise<boolean>;
+				isTrackingLatestRelease(nameOrId: string | number): Promise<boolean>;
 				pinToRelease(
 					nameOrId: string | number,
 					fullReleaseHash: string,
-				): Bluebird<void>;
-				getTargetReleaseHash(nameOrId: string | number): Bluebird<string>;
-				trackLatestRelease(nameOrId: string | number): Bluebird<void>;
+				): Promise<void>;
+				getTargetReleaseHash(nameOrId: string | number): Promise<string>;
+				trackLatestRelease(nameOrId: string | number): Promise<void>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<ApplicationTag>,
-					): Bluebird<ApplicationTag[]>;
+					): Promise<ApplicationTag[]>;
 					getAll(
 						options?: PineOptions<ApplicationTag>,
-					): Bluebird<ApplicationTag[]>;
+					): Promise<ApplicationTag[]>;
 					set(
 						nameOrId: string | number,
 						tagKey: string,
 						value: string,
-					): Bluebird<void>;
-					remove(nameOrId: string | number, tagKey: string): Bluebird<void>;
+					): Promise<void>;
+					remove(nameOrId: string | number, tagKey: string): Promise<void>;
 				};
 				configVar: {
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<ApplicationVariable>,
-					): Bluebird<ApplicationVariable[]>;
+					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
 						key: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					get(
 						nameOrId: string | number,
 						key: string,
-					): Bluebird<string | undefined>;
-					remove(nameOrId: string | number, key: string): Bluebird<void>;
+					): Promise<string | undefined>;
+					remove(nameOrId: string | number, key: string): Promise<void>;
 				};
 				envVar: {
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<ApplicationVariable>,
-					): Bluebird<ApplicationVariable[]>;
+					): Promise<ApplicationVariable[]>;
 					set(
 						nameOrId: string | number,
 						key: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					get(
 						nameOrId: string | number,
 						key: string,
-					): Bluebird<string | undefined>;
-					remove(nameOrId: string | number, key: string): Bluebird<void>;
+					): Promise<string | undefined>;
+					remove(nameOrId: string | number, key: string): Promise<void>;
 				};
 				buildVar: {
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<BuildVariable>,
-					): Bluebird<BuildVariable[]>;
+					): Promise<BuildVariable[]>;
 					set(
 						nameOrId: string | number,
 						key: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					get(
 						nameOrId: string | number,
 						key: string,
-					): Bluebird<string | undefined>;
-					remove(nameOrId: string | number, key: string): Bluebird<void>;
+					): Promise<string | undefined>;
+					remove(nameOrId: string | number, key: string): Promise<void>;
 				};
 				invite: {
 					create: (
 						nameOrSlugOrId: string | number,
 						options: ApplicationInviteOptions,
-					) => Bluebird<ApplicationInvite>;
+					) => Promise<ApplicationInvite>;
 					getAllByApplication: (
 						nameOrSlugOrId: string | number,
 						options?: PineOptions<ApplicationInvite>,
-					) => Bluebird<ApplicationInvite[]>;
+					) => Promise<ApplicationInvite[]>;
 					getAll: (
 						options?: PineOptions<ApplicationInvite>,
-					) => Bluebird<ApplicationInvite>;
-					accept: (invitationToken: string) => Bluebird<void>;
-					revoke: (id: number) => Bluebird<void>;
+					) => Promise<ApplicationInvite>;
+					accept: (invitationToken: string) => Promise<void>;
+					revoke: (id: number) => Promise<void>;
 				};
 			};
 			apiKey: {
-				create: (name: string, description?: string | null) => Bluebird<string>;
-				getAll: (options?: PineOptions<ApiKey>) => Bluebird<ApiKey[]>;
+				create: (name: string, description?: string | null) => Promise<string>;
+				getAll: (options?: PineOptions<ApiKey>) => Promise<ApiKey[]>;
 				update: (
 					id: number,
 					apiKeyInfo: { name?: string; description?: string | null },
-				) => Bluebird<void>;
-				revoke: (id: number) => Bluebird<void>;
+				) => Promise<void>;
+				revoke: (id: number) => Promise<void>;
 			};
 			release: {
 				get(
 					commitOrId: string | number,
 					options?: PineOptions<Release>,
-				): Bluebird<Release>;
+				): Promise<Release>;
 				getAllByApplication(
 					nameOrSlugOrId: string | number,
 					options?: PineOptions<Release>,
-				): Bluebird<Release[]>;
+				): Promise<Release[]>;
 				getLatestByApplication(
 					nameOrSlugOrId: string | number,
 					options?: PineOptions<Release>,
-				): Bluebird<Release>;
+				): Promise<Release>;
 				getWithImageDetails(
 					commitOrId: string | number,
 					options?: {
 						release?: PineOptions<Release>;
 						image?: PineOptions<Image>;
 					},
-				): Bluebird<ReleaseWithImageDetails>;
+				): Promise<ReleaseWithImageDetails>;
 				createFromUrl(
 					nameOrSlugOrId: string | number,
 					urlDeployOptions: BuilderUrlDeployOptions,
-				): Bluebird<number>;
+				): Promise<number>;
 				tags: {
 					getAllByApplication(
 						nameOrSlugOrId: string | number,
 						options?: PineOptions<ReleaseTag>,
-					): Bluebird<ReleaseTag[]>;
+					): Promise<ReleaseTag[]>;
 					getAllByRelease(
 						commitOrId: string | number,
 						options?: PineOptions<ReleaseTag>,
-					): Bluebird<ReleaseTag[]>;
-					getAll(options?: PineOptions<ReleaseTag>): Bluebird<ReleaseTag[]>;
+					): Promise<ReleaseTag[]>;
+					getAll(options?: PineOptions<ReleaseTag>): Promise<ReleaseTag[]>;
 					set(
 						commitOrReleaseId: string | number,
 						tagKey: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					remove(
 						commitOrReleaseId: string | number,
 						tagKey: string,
-					): Bluebird<void>;
+					): Promise<void>;
 				};
 			};
 			billing: {
-				getAccount(organization: string | number): Bluebird<BillingAccountInfo>;
-				getPlan(organization: string | number): Bluebird<BillingPlanInfo>;
-				getBillingInfo(organization: string | number): Bluebird<BillingInfo>;
+				getAccount(organization: string | number): Promise<BillingAccountInfo>;
+				getPlan(organization: string | number): Promise<BillingPlanInfo>;
+				getBillingInfo(organization: string | number): Promise<BillingInfo>;
 				updateBillingInfo(
 					organization: string | number,
 					billingInfo: TokenBillingSubmitInfo,
-				): Bluebird<BillingInfo>;
-				getInvoices(organization: string | number): Bluebird<InvoiceInfo[]>;
+				): Promise<BillingInfo>;
+				getInvoices(organization: string | number): Promise<InvoiceInfo[]>;
 				downloadInvoice(
 					organization: string | number,
 					invoiceNumber: string,
-				): Bluebird<Blob | BalenaRequestStreamResult>;
+				): Promise<Blob | BalenaRequestStreamResult>;
 			};
 			device: {
 				get(
 					uuidOrId: string | number,
 					options?: PineOptions<Device>,
-				): Bluebird<Device>;
+				): Promise<Device>;
 				getByName(
 					nameOrId: string | number,
 					options?: PineOptions<Device>,
-				): Bluebird<Device[]>;
+				): Promise<Device[]>;
 				getWithServiceDetails(
 					nameOrId: string | number,
 					options?: PineOptions<Device>,
-				): Bluebird<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
-				getAll(options?: PineOptions<Device>): Bluebird<Device[]>;
+				): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
+				getAll(options?: PineOptions<Device>): Promise<Device[]>;
 				getAllByApplication(
 					nameOrId: string | number,
 					options?: PineOptions<Device>,
-				): Bluebird<Device[]>;
+				): Promise<Device[]>;
 				getAllByParentDevice(
 					parentUuidOrId: string | number,
 					options?: PineOptions<Device>,
-				): Bluebird<Device[]>;
-				getName(uuidOrId: string | number): Bluebird<string>;
-				getApplicationName(uuidOrId: string | number): Bluebird<string>;
+				): Promise<Device[]>;
+				getName(uuidOrId: string | number): Promise<string>;
+				getApplicationName(uuidOrId: string | number): Promise<string>;
 				getApplicationInfo(
 					uuidOrId: string | number,
-				): Bluebird<{
+				): Promise<{
 					appId: string;
 					commit: string;
 					containerId: string;
 					env: { [key: string]: string | number };
 					imageId: string;
 				}>;
-				has(uuidOrId: string | number): Bluebird<boolean>;
-				isOnline(uuidOrId: string | number): Bluebird<boolean>;
-				getLocalIPAddresses(uuidOrId: string | number): Bluebird<string[]>;
-				getMACAddresses(uuidOrId: string | number): Bluebird<string[]>;
+				has(uuidOrId: string | number): Promise<boolean>;
+				isOnline(uuidOrId: string | number): Promise<boolean>;
+				getLocalIPAddresses(uuidOrId: string | number): Promise<string[]>;
+				getMACAddresses(uuidOrId: string | number): Promise<string[]>;
 				getDashboardUrl(uuid: string): string;
-				getSupportedDeviceTypes(): Bluebird<string[]>;
+				getSupportedDeviceTypes(): Promise<string[]>;
 				getManifestBySlug(
 					slugOrName: string,
-				): Bluebird<DeviceTypeJson.DeviceType>;
+				): Promise<DeviceTypeJson.DeviceType>;
 				getManifestByApplication(
 					nameOrId: string | number,
-				): Bluebird<DeviceTypeJson.DeviceType>;
+				): Promise<DeviceTypeJson.DeviceType>;
 				move(
 					uuidOrId: string | number,
 					applicationNameOrId: string | number,
-				): Bluebird<void>;
-				note(uuidOrId: string | number, note: string): Bluebird<void>;
-				remove(uuidOrId: string | number): Bluebird<void>;
-				rename(uuidOrId: string | number, newName: string): Bluebird<void>;
+				): Promise<void>;
+				note(uuidOrId: string | number, note: string): Promise<void>;
+				remove(uuidOrId: string | number): Promise<void>;
+				rename(uuidOrId: string | number, newName: string): Promise<void>;
 				setCustomLocation(
 					uuidOrId: string | number,
 					location: { latitude: number; longitude: number },
-				): Bluebird<void>;
-				unsetCustomLocation(uuidOrId: string | number): Bluebird<void>;
-				identify(uuidOrId: string | number): Bluebird<void>;
-				startApplication(uuidOrId: string | number): Bluebird<void>;
-				stopApplication(uuidOrId: string | number): Bluebird<void>;
-				restartApplication(uuidOrId: string | number): Bluebird<void>;
-				startService(
-					uuidOrId: string | number,
-					imageId: number,
-				): Bluebird<void>;
-				stopService(uuidOrId: string | number, imageId: number): Bluebird<void>;
+				): Promise<void>;
+				unsetCustomLocation(uuidOrId: string | number): Promise<void>;
+				identify(uuidOrId: string | number): Promise<void>;
+				startApplication(uuidOrId: string | number): Promise<void>;
+				stopApplication(uuidOrId: string | number): Promise<void>;
+				restartApplication(uuidOrId: string | number): Promise<void>;
+				startService(uuidOrId: string | number, imageId: number): Promise<void>;
+				stopService(uuidOrId: string | number, imageId: number): Promise<void>;
 				restartService(
 					uuidOrId: string | number,
 					imageId: number,
-				): Bluebird<void>;
+				): Promise<void>;
 				grantSupportAccess(
 					uuidOrId: string | number,
 					expiryTimestamp: number,
-				): Bluebird<void>;
-				revokeSupportAccess(uuidOrId: string | number): Bluebird<void>;
-				enableLocalMode(uuidOrId: string | number): Bluebird<void>;
-				disableLocalMode(uuidOrId: string | number): Bluebird<void>;
-				isInLocalMode(uuidOrId: string | number): Bluebird<boolean>;
+				): Promise<void>;
+				revokeSupportAccess(uuidOrId: string | number): Promise<void>;
+				enableLocalMode(uuidOrId: string | number): Promise<void>;
+				disableLocalMode(uuidOrId: string | number): Promise<void>;
+				isInLocalMode(uuidOrId: string | number): Promise<boolean>;
 				getLocalModeSupport(
 					device: AtLeast<
 						Device,
@@ -666,49 +662,49 @@ declare namespace BalenaSdk {
 					supported: boolean;
 					message: string;
 				};
-				enableLockOverride(uuidOrId: string | number): Bluebird<void>;
-				disableLockOverride(uuidOrId: string | number): Bluebird<void>;
-				hasLockOverride(uuidOrId: string | number): Bluebird<boolean>;
+				enableLockOverride(uuidOrId: string | number): Promise<void>;
+				disableLockOverride(uuidOrId: string | number): Promise<void>;
+				hasLockOverride(uuidOrId: string | number): Promise<boolean>;
 				reboot(
 					uuidOrId: string | number,
 					{ force }: { force?: boolean },
-				): Bluebird<void>;
+				): Promise<void>;
 				shutdown(
 					uuidOrId: string | number,
 					{ force }: { force?: boolean },
-				): Bluebird<void>;
-				purge(uuidOrId: string | number): Bluebird<void>;
+				): Promise<void>;
+				purge(uuidOrId: string | number): Promise<void>;
 				update(
 					uuidOrId: string | number,
 					{ force }: { force?: boolean },
-				): Bluebird<void>;
+				): Promise<void>;
 				getSupervisorState(
 					uuidOrId: string | number,
-				): Bluebird<SupervisorStatus>;
+				): Promise<SupervisorStatus>;
 				getSupervisorTargetState(
 					uuidOrId: string | number,
-				): Bluebird<DeviceState.DeviceState>;
-				getDisplayName(deviceTypeName: string): Bluebird<string>;
-				getDeviceSlug(deviceTypeName: string): Bluebird<string>;
+				): Promise<DeviceState.DeviceState>;
+				getDisplayName(deviceTypeName: string): Promise<string>;
+				getDeviceSlug(deviceTypeName: string): Promise<string>;
 				generateUniqueKey(): string;
 				register(
 					applicationNameOrId: string | number,
 					uuid: string,
-				): Bluebird<{
+				): Promise<{
 					id: number;
 					uuid: string;
 					api_key: string;
 				}>;
-				generateDeviceKey(uuidOrId: string | number): Bluebird<string>;
-				enableDeviceUrl(uuidOrId: string | number): Bluebird<void>;
-				disableDeviceUrl(uuidOrId: string | number): Bluebird<void>;
-				hasDeviceUrl(uuidOrId: string | number): Bluebird<boolean>;
-				getDeviceUrl(uuidOrId: string | number): Bluebird<string>;
-				enableTcpPing(uuidOrId: string | number): Bluebird<void>;
-				disableTcpPing(uuidOrId: string | number): Bluebird<void>;
-				ping(uuidOrId: string | number): Bluebird<void>;
-				getStatus(uuidOrId: string | number): Bluebird<string>;
-				getProgress(uuidOrId: string | number): Bluebird<number | null>;
+				generateDeviceKey(uuidOrId: string | number): Promise<string>;
+				enableDeviceUrl(uuidOrId: string | number): Promise<void>;
+				disableDeviceUrl(uuidOrId: string | number): Promise<void>;
+				hasDeviceUrl(uuidOrId: string | number): Promise<boolean>;
+				getDeviceUrl(uuidOrId: string | number): Promise<string>;
+				enableTcpPing(uuidOrId: string | number): Promise<void>;
+				disableTcpPing(uuidOrId: string | number): Promise<void>;
+				ping(uuidOrId: string | number): Promise<void>;
+				getStatus(uuidOrId: string | number): Promise<string>;
+				getProgress(uuidOrId: string | number): Promise<number | null>;
 				lastOnline(
 					device: AtLeast<Device, 'last_connectivity_event' | 'is_online'>,
 				): string;
@@ -717,100 +713,100 @@ declare namespace BalenaSdk {
 				): string;
 				isTrackingApplicationRelease(
 					uuidOrId: string | number,
-				): Bluebird<boolean>;
-				getTargetReleaseHash(uuidOrId: string | number): Bluebird<string>;
+				): Promise<boolean>;
+				getTargetReleaseHash(uuidOrId: string | number): Promise<string>;
 				pinToRelease(
 					uuidOrId: string | number,
 					fullReleaseHashOrId: string | number,
-				): Bluebird<void>;
-				trackApplicationRelease(uuidOrId: string | number): Bluebird<void>;
+				): Promise<void>;
+				trackApplicationRelease(uuidOrId: string | number): Promise<void>;
 				startOsUpdate(
 					uuid: string,
 					targetOsVersion: string,
-				): Bluebird<OsUpdateActionResult>;
-				getOsUpdateStatus(uuid: string): Bluebird<OsUpdateActionResult>;
+				): Promise<OsUpdateActionResult>;
+				getOsUpdateStatus(uuid: string): Promise<OsUpdateActionResult>;
 				tags: {
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<DeviceTag>,
-					): Bluebird<DeviceTag[]>;
+					): Promise<DeviceTag[]>;
 					getAllByDevice(
 						uuidOrId: string | number,
 						options?: PineOptions<DeviceTag>,
-					): Bluebird<DeviceTag[]>;
-					getAll(options?: PineOptions<DeviceTag>): Bluebird<DeviceTag[]>;
+					): Promise<DeviceTag[]>;
+					getAll(options?: PineOptions<DeviceTag>): Promise<DeviceTag[]>;
 					set(
 						uuidOrId: string | number,
 						tagKey: string,
 						value: string,
-					): Bluebird<void>;
-					remove(uuidOrId: string | number, tagKey: string): Bluebird<void>;
+					): Promise<void>;
+					remove(uuidOrId: string | number, tagKey: string): Promise<void>;
 				};
 				configVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
 						options?: PineOptions<DeviceVariable>,
-					): Bluebird<DeviceVariable[]>;
+					): Promise<DeviceVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<DeviceVariable>,
-					): Bluebird<DeviceVariable[]>;
+					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
 						key: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					get(
 						uuidOrId: string | number,
 						key: string,
-					): Bluebird<string | undefined>;
-					remove(uuidOrId: string | number, key: string): Bluebird<void>;
+					): Promise<string | undefined>;
+					remove(uuidOrId: string | number, key: string): Promise<void>;
 				};
 				envVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
 						options?: PineOptions<DeviceVariable>,
-					): Bluebird<DeviceVariable[]>;
+					): Promise<DeviceVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<DeviceVariable>,
-					): Bluebird<DeviceVariable[]>;
+					): Promise<DeviceVariable[]>;
 					set(
 						uuidOrId: string | number,
 						key: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					get(
 						uuidOrId: string | number,
 						key: string,
-					): Bluebird<string | undefined>;
-					remove(uuidOrId: string | number, key: string): Bluebird<void>;
+					): Promise<string | undefined>;
+					remove(uuidOrId: string | number, key: string): Promise<void>;
 				};
 				serviceVar: {
 					getAllByDevice(
 						uuidOrId: string | number,
 						options?: PineOptions<DeviceServiceEnvironmentVariable>,
-					): Bluebird<DeviceServiceEnvironmentVariable[]>;
+					): Promise<DeviceServiceEnvironmentVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<DeviceServiceEnvironmentVariable>,
-					): Bluebird<DeviceServiceEnvironmentVariable[]>;
+					): Promise<DeviceServiceEnvironmentVariable[]>;
 					set(
 						uuidOrId: string | number,
 						serviceId: number,
 						key: string,
 						value: string,
-					): Bluebird<void>;
+					): Promise<void>;
 					get(
 						uuidOrId: string | number,
 						serviceId: number,
 						key: string,
-					): Bluebird<string | undefined>;
+					): Promise<string | undefined>;
 					remove(
 						uuidOrId: string | number,
 						serviceId: number,
 						key: string,
-					): Bluebird<void>;
+					): Promise<void>;
 				};
 				OverallStatus: typeof DeviceOverallStatus.DeviceOverallStatus;
 			};
@@ -818,27 +814,27 @@ declare namespace BalenaSdk {
 				getAllByApplication(
 					nameOrId: string | number,
 					options?: PineOptions<Service>,
-				): Bluebird<Service[]>;
+				): Promise<Service[]>;
 				var: {
 					getAllByService(
 						id: number,
 						options?: PineOptions<ServiceEnvironmentVariable>,
-					): Bluebird<ServiceEnvironmentVariable[]>;
+					): Promise<ServiceEnvironmentVariable[]>;
 					getAllByApplication(
 						nameOrId: string | number,
 						options?: PineOptions<ServiceEnvironmentVariable>,
-					): Bluebird<ServiceEnvironmentVariable[]>;
-					set(id: number, key: string, value: string): Bluebird<void>;
-					get(id: number, key: string): Bluebird<string | undefined>;
-					remove(id: number, key: string): Bluebird<void>;
+					): Promise<ServiceEnvironmentVariable[]>;
+					set(id: number, key: string, value: string): Promise<void>;
+					get(id: number, key: string): Promise<string | undefined>;
+					remove(id: number, key: string): Promise<void>;
 				};
 			};
 			config: {
-				getAll: () => Bluebird<Config>;
-				getDeviceTypes: () => Bluebird<DeviceTypeJson.DeviceType[]>;
+				getAll: () => Promise<Config>;
+				getDeviceTypes: () => Promise<DeviceTypeJson.DeviceType[]>;
 				getDeviceOptions(
 					deviceType: string,
-				): Bluebird<
+				): Promise<
 					Array<
 						| DeviceTypeJson.DeviceTypeOptions
 						| DeviceTypeJson.DeviceInitializationOptions
@@ -846,53 +842,53 @@ declare namespace BalenaSdk {
 				>;
 			};
 			image: {
-				get(id: number, options?: PineOptions<Image>): Bluebird<Image>;
-				getLogs(id: number): Bluebird<string>;
+				get(id: number, options?: PineOptions<Image>): Promise<Image>;
+				getLogs(id: number): Promise<string>;
 			};
 			key: {
-				getAll(options?: PineOptions<SSHKey>): Bluebird<SSHKey[]>;
-				get(id: number): Bluebird<SSHKey>;
-				remove(id: number): Bluebird<string>;
-				create(title: string, key: string): Bluebird<SSHKey>;
+				getAll(options?: PineOptions<SSHKey>): Promise<SSHKey[]>;
+				get(id: number): Promise<SSHKey>;
+				remove(id: number): Promise<string>;
+				create(title: string, key: string): Promise<SSHKey>;
 			};
 			organization: {
 				create: (
 					options: PineSubmitBody<Organization>,
-				) => Bluebird<Organization>;
+				) => Promise<Organization>;
 				getAll: (
 					options?: PineOptions<Organization>,
-				) => Bluebird<Organization[]>;
+				) => Promise<Organization[]>;
 				get: (
 					handleOrId: string | number,
 					options?: PineOptions<Organization>,
-				) => Bluebird<Organization>;
-				remove: (handleOrId: string | number) => Bluebird<void>;
+				) => Promise<Organization>;
+				remove: (handleOrId: string | number) => Promise<void>;
 			};
 			os: {
 				getConfig(
 					nameOrId: string | number,
 					options: ImgConfigOptions,
-				): Bluebird<object>;
-				getDownloadSize(slug: string, version?: string): Bluebird<number>;
-				getSupportedVersions(slug: string): Bluebird<OsVersions>;
+				): Promise<object>;
+				getDownloadSize(slug: string, version?: string): Promise<number>;
+				getSupportedVersions(slug: string): Promise<OsVersions>;
 				getMaxSatisfyingVersion(
 					deviceType: string,
 					versionOrRange: string,
-				): Bluebird<string>;
-				getLastModified(deviceType: string, version?: string): Bluebird<Date>;
+				): Promise<string>;
+				getLastModified(deviceType: string, version?: string): Promise<Date>;
 				download(
 					deviceType: string,
 					version?: string,
-				): Bluebird<BalenaRequestStreamResult>;
+				): Promise<BalenaRequestStreamResult>;
 				isSupportedOsUpdate(
 					deviceType: string,
 					currentVersion: string,
 					targetVersion: string,
-				): Bluebird<boolean>;
+				): Promise<boolean>;
 				getSupportedOsUpdateVersions(
 					deviceType: string,
 					currentVersion: string,
-				): Bluebird<OsUpdateVersions>;
+				): Promise<OsUpdateVersions>;
 				isArchitectureCompatibleWith(
 					osArchitecture: string,
 					applicationArchitecture: string,
@@ -901,11 +897,8 @@ declare namespace BalenaSdk {
 		};
 
 		logs: {
-			history(uuid: string, options?: LogsOptions): Bluebird<LogMessage[]>;
-			subscribe(
-				uuid: string,
-				options?: LogsOptions,
-			): Bluebird<LogsSubscription>;
+			history(uuid: string, options?: LogsOptions): Promise<LogMessage[]>;
+			subscribe(uuid: string, options?: LogsOptions): Promise<LogsSubscription>;
 		};
 
 		pine: BalenaPine.Pine;

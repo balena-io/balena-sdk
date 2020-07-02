@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import * as Bluebird from 'bluebird';
-
 import * as bSemver from 'balena-semver';
 import once = require('lodash/once');
 import * as memoizee from 'memoizee';
@@ -87,7 +85,7 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 */
 	const _getDeviceTypes = withDeviceTypesEndpointCaching<
-		() => Bluebird<DeviceTypeJson.DeviceType[]>
+		() => Promise<DeviceTypeJson.DeviceType[]>
 	>(() => configModel().getDeviceTypes());
 
 	const getValidatedDeviceType = (deviceTypeSlug: string) =>
@@ -253,7 +251,7 @@ const getOsModel = function (
 	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'.
 	 * The version **must** be the exact version number.
 	 * @fulfil {Number} - OS image download size, in bytes.
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
@@ -268,7 +266,7 @@ const getOsModel = function (
 	const getDownloadSize = function (
 		deviceType: string,
 		version: string = 'latest',
-	): Bluebird<number> {
+	): Promise<number> {
 		return getValidatedDeviceType(deviceType).then(() =>
 			_getDownloadSize(deviceType, version),
 		);
@@ -289,7 +287,7 @@ const getOsModel = function (
 	 * that is _not_ pre-release, can be `null`
 	 * * latest - the most recent version, including pre-releases
 	 * * default - recommended (if available) or latest otherwise
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
@@ -303,7 +301,7 @@ const getOsModel = function (
 	 */
 	const getSupportedVersions = function (
 		deviceType: string,
-	): Bluebird<OsVersions> {
+	): Promise<OsVersions> {
 		return getValidatedDeviceType(deviceType).then(() =>
 			_getOsVersions(deviceType),
 		);
@@ -332,7 +330,7 @@ const getOsModel = function (
 	 * or `latest` is returned otherwise.
 	 * Defaults to `'latest'`.
 	 * @fulfil {String|null} - the version number, or `null` if no matching versions are found
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
@@ -347,7 +345,7 @@ const getOsModel = function (
 	const getMaxSatisfyingVersion = function (
 		deviceType: string,
 		versionOrRange: keyof OsVersions = 'latest',
-	): Bluebird<string> {
+	): Promise<string> {
 		return getValidatedDeviceType(deviceType)
 			.then(() => getSupportedVersions(deviceType))
 			.then((osVersions) =>
@@ -368,7 +366,7 @@ const getOsModel = function (
 	 * The version **must** be the exact version number.
 	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
 	 * @fulfil {Date} - last modified date
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.getLastModified('raspberry-pi').then(function(date) {
@@ -387,7 +385,7 @@ const getOsModel = function (
 	const getLastModified = function (
 		deviceType: string,
 		version: string = 'latest',
-	): Bluebird<Date> {
+	): Promise<Date> {
 		return getValidatedDeviceType(deviceType)
 			.then(() => normalizeVersion(version))
 			.then((ver) =>
@@ -420,7 +418,7 @@ const getOsModel = function (
 	 * The version **must** be the exact version number.
 	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
 	 * @fulfil {ReadableStream} - download stream
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.download('raspberry-pi').then(function(stream) {
@@ -435,7 +433,7 @@ const getOsModel = function (
 	const download = onlyIf(!isBrowser)(function (
 		deviceType: string,
 		version: string = 'latest',
-	): Bluebird<BalenaRequestStreamResult> {
+	): Promise<BalenaRequestStreamResult> {
 		return getValidatedDeviceType(deviceType)
 			.then(() => {
 				if (version === 'latest') {
@@ -489,7 +487,7 @@ const getOsModel = function (
 	 * @param {String} [options.gateway] - static ip gateway.
 	 * @param {String} [options.netmask] - static ip netmask.
 	 * @fulfil {Object} - application configuration as a JSON object.
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.getConfig('MyApp', { version: ''2.12.7+rev1.prod'' }).then(function(config) {
@@ -505,35 +503,32 @@ const getOsModel = function (
 	 * 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	 * });
 	 */
-	const getConfig = function (
+	const getConfig = async function (
 		nameOrSlugOrId: string | number,
 		options: ImgConfigOptions,
-	): Bluebird<object> {
-		return Bluebird.try(() => {
-			if (!options?.version) {
-				throw new Error('An OS version is required when calling os.getConfig');
+	): Promise<object> {
+		if (!options?.version) {
+			throw new Error('An OS version is required when calling os.getConfig');
+		}
+
+		options.network = options.network ?? 'ethernet';
+
+		try {
+			const applicationId = await applicationModel()._getId(nameOrSlugOrId);
+
+			const { body } = await request.send({
+				method: 'POST',
+				url: '/download-config',
+				baseUrl: apiUrl,
+				body: Object.assign(options, { appId: applicationId }),
+			});
+			return body;
+		} catch (err) {
+			if (isNotFoundResponse(err)) {
+				treatAsMissingApplication(nameOrSlugOrId, err);
 			}
-
-			options.network = options.network ?? 'ethernet';
-
-			return applicationModel()
-				._getId(nameOrSlugOrId)
-				.then((applicationId: number) =>
-					request.send({
-						method: 'POST',
-						url: '/download-config',
-						baseUrl: apiUrl,
-						body: Object.assign(options, { appId: applicationId }),
-					}),
-				)
-				.then(({ body }) => body)
-				.catch((err) => {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingApplication(nameOrSlugOrId, err);
-					}
-					throw err;
-				});
-		});
+			throw err;
+		}
 	};
 
 	/**
@@ -547,7 +542,7 @@ const getOsModel = function (
 	 * @param {String} currentVersion - semver-compatible version for the starting OS version
 	 * @param {String} targetVersion - semver-compatible version for the target OS version
 	 * @fulfil {Boolean} - whether upgrading the OS to the target version is supported
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(isSupported) {
@@ -563,7 +558,7 @@ const getOsModel = function (
 		deviceType: string,
 		currentVersion: string,
 		targetVersion: string,
-	): Bluebird<boolean> =>
+	): Promise<boolean> =>
 		getValidatedDeviceType(deviceType).then(() =>
 			hupActionHelper().isSupportedOsUpdate(
 				deviceType,
@@ -587,7 +582,7 @@ const getOsModel = function (
 	 * * recommended - the recommended version, i.e. the most recent version
 	 * that is _not_ pre-release, can be `null`
 	 * * current - the provided current version after normalization
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod').then(function(isSupported) {
@@ -602,7 +597,7 @@ const getOsModel = function (
 	const getSupportedOsUpdateVersions = (
 		deviceType: string,
 		currentVersion: string,
-	): Bluebird<OsUpdateVersions> =>
+	): Promise<OsUpdateVersions> =>
 		getSupportedVersions(deviceType).then(({ versions: allVersions }) => {
 			// use bSemver.compare to find the current version in the OS list
 			// to benefit from the baked-in normalization

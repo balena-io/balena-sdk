@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 import type { Dictionary } from '../../typings/utils';
 
 // Use with: `findCallback(arguments)`.
@@ -23,12 +22,9 @@ const addCallbackSupport = <T extends (...args: any[]) => any>(fn: T): T => {
 			return result;
 		}
 
-		const bluebirdPromise =
-			result instanceof Bluebird
-				? (result as Bluebird<any>)
-				: Bluebird.resolve(result);
+		result.then((v) => callback(null, v), callback);
 
-		return bluebirdPromise.asCallback(callback);
+		return result;
 	} as T;
 };
 

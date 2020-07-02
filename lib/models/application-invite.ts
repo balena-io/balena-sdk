@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Bluebird from 'bluebird';
 import type {
 	Application,
 	ApplicationInvite,
@@ -51,7 +50,7 @@ const getApplicationInviteModel = function (
 		 *
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - invites
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.application.invite.getAll().then(function(invites) {
@@ -65,7 +64,7 @@ const getApplicationInviteModel = function (
 		 */
 		getAll(
 			options: PineOptions<ApplicationInvite> = {},
-		): Bluebird<ApplicationInvite[]> {
+		): Promise<ApplicationInvite[]> {
 			return pine.get({
 				resource: RESOURCE,
 				options,
@@ -85,7 +84,7 @@ const getApplicationInviteModel = function (
 		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - invites
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.application.invite.getAllByApplication('MyApp').then(function(invites) {
@@ -105,7 +104,7 @@ const getApplicationInviteModel = function (
 		getAllByApplication(
 			nameOrSlugOrId: number | string,
 			options: PineOptions<ApplicationInvite> = {},
-		): Bluebird<ApplicationInvite[]> {
+		): Promise<ApplicationInvite[]> {
 			return getApplication(nameOrSlugOrId, {
 				$select: 'id',
 			}).then(({ id }: Application) =>
@@ -134,7 +133,7 @@ const getApplicationInviteModel = function (
 		 * @param {String} [message=null] - the message to send along with the invite
 		 *
 		 * @fulfil {String} - application invite
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.application.invite.create('MyApp', { collabortor: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
@@ -154,8 +153,8 @@ const getApplicationInviteModel = function (
 		create(
 			nameOrSlugOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Bluebird<Partial<ApplicationInvite>> {
-			return Bluebird.all([
+		): Promise<Partial<ApplicationInvite>> {
+			return Promise.all([
 				getApplication(nameOrSlugOrId, { $select: 'id' }),
 				roleName
 					? pine.get<ApplicationMembershipRole>({
@@ -202,7 +201,7 @@ const getApplicationInviteModel = function (
 		 * @memberof balena.models.application.invite
 		 *
 		 * @param {Number} id - application invite id
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.application.invite.revoke(123);
@@ -213,8 +212,8 @@ const getApplicationInviteModel = function (
 		 * 	...
 		 * });
 		 */
-		revoke(id: number): Bluebird<void> {
-			return pine.delete({ resource: RESOURCE, id }).return();
+		async revoke(id: number): Promise<void> {
+			await pine.delete({ resource: RESOURCE, id });
 		},
 
 		/**
@@ -227,7 +226,7 @@ const getApplicationInviteModel = function (
 		 * @description This method adds the calling user to the application.
 		 *
 		 * @param {String} invitationToken - invite token
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.application.invite.accept("qwerty-invitation-token");
@@ -238,23 +237,21 @@ const getApplicationInviteModel = function (
 		 * 	...
 		 * });
 		 */
-		accept(invitationToken: string) {
-			return Bluebird.try(() => {
-				return request
-					.send({
-						method: 'POST',
-						url: `/user/v1/invitation/${invitationToken}`,
-						baseUrl: apiUrl,
-					})
-					.then(({ body }) => body)
-					.catch(function (err: errors.BalenaRequestError) {
-						if (err.statusCode === 401) {
-							return new errors.BalenaNotLoggedIn();
-						} else {
-							return err;
-						}
-					});
-			});
+		async accept(invitationToken: string) {
+			try {
+				const { body } = await request.send({
+					method: 'POST',
+					url: `/user/v1/invitation/${invitationToken}`,
+					baseUrl: apiUrl,
+				});
+				return body;
+			} catch (err) {
+				if (err.statusCode === 401) {
+					return new errors.BalenaNotLoggedIn();
+				} else {
+					return err;
+				}
+			}
 		},
 	};
 	return exports;

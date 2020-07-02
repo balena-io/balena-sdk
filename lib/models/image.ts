@@ -18,7 +18,6 @@ import * as errors from 'balena-errors';
 import type { Image, PineOptions } from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
-import * as Bluebird from 'bluebird';
 
 const getImageModel = function (
 	deps: InjectedDependenciesParam,
@@ -36,7 +35,7 @@ const getImageModel = function (
 		 * @param {Number} id - image id
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - image
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.image.get(123).then(function(image) {
@@ -49,7 +48,7 @@ const getImageModel = function (
 		 * 	console.log(image);
 		 * });
 		 */
-		get(id: number, options: PineOptions<Image> = {}): Bluebird<Image> {
+		get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
 			return pine
 				.get({
 					resource: 'image',
