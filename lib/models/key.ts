@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
@@ -39,7 +39,7 @@ const getKeyModel = function (
 	 *
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - ssh keys
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.key.getAll().then(function(keys) {
@@ -54,7 +54,7 @@ const getKeyModel = function (
 	 */
 	function getAll(
 		options: BalenaSdk.PineOptions<BalenaSdk.SSHKey> = {},
-	): Promise<BalenaSdk.SSHKey[]> {
+	): Bluebird<BalenaSdk.SSHKey[]> {
 		return pine.get<BalenaSdk.SSHKey>({
 			resource: 'user__has__public_key',
 			options: mergePineOptions({}, options),
@@ -70,7 +70,7 @@ const getKeyModel = function (
 	 *
 	 * @param {Number} id - key id
 	 * @fulfil {Object} - ssh key
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.key.get(51).then(function(key) {
@@ -83,7 +83,7 @@ const getKeyModel = function (
 	 * 	console.log(key);
 	 * });
 	 */
-	function get(id: number): Promise<BalenaSdk.SSHKey> {
+	function get(id: number): Bluebird<BalenaSdk.SSHKey> {
 		return pine
 			.get<BalenaSdk.SSHKey>({
 				resource: 'user__has__public_key',
@@ -104,7 +104,7 @@ const getKeyModel = function (
 	 * @memberof balena.models.key
 	 *
 	 * @param {Number} id - key id
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.key.remove(51);
@@ -114,7 +114,7 @@ const getKeyModel = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function remove(id: number): Promise<string> {
+	function remove(id: number): Bluebird<string> {
 		return pine.delete<BalenaSdk.SSHKey>({
 			resource: 'user__has__public_key',
 			id,
@@ -132,7 +132,7 @@ const getKeyModel = function (
 	 * @param {String} key - the public ssh key
 	 *
 	 * @fulfil {Object} - ssh key
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
@@ -145,8 +145,8 @@ const getKeyModel = function (
 	 * 	console.log(key);
 	 * });
 	 */
-	function create(title: string, key: string): Promise<BalenaSdk.SSHKey> {
-		return Promise.try(() => {
+	function create(title: string, key: string): Bluebird<BalenaSdk.SSHKey> {
+		return Bluebird.try(() => {
 			// Avoid ugly whitespaces
 			key = key.trim();
 

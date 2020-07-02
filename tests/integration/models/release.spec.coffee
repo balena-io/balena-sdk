@@ -1,5 +1,5 @@
 m = require('mochainon')
-Promise = require('bluebird')
+Bluebird = require('bluebird')
 _ = require('lodash')
 
 {
@@ -310,7 +310,7 @@ describe 'Release Model', ->
 			before ->
 				balena.auth.getUserId()
 				.then (userId) =>
-					Promise.mapSeries [
+					Bluebird.mapSeries [
 							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'errored-then-fixed-release-commit'

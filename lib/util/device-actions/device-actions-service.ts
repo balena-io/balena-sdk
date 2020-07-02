@@ -1,4 +1,4 @@
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import * as BalenaRequest from '../../../typings/balena-request';
 
 interface MakeActionRequestParams {
@@ -66,7 +66,7 @@ export class DeviceActionsService {
 		actionNameOrId,
 		params,
 		extraOptions,
-	}: MakeActionRequestParams): Promise<T> => {
+	}: MakeActionRequestParams): Bluebird<T> => {
 		const data = params ? { parameters: params } : null;
 
 		return this.request

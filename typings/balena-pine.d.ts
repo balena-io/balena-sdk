@@ -1,4 +1,4 @@
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import * as PineClient from './pinejs-client-core';
 
 /* tslint:disable:no-namespace */
@@ -6,15 +6,15 @@ declare namespace BalenaPine {
 	interface Pine {
 		delete<T>(
 			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObjWithFilter<T>,
-		): Promise<'OK'>;
-		get<T>(params: PineClient.ParamsObjWithId<T>): Promise<T>;
-		get<T>(params: PineClient.ParamsObj<T>): Promise<T[]>;
-		get<T, Result>(params: PineClient.ParamsObj<T>): Promise<Result>;
-		post<T>(params: PineClient.ParamsObj<T>): Promise<T>;
+		): Bluebird<'OK'>;
+		get<T>(params: PineClient.ParamsObjWithId<T>): Bluebird<T>;
+		get<T>(params: PineClient.ParamsObj<T>): Bluebird<T[]>;
+		get<T, Result>(params: PineClient.ParamsObj<T>): Bluebird<Result>;
+		post<T>(params: PineClient.ParamsObj<T>): Bluebird<T>;
 		patch<T>(
 			params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObjWithFilter<T>,
-		): Promise<'OK'>;
-		upsert<T>(params: PineClient.UpsertParams<T>): Promise<T | 'OK'>;
+		): Bluebird<'OK'>;
+		upsert<T>(params: PineClient.UpsertParams<T>): Bluebird<T | 'OK'>;
 	}
 }
 
