@@ -1,4 +1,23 @@
 - commits:
+    - subject: Avoid $ExpectType b/c of issues with TS 3.9.6
+      hash: f83e4f4d358b1a6eb9e7815a28014e56ad55f562
+      body: |
+        Dtslint's $ExpectType on TS 3.9.6 stopped expanding
+        PineExpandableProps<Release> to the exact
+        properties, which broke the tests. Stopped using
+        $ExpectType in favor of using ts-toolbelt's Equals
+        on a plain assignment. This also makes it easier to
+        completely drop dtslint in a future PR, in favor of
+        plain tsc using @ts-expect-error.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.2.2
+  date: 2020-07-03T11:13:07.207Z
+- commits:
     - subject: 'model: Add build_environment_variable'
       hash: 230c5437daa659da7024123cc28ed63112d63120
       body: ''
