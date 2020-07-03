@@ -1,4 +1,4 @@
-Promise = require('bluebird')
+Bluebird = require('bluebird')
 _ = require('lodash')
 
 { chai } = require('mochainon')
@@ -73,7 +73,7 @@ exports.resetUser = ->
 	return balena.auth.isLoggedIn().then (isLoggedIn) ->
 		return if not isLoggedIn
 
-		Promise.all [
+		Bluebird.all [
 			balena.pine.delete
 				resource: 'application'
 				options:
@@ -216,7 +216,7 @@ exports.givenADevice = (beforeFn, extraDeviceProps) ->
 			if !@currentRelease || !@currentRelease.commit
 				return
 
-			Promise.all [
+			Bluebird.all [
 				# Create image installs for the images on the device
 				balena.pine.post
 					resource: 'image_install'
@@ -279,7 +279,7 @@ exports.givenMulticontainerApplication = (beforeFn) ->
 
 	beforeFn ->
 		balena.auth.getUserId().then (userId) =>
-			Promise.all [
+			Bluebird.all [
 				# Register web & DB services
 				balena.pine.post
 					resource: 'service'
@@ -294,7 +294,7 @@ exports.givenMulticontainerApplication = (beforeFn) ->
 						service_name: 'db'
 			,
 				# Register an old & new release of this application
-				Promise.mapSeries [
+				Bluebird.mapSeries [
 					resource: 'release'
 					body:
 						belongs_to__application: @application.id
@@ -322,7 +322,7 @@ exports.givenMulticontainerApplication = (beforeFn) ->
 			@oldRelease = oldRelease
 			@currentRelease = newRelease
 
-			Promise.all [
+			Bluebird.all [
 				# Register an old & new web image build from the old and new
 				# releases, a db build in the new release only
 				balena.pine.post
@@ -375,7 +375,7 @@ exports.givenMulticontainerApplication = (beforeFn) ->
 				@oldDbImage = oldDbImage
 				@newDbImage = newDbImage
 
-				Promise.all [
+				Bluebird.all [
 					# Tie the images to their corresponding releases
 					balena.pine.post
 						resource: 'image__is_part_of__release'

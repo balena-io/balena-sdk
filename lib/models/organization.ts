@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam } from '..';
@@ -46,7 +46,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 * @param {String} [options.handle] - The handle of the organization that will be created.
 	 *
 	 * @fulfil {String} - Organization
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.organization.create({ name:'MyOrganization' }).then(function(organization) {
@@ -61,7 +61,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 */
 	const create = function (
 		organization: BalenaSdk.PineSubmitBody<BalenaSdk.Organization>,
-	): Promise<BalenaSdk.Organization> {
+	): Bluebird<BalenaSdk.Organization> {
 		return pine.post<BalenaSdk.Organization>({
 			resource: 'organization',
 			body: organization,
@@ -77,7 +77,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 *
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - organizations
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.organization.getAll().then(function(organizations) {
@@ -92,7 +92,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 */
 	const getAll = function (
 		options: BalenaSdk.PineOptions<BalenaSdk.Organization> = {},
-	): Promise<BalenaSdk.Organization[]> {
+	): Bluebird<BalenaSdk.Organization[]> {
 		return pine.get<BalenaSdk.Organization>({
 			resource: 'organization',
 			options: mergePineOptions(
@@ -114,7 +114,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 * @param {String|Number} handleOrId - organization handle (string) or id (number).
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object} - organization
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.organization.get('myorganization').then(function(organization) {
@@ -136,7 +136,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 		handleOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Organization> = {},
 	) {
-		return Promise.try(() => {
+		return Bluebird.try(() => {
 			if (handleOrId == null) {
 				throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 			}
@@ -183,7 +183,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 * @memberof balena.models.organization
 	 *
 	 * @param {String|Number} handleOrId - organization handle (string) or id (number).
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.organization.remove(123);
@@ -193,7 +193,7 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	 * 	if (error) throw error;
 	 * });
 	 */
-	const remove = function (handleOrId: string | number): Promise<void> {
+	const remove = function (handleOrId: string | number): Bluebird<void> {
 		return getId(handleOrId)
 			.then((id) =>
 				pine.delete<BalenaSdk.Organization>({

@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import * as memoizee from 'memoizee';
 // TODO: change to type-only import when we bump TS to 3.8
 import _get2faModel from './2fa';
@@ -38,7 +38,7 @@ const getAuth = function (
 		}
 	};
 
-	const wrapAuthFn = <T extends (...args: any[]) => Promise<any>>(
+	const wrapAuthFn = <T extends (...args: any[]) => Bluebird<any>>(
 		eventName: string,
 		fn: T,
 	): T =>
@@ -88,7 +88,7 @@ const getAuth = function (
 	});
 
 	const getUserDetails = (noCache = false) =>
-		Promise.try(() => {
+		Bluebird.try(() => {
 			if (noCache) {
 				memoizedUserWhoami.clear();
 			}
@@ -107,7 +107,7 @@ const getAuth = function (
 	 * @description This will only work if you used {@link balena.auth.login} to log in.
 	 *
 	 * @fulfil {(String|undefined)} - username, if it exists
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.whoami().then(function(username) {
@@ -129,7 +129,7 @@ const getAuth = function (
 	 * 	}
 	 * });
 	 */
-	function whoami(): Promise<string | undefined> {
+	function whoami(): Bluebird<string | undefined> {
 		return getUserDetails()
 			.then((userDetails) => userDetails?.username)
 			.catchReturn(errors.BalenaNotLoggedIn, undefined);
@@ -153,7 +153,7 @@ const getAuth = function (
 	 * @param {String} credentials.password - the password
 	 *
 	 * @fulfil {String} - session token
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.authenticate(credentials).then(function(token) {
@@ -169,7 +169,7 @@ const getAuth = function (
 	function authenticate(credentials: {
 		email: string;
 		password: string;
-	}): Promise<string> {
+	}): Bluebird<string> {
 		return request
 			.send<string>({
 				method: 'POST',
@@ -197,7 +197,7 @@ const getAuth = function (
 	 * @param {String} credentials.email - the email
 	 * @param {String} credentials.password - the password
 	 *
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.login(credentials);
@@ -210,7 +210,7 @@ const getAuth = function (
 	function login(credentials: {
 		email: string;
 		password: string;
-	}): Promise<void> {
+	}): Bluebird<void> {
 		memoizedUserWhoami.clear();
 		return authenticate(credentials).then(auth.setKey);
 	}
@@ -225,7 +225,7 @@ const getAuth = function (
 	 * @description Login to balena with a session token or api key instead of with credentials.
 	 *
 	 * @param {String} authToken - the auth token
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.loginWithToken(authToken);
@@ -235,7 +235,7 @@ const getAuth = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function loginWithToken(authToken: string): Promise<void> {
+	function loginWithToken(authToken: string): Bluebird<void> {
 		memoizedUserWhoami.clear();
 		return auth.setKey(authToken);
 	}
@@ -248,7 +248,7 @@ const getAuth = function (
 	 * @memberof balena.auth
 	 *
 	 * @fulfil {Boolean} - is logged in
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.isLoggedIn().then(function(isLoggedIn) {
@@ -270,7 +270,7 @@ const getAuth = function (
 	 * 	}
 	 * });
 	 */
-	function isLoggedIn(): Promise<boolean> {
+	function isLoggedIn(): Bluebird<boolean> {
 		return getUserDetails(true)
 			.return(true)
 			.catchReturn(errors.BalenaNotLoggedIn, false);
@@ -286,7 +286,7 @@ const getAuth = function (
 	 * @description This will only work if you used {@link balena.auth.login} to log in.
 	 *
 	 * @fulfil {String} - raw API key or session token
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.getToken().then(function(token) {
@@ -299,7 +299,7 @@ const getAuth = function (
 	 * 	console.log(token);
 	 * });
 	 */
-	function getToken(): Promise<string> {
+	function getToken(): Bluebird<string> {
 		return auth.getKey().catch(function (err) {
 			throw normalizeAuthError(err);
 		});
@@ -315,7 +315,7 @@ const getAuth = function (
 	 * @description This will only work if you used {@link balena.auth.login} to log in.
 	 *
 	 * @fulfil {Number} - user id
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.getUserId().then(function(userId) {
@@ -328,7 +328,7 @@ const getAuth = function (
 	 * 	console.log(userId);
 	 * });
 	 */
-	function getUserId(): Promise<number> {
+	function getUserId(): Bluebird<number> {
 		return getUserDetails().get('id');
 	}
 
@@ -342,7 +342,7 @@ const getAuth = function (
 	 * @description This will only work if you used {@link balena.auth.login} to log in.
 	 *
 	 * @fulfil {String} - user email
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.getEmail().then(function(email) {
@@ -355,7 +355,7 @@ const getAuth = function (
 	 * 	console.log(email);
 	 * });
 	 */
-	function getEmail(): Promise<string> {
+	function getEmail(): Bluebird<string> {
 		return getUserDetails().get('email');
 	}
 
@@ -366,7 +366,7 @@ const getAuth = function (
 	 * @function
 	 * @memberof balena.auth
 	 *
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.logout();
@@ -376,7 +376,7 @@ const getAuth = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function logout(): Promise<void> {
+	function logout(): Bluebird<void> {
 		memoizedUserWhoami.clear();
 		return auth.removeKey();
 	}
@@ -394,7 +394,7 @@ const getAuth = function (
 	 * @param {(String|undefined)} [credentials.'g-recaptcha-response'] - the captcha response
 	 *
 	 * @fulfil {String} - session token
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.auth.register({
@@ -417,7 +417,7 @@ const getAuth = function (
 		email: string;
 		password: string;
 		'g-recaptcha-response'?: string;
-	}): Promise<string> {
+	}): Bluebird<string> {
 		return request
 			.send({
 				method: 'POST',

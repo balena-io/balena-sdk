@@ -1,5 +1,5 @@
 _ = require('lodash')
-Promise = require('bluebird')
+Bluebird = require('bluebird')
 m = require('mochainon')
 
 {
@@ -498,7 +498,7 @@ describe 'Application Model', ->
 							m.chai.expect(result).to.equal(undefined)
 
 					it "can create and then retrieve multiple variables by #{appParam}", ->
-						Promise.all [
+						Bluebird.all [
 							configVarModel.set(@application[appParam], "BALENA_A_#{appParamUpper}", 'a')
 							configVarModel.set(@application[appParam], "BALENA_B_#{appParamUpper}", 'b')
 						]
@@ -510,7 +510,7 @@ describe 'Application Model', ->
 							m.chai.expect(_.find(result, { name: "BALENA_B_#{appParamUpper}" })).to.be.an('object')
 								.that.has.property('value', 'b')
 						.then =>
-							Promise.all [
+							Bluebird.all [
 								configVarModel.remove(@application[appParam], "BALENA_A_#{appParamUpper}")
 								configVarModel.remove(@application[appParam], "BALENA_B_#{appParamUpper}")
 							]
@@ -545,7 +545,7 @@ describe 'Application Model', ->
 							m.chai.expect(result).to.equal(undefined)
 
 					it "can create and then retrieve multiple variables by #{appParam}", ->
-						Promise.all [
+						Bluebird.all [
 							envVarModel.set(@application[appParam], "A_BY_#{appParam}", 'a')
 							envVarModel.set(@application[appParam], "B_BY_#{appParam}", 'b')
 						]
@@ -557,7 +557,7 @@ describe 'Application Model', ->
 							m.chai.expect(_.find(result, { name: "B_BY_#{appParam}" })).to.be.an('object')
 								.that.has.property('value', 'b')
 						.then =>
-							Promise.all [
+							Bluebird.all [
 								envVarModel.remove(@application[appParam], "A_BY_#{appParam}")
 								envVarModel.remove(@application[appParam], "B_BY_#{appParam}")
 							]
@@ -592,7 +592,7 @@ describe 'Application Model', ->
 							m.chai.expect(result).to.equal(undefined)
 
 					it "can create and then retrieve multiple variables by #{appParam}", ->
-						Promise.all [
+						Bluebird.all [
 							envVarModel.set(@application[appParam], "A_BY_#{appParam}", 'a')
 							envVarModel.set(@application[appParam], "B_BY_#{appParam}", 'b')
 						]
@@ -604,7 +604,7 @@ describe 'Application Model', ->
 							m.chai.expect(_.find(result, { name: "B_BY_#{appParam}" })).to.be.an('object')
 								.that.has.property('value', 'b')
 						.then =>
-							Promise.all [
+							Bluebird.all [
 								envVarModel.remove(@application[appParam], "A_BY_#{appParam}")
 								envVarModel.remove(@application[appParam], "B_BY_#{appParam}")
 							]
@@ -642,7 +642,7 @@ describe 'Application Model', ->
 			beforeEach ->
 				balena.auth.getUserId()
 				.then (userId) =>
-					Promise.mapSeries [
+					Bluebird.mapSeries [
 							belongs_to__application: @application.id
 							is_created_by__user: userId
 							commit: 'old-release-commit'

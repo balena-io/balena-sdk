@@ -1,4 +1,4 @@
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import * as BalenaSdk from '../../typings/balena-sdk';
 
 export const IS_BROWSER: boolean;
@@ -44,7 +44,7 @@ export const balena: BalenaSdk.BalenaSDK & {
 	};
 };
 
-export const resetUser: () => Promise<void>;
+export const resetUser: () => Bluebird<void>;
 
 export const givenLoggedInUserWithApiKey: (
 	beforeFn: Mocha.HookFunction,
@@ -52,7 +52,7 @@ export const givenLoggedInUserWithApiKey: (
 
 export const givenLoggedInUser: (beforeFn: Mocha.HookFunction) => void;
 
-export const loginPaidUser: () => Promise<void>;
+export const loginPaidUser: () => Bluebird<void>;
 
 export const givenAnApplication: (beforeFn: Mocha.HookFunction) => void;
 export const givenADevice: (beforeFn: Mocha.HookFunction) => void;

@@ -1,7 +1,7 @@
 _ = require('lodash')
 m = require('mochainon')
 superagent = require('superagent')
-Promise = require('bluebird')
+Bluebird = require('bluebird')
 
 {
 	balena
@@ -21,7 +21,7 @@ Promise = require('bluebird')
 } = require('./tags')
 
 makeRequest = (url) ->
-	return new Promise (resolve, reject) ->
+	return new Bluebird (resolve, reject) ->
 		superagent.get(url)
 		.end (err, res) ->
 			# have to normalize because of different behaviour in the browser and node
@@ -415,7 +415,7 @@ describe 'Device Model', ->
 				givenInitialOrganization(before)
 
 				before ->
-					Promise.props
+					Bluebird.props
 						userId: balena.auth.getUserId()
 						childApplication: balena.models.application.create
 							name: 'ChildApp'
@@ -1180,7 +1180,7 @@ describe 'Device Model', ->
 						m.chai.expect(result).to.equal(undefined)
 
 				it "can create and then retrieve multiple variables by #{deviceParamUpper}", ->
-					Promise.all [
+					Bluebird.all [
 						configVarModel.set(@device[deviceParam], "BALENA_A_#{deviceParamUpper}", 'a')
 						configVarModel.set(@device[deviceParam], "BALENA_B_#{deviceParamUpper}", 'b')
 					]
@@ -1192,13 +1192,13 @@ describe 'Device Model', ->
 						m.chai.expect(_.find(result, { name: "BALENA_B_#{deviceParamUpper}" })).to.be.an('object')
 							.that.has.property('value', 'b')
 					.then =>
-						Promise.all [
+						Bluebird.all [
 							configVarModel.remove(@device[deviceParam], "BALENA_A_#{deviceParamUpper}")
 							configVarModel.remove(@device[deviceParam], "BALENA_B_#{deviceParamUpper}")
 						]
 
 			it 'can create and then retrieve multiple variables by application', ->
-				Promise.all [
+				Bluebird.all [
 					configVarModel.set(@device.id, 'BALENA_A_BY_APPLICATION', 'a')
 					configVarModel.set(@device.id, 'BALENA_B_BY_APPLICATION', 'b')
 				]
@@ -1210,7 +1210,7 @@ describe 'Device Model', ->
 					m.chai.expect(_.find(result, { name: 'BALENA_B_BY_APPLICATION' })).to.be.an('object')
 						.that.has.property('value', 'b')
 				.then =>
-					Promise.all [
+					Bluebird.all [
 						configVarModel.remove(@device.id, 'BALENA_A_BY_APPLICATION')
 						configVarModel.remove(@device.id, 'BALENA_B_BY_APPLICATION')
 					]
@@ -1247,7 +1247,7 @@ describe 'Device Model', ->
 						m.chai.expect(result).to.equal(undefined)
 
 				it "can create and then retrieve multiple variables by #{deviceParam}", ->
-					Promise.all [
+					Bluebird.all [
 						envVarModel.set(@device[deviceParam], "A_BY_#{deviceParam}", 'a')
 						envVarModel.set(@device[deviceParam], "B_BY_#{deviceParam}", 'b')
 					]
@@ -1259,13 +1259,13 @@ describe 'Device Model', ->
 						m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" })).to.be.an('object')
 							.that.has.property('value', 'b')
 					.then =>
-						Promise.all [
+						Bluebird.all [
 							envVarModel.remove(@device[deviceParam], "A_BY_#{deviceParam}")
 							envVarModel.remove(@device[deviceParam], "B_BY_#{deviceParam}")
 						]
 
 			it 'can create and then retrieve multiple variables by application', ->
-				Promise.all [
+				Bluebird.all [
 					envVarModel.set(@device.id, 'A_BY_APPLICATION', 'a')
 					envVarModel.set(@device.id, 'B_BY_APPLICATION', 'b')
 				]
@@ -1277,7 +1277,7 @@ describe 'Device Model', ->
 					m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
 						.that.has.property('value', 'b')
 				.then =>
-					Promise.all [
+					Bluebird.all [
 						envVarModel.remove(@device.id, 'A_BY_APPLICATION')
 						envVarModel.remove(@device.id, 'B_BY_APPLICATION')
 					]
@@ -1475,7 +1475,7 @@ describe 'Device Model', ->
 							app_name: @application.app_name
 
 				it 'should return gateway downloads, if available', ->
-					Promise.all [
+					Bluebird.all [
 						balena.pine.post
 							resource: 'gateway_download'
 							body:
@@ -1532,7 +1532,7 @@ describe 'Device Model', ->
 							m.chai.expect(result).to.equal(undefined)
 
 					it "can create and then retrieve multiple variables by #{deviceParam}", ->
-						Promise.all [
+						Bluebird.all [
 							varModel.set(@device[deviceParam], @webService.id, "A_BY_#{deviceParam}", 'a')
 							varModel.set(@device[deviceParam], @dbService.id, "B_BY_#{deviceParam}", 'b')
 						]
@@ -1544,13 +1544,13 @@ describe 'Device Model', ->
 							m.chai.expect(_.find(result, { name: "B_BY_#{deviceParam}" })).to.be.an('object')
 								.that.has.property('value', 'b')
 						.then =>
-							Promise.all [
+							Bluebird.all [
 								varModel.remove(@device[deviceParam], @webService.id, "A_BY_#{deviceParam}")
 								varModel.remove(@device[deviceParam], @dbService.id, "B_BY_#{deviceParam}")
 							]
 
 				it 'can create and then retrieve multiple variables by application', ->
-					Promise.all [
+					Bluebird.all [
 						varModel.set(@device.id, @webService.id, 'A_BY_APPLICATION', 'a')
 						varModel.set(@device.id, @dbService.id, 'B_BY_APPLICATION', 'b')
 					]
@@ -1562,7 +1562,7 @@ describe 'Device Model', ->
 						m.chai.expect(_.find(result, { name: 'B_BY_APPLICATION' })).to.be.an('object')
 							.that.has.property('value', 'b')
 					.then =>
-						Promise.all [
+						Bluebird.all [
 							varModel.remove(@device.id, @webService.id, 'A_BY_APPLICATION')
 							varModel.remove(@device.id, @dbService.id, 'B_BY_APPLICATION')
 						]
@@ -1676,7 +1676,7 @@ describe 'Device Model', ->
 		givenMulticontainerApplication(before)
 
 		before ->
-			Promise.all([
+			Bluebird.all([
 				balena.pine.patch
 					resource: 'service'
 					id: @webService.id
@@ -1765,7 +1765,7 @@ describe 'Device Model', ->
 			uuid1 = @uuidRoot + balena.models.device.generateUniqueKey().slice(16)
 			uuid2 = @uuidRoot + balena.models.device.generateUniqueKey().slice(16)
 
-			Promise.all [
+			Bluebird.all [
 				balena.models.device.register(@application.app_name, uuid1)
 				balena.models.device.register(@application.app_name, uuid2)
 			]
@@ -1791,7 +1791,7 @@ describe 'Device Model', ->
 		givenInitialOrganization(before)
 
 		beforeEach ->
-			Promise.props
+			Bluebird.props
 				application1: balena.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
@@ -1818,7 +1818,7 @@ describe 'Device Model', ->
 					@deviceInfo = deviceInfo
 
 		afterEach ->
-			Promise.map [
+			Bluebird.map [
 				@application1.id
 				@application2.id
 				@application3.id
@@ -1855,7 +1855,7 @@ describe 'Device Model', ->
 		givenInitialOrganization(before)
 
 		beforeEach ->
-			Promise.props
+			Bluebird.props
 				application1: balena.models.application.create
 					name: 'FooBar'
 					applicationType: 'microservices-starter'
@@ -1876,7 +1876,7 @@ describe 'Device Model', ->
 					@deviceInfo = deviceInfo
 
 		afterEach ->
-			Promise.map [
+			Bluebird.map [
 				@application1.id
 				@application2.id
 			], balena.models.application.remove
@@ -1892,7 +1892,7 @@ describe 'Device Model', ->
 		givenInitialOrganization(before)
 
 		before ->
-			Promise.props
+			Bluebird.props
 				rpi: balena.models.application.create
 					name: 'FooBarArmv6'
 					applicationType: 'microservices-starter'
@@ -1911,13 +1911,13 @@ describe 'Device Model', ->
 			.then (apps) =>
 				@apps = apps
 
-				Promise.props _.mapValues apps, (app) ->
+				Bluebird.props _.mapValues apps, (app) ->
 					balena.models.device.register(app.id, balena.models.device.generateUniqueKey())
 			.then (devices) =>
 				@devices = devices
 
 		after ->
-			Promise.props _.mapValues(@apps, 'id'),
+			Bluebird.props _.mapValues(@apps, 'id'),
 				balena.models.application.remove
 
 		describe 'balena.models.device.move()', ->

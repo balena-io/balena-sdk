@@ -1,4 +1,4 @@
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import { Readable } from 'stream';
 import { Omit } from './utils';
 
@@ -23,8 +23,8 @@ declare namespace BalenaRequest {
 	};
 
 	interface BalenaRequestSend {
-		(options: BalenaRequestOptions): Promise<BalenaRequestResponse>;
-		<T>(options: BalenaRequestOptions): Promise<BalenaRequestResponseOf<T>>;
+		(options: BalenaRequestOptions): Bluebird<BalenaRequestResponse>;
+		<T>(options: BalenaRequestOptions): Bluebird<BalenaRequestResponseOf<T>>;
 	}
 
 	interface BalenaRequestStreamResult extends Readable {
@@ -35,7 +35,7 @@ declare namespace BalenaRequest {
 		send: BalenaRequestSend;
 		stream: (
 			options: BalenaRequestOptions,
-		) => Promise<BalenaRequestStreamResult>;
+		) => Bluebird<BalenaRequestStreamResult>;
 	}
 }
 

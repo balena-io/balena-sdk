@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import { BalenaRequestStreamResult } from '../../typings/balena-request';
 import {
 	BillingAccountInfo,
@@ -41,7 +41,7 @@ const getBillingModel = function (
 	 * @memberof balena.models.billing
 	 *
 	 * @fulfil {Object} - billing account
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.billing.getAccount().then(function(billingAccount) {
@@ -54,7 +54,7 @@ const getBillingModel = function (
 	 * 	console.log(billingAccount);
 	 * });
 	 */
-	exports.getAccount = (): Promise<BillingAccountInfo> =>
+	exports.getAccount = (): Bluebird<BillingAccountInfo> =>
 		request
 			.send({
 				method: 'GET',
@@ -71,7 +71,7 @@ const getBillingModel = function (
 	 * @memberof balena.models.billing
 	 *
 	 * @fulfil {Object} - billing plan
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.billing.getPlan().then(function(billingPlan) {
@@ -84,7 +84,7 @@ const getBillingModel = function (
 	 * 	console.log(billingPlan);
 	 * });
 	 */
-	exports.getPlan = (): Promise<BillingPlanInfo> =>
+	exports.getPlan = (): Bluebird<BillingPlanInfo> =>
 		request
 			.send({
 				method: 'GET',
@@ -101,7 +101,7 @@ const getBillingModel = function (
 	 * @memberof balena.models.billing
 	 *
 	 * @fulfil {Object} - billing information
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.billing.getBillingInfo().then(function(billingInfo) {
@@ -114,7 +114,7 @@ const getBillingModel = function (
 	 * 	console.log(billingInfo);
 	 * });
 	 */
-	exports.getBillingInfo = (): Promise<BillingInfo> =>
+	exports.getBillingInfo = (): Bluebird<BillingInfo> =>
 		request
 			.send({
 				method: 'GET',
@@ -134,7 +134,7 @@ const getBillingModel = function (
 	 * @param {String} billingInfo.token_id - the token id generated for the billing info form
 	 * @param {(String|undefined)} [billingInfo.'g-recaptcha-response'] - the captcha response
 	 * @fulfil {Object} - billing information
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }).then(function(billingInfo) {
@@ -149,7 +149,7 @@ const getBillingModel = function (
 	 */
 	exports.updateBillingInfo = (
 		billingInfo: TokenBillingSubmitInfo,
-	): Promise<BillingInfo> =>
+	): Bluebird<BillingInfo> =>
 		request
 			.send({
 				method: 'POST',
@@ -167,7 +167,7 @@ const getBillingModel = function (
 	 * @memberof balena.models.billing
 	 *
 	 * @fulfil {Object} - invoices
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.billing.getInvoices().then(function(invoices) {
@@ -180,7 +180,7 @@ const getBillingModel = function (
 	 * 	console.log(invoices);
 	 * });
 	 */
-	exports.getInvoices = (): Promise<InvoiceInfo[]> =>
+	exports.getInvoices = (): Bluebird<InvoiceInfo[]> =>
 		request
 			.send({
 				method: 'GET',
@@ -198,7 +198,7 @@ const getBillingModel = function (
 	 *
 	 * @param {String} - an invoice number
 	 * @fulfil {Blob|ReadableStream} - blob on the browser, download stream on node
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * # Browser
@@ -212,7 +212,7 @@ const getBillingModel = function (
 	 */
 	exports.downloadInvoice = function (
 		invoiceNumber: string,
-	): Promise<Blob | BalenaRequestStreamResult> {
+	): Bluebird<Blob | BalenaRequestStreamResult> {
 		const url = `/user/billing/invoices/${invoiceNumber}/download`;
 
 		if (!isBrowser) {

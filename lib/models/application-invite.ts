@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import {
 	Application,
 	ApplicationInvite,
@@ -51,7 +51,7 @@ const getApplicationInviteModel = function (
 		 *
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - invites
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.application.invite.getAll().then(function(invites) {
@@ -65,7 +65,7 @@ const getApplicationInviteModel = function (
 		 */
 		getAll(
 			options: PineOptions<ApplicationInvite> = {},
-		): Promise<ApplicationInvite[]> {
+		): Bluebird<ApplicationInvite[]> {
 			return pine.get({
 				resource: RESOURCE,
 				options,
@@ -85,7 +85,7 @@ const getApplicationInviteModel = function (
 		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - invites
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.application.invite.getAllByApplication('MyApp').then(function(invites) {
@@ -105,7 +105,7 @@ const getApplicationInviteModel = function (
 		getAllByApplication(
 			nameOrSlugOrId: number | string,
 			options: PineOptions<ApplicationInvite> = {},
-		): Promise<ApplicationInvite[]> {
+		): Bluebird<ApplicationInvite[]> {
 			return getApplication(nameOrSlugOrId, {
 				$select: 'id',
 			}).then(({ id }: Application) =>
@@ -134,7 +134,7 @@ const getApplicationInviteModel = function (
 		 * @param {String} [message=null] - the message to send along with the invite
 		 *
 		 * @fulfil {String} - application invite
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.application.invite.create('MyApp', { collabortor: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
@@ -154,8 +154,8 @@ const getApplicationInviteModel = function (
 		create(
 			nameOrSlugOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<Partial<ApplicationInvite>> {
-			return Promise.all([
+		): Bluebird<Partial<ApplicationInvite>> {
+			return Bluebird.all([
 				getApplication(nameOrSlugOrId, { $select: 'id' }).get('id'),
 				roleName
 					? pine.get<ApplicationMembershipRole>({
@@ -202,7 +202,7 @@ const getApplicationInviteModel = function (
 		 * @memberof balena.models.application.invite
 		 *
 		 * @param {Number} id - application invite id
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.application.invite.revoke(123);
@@ -213,7 +213,7 @@ const getApplicationInviteModel = function (
 		 * 	...
 		 * });
 		 */
-		revoke(id: number): Promise<void> {
+		revoke(id: number): Bluebird<void> {
 			return pine.delete({ resource: RESOURCE, id }).return();
 		},
 
@@ -227,7 +227,7 @@ const getApplicationInviteModel = function (
 		 * @description This method adds the calling user to the application.
 		 *
 		 * @param {String} invitationToken - invite token
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.application.invite.accept("qwerty-invitation-token");
@@ -239,7 +239,7 @@ const getApplicationInviteModel = function (
 		 * });
 		 */
 		accept(invitationToken: string) {
-			return Promise.try(() => {
+			return Bluebird.try(() => {
 				return request
 					.send({
 						method: 'POST',

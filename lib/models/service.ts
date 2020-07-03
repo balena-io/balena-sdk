@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import once = require('lodash/once');
 import {
 	PineOptions,
@@ -77,7 +77,7 @@ const getServiceModel = (
 	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - services
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.service.getAllByApplication('MyApp').then(function(services) {
@@ -98,7 +98,7 @@ const getServiceModel = (
 	exports.getAllByApplication = function (
 		nameOrSlugOrId: string | number,
 		options: PineOptions<Service> = {},
-	): Promise<Service[]> {
+	): Bluebird<Service[]> {
 		return applicationModel()
 			.get(nameOrSlugOrId, { $select: 'id' })
 			.then(({ id }: { id: number }) =>
@@ -124,7 +124,7 @@ const getServiceModel = (
 		 * @param {Number} id - service id
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - service variables
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.service.var.getAllByService(999999).then(function(vars) {
@@ -149,7 +149,7 @@ const getServiceModel = (
 		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - service variables
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.service.var.getAllByApplication('MyApp').then(function(vars) {
@@ -208,7 +208,7 @@ const getServiceModel = (
 		 * @param {Number} id - service id
 		 * @param {String} key - variable name
 		 * @fulfil {String|undefined} - the variable value (or undefined)
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.service.var.get(999999, 'VAR').then(function(value) {
@@ -233,7 +233,7 @@ const getServiceModel = (
 		 * @param {Number} id - service id
 		 * @param {String} key - variable name
 		 * @param {String} value - variable value
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
@@ -257,7 +257,7 @@ const getServiceModel = (
 		 *
 		 * @param {Number} id - service id
 		 * @param {String} key - variable name
-		 * @returns {Promise}
+		 * @returns {Bluebird}
 		 *
 		 * @example
 		 * balena.models.service.var.remove(999999, 'VAR').then(function() {

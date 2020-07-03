@@ -1,4 +1,4 @@
-Promise = require('bluebird')
+Bluebird = require('bluebird')
 
 {
 	balena
@@ -86,12 +86,12 @@ describe 'Logs', ->
 				.then =>
 					balena.logs.subscribe(@uuid)
 				.then (logs) ->
-					new Promise (resolve, reject) ->
+					new Bluebird (resolve, reject) ->
 						lines = []
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(2000)
+						Bluebird.delay(2000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
@@ -109,12 +109,12 @@ describe 'Logs', ->
 				.then =>
 					balena.logs.subscribe(@uuid, { count: 'all' })
 				.then (logs) ->
-					new Promise (resolve, reject) ->
+					new Bluebird (resolve, reject) ->
 						lines = []
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(2000)
+						Bluebird.delay(2000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
@@ -136,12 +136,12 @@ describe 'Logs', ->
 				.then =>
 					balena.logs.subscribe(@uuid, { count: 1 })
 				.then (logs) ->
-					new Promise (resolve, reject) ->
+					new Bluebird (resolve, reject) ->
 						lines = []
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
 
-						Promise.delay(2000)
+						Bluebird.delay(2000)
 						.then ->
 							resolve(lines)
 					.finally(logs.unsubscribe)
@@ -158,7 +158,7 @@ describe 'Logs', ->
 				.then =>
 					balena.logs.subscribe(@uuid, { count: 100 })
 				.then (logs) =>
-					new Promise (resolve, reject) =>
+					new Bluebird (resolve, reject) =>
 						lines = []
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)
@@ -188,7 +188,7 @@ describe 'Logs', ->
 					# Unsubscribe before any messages are sent
 					logs.unsubscribe()
 
-					new Promise (resolve, reject) =>
+					new Bluebird (resolve, reject) =>
 						lines = []
 						logs.on('line', (line) -> lines.push(line))
 						logs.on('error', reject)

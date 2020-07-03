@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 
 import * as BalenaSdk from '../../typings/balena-sdk';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
@@ -42,7 +42,7 @@ const getApiKeysModel = function (
 	 * @param {String} [description=null] - the API key description
 	 *
 	 * @fulfil {String} - API key
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
@@ -63,7 +63,7 @@ const getApiKeysModel = function (
 	exports.create = function (
 		name: string,
 		description: string | null = null,
-	): Promise<string> {
+	): Bluebird<string> {
 		const apiKeyBody: { name: string; description?: string | null } = {
 			name,
 		};
@@ -92,7 +92,7 @@ const getApiKeysModel = function (
 	 *
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - apiKeys
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.apiKey.getAll().then(function(apiKeys) {
@@ -107,7 +107,7 @@ const getApiKeysModel = function (
 	 */
 	exports.getAll = function (
 		options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-	): Promise<BalenaSdk.ApiKey[]> {
+	): Bluebird<BalenaSdk.ApiKey[]> {
 		return pine.get<BalenaSdk.ApiKey>({
 			resource: 'api_key',
 			options: mergePineOptions(
@@ -136,7 +136,7 @@ const getApiKeysModel = function (
 	 *
 	 * @param {Number} id - API key id
 	 * @param {Object} apiKeyInfo - an object with the updated name or description
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.apiKey.update(123, { name: 'updatedName' });
@@ -156,8 +156,8 @@ const getApiKeysModel = function (
 	exports.update = function (
 		id: number,
 		apiKeyInfo: { name?: string; description?: string },
-	): Promise<void> {
-		return Promise.try<void>(() => {
+	): Bluebird<void> {
+		return Bluebird.try<void>(() => {
 			if (!apiKeyInfo) {
 				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
 			}
@@ -199,7 +199,7 @@ const getApiKeysModel = function (
 	 * @memberof balena.models.apiKey
 	 *
 	 * @param {Number} id - API key id
-	 * @returns {Promise}
+	 * @returns {Bluebird}
 	 *
 	 * @example
 	 * balena.models.apiKey.revoke(123);
@@ -209,7 +209,7 @@ const getApiKeysModel = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	exports.revoke = function (id: number): Promise<void> {
+	exports.revoke = function (id: number): Bluebird<void> {
 		return pine
 			.delete({
 				resource: 'api_key',
