@@ -2,6 +2,7 @@
 import * as BalenaSdk from '../typings/balena-sdk';
 import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
 import { AnyObject } from '../typings/utils';
+import { Equals, EqualsTrue } from './utils';
 
 // This file is in .prettierignore, since otherwise
 // the $ExpectError comments would move to the wrong place
@@ -497,14 +498,36 @@ export const appOptionsEValid20: BalenaSdk.PineOptions<BalenaSdk.Application> = 
 
 // valid OptionalNavigationResource $selects & $expands
 
-// $ExpectType "is_created_by__user" | "belongs_to__application" | "contains__image" | "should_be_running_on__application" | "is_running_on__device" | "should_be_running_on__device" | "release_tag"
-export type ReleaseExpandableProps = BalenaSdk.PineExpandableProps<
+type ReleaseExpandablePropsExpectation =
+	| 'is_created_by__user'
+	| 'belongs_to__application'
+	| 'contains__image'
+	| 'should_be_running_on__application'
+	| 'is_running_on__device'
+	| 'should_be_running_on__device'
+	| 'release_tag';
+
+// $ExpectError
+export const releaseExpandablePropsFailingTest1: Equals<
+	BalenaSdk.PineExpandableProps<BalenaSdk.Release>,
+	Exclude<ReleaseExpandablePropsExpectation, 'release_tag'>
+> = EqualsTrue;
+
+// $ExpectError
+export const releaseExpandablePropsFailingTest2: Equals<
+	BalenaSdk.PineExpandableProps<BalenaSdk.Release>,
+	ReleaseExpandablePropsExpectation | 'id'
+> = EqualsTrue;
+
+export const releaseExpandablePropsTest: Equals<
+	BalenaSdk.PineExpandableProps<BalenaSdk.Release>,
+	ReleaseExpandablePropsExpectation
+> = EqualsTrue;
+
+export const deviceIsRunningReleaseAssociatedResourceType: Equals<
+	InferAssociatedResourceType<BalenaSdk.Device['is_running__release']>,
 	BalenaSdk.Release
->;
-// $ExpectType Release
-export type DeviceIsRunningReleaseAssociatedResourceType = InferAssociatedResourceType<
-	BalenaSdk.Device['is_running__release']
->;
+> = EqualsTrue;
 
 export const appOptionsEValid30: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: [
