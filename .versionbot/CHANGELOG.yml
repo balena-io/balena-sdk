@@ -1,4 +1,14 @@
 - commits:
+    - subject: Standardize bluebird naming as `Bluebird`
+      hash: d4a1043a33f41c7463170629372407bc2f69ba20
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.2.3
+  date: 2020-07-03T12:00:09.461Z
+- commits:
     - subject: Avoid $ExpectType b/c of issues with TS 3.9.6
       hash: f83e4f4d358b1a6eb9e7815a28014e56ad55f562
       body: |
