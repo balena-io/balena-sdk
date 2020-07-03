@@ -5,10 +5,7 @@
             "es2015",
             "dom"
         ],
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
+        "strict": true,
         "noEmit": true,
         "baseUrl": ".",
         "typeRoots": [
