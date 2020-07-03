@@ -16,7 +16,8 @@
             "node_modules/@types",
             "node_modules/@resin.io"
         ],
-        "allowJs": true
+        "allowJs": true,
+        "importHelpers": true
     },
     "include": [
         "typings/*.d.ts",
