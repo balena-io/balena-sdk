@@ -1,4 +1,25 @@
 - commits:
+    - subject: Drop dtslint in favor of plain @ts-expect-error
+      hash: 1d2c1ffda6b6e98e3059b6ea12aa7b0da47dc28e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Enable strict checks for the typing tests
+      hash: 5819a86d34586f0c63cae79abf8c9bb61ed9617f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.2.4
+  date: 2020-07-03T20:23:16.583Z
+- commits:
     - subject: Standardize bluebird naming as `Bluebird`
       hash: d4a1043a33f41c7463170629372407bc2f69ba20
       body: ''
