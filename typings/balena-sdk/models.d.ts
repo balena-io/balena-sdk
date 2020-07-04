@@ -178,6 +178,12 @@ declare module './index' {
 		is_host_os: boolean;
 	}
 
+	export interface ApplicationHostedOnApplication {
+		id: null;
+		application: NavigationResource<Application>;
+		can_use__application_as_host: NavigationResource<Application>;
+	}
+
 	export type ApplicationMembershipRoles =
 		| 'developer'
 		| 'operator'
