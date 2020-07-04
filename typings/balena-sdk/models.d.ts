@@ -31,6 +31,13 @@ declare module './index' {
 		display_name: string;
 	}
 
+	export interface RecoveryTwoFactor {
+		id: number;
+		used_timestamp: string | null;
+
+		belongs_to__user: NavigationResource<User>;
+	}
+
 	export interface User {
 		account_type?: string;
 		actualUser?: number;
