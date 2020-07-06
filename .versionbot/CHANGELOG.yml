@@ -1,4 +1,14 @@
 - commits:
+    - subject: Include typings for all lazy loaded requires
+      hash: d101fa2c79e42bd36adde052abe96a15dd5c0373
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.2.7
+  date: 2020-07-06T16:26:16.843Z
+- commits:
     - subject: Simplify balena-request custom typings
       hash: 7945799f798c7f3b1943833b6e3dbf7e6ae70b18
       body: ''
