@@ -39,7 +39,8 @@ export const isNoApplicationForKeyResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 500) &&
 	err.body === 'No application found to associate with the api key';
 
-export const treatAsMissingOrganization = (handleOrId: string | number) => (
+export const treatAsMissingOrganization = (
+	handleOrId: string | number,
 	err: Error,
 ) => {
 	const replacementErr = new errors.BalenaOrganizationNotFound(handleOrId);
@@ -47,7 +48,8 @@ export const treatAsMissingOrganization = (handleOrId: string | number) => (
 	throw replacementErr;
 };
 
-export const treatAsMissingApplication = (nameOrId: string | number) => (
+export const treatAsMissingApplication = (
+	nameOrId: string | number,
 	err: Error,
 ) => {
 	const replacementErr = new errors.BalenaApplicationNotFound(nameOrId);
@@ -55,9 +57,7 @@ export const treatAsMissingApplication = (nameOrId: string | number) => (
 	throw replacementErr;
 };
 
-export const treatAsMissingDevice = (uuidOrId: string | number) => (
-	err: Error,
-) => {
+export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 	const replacementErr = new errors.BalenaDeviceNotFound(uuidOrId);
 	replacementErr.stack = err.stack || '';
 	throw replacementErr;

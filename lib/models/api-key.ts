@@ -73,7 +73,7 @@ const getApiKeysModel = function (
 					baseUrl: apiUrl,
 					body: apiKeyBody,
 				})
-				.get('body')
+				.then(({ body }) => body)
 				.catch(function () {
 					throw new errors.BalenaNotLoggedIn();
 				});

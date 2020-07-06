@@ -130,7 +130,12 @@ const getAuth = function (
 	function whoami(): Bluebird<string | undefined> {
 		return getUserDetails()
 			.then((userDetails) => userDetails?.username)
-			.catchReturn(errors.BalenaNotLoggedIn, undefined);
+			.catch((err) => {
+				if (err instanceof errors.BalenaNotLoggedIn) {
+					return undefined;
+				}
+				throw err;
+			});
 	}
 
 	/**
@@ -179,7 +184,7 @@ const getAuth = function (
 				},
 				sendToken: false,
 			})
-			.get('body');
+			.then(({ body }) => body);
 	}
 
 	/**
@@ -270,8 +275,13 @@ const getAuth = function (
 	 */
 	function isLoggedIn(): Bluebird<boolean> {
 		return getUserDetails(true)
-			.return(true)
-			.catchReturn(errors.BalenaNotLoggedIn, false);
+			.then(() => true)
+			.catch((err) => {
+				if (err instanceof errors.BalenaNotLoggedIn) {
+					return false;
+				}
+				throw err;
+			});
 	}
 
 	/**
@@ -327,7 +337,7 @@ const getAuth = function (
 	 * });
 	 */
 	function getUserId(): Bluebird<number> {
-		return getUserDetails().get('id');
+		return getUserDetails().then(({ id }) => id);
 	}
 
 	/**
@@ -354,7 +364,7 @@ const getAuth = function (
 	 * });
 	 */
 	function getEmail(): Bluebird<string> {
-		return getUserDetails().get('email');
+		return getUserDetails().then(({ email }) => email);
 	}
 
 	/**
@@ -424,7 +434,7 @@ const getAuth = function (
 				body: credentials,
 				sendToken: false,
 			})
-			.get('body');
+			.then(({ body }) => body);
 	}
 
 	return {

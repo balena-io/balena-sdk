@@ -61,7 +61,7 @@ const getBillingModel = function (
 					url: '/user/billing/account',
 					baseUrl: apiUrl,
 				})
-				.get('body'),
+				.then(({ body }) => body),
 
 		/**
 		 * @summary Get the current billing plan
@@ -91,7 +91,7 @@ const getBillingModel = function (
 					url: '/user/billing/plan',
 					baseUrl: apiUrl,
 				})
-				.get('body'),
+				.then(({ body }) => body),
 
 		/**
 		 * @summary Get the current billing information
@@ -121,7 +121,7 @@ const getBillingModel = function (
 					url: '/user/billing/info',
 					baseUrl: apiUrl,
 				})
-				.get('body'),
+				.then(({ body }) => body),
 
 		/**
 		 * @summary Update the current billing information
@@ -157,7 +157,7 @@ const getBillingModel = function (
 					baseUrl: apiUrl,
 					body: billingInfo,
 				})
-				.get('body'),
+				.then(({ body }) => body),
 
 		/**
 		 * @summary Get the available invoices
@@ -187,7 +187,7 @@ const getBillingModel = function (
 					url: '/user/billing/invoices',
 					baseUrl: apiUrl,
 				})
-				.get('body'),
+				.then(({ body }) => body),
 
 		/**
 		 * @summary Download a specific invoice
@@ -230,7 +230,7 @@ const getBillingModel = function (
 					baseUrl: apiUrl,
 					responseFormat: 'blob',
 				})
-				.get('body');
+				.then(({ body }) => body);
 		},
 	};
 
