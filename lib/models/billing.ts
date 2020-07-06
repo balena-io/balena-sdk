@@ -15,11 +15,13 @@ limitations under the License.
 */
 
 import * as Bluebird from 'bluebird';
+import once = require('lodash/once');
 import type { BalenaRequestStreamResult } from '../../typings/balena-request';
 import type {
 	BillingAccountInfo,
 	BillingInfo,
 	BillingPlanInfo,
+	Organization,
 	InvoiceInfo,
 	TokenBillingSubmitInfo,
 } from '../..';
@@ -32,6 +34,12 @@ const getBillingModel = function (
 	const { request } = deps;
 	const { apiUrl, isBrowser } = opts;
 
+	const organizationModel = once(() =>
+		(require('./organization') as typeof import('./organization')).default(
+			deps,
+		),
+	);
+
 	const exports = {
 		/**
 		 * @summary Get the user's billing account
@@ -39,6 +47,9 @@ const getBillingModel = function (
 		 * @public
 		 * @function
 		 * @memberof balena.models.billing
+		 *
+		 * @param {(String|Number)} [organization] - handle (string) or id (number) of the target organization.
+		 * Not specifying an organization is deprecated and will be dropped in a future release.
 		 *
 		 * @fulfil {Object} - billing account
 		 * @returns {Bluebird}
@@ -54,13 +65,28 @@ const getBillingModel = function (
 		 * 	console.log(billingAccount);
 		 * });
 		 */
-		getAccount: (): Bluebird<BillingAccountInfo> =>
-			request
-				.send({
-					method: 'GET',
-					url: '/user/billing/account',
-					baseUrl: apiUrl,
-				})
+
+		getAccount: (
+			organization?: string | number,
+		): Bluebird<BillingAccountInfo> =>
+			Bluebird.try(() => {
+				if (organization == null) {
+					return '/user/billing/account';
+				}
+
+				return organizationModel()
+					.get(organization, { $select: 'id' })
+					.then(
+						({ id }: Pick<Organization, 'id'>) => `/billing/v1/account/${id}`,
+					);
+			})
+				.then((url) =>
+					request.send({
+						method: 'GET',
+						url,
+						baseUrl: apiUrl,
+					}),
+				)
 				.then(({ body }) => body),
 
 		/**
@@ -73,6 +99,9 @@ const getBillingModel = function (
 		 * @fulfil {Object} - billing plan
 		 * @returns {Bluebird}
 		 *
+		 * @param {(String|Number)} [organization] - handle (string) or id (number) of the target organization.
+		 * Not specifying an organization is deprecated and will be dropped in a future release.
+		 *
 		 * @example
 		 * balena.models.billing.getPlan().then(function(billingPlan) {
 		 * 	console.log(billingPlan);
@@ -84,13 +113,26 @@ const getBillingModel = function (
 		 * 	console.log(billingPlan);
 		 * });
 		 */
-		getPlan: (): Bluebird<BillingPlanInfo> =>
-			request
-				.send({
-					method: 'GET',
-					url: '/user/billing/plan',
-					baseUrl: apiUrl,
-				})
+		getPlan: (organization?: string | number): Bluebird<BillingPlanInfo> =>
+			Bluebird.try(() => {
+				if (organization == null) {
+					return '/user/billing/plan';
+				}
+
+				return organizationModel()
+					.get(organization, { $select: 'id' })
+					.then(
+						({ id }: Pick<Organization, 'id'>) =>
+							`/billing/v1/account/${id}/plan`,
+					);
+			})
+				.then((url) =>
+					request.send({
+						method: 'GET',
+						url,
+						baseUrl: apiUrl,
+					}),
+				)
 				.then(({ body }) => body),
 
 		/**
@@ -99,6 +141,9 @@ const getBillingModel = function (
 		 * @public
 		 * @function
 		 * @memberof balena.models.billing
+		 *
+		 * @param {(String|Number)} [organization] - handle (string) or id (number) of the target organization.
+		 * Not specifying an organization is deprecated and will be dropped in a future release.
 		 *
 		 * @fulfil {Object} - billing information
 		 * @returns {Bluebird}
@@ -114,13 +159,26 @@ const getBillingModel = function (
 		 * 	console.log(billingInfo);
 		 * });
 		 */
-		getBillingInfo: (): Bluebird<BillingInfo> =>
-			request
-				.send({
-					method: 'GET',
-					url: '/user/billing/info',
-					baseUrl: apiUrl,
-				})
+		getBillingInfo: (organization?: string | number): Bluebird<BillingInfo> =>
+			Bluebird.try(() => {
+				if (organization == null) {
+					return '/user/billing/info';
+				}
+
+				return organizationModel()
+					.get(organization, { $select: 'id' })
+					.then(
+						({ id }: Pick<Organization, 'id'>) =>
+							`/billing/v1/account/${id}/info`,
+					);
+			})
+				.then((url) =>
+					request.send({
+						method: 'GET',
+						url,
+						baseUrl: apiUrl,
+					}),
+				)
 				.then(({ body }) => body),
 
 		/**
@@ -131,6 +189,9 @@ const getBillingModel = function (
 		 * @memberof balena.models.billing
 		 *
 		 * @param {Object} billingInfo - an object containing a billing info token_id
+		 * @param {(String|Number)} [organization] - handle (string) or id (number) of the target organization.
+		 * Not specifying an organization is deprecated and will be dropped in a future release.
+		 *
 		 * @param {String} billingInfo.token_id - the token id generated for the billing info form
 		 * @param {(String|undefined)} [billingInfo.'g-recaptcha-response'] - the captcha response
 		 * @fulfil {Object} - billing information
@@ -149,15 +210,35 @@ const getBillingModel = function (
 		 */
 		updateBillingInfo: (
 			billingInfo: TokenBillingSubmitInfo,
-		): Bluebird<BillingInfo> =>
-			request
-				.send({
-					method: 'POST',
-					url: '/user/billing/info',
-					baseUrl: apiUrl,
-					body: billingInfo,
-				})
-				.then(({ body }) => body),
+			organization?: string | number,
+		): Bluebird<BillingInfo> => {
+			if (organization == null) {
+				return request
+					.send({
+						method: 'POST',
+						url: '/user/billing/info',
+						baseUrl: apiUrl,
+						body: billingInfo,
+					})
+					.then(({ body }) => body);
+			}
+
+			return organizationModel()
+				.get(organization, { $select: 'id' })
+				.then(
+					({ id }: Pick<Organization, 'id'>) =>
+						`/billing/v1/account/${id}/info`,
+				)
+				.then((url) =>
+					request.send({
+						method: 'PATCH',
+						url,
+						baseUrl: apiUrl,
+						body: billingInfo,
+					}),
+				)
+				.then(({ body }) => body);
+		},
 
 		/**
 		 * @summary Get the available invoices
@@ -165,6 +246,9 @@ const getBillingModel = function (
 		 * @public
 		 * @function
 		 * @memberof balena.models.billing
+		 *
+		 * @param {(String|Number)} [organization] - handle (string) or id (number) of the target organization.
+		 * Not specifying an organization is deprecated and will be dropped in a future release.
 		 *
 		 * @fulfil {Object} - invoices
 		 * @returns {Bluebird}
@@ -180,13 +264,26 @@ const getBillingModel = function (
 		 * 	console.log(invoices);
 		 * });
 		 */
-		getInvoices: (): Bluebird<InvoiceInfo[]> =>
-			request
-				.send({
-					method: 'GET',
-					url: '/user/billing/invoices',
-					baseUrl: apiUrl,
-				})
+		getInvoices: (organization?: string | number): Bluebird<InvoiceInfo[]> =>
+			Bluebird.try(() => {
+				if (organization == null) {
+					return '/user/billing/invoices';
+				}
+
+				return organizationModel()
+					.get(organization, { $select: 'id' })
+					.then(
+						({ id }: Pick<Organization, 'id'>) =>
+							`/billing/v1/account/${id}/invoices`,
+					);
+			})
+				.then((url) =>
+					request.send({
+						method: 'GET',
+						url,
+						baseUrl: apiUrl,
+					}),
+				)
 				.then(({ body }) => body),
 
 		/**
@@ -197,6 +294,9 @@ const getBillingModel = function (
 		 * @memberof balena.models.billing
 		 *
 		 * @param {String} - an invoice number
+		 * @param {(String|Number)} [organization] - handle (string) or id (number) of the target organization.
+		 * Not specifying an organization is deprecated and will be dropped in a future release.
+		 *
 		 * @fulfil {Blob|ReadableStream} - blob on the browser, download stream on node
 		 * @returns {Bluebird}
 		 *
@@ -212,25 +312,37 @@ const getBillingModel = function (
 		 */
 		downloadInvoice(
 			invoiceNumber: string,
+			organization?: string | number,
 		): Bluebird<Blob | BalenaRequestStreamResult> {
-			const url = `/user/billing/invoices/${invoiceNumber}/download`;
+			return Bluebird.try(() => {
+				if (organization == null) {
+					return '`/user/billing/invoices/${invoiceNumber}/download`';
+				}
 
-			if (!isBrowser) {
-				return request.stream({
-					method: 'GET',
-					url,
-					baseUrl: apiUrl,
-				});
-			}
+				return organizationModel()
+					.get(organization, { $select: 'id' })
+					.then(
+						({ id }: Pick<Organization, 'id'>) =>
+							`/billing/v1/account/${id}/invoices/${invoiceNumber}/download`,
+					);
+			}).then((url) => {
+				if (!isBrowser) {
+					return request.stream({
+						method: 'GET',
+						url,
+						baseUrl: apiUrl,
+					});
+				}
 
-			return request
-				.send({
-					method: 'GET',
-					url,
-					baseUrl: apiUrl,
-					responseFormat: 'blob',
-				})
-				.then(({ body }) => body);
+				return request
+					.send({
+						method: 'GET',
+						url,
+						baseUrl: apiUrl,
+						responseFormat: 'blob',
+					})
+					.then(({ body }) => body);
+			});
 		},
 	};
 
