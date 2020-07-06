@@ -1,4 +1,14 @@
 - commits:
+    - subject: Use typescript import helpers
+      hash: b24780253825c734a73d272e8a8e1054622f8c14
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.2.5
+  date: 2020-07-06T10:30:26.802Z
+- commits:
     - subject: Drop dtslint in favor of plain @ts-expect-error
       hash: 1d2c1ffda6b6e98e3059b6ea12aa7b0da47dc28e
       body: ''
