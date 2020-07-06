@@ -1,4 +1,35 @@
 - commits:
+    - subject: Simplify balena-request custom typings
+      hash: 7945799f798c7f3b1943833b6e3dbf7e6ae70b18
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Use import type for declaration imports
+      hash: 6b1e790a16959d9e0a7d4675d83f518de2cc978d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Simplify balena-pine custom typings
+      hash: 5398e0b09cd78a0025eef0fc58ca5578f81b6be3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Import balena-sdk type declarations via import type and not direct path
+      hash: 094569deadef0d406be54d26adc632c4c44b2ec5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.2.6
+  date: 2020-07-06T14:55:17.133Z
+- commits:
     - subject: Use typescript import helpers
       hash: b24780253825c734a73d272e8a8e1054622f8c14
       body: ''
