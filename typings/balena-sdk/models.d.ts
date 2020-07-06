@@ -1,12 +1,5 @@
-import {
-	PineDeferred,
-	OptionalNavigationResource,
-	ReverseNavigationResource,
-	NavigationResource,
-} from '../pinejs-client-core';
-import * as DeviceOverallStatus from './device-overall-status';
+import type * as DeviceOverallStatus from './device-overall-status';
 
-// tslint:disable-next-line:no-module
 declare module './index' {
 	export interface Organization {
 		id: number;

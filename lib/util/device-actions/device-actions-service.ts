@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import * as BalenaRequest from '../../../typings/balena-request';
+import type * as BalenaRequest from '../../../typings/balena-request';
 
 interface MakeActionRequestParams {
 	uuid: string;

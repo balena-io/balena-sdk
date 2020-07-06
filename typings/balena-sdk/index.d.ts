@@ -1,14 +1,14 @@
-import * as BalenaErrors from 'balena-errors';
-import * as Bluebird from 'bluebird';
-import { EventEmitter } from 'events';
+import type * as BalenaErrors from 'balena-errors';
+import type * as Bluebird from 'bluebird';
+import type { EventEmitter } from 'events';
 
-import { Readable } from 'stream';
-
-import * as BalenaPine from '../balena-pine';
-import { BalenaRequest, BalenaRequestStreamResult } from '../balena-request';
-import * as DeviceOverallStatus from './device-overall-status';
-import * as Pine from '../pinejs-client-core';
-import { Dictionary } from '../utils';
+import type * as BalenaPine from '../balena-pine';
+import type {
+	BalenaRequest,
+	BalenaRequestStreamResult,
+} from '../balena-request';
+import type * as DeviceOverallStatus from './device-overall-status';
+import type * as Pine from '../pinejs-client-core';
 import './device-state';
 import './device-type-json';
 import './models';

@@ -1,5 +1,5 @@
-import * as BalenaRequest from '../../../../typings/balena-request';
-import * as BalenaSdk from '../../../../typings/balena-sdk';
+import type * as BalenaRequest from '../../../../typings/balena-request';
+import type * as BalenaSdk from '../../../..';
 import { DeviceActionsService } from '../device-actions-service';
 
 const OS_UPDATE_ACTION_NAME = 'resinhup';

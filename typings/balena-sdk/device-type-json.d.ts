@@ -1,6 +1,5 @@
-import { Dictionary } from '../utils';
+import type { Dictionary } from '../utils';
 
-// tslint:disable-next-line:no-module
 declare module './index' {
 	/* types for the /device-types/v1 endppoints */
 	export namespace DeviceTypeJson {

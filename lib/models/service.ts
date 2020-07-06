@@ -17,11 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import * as Bluebird from 'bluebird';
 import once = require('lodash/once');
-import {
-	PineOptions,
-	Service,
-	ServiceEnvironmentVariable,
-} from '../../typings/balena-sdk';
+import type { PineOptions, Service, ServiceEnvironmentVariable } from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
 

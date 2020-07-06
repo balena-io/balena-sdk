@@ -1,4 +1,4 @@
-import {
+import type {
 	CurrentGatewayDownload,
 	CurrentService,
 	Device,
@@ -10,7 +10,7 @@ import {
 	PineExpand,
 	Release,
 	Service,
-} from '../../typings/balena-sdk';
+} from '../..';
 
 // Pine expand options necessary for getting raw service data for a device
 export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {

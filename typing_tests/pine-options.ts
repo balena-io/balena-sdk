@@ -1,7 +1,7 @@
 /// <reference types="node" />
-import * as BalenaSdk from '../typings/balena-sdk';
-import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
-import { AnyObject } from '../typings/utils';
+import type * as BalenaSdk from '..';
+import type { InferAssociatedResourceType } from '../typings/pinejs-client-core';
+import type { AnyObject } from '../typings/utils';
 import { Equals, EqualsTrue } from './utils';
 
 // This file is in .prettierignore, since otherwise

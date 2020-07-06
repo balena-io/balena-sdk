@@ -15,14 +15,14 @@ limitations under the License.
 */
 
 import * as Bluebird from 'bluebird';
-import { BalenaRequestStreamResult } from '../../typings/balena-request';
-import {
+import type { BalenaRequestStreamResult } from '../../typings/balena-request';
+import type {
 	BillingAccountInfo,
 	BillingInfo,
 	BillingPlanInfo,
 	InvoiceInfo,
 	TokenBillingSubmitInfo,
-} from '../../typings/balena-sdk';
+} from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 const getBillingModel = function (

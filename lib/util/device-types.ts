@@ -1,6 +1,6 @@
 import * as errors from 'balena-errors';
-import { DeviceTypeJson } from '../../typings/balena-sdk';
-import { Dictionary } from '../../typings/utils';
+import type { DeviceTypeJson } from '../..';
+import type { Dictionary } from '../../typings/utils';
 
 type DeviceType = DeviceTypeJson.DeviceType;
 
