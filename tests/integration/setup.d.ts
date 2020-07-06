@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import * as BalenaSdk from '../../typings/balena-sdk';
+import type * as BalenaSdk from '../..';
 
 export const IS_BROWSER: boolean;
 

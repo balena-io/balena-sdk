@@ -17,7 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import * as Bluebird from 'bluebird';
 
-import * as BalenaSdk from '../../typings/balena-sdk';
+import type * as BalenaSdk from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
 

@@ -16,7 +16,7 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import * as Bluebird from 'bluebird';
-import {
+import type {
 	Application,
 	ApplicationInvite,
 	ApplicationMembershipRole,
@@ -24,7 +24,7 @@ import {
 	ApplicationInviteOptions,
 	BalenaSDK,
 	PineSubmitBody,
-} from '../../typings/balena-sdk';
+} from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
 

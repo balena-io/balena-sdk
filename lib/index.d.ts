@@ -2,7 +2,7 @@ import BalenaAuth from 'balena-auth/lib/auth';
 
 import * as BalenaPine from '../typings/balena-pine';
 import * as BalenaRequest from '../typings/balena-request';
-import * as BalenaSdk from '../typings/balena-sdk';
+import type * as BalenaSdk from '..';
 import { PubSub } from './util/pubsub';
 
 export interface InjectedDependenciesParam {

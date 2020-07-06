@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import * as BalenaSdk from '../typings/balena-sdk';
+import type * as BalenaSdk from '..';
 import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
 import { AnyObject } from '../typings/utils';
 

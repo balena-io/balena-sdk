@@ -26,12 +26,12 @@ import type * as deviceTypesUtilsType from '../util/device-types';
 import type { hupActionHelper as hupActionHelperType } from '../util/device-actions/os-update/utils';
 
 import { BalenaRequestStreamResult } from '../../typings/balena-request';
-import {
+import type {
 	DeviceTypeJson,
 	ImgConfigOptions,
 	OsUpdateVersions,
 	OsVersions,
-} from '../../typings/balena-sdk';
+} from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;

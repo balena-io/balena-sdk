@@ -1,5 +1,5 @@
 import bSemver = require('balena-semver');
-import * as BalenaSdk from '../../typings/balena-sdk';
+import type * as BalenaSdk from '../..';
 import { isProvisioned } from './device';
 
 const LOCAL_MODE_MIN_OS_VER = '2.0.0';

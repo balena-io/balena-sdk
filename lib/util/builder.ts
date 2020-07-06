@@ -1,5 +1,5 @@
 import * as errors from 'balena-errors';
-import * as BalenaSdk from '../../typings/balena-sdk';
+import type * as BalenaSdk from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 type BalenaBuilderRequestError = errors.BalenaError & {
