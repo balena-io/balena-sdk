@@ -1,4 +1,4 @@
-import { AnyObject, Omit, PropsOfType, StringKeyof } from './utils';
+import type { AnyObject, Omit, PropsOfType, StringKeyof } from './utils';
 
 export interface WithId {
 	id: number;

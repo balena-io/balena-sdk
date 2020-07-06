@@ -1,5 +1,5 @@
 import * as m from 'mochainon';
-import { AnyObject } from '../typings/utils';
+import type { AnyObject } from '../typings/utils';
 import { balena, BalenaSdk } from './integration/setup';
 const { expect } = m.chai;
 

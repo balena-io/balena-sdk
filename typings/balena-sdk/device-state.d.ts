@@ -1,6 +1,5 @@
-import { Dictionary } from '../utils';
+import type { Dictionary } from '../utils';
 
-// tslint:disable-next-line:no-module
 declare module './index' {
 	export namespace DeviceState {
 		export interface ServiceInfo {

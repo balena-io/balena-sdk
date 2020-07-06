@@ -1,7 +1,5 @@
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
-import { InferAssociatedResourceType } from '../typings/pinejs-client-core';
-import { AnyObject } from '../typings/utils';
 
 // This file is in .prettierignore, since otherwise
 // the @ts-expect-error comments would move to the wrong place

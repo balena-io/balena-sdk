@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as Bluebird from 'bluebird';
-import { BalenaRequestStreamResult } from '../../typings/balena-request';
+import type { BalenaRequestStreamResult } from '../../typings/balena-request';
 import type {
 	BillingAccountInfo,
 	BillingInfo,

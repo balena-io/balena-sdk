@@ -1,6 +1,5 @@
 /// <reference types="chai" />
 
-// tslint:disable-next-line:no-module
 declare module 'chai-samsam' {
 	const chaiSamSam: Chai.ChaiPlugin;
 	export = chaiSamSam;

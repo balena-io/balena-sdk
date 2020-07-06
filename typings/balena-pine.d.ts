@@ -1,5 +1,5 @@
-import * as Bluebird from 'bluebird';
-import * as PineClient from './pinejs-client-core';
+import type * as Bluebird from 'bluebird';
+import type * as PineClient from './pinejs-client-core';
 
 export interface Pine {
 	delete<T>(

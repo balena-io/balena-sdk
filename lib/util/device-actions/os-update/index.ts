@@ -1,4 +1,4 @@
-import * as BalenaRequest from '../../../../typings/balena-request';
+import type * as BalenaRequest from '../../../../typings/balena-request';
 import type * as BalenaSdk from '../../../..';
 import { DeviceActionsService } from '../device-actions-service';
 

@@ -1,6 +1,6 @@
-import * as Bluebird from 'bluebird';
-import { Readable } from 'stream';
-import { Omit } from './utils';
+import type * as Bluebird from 'bluebird';
+import type { Readable } from 'stream';
+import type { Omit } from './utils';
 
 /* tslint:disable:no-namespace */
 declare namespace BalenaRequest {

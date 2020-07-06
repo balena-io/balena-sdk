@@ -25,7 +25,7 @@ import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
 import type * as deviceTypesUtilsType from '../util/device-types';
 import type { hupActionHelper as hupActionHelperType } from '../util/device-actions/os-update/utils';
 
-import { BalenaRequestStreamResult } from '../../typings/balena-request';
+import type { BalenaRequestStreamResult } from '../../typings/balena-request';
 import type {
 	DeviceTypeJson,
 	ImgConfigOptions,

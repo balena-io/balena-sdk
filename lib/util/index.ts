@@ -1,5 +1,5 @@
 import * as errors from 'balena-errors';
-import * as Pine from '../../typings/pinejs-client-core';
+import type * as Pine from '../../typings/pinejs-client-core';
 
 export const notImplemented = () => {
 	throw new Error('The method is not implemented.');

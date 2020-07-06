@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { Dictionary } from '../../typings/utils';
+import type { Dictionary } from '../../typings/utils';
 
 // Use with: `findCallback(arguments)`.
 const findCallback = (args: IArguments): ((...args: any[]) => any) | void => {
