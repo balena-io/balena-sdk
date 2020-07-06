@@ -22,8 +22,6 @@ import * as memoizee from 'memoizee';
 import * as semver from 'semver';
 
 import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
-import type * as deviceTypesUtilsType from '../util/device-types';
-import type { hupActionHelper as hupActionHelperType } from '../util/device-actions/os-update/utils';
 
 import type { BalenaRequestStreamResult } from '../../typings/balena-request';
 import type {
@@ -45,19 +43,25 @@ const getOsModel = function (
 	const { request, pubsub } = deps;
 	const { apiUrl, isBrowser } = opts;
 
-	const configModel = once(() => require('./config').default(deps, opts));
+	const configModel = once(() =>
+		(require('./config') as typeof import('./config')).default(deps, opts),
+	);
 	const applicationModel = once(() =>
-		require('./application').default(deps, opts),
+		(require('./application') as typeof import('./application')).default(
+			deps,
+			opts,
+		),
 	);
 	const deviceTypesUtils = once(
 		// Hopefully TS 3.9 will allow us to drop this type cast
 		// and infer the types from the require
-		() => require('../util/device-types') as typeof deviceTypesUtilsType,
+		() =>
+			require('../util/device-types') as typeof import('../util/device-types'),
 	);
 	const hupActionHelper = once(
 		() =>
-			require('../util/device-actions/os-update/utils')
-				.hupActionHelper as typeof hupActionHelperType,
+			(require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils'))
+				.hupActionHelper,
 	);
 
 	const withDeviceTypesEndpointCaching = <T extends (...args: any[]) => any>(

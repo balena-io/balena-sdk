@@ -27,12 +27,19 @@ const getServiceModel = (
 ) => {
 	const { pine } = deps;
 	const applicationModel = once(() =>
-		require('./application').default(deps, opts),
+		(require('./application') as typeof import('./application')).default(
+			deps,
+			opts,
+		),
 	);
 
-	const { addCallbackSupportToModule } = require('../util/callbacks');
+	const {
+		addCallbackSupportToModule,
+	} = require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const { buildDependentResource } = require('../util/dependent-resource');
+	const {
+		buildDependentResource,
+	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
 	const varModel = buildDependentResource(
 		{ pine },
@@ -41,7 +48,6 @@ const getServiceModel = (
 			resourceKeyField: 'name',
 			parentResourceName: 'service',
 			getResourceId: (id: number) => get(id, { $select: 'id' }).get('id'),
-			ResourceNotFoundError: errors.BalenaServiceNotFound,
 		},
 	);
 
@@ -166,7 +172,7 @@ const getServiceModel = (
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
 			options: PineOptions<ServiceEnvironmentVariable> = {},
-		): ServiceEnvironmentVariable[] {
+		): Bluebird<ServiceEnvironmentVariable[]> {
 			return applicationModel()
 				.get(nameOrSlugOrId, { $select: 'id' })
 				.get('id')

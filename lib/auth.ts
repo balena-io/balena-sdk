@@ -17,9 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import * as Bluebird from 'bluebird';
 import * as memoizee from 'memoizee';
-// TODO: change to type-only import when we bump TS to 3.8
-import _get2faModel from './2fa';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '.';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const getAuth = function (
 	deps: InjectedDependenciesParam,
@@ -58,7 +56,7 @@ const getAuth = function (
 	 * @namespace balena.auth.twoFactor
 	 * @memberof balena.auth
 	 */
-	const twoFactor = (require('./2fa').default as typeof _get2faModel)(
+	const twoFactor = (require('./2fa') as typeof import('./2fa')).default(
 		{
 			...deps,
 			auth,
@@ -430,7 +428,7 @@ const getAuth = function (
 	}
 
 	return {
-		twoFactor: require('./util/callbacks').addCallbackSupportToModule(
+		twoFactor: (require('./util/callbacks') as typeof import('./util/callbacks')).addCallbackSupportToModule(
 			twoFactor,
 		) as typeof twoFactor,
 		whoami,

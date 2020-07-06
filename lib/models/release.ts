@@ -27,14 +27,23 @@ const getReleaseModel = function (
 ) {
 	const { pine } = deps;
 	const applicationModel = once(() =>
-		require('./application').default(deps, opts),
-	) as () => BalenaSdk.BalenaSDK['models']['application'];
+		(require('./application') as typeof import('./application')).default(
+			deps,
+			opts,
+		),
+	);
 
-	const { addCallbackSupportToModule } = require('../util/callbacks');
+	const {
+		addCallbackSupportToModule,
+	} = require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const { buildDependentResource } = require('../util/dependent-resource');
+	const {
+		buildDependentResource,
+	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const builderHelper = once(() => {
-		const { BuilderHelper } = require('../util/builder');
+		const {
+			BuilderHelper,
+		} = require('../util/builder') as typeof import('../util/builder');
 		return new BuilderHelper(deps, opts);
 	});
 
@@ -46,7 +55,6 @@ const getReleaseModel = function (
 			parentResourceName: 'release',
 			getResourceId: (commitOrId: string | number) =>
 				get(commitOrId, { $select: 'id' }).get('id'),
-			ResourceNotFoundError: errors.BalenaReleaseNotFound,
 		},
 	);
 

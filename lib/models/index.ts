@@ -21,68 +21,70 @@ const modelsTemplate = {
 	 * @namespace application
 	 * @memberof balena.models
 	 */
-	application: () => require('./application').default,
+	application: () =>
+		(require('./application') as typeof import('./application')).default,
 
 	/**
 	 * @namespace device
 	 * @memberof balena.models
 	 */
-	device: () => require('./device').default,
+	device: () => (require('./device') as typeof import('./device')).default,
 
 	/**
 	 * @namespace apiKey
 	 * @memberof balena.models
 	 */
-	apiKey: () => require('./api-key').default,
+	apiKey: () => (require('./api-key') as typeof import('./api-key')).default,
 
 	/**
 	 * @namespace key
 	 * @memberof balena.models
 	 */
-	key: () => require('./key').default,
+	key: () => (require('./key') as typeof import('./key')).default,
 
 	/**
 	 * @namespace organization
 	 * @memberof balena.models
 	 */
-	organization: () => require('./organization').default,
+	organization: () =>
+		(require('./organization') as typeof import('./organization')).default,
 
 	/**
 	 * @namespace os
 	 * @memberof balena.models
 	 */
-	os: () => require('./os').default,
+	os: () => (require('./os') as typeof import('./os')).default,
 
 	/**
 	 * @namespace config
 	 * @memberof balena.models
 	 */
-	config: () => require('./config').default,
+	config: () => (require('./config') as typeof import('./config')).default,
 
 	/**
 	 * @namespace release
 	 * @memberof balena.models
 	 */
-	release: () => require('./release').default,
+	release: () => (require('./release') as typeof import('./release')).default,
 
 	/**
 	 * @namespace service
 	 * @memberof balena.models
 	 */
-	service: () => require('./service').default,
+	service: () => (require('./service') as typeof import('./service')).default,
 
 	/**
 	 * @namespace image
 	 * @memberof balena.models
 	 */
-	image: () => require('./image').default,
+	image: () => (require('./image') as typeof import('./image')).default,
 
 	/**
 	 * @namespace billing
 	 * @memberof balena.models
 	 * @description **Note!** The billing methods are available on Balena.io exclusively.
 	 */
-	billing: () => require('./billing').default,
+	billing: () => (require('./billing') as typeof import('./billing')).default,
 };
 
 export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
@@ -94,7 +96,9 @@ export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
 				enumerable: true,
 				configurable: true,
 				get() {
-					const { addCallbackSupportToModule } = require('../util/callbacks');
+					const {
+						addCallbackSupportToModule,
+					} = require('../util/callbacks') as typeof import('../util/callbacks');
 					const moduleFactory = modelsTemplate[moduleName]();
 					// We need the delete first as the current property is read-only
 					// and the delete removes that restriction
