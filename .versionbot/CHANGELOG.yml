@@ -1,4 +1,14 @@
 - commits:
+    - subject: Minimize bluebird sugar usage
+      hash: 509364c5b73b3cee6d86ecd06055d0bb4e252787
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.3.3
+  date: 2020-07-07T19:11:03.768Z
+- commits:
     - subject: Add type checking for tests
       hash: d54fbcafc52fbb0b334779d9a35438e8a6577514
       body: ''
