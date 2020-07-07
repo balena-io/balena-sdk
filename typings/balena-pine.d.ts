@@ -14,3 +14,14 @@ export interface Pine {
 	): Bluebird<'OK'>;
 	upsert<T>(params: PineClient.UpsertParams<T>): Bluebird<T | 'OK'>;
 }
+
+export type PineWithSelectOnGet = Omit<Pine, 'get'> & {
+	get<T>(
+		params: PineClient.ParamsObjWithId<T> & PineClient.ParamsObjWithSelect<T>,
+	): Bluebird<T>;
+	get<T>(params: PineClient.ParamsObjWithSelect<T>): Bluebird<T[]>;
+	get<T, Result extends number>(
+		params: PineClient.ParamsObj<T>,
+	): Bluebird<Result>;
+	get<T, Result>(params: PineClient.ParamsObjWithSelect<T>): Bluebird<Result>;
+};

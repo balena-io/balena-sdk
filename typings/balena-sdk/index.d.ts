@@ -45,6 +45,12 @@ declare namespace BalenaSdk {
 	type PineSelectableProps<T> = Pine.SelectableProps<T>;
 	type PineExpandableProps<T> = Pine.ExpandableProps<T>;
 
+	/**
+	 * A variant that helps you not forget addins a $select, helping to
+	 * create requests explecitely fetch only what your code needs.
+	 */
+	type PineWithSelectOnGet = BalenaPine.PineWithSelectOnGet;
+
 	interface Interceptor {
 		request?(response: any): Bluebird<any>;
 		response?(response: any): Bluebird<any>;

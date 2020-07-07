@@ -269,6 +269,10 @@ export interface ParamsObjWithId<T> extends ParamsObj<T> {
 	id: number;
 }
 
+export type ParamsObjWithSelect<T> = ParamsObj<T> & {
+	options: ODataOptionsWithSelect<T>;
+};
+
 export interface ParamsObjWithFilter<T> extends ParamsObj<T> {
 	options: ODataOptionsWithFilter<T>;
 }
