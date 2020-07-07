@@ -1,3 +1,5 @@
+import 'chai-samsam';
+
 import * as m from 'mochainon';
 const { expect } = m.chai;
 

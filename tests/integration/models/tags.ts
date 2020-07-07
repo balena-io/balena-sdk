@@ -13,10 +13,8 @@ const getAllByResourceFactory = function (
 	resourceName: string,
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
-	return function (idOrUniqueParam: number | string) {
-		return (model as any)[propName].apply(this, arguments) as Bluebird<
-			BalenaSdk.ResourceTagBase[]
-		>;
+	return function (...args: [number | string]) {
+		return model[propName](...args) as Bluebird<BalenaSdk.ResourceTagBase[]>;
 	};
 };
 

@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.js.json",
+    "compilerOptions": {
+        "resolveJsonModule": true
+    },
+    "include": [
+        "typings/**/*",
+        "tests/**/*",
+        "lib/**/*",
+        "gulpfile.js"
+    ]
+}
