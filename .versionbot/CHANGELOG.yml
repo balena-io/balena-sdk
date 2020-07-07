@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'typings: Export pine variant w/ a mandatory $select on get requests'
+      hash: f8cfe069b7eaf0e45bbb9ca9b2e066c2327d3a7e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: 'https://github.com/balena-io/balena-ui/pull/3829/files#r450310702'
+        see: 'https://github.com/balena-io/balena-ui/pull/3829/files#r450310702'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.3.0
+  date: 2020-07-07T14:55:53.014Z
+- commits:
     - subject: Remove `this.skip` usage as a faster workaround to afterEach skipping
       hash: f930ce282ae650b443873e3df67ca7f0514b37c1
       body: ''
