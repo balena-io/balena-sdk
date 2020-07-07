@@ -1,4 +1,14 @@
 - commits:
+    - subject: Add type checking for tests
+      hash: d54fbcafc52fbb0b334779d9a35438e8a6577514
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.3.2
+  date: 2020-07-07T17:20:04.126Z
+- commits:
     - subject: 'Tests: cache device type lookup'
       hash: 1c331a8be1cbefe7184e56a6621963b3c9349e7b
       body: ''
