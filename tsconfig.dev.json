@@ -8,5 +8,8 @@
         "tests/**/*",
         "lib/**/*",
         "gulpfile.js"
-    ]
+	],
+	"exclude": [
+		"es2015"
+	]
 }

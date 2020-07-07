@@ -23,7 +23,7 @@ const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 	};
 };
 
-interface TagModelBase<T extends BalenaSdk.ResourceTagBase> {
+export interface TagModelBase<T extends BalenaSdk.ResourceTagBase> {
 	getAll(
 		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
 	): Bluebird<T[]>;
@@ -36,7 +36,7 @@ export interface Options<T extends BalenaSdk.ResourceTagBase> {
 	modelNamespace: string;
 	resourceName: string;
 	uniquePropertyNames: string[];
-	resourceProvider: () => { id: number };
+	resourceProvider?: () => { id: number };
 	setTagResourceProvider?: () => { id: number };
 }
 
@@ -47,6 +47,9 @@ export const itShouldGetAllTagsByResource = function <
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	beforeEach(function () {
+		if (!opts.resourceProvider) {
+			throw new Error('A resourceProvider was not provided!');
+		}
 		this.resource = opts.resourceProvider();
 		// used for tag creation in beforeEach
 		this.setTagResource = (
@@ -132,6 +135,9 @@ export const itShouldSetGetAndRemoveTags = function <
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	beforeEach(function () {
+		if (!opts.resourceProvider) {
+			throw new Error('A resourceProvider was not provided!');
+		}
 		return (this.resource = opts.resourceProvider());
 	});
 

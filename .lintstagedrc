@@ -4,8 +4,5 @@
 	],
 	"*.ts": [
 		"balena-lint --typescript --fix"
-	],
-	"*.coffee": [
-		"balena-lint"
 	]
 }

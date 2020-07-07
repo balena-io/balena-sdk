@@ -24,7 +24,7 @@ const OPTIONS = {
 		browserLibraryName: 'balena-sdk',
 	},
 	files: {
-		tests: ['tests/**/*.spec.ts', 'tests/**/*.spec.coffee'],
+		tests: ['tests/**/*.spec.js', 'tests/**/*.spec.ts'],
 		browserEntry: 'index.js',
 		browserOutput: 'balena-browser.js',
 		browserMinifiedOutput: 'balena-browser.min.js',
@@ -50,7 +50,7 @@ gulp.task('test', function (cb) {
 	return gulp.src(OPTIONS.files.tests, { read: false }).pipe(
 		gulpMocha({
 			reporter: 'spec',
-			require: ['ts-node/register/transpile-only', 'coffeescript/register'],
+			require: ['ts-node/register/transpile-only'],
 			timeout: 5 * 60 * 1000,
 			slow: 1000,
 		}),
