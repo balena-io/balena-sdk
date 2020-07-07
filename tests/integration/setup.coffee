@@ -1,5 +1,6 @@
 Bluebird = require('bluebird')
 _ = require('lodash')
+memoize = require('memoizee')
 
 { chai } = require('mochainon')
 chai.use(require('chai-samsam'))
@@ -142,6 +143,19 @@ exports.givenInitialOrganization = (beforeFn) ->
 		getInitialOrganization().then (initialOrg) =>
 			@initialOrg = initialOrg
 
+getDeviceType = memoize(
+	(deviceTypeId) ->
+		balena.pine.get
+			resource: 'device_type'
+			id: deviceTypeId
+			options:
+				$select: 'slug'
+	{
+		promise: true,
+		primitive: true
+	}
+)
+
 exports.givenAnApplication = (beforeFn) ->
 	exports.givenInitialOrganization(beforeFn)
 
@@ -155,11 +169,7 @@ exports.givenAnApplication = (beforeFn) ->
 			chai.expect(@application.is_for__device_type).to.be.an('object')
 			.that.has.property('__id').that.is.a('number')
 
-			balena.pine.get
-				resource: 'device_type'
-				id: @application.is_for__device_type.__id
-				options:
-					$select: 'slug'
+			getDeviceType(@application.is_for__device_type.__id)
 		.then (@applicationDeviceType) =>
 			chai.expect(@applicationDeviceType).to.be.an('object')
 			.that.has.property('slug').that.is.a('string')
