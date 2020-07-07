@@ -146,16 +146,11 @@ exports.givenAnApplication = (beforeFn) ->
 	exports.givenInitialOrganization(beforeFn)
 
 	beforeFn ->
-		# calling this.skip() doesn't trigger afterEach,
-		# so we need to reset in here as well
-		# See: https://github.com/mochajs/mocha/issues/3740
-		resetApplications()
-		.then =>
-			balena.models.application.create
-				name: 'FooBar'
-				applicationType: 'microservices-starter'
-				deviceType: 'raspberry-pi'
-				organization: @initialOrg.id
+		balena.models.application.create
+			name: 'FooBar'
+			applicationType: 'microservices-starter'
+			deviceType: 'raspberry-pi'
+			organization: @initialOrg.id
 		.then (@application) =>
 			chai.expect(@application.is_for__device_type).to.be.an('object')
 			.that.has.property('__id').that.is.a('number')
@@ -180,13 +175,8 @@ resetDevices = ->
 
 exports.givenADevice = (beforeFn, extraDeviceProps) ->
 	beforeFn ->
-		# calling this.skip() doesn't trigger afterEach,
-		# so we need to reset in here as well
-		# See: https://github.com/mochajs/mocha/issues/3740
-		resetDevices()
-		.then =>
-			uuid = balena.models.device.generateUniqueKey()
-			balena.models.device.register(@application.app_name, uuid)
+		uuid = balena.models.device.generateUniqueKey()
+		balena.models.device.register(@application.app_name, uuid)
 		.tap (deviceInfo) =>
 			if !@currentRelease || !@currentRelease.commit
 				return

@@ -921,13 +921,11 @@ describe 'Application Model', ->
 			before ->
 				balena.auth.logout()
 
+			$it = if publicApp then it else it.skip
+
 			describe 'arbitrary pinejs queries', ->
 
-				it 'should be able to retrieve the available public apps', ->
-					if !publicApp
-						this.skip()
-						return
-
+				$it 'should be able to retrieve the available public apps', ->
 					balena.pine.get
 						resource: 'application'
 						options:
@@ -946,18 +944,12 @@ describe 'Application Model', ->
 
 
 			describe 'balena.models.application.get()', ->
-
 				[
 					'id'
 					'app_name'
 					'slug'
 				].forEach (prop) ->
-
-					it "should be able to get a public application by #{prop}", ->
-						if !publicApp
-							this.skip()
-							return
-
+					$it "should be able to get a public application by #{prop}", ->
 						balena.models.application.get(publicApp[prop])
 						.then (app) ->
 							m.chai.expect(app).to.have.property('id').that.is.a('number')
