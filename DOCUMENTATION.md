@@ -293,7 +293,7 @@ const sdk = getSdk.fromSharedOptions();
                 * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Bluebird</code>
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Bluebird</code>
         * [.image](#balena.models.image) : <code>object</code>
-            * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
+            * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Bluebird</code>
             * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
         * [.billing](#balena.models.billing) : <code>object</code>
             * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
@@ -620,7 +620,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Bluebird</code>
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Bluebird</code>
     * [.image](#balena.models.image) : <code>object</code>
-        * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
+        * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Bluebird</code>
         * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
     * [.billing](#balena.models.billing) : <code>object</code>
         * [.getAccount()](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
@@ -5954,12 +5954,12 @@ balena.models.service.getAllByApplication('MyApp', function(error, services) {
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.image](#balena.models.image) : <code>object</code>
-    * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
+    * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Bluebird</code>
     * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
 
 <a name="balena.models.image.get"></a>
 
-##### image.get(id, [options]) ⇒ <code>Promise</code>
+##### image.get(id, [options]) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>image</code>](#balena.models.image)  
 **Summary**: Get a specific image  
 **Access**: public  

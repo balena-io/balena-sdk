@@ -18,97 +18,95 @@ import * as errors from 'balena-errors';
 import type { Image, PineOptions } from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
+import * as Bluebird from 'bluebird';
 
 const getImageModel = function (
 	deps: InjectedDependenciesParam,
 	_opts: InjectedOptionsParam,
 ) {
 	const { pine } = deps;
-	exports = {};
+	const exports = {
+		/**
+		 * @summary Get a specific image
+		 * @name get
+		 * @public
+		 * @function
+		 * @memberof balena.models.image
+		 *
+		 * @param {Number} id - image id
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object} - image
+		 * @returns {Bluebird}
+		 *
+		 * @example
+		 * balena.models.image.get(123).then(function(image) {
+		 * 	console.log(image);
+		 * });
+		 *
+		 * @example
+		 * balena.models.image.get(123, function(error, image) {
+		 * 	if (error) throw error;
+		 * 	console.log(image);
+		 * });
+		 */
+		get(id: number, options: PineOptions<Image> = {}): Bluebird<Image> {
+			return pine
+				.get({
+					resource: 'image',
+					id,
+					options: mergePineOptions(
+						{
+							$select: [
+								// Select all the interesting fields *except* build_log
+								// (which can be very large)
+								'id',
+								'content_hash',
+								'dockerfile',
+								'project_type',
+								'status',
+								'error_message',
+								'image_size',
+								'created_at',
+								'push_timestamp',
+								'start_timestamp',
+								'end_timestamp',
+							],
+						},
+						options,
+					),
+				})
+				.tap(function (image) {
+					if (image == null) {
+						throw new errors.BalenaImageNotFound(id);
+					}
+				});
+		},
 
-	/**
-	 * @summary Get a specific image
-	 * @name get
-	 * @public
-	 * @function
-	 * @memberof balena.models.image
-	 *
-	 * @param {Number} id - image id
-	 * @param {Object} [options={}] - extra pine options to use
-	 * @fulfil {Object} - image
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.models.image.get(123).then(function(image) {
-	 * 	console.log(image);
-	 * });
-	 *
-	 * @example
-	 * balena.models.image.get(123, function(error, image) {
-	 * 	if (error) throw error;
-	 * 	console.log(image);
-	 * });
-	 */
-	exports.get = function (
-		id: number,
-		options: PineOptions<Image> = {},
-	): Promise<Image> {
-		return pine
-			.get({
-				resource: 'image',
-				id,
-				options: mergePineOptions(
-					{
-						$select: [
-							// Select all the interesting fields *except* build_log
-							// (which can be very large)
-							'id',
-							'content_hash',
-							'dockerfile',
-							'project_type',
-							'status',
-							'error_message',
-							'image_size',
-							'created_at',
-							'push_timestamp',
-							'start_timestamp',
-							'end_timestamp',
-						],
-					},
-					options,
-				),
-			})
-			.tap(function (image) {
-				if (image == null) {
-					throw new errors.BalenaImageNotFound(id);
-				}
-			});
+		/**
+		 * @summary Get the logs for an image
+		 * @name getLogs
+		 * @public
+		 * @function
+		 * @memberof balena.models.image
+		 *
+		 * @param {Number} id - image id
+		 * @fulfil {string} - logs
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.image.getLogs(123).then(function(logs) {
+		 * 	console.log(logs);
+		 * });
+		 *
+		 * @example
+		 * balena.models.image.getLogs(123, function(error, logs) {
+		 * 	if (error) throw error;
+		 * 	console.log(logs);
+		 * });
+		 */
+		getLogs: (id: number): Promise<string> =>
+			exports.get(id, { $select: 'build_log' }).get('build_log'),
 	};
-
-	/**
-	 * @summary Get the logs for an image
-	 * @name getLogs
-	 * @public
-	 * @function
-	 * @memberof balena.models.image
-	 *
-	 * @param {Number} id - image id
-	 * @fulfil {string} - logs
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.models.image.getLogs(123).then(function(logs) {
-	 * 	console.log(logs);
-	 * });
-	 *
-	 * @example
-	 * balena.models.image.getLogs(123, function(error, logs) {
-	 * 	if (error) throw error;
-	 * 	console.log(logs);
-	 * });
-	 */
-	exports.getLogs = (id: number): Promise<string> =>
-		exports.get(id, { $select: 'build_log' }).get('build_log');
 
 	return exports;
 };
