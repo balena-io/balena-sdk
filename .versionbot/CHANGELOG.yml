@@ -1,4 +1,14 @@
 - commits:
+    - subject: 'Tests: cache device type lookup'
+      hash: 1c331a8be1cbefe7184e56a6621963b3c9349e7b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.3.1
+  date: 2020-07-07T15:50:51.973Z
+- commits:
     - subject: 'typings: Export pine variant w/ a mandatory $select on get requests'
       hash: f8cfe069b7eaf0e45bbb9ca9b2e066c2327d3a7e
       body: ''
