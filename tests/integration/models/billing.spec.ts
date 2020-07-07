@@ -148,13 +148,10 @@ describe('Billing Model', function () {
 		const givenABillingAccountIt = (
 			description: string,
 			testFn: (...args: any[]) => any,
-		) =>
-			it(description, function () {
-				if (!hasActiveBillingAccount) {
-					return this.skip();
-				}
-				return testFn.apply(this, arguments);
-			});
+		) => {
+			const $it = hasActiveBillingAccount ? it : it.skip;
+			$it(description, testFn);
+		};
 
 		before(() =>
 			loginPaidUser()

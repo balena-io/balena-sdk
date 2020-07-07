@@ -136,30 +136,25 @@ exports.itShouldSetGetAndRemoveTags = function (opts: Options) {
 
 	['id', ...uniquePropertyNames].forEach((param) =>
 		describe(`given a ${resourceName} ${param}`, function () {
-			it(`should be rejected if the ${resourceName} id does not exist`, function () {
-				if (!param) {
-					return this.skip();
-				}
-				const resourceUniqueKey = param === 'id' ? 999999 : '123456789';
-				const promise = model.set(resourceUniqueKey, 'EDITOR', 'vim');
-				return expect(promise).to.be.rejectedWith(
-					`${_.startCase(resourceName)} not found: ${resourceUniqueKey}`,
-				);
-			});
+			const $it = param ? it : it.skip;
+			$it(
+				`should be rejected if the ${resourceName} id does not exist`,
+				function () {
+					const resourceUniqueKey = param === 'id' ? 999999 : '123456789';
+					const promise = model.set(resourceUniqueKey, 'EDITOR', 'vim');
+					return expect(promise).to.be.rejectedWith(
+						`${_.startCase(resourceName)} not found: ${resourceUniqueKey}`,
+					);
+				},
+			);
 
-			it('should initially have no tags', function () {
-				if (!param) {
-					return this.skip();
-				}
+			$it('should initially have no tags', function () {
 				return getAllByResource(this.resource[param]).then((tags) =>
 					expect(tags).to.have.length(0),
 				);
 			});
 
-			it('...should be able to create a tag', function () {
-				if (!param) {
-					return this.skip();
-				}
+			$it('...should be able to create a tag', function () {
 				const promise = model.set(
 					this.resource[param],
 					`EDITOR_BY_${resourceName}_${param}`,
@@ -168,23 +163,20 @@ exports.itShouldSetGetAndRemoveTags = function (opts: Options) {
 				return expect(promise).to.not.be.rejected;
 			});
 
-			it('...should be able to retrieve all tags, including the one created', function () {
-				if (!param) {
-					return this.skip();
-				}
-				return getAllByResource(this.resource[param]).then(function (tags) {
-					expect(tags).to.have.length(1);
-					const tag = tags[0];
-					expect(tag).to.be.an('object');
-					expect(tag.tag_key).to.equal(`EDITOR_BY_${resourceName}_${param}`);
-					expect(tag.value).to.equal('vim');
-				});
-			});
+			$it(
+				'...should be able to retrieve all tags, including the one created',
+				function () {
+					return getAllByResource(this.resource[param]).then(function (tags) {
+						expect(tags).to.have.length(1);
+						const tag = tags[0];
+						expect(tag).to.be.an('object');
+						expect(tag.tag_key).to.equal(`EDITOR_BY_${resourceName}_${param}`);
+						expect(tag.value).to.equal('vim');
+					});
+				},
+			);
 
-			it('...should be able to update a tag', function () {
-				if (!param) {
-					return this.skip();
-				}
+			$it('...should be able to update a tag', function () {
 				return model
 					.set(
 						this.resource[param],
@@ -203,10 +195,7 @@ exports.itShouldSetGetAndRemoveTags = function (opts: Options) {
 					});
 			});
 
-			it('...should be able to remove a tag', function () {
-				if (!param) {
-					return this.skip();
-				}
+			$it('...should be able to remove a tag', function () {
 				return model
 					.remove(this.resource[param], `EDITOR_BY_${resourceName}_${param}`)
 					.then(() => {

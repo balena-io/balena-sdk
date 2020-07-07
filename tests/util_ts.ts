@@ -9,7 +9,7 @@ export const describeExpandAssertions = async <T>(
 	describe(`expanding from ${params.resource}`, function () {
 		Object.keys(params.options.$expand).forEach((key) => {
 			describe(`to ${key}`, function () {
-				it('should succeed', async function () {
+				it('should succeed and include the expanded property', async function () {
 					const [result] = await balena.pine.get<AnyObject>({
 						...params,
 						options: {
@@ -19,16 +19,9 @@ export const describeExpandAssertions = async <T>(
 							},
 						},
 					});
-					this.result = result;
-				});
-
-				it('should include the expanded property', function () {
-					if (!this.result) {
-						this.skip();
-						return;
+					if (result) {
+						expect(result).to.have.property(key).that.is.an('array');
 					}
-
-					expect(this.result).to.have.property(key).that.is.an('array');
 				});
 			});
 		});
