@@ -112,8 +112,7 @@ const getOsModel = function (
 					baseUrl: apiUrl,
 					// optionally authenticated, so we send the token in all cases
 				})
-				.get('body')
-				.get('size'),
+				.then(({ body }) => body.size),
 	);
 
 	const isDevelopmentVersion = (version: string) =>
@@ -135,25 +134,30 @@ const getOsModel = function (
 				baseUrl: apiUrl,
 				// optionally authenticated, so we send the token in all cases
 			})
-			.get('body')
-			.then(({ versions, latest }: { versions: any[]; latest: any }) => {
-				versions.sort(bSemver.rcompare);
-				const potentialRecommendedVersions = versions.filter(
-					(version) =>
-						!(semver.prerelease(version) || isDevelopmentVersion(version)),
-				);
-				const recommended =
-					(potentialRecommendedVersions != null
-						? potentialRecommendedVersions[0]
-						: undefined) || null;
+			.then(
+				({
+					body: { versions, latest },
+				}: {
+					body: { versions: any[]; latest: any };
+				}) => {
+					versions.sort(bSemver.rcompare);
+					const potentialRecommendedVersions = versions.filter(
+						(version) =>
+							!(semver.prerelease(version) || isDevelopmentVersion(version)),
+					);
+					const recommended =
+						(potentialRecommendedVersions != null
+							? potentialRecommendedVersions[0]
+							: undefined) || null;
 
-				return {
-					versions,
-					recommended,
-					latest,
-					default: recommended || latest,
-				};
-			}),
+					return {
+						versions,
+						recommended,
+						latest,
+						default: recommended || latest,
+					};
+				},
+			),
 	);
 
 	/**
@@ -394,8 +398,11 @@ const getOsModel = function (
 					// optionally authenticated, so we send the token in all cases
 				}),
 			)
-			.catch(isNotFoundResponse, () => {
-				throw new Error('No such version for the device type');
+			.catch((err) => {
+				if (isNotFoundResponse(err)) {
+					throw new Error('No such version for the device type');
+				}
+				throw err;
 			})
 			.then((response) => new Date(response.headers.get('last-modified')!));
 	};
@@ -432,7 +439,7 @@ const getOsModel = function (
 		return getValidatedDeviceType(deviceType)
 			.then(() => {
 				if (version === 'latest') {
-					return _getOsVersions(deviceType).get('latest');
+					return _getOsVersions(deviceType).then(({ latest }) => latest);
 				}
 
 				return normalizeVersion(version);
@@ -445,8 +452,11 @@ const getOsModel = function (
 					// optionally authenticated, so we send the token in all cases
 				}),
 			)
-			.catch(isNotFoundResponse, function () {
-				throw new Error('No such version for the device type');
+			.catch(function (err) {
+				if (isNotFoundResponse(err)) {
+					throw new Error('No such version for the device type');
+				}
+				throw err;
 			});
 	});
 
@@ -516,8 +526,13 @@ const getOsModel = function (
 						body: Object.assign(options, { appId: applicationId }),
 					}),
 				)
-				.get('body')
-				.catch(isNotFoundResponse, treatAsMissingApplication(nameOrSlugOrId));
+				.then(({ body }) => body)
+				.catch((err) => {
+					if (isNotFoundResponse(err)) {
+						treatAsMissingApplication(nameOrSlugOrId, err);
+					}
+					throw err;
+				});
 		});
 	};
 

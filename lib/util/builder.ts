@@ -55,8 +55,10 @@ export class BuilderHelper {
 				}
 				return resp.body.releaseId;
 			})
-			.catch(isBuilderError, (err: BalenaBuilderRequestError) => {
-				err.message = err.body.message || err.body.error;
+			.catch((err) => {
+				if (isBuilderError(err)) {
+					err.message = err.body.message || err.body.error;
+				}
 				throw err;
 			});
 	}

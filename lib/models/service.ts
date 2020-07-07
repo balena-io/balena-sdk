@@ -47,7 +47,8 @@ const getServiceModel = (
 			resourceName: 'service_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'service',
-			getResourceId: (id: number) => get(id, { $select: 'id' }).get('id'),
+			getResourceId: (id: number) =>
+				get(id, { $select: 'id' }).then((v) => v.id),
 		},
 	);
 
@@ -60,10 +61,11 @@ const getServiceModel = (
 				id,
 				options,
 			})
-			.tap((service: Service | undefined) => {
+			.then((service: Service | undefined) => {
 				if (service == null) {
 					throw new errors.BalenaServiceNotFound(id);
 				}
+				return service;
 			});
 	};
 
@@ -177,8 +179,7 @@ const getServiceModel = (
 			): Bluebird<ServiceEnvironmentVariable[]> {
 				return applicationModel()
 					.get(nameOrSlugOrId, { $select: 'id' })
-					.get('id')
-					.then((id: number) =>
+					.then(({ id }: { id: number }) =>
 						varModel.getAll(
 							mergePineOptions(
 								{

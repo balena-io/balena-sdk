@@ -147,10 +147,11 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 						id: handleOrId,
 						options: mergePineOptions({}, options),
 					})
-					.tap((organization) => {
+					.then((organization) => {
 						if (organization == null) {
 							throw new errors.BalenaOrganizationNotFound(handleOrId);
 						}
+						return organization;
 					});
 			}
 
@@ -166,12 +167,12 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 						options,
 					),
 				})
-				.tap((organizations) => {
+				.then((organizations) => {
 					if (!organizations || organizations.length === 0) {
 						throw new errors.BalenaOrganizationNotFound(handleOrId);
 					}
-				})
-				.get(0);
+					return organizations[0];
+				});
 		});
 	};
 
@@ -202,7 +203,12 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 				}),
 			)
 			.return()
-			.catch(isNotFoundResponse, treatAsMissingOrganization(handleOrId));
+			.catch((err) => {
+				if (isNotFoundResponse(err)) {
+					treatAsMissingOrganization(handleOrId, err);
+				}
+				throw err;
+			});
 	};
 
 	return {

@@ -112,8 +112,7 @@ const get2fa = function (
 				baseUrl: apiUrl,
 				body: { code },
 			})
-			.get('body')
-			.then(auth.setKey);
+			.then(({ body }) => auth.setKey(body));
 	}
 
 	return {

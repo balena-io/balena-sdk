@@ -54,7 +54,7 @@ const getReleaseModel = function (
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'release',
 			getResourceId: (commitOrId: string | number) =>
-				get(commitOrId, { $select: 'id' }).get('id'),
+				get(commitOrId, { $select: 'id' }).then(({ id }) => id),
 		},
 	);
 
@@ -102,10 +102,11 @@ const getReleaseModel = function (
 						id: commitOrId,
 						options: mergePineOptions({}, options),
 					})
-					.tap((release) => {
+					.then((release) => {
 						if (release == null) {
 							throw new errors.BalenaReleaseNotFound(commitOrId);
 						}
+						return release;
 					});
 			} else {
 				return pine
@@ -120,7 +121,7 @@ const getReleaseModel = function (
 							options,
 						),
 					})
-					.tap(function (releases) {
+					.then(function (releases) {
 						if (releases.length === 0) {
 							throw new errors.BalenaReleaseNotFound(commitOrId);
 						}
@@ -128,8 +129,8 @@ const getReleaseModel = function (
 						if (releases.length > 1) {
 							throw new errors.BalenaAmbiguousRelease(commitOrId);
 						}
-					})
-					.get(0);
+						return releases[0];
+					});
 			}
 		});
 	}
@@ -336,7 +337,7 @@ const getReleaseModel = function (
 				},
 				options,
 			),
-		).get(0);
+		).then(([release]) => release);
 	}
 
 	/**

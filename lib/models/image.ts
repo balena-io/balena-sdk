@@ -75,10 +75,11 @@ const getImageModel = function (
 						options,
 					),
 				})
-				.tap(function (image) {
+				.then(function (image) {
 					if (image == null) {
 						throw new errors.BalenaImageNotFound(id);
 					}
+					return image;
 				});
 		},
 
@@ -105,7 +106,9 @@ const getImageModel = function (
 		 * });
 		 */
 		getLogs: (id: number): Promise<string> =>
-			exports.get(id, { $select: 'build_log' }).get('build_log'),
+			exports
+				.get(id, { $select: 'build_log' })
+				.then(({ build_log }) => build_log),
 	};
 
 	return exports;

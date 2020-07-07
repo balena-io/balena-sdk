@@ -90,7 +90,7 @@ exports.resetUser = ->
 				# only delete named user api keys
 				options: $filter: name: $ne: null
 			# Api keys can't delete api keys, just ignore failures here
-			.catchReturn()
+			.catch(_.noop)
 		]
 
 exports.credentials = buildCredentials()

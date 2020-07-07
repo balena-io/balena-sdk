@@ -89,10 +89,11 @@ const getKeyModel = function (
 				resource: 'user__has__public_key',
 				id,
 			})
-			.tap(function (key) {
+			.then(function (key) {
 				if (key == null) {
 					throw new errors.BalenaKeyNotFound(id);
 				}
+				return key;
 			});
 	}
 

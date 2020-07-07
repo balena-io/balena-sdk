@@ -156,7 +156,7 @@ const getApplicationInviteModel = function (
 			{ invitee, roleName, message }: ApplicationInviteOptions,
 		): Bluebird<Partial<ApplicationInvite>> {
 			return Bluebird.all([
-				getApplication(nameOrSlugOrId, { $select: 'id' }).get('id'),
+				getApplication(nameOrSlugOrId, { $select: 'id' }),
 				roleName
 					? pine.get<ApplicationMembershipRole>({
 							resource: 'application_membership_role',
@@ -169,7 +169,7 @@ const getApplicationInviteModel = function (
 							},
 					  })
 					: undefined,
-			]).then(([id, roles]) => {
+			]).then(([{ id }, roles]) => {
 				type ApplicationInviteBase = Omit<ApplicationInvite, 'invitee'>;
 				type ApplicationInvitePostBody = ApplicationInviteBase & {
 					invitee: string;
@@ -246,7 +246,7 @@ const getApplicationInviteModel = function (
 						url: `/user/v1/invitation/${invitationToken}`,
 						baseUrl: apiUrl,
 					})
-					.get('body')
+					.then(({ body }) => body)
 					.catch(function (err: errors.BalenaRequestError) {
 						if (err.statusCode === 401) {
 							return new errors.BalenaNotLoggedIn();
