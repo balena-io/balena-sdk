@@ -1,12 +1,5 @@
-import * as m from 'mochainon';
 import { describeExpandAssertions } from '../util_ts';
-import {
-	balena,
-	BalenaSdk,
-	givenAnApplication,
-	givenLoggedInUser,
-} from './setup';
-const { expect } = m.chai;
+import { BalenaSdk, givenAnApplication, givenLoggedInUser } from './setup';
 
 describe('arbitrary pine requests', function () {
 	givenLoggedInUser(before);

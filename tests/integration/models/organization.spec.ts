@@ -1,8 +1,6 @@
-import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
-import type { AnyObject } from '../../../typings/utils';
 import { balena, credentials, givenLoggedInUser } from '../setup';
 const { expect } = m.chai;
 

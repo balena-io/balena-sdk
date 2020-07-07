@@ -6,8 +6,14 @@ const { expect } = m.chai;
 export const describeExpandAssertions = async <T>(
 	params: BalenaSdk.PineParams<T>,
 ) => {
+	const expand = params.options?.$expand;
+	if (expand == null) {
+		throw new Error(
+			`Params object passed to 'describeExpandAssertions' must include a $expand`,
+		);
+	}
 	describe(`expanding from ${params.resource}`, function () {
-		Object.keys(params.options.$expand).forEach((key) => {
+		Object.keys(expand).forEach((key) => {
 			describe(`to ${key}`, function () {
 				it('should succeed and include the expanded property', async function () {
 					const [result] = await balena.pine.get<AnyObject>({
@@ -15,7 +21,7 @@ export const describeExpandAssertions = async <T>(
 						options: {
 							...params.options,
 							$expand: {
-								[key]: params.options.$expand[key],
+								[key]: expand[key],
 							},
 						},
 					});
