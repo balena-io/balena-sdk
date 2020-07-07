@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove `this.skip` usage as a faster workaround to afterEach skipping
+      hash: f930ce282ae650b443873e3df67ca7f0514b37c1
+      body: ''
+      footer:
+        See: 'https://github.com/mochajs/mocha/issues/3740'
+        see: 'https://github.com/mochajs/mocha/issues/3740'
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.2.9
+  date: 2020-07-07T14:04:36.663Z
+- commits:
     - subject: Improve internal typings by avoiding some `any` cases
       hash: c28af087f9b8e4ae805ee638438f4dd6116d0cdb
       body: ''
