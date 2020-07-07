@@ -1,4 +1,14 @@
 - commits:
+    - subject: Improve internal typings by avoiding some `any` cases
+      hash: c28af087f9b8e4ae805ee638438f4dd6116d0cdb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.2.8
+  date: 2020-07-06T20:39:43.141Z
+- commits:
     - subject: Include typings for all lazy loaded requires
       hash: d101fa2c79e42bd36adde052abe96a15dd5c0373
       body: ''
