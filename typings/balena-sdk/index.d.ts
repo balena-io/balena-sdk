@@ -410,6 +410,7 @@ declare namespace BalenaSdk {
 				restart(nameOrId: string | number): Bluebird<void>;
 				enableDeviceUrls(nameOrId: string | number): Bluebird<void>;
 				disableDeviceUrls(nameOrId: string | number): Bluebird<void>;
+				getDashboardUrl(nameOrId: number): string;
 				grantSupportAccess(
 					nameOrId: string | number,
 					expiryTimestamp: number,
