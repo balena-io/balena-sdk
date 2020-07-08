@@ -707,7 +707,9 @@ declare namespace BalenaSdk {
 				ping(uuidOrId: string | number): Bluebird<void>;
 				getStatus(uuidOrId: string | number): Bluebird<string>;
 				getProgress(uuidOrId: string | number): Bluebird<number | null>;
-				lastOnline(device: Device): string;
+				lastOnline(
+					device: AtLeast<Device, 'last_connectivity_event' | 'is_online'>,
+				): string;
 				getOsVersion(device: Device): string;
 				isTrackingApplicationRelease(
 					uuidOrId: string | number,
