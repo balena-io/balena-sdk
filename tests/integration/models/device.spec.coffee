@@ -1818,11 +1818,20 @@ describe 'Device Model', ->
 					@deviceInfo = deviceInfo
 
 		afterEach ->
-			Bluebird.map [
-				@application1.id
-				@application2.id
-				@application3.id
-			], balena.models.application.remove
+			balena.pine.delete({
+				resource: 'application',
+				options: {
+					$filter: {
+						id: {
+							$in: [
+								@application1.id
+								@application2.id
+								@application3.id
+							]
+						}
+					}
+				}
+			})
 
 		describe 'balena.models.device.move()', ->
 
@@ -1876,10 +1885,19 @@ describe 'Device Model', ->
 					@deviceInfo = deviceInfo
 
 		afterEach ->
-			Bluebird.map [
-				@application1.id
-				@application2.id
-			], balena.models.application.remove
+			balena.pine.delete({
+				resource: 'application',
+				options: {
+					$filter: {
+						id: {
+							$in: [
+								@application1.id
+								@application2.id
+							]
+						}
+					}
+				}
+			})
 
 		describe 'balena.models.device.move()', ->
 
@@ -1917,8 +1935,16 @@ describe 'Device Model', ->
 				@devices = devices
 
 		after ->
-			Bluebird.props _.mapValues(@apps, 'id'),
-				balena.models.application.remove
+			balena.pine.delete({
+				resource: 'application',
+				options: {
+					$filter: {
+						id: {
+							$in: _.map(@apps, 'id')
+						}
+					}
+				}
+			})
 
 		describe 'balena.models.device.move()', ->
 
