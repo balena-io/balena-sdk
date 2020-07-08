@@ -610,7 +610,7 @@ declare namespace BalenaSdk {
 				has(uuidOrId: string | number): Bluebird<boolean>;
 				isOnline(uuidOrId: string | number): Bluebird<boolean>;
 				getLocalIPAddresses(uuidOrId: string | number): Bluebird<string[]>;
-				getMACAddressess(uuidOrId: string | number): Bluebird<string[]>;
+				getMACAddresses(uuidOrId: string | number): Bluebird<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Bluebird<string[]>;
 				getManifestBySlug(
