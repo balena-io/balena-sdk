@@ -15,6 +15,8 @@ import './models';
 
 // tslint:disable-next-line:no-namespace
 declare namespace BalenaSdk {
+	type AtLeast<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
+
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
 
@@ -650,7 +652,13 @@ declare namespace BalenaSdk {
 				disableLocalMode(uuidOrId: string | number): Bluebird<void>;
 				isInLocalMode(uuidOrId: string | number): Bluebird<boolean>;
 				getLocalModeSupport(
-					devive: Device,
+					device: AtLeast<
+						Device,
+						| 'os_variant'
+						| 'os_version'
+						| 'supervisor_version'
+						| 'last_connectivity_event'
+					>,
 				): {
 					supported: boolean;
 					message: string;
