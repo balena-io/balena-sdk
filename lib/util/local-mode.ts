@@ -34,7 +34,9 @@ export const checkLocalModeSupported = (
 	}
 };
 
-export const getLocalModeSupport = (device: BalenaSdk.Device) => {
+export const getLocalModeSupport = (
+	device: Pick<BalenaSdk.Device, typeof LOCAL_MODE_SUPPORT_PROPERTIES[number]>,
+) => {
 	try {
 		checkLocalModeSupported(device);
 		return {

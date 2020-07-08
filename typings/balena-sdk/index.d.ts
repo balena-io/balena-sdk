@@ -15,6 +15,8 @@ import './models';
 
 // tslint:disable-next-line:no-namespace
 declare namespace BalenaSdk {
+	type AtLeast<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
+
 	type WithId = Pine.WithId;
 	type PineDeferred = Pine.PineDeferred;
 
@@ -408,6 +410,7 @@ declare namespace BalenaSdk {
 				restart(nameOrId: string | number): Bluebird<void>;
 				enableDeviceUrls(nameOrId: string | number): Bluebird<void>;
 				disableDeviceUrls(nameOrId: string | number): Bluebird<void>;
+				getDashboardUrl(nameOrId: number): string;
 				grantSupportAccess(
 					nameOrId: string | number,
 					expiryTimestamp: number,
@@ -606,8 +609,8 @@ declare namespace BalenaSdk {
 				}>;
 				has(uuidOrId: string | number): Bluebird<boolean>;
 				isOnline(uuidOrId: string | number): Bluebird<boolean>;
-				getLocalIPAddressess(uuidOrId: string | number): Bluebird<string[]>;
-				getMACAddressess(uuidOrId: string | number): Bluebird<string[]>;
+				getLocalIPAddresses(uuidOrId: string | number): Bluebird<string[]>;
+				getMACAddresses(uuidOrId: string | number): Bluebird<string[]>;
 				getDashboardUrl(uuid: string): string;
 				getSupportedDeviceTypes(): Bluebird<string[]>;
 				getManifestBySlug(
@@ -650,7 +653,13 @@ declare namespace BalenaSdk {
 				disableLocalMode(uuidOrId: string | number): Bluebird<void>;
 				isInLocalMode(uuidOrId: string | number): Bluebird<boolean>;
 				getLocalModeSupport(
-					devive: Device,
+					device: AtLeast<
+						Device,
+						| 'os_variant'
+						| 'os_version'
+						| 'supervisor_version'
+						| 'last_connectivity_event'
+					>,
 				): {
 					supported: boolean;
 					message: string;
@@ -698,8 +707,12 @@ declare namespace BalenaSdk {
 				ping(uuidOrId: string | number): Bluebird<void>;
 				getStatus(uuidOrId: string | number): Bluebird<string>;
 				getProgress(uuidOrId: string | number): Bluebird<number | null>;
-				lastOnline(device: Device): string;
-				getOsVersion(device: Device): string;
+				lastOnline(
+					device: AtLeast<Device, 'last_connectivity_event' | 'is_online'>,
+				): string;
+				getOsVersion(
+					device: AtLeast<Device, 'os_variant' | 'os_version'>,
+				): string;
 				isTrackingApplicationRelease(
 					uuidOrId: string | number,
 				): Bluebird<boolean>;

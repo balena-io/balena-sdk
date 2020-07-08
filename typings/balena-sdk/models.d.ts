@@ -252,7 +252,7 @@ declare module './index' {
 		is_web_accessible: boolean;
 		is_active: boolean;
 		is_online: boolean;
-		last_connectivity_event: string;
+		last_connectivity_event: string | null;
 		last_vpn_event: string;
 		latitude?: string;
 		local_id?: string;
@@ -260,7 +260,7 @@ declare module './index' {
 		longitude?: string;
 		note: string;
 		os_variant?: string;
-		os_version: string;
+		os_version: string | null;
 		provisioning_progress?: number;
 		provisioning_state: string;
 		state?: { key: string; name: string };
