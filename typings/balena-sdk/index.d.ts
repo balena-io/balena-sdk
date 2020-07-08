@@ -710,7 +710,9 @@ declare namespace BalenaSdk {
 				lastOnline(
 					device: AtLeast<Device, 'last_connectivity_event' | 'is_online'>,
 				): string;
-				getOsVersion(device: Device): string;
+				getOsVersion(
+					device: AtLeast<Device, 'os_variant' | 'os_version'>,
+				): string;
 				isTrackingApplicationRelease(
 					uuidOrId: string | number,
 				): Bluebird<boolean>;
