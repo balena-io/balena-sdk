@@ -10,6 +10,9 @@ interface BalenaRequestOptions {
 	sendToken?: boolean;
 	body?: any;
 	responseFormat?: 'none' | 'blob' | 'json' | 'text';
+	headers?: {
+		[key: string]: string;
+	};
 }
 
 interface BalenaRequestResponse extends Response {
