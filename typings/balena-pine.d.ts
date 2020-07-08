@@ -8,7 +8,7 @@ export interface Pine {
 	get<T>(params: PineClient.ParamsObjWithId<T>): Bluebird<T>;
 	get<T>(params: PineClient.ParamsObj<T>): Bluebird<T[]>;
 	get<T, Result>(params: PineClient.ParamsObj<T>): Bluebird<Result>;
-	post<T>(params: PineClient.ParamsObj<T>): Bluebird<T>;
+	post<T>(params: PineClient.ParamsObj<T>): Bluebird<T & { id: number }>;
 	patch<T>(
 		params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObjWithFilter<T>,
 	): Bluebird<'OK'>;
