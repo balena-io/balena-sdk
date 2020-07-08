@@ -1,4 +1,14 @@
 - commits:
+    - subject: 'Tests: merge multiple application deletions into a single call'
+      hash: 381e31bcfeea3cb13d7c3d904679dc9671ca886a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.4.1
+  date: 2020-07-08T13:29:07.268Z
+- commits:
     - subject: Improve typings for `sdk.pine.post`
       hash: 406afd7ea4631cf322c6715493c4e8d8b00f478f
       body: ''
