@@ -4,13 +4,8 @@ import * as _fs from 'fs';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
-import {
-	balena,
-	BalenaSdk,
-	givenLoggedInUser,
-	IS_BROWSER,
-	loginPaidUser,
-} from '../setup';
+import { balena, givenLoggedInUser, IS_BROWSER, loginPaidUser } from '../setup';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 describe('Billing Model', function () {

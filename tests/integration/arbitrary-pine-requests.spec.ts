@@ -1,5 +1,6 @@
 import { describeExpandAssertions } from '../util_ts';
-import { BalenaSdk, givenAnApplication, givenLoggedInUser } from './setup';
+import { givenAnApplication, givenLoggedInUser } from './setup';
+import type * as BalenaSdk from '../..';
 
 describe('arbitrary pine requests', function () {
 	givenLoggedInUser(before);

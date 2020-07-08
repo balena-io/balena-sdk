@@ -27,8 +27,6 @@ export const credentials: {
 	};
 };
 
-export { BalenaSdk };
-
 export const balena: BalenaSdk.BalenaSDK & {
 	models: {
 		os: {

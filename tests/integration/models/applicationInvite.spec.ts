@@ -1,11 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as m from 'mochainon';
-import {
-	balena,
-	BalenaSdk,
-	givenAnApplication,
-	givenLoggedInUser,
-} from '../setup';
+import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';

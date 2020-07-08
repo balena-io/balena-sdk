@@ -1,6 +1,7 @@
 import * as m from 'mochainon';
 import type { AnyObject } from '../typings/utils';
-import { balena, BalenaSdk } from './integration/setup';
+import { balena } from './integration/setup';
+import type * as BalenaSdk from '..';
 const { expect } = m.chai;
 
 export const describeExpandAssertions = async <T>(

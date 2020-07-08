@@ -5,12 +5,12 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import {
 	balena,
-	BalenaSdk,
 	credentials,
 	givenAnApplication,
 	givenLoggedInUser,
 	IS_BROWSER,
 } from '../setup';
+import BalenaSdk = require('../../..');
 const { expect } = m.chai;
 
 const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>

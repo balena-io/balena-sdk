@@ -2,7 +2,7 @@ import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
-import { BalenaSdk } from '../setup';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>
