@@ -3,18 +3,20 @@ import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import { chai } from 'mochainon';
 import * as memoize from 'memoizee';
+import type * as BalenaSdk from '../../';
+import { AnyObject } from '../../typings/utils';
+import { getInitialOrganization } from './utils';
+// tslint:disable-next-line:no-var-requires
 chai.use(require('chai-samsam'));
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 
-const { getInitialOrganization } = require('./utils');
-
-let apiUrl;
-let env;
-/** @type {import('../..')} */
-let getSdk;
-let opts;
+let apiUrl: string;
+let env: AnyObject;
+let getSdk: BalenaSdk.SdkConstructor;
+let opts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
+	// tslint:disable-next-line:no-var-requires
 	require('js-polyfills/es6');
 	// @ts-expect-error
 	getSdk = window.balenaSdk;
@@ -27,7 +29,9 @@ if (IS_BROWSER) {
 		builderUrl: env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
 	};
 } else {
+	// tslint:disable-next-line:no-var-requires
 	getSdk = require('../..');
+	// tslint:disable-next-line:no-var-requires
 	const settings = require('balena-settings-client');
 	({ env } = process);
 
@@ -88,7 +92,7 @@ export { opts as sdkOpts };
 export const balena = getSdk(opts);
 
 export function resetUser() {
-	return balena.auth.isLoggedIn().then(function (isLoggedIn) {
+	return balena.auth.isLoggedIn().then(function (isLoggedIn: boolean) {
 		if (!isLoggedIn) {
 			return;
 		}
@@ -109,20 +113,26 @@ export function resetUser() {
 			}),
 
 			balena.pine
-				.delete({
+				.delete<BalenaSdk.ApiKey>({
 					resource: 'api_key',
 					// only delete named user api keys
-					options: { $filter: { name: { $ne: null } } },
+					options: {
+						$filter: {
+							name: {
+								$ne: null,
+							},
+						},
+					},
 				})
 				.catch(_.noop),
 		]);
 	});
 }
 
-let _credentials = buildCredentials();
+const _credentials = buildCredentials();
 export { _credentials as credentials };
 
-export function givenLoggedInUserWithApiKey(beforeFn) {
+export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 	beforeFn(() =>
 		balena.auth
 			.login({
@@ -149,7 +159,7 @@ export function givenLoggedInUserWithApiKey(beforeFn) {
 	return afterFn(() => exports.resetUser());
 }
 
-export function givenLoggedInUser(beforeFn) {
+export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
 	beforeFn(() =>
 		balena.auth
 			.login({
@@ -178,7 +188,7 @@ const resetApplications = () =>
 		},
 	});
 
-export function givenInitialOrganization(beforeFn) {
+export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
 	return beforeFn(function () {
 		return getInitialOrganization().then((initialOrg) => {
 			return (this.initialOrg = initialOrg);
@@ -188,7 +198,7 @@ export function givenInitialOrganization(beforeFn) {
 
 const getDeviceType = memoize(
 	(deviceTypeId) =>
-		balena.pine.get({
+		balena.pine.get<BalenaSdk.DeviceType>({
 			resource: 'device_type',
 			id: deviceTypeId,
 			options: {
@@ -201,8 +211,8 @@ const getDeviceType = memoize(
 	},
 );
 
-export function givenAnApplication(beforeFn) {
-	exports.givenInitialOrganization(beforeFn);
+export function givenAnApplication(beforeFn: Mocha.HookFunction) {
+	givenInitialOrganization(beforeFn);
 
 	beforeFn(function () {
 		return balena.models.application
@@ -244,7 +254,10 @@ const resetDevices = () =>
 		},
 	});
 
-export function givenADevice(beforeFn, extraDeviceProps) {
+export function givenADevice(
+	beforeFn: Mocha.HookFunction,
+	extraDeviceProps?: BalenaSdk.PineSubmitBody<BalenaSdk.Device>,
+) {
 	beforeFn(function () {
 		const uuid = balena.models.device.generateUniqueKey();
 		return balena.models.device
@@ -254,7 +267,7 @@ export function givenADevice(beforeFn, extraDeviceProps) {
 					return;
 				}
 
-				return balena.pine.patch({
+				return balena.pine.patch<BalenaSdk.Device>({
 					resource: 'device',
 					body: {
 						is_running__release: this.currentRelease.id,
@@ -271,7 +284,7 @@ export function givenADevice(beforeFn, extraDeviceProps) {
 					return;
 				}
 
-				return balena.pine.patch({
+				return balena.pine.patch<BalenaSdk.Device>({
 					resource: 'device',
 					body: extraDeviceProps,
 					options: {
@@ -292,18 +305,19 @@ export function givenADevice(beforeFn, extraDeviceProps) {
 
 				return Bluebird.all([
 					// Create image installs for the images on the device
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.ImageInstall>({
 						resource: 'image_install',
 						body: {
 							installs__image: this.oldWebImage.id,
 							is_provided_by__release: this.oldRelease.id,
 							device: device.id,
+							// @ts-expect-error
 							download_progress: null,
 							status: 'Running',
 							install_date: '2017-10-01',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.ImageInstall>({
 						resource: 'image_install',
 						body: {
 							installs__image: this.newWebImage.id,
@@ -314,7 +328,7 @@ export function givenADevice(beforeFn, extraDeviceProps) {
 							install_date: '2017-10-30',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.ImageInstall>({
 						resource: 'image_install',
 						body: {
 							installs__image: this.oldDbImage.id,
@@ -325,12 +339,13 @@ export function givenADevice(beforeFn, extraDeviceProps) {
 							install_date: '2017-09-30',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.ImageInstall>({
 						resource: 'image_install',
 						body: {
 							installs__image: this.newDbImage.id,
 							is_provided_by__release: this.currentRelease.id,
 							device: device.id,
+							// @ts-expect-error
 							download_progress: null,
 							status: 'Running',
 							install_date: '2017-10-30',
@@ -347,21 +362,23 @@ export function givenADevice(beforeFn, extraDeviceProps) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(resetDevices);
+	afterFn(resetDevices);
 }
 
-export function givenAnApplicationWithADevice(beforeFn) {
-	exports.givenAnApplication(beforeFn);
-	return exports.givenADevice(beforeFn);
+export function givenAnApplicationWithADevice(beforeFn: Mocha.HookFunction) {
+	givenAnApplication(beforeFn);
+	givenADevice(beforeFn);
 }
 
-export function givenMulticontainerApplicationWithADevice(beforeFn) {
-	exports.givenMulticontainerApplication(beforeFn);
-	return exports.givenADevice(beforeFn);
+export function givenMulticontainerApplicationWithADevice(
+	beforeFn: Mocha.HookFunction,
+) {
+	givenMulticontainerApplication(beforeFn);
+	givenADevice(beforeFn);
 }
 
-export function givenMulticontainerApplication(beforeFn) {
-	exports.givenAnApplication(beforeFn);
+export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
+	givenAnApplication(beforeFn);
 
 	beforeFn(function () {
 		return balena.auth
@@ -369,14 +386,14 @@ export function givenMulticontainerApplication(beforeFn) {
 			.then((userId) => {
 				return Bluebird.all([
 					// Register web & DB services
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.Service>({
 						resource: 'service',
 						body: {
 							application: this.application.id,
 							service_name: 'web',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.Service>({
 						resource: 'service',
 						body: {
 							application: this.application.id,
@@ -392,10 +409,10 @@ export function givenMulticontainerApplication(beforeFn) {
 									belongs_to__application: this.application.id,
 									is_created_by__user: userId,
 									commit: 'old-release-commit',
-									status: 'success',
+									status: 'success' as const,
 									source: 'cloud',
-									composition: {},
-									start_timestamp: 1234,
+									composition: '{}',
+									start_timestamp: '1234',
 								},
 							},
 							{
@@ -404,14 +421,14 @@ export function givenMulticontainerApplication(beforeFn) {
 									belongs_to__application: this.application.id,
 									is_created_by__user: userId,
 									commit: 'new-release-commit',
-									status: 'success',
+									status: 'success' as const,
 									source: 'cloud',
-									composition: {},
-									start_timestamp: 54321,
+									composition: '{}',
+									start_timestamp: '54321',
 								},
 							},
 						],
-						(pineParams) => balena.pine.post(pineParams),
+						(pineParams) => balena.pine.post<BalenaSdk.Release>(pineParams),
 					),
 				]);
 			})
@@ -424,51 +441,51 @@ export function givenMulticontainerApplication(beforeFn) {
 				return Bluebird.all([
 					// Register an old & new web image build from the old and new
 					// releases, a db build in the new release only
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.Image>({
 						resource: 'image',
 						body: {
 							is_a_build_of__service: webService.id,
 							project_type: 'dockerfile',
 							content_hash: 'abc',
 							build_log: 'old web log',
-							start_timestamp: 1234,
-							push_timestamp: 1234,
+							start_timestamp: '1234',
+							push_timestamp: '1234',
 							status: 'success',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.Image>({
 						resource: 'image',
 						body: {
 							is_a_build_of__service: webService.id,
 							project_type: 'dockerfile',
 							content_hash: 'def',
 							build_log: 'new web log',
-							start_timestamp: 54321,
-							push_timestamp: 54321,
+							start_timestamp: '54321',
+							push_timestamp: '54321',
 							status: 'success',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.Image>({
 						resource: 'image',
 						body: {
 							is_a_build_of__service: dbService.id,
 							project_type: 'dockerfile',
 							content_hash: 'jkl',
 							build_log: 'old db log',
-							start_timestamp: 123,
-							push_timestamp: 123,
+							start_timestamp: '123',
+							push_timestamp: '123',
 							status: 'success',
 						},
 					}),
-					balena.pine.post({
+					balena.pine.post<BalenaSdk.Image>({
 						resource: 'image',
 						body: {
 							is_a_build_of__service: dbService.id,
 							project_type: 'dockerfile',
 							content_hash: 'ghi',
 							build_log: 'new db log',
-							start_timestamp: 54321,
-							push_timestamp: 54321,
+							start_timestamp: '54321',
+							push_timestamp: '54321',
 							status: 'success',
 						},
 					}),
@@ -480,28 +497,28 @@ export function givenMulticontainerApplication(beforeFn) {
 
 					return Bluebird.all([
 						// Tie the images to their corresponding releases
-						balena.pine.post({
+						balena.pine.post<BalenaSdk.ReleaseImage>({
 							resource: 'image__is_part_of__release',
 							body: {
 								image: oldWebImage.id,
 								is_part_of__release: oldRelease.id,
 							},
 						}),
-						balena.pine.post({
+						balena.pine.post<BalenaSdk.ReleaseImage>({
 							resource: 'image__is_part_of__release',
 							body: {
 								image: oldDbImage.id,
 								is_part_of__release: oldRelease.id,
 							},
 						}),
-						balena.pine.post({
+						balena.pine.post<BalenaSdk.ReleaseImage>({
 							resource: 'image__is_part_of__release',
 							body: {
 								image: newWebImage.id,
 								is_part_of__release: newRelease.id,
 							},
 						}),
-						balena.pine.post({
+						balena.pine.post<BalenaSdk.ReleaseImage>({
 							resource: 'image__is_part_of__release',
 							body: {
 								image: newDbImage.id,
@@ -514,7 +531,7 @@ export function givenMulticontainerApplication(beforeFn) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(function () {
+	afterFn(function () {
 		return (this.currentRelease = null);
 	});
 }
