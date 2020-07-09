@@ -1,4 +1,59 @@
 - commits:
+    - subject: 'tests/integration/setup: Convert to TypeScript'
+      hash: 02440521f6a164c8369c3a74e2bba7cc95a567e3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings/ImageInstall: Deprecate the image field'
+      hash: b38263a46642cc37320b5c0caff5c021f788d2d2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings/ImageInstall: Add the `installs__image` field'
+      hash: cca2b887525f60e4c6ccb5d5438739601e5d3ab3
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Add typings for the ReleaseImage'
+      hash: 3582a54008fbd8142e8f759fb14c119416f2d296
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings/ImageInstall: Add the missing device property'
+      hash: 6af02f848a44b35c63a597b7bc2baafadd6c0099
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: Convert all remaining tests away from coffeescript
+      hash: d7e7a5f20995e6ba3616ff99e97b588882e6c08d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.5.0
+  date: 2020-07-09T22:17:25.239Z
+- commits:
     - subject: 'Tests: improve typing for access to private SDK os methods'
       hash: 95c8c195f5a1b5b253c8bf2d893571893f17e7a5
       body: ''
