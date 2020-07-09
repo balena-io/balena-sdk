@@ -383,6 +383,7 @@ declare module './index' {
 		install_date: string;
 
 		image: NavigationResource<Image>;
+		device: NavigationResource<Device>;
 		is_provided_by__release: NavigationResource<Release>;
 	}
 
