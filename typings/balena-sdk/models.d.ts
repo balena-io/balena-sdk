@@ -389,6 +389,7 @@ declare module './index' {
 		status: string;
 		install_date: string;
 
+		/** @deprecated Use `installs__image` instead. */
 		image: NavigationResource<Image>;
 		installs__image: NavigationResource<Image>;
 		device: NavigationResource<Device>;
