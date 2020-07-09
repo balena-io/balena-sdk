@@ -2,7 +2,8 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
 import PUBLIC_KEY from '../../data/public-key';
-import { balena, BalenaSdk, givenLoggedInUser } from '../setup';
+import { balena, givenLoggedInUser } from '../setup';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 describe('Key Model', function () {

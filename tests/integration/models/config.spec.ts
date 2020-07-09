@@ -1,7 +1,8 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
-import { balena, BalenaSdk } from '../setup';
+import { balena } from '../setup';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 const expectDeviceTypeArray = function (

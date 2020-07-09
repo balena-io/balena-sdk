@@ -2,49 +2,56 @@ import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
-import { BalenaSdk } from '../setup';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>
 	`getAllBy${_.startCase(resourceName)}`;
 
-const getAllByResourceFactory = function (
-	model: TagModelBase,
+const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
+	model: TagModelBase<T>,
 	resourceName: string,
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
-	return function (...args: [number | string]) {
-		return model[propName](...args) as Bluebird<BalenaSdk.ResourceTagBase[]>;
+	return function (
+		idOrUniqueParam: number | string,
+		cb?: (err: Error | null, result?: any) => void,
+	) {
+		return (model as any)[propName](idOrUniqueParam, cb) as Bluebird<
+			BalenaSdk.ResourceTagBase[]
+		>;
 	};
 };
 
-interface TagModelBase {
+interface TagModelBase<T extends BalenaSdk.ResourceTagBase> {
 	getAll(
 		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
-	): Promise<BalenaSdk.ResourceTagBase[]>;
-	set(uuidOrId: string | number, tagKey: string, value: string): Promise<void>;
-	remove(uuidOrId: string | number, tagKey: string): Promise<void>;
+	): Bluebird<T[]>;
+	set(uuidOrId: string | number, tagKey: string, value: string): Bluebird<void>;
+	remove(uuidOrId: string | number, tagKey: string): Bluebird<void>;
 }
 
-export interface Options {
-	model: TagModelBase;
+export interface Options<T extends BalenaSdk.ResourceTagBase> {
+	model: TagModelBase<T>;
 	modelNamespace: string;
 	resourceName: string;
 	uniquePropertyNames: string[];
 	resourceProvider: () => { id: number };
-	setTagResourceProvider: () => { id: number };
+	setTagResourceProvider?: () => { id: number };
 }
 
-exports.itShouldGetAllTagsByResource = function (opts: Options) {
+export const itShouldGetAllTagsByResource = function <
+	T extends BalenaSdk.ResourceTagBase
+>(opts: Options<T>) {
 	const { model, resourceName, uniquePropertyNames = [] } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	beforeEach(function () {
 		this.resource = opts.resourceProvider();
 		// used for tag creation in beforeEach
-		return (this.setTagResource = (
+		this.setTagResource = (
 			opts.setTagResourceProvider || opts.resourceProvider
-		)());
+		)();
 	});
 
 	it('should become an empty array by default [Promise]', function () {
@@ -53,10 +60,7 @@ exports.itShouldGetAllTagsByResource = function (opts: Options) {
 	});
 
 	it('should become an empty array by default [callback]', function (done) {
-		(getAllByResource as (...args: any[]) => any)(this.resource.id, function (
-			err,
-			tags,
-		) {
+		getAllByResource(this.resource.id, function (err, tags) {
 			expect(err).to.be.null;
 			expect(tags).to.deep.equal([]);
 			done();
@@ -105,10 +109,7 @@ exports.itShouldGetAllTagsByResource = function (opts: Options) {
 		});
 
 		it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
-			(getAllByResource as (...args: any[]) => any)(this.resource.id, function (
-				err,
-				tags,
-			) {
+			getAllByResource(this.resource.id, function (err, tags) {
 				expect(err).to.be.null;
 				expect(tags).to.have.length(1);
 				expect(tags[0].tag_key).to.equal('EDITOR');
@@ -119,7 +120,9 @@ exports.itShouldGetAllTagsByResource = function (opts: Options) {
 	});
 };
 
-exports.itShouldSetGetAndRemoveTags = function (opts: Options) {
+export const itShouldSetGetAndRemoveTags = function <
+	T extends BalenaSdk.ResourceTagBase
+>(opts: Options<T>) {
 	const {
 		model,
 		resourceName,

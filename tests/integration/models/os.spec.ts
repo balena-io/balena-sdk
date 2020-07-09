@@ -5,23 +5,33 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import {
 	balena,
-	BalenaSdk,
 	credentials,
 	givenAnApplication,
 	givenLoggedInUser,
 	IS_BROWSER,
 } from '../setup';
+import BalenaSdk = require('../../..');
 const { expect } = m.chai;
 
 const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
 	expect(promise).to.eventually.have.property(prop);
 
+const {
+	_getDeviceTypes,
+	_getOsVersions,
+	_getDownloadSize,
+	_getMaxSatisfyingVersion,
+	_clearDeviceTypesEndpointCaches,
+} = balena.models.os as ReturnType<
+	typeof import('../../../lib/models/os').default
+>;
+
 // tslint:disable-next-line:variable-name
 const itShouldClear_getDeviceTypesCache = (stepFn: () => void) =>
 	it('should clear the result cache of balena.models.os._getDeviceTypes()', function () {
-		const p1 = balena.models.os._getDeviceTypes();
+		const p1 = _getDeviceTypes();
 		return p1.tap(stepFn).then(function (result1) {
-			const p2 = balena.models.os._getDeviceTypes();
+			const p2 = _getDeviceTypes();
 			return p2.then(function (result2) {
 				// the endpoint doesn't sort the device types atm
 				[result1, result2].forEach((dtArray) =>
@@ -37,9 +47,9 @@ const itShouldClear_getDeviceTypesCache = (stepFn: () => void) =>
 // tslint:disable-next-line:variable-name
 const itShouldClear_getOsVersionsCache = (stepFn: () => void) =>
 	it('should clear the result cache of balena.models.os._getOsVersions()', function () {
-		const p1 = balena.models.os._getOsVersions('raspberry-pi');
+		const p1 = _getOsVersions('raspberry-pi');
 		return p1.tap(stepFn).then(function (result1) {
-			const p2 = balena.models.os._getOsVersions('raspberry-pi');
+			const p2 = _getOsVersions('raspberry-pi');
 			return p2.then(function (result2) {
 				expect(result1).to.deep.equal(result2);
 				expect(p1).to.not.equal(p2);
@@ -50,9 +60,9 @@ const itShouldClear_getOsVersionsCache = (stepFn: () => void) =>
 // tslint:disable-next-line:variable-name
 const itShouldClear_getDownloadSizeCache = (stepFn: () => void) =>
 	it('should clear the result cache of balena.models.os._getDownloadSize()', function () {
-		const p1 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1');
+		const p1 = _getDownloadSize('raspberry-pi', '1.26.1');
 		return p1.tap(stepFn).then(function (result1) {
-			const p2 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1');
+			const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
 			return p2.then(function (result2) {
 				expect(result1).to.deep.equal(result2);
 				expect(p1).to.not.equal(p2);
@@ -129,61 +139,57 @@ describe('OS model', function () {
 		};
 
 		it("should support 'latest'", () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('latest', osVersions),
-			).to.equal(osVersions.latest));
+			expect(_getMaxSatisfyingVersion('latest', osVersions)).to.equal(
+				osVersions.latest,
+			));
 
 		it("should support 'recommended'", () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('recommended', osVersions),
-			).to.equal(osVersions.recommended));
+			expect(_getMaxSatisfyingVersion('recommended', osVersions)).to.equal(
+				osVersions.recommended,
+			));
 
 		it("should support 'default'", () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('default', osVersions),
-			).to.equal(osVersions.default));
+			expect(_getMaxSatisfyingVersion('default', osVersions)).to.equal(
+				osVersions.default,
+			));
 
 		it('should support exact version', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('1.24.1', osVersions),
-			).to.equal('1.24.1'));
+			expect(_getMaxSatisfyingVersion('1.24.1', osVersions)).to.equal(
+				'1.24.1',
+			));
 
 		it('should support exact non-semver version', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('2.0.0.rev1', osVersions),
-			).to.equal('2.0.0.rev1'));
+			expect(_getMaxSatisfyingVersion('2.0.0.rev1', osVersions)).to.equal(
+				'2.0.0.rev1',
+			));
 
 		it('should return an exact match, if it exists, when given a specific version', () =>
 			// Concern here is that semver says .dev is equivalent to .prod, but
 			// we want provide an exact version and use _exactly_ that version.
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('2.0.1+rev2.dev', osVersions),
-			).to.equal('2.0.1+rev2.dev'));
+			expect(_getMaxSatisfyingVersion('2.0.1+rev2.dev', osVersions)).to.equal(
+				'2.0.1+rev2.dev',
+			));
 
 		it('should return an equivalent result, if no exact result exists, when given a specific version', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('2.0.1+rev2', osVersions),
-			).to.equal('2.0.1+rev2.prod'));
+			expect(_getMaxSatisfyingVersion('2.0.1+rev2', osVersions)).to.equal(
+				'2.0.1+rev2.prod',
+			));
 
 		it('should support semver ranges', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('^1.24.0', osVersions),
-			).to.equal('1.24.1'));
+			expect(_getMaxSatisfyingVersion('^1.24.0', osVersions)).to.equal(
+				'1.24.1',
+			));
 
 		it('should support non-semver version ranges', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('^2.0.0.rev1', osVersions),
-			).to.equal('2.0.1+rev2.prod'));
+			expect(_getMaxSatisfyingVersion('^2.0.0.rev1', osVersions)).to.equal(
+				'2.0.1+rev2.prod',
+			));
 
 		it('should drop unsupported exact versions', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('1.24.5', osVersions),
-			).to.equal(null));
+			expect(_getMaxSatisfyingVersion('1.24.5', osVersions)).to.equal(null));
 
 		it('should drop unsupported semver ranges', () =>
-			expect(
-				balena.models.os._getMaxSatisfyingVersion('~1.30.0', osVersions),
-			).to.equal(null));
+			expect(_getMaxSatisfyingVersion('~1.30.0', osVersions)).to.equal(null));
 	});
 
 	describe('balena.models.os.getSupportedVersions()', function () {
@@ -241,10 +247,7 @@ describe('OS model', function () {
 				Bluebird.all([
 					balena.models.os.getSupportedVersions('raspberry-pi'),
 					balena.models.os.getSupportedVersions('raspberrypi3'),
-				]).then(function (...args) {
-					const [deviceType1Versions, deviceType2Versions] = Array.from(
-						args[0],
-					);
+				]).then(function ([deviceType1Versions, deviceType2Versions]) {
 					expect(deviceType1Versions).not.to.equal(deviceType2Versions);
 				}));
 		});
@@ -258,9 +261,9 @@ describe('OS model', function () {
 
 	describe('balena.models.os._getDeviceTypes()', function () {
 		it('should cache the results', function () {
-			const p1 = balena.models.os._getDeviceTypes();
+			const p1 = _getDeviceTypes();
 			return p1.then(function (result1) {
-				const p2 = balena.models.os._getDeviceTypes();
+				const p2 = _getDeviceTypes();
 				return p2.then(function (result2) {
 					expect(result1).to.equal(result2);
 					expect(p1).to.equal(p2);
@@ -273,9 +276,9 @@ describe('OS model', function () {
 
 	describe('balena.models.os._getOsVersions()', function () {
 		it('should cache the results', function () {
-			const p1 = balena.models.os._getOsVersions('raspberry-pi');
+			const p1 = _getOsVersions('raspberry-pi');
 			return p1.then(function (result1) {
-				const p2 = balena.models.os._getOsVersions('raspberry-pi');
+				const p2 = _getOsVersions('raspberry-pi');
 				return p2.then(function (result2) {
 					expect(result1).to.equal(result2);
 					expect(p1).to.equal(p2);
@@ -329,8 +332,7 @@ describe('OS model', function () {
 				Bluebird.all([
 					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1'),
 					balena.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod'),
-				]).then(function (...args) {
-					const [os1Size, os2Size] = Array.from(args[0]);
+				]).then(function ([os1Size, os2Size]) {
 					expect(os1Size).not.to.equal(os2Size);
 				}));
 		});
@@ -344,9 +346,9 @@ describe('OS model', function () {
 
 	describe('balena.models.os._getDownloadSize()', function () {
 		it('should cache the results', function () {
-			const p1 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1');
+			const p1 = _getDownloadSize('raspberry-pi', '1.26.1');
 			return p1.then(function (result1) {
-				const p2 = balena.models.os._getDownloadSize('raspberry-pi', '1.26.1');
+				const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
 				return p2.then(function (result2) {
 					expect(result1).to.equal(result2);
 					expect(p1).to.equal(p2);
@@ -358,17 +360,11 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os._clearDeviceTypesEndpointCaches()', function () {
-		itShouldClear_getDeviceTypesCache(() =>
-			balena.models.os._clearDeviceTypesEndpointCaches(),
-		);
+		itShouldClear_getDeviceTypesCache(() => _clearDeviceTypesEndpointCaches());
 
-		itShouldClear_getOsVersionsCache(() =>
-			balena.models.os._clearDeviceTypesEndpointCaches(),
-		);
+		itShouldClear_getOsVersionsCache(() => _clearDeviceTypesEndpointCaches());
 
-		itShouldClear_getDownloadSizeCache(() =>
-			balena.models.os._clearDeviceTypesEndpointCaches(),
-		);
+		itShouldClear_getDownloadSizeCache(() => _clearDeviceTypesEndpointCaches());
 	});
 
 	describe('balena.models.os.getLastModified()', function () {
@@ -704,8 +700,7 @@ describe('OS model', function () {
 				['armv7hf', 'armv5e'],
 				['armv7hf', 'aarch64'],
 				['aarch64', 'armv5e'],
-			].forEach(function (...args) {
-				const [deviceArch, appArch] = Array.from(args[0]);
+			].forEach(function ([deviceArch, appArch]) {
 				it(`should return false when comparing ${deviceArch} and ${appArch} architectures`, () => expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(false));
 			});
 
@@ -737,8 +732,7 @@ describe('OS model', function () {
 				['aarch64', 'armv7hf'],
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],
-			].forEach(function (...args) {
-				const [deviceArch, appArch] = Array.from(args[0]);
+			].forEach(function ([deviceArch, appArch]) {
 				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () => expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(true));
 			});
 		}));

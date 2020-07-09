@@ -1,4 +1,5 @@
-import { balena, BalenaSdk } from './setup';
+import { balena } from './setup';
+import BalenaSdk = require('../..');
 
 export const getInitialOrganization = async () => {
 	const [org] = await balena.pine.get<BalenaSdk.Organization>({
