@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'Tests: improve typing for access to private SDK os methods'
+      hash: 95c8c195f5a1b5b253c8bf2d893571893f17e7a5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: 'Tests: improve typing of tag helpers'
+      hash: 34546af679431e1241f1c0bae83d82e32ad42780
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: 'Tests: import BalenaSDK types directly'
+      hash: 1f3081d8ff5c04f0ee1ca261d878b4935b0301cc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 14.4.2
+  date: 2020-07-09T10:05:36.792Z
+- commits:
     - subject: 'Tests: merge multiple application deletions into a single call'
       hash: 381e31bcfeea3cb13d7c3d904679dc9671ca886a
       body: ''
