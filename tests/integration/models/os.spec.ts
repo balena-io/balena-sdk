@@ -10,7 +10,7 @@ import {
 	givenLoggedInUser,
 	IS_BROWSER,
 } from '../setup';
-import BalenaSdk = require('../../..');
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>

@@ -17,11 +17,7 @@ module.exports = function (config) {
 		karmaConfig.preprocessors,
 		(_value, key) => key.startsWith('es2015/') || key.startsWith('es2018/'),
 	);
-	karmaConfig.preprocessors['tests/**/*.coffee'] = [
-		'webpack',
-		'sourcemap',
-		'env',
-	];
+	karmaConfig.preprocessors['tests/**/*.js'] = ['webpack', 'sourcemap', 'env'];
 	karmaConfig.client = {
 		mocha: {
 			timeout: 5 * 60 * 1000,
@@ -30,7 +26,7 @@ module.exports = function (config) {
 	};
 	karmaConfig.files = [
 		BROWSER_BUNDLE,
-		'tests/**/*.spec.coffee',
+		'tests/**/*.spec.js',
 		'tests/**/*.spec.ts',
 	];
 
@@ -61,6 +57,8 @@ module.exports = function (config) {
 		'TEST_REGISTER_PASSWORD',
 		'TEST_REGISTER_USERNAME',
 	];
+
+	console.log(JSON.stringify(karmaConfig));
 
 	return config.set(karmaConfig);
 };

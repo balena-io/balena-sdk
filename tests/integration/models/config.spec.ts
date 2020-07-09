@@ -46,7 +46,7 @@ const itNormalizesDeviceTypes = function () {
 		}
 	});
 
-	return it('properly replaces the names of device types with old states', function (this: Mocha.Context & {
+	it('properly replaces the names of device types with old states', function (this: Mocha.Context & {
 		deviceTypes: BalenaSdk.DeviceTypeJson.DeviceType[];
 	}) {
 		for (const deviceType of this.deviceTypes) {
