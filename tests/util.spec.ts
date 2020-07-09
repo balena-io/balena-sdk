@@ -5,14 +5,15 @@ import * as bSemver from 'balena-semver';
 
 const { expect } = m.chai;
 
-const {
-	mergePineOptions,
-	// tslint:disable-next-line:no-var-requires
-} = require('../es2015/util') as typeof import('../lib/util');
-const {
-	getDeviceOsSemverWithVariant,
-	// tslint:disable-next-line:no-var-requires
-} = require('../es2015/util/device-os-version') as typeof import('../lib/util/device-os-version');
+// HACK: Avoid typescript trying to resolve built es2015 files
+const nodeRequire = require;
+
+const { mergePineOptions } = nodeRequire(
+	'../es2015/util',
+) as typeof import('../lib/util');
+const { getDeviceOsSemverWithVariant } = nodeRequire(
+	'../es2015/util/device-os-version',
+) as typeof import('../lib/util/device-os-version');
 
 describe('Pine option merging', function () {
 	it('uses the defaults only, if no extra options are provided', function () {
