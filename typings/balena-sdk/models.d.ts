@@ -367,6 +367,13 @@ declare module './index' {
 		is_a_build_of__service: NavigationResource<Service>;
 	}
 
+	export interface ReleaseImage {
+		id: number;
+		created_at: string;
+		image: NavigationResource<Image>;
+		is_part_of__release: NavigationResource<Release>;
+	}
+
 	export interface SSHKey {
 		title: string;
 		public_key: string;
