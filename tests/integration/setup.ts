@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import { chai } from 'mochainon';
@@ -97,7 +96,7 @@ export function resetUser() {
 			return;
 		}
 
-		return Bluebird.all([
+		return Promise.all([
 			balena.pine.delete({
 				resource: 'application',
 				options: {
@@ -133,30 +132,26 @@ const _credentials = buildCredentials();
 export { _credentials as credentials };
 
 export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
-	beforeFn(() =>
-		balena.auth
-			.login({
-				email: exports.credentials.email,
-				password: exports.credentials.password,
-			})
-			.then(() =>
-				balena.request.send({
-					method: 'POST',
-					url: '/api-key/user/full',
-					baseUrl: opts.apiUrl,
-					body: {
-						name: 'apiKey',
-					},
-				}),
-			)
-			.get('body')
-			.tap(balena.auth.logout)
-			.then(balena.auth.loginWithToken)
-			.then(exports.resetUser),
-	);
+	beforeFn(async () => {
+		await balena.auth.login({
+			email: exports.credentials.email,
+			password: exports.credentials.password,
+		});
+		const { body } = await balena.request.send({
+			method: 'POST',
+			url: '/api-key/user/full',
+			baseUrl: opts.apiUrl,
+			body: {
+				name: 'apiKey',
+			},
+		});
+		await balena.auth.logout();
+		await balena.auth.loginWithToken(body);
+		await resetUser();
+	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(() => exports.resetUser());
+	return afterFn(() => resetUser());
 }
 
 export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
@@ -258,107 +253,95 @@ export function givenADevice(
 	beforeFn: Mocha.HookFunction,
 	extraDeviceProps?: BalenaSdk.PineSubmitBody<BalenaSdk.Device>,
 ) {
-	beforeFn(function () {
+	beforeFn(async function () {
 		const uuid = balena.models.device.generateUniqueKey();
-		return balena.models.device
-			.register(this.application.app_name, uuid)
-			.tap((deviceInfo) => {
-				if (!this.currentRelease || !this.currentRelease.commit) {
-					return;
-				}
+		const deviceInfo = await balena.models.device.register(
+			this.application.app_name,
+			uuid,
+		);
 
-				return balena.pine.patch<BalenaSdk.Device>({
-					resource: 'device',
-					body: {
-						is_running__release: this.currentRelease.id,
+		if (this.currentRelease?.commit) {
+			await balena.pine.patch<BalenaSdk.Device>({
+				resource: 'device',
+				body: {
+					is_running__release: this.currentRelease.id,
+				},
+				options: {
+					$filter: {
+						uuid: deviceInfo.uuid,
 					},
-					options: {
-						$filter: {
-							uuid: deviceInfo.uuid,
-						},
-					},
-				});
-			})
-			.tap(function (deviceInfo) {
-				if (!extraDeviceProps) {
-					return;
-				}
-
-				return balena.pine.patch<BalenaSdk.Device>({
-					resource: 'device',
-					body: extraDeviceProps,
-					options: {
-						$filter: {
-							uuid: deviceInfo.uuid,
-						},
-					},
-				});
-			})
-			.then((deviceInfo) => balena.models.device.get(deviceInfo.uuid))
-			.then((device) => {
-				return (this.device = device);
-			})
-			.tap((device) => {
-				if (!this.currentRelease || !this.currentRelease.commit) {
-					return;
-				}
-
-				return Bluebird.all([
-					// Create image installs for the images on the device
-					balena.pine.post<BalenaSdk.ImageInstall>({
-						resource: 'image_install',
-						body: {
-							installs__image: this.oldWebImage.id,
-							is_provided_by__release: this.oldRelease.id,
-							device: device.id,
-							// @ts-expect-error
-							download_progress: null,
-							status: 'Running',
-							install_date: '2017-10-01',
-						},
-					}),
-					balena.pine.post<BalenaSdk.ImageInstall>({
-						resource: 'image_install',
-						body: {
-							installs__image: this.newWebImage.id,
-							is_provided_by__release: this.currentRelease.id,
-							device: device.id,
-							download_progress: 50,
-							status: 'Downloading',
-							install_date: '2017-10-30',
-						},
-					}),
-					balena.pine.post<BalenaSdk.ImageInstall>({
-						resource: 'image_install',
-						body: {
-							installs__image: this.oldDbImage.id,
-							is_provided_by__release: this.oldRelease.id,
-							device: device.id,
-							download_progress: 100,
-							status: 'deleted',
-							install_date: '2017-09-30',
-						},
-					}),
-					balena.pine.post<BalenaSdk.ImageInstall>({
-						resource: 'image_install',
-						body: {
-							installs__image: this.newDbImage.id,
-							is_provided_by__release: this.currentRelease.id,
-							device: device.id,
-							// @ts-expect-error
-							download_progress: null,
-							status: 'Running',
-							install_date: '2017-10-30',
-						},
-					}),
-				]).spread(
-					(oldWebInstall, newWebInstall, _oldDbInstall, newDbInstall) => {
-						this.oldWebInstall = oldWebInstall;
-						this.newWebInstall = newWebInstall;
-						this.newDbInstall = newDbInstall;
-					},
-				);
+				},
 			});
+		}
+		if (extraDeviceProps) {
+			await balena.pine.patch<BalenaSdk.Device>({
+				resource: 'device',
+				body: extraDeviceProps,
+				options: {
+					$filter: {
+						uuid: deviceInfo.uuid,
+					},
+				},
+			});
+		}
+
+		const device = await balena.models.device.get(deviceInfo.uuid);
+		this.device = device;
+
+		if (!this.currentRelease || !this.currentRelease.commit) {
+			return;
+		}
+
+		const [oldWebInstall, newWebInstall, , newDbInstall] = await Promise.all([
+			// Create image installs for the images on the device
+			balena.pine.post<BalenaSdk.ImageInstall>({
+				resource: 'image_install',
+				body: {
+					installs__image: this.oldWebImage.id,
+					is_provided_by__release: this.oldRelease.id,
+					device: device.id,
+					download_progress: null,
+					status: 'Running',
+					install_date: '2017-10-01',
+				},
+			}),
+			balena.pine.post<BalenaSdk.ImageInstall>({
+				resource: 'image_install',
+				body: {
+					installs__image: this.newWebImage.id,
+					is_provided_by__release: this.currentRelease.id,
+					device: device.id,
+					download_progress: 50,
+					status: 'Downloading',
+					install_date: '2017-10-30',
+				},
+			}),
+			balena.pine.post<BalenaSdk.ImageInstall>({
+				resource: 'image_install',
+				body: {
+					installs__image: this.oldDbImage.id,
+					is_provided_by__release: this.oldRelease.id,
+					device: device.id,
+					download_progress: 100,
+					status: 'deleted',
+					install_date: '2017-09-30',
+				},
+			}),
+			balena.pine.post<BalenaSdk.ImageInstall>({
+				resource: 'image_install',
+				body: {
+					installs__image: this.newDbImage.id,
+					is_provided_by__release: this.currentRelease.id,
+					device: device.id,
+					download_progress: null,
+					status: 'Running',
+					install_date: '2017-10-30',
+				},
+			}),
+		]);
+		this.oldWebInstall = oldWebInstall;
+		this.newWebInstall = newWebInstall;
+		this.newDbInstall = newDbInstall;
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
@@ -384,7 +367,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 		return balena.auth
 			.getUserId()
 			.then((userId) => {
-				return Bluebird.all([
+				return Promise.all([
 					// Register web & DB services
 					balena.pine.post<BalenaSdk.Service>({
 						resource: 'service',
@@ -401,9 +384,9 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 						},
 					}),
 					// Register an old & new release of this application
-					Bluebird.mapSeries(
-						[
-							{
+					(async () => {
+						return [
+							await balena.pine.post<BalenaSdk.Release>({
 								resource: 'release',
 								body: {
 									belongs_to__application: this.application.id,
@@ -414,8 +397,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 									composition: '{}',
 									start_timestamp: '1234',
 								},
-							},
-							{
+							}),
+							await balena.pine.post<BalenaSdk.Release>({
 								resource: 'release',
 								body: {
 									belongs_to__application: this.application.id,
@@ -426,10 +409,9 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 									composition: '{}',
 									start_timestamp: '54321',
 								},
-							},
-						],
-						(pineParams) => balena.pine.post<BalenaSdk.Release>(pineParams),
-					),
+							}),
+						];
+					})(),
 				]);
 			})
 			.then(([webService, dbService, [oldRelease, newRelease]]) => {
@@ -438,7 +420,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 				this.oldRelease = oldRelease;
 				this.currentRelease = newRelease;
 
-				return Bluebird.all([
+				return Promise.all([
 					// Register an old & new web image build from the old and new
 					// releases, a db build in the new release only
 					balena.pine.post<BalenaSdk.Image>({
@@ -489,13 +471,13 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 							status: 'success',
 						},
 					}),
-				]).spread((oldWebImage, newWebImage, oldDbImage, newDbImage) => {
+				]).then(([oldWebImage, newWebImage, oldDbImage, newDbImage]) => {
 					this.oldWebImage = oldWebImage;
 					this.newWebImage = newWebImage;
 					this.oldDbImage = oldDbImage;
 					this.newDbImage = newDbImage;
 
-					return Bluebird.all([
+					return Promise.all([
 						// Tie the images to their corresponding releases
 						balena.pine.post<BalenaSdk.ReleaseImage>({
 							resource: 'image__is_part_of__release',

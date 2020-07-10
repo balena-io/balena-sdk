@@ -385,7 +385,7 @@ declare module './index' {
 
 	export interface ImageInstall {
 		id: number;
-		download_progress: number;
+		download_progress: number | null;
 		status: string;
 		install_date: string;
 

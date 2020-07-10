@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 import * as _fs from 'fs';
 // TODO: change this to type-only import once TS 3.8 gets released
 // tslint:disable-next-line:import-blacklist
@@ -321,14 +320,7 @@ describe('Billing Model', function () {
 			if (!IS_BROWSER) {
 				const rindle = require('rindle');
 				const tmp = require('tmp');
-				const fs = Bluebird.promisifyAll(require('fs')) as typeof _fs & {
-					statAsync: (
-						path: _fs.PathLike,
-					) => Bluebird<ReturnType<typeof _fs.statSync>>;
-					unlinkAsync: (
-						path: _fs.PathLike,
-					) => Bluebird<ReturnType<typeof _fs.unlinkSync>>;
-				};
+				const fs = require('fs') as typeof _fs;
 
 				return givenABillingAccountIt(
 					'should be able to download an invoice on node',
@@ -342,9 +334,9 @@ describe('Billing Model', function () {
 								const tmpFile = tmp.tmpNameSync();
 								return rindle
 									.wait(stream.pipe(fs.createWriteStream(tmpFile)))
-									.then(() => fs.statAsync(tmpFile))
+									.then(() => fs.promises.stat(tmpFile))
 									.then((stat: _fs.Stats) => expect(stat.size).to.not.equal(0))
-									.finally(() => fs.unlinkAsync(tmpFile));
+									.finally(() => fs.promises.unlink(tmpFile));
 							});
 					},
 				);

@@ -93,7 +93,7 @@ declare namespace BalenaSdk {
 		id: number;
 		image_id: number;
 		service_id: number;
-		download_progress: number;
+		download_progress: number | null;
 		status: string;
 		install_date: string;
 	}

@@ -1,4 +1,4 @@
-import * as Bluebird from 'bluebird';
+import type * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
@@ -262,14 +262,14 @@ export const itShouldSetGetAndRemoveTags = function <
 
 	describe('given two existing tags', function () {
 		before(function () {
-			return Bluebird.all([
+			return Promise.all([
 				model.set(this.resource.id, 'EDITOR', 'vim'),
 				model.set(this.resource.id, 'LANGUAGE', 'js'),
 			]);
 		});
 
 		after(function () {
-			return Bluebird.all([
+			return Promise.all([
 				model.remove(this.resource.id, 'EDITOR'),
 				model.remove(this.resource.id, 'LANGUAGE'),
 			]);

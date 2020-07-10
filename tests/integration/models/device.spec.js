@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as superagent from 'superagent';
-import * as Bluebird from 'bluebird';
 
 import {
 	balena,
@@ -23,7 +22,7 @@ import {
 const { expect } = m.chai;
 
 const makeRequest = (url) =>
-	new Bluebird((resolve) =>
+	new Promise((resolve) =>
 		superagent.get(url).end((
 			err,
 			res, // have to normalize because of different behaviour in the browser and node
@@ -88,13 +87,13 @@ describe('Device Model', function () {
 						return expect(deviceTypes).to.not.have.length(0);
 					}));
 
-			it('should return all valid display names', () =>
-				balena.models.device
-					.getSupportedDeviceTypes()
-					.each(function (deviceType) {
-						const promise = balena.models.device.getDeviceSlug(deviceType);
-						return expect(promise).to.eventually.not.be.undefined;
-					}));
+			it('should return all valid display names', async () => {
+				const deviceTypes = await balena.models.device.getSupportedDeviceTypes();
+				for (const deviceType of deviceTypes) {
+					const promise = balena.models.device.getDeviceSlug(deviceType);
+					await expect(promise).to.eventually.not.be.undefined;
+				}
+			});
 		});
 
 		describe('balena.models.device.getManifestBySlug()', function () {
@@ -582,36 +581,31 @@ describe('Device Model', function () {
 			describe('balena.models.device.getAllByParentDevice()', function () {
 				givenInitialOrganization(before);
 
-				before(function () {
-					return Bluebird.props({
-						userId: balena.auth.getUserId(),
-						childApplication: balena.models.application.create({
+				before(async function () {
+					const [userId, childApplication] = await Promise.all([
+						balena.auth.getUserId(),
+						balena.models.application.create({
 							name: 'ChildApp',
 							applicationType: 'microservices-starter',
 							deviceType: 'generic',
 							organization: this.initialOrg.id,
 							parent: this.application.id,
 						}),
-					})
-						.then(({ userId, childApplication }) => {
-							// We don't use the built-in .register or resin-register-device,
-							// because they don't yet support parent devices.
-							this.childApplication = childApplication;
-							return balena.pine.post({
-								resource: 'device',
-								body: {
-									belongs_to__user: userId,
-									belongs_to__application: this.childApplication.id,
-									is_of__device_type: this.childApplication.is_for__device_type
-										.__id,
-									uuid: balena.models.device.generateUniqueKey(),
-									is_managed_by__device: this.device.id,
-								},
-							});
-						})
-						.then((childDevice) => {
-							this.childDevice = childDevice;
-						});
+					]);
+					// We don't use the built-in .register or resin-register-device,
+					// because they don't yet support parent devices.
+					this.childApplication = childApplication;
+					this.childDevice = await balena.pine.post({
+						resource: 'device',
+						body: {
+							belongs_to__user: userId,
+							belongs_to__application: this.childApplication.id,
+							is_of__device_type: this.childApplication.is_for__device_type
+								.__id,
+							uuid: balena.models.device.generateUniqueKey(),
+							is_managed_by__device: this.device.id,
+						},
+					});
 				});
 
 				after(() => balena.models.application.remove('ChildApp'));
@@ -1728,7 +1722,7 @@ describe('Device Model', function () {
 				});
 
 				it(`can create and then retrieve multiple variables by ${deviceParamUpper}`, function () {
-					return Bluebird.all([
+					return Promise.all([
 						configVarModel.set(
 							this.device[deviceParam],
 							`BALENA_A_${deviceParamUpper}`,
@@ -1758,7 +1752,7 @@ describe('Device Model', function () {
 								.that.has.property('value', 'b');
 						})
 						.then(() =>
-							Bluebird.all([
+							Promise.all([
 								configVarModel.remove(
 									this.device[deviceParam],
 									`BALENA_A_${deviceParamUpper}`,
@@ -1773,7 +1767,7 @@ describe('Device Model', function () {
 			});
 
 			it('can create and then retrieve multiple variables by application', function () {
-				return Bluebird.all([
+				return Promise.all([
 					configVarModel.set(this.device.id, 'BALENA_A_BY_APPLICATION', 'a'),
 					configVarModel.set(this.device.id, 'BALENA_B_BY_APPLICATION', 'b'),
 				])
@@ -1791,7 +1785,7 @@ describe('Device Model', function () {
 							.that.has.property('value', 'b');
 					})
 					.then(() =>
-						Bluebird.all([
+						Promise.all([
 							configVarModel.remove(this.device.id, 'BALENA_A_BY_APPLICATION'),
 							configVarModel.remove(this.device.id, 'BALENA_B_BY_APPLICATION'),
 						]),
@@ -1845,7 +1839,7 @@ describe('Device Model', function () {
 				});
 
 				it(`can create and then retrieve multiple variables by ${deviceParam}`, function () {
-					return Bluebird.all([
+					return Promise.all([
 						envVarModel.set(
 							this.device[deviceParam],
 							`A_BY_${deviceParam}`,
@@ -1871,7 +1865,7 @@ describe('Device Model', function () {
 								.that.has.property('value', 'b');
 						})
 						.then(() =>
-							Bluebird.all([
+							Promise.all([
 								envVarModel.remove(
 									this.device[deviceParam],
 									`A_BY_${deviceParam}`,
@@ -1886,7 +1880,7 @@ describe('Device Model', function () {
 			});
 
 			it('can create and then retrieve multiple variables by application', function () {
-				return Bluebird.all([
+				return Promise.all([
 					envVarModel.set(this.device.id, 'A_BY_APPLICATION', 'a'),
 					envVarModel.set(this.device.id, 'B_BY_APPLICATION', 'b'),
 				])
@@ -1904,7 +1898,7 @@ describe('Device Model', function () {
 							.that.has.property('value', 'b');
 					})
 					.then(() =>
-						Bluebird.all([
+						Promise.all([
 							envVarModel.remove(this.device.id, 'A_BY_APPLICATION'),
 							envVarModel.remove(this.device.id, 'B_BY_APPLICATION'),
 						]),
@@ -2203,7 +2197,7 @@ describe('Device Model', function () {
 				});
 
 				it('should return gateway downloads, if available', function () {
-					return Bluebird.all([
+					return Promise.all([
 						balena.pine.post({
 							resource: 'gateway_download',
 							body: {
@@ -2302,7 +2296,7 @@ describe('Device Model', function () {
 					});
 
 					it(`can create and then retrieve multiple variables by ${deviceParam}`, function () {
-						return Bluebird.all([
+						return Promise.all([
 							varModel.set(
 								this.device[deviceParam],
 								this.webService.id,
@@ -2330,7 +2324,7 @@ describe('Device Model', function () {
 									.that.has.property('value', 'b');
 							})
 							.then(() =>
-								Bluebird.all([
+								Promise.all([
 									varModel.remove(
 										this.device[deviceParam],
 										this.webService.id,
@@ -2347,7 +2341,7 @@ describe('Device Model', function () {
 				});
 
 				it('can create and then retrieve multiple variables by application', function () {
-					return Bluebird.all([
+					return Promise.all([
 						varModel.set(
 							this.device.id,
 							this.webService.id,
@@ -2375,7 +2369,7 @@ describe('Device Model', function () {
 								.that.has.property('value', 'b');
 						})
 						.then(() =>
-							Bluebird.all([
+							Promise.all([
 								varModel.remove(
 									this.device.id,
 									this.webService.id,
@@ -2575,7 +2569,7 @@ describe('Device Model', function () {
 		givenMulticontainerApplication(before);
 
 		before(function () {
-			return Bluebird.all([
+			return Promise.all([
 				balena.pine.patch({
 					resource: 'service',
 					id: this.webService.id,
@@ -2693,7 +2687,7 @@ describe('Device Model', function () {
 			const uuid2 =
 				this.uuidRoot + balena.models.device.generateUniqueKey().slice(16);
 
-			return Bluebird.all([
+			return Promise.all([
 				balena.models.device.register(this.application.app_name, uuid1),
 				balena.models.device.register(this.application.app_name, uuid2),
 			]);
@@ -2727,38 +2721,40 @@ describe('Device Model', function () {
 	describe('given three compatible applications and a single device', function () {
 		givenInitialOrganization(before);
 
-		beforeEach(function () {
-			return Bluebird.props({
-				application1: balena.models.application.create({
-					name: 'FooBar',
-					applicationType: 'microservices-starter',
-					deviceType: 'raspberrypi3',
-					organization: this.initialOrg.id,
-				}),
-				application2: balena.models.application.create({
+		beforeEach(async function () {
+			const [application1, application2, application3] = await Promise.all([
+				(async () => {
+					const app = await balena.models.application.create({
+						name: 'FooBar',
+						applicationType: 'microservices-starter',
+						deviceType: 'raspberrypi3',
+						organization: this.initialOrg.id,
+					});
+
+					const uuid = balena.models.device.generateUniqueKey();
+					this.deviceInfo = await balena.models.device.register(
+						app.app_name,
+						uuid,
+					);
+
+					return app;
+				})(),
+				balena.models.application.create({
 					name: 'BarBaz',
 					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
-				application3: balena.models.application.create({
+				balena.models.application.create({
 					name: 'BazFoo',
 					applicationType: 'microservices-starter',
 					deviceType: 'raspberry-pi2',
 					organization: this.initialOrg.id,
 				}),
-			}).then((results) => {
-				this.application1 = results.application1;
-				this.application2 = results.application2;
-				this.application3 = results.application3;
-
-				const uuid = balena.models.device.generateUniqueKey();
-				return balena.models.device
-					.register(results.application1.app_name, uuid)
-					.then((deviceInfo) => {
-						return (this.deviceInfo = deviceInfo);
-					});
-			});
+			]);
+			this.application1 = application1;
+			this.application2 = application2;
+			this.application3 = application3;
 		});
 
 		afterEach(function () {
@@ -2827,31 +2823,33 @@ describe('Device Model', function () {
 	describe('given two incompatible applications and a single device', function () {
 		givenInitialOrganization(before);
 
-		beforeEach(function () {
-			return Bluebird.props({
-				application1: balena.models.application.create({
-					name: 'FooBar',
-					applicationType: 'microservices-starter',
-					deviceType: 'raspberry-pi',
-					organization: this.initialOrg.id,
-				}),
-				application2: balena.models.application.create({
+		beforeEach(async function () {
+			const [application1, application2] = await Promise.all([
+				(async () => {
+					const app = await balena.models.application.create({
+						name: 'FooBar',
+						applicationType: 'microservices-starter',
+						deviceType: 'raspberry-pi',
+						organization: this.initialOrg.id,
+					});
+
+					const uuid = balena.models.device.generateUniqueKey();
+					this.deviceInfo = await balena.models.device.register(
+						app.app_name,
+						uuid,
+					);
+
+					return app;
+				})(),
+				balena.models.application.create({
 					name: 'BarBaz',
 					applicationType: 'microservices-starter',
 					deviceType: 'intel-nuc',
 					organization: this.initialOrg.id,
 				}),
-			}).then((results) => {
-				this.application1 = results.application1;
-				this.application2 = results.application2;
-
-				const uuid = balena.models.device.generateUniqueKey();
-				return balena.models.device
-					.register(results.application1.app_name, uuid)
-					.then((deviceInfo) => {
-						return (this.deviceInfo = deviceInfo);
-					});
-			});
+			]);
+			this.application1 = application1;
+			this.application2 = application2;
 		});
 
 		afterEach(function () {
@@ -2884,42 +2882,46 @@ describe('Device Model', function () {
 	describe('given applications of different architectures with a device on each', function () {
 		givenInitialOrganization(before);
 
-		before(function () {
-			return Bluebird.props({
-				rpi: balena.models.application.create({
+		before(async function () {
+			const apps = await Promise.all([
+				balena.models.application.create({
 					name: 'FooBarArmv6',
 					applicationType: 'microservices-starter',
 					deviceType: 'raspberry-pi',
 					organization: this.initialOrg.id,
 				}),
-				armv7hf: balena.models.application.create({
+				balena.models.application.create({
 					name: 'FooBar32',
 					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
-				aarch64: balena.models.application.create({
+				balena.models.application.create({
 					name: 'BarBaz64',
 					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3-64',
 					organization: this.initialOrg.id,
 				}),
-			})
-				.then((apps) => {
-					this.apps = apps;
+			]);
+			this.apps = {
+				rpi: apps[0],
+				armv7hf: apps[1],
+				aarch64: apps[2],
+			};
 
-					return Bluebird.props(
-						_.mapValues(apps, (app) =>
-							balena.models.device.register(
-								app.id,
-								balena.models.device.generateUniqueKey(),
-							),
-						),
-					);
-				})
-				.then((devices) => {
-					return (this.devices = devices);
-				});
+			const devices = await Promise.all(
+				apps.map((app) =>
+					balena.models.device.register(
+						app.id,
+						balena.models.device.generateUniqueKey(),
+					),
+				),
+			);
+			this.devices = {
+				rpi: devices[0],
+				armv7hf: devices[1],
+				aarch64: devices[2],
+			};
 		});
 
 		after(function () {

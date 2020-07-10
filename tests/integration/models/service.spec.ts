@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
@@ -104,7 +103,7 @@ describe('Service Model', function () {
 			});
 
 			it('can create and then retrieve multiple variables', function () {
-				return Bluebird.all([
+				return Promise.all([
 					varModel.set(this.webService.id, 'A', 'a'),
 					varModel.set(this.webService.id, 'B', 'b'),
 				])
@@ -118,7 +117,7 @@ describe('Service Model', function () {
 						expect(_.find(result, { name: 'B' }))
 							.to.be.an('object')
 							.that.has.property('value', 'b');
-						return Bluebird.all([
+						return Promise.all([
 							varModel.remove(this.webService.id, 'A'),
 							varModel.remove(this.webService.id, 'B'),
 						]);
@@ -126,7 +125,7 @@ describe('Service Model', function () {
 			});
 
 			it('can create and then retrieve multiple variables by application', function () {
-				return Bluebird.all([
+				return Promise.all([
 					varModel.set(this.webService.id, 'A_BY_APPLICATION', 'a'),
 					varModel.set(this.webService.id, 'B_BY_APPLICATION', 'b'),
 				])
@@ -140,7 +139,7 @@ describe('Service Model', function () {
 						expect(_.find(result, { name: 'B_BY_APPLICATION' }))
 							.to.be.an('object')
 							.that.has.property('value', 'b');
-						return Bluebird.all([
+						return Promise.all([
 							varModel.remove(this.webService.id, 'A_BY_APPLICATION'),
 							varModel.remove(this.webService.id, 'B_BY_APPLICATION'),
 						]);

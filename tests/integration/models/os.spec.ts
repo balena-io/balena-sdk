@@ -1,5 +1,4 @@
 import * as bSemver from 'balena-semver';
-import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
@@ -11,6 +10,7 @@ import {
 	IS_BROWSER,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
+import type { Resolvable } from '../../../typings/utils';
 const { expect } = m.chai;
 
 const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
@@ -27,51 +27,54 @@ const {
 >;
 
 // tslint:disable-next-line:variable-name
-const itShouldClear_getDeviceTypesCache = (stepFn: () => void) =>
-	it('should clear the result cache of balena.models.os._getDeviceTypes()', function () {
+const itShouldClear_getDeviceTypesCache = (stepFn: () => Resolvable<void>) =>
+	it('should clear the result cache of balena.models.os._getDeviceTypes()', async function () {
 		const p1 = _getDeviceTypes();
-		return p1.tap(stepFn).then(function (result1) {
-			const p2 = _getDeviceTypes();
-			return p2.then(function (result2) {
-				// the endpoint doesn't sort the device types atm
-				[result1, result2].forEach((dtArray) =>
-					dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
-				);
+		const result1 = await p1;
+		await stepFn();
 
-				expect(result1).to.deep.equal(result2);
-				expect(p1).to.not.equal(p2);
-			});
-		});
+		const p2 = _getDeviceTypes();
+		const result2 = await p2;
+
+		// the endpoint doesn't sort the device types atm
+		[result1, result2].forEach((dtArray) =>
+			dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
+		);
+
+		expect(result1).to.deep.equal(result2);
+		expect(p1).to.not.equal(p2);
 	});
 
 // tslint:disable-next-line:variable-name
-const itShouldClear_getOsVersionsCache = (stepFn: () => void) =>
-	it('should clear the result cache of balena.models.os._getOsVersions()', function () {
+const itShouldClear_getOsVersionsCache = (stepFn: () => Resolvable<void>) =>
+	it('should clear the result cache of balena.models.os._getOsVersions()', async function () {
 		const p1 = _getOsVersions('raspberry-pi');
-		return p1.tap(stepFn).then(function (result1) {
-			const p2 = _getOsVersions('raspberry-pi');
-			return p2.then(function (result2) {
-				expect(result1).to.deep.equal(result2);
-				expect(p1).to.not.equal(p2);
-			});
-		});
+		const result1 = await p1;
+		await stepFn();
+
+		const p2 = _getOsVersions('raspberry-pi');
+		const result2 = await p2;
+
+		expect(result1).to.deep.equal(result2);
+		expect(p1).to.not.equal(p2);
 	});
 
 // tslint:disable-next-line:variable-name
-const itShouldClear_getDownloadSizeCache = (stepFn: () => void) =>
-	it('should clear the result cache of balena.models.os._getDownloadSize()', function () {
+const itShouldClear_getDownloadSizeCache = (stepFn: () => Resolvable<void>) =>
+	it('should clear the result cache of balena.models.os._getDownloadSize()', async function () {
 		const p1 = _getDownloadSize('raspberry-pi', '1.26.1');
-		return p1.tap(stepFn).then(function (result1) {
-			const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
-			return p2.then(function (result2) {
-				expect(result1).to.deep.equal(result2);
-				expect(p1).to.not.equal(p2);
-			});
-		});
+		const result1 = await p1;
+		await stepFn();
+
+		const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
+		const result2 = await p2;
+
+		expect(result1).to.deep.equal(result2);
+		expect(p1).to.not.equal(p2);
 	});
 
 const describeAllAuthUserChanges = function (
-	itFnWithStep: (fn: () => void) => Mocha.Test,
+	itFnWithStep: (fn: () => Resolvable<void>) => Mocha.Test,
 ) {
 	describe('when not logged in', function () {
 		beforeEach(() => balena.auth.logout());
@@ -244,7 +247,7 @@ describe('OS model', function () {
 					));
 
 			it('should cache the supported versions independently for each device type', () =>
-				Bluebird.all([
+				Promise.all([
 					balena.models.os.getSupportedVersions('raspberry-pi'),
 					balena.models.os.getSupportedVersions('raspberrypi3'),
 				]).then(function ([deviceType1Versions, deviceType2Versions]) {
@@ -329,7 +332,7 @@ describe('OS model', function () {
 					));
 
 			it('should cache download sizes independently for each version', () =>
-				Bluebird.all([
+				Promise.all([
 					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1'),
 					balena.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod'),
 				]).then(function ([os1Size, os2Size]) {
@@ -410,7 +413,7 @@ describe('OS model', function () {
 
 		const rindle = require('rindle');
 		const tmp = require('tmp');
-		const fs = Bluebird.promisifyAll(require('fs'));
+		const fs = require('fs') as typeof import('fs');
 
 		describe('given a valid device slug', function () {
 			it('should contain a valid mime property', () =>
@@ -433,9 +436,9 @@ describe('OS model', function () {
 					.download('raspberry-pi')
 					.then((stream) => stream.pipe(fs.createWriteStream(tmpFile)))
 					.then(rindle.wait)
-					.then(() => fs.statAsync(tmpFile))
+					.then(() => fs.promises.stat(tmpFile))
 					.then((stat) => expect(stat.size).to.not.equal(0))
-					.finally(() => fs.unlinkAsync(tmpFile));
+					.finally(() => fs.promises.unlink(tmpFile));
 			});
 		});
 
@@ -561,7 +564,7 @@ describe('OS model', function () {
 					const promise = balena.models.os.getConfig(this.application[prop], {
 						version: DEFAULT_OS_VERSION,
 					});
-					return Bluebird.all([
+					return Promise.all([
 						eventuallyExpectProperty(promise, 'applicationId'),
 						eventuallyExpectProperty(promise, 'apiKey'),
 						eventuallyExpectProperty(promise, 'userId'),

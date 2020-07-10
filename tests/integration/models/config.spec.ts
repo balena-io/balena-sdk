@@ -78,37 +78,27 @@ describe('Config Model', function () {
 			}));
 
 		it('should include the pubnub keys', () =>
-			balena.models.config
-				.getAll()
-				.get('pubnub')
-				.then(function (pubnubKeys) {
-					expect(pubnubKeys.publish_key).to.be.a('string').that.has.length(0);
-					expect(pubnubKeys.subscribe_key).to.be.a('string').that.has.length(0);
-				}));
+			balena.models.config.getAll().then(function ({ pubnub }) {
+				expect(pubnub.publish_key).to.be.a('string').that.has.length(0);
+				expect(pubnub.subscribe_key).to.be.a('string').that.has.length(0);
+			}));
 
 		it('should include the mixpanel token', () =>
-			balena.models.config
-				.getAll()
-				.get('mixpanelToken')
-				.then(function (mixpanelToken) {
-					expect(mixpanelToken).to.be.a('string');
-					expect(mixpanelToken).to.equal('balena-main');
-				}));
+			balena.models.config.getAll().then(function ({ mixpanelToken }) {
+				expect(mixpanelToken).to.be.a('string');
+				expect(mixpanelToken).to.equal('balena-main');
+			}));
 
 		it('should include the deviceTypes', () =>
 			balena.models.config
 				.getAll()
-				.get('deviceTypes')
-				.then((deviceTypes) => expectDeviceTypeArray(deviceTypes)));
+				.then(({ deviceTypes }) => expectDeviceTypeArray(deviceTypes)));
 
 		describe('device type normalization', function () {
 			before(function () {
-				return balena.models.config
-					.getAll()
-					.get('deviceTypes')
-					.then((deviceTypes) => {
-						this.deviceTypes = deviceTypes;
-					});
+				return balena.models.config.getAll().then(({ deviceTypes }) => {
+					this.deviceTypes = deviceTypes;
+				});
 			});
 
 			itNormalizesDeviceTypes();

@@ -68,15 +68,15 @@ describe('SDK authentication', function () {
 					.then(balena.auth.getToken)
 					.then((key) => expect(key).to.be.a('string')));
 
-			it('should be able to login with an API Key', () =>
-				balena.auth
-					.authenticate(credentials)
-					.then(balena.auth.loginWithToken)
-					.then(() => balena.models.apiKey.create('apiKey'))
-					.tap(balena.auth.logout)
-					.then(balena.auth.loginWithToken)
-					.then(balena.auth.getToken)
-					.then((key) => expect(key).to.be.a('string')));
+			it('should be able to login with an API Key', async () => {
+				const token = await balena.auth.authenticate(credentials);
+				await balena.auth.loginWithToken(token);
+				const apiKey = await balena.models.apiKey.create('apiKey');
+				await balena.auth.logout();
+				await balena.auth.loginWithToken(apiKey);
+				const key = await balena.auth.getToken();
+				expect(key).to.be.a('string');
+			});
 		});
 
 		describe('balena.auth.getEmail()', () =>
@@ -118,8 +118,11 @@ describe('SDK authentication', function () {
 							})
 							.then(balena.auth.logout),
 					)
-					.catch({ message: 'Request error: Unauthorized' }, function () {
-						// ignore
+					.catch(function (err) {
+						if (err.message === 'Request error: Unauthorized') {
+							return;
+						}
+						throw err;
 					}),
 			);
 
