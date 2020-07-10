@@ -1,5 +1,4 @@
 import * as m from 'mochainon';
-import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 
 const { expect } = m.chai;
@@ -421,45 +420,43 @@ describe('Release Model', function () {
 		describe('balena.models.release.getLatestByApplication()', function () {
 			givenMulticontainerApplication(before);
 
-			before(function () {
-				return balena.auth.getUserId().then((userId) => {
-					return Bluebird.mapSeries(
-						[
-							{
-								belongs_to__application: this.application.id,
-								is_created_by__user: userId,
-								commit: 'errored-then-fixed-release-commit',
-								status: 'error',
-								source: 'cloud',
-								composition: {},
-								start_timestamp: 64321,
-							},
-							{
-								belongs_to__application: this.application.id,
-								is_created_by__user: userId,
-								commit: 'errored-then-fixed-release-commit',
-								status: 'success',
-								source: 'cloud',
-								composition: {},
-								start_timestamp: 74321,
-							},
-							{
-								belongs_to__application: this.application.id,
-								is_created_by__user: userId,
-								commit: 'failed-release-commit',
-								status: 'failed',
-								source: 'cloud',
-								composition: {},
-								start_timestamp: 84321,
-							},
-						],
-						(body) =>
-							balena.pine.post({
-								resource: 'release',
-								body,
-							}),
-					);
-				});
+			before(async function () {
+				const userId = await balena.auth.getUserId();
+
+				for (const body of [
+					{
+						belongs_to__application: this.application.id,
+						is_created_by__user: userId,
+						commit: 'errored-then-fixed-release-commit',
+						status: 'error',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 64321,
+					},
+					{
+						belongs_to__application: this.application.id,
+						is_created_by__user: userId,
+						commit: 'errored-then-fixed-release-commit',
+						status: 'success',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 74321,
+					},
+					{
+						belongs_to__application: this.application.id,
+						is_created_by__user: userId,
+						commit: 'failed-release-commit',
+						status: 'failed',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 84321,
+					},
+				]) {
+					await balena.pine.post({
+						resource: 'release',
+						body,
+					});
+				}
 			});
 
 			['id', 'app_name', 'slug'].forEach((prop) =>

@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
@@ -47,7 +46,7 @@ describe('API Key model', function () {
 
 		describe('given two named api keys', function () {
 			before(() =>
-				Bluebird.all([
+				Promise.all([
 					balena.models.apiKey.create('apiKey1'),
 					balena.models.apiKey.create('apiKey2', 'apiKey2Description'),
 				]),

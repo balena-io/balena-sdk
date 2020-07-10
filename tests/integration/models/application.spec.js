@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import * as Bluebird from 'bluebird';
 import * as m from 'mochainon';
 
 const { expect } = m.chai;
@@ -728,7 +727,7 @@ describe('Application Model', function () {
 					});
 
 					it(`can create and then retrieve multiple variables by ${appParam}`, function () {
-						return Bluebird.all([
+						return Promise.all([
 							configVarModel.set(
 								this.application[appParam],
 								`BALENA_A_${appParamUpper}`,
@@ -756,7 +755,7 @@ describe('Application Model', function () {
 									.that.has.property('value', 'b');
 							})
 							.then(() =>
-								Bluebird.all([
+								Promise.all([
 									configVarModel.remove(
 										this.application[appParam],
 										`BALENA_A_${appParamUpper}`,
@@ -815,7 +814,7 @@ describe('Application Model', function () {
 					});
 
 					it(`can create and then retrieve multiple variables by ${appParam}`, function () {
-						return Bluebird.all([
+						return Promise.all([
 							envVarModel.set(
 								this.application[appParam],
 								`A_BY_${appParam}`,
@@ -843,7 +842,7 @@ describe('Application Model', function () {
 									.that.has.property('value', 'b');
 							})
 							.then(() =>
-								Bluebird.all([
+								Promise.all([
 									envVarModel.remove(
 										this.application[appParam],
 										`A_BY_${appParam}`,
@@ -902,7 +901,7 @@ describe('Application Model', function () {
 					});
 
 					it(`can create and then retrieve multiple variables by ${appParam}`, function () {
-						return Bluebird.all([
+						return Promise.all([
 							envVarModel.set(
 								this.application[appParam],
 								`A_BY_${appParam}`,
@@ -930,7 +929,7 @@ describe('Application Model', function () {
 									.that.has.property('value', 'b');
 							})
 							.then(() =>
-								Bluebird.all([
+								Promise.all([
 									envVarModel.remove(
 										this.application[appParam],
 										`A_BY_${appParam}`,
@@ -982,41 +981,33 @@ describe('Application Model', function () {
 		describe('given two releases', function () {
 			givenAnApplication(beforeEach);
 
-			beforeEach(function () {
-				return balena.auth
-					.getUserId()
-					.then((userId) => {
-						return Bluebird.mapSeries(
-							[
-								{
-									belongs_to__application: this.application.id,
-									is_created_by__user: userId,
-									commit: 'old-release-commit',
-									status: 'success',
-									source: 'cloud',
-									composition: {},
-									start_timestamp: 1234,
-								},
-								{
-									belongs_to__application: this.application.id,
-									is_created_by__user: userId,
-									commit: 'new-release-commit',
-									status: 'success',
-									source: 'cloud',
-									composition: {},
-									start_timestamp: 54321,
-								},
-							],
-							(body) =>
-								balena.pine.post({
-									resource: 'release',
-									body,
-								}),
-						);
-					})
-					.then((releases) => {
-						[this.oldRelease, this.newRelease] = releases;
-					});
+			beforeEach(async function () {
+				const userId = await balena.auth.getUserId();
+				this.oldRelease = await balena.pine.post({
+					resource: 'release',
+					body: {
+						belongs_to__application: this.application.id,
+						is_created_by__user: userId,
+						commit: 'old-release-commit',
+						status: 'success',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 1234,
+					},
+				});
+
+				this.newRelease = await balena.pine.post({
+					resource: 'release',
+					body: {
+						belongs_to__application: this.application.id,
+						is_created_by__user: userId,
+						commit: 'new-release-commit',
+						status: 'success',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 54321,
+					},
+				});
 			});
 
 			describe('balena.models.application.willTrackNewReleases()', function () {
