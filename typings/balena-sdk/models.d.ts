@@ -31,6 +31,13 @@ declare module './index' {
 		display_name: string;
 	}
 
+	export interface RecoveryTwoFactor {
+		id: number;
+		used_timestamp: string | null;
+
+		belongs_to__user: NavigationResource<User>;
+	}
+
 	export interface User {
 		account_type?: string;
 		actualUser?: number;
@@ -169,6 +176,12 @@ declare module './index' {
 		needs__os_version_range: string | null;
 		maximum_device_count: number | null;
 		is_host_os: boolean;
+	}
+
+	export interface ApplicationHostedOnApplication {
+		id: null;
+		application: NavigationResource<Application>;
+		can_use__application_as_host: NavigationResource<Application>;
 	}
 
 	export type ApplicationMembershipRoles =
