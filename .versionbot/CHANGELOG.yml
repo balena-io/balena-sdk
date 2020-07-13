@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'typings: Add ApplicationHostedOnApplication'
+      hash: f17c9531a006409095d77d971d66faa554f90e1c
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: typings Add RecoveryTwoFactor
+      hash: b2260a1b9dd7c4e3c24c132bbb7322fe12ec52ba
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.6.0
+  date: 2020-07-13T13:49:52.280Z
+- commits:
     - subject: 'Tests: remove bluebird usage'
       hash: 3430f52b1c4ca56bc833552d23054e8f07d16022
       body: ''
