@@ -563,19 +563,17 @@ declare namespace BalenaSdk {
 				};
 			};
 			billing: {
-				getAccount(
-					organization?: string | number,
-				): Bluebird<BillingAccountInfo>;
-				getPlan(organization?: string | number): Bluebird<BillingPlanInfo>;
-				getBillingInfo(organization?: string | number): Bluebird<BillingInfo>;
+				getAccount(organization: string | number): Bluebird<BillingAccountInfo>;
+				getPlan(organization: string | number): Bluebird<BillingPlanInfo>;
+				getBillingInfo(organization: string | number): Bluebird<BillingInfo>;
 				updateBillingInfo(
+					organization: string | number,
 					billingInfo: TokenBillingSubmitInfo,
-					organization?: string | number,
 				): Bluebird<BillingInfo>;
-				getInvoices(organization?: string | number): Bluebird<InvoiceInfo[]>;
+				getInvoices(organization: string | number): Bluebird<InvoiceInfo[]>;
 				downloadInvoice(
+					organization: string | number,
 					invoiceNumber: string,
-					organization?: string | number,
 				): Bluebird<Blob | BalenaRequestStreamResult>;
 			};
 			device: {
