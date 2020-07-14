@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix is_private typings for device type
+      hash: 7d7751dc8ebf107ced936737c232e72867c37c93
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+  version: 14.7.1
+  date: 2020-07-14T09:37:08.929Z
+- commits:
     - subject: Add an organization parameter to all billing methods
       hash: 02c099fb1697c0b159bde34dc0976cb75b821a0c
       body: ''
