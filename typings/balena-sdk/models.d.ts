@@ -314,7 +314,7 @@ declare module './index' {
 		id: number;
 		slug: string;
 		name: string;
-		is_private: string;
+		is_private: boolean;
 
 		is_accessible_privately_by__organization: ReverseNavigationResource<
 			Organization
