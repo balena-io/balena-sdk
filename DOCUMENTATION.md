@@ -296,12 +296,12 @@ const sdk = getSdk.fromSharedOptions();
             * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Bluebird</code>
             * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
         * [.billing](#balena.models.billing) : <code>object</code>
-            * [.getAccount([organization])](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
-            * [.getPlan([organization])](#balena.models.billing.getPlan) ⇒ <code>Bluebird</code>
-            * [.getBillingInfo([organization])](#balena.models.billing.getBillingInfo) ⇒ <code>Bluebird</code>
-            * [.updateBillingInfo(billingInfo, [organization])](#balena.models.billing.updateBillingInfo) ⇒ <code>Bluebird</code>
-            * [.getInvoices([organization])](#balena.models.billing.getInvoices) ⇒ <code>Bluebird</code>
-            * [.downloadInvoice([organization])](#balena.models.billing.downloadInvoice) ⇒ <code>Bluebird</code>
+            * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
+            * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Bluebird</code>
+            * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Bluebird</code>
+            * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Bluebird</code>
+            * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Bluebird</code>
+            * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Bluebird</code>
     * [.auth](#balena.auth) : <code>object</code>
         * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
             * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Bluebird</code>
@@ -623,12 +623,12 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Bluebird</code>
         * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
     * [.billing](#balena.models.billing) : <code>object</code>
-        * [.getAccount([organization])](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
-        * [.getPlan([organization])](#balena.models.billing.getPlan) ⇒ <code>Bluebird</code>
-        * [.getBillingInfo([organization])](#balena.models.billing.getBillingInfo) ⇒ <code>Bluebird</code>
-        * [.updateBillingInfo(billingInfo, [organization])](#balena.models.billing.updateBillingInfo) ⇒ <code>Bluebird</code>
-        * [.getInvoices([organization])](#balena.models.billing.getInvoices) ⇒ <code>Bluebird</code>
-        * [.downloadInvoice([organization])](#balena.models.billing.downloadInvoice) ⇒ <code>Bluebird</code>
+        * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
+        * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Bluebird</code>
+        * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Bluebird</code>
+        * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Bluebird</code>
+        * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Bluebird</code>
+        * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Bluebird</code>
 
 <a name="balena.models.application"></a>
 
@@ -6016,16 +6016,16 @@ balena.models.image.getLogs(123, function(error, logs) {
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.billing](#balena.models.billing) : <code>object</code>
-    * [.getAccount([organization])](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
-    * [.getPlan([organization])](#balena.models.billing.getPlan) ⇒ <code>Bluebird</code>
-    * [.getBillingInfo([organization])](#balena.models.billing.getBillingInfo) ⇒ <code>Bluebird</code>
-    * [.updateBillingInfo(billingInfo, [organization])](#balena.models.billing.updateBillingInfo) ⇒ <code>Bluebird</code>
-    * [.getInvoices([organization])](#balena.models.billing.getInvoices) ⇒ <code>Bluebird</code>
-    * [.downloadInvoice([organization])](#balena.models.billing.downloadInvoice) ⇒ <code>Bluebird</code>
+    * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Bluebird</code>
+    * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Bluebird</code>
+    * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Bluebird</code>
+    * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Bluebird</code>
+    * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Bluebird</code>
+    * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Bluebird</code>
 
 <a name="balena.models.billing.getAccount"></a>
 
-##### billing.getAccount([organization]) ⇒ <code>Bluebird</code>
+##### billing.getAccount(organization) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the user's billing account  
 **Access**: public  
@@ -6033,24 +6033,24 @@ balena.models.image.getLogs(123, function(error, logs) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [organization] | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. Not specifying an organization is deprecated and will be dropped in a future release. |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
 
 **Example**  
 ```js
-balena.models.billing.getAccount().then(function(billingAccount) {
+balena.models.billing.getAccount(orgId).then(function(billingAccount) {
 	console.log(billingAccount);
 });
 ```
 **Example**  
 ```js
-balena.models.billing.getAccount(function(error, billingAccount) {
+balena.models.billing.getAccount(orgId, function(error, billingAccount) {
 	if (error) throw error;
 	console.log(billingAccount);
 });
 ```
 <a name="balena.models.billing.getPlan"></a>
 
-##### billing.getPlan([organization]) ⇒ <code>Bluebird</code>
+##### billing.getPlan(organization) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the current billing plan  
 **Access**: public  
@@ -6058,24 +6058,24 @@ balena.models.billing.getAccount(function(error, billingAccount) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [organization] | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. Not specifying an organization is deprecated and will be dropped in a future release. |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
 
 **Example**  
 ```js
-balena.models.billing.getPlan().then(function(billingPlan) {
+balena.models.billing.getPlan(orgId).then(function(billingPlan) {
 	console.log(billingPlan);
 });
 ```
 **Example**  
 ```js
-balena.models.billing.getPlan(function(error, billingPlan) {
+balena.models.billing.getPlan(orgId, function(error, billingPlan) {
 	if (error) throw error;
 	console.log(billingPlan);
 });
 ```
 <a name="balena.models.billing.getBillingInfo"></a>
 
-##### billing.getBillingInfo([organization]) ⇒ <code>Bluebird</code>
+##### billing.getBillingInfo(organization) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the current billing information  
 **Access**: public  
@@ -6083,24 +6083,24 @@ balena.models.billing.getPlan(function(error, billingPlan) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [organization] | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. Not specifying an organization is deprecated and will be dropped in a future release. |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
 
 **Example**  
 ```js
-balena.models.billing.getBillingInfo().then(function(billingInfo) {
+balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
 **Example**  
 ```js
-balena.models.billing.getBillingInfo(function(error, billingInfo) {
+balena.models.billing.getBillingInfo(orgId, function(error, billingInfo) {
 	if (error) throw error;
 	console.log(billingInfo);
 });
 ```
 <a name="balena.models.billing.updateBillingInfo"></a>
 
-##### billing.updateBillingInfo(billingInfo, [organization]) ⇒ <code>Bluebird</code>
+##### billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Update the current billing information  
 **Access**: public  
@@ -6108,27 +6108,27 @@ balena.models.billing.getBillingInfo(function(error, billingInfo) {
 
 | Param | Type | Description |
 | --- | --- | --- |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
 | billingInfo | <code>Object</code> | an object containing a billing info token_id |
-| [organization] | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. Not specifying an organization is deprecated and will be dropped in a future release. |
 | billingInfo.token_id | <code>String</code> | the token id generated for the billing info form |
 | [billingInfo.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
 
 **Example**  
 ```js
-balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }).then(function(billingInfo) {
+balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
 **Example**  
 ```js
-balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }, function(error, billingInfo) {
+balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }, function(error, billingInfo) {
 	if (error) throw error;
 	console.log(billingInfo);
 });
 ```
 <a name="balena.models.billing.getInvoices"></a>
 
-##### billing.getInvoices([organization]) ⇒ <code>Bluebird</code>
+##### billing.getInvoices(organization) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the available invoices  
 **Access**: public  
@@ -6136,24 +6136,24 @@ balena.models.billing.updateBillingInfo({ token_id: 'xxxxxxx' }, function(error,
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [organization] | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. Not specifying an organization is deprecated and will be dropped in a future release. |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
 
 **Example**  
 ```js
-balena.models.billing.getInvoices().then(function(invoices) {
+balena.models.billing.getInvoices(orgId).then(function(invoices) {
 	console.log(invoices);
 });
 ```
 **Example**  
 ```js
-balena.models.billing.getInvoices(function(error, invoices) {
+balena.models.billing.getInvoices(orgId, function(error, invoices) {
 	if (error) throw error;
 	console.log(invoices);
 });
 ```
 <a name="balena.models.billing.downloadInvoice"></a>
 
-##### billing.downloadInvoice([organization]) ⇒ <code>Bluebird</code>
+##### billing.downloadInvoice(organization) ⇒ <code>Bluebird</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Download a specific invoice  
 **Access**: public  
@@ -6161,17 +6161,17 @@ balena.models.billing.getInvoices(function(error, invoices) {
 
 | Param | Type | Description |
 | --- | --- | --- |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
 |  | <code>String</code> | an invoice number |
-| [organization] | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. Not specifying an organization is deprecated and will be dropped in a future release. |
 
 **Example**  
 ```js
 # Browser
-balena.models.billing.downloadInvoice('0000').then(function(blob) {
+balena.models.billing.downloadInvoice(orgId, '0000').then(function(blob) {
 	console.log(blob);
 });
 # Node
-balena.models.billing.downloadInvoice('0000').then(function(stream) {
+balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
 	stream.pipe(fs.createWriteStream('foo/bar/invoice-0000.pdf'));
 });
 ```
