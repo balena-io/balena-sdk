@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add an organization parameter to all billing methods
+      hash: 02c099fb1697c0b159bde34dc0976cb75b821a0c
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.7.0
+  date: 2020-07-14T04:54:13.999Z
+- commits:
     - subject: 'typings: Add ApplicationHostedOnApplication'
       hash: f17c9531a006409095d77d971d66faa554f90e1c
       body: ''
