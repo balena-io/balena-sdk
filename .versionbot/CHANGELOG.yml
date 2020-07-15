@@ -1,4 +1,448 @@
 - commits:
+    - subject: '**BREAKING** Export setSharedOptions & fromSharedOptions separately'
+      hash: ce0aed03a81ebf1d1b45e18e79f7ac242ab98b67
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: '**BREAKING** Export as an ES6 module'
+      hash: 0d916adde250c5f031286bce7a0bcbc38cf2f0e6
+      body: ''
+      footer:
+        Resolves: '#922'
+        resolves: '#922'
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update dependencies and switch all returned promises to native promises
+      hash: af64b57ad2c16b983296e0e1caa14553fd711b70
+      body: |
+        Update balena-auth from 3.1.0 to 4.0.2
+        Update balena-hup-action-utils from 4.0.1 to 4.0.2
+        Update balena-pine from 11.2.0 to 12.1.1
+        Update balena-register-device from 6.1.1 to 7.1.0
+        Update balena-request from 10.0.9 to 11.0.4
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+      nested:
+        - commits:
+            - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+              hash: 286d4797c6d5cfd755cf6d04bb70169e6bb2b92f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-auth-4.0.2
+          date: 2020-07-13T12:56:45.554Z
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: patch
+              hash: 756c63445733bb8e7f36014853ac19ca0195d5f9
+              subject: Explicitly add tslib dependency
+          date: '2020-07-03T17:54:56Z'
+          version: balena-auth-4.0.1
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 7935d9a0fbd576eb2ec651b1f7c879401954f3fe
+              subject: Update to balena-settings-storage 6.x
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 5c60288aa585b8046e707c2388be290b273cbe59
+              subject: Update target to es2015
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: a79c4574b3964ddd59e18844de046751182a35aa
+              subject: Switch to native promises
+            - author: Pagan Gazzard
+              body: ''
+              hash: 1d84aca2cdaa0b11ace2dafd44099fd7340ba290
+              subject: Enable strict type checking
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 8248bf5bba4f972a3b262fe8317caa27281f6ea8
+              subject: Specify node 10+
+          date: '2020-07-02T15:23:00Z'
+          version: balena-auth-4.0.0
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: patch
+              hash: 6dbc95de3543cddab72ba6516cb998a212e63151
+              subject: Switch to @balena/lint for linting
+          date: '2020-07-02T14:58:05Z'
+          version: balena-auth-3.1.1
+        - commits:
+            - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+              hash: 9394a3215678277779fcc9de4f87a440206fa221
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-pine-12.1.1
+          date: 2020-07-13T13:04:22.398Z
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: minor
+              hash: bd8b1070a59c5ee99b861daeb47dc61c327a11ef
+              subject: Update balena-auth to 4.x and balena-request to 11.x
+          date: '2020-07-06T10:27:12Z'
+          version: balena-pine-12.1.0
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: patch
+              hash: 4723949cdd1999cefcd35cab2163b3a0ce3b7135
+              subject: Use typescript import helpers
+          date: '2020-07-03T18:44:27Z'
+          version: balena-pine-12.0.1
+        - commits:
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: major
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 1ba597dfd1d59a00b8c97ee3c5e53f33a20ed0d6
+              subject: Stop actively supporting node 8
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 76758e6a1e6f3663fc93e3805e30887b8cf35704
+              subject: Convert to async await
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: minor
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: b7d70d9a5818dad1e5ee2671f6ba7ce3b6b88f86
+              subject: Add balenaCI repo.yml
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 3b5a18e6165a5968f222a01af85453eea3e132a9
+              subject: 'karma.conf.js: Combine declaration & assignment of karmaConfig'
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 3841722fe089f0754ea3d4c372ec9f43cc870895
+              subject: Bump @balena/lint to v5
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: major
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 1e6cfddc1de158cd3f16b9051cec8496f6b36f8a
+              subject: Drop getPine() in favor of an es6 export of the BalenaPine class
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: major
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: c44a5df37aa6442bd5bb1a37d976196dfaba6b4a
+              subject: Drop the API_PREFIX property in favor of the apiPrefix
+            - author: Thodoris Greasidis
+              body: Update pinejs-client-core from 5.8.0 to 6.0.1
+              footers:
+                change-type: major
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 979466bb4908dd4d3f22737ac13de79ac0e30899
+              subject: >-
+                Bump to pinejs-client v6 which requires es2015 & drops Bluebird
+                promises
+          date: '2020-06-26T15:23:48Z'
+          version: balena-pine-12.0.0
+        - commits:
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 3f68368659c8424995daa2d2223152a8779ee0c3
+              subject: Convert karma.conf to js
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 02eda53ee6fad3b2409604f483e12a54490f0f77
+              subject: Bump balena-config-karma to v3
+          date: '2020-06-15T13:15:02Z'
+          version: balena-pine-11.2.1
+        - commits:
+            - subject: Switch from randomstring to uuid for generating device uuids
+              hash: 596a76abcf0a76aef93d191e4c59b939701c80b8
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+          version: balena-register-device-7.1.0
+          date: 2020-07-13T14:38:52.915Z
+        - commits:
+            - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+              hash: 7444f4ba2538180a5c75fa5f62de6f395ae28ba7
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-register-device-7.0.1
+          date: 2020-07-13T13:03:45.818Z
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              hash: 8cfa23ebbe2915b2f37730972cf104cb47f68c65
+              subject: Convert to type checked javascript
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 0f3e9d26f375554f793dd632b94f33e3ee88933b
+              subject: Drop callback interface in favor of promise interface
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 67d46678e910c2c8b11f417fa40d00781a1a3905
+              subject: Switch to a named export
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: faa9edc73cf243acd2abe1532e64aab8303031b5
+              subject: Convert to typescript
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 9e5bdbeaee325c8a523c8498ef023baeb49ef7c1
+              subject: Update to typed-error 3.x
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 27e78f2ea3f1a059a9fb2ba43dff55f32b0b2b4a
+              subject: Switch to returning native promises
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: dc21eb20dba1a977e74ffadbece66720ced4c529
+              subject: Update to balena-request 11.x
+            - author: Pagan Gazzard
+              body: ''
+              hash: f4008dad3de415cc25987268b387848fc3ed1200
+              subject: Use typescript import helpers
+          date: '2020-07-06T18:11:23Z'
+          version: balena-register-device-7.0.0
+        - commits:
+            - author: Cameron Diver
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              hash: effa651684318e8b1e336058515f467be02a4de4
+              subject: Export ApiError
+          date: '2020-05-26T13:07:26Z'
+          version: balena-register-device-6.1.6
+        - commits:
+            - author: Thodoris Greasidis
+              body: |-
+                Didn't convert the source, so that we don't end up
+                having conflicts with other ongoing PRs.
+              footers:
+                change-type: patch
+              hash: d2b9af51ae9714bc076d41a1f980ba019cf9e66a
+              subject: Convert tests to js
+          date: '2020-05-21T14:46:17Z'
+          version: balena-register-device-6.1.5
+        - commits:
+            - author: Cameron Diver
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              hash: f2be03b8cafe3dbfda30b9abf9cb7ec5a73aff0b
+              subject: Install typed-error v2
+          date: '2020-05-21T11:06:32Z'
+          version: balena-register-device-6.1.4
+        - commits:
+            - author: Miguel Casqueira
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              hash: bc79dbddf3e57081e9bb71e348c9ae6375c17ffc
+              subject: Extend API exception to include full response object
+          date: '2020-05-20T12:23:42Z'
+          version: balena-register-device-6.1.3
+        - commits:
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: patch
+                see: >-
+                  https://www.flowdock.com/app/rulemotion/r-supervisor/threads/KkFyAM4y7FbvbEOMtnoHdkCcz7p
+              hash: a6677fab4254f1f3a303ff4b8bdabcb3f2f631db
+              subject: Update mocha to fix node v12 deprecation warning
+          date: '2020-05-20T10:59:05Z'
+          version: balena-register-device-6.1.2
+        - commits:
+            - subject: Fix body overwriting on nodejs
+              hash: 432ee302c8c55e629f4915146d4d1c7388d6b01b
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-request-11.0.4
+          date: 2020-07-14T09:49:16.044Z
+        - commits:
+            - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+              hash: 6cdf460919b09a3cfe49bdfdfc1b1157117cc507
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-request-11.0.3
+          date: 2020-07-13T12:58:43.704Z
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: patch
+              hash: 4bcb7ac6741cdb115cba767920f6264d255322f3
+              subject: Fix tslib dependency
+          date: '2020-07-06T10:51:52Z'
+          version: balena-request-11.0.2
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: patch
+              hash: 079bfeece6bf01b0ebb9e12515f1304e51fcb068
+              subject: >-
+                Fix passing baseUrl to refreshToken if the request uses an
+                absolute url
+          date: '2020-07-03T21:42:07Z'
+          version: balena-request-11.0.1
+        - commits:
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: f20a78343dae178d7bbe42f199cfdfcf017faaa0
+              subject: Convert to type checked javascript
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 85d3e6df1b23af26275ab516d8cd0ed8ab3b08b5
+              subject: Switch to returning native promises
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: c53ca904ff5950271a5d8ed7911c04efc92358e6
+              subject: Drop support for nodejs < 10
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 072299f337bef7cd3e23d70c61cbc1cf8ab04df5
+              subject: Update balena-auth to 4.x
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: patch
+              hash: 812054063a073816af2b405b20c5fcec7fd43d69
+              subject: Remove rindle dependency
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: a8db723a33e6c912de25581f29796bfc5c7040da
+              subject: Update fetch-ponyfill to 6.x
+            - author: Pagan Gazzard
+              body: ''
+              hash: b3851fc526d94df3da1b4e768489eb91f4aa5d91
+              subject: >-
+                Remove proxy tests as global-tunnel-ng only supports nodejs <
+                10.16.0
+            - author: Pagan Gazzard
+              body: ''
+              footers:
+                change-type: major
+              hash: 0f67d2157ff70c8cfada7b6359ba4b58aeeacf3c
+              subject: Switch to a named export
+            - author: Pagan Gazzard
+              body: ''
+              hash: be34df9a401b1155e8b6a5ead9604fbd86164662
+              subject: Use typescript import helpers
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: patch
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              hash: 403418796d1505c9567396e06f221d1e959d4115
+              subject: Bump balena-config-karma & convert karma.conf.coffee to js
+            - author: Thodoris Greasidis
+              body: ''
+              footers:
+                change-type: major
+              hash: 25e8293b8ed3df3c80581903ab56a42c3e41babc
+              subject: >-
+                Change the browser request timeout error to be consistent with
+                node
+          date: '2020-07-03T19:12:04Z'
+          version: balena-request-11.0.0
+    - subject: '**BREAKING** billing: Make the organization parameter fist & required'
+      hash: 5d4a57a00c2cfbd3229e41f0da7f6d911ad090c3
+      body: ''
+      footer:
+        Resolves: '#925'
+        resolves: '#925'
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.0.0
+  date: 2020-07-15T16:23:57.737Z
+- commits:
     - subject: 'DeviceWithServiceDetails: preserve the image_install & gateway_downloads'
       hash: ab3a5c2e67b4dd51643018a6d717b9737fb94583
       body: ''
