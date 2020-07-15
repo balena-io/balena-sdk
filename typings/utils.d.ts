@@ -16,3 +16,5 @@ export interface Dictionary<T> {
 }
 
 export type Resolvable<R> = R | PromiseLike<R>;
+
+export type AtLeast<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
