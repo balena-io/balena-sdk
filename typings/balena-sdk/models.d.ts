@@ -495,7 +495,7 @@ export interface SupportTier {
 	title: string;
 	slug: string;
 	includes_private_support: boolean;
-	includes__SLA: string;
+	includes__SLA?: string;
 }
 
 export interface Plan {
