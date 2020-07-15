@@ -12,13 +12,12 @@ export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 
 let apiUrl: string;
 let env: AnyObject;
-let getSdk: BalenaSdk.SdkConstructor;
+export let balenaSdkExports: typeof BalenaSdk;
 let opts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
 	// tslint:disable-next-line:no-var-requires
 	require('js-polyfills/es6');
-	// @ts-expect-error
-	getSdk = window.balenaSdk;
+	balenaSdkExports = window.balenaSdk;
 	// @ts-expect-error
 	env = window.__env__;
 
@@ -29,7 +28,7 @@ if (IS_BROWSER) {
 	};
 } else {
 	// tslint:disable-next-line:no-var-requires
-	getSdk = require('../..');
+	balenaSdkExports = require('../..');
 	// tslint:disable-next-line:no-var-requires
 	const settings = require('balena-settings-client');
 	({ env } = process);
@@ -86,7 +85,7 @@ const buildCredentials = function () {
 	return credentials;
 };
 
-export { getSdk };
+export const getSdk = balenaSdkExports.getSdk;
 export { opts as sdkOpts };
 export const balena = getSdk(opts);
 

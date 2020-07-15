@@ -1,4 +1,3 @@
-import type * as Bluebird from 'bluebird';
 import type { Readable } from 'stream';
 import type { Omit } from './utils';
 
@@ -24,8 +23,8 @@ type BalenaRequestResponseOf<T> = Omit<BalenaRequestResponse, 'body'> & {
 };
 
 interface BalenaRequestSend {
-	(options: BalenaRequestOptions): Bluebird<BalenaRequestResponse>;
-	<T>(options: BalenaRequestOptions): Bluebird<BalenaRequestResponseOf<T>>;
+	(options: BalenaRequestOptions): Promise<BalenaRequestResponse>;
+	<T>(options: BalenaRequestOptions): Promise<BalenaRequestResponseOf<T>>;
 }
 
 interface BalenaRequestStreamResult extends Readable {
@@ -34,7 +33,5 @@ interface BalenaRequestStreamResult extends Readable {
 
 interface BalenaRequest {
 	send: BalenaRequestSend;
-	stream: (
-		options: BalenaRequestOptions,
-	) => Bluebird<BalenaRequestStreamResult>;
+	stream: (options: BalenaRequestOptions) => Promise<BalenaRequestStreamResult>;
 }

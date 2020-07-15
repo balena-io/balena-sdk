@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import * as Bluebird from 'bluebird';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const get2fa = function (
@@ -32,7 +31,7 @@ const get2fa = function (
 	 * @memberof balena.auth.twoFactor
 	 *
 	 * @fulfil {Boolean} - whether 2fa is enabled
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.auth.twoFactor.isEnabled().then(function(isEnabled) {
@@ -50,7 +49,7 @@ const get2fa = function (
 	 * 	}
 	 * });
 	 */
-	function isEnabled(): Bluebird<boolean> {
+	function isEnabled(): Promise<boolean> {
 		return auth
 			.needs2FA()
 			.then((twoFactorRequired) => twoFactorRequired != null);
@@ -64,7 +63,7 @@ const get2fa = function (
 	 * @memberof balena.auth.twoFactor
 	 *
 	 * @fulfil {Boolean} - whether 2fa challenge was passed
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.auth.twoFactor.isPassed().then(function(isPassed) {
@@ -82,7 +81,7 @@ const get2fa = function (
 	 * 	}
 	 * });
 	 */
-	function isPassed(): Bluebird<boolean> {
+	function isPassed(): Promise<boolean> {
 		return auth.needs2FA().then((twoFactorRequired) => !twoFactorRequired);
 	}
 
@@ -94,7 +93,7 @@ const get2fa = function (
 	 * @memberof balena.auth.twoFactor
 	 *
 	 * @param {String} code - code
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.auth.twoFactor.challenge('1234');
@@ -104,7 +103,7 @@ const get2fa = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function challenge(code: string): Bluebird<void> {
+	function challenge(code: string): Promise<void> {
 		return request
 			.send({
 				method: 'POST',

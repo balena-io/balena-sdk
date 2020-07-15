@@ -1,0 +1,10 @@
+type: 'node'
+upstream:
+  - repo: 'balena-auth'
+    url: 'https://github.com/balena-io-modules/balena-auth'
+  - repo: 'balena-pine'
+    url: 'https://github.com/balena-io-modules/balena-pine'
+  - repo: 'balena-register-device'
+    url: 'https://github.com/balena-io-modules/balena-register-device'
+  - repo: 'balena-request'
+    url: 'https://github.com/balena-io-modules/balena-request'

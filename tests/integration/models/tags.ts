@@ -1,4 +1,3 @@
-import type * as Bluebird from 'bluebird';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
@@ -17,7 +16,7 @@ const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 		idOrUniqueParam: number | string,
 		cb?: (err: Error | null, result?: any) => void,
 	) {
-		return (model as any)[propName](idOrUniqueParam, cb) as Bluebird<
+		return (model as any)[propName](idOrUniqueParam, cb) as Promise<
 			BalenaSdk.ResourceTagBase[]
 		>;
 	};
@@ -26,9 +25,9 @@ const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 export interface TagModelBase<T extends BalenaSdk.ResourceTagBase> {
 	getAll(
 		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
-	): Bluebird<T[]>;
-	set(uuidOrId: string | number, tagKey: string, value: string): Bluebird<void>;
-	remove(uuidOrId: string | number, tagKey: string): Bluebird<void>;
+	): Promise<T[]>;
+	set(uuidOrId: string | number, tagKey: string, value: string): Promise<void>;
+	remove(uuidOrId: string | number, tagKey: string): Promise<void>;
 }
 
 export interface Options<T extends BalenaSdk.ResourceTagBase> {

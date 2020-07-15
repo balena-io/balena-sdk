@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Bluebird from 'bluebird';
 
 import type * as BalenaSdk from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
@@ -41,7 +40,7 @@ const getApiKeysModel = function (
 		 * @param {String} [description=null] - the API key description
 		 *
 		 * @fulfil {String} - API key
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
@@ -59,7 +58,7 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKey);
 		 * });
 		 */
-		create(name: string, description: string | null = null): Bluebird<string> {
+		create(name: string, description: string | null = null): Promise<string> {
 			const apiKeyBody: { name: string; description?: string | null } = {
 				name,
 			};
@@ -88,7 +87,7 @@ const getApiKeysModel = function (
 		 *
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - apiKeys
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.apiKey.getAll().then(function(apiKeys) {
@@ -103,7 +102,7 @@ const getApiKeysModel = function (
 		 */
 		getAll(
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Bluebird<BalenaSdk.ApiKey[]> {
+		): Promise<BalenaSdk.ApiKey[]> {
 			return pine.get<BalenaSdk.ApiKey>({
 				resource: 'api_key',
 				options: mergePineOptions(
@@ -132,7 +131,7 @@ const getApiKeysModel = function (
 		 *
 		 * @param {Number} id - API key id
 		 * @param {Object} apiKeyInfo - an object with the updated name or description
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.apiKey.update(123, { name: 'updatedName' });
@@ -149,44 +148,37 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		update(
+		async update(
 			id: number,
 			apiKeyInfo: { name?: string; description?: string },
-		): Bluebird<void> {
-			return Bluebird.try<void>(() => {
-				if (!apiKeyInfo) {
-					throw new errors.BalenaInvalidParameterError(
-						'apiKeyInfo',
-						apiKeyInfo,
-					);
-				}
-				if (apiKeyInfo.name === null || apiKeyInfo.name === '') {
-					throw new errors.BalenaInvalidParameterError(
-						'apiKeyInfo.name',
-						apiKeyInfo.name,
-					);
-				}
-				const body = {
-					name: apiKeyInfo.name,
-					description: apiKeyInfo.description,
-				};
-				return pine
-					.patch<BalenaSdk.ApiKey>({
-						resource: 'api_key',
-						id,
-						body,
-						options: {
-							// the only way to reason whether
-							// it's a named user api key is whether
-							// it has a name
-							$filter: {
-								name: {
-									$ne: null,
-								},
-							},
+		): Promise<void> {
+			if (!apiKeyInfo) {
+				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
+			}
+			if (apiKeyInfo.name === null || apiKeyInfo.name === '') {
+				throw new errors.BalenaInvalidParameterError(
+					'apiKeyInfo.name',
+					apiKeyInfo.name,
+				);
+			}
+			const body = {
+				name: apiKeyInfo.name,
+				description: apiKeyInfo.description,
+			};
+			await pine.patch<BalenaSdk.ApiKey>({
+				resource: 'api_key',
+				id,
+				body,
+				options: {
+					// the only way to reason whether
+					// it's a named user api key is whether
+					// it has a name
+					$filter: {
+						name: {
+							$ne: null,
 						},
-					})
-					.return();
+					},
+				},
 			});
 		},
 
@@ -198,7 +190,7 @@ const getApiKeysModel = function (
 		 * @memberof balena.models.apiKey
 		 *
 		 * @param {Number} id - API key id
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.apiKey.revoke(123);
@@ -208,22 +200,20 @@ const getApiKeysModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		revoke(id: number): Bluebird<void> {
-			return pine
-				.delete({
-					resource: 'api_key',
-					id,
-					options: {
-						// so that we don't accidentally delete
-						// a non named user api key
-						$filter: {
-							name: {
-								$ne: null,
-							},
+		async revoke(id: number): Promise<void> {
+			await pine.delete({
+				resource: 'api_key',
+				id,
+				options: {
+					// so that we don't accidentally delete
+					// a non named user api key
+					$filter: {
+						name: {
+							$ne: null,
 						},
 					},
-				})
-				.return();
+				},
+			});
 		},
 	};
 

@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import * as Bluebird from 'bluebird';
 import once = require('lodash/once');
 import type * as BalenaSdk from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
@@ -68,7 +67,7 @@ const getReleaseModel = function (
 	 * @param {String|Number} commitOrId - release commit (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object} - release
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.release.get(123).then(function(release) {
@@ -86,53 +85,45 @@ const getReleaseModel = function (
 	 * 	console.log(release);
 	 * });
 	 */
-	function get(
+	async function get(
 		commitOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Bluebird<BalenaSdk.Release> {
-		return Bluebird.try(() => {
-			if (commitOrId == null) {
+	): Promise<BalenaSdk.Release> {
+		if (commitOrId == null) {
+			throw new errors.BalenaReleaseNotFound(commitOrId);
+		}
+
+		if (isId(commitOrId)) {
+			const release = await pine.get<BalenaSdk.Release>({
+				resource: 'release',
+				id: commitOrId,
+				options: mergePineOptions({}, options),
+			});
+			if (release == null) {
+				throw new errors.BalenaReleaseNotFound(commitOrId);
+			}
+			return release;
+		} else {
+			const releases = await pine.get<BalenaSdk.Release>({
+				resource: 'release',
+				options: mergePineOptions(
+					{
+						$filter: {
+							commit: { $startswith: commitOrId },
+						},
+					},
+					options,
+				),
+			});
+			if (releases.length === 0) {
 				throw new errors.BalenaReleaseNotFound(commitOrId);
 			}
 
-			if (isId(commitOrId)) {
-				return pine
-					.get<BalenaSdk.Release>({
-						resource: 'release',
-						id: commitOrId,
-						options: mergePineOptions({}, options),
-					})
-					.then((release) => {
-						if (release == null) {
-							throw new errors.BalenaReleaseNotFound(commitOrId);
-						}
-						return release;
-					});
-			} else {
-				return pine
-					.get<BalenaSdk.Release>({
-						resource: 'release',
-						options: mergePineOptions(
-							{
-								$filter: {
-									commit: { $startswith: commitOrId },
-								},
-							},
-							options,
-						),
-					})
-					.then(function (releases) {
-						if (releases.length === 0) {
-							throw new errors.BalenaReleaseNotFound(commitOrId);
-						}
-
-						if (releases.length > 1) {
-							throw new errors.BalenaAmbiguousRelease(commitOrId);
-						}
-						return releases[0];
-					});
+			if (releases.length > 1) {
+				throw new errors.BalenaAmbiguousRelease(commitOrId);
 			}
-		});
+			return releases[0];
+		}
 	}
 
 	/**
@@ -153,7 +144,7 @@ const getReleaseModel = function (
 	 * @param {Boolean} [options.release={}] - extra pine options for releases
 	 * @param {Object} [options.image={}] - extra pine options for images
 	 * @fulfil {Object} - release with image details
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.release.getWithImageDetails(123).then(function(release) {
@@ -183,7 +174,7 @@ const getReleaseModel = function (
 			release?: BalenaSdk.PineOptions<BalenaSdk.Release>;
 			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
 		} = {},
-	): Bluebird<BalenaSdk.ReleaseWithImageDetails> {
+	): Promise<BalenaSdk.ReleaseWithImageDetails> {
 		return get(
 			commitOrId,
 			mergePineOptions(
@@ -254,7 +245,7 @@ const getReleaseModel = function (
 	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - releases
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.release.getAllByApplication('MyApp').then(function(releases) {
@@ -275,7 +266,7 @@ const getReleaseModel = function (
 	function getAllByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Bluebird<BalenaSdk.Release[]> {
+	): Promise<BalenaSdk.Release[]> {
 		return applicationModel()
 			.get(nameOrSlugOrId, { $select: 'id' })
 			.then(({ id }) =>
@@ -304,7 +295,7 @@ const getReleaseModel = function (
 	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object|undefined} - release
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.release.getLatestByApplication('MyApp').then(function(releases) {
@@ -325,7 +316,7 @@ const getReleaseModel = function (
 	function getLatestByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Bluebird<BalenaSdk.Release> {
+	): Promise<BalenaSdk.Release> {
 		return getAllByApplication(
 			nameOrSlugOrId,
 			mergePineOptions(
@@ -352,7 +343,7 @@ const getReleaseModel = function (
 	 * @param {String} urlDeployOptions.url - a url with a tarball of the project to build
 	 * @param {Boolean} [urlDeployOptions.shouldFlatten=true] - Should be true when the tarball includes an extra root folder with all the content
 	 * @fulfil {number} - release ID
-	 * @returns {Bluebird}
+	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
@@ -373,7 +364,7 @@ const getReleaseModel = function (
 	function createFromUrl(
 		nameOrSlugOrId: string | number,
 		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
-	): Bluebird<number> {
+	): Promise<number> {
 		return applicationModel()
 			.get(nameOrSlugOrId, {
 				$select: 'app_name',
@@ -407,7 +398,7 @@ const getReleaseModel = function (
 		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release tags
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.release.tags.getAllByApplication('MyApp').then(function(tags) {
@@ -428,7 +419,7 @@ const getReleaseModel = function (
 		getAllByApplication(
 			nameOrSlugOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
-		): Bluebird<BalenaSdk.ReleaseTag[]> {
+		): Promise<BalenaSdk.ReleaseTag[]> {
 			return applicationModel()
 				.get(nameOrSlugOrId, { $select: 'id' })
 				.then(({ id }) =>
@@ -464,7 +455,7 @@ const getReleaseModel = function (
 		 * @param {String|Number} commitOrId - release commit (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release tags
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.release.tags.getAllByRelease(123).then(function(tags) {
@@ -485,7 +476,7 @@ const getReleaseModel = function (
 		getAllByRelease(
 			commitOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
-		): Bluebird<BalenaSdk.ReleaseTag[]> {
+		): Promise<BalenaSdk.ReleaseTag[]> {
 			return get(commitOrId, {
 				$select: 'id',
 				$expand: {
@@ -503,7 +494,7 @@ const getReleaseModel = function (
 		 *
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release tags
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.release.tags.getAll().then(function(tags) {
@@ -529,7 +520,7 @@ const getReleaseModel = function (
 		 * @param {String} tagKey - tag key
 		 * @param {String|undefined} value - tag value
 		 *
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.release.tags.set(123, 'EDITOR', 'vim');
@@ -553,7 +544,7 @@ const getReleaseModel = function (
 		 *
 		 * @param {String|Number} commitOrId - release commit (string) or id (number)
 		 * @param {String} tagKey - tag key
-		 * @returns {Bluebird}
+		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.release.tags.remove(123, 'EDITOR');
