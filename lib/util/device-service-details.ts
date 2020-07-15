@@ -2,7 +2,6 @@ import type {
 	CurrentGatewayDownload,
 	CurrentService,
 	Device,
-	DeviceWithImageInstalls,
 	DeviceWithServiceDetails,
 	GatewayDownload,
 	Image,
@@ -14,7 +13,7 @@ import type {
 
 // Pine expand options necessary for getting raw service data for a device
 export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
-	const pineExpand: PineExpand<DeviceWithImageInstalls> = {
+	const pineExpand: PineExpand<Device> = {
 		image_install: {
 			$select: ['id', 'download_progress', 'status', 'install_date'],
 			$filter: {
@@ -107,7 +106,7 @@ function getSingleInstallSummary(
 }
 
 export const generateCurrentServiceDetails = (
-	rawDevice: DeviceWithImageInstalls,
+	rawDevice: Device,
 ): DeviceWithServiceDetails => {
 	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
@@ -121,7 +120,7 @@ export const generateCurrentServiceDetails = (
 	delete rawDevice.image_install;
 	delete rawDevice.gateway_download;
 
-	const device = (rawDevice as Device) as DeviceWithServiceDetails;
+	const device = rawDevice as DeviceWithServiceDetails;
 
 	// Essentially a groupBy(installs, 'service_name')
 	// but try making it a bit faster for the sake of large fleets.
