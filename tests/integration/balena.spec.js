@@ -1,6 +1,12 @@
 import * as m from 'mochainon';
 import * as packageJSON from '../../package.json';
-import { balena, getSdk, sdkOpts, givenLoggedInUser } from './setup';
+import {
+	balena,
+	balenaSdkExports,
+	getSdk,
+	sdkOpts,
+	givenLoggedInUser,
+} from './setup';
 
 const { expect } = m.chai;
 
@@ -320,21 +326,21 @@ describe('Balena SDK', function () {
 		});
 	});
 
-	describe('getSdk.setSharedOptions()', () =>
+	describe('setSharedOptions()', () =>
 		it('should set a global containing shared options', function () {
 			const root =
 				typeof window !== 'undefined' && window !== null ? window : global;
 			const opts = { foo: 'bar' };
 
 			// @ts-expect-error
-			getSdk.setSharedOptions(opts);
+			balenaSdkExports.setSharedOptions(opts);
 
 			return expect(root['BALENA_SDK_SHARED_OPTIONS']).to.equal(opts);
 		}));
 
-	describe('getSdk.fromSharedOptions()', () =>
+	describe('fromSharedOptions()', () =>
 		it('should return an object with valid keys', function () {
-			const mockBalena = getSdk.fromSharedOptions();
+			const mockBalena = balenaSdkExports.fromSharedOptions();
 			return expect(mockBalena).to.include.keys(validKeys);
 		}));
 	describe('constructor options', () =>
