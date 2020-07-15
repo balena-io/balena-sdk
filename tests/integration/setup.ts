@@ -17,7 +17,7 @@ let opts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
 	// tslint:disable-next-line:no-var-requires
 	require('js-polyfills/es6');
-	getSdk = window.balenaSdk.BalenaSdk;
+	getSdk = window.balenaSdk.getSdk;
 	// @ts-expect-error
 	env = window.__env__;
 
@@ -28,7 +28,7 @@ if (IS_BROWSER) {
 	};
 } else {
 	// tslint:disable-next-line:no-var-requires
-	getSdk = require('../..').BalenaSdk;
+	getSdk = require('../..').getSdk;
 	// tslint:disable-next-line:no-var-requires
 	const settings = require('balena-settings-client');
 	({ env } = process);
