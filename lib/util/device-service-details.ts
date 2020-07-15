@@ -2,7 +2,6 @@ import type {
 	CurrentGatewayDownload,
 	CurrentService,
 	Device,
-	DeviceWithImageInstalls,
 	DeviceWithServiceDetails,
 	GatewayDownload,
 	Image,
@@ -14,7 +13,7 @@ import type {
 
 // Pine expand options necessary for getting raw service data for a device
 export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
-	const pineExpand: PineExpand<DeviceWithImageInstalls> = {
+	const pineExpand: PineExpand<Device> = {
 		image_install: {
 			$select: ['id', 'download_progress', 'status', 'install_date'],
 			$filter: {
@@ -88,26 +87,29 @@ function getSingleInstallSummary(
 		};
 	}
 
+	const result = {
+		...rawData,
+		service_id: service.id,
+		// add this extra property to make grouping the services easier
+		service_name: service.service_name,
+		image_id: image.id,
+		...releaseInfo,
+	};
+
 	// prefer over omit for performance reasons
-	delete rawData.image;
-	if ('is_provided_by__release' in rawData) {
-		delete rawData.is_provided_by__release;
+	delete result.image;
+	if ('installs__image' in result) {
+		delete result.installs__image;
+	}
+	if ('is_provided_by__release' in result) {
+		delete result.is_provided_by__release;
 	}
 
-	return Object.assign(
-		rawData,
-		{
-			service_id: service.id,
-			// add this extra property to make grouping the services easier
-			service_name: service.service_name,
-			image_id: image.id,
-		},
-		releaseInfo,
-	);
+	return result;
 }
 
 export const generateCurrentServiceDetails = (
-	rawDevice: DeviceWithImageInstalls,
+	rawDevice: Device,
 ): DeviceWithServiceDetails => {
 	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
@@ -116,12 +118,6 @@ export const generateCurrentServiceDetails = (
 	const downloads = rawDevice.gateway_download!.map((gd) =>
 		getSingleInstallSummary(gd),
 	);
-
-	// prefer over omit for performance reasons
-	delete rawDevice.image_install;
-	delete rawDevice.gateway_download;
-
-	const device = (rawDevice as Device) as DeviceWithServiceDetails;
 
 	// Essentially a groupBy(installs, 'service_name')
 	// but try making it a bit faster for the sake of large fleets.
@@ -154,6 +150,7 @@ export const generateCurrentServiceDetails = (
 		}
 	}
 
+	const device = rawDevice as DeviceWithServiceDetails;
 	device.current_services = currentServicesGroupedByName;
 	device.current_gateway_downloads = downloads;
 	return device;

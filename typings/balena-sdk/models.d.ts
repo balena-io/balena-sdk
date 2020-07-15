@@ -307,6 +307,8 @@ declare module './index' {
 		device_tag: ReverseNavigationResource<DeviceTag>;
 		manages__device: ReverseNavigationResource<Device>;
 		service_install: ReverseNavigationResource<ServiceInstall>;
+		image_install?: ReverseNavigationResource<ImageInstall>;
+		gateway_download?: ReverseNavigationResource<GatewayDownload>;
 	}
 
 	/** device_type */
@@ -331,10 +333,9 @@ declare module './index' {
 		has_private_access_to__device_type: NavigationResource<DeviceType>;
 	}
 
-	export interface DeviceWithImageInstalls extends Device {
-		image_install: ReverseNavigationResource<ImageInstall>;
-		gateway_download: ReverseNavigationResource<GatewayDownload>;
-	}
+	/** @deprecated Use the Device type directly */
+	export type DeviceWithImageInstalls = Device &
+		Required<Pick<Device, 'image_install' | 'gateway_download'>>;
 
 	export interface SupervisorRelease {
 		created_at: string;
@@ -415,6 +416,7 @@ declare module './index' {
 		status: string;
 
 		image: NavigationResource<Image>;
+		is_downloaded_by__device: NavigationResource<Device>;
 	}
 
 	export interface ServiceInstall {
