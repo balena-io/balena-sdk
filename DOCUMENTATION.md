@@ -37,8 +37,8 @@ The module exports a single factory function.
 **Summary**: Creates a new SDK instance using the default or the provided options.  
 **Example**  
 ```js
-const getSdk = require('balena-sdk');
-const balena = getSdk({
+import { BalenaSdk } from 'balena-sdk';
+const balena = BalenaSdk({
 	apiUrl: "https://api.balena-cloud.com/",
 	dataDirectory: "/opt/local/balena"
 });
@@ -46,7 +46,7 @@ const balena = getSdk({
 <a name="module_balena-sdk--getSdk..setSharedOptions"></a>
 
 #### getSdk~setSharedOptions(options)
-Set options that are used by calls to `getSdk.fromSharedOptions()`.
+Set options that are used by calls to `BalenaSdk.fromSharedOptions()`.
 The options accepted are the same as those used in the main SDK factory function.
 If you use this method, it should be called as soon as possible during app
 startup and before any calls to `fromSharedOptions()` are made.
@@ -67,8 +67,8 @@ startup and before any calls to `fromSharedOptions()` are made.
 
 **Example**  
 ```js
-const getSdk = require('balena-sdk');
-getSdk.setSharedOptions({
+import { BalenaSdk } from 'balena-sdk';
+BalenaSdk.setSharedOptions({
 	apiUrl: 'https://api.balena-cloud.com/',
 	builderUrl: 'https://builder.balena-cloud.com/',
 	isBrowser: true,
@@ -86,8 +86,8 @@ same defaults as the main SDK factory function.
 **Access**: public  
 **Example**  
 ```js
-const getSdk = require('balena-sdk');
-const sdk = getSdk.fromSharedOptions();
+import { BalenaSdk } from 'balena-sdk';
+const sdk = BalenaSdk.fromSharedOptions();
 ```
 <a name="balena"></a>
 

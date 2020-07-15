@@ -15,6 +15,10 @@ export interface Pine {
 	upsert<T>(params: PineClient.UpsertParams<T>): Bluebird<T | 'OK'>;
 }
 
+/**
+ * A variant that helps you not forget addins a $select, helping to
+ * create requests explecitely fetch only what your code needs.
+ */
 export type PineWithSelectOnGet = Omit<Pine, 'get'> & {
 	get<T>(
 		params: PineClient.ParamsObjWithId<T> & PineClient.ParamsObjWithSelect<T>,
