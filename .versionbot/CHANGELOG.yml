@@ -1,4 +1,15 @@
 - commits:
+    - subject: Fix SupportTier/includes__SLA typing
+      hash: 0225493520704d89bbbbfb5d392692e190db5fd5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 15.0.1
+  date: 2020-07-15T16:48:22.281Z
+- commits:
     - subject: '**BREAKING** Export setSharedOptions & fromSharedOptions separately'
       hash: ce0aed03a81ebf1d1b45e18e79f7ac242ab98b67
       body: ''
