@@ -1288,18 +1288,61 @@ describe('Application Model', function () {
 			}
 
 			expect(application.owns__device).to.have.lengthOf(1);
-			m.chai
-				.expect(application.owns__device[0])
-				.to.deep.match(deviceExpectation);
+			const [deviceDetails] = application.owns__device;
+			m.chai.expect(deviceDetails).to.deep.match(deviceExpectation);
 
+			// Should include the Device model properties
+			m.chai.expect(deviceDetails.image_install).to.have.lengthOf(3);
+
+			deviceDetails.image_install.forEach((imageInstall) => {
+				m.chai
+					.expect(imageInstall)
+					.to.have.property('id')
+					.that.is.oneOf([
+						this.oldWebInstall.id,
+						this.newWebInstall.id,
+						this.newDbInstall.id,
+					]);
+				m.chai
+					.expect(imageInstall)
+					.to.have.property('download_progress')
+					.that.is.oneOf([50, null]);
+				m.chai
+					.expect(imageInstall)
+					.to.have.property('image')
+					.that.has.length(1);
+				if (expectCommit) {
+					m.chai
+						.expect(imageInstall)
+						.to.have.property('is_provided_by__release')
+						.that.has.length(1);
+				} else {
+					m.chai
+						.expect(imageInstall)
+						.to.not.have.property('is_provided_by__release');
+				}
+				m.chai
+					.expect(imageInstall)
+					.to.have.property('install_date')
+					.that.is.a('string');
+				m.chai
+					.expect(imageInstall)
+					.to.have.property('status')
+					.that.is.a('string');
+				m.chai.expect(imageInstall).to.not.have.property('service_id');
+				m.chai.expect(imageInstall).to.not.have.property('image_id');
+				m.chai.expect(imageInstall).to.not.have.property('commit');
+			});
+
+			m.chai.expect(deviceDetails.gateway_download).to.have.lengthOf(0);
+
+			// Augmented properties
 			// Should filter out deleted image installs
-			m.chai
-				.expect(application.owns__device[0].current_services.db)
-				.to.have.lengthOf(1);
+			m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1);
 
 			// Should have an empty list of gateway downloads
-			return m.chai
-				.expect(application.owns__device[0].current_gateway_downloads)
+			m.chai
+				.expect(deviceDetails.current_gateway_downloads)
 				.to.have.lengthOf(0);
 		};
 

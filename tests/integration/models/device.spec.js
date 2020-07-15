@@ -2160,13 +2160,55 @@ describe('Device Model', function () {
 								},
 							});
 
+							// Should include the Device model properties
+							m.chai.expect(deviceDetails.image_install).to.have.lengthOf(3);
+
+							// Just to make TS happy, since we already checked its length.
+							const imageInstalls = deviceDetails.image_install ?? [];
+							imageInstalls.forEach((imageInstall) => {
+								m.chai
+									.expect(imageInstall)
+									.to.have.property('id')
+									.that.is.oneOf([
+										this.oldWebInstall.id,
+										this.newWebInstall.id,
+										this.newDbInstall.id,
+									]);
+								m.chai
+									.expect(imageInstall)
+									.to.have.property('download_progress')
+									.that.is.oneOf([50, null]);
+								m.chai
+									.expect(imageInstall)
+									.to.have.property('image')
+									.that.has.length(1);
+								m.chai
+									.expect(imageInstall)
+									.to.have.property('is_provided_by__release')
+									.that.has.length(1);
+								m.chai
+									.expect(imageInstall)
+									.to.have.property('install_date')
+									.that.is.a('string');
+								m.chai
+									.expect(imageInstall)
+									.to.have.property('status')
+									.that.is.a('string');
+								m.chai.expect(imageInstall).to.not.have.property('service_id');
+								m.chai.expect(imageInstall).to.not.have.property('image_id');
+								m.chai.expect(imageInstall).to.not.have.property('commit');
+							});
+
+							m.chai.expect(deviceDetails.gateway_download).to.have.lengthOf(0);
+
+							// Augmented properties
 							// Should filter out deleted image installs
 							m.chai
 								.expect(deviceDetails.current_services.db)
 								.to.have.lengthOf(1);
 
 							// Should have an empty list of gateway downloads
-							return m.chai
+							m.chai
 								.expect(deviceDetails.current_gateway_downloads)
 								.to.have.lengthOf(0);
 						});

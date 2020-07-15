@@ -416,6 +416,7 @@ declare module './index' {
 		status: string;
 
 		image: NavigationResource<Image>;
+		is_downloaded_by__device: NavigationResource<Device>;
 	}
 
 	export interface ServiceInstall {
