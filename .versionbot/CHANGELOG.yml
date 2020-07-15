@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'DeviceWithServiceDetails: preserve the image_install & gateway_downloads'
+      hash: ab3a5c2e67b4dd51643018a6d717b9737fb94583
+      body: ''
+      footer:
+        Connects-to: '#923'
+        connects-to: '#923'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: 'typings: Deprecate DeviceWithImageInstalls in favor of the Device type'
+      hash: ffa474f7770500b9ff9181c0fc6f24ed48abd6fc
+      body: ''
+      footer:
+        Connects-to: '#923'
+        connects-to: '#923'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 14.8.0
+  date: 2020-07-15T11:51:46.562Z
+- commits:
     - subject: Fix is_private typings for device type
       hash: 7d7751dc8ebf107ced936737c232e72867c37c93
       body: ''
