@@ -24,16 +24,16 @@ If you feel something is missing, not clear or could be improved, please don't h
 ## balena-sdk
 
 * [balena-sdk](#module_balena-sdk)
-    * [exports.getSdk()](#exp_module_balena-sdk--exports.getSdk) ⏏
-        * [~setSharedOptions(options)](#module_balena-sdk--exports.getSdk..setSharedOptions)
-        * [~fromSharedOptions()](#module_balena-sdk--exports.getSdk..fromSharedOptions)
+    * [.getSdk()](#module_balena-sdk.getSdk)
+    * [.setSharedOptions(options)](#module_balena-sdk.setSharedOptions)
+    * [.fromSharedOptions()](#module_balena-sdk.fromSharedOptions)
 
-<a name="exp_module_balena-sdk--exports.getSdk"></a>
+<a name="module_balena-sdk.getSdk"></a>
 
-### exports.getSdk() ⏏
+### balena-sdk.getSdk()
 The module exports a single factory function.
 
-**Kind**: Exported function  
+**Kind**: static method of [<code>balena-sdk</code>](#module_balena-sdk)  
 **Summary**: Creates a new SDK instance using the default or the provided options.  
 **Example**  
 ```js
@@ -43,15 +43,15 @@ const balena = getSdk({
 	dataDirectory: "/opt/local/balena"
 });
 ```
-<a name="module_balena-sdk--exports.getSdk..setSharedOptions"></a>
+<a name="module_balena-sdk.setSharedOptions"></a>
 
-#### exports.getSdk~setSharedOptions(options)
-Set options that are used by calls to `getSdk.fromSharedOptions()`.
+### balena-sdk.setSharedOptions(options)
+Set options that are used by calls to `fromSharedOptions()`.
 The options accepted are the same as those used in the main SDK factory function.
 If you use this method, it should be called as soon as possible during app
 startup and before any calls to `fromSharedOptions()` are made.
 
-**Kind**: inner method of [<code>exports.getSdk</code>](#exp_module_balena-sdk--exports.getSdk)  
+**Kind**: static method of [<code>balena-sdk</code>](#module_balena-sdk)  
 **Summary**: Set shared default options  
 **Access**: public  
 
@@ -67,27 +67,27 @@ startup and before any calls to `fromSharedOptions()` are made.
 
 **Example**  
 ```js
-import { getSdk } from 'balena-sdk';
-getSdk.setSharedOptions({
+import { setSharedOptions } from 'balena-sdk';
+setSharedOptions({
 	apiUrl: 'https://api.balena-cloud.com/',
 	builderUrl: 'https://builder.balena-cloud.com/',
 	isBrowser: true,
 });
 ```
-<a name="module_balena-sdk--exports.getSdk..fromSharedOptions"></a>
+<a name="module_balena-sdk.fromSharedOptions"></a>
 
-#### exports.getSdk~fromSharedOptions()
+### balena-sdk.fromSharedOptions()
 Create an SDK instance using shared default options set using the `setSharedOptions()` method.
 If options have not been set using this method, then this method will use the
 same defaults as the main SDK factory function.
 
-**Kind**: inner method of [<code>exports.getSdk</code>](#exp_module_balena-sdk--exports.getSdk)  
+**Kind**: static method of [<code>balena-sdk</code>](#module_balena-sdk)  
 **Summary**: Create an SDK instance using shared default options  
 **Access**: public  
 **Example**  
 ```js
-import { getSdk } from 'balena-sdk';
-const sdk = getSdk.fromSharedOptions();
+import { fromSharedOptions } from 'balena-sdk';
+const sdk = fromSharedOptions();
 ```
 <a name="balena"></a>
 
