@@ -1,4 +1,27 @@
 - commits:
+    - subject: '**BREAKING** Export setSharedOptions & fromSharedOptions separately'
+      hash: 73d5225f31692af75af47e0f109841d458420189
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+    - subject: '**BREAKING** Export as an ES6 module'
+      hash: 685a6bc80849d8bc9df5c75f7a6407ad5f9ce4b5
+      body: ''
+      footer:
+        Resolves: '#922'
+        resolves: '#922'
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 15.0.0
+  date: 2020-07-15T12:16:27.242Z
+- commits:
     - subject: Fix is_private typings for device type
       hash: 7d7751dc8ebf107ced936737c232e72867c37c93
       body: ''
