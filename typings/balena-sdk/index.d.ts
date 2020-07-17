@@ -712,6 +712,10 @@ export interface BalenaSDK {
 				uuidOrId: string | number,
 				fullReleaseHashOrId: string | number,
 			): Promise<void>;
+			setSupervisorRelease(
+				uuidOrId: string | number,
+				supervisorVersionOrId: string | number,
+			): Promise<void>;
 			trackApplicationRelease(uuidOrId: string | number): Promise<void>;
 			startOsUpdate(
 				uuid: string,
