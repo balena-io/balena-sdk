@@ -1,4 +1,15 @@
 - commits:
+    - subject: Fix code snippet for initializing balena-sdk
+      hash: b1c00f6ae90035c936ac691e9c15639ba60c5b87
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 15.0.2
+  date: 2020-07-22T19:07:30.064Z
+- commits:
     - subject: Fix SupportTier/includes__SLA typing
       hash: 0225493520704d89bbbbfb5d392692e190db5fd5
       body: ''
