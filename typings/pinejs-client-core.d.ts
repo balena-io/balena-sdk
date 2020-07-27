@@ -239,10 +239,11 @@ export interface ODataOptions<T> {
 	$skip?: number;
 }
 
-export type ODataOptionsWithSelect<T> = Omit<ODataOptions<T>, '$expand'> &
-	Required<Pick<ODataOptions<T>, '$select'>> & {
-		$expand?: ExpandWithSelect<T>;
-	};
+export interface ODataOptionsWithSelect<T>
+	extends Omit<ODataOptions<T>, '$select' | '$expand'> {
+	$select: ODataOptions<T>['$select'];
+	$expand?: ExpandWithSelect<T>;
+}
 
 export type ODataOptionsWithFilter<T> = ODataOptions<T> &
 	Required<Pick<ODataOptions<T>, '$filter'>>;
@@ -269,7 +270,7 @@ export interface ParamsObjWithId<T> extends ParamsObj<T> {
 	id: number;
 }
 
-export type ParamsObjWithSelect<T> = ParamsObj<T> & {
+export type ParamsObjWithSelect<T> = Omit<ParamsObj<T>, 'options'> & {
 	options: ODataOptionsWithSelect<T>;
 };
 
