@@ -138,33 +138,16 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 		if (handleOrId == null) {
 			throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 		}
-		if (isId(handleOrId)) {
-			const organization = await pine.get<BalenaSdk.Organization>({
-				resource: 'organization',
-				id: handleOrId,
-				options: mergePineOptions({}, options),
-			});
-			if (organization == null) {
-				throw new errors.BalenaOrganizationNotFound(handleOrId);
-			}
-			return organization;
-		}
 
-		const organizations = await pine.get<BalenaSdk.Organization>({
+		const organization = await pine.get<BalenaSdk.Organization>({
 			resource: 'organization',
-			options: mergePineOptions(
-				{
-					$filter: {
-						handle: handleOrId,
-					},
-				},
-				options,
-			),
+			id: isId(handleOrId) ? handleOrId : { handle: handleOrId },
+			options,
 		});
-		if (!organizations || organizations.length === 0) {
+		if (organization == null) {
 			throw new errors.BalenaOrganizationNotFound(handleOrId);
 		}
-		return organizations[0];
+		return organization;
 	};
 
 	/**

@@ -252,10 +252,23 @@ export type SubmitBody<T> = {
 	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
 };
 
+type BaseResourceId =
+	| string
+	| number
+	| Date
+	| {
+			'@': string;
+	  };
+type ResourceId<T> =
+	| BaseResourceId
+	| {
+			[key in keyof T]?: BaseResourceId;
+	  };
+
 export interface ParamsObj<T> {
 	resource?: string;
 	body?: SubmitBody<T>;
-	id?: number;
+	id?: ResourceId<T>;
 	options?: ODataOptions<T>;
 
 	apiPrefix?: string;
@@ -267,7 +280,7 @@ export interface ParamsObj<T> {
 }
 
 export interface ParamsObjWithId<T> extends ParamsObj<T> {
-	id: number;
+	id: ResourceId<T>;
 }
 
 export type ParamsObjWithSelect<T> = Omit<ParamsObj<T>, 'options'> & {
