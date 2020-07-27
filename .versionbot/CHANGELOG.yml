@@ -1,4 +1,49 @@
 - commits:
+    - subject: Update balena-pine to add support for and make use of named keys
+      hash: fba3107fcdf19b11866fc0687f1c684314dc2248
+      body: |
+        Update balena-pine from 12.1.1 to 12.2.0
+        Update balena-request from 11.0.4 to 11.1.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+      nested:
+        - commits:
+            - subject: Update pinejs-client-core
+              hash: ce5551050d658bf6f0982ee98939146c0765513d
+              body: |
+                Update pinejs-client-core from 6.0.1 to 6.1.0
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested:
+                - commits:
+                    - subject: Add support for using named ids
+                      hash: f6035bf5240e8aea1b92997d976cebd9a1857a61
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                  version: pinejs-client-js-6.1.0
+                  date: 2020-07-21T10:31:09.457Z
+          version: balena-pine-12.2.0
+          date: 2020-07-22T16:21:49.285Z
+        - commits:
+            - subject: Add lazy loading for most modules
+              hash: 45042aca602e44a8e4eefdf0fb57ab188530a48e
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+          version: balena-request-11.1.0
+          date: 2020-07-16T13:01:21.964Z
+  version: 15.1.0
+  date: 2020-07-27T16:44:09.892Z
+- commits:
     - subject: 'typings: Fix the PineWithSelect & related type helpers'
       hash: dc1d8625d93fa25876c3542a96cd5a7883a5690b
       body: ''
