@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'typings: Fix the PineWithSelect & related type helpers'
+      hash: dc1d8625d93fa25876c3542a96cd5a7883a5690b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Use the native TypeScript Omit type helper'
+      hash: 98e19e4cf5d0ff40486d49501f9c95d45eff2e74
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.0.3
+  date: 2020-07-27T13:57:16.268Z
+- commits:
     - subject: Fix code snippet for initializing balena-sdk
       hash: b1c00f6ae90035c936ac691e9c15639ba60c5b87
       body: ''

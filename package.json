@@ -1,6 +1,6 @@
 {
   "name": "balena-sdk",
-  "version": "15.0.2",
+  "version": "15.0.3",
   "description": "The Balena JavaScript SDK",
   "main": "index.js",
   "types": "typings/balena-sdk/index.d.ts",
