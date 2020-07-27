@@ -1,5 +1,4 @@
 import type { Readable } from 'stream';
-import type { Omit } from './utils';
 
 interface BalenaRequestOptions {
 	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
