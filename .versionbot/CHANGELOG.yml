@@ -1,4 +1,15 @@
 - commits:
+    - subject: Deduplicate device update methods
+      hash: 0cb9602b881ec5dc1a142d90050917a050d04887
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 15.1.1
+  date: 2020-07-27T21:37:46.835Z
+- commits:
     - subject: Update balena-pine to add support for and make use of named keys
       hash: fba3107fcdf19b11866fc0687f1c684314dc2248
       body: |
