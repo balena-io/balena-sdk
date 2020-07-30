@@ -54,7 +54,7 @@ const buildCredentials = function () {
 		throw new Error('Missing environment object?!');
 	}
 
-	const credentials = {
+	const creds = {
 		email: env.TEST_EMAIL,
 		password: env.TEST_PASSWORD,
 		username: env.TEST_USERNAME,
@@ -71,70 +71,67 @@ const buildCredentials = function () {
 
 	if (
 		!_.every([
-			credentials.email != null,
-			credentials.password != null,
-			credentials.username != null,
-			credentials.register.email != null,
-			credentials.register.password != null,
-			credentials.register.username != null,
+			creds.email != null,
+			creds.password != null,
+			creds.username != null,
+			creds.register.email != null,
+			creds.register.password != null,
+			creds.register.username != null,
 		])
 	) {
 		throw new Error('Missing environment credentials');
 	}
 
-	return credentials;
+	return creds;
 };
 
 export const getSdk = balenaSdkExports.getSdk;
 export { opts as sdkOpts };
 export const balena = getSdk(opts);
 
-export function resetUser() {
-	return balena.auth.isLoggedIn().then(function (isLoggedIn: boolean) {
-		if (!isLoggedIn) {
-			return;
-		}
+export async function resetUser() {
+	const isLoggedIn = await balena.auth.isLoggedIn();
+	if (!isLoggedIn) {
+		return;
+	}
+	return Promise.all([
+		balena.pine.delete({
+			resource: 'application',
+			options: {
+				$filter: { 1: 1 },
+			},
+		}),
 
-		return Promise.all([
-			balena.pine.delete({
-				resource: 'application',
+		balena.pine.delete({
+			resource: 'user__has__public_key',
+			options: {
+				$filter: { 1: 1 },
+			},
+		}),
+
+		balena.pine
+			.delete<BalenaSdk.ApiKey>({
+				resource: 'api_key',
+				// only delete named user api keys
 				options: {
-					$filter: { 1: 1 },
-				},
-			}),
-
-			balena.pine.delete({
-				resource: 'user__has__public_key',
-				options: {
-					$filter: { 1: 1 },
-				},
-			}),
-
-			balena.pine
-				.delete<BalenaSdk.ApiKey>({
-					resource: 'api_key',
-					// only delete named user api keys
-					options: {
-						$filter: {
-							name: {
-								$ne: null,
-							},
+					$filter: {
+						name: {
+							$ne: null,
 						},
 					},
-				})
-				.catch(_.noop),
-		]);
-	});
+				},
+			})
+			.catch(_.noop),
+	]);
 }
 
-const _credentials = buildCredentials();
-export { _credentials as credentials };
+export const credentials = buildCredentials();
 
 export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 	beforeFn(async () => {
 		await balena.auth.login({
-			email: exports.credentials.email,
-			password: exports.credentials.password,
+			email: credentials.email,
+			password: credentials.password,
 		});
 		const { body } = await balena.request.send({
 			method: 'POST',
@@ -154,23 +151,22 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 }
 
 export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
-	beforeFn(() =>
-		balena.auth
-			.login({
-				email: exports.credentials.email,
-				password: exports.credentials.password,
-			})
-			.then(exports.resetUser),
-	);
+	beforeFn(async () => {
+		await balena.auth.login({
+			email: credentials.email,
+			password: credentials.password,
+		});
+		await resetUser();
+	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(() => exports.resetUser());
+	return afterFn(() => resetUser());
 }
 
 export function loginPaidUser() {
 	return balena.auth.login({
-		email: exports.credentials.paid.email,
-		password: exports.credentials.paid.password,
+		email: credentials.paid.email,
+		password: credentials.paid.password,
 	});
 }
 
@@ -183,10 +179,9 @@ const resetApplications = () =>
 	});
 
 export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
-	return beforeFn(function () {
-		return getInitialOrganization().then((initialOrg) => {
-			return (this.initialOrg = initialOrg);
-		});
+	return beforeFn(async function () {
+		const initialOrg = await getInitialOrganization();
+		return (this.initialOrg = initialOrg);
 	});
 }
 
@@ -208,32 +203,28 @@ const getDeviceType = memoize(
 export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 	givenInitialOrganization(beforeFn);
 
-	beforeFn(function () {
-		return balena.models.application
-			.create({
-				name: 'FooBar',
-				applicationType: 'microservices-starter',
-				deviceType: 'raspberry-pi',
-				organization: this.initialOrg.id,
-			})
-			.then((application) => {
-				this.application = application;
-				chai
-					.expect(application.is_for__device_type)
-					.to.be.an('object')
-					.that.has.property('__id')
-					.that.is.a('number');
-
-				return getDeviceType(this.application.is_for__device_type.__id);
-			})
-			.then((applicationDeviceType) => {
-				this.applicationDeviceType = applicationDeviceType;
-				return chai
-					.expect(this.applicationDeviceType)
-					.to.be.an('object')
-					.that.has.property('slug')
-					.that.is.a('string');
-			});
+	beforeFn(async function () {
+		const application = await balena.models.application.create({
+			name: 'FooBar',
+			applicationType: 'microservices-starter',
+			deviceType: 'raspberry-pi',
+			organization: this.initialOrg.id,
+		});
+		this.application = application;
+		chai
+			.expect(application.is_for__device_type)
+			.to.be.an('object')
+			.that.has.property('__id')
+			.that.is.a('number');
+		const applicationDeviceType = await getDeviceType(
+			this.application.is_for__device_type.__id,
+		);
+		this.applicationDeviceType = applicationDeviceType;
+		return chai
+			.expect(this.applicationDeviceType)
+			.to.be.an('object')
+			.that.has.property('slug')
+			.that.is.a('string');
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
@@ -362,153 +353,153 @@ export function givenMulticontainerApplicationWithADevice(
 export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 	givenAnApplication(beforeFn);
 
-	beforeFn(function () {
-		return balena.auth
-			.getUserId()
-			.then((userId) => {
-				return Promise.all([
-					// Register web & DB services
-					balena.pine.post<BalenaSdk.Service>({
-						resource: 'service',
-						body: {
-							application: this.application.id,
-							service_name: 'web',
-						},
-					}),
-					balena.pine.post<BalenaSdk.Service>({
-						resource: 'service',
-						body: {
-							application: this.application.id,
-							service_name: 'db',
-						},
-					}),
-					// Register an old & new release of this application
-					(async () => {
-						return [
-							await balena.pine.post<BalenaSdk.Release>({
-								resource: 'release',
-								body: {
-									belongs_to__application: this.application.id,
-									is_created_by__user: userId,
-									commit: 'old-release-commit',
-									status: 'success' as const,
-									source: 'cloud',
-									composition: '{}',
-									start_timestamp: '1234',
-								},
-							}),
-							await balena.pine.post<BalenaSdk.Release>({
-								resource: 'release',
-								body: {
-									belongs_to__application: this.application.id,
-									is_created_by__user: userId,
-									commit: 'new-release-commit',
-									status: 'success' as const,
-									source: 'cloud',
-									composition: '{}',
-									start_timestamp: '54321',
-								},
-							}),
-						];
-					})(),
-				]);
-			})
-			.then(([webService, dbService, [oldRelease, newRelease]]) => {
-				this.webService = webService;
-				this.dbService = dbService;
-				this.oldRelease = oldRelease;
-				this.currentRelease = newRelease;
+	beforeFn(async function () {
+		const userId = await balena.auth.getUserId();
+		const [webService, dbService, [oldRelease, newRelease]] = await Promise.all(
+			[
+				// Register web & DB services
+				balena.pine.post<BalenaSdk.Service>({
+					resource: 'service',
+					body: {
+						application: this.application.id,
+						service_name: 'web',
+					},
+				}),
+				balena.pine.post<BalenaSdk.Service>({
+					resource: 'service',
+					body: {
+						application: this.application.id,
+						service_name: 'db',
+					},
+				}),
+				// Register an old & new release of this application
+				(async () => {
+					return [
+						await balena.pine.post<BalenaSdk.Release>({
+							resource: 'release',
+							body: {
+								belongs_to__application: this.application.id,
+								is_created_by__user: userId,
+								commit: 'old-release-commit',
+								status: 'success' as const,
+								source: 'cloud',
+								composition: '{}',
+								start_timestamp: '1234',
+							},
+						}),
+						await balena.pine.post<BalenaSdk.Release>({
+							resource: 'release',
+							body: {
+								belongs_to__application: this.application.id,
+								is_created_by__user: userId,
+								commit: 'new-release-commit',
+								status: 'success' as const,
+								source: 'cloud',
+								composition: '{}',
+								start_timestamp: '54321',
+							},
+						}),
+					];
+				})(),
+			],
+		);
+		this.webService = webService;
+		this.dbService = dbService;
+		this.oldRelease = oldRelease;
+		this.currentRelease = newRelease;
 
-				return Promise.all([
-					// Register an old & new web image build from the old and new
-					// releases, a db build in the new release only
-					balena.pine.post<BalenaSdk.Image>({
-						resource: 'image',
-						body: {
-							is_a_build_of__service: webService.id,
-							project_type: 'dockerfile',
-							content_hash: 'abc',
-							build_log: 'old web log',
-							start_timestamp: '1234',
-							push_timestamp: '1234',
-							status: 'success',
-						},
-					}),
-					balena.pine.post<BalenaSdk.Image>({
-						resource: 'image',
-						body: {
-							is_a_build_of__service: webService.id,
-							project_type: 'dockerfile',
-							content_hash: 'def',
-							build_log: 'new web log',
-							start_timestamp: '54321',
-							push_timestamp: '54321',
-							status: 'success',
-						},
-					}),
-					balena.pine.post<BalenaSdk.Image>({
-						resource: 'image',
-						body: {
-							is_a_build_of__service: dbService.id,
-							project_type: 'dockerfile',
-							content_hash: 'jkl',
-							build_log: 'old db log',
-							start_timestamp: '123',
-							push_timestamp: '123',
-							status: 'success',
-						},
-					}),
-					balena.pine.post<BalenaSdk.Image>({
-						resource: 'image',
-						body: {
-							is_a_build_of__service: dbService.id,
-							project_type: 'dockerfile',
-							content_hash: 'ghi',
-							build_log: 'new db log',
-							start_timestamp: '54321',
-							push_timestamp: '54321',
-							status: 'success',
-						},
-					}),
-				]).then(([oldWebImage, newWebImage, oldDbImage, newDbImage]) => {
-					this.oldWebImage = oldWebImage;
-					this.newWebImage = newWebImage;
-					this.oldDbImage = oldDbImage;
-					this.newDbImage = newDbImage;
-
-					return Promise.all([
-						// Tie the images to their corresponding releases
-						balena.pine.post<BalenaSdk.ReleaseImage>({
-							resource: 'image__is_part_of__release',
-							body: {
-								image: oldWebImage.id,
-								is_part_of__release: oldRelease.id,
-							},
-						}),
-						balena.pine.post<BalenaSdk.ReleaseImage>({
-							resource: 'image__is_part_of__release',
-							body: {
-								image: oldDbImage.id,
-								is_part_of__release: oldRelease.id,
-							},
-						}),
-						balena.pine.post<BalenaSdk.ReleaseImage>({
-							resource: 'image__is_part_of__release',
-							body: {
-								image: newWebImage.id,
-								is_part_of__release: newRelease.id,
-							},
-						}),
-						balena.pine.post<BalenaSdk.ReleaseImage>({
-							resource: 'image__is_part_of__release',
-							body: {
-								image: newDbImage.id,
-								is_part_of__release: newRelease.id,
-							},
-						}),
-					]);
-				});
-			});
+		const [
+			oldWebImage,
+			newWebImage,
+			oldDbImage,
+			newDbImage,
+		] = await Promise.all([
+			// Register an old & new web image build from the old and new
+			// releases, a db build in the new release only
+			balena.pine.post<BalenaSdk.Image>({
+				resource: 'image',
+				body: {
+					is_a_build_of__service: webService.id,
+					project_type: 'dockerfile',
+					content_hash: 'abc',
+					build_log: 'old web log',
+					start_timestamp: '1234',
+					push_timestamp: '1234',
+					status: 'success',
+				},
+			}),
+			balena.pine.post<BalenaSdk.Image>({
+				resource: 'image',
+				body: {
+					is_a_build_of__service: webService.id,
+					project_type: 'dockerfile',
+					content_hash: 'def',
+					build_log: 'new web log',
+					start_timestamp: '54321',
+					push_timestamp: '54321',
+					status: 'success',
+				},
+			}),
+			balena.pine.post<BalenaSdk.Image>({
+				resource: 'image',
+				body: {
+					is_a_build_of__service: dbService.id,
+					project_type: 'dockerfile',
+					content_hash: 'jkl',
+					build_log: 'old db log',
+					start_timestamp: '123',
+					push_timestamp: '123',
+					status: 'success',
+				},
+			}),
+			balena.pine.post<BalenaSdk.Image>({
+				resource: 'image',
+				body: {
+					is_a_build_of__service: dbService.id,
+					project_type: 'dockerfile',
+					content_hash: 'ghi',
+					build_log: 'new db log',
+					start_timestamp: '54321',
+					push_timestamp: '54321',
+					status: 'success',
+				},
+			}),
+		]);
+		this.oldWebImage = oldWebImage;
+		this.newWebImage = newWebImage;
+		this.oldDbImage = oldDbImage;
+		this.newDbImage = newDbImage;
+		return Promise.all([
+			// Tie the images to their corresponding releases
+			balena.pine.post<BalenaSdk.ReleaseImage>({
+				resource: 'image__is_part_of__release',
+				body: {
+					image: oldWebImage.id,
+					is_part_of__release: oldRelease.id,
+				},
+			}),
+			balena.pine.post<BalenaSdk.ReleaseImage>({
+				resource: 'image__is_part_of__release',
+				body: {
+					image: oldDbImage.id,
+					is_part_of__release: oldRelease.id,
+				},
+			}),
+			balena.pine.post<BalenaSdk.ReleaseImage>({
+				resource: 'image__is_part_of__release',
+				body: {
+					image: newWebImage.id,
+					is_part_of__release: newRelease.id,
+				},
+			}),
+			balena.pine.post<BalenaSdk.ReleaseImage>({
+				resource: 'image__is_part_of__release',
+				body: {
+					image: newDbImage.id,
+					is_part_of__release: newRelease.id,
+				},
+			}),
+		]);
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;

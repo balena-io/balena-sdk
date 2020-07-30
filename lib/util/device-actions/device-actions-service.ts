@@ -59,7 +59,7 @@ export class DeviceActionsService {
 			extraOptions,
 		});
 
-	private makeActionRequest = <T extends {} | string = any>({
+	private makeActionRequest = async <T extends {} | string = any>({
 		method,
 		uuid,
 		actionNameOrId,
@@ -68,13 +68,12 @@ export class DeviceActionsService {
 	}: MakeActionRequestParams): Promise<T> => {
 		const data = params ? { parameters: params } : null;
 
-		return this.request
-			.send<T>({
-				method,
-				url: `${this.actionsEndpoint}/${uuid}/${actionNameOrId}`,
-				body: data,
-				...extraOptions,
-			})
-			.then(({ body }) => body);
+		const { body } = await this.request.send<T>({
+			method,
+			url: `${this.actionsEndpoint}/${uuid}/${actionNameOrId}`,
+			body: data,
+			...extraOptions,
+		});
+		return body;
 	};
 }

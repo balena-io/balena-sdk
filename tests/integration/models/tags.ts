@@ -99,14 +99,11 @@ export const itShouldGetAllTagsByResource = function <
 		});
 
 		['id', ...uniquePropertyNames].forEach((uniquePropertyName) => {
-			it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, function () {
-				return getAllByResource(this.resource[uniquePropertyName]).then(
-					function (tags) {
-						expect(tags).to.have.length(1);
-						expect(tags[0].tag_key).to.equal('EDITOR');
-						expect(tags[0].value).to.equal('vim');
-					},
-				);
+			it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, async function () {
+				const tags = await getAllByResource(this.resource[uniquePropertyName]);
+				expect(tags).to.have.length(1);
+				expect(tags[0].tag_key).to.equal('EDITOR');
+				expect(tags[0].value).to.equal('vim');
 			});
 		});
 
@@ -154,10 +151,9 @@ export const itShouldSetGetAndRemoveTags = function <
 				},
 			);
 
-			$it('should initially have no tags', function () {
-				return getAllByResource(this.resource[param]).then((tags) =>
-					expect(tags).to.have.length(0),
-				);
+			$it('should initially have no tags', async function () {
+				const tags = await getAllByResource(this.resource[param]);
+				return expect(tags).to.have.length(0);
 			});
 
 			$it('...should be able to create a tag', function () {
@@ -171,43 +167,37 @@ export const itShouldSetGetAndRemoveTags = function <
 
 			$it(
 				'...should be able to retrieve all tags, including the one created',
-				function () {
-					return getAllByResource(this.resource[param]).then(function (tags) {
-						expect(tags).to.have.length(1);
-						const tag = tags[0];
-						expect(tag).to.be.an('object');
-						expect(tag.tag_key).to.equal(`EDITOR_BY_${resourceName}_${param}`);
-						expect(tag.value).to.equal('vim');
-					});
+				async function () {
+					const tags = await getAllByResource(this.resource[param]);
+					expect(tags).to.have.length(1);
+					const tag = tags[0];
+					expect(tag).to.be.an('object');
+					expect(tag.tag_key).to.equal(`EDITOR_BY_${resourceName}_${param}`);
+					expect(tag.value).to.equal('vim');
 				},
 			);
 
-			$it('...should be able to update a tag', function () {
-				return model
-					.set(
-						this.resource[param],
-						`EDITOR_BY_${resourceName}_${param}`,
-						'nano',
-					)
-					.then(() => {
-						return getAllByResource(this.resource[param]);
-					})
-					.then(function (tags) {
-						expect(tags).to.have.length(1);
-						const tag = tags[0];
-						expect(tag).to.be.an('object');
-						expect(tag.tag_key).to.equal(`EDITOR_BY_${resourceName}_${param}`);
-						expect(tag.value).to.equal('nano');
-					});
+			$it('...should be able to update a tag', async function () {
+				await model.set(
+					this.resource[param],
+					`EDITOR_BY_${resourceName}_${param}`,
+					'nano',
+				);
+				const tags = await getAllByResource(this.resource[param]);
+				expect(tags).to.have.length(1);
+				const tag = tags[0];
+				expect(tag).to.be.an('object');
+				expect(tag.tag_key).to.equal(`EDITOR_BY_${resourceName}_${param}`);
+				expect(tag.value).to.equal('nano');
 			});
 
-			$it('...should be able to remove a tag', function () {
-				return model
-					.remove(this.resource[param], `EDITOR_BY_${resourceName}_${param}`)
-					.then(() => {
-						return getAllByResource(this.resource.id);
-					})
-					.then((tags) => expect(tags).to.have.length(0));
+			$it('...should be able to remove a tag', async function () {
+				await model.remove(
+					this.resource[param],
+					`EDITOR_BY_${resourceName}_${param}`,
+				);
+				const tags = await getAllByResource(this.resource.id);
+				return expect(tags).to.have.length(0);
 			});
 		}),
 	);
@@ -244,18 +234,13 @@ export const itShouldSetGetAndRemoveTags = function <
 			return expect(promise).to.be.rejected;
 		});
 
-		it('should be able to create a numeric tag', function () {
-			return model
-				.set(this.resource.id, 'EDITOR_NUMERIC', 1 as any)
-				.then(() => {
-					return getAllByResource(this.resource.id);
-				})
-				.then((tags) => {
-					expect(tags).to.have.length(1);
-					expect(tags[0].tag_key).to.equal('EDITOR_NUMERIC');
-					expect(tags[0].value).to.equal('1');
-					return model.remove(this.resource.id, 'EDITOR_NUMERIC');
-				});
+		it('should be able to create a numeric tag', async function () {
+			await model.set(this.resource.id, 'EDITOR_NUMERIC', 1 as any);
+			const tags = await getAllByResource(this.resource.id);
+			expect(tags).to.have.length(1);
+			expect(tags[0].tag_key).to.equal('EDITOR_NUMERIC');
+			expect(tags[0].value).to.equal('1');
+			return model.remove(this.resource.id, 'EDITOR_NUMERIC');
 		});
 	});
 
@@ -275,47 +260,42 @@ export const itShouldSetGetAndRemoveTags = function <
 		});
 
 		describe(`${modelNamespace}.getAll()`, function () {
-			it('should retrieve all the tags', function () {
-				return model.getAll().then((tags) => {
-					tags = _.sortBy(tags, 'tag_key');
-					expect(tags.length).to.be.gte(2);
-					// exclude tags that the user can access b/c of public apps
-					const tagsOfUsersResource = tags.filter(
-						(t) => t[resourceName].__id === this.resource.id,
-					);
-					expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
-					expect(tagsOfUsersResource[0].value).to.equal('vim');
-					expect(tagsOfUsersResource[1].tag_key).to.equal('LANGUAGE');
-					expect(tagsOfUsersResource[1].value).to.equal('js');
-				});
+			it('should retrieve all the tags', async function () {
+				let tags = await model.getAll();
+				tags = _.sortBy(tags, 'tag_key');
+				expect(tags.length).to.be.gte(2);
+				// exclude tags that the user can access b/c of public apps
+				const tagsOfUsersResource = tags.filter(
+					(t) => t[resourceName].__id === this.resource.id,
+				);
+				expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
+				expect(tagsOfUsersResource[0].value).to.equal('vim');
+				expect(tagsOfUsersResource[1].tag_key).to.equal('LANGUAGE');
+				expect(tagsOfUsersResource[1].value).to.equal('js');
 			});
 
-			it('should retrieve the filtered tag', function () {
-				return model.getAll({ $filter: { tag_key: 'EDITOR' } }).then((tags) => {
-					expect(tags.length).to.be.gte(1);
-					// exclude tags that the user can access b/c of public apps
-					const tagsOfUsersResource = tags.filter(
-						(t) => t[resourceName].__id === this.resource.id,
-					);
-					expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
-					expect(tagsOfUsersResource[0].value).to.equal('vim');
-				});
+			it('should retrieve the filtered tag', async function () {
+				const tags = await model.getAll({ $filter: { tag_key: 'EDITOR' } });
+				expect(tags.length).to.be.gte(1);
+				// exclude tags that the user can access b/c of public apps
+				const tagsOfUsersResource = tags.filter(
+					(t) => t[resourceName].__id === this.resource.id,
+				);
+				expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
+				expect(tagsOfUsersResource[0].value).to.equal('vim');
 			});
 		});
 
 		describe(`${modelNamespace}.set()`, () =>
-			it('should be able to update a tag without affecting the rest', function () {
-				return model
-					.set(this.resource.id, 'EDITOR', 'emacs')
-					.then(() => getAllByResource(this.resource.id))
-					.then(function (tags) {
-						tags = _.sortBy(tags, 'tag_key');
-						expect(tags).to.have.length(2);
-						expect(tags[0].tag_key).to.equal('EDITOR');
-						expect(tags[0].value).to.equal('emacs');
-						expect(tags[1].tag_key).to.equal('LANGUAGE');
-						expect(tags[1].value).to.equal('js');
-					});
+			it('should be able to update a tag without affecting the rest', async function () {
+				await model.set(this.resource.id, 'EDITOR', 'emacs');
+				let tags = await getAllByResource(this.resource.id);
+				tags = _.sortBy(tags, 'tag_key');
+				expect(tags).to.have.length(2);
+				expect(tags[0].tag_key).to.equal('EDITOR');
+				expect(tags[0].value).to.equal('emacs');
+				expect(tags[1].tag_key).to.equal('LANGUAGE');
+				expect(tags[1].value).to.equal('js');
 			}));
 	});
 };

@@ -82,18 +82,15 @@ const getKeyModel = function (
 	 * 	console.log(key);
 	 * });
 	 */
-	function get(id: number): Promise<BalenaSdk.SSHKey> {
-		return pine
-			.get<BalenaSdk.SSHKey>({
-				resource: 'user__has__public_key',
-				id,
-			})
-			.then(function (key) {
-				if (key == null) {
-					throw new errors.BalenaKeyNotFound(id);
-				}
-				return key;
-			});
+	async function get(id: number): Promise<BalenaSdk.SSHKey> {
+		const key = await pine.get<BalenaSdk.SSHKey>({
+			resource: 'user__has__public_key',
+			id,
+		});
+		if (key == null) {
+			throw new errors.BalenaKeyNotFound(id);
+		}
+		return key;
 	}
 
 	/**

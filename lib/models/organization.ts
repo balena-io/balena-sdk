@@ -28,8 +28,10 @@ import {
 const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
 
-	const getId = (handleOrId: string | number) =>
-		get(handleOrId, { $select: 'id' }).then(({ id }) => id);
+	const getId = async (handleOrId: string | number) => {
+		const { id } = await get(handleOrId, { $select: 'id' });
+		return id;
+	};
 
 	/**
 	 * @summary Creates a new organization

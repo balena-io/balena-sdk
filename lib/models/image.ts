@@ -48,38 +48,35 @@ const getImageModel = function (
 		 * 	console.log(image);
 		 * });
 		 */
-		get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
-			return pine
-				.get({
-					resource: 'image',
-					id,
-					options: mergePineOptions(
-						{
-							$select: [
-								// Select all the interesting fields *except* build_log
-								// (which can be very large)
-								'id',
-								'content_hash',
-								'dockerfile',
-								'project_type',
-								'status',
-								'error_message',
-								'image_size',
-								'created_at',
-								'push_timestamp',
-								'start_timestamp',
-								'end_timestamp',
-							],
-						},
-						options,
-					),
-				})
-				.then(function (image) {
-					if (image == null) {
-						throw new errors.BalenaImageNotFound(id);
-					}
-					return image;
-				});
+		async get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
+			const image = await pine.get({
+				resource: 'image',
+				id,
+				options: mergePineOptions(
+					{
+						$select: [
+							// Select all the interesting fields *except* build_log
+							// (which can be very large)
+							'id',
+							'content_hash',
+							'dockerfile',
+							'project_type',
+							'status',
+							'error_message',
+							'image_size',
+							'created_at',
+							'push_timestamp',
+							'start_timestamp',
+							'end_timestamp',
+						],
+					},
+					options,
+				),
+			});
+			if (image == null) {
+				throw new errors.BalenaImageNotFound(id);
+			}
+			return image;
 		},
 
 		/**
@@ -104,10 +101,10 @@ const getImageModel = function (
 		 * 	console.log(logs);
 		 * });
 		 */
-		getLogs: (id: number): Promise<string> =>
-			exports
-				.get(id, { $select: 'build_log' })
-				.then(({ build_log }) => build_log),
+		getLogs: async (id: number): Promise<string> => {
+			const { build_log } = await exports.get(id, { $select: 'build_log' });
+			return build_log;
+		},
 	};
 
 	return exports;

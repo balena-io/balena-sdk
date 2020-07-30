@@ -88,10 +88,10 @@ const getOsModel = function (
 		() => Promise<DeviceTypeJson.DeviceType[]>
 	>(() => configModel().getDeviceTypes());
 
-	const getValidatedDeviceType = (deviceTypeSlug: string) =>
-		_getDeviceTypes().then((types) =>
-			deviceTypesUtils().getBySlug(types, deviceTypeSlug),
-		);
+	const getValidatedDeviceType = async (deviceTypeSlug: string) => {
+		const types = await _getDeviceTypes();
+		return deviceTypesUtils().getBySlug(types, deviceTypeSlug);
+	};
 
 	/**
 	 * @summary Get OS versions download size
@@ -102,15 +102,14 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 */
 	const _getDownloadSize = withDeviceTypesEndpointCaching(
-		(deviceType: string, version: string) =>
-			request
-				.send({
-					method: 'GET',
-					url: `/device-types/v1/${deviceType}/images/${version}/download-size`,
-					baseUrl: apiUrl,
-					// optionally authenticated, so we send the token in all cases
-				})
-				.then(({ body }) => body.size),
+		async (deviceType: string, version: string) => {
+			const { body } = await request.send({
+				method: 'GET',
+				url: `/device-types/v1/${deviceType}/images/${version}/download-size`,
+				baseUrl: apiUrl,
+			});
+			return body.size;
+		},
 	);
 
 	const isDevelopmentVersion = (version: string) =>
@@ -124,38 +123,33 @@ const getOsModel = function (
 	 * @function
 	 * @memberof balena.models.os
 	 */
-	const _getOsVersions = withDeviceTypesEndpointCaching((deviceType: string) =>
-		request
-			.send({
+	const _getOsVersions = withDeviceTypesEndpointCaching(
+		async (deviceType: string) => {
+			const {
+				body: { versions, latest },
+			} = (await request.send({
 				method: 'GET',
 				url: `/device-types/v1/${deviceType}/images`,
 				baseUrl: apiUrl,
-				// optionally authenticated, so we send the token in all cases
-			})
-			.then(
-				({
-					body: { versions, latest },
-				}: {
-					body: { versions: any[]; latest: any };
-				}) => {
-					versions.sort(bSemver.rcompare);
-					const potentialRecommendedVersions = versions.filter(
-						(version) =>
-							!(semver.prerelease(version) || isDevelopmentVersion(version)),
-					);
-					const recommended =
-						(potentialRecommendedVersions != null
-							? potentialRecommendedVersions[0]
-							: undefined) || null;
-
-					return {
-						versions,
-						recommended,
-						latest,
-						default: recommended || latest,
-					};
-				},
-			),
+			})) as {
+				body: { versions: any[]; latest: any };
+			};
+			versions.sort(bSemver.rcompare);
+			const potentialRecommendedVersions = versions.filter(
+				(version) =>
+					!(semver.prerelease(version) || isDevelopmentVersion(version)),
+			);
+			const recommended =
+				(potentialRecommendedVersions != null
+					? potentialRecommendedVersions[0]
+					: undefined) || null;
+			return {
+				versions,
+				recommended,
+				latest,
+				default: recommended || latest,
+			};
+		},
 	);
 
 	/**
@@ -263,13 +257,12 @@ const getOsModel = function (
 	 * 	console.log('The OS download size for raspberry-pi', size);
 	 * });
 	 */
-	const getDownloadSize = function (
+	const getDownloadSize = async function (
 		deviceType: string,
 		version: string = 'latest',
 	): Promise<number> {
-		return getValidatedDeviceType(deviceType).then(() =>
-			_getDownloadSize(deviceType, version),
-		);
+		await getValidatedDeviceType(deviceType);
+		return await _getDownloadSize(deviceType, version);
 	};
 
 	/**
@@ -299,12 +292,11 @@ const getOsModel = function (
 	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
 	 * });
 	 */
-	const getSupportedVersions = function (
+	const getSupportedVersions = async function (
 		deviceType: string,
 	): Promise<OsVersions> {
-		return getValidatedDeviceType(deviceType).then(() =>
-			_getOsVersions(deviceType),
-		);
+		await getValidatedDeviceType(deviceType);
+		return await _getOsVersions(deviceType);
 	};
 
 	/**
@@ -342,15 +334,13 @@ const getOsModel = function (
 	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
 	 * });
 	 */
-	const getMaxSatisfyingVersion = function (
+	const getMaxSatisfyingVersion = async function (
 		deviceType: string,
 		versionOrRange: keyof OsVersions = 'latest',
 	): Promise<string> {
-		return getValidatedDeviceType(deviceType)
-			.then(() => getSupportedVersions(deviceType))
-			.then((osVersions) =>
-				_getMaxSatisfyingVersion(versionOrRange, osVersions),
-			);
+		await getValidatedDeviceType(deviceType);
+		const osVersions = await getSupportedVersions(deviceType);
+		return _getMaxSatisfyingVersion(versionOrRange, osVersions);
 	};
 
 	/**
@@ -382,27 +372,25 @@ const getOsModel = function (
 	 * 	console.log('The raspberry-pi image was last modified in ' + date);
 	 * });
 	 */
-	const getLastModified = function (
+	const getLastModified = async function (
 		deviceType: string,
 		version: string = 'latest',
 	): Promise<Date> {
-		return getValidatedDeviceType(deviceType)
-			.then(() => normalizeVersion(version))
-			.then((ver) =>
-				request.send({
-					method: 'HEAD',
-					url: deviceImageUrl(deviceType, ver),
-					baseUrl: apiUrl,
-					// optionally authenticated, so we send the token in all cases
-				}),
-			)
-			.catch((err) => {
-				if (isNotFoundResponse(err)) {
-					throw new Error('No such version for the device type');
-				}
-				throw err;
-			})
-			.then((response) => new Date(response.headers.get('last-modified')!));
+		try {
+			await getValidatedDeviceType(deviceType);
+			const ver = normalizeVersion(version);
+			const response = await request.send({
+				method: 'HEAD',
+				url: deviceImageUrl(deviceType, ver),
+				baseUrl: apiUrl,
+			});
+			return new Date(response.headers.get('last-modified')!);
+		} catch (err) {
+			if (isNotFoundResponse(err)) {
+				throw new Error('No such version for the device type');
+			}
+			throw err;
+		}
 	};
 
 	/**
@@ -430,32 +418,31 @@ const getOsModel = function (
 	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	 * });
 	 */
-	const download = onlyIf(!isBrowser)(function (
+	const download = onlyIf(!isBrowser)(async function (
 		deviceType: string,
 		version: string = 'latest',
 	): Promise<BalenaRequestStreamResult> {
-		return getValidatedDeviceType(deviceType)
-			.then(() => {
-				if (version === 'latest') {
-					return _getOsVersions(deviceType).then(({ latest }) => latest);
-				}
-
-				return normalizeVersion(version);
-			})
-			.then((ver) =>
-				request.stream({
-					method: 'GET',
-					url: deviceImageUrl(deviceType, ver),
-					baseUrl: apiUrl,
-					// optionally authenticated, so we send the token in all cases
-				}),
-			)
-			.catch(function (err) {
-				if (isNotFoundResponse(err)) {
-					throw new Error('No such version for the device type');
-				}
-				throw err;
+		try {
+			await getValidatedDeviceType(deviceType);
+			let ver;
+			if (version === 'latest') {
+				const { latest } = await _getOsVersions(deviceType);
+				ver = latest;
+			} else {
+				ver = normalizeVersion(version);
+			}
+			return await request.stream({
+				method: 'GET',
+				url: deviceImageUrl(deviceType, ver),
+				baseUrl: apiUrl,
+				// optionally authenticated, so we send the token in all cases
 			});
+		} catch (err) {
+			if (isNotFoundResponse(err)) {
+				throw new Error('No such version for the device type');
+			}
+			throw err;
+		}
 	});
 
 	/**
@@ -554,18 +541,18 @@ const getOsModel = function (
 	 * 	console.log(isSupported);
 	 * });
 	 */
-	const isSupportedOsUpdate = (
+	const isSupportedOsUpdate = async (
 		deviceType: string,
 		currentVersion: string,
 		targetVersion: string,
-	): Promise<boolean> =>
-		getValidatedDeviceType(deviceType).then(() =>
-			hupActionHelper().isSupportedOsUpdate(
-				deviceType,
-				currentVersion,
-				targetVersion,
-			),
+	): Promise<boolean> => {
+		await getValidatedDeviceType(deviceType);
+		return hupActionHelper().isSupportedOsUpdate(
+			deviceType,
+			currentVersion,
+			targetVersion,
 		);
+	};
 
 	/**
 	 * @summary Returns the supported OS update targets for the provided device type
@@ -594,32 +581,32 @@ const getOsModel = function (
 	 * 	console.log(isSupported);
 	 * });
 	 */
-	const getSupportedOsUpdateVersions = (
+	const getSupportedOsUpdateVersions = async (
 		deviceType: string,
 		currentVersion: string,
-	): Promise<OsUpdateVersions> =>
-		getSupportedVersions(deviceType).then(({ versions: allVersions }) => {
-			// use bSemver.compare to find the current version in the OS list
-			// to benefit from the baked-in normalization
-			const current = allVersions.find(
-				(v) => bSemver.compare(v, currentVersion) === 0,
-			);
+	): Promise<OsUpdateVersions> => {
+		const { versions: allVersions } = await getSupportedVersions(deviceType);
+		// use bSemver.compare to find the current version in the OS list
+		// to benefit from the baked-in normalization
+		const current = allVersions.find(
+			(v) => bSemver.compare(v, currentVersion) === 0,
+		);
 
-			const versions = allVersions.filter((v) =>
-				// avoid the extra call to getValidatedDeviceType, since getSupportedVersions already does that
-				hupActionHelper().isSupportedOsUpdate(deviceType, currentVersion, v),
-			);
+		const versions = allVersions.filter((v) =>
+			// avoid the extra call to getValidatedDeviceType, since getSupportedVersions already does that
+			hupActionHelper().isSupportedOsUpdate(deviceType, currentVersion, v),
+		);
 
-			const recommended = versions.filter((v) => !bSemver.prerelease(v))[0] as
-				| string
-				| undefined;
+		const recommended = versions.filter((v) => !bSemver.prerelease(v))[0] as
+			| string
+			| undefined;
 
-			return {
-				versions,
-				recommended,
-				current,
-			};
-		});
+		return {
+			versions,
+			recommended,
+			current,
+		};
+	};
 
 	/**
 	 * @summary Returns whether the specified OS architecture is compatible with the target architecture

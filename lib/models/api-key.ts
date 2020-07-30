@@ -58,24 +58,27 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKey);
 		 * });
 		 */
-		create(name: string, description: string | null = null): Promise<string> {
+		async create(
+			name: string,
+			description: string | null = null,
+		): Promise<string> {
 			const apiKeyBody: { name: string; description?: string | null } = {
 				name,
 			};
 			if (typeof description === 'string' && !!description) {
 				apiKeyBody.description = description;
 			}
-			return request
-				.send({
+			try {
+				const { body } = await request.send({
 					method: 'POST',
 					url: '/api-key/user/full',
 					baseUrl: apiUrl,
 					body: apiKeyBody,
-				})
-				.then(({ body }) => body)
-				.catch(function () {
-					throw new errors.BalenaNotLoggedIn();
 				});
+				return body;
+			} catch {
+				throw new errors.BalenaNotLoggedIn();
+			}
 		},
 
 		/**
