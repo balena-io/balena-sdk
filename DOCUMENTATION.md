@@ -244,6 +244,7 @@ const sdk = fromSharedOptions();
             * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
             * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
+            * [.setSupervisorRelease(uuidOrId, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
             * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
@@ -571,6 +572,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
         * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
+        * [.setSupervisorRelease(uuidOrId, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
         * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
@@ -2167,6 +2169,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
     * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.pinToRelease(uuidOrId, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
+    * [.setSupervisorRelease(uuidOrId, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
     * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
     * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
@@ -4642,6 +4645,39 @@ balena.models.device.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847
 **Example**  
 ```js
 balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.device.setSupervisorRelease"></a>
+
+##### device.setSupervisorRelease(uuidOrId, supervisorVersionOrId) ⇒ <code>Promise</code>
+Configures the device to run a particular supervisor release.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Set a specific device to run a particular supervisor release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| supervisorVersionOrId | <code>String</code> \| <code>Number</code> | the version of a released supervisor (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.setSupervisorRelease('7cf02a6', 'v10.8.0').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.setSupervisorRelease(123, 'v11.4.14').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.setSupervisorRelease('7cf02a6', 123, function(error) {
 	if (error) throw error;
 	...
 });
