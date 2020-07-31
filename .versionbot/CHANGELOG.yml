@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'device: add method to update target supervisor release'
+      hash: 0ac0366f823489d8c3459d9ebcc1077b22ea4c66
+      body: ''
+      footer:
+        Connects-to: 'https://github.com/balena-io/balena-io/pull/2177'
+        connects-to: 'https://github.com/balena-io/balena-io/pull/2177'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 15.2.0
+  date: 2020-07-31T16:28:56.036Z
+- commits:
     - subject: Deduplicate device update methods
       hash: 0cb9602b881ec5dc1a142d90050917a050d04887
       body: ''
