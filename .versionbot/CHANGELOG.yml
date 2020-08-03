@@ -1,4 +1,15 @@
 - commits:
+    - subject: Convert majority to async/await
+      hash: fdbbc1aa8cc23d9d28704e5d88f88713f7d28aff
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 15.2.1
+  date: 2020-08-03T09:26:10.989Z
+- commits:
     - subject: 'device: add method to update target supervisor release'
       hash: 0ac0366f823489d8c3459d9ebcc1077b22ea4c66
       body: ''
