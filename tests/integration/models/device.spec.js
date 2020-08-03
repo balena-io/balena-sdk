@@ -1161,7 +1161,7 @@ describe('Device Model', function () {
 					$select: 'is_accessible_by_support_until__date',
 				});
 				return expect(
-					Date.parse(is_accessible_by_support_until__date),
+					Date.parse(is_accessible_by_support_until__date ?? '0'),
 				).to.equal(expiryTimestamp);
 			});
 		});

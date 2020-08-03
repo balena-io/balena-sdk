@@ -4,12 +4,12 @@ import * as moment from 'moment';
 
 const now = throttle(() => moment(), 1000, { leading: true });
 
-const dateToMoment = memoizee((date: Date) => moment(date), {
+const dateToMoment = memoizee((date: Date | string) => moment(date), {
 	max: 1000,
 	primitive: true,
 });
 
-export const timeSince = (input: Date, suffix = true) => {
+export const timeSince = (input: Date | string, suffix = true) => {
 	const date = dateToMoment(input);
 
 	// We do this to avoid out-of-sync times causing this to return

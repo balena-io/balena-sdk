@@ -155,10 +155,10 @@ const getConfigModel = function (
 			>
 		> => {
 			const manifest = await deviceModel().getManifestBySlug(deviceType);
-			if (manifest.initialization == null) {
-				manifest.initialization = {};
-			}
-			return union(manifest.options, manifest.initialization.options);
+			return union<
+				| DeviceTypeJson.DeviceTypeOptions
+				| DeviceTypeJson.DeviceInitializationOptions
+			>(manifest.options, manifest.initialization?.options);
 		},
 	};
 

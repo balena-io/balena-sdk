@@ -12,9 +12,11 @@ interface BalenaRequestOptions {
 		[key: string]: string;
 	};
 	signal?: any;
+	timeout?: number;
 }
 
 interface BalenaRequestResponse extends Response {
+	statusCode: number;
 	body: any;
 }
 
