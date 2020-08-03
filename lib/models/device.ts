@@ -134,39 +134,39 @@ const getDeviceModel = function (
 		() => require('../util/date') as typeof import('../util/date'),
 	);
 
-	const tagsModel = buildDependentResource(
+	const tagsModel = buildDependentResource<DeviceTag>(
 		{ pine },
 		{
 			resourceName: 'device_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId: string | number) {
+			async getResourceId(uuidOrId: string | number): Promise<number> {
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
 
-	const configVarModel = buildDependentResource(
+	const configVarModel = buildDependentResource<DeviceVariable>(
 		{ pine },
 		{
 			resourceName: 'device_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId: string | number) {
+			async getResourceId(uuidOrId: string | number): Promise<number> {
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
 
-	const envVarModel = buildDependentResource(
+	const envVarModel = buildDependentResource<DeviceVariable>(
 		{ pine },
 		{
 			resourceName: 'device_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId: string | number) {
+			async getResourceId(uuidOrId: string | number): Promise<number> {
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},

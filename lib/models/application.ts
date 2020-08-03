@@ -16,13 +16,16 @@ limitations under the License.
 
 import type { SubmitBody } from '../../typings/pinejs-client-core';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
-import type {
+import {
 	PineOptions,
 	DeviceWithServiceDetails,
 	CurrentService,
 	ApplicationType,
 	CurrentServiceWithCommit,
 	Release,
+	ApplicationTag,
+	ApplicationVariable,
+	BuildVariable,
 } from '../..';
 
 import * as url from 'url';
@@ -70,54 +73,58 @@ const getApplicationModel = function (
 		(...args: Parameters<typeof exports.get>) => exports.get(...args),
 	);
 
-	const { addCallbackSupportToModule } = require('../util/callbacks');
+	const {
+		addCallbackSupportToModule,
+	} = require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const { buildDependentResource } = require('../util/dependent-resource');
+	const {
+		buildDependentResource,
+	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
-	const tagsModel = buildDependentResource(
+	const tagsModel = buildDependentResource<ApplicationTag>(
 		{ pine },
 		{
 			resourceName: 'application_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId: string | number) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
 
-	const configVarModel = buildDependentResource(
+	const configVarModel = buildDependentResource<ApplicationVariable>(
 		{ pine },
 		{
 			resourceName: 'application_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId: string | number) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
-	const envVarModel = buildDependentResource(
+	const envVarModel = buildDependentResource<ApplicationVariable>(
 		{ pine },
 		{
 			resourceName: 'application_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId: string | number) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
-	const buildVarModel = buildDependentResource(
+	const buildVarModel = buildDependentResource<BuildVariable>(
 		{ pine },
 		{
 			resourceName: 'build_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId: string | number) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
