@@ -126,14 +126,14 @@ describe('Application Model', function () {
 
 				it('should be rejected if the user did not provide an organization parameter', () =>
 					m.chai
-						.expect(() =>
+						.expect(
 							// @ts-expect-error
 							balena.models.application.create({
 								name: 'FooBar',
 								deviceType: 'raspberry-pi',
 							}),
 						)
-						.to.throw(
+						.to.be.rejectedWith(
 							"undefined is not a valid value for parameter 'organization'",
 						));
 
@@ -594,23 +594,19 @@ describe('Application Model', function () {
 				it('should throw an error if the expiry time stamp is in the past', function () {
 					const expiryTimestamp = Date.now() - 3600 * 1000;
 
-					return m.chai
-						.expect(() =>
-							balena.models.application.grantSupportAccess(
-								this.application.id,
-								expiryTimestamp,
-							),
-						)
-						.to.throw();
+					return m.chai.expect(
+						balena.models.application.grantSupportAccess(
+							this.application.id,
+							expiryTimestamp,
+						),
+					).to.be.rejected;
 				});
 
 				it('should throw an error if the expiry time stamp is undefined', function () {
-					return m.chai
-						.expect(() =>
-							// @ts-expect-error
-							balena.models.application.grantSupportAccess(this.application.id),
-						)
-						.to.throw();
+					return m.chai.expect(
+						// @ts-expect-error
+						balena.models.application.grantSupportAccess(this.application.id),
+					).to.be.rejected;
 				});
 
 				it('should grant support access until the specified time', function () {

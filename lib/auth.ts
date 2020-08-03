@@ -71,14 +71,13 @@ const getAuth = function (
 		email: string;
 	}
 
-	const userWhoami = () => {
-		return request
-			.send<WhoamiResult>({
-				method: 'GET',
-				url: '/user/v1/whoami',
-				baseUrl: apiUrl,
-			})
-			.then(({ body }) => body);
+	const userWhoami = async () => {
+		const { body } = await request.send<WhoamiResult>({
+			method: 'GET',
+			url: '/user/v1/whoami',
+			baseUrl: apiUrl,
+		});
+		return body;
 	};
 
 	const memoizedUserWhoami = memoizee(userWhoami, {
@@ -129,15 +128,16 @@ const getAuth = function (
 	 * 	}
 	 * });
 	 */
-	function whoami(): Promise<string | undefined> {
-		return getUserDetails()
-			.then((userDetails) => userDetails?.username)
-			.catch((err) => {
-				if (err instanceof errors.BalenaNotLoggedIn) {
-					return undefined;
-				}
-				throw err;
-			});
+	async function whoami(): Promise<string | undefined> {
+		try {
+			const userDetails = await getUserDetails();
+			return userDetails?.username;
+		} catch (err) {
+			if (err instanceof errors.BalenaNotLoggedIn) {
+				return;
+			}
+			throw err;
+		}
 	}
 
 	/**
@@ -171,22 +171,21 @@ const getAuth = function (
 	 * 	console.log('My token is:', token);
 	 * });
 	 */
-	function authenticate(credentials: {
+	async function authenticate(credentials: {
 		email: string;
 		password: string;
 	}): Promise<string> {
-		return request
-			.send<string>({
-				method: 'POST',
-				baseUrl: apiUrl,
-				url: '/login_',
-				body: {
-					username: credentials.email,
-					password: String(credentials.password),
-				},
-				sendToken: false,
-			})
-			.then(({ body }) => body);
+		const { body } = await request.send<string>({
+			method: 'POST',
+			baseUrl: apiUrl,
+			url: '/login_',
+			body: {
+				username: credentials.email,
+				password: String(credentials.password),
+			},
+			sendToken: false,
+		});
+		return body;
 	}
 
 	/**
@@ -212,12 +211,13 @@ const getAuth = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function login(credentials: {
+	async function login(credentials: {
 		email: string;
 		password: string;
 	}): Promise<void> {
 		memoizedUserWhoami.clear();
-		return authenticate(credentials).then(auth.setKey);
+		const token = await authenticate(credentials);
+		await auth.setKey(token);
 	}
 
 	/**
@@ -275,15 +275,16 @@ const getAuth = function (
 	 * 	}
 	 * });
 	 */
-	function isLoggedIn(): Promise<boolean> {
-		return getUserDetails(true)
-			.then(() => true)
-			.catch((err) => {
-				if (err instanceof errors.BalenaNotLoggedIn) {
-					return false;
-				}
-				throw err;
-			});
+	async function isLoggedIn(): Promise<boolean> {
+		try {
+			await getUserDetails(true);
+			return true;
+		} catch (err) {
+			if (err instanceof errors.BalenaNotLoggedIn) {
+				return false;
+			}
+			throw err;
+		}
 	}
 
 	/**
@@ -338,8 +339,9 @@ const getAuth = function (
 	 * 	console.log(userId);
 	 * });
 	 */
-	function getUserId(): Promise<number> {
-		return getUserDetails().then(({ id }) => id);
+	async function getUserId(): Promise<number> {
+		const { id } = await getUserDetails();
+		return id;
 	}
 
 	/**
@@ -365,8 +367,9 @@ const getAuth = function (
 	 * 	console.log(email);
 	 * });
 	 */
-	function getEmail(): Promise<string> {
-		return getUserDetails().then(({ email }) => email);
+	async function getEmail(): Promise<string> {
+		const { email } = await getUserDetails();
+		return email;
 	}
 
 	/**
@@ -423,20 +426,19 @@ const getAuth = function (
 	 * 	console.log(token);
 	 * });
 	 */
-	function register(credentials: {
+	async function register(credentials: {
 		email: string;
 		password: string;
 		'g-recaptcha-response'?: string;
 	}): Promise<string> {
-		return request
-			.send({
-				method: 'POST',
-				url: '/user/register',
-				baseUrl: apiUrl,
-				body: credentials,
-				sendToken: false,
-			})
-			.then(({ body }) => body);
+		const { body } = await request.send({
+			method: 'POST',
+			url: '/user/register',
+			baseUrl: apiUrl,
+			body: credentials,
+			sendToken: false,
+		});
+		return body;
 	}
 
 	return {

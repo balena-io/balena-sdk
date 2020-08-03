@@ -46,26 +46,23 @@ const getServiceModel = (
 			resourceName: 'service_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'service',
-			getResourceId: (id: number) =>
-				get(id, { $select: 'id' }).then((v) => v.id),
+			getResourceId: async (id: number) =>
+				(await get(id, { $select: 'id' })).id,
 		},
 	);
 
 	// Not exported for now, but we could document & export it in the future
 	// if there are external use cases for this.
-	const get = (id: number, options: PineOptions<Service> = {}) => {
-		return pine
-			.get({
-				resource: 'service',
-				id,
-				options,
-			})
-			.then((service: Service | undefined) => {
-				if (service == null) {
-					throw new errors.BalenaServiceNotFound(id);
-				}
-				return service;
-			});
+	const get = async (id: number, options: PineOptions<Service> = {}) => {
+		const service = (await pine.get({
+			resource: 'service',
+			id,
+			options,
+		})) as Service | undefined;
+		if (service == null) {
+			throw new errors.BalenaServiceNotFound(id);
+		}
+		return service;
 	};
 
 	const exports = {
@@ -97,21 +94,17 @@ const getServiceModel = (
 		 * 	console.log(services);
 		 * });
 		 */
-		getAllByApplication(
+		async getAllByApplication(
 			nameOrSlugOrId: string | number,
 			options: PineOptions<Service> = {},
 		): Promise<Service[]> {
-			return applicationModel()
-				.get(nameOrSlugOrId, { $select: 'id' })
-				.then(({ id }: { id: number }) =>
-					pine.get({
-						resource: 'service',
-						options: mergePineOptions(
-							{ $filter: { application: id } },
-							options,
-						),
-					}),
-				);
+			const { id } = (await applicationModel().get(nameOrSlugOrId, {
+				$select: 'id',
+			})) as { id: number };
+			return pine.get({
+				resource: 'service',
+				options: mergePineOptions({ $filter: { application: id } }, options),
+			});
 		},
 
 		/**
@@ -172,34 +165,33 @@ const getServiceModel = (
 			 * 	console.log(vars)
 			 * });
 			 */
-			getAllByApplication(
+			async getAllByApplication(
 				nameOrSlugOrId: string | number,
 				options: PineOptions<ServiceEnvironmentVariable> = {},
 			): Promise<ServiceEnvironmentVariable[]> {
-				return applicationModel()
-					.get(nameOrSlugOrId, { $select: 'id' })
-					.then(({ id }: { id: number }) =>
-						varModel.getAll(
-							mergePineOptions(
-								{
-									$filter: {
-										service: {
-											$any: {
-												$alias: 's',
-												$expr: {
-													s: {
-														application: id,
-													},
-												},
+				const { id } = (await applicationModel().get(nameOrSlugOrId, {
+					$select: 'id',
+				})) as { id: number };
+				return varModel.getAll(
+					mergePineOptions(
+						{
+							$filter: {
+								service: {
+									$any: {
+										$alias: 's',
+										$expr: {
+											s: {
+												application: id,
 											},
 										},
 									},
-									$orderby: 'name asc',
 								},
-								options,
-							),
-						),
-					);
+							},
+							$orderby: 'name asc',
+						},
+						options,
+					),
+				);
 			},
 
 			/**

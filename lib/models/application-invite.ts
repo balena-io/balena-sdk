@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type {
-	Application,
 	ApplicationInvite,
 	ApplicationMembershipRole,
 	PineOptions,
@@ -101,18 +100,17 @@ const getApplicationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		getAllByApplication(
+		async getAllByApplication(
 			nameOrSlugOrId: number | string,
 			options: PineOptions<ApplicationInvite> = {},
 		): Promise<ApplicationInvite[]> {
-			return getApplication(nameOrSlugOrId, {
+			const { id } = await getApplication(nameOrSlugOrId, {
 				$select: 'id',
-			}).then(({ id }: Application) =>
-				exports.getAll(
-					mergePineOptions(
-						{ $filter: { is_invited_to__application: id } },
-						options,
-					),
+			});
+			return await exports.getAll(
+				mergePineOptions(
+					{ $filter: { is_invited_to__application: id } },
+					options,
 				),
 			);
 		},
@@ -150,11 +148,11 @@ const getApplicationInviteModel = function (
 		 * 	console.log(invite);
 		 * });
 		 */
-		create(
+		async create(
 			nameOrSlugOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
 		): Promise<Partial<ApplicationInvite>> {
-			return Promise.all([
+			const [{ id }, roles] = await Promise.all([
 				getApplication(nameOrSlugOrId, { $select: 'id' }),
 				roleName
 					? pine.get<ApplicationMembershipRole>({
@@ -168,28 +166,27 @@ const getApplicationInviteModel = function (
 							},
 					  })
 					: undefined,
-			]).then(([{ id }, roles]) => {
-				type ApplicationInviteBase = Omit<ApplicationInvite, 'invitee'>;
-				type ApplicationInvitePostBody = ApplicationInviteBase & {
-					invitee: string;
-				};
-				const body: PineSubmitBody<ApplicationInvitePostBody> = {
-					invitee,
-					is_invited_to__application: id,
-					message,
-				};
-				if (roles) {
-					const [{ id: roleId }] = roles;
-					// Throw if the user provided a roleName, but we didn't find that role
-					if (!roleId && roleName) {
-						throw new errors.BalenaApplicationMembershipRoleNotFound(roleName);
-					}
-					body.application_membership_role = roleId;
+			]);
+			type ApplicationInviteBase = Omit<ApplicationInvite, 'invitee'>;
+			type ApplicationInvitePostBody = ApplicationInviteBase & {
+				invitee: string;
+			};
+			const body: PineSubmitBody<ApplicationInvitePostBody> = {
+				invitee,
+				is_invited_to__application: id,
+				message,
+			};
+			if (roles) {
+				const [{ id: roleId }] = roles;
+				// Throw if the user provided a roleName, but we didn't find that role
+				if (!roleId && roleName) {
+					throw new errors.BalenaApplicationMembershipRoleNotFound(roleName);
 				}
-				return pine.post<ApplicationInviteBase>({
-					resource: RESOURCE,
-					body,
-				});
+				body.application_membership_role = roleId;
+			}
+			return await pine.post<ApplicationInviteBase>({
+				resource: RESOURCE,
+				body,
 			});
 		},
 

@@ -32,13 +32,13 @@ export class BuilderHelper {
 		private opts: InjectedOptionsParam,
 	) {}
 
-	public buildFromUrl(
+	public async buildFromUrl(
 		owner: string,
 		appName: string,
 		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
 	) {
-		return this.deps.request
-			.send<BuilderBuildFromUrlResponse>({
+		try {
+			const resp = await this.deps.request.send<BuilderBuildFromUrlResponse>({
 				method: 'POST',
 				url: `/v3/buildFromUrl?headless=true&owner=${owner}&app=${appName}`,
 				baseUrl: this.opts.builderUrl,
@@ -48,18 +48,16 @@ export class BuilderHelper {
 					},
 					urlDeployOptions,
 				),
-			})
-			.then((resp) => {
-				if (!resp.body.started) {
-					throw new errors.BalenaError(resp.body.message);
-				}
-				return resp.body.releaseId;
-			})
-			.catch((err) => {
-				if (isBuilderError(err)) {
-					err.message = err.body.message || err.body.error;
-				}
-				throw err;
 			});
+			if (!resp.body.started) {
+				throw new errors.BalenaError(resp.body.message);
+			}
+			return resp.body.releaseId;
+		} catch (err) {
+			if (isBuilderError(err)) {
+				err.message = err.body.message || err.body.error;
+			}
+			throw err;
+		}
 	}
 }

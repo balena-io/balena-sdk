@@ -49,10 +49,9 @@ const get2fa = function (
 	 * 	}
 	 * });
 	 */
-	function isEnabled(): Promise<boolean> {
-		return auth
-			.needs2FA()
-			.then((twoFactorRequired) => twoFactorRequired != null);
+	async function isEnabled(): Promise<boolean> {
+		const twoFactorRequired = await auth.needs2FA();
+		return twoFactorRequired != null;
 	}
 
 	/**
@@ -81,8 +80,9 @@ const get2fa = function (
 	 * 	}
 	 * });
 	 */
-	function isPassed(): Promise<boolean> {
-		return auth.needs2FA().then((twoFactorRequired) => !twoFactorRequired);
+	async function isPassed(): Promise<boolean> {
+		const twoFactorRequired = await auth.needs2FA();
+		return !twoFactorRequired;
 	}
 
 	/**
@@ -103,15 +103,14 @@ const get2fa = function (
 	 * 	if (error) throw error;
 	 * });
 	 */
-	function challenge(code: string): Promise<void> {
-		return request
-			.send({
-				method: 'POST',
-				url: '/auth/totp/verify',
-				baseUrl: apiUrl,
-				body: { code },
-			})
-			.then(({ body }) => auth.setKey(body));
+	async function challenge(code: string): Promise<void> {
+		const { body } = await request.send({
+			method: 'POST',
+			url: '/auth/totp/verify',
+			baseUrl: apiUrl,
+			body: { code },
+		});
+		await auth.setKey(body);
 	}
 
 	return {

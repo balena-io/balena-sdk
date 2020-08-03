@@ -52,8 +52,8 @@ const getReleaseModel = function (
 			resourceName: 'release_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'release',
-			getResourceId: (commitOrId: string | number) =>
-				get(commitOrId, { $select: 'id' }).then(({ id }) => id),
+			getResourceId: async (commitOrId: string | number) =>
+				(await get(commitOrId, { $select: 'id' })).id,
 		},
 	);
 
@@ -168,14 +168,14 @@ const getReleaseModel = function (
 	 * 	console.log(release);
 	 * });
 	 */
-	function getWithImageDetails(
+	async function getWithImageDetails(
 		commitOrId: string | number,
 		options: {
 			release?: BalenaSdk.PineOptions<BalenaSdk.Release>;
 			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
 		} = {},
 	): Promise<BalenaSdk.ReleaseWithImageDetails> {
-		return get(
+		const rawRelease = await get(
 			commitOrId,
 			mergePineOptions(
 				{
@@ -202,37 +202,36 @@ const getReleaseModel = function (
 				},
 				options.release,
 			),
-		).then(function (rawRelease) {
-			const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
+		);
+		const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
 
-			// Squash .contains__image[x].image[0] into a simple array
-			const images = (release.contains__image as Array<{
-				image: BalenaSdk.Image[];
-			}>).map((imageJoin) => imageJoin.image[0]);
-			delete release.contains__image;
+		// Squash .contains__image[x].image[0] into a simple array
+		const images = (release.contains__image as Array<{
+			image: BalenaSdk.Image[];
+		}>).map((imageJoin) => imageJoin.image[0]);
+		delete release.contains__image;
 
-			release.images = images
-				.map(function ({ is_a_build_of__service, ...imageData }) {
-					const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
-						...imageData,
-						service_name: (is_a_build_of__service as BalenaSdk.Service[])[0]
-							.service_name,
-					};
-					return image;
-				})
-				.sort((a, b) => a.service_name.localeCompare(b.service_name));
+		release.images = images
+			.map(function ({ is_a_build_of__service, ...imageData }) {
+				const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
+					...imageData,
+					service_name: (is_a_build_of__service as BalenaSdk.Service[])[0]
+						.service_name,
+				};
+				return image;
+			})
+			.sort((a, b) => a.service_name.localeCompare(b.service_name));
 
-			release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
-			delete release.is_created_by__user;
+		release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
+		delete release.is_created_by__user;
 
-			return release as BalenaSdk.Release & {
-				images: Array<{
-					id: number;
-					service_name: string;
-				}>;
-				user: BalenaSdk.User;
-			};
-		});
+		return release as BalenaSdk.Release & {
+			images: Array<{
+				id: number;
+				service_name: string;
+			}>;
+			user: BalenaSdk.User;
+		};
 	}
 
 	/**
@@ -263,26 +262,25 @@ const getReleaseModel = function (
 	 * 	console.log(releases);
 	 * });
 	 */
-	function getAllByApplication(
+	async function getAllByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release[]> {
-		return applicationModel()
-			.get(nameOrSlugOrId, { $select: 'id' })
-			.then(({ id }) =>
-				pine.get({
-					resource: 'release',
-					options: mergePineOptions(
-						{
-							$filter: {
-								belongs_to__application: id,
-							},
-							$orderby: 'created_at desc',
-						},
-						options,
-					),
-				}),
-			);
+		const { id } = await applicationModel().get(nameOrSlugOrId, {
+			$select: 'id',
+		});
+		return await pine.get({
+			resource: 'release',
+			options: mergePineOptions(
+				{
+					$filter: {
+						belongs_to__application: id,
+					},
+					$orderby: 'created_at desc',
+				},
+				options,
+			),
+		});
 	}
 
 	/**
@@ -313,11 +311,11 @@ const getReleaseModel = function (
 	 * 	console.log(releases);
 	 * });
 	 */
-	function getLatestByApplication(
+	async function getLatestByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release> {
-		return getAllByApplication(
+		const [release] = await getAllByApplication(
 			nameOrSlugOrId,
 			mergePineOptions(
 				{
@@ -328,7 +326,8 @@ const getReleaseModel = function (
 				},
 				options,
 			),
-		).then(([release]) => release);
+		);
+		return release;
 	}
 
 	/**
@@ -361,26 +360,26 @@ const getReleaseModel = function (
 	 * 	console.log(releaseId);
 	 * });
 	 */
-	function createFromUrl(
+	async function createFromUrl(
 		nameOrSlugOrId: string | number,
 		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
 	): Promise<number> {
-		return applicationModel()
-			.get(nameOrSlugOrId, {
+		const { app_name, organization } = await applicationModel().get(
+			nameOrSlugOrId,
+			{
 				$select: 'app_name',
 				$expand: {
 					organization: {
 						$select: 'handle',
 					},
 				},
-			})
-			.then(({ app_name, organization }) =>
-				builderHelper().buildFromUrl(
-					(organization as BalenaSdk.Organization[])[0].handle,
-					app_name,
-					urlDeployOptions,
-				),
-			);
+			},
+		);
+		return await builderHelper().buildFromUrl(
+			(organization as BalenaSdk.Organization[])[0].handle,
+			app_name,
+			urlDeployOptions,
+		);
 	}
 
 	/**
@@ -416,33 +415,32 @@ const getReleaseModel = function (
 		 * 	console.log(tags)
 		 * });
 		 */
-		getAllByApplication(
+		async getAllByApplication(
 			nameOrSlugOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
-			return applicationModel()
-				.get(nameOrSlugOrId, { $select: 'id' })
-				.then(({ id }) =>
-					tagsModel.getAll(
-						mergePineOptions(
-							{
-								$filter: {
-									release: {
-										$any: {
-											$alias: 'r',
-											$expr: {
-												r: {
-													belongs_to__application: id,
-												},
-											},
+			const { id } = await applicationModel().get(nameOrSlugOrId, {
+				$select: 'id',
+			});
+			return await tagsModel.getAll(
+				mergePineOptions(
+					{
+						$filter: {
+							release: {
+								$any: {
+									$alias: 'r',
+									$expr: {
+										r: {
+											belongs_to__application: id,
 										},
 									},
 								},
 							},
-							options,
-						),
-					),
-				);
+						},
+					},
+					options,
+				),
+			);
 		},
 
 		/**
@@ -473,16 +471,17 @@ const getReleaseModel = function (
 		 * 	console.log(tags)
 		 * });
 		 */
-		getAllByRelease(
+		async getAllByRelease(
 			commitOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
-			return get(commitOrId, {
+			const release = await get(commitOrId, {
 				$select: 'id',
 				$expand: {
 					release_tag: mergePineOptions({ $orderby: 'tag_key asc' }, options),
 				},
-			}).then((release) => release.release_tag as BalenaSdk.ReleaseTag[]);
+			});
+			return release.release_tag as BalenaSdk.ReleaseTag[];
 		},
 
 		/**
