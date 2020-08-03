@@ -1,4 +1,5 @@
 import type { Readable } from 'stream';
+import { Interceptor } from './balena-sdk';
 
 interface BalenaRequestOptions {
 	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
@@ -36,4 +37,5 @@ interface BalenaRequestStreamResult extends Readable {
 interface BalenaRequest {
 	send: BalenaRequestSend;
 	stream: (options: BalenaRequestOptions) => Promise<BalenaRequestStreamResult>;
+	interceptors: Interceptor[];
 }

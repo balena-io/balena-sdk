@@ -1,5 +1,11 @@
+import { SdkOptions } from '../../typings/balena-sdk';
+
 // If we can't guarantee global state, don't fake it: fail instead.
-let globalEnv: typeof window | typeof self | typeof global;
+let globalEnv: (typeof window | typeof self | typeof global) & {
+	BALENA_SDK_SHARED_OPTIONS?: SdkOptions;
+	BALENA_SDK_HAS_USED_SHARED_OPTIONS?: boolean;
+	BALENA_SDK_HAS_SET_SHARED_OPTIONS?: boolean;
+};
 // Use window (web)/self (web worker)/global (node) as appropriate
 if (typeof window !== 'undefined') {
 	globalEnv = window;
