@@ -14,18 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const once = require('lodash/once');
-const union = require('lodash/union');
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { DeviceTypeJson, Config } from '../..';
 
-const getConfigModel = function (deps, opts) {
+import once = require('lodash/once');
+import union = require('lodash/union');
+
+const getConfigModel = function (
+	deps: InjectedDependenciesParam,
+	opts: InjectedOptionsParam,
+) {
 	const { request } = deps;
 	const { apiUrl } = opts;
 
-	const deviceModel = once(() => require('./device').default(deps, opts));
+	const deviceModel = once(() =>
+		(require('./device') as typeof import('./device')).default(deps, opts),
+	);
 
 	const normalizeDeviceTypes = (
-		deviceTypes, // Patch device types to be marked as ALPHA and BETA instead
-	) =>
+		deviceTypes: DeviceTypeJson.DeviceType[], // Patch device types to be marked as ALPHA and BETA instead
+	): DeviceTypeJson.DeviceType[] =>
 		// of PREVIEW and EXPERIMENTAL, respectively.
 		// This logic is literally copy and pasted from balena UI, but
 		// there are plans to move this to `resin-device-types` so it
@@ -72,7 +80,7 @@ const getConfigModel = function (deps, opts) {
 		 * 	console.log(config);
 		 * });
 		 */
-		getAll: async () => {
+		getAll: async (): Promise<Config> => {
 			const { body } = await request.send({
 				method: 'GET',
 				url: '/config',
@@ -104,7 +112,7 @@ const getConfigModel = function (deps, opts) {
 		 * 	console.log(deviceTypes);
 		 * })
 		 */
-		getDeviceTypes: async () => {
+		getDeviceTypes: async (): Promise<DeviceTypeJson.DeviceType[]> => {
 			const { body: deviceTypes } = await request.send({
 				method: 'GET',
 				url: '/device-types/v1',
@@ -138,7 +146,14 @@ const getConfigModel = function (deps, opts) {
 		 * 	console.log(options);
 		 * });
 		 */
-		getDeviceOptions: async (deviceType) => {
+		getDeviceOptions: async (
+			deviceType: string,
+		): Promise<
+			Array<
+				| DeviceTypeJson.DeviceTypeOptions
+				| DeviceTypeJson.DeviceInitializationOptions
+			>
+		> => {
 			const manifest = await deviceModel().getManifestBySlug(deviceType);
 			if (manifest.initialization == null) {
 				manifest.initialization = {};
