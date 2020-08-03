@@ -11,6 +11,7 @@ interface BalenaRequestOptions {
 	headers?: {
 		[key: string]: string;
 	};
+	signal?: any;
 }
 
 interface BalenaRequestResponse extends Response {

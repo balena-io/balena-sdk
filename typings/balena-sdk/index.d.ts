@@ -890,8 +890,14 @@ export interface BalenaSDK {
 	};
 
 	logs: {
-		history(uuid: string, options?: LogsOptions): Promise<LogMessage[]>;
-		subscribe(uuid: string, options?: LogsOptions): Promise<LogsSubscription>;
+		history(
+			uuidOrId: string | number,
+			options?: LogsOptions,
+		): Promise<LogMessage[]>;
+		subscribe(
+			uuidOrId: string | number,
+			options?: LogsOptions,
+		): Promise<LogsSubscription>;
 	};
 
 	pine: BalenaPine.Pine;
