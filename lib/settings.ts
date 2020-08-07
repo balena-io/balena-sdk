@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const getSettings = function ({ settings }) {
+import type { InjectedDependenciesParam } from '.';
+
+const getSettings = function ({ settings }: InjectedDependenciesParam) {
 	const exports = {
 		/**
 		 * @summary Get a single setting. **Only implemented in Node.js**
@@ -38,7 +40,7 @@ const getSettings = function ({ settings }) {
 		 * 	console.log(apiUrl);
 		 * });
 		 */
-		get: async (key) => settings.get(key),
+		get: async (key: string): Promise<string> => settings.get(key),
 
 		/**
 		 * @summary Get all settings **Only implemented in Node.js**
@@ -61,7 +63,7 @@ const getSettings = function ({ settings }) {
 		 * 	console.log(settings);
 		 * });
 		 */
-		getAll: async () => settings.getAll(),
+		getAll: async (): Promise<{ [key: string]: string }> => settings.getAll(),
 	};
 
 	return exports;

@@ -14,9 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { InjectedOptionsParam, InjectedDependenciesParam } from '..';
+import {
+	Device,
+	PineOptions,
+	ServiceInstall,
+	DeviceServiceEnvironmentVariable,
+	OsUpdateActionResult,
+	DeviceVariable,
+	DeviceTag,
+	SupervisorRelease,
+	Application,
+	Release,
+	SupervisorStatus,
+	DeviceTypeJson,
+	DeviceWithServiceDetails,
+	CurrentServiceWithCommit,
+	DeviceState,
+} from '../..';
+
 import * as url from 'url';
 
-const once = require('lodash/once');
+import once = require('lodash/once');
 import * as bSemver from 'balena-semver';
 import * as semver from 'semver';
 import * as errors from 'balena-errors';
@@ -47,6 +66,9 @@ import {
 } from '../util/local-mode';
 
 import { OverallStatus } from './device-ts';
+import { SubmitBody, SelectableProps } from '../../typings/pinejs-client-core';
+import { AtLeast } from '../../typings/utils';
+import { DeviceType } from '../../typings/balena-sdk/device-type-json';
 
 // The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 // be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -62,66 +84,89 @@ const MIN_SUPERVISOR_MC_API = '7.0.0';
 // affected in particular.
 const CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
-const getDeviceModel = function (deps, opts) {
+const getDeviceModel = function (
+	deps: InjectedDependenciesParam,
+	opts: InjectedOptionsParam,
+) {
 	const {
 		pine,
 		request,
 		// Do not destructure sub-modules, to allow lazy loading only when needed.
 		sdkInstance,
 	} = deps;
-	let { apiUrl, dashboardUrl, deviceUrlsBase } = opts;
+	const { apiUrl, deviceUrlsBase } = opts;
 
 	const registerDevice = once(() =>
-		require('balena-register-device').getRegisterDevice({ request }),
+		(require('balena-register-device') as typeof import('balena-register-device')).getRegisterDevice(
+			{ request },
+		),
 	);
-	const configModel = once(() => require('./config').default(deps, opts));
+	const configModel = once(() =>
+		(require('./config') as typeof import('./config')).default(deps, opts),
+	);
 	const applicationModel = once(() =>
-		require('./application').default(deps, opts),
+		(require('./application') as typeof import('./application')).default(
+			deps,
+			opts,
+		),
 	);
-	const osModel = once(() => require('./os').default(deps, opts));
+	const osModel = once(() =>
+		(require('./os') as typeof import('./os')).default(deps, opts),
+	);
 
-	const { addCallbackSupportToModule } = require('../util/callbacks');
+	const {
+		addCallbackSupportToModule,
+	} = require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const { buildDependentResource } = require('../util/dependent-resource');
+	const {
+		buildDependentResource,
+	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const hupActionHelper = once(
-		() => require('../util/device-actions/os-update/utils').hupActionHelper,
+		() =>
+			(require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils'))
+				.hupActionHelper,
 	);
-	const deviceTypesUtils = once(() => require('../util/device-types'));
-	const dateUtils = once(() => require('../util/date'));
+	const deviceTypesUtils = once(
+		() =>
+			require('../util/device-types') as typeof import('../util/device-types'),
+	);
+	const dateUtils = once(
+		() => require('../util/date') as typeof import('../util/date'),
+	);
 
-	const tagsModel = buildDependentResource(
+	const tagsModel = buildDependentResource<DeviceTag>(
 		{ pine },
 		{
 			resourceName: 'device_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId) {
+			async getResourceId(uuidOrId: string | number): Promise<number> {
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
 
-	const configVarModel = buildDependentResource(
+	const configVarModel = buildDependentResource<DeviceVariable>(
 		{ pine },
 		{
 			resourceName: 'device_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId) {
+			async getResourceId(uuidOrId: string | number): Promise<number> {
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
 
-	const envVarModel = buildDependentResource(
+	const envVarModel = buildDependentResource<DeviceVariable>(
 		{ pine },
 		{
 			resourceName: 'device_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId) {
+			async getResourceId(uuidOrId: string | number): Promise<number> {
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
@@ -129,9 +174,7 @@ const getDeviceModel = function (deps, opts) {
 	);
 
 	// Infer dashboardUrl from apiUrl if former is undefined
-	if (dashboardUrl == null) {
-		dashboardUrl = apiUrl.replace(/api/, 'dashboard');
-	}
+	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
 
 	const getDeviceUrlsBase = once(async function () {
 		if (deviceUrlsBase != null) {
@@ -144,13 +187,13 @@ const getDeviceModel = function (deps, opts) {
 		const $deviceUrlsBase = await getDeviceUrlsBase();
 		const {
 			getOsUpdateHelper: _getOsUpdateHelper,
-		} = require('../util/device-actions/os-update');
+		} = require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
 		return _getOsUpdateHelper($deviceUrlsBase, request);
 	});
 
 	// Internal method for uuid/id disambiguation
 	// Note that this throws an exception for missing uuids, but not missing ids
-	const getId = async (uuidOrId) => {
+	const getId = async (uuidOrId: string | number) => {
 		if (isId(uuidOrId)) {
 			return uuidOrId;
 		} else {
@@ -175,7 +218,10 @@ const getDeviceModel = function (deps, opts) {
 	 * console.log('Is compatible');
 	 *
 	 */
-	const ensureSupervisorCompatibility = function (version, minVersion) {
+	const ensureSupervisorCompatibility = function (
+		version: string,
+		minVersion: string,
+	): void {
 		if (semver.lt(version, minVersion)) {
 			throw new Error(
 				`Incompatible supervisor version: ${version} - must be >= ${minVersion}`,
@@ -183,15 +229,18 @@ const getDeviceModel = function (deps, opts) {
 		}
 	};
 
-	const addExtraInfo = function (device) {
+	const addExtraInfo = function (device: Device) {
 		normalizeDeviceOsVersion(device);
 		return device;
 	};
 
-	const setLockOverriden = async (uuidOrId, shouldOverride) => {
+	const setLockOverriden = async (
+		uuidOrId: string | number,
+		shouldOverride: boolean,
+	): Promise<void> => {
 		const deviceId = await getId(uuidOrId);
 		const value = shouldOverride ? '1' : '0';
-		return await request.send({
+		await request.send({
 			method: 'POST',
 			url: `/device/${deviceId}/lock-override`,
 			baseUrl: apiUrl,
@@ -201,9 +250,12 @@ const getDeviceModel = function (deps, opts) {
 		});
 	};
 
-	const set = async (uuidOrId, body) => {
+	const set = async (
+		uuidOrId: string | number,
+		body: SubmitBody<Device>,
+	): Promise<void> => {
 		const { id } = await exports.get(uuidOrId, { $select: 'id' });
-		return await pine.patch({
+		await pine.patch({
 			resource: 'device',
 			body,
 			id,
@@ -225,7 +277,7 @@ const getDeviceModel = function (deps, opts) {
 		 * @example
 		 * dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 		 */
-		getDashboardUrl(uuid) {
+		getDashboardUrl(uuid: string): string {
 			if (typeof uuid !== 'string' || uuid.length === 0) {
 				throw new Error('The uuid option should be a non empty string');
 			}
@@ -267,7 +319,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(devices);
 		 * });
 		 */
-		async getAll(options) {
+		async getAll(options?: PineOptions<Device>): Promise<Device[]> {
 			if (options == null) {
 				options = {};
 			}
@@ -319,7 +371,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(devices);
 		 * });
 		 */
-		async getAllByApplication(nameOrSlugOrId, options) {
+		async getAllByApplication(
+			nameOrSlugOrId: string | number,
+			options?: PineOptions<Device>,
+		): Promise<Device[]> {
 			if (options == null) {
 				options = {};
 			}
@@ -360,7 +415,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(devices);
 		 * });
 		 */
-		async getAllByParentDevice(parentUuidOrId, options) {
+		async getAllByParentDevice(
+			parentUuidOrId: string | number,
+			options?: PineOptions<Device>,
+		): Promise<Device[]> {
 			if (options == null) {
 				options = {};
 			}
@@ -411,7 +469,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(device);
 		 * });
 		 */
-		async get(uuidOrId, options) {
+		async get(
+			uuidOrId: string | number,
+			options?: PineOptions<Device>,
+		): Promise<Device> {
 			if (options == null) {
 				options = {};
 			}
@@ -489,7 +550,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(device);
 		 * });
 		 */
-		async getWithServiceDetails(uuidOrId, options) {
+		async getWithServiceDetails(
+			uuidOrId: string | number,
+			options?: PineOptions<Device>,
+		): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>> {
 			if (options == null) {
 				options = {};
 			}
@@ -526,7 +590,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(devices);
 		 * });
 		 */
-		async getByName(name, options) {
+		async getByName(
+			name: string,
+			options?: PineOptions<Device>,
+		): Promise<Device[]> {
 			if (options == null) {
 				options = {};
 			}
@@ -567,7 +634,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(deviceName);
 		 * });
 		 */
-		getName: async (uuidOrId) => {
+		getName: async (uuidOrId: string | number): Promise<string> => {
 			const { device_name } = await exports.get(uuidOrId, {
 				$select: 'device_name',
 			});
@@ -601,11 +668,11 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(applicationName);
 		 * });
 		 */
-		getApplicationName: async (uuidOrId) => {
-			const device = await exports.get(uuidOrId, {
+		getApplicationName: async (uuidOrId: string | number): Promise<string> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'app_name' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			return device.belongs_to__application[0].app_name;
 		},
 
@@ -640,11 +707,19 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(appInfo);
 		 * });
 		 */
-		getApplicationInfo: async (uuidOrId) => {
-			const device = await exports.get(uuidOrId, {
+		getApplicationInfo: async (
+			uuidOrId: string | number,
+		): Promise<{
+			appId: string;
+			commit: string;
+			containerId: string;
+			env: { [key: string]: string | number };
+			imageId: string;
+		}> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_APPS_API,
@@ -690,7 +765,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(hasDevice);
 		 * });
 		 */
-		has: async (uuidOrId) => {
+		has: async (uuidOrId: string | number): Promise<boolean> => {
 			try {
 				await exports.get(uuidOrId, { $select: ['id'] });
 				return true;
@@ -729,7 +804,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log('Is device online?', isOnline);
 		 * });
 		 */
-		isOnline: async (uuidOrId) => {
+		isOnline: async (uuidOrId: string | number): Promise<boolean> => {
 			const { is_online } = await exports.get(uuidOrId, {
 				$select: 'is_online',
 			});
@@ -771,7 +846,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	});
 		 * });
 		 */
-		getLocalIPAddresses: async (uuidOrId) => {
+		getLocalIPAddresses: async (
+			uuidOrId: string | number,
+		): Promise<string[]> => {
 			const { is_online, ip_address, vpn_address } = await exports.get(
 				uuidOrId,
 				{ $select: ['is_online', 'ip_address', 'vpn_address'] },
@@ -779,7 +856,7 @@ const getDeviceModel = function (deps, opts) {
 			if (!is_online) {
 				throw new Error(`The device is offline: ${uuidOrId}`);
 			}
-			const ips = ip_address.split(' ');
+			const ips = (ip_address ?? '').split(' ');
 			return ips.filter((ip) => ip !== vpn_address);
 		},
 
@@ -817,7 +894,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	});
 		 * });
 		 */
-		getMACAddresses: async (uuidOrId) => {
+		getMACAddresses: async (uuidOrId: string | number): Promise<string[]> => {
 			const { mac_address } = await exports.get(uuidOrId, {
 				$select: ['mac_address'],
 			});
@@ -848,9 +925,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		remove: async (uuidOrId) => {
+		remove: async (uuidOrId: string | number): Promise<void> => {
 			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
-			return await pine.delete({
+			await pine.delete({
 				resource: 'device',
 				id: {
 					uuid,
@@ -879,7 +956,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		identify: async (uuidOrId) => {
+		identify: async (uuidOrId: string | number): Promise<void> => {
 			const device = await exports.get(uuidOrId);
 			await request.send({
 				method: 'POST',
@@ -914,7 +991,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		rename: (uuidOrId, newName) =>
+		rename: (uuidOrId: string | number, newName: string): Promise<void> =>
 			set(uuidOrId, {
 				device_name: newName,
 			}),
@@ -942,7 +1019,8 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		note: (uuidOrId, note) => set(uuidOrId, { note }),
+		note: (uuidOrId: string | number, note: string): Promise<void> =>
+			set(uuidOrId, { note }),
 
 		/**
 		 * @summary Set a custom location for a device
@@ -967,7 +1045,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		setCustomLocation: (uuidOrId, location) =>
+		setCustomLocation: (
+			uuidOrId: string | number,
+			location: { latitude: string | number; longitude: string | number },
+		): Promise<void> =>
 			set(uuidOrId, {
 				custom_latitude: String(location.latitude),
 				custom_longitude: String(location.longitude),
@@ -995,7 +1076,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		unsetCustomLocation: (uuidOrId) =>
+		unsetCustomLocation: (uuidOrId: string | number): Promise<void> =>
 			exports.setCustomLocation(uuidOrId, {
 				latitude: '',
 				longitude: '',
@@ -1027,17 +1108,20 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		move: async (uuidOrId, applicationNameOrSlugOrId) => {
+		move: async (
+			uuidOrId: string | number,
+			applicationNameOrSlugOrId: string | number,
+		): Promise<void> => {
 			const [device, deviceTypes, application] = await Promise.all([
 				exports.get(uuidOrId, {
 					$select: 'uuid',
 					$expand: { is_of__device_type: { $select: 'slug' } },
-				}),
+				}) as Promise<Device & { is_of__device_type: [DeviceType] }>,
 				configModel().getDeviceTypes(),
 				applicationModel().get(applicationNameOrSlugOrId, {
 					$select: 'id',
 					$expand: { is_for__device_type: { $select: 'slug' } },
-				}),
+				}) as Promise<Application & { is_for__device_type: [DeviceType] }>,
 			]);
 			const osDeviceType = deviceTypesUtils().getBySlug(
 				deviceTypes,
@@ -1057,7 +1141,7 @@ const getDeviceModel = function (deps, opts) {
 				);
 			}
 
-			await pine.patch({
+			await pine.patch<Device>({
 				resource: 'device',
 				body: {
 					belongs_to__application: application.id,
@@ -1099,11 +1183,11 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(containerId);
 		 * });
 		 */
-		startApplication: async (uuidOrId) => {
-			const device = await exports.get(uuidOrId, {
+		startApplication: async (uuidOrId: string | number): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_APPS_API,
@@ -1153,11 +1237,11 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(containerId);
 		 * });
 		 */
-		stopApplication: async (uuidOrId) => {
-			const device = await exports.get(uuidOrId, {
+		stopApplication: async (uuidOrId: string | number): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_APPS_API,
@@ -1202,7 +1286,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		restartApplication: async (uuidOrId) => {
+		restartApplication: async (uuidOrId: string | number): Promise<void> => {
 			try {
 				const deviceId = await getId(uuidOrId);
 				const { body } = await request.send({
@@ -1247,17 +1331,20 @@ const getDeviceModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		startService: async (uuidOrId, imageId) => {
-			const device = await exports.get(uuidOrId, {
+		startService: async (
+			uuidOrId: string | number,
+			imageId: number,
+		): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
 			);
 			const appId = device.belongs_to__application[0].id;
-			return await request.send({
+			await request.send({
 				method: 'POST',
 				url: `/supervisor/v2/applications/${appId}/start-service`,
 				baseUrl: apiUrl,
@@ -1300,17 +1387,20 @@ const getDeviceModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		stopService: async (uuidOrId, imageId) => {
-			const device = await exports.get(uuidOrId, {
+		stopService: async (
+			uuidOrId: string | number,
+			imageId: number,
+		): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
 			);
 			const appId = device.belongs_to__application[0].id;
-			return await request.send({
+			await request.send({
 				method: 'POST',
 				url: `/supervisor/v2/applications/${appId}/stop-service`,
 				baseUrl: apiUrl,
@@ -1353,17 +1443,20 @@ const getDeviceModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		restartService: async (uuidOrId, imageId) => {
-			const device = await exports.get(uuidOrId, {
+		restartService: async (
+			uuidOrId: string | number,
+			imageId: number,
+		): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
+			})) as Device & { belongs_to__application: [Application] };
 			ensureSupervisorCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
 			);
 			const appId = device.belongs_to__application[0].id;
-			return await request.send({
+			await request.send({
 				method: 'POST',
 				url: `/supervisor/v2/applications/${appId}/restart-service`,
 				baseUrl: apiUrl,
@@ -1402,7 +1495,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async reboot(uuidOrId, options) {
+		async reboot(
+			uuidOrId: string | number,
+			options: { force?: boolean },
+		): Promise<void> {
 			if (options == null) {
 				options = {};
 			}
@@ -1460,16 +1556,19 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async shutdown(uuidOrId, options) {
+		async shutdown(
+			uuidOrId: string | number,
+			options: { force?: boolean },
+		): Promise<void> {
 			if (options == null) {
 				options = {};
 			}
 
-			const device = await exports.get(uuidOrId, {
+			const device = (await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
-			return await request
+			})) as Device & { belongs_to__application: [Application] };
+			await request
 				.send({
 					method: 'POST',
 					url: '/supervisor/v1/shutdown',
@@ -1515,12 +1614,12 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		purge: async (uuidOrId) => {
-			const device = await exports.get(uuidOrId, {
+		purge: async (uuidOrId: string | number): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
-			return await request
+			})) as Device & { belongs_to__application: [Application] };
+			await request
 				.send({
 					method: 'POST',
 					url: '/supervisor/v1/purge',
@@ -1571,16 +1670,19 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async update(uuidOrId, options) {
+		async update(
+			uuidOrId: string | number,
+			options: { force?: boolean },
+		): Promise<void> {
 			if (options == null) {
 				options = {};
 			}
 
-			const device = await exports.get(uuidOrId, {
+			const device = (await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
-			return await request.send({
+			})) as Device & { belongs_to__application: [Application] };
+			await request.send({
 				method: 'POST',
 				url: '/supervisor/v1/update',
 				baseUrl: apiUrl,
@@ -1620,7 +1722,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(state);
 		 * });
 		 */
-		getSupervisorTargetState: async (uuidOrId) => {
+		getSupervisorTargetState: async (
+			uuidOrId: string | number,
+		): Promise<DeviceState.DeviceState> => {
 			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
 			const { body } = await request.send({
 				url: `/device/v2/${uuid}/state`,
@@ -1655,7 +1759,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(state);
 		 * });
 		 */
-		getSupervisorState: async (uuidOrId) => {
+		getSupervisorState: async (
+			uuidOrId: string | number,
+		): Promise<SupervisorStatus> => {
 			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
 			const { body } = await request.send({
 				method: 'POST',
@@ -1695,7 +1801,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	// Raspberry Pi
 		 * });
 		 */
-		getDisplayName: async (deviceTypeSlug) => {
+		getDisplayName: async (
+			deviceTypeSlug: string,
+		): Promise<string | undefined> => {
 			try {
 				const { name } = await exports.getManifestBySlug(deviceTypeSlug);
 				return name;
@@ -1717,7 +1825,7 @@ const getDeviceModel = function (deps, opts) {
 		 *
 		 * @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 		 *
-		 * @param {String} deviceTypeName - device type name
+		 * @param {String} deviceTypeSlug - device type name
 		 * @fulfil {String} - device slug name
 		 * @returns {Promise}
 		 *
@@ -1734,9 +1842,11 @@ const getDeviceModel = function (deps, opts) {
 		 * 	// raspberry-pi
 		 * });
 		 */
-		getDeviceSlug: async (deviceTypeName) => {
+		getDeviceSlug: async (
+			deviceTypeSlug: string,
+		): Promise<string | undefined> => {
 			try {
-				const { slug } = await exports.getManifestBySlug(deviceTypeName);
+				const { slug } = await exports.getManifestBySlug(deviceTypeSlug);
 				return slug;
 			} catch (error) {
 				if (error instanceof errors.BalenaInvalidDeviceType) {
@@ -1773,7 +1883,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	});
 		 * });
 		 */
-		getSupportedDeviceTypes: async () => {
+		getSupportedDeviceTypes: async (): Promise<string[]> => {
 			const deviceTypes = await configModel().getDeviceTypes();
 			return deviceTypes.map((dt) => dt.name);
 		},
@@ -1785,7 +1895,7 @@ const getDeviceModel = function (deps, opts) {
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String} slug - device slug
+		 * @param {String} slugOrName - device slug
 		 * @fulfil {Object} - device manifest
 		 * @returns {Promise}
 		 *
@@ -1800,16 +1910,18 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(manifest);
 		 * });
 		 */
-		getManifestBySlug: async (slug) => {
+		getManifestBySlug: async (
+			slugOrName: string,
+		): Promise<DeviceTypeJson.DeviceType> => {
 			const deviceTypes = await configModel().getDeviceTypes();
 			const deviceManifest = deviceTypes.find(
 				(deviceType) =>
-					deviceType.name === slug ||
-					deviceType.slug === slug ||
-					deviceType.aliases?.includes(slug),
+					deviceType.name === slugOrName ||
+					deviceType.slug === slugOrName ||
+					deviceType.aliases?.includes(slugOrName),
 			);
 			if (deviceManifest == null) {
-				throw new errors.BalenaInvalidDeviceType(slug);
+				throw new errors.BalenaInvalidDeviceType(slugOrName);
 			}
 			return deviceManifest;
 		},
@@ -1841,14 +1953,14 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(manifest);
 		 * });
 		 */
-		getManifestByApplication: async (nameOrSlugOrId) => {
-			const {
-				is_for__device_type: [deviceType],
-			} = await applicationModel().get(nameOrSlugOrId, {
+		getManifestByApplication: async (
+			nameOrSlugOrId: string | number,
+		): Promise<DeviceTypeJson.DeviceType> => {
+			const app = (await applicationModel().get(nameOrSlugOrId, {
 				$select: 'id',
 				$expand: { is_for__device_type: { $select: 'slug' } },
-			});
-			return await exports.getManifestBySlug(deviceType.slug);
+			})) as Application & { is_for__device_type: [DeviceType] };
+			return await exports.getManifestBySlug(app.is_for__device_type[0].slug);
 		},
 
 		/**
@@ -1865,7 +1977,7 @@ const getDeviceModel = function (deps, opts) {
 		 * // randomKey is a randomly generated key that can be used as either a uuid or an api key
 		 * console.log(randomKey);
 		 */
-		generateUniqueKey: function () {
+		generateUniqueKey(): string {
 			// Wrap with a function so that we can lazy load registerDevice
 			return registerDevice().generateUniqueKey();
 		},
@@ -1902,14 +2014,21 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(registrationInfo);
 		 * });
 		 */
-		async register(applicationNameOrSlugOrId, uuid) {
+		async register(
+			applicationNameOrSlugOrId: string | number,
+			uuid: string,
+		): Promise<{
+			id: number;
+			uuid: string;
+			api_key: string;
+		}> {
 			const [userId, apiKey, application] = await Promise.all([
 				sdkInstance.auth.getUserId(),
 				applicationModel().generateProvisioningKey(applicationNameOrSlugOrId),
 				applicationModel().get(applicationNameOrSlugOrId, {
 					$select: 'id',
 					$expand: { is_for__device_type: { $select: 'slug' } },
-				}),
+				}) as Promise<Application & { is_for__device_type: [DeviceType] }>,
 			]);
 			return await registerDevice().register({
 				userId,
@@ -1917,7 +2036,7 @@ const getDeviceModel = function (deps, opts) {
 				uuid,
 				deviceType: application.is_for__device_type[0].slug,
 				provisioningApiKey: apiKey,
-				apiEndpoint: apiUrl,
+				apiEndpoint: apiUrl!,
 			});
 		},
 
@@ -1947,7 +2066,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(deviceApiKey);
 		 * });
 		 */
-		generateDeviceKey: async (uuidOrId) => {
+		generateDeviceKey: async (uuidOrId: string | number): Promise<string> => {
 			try {
 				const deviceId = await getId(uuidOrId);
 				const { body } = await request.send({
@@ -1998,7 +2117,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	}
 		 * });
 		 */
-		hasDeviceUrl: async (uuidOrId) => {
+		hasDeviceUrl: async (uuidOrId: string | number): Promise<boolean> => {
 			const { is_web_accessible } = await exports.get(uuidOrId, {
 				$select: 'is_web_accessible',
 			});
@@ -2032,7 +2151,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(url);
 		 * });
 		 */
-		getDeviceUrl: async (uuidOrId) => {
+		getDeviceUrl: async (uuidOrId: string | number): Promise<string> => {
 			const hasDeviceUrl = await exports.hasDeviceUrl(uuidOrId);
 			if (!hasDeviceUrl) {
 				throw new Error(`Device is not web accessible: ${uuidOrId}`);
@@ -2063,7 +2182,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		enableDeviceUrl: (uuidOrId) =>
+		enableDeviceUrl: (uuidOrId: string | number): Promise<void> =>
 			set(uuidOrId, {
 				is_web_accessible: true,
 			}),
@@ -2089,7 +2208,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		disableDeviceUrl: (uuidOrId) =>
+		disableDeviceUrl: (uuidOrId: string | number): Promise<void> =>
 			set(uuidOrId, {
 				is_web_accessible: false,
 			}),
@@ -2115,8 +2234,11 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async enableLocalMode(uuidOrId) {
-			const selectedProps = ['id', ...LOCAL_MODE_SUPPORT_PROPERTIES];
+		async enableLocalMode(uuidOrId: string | number): Promise<void> {
+			const selectedProps: Array<SelectableProps<Device>> = [
+				'id',
+				...LOCAL_MODE_SUPPORT_PROPERTIES,
+			];
 			const device = await exports.get(uuidOrId, { $select: selectedProps });
 			checkLocalModeSupported(device);
 			return await exports.configVar.set(device.id, LOCAL_MODE_ENV_VAR, '1');
@@ -2143,7 +2265,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		disableLocalMode: (uuidOrId) =>
+		disableLocalMode: (uuidOrId: string | number): Promise<void> =>
 			exports.configVar.set(uuidOrId, LOCAL_MODE_ENV_VAR, '0'),
 
 		/**
@@ -2180,10 +2302,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	}
 		 * });
 		 */
-		isInLocalMode: (uuidOrId) =>
-			exports.configVar
-				.get(uuidOrId, LOCAL_MODE_ENV_VAR)
-				.then((value) => value === '1'),
+		isInLocalMode: async (uuidOrId: string | number): Promise<boolean> => {
+			const value = await exports.configVar.get(uuidOrId, LOCAL_MODE_ENV_VAR);
+			return value === '1';
+		},
 
 		/**
 		 * @summary Returns whether local mode is supported along with a message describing the reason why local mode is not supported.
@@ -2200,7 +2322,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	balena.models.device.getLocalModeSupport(device);
 		 * })
 		 */
-		getLocalModeSupport: getLocalModeSupport,
+		getLocalModeSupport,
 
 		/**
 		 * @summary Enable lock override
@@ -2223,7 +2345,8 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		enableLockOverride: (uuidOrId) => setLockOverriden(uuidOrId, true),
+		enableLockOverride: (uuidOrId: string | number): Promise<void> =>
+			setLockOverriden(uuidOrId, true),
 
 		/**
 		 * @summary Disable lock override
@@ -2246,7 +2369,8 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		disableLockOverride: (uuidOrId) => setLockOverriden(uuidOrId, false),
+		disableLockOverride: (uuidOrId: string | number): Promise<void> =>
+			setLockOverriden(uuidOrId, false),
 
 		/**
 		 * @summary Check if a device has the lock override enabled
@@ -2269,7 +2393,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		hasLockOverride: async (uuidOrId) => {
+		hasLockOverride: async (uuidOrId: string | number): Promise<boolean> => {
 			const deviceId = await getId(uuidOrId);
 			const { body } = await request.send({
 				method: 'GET',
@@ -2303,12 +2427,12 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		ping: async (uuidOrId) => {
-			const device = await exports.get(uuidOrId, {
+		ping: async (uuidOrId: string | number): Promise<void> => {
+			const device = (await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'id' } },
-			});
-			return await request.send({
+			})) as Device & { belongs_to__application: [Application] };
+			await request.send({
 				method: 'POST',
 				url: '/supervisor/ping',
 				baseUrl: apiUrl,
@@ -2354,7 +2478,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(status);
 		 * });
 		 */
-		async getStatus(uuidOrId) {
+		async getStatus(uuidOrId: string | number): Promise<string> {
 			if (typeof uuidOrId !== 'string' && typeof uuidOrId !== 'number') {
 				throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 			}
@@ -2399,7 +2523,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(progress);
 		 * });
 		 */
-		async getProgress(uuidOrId) {
+		async getProgress(uuidOrId: string | number): Promise<number | null> {
 			if (typeof uuidOrId !== 'string' && typeof uuidOrId !== 'number') {
 				throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 			}
@@ -2432,7 +2556,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async grantSupportAccess(uuidOrId, expiryTimestamp) {
+		async grantSupportAccess(
+			uuidOrId: string | number,
+			expiryTimestamp: number,
+		): Promise<void> {
 			if (expiryTimestamp == null || expiryTimestamp <= Date.now()) {
 				throw new errors.BalenaInvalidParameterError(
 					'expiryTimestamp',
@@ -2441,6 +2568,7 @@ const getDeviceModel = function (deps, opts) {
 			}
 
 			return await set(uuidOrId, {
+				// @ts-expect-error a number is valid to set but it will always be returned as an ISO string so the typings specify string rather than string | number
 				is_accessible_by_support_until__date: expiryTimestamp,
 			});
 		},
@@ -2466,7 +2594,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		revokeSupportAccess: (uuidOrId) =>
+		revokeSupportAccess: (uuidOrId: string | number): Promise<void> =>
 			set(uuidOrId, {
 				is_accessible_by_support_until__date: null,
 			}),
@@ -2489,7 +2617,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	balena.models.device.lastOnline(device);
 		 * })
 		 */
-		lastOnline(device) {
+		lastOnline(
+			device: AtLeast<Device, 'last_connectivity_event' | 'is_online'>,
+		): string {
 			const lce = device.last_connectivity_event;
 
 			if (!lce) {
@@ -2521,7 +2651,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	balena.models.device.getOsVersion(device); // => '2.26.0+rev1.prod'
 		 * })
 		 */
-		getOsVersion: (device) => getDeviceOsSemverWithVariant(device),
+		getOsVersion: (
+			device: AtLeast<Device, 'os_variant' | 'os_version'>,
+		): string => getDeviceOsSemverWithVariant(device)!,
 
 		/**
 		 * @summary Get whether the device is configured to track the current application release
@@ -2544,7 +2676,9 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(isEnabled);
 		 * });
 		 */
-		isTrackingApplicationRelease: async (uuidOrId) => {
+		isTrackingApplicationRelease: async (
+			uuidOrId: string | number,
+		): Promise<boolean> => {
 			const { should_be_running__release } = await exports.get(uuidOrId, {
 				$select: 'should_be_running__release',
 			});
@@ -2572,11 +2706,13 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(release);
 		 * });
 		 */
-		getTargetReleaseHash: async (uuidOrId) => {
+		getTargetReleaseHash: async (
+			uuidOrId: string | number,
+		): Promise<string | undefined> => {
 			const {
 				should_be_running__release,
 				belongs_to__application,
-			} = await exports.get(uuidOrId, {
+			} = (await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: {
 					should_be_running__release: {
@@ -2587,9 +2723,16 @@ const getDeviceModel = function (deps, opts) {
 						$expand: { should_be_running__release: { $select: ['commit'] } },
 					},
 				},
-			});
+			})) as Device & {
+				should_be_running__release: [Release?];
+				belongs_to__application: [
+					Application & {
+						should_be_running__release: [Release?];
+					},
+				];
+			};
 			if (should_be_running__release.length > 0) {
-				return should_be_running__release[0].commit;
+				return should_be_running__release[0]!.commit;
 			}
 			const targetRelease =
 				belongs_to__application[0].should_be_running__release[0];
@@ -2628,7 +2771,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		pinToRelease: async (uuidOrId, fullReleaseHashOrId) => {
+		pinToRelease: async (
+			uuidOrId: string | number,
+			fullReleaseHashOrId: string | number,
+		): Promise<void> => {
 			let deviceId;
 			let releaseId;
 			if (isId(uuidOrId) && isId(fullReleaseHashOrId)) {
@@ -2638,7 +2784,7 @@ const getDeviceModel = function (deps, opts) {
 				const releaseFilterProperty = isId(fullReleaseHashOrId)
 					? 'id'
 					: 'commit';
-				const { id, belongs_to__application } = await exports.get(uuidOrId, {
+				const { id, belongs_to__application } = (await exports.get(uuidOrId, {
 					$select: 'id',
 					$expand: {
 						belongs_to__application: {
@@ -2656,7 +2802,13 @@ const getDeviceModel = function (deps, opts) {
 							},
 						},
 					},
-				});
+				})) as Device & {
+					belongs_to__application: [
+						Application & {
+							owns__release: Release[];
+						},
+					];
+				};
 				const app = belongs_to__application[0];
 				const release = app.owns__release[0];
 				if (!release) {
@@ -2665,7 +2817,7 @@ const getDeviceModel = function (deps, opts) {
 				deviceId = id;
 				releaseId = release.id;
 			}
-			return await pine.patch({
+			await pine.patch({
 				resource: 'device',
 				id: deviceId,
 				body: { should_be_running__release: releaseId },
@@ -2701,7 +2853,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		setSupervisorRelease: async (uuidOrId, supervisorVersionOrId) => {
+		setSupervisorRelease: async (
+			uuidOrId: string | number,
+			supervisorVersionOrId: string | number,
+		): Promise<void> => {
 			let deviceId;
 			let releaseId;
 			if (isId(uuidOrId) && isId(supervisorVersionOrId)) {
@@ -2711,11 +2866,11 @@ const getDeviceModel = function (deps, opts) {
 				const releaseFilterProperty = isId(supervisorVersionOrId)
 					? 'id'
 					: 'supervisor_version';
-				const device = await exports.get(uuidOrId, {
+				const device = (await exports.get(uuidOrId, {
 					$select: 'id',
 					$expand: { is_of__device_type: { $select: 'slug' } },
-				});
-				const [supervisorRelease] = await pine.get({
+				})) as Device & { is_of__device_type: [DeviceType] };
+				const [supervisorRelease] = await pine.get<SupervisorRelease>({
 					resource: 'supervisor_release',
 					options: {
 						$top: 1,
@@ -2741,7 +2896,7 @@ const getDeviceModel = function (deps, opts) {
 				deviceId = device.id;
 				releaseId = supervisorRelease.id;
 			}
-			return await pine.patch({
+			await pine.patch({
 				resource: 'device',
 				id: deviceId,
 				body: { should_be_managed_by__supervisor_release: releaseId },
@@ -2771,7 +2926,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		trackApplicationRelease: (uuidOrId) =>
+		trackApplicationRelease: (uuidOrId: string | number): Promise<void> =>
 			set(uuidOrId, {
 				should_be_running__release: null,
 			}),
@@ -2792,8 +2947,14 @@ const getDeviceModel = function (deps, opts) {
 		 * @returns {void}
 		 */
 		_checkOsUpdateTarget(
-			{ uuid, is_of__device_type, is_online, os_version, os_variant },
-			targetOsVersion,
+			{
+				uuid,
+				is_of__device_type,
+				is_online,
+				os_version,
+				os_variant,
+			}: Device & { is_of__device_type: [DeviceType] },
+			targetOsVersion: string,
 		) {
 			if (!uuid) {
 				throw new Error('The uuid of the device is not available');
@@ -2823,7 +2984,7 @@ const getDeviceModel = function (deps, opts) {
 				);
 			}
 
-			let currentOsVersion =
+			const currentOsVersion =
 				getDeviceOsSemverWithVariant({
 					os_version,
 					os_variant,
@@ -2842,7 +3003,11 @@ const getDeviceModel = function (deps, opts) {
 
 		// TODO: This is a temporary solution for ESR, as the ESR-supported versions are not part of the SDK yet.
 		// 	It should be removed once the getSupportedVersions is updated to support ESR as well.
-		_startOsUpdate: async (uuid, targetOsVersion, skipCheck) => {
+		_startOsUpdate: async (
+			uuid: string,
+			targetOsVersion: string,
+			skipCheck: boolean,
+		): Promise<OsUpdateActionResult> => {
 			if (!targetOsVersion) {
 				throw new errors.BalenaInvalidParameterError(
 					'targetOsVersion',
@@ -2850,10 +3015,10 @@ const getDeviceModel = function (deps, opts) {
 				);
 			}
 
-			const device = await exports.get(uuid, {
+			const device = (await exports.get(uuid, {
 				$select: ['is_online', 'os_version', 'os_variant'],
 				$expand: { is_of__device_type: { $select: 'slug' } },
-			});
+			})) as Device & { is_of__device_type: [DeviceType] };
 
 			device.uuid = uuid;
 			// this will throw an error if the action isn't available
@@ -2874,7 +3039,7 @@ const getDeviceModel = function (deps, opts) {
 
 			const osUpdateHelper = await getOsUpdateHelper();
 
-			await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
+			return await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
 		},
 		/**
 		 * @summary Start an OS update on a device
@@ -2902,7 +3067,10 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(result.status);
 		 * });
 		 */
-		startOsUpdate: async (uuid, targetOsVersion) => {
+		startOsUpdate: async (
+			uuid: string,
+			targetOsVersion: string,
+		): Promise<OsUpdateActionResult> => {
 			if (!targetOsVersion) {
 				throw new errors.BalenaInvalidParameterError(
 					'targetOsVersion',
@@ -2910,10 +3078,10 @@ const getDeviceModel = function (deps, opts) {
 				);
 			}
 
-			const device = await exports.get(uuid, {
+			const device = (await exports.get(uuid, {
 				$select: ['is_online', 'os_version', 'os_variant'],
 				$expand: { is_of__device_type: { $select: 'slug' } },
-			});
+			})) as Device & { is_of__device_type: [DeviceType] };
 
 			device.uuid = uuid;
 			// this will throw an error if the action isn't available
@@ -2931,7 +3099,7 @@ const getDeviceModel = function (deps, opts) {
 			}
 
 			const osUpdateHelper = await getOsUpdateHelper();
-			await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
+			return await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
 		},
 
 		/**
@@ -2956,7 +3124,7 @@ const getDeviceModel = function (deps, opts) {
 		 * 	console.log(result.status);
 		 * });
 		 */
-		getOsUpdateStatus: async (uuid) => {
+		getOsUpdateStatus: async (uuid: string): Promise<OsUpdateActionResult> => {
 			try {
 				const osUpdateHelper = await getOsUpdateHelper();
 				return await osUpdateHelper.getOsUpdateStatus(uuid);
@@ -3007,7 +3175,10 @@ const getDeviceModel = function (deps, opts) {
 			 * 	console.log(tags)
 			 * });
 			 */
-			async getAllByApplication(nameOrSlugOrId, options) {
+			async getAllByApplication(
+				nameOrSlugOrId: string | number,
+				options?: PineOptions<DeviceTag>,
+			): Promise<DeviceTag[]> {
 				if (options == null) {
 					options = {};
 				}
@@ -3196,7 +3367,10 @@ const getDeviceModel = function (deps, opts) {
 			 * 	console.log(vars)
 			 * });
 			 */
-			async getAllByApplication(nameOrSlugOrId, options) {
+			async getAllByApplication(
+				nameOrSlugOrId: string | number,
+				options?: PineOptions<DeviceVariable>,
+			): Promise<DeviceVariable[]> {
 				if (options == null) {
 					options = {};
 				}
@@ -3379,7 +3553,10 @@ const getDeviceModel = function (deps, opts) {
 			 * 	console.log(vars)
 			 * });
 			 */
-			async getAllByApplication(nameOrSlugOrId, options) {
+			async getAllByApplication(
+				nameOrSlugOrId: string | number,
+				options?: PineOptions<DeviceVariable>,
+			): Promise<DeviceVariable[]> {
 				if (options == null) {
 					options = {};
 				}
@@ -3532,7 +3709,10 @@ const getDeviceModel = function (deps, opts) {
 			 * 	console.log(vars)
 			 * });
 			 */
-			async getAllByDevice(uuidOrId, options) {
+			async getAllByDevice(
+				uuidOrId: string | number,
+				options?: PineOptions<DeviceServiceEnvironmentVariable>,
+			): Promise<DeviceServiceEnvironmentVariable[]> {
 				if (options == null) {
 					options = {};
 				}
@@ -3584,7 +3764,10 @@ const getDeviceModel = function (deps, opts) {
 			 * 	console.log(vars)
 			 * });
 			 */
-			async getAllByApplication(nameOrSlugOrId, options) {
+			async getAllByApplication(
+				nameOrSlugOrId: string | number,
+				options?: PineOptions<DeviceServiceEnvironmentVariable>,
+			): Promise<DeviceServiceEnvironmentVariable[]> {
 				if (options == null) {
 					options = {};
 				}
@@ -3653,9 +3836,13 @@ const getDeviceModel = function (deps, opts) {
 			 * 	console.log(value)
 			 * });
 			 */
-			async get(uuidOrId, serviceId, key) {
+			async get(
+				uuidOrId: string | number,
+				serviceId: number,
+				key: string,
+			): Promise<string | undefined> {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
-				const [variable] = await pine.get({
+				const [variable] = await pine.get<DeviceServiceEnvironmentVariable>({
 					resource: 'device_service_environment_variable',
 					options: {
 						$filter: {
@@ -3665,7 +3852,7 @@ const getDeviceModel = function (deps, opts) {
 									$expr: {
 										si: {
 											device: deviceId,
-											service: serviceId,
+											installs__service: serviceId,
 										},
 									},
 								},
@@ -3706,7 +3893,12 @@ const getDeviceModel = function (deps, opts) {
 			 * 	...
 			 * });
 			 */
-			async set(uuidOrId, serviceId, key, value) {
+			async set(
+				uuidOrId: string | number,
+				serviceId: number,
+				key: string,
+				value: string,
+			): Promise<void> {
 				value = String(value);
 
 				const deviceFilter = isId(uuidOrId)
@@ -3722,12 +3914,12 @@ const getDeviceModel = function (deps, opts) {
 							},
 					  };
 
-				const serviceInstalls = await pine.get({
+				const serviceInstalls = await pine.get<ServiceInstall>({
 					resource: 'service_install',
 					options: {
 						$filter: {
 							device: deviceFilter,
-							service: serviceId,
+							installs__service: serviceId,
 						},
 					},
 				});
@@ -3740,7 +3932,7 @@ const getDeviceModel = function (deps, opts) {
 				}
 				const serviceInstallId = serviceInstalls[0].id;
 
-				await pine.upsert({
+				await pine.upsert<DeviceServiceEnvironmentVariable>({
 					resource: 'device_service_environment_variable',
 					id: {
 						service_install: serviceInstallId,
@@ -3780,9 +3972,13 @@ const getDeviceModel = function (deps, opts) {
 			 * 	...
 			 * });
 			 */
-			async remove(uuidOrId, serviceId, key) {
+			async remove(
+				uuidOrId: string | number,
+				serviceId: number,
+				key: string,
+			): Promise<void> {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
-				return await pine.delete({
+				await pine.delete({
 					resource: 'device_service_environment_variable',
 					options: {
 						$filter: {

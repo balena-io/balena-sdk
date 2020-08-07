@@ -15,7 +15,7 @@ export const normalizeDeviceOsVersion = (device: BalenaSdk.Device) => {
 export const getDeviceOsSemverWithVariant = ({
 	os_version,
 	os_variant,
-}: Pick<BalenaSdk.Device, 'os_version' | 'os_variant'>) => {
+}: Pick<BalenaSdk.Device, 'os_version' | 'os_variant'>): string | null => {
 	if (!os_version) {
 		return null;
 	}

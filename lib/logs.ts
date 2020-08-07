@@ -14,29 +14,46 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
+
 import * as querystring from 'querystring';
 
 import { EventEmitter } from 'events';
 import * as ndjson from 'ndjson';
-import { AbortController as AbortControllerPonyfill } from 'abortcontroller-polyfill/dist/cjs-ponyfill';
 import { globalEnv } from './util/global-env';
+import {
+	LogsOptions,
+	LogMessage,
+	LogsSubscription,
+	Device,
+} from '../typings/balena-sdk';
 
-const AbortController =
+const AbortController: typeof window.AbortController =
 	'AbortController' in globalEnv
 		? globalEnv.AbortController
-		: AbortControllerPonyfill;
+		: // tslint:disable-next-line:no-var-requires
+		  require('abortcontroller-polyfill/dist/cjs-ponyfill').AbortController;
 
-const getLogs = function (deps, opts) {
+const getLogs = function (
+	deps: InjectedDependenciesParam,
+	opts: InjectedOptionsParam,
+) {
 	const { request } = deps;
 
-	const deviceModel = require('./models/device').default(deps, opts);
+	const deviceModel = (require('./models/device') as typeof import('./models/device')).default(
+		deps,
+		opts,
+	);
 
-	const getLogsUrl = function (device, options) {
+	const getLogsUrl = function (device: Device, options?: LogsOptions) {
 		const query = querystring.stringify(options);
 		return `/device/v2/${device.uuid}/logs?${query}`;
 	};
 
-	const getLogsFromApi = async function (device, options) {
+	const getLogsFromApi = async function (
+		device: Device,
+		options?: LogsOptions,
+	) {
 		if (options == null) {
 			options = {};
 		}
@@ -47,14 +64,16 @@ const getLogs = function (deps, opts) {
 		return body;
 	};
 
-	const subscribeToApiLogs = function (device, options) {
+	const subscribeToApiLogs = function (
+		device: Device,
+		options?: LogsOptions,
+	): LogsSubscription {
 		if (options == null) {
 			options = {};
 		}
-		/** @type {any} */
-		const emitter = new EventEmitter();
+		const emitter = new EventEmitter() as LogsSubscription;
 		const controller = new AbortController();
-		const parser = ndjson();
+		const parser = ndjson.parse();
 
 		request
 			.stream({
@@ -182,7 +201,10 @@ const getLogs = function (deps, opts) {
 		 * 	});
 		 * });
 		 */
-		async subscribe(uuidOrId, options) {
+		async subscribe(
+			uuidOrId: string | number,
+			options?: LogsOptions,
+		): Promise<LogsSubscription> {
 			// TODO: We should consider making this a readable stream.
 
 			const device = await deviceModel.get(uuidOrId, { $select: 'uuid' });
@@ -228,7 +250,10 @@ const getLogs = function (deps, opts) {
 		 * 	});
 		 * });
 		 */
-		async history(uuidOrId, options) {
+		async history(
+			uuidOrId: string | number,
+			options?: LogsOptions,
+		): Promise<LogMessage[]> {
 			const device = await deviceModel.get(uuidOrId, { $select: 'uuid' });
 			return await getLogsFromApi(device, options);
 		},

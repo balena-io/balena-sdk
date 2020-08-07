@@ -40,13 +40,13 @@ const getServiceModel = (
 		buildDependentResource,
 	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
-	const varModel = buildDependentResource(
+	const varModel = buildDependentResource<ServiceEnvironmentVariable>(
 		{ pine },
 		{
 			resourceName: 'service_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'service',
-			getResourceId: async (id: number) =>
+			getResourceId: async (id: number): Promise<number> =>
 				(await get(id, { $select: 'id' })).id,
 		},
 	);

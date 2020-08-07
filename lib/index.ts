@@ -14,7 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { Pine } from '../typings/balena-pine';
+import type { BalenaRequest } from '../typings/balena-request';
+import type * as BalenaSdk from '..';
+
 import { globalEnv } from './util/global-env';
+
+export interface InjectedDependenciesParam {
+	sdkInstance: BalenaSdk.BalenaSDK;
+	settings: {
+		get(key: string): string;
+		getAll(): { [key: string]: string };
+	};
+	request: BalenaRequest;
+	auth: import('balena-auth').default;
+	pine: Pine;
+	pubsub: import('./util/pubsub').PubSub;
+}
+
+export interface InjectedOptionsParam extends BalenaSdk.SdkOptions {
+	apiUrl: string;
+	apiVersion: string;
+}
 
 // These constants are used to create globals for sharing defualt options between
 // multiple instances of the SDK.
@@ -48,17 +69,29 @@ const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
  * 	dataDirectory: "/opt/local/balena"
  * });
  */
-export const getSdk = function (opts) {
-	let settings;
-	if (opts == null) {
-		opts = {};
-	}
-	const version = require('./util/sdk-version').default;
-	const { getRequest } = require('balena-request');
-	const BalenaAuth = require('balena-auth')['default'];
-	const { BalenaPine } = require('balena-pine');
-	const errors = require('balena-errors');
-	const { PubSub } = require('./util/pubsub');
+export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
+	const opts: InjectedOptionsParam = {
+		apiUrl: 'https://api.balena-cloud.com/',
+		builderUrl: 'https://builder.balena-cloud.com/',
+		isBrowser: typeof window !== 'undefined' && window !== null,
+		// API version is configurable but only do so if you know what you're doing,
+		// as the SDK is directly tied to a specific version.
+		apiVersion: 'v6',
+		...$opts,
+	};
+
+	const version = (require('./util/sdk-version') as typeof import('./util/sdk-version'))
+		.default;
+	const { getRequest } = require('balena-request') as {
+		getRequest: (
+			opts: BalenaSdk.SdkOptions & { auth: InjectedDependenciesParam['auth'] },
+		) => BalenaRequest;
+	};
+	const BalenaAuth = (require('balena-auth') as typeof import('balena-auth'))
+		.default;
+	const { BalenaPine } = require('balena-pine') as typeof import('balena-pine');
+	const errors = require('balena-errors') as typeof import('balena-errors');
+	const { PubSub } = require('./util/pubsub') as typeof import('./util/pubsub');
 
 	/**
 	 * @namespace models
@@ -81,45 +114,46 @@ export const getSdk = function (opts) {
 	 */
 	const sdkTemplate = {
 		auth() {
-			const { addCallbackSupportToModuleFactory } = require('./util/callbacks');
-			return addCallbackSupportToModuleFactory(require('./auth').default);
+			const {
+				addCallbackSupportToModuleFactory,
+			} = require('./util/callbacks') as typeof import('./util/callbacks');
+			return addCallbackSupportToModuleFactory(
+				(require('./auth') as typeof import('./auth')).default,
+			);
 		},
 		models() {
 			// don't try to add callbacks for this, since it's just a namespace
 			// and it would otherwise break lazy loading since it would enumerate
 			// all properties
-			return require('./models');
+			return require('./models') as typeof import('./models');
 		},
 		logs() {
-			const { addCallbackSupportToModuleFactory } = require('./util/callbacks');
-			return addCallbackSupportToModuleFactory(require('./logs').default);
+			const {
+				addCallbackSupportToModuleFactory,
+			} = require('./util/callbacks') as typeof import('./util/callbacks');
+			return addCallbackSupportToModuleFactory(
+				(require('./logs') as typeof import('./logs')).default,
+			);
 		},
 		settings() {
-			const { addCallbackSupportToModuleFactory } = require('./util/callbacks');
-			return addCallbackSupportToModuleFactory(require('./settings').default);
+			const {
+				addCallbackSupportToModuleFactory,
+			} = require('./util/callbacks') as typeof import('./util/callbacks');
+			return addCallbackSupportToModuleFactory(
+				(require('./settings') as typeof import('./settings')).default,
+			);
 		},
 	};
 
-	opts = Object.assign(
-		{
-			apiUrl: 'https://api.balena-cloud.com/',
-			builderUrl: 'https://builder.balena-cloud.com/',
-			isBrowser: typeof window !== 'undefined' && window !== null,
-			// API version is configurable but only do so if you know what you're doing,
-			// as the SDK is directly tied to a specific version.
-			apiVersion: 'v6',
-		},
-		opts,
-	);
-
+	let settings: InjectedDependenciesParam['settings'];
 	if (opts.isBrowser) {
-		const { notImplemented } = require('./util');
+		const { notImplemented } = require('./util') as typeof import('./util');
 		settings = {
 			get: notImplemented,
 			getAll: notImplemented,
 		};
 	} else {
-		settings = require('balena-settings-client');
+		settings = (require('balena-settings-client') as typeof import('balena-settings-client')) as InjectedDependenciesParam['settings'];
 		if (opts.dataDirectory == null) {
 			opts.dataDirectory = settings.get('dataDirectory');
 		}
@@ -128,16 +162,20 @@ export const getSdk = function (opts) {
 	if ('apiKey' in opts) {
 		// to prevent exposing it to balena-request directly
 		// which would add it as a query sting option
-		opts.apiKey = null;
+		// @ts-expect-error
+		delete opts.apiKey;
 	}
 
 	const auth = new BalenaAuth(opts);
-	const request = getRequest(Object.assign({}, opts, { auth }));
-	const pine = new BalenaPine({}, Object.assign({}, opts, { auth, request }));
+	const request = getRequest({ ...opts, auth });
+	const pine = (new BalenaPine(
+		{},
+		{ ...opts, auth, request },
+	) as unknown) as Pine;
 	const pubsub = new PubSub();
 
-	const sdk = {};
-	const deps = {
+	const sdk = {} as BalenaSdk.BalenaSDK;
+	const deps: InjectedDependenciesParam = {
 		settings,
 		request,
 		auth,
@@ -146,7 +184,9 @@ export const getSdk = function (opts) {
 		sdkInstance: sdk,
 	};
 
-	Object.keys(sdkTemplate).forEach(function (moduleName) {
+	Object.keys(sdkTemplate).forEach(function (
+		moduleName: keyof typeof sdkTemplate,
+	) {
 		Object.defineProperty(sdk, moduleName, {
 			enumerable: true,
 			configurable: true,
@@ -210,16 +250,15 @@ export const getSdk = function (opts) {
 	 * });
 	 */
 	Object.defineProperty(sdk, 'interceptors', {
-		/** @private @returns Interceptor[] */
-		get() {
+		get(): BalenaSdk.Interceptor[] {
 			return request.interceptors;
 		},
-		set(/** @type Interceptor[] */ interceptors) {
+		set(interceptors: BalenaSdk.Interceptor[]) {
 			return (request.interceptors = interceptors);
 		},
 	});
 
-	const versionHeaderInterceptor = {
+	const versionHeaderInterceptor: BalenaSdk.Interceptor = {
 		request($request) {
 			let { url } = $request;
 
@@ -334,7 +373,7 @@ export const getSdk = function (opts) {
  * 	isBrowser: true,
  * });
  */
-export const setSharedOptions = function (options) {
+export const setSharedOptions = function (options: BalenaSdk.SdkOptions) {
 	if (globalEnv[BALENA_SDK_HAS_USED_SHARED_OPTIONS]) {
 		console.error(
 			'Shared SDK options have already been used. You may have a race condition in your code.',

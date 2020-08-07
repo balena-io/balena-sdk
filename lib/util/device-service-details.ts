@@ -108,12 +108,14 @@ function getSingleInstallSummary(
 	return result;
 }
 
-export const generateCurrentServiceDetails = (
+export const generateCurrentServiceDetails = <
+	TCurrentService extends CurrentService = CurrentService
+>(
 	rawDevice: Device,
-): DeviceWithServiceDetails => {
+): DeviceWithServiceDetails<TCurrentService> => {
 	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
-	);
+	) as Array<TCurrentService & WithServiceName>;
 
 	const downloads = rawDevice.gateway_download!.map((gd) =>
 		getSingleInstallSummary(gd),
@@ -125,11 +127,11 @@ export const generateCurrentServiceDetails = (
 	// which could match service names
 	const currentServicesGroupedByName: Record<
 		string,
-		CurrentService[]
+		TCurrentService[]
 	> = Object.create(null);
 	for (const container of installs) {
 		const { service_name } = container;
-		let serviceContainerGroup: CurrentService[];
+		let serviceContainerGroup: TCurrentService[];
 		if (currentServicesGroupedByName[service_name] == null) {
 			serviceContainerGroup = [];
 			currentServicesGroupedByName[service_name] = serviceContainerGroup;
@@ -150,7 +152,7 @@ export const generateCurrentServiceDetails = (
 		}
 	}
 
-	const device = rawDevice as DeviceWithServiceDetails;
+	const device = rawDevice as DeviceWithServiceDetails<TCurrentService>;
 	device.current_services = currentServicesGroupedByName;
 	device.current_gateway_downloads = downloads;
 	return device;

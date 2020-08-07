@@ -14,9 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { SubmitBody } from '../../typings/pinejs-client-core';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import {
+	PineOptions,
+	DeviceWithServiceDetails,
+	CurrentService,
+	ApplicationType,
+	CurrentServiceWithCommit,
+	Release,
+	ApplicationTag,
+	ApplicationVariable,
+	BuildVariable,
+} from '../..';
+
 import * as url from 'url';
 
-const once = require('lodash/once');
+import once = require('lodash/once');
 import * as errors from 'balena-errors';
 
 import {
@@ -33,67 +47,84 @@ import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } from '../util/device-service-details';
+import {
+	Application,
+	DeviceType,
+	Device,
+	Organization,
+} from '../../typings/balena-sdk';
 
-const getApplicationModel = function (deps, opts) {
+const getApplicationModel = function (
+	deps: InjectedDependenciesParam,
+	opts: InjectedOptionsParam,
+) {
 	const { request, pine } = deps;
-	let { apiUrl, dashboardUrl } = opts;
+	const { apiUrl } = opts;
 
-	const deviceModel = once(() => require('./device').default(deps, opts));
-	const releaseModel = once(() => require('./release').default(deps, opts));
-	const inviteModel = require('./application-invite').default(
+	const deviceModel = once(() =>
+		(require('./device') as typeof import('./device')).default(deps, opts),
+	);
+	const releaseModel = once(() =>
+		(require('./release') as typeof import('./release')).default(deps, opts),
+	);
+	const inviteModel = (require('./application-invite') as typeof import('./application-invite')).default(
 		deps,
 		opts,
-		(nameOrSlugOrId, options) => exports.get(nameOrSlugOrId, options),
+		(...args: Parameters<typeof exports.get>) => exports.get(...args),
 	);
 
-	const { addCallbackSupportToModule } = require('../util/callbacks');
+	const {
+		addCallbackSupportToModule,
+	} = require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const { buildDependentResource } = require('../util/dependent-resource');
+	const {
+		buildDependentResource,
+	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
-	const tagsModel = buildDependentResource(
+	const tagsModel = buildDependentResource<ApplicationTag>(
 		{ pine },
 		{
 			resourceName: 'application_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
 
-	const configVarModel = buildDependentResource(
+	const configVarModel = buildDependentResource<ApplicationVariable>(
 		{ pine },
 		{
 			resourceName: 'application_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
-	const envVarModel = buildDependentResource(
+	const envVarModel = buildDependentResource<ApplicationVariable>(
 		{ pine },
 		{
 			resourceName: 'application_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
 		},
 	);
-	const buildVarModel = buildDependentResource(
+	const buildVarModel = buildDependentResource<BuildVariable>(
 		{ pine },
 		{
 			resourceName: 'build_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(nameOrSlugOrId) {
+			async getResourceId(nameOrSlugOrId: string | number): Promise<number> {
 				const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
 				return id;
 			},
@@ -101,13 +132,11 @@ const getApplicationModel = function (deps, opts) {
 	);
 
 	// Infer dashboardUrl from apiUrl if former is undefined
-	if (dashboardUrl == null) {
-		dashboardUrl = apiUrl.replace(/api/, 'dashboard');
-	}
+	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
 
 	// Internal method for name/id disambiguation
 	// Note that this throws an exception for missing names, but not missing ids
-	const getId = async (nameOrSlugOrId) => {
+	const getId = async (nameOrSlugOrId: string | number) => {
 		if (isId(nameOrSlugOrId)) {
 			return nameOrSlugOrId;
 		} else {
@@ -116,7 +145,7 @@ const getApplicationModel = function (deps, opts) {
 		}
 	};
 
-	const normalizeApplication = function (application) {
+	const normalizeApplication = function (application: Application) {
 		if (Array.isArray(application.owns__device)) {
 			application.owns__device.forEach((device) =>
 				normalizeDeviceOsVersion(device),
@@ -144,7 +173,7 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(dashboardApplicationUrl);
 		 * });
 		 */
-		getDashboardUrl(id) {
+		getDashboardUrl(id: number): string {
 			if (typeof id !== 'number' || !Number.isFinite(id)) {
 				throw new Error('The id option should be a finite number');
 			}
@@ -174,7 +203,7 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAll(options) {
+		async getAll(options?: PineOptions<Application>): Promise<Application[]> {
 			if (options == null) {
 				options = {};
 			}
@@ -217,7 +246,15 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAllWithDeviceServiceDetails(options) {
+		async getAllWithDeviceServiceDetails(
+			options?: PineOptions<Application>,
+		): Promise<
+			Array<
+				Application & {
+					owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
+				}
+			>
+		> {
 			if (options == null) {
 				options = {};
 			}
@@ -235,7 +272,11 @@ const getApplicationModel = function (deps, opts) {
 				options,
 			);
 
-			const apps = await exports.getAll(serviceOptions);
+			const apps = (await exports.getAll(serviceOptions)) as Array<
+				Application & {
+					owns__device: Array<DeviceWithServiceDetails<CurrentService>>;
+				}
+			>;
 			apps.forEach((app) => {
 				app.owns__device = app.owns__device.map(generateCurrentServiceDetails);
 			});
@@ -270,7 +311,10 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(application);
 		 * });
 		 */
-		async get(nameOrSlugOrId, options) {
+		async get(
+			nameOrSlugOrId: string | number,
+			options?: PineOptions<Application>,
+		): Promise<Application> {
 			if (options == null) {
 				options = {};
 			}
@@ -351,7 +395,14 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(device);
 		 * });
 		 */
-		async getWithDeviceServiceDetails(nameOrSlugOrId, options) {
+		async getWithDeviceServiceDetails(
+			nameOrSlugOrId: string | number,
+			options?: PineOptions<Application>,
+		): Promise<
+			Application & {
+				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
+			}
+		> {
 			if (options == null) {
 				options = {};
 			}
@@ -369,9 +420,16 @@ const getApplicationModel = function (deps, opts) {
 				options,
 			);
 
-			const app = await exports.get(nameOrSlugOrId, serviceOptions);
+			const app = (await exports.get(
+				nameOrSlugOrId,
+				serviceOptions,
+			)) as Application & {
+				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
+			};
 			if (app && app.owns__device) {
-				app.owns__device = app.owns__device.map(generateCurrentServiceDetails);
+				app.owns__device = app.owns__device.map((d) =>
+					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
+				);
 			}
 			return app;
 		},
@@ -394,7 +452,11 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(application);
 		 * });
 		 */
-		async getAppByOwner(appName, owner, options) {
+		async getAppByOwner(
+			appName: string,
+			owner: string,
+			options?: PineOptions<Application>,
+		): Promise<Application> {
 			if (options == null) {
 				options = {};
 			}
@@ -442,7 +504,7 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(hasApp);
 		 * });
 		 */
-		has: async (nameOrSlugOrId) => {
+		has: async (nameOrSlugOrId: string | number): Promise<boolean> => {
 			try {
 				await exports.get(nameOrSlugOrId, { $select: ['id'] });
 				return true;
@@ -513,7 +575,19 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(application);
 		 * });
 		 */
-		async create({ name, applicationType, deviceType, parent, organization }) {
+		async create({
+			name,
+			applicationType,
+			deviceType,
+			parent,
+			organization,
+		}: {
+			name: string;
+			applicationType?: string;
+			deviceType: string;
+			parent?: number | string;
+			organization: number | string;
+		}): Promise<Application> {
 			if (organization == null) {
 				throw new errors.BalenaInvalidParameterError(
 					'organization',
@@ -524,7 +598,7 @@ const getApplicationModel = function (deps, opts) {
 			const applicationTypePromise = !applicationType
 				? undefined
 				: pine
-						.get({
+						.get<ApplicationType>({
 							resource: 'application_type',
 							id: {
 								slug: applicationType,
@@ -555,7 +629,7 @@ const getApplicationModel = function (deps, opts) {
 						throw new errors.BalenaDiscontinuedDeviceType(deviceType);
 					}
 
-					const dt = await pine.get({
+					const dt = await pine.get<DeviceType>({
 						resource: 'device_type',
 						id: {
 							// this way we get the un-aliased device type slug
@@ -572,7 +646,7 @@ const getApplicationModel = function (deps, opts) {
 				});
 
 			const organizationPromise = pine
-				.get({
+				.get<Organization>({
 					resource: 'organization',
 					id: {
 						[isId(organization) ? 'id' : 'handle']: organization,
@@ -599,23 +673,21 @@ const getApplicationModel = function (deps, opts) {
 				parentAppPromise,
 				organizationPromise,
 			]);
-			const body = {
+			const body: SubmitBody<Application> = {
 				app_name: name,
 				is_for__device_type: deviceTypeId,
 			};
 
 			if (parentApplication) {
-				Object.assign(body, {
-					depends_on__application: parentApplication.id,
-				});
+				body.depends_on__application = parentApplication.id;
 			}
 
 			if (applicationTypeId) {
-				Object.assign(body, { application_type: applicationTypeId });
+				body.application_type = applicationTypeId;
 			}
 
 			if (organizationId) {
-				Object.assign(body, { organization: organizationId });
+				body.organization = organizationId;
 			}
 
 			return await pine.post({
@@ -645,10 +717,10 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		remove: async (nameOrSlugOrId) => {
+		remove: async (nameOrSlugOrId: string | number): Promise<void> => {
 			try {
 				const applicationId = await getId(nameOrSlugOrId);
-				return await pine.delete({
+				await pine.delete({
 					resource: 'application',
 					id: applicationId,
 				});
@@ -681,7 +753,7 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		restart: async (nameOrSlugOrId) => {
+		restart: async (nameOrSlugOrId: string | number): Promise<void> => {
 			try {
 				const applicationId = await getId(nameOrSlugOrId);
 
@@ -730,7 +802,9 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(apiKey);
 		 * });
 		 */
-		generateApiKey: async (nameOrSlugOrId) => {
+		generateApiKey: async (
+			nameOrSlugOrId: string | number,
+		): Promise<string> => {
 			// Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 			// doesn't exist. TODO: Can use getId once https://github.com/balena-io/balena-api/issues/110 is resolved
 			const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
@@ -769,7 +843,9 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(key);
 		 * });
 		 */
-		generateProvisioningKey: async (nameOrSlugOrId) => {
+		generateProvisioningKey: async (
+			nameOrSlugOrId: string | number,
+		): Promise<string> => {
 			try {
 				const applicationId = await getId(nameOrSlugOrId);
 				const { body } = await request.send({
@@ -804,9 +880,9 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		purge: async (appId) => {
+		purge: async (appId: number): Promise<void> => {
 			try {
-				return await request.send({
+				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/purge',
 					baseUrl: apiUrl,
@@ -846,12 +922,15 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async shutdown(appId, options) {
+		async shutdown(
+			appId: number,
+			options?: { force?: boolean },
+		): Promise<void> {
 			if (options == null) {
 				options = {};
 			}
 			try {
-				return await request.send({
+				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/shutdown',
 					baseUrl: apiUrl,
@@ -891,12 +970,12 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async reboot(appId, options) {
+		async reboot(appId: number, options?: { force?: boolean }): Promise<void> {
 			if (options == null) {
 				options = {};
 			}
 			try {
-				return await request.send({
+				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/reboot',
 					baseUrl: apiUrl,
@@ -942,7 +1021,9 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(isEnabled);
 		 * });
 		 */
-		willTrackNewReleases: async (nameOrSlugOrId) => {
+		willTrackNewReleases: async (
+			nameOrSlugOrId: string | number,
+		): Promise<boolean> => {
 			const { should_track_latest_release } = await exports.get(
 				nameOrSlugOrId,
 				{ $select: 'should_track_latest_release' },
@@ -976,8 +1057,10 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(isEnabled);
 		 * });
 		 */
-		isTrackingLatestRelease: async (nameOrSlugOrId) => {
-			const application = await exports.get(nameOrSlugOrId, {
+		isTrackingLatestRelease: async (
+			nameOrSlugOrId: string | number,
+		): Promise<boolean> => {
+			const application = (await exports.get(nameOrSlugOrId, {
 				$select: ['should_track_latest_release'],
 				$expand: {
 					should_be_running__release: { $select: ['id'] },
@@ -990,7 +1073,10 @@ const getApplicationModel = function (deps, opts) {
 						$orderby: 'created_at desc',
 					},
 				},
-			});
+			})) as Application & {
+				should_be_running__release: Release[];
+				owns__release: Release[];
+			};
 			const trackedRelease = application.should_be_running__release[0];
 			const latestRelease = application.owns__release[0];
 			return (
@@ -1030,7 +1116,10 @@ const getApplicationModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		pinToRelease: async (nameOrSlugOrId, fullReleaseHash) => {
+		pinToRelease: async (
+			nameOrSlugOrId: string | number,
+			fullReleaseHash: string,
+		): Promise<void> => {
 			const applicationId = await getId(nameOrSlugOrId);
 			const release = await releaseModel().get(fullReleaseHash, {
 				$select: 'id',
@@ -1040,7 +1129,7 @@ const getApplicationModel = function (deps, opts) {
 					status: 'success',
 				},
 			});
-			return await pine.patch({
+			await pine.patch({
 				resource: 'application',
 				id: applicationId,
 				body: {
@@ -1076,11 +1165,15 @@ const getApplicationModel = function (deps, opts) {
 		 * 	console.log(release);
 		 * });
 		 */
-		getTargetReleaseHash: async (nameOrSlugOrId) => {
-			const application = await exports.get(nameOrSlugOrId, {
+		getTargetReleaseHash: async (
+			nameOrSlugOrId: string | number,
+		): Promise<string> => {
+			const application = (await exports.get(nameOrSlugOrId, {
 				$select: 'id',
 				$expand: { should_be_running__release: { $select: ['commit'] } },
-			});
+			})) as Application & {
+				should_be_running__release: Release[];
+			};
 			return application.should_be_running__release[0]?.commit;
 		},
 
@@ -1112,8 +1205,10 @@ const getApplicationModel = function (deps, opts) {
 		 * 	...
 		 * });
 		 */
-		trackLatestRelease: async (nameOrSlugOrId) => {
-			const application = await exports.get(nameOrSlugOrId, {
+		trackLatestRelease: async (
+			nameOrSlugOrId: string | number,
+		): Promise<void> => {
+			const application = (await exports.get(nameOrSlugOrId, {
 				$select: 'id',
 				$expand: {
 					owns__release: {
@@ -1125,13 +1220,17 @@ const getApplicationModel = function (deps, opts) {
 						$orderby: 'created_at desc',
 					},
 				},
-			});
-			const body = { should_track_latest_release: true };
+			})) as Application & {
+				owns__release: Release[];
+			};
+			const body: SubmitBody<Application> = {
+				should_track_latest_release: true,
+			};
 			const latestRelease = application.owns__release[0];
 			if (latestRelease) {
 				body.should_be_running__release = latestRelease.id;
 			}
-			return await pine.patch({
+			await pine.patch({
 				resource: 'application',
 				id: application.id,
 				body,
@@ -1159,9 +1258,11 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		enableDeviceUrls: async (nameOrSlugOrId) => {
+		enableDeviceUrls: async (
+			nameOrSlugOrId: string | number,
+		): Promise<void> => {
 			const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
-			return await pine.patch({
+			await pine.patch<Device>({
 				resource: 'device',
 				body: {
 					is_web_accessible: true,
@@ -1195,9 +1296,11 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		disableDeviceUrls: async (nameOrSlugOrId) => {
+		disableDeviceUrls: async (
+			nameOrSlugOrId: string | number,
+		): Promise<void> => {
 			const { id } = await exports.get(nameOrSlugOrId, { $select: 'id' });
-			return await pine.patch({
+			await pine.patch<Device>({
 				resource: 'device',
 				body: {
 					is_web_accessible: false,
@@ -1232,7 +1335,10 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async grantSupportAccess(nameOrSlugOrId, expiryTimestamp) {
+		async grantSupportAccess(
+			nameOrSlugOrId: string | number,
+			expiryTimestamp: number,
+		): Promise<void> {
 			if (expiryTimestamp == null || expiryTimestamp <= Date.now()) {
 				throw new errors.BalenaInvalidParameterError(
 					'expiryTimestamp',
@@ -1242,7 +1348,7 @@ const getApplicationModel = function (deps, opts) {
 
 			try {
 				const applicationId = await getId(nameOrSlugOrId);
-				return await pine.patch({
+				await pine.patch({
 					resource: 'application',
 					id: applicationId,
 					body: { is_accessible_by_support_until__date: expiryTimestamp },
@@ -1276,10 +1382,12 @@ const getApplicationModel = function (deps, opts) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		revokeSupportAccess: async (nameOrSlugOrId) => {
+		revokeSupportAccess: async (
+			nameOrSlugOrId: string | number,
+		): Promise<void> => {
 			try {
 				const applicationId = await getId(nameOrSlugOrId);
-				return await pine.patch({
+				await pine.patch({
 					resource: 'application',
 					id: applicationId,
 					body: { is_accessible_by_support_until__date: null },

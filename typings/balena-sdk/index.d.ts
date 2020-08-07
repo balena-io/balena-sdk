@@ -377,11 +377,11 @@ export interface BalenaSDK {
 				organization: number | string;
 			}): Promise<Application>;
 			get(
-				nameOrId: string | number,
+				nameOrSlugOrId: string | number,
 				options?: PineOptions<Application>,
 			): Promise<Application>;
 			getWithDeviceServiceDetails(
-				nameOrId: string | number,
+				nameOrSlugOrId: string | number,
 				options?: PineOptions<Application>,
 			): Promise<
 				Application & {
@@ -405,93 +405,97 @@ export interface BalenaSDK {
 					}
 				>
 			>;
-			has(nameOrId: string | number): Promise<boolean>;
+			has(nameOrSlugOrId: string | number): Promise<boolean>;
 			hasAny(): Promise<boolean>;
-			remove(nameOrId: string | number): Promise<void>;
-			restart(nameOrId: string | number): Promise<void>;
-			enableDeviceUrls(nameOrId: string | number): Promise<void>;
-			disableDeviceUrls(nameOrId: string | number): Promise<void>;
-			getDashboardUrl(nameOrId: number): string;
+			remove(nameOrSlugOrId: string | number): Promise<void>;
+			restart(nameOrSlugOrId: string | number): Promise<void>;
+			enableDeviceUrls(nameOrSlugOrId: string | number): Promise<void>;
+			disableDeviceUrls(nameOrSlugOrId: string | number): Promise<void>;
+			getDashboardUrl(id: number): string;
 			grantSupportAccess(
-				nameOrId: string | number,
+				nameOrSlugOrId: string | number,
 				expiryTimestamp: number,
 			): Promise<void>;
-			revokeSupportAccess(nameOrId: string | number): Promise<void>;
-			reboot(appId: number, { force }: { force?: boolean }): Promise<void>;
-			shutdown(appId: number, { force }: { force?: boolean }): Promise<void>;
+			revokeSupportAccess(nameOrSlugOrId: string | number): Promise<void>;
+			reboot(appId: number, options?: { force?: boolean }): Promise<void>;
+			shutdown(appId: number, options?: { force?: boolean }): Promise<void>;
 			purge(appId: number): Promise<void>;
-			generateApiKey(nameOrId: string | number): Promise<string>;
-			generateProvisioningKey(nameOrId: string | number): Promise<string>;
-			willTrackNewReleases(nameOrId: string | number): Promise<boolean>;
-			isTrackingLatestRelease(nameOrId: string | number): Promise<boolean>;
+			generateApiKey(nameOrSlugOrId: string | number): Promise<string>;
+			generateProvisioningKey(nameOrSlugOrId: string | number): Promise<string>;
+			willTrackNewReleases(nameOrSlugOrId: string | number): Promise<boolean>;
+			isTrackingLatestRelease(
+				nameOrSlugOrId: string | number,
+			): Promise<boolean>;
 			pinToRelease(
-				nameOrId: string | number,
+				nameOrSlugOrId: string | number,
 				fullReleaseHash: string,
 			): Promise<void>;
-			getTargetReleaseHash(nameOrId: string | number): Promise<string>;
-			trackLatestRelease(nameOrId: string | number): Promise<void>;
+			getTargetReleaseHash(
+				nameOrSlugOrId: string | number,
+			): Promise<string | undefined>;
+			trackLatestRelease(nameOrSlugOrId: string | number): Promise<void>;
 			tags: {
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<ApplicationTag>,
 				): Promise<ApplicationTag[]>;
 				getAll(
 					options?: PineOptions<ApplicationTag>,
 				): Promise<ApplicationTag[]>;
 				set(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					tagKey: string,
 					value: string,
 				): Promise<void>;
-				remove(nameOrId: string | number, tagKey: string): Promise<void>;
+				remove(nameOrSlugOrId: string | number, tagKey: string): Promise<void>;
 			};
 			configVar: {
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<ApplicationVariable>,
 				): Promise<ApplicationVariable[]>;
 				set(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					key: string,
 					value: string,
 				): Promise<void>;
 				get(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					key: string,
 				): Promise<string | undefined>;
-				remove(nameOrId: string | number, key: string): Promise<void>;
+				remove(nameOrSlugOrId: string | number, key: string): Promise<void>;
 			};
 			envVar: {
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<ApplicationVariable>,
 				): Promise<ApplicationVariable[]>;
 				set(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					key: string,
 					value: string,
 				): Promise<void>;
 				get(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					key: string,
 				): Promise<string | undefined>;
-				remove(nameOrId: string | number, key: string): Promise<void>;
+				remove(nameOrSlugOrId: string | number, key: string): Promise<void>;
 			};
 			buildVar: {
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<BuildVariable>,
 				): Promise<BuildVariable[]>;
 				set(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					key: string,
 					value: string,
 				): Promise<void>;
 				get(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					key: string,
 				): Promise<string | undefined>;
-				remove(nameOrId: string | number, key: string): Promise<void>;
+				remove(nameOrSlugOrId: string | number, key: string): Promise<void>;
 			};
 			invite: {
 				create: (
@@ -582,17 +586,14 @@ export interface BalenaSDK {
 				uuidOrId: string | number,
 				options?: PineOptions<Device>,
 			): Promise<Device>;
-			getByName(
-				nameOrId: string | number,
-				options?: PineOptions<Device>,
-			): Promise<Device[]>;
+			getByName(name: string, options?: PineOptions<Device>): Promise<Device[]>;
 			getWithServiceDetails(
-				nameOrId: string | number,
+				uuidOrId: string | number,
 				options?: PineOptions<Device>,
 			): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			getAll(options?: PineOptions<Device>): Promise<Device[]>;
 			getAllByApplication(
-				nameOrId: string | number,
+				nameOrSlugOrId: string | number,
 				options?: PineOptions<Device>,
 			): Promise<Device[]>;
 			getAllByParentDevice(
@@ -618,11 +619,11 @@ export interface BalenaSDK {
 			getSupportedDeviceTypes(): Promise<string[]>;
 			getManifestBySlug(slugOrName: string): Promise<DeviceTypeJson.DeviceType>;
 			getManifestByApplication(
-				nameOrId: string | number,
+				nameOrSlugOrId: string | number,
 			): Promise<DeviceTypeJson.DeviceType>;
 			move(
 				uuidOrId: string | number,
-				applicationNameOrId: string | number,
+				applicationNameOrSlugOrId: string | number,
 			): Promise<void>;
 			note(uuidOrId: string | number, note: string): Promise<void>;
 			remove(uuidOrId: string | number): Promise<void>;
@@ -664,26 +665,26 @@ export interface BalenaSDK {
 			hasLockOverride(uuidOrId: string | number): Promise<boolean>;
 			reboot(
 				uuidOrId: string | number,
-				{ force }: { force?: boolean },
+				options: { force?: boolean },
 			): Promise<void>;
 			shutdown(
 				uuidOrId: string | number,
-				{ force }: { force?: boolean },
+				options: { force?: boolean },
 			): Promise<void>;
 			purge(uuidOrId: string | number): Promise<void>;
 			update(
 				uuidOrId: string | number,
-				{ force }: { force?: boolean },
+				options: { force?: boolean },
 			): Promise<void>;
 			getSupervisorState(uuidOrId: string | number): Promise<SupervisorStatus>;
 			getSupervisorTargetState(
 				uuidOrId: string | number,
 			): Promise<DeviceState.DeviceState>;
-			getDisplayName(deviceTypeName: string): Promise<string>;
-			getDeviceSlug(deviceTypeName: string): Promise<string>;
+			getDisplayName(deviceTypeSlug: string): Promise<string | undefined>;
+			getDeviceSlug(deviceTypeSlug: string): Promise<string | undefined>;
 			generateUniqueKey(): string;
 			register(
-				applicationNameOrId: string | number,
+				applicationNameOrSlugOrId: string | number,
 				uuid: string,
 			): Promise<{
 				id: number;
@@ -724,7 +725,7 @@ export interface BalenaSDK {
 			getOsUpdateStatus(uuid: string): Promise<OsUpdateActionResult>;
 			tags: {
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<DeviceTag>,
 				): Promise<DeviceTag[]>;
 				getAllByDevice(
@@ -745,7 +746,7 @@ export interface BalenaSDK {
 					options?: PineOptions<DeviceVariable>,
 				): Promise<DeviceVariable[]>;
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<DeviceVariable>,
 				): Promise<DeviceVariable[]>;
 				set(
@@ -765,7 +766,7 @@ export interface BalenaSDK {
 					options?: PineOptions<DeviceVariable>,
 				): Promise<DeviceVariable[]>;
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<DeviceVariable>,
 				): Promise<DeviceVariable[]>;
 				set(
@@ -785,7 +786,7 @@ export interface BalenaSDK {
 					options?: PineOptions<DeviceServiceEnvironmentVariable>,
 				): Promise<DeviceServiceEnvironmentVariable[]>;
 				getAllByApplication(
-					nameOrId: string | number,
+					nameOrSlugOrId: string | number,
 					options?: PineOptions<DeviceServiceEnvironmentVariable>,
 				): Promise<DeviceServiceEnvironmentVariable[]>;
 				set(
@@ -890,8 +891,14 @@ export interface BalenaSDK {
 	};
 
 	logs: {
-		history(uuid: string, options?: LogsOptions): Promise<LogMessage[]>;
-		subscribe(uuid: string, options?: LogsOptions): Promise<LogsSubscription>;
+		history(
+			uuidOrId: string | number,
+			options?: LogsOptions,
+		): Promise<LogMessage[]>;
+		subscribe(
+			uuidOrId: string | number,
+			options?: LogsOptions,
+		): Promise<LogsSubscription>;
 	};
 
 	pine: BalenaPine.Pine;
@@ -904,9 +911,11 @@ export interface BalenaSDK {
 export interface SdkOptions {
 	apiUrl?: string;
 	builderUrl?: string;
+	dashboardUrl?: string;
 	dataDirectory?: string;
 	isBrowser?: boolean;
 	debug?: boolean;
+	deviceUrlsBase?: string;
 }
 
 export type SdkConstructor = (options?: SdkOptions) => BalenaSDK;

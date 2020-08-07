@@ -19,6 +19,7 @@ import once = require('lodash/once');
 import type * as BalenaSdk from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { isId, mergePineOptions } from '../util';
+import { ReleaseTag } from '../..';
 
 const getReleaseModel = function (
 	deps: InjectedDependenciesParam,
@@ -46,13 +47,13 @@ const getReleaseModel = function (
 		return new BuilderHelper(deps, opts);
 	});
 
-	const tagsModel = buildDependentResource(
+	const tagsModel = buildDependentResource<ReleaseTag>(
 		{ pine },
 		{
 			resourceName: 'release_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'release',
-			getResourceId: async (commitOrId: string | number) =>
+			getResourceId: async (commitOrId: string | number): Promise<number> =>
 				(await get(commitOrId, { $select: 'id' })).id,
 		},
 	);

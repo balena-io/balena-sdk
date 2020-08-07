@@ -20,23 +20,30 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
+import type * as BalenaPine from '../../typings/balena-pine';
+import { PineOptions } from '../../typings/balena-sdk';
 
-export function buildDependentResource(
-	{ pine },
+export function buildDependentResource<T extends { value: string }>(
+	{ pine }: { pine: BalenaPine.Pine },
 	{
-		resourceName, // e.g. device_tag
-		resourceKeyField, // e.g. tag_key
-		parentResourceName, // e.g. device
-		getResourceId, // e.g. getId(uuidOrId)
+		resourceName,
+		resourceKeyField,
+		parentResourceName,
+		getResourceId,
+	}: {
+		resourceName: string; // e.g. device_tag
+		resourceKeyField: keyof T; // e.g. tag_key
+		parentResourceName: keyof T; // e.g. device
+		getResourceId: (uuidOrId: string | number) => Promise<number>; // e.g. getId(uuidOrId)
 	},
 ) {
 	const exports = {
-		getAll(options) {
+		getAll(options?: PineOptions<T>): Promise<T[]> {
 			if (options == null) {
 				options = {};
 			}
 
-			return pine.get({
+			return pine.get<T>({
 				resource: resourceName,
 				options: mergePineOptions(
 					{ $orderby: `${resourceKeyField} asc` },
@@ -45,45 +52,50 @@ export function buildDependentResource(
 			});
 		},
 
-		getAllByParent(parentParam, options) {
+		async getAllByParent(
+			parentParam: string | number,
+			options?: PineOptions<T>,
+		): Promise<T[]> {
 			if (options == null) {
 				options = {};
 			}
 
-			return getResourceId(parentParam).then((id) =>
-				exports.getAll(
-					mergePineOptions(
-						{
-							$filter: { [parentResourceName]: id },
-							$orderby: `${resourceKeyField} asc`,
-						},
-						options,
-					),
+			const id = await getResourceId(parentParam);
+			return await exports.getAll(
+				mergePineOptions(
+					{
+						$filter: { [parentResourceName]: id },
+						$orderby: `${resourceKeyField} asc`,
+					},
+					options,
 				),
 			);
 		},
 
-		get(parentParam, key) {
-			return getResourceId(parentParam)
-				.then((id) =>
-					pine.get({
-						resource: resourceName,
-						options: {
-							$filter: {
-								[parentResourceName]: id,
-								[resourceKeyField]: key,
-							},
-						},
-					}),
-				)
-				.then(function (results) {
-					if (results[0]) {
-						return results[0].value;
-					}
-				});
+		async get(
+			parentParam: string | number,
+			key: string,
+		): Promise<string | undefined> {
+			const id = await getResourceId(parentParam);
+			const results = await pine.get<T>({
+				resource: resourceName,
+				options: {
+					$filter: {
+						[parentResourceName]: id,
+						[resourceKeyField]: key,
+					},
+				},
+			});
+			if (results[0]) {
+				return results[0].value;
+			}
 		},
 
-		async set(parentParam, key, value) {
+		async set(
+			parentParam: string | number,
+			key: string,
+			value: string,
+		): Promise<void> {
 			value = String(value);
 
 			// Trying to avoid an extra HTTP request
@@ -94,7 +106,7 @@ export function buildDependentResource(
 				? parentParam
 				: await getResourceId(parentParam);
 			try {
-				return await pine.upsert({
+				await pine.upsert({
 					resource: resourceName,
 					id: {
 						[parentResourceName]: parentId,
@@ -117,18 +129,17 @@ export function buildDependentResource(
 			}
 		},
 
-		remove(parentParam, key) {
-			return getResourceId(parentParam).then((parentId) =>
-				pine.delete({
-					resource: `${resourceName}`,
-					options: {
-						$filter: {
-							[parentResourceName]: parentId,
-							[resourceKeyField]: key,
-						},
+		async remove(parentParam: string | number, key: string): Promise<void> {
+			const parentId = await getResourceId(parentParam);
+			await pine.delete({
+				resource: `${resourceName}`,
+				options: {
+					$filter: {
+						[parentResourceName]: parentId,
+						[resourceKeyField]: key,
 					},
-				}),
-			);
+				},
+			});
 		},
 	};
 
