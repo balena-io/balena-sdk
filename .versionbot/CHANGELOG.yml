@@ -1,4 +1,63 @@
 - commits:
+    - subject: Convert index.js to typescript
+      hash: 19ebf96130d7ac731fe92a289b4c7a3920c820b0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert dependent-resource.js to typescript
+      hash: 7e1f5e9efb79fa49b59c442d8da93b8ae3a4037e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert device.js to typescript
+      hash: 558618c2803d105f04c34c92dabb5c9d80cfe787
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert application.js to typescript
+      hash: 3bb0ca2f7c50dd5f1187651d994b3df2fb844e85
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert settings.js to typescript
+      hash: 02bb738acd78df5c33fcae029719e46837104ce3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert logs.js to typescript
+      hash: f30f276bf952f7c0569f08f5ea3cd97c9378b96f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert config.js to typescript
+      hash: 8c41f3eb54d7802e75987f67eb2ada2b426b6217
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 15.2.2
+  date: 2020-08-05T16:42:25.605Z
+- commits:
     - subject: Convert majority to async/await
       hash: fdbbc1aa8cc23d9d28704e5d88f88713f7d28aff
       body: ''
