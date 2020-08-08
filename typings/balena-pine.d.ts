@@ -4,7 +4,7 @@ export interface Pine {
 	delete<T>(
 		params: PineClient.ParamsObjWithId<T> | PineClient.ParamsObjWithFilter<T>,
 	): Promise<'OK'>;
-	get<T>(params: PineClient.ParamsObjWithId<T>): Promise<T>;
+	get<T>(params: PineClient.ParamsObjWithId<T>): Promise<T | undefined>;
 	get<T>(params: PineClient.ParamsObj<T>): Promise<T[]>;
 	get<T, Result>(params: PineClient.ParamsObj<T>): Promise<Result>;
 	post<T>(params: PineClient.ParamsObj<T>): Promise<T & { id: number }>;
@@ -21,7 +21,7 @@ export interface Pine {
 export type PineWithSelectOnGet = Omit<Pine, 'get'> & {
 	get<T>(
 		params: PineClient.ParamsObjWithId<T> & PineClient.ParamsObjWithSelect<T>,
-	): Promise<T>;
+	): Promise<T | undefined>;
 	get<T>(params: PineClient.ParamsObjWithSelect<T>): Promise<T[]>;
 	get<T, Result extends number>(
 		params: PineClient.ParamsObj<T>,
