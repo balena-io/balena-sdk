@@ -1,9 +1,8 @@
 import type * as BalenaSdk from '../..';
 
 export const isProvisioned = (
-	device: Pick<
-		BalenaSdk.Device,
-		'supervisor_version' | 'last_connectivity_event'
+	device: Partial<
+		Pick<BalenaSdk.Device, 'supervisor_version' | 'last_connectivity_event'>
 	>,
 ) => {
 	return (
