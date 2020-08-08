@@ -141,7 +141,7 @@ export interface ReleaseWithImageDetails extends Release {
 		id: number;
 		service_name: string;
 	}>;
-	user: User;
+	user: Pick<User, 'id' | 'username'> | undefined;
 }
 
 export interface BillingAccountAddressInfo {
