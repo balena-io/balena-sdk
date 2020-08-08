@@ -3845,6 +3845,7 @@ const getDeviceModel = function (
 				const [variable] = await pine.get<DeviceServiceEnvironmentVariable>({
 					resource: 'device_service_environment_variable',
 					options: {
+						$select: 'value',
 						$filter: {
 							service_install: {
 								$any: {
@@ -3917,6 +3918,7 @@ const getDeviceModel = function (
 				const serviceInstalls = await pine.get<ServiceInstall>({
 					resource: 'service_install',
 					options: {
+						$select: 'id',
 						$filter: {
 							device: deviceFilter,
 							installs__service: serviceId,
@@ -3924,18 +3926,19 @@ const getDeviceModel = function (
 					},
 				});
 
-				if (serviceInstalls.length === 0) {
+				const [serviceInstall] = serviceInstalls;
+				if (serviceInstall == null) {
 					throw new errors.BalenaServiceNotFound(serviceId);
 				}
+
 				if (serviceInstalls.length > 1) {
 					throw new errors.BalenaAmbiguousDevice(uuidOrId);
 				}
-				const serviceInstallId = serviceInstalls[0].id;
 
 				await pine.upsert<DeviceServiceEnvironmentVariable>({
 					resource: 'device_service_environment_variable',
 					id: {
-						service_install: serviceInstallId,
+						service_install: serviceInstall.id,
 						name: key,
 					},
 					body: {

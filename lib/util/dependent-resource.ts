@@ -23,7 +23,12 @@ import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
 import type * as BalenaPine from '../../typings/balena-pine';
 import { PineOptions } from '../../typings/balena-sdk';
 
-export function buildDependentResource<T extends { value: string }>(
+interface DependentResource {
+	id: number;
+	value: string;
+}
+
+export function buildDependentResource<T extends DependentResource>(
 	{ pine }: { pine: BalenaPine.Pine },
 	{
 		resourceName,
@@ -77,17 +82,18 @@ export function buildDependentResource<T extends { value: string }>(
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
-			const results = await pine.get<T>({
+			const [result] = await pine.get<DependentResource>({
 				resource: resourceName,
 				options: {
+					$select: 'value',
 					$filter: {
 						[parentResourceName]: id,
 						[resourceKeyField]: key,
 					},
 				},
 			});
-			if (results[0]) {
-				return results[0].value;
+			if (result) {
+				return result.value;
 			}
 		},
 
