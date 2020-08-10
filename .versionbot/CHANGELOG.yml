@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add a few missing explicit field $selects
+      hash: c6361ead5cf1859478c8172b0975bdcf0f708ca9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.2.3
+  date: 2020-08-08T15:18:30.157Z
+- commits:
     - subject: Convert index.js to typescript
       hash: 19ebf96130d7ac731fe92a289b4c7a3920c820b0
       body: ''
