@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'typings: Properly type some Device properties'
+      hash: 005e6b03246106f7a7028c81fdb63bdb76e4ac56
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Drop the DeviceWithImageInstalls type'
+      hash: 3ee98d35dfd8a396c952ef52a2ae1c5e54f4102b
+      body: ''
+      footer:
+        Resolves: '#923'
+        resolves: '#923'
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.0.0
+  date: 2020-08-10T11:38:44.726Z
+- commits:
     - subject: Add a few missing explicit field $selects
       hash: c6361ead5cf1859478c8172b0975bdcf0f708ca9
       body: ''
