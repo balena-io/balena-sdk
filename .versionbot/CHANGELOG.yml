@@ -1,4 +1,17 @@
 - commits:
+    - subject: Fix pine.get with id result type to include undefined
+      hash: e6966a51127e1c26383fc3de408a1dcbf43813a8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.2.4
+  date: 2020-08-10T11:39:59.254Z
+- commits:
     - subject: Add a few missing explicit field $selects
       hash: c6361ead5cf1859478c8172b0975bdcf0f708ca9
       body: ''
