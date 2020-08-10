@@ -1,4 +1,20 @@
 - commits:
+    - subject: Split the User resource & JWT interfaces
+      hash: a038bdaad4ae83dd9a4a1af6e21d1e6653edd812
+      body: |
+        We still extend the User interface so that we don't
+        break anyone's build, but added a TODO to properly
+        break the link in the next majar.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.2.5
+  date: 2020-08-10T11:50:00.634Z
+- commits:
     - subject: Fix pine.get with id result type to include undefined
       hash: e6966a51127e1c26383fc3de408a1dcbf43813a8
       body: ''
