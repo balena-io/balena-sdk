@@ -36,6 +36,7 @@ import {
 export * as DeviceState from './device-state';
 export * as DeviceTypeJson from './device-type-json';
 export * from './models';
+export * from './jwt';
 
 export type {
 	WithId,

@@ -1,10 +1,14 @@
 import type * as DeviceOverallStatus from './device-overall-status';
+import { JWTUser } from './jwt';
 import type {
 	PineDeferred,
 	NavigationResource,
 	OptionalNavigationResource,
 	ReverseNavigationResource,
 } from '../pinejs-client-core';
+
+// TODO: Drop in the next major
+export { SocialServiceAccount } from './jwt';
 
 export interface Organization {
 	id: number;
@@ -31,10 +35,6 @@ export interface Team {
 	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 }
 
-export interface SocialServiceAccount {
-	provider: string;
-	display_name: string;
-}
 
 export interface RecoveryTwoFactor {
 	id: number;
@@ -43,40 +43,12 @@ export interface RecoveryTwoFactor {
 	belongs_to__user: NavigationResource<User>;
 }
 
-export interface User {
-	account_type?: string;
-	actualUser?: number;
-	company?: string;
-	created_at: string;
-	email?: string;
-	features?: string[];
-	first_name?: string;
-	hasPasswordSet?: boolean;
-	has_disabled_newsletter?: boolean;
+// TODO: Stop (confusingly) extending the UserJWT in the next major version
+export interface User extends JWTUser {
 	id: number;
-	intercomUserName?: string;
-	intercomUserHash?: string;
-	jwt_secret: string;
-	last_name?: string;
-	loginAs?: boolean;
-	needsPasswordReset?: boolean;
-	permissions?: string[];
-	public_key?: boolean;
-	twoFactorRequired?: boolean;
+	actor: number;
+	created_at: string;
 	username: string;
-
-	/** includes__organization_membership */
-	organization_membership: ReverseNavigationResource<OrganizationMembership>;
-	/** user_application_membership */
-	user__is_member_of__application: ReverseNavigationResource<
-		ApplicationMembership
-	>;
-	/** is_member_of__team */
-	team_membership: ReverseNavigationResource<TeamMembership>;
-	creates__release: ReverseNavigationResource<Release>;
-	owns__device: ReverseNavigationResource<Device>;
-	// this is what the api route returns
-	social_service_account: ReverseNavigationResource<SocialServiceAccount>;
 }
 
 export type OrganizationMembershipRoles = 'administrator' | 'member';
@@ -453,7 +425,7 @@ export interface ApplicationVariable extends EnvironmentVariableBase {
 	application: NavigationResource<Application>;
 }
 
-interface BuildVariable extends EnvironmentVariableBase {
+export interface BuildVariable extends EnvironmentVariableBase {
 	application: NavigationResource<Application>;
 }
 
