@@ -1,4 +1,4 @@
-import type { AnyObject, PropsOfType, StringKeyof } from './utils';
+import type { AnyObject, PropsOfType, StringKeyof, Dictionary } from './utils';
 
 export interface WithId {
 	id: number;
@@ -151,9 +151,13 @@ type FilterFunctionKey =
 	| '$cast';
 
 interface FilterExpressions<T> {
+	'@'?: string;
+
 	$raw?: RawFilter;
 
 	$?: string | string[];
+
+	$count?: Filter<T>;
 
 	$and?: NestedFilter<T>;
 	$or?: NestedFilter<T>;
@@ -230,13 +234,16 @@ type ExpandWithSelect<T> =
 
 export type ODataMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-export interface ODataOptions<T> {
+export interface ODataOptionsWithoutCount<T> {
 	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
 	$orderby?: OrderBy;
 	$top?: number;
 	$skip?: number;
+}
+export interface ODataOptions<T> extends ODataOptionsWithoutCount<T> {
+	$count?: ODataOptionsWithoutCount<T>;
 }
 
 export interface ODataOptionsWithSelect<T>
@@ -283,6 +290,10 @@ export interface ParamsObjWithId<T> extends ParamsObj<T> {
 	id: ResourceId<T>;
 }
 
+export interface ParamsObjWithCount<T> extends ParamsObj<T> {
+	options: { $count: NonNullable<ODataOptions<T>['$count']> };
+}
+
 export type ParamsObjWithSelect<T> = Omit<ParamsObj<T>, 'options'> & {
 	options: ODataOptionsWithSelect<T>;
 };
@@ -297,3 +308,179 @@ export interface UpsertParams<T>
 	resource: string;
 	body: SubmitBody<T>;
 }
+
+export declare type Primitive = null | string | number | boolean | Date;
+export declare type ParameterAlias = Primitive;
+export declare type PreparedFn<T extends Dictionary<ParameterAlias>, U, R> = (
+	parameterAliases?: T,
+	body?: ParamsObj<R>['body'],
+	passthrough?: ParamsObj<R>['passthrough'],
+) => U;
+
+interface PollOnObj {
+	unsubscribe: () => void;
+}
+declare class Poll<T> {
+	private intervalTime;
+	private subscribers;
+	private stopped;
+	private pollInterval?;
+	private requestFn;
+	constructor(requestFn: () => Promise<T>, intervalTime?: number);
+	setPollInterval(intervalTime: number): void;
+	runRequest(): Promise<void>;
+	on(name: 'data', fn: (response: Promise<T>) => void): PollOnObj;
+	on(name: 'error', fn: (err: any) => void): PollOnObj;
+	start(): void;
+	stop(): void;
+	destroy(): void;
+	private restartTimeout;
+}
+export interface SubscribeParams<T> extends ParamsObj<T> {
+	method?: 'GET';
+	pollInterval?: number;
+}
+export interface SubscribeParamsWithCount<T> extends ParamsObjWithCount<T> {
+	method?: 'GET';
+	pollInterval?: number;
+}
+export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
+	method?: 'GET';
+	pollInterval?: number;
+}
+
+export interface Pine {
+	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
+	get<T>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T>(params: ParamsObjWithId<T>): Promise<T | undefined>;
+	get<T>(params: ParamsObj<T>): Promise<T[]>;
+	get<T, Result>(params: ParamsObj<T>): Promise<Result>;
+	post<T>(params: ParamsObj<T>): Promise<T & { id: number }>;
+	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
+	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
+
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObjWithCount<R> & {
+			method?: 'GET';
+		},
+	): PreparedFn<T, Promise<number>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObjWithId<R> & {
+			method?: 'GET';
+		},
+	): PreparedFn<T, Promise<R | undefined>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObj<R> & {
+			method?: 'GET';
+		},
+	): PreparedFn<T, Promise<R[]>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObj<R> & {
+			method: 'POST';
+		},
+	): PreparedFn<T, Promise<R & { id: number }>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObj<R> & {
+			method: 'PATCH' | 'DELETE';
+		},
+	): PreparedFn<T, Promise<'OK'>, R>;
+
+	subscribe<T>(
+		params: SubscribeParamsWithCount<T> & {
+			method?: 'GET';
+		},
+	): Poll<number>;
+	subscribe<T>(
+		params: SubscribeParamsWithId<T> & {
+			method?: 'GET';
+		},
+	): Poll<T | undefined>;
+	subscribe<T>(
+		params: SubscribeParams<T> & {
+			method?: 'GET';
+		},
+	): Poll<T[]>;
+	subscribe<T>(
+		params: SubscribeParams<T> & {
+			method: 'POST';
+		},
+	): Poll<T & { id: number }>;
+	subscribe<T>(
+		params: SubscribeParams<T> & {
+			method: 'PATCH' | 'DELETE';
+		},
+	): Poll<'OK'>;
+}
+
+/**
+ * A variant that helps you not forget addins a $select, helping to
+ * create requests explecitely fetch only what your code needs.
+ */
+export type PineWithSelectOnGet = Omit<
+	Pine,
+	'get' | 'prepare' | 'subscribe'
+> & {
+	get<T>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T>(
+		params: ParamsObjWithId<T> & ParamsObjWithSelect<T>,
+	): Promise<T | undefined>;
+	get<T>(params: ParamsObjWithSelect<T>): Promise<T[]>;
+	get<T, Result extends number>(params: ParamsObj<T>): Promise<Result>;
+	get<T, Result>(params: ParamsObjWithSelect<T>): Promise<Result>;
+
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObjWithCount<R> & {
+			method?: 'GET';
+		},
+	): PreparedFn<T, Promise<number>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObjWithId<R> &
+			ParamsObjWithSelect<R> & {
+				method?: 'GET';
+			},
+	): PreparedFn<T, Promise<R | undefined>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObj<R> &
+			ParamsObjWithSelect<R> & {
+				method?: 'GET';
+			},
+	): PreparedFn<T, Promise<R[]>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObj<R> & {
+			method: 'POST';
+		},
+	): PreparedFn<T, Promise<R & { id: number }>, R>;
+	prepare<T extends Dictionary<ParameterAlias>, R>(
+		params: ParamsObj<R> & {
+			method: 'PATCH' | 'DELETE';
+		},
+	): PreparedFn<T, Promise<'OK'>, R>;
+
+	subscribe<T>(
+		params: SubscribeParamsWithCount<T> & {
+			method?: 'GET';
+		},
+	): Poll<number>;
+	subscribe<T>(
+		params: SubscribeParamsWithId<T> &
+			ParamsObjWithSelect<T> & {
+				method?: 'GET';
+			},
+	): Poll<T | undefined>;
+	subscribe<T>(
+		params: SubscribeParams<T> &
+			ParamsObjWithSelect<T> & {
+				method?: 'GET';
+			},
+	): Poll<T[]>;
+	subscribe<T>(
+		params: SubscribeParams<T> & {
+			method: 'POST';
+		},
+	): Poll<T & { id: number }>;
+	subscribe<T>(
+		params: SubscribeParams<T> & {
+			method: 'PATCH' | 'DELETE';
+		},
+	): Poll<'OK'>;
+};
