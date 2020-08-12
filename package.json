@@ -84,7 +84,7 @@
     "superagent": "^3.8.3",
     "tmp": "^0.0.31",
     "ts-node": "^7.0.1",
-    "ts-toolbelt": "^6.13.33",
+    "ts-toolbelt": "^6.15.4",
     "typescript": "^3.9.7",
     "uglify-es": "^3.3.9",
     "vinyl-buffer": "^1.0.1",
@@ -93,14 +93,14 @@
   },
   "dependencies": {
     "@balena/es-version": "^1.0.0",
-    "@types/lodash": "^4.14.158",
+    "@types/lodash": "^4.14.159",
     "@types/memoizee": "^0.4.3",
     "@types/node": "^10.17.28",
     "abortcontroller-polyfill": "^1.5.0",
     "balena-auth": "^4.0.2",
     "balena-errors": "^4.4.0",
     "balena-hup-action-utils": "~4.0.2",
-    "balena-pine": "^12.2.0",
+    "balena-pine": "^12.3.0",
     "balena-register-device": "^7.1.0",
     "balena-request": "^11.1.0",
     "balena-semver": "^2.3.0",
@@ -110,6 +110,6 @@
     "moment": "~2.24.0 || ^2.25.1",
     "ndjson": "^1.5.0",
     "semver": "^7.3.2",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.1"
   }
 }

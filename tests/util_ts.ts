@@ -1,5 +1,4 @@
 import * as m from 'mochainon';
-import type { AnyObject } from '../typings/utils';
 import { balena } from './integration/setup';
 import type * as BalenaSdk from '..';
 const { expect } = m.chai;
@@ -17,7 +16,7 @@ export const describeExpandAssertions = async <T>(
 		Object.keys(expand).forEach((key) => {
 			describe(`to ${key}`, function () {
 				it('should succeed and include the expanded property', async function () {
-					const [result] = await balena.pine.get<AnyObject>({
+					const [result] = await balena.pine.get({
 						...params,
 						options: {
 							...params.options,
@@ -25,7 +24,7 @@ export const describeExpandAssertions = async <T>(
 								[key]: expand[key],
 							},
 						},
-					});
+					} as typeof params);
 					if (result) {
 						expect(result).to.have.property(key).that.is.an('array');
 					}

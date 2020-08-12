@@ -310,9 +310,11 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
 	 *
 	 * @example
 	 * balena.pine.get({
-	 * 	resource: 'release/$count',
+	 * 	resource: 'release',
 	 * 	options: {
-	 * 		$filter: { belongs_to__application: applicationId }
+	 * 		$count: {
+	 * 			$filter: { belongs_to__application: applicationId }
+	 * 		}
 	 * 	}
 	 * });
 	 */
