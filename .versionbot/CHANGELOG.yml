@@ -1,4 +1,38 @@
 - commits:
+    - subject: Bump balena-request to fix breaking user's stored token on token refresh
+      hash: 9befc8d0d60e4240c7c23df850669a9eac70fe50
+      body: |
+        Update balena-request from 11.1.0 to 11.1.1
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/XVvB7BhMFMXAXsQNwACFg5seFyQ
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-frontend/threads/XVvB7BhMFMXAXsQNwACFg5seFyQ
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Stop refreshing the token on absolute urls
+              hash: a61c8bb2a7c144748048e41b201f1ee2f7d6e7c7
+              body: |
+                Essentially reverting v11.0.1 but rejecting with a
+                better error than before.
+              footer:
+                Change-type: patch
+                change-type: patch
+                See: 'https://github.com/balena-io/balena-ui/issues/3942'
+                see: 'https://github.com/balena-io/balena-ui/issues/3942'
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+          version: balena-request-11.1.1
+          date: 2020-08-13T13:01:55.868Z
+  version: 15.3.1
+  date: 2020-08-13T13:40:31.151Z
+- commits:
     - subject: Update balena-pine and add custom typings for prepare/subscribe
       hash: e283039053835c55216e6df41adb3f072de0b245
       body: |
