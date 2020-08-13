@@ -102,7 +102,7 @@
     "balena-hup-action-utils": "~4.0.2",
     "balena-pine": "^12.3.0",
     "balena-register-device": "^7.1.0",
-    "balena-request": "^11.1.0",
+    "balena-request": "^11.1.1",
     "balena-semver": "^2.3.0",
     "balena-settings-client": "^4.0.4",
     "lodash": "^4.17.19",
