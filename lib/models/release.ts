@@ -224,7 +224,6 @@ const getReleaseModel = function (
 			.sort((a, b) => a.service_name.localeCompare(b.service_name));
 
 		release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
-		delete release.is_created_by__user;
 
 		return release as BalenaSdk.Release & {
 			images: Array<{
