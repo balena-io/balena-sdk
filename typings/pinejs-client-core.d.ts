@@ -242,15 +242,25 @@ export interface ODataOptionsWithoutCount<T> {
 	$top?: number;
 	$skip?: number;
 }
+
 export interface ODataOptions<T> extends ODataOptionsWithoutCount<T> {
 	$count?: ODataOptionsWithoutCount<T>;
 }
 
-export interface ODataOptionsWithSelect<T>
-	extends Omit<ODataOptions<T>, '$select' | '$expand'> {
-	$select: ODataOptions<T>['$select'];
-	$expand?: ExpandWithSelect<T>;
-}
+// TODO: Rename to ODataOptionsStrict on the next major
+export type ODataOptionsWithSelect<T> = Omit<
+	ODataOptions<T>,
+	'$select' | '$expand' | '$count'
+> &
+	(
+		| {
+				$select: ODataOptions<T>['$select'];
+				$expand?: ExpandWithSelect<T>;
+		  }
+		| {
+				$count: ODataOptionsWithoutCount<T>;
+		  }
+	);
 
 export type ODataOptionsWithFilter<T> = ODataOptions<T> &
 	Required<Pick<ODataOptions<T>, '$filter'>>;
@@ -294,6 +304,7 @@ export interface ParamsObjWithCount<T> extends ParamsObj<T> {
 	options: { $count: NonNullable<ODataOptions<T>['$count']> };
 }
 
+// TODO: Rename to ParamsObjStrict on the next major
 export type ParamsObjWithSelect<T> = Omit<ParamsObj<T>, 'options'> & {
 	options: ODataOptionsWithSelect<T>;
 };
@@ -412,6 +423,7 @@ export interface Pine {
 	): Poll<'OK'>;
 }
 
+// TODO: Rename to PineStrict on the next major
 /**
  * A variant that helps you not forget addins a $select, helping to
  * create requests explecitely fetch only what your code needs.
