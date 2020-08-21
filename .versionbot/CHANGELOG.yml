@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update TypeScript to 4.0
+      hash: 606f4c02972cf656b261e67f49a2b2af8e6dd292
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.3.2
+  date: 2020-08-20T18:20:29.879Z
+- commits:
     - subject: Bump balena-request to fix breaking user's stored token on token refresh
       hash: 9befc8d0d60e4240c7c23df850669a9eac70fe50
       body: |
