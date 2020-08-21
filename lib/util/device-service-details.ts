@@ -87,7 +87,15 @@ function getSingleInstallSummary(
 		};
 	}
 
-	const result = {
+	const result: (
+		| (CurrentService &
+				Partial<
+					Pick<ImageInstall, 'installs__image' | 'is_provided_by__release'>
+				>)
+		| CurrentGatewayDownload
+	) &
+		Partial<Pick<ImageInstall, 'image'>> &
+		WithServiceName = {
 		...rawData,
 		service_id: service.id,
 		// add this extra property to make grouping the services easier
@@ -129,8 +137,8 @@ export const generateCurrentServiceDetails = <
 		string,
 		TCurrentService[]
 	> = Object.create(null);
-	for (const container of installs) {
-		const { service_name } = container;
+	for (const containerWithServiceName of installs) {
+		const { service_name } = containerWithServiceName;
 		let serviceContainerGroup: TCurrentService[];
 		if (currentServicesGroupedByName[service_name] == null) {
 			serviceContainerGroup = [];
@@ -138,6 +146,9 @@ export const generateCurrentServiceDetails = <
 		} else {
 			serviceContainerGroup = currentServicesGroupedByName[service_name];
 		}
+
+		const container: TCurrentService &
+			Partial<WithServiceName> = containerWithServiceName;
 
 		// remove the extra property that we added for the grouping
 		delete container.service_name;

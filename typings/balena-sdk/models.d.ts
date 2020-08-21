@@ -35,7 +35,6 @@ export interface Team {
 	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 }
 
-
 export interface RecoveryTwoFactor {
 	id: number;
 	used_timestamp: string | null;

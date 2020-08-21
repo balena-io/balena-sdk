@@ -1249,7 +1249,7 @@ describe('Application Model', function () {
 							id: this.newWebInstall.id,
 							service_id: this.webService.id,
 							image_id: this.newWebImage.id,
-							commit: 'new-release-commit',
+							...(expectCommit && { commit: 'new-release-commit' }),
 							status: 'Downloading',
 							download_progress: 50,
 						},
@@ -1257,7 +1257,7 @@ describe('Application Model', function () {
 							id: this.oldWebInstall.id,
 							service_id: this.webService.id,
 							image_id: this.oldWebImage.id,
-							commit: 'old-release-commit',
+							...(expectCommit && { commit: 'old-release-commit' }),
 							status: 'Running',
 							download_progress: null,
 						},
@@ -1267,21 +1267,13 @@ describe('Application Model', function () {
 							id: this.newDbInstall.id,
 							service_id: this.dbService.id,
 							image_id: this.newDbImage.id,
-							commit: 'new-release-commit',
+							...(expectCommit && { commit: 'new-release-commit' }),
 							status: 'Running',
 							download_progress: null,
 						},
 					],
 				},
 			};
-
-			if (!expectCommit) {
-				_.forEach(deviceExpectation.current_services, (currentServicesByName) =>
-					currentServicesByName.forEach(
-						(currentServicesOfName) => delete currentServicesOfName.commit,
-					),
-				);
-			}
 
 			expect(application.owns__device).to.have.lengthOf(1);
 			const [deviceDetails] = application.owns__device;
