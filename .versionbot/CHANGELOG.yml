@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'typings: Fix nested $count support in the strict pine variant'
+      hash: c3c08ab4665acdfad675e65a78162eabaaa71b11
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.3.3
+  date: 2020-08-21T17:38:00.841Z
+- commits:
     - subject: Update TypeScript to 4.0
       hash: 606f4c02972cf656b261e67f49a2b2af8e6dd292
       body: ''
