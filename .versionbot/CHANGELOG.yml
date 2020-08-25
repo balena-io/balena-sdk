@@ -1,4 +1,19 @@
 - commits:
+    - subject: Use relative directory when exporting es modules
+      hash: 19d32dc1ce04d2d50de3c377261e5153af154a2c
+      body: ''
+      footer:
+        Connects-to: '#973'
+        connects-to: '#973'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.3.4
+  date: 2020-08-25T14:07:11.465Z
+- commits:
     - subject: 'typings: Fix nested $count support in the strict pine variant'
       hash: c3c08ab4665acdfad675e65a78162eabaaa71b11
       body: ''
