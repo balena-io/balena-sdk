@@ -216,9 +216,9 @@ const sdk = fromSharedOptions();
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
             * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
-            * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
+            * [.getDeviceSlug(deviceTypeSlug)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
             * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-            * [.getManifestBySlug(slug)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+            * [.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
             * [.getManifestByApplication(nameOrSlugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationNameOrSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
@@ -400,9 +400,11 @@ in the SDK.
 **Example**  
 ```js
 balena.pine.get({
-	resource: 'release/$count',
+	resource: 'release',
 	options: {
-		$filter: { belongs_to__application: applicationId }
+		$count: {
+			$filter: { belongs_to__application: applicationId }
+		}
 	}
 });
 ```
@@ -544,9 +546,9 @@ balena.models.device.get(123).catch(function (error) {
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
         * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
-        * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
+        * [.getDeviceSlug(deviceTypeSlug)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
         * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-        * [.getManifestBySlug(slug)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+        * [.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
         * [.getManifestByApplication(nameOrSlugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationNameOrSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
@@ -2141,9 +2143,9 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
     * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
-    * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
+    * [.getDeviceSlug(deviceTypeSlug)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
     * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-    * [.getManifestBySlug(slug)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+    * [.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
     * [.getManifestByApplication(nameOrSlugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationNameOrSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
@@ -3894,7 +3896,7 @@ balena.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeNa
 ```
 <a name="balena.models.device.getDeviceSlug"></a>
 
-##### device.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>
+##### device.getDeviceSlug(deviceTypeSlug) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get device slug  
 **Access**: public  
@@ -3903,7 +3905,7 @@ balena.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeNa
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceTypeName | <code>String</code> | device type name |
+| deviceTypeSlug | <code>String</code> | device type name |
 
 **Example**  
 ```js
@@ -3947,7 +3949,7 @@ balena.models.device.getSupportedDeviceTypes(function(error, supportedDeviceType
 ```
 <a name="balena.models.device.getManifestBySlug"></a>
 
-##### device.getManifestBySlug(slug) ⇒ <code>Promise</code>
+##### device.getManifestBySlug(slugOrName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by slug  
 **Access**: public  
@@ -3955,7 +3957,7 @@ balena.models.device.getSupportedDeviceTypes(function(error, supportedDeviceType
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slug | <code>String</code> | device slug |
+| slugOrName | <code>String</code> | device slug |
 
 **Example**  
 ```js
