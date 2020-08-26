@@ -43,6 +43,31 @@ In the browser the balena SDK doesn't use the following dependencies:
 
 For the future we're looking at ways to automatically exclude these in downstream bundles. See [#254](https://github.com/balena-io/balena-sdk/issues/254) for more information.
 
+### Bundling with pkg
+
+The balena SDK includes builds for various ECMAScript versions that are
+dynamically selected at runtime (using 
+[@balena/es-version](https://github.com/balena-io-modules/balena-es-version)).
+For this reason, packagers like [pkg](https://github.com/vercel/pkg) are not
+able to automatically detect which assets to include in the output package. The
+following sample `pkg` section should be added to your application's
+`package.json` file to instruct `pkg` to bundle the required assets:
+
+```json
+  "pkg": {
+    "scripts": [
+      "node_modules/balena-sdk/**/*.js"
+    ],
+    "assets": [
+      "node_modules/balena-pine/**/*",
+      "node_modules/pinejs-client-core/**/*"
+    ]
+  }
+```
+
+For more information, please refer to the respective
+[documentation from the `pkg` project](https://github.com/vercel/pkg#config).
+
 ## Documentation
 
 The module exports a single factory function. Use it like this:
