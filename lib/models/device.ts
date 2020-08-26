@@ -1825,7 +1825,7 @@ const getDeviceModel = function (
 		 *
 		 * @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 		 *
-		 * @param {String} deviceTypeSlug - device type name
+		 * @param {String} deviceTypeName - device type name
 		 * @fulfil {String} - device slug name
 		 * @returns {Promise}
 		 *
@@ -1843,10 +1843,10 @@ const getDeviceModel = function (
 		 * });
 		 */
 		getDeviceSlug: async (
-			deviceTypeSlug: string,
+			deviceTypeName: string,
 		): Promise<string | undefined> => {
 			try {
-				const { slug } = await exports.getManifestBySlug(deviceTypeSlug);
+				const { slug } = await exports.getManifestBySlug(deviceTypeName);
 				return slug;
 			} catch (error) {
 				if (error instanceof errors.BalenaInvalidDeviceType) {
