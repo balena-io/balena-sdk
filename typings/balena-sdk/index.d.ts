@@ -682,7 +682,7 @@ export interface BalenaSDK {
 				uuidOrId: string | number,
 			): Promise<DeviceState.DeviceState>;
 			getDisplayName(deviceTypeSlug: string): Promise<string | undefined>;
-			getDeviceSlug(deviceTypeSlug: string): Promise<string | undefined>;
+			getDeviceSlug(deviceTypeName: string): Promise<string | undefined>;
 			generateUniqueKey(): string;
 			register(
 				applicationNameOrSlugOrId: string | number,
