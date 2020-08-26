@@ -1,0 +1,19 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: "daily"
+    time: "12:00"
+  open-pull-requests-limit: 1
+  ignore:
+  # Ignore entries in repo.yml until nested changelogs no longer require
+  # us to write the magic "update from to" commit message.
+  - dependency-name: "balena-auth"
+  - dependency-name: "balena-hup-action-utils"
+  - dependency-name: "balena-register-device"
+  - dependency-name: "balena-request"
+  - dependency-name: "pinejs-client-core"
+  commit-message:
+    prefix: patch
+  rebase-strategy: disabled
