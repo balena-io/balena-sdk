@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add support for bundling with pkg
+      hash: f5fed0e20b94fa32eb1b26e3a06659756c83a89e
+      body: ''
+      footer:
+        Connects-to: '#973'
+        connects-to: '#973'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.4.0
+  date: 2020-08-26T15:43:01.822Z
+- commits:
     - subject: 'tests: Update the tests for the new maximum application name size'
       hash: 19f3c01a03c272875702676d40b3408642f90b2b
       body: ''
