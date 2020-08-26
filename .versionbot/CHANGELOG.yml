@@ -1,4 +1,19 @@
 - commits:
+    - subject: Document how to use with pkg
+      hash: ebe99cda636c5c513236a473c6e45d6b8eb49a09
+      body: ''
+      footer:
+        Resolves: '#973'
+        resolves: '#973'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.3.6
+  date: 2020-08-26T21:39:20.309Z
+- commits:
     - subject: Use a more semantic parameter name for device.getDeviceSlug
       hash: 8e1a76bb152d529e336b4056c9588ae0bcb690c2
       body: ''
