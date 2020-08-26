@@ -119,7 +119,7 @@ describe('Application Model', function () {
 							.expect(error)
 							.to.have.property('message')
 							.that.contains(
-								'It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 30',
+								'It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 100',
 							);
 					});
 				});
