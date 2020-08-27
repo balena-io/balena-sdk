@@ -70,7 +70,7 @@ interface Lambda<T> {
 }
 
 type OrderByValues = 'asc' | 'desc';
-type OrderBy = string | string[] | { [index: string]: OrderByValues };
+type OrderBy = string | OrderBy[] | { [index: string]: OrderByValues };
 
 type AssociatedResourceFilter<T> = T extends NonNullable<
 	ReverseNavigationResource
