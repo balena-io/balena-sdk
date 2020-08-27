@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'Improve $orderby typing to allow `[{a: ''desc''}, {b: ''asc''}]`'
+      hash: 0ded115ec8609c17a73f0dea6ab0cc8eea5fb530
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 15.3.7
+  date: 2020-08-27T11:00:20.808Z
+- commits:
     - subject: Document how to use with pkg
       hash: ebe99cda636c5c513236a473c6e45d6b8eb49a09
       body: ''
