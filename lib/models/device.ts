@@ -65,7 +65,6 @@ import {
 	LOCAL_MODE_SUPPORT_PROPERTIES,
 } from '../util/local-mode';
 
-import { OverallStatus } from './device-ts';
 import { SubmitBody, SelectableProps } from '../../typings/pinejs-client-core';
 import { AtLeast } from '../../typings/utils';
 import { DeviceType } from '../../typings/balena-sdk/device-type-json';
@@ -83,6 +82,18 @@ const MIN_SUPERVISOR_MC_API = '7.0.0';
 // noticed during tests and the endpoints that resulted in container management actions were
 // affected in particular.
 const CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
+
+export enum OverallStatus {
+	CONFIGURING = 'configuring',
+	IDLE = 'idle',
+	OFFLINE = 'offline',
+	INACTIVE = 'inactive',
+	POST_PROVISIONING = 'post-provisioning',
+	UPDATING = 'updating',
+	ORDERED = 'ordered',
+	PREPARING = 'preparing',
+	SHIPPED = 'shipped',
+}
 
 const getDeviceModel = function (
 	deps: InjectedDependenciesParam,
