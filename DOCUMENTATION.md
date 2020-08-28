@@ -259,6 +259,9 @@ const sdk = fromSharedOptions();
             * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
             * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
         * [.organization](#balena.models.organization) : <code>object</code>
+            * [.membership](#balena.models.organization.membership) : <code>object</code>
+                * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
+                * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
             * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
@@ -593,6 +596,9 @@ balena.models.device.get(123).catch(function (error) {
         * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
         * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
     * [.organization](#balena.models.organization) : <code>object</code>
+        * [.membership](#balena.models.organization.membership) : <code>object</code>
+            * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
+            * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
         * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
@@ -4995,11 +5001,82 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.organization](#balena.models.organization) : <code>object</code>
+    * [.membership](#balena.models.organization.membership) : <code>object</code>
+        * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
+        * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
     * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
     * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
 
+<a name="balena.models.organization.membership"></a>
+
+##### organization.membership : <code>object</code>
+**Kind**: static namespace of [<code>organization</code>](#balena.models.organization)  
+
+* [.membership](#balena.models.organization.membership) : <code>object</code>
+    * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
+    * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+
+<a name="balena.models.organization.membership.getAll"></a>
+
+###### membership.getAll([options]) ⇒ <code>Promise</code>
+This method returns all organization memberships.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
+**Summary**: Get all organization memberships  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - organization memberships  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.membership.getAll().then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.organization.membership.getAll(function(error, memberships) {
+	console.log(memberships);
+});
+```
+<a name="balena.models.organization.membership.getAllByOrganization"></a>
+
+###### membership.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
+This method returns all organization memberships for a specific organization.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
+**Summary**: Get all memberships by organization  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - organization memberships  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| handleOrId | <code>String</code> \| <code>Number</code> |  | organization handle (string) or id (number). |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.membership.getAllByOrganization('MyOrg').then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.organization.membership.getAllByOrganization(123).then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.organization.membership.getAllByOrganization(123, function(error, memberships) {
+	console.log(memberships);
+});
+```
 <a name="balena.models.organization.create"></a>
 
 ##### organization.create(options) ⇒ <code>Promise</code>
