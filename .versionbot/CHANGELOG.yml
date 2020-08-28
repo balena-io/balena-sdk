@@ -1,4 +1,17 @@
 - commits:
+    - subject: Combine the two device model files
+      hash: 29e2a275f89271cd5fc396c9c136ba239a2552ef
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.4.1
+  date: 2020-08-28T10:33:33.788Z
+- commits:
     - subject: 'Add methods to enable, verify & disable 2fa'
       hash: b125d58f40ff7a007bc8dc72c18c8a7a1600e722
       body: ''
