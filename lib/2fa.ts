@@ -86,11 +86,110 @@ const get2fa = function (
 	}
 
 	/**
-	 * @summary Challenge two factor authentication
+	 * @summary Verify two factor authentication
+	 * @name verify
+	 * @public
+	 * @function
+	 * @memberof balena.auth.twoFactor
+	 *
+	 * @description Verifies two factor authentication.
+	 * Note that this method not update the token automatically.
+	 * You should use {@link balena.auth.twoFactor.challenge} when possible,
+	 * as it takes care of that as well.
+	 *
+	 * @param {String} code - code
+	 * @fulfil {String} - session token
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * const token = balena.auth.twoFactor.verify('1234');
+	 * balena.auth.loginWithToken(token);
+	 *
+	 * @example
+	 * balena.auth.twoFactor.verify('1234', function(error, token) {
+	 * 	if (error) throw error;
+	 * 	console.log(token);
+	 * });
+	 */
+	async function verify(code: string): Promise<string> {
+		const { body: token } = await request.send<string>({
+			method: 'POST',
+			url: '/auth/totp/verify',
+			baseUrl: apiUrl,
+			body: { code },
+		});
+		return token;
+	}
+
+	/**
+	 * @summary Get two factor authentication setup key
+	 * @name getSetupKey
+	 * @public
+	 * @function
+	 * @memberof balena.auth.twoFactor
+	 *
+	 * @description Retrieves a setup key for enabling two factor authentication.
+	 *
+	 * @fulfil {String} - setup key
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * const setupKey = balena.auth.twoFactor.getSetupKey();
+	 * console.log(setupKey);
+	 *
+	 * @example
+	 * balena.auth.twoFactor.getSetupKey(function(error, setupKey) {
+	 * 	if (error) throw error;
+	 * 	console.log(setupKey);
+	 * });
+	 */
+	async function getSetupKey(): Promise<string> {
+		const { body: setupKey } = await request.send<string>({
+			method: 'GET',
+			url: '/auth/totp/setup',
+			baseUrl: apiUrl,
+		});
+		return setupKey;
+	}
+
+	/**
+	 * @summary Enable two factor authentication
+	 * @name enable
+	 * @public
+	 * @function
+	 * @memberof balena.auth.twoFactor
+	 *
+	 * @description Enables two factor authentication.
+	 *
+	 * @param {String} code - code
+	 * @fulfil {String} - session token
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * const token = balena.auth.twoFactor.enable('1234');
+	 * balena.auth.loginWithToken(token);
+	 *
+	 * @example
+	 * balena.auth.twoFactor.enable('1234', function(error, token) {
+	 * 	if (error) throw error;
+	 * 	console.log(token);
+	 * });
+	 */
+	const enable = async (code: string): Promise<string> => {
+		const token = await verify(code);
+		await auth.setKey(token);
+		return token;
+	};
+
+	/**
+	 * @summary Challenge two factor authentication and complete login
 	 * @name challenge
 	 * @public
 	 * @function
 	 * @memberof balena.auth.twoFactor
+	 *
+	 * @description You should use {@link balena.auth.login} when possible,
+	 * as it takes care of saving the token and email as well.
 	 *
 	 * @param {String} code - code
 	 * @returns {Promise}
@@ -104,19 +203,52 @@ const get2fa = function (
 	 * });
 	 */
 	async function challenge(code: string): Promise<void> {
-		const { body } = await request.send({
+		const token = await verify(code);
+		await auth.setKey(token);
+	}
+
+	/**
+	 * @summary Disable two factor authentication
+	 * @name disable
+	 * @public
+	 * @function
+	 * @memberof balena.auth.twoFactor
+	 *
+	 * @description Disables two factor authentication.
+	 *
+	 * @param {String} password - password
+	 * @fulfil {String} - session token
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * const token = balena.auth.twoFactor.disable('1234');
+	 * balena.auth.loginWithToken(token);
+	 *
+	 * @example
+	 * balena.auth.twoFactor.disable('1234', function(error, token) {
+	 * 	if (error) throw error;
+	 * 	console.log(token);
+	 * });
+	 */
+	async function disable(password: string): Promise<string> {
+		const { body: token } = await request.send<string>({
 			method: 'POST',
-			url: '/auth/totp/verify',
+			url: '/auth/totp/disable',
 			baseUrl: apiUrl,
-			body: { code },
+			body: { password },
 		});
-		await auth.setKey(body);
+		await auth.setKey(token);
+		return token;
 	}
 
 	return {
 		isEnabled,
 		isPassed,
+		getSetupKey,
+		enable,
+		verify,
 		challenge,
+		disable,
 	};
 };
 

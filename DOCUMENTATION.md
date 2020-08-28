@@ -311,7 +311,11 @@ const sdk = fromSharedOptions();
         * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
             * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
             * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+            * [.verify(code)](#balena.auth.twoFactor.verify) ⇒ <code>Promise</code>
+            * [.getSetupKey()](#balena.auth.twoFactor.getSetupKey) ⇒ <code>Promise</code>
+            * [.enable(code)](#balena.auth.twoFactor.enable) ⇒ <code>Promise</code>
             * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+            * [.disable(password)](#balena.auth.twoFactor.disable) ⇒ <code>Promise</code>
         * [.whoami()](#balena.auth.whoami) ⇒ <code>Promise</code>
         * [.authenticate(credentials)](#balena.auth.authenticate) ⇒ <code>Promise</code>
         * [.login(credentials)](#balena.auth.login) ⇒ <code>Promise</code>
@@ -6226,7 +6230,11 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
     * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
         * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
         * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+        * [.verify(code)](#balena.auth.twoFactor.verify) ⇒ <code>Promise</code>
+        * [.getSetupKey()](#balena.auth.twoFactor.getSetupKey) ⇒ <code>Promise</code>
+        * [.enable(code)](#balena.auth.twoFactor.enable) ⇒ <code>Promise</code>
         * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+        * [.disable(password)](#balena.auth.twoFactor.disable) ⇒ <code>Promise</code>
     * [.whoami()](#balena.auth.whoami) ⇒ <code>Promise</code>
     * [.authenticate(credentials)](#balena.auth.authenticate) ⇒ <code>Promise</code>
     * [.login(credentials)](#balena.auth.login) ⇒ <code>Promise</code>
@@ -6246,7 +6254,11 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
 * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
     * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
     * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
+    * [.verify(code)](#balena.auth.twoFactor.verify) ⇒ <code>Promise</code>
+    * [.getSetupKey()](#balena.auth.twoFactor.getSetupKey) ⇒ <code>Promise</code>
+    * [.enable(code)](#balena.auth.twoFactor.enable) ⇒ <code>Promise</code>
     * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
+    * [.disable(password)](#balena.auth.twoFactor.disable) ⇒ <code>Promise</code>
 
 <a name="balena.auth.twoFactor.isEnabled"></a>
 
@@ -6298,11 +6310,90 @@ balena.auth.twoFactor.isPassed(function(error, isPassed) {
 	}
 });
 ```
+<a name="balena.auth.twoFactor.verify"></a>
+
+##### twoFactor.verify(code) ⇒ <code>Promise</code>
+Verifies two factor authentication.
+Note that this method not update the token automatically.
+You should use [challenge](#balena.auth.twoFactor.challenge) when possible,
+as it takes care of that as well.
+
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
+**Summary**: Verify two factor authentication  
+**Access**: public  
+**Fulfil**: <code>String</code> - session token  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| code | <code>String</code> | code |
+
+**Example**  
+```js
+const token = balena.auth.twoFactor.verify('1234');
+balena.auth.loginWithToken(token);
+```
+**Example**  
+```js
+balena.auth.twoFactor.verify('1234', function(error, token) {
+	if (error) throw error;
+	console.log(token);
+});
+```
+<a name="balena.auth.twoFactor.getSetupKey"></a>
+
+##### twoFactor.getSetupKey() ⇒ <code>Promise</code>
+Retrieves a setup key for enabling two factor authentication.
+
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
+**Summary**: Get two factor authentication setup key  
+**Access**: public  
+**Fulfil**: <code>String</code> - setup key  
+**Example**  
+```js
+const setupKey = balena.auth.twoFactor.getSetupKey();
+console.log(setupKey);
+```
+**Example**  
+```js
+balena.auth.twoFactor.getSetupKey(function(error, setupKey) {
+	if (error) throw error;
+	console.log(setupKey);
+});
+```
+<a name="balena.auth.twoFactor.enable"></a>
+
+##### twoFactor.enable(code) ⇒ <code>Promise</code>
+Enables two factor authentication.
+
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
+**Summary**: Enable two factor authentication  
+**Access**: public  
+**Fulfil**: <code>String</code> - session token  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| code | <code>String</code> | code |
+
+**Example**  
+```js
+const token = balena.auth.twoFactor.enable('1234');
+balena.auth.loginWithToken(token);
+```
+**Example**  
+```js
+balena.auth.twoFactor.enable('1234', function(error, token) {
+	if (error) throw error;
+	console.log(token);
+});
+```
 <a name="balena.auth.twoFactor.challenge"></a>
 
 ##### twoFactor.challenge(code) ⇒ <code>Promise</code>
+You should use [login](#balena.auth.login) when possible,
+as it takes care of saving the token and email as well.
+
 **Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
-**Summary**: Challenge two factor authentication  
+**Summary**: Challenge two factor authentication and complete login  
 **Access**: public  
 
 | Param | Type | Description |
@@ -6317,6 +6408,32 @@ balena.auth.twoFactor.challenge('1234');
 ```js
 balena.auth.twoFactor.challenge('1234', function(error) {
 	if (error) throw error;
+});
+```
+<a name="balena.auth.twoFactor.disable"></a>
+
+##### twoFactor.disable(password) ⇒ <code>Promise</code>
+Disables two factor authentication.
+
+**Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
+**Summary**: Disable two factor authentication  
+**Access**: public  
+**Fulfil**: <code>String</code> - session token  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| password | <code>String</code> | password |
+
+**Example**  
+```js
+const token = balena.auth.twoFactor.disable('1234');
+balena.auth.loginWithToken(token);
+```
+**Example**  
+```js
+balena.auth.twoFactor.disable('1234', function(error, token) {
+	if (error) throw error;
+	console.log(token);
 });
 ```
 <a name="balena.auth.whoami"></a>
