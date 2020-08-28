@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add missing balena-request typings for the refreshToken method
+      hash: acbe2b22d029230767210a4d5a7490aa0b12545b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.4.2
+  date: 2020-08-28T11:59:06.217Z
+- commits:
     - subject: Combine the two device model files
       hash: 29e2a275f89271cd5fc396c9c136ba239a2552ef
       body: ''
