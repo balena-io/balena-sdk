@@ -38,4 +38,5 @@ interface BalenaRequest {
 	send: BalenaRequestSend;
 	stream: (options: BalenaRequestOptions) => Promise<BalenaRequestStreamResult>;
 	interceptors: Interceptor[];
+	refreshToken(options: { baseUrl: string }): Promise<string>;
 }
