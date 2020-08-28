@@ -451,6 +451,10 @@ export interface DeviceTag extends ResourceTagBase {
 	device: NavigationResource<Device>;
 }
 
+export interface OrganizationMembershipTag extends ResourceTagBase {
+	organization_membership: NavigationResource<OrganizationMembership>;
+}
+
 export interface ReleaseTag extends ResourceTagBase {
 	release: NavigationResource<Release>;
 }
