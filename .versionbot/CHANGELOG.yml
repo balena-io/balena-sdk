@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'Add methods to enable, verify & disable 2fa'
+      hash: b125d58f40ff7a007bc8dc72c18c8a7a1600e722
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.4.0
+  date: 2020-08-27T13:04:01.606Z
+- commits:
     - subject: 'Improve $orderby typing to allow `[{a: ''desc''}, {b: ''asc''}]`'
       hash: 0ded115ec8609c17a73f0dea6ab0cc8eea5fb530
       body: ''
