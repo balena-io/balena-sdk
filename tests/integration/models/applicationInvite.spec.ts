@@ -37,8 +37,12 @@ describe('Application Invite Model', function () {
 						_err: Error,
 						applicationInvite: BalenaSdk.ApplicationInvite[],
 					) {
-						expect(applicationInvite).to.deep.equal([]);
-						return done();
+						try {
+							expect(applicationInvite).to.deep.equal([]);
+							done();
+						} catch (err) {
+							done(err);
+						}
 					});
 				});
 			});

@@ -63,9 +63,13 @@ export const itShouldGetAllTagsByResource = function <
 
 	it('should become an empty array by default [callback]', function (done) {
 		getAllByResource(this.resource.id, function (err, tags) {
-			expect(err).to.be.null;
-			expect(tags).to.deep.equal([]);
-			done();
+			try {
+				expect(err).to.be.null;
+				expect(tags).to.deep.equal([]);
+				done();
+			} catch (err) {
+				done(err);
+			}
 		});
 	});
 
@@ -109,11 +113,15 @@ export const itShouldGetAllTagsByResource = function <
 
 		it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
 			getAllByResource(this.resource.id, function (err, tags) {
-				expect(err).to.be.null;
-				expect(tags).to.have.length(1);
-				expect(tags[0].tag_key).to.equal('EDITOR');
-				expect(tags[0].value).to.equal('vim');
-				done();
+				try {
+					expect(err).to.be.null;
+					expect(tags).to.have.length(1);
+					expect(tags[0].tag_key).to.equal('EDITOR');
+					expect(tags[0].value).to.equal('vim');
+					done();
+				} catch (err) {
+					done(err);
+				}
 			});
 		});
 	});

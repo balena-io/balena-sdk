@@ -31,8 +31,12 @@ describe('Key Model', function () {
 					_err: Error,
 					keys: BalenaSdk.SSHKey[],
 				) {
-					expect(keys).to.deep.equal([]);
-					return done();
+					try {
+						expect(keys).to.deep.equal([]);
+						done();
+					} catch (err) {
+						done(err);
+					}
 				});
 			});
 		});

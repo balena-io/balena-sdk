@@ -32,9 +32,13 @@ describe('Application Model', function () {
 			it('should eventually become an empty array [callback]', function (done) {
 				// @ts-expect-error
 				balena.models.application.getAll(function (err, applications) {
-					expect(err).to.be.null;
-					expect(applications).to.deep.equal([]);
-					return done();
+					try {
+						expect(err).to.be.null;
+						expect(applications).to.deep.equal([]);
+						done();
+					} catch (err) {
+						done(err);
+					}
 				});
 			});
 		});
@@ -53,8 +57,12 @@ describe('Application Model', function () {
 				balena.models.application.getAppByOwner('testapp', 'FooBar', function (
 					err,
 				) {
-					expect(err).to.not.be.undefined;
-					return done();
+					try {
+						expect(err).to.not.be.undefined;
+						done();
+					} catch (err) {
+						done(err);
+					}
 				});
 			});
 		});
@@ -410,11 +418,15 @@ describe('Application Model', function () {
 						{ $expand: { organization: { $select: 'handle' } } },
 						// @ts-expect-error
 						function (err, applications) {
-							expect(err).to.be.null;
-							m.chai
-								.expect(applications[0].organization[0].handle)
-								.to.equal(credentials.username);
-							return done();
+							try {
+								expect(err).to.be.null;
+								m.chai
+									.expect(applications[0].organization[0].handle)
+									.to.equal(credentials.username);
+								done();
+							} catch (err) {
+								done(err);
+							}
 						},
 					);
 				});
