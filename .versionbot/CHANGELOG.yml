@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add methods for retrieving organization memberships
+      hash: d1f84825e77e4a2b67712806f800530af693d561
+      body: |
+        Didn't include an add method, since how that should
+        work needs further discussion.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.5.0
+  date: 2020-08-31T13:10:37.818Z
+- commits:
     - subject: Remove invite by username example
       hash: 2cbabe0c5e475c4444737df1c14d623323051eac
       body: ''
