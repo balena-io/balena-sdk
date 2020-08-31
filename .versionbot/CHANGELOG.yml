@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove invite by username example
+      hash: 2cbabe0c5e475c4444737df1c14d623323051eac
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Amit Solanki <amit@balena.io>
+        signed-off-by: Amit Solanki <amit@balena.io>
+      author: Amit Solanki
+      nested: []
+  version: 15.4.5
+  date: 2020-08-31T11:50:50.345Z
+- commits:
     - subject: Workaround a regression in lodash typings for throttle()
       hash: 7ded606c8d3f236eda49775fb6c7f4f8e3ebb854
       body: ''
