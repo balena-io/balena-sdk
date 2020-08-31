@@ -1,4 +1,17 @@
 - commits:
+    - subject: Workaround a regression in lodash typings for throttle()
+      hash: 7ded606c8d3f236eda49775fb6c7f4f8e3ebb854
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.4.4
+  date: 2020-08-31T10:31:30.414Z
+- commits:
     - subject: 'tests: Prevent callback support tests from hanging when failing'
       hash: 1cfb3724c89c1cdb96ff597b3833f594d1ce1559
       body: ''
