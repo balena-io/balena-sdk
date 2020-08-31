@@ -122,7 +122,7 @@ const getApplicationInviteModel = function (
 		 * @function
 		 * @memberof balena.models.application.invite
 		 *
-		 * @description This method invites a user by their email/username to an application.
+		 * @description This method invites a user by their email to an application.
 		 *
 		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
 		 * @param {Object} options - invite creation parameters
@@ -134,17 +134,12 @@ const getApplicationInviteModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.invite.create('MyApp', { collabortor: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
+		 * balena.models.application.invite.create('MyApp', { invitee: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
 		 * 	console.log(invite);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.invite.create(53, { invitee: "invitee_username" }).then(function(invite) {
-		 * 	console.log(invite);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.invite.create(53, { invitee: "invitee_username" }, function(error, invite) {
+		 * balena.models.application.invite.create(53, { invitee: "invitee@example.org" }, function(error, invite) {
 		 * 	console.log(invite);
 		 * });
 		 */
