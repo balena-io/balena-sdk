@@ -2,7 +2,11 @@ import throttle = require('lodash/throttle');
 import * as memoizee from 'memoizee';
 import * as moment from 'moment';
 
-const now = throttle(() => moment(), 1000, { leading: true });
+// Because we are using `leading: true` this never returns an undefined result.
+// TODO: Remove this casting once the lodash typings get better
+const now = throttle(() => moment(), 1000, {
+	leading: true,
+}) as () => moment.Moment;
 
 const dateToMoment = memoizee((date: Date | string) => moment(date), {
 	max: 1000,
