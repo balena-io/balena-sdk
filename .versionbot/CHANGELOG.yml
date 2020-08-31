@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Prevent callback support tests from hanging when failing'
+      hash: 1cfb3724c89c1cdb96ff597b3833f594d1ce1559
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.4.3
+  date: 2020-08-28T14:21:30.576Z
+- commits:
     - subject: Add missing balena-request typings for the refreshToken method
       hash: acbe2b22d029230767210a4d5a7490aa0b12545b
       body: ''
