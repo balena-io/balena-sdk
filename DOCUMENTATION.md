@@ -1305,7 +1305,7 @@ balena.models.application.invite.getAllByApplication(123, function(error, invite
 <a name="balena.models.application.invite.create"></a>
 
 ###### invite.create(nameOrSlugOrId, options, [message]) ⇒ <code>Promise</code>
-This method invites a user by their email/username to an application.
+This method invites a user by their email to an application.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
 **Summary**: Creates a new invite for an application  
@@ -1322,19 +1322,13 @@ This method invites a user by their email/username to an application.
 
 **Example**  
 ```js
-balena.models.application.invite.create('MyApp', { collabortor: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
+balena.models.application.invite.create('MyApp', { invitee: "invitee@example.org", roleName: "developer", message: "join my app" }).then(function(invite) {
 	console.log(invite);
 });
 ```
 **Example**  
 ```js
-balena.models.application.invite.create(53, { invitee: "invitee_username" }).then(function(invite) {
-	console.log(invite);
-});
-```
-**Example**  
-```js
-balena.models.application.invite.create(53, { invitee: "invitee_username" }, function(error, invite) {
+balena.models.application.invite.create(53, { invitee: "invitee@example.org" }, function(error, invite) {
 	console.log(invite);
 });
 ```
