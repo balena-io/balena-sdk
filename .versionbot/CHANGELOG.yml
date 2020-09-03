@@ -1,4 +1,29 @@
 - commits:
+    - subject: Add methods for managing organization membership tags
+      hash: f49109170901d5cec8eeb74cf45c5d692e473971
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2761'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2761'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests: Support testing tags with two word names'
+      hash: a0be4f245660e568ab0fe9a5f91ecf870cbf20ad
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.7.0
+  date: 2020-09-03T16:37:06.467Z
+- commits:
     - subject: Add the models.device.getMetrics method
       hash: caad8b83d73ccf5f6cca4447c4772420731d01ab
       body: ''
