@@ -196,6 +196,7 @@ const sdk = fromSharedOptions();
             * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
             * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
             * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
+            * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
             * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
@@ -533,6 +534,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
         * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
         * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
+        * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
         * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
@@ -2127,6 +2129,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
     * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
     * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
+    * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
     * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
@@ -3319,6 +3322,38 @@ balena.models.device.getMACAddresses('7cf02a6', function(error, macAddresses) {
 	macAddresses.forEach(function(mac) {
 		console.log(mac);
 	});
+});
+```
+<a name="balena.models.device.getMetrics"></a>
+
+##### device.getMetrics(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the metrics related information for a device  
+**Access**: public  
+**Fulfil**: <code>Object</code> - device metrics  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.getMetrics('7cf02a6').then(function(deviceMetrics) {
+	console.log(deviceMetrics);
+});
+```
+**Example**  
+```js
+balena.models.device.getMetrics(123).then(function(deviceMetrics) {
+	console.log(deviceMetrics);
+});
+```
+**Example**  
+```js
+balena.models.device.getMetrics('7cf02a6', function(error, deviceMetrics) {
+	if (error) throw error;
+
+	console.log(deviceMetrics);
 });
 ```
 <a name="balena.models.device.remove"></a>

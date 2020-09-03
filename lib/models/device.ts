@@ -31,6 +31,7 @@ import {
 	DeviceWithServiceDetails,
 	CurrentServiceWithCommit,
 	DeviceState,
+	DeviceMetrics,
 } from '../..';
 
 import * as url from 'url';
@@ -913,6 +914,53 @@ const getDeviceModel = function (
 				return [];
 			}
 			return mac_address.split(' ');
+		},
+
+		/**
+		 * @summary Get the metrics related information for a device
+		 * @name getMetrics
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @fulfil {Object} - device metrics
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.getMetrics('7cf02a6').then(function(deviceMetrics) {
+		 * 	console.log(deviceMetrics);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.getMetrics(123).then(function(deviceMetrics) {
+		 * 	console.log(deviceMetrics);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.getMetrics('7cf02a6', function(error, deviceMetrics) {
+		 * 	if (error) throw error;
+		 *
+		 * 	console.log(deviceMetrics);
+		 * });
+		 */
+		getMetrics: async (uuidOrId: string | number): Promise<DeviceMetrics> => {
+			const device = await exports.get(uuidOrId, {
+				$select: [
+					'memory_usage',
+					'memory_total',
+					'storage_block_device',
+					'storage_usage',
+					'storage_total',
+					'cpu_usage',
+					'cpu_temp',
+					'cpu_id',
+					'is_undervolted',
+				],
+			});
+			// @ts-expect-error
+			delete device.__metadata;
+			return device;
 		},
 
 		/**

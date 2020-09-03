@@ -254,6 +254,19 @@ export interface InvoiceInfo {
 	state: 'pending' | 'paid' | 'failed' | 'past_due';
 }
 
+export type DeviceMetrics = Pick<
+	Device,
+	| 'memory_usage'
+	| 'memory_total'
+	| 'storage_block_device'
+	| 'storage_usage'
+	| 'storage_total'
+	| 'cpu_usage'
+	| 'cpu_temp'
+	| 'cpu_id'
+	| 'is_undervolted'
+>;
+
 export interface SupervisorStatus {
 	api_port: string;
 	ip_address: string;
@@ -621,6 +634,7 @@ export interface BalenaSDK {
 			isOnline(uuidOrId: string | number): Promise<boolean>;
 			getLocalIPAddresses(uuidOrId: string | number): Promise<string[]>;
 			getMACAddresses(uuidOrId: string | number): Promise<string[]>;
+			getMetrics(uuidOrId: string | number): Promise<DeviceMetrics>;
 			getDashboardUrl(uuid: string): string;
 			getSupportedDeviceTypes(): Promise<string[]>;
 			getManifestBySlug(slugOrName: string): Promise<DeviceTypeJson.DeviceType>;

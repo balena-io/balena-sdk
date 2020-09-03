@@ -13,7 +13,6 @@ import {
 	sdkOpts,
 	IS_BROWSER,
 } from '../setup';
-
 import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
@@ -562,6 +561,41 @@ describe('Device Model', function () {
 				);
 			});
 
+			describe('balena.models.device.getMetrics()', function () {
+				it('should be rejected if the device uuid does not exist', async function () {
+					const promise = balena.models.device.getMetrics('asdfghjkl');
+					await m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Device not found: asdfghjkl');
+				});
+
+				it('should be rejected if the device id does not exist', async function () {
+					const promise = balena.models.device.getMetrics(999999);
+					await m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Device not found: 999999');
+				});
+
+				['id', 'uuid'].forEach((field) =>
+					it(`should retrieve an empty device metrics object by ${field}`, async function () {
+						const result = await balena.models.device.getMetrics(
+							this.device[field],
+						);
+						expect(result).to.deep.equal({
+							memory_usage: null,
+							memory_total: null,
+							storage_block_device: null,
+							storage_usage: null,
+							storage_total: null,
+							cpu_usage: null,
+							cpu_temp: null,
+							cpu_id: null,
+							is_undervolted: false,
+						});
+					}),
+				);
+			});
+
 			describe('balena.models.device.getAllByParentDevice()', function () {
 				givenInitialOrganization(before);
 
@@ -657,6 +691,40 @@ describe('Device Model', function () {
 					return m.chai
 						.expect(result)
 						.to.deep.equal(['00:11:22:33:44:55', '66:77:88:99:AA:BB']);
+				}),
+			);
+		});
+
+		describe('balena.models.device.getMetrics()', function () {
+			givenAnApplication(before);
+			givenADevice(before, {
+				cpu_usage: 34,
+				memory_usage: 1000, // 1GB in MiB
+				memory_total: 4000, // 4GB in MiB
+				storage_block_device: '/dev/mmcblk0',
+				storage_usage: 1000, // 1GB in MiB
+				storage_total: 64000, // 64GB in MiB
+				cpu_temp: 56,
+				is_undervolted: true,
+				cpu_id: 'a CPU string',
+			});
+
+			['id', 'uuid'].forEach((field) =>
+				it(`should be able to retrieve the device metrics by ${field}`, async function () {
+					const result = await balena.models.device.getMetrics(
+						this.device[field],
+					);
+					expect(result).to.deep.equal({
+						cpu_usage: 34,
+						memory_usage: 1000, // 1GB in MiB
+						memory_total: 4000, // 4GB in MiB
+						storage_block_device: '/dev/mmcblk0',
+						storage_usage: 1000, // 1GB in MiB
+						storage_total: 64000, // 64GB in MiB
+						cpu_temp: 56,
+						is_undervolted: true,
+						cpu_id: 'a CPU string',
+					});
 				}),
 			);
 		});
