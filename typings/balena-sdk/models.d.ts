@@ -254,6 +254,15 @@ export interface Device {
 	uuid: string;
 	vpn_address: string | null;
 	api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
+	memory_usage: number | null;
+	memory_total: number | null;
+	storage_block_device: string | null;
+	storage_usage: number | null;
+	storage_total: number | null;
+	cpu_usage: number | null;
+	cpu_temp: number | null;
+	cpu_id: string | null;
+	is_undervolted: boolean;
 	/** This is a computed term */
 	overall_status: DeviceOverallStatus.DeviceOverallStatus;
 	/** This is a computed term */
