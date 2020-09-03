@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Convert the device.getMACAddress tests to async await'
+      hash: e4b7210247b6b2fd7450ef21fd17e16c86cbf225
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.7.1
+  date: 2020-09-03T19:09:33.053Z
+- commits:
     - subject: Add methods for managing organization membership tags
       hash: f49109170901d5cec8eeb74cf45c5d692e473971
       body: ''
