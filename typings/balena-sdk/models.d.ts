@@ -10,6 +10,58 @@ import type {
 // TODO: Drop in the next major
 export { SocialServiceAccount } from './jwt';
 
+export interface ResourceTypeMap {
+	api_key: ApiKey;
+	application: Application;
+	application__can_use__application_as_host: ApplicationHostedOnApplication;
+	application_config_variable: ApplicationVariable;
+	application_environment_variable: ApplicationVariable;
+	application_membership_role: ApplicationMembershipRole;
+	application_tag: ApplicationTag;
+	application_type: ApplicationType;
+	build_environment_variable: BuildVariable;
+	device: Device;
+	device_config_variable: DeviceVariable;
+	device_environment_variable: DeviceVariable;
+	device_service_environment_variable: DeviceServiceEnvironmentVariable;
+	device_tag: DeviceTag;
+	device_type: DeviceType;
+	feature: Feature;
+	gateway_download: GatewayDownload;
+	image: Image;
+	image_install: ImageInstall;
+	invitee: Invitee;
+	invitee__is_invited_to__application: ApplicationInvite;
+	my_application: Application;
+	organization: Organization;
+	organization__has_private_access_to__device_type: OrganizationPrivateDeviceTypeAccess;
+	organization_membership: OrganizationMembership;
+	organization_membership_role: OrganizationMembershipRole;
+	organization_membership_tag: OrganizationMembershipTag;
+	plan: Plan;
+	plan__has__discount_code: PlanDiscountCode;
+	plan_addon: PlanAddon;
+	plan_feature: PlanFeature;
+	recovery_two_factor: RecoveryTwoFactor;
+	release: Release;
+	release_tag: ReleaseTag;
+	service: Service;
+	service_environment_variable: ServiceEnvironmentVariable;
+	service_install: ServiceInstall;
+	service_instance: ServiceInstance;
+	subscription: Subscription;
+	subscription_prepaid_addon: SubscriptionPrepaidAddon;
+	supervisor_release: SupervisorRelease;
+	support_feature: SupportFeature;
+	support_tier: SupportTier;
+	team: Team;
+	team_application_access: TeamApplicationAccess;
+	team_membership: TeamMembership;
+	user: User;
+	user__has__public_key: SSHKey;
+	user__is_member_of__application: ApplicationMembership;
+}
+
 export interface Organization {
 	id: number;
 	created_at: string;
@@ -57,7 +109,6 @@ export interface OrganizationMembershipRole {
 	name: OrganizationMembershipRoles;
 }
 
-/** organization_membership */
 export interface OrganizationMembership {
 	id: number;
 	created_at: string;
@@ -72,7 +123,6 @@ export interface OrganizationMembership {
 	>;
 }
 
-/** team_membership */
 export interface TeamMembership {
 	id: number;
 	created_at: string;
@@ -169,7 +219,6 @@ export interface ApplicationMembershipRole {
 	name: ApplicationMembershipRoles;
 }
 
-/** user__is_member_of__application */
 export interface ApplicationMembership {
 	id: number;
 	user: NavigationResource<User>;
@@ -178,7 +227,6 @@ export interface ApplicationMembership {
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 }
 
-/** team_application_access */
 export interface TeamApplicationAccess {
 	id: number;
 	team: NavigationResource<Team>;
@@ -293,7 +341,6 @@ export interface Device {
 	gateway_download?: ReverseNavigationResource<GatewayDownload>;
 }
 
-/** device_type */
 export interface DeviceType {
 	id: number;
 	slug: string;
@@ -308,14 +355,12 @@ export interface DeviceType {
 
 export type DeviceOverallStatus = DeviceOverallStatus.DeviceOverallStatus;
 
-/** organization__has_private_access_to__device_type */
 export interface OrganizationPrivateDeviceTypeAccess {
 	id: number;
 	organization: NavigationResource<Organization>;
 	has_private_access_to__device_type: NavigationResource<DeviceType>;
 }
 
-/** @deprecated Use the Device type directly */
 export type DeviceWithImageInstalls = Device &
 	Required<Pick<Device, 'image_install' | 'gateway_download'>>;
 
