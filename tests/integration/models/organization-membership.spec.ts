@@ -4,6 +4,11 @@ import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 import { assertDeepMatchAndLength } from '../../util';
+import {
+	itShouldSetGetAndRemoveTags,
+	itShouldGetAllTagsByResource,
+} from './tags';
+import type * as tagsHelper from './tags';
 
 describe('Organization Membership Model', function () {
 	givenLoggedInUser(before);
@@ -68,6 +73,61 @@ describe('Organization Membership Model', function () {
 					organization_membership_role: { __id: this.orgAdminRole.id },
 				},
 			]);
+		});
+	});
+
+	describe('balena.models.organization.membership.tags', function () {
+		describe('[contained scenario]', function () {
+			const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
+				model: balena.models.organization.membership
+					.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
+				modelNamespace: 'balena.models.organization.membership.tags',
+				resourceName: 'organization',
+				uniquePropertyNames: ['handle'],
+			};
+
+			const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
+				model: balena.models.organization.membership
+					.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
+				modelNamespace: 'balena.models.organization.membership.tags',
+				resourceName: 'organization_membership',
+				uniquePropertyNames: [],
+			};
+
+			before(async function () {
+				const [
+					membership,
+				] = await balena.models.organization.membership.getAllByOrganization(
+					this.initialOrg.id,
+					{
+						$filter: { user: this.userId },
+					},
+				);
+
+				expect(membership).to.be.an('object');
+				expect(membership).to.have.property('id').that.is.a('number');
+				orgTagTestOptions.resourceProvider = () => this.initialOrg;
+				// used for tag creation during the
+				// device.tags.getAllByOrganization() test
+				orgTagTestOptions.setTagResourceProvider = () => membership;
+				orgMembershipTagTestOptions.resourceProvider = () => membership;
+
+				// Clear all tags, since this is not a fresh organization
+				await balena.pine.delete({
+					resource: 'organization_membership_tag',
+					options: {
+						$filter: { 1: 1 },
+					},
+				});
+			});
+
+			itShouldSetGetAndRemoveTags(orgMembershipTagTestOptions);
+
+			describe('balena.models.organization.membership.tags.getAllByOrganization()', () =>
+				itShouldGetAllTagsByResource(orgTagTestOptions));
+
+			describe('balena.models.organization.membership.tags.getAllByOrganizationMembership()', () =>
+				itShouldGetAllTagsByResource(orgMembershipTagTestOptions));
 		});
 	});
 });

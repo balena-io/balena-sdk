@@ -5,7 +5,7 @@ import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>
-	`getAllBy${_.startCase(resourceName)}`;
+	`getAllBy${_.upperFirst(_.camelCase(resourceName))}`;
 
 const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 	model: TagModelBase<T>,
