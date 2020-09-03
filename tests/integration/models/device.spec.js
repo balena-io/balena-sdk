@@ -537,16 +537,16 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.getMACAddresses()', function () {
-				it('should be rejected if the device uuid does not exist', function () {
+				it('should be rejected if the device uuid does not exist', async function () {
 					const promise = balena.models.device.getMACAddresses('asdfghjkl');
-					return m.chai
+					await m.chai
 						.expect(promise)
 						.to.be.rejectedWith('Device not found: asdfghjkl');
 				});
 
-				it('should be rejected if the device id does not exist', function () {
+				it('should be rejected if the device id does not exist', async function () {
 					const promise = balena.models.device.getMACAddresses(999999);
-					return m.chai
+					await m.chai
 						.expect(promise)
 						.to.be.rejectedWith('Device not found: 999999');
 				});
@@ -556,7 +556,7 @@ describe('Device Model', function () {
 						const result = await balena.models.device.getMACAddresses(
 							this.device[field],
 						);
-						return expect(result).to.deep.equal([]);
+						expect(result).to.deep.equal([]);
 					}),
 				);
 			});
@@ -688,7 +688,7 @@ describe('Device Model', function () {
 					const result = await balena.models.device.getMACAddresses(
 						this.device[field],
 					);
-					return m.chai
+					m.chai
 						.expect(result)
 						.to.deep.equal(['00:11:22:33:44:55', '66:77:88:99:AA:BB']);
 				}),
