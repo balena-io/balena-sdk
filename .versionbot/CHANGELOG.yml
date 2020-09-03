@@ -1,4 +1,35 @@
 - commits:
+    - subject: Add the models.device.getMetrics method
+      hash: caad8b83d73ccf5f6cca4447c4772420731d01ab
+      body: ''
+      footer:
+        Resolves: '#989'
+        resolves: '#989'
+        Change-type: minor
+        change-type: minor
+        HQ: 'https://github.com/balena-io/balena-io/issues/2264'
+        hq: 'https://github.com/balena-io/balena-io/issues/2264'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add the device metric related fields
+      hash: c3982e78470bbfc570ad311a02de6228f30852d8
+      body: ''
+      footer:
+        Resolves: '#989'
+        resolves: '#989'
+        Change-type: minor
+        change-type: minor
+        HQ: 'https://github.com/balena-io/balena-io/issues/2264'
+        hq: 'https://github.com/balena-io/balena-io/issues/2264'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.6.0
+  date: 2020-09-03T14:25:20.129Z
+- commits:
     - subject: Add methods for retrieving organization memberships
       hash: d1f84825e77e4a2b67712806f800530af693d561
       body: |
