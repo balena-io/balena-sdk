@@ -186,8 +186,8 @@ export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
 }
 
 const getDeviceType = memoize(
-	(deviceTypeId) =>
-		balena.pine.get<BalenaSdk.DeviceType>({
+	(deviceTypeId: number) =>
+		balena.pine.get({
 			resource: 'device_type',
 			id: deviceTypeId,
 			options: {

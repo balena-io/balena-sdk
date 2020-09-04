@@ -18,6 +18,7 @@ import * as errors from 'balena-errors';
 import type { Image, PineOptions } from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
+import { toWritable } from '../util/types';
 
 const getImageModel = function (
 	deps: InjectedDependenciesParam,
@@ -49,34 +50,32 @@ const getImageModel = function (
 		 * });
 		 */
 		async get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
+			const baseOptions = {
+				$select: toWritable([
+					// Select all the interesting fields *except* build_log
+					// (which can be very large)
+					'id',
+					'content_hash',
+					'dockerfile',
+					'project_type',
+					'status',
+					'error_message',
+					'image_size',
+					'created_at',
+					'push_timestamp',
+					'start_timestamp',
+					'end_timestamp',
+				] as const),
+			};
 			const image = await pine.get({
 				resource: 'image',
 				id,
-				options: mergePineOptions(
-					{
-						$select: [
-							// Select all the interesting fields *except* build_log
-							// (which can be very large)
-							'id',
-							'content_hash',
-							'dockerfile',
-							'project_type',
-							'status',
-							'error_message',
-							'image_size',
-							'created_at',
-							'push_timestamp',
-							'start_timestamp',
-							'end_timestamp',
-						],
-					},
-					options,
-				),
+				options: mergePineOptions(baseOptions, options) as typeof baseOptions,
 			});
 			if (image == null) {
 				throw new errors.BalenaImageNotFound(id);
 			}
-			return image;
+			return image as Image;
 		},
 
 		/**

@@ -54,11 +54,11 @@ const getServiceModel = (
 	// Not exported for now, but we could document & export it in the future
 	// if there are external use cases for this.
 	const get = async (id: number, options: PineOptions<Service> = {}) => {
-		const service = (await pine.get({
+		const service = await pine.get({
 			resource: 'service',
 			id,
 			options,
-		})) as Service | undefined;
+		});
 		if (service == null) {
 			throw new errors.BalenaServiceNotFound(id);
 		}
@@ -98,9 +98,9 @@ const getServiceModel = (
 			nameOrSlugOrId: string | number,
 			options: PineOptions<Service> = {},
 		): Promise<Service[]> {
-			const { id } = (await applicationModel().get(nameOrSlugOrId, {
+			const { id } = await applicationModel().get(nameOrSlugOrId, {
 				$select: 'id',
-			})) as { id: number };
+			});
 			return pine.get({
 				resource: 'service',
 				options: mergePineOptions({ $filter: { application: id } }, options),
@@ -169,9 +169,9 @@ const getServiceModel = (
 				nameOrSlugOrId: string | number,
 				options: PineOptions<ServiceEnvironmentVariable> = {},
 			): Promise<ServiceEnvironmentVariable[]> {
-				const { id } = (await applicationModel().get(nameOrSlugOrId, {
+				const { id } = await applicationModel().get(nameOrSlugOrId, {
 					$select: 'id',
-				})) as { id: number };
+				});
 				return varModel.getAll(
 					mergePineOptions(
 						{

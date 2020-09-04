@@ -106,7 +106,7 @@ const getApiKeysModel = function (
 		getAll(
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
 		): Promise<BalenaSdk.ApiKey[]> {
-			return pine.get<BalenaSdk.ApiKey>({
+			return pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
 					{

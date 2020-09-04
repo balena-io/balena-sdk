@@ -91,7 +91,7 @@ const getOrganizationMembershipModel = function (
 				);
 			}
 
-			const result = await pine.get<OrganizationMembership>({
+			const result = await pine.get({
 				resource: RESOURCE,
 				id: membershipId,
 				options,

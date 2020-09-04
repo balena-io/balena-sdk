@@ -19,7 +19,8 @@ import once = require('lodash/once');
 import type * as BalenaSdk from '../..';
 import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { isId, mergePineOptions } from '../util';
-import { ReleaseTag } from '../..';
+import { toWritable } from '../util/types';
+import { Application, ReleaseTag, Release, PineTypedResult } from '../..';
 
 const getReleaseModel = function (
 	deps: InjectedDependenciesParam,
@@ -95,7 +96,7 @@ const getReleaseModel = function (
 		}
 
 		if (isId(commitOrId)) {
-			const release = await pine.get<BalenaSdk.Release>({
+			const release = await pine.get({
 				resource: 'release',
 				id: commitOrId,
 				options: mergePineOptions({}, options),
@@ -105,7 +106,7 @@ const getReleaseModel = function (
 			}
 			return release;
 		} else {
-			const releases = await pine.get<BalenaSdk.Release>({
+			const releases = await pine.get({
 				resource: 'release',
 				options: mergePineOptions(
 					{
@@ -176,62 +177,56 @@ const getReleaseModel = function (
 			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
 		} = {},
 	): Promise<BalenaSdk.ReleaseWithImageDetails> {
-		const rawRelease = await get(
-			commitOrId,
-			mergePineOptions(
-				{
+		const baseImageOptions = {
+			$select: 'id',
+			$expand: {
+				is_a_build_of__service: {
+					$select: 'service_name',
+				},
+			},
+		} as const;
+
+		const baseReleaseOptions = {
+			$expand: {
+				contains__image: {
 					$expand: {
-						contains__image: {
-							$expand: {
-								image: mergePineOptions(
-									{
-										$select: ['id'],
-										$expand: {
-											is_a_build_of__service: {
-												$select: ['service_name'],
-											},
-										},
-									},
-									options.image,
-								),
-							},
-						},
-						is_created_by__user: {
-							$select: ['id', 'username'],
-						},
+						image: mergePineOptions(
+							baseImageOptions,
+							options.image,
+						) as typeof baseImageOptions,
 					},
 				},
-				options.release,
-			),
-		);
+				is_created_by__user: {
+					$select: toWritable(['id', 'username'] as const),
+				},
+			},
+		} as const;
+
+		const rawRelease = (await get(
+			commitOrId,
+			mergePineOptions(baseReleaseOptions, options.release),
+		)) as PineTypedResult<Release, typeof baseReleaseOptions>;
 		const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
 
 		// Squash .contains__image[x].image[0] into a simple array
-		const images = (release.contains__image as Array<{
-			image: BalenaSdk.Image[];
-		}>).map((imageJoin) => imageJoin.image[0]);
+		const images = rawRelease.contains__image.map(
+			(imageJoin) => imageJoin.image[0],
+		);
 		delete release.contains__image;
 
 		release.images = images
 			.map(function ({ is_a_build_of__service, ...imageData }) {
 				const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
 					...imageData,
-					service_name: (is_a_build_of__service as BalenaSdk.Service[])[0]
-						.service_name,
+					service_name: is_a_build_of__service[0].service_name,
 				};
 				return image;
 			})
 			.sort((a, b) => a.service_name.localeCompare(b.service_name));
 
-		release.user = (release.is_created_by__user as BalenaSdk.User[])[0];
+		release.user = rawRelease.is_created_by__user[0];
 
-		return release as BalenaSdk.Release & {
-			images: Array<{
-				id: number;
-				service_name: string;
-			}>;
-			user: BalenaSdk.User;
-		};
+		return release;
 	}
 
 	/**
@@ -364,19 +359,21 @@ const getReleaseModel = function (
 		nameOrSlugOrId: string | number,
 		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
 	): Promise<number> {
-		const { app_name, organization } = await applicationModel().get(
-			nameOrSlugOrId,
-			{
-				$select: 'app_name',
-				$expand: {
-					organization: {
-						$select: 'handle',
-					},
+		const appOptions = {
+			$select: 'app_name',
+			$expand: {
+				organization: {
+					$select: 'handle',
 				},
 			},
-		);
+		} as const;
+
+		const { app_name, organization } = (await applicationModel().get(
+			nameOrSlugOrId,
+			appOptions,
+		)) as PineTypedResult<Application, typeof appOptions>;
 		return await builderHelper().buildFromUrl(
-			(organization as BalenaSdk.Organization[])[0].handle,
+			organization[0].handle,
 			app_name,
 			urlDeployOptions,
 		);
@@ -475,13 +472,18 @@ const getReleaseModel = function (
 			commitOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
-			const release = await get(commitOrId, {
+			const releaseOpts = {
 				$select: 'id',
 				$expand: {
 					release_tag: mergePineOptions({ $orderby: 'tag_key asc' }, options),
 				},
-			});
-			return release.release_tag as BalenaSdk.ReleaseTag[];
+			} as const;
+
+			const release = (await get(commitOrId, releaseOpts)) as PineTypedResult<
+				Release,
+				typeof releaseOpts
+			>;
+			return release.release_tag;
 		},
 
 		/**

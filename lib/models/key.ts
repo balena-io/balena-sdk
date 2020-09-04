@@ -54,7 +54,7 @@ const getKeyModel = function (
 	function getAll(
 		options: BalenaSdk.PineOptions<BalenaSdk.SSHKey> = {},
 	): Promise<BalenaSdk.SSHKey[]> {
-		return pine.get<BalenaSdk.SSHKey>({
+		return pine.get({
 			resource: 'user__has__public_key',
 			options: mergePineOptions({}, options),
 		});
@@ -83,7 +83,7 @@ const getKeyModel = function (
 	 * });
 	 */
 	async function get(id: number): Promise<BalenaSdk.SSHKey> {
-		const key = await pine.get<BalenaSdk.SSHKey>({
+		const key = await pine.get({
 			resource: 'user__has__public_key',
 			id,
 		});

@@ -17,7 +17,6 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import type {
 	ApplicationInvite,
-	ApplicationMembershipRole,
 	PineOptions,
 	ApplicationInviteOptions,
 	BalenaSDK,
@@ -150,7 +149,7 @@ const getApplicationInviteModel = function (
 			const [{ id }, roles] = await Promise.all([
 				getApplication(nameOrSlugOrId, { $select: 'id' }),
 				roleName
-					? pine.get<ApplicationMembershipRole>({
+					? pine.get({
 							resource: 'application_membership_role',
 							options: {
 								$top: 1,
