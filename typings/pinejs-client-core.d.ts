@@ -1,4 +1,5 @@
 import type { AnyObject, PropsOfType, StringKeyof, Dictionary } from './utils';
+import type { ResourceTypeMap } from './balena-sdk/models';
 
 export interface WithId {
 	id: number;
@@ -448,10 +449,34 @@ export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
 
 export interface Pine {
 	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
-	get<T>(params: ParamsObjWithCount<T>): Promise<number>;
-	get<T>(params: ParamsObjWithId<T>): Promise<T | undefined>;
-	get<T>(params: ParamsObj<T>): Promise<T[]>;
-	get<T, Result>(params: ParamsObj<T>): Promise<Result>;
+	// Fully typed result overloads
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithCount<
+			ResourceTypeMap[P['resource']]
+		>
+	>(
+		params: P,
+	): Promise<number>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithId<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<
+		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
+	>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
+	// User provided resource type overloads
+	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T extends {}>(params: ParamsObjWithId<T>): Promise<T | undefined>;
+	get<T extends {}>(params: ParamsObj<T>): Promise<T[]>;
+	get<T extends {}, Result>(params: ParamsObj<T>): Promise<Result>;
 	post<T>(params: ParamsObj<T>): Promise<T & { id: number }>;
 	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
@@ -519,13 +544,45 @@ export type PineWithSelectOnGet = Omit<
 	Pine,
 	'get' | 'prepare' | 'subscribe'
 > & {
-	get<T>(params: ParamsObjWithCount<T>): Promise<number>;
-	get<T>(
+	// Fully typed result overloads
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithCount<
+			ResourceTypeMap[P['resource']]
+		> &
+			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<number>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithId<
+			ResourceTypeMap[P['resource']]
+		> &
+			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<
+		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
+	>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithSelect<
+			ResourceTypeMap[P['resource']]
+		>
+	>(
+		params: P,
+	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
+	// User provided resource type overloads
+	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T extends {}>(
 		params: ParamsObjWithId<T> & ParamsObjWithSelect<T>,
 	): Promise<T | undefined>;
-	get<T>(params: ParamsObjWithSelect<T>): Promise<T[]>;
-	get<T, Result extends number>(params: ParamsObj<T>): Promise<Result>;
-	get<T, Result>(params: ParamsObjWithSelect<T>): Promise<Result>;
+	get<T extends {}>(params: ParamsObjWithSelect<T>): Promise<T[]>;
+	get<T extends {}, Result extends number>(
+		params: ParamsObj<T>,
+	): Promise<Result>;
+	get<T extends {}, Result>(params: ParamsObjWithSelect<T>): Promise<Result>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithCount<R> & {
