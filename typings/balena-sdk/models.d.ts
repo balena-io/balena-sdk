@@ -566,12 +566,22 @@ export interface PlanFeature {
 	provides__feature: NavigationResource<Feature>;
 }
 
+export type SubscriptionBillingCycle =
+	| 'monthly'
+	| 'quarterly'
+	| 'biannual'
+	| 'annual'
+	| 'biennial'
+	| 'triennial'
+	| 'quadrennial'
+	| 'quinquennial';
+
 export interface Subscription {
 	id: number;
 	starts_on__date: string;
 	ends_on__date: string | null;
 	discount_percentage: number;
-	billing_cycle: 'monthly' | 'quarterly' | 'annual';
+	billing_cycle: SubscriptionBillingCycle;
 	origin: string;
 
 	is_for__organization: NavigationResource<Organization>;
