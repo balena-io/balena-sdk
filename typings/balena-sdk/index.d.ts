@@ -7,6 +7,7 @@ import type {
 	BalenaRequestStreamResult,
 } from '../balena-request';
 import type * as DeviceOverallStatus from './device-overall-status';
+import type * as OsTypes from './os-types';
 import type * as Pine from '../pinejs-client-core';
 import { AtLeast } from '../utils';
 import type * as DeviceState from './device-state';
@@ -330,6 +331,25 @@ export interface OsUpdateVersions {
 	versions: string[];
 	recommended: string | undefined;
 	current: string | undefined;
+}
+
+export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
+
+export interface OsVersion {
+	id: number;
+	rawVersion: string;
+	strippedVersion: string;
+	basedOnVersion?: string;
+	osType: string;
+	line?: OsLines;
+	variant?: string;
+
+	formattedVersion: string;
+	isRecommended?: boolean;
+}
+
+export interface OsVersionsByDeviceType {
+	[deviceTypeSlug: string]: OsVersion[];
 }
 
 // See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
@@ -911,6 +931,12 @@ export interface BalenaSDK {
 				};
 			};
 		};
+
+		hostapp: {
+			OsTypes: typeof OsTypes.OsTypes;
+			getAllOsVersions(deviceTypes: string[]): Promise<OsVersionsByDeviceType>;
+		};
+
 		os: {
 			getConfig(
 				nameOrId: string | number,
