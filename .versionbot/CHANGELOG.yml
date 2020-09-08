@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add a hostapps model for fetching OS versions
+      hash: 34b8af290a6035401bcd08f39f119d5f9861f379
+      body: |
+        This is still in beta as not all deployment environments of
+        balena easily support hostapps. Once we have resolved that issue
+        we can move to hostapps-only model for serving OS releases.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.8.0
+  date: 2020-09-08T11:26:40.628Z
+- commits:
     - subject: 'tests: Convert the device.getMACAddress tests to async await'
       hash: e4b7210247b6b2fd7450ef21fd17e16c86cbf225
       body: ''
