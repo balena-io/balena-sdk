@@ -31,7 +31,7 @@
   },
   "scripts": {
     "clean": "rimraf es2015 es2018",
-    "test:fast": "npm run build-es2015:fast && npm run test:node",
+    "test:fast": "npm run lint-fix && npm run build-es2015:fast && npm run test:node",
     "test": "npm run build && npm run test:all",
     "test:all": "npm run test:ts-compatibility && npm run test:dev && npm run test:ts-js && npm run test:typings && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
@@ -46,7 +46,8 @@
     "build": "npm run lint && npm run build-es2015 && npm run build-es2018 && npm run docs",
     "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs \"es2015/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
-    "lint": "balena-lint -e js -e ts --typescript --fix typings lib tests gulpfile.js",
+    "lint": "balena-lint -e js -e ts --typescript --tests typings lib tests gulpfile.js",
+    "lint-fix": "balena-lint -e js -e ts --typescript --fix typings lib tests gulpfile.js",
     "prepublish": "require-npm4-to-publish",
     "prepack": "npm run build",
     "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\""
