@@ -101,7 +101,7 @@
     "balena-auth": "^4.0.2",
     "balena-errors": "^4.4.0",
     "balena-hup-action-utils": "~4.0.2",
-    "balena-pine": "^12.3.0",
+    "balena-pine": "^12.4.0",
     "balena-register-device": "^7.1.0",
     "balena-request": "^11.1.1",
     "balena-semver": "^2.3.0",
