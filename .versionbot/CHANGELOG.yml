@@ -1,4 +1,37 @@
 - commits:
+    - subject: Add mocha tests specific linting
+      hash: 20059e8275bc6a45a4fa1ad1b8ff2225045eff10
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'Auto-fix lint errors with the test:fast script'
+      hash: b824263afe72ef880dac157d33e7456259f1ee12
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add linting checks back to the test script
+      hash: 191b33691a9792160f1025e01f8167353ece0c94
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.8.1
+  date: 2020-09-08T12:51:20.578Z
+- commits:
     - subject: Add a hostapps model for fetching OS versions
       hash: 34b8af290a6035401bcd08f39f119d5f9861f379
       body: |
