@@ -66,6 +66,10 @@ export interface OrganizationMembership {
 	/** organization */
 	is_member_of__organization: NavigationResource<Organization>;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
+
+	organization_membership_tag: ReverseNavigationResource<
+		OrganizationMembershipTag
+	>;
 }
 
 /** team_membership */
