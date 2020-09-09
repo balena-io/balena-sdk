@@ -276,11 +276,10 @@ type BaseResourceId =
 	| {
 			'@': string;
 	  };
-type ResourceId<T> =
-	| BaseResourceId
-	| {
-			[key in keyof T]?: BaseResourceId;
-	  };
+
+type ResourceAlternateKey<T> = SubmitBody<T>;
+
+type ResourceId<T> = BaseResourceId | ResourceAlternateKey<T>;
 
 export interface ParamsObj<T> {
 	resource?: string;
@@ -313,9 +312,15 @@ export interface ParamsObjWithFilter<T> extends ParamsObj<T> {
 	options: ODataOptionsWithFilter<T>;
 }
 
+export interface GetOrCreateParams<T> extends Omit<ParamsObj<T>, 'method'> {
+	id: ResourceAlternateKey<T>;
+	resource: string;
+	body: SubmitBody<T>;
+}
+
 export interface UpsertParams<T>
 	extends Omit<ParamsObj<T>, 'id' | 'method' | 'options'> {
-	id: SubmitBody<T>;
+	id: ResourceAlternateKey<T>;
 	resource: string;
 	body: SubmitBody<T>;
 }
@@ -369,6 +374,7 @@ export interface Pine {
 	post<T>(params: ParamsObj<T>): Promise<T & { id: number }>;
 	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
+	getOrCreate<T>(params: GetOrCreateParams<T>): Promise<T>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithCount<R> & {
