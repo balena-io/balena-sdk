@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'Typings: Add organization member relation to tags'
+      hash: 5a9d69659338ee59602c0d91089d6e909153dff4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.9.1
+  date: 2020-09-09T21:15:07.894Z
+- commits:
     - subject: Add typings for pine.getOrCreate()
       hash: 97cc821024bfe7e52770997009c7d0ca492294ef
       body: ''
