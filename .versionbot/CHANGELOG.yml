@@ -1,4 +1,106 @@
 - commits:
+    - subject: Add typings for pine.getOrCreate()
+      hash: 97cc821024bfe7e52770997009c7d0ca492294ef
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Bump balena-pine to add getOrCreate
+      hash: b327b00cc0c6e459184319d47a58922564d41436
+      body: |
+        Update balena-pine from 12.3.0 to 12.4.0
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Update pinejs-client-core to 6.9.0 to support getOrCreate()
+              hash: 31a52ba29ee77b5e6b0eea14d8dcaa9aa3a5fb9f
+              body: |
+                Update pinejs-client-core from 6.6.1 to 6.9.0
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested:
+                - commits:
+                    - subject: Add 'getOrCreate' method supporting natural keys
+                      hash: 5aa39b34fef7c7a4bbb27c2c81bb1c8ee4ee2c94
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                      author: Thodoris Greasidis
+                  version: pinejs-client-js-6.9.0
+                  date: 2020-09-07T10:54:14.786Z
+                - commits:
+                    - subject: Add support for $format
+                      hash: aa85327cb7910c74b1bed5323f7ae708aeb2d2b9
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                  version: pinejs-client-js-6.8.0
+                  date: 2020-09-03T15:46:49.095Z
+                - commits:
+                    - subject: >-
+                        Improve $orderby typing to allow `[{a: 'desc'}, {b:
+                        'asc'}]`
+                      hash: 3f66006790c0ace813dd902125b22cf79f2a3095
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-js-6.7.3
+                  date: 2020-08-26T15:41:19.488Z
+                - commits:
+                    - subject: Update dev dependencies
+                      hash: c131ef723a228e19caf21bc92e9bf9456b7bc1e0
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-js-6.7.2
+                  date: 2020-08-24T12:12:05.946Z
+                - commits:
+                    - subject: Fix prepare $count typings
+                      hash: fe63b2ba648b0ef545afe9fd18d433faca4af6a2
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-js-6.7.1
+                  date: 2020-08-12T14:30:20.061Z
+                - commits:
+                    - subject: Improve typings for request/post/put/patch/delete
+                      hash: 32c0d5b40c14e44155391099a9051255c38b1c05
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                  version: pinejs-client-js-6.7.0
+                  date: 2020-08-12T13:42:49.438Z
+          version: balena-pine-12.4.0
+          date: 2020-09-07T11:51:48.407Z
+  version: 15.9.0
+  date: 2020-09-08T18:06:20.389Z
+- commits:
     - subject: Add mocha tests specific linting
       hash: 20059e8275bc6a45a4fa1ad1b8ff2225045eff10
       body: ''
