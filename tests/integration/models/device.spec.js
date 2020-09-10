@@ -91,7 +91,7 @@ describe('Device Model', function () {
 						const deviceSlug = await balena.models.device.getDeviceSlug(
 							deviceType,
 						);
-						expect(deviceSlug).to.not.be.undefined;
+						expect(deviceSlug).to.be.a('string');
 					}),
 				);
 			});
