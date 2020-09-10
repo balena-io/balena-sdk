@@ -281,21 +281,18 @@ describe('Application Model', function () {
 										.expect(childApplication.depends_on__application)
 										.to.have.property('__id', parentApplication.id);
 									// application.getAll() doesn't return dependent apps
-									// prettier-ignore
-									return balena.pine.get(
-										/** @type {import('../../../').PineParams<import('../../../').Application>} */ ({
-											resource: 'application',
-											options: {
-												$select: ['id', 'depends_on__application'],
-												$filter: {
-													id: {
-														$in: [parentApplication.id, childApplication.id],
-													},
+									return balena.pine.get({
+										resource: 'application',
+										options: {
+											$select: ['id', 'depends_on__application'],
+											$filter: {
+												id: {
+													$in: [parentApplication.id, childApplication.id],
 												},
-												$orderby: { id: 'asc' },
 											},
-										}),
-									);
+											$orderby: { id: 'asc' },
+										},
+									});
 								});
 						})
 						.then(function ([parentApplication, childApplication]) {

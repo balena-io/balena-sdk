@@ -55,6 +55,8 @@ export type {
 	ODataOptionsWithFilter as PineOptionsWithFilter,
 	SelectableProps as PineSelectableProps,
 	ExpandableProps as PineExpandableProps,
+	ExpandResultObject as PineExpandResultObject,
+	TypedResult as PineTypedResult,
 } from '../pinejs-client-core';
 export type { PineWithSelectOnGet } from '../balena-pine';
 
@@ -139,7 +141,7 @@ export interface ReleaseWithImageDetails extends Release {
 		id: number;
 		service_name: string;
 	}>;
-	user: User;
+	user: Pick<User, 'id' | 'username'> | undefined;
 }
 
 export interface BillingAccountAddressInfo {

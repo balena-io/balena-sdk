@@ -1,8 +1,7 @@
 import { balena } from './setup';
-import type * as BalenaSdk from '../..';
 
 export const getInitialOrganization = async () => {
-	const [org] = await balena.pine.get<BalenaSdk.Organization>({
+	const [org] = await balena.pine.get({
 		resource: 'organization',
 		options: {
 			$select: ['id', 'handle'],

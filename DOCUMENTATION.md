@@ -1934,7 +1934,7 @@ balena.models.application.pinToRelease('MyApp', 'f7caf4ff80114deeaefb7ab4447ad9c
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get the hash of the current release for a specific application  
 **Access**: public  
-**Fulfil**: <code>String</code> - The release hash of the current release  
+**Fulfil**: <code>String\|undefined</code> - The release hash of the current release  
 
 | Param | Type | Description |
 | --- | --- | --- |

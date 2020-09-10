@@ -1,4 +1,5 @@
 import type { AnyObject, PropsOfType, StringKeyof, Dictionary } from './utils';
+import type { ResourceTypeMap } from './balena-sdk/models';
 
 export interface WithId {
 	id: number;
@@ -43,6 +44,83 @@ export type SelectableProps<T> =
 		: Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource>>; // This is the normal typed case
 
 export type ExpandableProps<T> = PropsOfType<T, AssociatedResource> & string;
+
+type SelectedProperty<T, K extends keyof T> = T[K] extends NavigationResource<
+	any
+>
+	? PineDeferred
+	: T[K] extends OptionalNavigationResource<any>
+	? PineDeferred | null
+	: T[K];
+
+type SelectResultObject<T, Props extends keyof T> = {
+	[P in Props]: SelectedProperty<T, P>;
+};
+
+export type TypedSelectResult<
+	T,
+	TParams extends ODataOptions<T>
+> = TParams['$select'] extends keyof T
+	? SelectResultObject<T, TParams['$select']>
+	: TParams['$select'] extends Array<keyof T>
+	? SelectResultObject<T, TParams['$select'][number]>
+	: TParams['$select'] extends '*'
+	? SelectResultObject<T, SelectableProps<T>>
+	: undefined extends TParams['$select']
+	? SelectResultObject<T, SelectableProps<T>>
+	: never;
+
+type ExpandedProperty<
+	T,
+	K extends keyof T,
+	KOpts extends ODataOptions<InferAssociatedResourceType<T[K]>>
+> = KOpts extends ODataOptionsWithCount<any>
+	? number
+	: T[K] extends NavigationResource<any>
+	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
+	: T[K] extends OptionalNavigationResource<any>
+	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
+	: T[K] extends ReverseNavigationResource<any>
+	? Array<TypedResult<InferAssociatedResourceType<T[K]>, KOpts>>
+	: never;
+
+export type ExpandResultObject<T, Props extends keyof T> = {
+	[P in Props]: ExpandedProperty<T, P, {}>;
+};
+
+type ExpandResourceExpandObject<
+	T,
+	TResourceExpand extends ResourceExpand<T>
+> = {
+	[P in keyof TResourceExpand]: ExpandedProperty<
+		T,
+		P extends keyof T ? P : never,
+		Exclude<TResourceExpand[P], undefined>
+	>;
+};
+
+export type TypedExpandResult<
+	T,
+	TParams extends ODataOptions<T>
+> = TParams['$expand'] extends ExpandableProps<T>
+	? ExpandResultObject<T, TParams['$expand']>
+	: TParams['$expand'] extends ResourceExpand<T>
+	? keyof TParams['$expand'] extends ExpandableProps<T>
+		? ExpandResourceExpandObject<T, TParams['$expand']>
+		: never
+	: {};
+
+export type TypedResult<
+	T,
+	TParams extends ODataOptions<T> | undefined
+> = TParams extends ODataOptionsWithCount<T>
+	? number
+	: TParams extends ODataOptions<T>
+	? Omit<TypedSelectResult<T, TParams>, keyof TypedExpandResult<T, TParams>> &
+			TypedExpandResult<T, TParams>
+	: undefined extends TParams
+	? TypedSelectResult<T, { $select: '*' }>
+	: never;
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
@@ -247,6 +325,10 @@ export interface ODataOptions<T> extends ODataOptionsWithoutCount<T> {
 	$count?: ODataOptionsWithoutCount<T>;
 }
 
+export interface ODataOptionsWithCount<T> extends ODataOptionsWithoutCount<T> {
+	$count: NonNullable<ODataOptions<T>['$count']>;
+}
+
 // TODO: Rename to ODataOptionsStrict on the next major
 export type ODataOptionsWithSelect<T> = Omit<
 	ODataOptions<T>,
@@ -367,10 +449,34 @@ export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
 
 export interface Pine {
 	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
-	get<T>(params: ParamsObjWithCount<T>): Promise<number>;
-	get<T>(params: ParamsObjWithId<T>): Promise<T | undefined>;
-	get<T>(params: ParamsObj<T>): Promise<T[]>;
-	get<T, Result>(params: ParamsObj<T>): Promise<Result>;
+	// Fully typed result overloads
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithCount<
+			ResourceTypeMap[P['resource']]
+		>
+	>(
+		params: P,
+	): Promise<number>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithId<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<
+		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
+	>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
+	// User provided resource type overloads
+	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T extends {}>(params: ParamsObjWithId<T>): Promise<T | undefined>;
+	get<T extends {}>(params: ParamsObj<T>): Promise<T[]>;
+	get<T extends {}, Result>(params: ParamsObj<T>): Promise<Result>;
 	post<T>(params: ParamsObj<T>): Promise<T & { id: number }>;
 	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
@@ -438,13 +544,45 @@ export type PineWithSelectOnGet = Omit<
 	Pine,
 	'get' | 'prepare' | 'subscribe'
 > & {
-	get<T>(params: ParamsObjWithCount<T>): Promise<number>;
-	get<T>(
+	// Fully typed result overloads
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithCount<
+			ResourceTypeMap[P['resource']]
+		> &
+			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<number>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithId<
+			ResourceTypeMap[P['resource']]
+		> &
+			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+	>(
+		params: P,
+	): Promise<
+		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
+	>;
+	get<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObjWithSelect<
+			ResourceTypeMap[P['resource']]
+		>
+	>(
+		params: P,
+	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
+	// User provided resource type overloads
+	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T extends {}>(
 		params: ParamsObjWithId<T> & ParamsObjWithSelect<T>,
 	): Promise<T | undefined>;
-	get<T>(params: ParamsObjWithSelect<T>): Promise<T[]>;
-	get<T, Result extends number>(params: ParamsObj<T>): Promise<Result>;
-	get<T, Result>(params: ParamsObjWithSelect<T>): Promise<Result>;
+	get<T extends {}>(params: ParamsObjWithSelect<T>): Promise<T[]>;
+	get<T extends {}, Result extends number>(
+		params: ParamsObj<T>,
+	): Promise<Result>;
+	get<T extends {}, Result>(params: ParamsObjWithSelect<T>): Promise<Result>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithCount<R> & {

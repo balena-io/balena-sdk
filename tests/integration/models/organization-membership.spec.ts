@@ -16,9 +16,7 @@ describe('Organization Membership Model', function () {
 
 	before(async function () {
 		this.userId = await balena.auth.getUserId();
-		this.orgAdminRole = await balena.pine.get<
-			BalenaSdk.OrganizationMembershipRole
-		>({
+		this.orgAdminRole = await balena.pine.get({
 			resource: 'organization_membership_role',
 			id: { name: 'administrator' },
 			options: { $select: 'id' },

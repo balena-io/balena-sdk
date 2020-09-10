@@ -16,7 +16,7 @@ export const describeExpandAssertions = async <T>(
 		Object.keys(expand).forEach((key) => {
 			describe(`to ${key}`, function () {
 				it('should succeed and include the expanded property', async function () {
-					const [result] = await balena.pine.get({
+					const [result] = await balena.pine.get<T>({
 						...params,
 						options: {
 							...params.options,
