@@ -1,4 +1,39 @@
 - commits:
+    - subject: 'typings: Make ReleaseWithImageDetails more accurate'
+      hash: a6506ccf3d3ae2450bc12a8bc2e10f0647722ef1
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fully type the pine.get results
+      hash: 337f14e5aea79fd8fc8d868e64b85ab0ba8afa23
+      body: ''
+      footer:
+        Connects-to: '#887'
+        connects-to: '#887'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Add the PineTypedResult helper type'
+      hash: e8a036bba6e63bf5c2e7d9acf4714979f5204953
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.10.0
+  date: 2020-09-10T12:58:10.890Z
+- commits:
     - subject: 'Typings: Add organization member relation to tags'
       hash: 5a9d69659338ee59602c0d91089d6e909153dff4
       body: ''
