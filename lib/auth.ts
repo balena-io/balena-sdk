@@ -175,17 +175,27 @@ const getAuth = function (
 		email: string;
 		password: string;
 	}): Promise<string> {
-		const { body } = await request.send<string>({
-			method: 'POST',
-			baseUrl: apiUrl,
-			url: '/login_',
-			body: {
-				username: credentials.email,
-				password: String(credentials.password),
-			},
-			sendToken: false,
-		});
-		return body;
+		try {
+			const { body } = await request.send<string>({
+				method: 'POST',
+				baseUrl: apiUrl,
+				url: '/login_',
+				body: {
+					username: credentials.email,
+					password: String(credentials.password),
+				},
+				sendToken: false,
+			});
+			return body;
+		} catch (err) {
+			if (err.statusCode === 401) {
+				throw new errors.BalenaInvalidLoginCredentials();
+			}
+			if (err.statusCode === 429) {
+				throw new errors.BalenaTooManyRequests();
+			}
+			throw err;
+		}
 	}
 
 	/**
