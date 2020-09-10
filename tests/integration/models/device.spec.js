@@ -86,12 +86,14 @@ describe('Device Model', function () {
 
 			it('should return all valid display names', async () => {
 				const deviceTypes = await balena.models.device.getSupportedDeviceTypes();
-				for (const deviceType of deviceTypes) {
-					const deviceSlug = await balena.models.device.getDeviceSlug(
-						deviceType,
-					);
-					expect(deviceSlug).to.not.be.undefined;
-				}
+				await Promise.all(
+					deviceTypes.map(async (deviceType) => {
+						const deviceSlug = await balena.models.device.getDeviceSlug(
+							deviceType,
+						);
+						expect(deviceSlug).to.not.be.undefined;
+					}),
+				);
 			});
 		});
 
