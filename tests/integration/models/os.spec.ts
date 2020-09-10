@@ -544,9 +544,8 @@ describe('OS model', function () {
 	});
 
 	describe('when logged in as a user with a single application', function () {
-		givenLoggedInUser(beforeEach);
-
-		givenAnApplication(beforeEach);
+		givenLoggedInUser(before);
+		givenAnApplication(before);
 
 		describe('balena.models.os.getConfig()', function () {
 			const DEFAULT_OS_VERSION = '2.12.7+rev1.prod';
