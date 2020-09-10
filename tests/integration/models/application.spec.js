@@ -1473,7 +1473,15 @@ describe('Application Model', function () {
 		describe('when not being logged in', function () {
 			before(() => balena.auth.logout());
 
-			const $it = publicApp ? it : it.skip;
+			const $it = function (description, fn) {
+				it(description, function () {
+					if (!publicApp) {
+						this.skip();
+						return;
+					}
+					return fn.call(this);
+				});
+			};
 
 			describe('arbitrary pinejs queries', () =>
 				$it(
