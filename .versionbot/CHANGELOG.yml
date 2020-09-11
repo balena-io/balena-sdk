@@ -1,4 +1,47 @@
 - commits:
+    - subject: 'tests: Test that the result of device.getDeviceSlug() is a string'
+      hash: 21f0682f4f4ca63db67be9449de60f4c2aaaed50
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests: Run device.getDeviceBySlug() calls in parallel to speed up tests'
+      hash: a0342ca8a5fa1eebdd03968266c0af8498d1ec29
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests/os: Drop unnecessary beforeEach in getConfig()'
+      hash: ff564717649bbe9e1bddd49b6c37e0039e256b40
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests/application: Fix incorrect skipping of unauthenticated tests'
+      hash: 4a451254a02d1dee6b1689f9e0f7f39c9e98afb9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.10.1
+  date: 2020-09-10T22:54:00.541Z
+- commits:
     - subject: 'typings: Make ReleaseWithImageDetails more accurate'
       hash: a6506ccf3d3ae2450bc12a8bc2e10f0647722ef1
       body: ''
