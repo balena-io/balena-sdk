@@ -1,6 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena, credentials, givenLoggedInUser } from '../setup';
 const { expect } = m.chai;
 
@@ -26,7 +27,7 @@ describe('Organization model', function () {
 			});
 		});
 
-		describe('balena.models.organization.get()', function () {
+		parallel('balena.models.organization.get()', function () {
 			it('should be rejected if the organization handle does not exist', function () {
 				const randomTestOrgHandle = `testOrgRandom_${Date.now()}`;
 				const promise = balena.models.organization.get(randomTestOrgHandle);
@@ -55,7 +56,7 @@ describe('Organization model', function () {
 			});
 		});
 
-		describe('balena.models.organization.remove()', function () {
+		parallel('balena.models.organization.remove()', function () {
 			it('should be rejected if the organization handle does not exist', function () {
 				const randomTestOrgHandle = `testOrgRandom_${Date.now()}`;
 				const promise = balena.models.organization.get(randomTestOrgHandle);
@@ -111,7 +112,7 @@ describe('Organization model', function () {
 			});
 		});
 
-		describe('balena.models.organization.get()', function () {
+		parallel('balena.models.organization.get()', function () {
 			['id', 'handle'].forEach((prop) => {
 				it(`should retrieve an organization by ${prop}`, async function () {
 					const orgs = await balena.models.organization.get(ctx.newOrg1[prop]);
@@ -120,7 +121,7 @@ describe('Organization model', function () {
 			});
 		});
 
-		describe('balena.models.organization.remove()', function () {
+		parallel('balena.models.organization.remove()', function () {
 			[
 				{ prop: 'id', getOrg: () => ctx.newOrg1 },
 				{ prop: 'handle', getOrg: () => ctx.newOrg2 },

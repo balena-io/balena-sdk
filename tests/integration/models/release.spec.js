@@ -1,4 +1,5 @@
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import * as _ from 'lodash';
 
 const { expect } = m.chai;
@@ -23,7 +24,13 @@ describe('Release Model', function () {
 	describe('given an application with no releases', function () {
 		givenAnApplication(before);
 
-		describe('balena.models.release.get()', function () {
+		let ctx = null;
+
+		before(function () {
+			ctx = this;
+		});
+
+		parallel('balena.models.release.get()', function () {
 			it('should be rejected if the release id does not exist by id', function () {
 				const promise = balena.models.release.get(123);
 				return m.chai
@@ -39,7 +46,7 @@ describe('Release Model', function () {
 			});
 		});
 
-		describe('balena.models.release.getWithImageDetails()', function () {
+		parallel('balena.models.release.getWithImageDetails()', function () {
 			it('should be rejected if the release id does not exist by id', function () {
 				const promise = balena.models.release.getWithImageDetails(123);
 				return m.chai
@@ -55,11 +62,11 @@ describe('Release Model', function () {
 			});
 		});
 
-		describe('balena.models.release.getAllByApplication()', function () {
+		parallel('balena.models.release.getAllByApplication()', function () {
 			['id', 'app_name', 'slug'].forEach((prop) =>
 				it(`should eventually become an empty array given an application ${prop}`, function () {
 					const promise = balena.models.release.getAllByApplication(
-						this.application[prop],
+						ctx.application[prop],
 					);
 					return expect(promise).to.become([]);
 				}),
@@ -91,74 +98,76 @@ describe('Release Model', function () {
 			const TEST_SOURCE_URL =
 				'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz';
 
-			it('should be rejected if the application name does not exist', function () {
-				const promise = balena.models.release.createFromUrl('HelloWorldApp', {
-					url: TEST_SOURCE_URL,
-				});
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Application not found: HelloWorldApp');
-			});
-
-			it('should be rejected if the application id does not exist', function () {
-				const promise = balena.models.release.createFromUrl(999999, {
-					url: TEST_SOURCE_URL,
-				});
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Application not found: 999999');
-			});
-
-			it('should be rejected when the provided tarball url is not found', function () {
-				const promise = balena.models.release.createFromUrl(
-					this.application.id,
-					{
-						url:
-							'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz',
-					},
-				);
-				return expect(promise).to.be.rejected.then(function (error) {
-					expect(error).to.have.property('code', 'BalenaRequestError');
-					expect(error).to.have.property('statusCode', 404);
-					return m.chai
-						.expect(error)
-						.to.have.property('message')
-						.that.contains('Failed to fetch tarball from passed URL');
-				});
-			});
-
-			it('should be rejected when the provided url is not a tarball', function () {
-				const promise = balena.models.release.createFromUrl(
-					this.application.id,
-					{ url: 'https://github.com/balena-io-projects/simple-server-node' },
-				);
-				return expect(promise).to.be.rejected.then(function (error) {
-					expect(error).to.have.property('code', 'BalenaError');
-					return m.chai
-						.expect(error)
-						.to.have.property('message')
-						.that.contains(
-							'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
-						);
-				});
-			});
-
-			describe('[mutating operations]', function () {
-				afterEach(function () {
-					return balena.pine.delete({
-						resource: 'release',
-						options: {
-							$filter: {
-								belongs_to__application: this.application.id,
-							},
+			after(function () {
+				return balena.pine.delete({
+					resource: 'release',
+					options: {
+						$filter: {
+							belongs_to__application: this.application.id,
 						},
+					},
+				});
+			});
+
+			parallel('', function () {
+				// [read operations]
+				it('should be rejected if the application name does not exist', function () {
+					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
+						url: TEST_SOURCE_URL,
+					});
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Application not found: HelloWorldApp');
+				});
+
+				it('should be rejected if the application id does not exist', function () {
+					const promise = balena.models.release.createFromUrl(999999, {
+						url: TEST_SOURCE_URL,
+					});
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Application not found: 999999');
+				});
+
+				it('should be rejected when the provided tarball url is not found', function () {
+					const promise = balena.models.release.createFromUrl(
+						ctx.application.id,
+						{
+							url:
+								'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz',
+						},
+					);
+					return expect(promise).to.be.rejected.then(function (error) {
+						expect(error).to.have.property('code', 'BalenaRequestError');
+						expect(error).to.have.property('statusCode', 404);
+						return m.chai
+							.expect(error)
+							.to.have.property('message')
+							.that.contains('Failed to fetch tarball from passed URL');
 					});
 				});
 
-				['id', 'app_name', 'slug'].forEach((prop) =>
+				it('should be rejected when the provided url is not a tarball', function () {
+					const promise = balena.models.release.createFromUrl(
+						ctx.application.id,
+						{ url: 'https://github.com/balena-io-projects/simple-server-node' },
+					);
+					return expect(promise).to.be.rejected.then(function (error) {
+						expect(error).to.have.property('code', 'BalenaError');
+						return m.chai
+							.expect(error)
+							.to.have.property('message')
+							.that.contains(
+								'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
+							);
+					});
+				});
+
+				// [mutating operations]
+				['id', 'app_name', 'slug'].forEach((prop) => {
 					it(`should be able to create a release using a tarball url given an application ${prop}`, function () {
 						return balena.models.release
-							.createFromUrl(this.application[prop], { url: TEST_SOURCE_URL })
+							.createFromUrl(ctx.application[prop], { url: TEST_SOURCE_URL })
 							.then((releaseId) => {
 								expect(releaseId).to.be.a('number');
 								return balena.models.release.get(releaseId).then((release) => {
@@ -166,7 +175,7 @@ describe('Release Model', function () {
 										status: 'running',
 										source: 'cloud',
 										id: releaseId,
-										belongs_to__application: { __id: this.application.id },
+										belongs_to__application: { __id: ctx.application.id },
 									});
 									return m.chai
 										.expect(release)
@@ -174,8 +183,8 @@ describe('Release Model', function () {
 										.that.is.a('string');
 								});
 							});
-					}),
-				);
+					});
+				});
 			});
 		});
 	});
@@ -183,45 +192,51 @@ describe('Release Model', function () {
 	describe('given a multicontainer application with two releases', function () {
 		givenMulticontainerApplication(before);
 
-		describe('balena.models.release.get()', function () {
+		let ctx = null;
+
+		before(function () {
+			ctx = this;
+		});
+
+		parallel('balena.models.release.get()', function () {
 			it('should get the requested release by id', function () {
 				return balena.models.release
-					.get(this.currentRelease.id)
+					.get(ctx.currentRelease.id)
 					.then((release) => {
 						return expect(release).to.deep.match({
 							status: 'success',
 							source: 'cloud',
 							commit: 'new-release-commit',
-							id: this.currentRelease.id,
-							belongs_to__application: { __id: this.application.id },
+							id: ctx.currentRelease.id,
+							belongs_to__application: { __id: ctx.application.id },
 						});
 					});
 			});
 
 			it('should get the requested release by commit', function () {
 				return balena.models.release
-					.get(this.currentRelease.commit)
+					.get(ctx.currentRelease.commit)
 					.then((release) => {
 						return expect(release).to.deep.match({
 							status: 'success',
 							source: 'cloud',
 							commit: 'new-release-commit',
-							id: this.currentRelease.id,
-							belongs_to__application: { __id: this.application.id },
+							id: ctx.currentRelease.id,
+							belongs_to__application: { __id: ctx.application.id },
 						});
 					});
 			});
 
 			it('should get the requested release by shorter commit', function () {
 				return balena.models.release
-					.get(this.currentRelease.commit.slice(0, 7))
+					.get(ctx.currentRelease.commit.slice(0, 7))
 					.then((release) => {
 						return expect(release).to.deep.match({
 							status: 'success',
 							source: 'cloud',
 							commit: 'new-release-commit',
-							id: this.currentRelease.id,
-							belongs_to__application: { __id: this.application.id },
+							id: ctx.currentRelease.id,
+							belongs_to__application: { __id: ctx.application.id },
 						});
 					});
 			});
@@ -255,10 +270,10 @@ describe('Release Model', function () {
 					});
 			}));
 
-		describe('balena.models.release.getWithImageDetails()', function () {
+		parallel('balena.models.release.getWithImageDetails()', function () {
 			it('should get the release with associated images attached by id', function () {
 				return balena.models.release
-					.getWithImageDetails(this.currentRelease.id)
+					.getWithImageDetails(ctx.currentRelease.id)
 					.then(function (release) {
 						expect(release).to.deep.match({
 							commit: 'new-release-commit',
@@ -276,7 +291,7 @@ describe('Release Model', function () {
 
 			it('should get the release with associated images attached by commit', function () {
 				return balena.models.release
-					.getWithImageDetails(this.currentRelease.commit)
+					.getWithImageDetails(ctx.currentRelease.commit)
 					.then(function (release) {
 						expect(release).to.deep.match({
 							commit: 'new-release-commit',
@@ -294,7 +309,7 @@ describe('Release Model', function () {
 
 			it('should get the release with associated images attached by shorter commit', function () {
 				return balena.models.release
-					.getWithImageDetails(this.currentRelease.commit.slice(0, 7))
+					.getWithImageDetails(ctx.currentRelease.commit.slice(0, 7))
 					.then(function (release) {
 						expect(release).to.deep.match({
 							commit: 'new-release-commit',
@@ -312,7 +327,7 @@ describe('Release Model', function () {
 
 			it('should allow extra options to also get the build log', function () {
 				return balena.models.release
-					.getWithImageDetails(this.currentRelease.id, {
+					.getWithImageDetails(ctx.currentRelease.id, {
 						image: { $select: 'build_log' },
 					})
 					.then((release) =>
@@ -369,7 +384,7 @@ describe('Release Model', function () {
 			);
 		});
 
-		describe('balena.models.release.get()', function () {
+		parallel('balena.models.release.get()', function () {
 			it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
 				const promise = balena.models.release.get('feb23612');
 				return m.chai
@@ -392,7 +407,7 @@ describe('Release Model', function () {
 					));
 		});
 
-		describe('balena.models.release.getWithImageDetails()', function () {
+		parallel('balena.models.release.getWithImageDetails()', function () {
 			it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
 				const promise = balena.models.release.getWithImageDetails('feb23612');
 				return m.chai
@@ -420,7 +435,10 @@ describe('Release Model', function () {
 		describe('balena.models.release.getLatestByApplication()', function () {
 			givenMulticontainerApplication(before);
 
+			let ctx = null;
+
 			before(async function () {
+				ctx = this;
 				const userId = await balena.auth.getUserId();
 
 				for (const body of [
@@ -459,20 +477,22 @@ describe('Release Model', function () {
 				}
 			});
 
-			['id', 'app_name', 'slug'].forEach((prop) =>
-				it(`should get the latest release by application ${prop}`, function () {
-					return balena.models.release
-						.getLatestByApplication(this.application[prop])
-						.then((release) => {
-							return expect(release).to.deep.match({
-								status: 'success',
-								source: 'cloud',
-								commit: 'errored-then-fixed-release-commit',
-								belongs_to__application: { __id: this.application.id },
+			parallel('', function () {
+				['id', 'app_name', 'slug'].forEach((prop) =>
+					it(`should get the latest release by application ${prop}`, function () {
+						return balena.models.release
+							.getLatestByApplication(ctx.application[prop])
+							.then((release) => {
+								return expect(release).to.deep.match({
+									status: 'success',
+									source: 'cloud',
+									commit: 'errored-then-fixed-release-commit',
+									belongs_to__application: { __id: ctx.application.id },
+								});
 							});
-						});
-				}),
-			);
+					}),
+				);
+			});
 		});
 
 		describe('balena.models.release.tags', function () {
@@ -496,7 +516,7 @@ describe('Release Model', function () {
 				uniquePropertyNames: ['commit'],
 			};
 
-			beforeEach(function () {
+			before(function () {
 				appTagTestOptions.resourceProvider = () => this.application;
 				releaseTagTestOptions.resourceProvider = () => this.currentRelease;
 				// used for tag creation during the
@@ -506,11 +526,13 @@ describe('Release Model', function () {
 
 			itShouldSetGetAndRemoveTags(releaseTagTestOptions);
 
-			describe('balena.models.release.tags.getAllByApplication()', () =>
-				itShouldGetAllTagsByResource(appTagTestOptions));
+			describe('balena.models.release.tags.getAllByApplication()', function () {
+				itShouldGetAllTagsByResource(appTagTestOptions);
+			});
 
-			describe('balena.models.release.tags.getAllByRelease()', () =>
-				itShouldGetAllTagsByResource(releaseTagTestOptions));
+			describe('balena.models.release.tags.getAllByRelease()', function () {
+				itShouldGetAllTagsByResource(releaseTagTestOptions);
+			});
 		});
 	});
 });

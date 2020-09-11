@@ -1,6 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import {
 	balena,
 	givenAnApplication,
@@ -15,11 +16,16 @@ describe('Service Model', function () {
 	describe('given an application with no services', function () {
 		givenAnApplication(before);
 
-		describe('balena.models.service.getAllByApplication()', function () {
+		let ctx: Mocha.Context;
+		before(function () {
+			ctx = this;
+		});
+
+		parallel('balena.models.service.getAllByApplication()', function () {
 			['id', 'app_name', 'slug'].forEach((prop) => {
 				it(`should eventually become an empty array given an application ${prop}`, function () {
 					const promise = balena.models.service.getAllByApplication(
-						this.application[prop],
+						ctx.application[prop],
 					);
 					return expect(promise).to.become([]);
 				});
@@ -46,7 +52,7 @@ describe('Service Model', function () {
 	describe('given a multicontainer application with two services', function () {
 		givenMulticontainerApplication(before);
 
-		describe('balena.models.service.getAllByApplication()', () =>
+		describe('balena.models.service.getAllByApplication()', () => {
 			it('should load both services', function () {
 				return balena.models.service
 					.getAllByApplication(this.application.id)
@@ -68,7 +74,8 @@ describe('Service Model', function () {
 							},
 						]);
 					});
-			}));
+			});
+		});
 
 		describe('balena.models.service.var', function () {
 			const varModel = balena.models.service.var;

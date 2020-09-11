@@ -1,5 +1,6 @@
 // tslint:disable-next-line:import-blacklist
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
@@ -14,7 +15,9 @@ describe('Organization Membership Model', function () {
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 
+	let ctx: Mocha.Context;
 	before(async function () {
+		ctx = this;
 		this.userId = await balena.auth.getUserId();
 		this.orgAdminRole = await balena.pine.get({
 			resource: 'organization_membership_role',
@@ -25,15 +28,15 @@ describe('Organization Membership Model', function () {
 		expect(this.orgAdminRole).to.have.property('id').that.is.a('number');
 	});
 
-	describe('balena.models.organization.membership.getAll()', function () {
+	parallel('balena.models.organization.membership.getAll()', function () {
 		it(`shoud return only the user's own membership [Promise]`, async function () {
 			const memberships = await balena.models.organization.membership.getAll();
 
 			assertDeepMatchAndLength(memberships, [
 				{
-					user: { __id: this.userId },
-					is_member_of__organization: { __id: this.initialOrg.id },
-					organization_membership_role: { __id: this.orgAdminRole.id },
+					user: { __id: ctx.userId },
+					is_member_of__organization: { __id: ctx.initialOrg.id },
+					organization_membership_role: { __id: ctx.orgAdminRole.id },
 				},
 			]);
 		});
@@ -45,9 +48,9 @@ describe('Organization Membership Model', function () {
 					try {
 						assertDeepMatchAndLength(memberships, [
 							{
-								user: { __id: this.userId },
-								is_member_of__organization: { __id: this.initialOrg.id },
-								organization_membership_role: { __id: this.orgAdminRole.id },
+								user: { __id: ctx.userId },
+								is_member_of__organization: { __id: ctx.initialOrg.id },
+								organization_membership_role: { __id: ctx.orgAdminRole.id },
 							},
 						]);
 						done();
@@ -121,11 +124,13 @@ describe('Organization Membership Model', function () {
 
 			itShouldSetGetAndRemoveTags(orgMembershipTagTestOptions);
 
-			describe('balena.models.organization.membership.tags.getAllByOrganization()', () =>
-				itShouldGetAllTagsByResource(orgTagTestOptions));
+			describe('balena.models.organization.membership.tags.getAllByOrganization()', function () {
+				itShouldGetAllTagsByResource(orgTagTestOptions);
+			});
 
-			describe('balena.models.organization.membership.tags.getAllByOrganizationMembership()', () =>
-				itShouldGetAllTagsByResource(orgMembershipTagTestOptions));
+			describe('balena.models.organization.membership.tags.getAllByOrganizationMembership()', function () {
+				itShouldGetAllTagsByResource(orgMembershipTagTestOptions);
+			});
 		});
 	});
 });

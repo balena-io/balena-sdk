@@ -1,6 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
@@ -71,28 +72,30 @@ describe('Config Model', function () {
 	});
 
 	describe('balena.models.config.getAll()', function () {
-		it('should return all the configuration', () =>
-			balena.models.config.getAll().then(function (config) {
-				expect(_.isPlainObject(config)).to.be.true;
-				expect(_.isEmpty(config)).to.be.false;
-			}));
+		parallel('', function () {
+			it('should return all the configuration', () =>
+				balena.models.config.getAll().then(function (config) {
+					expect(_.isPlainObject(config)).to.be.true;
+					expect(_.isEmpty(config)).to.be.false;
+				}));
 
-		it('should include the pubnub keys', () =>
-			balena.models.config.getAll().then(function ({ pubnub }) {
-				expect(pubnub.publish_key).to.be.a('string').that.has.length(0);
-				expect(pubnub.subscribe_key).to.be.a('string').that.has.length(0);
-			}));
+			it('should include the pubnub keys', () =>
+				balena.models.config.getAll().then(function ({ pubnub }) {
+					expect(pubnub.publish_key).to.be.a('string').that.has.length(0);
+					expect(pubnub.subscribe_key).to.be.a('string').that.has.length(0);
+				}));
 
-		it('should include the mixpanel token', () =>
-			balena.models.config.getAll().then(function ({ mixpanelToken }) {
-				expect(mixpanelToken).to.be.a('string');
-				expect(mixpanelToken).to.equal('balena-main');
-			}));
+			it('should include the mixpanel token', () =>
+				balena.models.config.getAll().then(function ({ mixpanelToken }) {
+					expect(mixpanelToken).to.be.a('string');
+					expect(mixpanelToken).to.equal('balena-main');
+				}));
 
-		it('should include the deviceTypes', () =>
-			balena.models.config
-				.getAll()
-				.then(({ deviceTypes }) => expectDeviceTypeArray(deviceTypes)));
+			it('should include the deviceTypes', () =>
+				balena.models.config
+					.getAll()
+					.then(({ deviceTypes }) => expectDeviceTypeArray(deviceTypes)));
+		});
 
 		describe('device type normalization', function () {
 			before(function () {
@@ -123,7 +126,7 @@ describe('Config Model', function () {
 		});
 	});
 
-	describe('balena.models.config.getDeviceOptions()', function () {
+	parallel('balena.models.config.getDeviceOptions()', function () {
 		it('should become the device options', () =>
 			balena.models.config
 				.getDeviceOptions('raspberry-pi')
