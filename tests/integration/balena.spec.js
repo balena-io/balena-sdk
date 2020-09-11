@@ -65,7 +65,7 @@ describe('Balena SDK', function () {
 				(balena.interceptors = originalInterceptors.slice()),
 		);
 
-		givenLoggedInUser(beforeEach);
+		givenLoggedInUser(before);
 
 		const ignoreWhoamiCalls = (fn) =>
 			function (arg) {

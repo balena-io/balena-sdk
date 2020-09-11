@@ -36,11 +36,11 @@ describe('Logs', function () {
 				});
 		});
 
-		afterEach(function () {
+		after(function () {
 			return balena.pine.delete({
 				resource: 'device',
 				options: {
-					$filter: { uuid: this.uuid },
+					$filter: { 1: 1 },
 				},
 			});
 		});
