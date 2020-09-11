@@ -520,11 +520,25 @@ describe('Application Model', function () {
 			});
 		});
 
-		describe('[mutating operations]', function () {
-			givenAnApplication(beforeEach);
+		describe('balena.models.application.remove()', function () {
+			it('should be rejected if the application name does not exist', function () {
+				const promise = balena.models.application.remove('HelloWorldApp');
+				return m.chai
+					.expect(promise)
+					.to.be.rejectedWith('Application not found: HelloWorldApp');
+			});
 
-			describe('balena.models.application.remove()', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
+			it('should be rejected if the application id does not exist', function () {
+				const promise = balena.models.application.remove(999999);
+				return m.chai
+					.expect(promise)
+					.to.be.rejectedWith('Application not found: 999999');
+			});
+
+			describe('[mutating operations]', function () {
+				givenAnApplication(beforeEach);
+
+				['id', 'app_name', 'slug'].forEach((prop) => {
 					it(`should be able to remove an existing application by ${prop}`, function () {
 						return balena.models.application
 							.remove(this.application[prop])
@@ -532,23 +546,13 @@ describe('Application Model', function () {
 								const promise = balena.models.application.getAll();
 								return expect(promise).to.eventually.have.length(0);
 							});
-					}),
-				);
-
-				it('should be rejected if the application name does not exist', function () {
-					const promise = balena.models.application.remove('HelloWorldApp');
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: HelloWorldApp');
-				});
-
-				it('should be rejected if the application id does not exist', function () {
-					const promise = balena.models.application.remove(999999);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: 999999');
+					});
 				});
 			});
+		});
+
+		describe('[contained scenario]', function () {
+			givenAnApplication(before);
 
 			describe('balena.models.application.generateApiKey()', function () {
 				['id', 'app_name', 'slug'].forEach((prop) =>
@@ -646,29 +650,26 @@ describe('Application Model', function () {
 				});
 			});
 
-			describe('balena.models.application.revokeSupportAccess()', () =>
-				it('should revoke support access', function () {
-					const expiryTime = Date.now() + 3600 * 1000;
-					const promise = balena.models.application
-						.grantSupportAccess(this.application.id, expiryTime)
-						.then(() => {
-							return balena.models.application.revokeSupportAccess(
-								this.application.id,
-							);
-						})
-						.then(() => {
-							return balena.models.application.get(this.application.id, {
-								$select: 'is_accessible_by_support_until__date',
-							});
-						})
-						.then((app) => app.is_accessible_by_support_until__date);
+			describe('balena.models.application.revokeSupportAccess()', () => {
+				it('...should revoke support access', async function () {
+					const {
+						is_accessible_by_support_until__date: originalSupportExpiry,
+					} = await balena.models.application.get(this.application.id, {
+						$select: 'is_accessible_by_support_until__date',
+					});
+					expect(originalSupportExpiry).to.not.equal(null);
 
-					return expect(promise).to.eventually.equal(null);
-				}));
-		});
-
-		describe('[contained scenario]', function () {
-			givenAnApplication(before);
+					await balena.models.application.revokeSupportAccess(
+						this.application.id,
+					);
+					const {
+						is_accessible_by_support_until__date: supportExpiry,
+					} = await balena.models.application.get(this.application.id, {
+						$select: 'is_accessible_by_support_until__date',
+					});
+					expect(supportExpiry).to.equal(null);
+				});
+			});
 
 			describe('balena.models.application.tags', function () {
 				const tagTestOptions = {
@@ -960,276 +961,270 @@ describe('Application Model', function () {
 					});
 				});
 			});
-		});
 
-		describe('with a registered device', function () {
-			givenAnApplication(beforeEach);
+			describe('with a registered device', function () {
+				givenADevice(before);
 
-			givenADevice(beforeEach);
-
-			describe('balena.models.application.enableDeviceUrls()', () =>
-				it("should enable the device url for the application's devices", function () {
-					const promise = balena.models.application
-						.enableDeviceUrls(this.application.id)
-						.then(() => {
-							return balena.models.device.hasDeviceUrl(this.device.uuid);
-						});
-
-					return expect(promise).to.eventually.be.true;
-				}));
-
-			describe('balena.models.application.disableDeviceUrls()', () =>
-				it("should disable the device url for the application's devices", function () {
-					const promise = balena.models.device
-						.enableDeviceUrl(this.device.uuid)
-						.then(() => {
-							return balena.models.application.disableDeviceUrls(
-								this.application.id,
-							);
-						})
-						.then(() => {
-							return balena.models.device.hasDeviceUrl(this.device.uuid);
-						});
-
-					return expect(promise).to.eventually.be.false;
-				}));
-		});
-
-		describe('given two releases', function () {
-			givenAnApplication(beforeEach);
-
-			beforeEach(async function () {
-				const userId = await balena.auth.getUserId();
-				this.oldRelease = await balena.pine.post({
-					resource: 'release',
-					body: {
-						belongs_to__application: this.application.id,
-						is_created_by__user: userId,
-						commit: 'old-release-commit',
-						status: 'success',
-						source: 'cloud',
-						composition: {},
-						start_timestamp: 1234,
-					},
-				});
-
-				this.newRelease = await balena.pine.post({
-					resource: 'release',
-					body: {
-						belongs_to__application: this.application.id,
-						is_created_by__user: userId,
-						commit: 'new-release-commit',
-						status: 'success',
-						source: 'cloud',
-						composition: {},
-						start_timestamp: 54321,
-					},
-				});
-			});
-
-			describe('balena.models.application.willTrackNewReleases()', function () {
-				it('should be configured to track new releases by default', function () {
-					const promise = balena.models.application.willTrackNewReleases(
-						this.application.id,
-					);
-					return expect(promise).to.eventually.be.true;
-				});
-
-				it('should be false when should_track_latest_release is false', function () {
-					return balena.pine
-						.patch({
-							resource: 'application',
-							id: this.application.id,
-							body: { should_track_latest_release: false },
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
-						})
-						.then(() => {
-							return balena.pine.patch({
-								resource: 'application',
-								id: this.application.id,
-								body: { should_track_latest_release: true },
+				describe('balena.models.application.enableDeviceUrls()', () => {
+					it("should enable the device url for the application's devices", function () {
+						const promise = balena.models.application
+							.enableDeviceUrls(this.application.id)
+							.then(() => {
+								return balena.models.device.hasDeviceUrl(this.device.uuid);
 							});
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.true;
-						});
+
+						return expect(promise).to.eventually.be.true;
+					});
 				});
 
-				it('should be true regardless of the current commit', function () {
-					return balena.pine
-						.patch({
-							resource: 'application',
-							id: this.application.id,
-							body: { should_be_running__release: this.oldRelease.id },
-						})
-						.then(() => {
+				describe('balena.models.application.disableDeviceUrls()', () => {
+					it("...should disable the device url for the application's devices", function () {
+						const promise = balena.models.device
+							.enableDeviceUrl(this.device.uuid)
+							.then(() => {
+								return balena.models.application.disableDeviceUrls(
+									this.application.id,
+								);
+							})
+							.then(() => {
+								return balena.models.device.hasDeviceUrl(this.device.uuid);
+							});
+
+						return expect(promise).to.eventually.be.false;
+					});
+				});
+
+				describe('given two releases', function () {
+					before(async function () {
+						const userId = await balena.auth.getUserId();
+						this.oldRelease = await balena.pine.post({
+							resource: 'release',
+							body: {
+								belongs_to__application: this.application.id,
+								is_created_by__user: userId,
+								commit: 'old-release-commit',
+								status: 'success',
+								source: 'cloud',
+								composition: {},
+								start_timestamp: 1234,
+							},
+						});
+
+						this.newRelease = await balena.pine.post({
+							resource: 'release',
+							body: {
+								belongs_to__application: this.application.id,
+								is_created_by__user: userId,
+								commit: 'new-release-commit',
+								status: 'success',
+								source: 'cloud',
+								composition: {},
+								start_timestamp: 54321,
+							},
+						});
+					});
+
+					describe('balena.models.application.willTrackNewReleases()', function () {
+						it('should be configured to track new releases by default', function () {
 							const promise = balena.models.application.willTrackNewReleases(
 								this.application.id,
 							);
 							return expect(promise).to.eventually.be.true;
 						});
-				});
-			});
 
-			describe('balena.models.application.isTrackingLatestRelease()', function () {
-				it('should be tracking the latest release by default', function () {
-					const promise = balena.models.application.isTrackingLatestRelease(
-						this.application.id,
-					);
-					return expect(promise).to.eventually.be.true;
-				});
+						it('...should be false when should_track_latest_release is false', function () {
+							return balena.pine
+								.patch({
+									resource: 'application',
+									id: this.application.id,
+									body: { should_track_latest_release: false },
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.false;
+								})
+								.then(() => {
+									return balena.pine.patch({
+										resource: 'application',
+										id: this.application.id,
+										body: { should_track_latest_release: true },
+									});
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.true;
+								});
+						});
 
-				it('should be false when should_track_latest_release is false', function () {
-					return balena.pine
-						.patch({
-							resource: 'application',
-							id: this.application.id,
-							body: { should_track_latest_release: false },
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
-						})
-						.then(() => {
-							return balena.pine.patch({
+						it('...should be true regardless of the current commit', async function () {
+							await balena.pine.patch({
 								resource: 'application',
 								id: this.application.id,
-								body: { should_track_latest_release: true },
+								body: { should_be_running__release: this.oldRelease.id },
 							});
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.true;
-						});
-				});
 
-				it('should be false when the current commit is not of the latest release', function () {
-					return balena.pine
-						.patch({
-							resource: 'application',
-							id: this.application.id,
-							body: { should_be_running__release: this.oldRelease.id },
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
-						})
-						.then(() => {
-							return balena.pine.patch({
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.true;
+
+							await balena.pine.patch({
 								resource: 'application',
 								id: this.application.id,
 								body: { should_be_running__release: this.newRelease.id },
 							});
-						})
-						.then(() => {
+
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.true;
+						});
+					});
+
+					describe('balena.models.application.isTrackingLatestRelease()', function () {
+						it('should be tracking the latest release by default', function () {
 							const promise = balena.models.application.isTrackingLatestRelease(
 								this.application.id,
 							);
 							return expect(promise).to.eventually.be.true;
 						});
-				});
-			});
 
-			describe('balena.models.application.getTargetReleaseHash()', () =>
-				it('should retrieve the commit hash of the current release', function () {
-					const promise = balena.models.application.getTargetReleaseHash(
-						this.application.id,
-					);
-					return m.chai
-						.expect(promise)
-						.to.eventually.equal('new-release-commit');
-				}));
-
-			describe('balena.models.application.pinToRelease()', () =>
-				it('should set the application to specific release & disable latest release tracking', function () {
-					return balena.models.application
-						.pinToRelease(this.application.id, 'old-release-commit')
-						.then(() => {
-							const promise = balena.models.application.getTargetReleaseHash(
-								this.application.id,
-							);
-							return m.chai
-								.expect(promise)
-								.to.eventually.equal('old-release-commit');
-						})
-						.then(() => {
-							const promise = balena.models.application.willTrackNewReleases(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
+						it('...should be false when should_track_latest_release is false', function () {
+							return balena.pine
+								.patch({
+									resource: 'application',
+									id: this.application.id,
+									body: { should_track_latest_release: false },
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.false;
+								})
+								.then(() => {
+									return balena.pine.patch({
+										resource: 'application',
+										id: this.application.id,
+										body: { should_track_latest_release: true },
+									});
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.true;
+								});
 						});
-				}));
 
-			describe('balena.models.application.trackLatestRelease()', () =>
-				it('should re-enable latest release tracking', function () {
-					return balena.models.application
-						.pinToRelease(this.application.id, 'old-release-commit')
-						.then(() => {
-							const promise = balena.models.application.getTargetReleaseHash(
-								this.application.id,
-							);
-							return m.chai
-								.expect(promise)
-								.to.eventually.equal('old-release-commit');
-						})
-						.then(() => {
-							const promise = balena.models.application.willTrackNewReleases(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.false;
-						})
-						.then(() => {
-							return balena.models.application.trackLatestRelease(
-								this.application.id,
-							);
-						})
-						.then(() => {
+						it('...should be false when the current commit is not of the latest release', function () {
+							return balena.pine
+								.patch({
+									resource: 'application',
+									id: this.application.id,
+									body: { should_be_running__release: this.oldRelease.id },
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.false;
+								})
+								.then(() => {
+									return balena.pine.patch({
+										resource: 'application',
+										id: this.application.id,
+										body: { should_be_running__release: this.newRelease.id },
+									});
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.true;
+								});
+						});
+					});
+
+					describe('balena.models.application.getTargetReleaseHash()', () => {
+						it('should retrieve the commit hash of the current release', function () {
 							const promise = balena.models.application.getTargetReleaseHash(
 								this.application.id,
 							);
 							return m.chai
 								.expect(promise)
 								.to.eventually.equal('new-release-commit');
-						})
-						.then(() => {
-							const promise = balena.models.application.willTrackNewReleases(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.true;
-						})
-						.then(() => {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.true;
 						});
-				}));
+					});
+
+					describe('balena.models.application.pinToRelease()', () => {
+						it('should set the application to specific release & disable latest release tracking', function () {
+							return balena.models.application
+								.pinToRelease(this.application.id, 'old-release-commit')
+								.then(() => {
+									const promise = balena.models.application.getTargetReleaseHash(
+										this.application.id,
+									);
+									return m.chai
+										.expect(promise)
+										.to.eventually.equal('old-release-commit');
+								})
+								.then(() => {
+									const promise = balena.models.application.willTrackNewReleases(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.false;
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.false;
+								});
+						});
+					});
+
+					describe('balena.models.application.trackLatestRelease()', () => {
+						it('...should re-enable latest release tracking', function () {
+							return balena.models.application
+								.isTrackingLatestRelease(this.application.id)
+								.then((result) => {
+									expect(result).to.be.false;
+
+									return balena.models.application.trackLatestRelease(
+										this.application.id,
+									);
+								})
+								.then(() => {
+									const promise = balena.models.application.getTargetReleaseHash(
+										this.application.id,
+									);
+									return m.chai
+										.expect(promise)
+										.to.eventually.equal('new-release-commit');
+								})
+								.then(() => {
+									const promise = balena.models.application.willTrackNewReleases(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.true;
+								})
+								.then(() => {
+									const promise = balena.models.application.isTrackingLatestRelease(
+										this.application.id,
+									);
+									return expect(promise).to.eventually.be.true;
+								});
+						});
+					});
+				});
+			});
 		});
 	});
 
