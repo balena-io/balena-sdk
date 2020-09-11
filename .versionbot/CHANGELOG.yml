@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Reduce the application creations & teardowns'
+      hash: 650af63e7ac33d2ed457aed141711c526f670963
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.10.4
+  date: 2020-09-11T13:46:21.436Z
+- commits:
     - subject: 'tests: Use mocha.parallel to speed up the test cases'
       hash: 5e51129f6032c86a3d25daca358591da4dc53bea
       body: |
