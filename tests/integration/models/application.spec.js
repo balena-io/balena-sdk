@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 
 const { expect } = m.chai;
 
@@ -21,68 +22,78 @@ import {
 
 describe('Application Model', function () {
 	givenLoggedInUser(before);
+	givenInitialOrganization(before);
 
 	describe('given no applications', function () {
-		describe('balena.models.application.getAll()', function () {
-			it('should eventually become an empty array [Promise]', function () {
-				const promise = balena.models.application.getAll();
-				return expect(promise).to.become([]);
+		describe('[read operations]', function () {
+			parallel('balena.models.application.getAll()', function () {
+				it('should eventually become an empty array [Promise]', function () {
+					const promise = balena.models.application.getAll();
+					return expect(promise).to.become([]);
+				});
+
+				it('should eventually become an empty array [callback]', function (done) {
+					// @ts-expect-error
+					balena.models.application.getAll(function (err, applications) {
+						try {
+							expect(err).to.be.null;
+							expect(applications).to.deep.equal([]);
+							done();
+						} catch (err) {
+							done(err);
+						}
+					});
+				});
 			});
 
-			it('should eventually become an empty array [callback]', function (done) {
-				// @ts-expect-error
-				balena.models.application.getAll(function (err, applications) {
-					try {
-						expect(err).to.be.null;
-						expect(applications).to.deep.equal([]);
-						done();
-					} catch (err) {
-						done(err);
-					}
+			parallel('balena.models.application.getAppByOwner()', function () {
+				it('should eventually reject [Promise]', function () {
+					const promise = balena.models.application.getAppByOwner(
+						'testapp',
+						'FooBar',
+					);
+					return expect(promise).to.be.rejected;
+				});
+
+				it('should eventually reject [callback]', function (done) {
+					balena.models.application.getAppByOwner(
+						'testapp',
+						'FooBar',
+						// @ts-expect-error
+						function (err) {
+							try {
+								expect(err).to.not.be.undefined;
+								done();
+							} catch (err) {
+								done(err);
+							}
+						},
+					);
+				});
+			});
+
+			describe('balena.models.application.hasAny()', function () {
+				it('should eventually be false', function () {
+					const promise = balena.models.application.hasAny();
+					return expect(promise).to.eventually.be.false;
 				});
 			});
 		});
-
-		describe('balena.models.application.getAppByOwner()', function () {
-			it('should eventually reject [Promise]', function () {
-				const promise = balena.models.application.getAppByOwner(
-					'testapp',
-					'FooBar',
-				);
-				return expect(promise).to.be.rejected;
-			});
-
-			it('should eventually reject [callback]', function (done) {
-				// @ts-expect-error
-				balena.models.application.getAppByOwner('testapp', 'FooBar', function (
-					err,
-				) {
-					try {
-						expect(err).to.not.be.undefined;
-						done();
-					} catch (err) {
-						done(err);
-					}
-				});
-			});
-		});
-
-		describe('balena.models.application.hasAny()', () =>
-			it('should eventually be false', function () {
-				const promise = balena.models.application.hasAny();
-				return expect(promise).to.eventually.be.false;
-			}));
 
 		describe('balena.models.application.create()', function () {
-			givenInitialOrganization(before);
+			let ctx = null;
 
-			describe('[read operations]', function () {
+			before(function () {
+				ctx = this;
+			});
+
+			parallel('[read operations]', function () {
 				it('should be rejected if the application type is invalid', function () {
 					const promise = balena.models.application.create({
 						name: 'FooBar',
 						applicationType: 'non-existing',
 						deviceType: 'raspberry-pi',
-						organization: this.initialOrg.id,
+						organization: ctx.initialOrg.id,
 					});
 					return m.chai
 						.expect(promise)
@@ -94,7 +105,7 @@ describe('Application Model', function () {
 						name: 'FooBar',
 						applicationType: 'microservices-starter',
 						deviceType: 'foobarbaz',
-						organization: this.initialOrg.id,
+						organization: ctx.initialOrg.id,
 					});
 					return m.chai
 						.expect(promise)
@@ -106,7 +117,7 @@ describe('Application Model', function () {
 						name: 'FooBar',
 						applicationType: 'microservices-starter',
 						deviceType: 'edge',
-						organization: this.initialOrg.id,
+						organization: ctx.initialOrg.id,
 					});
 					return m.chai
 						.expect(promise)
@@ -118,7 +129,7 @@ describe('Application Model', function () {
 						name: 'Foo',
 						applicationType: 'microservices-starter',
 						deviceType: 'raspberry-pi',
-						organization: this.initialOrg.id,
+						organization: ctx.initialOrg.id,
 					});
 					return expect(promise).to.be.rejected.then(function (error) {
 						expect(error).to.have.property('code', 'BalenaRequestError');
@@ -326,15 +337,20 @@ describe('Application Model', function () {
 		describe('[read operations]', function () {
 			givenAnApplication(before);
 
-			describe('balena.models.application.hasAny()', () =>
+			let ctx = null;
+
+			before(function () {
+				ctx = this;
+			});
+
+			describe('balena.models.application.hasAny()', function () {
 				it('should eventually be true', function () {
 					const promise = balena.models.application.hasAny();
 					return expect(promise).to.eventually.be.true;
-				}));
+				});
+			});
 
 			describe('balena.models.application.create()', function () {
-				givenInitialOrganization(before);
-
 				it('should reject if trying to create an app with the same name', function () {
 					const promise = balena.models.application.create({
 						name: 'FooBar',
@@ -355,22 +371,19 @@ describe('Application Model', function () {
 			// TODO: re-enable once the API regression gets fixed
 			// expect(error).to.have.property('message').that.contains('Application name must be unique')
 
-			describe('balena.models.application.hasAny()', () =>
+			describe('balena.models.application.hasAny()', function () {
 				it('should eventually be true', function () {
 					const promise = balena.models.application.hasAny();
 					return expect(promise).to.eventually.be.true;
-				}));
+				});
+			});
 
-			describe('balena.models.application.getAppByOwner()', function () {
-				givenInitialOrganization(before);
-
+			parallel('balena.models.application.getAppByOwner()', function () {
 				it('should find the created application', function () {
 					return balena.models.application
-						.getAppByOwner('FooBar', this.initialOrg.handle)
+						.getAppByOwner('FooBar', ctx.initialOrg.handle)
 						.then((application) => {
-							return m.chai
-								.expect(application.id)
-								.to.equal(this.application.id);
+							return m.chai.expect(application.id).to.equal(ctx.application.id);
 						});
 				});
 
@@ -387,7 +400,7 @@ describe('Application Model', function () {
 				});
 			});
 
-			describe('balena.models.application.getAll()', function () {
+			parallel('balena.models.application.getAll()', function () {
 				it('should return an array with length 1', function () {
 					const promise = balena.models.application.getAll();
 					return expect(promise).to.eventually.have.length(1);
@@ -397,7 +410,7 @@ describe('Application Model', function () {
 					return balena.models.application.getAll().then((applications) => {
 						return m.chai
 							.expect(applications[0].id)
-							.to.equal(this.application.id);
+							.to.equal(ctx.application.id);
 					});
 				});
 
@@ -429,29 +442,27 @@ describe('Application Model', function () {
 				});
 			});
 
-			describe('balena.models.application.get()', function () {
+			parallel('balena.models.application.get()', function () {
 				['id', 'app_name', 'slug'].forEach((prop) =>
 					it(`should be able to get an application by ${prop}`, function () {
 						const promise = balena.models.application.get(
-							this.application[prop],
+							ctx.application[prop],
 						);
-						return expect(promise).to.become(this.application);
+						return expect(promise).to.become(ctx.application);
 					}),
 				);
 
 				it('should be able to get an application by slug regardless of casing', function () {
-					if (
-						this.application.app_name === this.application.slug.toUpperCase()
-					) {
+					if (ctx.application.app_name === ctx.application.slug.toUpperCase()) {
 						throw new Error(
 							'This tests expects the application name to not be fully upper case',
 						);
 					}
 
 					const promise = balena.models.application.get(
-						this.application.slug.toUpperCase(),
+						ctx.application.slug.toUpperCase(),
 					);
-					return expect(promise).to.become(this.application);
+					return expect(promise).to.become(ctx.application);
 				});
 
 				it('should be rejected if the application name does not exist', function () {
@@ -470,7 +481,7 @@ describe('Application Model', function () {
 
 				it('should support arbitrary pinejs options', function () {
 					return balena.models.application
-						.get(this.application.id, {
+						.get(ctx.application.id, {
 							$expand: { organization: { $select: 'handle' } },
 						})
 						.then((application) =>
@@ -481,11 +492,11 @@ describe('Application Model', function () {
 				});
 			});
 
-			describe('balena.models.application.has()', function () {
+			parallel('balena.models.application.has()', function () {
 				['id', 'app_name', 'slug'].forEach((prop) =>
 					it(`should eventually be true if the application ${prop} exists`, function () {
 						const promise = balena.models.application.has(
-							this.application[prop],
+							ctx.application[prop],
 						);
 						return expect(promise).to.eventually.be.true;
 					}),
@@ -669,14 +680,15 @@ describe('Application Model', function () {
 					uniquePropertyNames: ['app_name', 'slug'],
 				};
 
-				beforeEach(function () {
+				before(function () {
 					tagTestOptions.resourceProvider = () => this.application;
 				});
 
 				itShouldSetGetAndRemoveTags(tagTestOptions);
 
-				describe('balena.models.application.tags.getAllByApplication()', () =>
-					itShouldGetAllTagsByResource(tagTestOptions));
+				describe('balena.models.application.tags.getAllByApplication()', function () {
+					itShouldGetAllTagsByResource(tagTestOptions);
+				});
 			});
 
 			describe('balena.models.application.configVar', function () {
@@ -1451,24 +1463,18 @@ describe('Application Model', function () {
 	describe('given public apps', function () {
 		let publicApp = undefined;
 
-		before(() =>
-			// prettier-ignore
-			balena.pine
-				.get(
-					/** @type {import('../../../').PineParams<import('../../../').Application>} */ ({
-						resource: 'application',
-						options: {
-							$top: 1,
-							$select: ['id', 'app_name', 'slug', 'is_public'],
-							$filter: { is_public: true },
-						},
-					}),
-				)
-				.then(function ([app]) {
-					expect(app).to.have.property('is_public', true);
-					return (publicApp = app);
-				}),
-		);
+		before(async function () {
+			const [app] = await balena.pine.get({
+				resource: 'application',
+				options: {
+					$top: 1,
+					$select: ['id', 'app_name', 'slug', 'is_public'],
+					$filter: { is_public: true },
+				},
+			});
+			expect(app).to.have.property('is_public', true);
+			publicApp = app;
+		});
 
 		describe('when not being logged in', function () {
 			before(() => balena.auth.logout());
@@ -1513,8 +1519,8 @@ describe('Application Model', function () {
 					},
 				));
 
-			describe('balena.models.application.get()', () =>
-				['id', 'app_name', 'slug'].forEach((prop) =>
+			parallel('balena.models.application.get()', function () {
+				['id', 'app_name', 'slug'].forEach((prop) => {
 					$it(
 						`should be able to get a public application by ${prop}`,
 						function () {
@@ -1530,8 +1536,9 @@ describe('Application Model', function () {
 									return expect(app).to.have.property('is_public', true);
 								});
 						},
-					),
-				));
+					);
+				});
+			});
 		});
 	});
 });

@@ -1,4 +1,5 @@
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena } from './integration/setup';
 import type * as BalenaSdk from '..';
 const { expect } = m.chai;
@@ -12,23 +13,21 @@ export const describeExpandAssertions = async <T>(
 			`Params object passed to 'describeExpandAssertions' must include a $expand`,
 		);
 	}
-	describe(`expanding from ${params.resource}`, function () {
+	parallel(`expanding from ${params.resource}`, function () {
 		Object.keys(expand).forEach((key) => {
-			describe(`to ${key}`, function () {
-				it('should succeed and include the expanded property', async function () {
-					const [result] = await balena.pine.get<T>({
-						...params,
-						options: {
-							...params.options,
-							$expand: {
-								[key]: expand[key],
-							},
+			it(`should succeed to expand property ${key}`, async function () {
+				const [result] = await balena.pine.get<T>({
+					...params,
+					options: {
+						...params.options,
+						$expand: {
+							[key]: expand[key],
 						},
-					} as typeof params);
-					if (result) {
-						expect(result).to.have.property(key).that.is.an('array');
-					}
-				});
+					},
+				} as typeof params);
+				if (result) {
+					expect(result).to.have.property(key).that.is.an('array');
+				}
 			});
 		});
 	});

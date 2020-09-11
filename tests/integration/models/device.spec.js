@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import * as superagent from 'superagent';
 
 import {
@@ -38,7 +39,7 @@ describe('Device Model', function () {
 	givenLoggedInUser(before);
 
 	describe('given no applications', function () {
-		describe('balena.models.device.getDisplayName()', function () {
+		parallel('balena.models.device.getDisplayName()', function () {
 			it('should get the display name for a known slug', function () {
 				const promise = balena.models.device.getDisplayName('raspberry-pi2');
 				return expect(promise).to.eventually.equal('Raspberry Pi 2');
@@ -55,7 +56,7 @@ describe('Device Model', function () {
 			});
 		});
 
-		describe('balena.models.device.getDeviceSlug()', function () {
+		parallel('balena.models.device.getDeviceSlug()', function () {
 			it('should eventually be the slug from a display name', function () {
 				const promise = balena.models.device.getDeviceSlug('Raspberry Pi 2');
 				return expect(promise).to.eventually.equal('raspberry-pi2');
@@ -77,7 +78,7 @@ describe('Device Model', function () {
 			});
 		});
 
-		describe('balena.models.device.getSupportedDeviceTypes()', function () {
+		parallel('balena.models.device.getSupportedDeviceTypes()', function () {
 			it('should return a non empty array', async () => {
 				const deviceTypes = await balena.models.device.getSupportedDeviceTypes();
 				expect(Array.isArray(deviceTypes)).to.be.true;
@@ -97,7 +98,7 @@ describe('Device Model', function () {
 			});
 		});
 
-		describe('balena.models.device.getManifestBySlug()', function () {
+		parallel('balena.models.device.getManifestBySlug()', function () {
 			it('should become the manifest if the slug is valid', async () => {
 				const manifest = await balena.models.device.getManifestBySlug(
 					'raspberry-pi',
@@ -128,6 +129,12 @@ describe('Device Model', function () {
 		describe('[read operations]', function () {
 			givenAnApplication(before);
 
+			let ctx = null;
+
+			before(function () {
+				ctx = this;
+			});
+
 			describe('balena.models.device.getAll()', () =>
 				it('should become an empty array', function () {
 					const promise = balena.models.device.getAll();
@@ -137,12 +144,12 @@ describe('Device Model', function () {
 			describe('balena.models.device.getAllByApplication()', () =>
 				it('should become an empty array', function () {
 					const promise = balena.models.device.getAllByApplication(
-						this.application.id,
+						ctx.application.id,
 					);
 					return expect(promise).to.become([]);
 				}));
 
-			describe('balena.models.device.generateUniqueKey()', function () {
+			parallel('balena.models.device.generateUniqueKey()', function () {
 				it('should generate a valid uuid', function () {
 					const uuid = balena.models.device.generateUniqueKey();
 
@@ -161,15 +168,15 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getManifestByApplication()', function () {
+			parallel('balena.models.device.getManifestByApplication()', function () {
 				['id', 'app_name', 'slug'].forEach((prop) =>
 					it(`should return the appropriate manifest for an application ${prop}`, async function () {
 						const manifest = await balena.models.device.getManifestByApplication(
-							this.application[prop],
+							ctx.application[prop],
 						);
 						return m.chai
 							.expect(manifest.slug)
-							.to.equal(this.applicationDeviceType.slug);
+							.to.equal(ctx.applicationDeviceType.slug);
 					}),
 				);
 
@@ -237,18 +244,24 @@ describe('Device Model', function () {
 		describe('[read operations]', function () {
 			givenAnApplicationWithADevice(before);
 
-			describe('balena.models.device.getAll()', function () {
+			let ctx = null;
+
+			before(function () {
+				ctx = this;
+			});
+
+			parallel('balena.models.device.getAll()', function () {
 				it('should become the device', async function () {
 					const devices = await balena.models.device.getAll();
 					expect(devices).to.have.length(1);
-					return expect(devices[0].id).to.equal(this.device.id);
+					return expect(devices[0].id).to.equal(ctx.device.id);
 				});
 
 				it('should support arbitrary pinejs options', async function () {
 					const [device] = await balena.models.device.getAll({
 						$select: ['id'],
 					});
-					expect(device.id).to.equal(this.device.id);
+					expect(device.id).to.equal(ctx.device.id);
 					return expect(device.device_name).to.equal(undefined);
 				});
 
@@ -263,14 +276,14 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getAllByApplication()', function () {
+			parallel('balena.models.device.getAllByApplication()', function () {
 				['id', 'app_name', 'slug'].forEach((prop) =>
 					it(`should get the device given the right application ${prop}`, async function () {
 						const devices = await balena.models.device.getAllByApplication(
-							this.application[prop],
+							ctx.application[prop],
 						);
 						expect(devices).to.have.length(1);
-						return expect(devices[0].id).to.equal(this.device.id);
+						return expect(devices[0].id).to.equal(ctx.device.id);
 					}),
 				);
 
@@ -292,16 +305,16 @@ describe('Device Model', function () {
 
 				it('should support arbitrary pinejs options', async function () {
 					const [device] = await balena.models.device.getAllByApplication(
-						this.application.id,
+						ctx.application.id,
 						{ $select: ['id'] },
 					);
-					expect(device.id).to.equal(this.device.id);
+					expect(device.id).to.equal(ctx.device.id);
 					return expect(device.device_name).to.equal(undefined);
 				});
 
 				it('should be able to retrieve computed terms', async function () {
 					const [device] = await balena.models.device.getAllByApplication(
-						this.application.id,
+						ctx.application.id,
 						{
 							$select: ['overall_status', 'overall_progress'],
 						},
@@ -313,15 +326,15 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.get()', function () {
+			parallel('balena.models.device.get()', function () {
 				it('should be able to get the device by uuid', async function () {
-					const device = await balena.models.device.get(this.device.uuid);
-					return expect(device.id).to.equal(this.device.id);
+					const device = await balena.models.device.get(ctx.device.uuid);
+					return expect(device.id).to.equal(ctx.device.id);
 				});
 
 				it('should be able to get the device by id', async function () {
-					const device = await balena.models.device.get(this.device.id);
-					return expect(device.id).to.equal(this.device.id);
+					const device = await balena.models.device.get(ctx.device.id);
+					return expect(device.id).to.equal(ctx.device.id);
 				});
 
 				it('should be rejected if the device name does not exist', function () {
@@ -340,21 +353,21 @@ describe('Device Model', function () {
 
 				it('should be able to use a shorter uuid', async function () {
 					const device = await balena.models.device.get(
-						this.device.uuid.slice(0, 8),
+						ctx.device.uuid.slice(0, 8),
 					);
-					return expect(device.id).to.equal(this.device.id);
+					return expect(device.id).to.equal(ctx.device.id);
 				});
 
 				it('should support arbitrary pinejs options', async function () {
-					const device = await balena.models.device.get(this.device.id, {
+					const device = await balena.models.device.get(ctx.device.id, {
 						$select: ['id'],
 					});
-					expect(device.id).to.equal(this.device.id);
+					expect(device.id).to.equal(ctx.device.id);
 					return expect(device.device_name).to.equal(undefined);
 				});
 
 				it('should be able to retrieve computed terms', async function () {
-					const device = await balena.models.device.get(this.device.uuid, {
+					const device = await balena.models.device.get(ctx.device.uuid, {
 						$select: ['overall_status', 'overall_progress'],
 					});
 					return expect(device).to.deep.match({
@@ -364,13 +377,13 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getByName()', function () {
+			parallel('balena.models.device.getByName()', function () {
 				it('should be able to get the device', async function () {
 					const devices = await balena.models.device.getByName(
-						this.device.device_name,
+						ctx.device.device_name,
 					);
 					expect(devices).to.have.length(1);
-					return expect(devices[0].id).to.equal(this.device.id);
+					return expect(devices[0].id).to.equal(ctx.device.id);
 				});
 
 				it('should be rejected if the device does not exist', function () {
@@ -382,23 +395,23 @@ describe('Device Model', function () {
 
 				it('should support arbitrary pinejs options', async function () {
 					const [device] = await balena.models.device.getByName(
-						this.device.device_name,
+						ctx.device.device_name,
 						{ $select: ['id'] },
 					);
-					expect(device.id).to.equal(this.device.id);
+					expect(device.id).to.equal(ctx.device.id);
 					return expect(device.device_name).to.equal(undefined);
 				});
 			});
 
-			describe('balena.models.device.getName()', function () {
+			parallel('balena.models.device.getName()', function () {
 				it('should get the correct name by uuid', async function () {
-					const name = await balena.models.device.getName(this.device.uuid);
-					return m.chai.expect(name).to.equal(this.device.device_name);
+					const name = await balena.models.device.getName(ctx.device.uuid);
+					return m.chai.expect(name).to.equal(ctx.device.device_name);
 				});
 
 				it('should get the correct name by id', async function () {
-					const name = await balena.models.device.getName(this.device.id);
-					return m.chai.expect(name).to.equal(this.device.device_name);
+					const name = await balena.models.device.getName(ctx.device.id);
+					return m.chai.expect(name).to.equal(ctx.device.device_name);
 				});
 
 				it('should be rejected if the device uuid does not exist', function () {
@@ -416,23 +429,23 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getApplicationName()', function () {
+			parallel('balena.models.device.getApplicationName()', function () {
 				it('should get the correct application name from a device uuid', function () {
 					const promise = balena.models.device.getApplicationName(
-						this.device.uuid,
+						ctx.device.uuid,
 					);
 					return m.chai
 						.expect(promise)
-						.to.eventually.equal(this.application.app_name);
+						.to.eventually.equal(ctx.application.app_name);
 				});
 
 				it('should get the correct application name from a device id', function () {
 					const promise = balena.models.device.getApplicationName(
-						this.device.id,
+						ctx.device.id,
 					);
 					return m.chai
 						.expect(promise)
-						.to.eventually.equal(this.application.app_name);
+						.to.eventually.equal(ctx.application.app_name);
 				});
 
 				it('should be rejected if the device uuid does not exist', function () {
@@ -450,14 +463,14 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.has()', function () {
+			parallel('balena.models.device.has()', function () {
 				it('should eventually be true if the device uuid exists', function () {
-					const promise = balena.models.device.has(this.device.uuid);
+					const promise = balena.models.device.has(ctx.device.uuid);
 					return expect(promise).to.eventually.be.true;
 				});
 
 				it('should eventually be true if the device id exists', function () {
-					const promise = balena.models.device.has(this.device.id);
+					const promise = balena.models.device.has(ctx.device.id);
 					return expect(promise).to.eventually.be.true;
 				});
 
@@ -478,14 +491,14 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.isOnline()', function () {
+			parallel('balena.models.device.isOnline()', function () {
 				it('should eventually be false if the device uuid is offline', function () {
-					const promise = balena.models.device.isOnline(this.device.uuid);
+					const promise = balena.models.device.isOnline(ctx.device.uuid);
 					return expect(promise).to.eventually.be.false;
 				});
 
 				it('should eventually be false if the device id is offline', function () {
-					const promise = balena.models.device.isOnline(this.device.id);
+					const promise = balena.models.device.isOnline(ctx.device.id);
 					return expect(promise).to.eventually.be.false;
 				});
 
@@ -504,23 +517,23 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getLocalIPAddresses()', function () {
+			parallel('balena.models.device.getLocalIPAddresses()', function () {
 				it('should be rejected with an offline error if the device uuid is offline', function () {
 					const promise = balena.models.device.getLocalIPAddresses(
-						this.device.uuid,
+						ctx.device.uuid,
 					);
 					return m.chai
 						.expect(promise)
-						.to.be.rejectedWith(`The device is offline: ${this.device.uuid}`);
+						.to.be.rejectedWith(`The device is offline: ${ctx.device.uuid}`);
 				});
 
 				it('should be rejected with an offline error if the device id is offline', function () {
 					const promise = balena.models.device.getLocalIPAddresses(
-						this.device.id,
+						ctx.device.id,
 					);
 					return m.chai
 						.expect(promise)
-						.to.be.rejectedWith(`The device is offline: ${this.device.id}`);
+						.to.be.rejectedWith(`The device is offline: ${ctx.device.id}`);
 				});
 
 				it('should be rejected if the device uuid does not exist', function () {
@@ -538,7 +551,7 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getMACAddresses()', function () {
+			parallel('balena.models.device.getMACAddresses()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					const promise = balena.models.device.getMACAddresses('asdfghjkl');
 					await m.chai
@@ -556,14 +569,14 @@ describe('Device Model', function () {
 				['id', 'uuid'].forEach((field) =>
 					it(`should retrieve a empty list of mac addresses by ${field}`, async function () {
 						const result = await balena.models.device.getMACAddresses(
-							this.device[field],
+							ctx.device[field],
 						);
 						expect(result).to.deep.equal([]);
 					}),
 				);
 			});
 
-			describe('balena.models.device.getMetrics()', function () {
+			parallel('balena.models.device.getMetrics()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					const promise = balena.models.device.getMetrics('asdfghjkl');
 					await m.chai
@@ -581,7 +594,7 @@ describe('Device Model', function () {
 				['id', 'uuid'].forEach((field) =>
 					it(`should retrieve an empty device metrics object by ${field}`, async function () {
 						const result = await balena.models.device.getMetrics(
-							this.device[field],
+							ctx.device[field],
 						);
 						expect(result).to.deep.equal({
 							memory_usage: null,
@@ -626,109 +639,117 @@ describe('Device Model', function () {
 							is_managed_by__device: this.device.id,
 						},
 					});
+					ctx = this;
 				});
 
 				after(() => balena.models.application.remove('ChildApp'));
 
-				it('should get the device given the right parent uuid', async function () {
-					const childDevices = await balena.models.device.getAllByParentDevice(
-						this.device.uuid,
-					);
-					expect(childDevices).to.have.length(1);
-					return m.chai
-						.expect(childDevices[0].id)
-						.to.equal(this.childDevice.id);
-				});
-
-				it('should get the device given the right parent id', async function () {
-					const childDevices = await balena.models.device.getAllByParentDevice(
-						this.device.id,
-					);
-					expect(childDevices).to.have.length(1);
-					return m.chai
-						.expect(childDevices[0].id)
-						.to.equal(this.childDevice.id);
-				});
-
-				it('should be empty if the parent device has no children', async function () {
-					const childDevices = await balena.models.device.getAllByParentDevice(
-						this.childDevice.id,
-					);
-					return expect(childDevices).to.have.length(0);
-				});
-
-				it('should be rejected if the parent device does not exist', function () {
-					const promise = balena.models.device.getAllByParentDevice(
-						'asdfghjkl',
-					);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Device not found: asdfghjkl');
-				});
-
-				it('should support arbitrary pinejs options', async function () {
-					const [childDevice] = await balena.models.device.getAllByParentDevice(
-						this.device.id,
-						{
-							$select: ['id'],
-						},
-					);
-					expect(childDevice.id).to.equal(this.childDevice.id);
-					return expect(childDevice.device_name).to.equal(undefined);
-				});
-			});
-		});
-
-		describe('balena.models.device.getMACAddresses()', function () {
-			givenAnApplication(before);
-			givenADevice(before, {
-				mac_address: '00:11:22:33:44:55 66:77:88:99:AA:BB',
-			});
-
-			['id', 'uuid'].forEach((field) =>
-				it(`should be able to retrieve the device mac addresses by ${field}`, async function () {
-					const result = await balena.models.device.getMACAddresses(
-						this.device[field],
-					);
-					m.chai
-						.expect(result)
-						.to.deep.equal(['00:11:22:33:44:55', '66:77:88:99:AA:BB']);
-				}),
-			);
-		});
-
-		describe('balena.models.device.getMetrics()', function () {
-			givenAnApplication(before);
-			givenADevice(before, {
-				cpu_usage: 34,
-				memory_usage: 1000, // 1GB in MiB
-				memory_total: 4000, // 4GB in MiB
-				storage_block_device: '/dev/mmcblk0',
-				storage_usage: 1000, // 1GB in MiB
-				storage_total: 64000, // 64GB in MiB
-				cpu_temp: 56,
-				is_undervolted: true,
-				cpu_id: 'a CPU string',
-			});
-
-			['id', 'uuid'].forEach((field) =>
-				it(`should be able to retrieve the device metrics by ${field}`, async function () {
-					const result = await balena.models.device.getMetrics(
-						this.device[field],
-					);
-					expect(result).to.deep.equal({
-						cpu_usage: 34,
-						memory_usage: 1000, // 1GB in MiB
-						memory_total: 4000, // 4GB in MiB
-						storage_block_device: '/dev/mmcblk0',
-						storage_usage: 1000, // 1GB in MiB
-						storage_total: 64000, // 64GB in MiB
-						cpu_temp: 56,
-						is_undervolted: true,
-						cpu_id: 'a CPU string',
+				parallel('', function () {
+					it('should get the device given the right parent uuid', async function () {
+						const childDevices = await balena.models.device.getAllByParentDevice(
+							ctx.device.uuid,
+						);
+						expect(childDevices).to.have.length(1);
+						m.chai.expect(childDevices[0].id).to.equal(ctx.childDevice.id);
 					});
-				}),
-			);
+
+					it('should get the device given the right parent id', async function () {
+						const childDevices = await balena.models.device.getAllByParentDevice(
+							ctx.device.id,
+						);
+						expect(childDevices).to.have.length(1);
+						m.chai.expect(childDevices[0].id).to.equal(ctx.childDevice.id);
+					});
+
+					it('should be empty if the parent device has no children', async function () {
+						const childDevices = await balena.models.device.getAllByParentDevice(
+							ctx.childDevice.id,
+						);
+						expect(childDevices).to.have.length(0);
+					});
+
+					it('should be rejected if the parent device does not exist', function () {
+						const promise = balena.models.device.getAllByParentDevice(
+							'asdfghjkl',
+						);
+						m.chai
+							.expect(promise)
+							.to.be.rejectedWith('Device not found: asdfghjkl');
+					});
+
+					it('should support arbitrary pinejs options', async function () {
+						const [
+							childDevice,
+						] = await balena.models.device.getAllByParentDevice(ctx.device.id, {
+							$select: ['id'],
+						});
+						expect(childDevice.id).to.equal(ctx.childDevice.id);
+						expect(childDevice.device_name).to.equal(undefined);
+					});
+				});
+			});
+
+			describe('balena.models.device.getMACAddresses()', function () {
+				givenADevice(before, {
+					mac_address: '00:11:22:33:44:55 66:77:88:99:AA:BB',
+				});
+
+				before(function () {
+					ctx = this;
+				});
+
+				parallel('', function () {
+					['id', 'uuid'].forEach((field) =>
+						it(`should be able to retrieve the device mac addresses by ${field}`, async function () {
+							const result = await balena.models.device.getMACAddresses(
+								ctx.device[field],
+							);
+							m.chai
+								.expect(result)
+								.to.deep.equal(['00:11:22:33:44:55', '66:77:88:99:AA:BB']);
+						}),
+					);
+				});
+			});
+
+			describe('balena.models.device.getMetrics()', function () {
+				givenADevice(before, {
+					cpu_usage: 34,
+					memory_usage: 1000, // 1GB in MiB
+					memory_total: 4000, // 4GB in MiB
+					storage_block_device: '/dev/mmcblk0',
+					storage_usage: 1000, // 1GB in MiB
+					storage_total: 64000, // 64GB in MiB
+					cpu_temp: 56,
+					is_undervolted: true,
+					cpu_id: 'a CPU string',
+				});
+
+				before(function () {
+					ctx = this;
+				});
+
+				parallel('', function () {
+					['id', 'uuid'].forEach((field) =>
+						it(`should be able to retrieve the device metrics by ${field}`, async function () {
+							const result = await balena.models.device.getMetrics(
+								ctx.device[field],
+							);
+							expect(result).to.deep.equal({
+								cpu_usage: 34,
+								memory_usage: 1000, // 1GB in MiB
+								memory_total: 4000, // 4GB in MiB
+								storage_block_device: '/dev/mmcblk0',
+								storage_usage: 1000, // 1GB in MiB
+								storage_total: 64000, // 64GB in MiB
+								cpu_temp: 56,
+								is_undervolted: true,
+								cpu_id: 'a CPU string',
+							});
+						}),
+					);
+				});
+			});
 		});
 
 		describe('balena.models.device.remove()', function () {
@@ -1637,7 +1658,7 @@ describe('Device Model', function () {
 				uniquePropertyNames: ['uuid'],
 			};
 
-			beforeEach(function () {
+			before(function () {
 				appTagTestOptions.resourceProvider = () => this.application;
 				deviceTagTestOptions.resourceProvider = () => this.device;
 				// used for tag creation during the
@@ -1647,11 +1668,13 @@ describe('Device Model', function () {
 
 			itShouldSetGetAndRemoveTags(deviceTagTestOptions);
 
-			describe('balena.models.device.tags.getAllByApplication()', () =>
-				itShouldGetAllTagsByResource(appTagTestOptions));
+			describe('balena.models.device.tags.getAllByApplication()', function () {
+				itShouldGetAllTagsByResource(appTagTestOptions);
+			});
 
-			describe('balena.models.device.tags.getAllByDevice()', () =>
-				itShouldGetAllTagsByResource(deviceTagTestOptions));
+			describe('balena.models.device.tags.getAllByDevice()', function () {
+				itShouldGetAllTagsByResource(deviceTagTestOptions);
+			});
 		});
 
 		describe('balena.models.device.configVar', function () {

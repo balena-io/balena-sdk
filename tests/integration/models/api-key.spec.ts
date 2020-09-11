@@ -1,35 +1,40 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena, givenLoggedInUser } from '../setup';
 const { expect } = m.chai;
 
 describe('API Key model', function () {
 	describe('balena.models.apiKey.create()', function () {
-		givenLoggedInUser(beforeEach);
+		givenLoggedInUser(before);
 
-		it('should be able to create a new api key', () =>
-			balena.models.apiKey
-				.create('apiKey')
-				.then((key) => expect(key).to.be.a('string')));
+		parallel('', function () {
+			it('should be able to create a new api key', function () {
+				balena.models.apiKey
+					.create('apiKey')
+					.then((key) => expect(key).to.be.a('string'));
+			});
 
-		it('should be able to create a new api key with description', () =>
-			balena.models.apiKey
-				.create('apiKey', 'apiKeyDescription')
-				.then(function (key) {
-					expect(key).to.be.a('string');
-					return balena.models.apiKey.getAll();
-				})
-				.then(function (apiKeys) {
-					expect(apiKeys).to.be.an('array');
-					expect(apiKeys).to.have.lengthOf(1);
-					expect(apiKeys).to.deep.match([
-						{
-							name: 'apiKey',
-							description: 'apiKeyDescription',
-						},
-					]);
-				}));
+			it('should be able to create a new api key with description', function () {
+				balena.models.apiKey
+					.create('apiKey2', 'apiKeyDescription')
+					.then(function (key) {
+						expect(key).to.be.a('string');
+						return balena.models.apiKey.getAll();
+					})
+					.then(function (apiKeys) {
+						expect(apiKeys).to.be.an('array');
+						expect(apiKeys).to.have.lengthOf(1);
+						expect(apiKeys).to.deep.match([
+							{
+								name: 'apiKey2',
+								description: 'apiKeyDescription',
+							},
+						]);
+					});
+			});
+		});
 	});
 
 	describe('balena.models.apiKey.getAll()', function () {

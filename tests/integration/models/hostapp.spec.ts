@@ -1,6 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
@@ -14,7 +15,7 @@ const containsVersion = (
 };
 
 describe('Hostapp model', function () {
-	describe('balena.models.hostapp.getAllOsVersions()', function () {
+	parallel('balena.models.hostapp.getAllOsVersions()', function () {
 		it("should contain both balenaOS and balenaOS ESR OS types'", async () => {
 			const res = await balena.models.hostapp.getAllOsVersions([
 				'fincm3',

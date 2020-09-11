@@ -1,6 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
@@ -45,7 +46,8 @@ export const itShouldGetAllTagsByResource = function <
 	const { model, resourceName, uniquePropertyNames = [] } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
-	beforeEach(function () {
+	let ctx: Mocha.Context;
+	before(function () {
 		if (!opts.resourceProvider) {
 			throw new Error('A resourceProvider was not provided!');
 		}
@@ -54,43 +56,47 @@ export const itShouldGetAllTagsByResource = function <
 		this.setTagResource = (
 			opts.setTagResourceProvider || opts.resourceProvider
 		)();
+		ctx = this;
 	});
 
-	it('should become an empty array by default [Promise]', function () {
-		const promise = getAllByResource(this.resource.id);
-		return expect(promise).to.become([]);
-	});
-
-	it('should become an empty array by default [callback]', function (done) {
-		getAllByResource(this.resource.id, function (err, tags) {
-			try {
-				expect(err).to.be.null;
-				expect(tags).to.deep.equal([]);
-				done();
-			} catch (err) {
-				done(err);
-			}
+	parallel('', function () {
+		it('should become an empty array by default [Promise]', function () {
+			const promise = getAllByResource(ctx.resource.id);
+			return expect(promise).to.become([]);
 		});
-	});
 
-	it(`should be rejected if the ${resourceName} id does not exist`, function () {
-		const promise = getAllByResource(999999);
-		return expect(promise).to.be.rejectedWith(
-			`${_.startCase(resourceName)} not found: 999999`,
-		);
-	});
+		it('should become an empty array by default [callback]', function (done) {
+			getAllByResource(ctx.resource.id, function (err, tags) {
+				try {
+					expect(err).to.be.null;
+					expect(tags).to.deep.equal([]);
+					done();
+				} catch (err) {
+					done(err);
+				}
+			});
+		});
 
-	uniquePropertyNames.forEach((uniquePropertyName) => {
-		it(`should be rejected if the ${resourceName} ${uniquePropertyName} does not exist`, function () {
-			const promise = getAllByResource('123456789');
+		it(`should be rejected if the ${resourceName} id does not exist`, function () {
+			const promise = getAllByResource(999999);
 			return expect(promise).to.be.rejectedWith(
-				`${_.startCase(resourceName)} not found: 123456789`,
+				`${_.startCase(resourceName)} not found: 999999`,
 			);
+		});
+
+		uniquePropertyNames.forEach((uniquePropertyName) => {
+			it(`should be rejected if the ${resourceName} ${uniquePropertyName} does not exist`, function () {
+				const promise = getAllByResource('123456789');
+				return expect(promise).to.be.rejectedWith(
+					`${_.startCase(resourceName)} not found: 123456789`,
+				);
+			});
 		});
 	});
 
 	describe('given a tag', function () {
 		before(function () {
+			ctx = this;
 			// we use the tag associated resource id here
 			// for cases like device.tags.getAllByApplication()
 			// where @setTagResource will be a device and
@@ -102,26 +108,28 @@ export const itShouldGetAllTagsByResource = function <
 			return model.remove(this.setTagResource.id, 'EDITOR');
 		});
 
-		['id', ...uniquePropertyNames].forEach((uniquePropertyName) => {
-			it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, async function () {
-				const tags = await getAllByResource(this.resource[uniquePropertyName]);
-				expect(tags).to.have.length(1);
-				expect(tags[0].tag_key).to.equal('EDITOR');
-				expect(tags[0].value).to.equal('vim');
-			});
-		});
-
-		it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
-			getAllByResource(this.resource.id, function (err, tags) {
-				try {
-					expect(err).to.be.null;
+		parallel('', function () {
+			['id', ...uniquePropertyNames].forEach((uniquePropertyName) => {
+				it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, async function () {
+					const tags = await getAllByResource(ctx.resource[uniquePropertyName]);
 					expect(tags).to.have.length(1);
 					expect(tags[0].tag_key).to.equal('EDITOR');
 					expect(tags[0].value).to.equal('vim');
-					done();
-				} catch (err) {
-					done(err);
-				}
+				});
+			});
+
+			it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
+				getAllByResource(ctx.resource.id, function (err, tags) {
+					try {
+						expect(err).to.be.null;
+						expect(tags).to.have.length(1);
+						expect(tags[0].tag_key).to.equal('EDITOR');
+						expect(tags[0].value).to.equal('vim');
+						done();
+					} catch (err) {
+						done(err);
+					}
+				});
 			});
 		});
 	});
@@ -138,11 +146,11 @@ export const itShouldSetGetAndRemoveTags = function <
 	} = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
-	beforeEach(function () {
+	before(function () {
 		if (!opts.resourceProvider) {
 			throw new Error('A resourceProvider was not provided!');
 		}
-		return (this.resource = opts.resourceProvider());
+		this.resource = opts.resourceProvider();
 	});
 
 	['id', ...uniquePropertyNames].forEach((param) =>
@@ -253,7 +261,9 @@ export const itShouldSetGetAndRemoveTags = function <
 	});
 
 	describe('given two existing tags', function () {
+		let ctx: Mocha.Context;
 		before(function () {
+			ctx = this;
 			return Promise.all([
 				model.set(this.resource.id, 'EDITOR', 'vim'),
 				model.set(this.resource.id, 'LANGUAGE', 'js'),
@@ -267,14 +277,14 @@ export const itShouldSetGetAndRemoveTags = function <
 			]);
 		});
 
-		describe(`${modelNamespace}.getAll()`, function () {
+		parallel(`${modelNamespace}.getAll()`, function () {
 			it('should retrieve all the tags', async function () {
 				let tags = await model.getAll();
 				tags = _.sortBy(tags, 'tag_key');
 				expect(tags.length).to.be.gte(2);
 				// exclude tags that the user can access b/c of public apps
 				const tagsOfUsersResource = tags.filter(
-					(t) => t[resourceName].__id === this.resource.id,
+					(t) => t[resourceName].__id === ctx.resource.id,
 				);
 				expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
 				expect(tagsOfUsersResource[0].value).to.equal('vim');
@@ -287,7 +297,7 @@ export const itShouldSetGetAndRemoveTags = function <
 				expect(tags.length).to.be.gte(1);
 				// exclude tags that the user can access b/c of public apps
 				const tagsOfUsersResource = tags.filter(
-					(t) => t[resourceName].__id === this.resource.id,
+					(t) => t[resourceName].__id === ctx.resource.id,
 				);
 				expect(tagsOfUsersResource[0].tag_key).to.equal('EDITOR');
 				expect(tagsOfUsersResource[0].value).to.equal('vim');
@@ -296,8 +306,8 @@ export const itShouldSetGetAndRemoveTags = function <
 
 		describe(`${modelNamespace}.set()`, () =>
 			it('should be able to update a tag without affecting the rest', async function () {
-				await model.set(this.resource.id, 'EDITOR', 'emacs');
-				let tags = await getAllByResource(this.resource.id);
+				await model.set(ctx.resource.id, 'EDITOR', 'emacs');
+				let tags = await getAllByResource(ctx.resource.id);
 				tags = _.sortBy(tags, 'tag_key');
 				expect(tags).to.have.length(2);
 				expect(tags[0].tag_key).to.equal('EDITOR');

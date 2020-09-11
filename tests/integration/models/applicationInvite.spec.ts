@@ -1,5 +1,6 @@
 // tslint:disable-next-line:import-blacklist
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
@@ -22,30 +23,38 @@ describe('Application Invite Model', function () {
 
 		describe('given no application invite [contained scenario]', function () {
 			givenAnApplication(before);
-			describe('balena.models.application.invite.getAllByApplication()', function () {
-				it('shoud return an empty Array', function () {
-					const promise = balena.models.application.invite.getAllByApplication(
-						this.application.id,
-					);
-					return expect(promise).to.become([]);
-				});
-
-				it('should support a callback with no options', function (done) {
-					(balena.models.application.invite.getAllByApplication as (
-						...args: any[]
-					) => any)(this.application.id, function (
-						_err: Error,
-						applicationInvite: BalenaSdk.ApplicationInvite[],
-					) {
-						try {
-							expect(applicationInvite).to.deep.equal([]);
-							done();
-						} catch (err) {
-							done(err);
-						}
-					});
-				});
+			let ctx: Mocha.Context;
+			before(function () {
+				ctx = this;
 			});
+
+			parallel(
+				'balena.models.application.invite.getAllByApplication()',
+				function () {
+					it('shoud return an empty Array', function () {
+						const promise = balena.models.application.invite.getAllByApplication(
+							ctx.application.id,
+						);
+						return expect(promise).to.become([]);
+					});
+
+					it('should support a callback with no options', function (done) {
+						(balena.models.application.invite.getAllByApplication as (
+							...args: any[]
+						) => any)(ctx.application.id, function (
+							_err: Error,
+							applicationInvite: BalenaSdk.ApplicationInvite[],
+						) {
+							try {
+								expect(applicationInvite).to.deep.equal([]);
+								done();
+							} catch (err) {
+								done(err);
+							}
+						});
+					});
+				},
+			);
 
 			describe('balena.models.application.invite.create()', function () {
 				it('should create and return an application invite', async function () {
@@ -102,7 +111,9 @@ describe('Application Invite Model', function () {
 
 		describe('given a single application invite [contained scenario]', function () {
 			givenAnApplication(before);
+			let ctx: Mocha.Context;
 			before(async function () {
+				ctx = this;
 				const applicationInvite = await balena.models.application.invite.create(
 					this.application.id,
 					{
@@ -114,17 +125,17 @@ describe('Application Invite Model', function () {
 				return (this.applicationInvite = applicationInvite);
 			});
 
-			describe('balena.models.application.invite.getAllApplication()', () => {
+			parallel('balena.models.application.invite.getAllApplication()', () => {
 				it('should become the list of application invites', async function () {
 					const applicationInvites = await balena.models.application.invite.getAllByApplication(
-						this.application.id,
+						ctx.application.id,
 					);
 					expect(applicationInvites).to.have.length(1);
 				});
 
 				it('should support arbitrary pinejs options', async function () {
 					const applicationInvites = await balena.models.application.invite.getAllByApplication(
-						this.application.id,
+						ctx.application.id,
 						{
 							$expand: { invitee: { $select: ['email'] } },
 						},

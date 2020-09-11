@@ -2,6 +2,7 @@ import * as bSemver from 'balena-semver';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
 import {
 	balena,
 	credentials,
@@ -196,7 +197,7 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os.getSupportedVersions()', function () {
-		describe('given a valid device slug', function () {
+		parallel('given a valid device slug', function () {
 			const expectSorted = (
 				array: string[],
 				comparator: <T extends string | null | undefined>(a: T, b: T) => number, // re-sorting could fail when the system is not using a stable
@@ -293,7 +294,7 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os.getDownloadSize()', function () {
-		describe('given a valid device slug', function () {
+		parallel('given a valid device slug', function () {
 			it('should eventually be a valid number', function () {
 				const promise = balena.models.os.getDownloadSize('raspberry-pi');
 				return expect(promise).to.eventually.be.a('number');
@@ -305,7 +306,7 @@ describe('OS model', function () {
 			});
 		});
 
-		describe('given a specific OS version', function () {
+		parallel('given a specific OS version', function () {
 			it('should get a result for ResinOS v1', function () {
 				const promise = balena.models.os.getDownloadSize(
 					'raspberry-pi',
@@ -371,7 +372,7 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os.getLastModified()', function () {
-		describe('given a valid device slug', function () {
+		parallel('given a valid device slug', function () {
 			it('should eventually be a valid Date instance', function () {
 				const promise = balena.models.os.getLastModified('raspberry-pi');
 				return expect(promise).to.eventually.be.an.instanceof(Date);
@@ -547,12 +548,17 @@ describe('OS model', function () {
 		givenLoggedInUser(before);
 		givenAnApplication(before);
 
-		describe('balena.models.os.getConfig()', function () {
+		let ctx: Mocha.Context;
+		before(function () {
+			ctx = this;
+		});
+
+		parallel('balena.models.os.getConfig()', function () {
 			const DEFAULT_OS_VERSION = '2.12.7+rev1.prod';
 
 			it('should fail if no version option is provided', function () {
 				return expect(
-					(balena.models.os.getConfig as any)(this.application.id),
+					(balena.models.os.getConfig as any)(ctx.application.id),
 				).to.be.rejectedWith(
 					'An OS version is required when calling os.getConfig',
 				);
@@ -560,7 +566,7 @@ describe('OS model', function () {
 
 			['id', 'app_name', 'slug'].forEach((prop) => {
 				it(`should be able to get an application config by ${prop}`, function () {
-					const promise = balena.models.os.getConfig(this.application[prop], {
+					const promise = balena.models.os.getConfig(ctx.application[prop], {
 						version: DEFAULT_OS_VERSION,
 					});
 					return Promise.all([
@@ -577,7 +583,7 @@ describe('OS model', function () {
 			});
 
 			it('should be rejected if the version is invalid', function () {
-				const promise = balena.models.os.getConfig(this.application.id, {
+				const promise = balena.models.os.getConfig(ctx.application.id, {
 					version: 'v1+foo',
 				});
 				return expect(promise).to.be.rejected.then((error) => {
@@ -591,7 +597,7 @@ describe('OS model', function () {
 			});
 
 			it('should be rejected if the version is <= 1.2.0', function () {
-				const promise = balena.models.os.getConfig(this.application.id, {
+				const promise = balena.models.os.getConfig(ctx.application.id, {
 					version: '1.2.0',
 				});
 				return expect(promise).to.be.rejected.then((error) => {
@@ -616,7 +622,7 @@ describe('OS model', function () {
 					version: '1.26.1',
 				};
 				return balena.models.os
-					.getConfig(this.application.id, configOptions)
+					.getConfig(ctx.application.id, configOptions)
 					.then(function (config) {
 						expect(config).to.deep.match({
 							// NOTE: the interval is converted to ms in the config object
@@ -646,7 +652,7 @@ describe('OS model', function () {
 					version: '2.0.8+rev1.prod',
 				};
 				return balena.models.os
-					.getConfig(this.application.id, configOptions)
+					.getConfig(ctx.application.id, configOptions)
 					.then(function (config) {
 						expect(config).to.deep.match({
 							// NOTE: the interval is converted to ms in the config object
