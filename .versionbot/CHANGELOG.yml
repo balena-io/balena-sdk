@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'tests: Use mocha.parallel to speed up the test cases'
+      hash: 5e51129f6032c86a3d25daca358591da4dc53bea
+      body: |
+        Unfortunately mocha.parallel doesn't have proper
+        support for the `this` context of tests.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 'https://github.com/danielstjules/mocha.parallel/issues/16'
+        see: 'https://github.com/danielstjules/mocha.parallel/issues/16'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.10.3
+  date: 2020-09-11T10:12:11.545Z
+- commits:
     - subject: 'tests: Remove some before/afterEach calls to speed up the tests'
       hash: 378917789a8fe72d22c1dc54dc50e853422178d4
       body: ''
