@@ -224,20 +224,13 @@ describe('SDK authentication', function () {
 	});
 
 	describe('when logged in with credentials', function () {
-		givenLoggedInUser(beforeEach);
+		givenLoggedInUser(before);
 
 		describe('balena.auth.isLoggedIn()', () =>
 			it('should eventually be true', function () {
 				const promise = balena.auth.isLoggedIn();
 				return expect(promise).to.eventually.be.true;
 			}));
-
-		describe('balena.auth.logout()', () =>
-			it('should logout the user', () =>
-				balena.auth.logout().then(function () {
-					const promise = balena.auth.isLoggedIn();
-					return expect(promise).to.eventually.be.false;
-				})));
 
 		describe('balena.auth.whoami()', () =>
 			it('should eventually be the username', function () {
@@ -257,16 +250,42 @@ describe('SDK authentication', function () {
 					expect(userId).to.be.a('number');
 					return expect(userId).to.be.greaterThan(0);
 				})));
+
+		describe('balena.auth.logout()', () =>
+			it('should logout the user', () =>
+				balena.auth.logout().then(function () {
+					const promise = balena.auth.isLoggedIn();
+					return expect(promise).to.eventually.be.false;
+				})));
 	});
 
 	describe('when logged in with API key', function () {
-		givenLoggedInUserWithApiKey(beforeEach);
+		givenLoggedInUserWithApiKey(before);
 
 		describe('balena.auth.isLoggedIn()', () =>
 			it('should eventually be true', function () {
 				const promise = balena.auth.isLoggedIn();
 				return expect(promise).to.eventually.be.true;
 			}));
+
+		describe('balena.auth.whoami()', () =>
+			it('should eventually be the username', function () {
+				const promise = balena.auth.whoami();
+				return expect(promise).to.eventually.equal(credentials.username);
+			}));
+
+		describe('balena.auth.getEmail()', () =>
+			it('should eventually be the email', function () {
+				const promise = balena.auth.getEmail();
+				return expect(promise).to.eventually.equal(credentials.email);
+			}));
+
+		describe('balena.auth.getUserId()', () =>
+			it('should eventually be a user id', () =>
+				balena.auth.getUserId().then(function (userId) {
+					expect(userId).to.be.a('number');
+					return expect(userId).to.be.greaterThan(0);
+				})));
 
 		describe('balena.auth.logout()', function () {
 			it('should logout the user', () =>
@@ -275,35 +294,15 @@ describe('SDK authentication', function () {
 					return expect(promise).to.eventually.be.false;
 				}));
 
-			it('should reset the token on logout', () =>
-				balena.auth.logout().then(function () {
-					const promise = balena.auth.getToken();
-					return m.chai
-						.expect(promise)
-						.to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaNotLoggedIn',
-						);
-				}));
+			it('...should reset the token on logout', () => {
+				const promise = balena.auth.getToken();
+				return m.chai
+					.expect(promise)
+					.to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaNotLoggedIn',
+					);
+			});
 		});
-
-		describe('balena.auth.whoami()', () =>
-			it('should eventually be the username', function () {
-				const promise = balena.auth.whoami();
-				return expect(promise).to.eventually.equal(credentials.username);
-			}));
-
-		describe('balena.auth.getEmail()', () =>
-			it('should eventually be the email', function () {
-				const promise = balena.auth.getEmail();
-				return expect(promise).to.eventually.equal(credentials.email);
-			}));
-
-		describe('balena.auth.getUserId()', () =>
-			it('should eventually be a user id', () =>
-				balena.auth.getUserId().then(function (userId) {
-					expect(userId).to.be.a('number');
-					return expect(userId).to.be.greaterThan(0);
-				})));
 	});
 });
