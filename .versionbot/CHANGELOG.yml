@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Remove some before/afterEach calls to speed up the tests'
+      hash: 378917789a8fe72d22c1dc54dc50e853422178d4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.10.2
+  date: 2020-09-11T09:10:50.191Z
+- commits:
     - subject: 'tests: Test that the result of device.getDeviceSlug() is a string'
       hash: 21f0682f4f4ca63db67be9449de60f4c2aaaed50
       body: ''
