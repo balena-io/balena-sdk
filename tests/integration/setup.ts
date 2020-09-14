@@ -338,11 +338,6 @@ export function givenADevice(
 	afterFn(resetDevices);
 }
 
-export function givenAnApplicationWithADevice(beforeFn: Mocha.HookFunction) {
-	givenAnApplication(beforeFn);
-	givenADevice(beforeFn);
-}
-
 export function givenMulticontainerApplicationWithADevice(
 	beforeFn: Mocha.HookFunction,
 ) {

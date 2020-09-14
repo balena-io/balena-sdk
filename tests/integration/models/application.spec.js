@@ -184,7 +184,12 @@ describe('Application Model', function () {
 			});
 
 			describe('[mutating operations]', function () {
-				afterEach(() =>
+				let appCount = 0;
+				beforeEach(() => {
+					appCount++;
+				});
+
+				after(() =>
 					balena.pine.delete({
 						resource: 'application',
 						options: {
@@ -197,7 +202,7 @@ describe('Application Model', function () {
 					it(`should be able to create an application using the user's initial organization ${prop}`, function () {
 						return balena.models.application
 							.create({
-								name: 'FooBar',
+								name: `FooBarByOrg${_.startCase(prop)}`,
 								deviceType: 'raspberrypi',
 								organization: this.initialOrg[prop],
 							})
@@ -208,7 +213,7 @@ describe('Application Model', function () {
 								}),
 							)
 							.then((apps) => {
-								expect(apps).to.have.length(1);
+								expect(apps).to.have.length(appCount);
 								return m.chai
 									.expect(apps[0])
 									.to.have.nested.property(
@@ -219,23 +224,23 @@ describe('Application Model', function () {
 					}),
 				);
 
-				it('should be able to create an application w/o providing an application type', function () {
+				it('...should be able to create an application w/o providing an application type', function () {
 					return balena.models.application
 						.create({
-							name: 'FooBar',
+							name: 'FooBarNoAppType',
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
 						})
 						.then(function () {
 							const promise = balena.models.application.getAll();
-							return expect(promise).to.eventually.have.length(1);
+							return expect(promise).to.eventually.have.length(appCount);
 						});
 				});
 
-				it('should be able to create an application with a specific application type', function () {
+				it('...should be able to create an application with a specific application type', function () {
 					return balena.models.application
 						.create({
-							name: 'FooBar',
+							name: 'FooBarWithAppType',
 							applicationType: 'microservices-starter',
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
@@ -251,9 +256,10 @@ describe('Application Model', function () {
 							return balena.models.application
 								.getAll({
 									$expand: { is_for__device_type: { $select: 'slug' } },
+									$orderby: 'id desc',
 								})
 								.then(function (apps) {
-									expect(apps).to.have.length(1);
+									expect(apps).to.have.length(appCount);
 									expect(apps[0]).to.have.property('id', app.id);
 									m.chai
 										.expect(apps[0])
@@ -267,10 +273,24 @@ describe('Application Model', function () {
 						});
 				});
 
+				it('...should be able to create an application using a device type alias', function () {
+					return balena.models.application
+						.create({
+							name: 'FooBarDeviceTypeAlias',
+							applicationType: 'microservices-starter',
+							deviceType: 'raspberrypi',
+							organization: this.initialOrg.id,
+						})
+						.then(function () {
+							const promise = balena.models.application.getAll();
+							return expect(promise).to.eventually.have.length(appCount);
+						});
+				});
+
 				it('should be able to create a child application', function () {
 					return balena.models.application
 						.create({
-							name: 'FooBar',
+							name: 'FooBarParent',
 							applicationType: 'microservices-starter',
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
@@ -315,211 +335,11 @@ describe('Application Model', function () {
 								.to.have.property('__id', parentApplication.id);
 						});
 				});
-
-				it('should be able to create an application using a device type alias', function () {
-					return balena.models.application
-						.create({
-							name: 'FooBar',
-							applicationType: 'microservices-starter',
-							deviceType: 'raspberrypi',
-							organization: this.initialOrg.id,
-						})
-						.then(function () {
-							const promise = balena.models.application.getAll();
-							return expect(promise).to.eventually.have.length(1);
-						});
-				});
 			});
 		});
 	});
 
 	describe('given a single application', function () {
-		describe('[read operations]', function () {
-			givenAnApplication(before);
-
-			let ctx = null;
-
-			before(function () {
-				ctx = this;
-			});
-
-			describe('balena.models.application.hasAny()', function () {
-				it('should eventually be true', function () {
-					const promise = balena.models.application.hasAny();
-					return expect(promise).to.eventually.be.true;
-				});
-			});
-
-			describe('balena.models.application.create()', function () {
-				it('should reject if trying to create an app with the same name', function () {
-					const promise = balena.models.application.create({
-						name: 'FooBar',
-						applicationType: 'microservices-starter',
-						deviceType: 'beaglebone-black',
-						organization: this.initialOrg.id,
-					});
-					return expect(promise).to.be.rejected.then(function (error) {
-						expect(error).to.have.property('code', 'BalenaRequestError');
-						expect(error).to.have.property('statusCode', 409);
-						return m.chai
-							.expect(error)
-							.to.have.property('message')
-							.that.matches(/\bunique\b/i);
-					});
-				});
-			});
-			// TODO: re-enable once the API regression gets fixed
-			// expect(error).to.have.property('message').that.contains('Application name must be unique')
-
-			describe('balena.models.application.hasAny()', function () {
-				it('should eventually be true', function () {
-					const promise = balena.models.application.hasAny();
-					return expect(promise).to.eventually.be.true;
-				});
-			});
-
-			parallel('balena.models.application.getAppByOwner()', function () {
-				it('should find the created application', function () {
-					return balena.models.application
-						.getAppByOwner('FooBar', ctx.initialOrg.handle)
-						.then((application) => {
-							return m.chai.expect(application.id).to.equal(ctx.application.id);
-						});
-				});
-
-				it('should not find the created application with a different organization handle', function () {
-					const promise = balena.models.application.getAppByOwner(
-						'FooBar',
-						'test_org_handle',
-					);
-					return m.chai
-						.expect(promise)
-						.to.eventually.be.rejectedWith(
-							'Application not found: test_org_handle/foobar',
-						);
-				});
-			});
-
-			parallel('balena.models.application.getAll()', function () {
-				it('should return an array with length 1', function () {
-					const promise = balena.models.application.getAll();
-					return expect(promise).to.eventually.have.length(1);
-				});
-
-				it('should eventually become an array containing the application', function () {
-					return balena.models.application.getAll().then((applications) => {
-						return m.chai
-							.expect(applications[0].id)
-							.to.equal(ctx.application.id);
-					});
-				});
-
-				it('should support arbitrary pinejs options [Promise]', () =>
-					balena.models.application
-						.getAll({ $expand: { organization: { $select: 'handle' } } })
-						.then((applications) =>
-							m.chai
-								.expect(applications[0].organization[0].handle)
-								.to.equal(credentials.username),
-						));
-
-				it('should support arbitrary pinejs options [callback]', function (done) {
-					balena.models.application.getAll(
-						{ $expand: { organization: { $select: 'handle' } } },
-						// @ts-expect-error
-						function (err, applications) {
-							try {
-								expect(err).to.be.null;
-								m.chai
-									.expect(applications[0].organization[0].handle)
-									.to.equal(credentials.username);
-								done();
-							} catch (err) {
-								done(err);
-							}
-						},
-					);
-				});
-			});
-
-			parallel('balena.models.application.get()', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
-					it(`should be able to get an application by ${prop}`, function () {
-						const promise = balena.models.application.get(
-							ctx.application[prop],
-						);
-						return expect(promise).to.become(ctx.application);
-					}),
-				);
-
-				it('should be able to get an application by slug regardless of casing', function () {
-					if (ctx.application.app_name === ctx.application.slug.toUpperCase()) {
-						throw new Error(
-							'This tests expects the application name to not be fully upper case',
-						);
-					}
-
-					const promise = balena.models.application.get(
-						ctx.application.slug.toUpperCase(),
-					);
-					return expect(promise).to.become(ctx.application);
-				});
-
-				it('should be rejected if the application name does not exist', function () {
-					const promise = balena.models.application.get('HelloWorldApp');
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: HelloWorldApp');
-				});
-
-				it('should be rejected if the application id does not exist', function () {
-					const promise = balena.models.application.get(999999);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: 999999');
-				});
-
-				it('should support arbitrary pinejs options', function () {
-					return balena.models.application
-						.get(ctx.application.id, {
-							$expand: { organization: { $select: 'handle' } },
-						})
-						.then((application) =>
-							m.chai
-								.expect(application.organization[0].handle)
-								.to.equal(credentials.username),
-						);
-				});
-			});
-
-			parallel('balena.models.application.has()', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
-					it(`should eventually be true if the application ${prop} exists`, function () {
-						const promise = balena.models.application.has(
-							ctx.application[prop],
-						);
-						return expect(promise).to.eventually.be.true;
-					}),
-				);
-
-				it('should return false if the application id is undefined', function () {
-					// @ts-expect-error
-					const promise = balena.models.application.has(undefined);
-					return expect(promise).to.eventually.be.false;
-				});
-
-				it('should eventually be false if the application name does not exist', function () {
-					const promise = balena.models.application.has('HelloWorldApp');
-					return expect(promise).to.eventually.be.false;
-				});
-
-				it('should eventually be false if the application id does not exist', function () {
-					const promise = balena.models.application.has(999999);
-					return expect(promise).to.eventually.be.false;
-				});
-			});
-		});
-
 		describe('balena.models.application.remove()', function () {
 			it('should be rejected if the application name does not exist', function () {
 				const promise = balena.models.application.remove('HelloWorldApp');
@@ -553,6 +373,194 @@ describe('Application Model', function () {
 
 		describe('[contained scenario]', function () {
 			givenAnApplication(before);
+
+			describe('[read operations]', function () {
+				let ctx = null;
+
+				before(function () {
+					ctx = this;
+				});
+
+				describe('balena.models.application.hasAny()', function () {
+					it('should eventually be true', function () {
+						const promise = balena.models.application.hasAny();
+						return expect(promise).to.eventually.be.true;
+					});
+				});
+
+				describe('balena.models.application.create()', function () {
+					it('should reject if trying to create an app with the same name', function () {
+						const promise = balena.models.application.create({
+							name: 'FooBar',
+							applicationType: 'microservices-starter',
+							deviceType: 'beaglebone-black',
+							organization: this.initialOrg.id,
+						});
+						return expect(promise).to.be.rejected.then(function (error) {
+							expect(error).to.have.property('code', 'BalenaRequestError');
+							expect(error).to.have.property('statusCode', 409);
+							return m.chai
+								.expect(error)
+								.to.have.property('message')
+								.that.matches(/\bunique\b/i);
+						});
+					});
+				});
+				// TODO: re-enable once the API regression gets fixed
+				// expect(error).to.have.property('message').that.contains('Application name must be unique')
+
+				describe('balena.models.application.hasAny()', function () {
+					it('should eventually be true', function () {
+						const promise = balena.models.application.hasAny();
+						return expect(promise).to.eventually.be.true;
+					});
+				});
+
+				parallel('balena.models.application.getAppByOwner()', function () {
+					it('should find the created application', function () {
+						return balena.models.application
+							.getAppByOwner('FooBar', ctx.initialOrg.handle)
+							.then((application) => {
+								return m.chai
+									.expect(application.id)
+									.to.equal(ctx.application.id);
+							});
+					});
+
+					it('should not find the created application with a different organization handle', function () {
+						const promise = balena.models.application.getAppByOwner(
+							'FooBar',
+							'test_org_handle',
+						);
+						return m.chai
+							.expect(promise)
+							.to.eventually.be.rejectedWith(
+								'Application not found: test_org_handle/foobar',
+							);
+					});
+				});
+
+				parallel('balena.models.application.getAll()', function () {
+					it('should return an array with length 1', function () {
+						const promise = balena.models.application.getAll();
+						return expect(promise).to.eventually.have.length(1);
+					});
+
+					it('should eventually become an array containing the application', function () {
+						return balena.models.application.getAll().then((applications) => {
+							return m.chai
+								.expect(applications[0].id)
+								.to.equal(ctx.application.id);
+						});
+					});
+
+					it('should support arbitrary pinejs options [Promise]', () =>
+						balena.models.application
+							.getAll({ $expand: { organization: { $select: 'handle' } } })
+							.then((applications) =>
+								m.chai
+									.expect(applications[0].organization[0].handle)
+									.to.equal(credentials.username),
+							));
+
+					it('should support arbitrary pinejs options [callback]', function (done) {
+						balena.models.application.getAll(
+							{ $expand: { organization: { $select: 'handle' } } },
+							// @ts-expect-error
+							function (err, applications) {
+								try {
+									expect(err).to.be.null;
+									m.chai
+										.expect(applications[0].organization[0].handle)
+										.to.equal(credentials.username);
+									done();
+								} catch (err) {
+									done(err);
+								}
+							},
+						);
+					});
+				});
+
+				parallel('balena.models.application.get()', function () {
+					['id', 'app_name', 'slug'].forEach((prop) =>
+						it(`should be able to get an application by ${prop}`, function () {
+							const promise = balena.models.application.get(
+								ctx.application[prop],
+							);
+							return expect(promise).to.become(ctx.application);
+						}),
+					);
+
+					it('should be able to get an application by slug regardless of casing', function () {
+						if (
+							ctx.application.app_name === ctx.application.slug.toUpperCase()
+						) {
+							throw new Error(
+								'This tests expects the application name to not be fully upper case',
+							);
+						}
+
+						const promise = balena.models.application.get(
+							ctx.application.slug.toUpperCase(),
+						);
+						return expect(promise).to.become(ctx.application);
+					});
+
+					it('should be rejected if the application name does not exist', function () {
+						const promise = balena.models.application.get('HelloWorldApp');
+						return m.chai
+							.expect(promise)
+							.to.be.rejectedWith('Application not found: HelloWorldApp');
+					});
+
+					it('should be rejected if the application id does not exist', function () {
+						const promise = balena.models.application.get(999999);
+						return m.chai
+							.expect(promise)
+							.to.be.rejectedWith('Application not found: 999999');
+					});
+
+					it('should support arbitrary pinejs options', function () {
+						return balena.models.application
+							.get(ctx.application.id, {
+								$expand: { organization: { $select: 'handle' } },
+							})
+							.then((application) =>
+								m.chai
+									.expect(application.organization[0].handle)
+									.to.equal(credentials.username),
+							);
+					});
+				});
+
+				parallel('balena.models.application.has()', function () {
+					['id', 'app_name', 'slug'].forEach((prop) =>
+						it(`should eventually be true if the application ${prop} exists`, function () {
+							const promise = balena.models.application.has(
+								ctx.application[prop],
+							);
+							return expect(promise).to.eventually.be.true;
+						}),
+					);
+
+					it('should return false if the application id is undefined', function () {
+						// @ts-expect-error
+						const promise = balena.models.application.has(undefined);
+						return expect(promise).to.eventually.be.false;
+					});
+
+					it('should eventually be false if the application name does not exist', function () {
+						const promise = balena.models.application.has('HelloWorldApp');
+						return expect(promise).to.eventually.be.false;
+					});
+
+					it('should eventually be false if the application id does not exist', function () {
+						const promise = balena.models.application.has(999999);
+						return expect(promise).to.eventually.be.false;
+					});
+				});
+			});
 
 			describe('balena.models.application.generateApiKey()', function () {
 				['id', 'app_name', 'slug'].forEach((prop) =>
