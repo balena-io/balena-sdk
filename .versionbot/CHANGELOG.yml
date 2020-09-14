@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'Login: add new error handling, update balena-errors'
+      hash: a0817f1aaf3b3eba9c4b2acd0db94c2fa7e9fc30
+      body: |
+        Update balena-errors version to v4.5.1 and add new errors during
+        authntication
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.10.5
+  date: 2020-09-14T11:15:45.857Z
+- commits:
     - subject: 'tests: Reduce the application creations & teardowns'
       hash: 650af63e7ac33d2ed457aed141711c526f670963
       body: ''
