@@ -45,7 +45,10 @@ describe('SDK authentication', function () {
 					password: 'NOT-THE-CORRECT-PASSWORD',
 				});
 
-				return expect(promise).to.be.rejectedWith('Unauthorized');
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaInvalidLoginCredentials',
+				);
 			});
 		});
 
