@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Reduce the application creations & teardowns even further'
+      hash: 9ec9361596503219b93f9d24ef27d9bb5131e9a2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.10.6
+  date: 2020-09-14T13:06:46.504Z
+- commits:
     - subject: 'Login: add new error handling, update balena-errors'
       hash: a0817f1aaf3b3eba9c4b2acd0db94c2fa7e9fc30
       body: |
