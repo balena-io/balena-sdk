@@ -346,158 +346,8 @@ describe('Release Model', function () {
 					);
 			});
 		});
-	});
-
-	describe('given an application with two releases that share the same commit root', function () {
-		givenAnApplication(before);
-
-		before(function () {
-			const { application } = this;
-			return balena.auth.getUserId().then((userId) =>
-				balena.pine
-					.post({
-						resource: 'release',
-						body: {
-							belongs_to__application: application.id,
-							is_created_by__user: userId,
-							commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-							status: 'success',
-							source: 'cloud',
-							composition: {},
-							start_timestamp: 64321,
-						},
-					})
-					.then(() =>
-						balena.pine.post({
-							resource: 'release',
-							body: {
-								belongs_to__application: application.id,
-								is_created_by__user: userId,
-								commit: 'feb236123bf740d48900c19027d4a02127d4a021',
-								status: 'success',
-								source: 'cloud',
-								composition: {},
-								start_timestamp: 74321,
-							},
-						}),
-					),
-			);
-		});
-
-		parallel('balena.models.release.get()', function () {
-			it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
-				const promise = balena.models.release.get('feb23612');
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaAmbiguousRelease',
-					);
-			});
-
-			it('should get the requested release by the full commit', () =>
-				balena.models.release
-					.get('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
-					.then((release) =>
-						expect(release).to.deep.match({
-							commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-							status: 'success',
-							source: 'cloud',
-						}),
-					));
-		});
-
-		parallel('balena.models.release.getWithImageDetails()', function () {
-			it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
-				const promise = balena.models.release.getWithImageDetails('feb23612');
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaAmbiguousRelease',
-					);
-			});
-
-			it('should get the release with associated images attached by the full commit', () =>
-				balena.models.release
-					.getWithImageDetails('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
-					.then((release) =>
-						expect(release).to.deep.match({
-							commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-							status: 'success',
-							source: 'cloud',
-						}),
-					));
-		});
-	});
-
-	describe('given a multicontainer application with successful & failed releases', function () {
-		describe('balena.models.release.getLatestByApplication()', function () {
-			givenMulticontainerApplication(before);
-
-			let ctx = null;
-
-			before(async function () {
-				ctx = this;
-				const userId = await balena.auth.getUserId();
-
-				for (const body of [
-					{
-						belongs_to__application: this.application.id,
-						is_created_by__user: userId,
-						commit: 'errored-then-fixed-release-commit',
-						status: 'error',
-						source: 'cloud',
-						composition: {},
-						start_timestamp: 64321,
-					},
-					{
-						belongs_to__application: this.application.id,
-						is_created_by__user: userId,
-						commit: 'errored-then-fixed-release-commit',
-						status: 'success',
-						source: 'cloud',
-						composition: {},
-						start_timestamp: 74321,
-					},
-					{
-						belongs_to__application: this.application.id,
-						is_created_by__user: userId,
-						commit: 'failed-release-commit',
-						status: 'failed',
-						source: 'cloud',
-						composition: {},
-						start_timestamp: 84321,
-					},
-				]) {
-					await balena.pine.post({
-						resource: 'release',
-						body,
-					});
-				}
-			});
-
-			parallel('', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
-					it(`should get the latest release by application ${prop}`, function () {
-						return balena.models.release
-							.getLatestByApplication(ctx.application[prop])
-							.then((release) => {
-								return expect(release).to.deep.match({
-									status: 'success',
-									source: 'cloud',
-									commit: 'errored-then-fixed-release-commit',
-									belongs_to__application: { __id: ctx.application.id },
-								});
-							});
-					}),
-				);
-			});
-		});
 
 		describe('balena.models.release.tags', function () {
-			givenMulticontainerApplication(before);
-
 			const appTagTestOptions = {
 				// prettier-ignore
 				model:
@@ -532,6 +382,149 @@ describe('Release Model', function () {
 
 			describe('balena.models.release.tags.getAllByRelease()', function () {
 				itShouldGetAllTagsByResource(releaseTagTestOptions);
+			});
+		});
+
+		describe('given extra successful & failed releases', function () {
+			describe('balena.models.release.getLatestByApplication()', function () {
+				before(async function () {
+					ctx = this;
+					const userId = await balena.auth.getUserId();
+
+					for (const body of [
+						{
+							belongs_to__application: this.application.id,
+							is_created_by__user: userId,
+							commit: 'errored-then-fixed-release-commit',
+							status: 'error',
+							source: 'cloud',
+							composition: {},
+							start_timestamp: 64321,
+						},
+						{
+							belongs_to__application: this.application.id,
+							is_created_by__user: userId,
+							commit: 'errored-then-fixed-release-commit',
+							status: 'success',
+							source: 'cloud',
+							composition: {},
+							start_timestamp: 74321,
+						},
+						{
+							belongs_to__application: this.application.id,
+							is_created_by__user: userId,
+							commit: 'failed-release-commit',
+							status: 'failed',
+							source: 'cloud',
+							composition: {},
+							start_timestamp: 84321,
+						},
+					]) {
+						await balena.pine.post({
+							resource: 'release',
+							body,
+						});
+					}
+				});
+
+				parallel('', function () {
+					['id', 'app_name', 'slug'].forEach((prop) =>
+						it(`should get the latest release by application ${prop}`, function () {
+							return balena.models.release
+								.getLatestByApplication(ctx.application[prop])
+								.then((release) => {
+									return expect(release).to.deep.match({
+										status: 'success',
+										source: 'cloud',
+										commit: 'errored-then-fixed-release-commit',
+										belongs_to__application: { __id: ctx.application.id },
+									});
+								});
+						}),
+					);
+				});
+			});
+		});
+
+		describe('given two releases that share the same commit root', function () {
+			before(function () {
+				const { application } = this;
+				return balena.auth.getUserId().then((userId) =>
+					balena.pine
+						.post({
+							resource: 'release',
+							body: {
+								belongs_to__application: application.id,
+								is_created_by__user: userId,
+								commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+								status: 'success',
+								source: 'cloud',
+								composition: {},
+								start_timestamp: 64321,
+							},
+						})
+						.then(() =>
+							balena.pine.post({
+								resource: 'release',
+								body: {
+									belongs_to__application: application.id,
+									is_created_by__user: userId,
+									commit: 'feb236123bf740d48900c19027d4a02127d4a021',
+									status: 'success',
+									source: 'cloud',
+									composition: {},
+									start_timestamp: 74321,
+								},
+							}),
+						),
+				);
+			});
+
+			parallel('balena.models.release.get()', function () {
+				it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
+					const promise = balena.models.release.get('feb23612');
+					return m.chai
+						.expect(promise)
+						.to.be.rejected.and.eventually.have.property(
+							'code',
+							'BalenaAmbiguousRelease',
+						);
+				});
+
+				it('should get the requested release by the full commit', () =>
+					balena.models.release
+						.get('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
+						.then((release) =>
+							expect(release).to.deep.match({
+								commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+								status: 'success',
+								source: 'cloud',
+							}),
+						));
+			});
+
+			parallel('balena.models.release.getWithImageDetails()', function () {
+				it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
+					const promise = balena.models.release.getWithImageDetails('feb23612');
+					return m.chai
+						.expect(promise)
+						.to.be.rejected.and.eventually.have.property(
+							'code',
+							'BalenaAmbiguousRelease',
+						);
+				});
+
+				it('should get the release with associated images attached by the full commit', function () {
+					return balena.models.release
+						.getWithImageDetails('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
+						.then((release) =>
+							expect(release).to.deep.match({
+								commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+								status: 'success',
+								source: 'cloud',
+							}),
+						);
+				});
 			});
 		});
 	});
