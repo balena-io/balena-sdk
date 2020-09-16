@@ -357,7 +357,6 @@ describe('Application Model', function () {
 
 			describe('[mutating operations]', function () {
 				givenAnApplication(beforeEach);
-
 				['id', 'app_name', 'slug'].forEach((prop) => {
 					it(`should be able to remove an existing application by ${prop}`, function () {
 						return balena.models.application
@@ -558,6 +557,47 @@ describe('Application Model', function () {
 					it('should eventually be false if the application id does not exist', function () {
 						const promise = balena.models.application.has(999999);
 						return expect(promise).to.eventually.be.false;
+					});
+				});
+			});
+
+			describe('balena.models.application.rename()', function () {
+				it('should be rejected if the application name does not exist', function () {
+					const promise = balena.models.application.rename(
+						'HelloWorldApp',
+						'newAppName',
+					);
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Application not found: HelloWorldApp');
+				});
+
+				describe('[mutating operations]', function () {
+					let originalAppName;
+					before(function () {
+						originalAppName = this.application.app_name;
+					});
+					afterEach(function () {
+						return balena.models.application.rename(
+							this.application.id,
+							originalAppName,
+						);
+					});
+					['id', 'app_name', 'slug'].forEach((prop) => {
+						it(`should be able to rename an existing application by ${prop}`, function () {
+							return balena.models.application
+								.rename(this.application[prop], 'newApplicationName_' + prop)
+								.then(function () {
+									balena.models.application
+										.get('newApplicationName_' + prop)
+										.then(function (app) {
+											return expect(app).to.have.property(
+												'app_name',
+												'newApplicationName_' + prop,
+											);
+										});
+								});
+						});
 					});
 				});
 			});

@@ -728,6 +728,49 @@ const getApplicationModel = function (
 		},
 
 		/**
+		 * @summary Rename application
+		 * @name rename
+		 * @public
+		 * @function
+		 * @memberof balena.models.application
+		 *
+		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String} newName - new application name (string)
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.application.rename('MyApp', 'MyRenamedApp');
+		 *
+		 * @example
+		 * balena.models.application.rename(123, 'MyRenamedApp');
+		 *
+		 * @example
+		 * balena.models.application.rename('MyApp', 'MyRenamedApp', function(error) {
+		 * 	if (error) throw error;
+		 * });
+		 */
+		rename: async (
+			nameOrSlugOrId: string | number,
+			newAppName: string,
+		): Promise<void> => {
+			try {
+				const applicationId = await getId(nameOrSlugOrId);
+				await pine.patch({
+					resource: 'application',
+					id: applicationId,
+					body: {
+						app_name: newAppName,
+					},
+				});
+			} catch (err) {
+				if (isNotFoundResponse(err)) {
+					treatAsMissingApplication(nameOrSlugOrId, err);
+				}
+				throw err;
+			}
+		},
+
+		/**
 		 * @summary Restart application
 		 * @name restart
 		 * @public

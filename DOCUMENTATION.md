@@ -142,6 +142,7 @@ const sdk = fromSharedOptions();
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
             * [.remove(nameOrSlugOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+            * [.rename(nameOrSlugOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
             * [.restart(nameOrSlugOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
             * ~~[.generateApiKey(nameOrSlugOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
             * [.generateProvisioningKey(nameOrSlugOrId)](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
@@ -483,6 +484,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
         * [.remove(nameOrSlugOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+        * [.rename(nameOrSlugOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
         * [.restart(nameOrSlugOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
         * ~~[.generateApiKey(nameOrSlugOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
         * [.generateProvisioningKey(nameOrSlugOrId)](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
@@ -698,6 +700,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
     * [.remove(nameOrSlugOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+    * [.rename(nameOrSlugOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
     * [.restart(nameOrSlugOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
     * ~~[.generateApiKey(nameOrSlugOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
     * [.generateProvisioningKey(nameOrSlugOrId)](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
@@ -1671,6 +1674,32 @@ balena.models.application.remove(123);
 **Example**  
 ```js
 balena.models.application.remove('MyApp', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.application.rename"></a>
+
+##### application.rename(nameOrSlugOrId, newName) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Rename application  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| newName | <code>String</code> | new application name (string) |
+
+**Example**  
+```js
+balena.models.application.rename('MyApp', 'MyRenamedApp');
+```
+**Example**  
+```js
+balena.models.application.rename(123, 'MyRenamedApp');
+```
+**Example**  
+```js
+balena.models.application.rename('MyApp', 'MyRenamedApp', function(error) {
 	if (error) throw error;
 });
 ```
