@@ -5,9 +5,11 @@ import {
 	givenLoggedInUser,
 	givenMulticontainerApplication,
 } from '../setup';
+import { timeSuite } from '../../util';
 const { expect } = m.chai;
 
 describe('Image Model', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 
 	describe('given an application with no releases', function () {

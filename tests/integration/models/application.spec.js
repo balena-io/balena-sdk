@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
+import { timeSuite } from '../../util';
 
 const { expect } = m.chai;
 
@@ -21,6 +22,7 @@ import {
 } from './tags';
 
 describe('Application Model', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 

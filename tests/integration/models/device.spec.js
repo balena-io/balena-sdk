@@ -13,6 +13,7 @@ import {
 	sdkOpts,
 	IS_BROWSER,
 } from '../setup';
+import { timeSuite } from '../../util';
 import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
@@ -35,6 +36,7 @@ const makeRequest = (url) =>
 	);
 
 describe('Device Model', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 

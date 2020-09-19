@@ -1,6 +1,7 @@
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import * as _ from 'lodash';
+import { timeSuite } from '../../util';
 
 const { expect } = m.chai;
 
@@ -19,6 +20,7 @@ import {
 } from './tags';
 
 describe('Release Model', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 
 	describe('given an application with no releases', function () {

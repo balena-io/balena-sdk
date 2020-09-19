@@ -4,10 +4,12 @@ import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import PUBLIC_KEY from '../../data/public-key';
 import { balena, givenLoggedInUser } from '../setup';
+import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 describe('Key Model', function () {
+	timeSuite(before);
 	describe('given no keys', function () {
 		describe('balena.models.key.getAll()', function () {
 			givenLoggedInUser(before);

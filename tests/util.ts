@@ -48,3 +48,20 @@ export const describeExpandAssertions = async <T>(
 		});
 	});
 };
+
+export const timeSuite = function (beforeFn: Mocha.HookFunction) {
+	let start: number;
+
+	beforeFn(function () {
+		start = Date.now();
+	});
+
+	const afterFn = beforeFn === beforeEach ? afterEach : after;
+	afterFn(function () {
+		console.log(
+			`Finished ${this.test?.parent?.title} test suite in ${
+				(Date.now() - start) / 1000
+			} seconds.`,
+		);
+	});
+};

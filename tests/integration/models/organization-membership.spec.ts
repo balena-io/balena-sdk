@@ -4,7 +4,7 @@ import * as parallel from 'mocha.parallel';
 import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
-import { assertDeepMatchAndLength } from '../../util';
+import { assertDeepMatchAndLength, timeSuite } from '../../util';
 import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
@@ -12,6 +12,7 @@ import {
 import type * as tagsHelper from './tags';
 
 describe('Organization Membership Model', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 

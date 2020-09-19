@@ -1,8 +1,10 @@
-import { describeExpandAssertions } from '../util';
+import { describeExpandAssertions, timeSuite } from '../util';
 import { givenAnApplication, givenLoggedInUser } from './setup';
 import type * as BalenaSdk from '../..';
 
 describe('arbitrary pine requests', function () {
+	timeSuite(before);
+
 	givenLoggedInUser(before);
 	givenAnApplication(before);
 

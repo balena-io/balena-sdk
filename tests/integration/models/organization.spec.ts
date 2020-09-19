@@ -3,9 +3,11 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena, credentials, givenLoggedInUser } from '../setup';
+import { timeSuite } from '../../util';
 const { expect } = m.chai;
 
 describe('Organization model', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 
 	const ctx: Partial<{
