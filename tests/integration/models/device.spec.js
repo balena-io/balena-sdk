@@ -2628,7 +2628,7 @@ describe('Device Model', function () {
 				givenADevice(beforeEach);
 
 				beforeEach(async function () {
-					const targetSupervisorVersion = 'v11.9.8';
+					const targetSupervisorVersion = 'v11.12.4';
 					const supervisorRelease = await balena.pine.get({
 						resource: 'supervisor_release',
 						options: {
