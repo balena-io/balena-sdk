@@ -2681,85 +2681,83 @@ describe('Device Model', function () {
 				});
 			});
 		});
-	});
 
-	describe('given a multicontainer application with weird service names', function () {
-		givenMulticontainerApplication(before);
-
-		before(function () {
-			return Promise.all([
-				balena.pine.patch({
-					resource: 'service',
-					id: this.webService.id,
-					body: {
-						service_name: 'hasOwnProperty',
-					},
-				}),
-				balena.pine.patch({
-					resource: 'service',
-					id: this.dbService.id,
-					body: {
-						service_name: '__proto__',
-					},
-				}),
-			]);
-		});
-
-		describe('given a single offline device', function () {
-			givenADevice(before);
-
-			describe('balena.models.device.getWithServiceDetails()', () =>
-				it('should retrieve the current service details', async function () {
-					const deviceDetails = await balena.models.device.getWithServiceDetails(
-						this.device.id,
-					);
-					expect(deviceDetails).to.deep.match({
-						device_name: this.device.device_name,
-						uuid: this.device.uuid,
-						is_running__release: {
-							__id: this.currentRelease.id,
+		describe('given services with weird names', function () {
+			before(function () {
+				return Promise.all([
+					balena.pine.patch({
+						resource: 'service',
+						id: this.webService.id,
+						body: {
+							service_name: 'hasOwnProperty',
 						},
-					});
+					}),
+					balena.pine.patch({
+						resource: 'service',
+						id: this.dbService.id,
+						body: {
+							service_name: '__proto__',
+						},
+					}),
+				]);
+			});
 
-					m.chai
-						.expect(Object.keys(deviceDetails.current_services).sort())
-						.to.deep.equal(['__proto__', 'hasOwnProperty']);
+			describe('given a single offline device', function () {
+				givenADevice(before);
 
-					// it seems that deep.match doesn't work with objects with a custom __proto__ property
-					m.chai
-						.expect(deviceDetails.current_services.hasOwnProperty)
-						.to.deep.match([
-							{
-								id: this.newWebInstall.id,
-								service_id: this.webService.id,
-								image_id: this.newWebImage.id,
-								commit: 'new-release-commit',
-								status: 'Downloading',
-								download_progress: 50,
+				describe('balena.models.device.getWithServiceDetails()', () =>
+					it('should retrieve the current service details', async function () {
+						const deviceDetails = await balena.models.device.getWithServiceDetails(
+							this.device.id,
+						);
+						expect(deviceDetails).to.deep.match({
+							device_name: this.device.device_name,
+							uuid: this.device.uuid,
+							is_running__release: {
+								__id: this.currentRelease.id,
 							},
-							{
-								id: this.oldWebInstall.id,
-								service_id: this.webService.id,
-								image_id: this.oldWebImage.id,
-								commit: 'old-release-commit',
-								status: 'Running',
-								download_progress: null,
-							},
-						]);
+						});
 
-					return m.chai
-						.expect(deviceDetails.current_services.__proto__)
-						.to.deep.match([
-							{
-								id: this.newDbInstall.id,
-								service_id: this.dbService.id,
-								image_id: this.newDbImage.id,
-								commit: 'new-release-commit',
-								status: 'Running',
-								download_progress: null,
-							},
-						]);
-				}));
+						m.chai
+							.expect(Object.keys(deviceDetails.current_services).sort())
+							.to.deep.equal(['__proto__', 'hasOwnProperty']);
+
+						// it seems that deep.match doesn't work with objects with a custom __proto__ property
+						m.chai
+							.expect(deviceDetails.current_services.hasOwnProperty)
+							.to.deep.match([
+								{
+									id: this.newWebInstall.id,
+									service_id: this.webService.id,
+									image_id: this.newWebImage.id,
+									commit: 'new-release-commit',
+									status: 'Downloading',
+									download_progress: 50,
+								},
+								{
+									id: this.oldWebInstall.id,
+									service_id: this.webService.id,
+									image_id: this.oldWebImage.id,
+									commit: 'old-release-commit',
+									status: 'Running',
+									download_progress: null,
+								},
+							]);
+
+						return m.chai
+							.expect(deviceDetails.current_services.__proto__)
+							.to.deep.match([
+								{
+									id: this.newDbInstall.id,
+									service_id: this.dbService.id,
+									image_id: this.newDbImage.id,
+									commit: 'new-release-commit',
+									status: 'Running',
+									download_progress: null,
+								},
+							]);
+					}));
+			});
 		});
 	});
 
