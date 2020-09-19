@@ -1,4 +1,4 @@
-import { describeExpandAssertions } from '../util_ts';
+import { describeExpandAssertions } from '../util';
 import { givenAnApplication, givenLoggedInUser } from './setup';
 import type * as BalenaSdk from '../..';
 
