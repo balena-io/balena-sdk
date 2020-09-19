@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests/keys: Fix race condition'
+      hash: 3c3d8ced26118ddd01849e60c071e06b94a331fc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.11.3
+  date: 2020-09-19T16:50:05.990Z
+- commits:
     - subject: 'tests/device: Combine some multicontainer app tests'
       hash: 5a73d51e829974a22a6e8ac95fc65107a787931c
       body: ''
