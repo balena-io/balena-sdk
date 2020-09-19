@@ -18,16 +18,6 @@ describe('Key Model', function () {
 					return expect(promise).to.become([]);
 				});
 
-				it('should support arbitrary pinejs options', () =>
-					balena.models.key
-						.create('MyKey', PUBLIC_KEY)
-						.then(() => balena.models.key.getAll({ $select: ['public_key'] }))
-						.then(function (keys) {
-							const key = keys[0];
-							expect(key.public_key).to.equal(PUBLIC_KEY);
-							expect(key.title).to.be.undefined;
-						}));
-
 				it('should support a callback with no options', function (done) {
 					(balena
 						.models.key.getAll as (...args: any[]) => any)(function (_err: Error, keys: BalenaSdk.SSHKey[]) {
@@ -75,23 +65,28 @@ describe('Key Model', function () {
 		givenLoggedInUser(before);
 
 		let ctx: Mocha.Context;
-		before(function () {
+		before(async function () {
 			ctx = this;
-			const publicKey = PUBLIC_KEY;
-			return balena.models.key.create('MyKey', publicKey).then((key) => {
-				return (this.key = key);
-			});
+			this.key = await balena.models.key.create('MyKey', PUBLIC_KEY);
 		});
 
-		describe('balena.models.key.getAll()', () => {
+		parallel('balena.models.key.getAll()', () => {
 			it('should become the list of keys', function () {
 				return balena.models.key.getAll().then((keys) => {
 					expect(keys).to.have.length(1);
 					expect(keys[0].public_key).to.equal(
-						this.key.public_key.replace(/\n/g, ''),
+						ctx.key.public_key.replace(/\n/g, ''),
 					);
 					expect(keys[0].title).to.equal('MyKey');
 				});
+			});
+
+			it('should support arbitrary pinejs options', async function () {
+				const [key] = await balena.models.key.getAll({
+					$select: ['public_key'],
+				});
+				expect(key.public_key).to.equal(PUBLIC_KEY);
+				expect(key.title).to.be.undefined;
 			});
 		});
 
