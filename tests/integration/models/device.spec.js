@@ -1273,10 +1273,14 @@ describe('Device Model', function () {
 				});
 
 				describe('given device url is enabled', function () {
-					givenADevice(beforeEach);
+					givenADevice(before);
 
-					beforeEach(function () {
-						return balena.models.device.enableDeviceUrl(this.device.id);
+					beforeEach(async function () {
+						await balena.models.device.enableDeviceUrl(this.device.id);
+						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
+							this.device.id,
+						);
+						expect(hasDeviceUrl).to.be.true;
 					});
 
 					it('should be able to disable web access using a uuid', async function () {
@@ -1490,10 +1494,14 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.disableLockOverride()', function () {
-				givenADevice(beforeEach);
+				givenADevice(before);
 
-				beforeEach(function () {
-					return balena.models.device.enableLockOverride(this.device.uuid);
+				beforeEach(async function () {
+					await balena.models.device.enableLockOverride(this.device.uuid);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					expect(hasLockOverride).to.be.true;
 				});
 
 				it('should be able to disable lock override by uuid', async function () {
@@ -2625,16 +2633,14 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {
-				givenADevice(beforeEach);
-
-				beforeEach(async function () {
+				before(async function () {
 					const targetSupervisorVersion = 'v11.12.4';
 					const supervisorRelease = await balena.pine.get({
 						resource: 'supervisor_release',
 						options: {
 							$filter: {
 								supervisor_version: targetSupervisorVersion,
-								is_for__device_type: this.device.is_of__device_type.__id,
+								is_for__device_type: this.application.is_for__device_type.__id,
 							},
 						},
 					});
@@ -2757,9 +2763,14 @@ describe('Device Model', function () {
 		});
 	});
 
-	describe('given three compatible applications and a single device', function () {
+	describe('given three compatible & one incompatible applications and a single device', function () {
 		before(async function () {
-			const [application1, application2, application3] = await Promise.all([
+			const [
+				application1,
+				applicationSameDT,
+				applicationCompatibleDT,
+				applicationIncompatibleDT,
+			] = await Promise.all([
 				balena.models.application.create({
 					name: 'FooBar',
 					applicationType: 'microservices-starter',
@@ -2778,10 +2789,23 @@ describe('Device Model', function () {
 					deviceType: 'raspberry-pi2',
 					organization: this.initialOrg.id,
 				}),
+				balena.models.application.create({
+					name: 'BarBazNuc',
+					applicationType: 'microservices-starter',
+					deviceType: 'intel-nuc',
+					organization: this.initialOrg.id,
+				}),
 			]);
 			this.application1 = application1;
-			this.application2 = application2;
-			this.application3 = application3;
+			this.applicationSameDT = applicationSameDT;
+			this.applicationCompatibleDT = applicationCompatibleDT;
+			this.applicationIncompatibleDT = applicationIncompatibleDT;
+
+			const uuid = balena.models.device.generateUniqueKey();
+			this.deviceInfo = await balena.models.device.register(
+				this.application1.app_name,
+				uuid,
+			);
 		});
 
 		after(function () {
@@ -2792,8 +2816,9 @@ describe('Device Model', function () {
 						id: {
 							$in: [
 								this.application1.id,
-								this.application2.id,
-								this.application3.id,
+								this.applicationSameDT.id,
+								this.applicationCompatibleDT.id,
+								this.applicationIncompatibleDT.id,
 							],
 						},
 					},
@@ -2801,117 +2826,68 @@ describe('Device Model', function () {
 			});
 		});
 
-		beforeEach(async function () {
-			const uuid = balena.models.device.generateUniqueKey();
-			this.deviceInfo = await balena.models.device.register(
-				this.application1.app_name,
-				uuid,
-			);
-		});
-
 		afterEach(async function () {
-			await balena.models.device.remove(this.deviceInfo.id);
+			await balena.models.device.move(this.deviceInfo.id, this.application1.id);
 		});
 
 		describe('balena.models.device.move()', function () {
-			['id', 'app_name', 'slug'].forEach((prop) =>
-				it(`should be able to move a device by device uuid and application ${prop}`, async function () {
+			describe('when trying to move between applications of the same device type', function () {
+				['id', 'app_name', 'slug'].forEach((prop) =>
+					it(`should be able to move a device by device uuid and application ${prop}`, async function () {
+						await balena.models.device.move(
+							this.deviceInfo.uuid,
+							this.applicationSameDT[prop],
+						);
+						const applicationName = await balena.models.device.getApplicationName(
+							this.deviceInfo.uuid,
+						);
+						return m.chai
+							.expect(applicationName)
+							.to.equal(this.applicationSameDT.app_name);
+					}),
+				);
+
+				it('should be able to move a device using shorter uuids', async function () {
 					await balena.models.device.move(
-						this.deviceInfo.uuid,
-						this.application2[prop],
+						this.deviceInfo.uuid.slice(0, 7),
+						this.applicationSameDT.id,
 					);
 					const applicationName = await balena.models.device.getApplicationName(
-						this.deviceInfo.uuid,
+						this.deviceInfo.id,
 					);
 					return m.chai
 						.expect(applicationName)
-						.to.equal(this.application2.app_name);
-				}),
-			);
-
-			it('should be able to move a device using shorter uuids', async function () {
-				await balena.models.device.move(
-					this.deviceInfo.uuid.slice(0, 7),
-					this.application2.id,
-				);
-				const applicationName = await balena.models.device.getApplicationName(
-					this.deviceInfo.id,
-				);
-				return m.chai
-					.expect(applicationName)
-					.to.equal(this.application2.app_name);
+						.to.equal(this.applicationSameDT.app_name);
+				});
 			});
 
 			it('should be able to move a device to an application of the same architecture', async function () {
 				await balena.models.device.move(
 					this.deviceInfo.id,
-					this.application3.id,
+					this.applicationCompatibleDT.id,
 				);
 				const applicationName = await balena.models.device.getApplicationName(
 					this.deviceInfo.id,
 				);
 				return m.chai
 					.expect(applicationName)
-					.to.equal(this.application3.app_name);
+					.to.equal(this.applicationCompatibleDT.app_name);
+			});
+
+			describe('when trying to move to an incompatible application', function () {
+				it('should be rejected with an incompatibility error', function () {
+					const promise = balena.models.device.move(
+						this.deviceInfo.uuid,
+						this.applicationIncompatibleDT.app_name,
+					);
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith(
+							`Incompatible application: ${this.applicationIncompatibleDT.app_name}`,
+						);
+				});
 			});
 		});
-	});
-
-	describe('given two incompatible applications and a single device', function () {
-		before(async function () {
-			const [application1, application2] = await Promise.all([
-				(async () => {
-					const app = await balena.models.application.create({
-						name: 'FooBar',
-						applicationType: 'microservices-starter',
-						deviceType: 'raspberry-pi',
-						organization: this.initialOrg.id,
-					});
-
-					const uuid = balena.models.device.generateUniqueKey();
-					this.deviceInfo = await balena.models.device.register(
-						app.app_name,
-						uuid,
-					);
-
-					return app;
-				})(),
-				balena.models.application.create({
-					name: 'BarBaz',
-					applicationType: 'microservices-starter',
-					deviceType: 'intel-nuc',
-					organization: this.initialOrg.id,
-				}),
-			]);
-			this.application1 = application1;
-			this.application2 = application2;
-		});
-
-		after(function () {
-			return balena.pine.delete({
-				resource: 'application',
-				options: {
-					$filter: {
-						id: {
-							$in: [this.application1.id, this.application2.id],
-						},
-					},
-				},
-			});
-		});
-
-		describe('balena.models.device.move()', () =>
-			it('should be rejected with an incompatibility error', function () {
-				const promise = balena.models.device.move(
-					this.deviceInfo.uuid,
-					this.application2.app_name,
-				);
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith(
-						`Incompatible application: ${this.application2.app_name}`,
-					);
-			}));
 	});
 
 	describe('given applications of different architectures with a device on each', function () {
@@ -2986,7 +2962,7 @@ describe('Device Model', function () {
 				});
 			});
 
-			return [
+			[
 				['aarch64', 'armv7hf'],
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],
