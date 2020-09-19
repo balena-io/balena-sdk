@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests/device: Combine some multicontainer app tests'
+      hash: 5a73d51e829974a22a6e8ac95fc65107a787931c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Remove some beforeEach() from the device tests
+      hash: 8b68f5108f0a1f31312f24cbc3ca49df0b939ac3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.11.2
+  date: 2020-09-19T15:45:59.940Z
+- commits:
     - subject: Fix the device.setSupervisorRelease() tests
       hash: 9dd0c3d87f5298034731b0808fd7f31dcbbdacf8
       body: ''
