@@ -1,4 +1,21 @@
 - commits:
+    - subject: Fix the device.setSupervisorRelease() tests
+      hash: 9dd0c3d87f5298034731b0808fd7f31dcbbdacf8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/r-supervisor/threads/JuTUTtH3BS3w8IJvRrYg6NdTkrN
+        see: >-
+          https://www.flowdock.com/app/rulemotion/r-supervisor/threads/JuTUTtH3BS3w8IJvRrYg6NdTkrN
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.11.1
+  date: 2020-09-19T14:31:50.481Z
+- commits:
     - subject: 'Typings: Extend the supported billing cycles'
       hash: 6c15c2a81b34be980142c05215012fc2e2e8c742
       body: ''
