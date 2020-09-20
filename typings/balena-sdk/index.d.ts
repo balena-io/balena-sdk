@@ -450,6 +450,7 @@ export interface BalenaSDK {
 			has(nameOrSlugOrId: string | number): Promise<boolean>;
 			hasAny(): Promise<boolean>;
 			remove(nameOrSlugOrId: string | number): Promise<void>;
+			rename(nameOrSlugOrId: string | number, newName: string): Promise<void>;
 			restart(nameOrSlugOrId: string | number): Promise<void>;
 			enableDeviceUrls(nameOrSlugOrId: string | number): Promise<void>;
 			disableDeviceUrls(nameOrSlugOrId: string | number): Promise<void>;
