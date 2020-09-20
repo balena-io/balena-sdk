@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'Application: add rename method'
+      hash: cabdc7145ff4153fee10fde72189c19dc88d3ecc
+      body: |
+        add rename method on application model
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.12.0
+  date: 2020-09-20T09:21:50.671Z
+- commits:
     - subject: 'tests/keys: Fix race condition'
       hash: 3c3d8ced26118ddd01849e60c071e06b94a331fc
       body: ''
