@@ -4,7 +4,7 @@ import {
 	givenLoggedInUser,
 	sdkOpts,
 } from './setup';
-import { assertDeepMatchAndLength } from '../util';
+import { assertDeepMatchAndLength, timeSuite } from '../util';
 
 const delay = (ms) =>
 	new Promise((resolve) => {
@@ -22,6 +22,7 @@ const sendLogMessages = (uuid, deviceApiKey, messages) =>
 	});
 
 describe('Logs', function () {
+	timeSuite(before);
 	givenLoggedInUser(before);
 
 	describe('given a device', function () {

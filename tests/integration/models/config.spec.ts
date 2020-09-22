@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena } from '../setup';
+import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
@@ -67,6 +68,7 @@ const itNormalizesDeviceTypes = function () {
 };
 
 describe('Config Model', function () {
+	timeSuite(before);
 	before(function () {
 		return balena.auth.logout();
 	});

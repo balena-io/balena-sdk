@@ -1,4 +1,5 @@
 import * as m from 'mochainon';
+import { timeSuite } from '../util';
 
 const { expect } = m.chai;
 
@@ -11,6 +12,7 @@ import {
 } from './setup';
 
 describe('SDK authentication', function () {
+	timeSuite(before);
 	describe('when not logged in', function () {
 		beforeEach(() => balena.auth.logout());
 

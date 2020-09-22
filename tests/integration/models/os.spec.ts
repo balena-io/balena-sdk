@@ -10,6 +10,7 @@ import {
 	givenLoggedInUser,
 	IS_BROWSER,
 } from '../setup';
+import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 import type { Resolvable } from '../../../typings/utils';
 const { expect } = m.chai;
@@ -121,6 +122,7 @@ const describeAllAuthUserChanges = function (
 };
 
 describe('OS model', function () {
+	timeSuite(before);
 	before(function () {
 		return balena.auth.logout();
 	});

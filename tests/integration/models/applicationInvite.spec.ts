@@ -2,6 +2,7 @@
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
+import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 import { assertDeepMatchAndLength } from '../../util';
@@ -11,6 +12,7 @@ const TEST_ROLE = 'developer';
 const UNKNOWN_ROLE = 'undefined_role';
 
 describe('Application Invite Model', function () {
+	timeSuite(before);
 	describe('When user is logged out', function () {
 		describe('balena.models.application.invite.getAllByApplication()', function () {
 			const promise = balena.models.application.invite.getAllByApplication(1);

@@ -7,12 +7,15 @@ import {
 	sdkOpts,
 	givenLoggedInUser,
 } from './setup';
+import { timeSuite } from '../util';
 
 const { expect } = m.chai;
 
 const DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/';
 
 describe('Balena SDK', function () {
+	timeSuite(before);
+
 	const validKeys = ['auth', 'models', 'logs', 'settings', 'version'];
 
 	describe('factory function', function () {

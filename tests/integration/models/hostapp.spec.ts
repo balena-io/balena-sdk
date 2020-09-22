@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena } from '../setup';
+import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
@@ -15,6 +16,7 @@ const containsVersion = (
 };
 
 describe('Hostapp model', function () {
+	timeSuite(before);
 	parallel('balena.models.hostapp.getAllOsVersions()', function () {
 		it("should contain both balenaOS and balenaOS ESR OS types'", async () => {
 			const res = await balena.models.hostapp.getAllOsVersions([

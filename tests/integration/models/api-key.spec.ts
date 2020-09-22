@@ -3,9 +3,12 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena, givenLoggedInUser } from '../setup';
+import { timeSuite } from '../../util';
 const { expect } = m.chai;
 
 describe('API Key model', function () {
+	timeSuite(before);
+
 	describe('balena.models.apiKey.create()', function () {
 		givenLoggedInUser(before);
 
