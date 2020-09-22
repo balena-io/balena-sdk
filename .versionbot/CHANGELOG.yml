@@ -1,4 +1,27 @@
 - commits:
+    - subject: Time the test suites
+      hash: 11b7d30663eedcdc67be2390e60074c78452cb44
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Combine test util files from before dropping coffeescript
+      hash: 4f19dcf6ead9ed3b96a463fc1affe9014348b477
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.12.1
+  date: 2020-09-20T18:33:50.796Z
+- commits:
     - subject: 'Application: add rename method'
       hash: cabdc7145ff4153fee10fde72189c19dc88d3ecc
       body: |
