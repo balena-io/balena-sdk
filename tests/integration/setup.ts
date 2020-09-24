@@ -170,6 +170,23 @@ export function loginPaidUser() {
 	});
 }
 
+const resetOrganization = () =>
+	balena.pine
+		.get({
+			resource: 'organization',
+			options: { $filter: { name: 'FooBar' }, $top: 1 },
+		})
+		.then((orgs) => {
+			const [org] = orgs;
+			if (!org) {
+				return;
+			}
+			return balena.pine.delete({
+				resource: 'organization',
+				id: org.id,
+			});
+		});
+
 const resetApplications = () =>
 	balena.pine.delete({
 		resource: 'application',
@@ -199,6 +216,18 @@ const getDeviceType = memoize(
 		primitive: true,
 	},
 );
+
+export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
+	beforeFn(async function () {
+		const organization = await balena.models.organization.create({
+			name: 'FooBar',
+		});
+		this.organization = organization;
+	});
+
+	const afterFn = beforeFn === beforeEach ? afterEach : after;
+	return afterFn(resetOrganization);
+}
 
 export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 	givenInitialOrganization(beforeFn);

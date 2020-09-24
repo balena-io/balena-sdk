@@ -35,6 +35,7 @@ const getBillingModel = function (
 	const organizationModel = once(() =>
 		(require('./organization') as typeof import('./organization')).default(
 			deps,
+			opts,
 		),
 	);
 

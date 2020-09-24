@@ -100,7 +100,7 @@
     "@types/node": "^10.17.28",
     "abortcontroller-polyfill": "^1.5.0",
     "balena-auth": "^4.0.2",
-    "balena-errors": "^4.5.1",
+    "balena-errors": "^4.6.0",
     "balena-hup-action-utils": "~4.0.2",
     "balena-pine": "^12.4.0",
     "balena-register-device": "^7.1.0",
