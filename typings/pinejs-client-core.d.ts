@@ -14,11 +14,7 @@ export interface PineDeferred {
  * When expanded hold an array with a single element.
  */
 export type NavigationResource<T = WithId> = [T] | PineDeferred;
-export type OptionalNavigationResource<T = WithId> =
-	| []
-	| [T]
-	| PineDeferred
-	| null;
+export type OptionalNavigationResource<T = WithId> = [T?] | PineDeferred | null;
 
 /**
  * When expanded holds an array, otherwise the property is not present.
@@ -32,9 +28,11 @@ export type AssociatedResource<T = WithId> =
 	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
 
+type NonUndefined<T> = T extends undefined ? never : T;
+
 export type InferAssociatedResourceType<T> = T extends AssociatedResource &
 	any[]
-	? T[number]
+	? NonUndefined<T[number]>
 	: never;
 
 export type SelectableProps<T> =
@@ -79,7 +77,7 @@ type ExpandedProperty<
 	: T[K] extends NavigationResource<any>
 	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
 	: T[K] extends OptionalNavigationResource<any>
-	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
+	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>?]
 	: T[K] extends ReverseNavigationResource<any>
 	? Array<TypedResult<InferAssociatedResourceType<T[K]>, KOpts>>
 	: never;

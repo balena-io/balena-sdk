@@ -442,7 +442,7 @@ let aStringOrUndefined: string | undefined;
 	// @ts-expect-error
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	// This also works, since the typings don't know whether this is Navigation or a Reverse Navigation Resounce
-	aAny = result.should_be_running__release[1].commit;
+	aAny = result.should_be_running__release[1]?.commit;
 
 	// @ts-expect-error
 	aString = result.device_name;
