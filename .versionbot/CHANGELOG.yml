@@ -1,4 +1,17 @@
 - commits:
+    - subject: Pass shouldFlatten through when creating release from url
+      hash: a9278f5cfde098ad656b0d0d4fca037a79cb3000
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.13.0
+  date: 2020-10-09T09:09:10.065Z
+- commits:
     - subject: Time the test suites
       hash: 11b7d30663eedcdc67be2390e60074c78452cb44
       body: ''
