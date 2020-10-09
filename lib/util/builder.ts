@@ -44,7 +44,7 @@ export class BuilderHelper {
 				baseUrl: this.opts.builderUrl,
 				body: Object.assign(
 					{
-						shouldFlatten: true,
+						shouldFlatten: urlDeployOptions.shouldFlatten ?? true,
 					},
 					urlDeployOptions,
 				),
