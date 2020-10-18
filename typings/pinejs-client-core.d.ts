@@ -4,6 +4,7 @@ import type {
 	StringKeyof,
 	Dictionary,
 	ExactlyExtends,
+	NoInfer,
 } from './utils';
 import type { ResourceTypeMap } from './balena-sdk/models';
 
@@ -592,15 +593,17 @@ export type PineWithSelectOnGet = Omit<
 		>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
-	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T extends {}>(params: ParamsObjWithCount<NoInfer<T>>): Promise<number>;
 	get<T extends {}>(
-		params: ParamsObjWithId<T> & ParamsObjWithSelect<T>,
+		params: ParamsObjWithId<NoInfer<T>> & ParamsObjWithSelect<NoInfer<T>>,
 	): Promise<T | undefined>;
-	get<T extends {}>(params: ParamsObjWithSelect<T>): Promise<T[]>;
+	get<T extends {}>(params: ParamsObjWithSelect<NoInfer<T>>): Promise<T[]>;
 	get<T extends {}, Result extends number>(
-		params: ParamsObj<T>,
+		params: ParamsObj<NoInfer<T>>,
 	): Promise<Result>;
-	get<T extends {}, Result>(params: ParamsObjWithSelect<T>): Promise<Result>;
+	get<T extends {}, Result>(
+		params: ParamsObjWithSelect<NoInfer<T>>,
+	): Promise<Result>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithCount<R> & {
