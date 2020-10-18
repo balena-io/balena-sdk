@@ -1,4 +1,10 @@
-import type { AnyObject, PropsOfType, StringKeyof, Dictionary } from './utils';
+import type {
+	AnyObject,
+	PropsOfType,
+	StringKeyof,
+	Dictionary,
+	ExactlyExtends,
+} from './utils';
 import type { ResourceTypeMap } from './balena-sdk/models';
 
 export interface WithId {
@@ -456,13 +462,16 @@ export interface Pine {
 			ResourceTypeMap[P['resource']]
 		>
 	>(
-		params: P,
+		params: ExactlyExtends<
+			P,
+			ParamsObjWithCount<ResourceTypeMap[P['resource']]>
+		>,
 	): Promise<number>;
 	get<
 		R extends keyof ResourceTypeMap,
 		P extends { resource: R } & ParamsObjWithId<ResourceTypeMap[P['resource']]>
 	>(
-		params: P,
+		params: ExactlyExtends<P, ParamsObjWithId<ResourceTypeMap[P['resource']]>>,
 	): Promise<
 		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
 	>;
@@ -470,7 +479,7 @@ export interface Pine {
 		R extends keyof ResourceTypeMap,
 		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>
 	>(
-		params: P,
+		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
 	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
@@ -549,10 +558,12 @@ export type PineWithSelectOnGet = Omit<
 		R extends keyof ResourceTypeMap,
 		P extends { resource: R } & ParamsObjWithCount<
 			ResourceTypeMap[P['resource']]
-		> &
-			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+		>
 	>(
-		params: P,
+		params: ExactlyExtends<
+			P,
+			ParamsObjWithCount<ResourceTypeMap[P['resource']]>
+		>,
 	): Promise<number>;
 	get<
 		R extends keyof ResourceTypeMap,
@@ -561,7 +572,11 @@ export type PineWithSelectOnGet = Omit<
 		> &
 			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
 	>(
-		params: P,
+		params: ExactlyExtends<
+			P,
+			ParamsObjWithId<ResourceTypeMap[P['resource']]> &
+				ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+		>,
 	): Promise<
 		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
 	>;
@@ -571,7 +586,10 @@ export type PineWithSelectOnGet = Omit<
 			ResourceTypeMap[P['resource']]
 		>
 	>(
-		params: P,
+		params: ExactlyExtends<
+			P,
+			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+		>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
 	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;

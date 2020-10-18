@@ -265,6 +265,31 @@ let aString: string;
 	aNumber = result.is_on__release.__id;
 })();
 
+// Exceeding properties
+(async () => {
+	const result = await sdk.pine.get({
+		resource: 'device',
+		// @ts-expect-error
+		missplaced$filter: {},
+		options: {
+			$select: ['id', 'device_name', 'belongs_to__application'],
+		},
+	});
+})();
+
+
+(async () => {
+	const result = await sdk.pine.get({
+		resource: 'device',
+		options: {
+			$select: ['id', 'device_name', 'belongs_to__application'],
+			// @ts-expect-error
+			$asdf: {},
+		},
+	});
+})();
+
+// Incorrect properties
 (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
@@ -288,6 +313,7 @@ let aString: string;
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
+				// @ts-expect-error
 				should_be_running__release: {},
 				asdf: {},
 				device_tag: {
@@ -296,5 +322,4 @@ let aString: string;
 			},
 		},
 	});
-	const test: Equals<typeof result, never[]> = EqualsTrue;
 })();
