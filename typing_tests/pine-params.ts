@@ -5,6 +5,8 @@ import { Compute, Equals, EqualsTrue } from './utils';
 
 const sdk: BalenaSdk.BalenaSDK = {} as any;
 
+const strictPine = sdk.pine as BalenaSdk.PineWithSelectOnGet;
+
 let aAny: any;
 let aNumber: number;
 let aNumberOrUndefined: number | undefined;
@@ -265,6 +267,31 @@ let aString: string;
 	aNumber = result.is_on__release.__id;
 })();
 
+// Exceeding properties
+(async () => {
+	const result = await sdk.pine.get({
+		resource: 'device',
+		// @ts-expect-error
+		missplaced$filter: {},
+		options: {
+			$select: ['id', 'device_name', 'belongs_to__application'],
+		},
+	});
+})();
+
+
+(async () => {
+	const result = await sdk.pine.get({
+		resource: 'device',
+		options: {
+			$select: ['id', 'device_name', 'belongs_to__application'],
+			// @ts-expect-error
+			$asdf: {},
+		},
+	});
+})();
+
+// Incorrect properties
 (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
@@ -288,6 +315,7 @@ let aString: string;
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
+				// @ts-expect-error
 				should_be_running__release: {},
 				asdf: {},
 				device_tag: {
@@ -296,5 +324,154 @@ let aString: string;
 			},
 		},
 	});
-	const test: Equals<typeof result, never[]> = EqualsTrue;
+})();
+
+// strictPine
+(async () => {
+	const result = await strictPine.get({
+		resource: 'device',
+		options: {
+			// @ts-expect-error
+			$select: ['id', 'device_name', 'belongs_to__application', 'asdf'],
+		},
+	});
+})();
+
+(async () => {
+	const result = await strictPine.get({
+		resource: 'device',
+		options: {
+			// @ts-expect-error b/c the expand doesn't have a $select, bad placing though.
+			$select: ['id', 'device_name', 'belongs_to__application'],
+			$expand: {
+				should_be_running__release: {},
+				device_tag: {
+					$count: {}
+				},
+			},
+		},
+	});
+})();
+
+(async () => {
+	const result = await strictPine.get({
+		resource: 'device',
+		options: {
+			// @ts-expect-error b/c asdf is not an expandable prop, bad placing though.
+			$select: ['id', 'device_name', 'belongs_to__application'],
+			$expand: {
+				should_be_running__release: {
+					$select: 'id'
+				},
+				asdf: {
+					$select: 'id',
+				},
+				device_tag: {
+					$count: {}
+				},
+			},
+		},
+	});
+})();
+
+(async () => {
+	const [result] = await strictPine.get({
+		resource: 'device',
+		options: {
+			$select: ['id', 'device_name', 'belongs_to__application'],
+			$expand: {
+				should_be_running__release: {
+					$select: 'id'
+				},
+				device_tag: {
+					$count: {}
+				},
+			},
+		},
+	});
+	aNumber = result.id;
+	aString = result.device_name;
+	aNumber = result.belongs_to__application.__id;
+	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumber = result.device_tag;
+
+	// @ts-expect-error
+	aString = result.os_version;
+	// @ts-expect-error
+	aNumber = result.is_on__release.__id;
+})();
+
+(async () => {
+	const result = await strictPine.get({
+		resource: 'device',
+		id: 5,
+		options: {
+			$select: ['id', 'device_name', 'belongs_to__application'],
+			$expand: {
+				should_be_running__release: {
+					$select: 'id'
+				},
+				device_tag: {
+					$count: {}
+				},
+			},
+		},
+	});
+	const checkUndefined: typeof result = undefined;
+	if (result === undefined) {
+		throw 'Can be undefined';
+	}
+
+	aNumber = result.id;
+	aString = result.device_name;
+	aNumber = result.belongs_to__application.__id;
+	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumber = result.device_tag;
+
+	// @ts-expect-error
+	aString = result.os_version;
+	// @ts-expect-error
+	aNumber = result.is_on__release.__id;
+})();
+
+(async () => {
+	const result = await strictPine.get({
+		resource: 'device',
+		id: 5,
+		options: {
+			$count: {
+				$filter: {
+					// TODO: this should error
+					asdf: 4,
+					belongs_to__application: {
+						organization: 1,
+						application_type: 2,
+						depends_on__application: null,
+					},
+				},
+			},
+		},
+	});
+
+	aNumber = result;
+})();
+
+(async () => {
+	const result = await strictPine.get({
+		resource: 'device',
+		id: 5,
+		options: {
+			$count: {
+				$filter: {
+					belongs_to__application: {
+						organization: 1,
+						application_type: 2,
+						depends_on__application: null,
+					},
+				},
+			},
+		},
+	});
+
+	aNumber = result;
 })();
