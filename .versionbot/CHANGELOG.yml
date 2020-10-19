@@ -1,4 +1,40 @@
 - commits:
+    - subject: Prevent invalid $selects in strict pine.get variant calls
+      hash: 08dde2331405f29c8789bb2523a8e7fc574ba373
+      body: |
+        Used the NoInfer helper to prevent TS from using the
+        old pine.get overloads, unless the generic
+        parameters are explicitely provided. This way when
+        no generic arguments are provided TS will try to
+        match only the fully typed variants and in case of an
+        error it will output the reason from those overloads.
+        Previously it would fallback to the old pine.get
+        variants and try to infer a loose generic type, which
+        wasn't correct and silenced some errors This is a bit
+        aggressive change and as a result I decided to limit
+        this change for the strict pine variant, which is opt-in,
+        and hold it back from the main typings until the next
+        major.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Improve the parameter type checks for the fully typed pine.get
+      hash: 602ffeccd7355ede88bc64584fccbd8f47046781
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.14.0
+  date: 2020-10-19T11:11:50.321Z
+- commits:
     - subject: Pass shouldFlatten through when creating release from url
       hash: a9278f5cfde098ad656b0d0d4fca037a79cb3000
       body: ''
