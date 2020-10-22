@@ -1,4 +1,17 @@
 - commits:
+    - subject: Modify the os update to check against hostapp release
+      hash: 65991f10a29a34f78153b8074969e915a25d6742
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.15.0
+  date: 2020-10-22T10:30:20.246Z
+- commits:
     - subject: Prevent invalid $selects in strict pine.get variant calls
       hash: 08dde2331405f29c8789bb2523a8e7fc574ba373
       body: |
