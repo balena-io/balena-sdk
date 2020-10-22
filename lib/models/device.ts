@@ -122,8 +122,8 @@ const getDeviceModel = function (
 			opts,
 		),
 	);
-	const osModel = once(() =>
-		(require('./os') as typeof import('./os')).default(deps, opts),
+	const hostappModel = once(() =>
+		(require('./hostapp') as typeof import('./hostapp')).default(deps),
 	);
 
 	const {
@@ -3136,52 +3136,6 @@ const getDeviceModel = function (
 			);
 		},
 
-		// TODO: This is a temporary solution for ESR, as the ESR-supported versions are not part of the SDK yet.
-		// 	It should be removed once the getSupportedVersions is updated to support ESR as well.
-		_startOsUpdate: async (
-			uuid: string,
-			targetOsVersion: string,
-			skipCheck: boolean,
-		): Promise<OsUpdateActionResult> => {
-			if (!targetOsVersion) {
-				throw new errors.BalenaInvalidParameterError(
-					'targetOsVersion',
-					targetOsVersion,
-				);
-			}
-
-			const deviceOpts = {
-				$select: toWritable(['is_online', 'os_version', 'os_variant'] as const),
-				$expand: { is_of__device_type: { $select: 'slug' as const } },
-			};
-
-			const device = (await exports.get(uuid, deviceOpts)) as PineTypedResult<
-				Device,
-				typeof deviceOpts
-			> &
-				Pick<Device, 'uuid'>;
-
-			device.uuid = uuid;
-			// this will throw an error if the action isn't available
-			exports._checkOsUpdateTarget(device, targetOsVersion);
-			if (!skipCheck) {
-				const { versions: allVersions } = await osModel().getSupportedVersions(
-					device.is_of__device_type[0].slug,
-				);
-				if (
-					!allVersions.some((v) => bSemver.compare(v, targetOsVersion) === 0)
-				) {
-					throw new errors.BalenaInvalidParameterError(
-						'targetOsVersion',
-						targetOsVersion,
-					);
-				}
-			}
-
-			const osUpdateHelper = await getOsUpdateHelper();
-
-			return await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
-		},
 		/**
 		 * @summary Start an OS update on a device
 		 * @name startOsUpdate
@@ -3234,11 +3188,17 @@ const getDeviceModel = function (
 			// this will throw an error if the action isn't available
 			exports._checkOsUpdateTarget(device, targetOsVersion);
 
-			const { versions: allVersions } = await osModel().getSupportedVersions(
-				device.is_of__device_type[0].slug,
-			);
+			const osVersions = (
+				await hostappModel().getAllOsVersions([
+					device.is_of__device_type[0].slug,
+				])
+			)[device.is_of__device_type[0].slug];
 
-			if (!allVersions.some((v) => bSemver.compare(v, targetOsVersion) === 0)) {
+			if (
+				!osVersions.some(
+					(v) => bSemver.compare(v.rawVersion, targetOsVersion) === 0,
+				)
+			) {
 				throw new errors.BalenaInvalidParameterError(
 					'targetOsVersion',
 					targetOsVersion,
