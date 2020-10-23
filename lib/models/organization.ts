@@ -17,7 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 
 import type * as BalenaSdk from '../..';
-import { InjectedDependenciesParam } from '..';
+import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import {
 	isId,
 	isNotFoundResponse,
@@ -25,11 +25,20 @@ import {
 	treatAsMissingOrganization,
 } from '../util';
 
-const getOrganizationModel = function (deps: InjectedDependenciesParam) {
+const getOrganizationModel = function (
+	deps: InjectedDependenciesParam,
+	opts: InjectedOptionsParam,
+) {
 	const { pine } = deps;
 
 	const membershipModel = (require('./organization-membership') as typeof import('./organization-membership')).default(
 		deps,
+		(...args: Parameters<typeof get>) => get(...args),
+	);
+
+	const inviteModel = (require('./organization-invite') as typeof import('./organization-invite')).default(
+		deps,
+		opts,
 		(...args: Parameters<typeof get>) => get(...args),
 	);
 
@@ -204,6 +213,11 @@ const getOrganizationModel = function (deps: InjectedDependenciesParam) {
 		 * @memberof balena.models.organization
 		 */
 		membership: addCallbackSupportToModule(membershipModel),
+		/**
+		 * @namespace balena.models.organization.invite
+		 * @memberof balena.models.organization
+		 */
+		invite: addCallbackSupportToModule(inviteModel),
 	};
 };
 

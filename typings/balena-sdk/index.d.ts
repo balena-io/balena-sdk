@@ -18,6 +18,7 @@ import {
 	ApplicationMembershipRoles,
 	BuildVariable,
 	ApplicationInvite,
+	OrganizationInvite,
 	Release,
 	Image,
 	Device,
@@ -32,6 +33,7 @@ import {
 	SSHKey,
 	Organization,
 	OrganizationMembership,
+	OrganizationMembershipRoles,
 	OrganizationMembershipTag,
 	User,
 } from './models';
@@ -133,6 +135,12 @@ export interface DeviceWithServiceDetails<
 export interface ApplicationInviteOptions {
 	invitee: string;
 	roleName?: ApplicationMembershipRoles;
+	message?: string;
+}
+
+export interface OrganizationInviteOptions {
+	invitee: string;
+	roleName?: OrganizationMembershipRoles;
 	message?: string;
 }
 
@@ -932,6 +940,21 @@ export interface BalenaSDK {
 					): Promise<void>;
 					remove(membershipId: number, tagKey: string): Promise<void>;
 				};
+			};
+			invite: {
+				create: (
+					handleOrId: string | number,
+					options: OrganizationInviteOptions,
+				) => Promise<OrganizationInvite>;
+				getAllByOrganization: (
+					handleOrId: string | number,
+					options?: PineOptions<OrganizationInvite>,
+				) => Promise<OrganizationInvite[]>;
+				getAll: (
+					options?: PineOptions<OrganizationInvite>,
+				) => Promise<OrganizationInvite>;
+				accept: (invitationToken: string) => Promise<void>;
+				revoke: (id: number) => Promise<void>;
 			};
 		};
 

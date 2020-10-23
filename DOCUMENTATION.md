@@ -265,6 +265,12 @@ const sdk = fromSharedOptions();
                 * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
                 * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+            * [.invite](#balena.models.organization.invite) : <code>object</code>
+                * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
+                * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.invite.getAllByOrganization) ⇒ <code>Promise</code>
+                * [.create(handleOrId, options, [message])](#balena.models.organization.invite.create) ⇒ <code>Promise</code>
+                * [.revoke(id)](#balena.models.organization.invite.revoke) ⇒ <code>Promise</code>
+                * [.accept(invitationToken)](#balena.models.organization.invite.accept) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
             * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
@@ -607,6 +613,12 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+        * [.invite](#balena.models.organization.invite) : <code>object</code>
+            * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
+            * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.invite.getAllByOrganization) ⇒ <code>Promise</code>
+            * [.create(handleOrId, options, [message])](#balena.models.organization.invite.create) ⇒ <code>Promise</code>
+            * [.revoke(id)](#balena.models.organization.invite.revoke) ⇒ <code>Promise</code>
+            * [.accept(invitationToken)](#balena.models.organization.invite.accept) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
         * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
@@ -5075,6 +5087,12 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
         * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+    * [.invite](#balena.models.organization.invite) : <code>object</code>
+        * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
+        * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.invite.getAllByOrganization) ⇒ <code>Promise</code>
+        * [.create(handleOrId, options, [message])](#balena.models.organization.invite.create) ⇒ <code>Promise</code>
+        * [.revoke(id)](#balena.models.organization.invite.revoke) ⇒ <code>Promise</code>
+        * [.accept(invitationToken)](#balena.models.organization.invite.accept) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
     * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
@@ -5174,6 +5192,153 @@ balena.models.organization.membership.getAllByOrganization(123).then(function(me
 ```js
 balena.models.organization.membership.getAllByOrganization(123, function(error, memberships) {
 	console.log(memberships);
+});
+```
+<a name="balena.models.organization.invite"></a>
+
+##### organization.invite : <code>object</code>
+**Kind**: static namespace of [<code>organization</code>](#balena.models.organization)  
+
+* [.invite](#balena.models.organization.invite) : <code>object</code>
+    * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
+    * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.invite.getAllByOrganization) ⇒ <code>Promise</code>
+    * [.create(handleOrId, options, [message])](#balena.models.organization.invite.create) ⇒ <code>Promise</code>
+    * [.revoke(id)](#balena.models.organization.invite.revoke) ⇒ <code>Promise</code>
+    * [.accept(invitationToken)](#balena.models.organization.invite.accept) ⇒ <code>Promise</code>
+
+<a name="balena.models.organization.invite.getAll"></a>
+
+###### invite.getAll([options]) ⇒ <code>Promise</code>
+This method returns all invites.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
+**Summary**: Get all invites  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - invites  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.invite.getAll().then(function(invites) {
+	console.log(invites);
+});
+```
+**Example**  
+```js
+balena.models.organization.invite.getAll(function(error, invites) {
+	console.log(invites);
+});
+```
+<a name="balena.models.organization.invite.getAllByOrganization"></a>
+
+###### invite.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
+This method returns all invites for a specific organization.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
+**Summary**: Get all invites by organization  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - invites  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| handleOrId | <code>String</code> \| <code>Number</code> |  | organization handle (string), or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.invite.getAllByOrganization('MyOrg').then(function(invites) {
+	console.log(invites);
+});
+```
+**Example**  
+```js
+balena.models.organization.invite.getAllByOrganization(123).then(function(invites) {
+	console.log(invites);
+});
+```
+**Example**  
+```js
+balena.models.organization.invite.getAllByOrganization(123, function(error, invites) {
+	console.log(invites);
+});
+```
+<a name="balena.models.organization.invite.create"></a>
+
+###### invite.create(handleOrId, options, [message]) ⇒ <code>Promise</code>
+This method invites a user by their email to an organization.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
+**Summary**: Creates a new invite for an organization  
+**Access**: public  
+**Fulfil**: <code>String</code> - organization invite  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| handleOrId | <code>String</code> \| <code>Number</code> |  | organization handle (string), or id (number) |
+| options | <code>Object</code> |  | invite creation parameters |
+| options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
+| [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
+| [message] | <code>String</code> | <code></code> | the message to send along with the invite |
+
+**Example**  
+```js
+balena.models.organization.invite.create('MyOrg', { invitee: "invitee@example.org", roleName: "developer", message: "join my org" }).then(function(invite) {
+	console.log(invite);
+});
+```
+**Example**  
+```js
+balena.models.organization.invite.create(53, { invitee: "invitee@example.org" }, function(error, invite) {
+	console.log(invite);
+});
+```
+<a name="balena.models.organization.invite.revoke"></a>
+
+###### invite.revoke(id) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
+**Summary**: Revoke an invite  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | organization invite id |
+
+**Example**  
+```js
+balena.models.organization.invite.revoke(123);
+```
+**Example**  
+```js
+balena.models.organization.invite.revoke(123,function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.organization.invite.accept"></a>
+
+###### invite.accept(invitationToken) ⇒ <code>Promise</code>
+This method adds the calling user to the organization.
+
+**Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
+**Summary**: Accepts an invite  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| invitationToken | <code>String</code> | invite token |
+
+**Example**  
+```js
+balena.models.organization.invite.accept("qwerty-invitation-token");
+```
+**Example**  
+```js
+balena.models.organization.invite.accept("qwerty-invitation-token", function(error) {
+	if (error) throw error;
+	...
 });
 ```
 <a name="balena.models.organization.create"></a>

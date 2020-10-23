@@ -32,6 +32,7 @@ export interface ResourceTypeMap {
 	image_install: ImageInstall;
 	invitee: Invitee;
 	invitee__is_invited_to__application: ApplicationInvite;
+	invitee__is_invited_to__organization: OrganizationInvite;
 	my_application: Application;
 	organization: Organization;
 	organization__has_private_access_to__device_type: OrganizationPrivateDeviceTypeAccess;
@@ -189,6 +190,16 @@ export interface ApplicationInvite {
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__application: NavigationResource<Application>;
+}
+
+export interface OrganizationInvite {
+	id: number;
+	message?: string;
+	created_at: string;
+	invitationToken: string;
+	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
+	invitee: NavigationResource<Invitee>;
+	is_invited_to__organization: NavigationResource<Organization>;
 }
 
 export interface ApplicationType {
