@@ -1,4 +1,25 @@
 - commits:
+    - subject: Add SDK methods for org invites
+      hash: 2f97747e0be8f5f42049cd9548993ae79c792be6
+      body: ''
+      footer:
+        See: >-
+          https://www.flowdock.com/app/rulemotion/p-organizations/threads/o043xZcnvf1tTjmjykyulfIYP14
+        see: >-
+          https://www.flowdock.com/app/rulemotion/p-organizations/threads/o043xZcnvf1tTjmjykyulfIYP14
+        Connects-to: '#1007'
+        connects-to: '#1007'
+        Depends-on: 'https://github.com/balena-io-modules/balena-errors/pull/46'
+        depends-on: 'https://github.com/balena-io-modules/balena-errors/pull/46'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Amit Solanki <amit@balena.io>
+        signed-off-by: Amit Solanki <amit@balena.io>
+      author: Amit Solanki
+      nested: []
+  version: 15.16.0
+  date: 2020-10-23T11:25:10.298Z
+- commits:
     - subject: Modify the os update to check against hostapp release
       hash: 65991f10a29a34f78153b8074969e915a25d6742
       body: ''
