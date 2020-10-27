@@ -101,6 +101,13 @@ export interface User extends JWTUser {
 	actor: number;
 	created_at: string;
 	username: string;
+
+	organization_membership: ReverseNavigationResource<OrganizationMembership>;
+	// TODO: Consider replacing with user_application_membership in the next major
+	user__is_member_of__application: ReverseNavigationResource<
+		ApplicationMembership
+	>;
+	team_membership: ReverseNavigationResource<TeamMembership>;
 }
 
 export type OrganizationMembershipRoles = 'administrator' | 'member';
