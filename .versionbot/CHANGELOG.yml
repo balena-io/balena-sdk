@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add missing reverse navigation relations to User typings
+      hash: 597a99cb09a943c3fbc51dccc6347bd5a16f510f
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.17.0
+  date: 2020-10-27T15:11:28.400Z
+- commits:
     - subject: Add SDK methods for org invites
       hash: 2f97747e0be8f5f42049cd9548993ae79c792be6
       body: ''
