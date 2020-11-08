@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'os.download: Fix balenaOS version format validation'
+      hash: b139f13d6ef3b31bae511f66426f00ba9853bf11
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Paulo Castro
+      nested: []
+  version: 15.17.1
+  date: 2020-11-08T22:03:39.874Z
+- commits:
     - subject: Add missing reverse navigation relations to User typings
       hash: 597a99cb09a943c3fbc51dccc6347bd5a16f510f
       body: ''
