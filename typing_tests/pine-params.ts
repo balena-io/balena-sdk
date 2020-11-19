@@ -5,7 +5,7 @@ import { Compute, Equals, EqualsTrue } from './utils';
 
 const sdk: BalenaSdk.BalenaSDK = {} as any;
 
-const strictPine = sdk.pine as BalenaSdk.PineWithSelectOnGet;
+const strictPine = sdk.pine as BalenaSdk.PineStrict;
 
 let aAny: any;
 let aNumber: number;

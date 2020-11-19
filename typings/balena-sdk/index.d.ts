@@ -60,7 +60,12 @@ export type {
 	ExpandResultObject as PineExpandResultObject,
 	TypedResult as PineTypedResult,
 } from '../pinejs-client-core';
-export type { PineWithSelectOnGet } from '../balena-pine';
+export type { PineStrict } from '../balena-pine';
+
+// TODO: Drop in the next major
+import type { PineStrict } from '../balena-pine';
+/** @deprecated */
+export type PineWithSelectOnGet = PineStrict;
 
 export type PineOptions<T> = Pine.ODataOptions<T>;
 export type PineSubmitBody<T> = Pine.SubmitBody<T>;

@@ -545,15 +545,11 @@ export interface Pine {
 	): Poll<'OK'>;
 }
 
-// TODO: Rename to PineStrict on the next major
 /**
- * A variant that helps you not forget addins a $select, helping to
- * create requests explecitely fetch only what your code needs.
+ * A variant that makes $select mandatory, helping to create
+ * requests that explicitly fetch only what your code needs.
  */
-export type PineWithSelectOnGet = Omit<
-	Pine,
-	'get' | 'prepare' | 'subscribe'
-> & {
+export type PineStrict = Omit<Pine, 'get' | 'prepare' | 'subscribe'> & {
 	// Fully typed result overloads
 	get<
 		R extends keyof ResourceTypeMap,
