@@ -1,4 +1,38 @@
 - commits:
+    - subject: 'typings: Deprecate PineWithSelectOnGet variant in favor of PineStrict'
+      hash: 5b7a7e83c3beef41ee08c4b840a11e9f71e1a35b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update balena-auth from 4.0.2 to 4.1.0
+      hash: 36282cee7b3f394b690d0d430dc5705c075b67d1
+      body: |
+        Update balena-errors from 4.6.0 to 4.7.1
+        Update balena-request from 11.1.1 to 11.2.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: josecoelho
+      nested:
+        - commits:
+            - subject: Update balena-auth from 4.0.0 to 4.1.0
+              hash: a0c18a805b2a492705255b6dbcc8748fbd4f2c5a
+              body: |
+                Update balena-errors from 4.4.0 to 4.7.1
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: josecoelho
+          version: balena-request-11.2.0
+          date: 2020-11-12T08:29:09.564Z
+  version: 15.18.0
+  date: 2020-11-19T12:49:26.820Z
+- commits:
     - subject: Add missing reverse navigation relations to User typings
       hash: 597a99cb09a943c3fbc51dccc6347bd5a16f510f
       body: ''
