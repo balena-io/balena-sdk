@@ -52,9 +52,10 @@ export type SelectableProps<T> =
 
 export type ExpandableProps<T> = PropsOfType<T, AssociatedResource> & string;
 
-type SelectedProperty<T, K extends keyof T> = T[K] extends NavigationResource<
-	any
->
+type SelectedProperty<
+	T,
+	K extends keyof T
+> = T[K] extends NavigationResource<any>
 	? PineDeferred
 	: T[K] extends OptionalNavigationResource<any>
 	? PineDeferred | null
@@ -157,9 +158,9 @@ interface Lambda<T> {
 type OrderByValues = 'asc' | 'desc';
 type OrderBy = string | OrderBy[] | { [index: string]: OrderByValues };
 
-type AssociatedResourceFilter<T> = T extends NonNullable<
-	ReverseNavigationResource
->
+type AssociatedResourceFilter<
+	T
+> = T extends NonNullable<ReverseNavigationResource>
 	? FilterObj<InferAssociatedResourceType<T>>
 	: FilterObj<InferAssociatedResourceType<T>> | number | null;
 

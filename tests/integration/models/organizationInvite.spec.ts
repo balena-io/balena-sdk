@@ -56,17 +56,20 @@ describe('Organization Invite Model', function () {
 						it('should support a callback with no options', function (done) {
 							(balena.models.organization.invite.getAllByOrganization as (
 								...args: any[]
-							) => any)(ctx.organization.id, function (
-								_err: Error,
-								organizationInvite: BalenaSdk.OrganizationInvite[],
-							) {
-								try {
-									expect(organizationInvite).to.deep.equal([]);
-									done();
-								} catch (err) {
-									done(err);
-								}
-							});
+							) => any)(
+								ctx.organization.id,
+								function (
+									_err: Error,
+									organizationInvite: BalenaSdk.OrganizationInvite[],
+								) {
+									try {
+										expect(organizationInvite).to.deep.equal([]);
+										done();
+									} catch (err) {
+										done(err);
+									}
+								},
+							);
 						});
 					},
 				);

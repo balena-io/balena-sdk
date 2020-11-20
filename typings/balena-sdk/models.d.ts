@@ -104,9 +104,7 @@ export interface User extends JWTUser {
 
 	organization_membership: ReverseNavigationResource<OrganizationMembership>;
 	// TODO: Consider replacing with user_application_membership in the next major
-	user__is_member_of__application: ReverseNavigationResource<
-		ApplicationMembership
-	>;
+	user__is_member_of__application: ReverseNavigationResource<ApplicationMembership>;
 	team_membership: ReverseNavigationResource<TeamMembership>;
 }
 
@@ -126,9 +124,7 @@ export interface OrganizationMembership {
 	is_member_of__organization: NavigationResource<Organization>;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
 
-	organization_membership_tag: ReverseNavigationResource<
-		OrganizationMembershipTag
-	>;
+	organization_membership_tag: ReverseNavigationResource<OrganizationMembershipTag>;
 }
 
 export interface TeamMembership {
@@ -167,18 +163,14 @@ export interface Application {
 	should_be_running__release: OptionalNavigationResource<Release>;
 
 	application_config_variable: ReverseNavigationResource<ApplicationVariable>;
-	application_environment_variable: ReverseNavigationResource<
-		ApplicationVariable
-	>;
+	application_environment_variable: ReverseNavigationResource<ApplicationVariable>;
 	build_environment_variable: ReverseNavigationResource<BuildVariable>;
 	application_tag: ReverseNavigationResource<ApplicationTag>;
 	owns__device: ReverseNavigationResource<Device>;
 	owns__release: ReverseNavigationResource<Release>;
 	is_depended_on_by__application: ReverseNavigationResource<Application>;
 	/** includes__user */
-	user__is_member_of__application: ReverseNavigationResource<
-		ApplicationMembership
-	>;
+	user__is_member_of__application: ReverseNavigationResource<ApplicationMembership>;
 	/** is_accessible_by__team */
 	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 }
@@ -346,9 +338,7 @@ export interface Device {
 	should_be_running__release: OptionalNavigationResource<Release>;
 	is_managed_by__service_instance: OptionalNavigationResource<ServiceInstance>;
 	is_managed_by__device: OptionalNavigationResource<Device>;
-	should_be_managed_by__supervisor_release: OptionalNavigationResource<
-		SupervisorRelease
-	>;
+	should_be_managed_by__supervisor_release: OptionalNavigationResource<SupervisorRelease>;
 
 	device_config_variable: ReverseNavigationResource<DeviceVariable>;
 	device_environment_variable: ReverseNavigationResource<DeviceVariable>;
@@ -365,9 +355,7 @@ export interface DeviceType {
 	name: string;
 	is_private: boolean;
 
-	is_accessible_privately_by__organization: ReverseNavigationResource<
-		Organization
-	>;
+	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
 	describes_device: ReverseNavigationResource<Device>;
 }
 
@@ -472,9 +460,7 @@ export interface ServiceInstall {
 	installs__service: NavigationResource<Service>;
 	application: NavigationResource<Application>;
 
-	device_service_environment_variable: ReverseNavigationResource<
-		DeviceServiceEnvironmentVariable
-	>;
+	device_service_environment_variable: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
 export interface EnvironmentVariableBase {
@@ -605,9 +591,7 @@ export interface Subscription {
 	is_for__organization: NavigationResource<Organization>;
 	is_for__plan: NavigationResource<Plan>;
 	discounts__plan_addon: ReverseNavigationResource<SubscriptionAddonDiscount>;
-	subscription_prepaid_addon: ReverseNavigationResource<
-		SubscriptionPrepaidAddon
-	>;
+	subscription_prepaid_addon: ReverseNavigationResource<SubscriptionPrepaidAddon>;
 }
 
 export interface SubscriptionPrepaidAddon {
