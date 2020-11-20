@@ -56,17 +56,20 @@ describe('Application Invite Model', function () {
 						it('should support a callback with no options', function (done) {
 							(balena.models.application.invite.getAllByApplication as (
 								...args: any[]
-							) => any)(ctx.application.id, function (
-								_err: Error,
-								applicationInvite: BalenaSdk.ApplicationInvite[],
-							) {
-								try {
-									expect(applicationInvite).to.deep.equal([]);
-									done();
-								} catch (err) {
-									done(err);
-								}
-							});
+							) => any)(
+								ctx.application.id,
+								function (
+									_err: Error,
+									applicationInvite: BalenaSdk.ApplicationInvite[],
+								) {
+									try {
+										expect(applicationInvite).to.deep.equal([]);
+										done();
+									} catch (err) {
+										done(err);
+									}
+								},
+							);
 						});
 					},
 				);
