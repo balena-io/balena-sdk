@@ -24,16 +24,16 @@ If you feel something is missing, not clear or could be improved, please don't h
 ## balena-sdk
 
 * [balena-sdk](#module_balena-sdk)
-    * [.getSdk()](#module_balena-sdk.getSdk)
-    * [.setSharedOptions(options)](#module_balena-sdk.setSharedOptions)
-    * [.fromSharedOptions()](#module_balena-sdk.fromSharedOptions)
+    * [~getSdk()](#module_balena-sdk..getSdk)
+    * [~setSharedOptions(options)](#module_balena-sdk..setSharedOptions)
+    * [~fromSharedOptions()](#module_balena-sdk..fromSharedOptions)
 
-<a name="module_balena-sdk.getSdk"></a>
+<a name="module_balena-sdk..getSdk"></a>
 
-### balena-sdk.getSdk()
+### balena-sdk~getSdk()
 The module exports a single factory function.
 
-**Kind**: static method of [<code>balena-sdk</code>](#module_balena-sdk)  
+**Kind**: inner method of [<code>balena-sdk</code>](#module_balena-sdk)  
 **Summary**: Creates a new SDK instance using the default or the provided options.  
 **Example**  
 ```js
@@ -47,15 +47,15 @@ const balena = getSdk({
 	dataDirectory: "/opt/local/balena"
 });
 ```
-<a name="module_balena-sdk.setSharedOptions"></a>
+<a name="module_balena-sdk..setSharedOptions"></a>
 
-### balena-sdk.setSharedOptions(options)
+### balena-sdk~setSharedOptions(options)
 Set options that are used by calls to `fromSharedOptions()`.
 The options accepted are the same as those used in the main SDK factory function.
 If you use this method, it should be called as soon as possible during app
 startup and before any calls to `fromSharedOptions()` are made.
 
-**Kind**: static method of [<code>balena-sdk</code>](#module_balena-sdk)  
+**Kind**: inner method of [<code>balena-sdk</code>](#module_balena-sdk)  
 **Summary**: Set shared default options  
 **Access**: public  
 
@@ -78,14 +78,14 @@ setSharedOptions({
 	isBrowser: true,
 });
 ```
-<a name="module_balena-sdk.fromSharedOptions"></a>
+<a name="module_balena-sdk..fromSharedOptions"></a>
 
-### balena-sdk.fromSharedOptions()
+### balena-sdk~fromSharedOptions()
 Create an SDK instance using shared default options set using the `setSharedOptions()` method.
 If options have not been set using this method, then this method will use the
 same defaults as the main SDK factory function.
 
-**Kind**: static method of [<code>balena-sdk</code>](#module_balena-sdk)  
+**Kind**: inner method of [<code>balena-sdk</code>](#module_balena-sdk)  
 **Summary**: Create an SDK instance using shared default options  
 **Access**: public  
 **Example**  
