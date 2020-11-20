@@ -1,4 +1,17 @@
 - commits:
+    - subject: Bump typescript to 4.1
+      hash: b29e8bde751ac321833a98a2e3319c23867d7d4a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.18.1
+  date: 2020-11-20T12:57:43.984Z
+- commits:
     - subject: 'typings: Deprecate PineWithSelectOnGet variant in favor of PineStrict'
       hash: 5b7a7e83c3beef41ee08c4b840a11e9f71e1a35b
       body: ''
