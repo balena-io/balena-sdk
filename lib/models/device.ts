@@ -1007,6 +1007,38 @@ const getDeviceModel = function (
 		},
 
 		/**
+		 * @summary Deactivate device
+		 * @name deactivate
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.deactivate('7cf02a6');
+		 *
+		 * @example
+		 * balena.models.device.deactivate(123);
+		 *
+		 * @example
+		 * balena.models.device.deactivate('7cf02a6', function(error) {
+		 * 	if (error) throw error;
+		 * });
+		 */
+		deactivate: async (uuidOrId: string | number): Promise<void> => {
+			const { id } = await exports.get(uuidOrId, { $select: 'id' });
+			await pine.patch({
+				resource: 'device',
+				body: {
+					is_active: false,
+				},
+				id,
+			});
+		},
+
+		/**
 		 * @summary Identify device
 		 * @name identify
 		 * @public

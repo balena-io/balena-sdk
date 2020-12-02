@@ -199,6 +199,7 @@ const sdk = fromSharedOptions();
             * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
             * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
             * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
+            * [.deactivate(uuidOrId)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
             * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
@@ -547,6 +548,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
         * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
         * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
+        * [.deactivate(uuidOrId)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
         * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
@@ -2178,6 +2180,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
     * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
     * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
+    * [.deactivate(uuidOrId)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
     * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
@@ -3425,6 +3428,31 @@ balena.models.device.remove(123);
 **Example**  
 ```js
 balena.models.device.remove('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.deactivate"></a>
+
+##### device.deactivate(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Deactivate device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.deactivate('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.deactivate(123);
+```
+**Example**  
+```js
+balena.models.device.deactivate('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```

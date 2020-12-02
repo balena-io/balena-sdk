@@ -684,6 +684,7 @@ export interface BalenaSDK {
 			): Promise<void>;
 			note(uuidOrId: string | number, note: string): Promise<void>;
 			remove(uuidOrId: string | number): Promise<void>;
+			deactivate(uuidOrId: string | number): Promise<void>;
 			rename(uuidOrId: string | number, newName: string): Promise<void>;
 			setCustomLocation(
 				uuidOrId: string | number,
