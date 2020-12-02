@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add missing application and release typings
+      hash: 1b36a1512ee06aa62ef07f839c9284e07dbcac93
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.19.0
+  date: 2020-12-02T12:02:50.446Z
+- commits:
     - subject: Bump typescript to 4.1
       hash: b29e8bde751ac321833a98a2e3319c23867d7d4a
       body: ''
