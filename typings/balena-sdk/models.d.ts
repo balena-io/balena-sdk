@@ -155,6 +155,8 @@ export interface Application {
 	should_track_latest_release: boolean;
 	is_public: boolean;
 	is_archived: boolean;
+	is_discoverable: boolean;
+	is_stored_at__repository_url: string | null;
 
 	application_type: NavigationResource<ApplicationType>;
 	is_for__device_type: NavigationResource<DeviceType>;
@@ -261,6 +263,7 @@ export interface Release {
 	created_at: string;
 	commit: string;
 	composition: string | null;
+	contract: string | null;
 	status: ReleaseStatus;
 	source: string;
 	build_log: string | null;
