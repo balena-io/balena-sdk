@@ -2079,6 +2079,21 @@ describe('Device Model', function () {
 					});
 				});
 			});
+
+			describe('balena.models.device.deactivate()', function () {
+				it('should be rejected if the device is online with statusCode 400', function () {
+					const promise = balena.models.device.deactivate(this.device.uuid);
+					return expect(promise).to.be.rejected.then(function (error) {
+						expect(error).to.have.property('statusCode', 400);
+						return m.chai
+							.expect(error)
+							.to.have.property(
+								'message',
+								'Request error: Devices must be offline in order to be deactivated.',
+							);
+					});
+				});
+			});
 		});
 
 		describe('given a device id whose shorter uuid is only numbers', function () {
@@ -2514,6 +2529,35 @@ describe('Device Model', function () {
 					return m.chai
 						.expect(promise)
 						.to.eventually.equal('new-release-commit');
+				});
+			});
+
+			describe('balena.models.device.deactivate()', function () {
+				it('should be rejected if the device uuid does not exist', function () {
+					const promise = balena.models.device.deactivate('asdfghjkl');
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Device not found: asdfghjkl');
+				});
+
+				it('should be rejected if the device id does not exist', function () {
+					const promise = balena.models.device.deactivate(999999);
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith('Device not found: 999999');
+				});
+
+				it('should be rejected if the device is in a Strarter application with statusCode 400', function () {
+					const promise = balena.models.device.deactivate(this.device.uuid);
+					return expect(promise).to.be.rejected.then(function (error) {
+						expect(error).to.have.property('statusCode', 400);
+						return m.chai
+							.expect(error)
+							.to.have.property(
+								'message',
+								'Request error: Cannot deactivate devices of Starter applications.',
+							);
+					});
 				});
 			});
 		});
