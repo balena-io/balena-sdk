@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'device: Add deactivate method'
+      hash: d30be851132ebdafb705922122de29d357de365e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Marios Balamatsias <mbalamatsias@gmail.com>
+        signed-off-by: Marios Balamatsias <mbalamatsias@gmail.com>
+      author: Marios Balamatsias
+      nested: []
+  version: 15.20.0
+  date: 2020-12-04T10:06:51.053Z
+- commits:
     - subject: Add missing application and release typings
       hash: 1b36a1512ee06aa62ef07f839c9284e07dbcac93
       body: ''
