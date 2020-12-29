@@ -1,4 +1,17 @@
 - commits:
+    - subject: Fix device type typings and add to resource mapping
+      hash: 6a5ba82beeb3065404754986a5b204a6954ce1a7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.21.1
+  date: 2020-12-29T11:55:56.160Z
+- commits:
     - subject: Add missing typings for device type
       hash: f2ea69687dac0689338802f1cc94744d679fdad7
       body: ''
