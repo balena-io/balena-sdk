@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add missing typings for device type
+      hash: f2ea69687dac0689338802f1cc94744d679fdad7
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Stevche Radevski <stevche@balena.io>
+        signed-off-by: Stevche Radevski <stevche@balena.io>
+      author: Stevche Radevski
+      nested: []
+  version: 15.21.0
+  date: 2020-12-29T08:25:50.720Z
+- commits:
     - subject: 'device: Add deactivate method'
       hash: d30be851132ebdafb705922122de29d357de365e
       body: ''
