@@ -352,11 +352,21 @@ export interface Device {
 	gateway_download?: ReverseNavigationResource<GatewayDownload>;
 }
 
+export interface CpuArchitecture {
+	id: number;
+	slug: string;
+}
+
 export interface DeviceType {
 	id: number;
 	slug: string;
 	name: string;
 	is_private: boolean;
+	logo: string | null;
+
+	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
+	supports__cpu_architecture: NavigationResource<CpuArchitecture>;
+	is_supported_by__device_type: ReverseNavigationResource<CpuArchitecture>;
 
 	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
 	describes_device: ReverseNavigationResource<Device>;
