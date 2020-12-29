@@ -20,6 +20,7 @@ export interface ResourceTypeMap {
 	application_tag: ApplicationTag;
 	application_type: ApplicationType;
 	build_environment_variable: BuildVariable;
+	cpu_architecture: CpuArchitecture;
 	device: Device;
 	device_config_variable: DeviceVariable;
 	device_environment_variable: DeviceVariable;
@@ -355,6 +356,8 @@ export interface Device {
 export interface CpuArchitecture {
 	id: number;
 	slug: string;
+
+	is_supported_by__device_type: ReverseNavigationResource<CpuArchitecture>;
 }
 
 export interface DeviceType {
@@ -365,9 +368,6 @@ export interface DeviceType {
 	logo: string | null;
 
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
-	supports__cpu_architecture: NavigationResource<CpuArchitecture>;
-	is_supported_by__device_type: ReverseNavigationResource<CpuArchitecture>;
-
 	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
 	describes_device: ReverseNavigationResource<Device>;
 }
