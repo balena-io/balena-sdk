@@ -40,7 +40,7 @@ import {
 	isNotFoundResponse,
 	mergePineOptions,
 	treatAsMissingApplication,
-	LOCKED_STATUS_CODE,
+	withSupervisorLockedError,
 } from '../util';
 
 import { normalizeDeviceOsVersion } from '../util/device-os-version';
@@ -791,22 +791,23 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		restart: async (nameOrSlugOrId: string | number): Promise<void> => {
-			try {
-				const applicationId = await getId(nameOrSlugOrId);
+		restart: (nameOrSlugOrId: string | number): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				try {
+					const applicationId = await getId(nameOrSlugOrId);
 
-				await request.send({
-					method: 'POST',
-					url: `/application/${applicationId}/restart`,
-					baseUrl: apiUrl,
-				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(nameOrSlugOrId, err);
+					await request.send({
+						method: 'POST',
+						url: `/application/${applicationId}/restart`,
+						baseUrl: apiUrl,
+					});
+				} catch (err) {
+					if (isNotFoundResponse(err)) {
+						treatAsMissingApplication(nameOrSlugOrId, err);
+					}
+					throw err;
 				}
-				throw err;
-			}
-		},
+			}),
 
 		/**
 		 * @summary Generate an API key for a specific application
@@ -918,8 +919,8 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		purge: async (appId: number): Promise<void> => {
-			try {
+		purge: (appId: number): Promise<void> =>
+			withSupervisorLockedError(async () => {
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/purge',
@@ -931,14 +932,7 @@ const getApplicationModel = function (
 						},
 					},
 				});
-			} catch (err) {
-				if (err.statusCode === LOCKED_STATUS_CODE) {
-					throw new errors.BalenaSupervisorLockedError();
-				}
-
-				throw err;
-			}
-		},
+			}),
 
 		/**
 		 * @summary Shutdown devices by application id
@@ -960,14 +954,12 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async shutdown(
-			appId: number,
-			options?: { force?: boolean },
-		): Promise<void> {
-			if (options == null) {
-				options = {};
-			}
-			try {
+		shutdown: (appId: number, options?: { force?: boolean }): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				if (options == null) {
+					options = {};
+				}
+
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/shutdown',
@@ -979,14 +971,7 @@ const getApplicationModel = function (
 						},
 					},
 				});
-			} catch (err) {
-				if (err.statusCode === LOCKED_STATUS_CODE) {
-					throw new errors.BalenaSupervisorLockedError();
-				}
-
-				throw err;
-			}
-		},
+			}),
 
 		/**
 		 * @summary Reboot devices by application id
@@ -1008,11 +993,12 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async reboot(appId: number, options?: { force?: boolean }): Promise<void> {
-			if (options == null) {
-				options = {};
-			}
-			try {
+		reboot: (appId: number, options?: { force?: boolean }): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				if (options == null) {
+					options = {};
+				}
+
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/reboot',
@@ -1024,14 +1010,7 @@ const getApplicationModel = function (
 						},
 					},
 				});
-			} catch (err) {
-				if (err.statusCode === LOCKED_STATUS_CODE) {
-					throw new errors.BalenaSupervisorLockedError();
-				}
-
-				throw err;
-			}
-		},
+			}),
 
 		/**
 		 * @summary Get whether the application is configured to receive updates whenever a new release is available

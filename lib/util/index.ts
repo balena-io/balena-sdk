@@ -17,7 +17,18 @@ export const onlyIf = <T extends (...args: any[]) => any>(
 
 export const isId = (v?: any): v is number => typeof v === 'number';
 
-export const LOCKED_STATUS_CODE = 423;
+const SUPERVISOR_LOCKED_STATUS_CODE = 423;
+
+export const withSupervisorLockedError = async <T>(fn: () => Promise<T>) => {
+	try {
+		return await fn();
+	} catch (err) {
+		if (err.statusCode === SUPERVISOR_LOCKED_STATUS_CODE) {
+			throw new errors.BalenaSupervisorLockedError();
+		}
+		throw err;
+	}
+};
 
 const isBalenaRequestErrorResponseWithCode = (
 	error: Partial<errors.BalenaRequestError>,

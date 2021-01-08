@@ -45,7 +45,7 @@ import {
 	isNotFoundResponse,
 	mergePineOptions,
 	treatAsMissingDevice,
-	LOCKED_STATUS_CODE,
+	withSupervisorLockedError,
 } from '../util';
 
 import { toWritable } from '../util/types';
@@ -1353,32 +1353,33 @@ const getDeviceModel = function (
 		 * 	console.log(containerId);
 		 * });
 		 */
-		stopApplication: async (uuidOrId: string | number): Promise<void> => {
-			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureSupervisorCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_APPS_API,
-			);
-			const appId = device.belongs_to__application[0].id;
-			const { body } = await request.send({
-				method: 'POST',
-				url: `/supervisor/v1/apps/${appId}/stop`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-				},
-				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-			});
-			return body.containerId;
-		},
+		stopApplication: (uuidOrId: string | number): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				const deviceOptions = {
+					$select: toWritable(['id', 'supervisor_version'] as const),
+					$expand: { belongs_to__application: { $select: 'id' as const } },
+				};
+				const device = (await exports.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+				ensureSupervisorCompatibility(
+					device.supervisor_version,
+					MIN_SUPERVISOR_APPS_API,
+				);
+				const appId = device.belongs_to__application[0].id;
+				const { body } = await request.send({
+					method: 'POST',
+					url: `/supervisor/v1/apps/${appId}/stop`,
+					baseUrl: apiUrl,
+					body: {
+						deviceId: device.id,
+						appId,
+					},
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+				});
+				return body.containerId;
+			}),
 
 		/**
 		 * @summary Restart application on device
@@ -1406,23 +1407,24 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		restartApplication: async (uuidOrId: string | number): Promise<void> => {
-			try {
-				const deviceId = await getId(uuidOrId);
-				const { body } = await request.send({
-					method: 'POST',
-					url: `/device/${deviceId}/restart`,
-					baseUrl: apiUrl,
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-				});
-				return body;
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingDevice(uuidOrId, err);
+		restartApplication: (uuidOrId: string | number): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				try {
+					const deviceId = await getId(uuidOrId);
+					const { body } = await request.send({
+						method: 'POST',
+						url: `/device/${deviceId}/restart`,
+						baseUrl: apiUrl,
+						timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+					});
+					return body;
+				} catch (err) {
+					if (isNotFoundResponse(err)) {
+						treatAsMissingDevice(uuidOrId, err);
+					}
+					throw err;
 				}
-				throw err;
-			}
-		},
+			}),
 
 		/**
 		 * @summary Start a service on a device
@@ -1511,38 +1513,36 @@ const getDeviceModel = function (
 		 * 	...
 		 * });
 		 */
-		stopService: async (
-			uuidOrId: string | number,
-			imageId: number,
-		): Promise<void> => {
-			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureSupervisorCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_MC_API,
-			);
-			const appId = device.belongs_to__application[0].id;
-			await request.send({
-				method: 'POST',
-				url: `/supervisor/v2/applications/${appId}/stop-service`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-					data: {
+		stopService: (uuidOrId: string | number, imageId: number): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				const deviceOptions = {
+					$select: toWritable(['id', 'supervisor_version'] as const),
+					$expand: { belongs_to__application: { $select: 'id' as const } },
+				};
+				const device = (await exports.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+				ensureSupervisorCompatibility(
+					device.supervisor_version,
+					MIN_SUPERVISOR_MC_API,
+				);
+				const appId = device.belongs_to__application[0].id;
+				await request.send({
+					method: 'POST',
+					url: `/supervisor/v2/applications/${appId}/stop-service`,
+					baseUrl: apiUrl,
+					body: {
+						deviceId: device.id,
 						appId,
-						imageId,
+						data: {
+							appId,
+							imageId,
+						},
 					},
-				},
-				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-			});
-		},
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+				});
+			}),
 
 		/**
 		 * @summary Restart a service on a device
@@ -1571,38 +1571,39 @@ const getDeviceModel = function (
 		 * 	...
 		 * });
 		 */
-		restartService: async (
+		restartService: (
 			uuidOrId: string | number,
 			imageId: number,
-		): Promise<void> => {
-			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureSupervisorCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_MC_API,
-			);
-			const appId = device.belongs_to__application[0].id;
-			await request.send({
-				method: 'POST',
-				url: `/supervisor/v2/applications/${appId}/restart-service`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-					data: {
+		): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				const deviceOptions = {
+					$select: toWritable(['id', 'supervisor_version'] as const),
+					$expand: { belongs_to__application: { $select: 'id' as const } },
+				};
+				const device = (await exports.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+				ensureSupervisorCompatibility(
+					device.supervisor_version,
+					MIN_SUPERVISOR_MC_API,
+				);
+				const appId = device.belongs_to__application[0].id;
+				await request.send({
+					method: 'POST',
+					url: `/supervisor/v2/applications/${appId}/restart-service`,
+					baseUrl: apiUrl,
+					body: {
+						deviceId: device.id,
 						appId,
-						imageId,
+						data: {
+							appId,
+							imageId,
+						},
 					},
-				},
-				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-			});
-		},
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+				});
+			}),
 
 		/**
 		 * @summary Reboot device
@@ -1627,18 +1628,18 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async reboot(
+		reboot: (
 			uuidOrId: string | number,
 			options: { force?: boolean },
-		): Promise<void> {
-			if (options == null) {
-				options = {};
-			}
+		): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				if (options == null) {
+					options = {};
+				}
 
-			try {
-				const deviceId = await getId(uuidOrId);
-				const { body } = await request
-					.send({
+				try {
+					const deviceId = await getId(uuidOrId);
+					const { body } = await request.send({
 						method: 'POST',
 						url: '/supervisor/v1/reboot',
 						baseUrl: apiUrl,
@@ -1648,22 +1649,15 @@ const getDeviceModel = function (
 								force: Boolean(options?.force),
 							},
 						},
-					})
-					.catch(function (err) {
-						if (err.statusCode === LOCKED_STATUS_CODE) {
-							throw new errors.BalenaSupervisorLockedError();
-						}
-
-						throw err;
 					});
-				return body;
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingDevice(uuidOrId, err);
+					return body;
+				} catch (err) {
+					if (isNotFoundResponse(err)) {
+						treatAsMissingDevice(uuidOrId, err);
+					}
+					throw err;
 				}
-				throw err;
-			}
-		},
+			}),
 
 		/**
 		 * @summary Shutdown device
@@ -1688,25 +1682,25 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		async shutdown(
+		shutdown: (
 			uuidOrId: string | number,
 			options: { force?: boolean },
-		): Promise<void> {
-			if (options == null) {
-				options = {};
-			}
+		): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				if (options == null) {
+					options = {};
+				}
 
-			const deviceOptions = {
-				$select: 'id',
-				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
+				const deviceOptions = {
+					$select: 'id',
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} as const;
 
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			await request
-				.send({
+				const device = (await exports.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/shutdown',
 					baseUrl: apiUrl,
@@ -1717,15 +1711,8 @@ const getDeviceModel = function (
 							force: Boolean(options?.force),
 						},
 					},
-				})
-				.catch(function (err) {
-					if (err.statusCode === LOCKED_STATUS_CODE) {
-						throw new errors.BalenaSupervisorLockedError();
-					}
-
-					throw err;
 				});
-		},
+			}),
 
 		/**
 		 * @summary Purge device
@@ -1751,17 +1738,17 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		purge: async (uuidOrId: string | number): Promise<void> => {
-			const deviceOptions = {
-				$select: 'id',
-				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			await request
-				.send({
+		purge: (uuidOrId: string | number): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				const deviceOptions = {
+					$select: 'id',
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} as const;
+				const device = (await exports.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/purge',
 					baseUrl: apiUrl,
@@ -1772,15 +1759,8 @@ const getDeviceModel = function (
 							appId: device.belongs_to__application[0].id,
 						},
 					},
-				})
-				.catch(function (err) {
-					if (err.statusCode === LOCKED_STATUS_CODE) {
-						throw new errors.BalenaSupervisorLockedError();
-					}
-
-					throw err;
 				});
-		},
+			}),
 
 		/**
 		 * @summary Trigger an update check on the supervisor
