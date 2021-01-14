@@ -144,9 +144,13 @@ Run the test suite by doing:
 $ npm test
 ```
 
-In order to make the develop & test cycle faster, you can use [mocha's `.only` & `.skip`](https://mochajs.org/#exclusive-tests) variants
-to only run the subset of the test cases that is relevant to your changes/additions. You should make sure to remove those from
-your code before you push and make sure that the complete test suite completes successfully.
+In order to make the develop & test cycle faster:
+* You can use [mocha's `.only` & `.skip`](https://mochajs.org/#exclusive-tests) variants
+  to only run the subset of the test cases that is relevant to your changes/additions. You should make sure to remove those from
+  your code before you push and make sure that the complete test suite completes successfully.
+* You can use `npm run test:fast` which fixes linting issues, only builds for a single ES target and runs the tests only on node.
+  This can save time when implementing a method that interacts with an API endpoint, but should be avoided if the feature might
+  work different or only in the browser.
 
 ## Contribute
 
