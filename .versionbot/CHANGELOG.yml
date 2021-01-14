@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'Add note about the test:fast npm script variant'
+      hash: f1c9fa0469fc4be45abda791945356423c32d77c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.21.3
+  date: 2021-01-14T12:43:38.041Z
+- commits:
     - subject: Properly throw Supervisor locked errors in all methods that should do so
       hash: 603f50cb9b8d8059b2f47fd0e7935d509a969d76
       body: ''
