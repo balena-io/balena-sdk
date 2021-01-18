@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'typings: add missing `release_version`'
+      hash: fa7f90c083202bfa4087e417333c819b1d8192f7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 15.21.4
+  date: 2021-01-18T19:03:36.276Z
+- commits:
     - subject: 'Add note about the test:fast npm script variant'
       hash: f1c9fa0469fc4be45abda791945356423c32d77c
       body: ''
