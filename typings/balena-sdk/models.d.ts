@@ -272,6 +272,7 @@ export interface Release {
 	start_timestamp: string;
 	update_timestamp: string | null;
 	end_timestamp: string;
+	release_version: string | null;
 
 	is_created_by__user: OptionalNavigationResource<User>;
 	belongs_to__application: NavigationResource<Application>;
