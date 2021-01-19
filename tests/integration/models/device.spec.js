@@ -6,6 +6,7 @@ import * as superagent from 'superagent';
 import {
 	balena,
 	givenADevice,
+	givenASupervisorRelease,
 	givenAnApplication,
 	givenLoggedInUser,
 	givenMulticontainerApplication,
@@ -2677,78 +2678,70 @@ describe('Device Model', function () {
 					return expect(isTracking).to.be.true;
 				});
 			});
+		});
+
+		describe('given a device that supports multicontainer', function () {
+			givenADevice(beforeEach, {
+				os_version: 'balenaOS 2.56.1+rev1',
+			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {
-				before(async function () {
-					const targetSupervisorVersion = 'v11.12.4';
-					const supervisorRelease = await balena.pine.get({
-						resource: 'supervisor_release',
-						options: {
-							$filter: {
-								supervisor_version: targetSupervisorVersion,
-								is_for__device_type: this.application.is_for__device_type.__id,
-							},
-						},
-					});
-					this.supervisorRelease = supervisorRelease[0];
+				givenASupervisorRelease(before);
+
+				it('should set the device to a specific supervisor release, using the device id & target version', async function () {
+					await balena.models.device.setSupervisorRelease(
+						this.device.id,
+						this.supervisorRelease.supervisor_version,
+					);
+					const device = await balena.models.device.get(this.device.id);
+					m.chai
+						.expect(device.should_be_managed_by__supervisor_release)
+						.to.have.deep.property('__id', this.supervisorRelease.id);
 				});
 
-				describe('given a device that supports multicontainer', function () {
-					givenADevice(beforeEach, {
-						os_version: 'balenaOS 2.56.1+rev1',
-					});
-
-					it('should set the device to a specific supervisor release, using the device id & target version', async function () {
-						await balena.models.device.setSupervisorRelease(
-							this.device.id,
-							this.supervisorRelease.supervisor_version,
-						);
-						const device = await balena.models.device.get(this.device.id);
-						m.chai
-							.expect(device.should_be_managed_by__supervisor_release)
-							.to.have.deep.property('__id', this.supervisorRelease.id);
-					});
-
-					it('should set the device to a specific supervisor release, using the device id & supervisor release id', async function () {
-						await balena.models.device.setSupervisorRelease(
-							this.device.id,
-							this.supervisorRelease.id,
-						);
-						const device = await balena.models.device.get(this.device.id);
-						m.chai
-							.expect(device.should_be_managed_by__supervisor_release)
-							.to.have.deep.property('__id', this.supervisorRelease.id);
-					});
-
-					it('should fail to set the device to a specific non-existent supervisor release', function () {
-						const badRelease = 'nonexistent-supervisor-version';
-						const promise = balena.models.device.setSupervisorRelease(
-							this.device.id,
-							badRelease,
-						);
-						return m.chai
-							.expect(promise)
-							.to.be.rejectedWith(`Release not found: ${badRelease}`);
-					});
+				it('should set the device to a specific supervisor release, using the device id & supervisor release id', async function () {
+					await balena.models.device.setSupervisorRelease(
+						this.device.id,
+						this.supervisorRelease.id,
+					);
+					const device = await balena.models.device.get(this.device.id);
+					m.chai
+						.expect(device.should_be_managed_by__supervisor_release)
+						.to.have.deep.property('__id', this.supervisorRelease.id);
 				});
 
-				describe('given a device that does not support multicontainer', function () {
-					const hostOS = 'Resin OS 2.7.8+rev1';
-					givenADevice(before, {
-						os_version: hostOS,
-					});
+				it('should fail to set the device to a specific non-existent supervisor release', function () {
+					const badRelease = 'nonexistent-supervisor-version';
+					const promise = balena.models.device.setSupervisorRelease(
+						this.device.id,
+						badRelease,
+					);
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith(`Release not found: ${badRelease}`);
+				});
+			});
+		});
 
-					it('should fail to set the target supervisor for a pre-multicontainer device', function () {
-						const promise = balena.models.device.setSupervisorRelease(
-							this.device.id,
-							this.supervisorRelease.id,
+		describe('given a device that does not support multicontainer', function () {
+			const hostOS = 'Resin OS 2.7.8+rev1';
+			givenADevice(before, {
+				os_version: hostOS,
+			});
+
+			describe('balena.models.device.setSupervisorRelease()', function () {
+				givenASupervisorRelease(before);
+
+				it('should fail to set the target supervisor for a pre-multicontainer device', function () {
+					const promise = balena.models.device.setSupervisorRelease(
+						this.device.id,
+						this.supervisorRelease.id,
+					);
+					return m.chai
+						.expect(promise)
+						.to.be.rejectedWith(
+							`Incompatible host OS version: ${hostOS} - must be >= 2.12.0`,
 						);
-						return m.chai
-							.expect(promise)
-							.to.be.rejectedWith(
-								`Incompatible host OS version: ${hostOS} - must be >= 2.12.0`,
-							);
-					});
 				});
 			});
 		});

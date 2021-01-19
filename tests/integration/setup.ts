@@ -531,3 +531,21 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 		return (this.currentRelease = null);
 	});
 }
+
+export function givenASupervisorRelease(
+	beforeFn: Mocha.HookFunction,
+	version = 'v11.12.4',
+) {
+	beforeFn(async function () {
+		const supervisorRelease = await balena.pine.get({
+			resource: 'supervisor_release',
+			options: {
+				$filter: {
+					supervisor_version: version,
+					is_for__device_type: this.application.is_for__device_type.__id,
+				},
+			},
+		});
+		this.supervisorRelease = supervisorRelease[0];
+	});
+}
