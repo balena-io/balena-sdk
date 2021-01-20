@@ -36,7 +36,6 @@ import * as url from 'url';
 
 import once = require('lodash/once');
 import * as bSemver from 'balena-semver';
-import * as semver from 'semver';
 import * as errors from 'balena-errors';
 
 import {
@@ -77,6 +76,7 @@ import { DeviceType } from '../../typings/balena-sdk/device-type-json';
 const MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
 
 const MIN_SUPERVISOR_MC_API = '7.0.0';
+const MIN_OS_MC = '2.12.0';
 
 // Degraded network, slow devices, compressed docker binaries and any combination of these factors
 // can cause proxied device requests to surpass the default timeout (currently 30s). This was
@@ -215,8 +215,8 @@ const getDeviceModel = function (
 	};
 
 	/**
-	 * @summary Ensure supervisor version compatibility using semver
-	 * @name ensureSupervisorCompatibility
+	 * @summary Ensure version compatibility using balena-semver
+	 * @name ensureVersionCompatibility
 	 * @private
 	 * @function
 	 *
@@ -226,17 +226,18 @@ const getDeviceModel = function (
 	 * @returns {void}
 	 *
 	 * @example
-	 * ensureSupervisorCompatibility(version, MIN_VERSION)
+	 * ensureVersionCompatibility(version, MIN_VERSION)
 	 * console.log('Is compatible');
 	 *
 	 */
-	const ensureSupervisorCompatibility = function (
-		version: string,
+	const ensureVersionCompatibility = function (
+		version: string | null,
 		minVersion: string,
+		versionType: 'supervisor' | 'host OS',
 	): void {
-		if (semver.lt(version, minVersion)) {
+		if (version && bSemver.lt(version, minVersion)) {
 			throw new Error(
-				`Incompatible supervisor version: ${version} - must be >= ${minVersion}`,
+				`Incompatible ${versionType} version: ${version} - must be >= ${minVersion}`,
 			);
 		}
 	};
@@ -744,9 +745,10 @@ const getDeviceModel = function (
 				uuidOrId,
 				deviceOptions,
 			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureSupervisorCompatibility(
+			ensureVersionCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_APPS_API,
+				'supervisor',
 			);
 			const appId = device.belongs_to__application[0].id;
 			const { body } = await request.send({
@@ -1304,9 +1306,10 @@ const getDeviceModel = function (
 				uuidOrId,
 				deviceOptions,
 			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureSupervisorCompatibility(
+			ensureVersionCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_APPS_API,
+				'supervisor',
 			);
 			const appId = device.belongs_to__application[0].id;
 			const { body } = await request.send({
@@ -1363,9 +1366,10 @@ const getDeviceModel = function (
 					uuidOrId,
 					deviceOptions,
 				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureSupervisorCompatibility(
+				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_APPS_API,
+					'supervisor',
 				);
 				const appId = device.belongs_to__application[0].id;
 				const { body } = await request.send({
@@ -1465,9 +1469,10 @@ const getDeviceModel = function (
 				uuidOrId,
 				deviceOptions,
 			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureSupervisorCompatibility(
+			ensureVersionCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
+				'supervisor',
 			);
 			const appId = device.belongs_to__application[0].id;
 			await request.send({
@@ -1523,9 +1528,10 @@ const getDeviceModel = function (
 					uuidOrId,
 					deviceOptions,
 				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureSupervisorCompatibility(
+				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_MC_API,
+					'supervisor',
 				);
 				const appId = device.belongs_to__application[0].id;
 				await request.send({
@@ -1584,9 +1590,10 @@ const getDeviceModel = function (
 					uuidOrId,
 					deviceOptions,
 				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureSupervisorCompatibility(
+				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_MC_API,
+					'supervisor',
 				);
 				const appId = device.belongs_to__application[0].id;
 				await request.send({
@@ -2998,6 +3005,25 @@ const getDeviceModel = function (
 		): Promise<void> => {
 			let deviceId;
 			let releaseId;
+			const deviceOpts = {
+				$select: toWritable([
+					'id',
+					'supervisor_version',
+					'os_version',
+				] as const),
+				$expand: { is_of__device_type: { $select: 'slug' } },
+			} as const;
+
+			const device = (await exports.get(
+				uuidOrId,
+				deviceOpts,
+			)) as PineTypedResult<Device, typeof deviceOpts>;
+			ensureVersionCompatibility(
+				device.supervisor_version,
+				MIN_SUPERVISOR_MC_API,
+				'supervisor',
+			);
+			ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
 			if (isId(uuidOrId) && isId(supervisorVersionOrId)) {
 				deviceId = uuidOrId;
 				releaseId = supervisorVersionOrId;
@@ -3006,15 +3032,6 @@ const getDeviceModel = function (
 					? 'id'
 					: 'supervisor_version';
 
-				const deviceOpts = {
-					$select: 'id',
-					$expand: { is_of__device_type: { $select: 'slug' } },
-				} as const;
-
-				const device = (await exports.get(
-					uuidOrId,
-					deviceOpts,
-				)) as PineTypedResult<Device, typeof deviceOpts>;
 				const [supervisorRelease] = await pine.get({
 					resource: 'supervisor_release',
 					options: {
