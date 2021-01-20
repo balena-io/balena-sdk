@@ -1,4 +1,29 @@
 - commits:
+    - subject: Refactor device.setSupervisorRelease tests to reduce the created devices
+      hash: 3d7267f1a585b33642645f725a182156c441a2d5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'supervisor-upgrades: limit to devices that support multicontainer'
+      hash: c02b118df3deb4c9150bfa5d8e22d804f5d7a8e4
+      body: ''
+      footer:
+        Connects-to: 'https://github.com/balena-io/balena-sdk/issues/1033'
+        connects-to: 'https://github.com/balena-io/balena-sdk/issues/1033'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 15.21.5
+  date: 2021-01-20T13:09:38.425Z
+- commits:
     - subject: 'typings: add missing `release_version`'
       hash: fa7f90c083202bfa4087e417333c819b1d8192f7
       body: ''
