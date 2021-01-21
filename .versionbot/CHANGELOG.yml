@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'typings: Mark the my_application resource as deprecated'
+      hash: 67d7788c67c095e15dca32a0c5da7fc0d9d5eac7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Add the `user has direct access to application` resource'
+      hash: f14f0ffa29eaecc05ea3c3c46bda9c49d4504fdd
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: 'https://github.com/balena-io/balena-api/pull/2849'
+        see: 'https://github.com/balena-io/balena-api/pull/2849'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.22.0
+  date: 2021-01-21T12:58:20.199Z
+- commits:
     - subject: Refactor device.setSupervisorRelease tests to reduce the created devices
       hash: 3d7267f1a585b33642645f725a182156c441a2d5
       body: ''
