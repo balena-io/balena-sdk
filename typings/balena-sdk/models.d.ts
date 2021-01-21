@@ -34,6 +34,7 @@ export interface ResourceTypeMap {
 	invitee: Invitee;
 	invitee__is_invited_to__application: ApplicationInvite;
 	invitee__is_invited_to__organization: OrganizationInvite;
+	/** @deprecated */
 	my_application: Application;
 	organization: Organization;
 	organization__has_private_access_to__device_type: OrganizationPrivateDeviceTypeAccess;
