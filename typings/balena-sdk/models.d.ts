@@ -34,6 +34,7 @@ export interface ResourceTypeMap {
 	invitee: Invitee;
 	invitee__is_invited_to__application: ApplicationInvite;
 	invitee__is_invited_to__organization: OrganizationInvite;
+	/** @deprecated */
 	my_application: Application;
 	organization: Organization;
 	organization__has_private_access_to__device_type: OrganizationPrivateDeviceTypeAccess;
@@ -61,6 +62,7 @@ export interface ResourceTypeMap {
 	team_membership: TeamMembership;
 	user: User;
 	user__has__public_key: SSHKey;
+	user__has_direct_access_to__application: UserHasDirectAccessToApplication;
 	user__is_member_of__application: ApplicationMembership;
 }
 
@@ -107,6 +109,7 @@ export interface User extends JWTUser {
 	// TODO: Consider replacing with user_application_membership in the next major
 	user__is_member_of__application: ReverseNavigationResource<ApplicationMembership>;
 	team_membership: ReverseNavigationResource<TeamMembership>;
+	has_direct_access_to__application: ReverseNavigationResource<Application>;
 }
 
 export type OrganizationMembershipRoles = 'administrator' | 'member';
@@ -172,10 +175,17 @@ export interface Application {
 	owns__device: ReverseNavigationResource<Device>;
 	owns__release: ReverseNavigationResource<Release>;
 	is_depended_on_by__application: ReverseNavigationResource<Application>;
+	is_directly_accessible_by__user: ReverseNavigationResource<User>;
 	/** includes__user */
 	user__is_member_of__application: ReverseNavigationResource<ApplicationMembership>;
 	/** is_accessible_by__team */
 	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
+}
+
+export interface UserHasDirectAccessToApplication {
+	id: number;
+	user: NavigationResource<User>;
+	has_direct_access_to__application: NavigationResource<Application>;
 }
 
 export interface Invitee {
