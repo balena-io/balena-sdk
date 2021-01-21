@@ -147,7 +147,7 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(() => resetUser());
+	afterFn(() => resetUser());
 }
 
 export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
@@ -160,7 +160,7 @@ export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(() => resetUser());
+	afterFn(() => resetUser());
 }
 
 export function loginPaidUser() {
@@ -169,31 +169,6 @@ export function loginPaidUser() {
 		password: credentials.paid.password,
 	});
 }
-
-const resetOrganization = () =>
-	balena.pine
-		.get({
-			resource: 'organization',
-			options: { $filter: { name: 'FooBar' }, $top: 1 },
-		})
-		.then((orgs) => {
-			const [org] = orgs;
-			if (!org) {
-				return;
-			}
-			return balena.pine.delete({
-				resource: 'organization',
-				id: org.id,
-			});
-		});
-
-const resetApplications = () =>
-	balena.pine.delete({
-		resource: 'application',
-		options: {
-			$filter: { 1: 1 },
-		},
-	});
 
 export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
 	return beforeFn(async function () {
@@ -218,15 +193,22 @@ const getDeviceType = memoize(
 );
 
 export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
+	let orgId;
 	beforeFn(async function () {
 		const organization = await balena.models.organization.create({
 			name: 'FooBar',
 		});
 		this.organization = organization;
+		orgId = organization.id;
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(resetOrganization);
+	afterFn(async () => {
+		await balena.pine.delete({
+			resource: 'organization',
+			id: orgId,
+		});
+	});
 }
 
 export function givenAnApplication(beforeFn: Mocha.HookFunction) {
@@ -257,7 +239,14 @@ export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	return afterFn(resetApplications);
+	afterFn(async () => {
+		await balena.pine.delete({
+			resource: 'application',
+			options: {
+				$filter: { 1: 1 },
+			},
+		});
+	});
 }
 
 const resetDevices = () =>
