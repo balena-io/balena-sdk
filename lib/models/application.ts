@@ -213,8 +213,23 @@ const getApplicationModel = function (
 			}
 
 			const apps = await pine.get({
-				resource: 'my_application',
-				options: mergePineOptions({ $orderby: 'app_name asc' }, options),
+				resource: 'application',
+				options: mergePineOptions(
+					{
+						$filter: {
+							is_directly_accessible_by__user: {
+								$any: {
+									$alias: 'dau',
+									$expr: {
+										1: 1,
+									},
+								},
+							},
+						},
+						$orderby: 'app_name asc',
+					},
+					options,
+				),
 			});
 			return apps.map(normalizeApplication);
 		},
