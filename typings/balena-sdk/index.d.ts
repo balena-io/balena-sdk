@@ -12,7 +12,10 @@ import type {
 } from '../balena-request';
 import type * as DeviceOverallStatus from './device-overall-status';
 import type * as OsTypes from './os-types';
-import type * as PineClient from '../pinejs-client-core';
+import type {
+	ODataOptions as PineOptions,
+	SubmitBody as PineSubmitBody,
+} from '../pinejs-client-core';
 import { AtLeast } from '../utils';
 import type * as DeviceState from './device-state';
 import type * as DeviceTypeJson from './device-type-json';
@@ -58,11 +61,13 @@ export type {
 	ParamsObjWithId as PineParamsWithId,
 	Filter as PineFilter,
 	Expand as PineExpand,
+	ODataOptions as PineOptions,
 	ODataOptionsWithSelect as PineOptionsWithSelect,
 	ODataOptionsWithFilter as PineOptionsWithFilter,
 	SelectableProps as PineSelectableProps,
 	ExpandableProps as PineExpandableProps,
 	ExpandResultObject as PineExpandResultObject,
+	SubmitBody as PineSubmitBody,
 	TypedResult as PineTypedResult,
 } from '../pinejs-client-core';
 
@@ -72,9 +77,6 @@ export type PineStrict = PineStrictBase<ResourceTypeMap>;
 // TODO: Drop in the next major
 /** @deprecated */
 export type PineWithSelectOnGet = PineStrict;
-
-export type PineOptions<T> = PineClient.ODataOptions<T>;
-export type PineSubmitBody<T> = PineClient.SubmitBody<T>;
 
 export interface Interceptor {
 	request?(response: any): Promise<any>;
