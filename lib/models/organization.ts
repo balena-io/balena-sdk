@@ -16,8 +16,8 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 
-import type * as BalenaSdk from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type * as BalenaSdk from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import {
 	isId,
 	isNotFoundResponse,

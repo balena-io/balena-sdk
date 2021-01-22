@@ -1,4 +1,4 @@
-import type { Dictionary } from '../utils';
+import type { Dictionary } from '../../typings/utils';
 
 export interface ServiceInfo {
 	imageId: number;

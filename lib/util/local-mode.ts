@@ -1,5 +1,6 @@
 import bSemver = require('balena-semver');
-import type * as BalenaSdk from '../..';
+import type * as BalenaSdk from '..';
+import type { AtLeast } from '../../typings/utils';
 import { isProvisioned } from './device';
 
 const LOCAL_MODE_MIN_OS_VER = '2.0.0';
@@ -35,7 +36,10 @@ export const checkLocalModeSupported = (
 };
 
 export const getLocalModeSupport = (
-	device: Pick<BalenaSdk.Device, typeof LOCAL_MODE_SUPPORT_PROPERTIES[number]>,
+	device: AtLeast<
+		BalenaSdk.Device,
+		typeof LOCAL_MODE_SUPPORT_PROPERTIES[number]
+	>,
 ) => {
 	try {
 		checkLocalModeSupported(device);

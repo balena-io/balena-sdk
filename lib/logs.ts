@@ -21,18 +21,39 @@ import * as querystring from 'querystring';
 import { EventEmitter } from 'events';
 import * as ndjson from 'ndjson';
 import { globalEnv } from './util/global-env';
-import {
-	LogsOptions,
-	LogMessage,
-	LogsSubscription,
-	Device,
-} from '../typings/balena-sdk';
+import { Device } from './types/models';
 
 const AbortController: typeof window.AbortController =
 	'AbortController' in globalEnv
 		? globalEnv.AbortController
 		: // tslint:disable-next-line:no-var-requires
 		  require('abortcontroller-polyfill/dist/cjs-ponyfill').AbortController;
+
+export interface BaseLog {
+	message: string;
+	createdAt: number;
+	timestamp: number;
+	isStdErr: boolean;
+}
+
+export interface ServiceLog extends BaseLog {
+	isSystem: false;
+	serviceId: number;
+}
+
+export interface SystemLog extends BaseLog {
+	isSystem: true;
+}
+
+export type LogMessage = ServiceLog | SystemLog;
+
+export interface LogsSubscription extends EventEmitter {
+	unsubscribe(): void;
+}
+
+export interface LogsOptions {
+	count?: number | 'all';
+}
 
 const getLogs = function (
 	deps: InjectedDependenciesParam,

@@ -16,19 +16,22 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type {
+	Organization,
 	OrganizationMembership,
 	OrganizationMembershipTag,
 	PineOptions,
-	BalenaSDK,
-} from '../..';
-import { InjectedDependenciesParam } from '..';
+	InjectedDependenciesParam,
+} from '..';
 import { mergePineOptions } from '../util';
 
 const RESOURCE = 'organization_membership';
 
 const getOrganizationMembershipModel = function (
 	deps: InjectedDependenciesParam,
-	getOrganization: BalenaSDK['models']['organization']['get'],
+	getOrganization: (
+		handleOrId: string | number,
+		options?: PineOptions<Organization>,
+	) => Promise<Organization>,
 ) {
 	const { pine } = deps;
 

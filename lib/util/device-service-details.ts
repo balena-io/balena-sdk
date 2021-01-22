@@ -1,15 +1,53 @@
 import type {
-	CurrentGatewayDownload,
-	CurrentService,
 	Device,
-	DeviceWithServiceDetails,
 	GatewayDownload,
 	Image,
 	ImageInstall,
 	PineExpand,
 	Release,
 	Service,
-} from '../..';
+} from '..';
+
+export interface CurrentService {
+	id: number;
+	image_id: number;
+	service_id: number;
+	download_progress: number | null;
+	status: string;
+	install_date: string;
+}
+
+export interface CurrentServiceWithCommit extends CurrentService {
+	commit: string;
+}
+
+export interface CurrentGatewayDownload {
+	id: number;
+	image_id: number;
+	service_id: number;
+	download_progress: number;
+	status: string;
+}
+
+export interface DeviceWithServiceDetails<
+	TCurrentService extends CurrentService = CurrentService
+> extends Device {
+	current_services: {
+		[serviceName: string]: TCurrentService[];
+	};
+
+	current_gateway_downloads: CurrentGatewayDownload[];
+}
+
+export interface DeviceWithServiceDetails<
+	TCurrentService extends CurrentService = CurrentService
+> extends Device {
+	current_services: {
+		[serviceName: string]: TCurrentService[];
+	};
+
+	current_gateway_downloads: CurrentGatewayDownload[];
+}
 
 // Pine expand options necessary for getting raw service data for a device
 export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {

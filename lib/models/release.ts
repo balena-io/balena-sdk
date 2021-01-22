@@ -16,11 +16,24 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import once = require('lodash/once');
-import type * as BalenaSdk from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type * as BalenaSdk from '..';
+import type {
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+	PineTypedResult,
+} from '..';
 import { isId, mergePineOptions } from '../util';
 import { toWritable } from '../util/types';
-import { Application, ReleaseTag, Release, PineTypedResult } from '../..';
+import type { Application, ReleaseTag, Release, User } from '../types/models';
+import type { BuilderUrlDeployOptions } from '../util/builder';
+
+export interface ReleaseWithImageDetails extends Release {
+	images: Array<{
+		id: number;
+		service_name: string;
+	}>;
+	user: Pick<User, 'id' | 'username'> | undefined;
+}
 
 const getReleaseModel = function (
 	deps: InjectedDependenciesParam,
@@ -357,7 +370,7 @@ const getReleaseModel = function (
 	 */
 	async function createFromUrl(
 		nameOrSlugOrId: string | number,
-		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
+		urlDeployOptions: BuilderUrlDeployOptions,
 	): Promise<number> {
 		const appOptions = {
 			$select: 'app_name',

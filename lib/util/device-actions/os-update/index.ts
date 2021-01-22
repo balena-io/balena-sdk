@@ -1,8 +1,17 @@
 import type * as BalenaRequest from '../../../../typings/balena-request';
-import type * as BalenaSdk from '../../../..';
 import { DeviceActionsService } from '../device-actions-service';
 
 const OS_UPDATE_ACTION_NAME = 'resinhup';
+
+// See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
+export interface OsUpdateActionResult {
+	status: 'idle' | 'in_progress' | 'done' | 'error' | 'configuring';
+	parameters?: {
+		target_version: string;
+	};
+	error?: string;
+	fatal?: boolean;
+}
 
 export const getOsUpdateHelper = function (
 	deviceUrlsBase: string,
@@ -14,7 +23,7 @@ export const getOsUpdateHelper = function (
 	);
 
 	const startOsUpdate = (uuid: string, targetOsVersion: string) => {
-		return deviceActionsService.startAction<BalenaSdk.OsUpdateActionResult>({
+		return deviceActionsService.startAction<OsUpdateActionResult>({
 			uuid,
 			actionName: OS_UPDATE_ACTION_NAME,
 			params: {
@@ -24,13 +33,11 @@ export const getOsUpdateHelper = function (
 	};
 
 	const getOsUpdateStatus = (uuid: string) => {
-		return deviceActionsService.getActionStatus<BalenaSdk.OsUpdateActionResult>(
-			{
-				uuid,
-				// TODO: this is an assumption recorded here: https://github.com/resin-io/resin-proxy/issues/51#issuecomment-274087973
-				actionId: OS_UPDATE_ACTION_NAME,
-			},
-		);
+		return deviceActionsService.getActionStatus<OsUpdateActionResult>({
+			uuid,
+			// TODO: this is an assumption recorded here: https://github.com/resin-io/resin-proxy/issues/51#issuecomment-274087973
+			actionId: OS_UPDATE_ACTION_NAME,
+		});
 	};
 
 	return {

@@ -16,21 +16,31 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type {
+	Organization,
 	OrganizationInvite,
+	OrganizationMembershipRoles,
 	PineOptions,
-	OrganizationInviteOptions,
-	BalenaSDK,
 	PineSubmitBody,
-} from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+} from '..';
 import { mergePineOptions } from '../util';
+
+export interface OrganizationInviteOptions {
+	invitee: string;
+	roleName?: OrganizationMembershipRoles;
+	message?: string;
+}
 
 const RESOURCE = 'invitee__is_invited_to__organization';
 
 const getOrganizationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
-	getOrganization: BalenaSDK['models']['organization']['get'],
+	getOrganization: (
+		handleOrId: string | number,
+		options?: PineOptions<Organization>,
+	) => Promise<Organization>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;

@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { chai } from 'mochainon';
 import * as memoize from 'memoizee';
 import type * as BalenaSdk from '../../';
-import { AnyObject } from '../../typings/utils';
+import type { AnyObject } from '../../typings/utils';
 import { getInitialOrganization } from './utils';
 // tslint:disable-next-line:no-var-requires
 chai.use(require('chai-samsam'));

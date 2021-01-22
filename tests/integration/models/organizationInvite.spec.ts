@@ -3,7 +3,7 @@ import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena, givenAnOrganization, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
-import type * as BalenaSdk from '../../../typings/balena-sdk';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';

@@ -16,21 +16,31 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type {
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+	Application,
 	ApplicationInvite,
+	ApplicationMembershipRoles,
 	PineOptions,
-	ApplicationInviteOptions,
-	BalenaSDK,
 	PineSubmitBody,
-} from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+} from '..';
 import { mergePineOptions } from '../util';
+
+export interface ApplicationInviteOptions {
+	invitee: string;
+	roleName?: ApplicationMembershipRoles;
+	message?: string;
+}
 
 const RESOURCE = 'invitee__is_invited_to__application';
 
 const getApplicationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
-	getApplication: BalenaSDK['models']['application']['get'],
+	getApplication: (
+		nameOrSlugOrId: string | number,
+		options?: PineOptions<Application>,
+	) => Promise<Application>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -153,7 +163,7 @@ const getApplicationInviteModel = function (
 							resource: 'application_membership_role',
 							options: {
 								$top: 1,
-								$select: ['id'],
+								$select: 'id',
 								$filter: {
 									name: roleName,
 								},

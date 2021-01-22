@@ -1,11 +1,12 @@
-import type * as DeviceOverallStatus from './device-overall-status';
+import type { DeviceOverallStatus } from './device-overall-status';
+export type { DeviceOverallStatus } from './device-overall-status';
 import { JWTUser } from './jwt';
 import type {
 	PineDeferred,
 	NavigationResource,
 	OptionalNavigationResource,
 	ReverseNavigationResource,
-} from '../pinejs-client-core';
+} from '../../typings/pinejs-client-core';
 
 // TODO: Drop in the next major
 export { SocialServiceAccount } from './jwt';
@@ -341,7 +342,7 @@ export interface Device {
 	cpu_id: string | null;
 	is_undervolted: boolean;
 	/** This is a computed term */
-	overall_status: DeviceOverallStatus.DeviceOverallStatus;
+	overall_status: DeviceOverallStatus;
 	/** This is a computed term */
 	overall_progress: number | null;
 
@@ -382,8 +383,6 @@ export interface DeviceType {
 	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
 	describes_device: ReverseNavigationResource<Device>;
 }
-
-export type DeviceOverallStatus = DeviceOverallStatus.DeviceOverallStatus;
 
 export interface OrganizationPrivateDeviceTypeAccess {
 	id: number;

@@ -1,5 +1,5 @@
 import bSemver = require('balena-semver');
-import type * as BalenaSdk from '../..';
+import type * as BalenaSdk from '..';
 import { isProvisioned } from './device';
 
 export const normalizeDeviceOsVersion = (

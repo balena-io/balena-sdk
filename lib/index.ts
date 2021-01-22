@@ -14,24 +14,120 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { BalenaRequest } from '../typings/balena-request';
-import type * as BalenaSdk from '..';
+import type {
+	Pine as PineBase,
+	PineStrict as PineStrictBase,
+} from '../typings/balena-pine';
+import type { BalenaRequest, Interceptor } from '../typings/balena-request';
+import type { ResourceTypeMap } from './types/models';
 
 import { globalEnv } from './util/global-env';
 
+export type Pine = PineBase<ResourceTypeMap>;
+export type PineStrict = PineStrictBase<ResourceTypeMap>;
+
+export * from './types/models';
+export * from './types/jwt';
+
+export type { Interceptor };
+export type {
+	WithId,
+	PineDeferred,
+	NavigationResource,
+	OptionalNavigationResource,
+	ReverseNavigationResource,
+	ParamsObj as PineParams,
+	ParamsObjWithId as PineParamsWithId,
+	Filter as PineFilter,
+	Expand as PineExpand,
+	ODataOptions as PineOptions,
+	SubmitBody as PineSubmitBody,
+	ODataOptionsWithFilter as PineOptionsWithFilter,
+	ODataOptionsWithSelect as PineOptionsWithSelect,
+	SelectableProps as PineSelectableProps,
+	ExpandableProps as PineExpandableProps,
+	ExpandResultObject as PineExpandResultObject,
+	TypedResult as PineTypedResult,
+} from '../typings/pinejs-client-core';
+
+// TODO: Drop in the next major
+/** @deprecated */
+export type PineWithSelectOnGet = PineStrict;
+
+export type { ApplicationInviteOptions } from './models/application-invite';
+export type {
+	BankAccountBillingInfo,
+	BillingAccountAddressInfo,
+	BillingAccountInfo,
+	BillingAddonPlanInfo,
+	BillingInfo,
+	BillingInfoType,
+	BillingPlanBillingInfo,
+	BillingPlanInfo,
+	CardBillingInfo,
+	InvoiceInfo,
+	TokenBillingSubmitInfo,
+} from './models/billing';
+export type { GaConfig, Config, DeviceTypeJson } from './models/config';
+export type {
+	DeviceState,
+	DeviceMetrics,
+	OverallStatus,
+	SupervisorStatus,
+} from './models/device';
+export type {
+	OsTypes,
+	OsLines,
+	OsVersion,
+	OsVersionsByDeviceType,
+} from './models/hostapp';
+export type { ReleaseWithImageDetails } from './models/release';
+export type { OrganizationInviteOptions } from './models/organization-invite';
+export type {
+	ImgConfigOptions,
+	OsVersions,
+	OsUpdateVersions,
+} from './models/os';
+export type { OsUpdateActionResult } from './util/device-actions/os-update';
+export type { BuilderUrlDeployOptions } from './util/builder';
+export type {
+	CurrentService,
+	CurrentServiceWithCommit,
+	CurrentGatewayDownload,
+	DeviceWithServiceDetails,
+} from './util/device-service-details';
+export type {
+	BaseLog,
+	ServiceLog,
+	SystemLog,
+	LogMessage,
+	LogsSubscription,
+	LogsOptions,
+} from './logs';
+
 export interface InjectedDependenciesParam {
-	sdkInstance: BalenaSdk.BalenaSDK;
+	sdkInstance: BalenaSDK;
 	settings: {
 		get(key: string): string;
 		getAll(): { [key: string]: string };
 	};
 	request: BalenaRequest;
 	auth: import('balena-auth').default;
-	pine: BalenaSdk.Pine;
+	pine: Pine;
 	pubsub: import('./util/pubsub').PubSub;
 }
 
-export interface InjectedOptionsParam extends BalenaSdk.SdkOptions {
+export interface SdkOptions {
+	apiUrl?: string;
+	builderUrl?: string;
+	dashboardUrl?: string;
+	dataDirectory?: string;
+	isBrowser?: boolean;
+	debug?: boolean;
+	deviceUrlsBase?: string;
+}
+
+export interface InjectedOptionsParam extends SdkOptions {
 	apiUrl: string;
 	apiVersion: string;
 }
@@ -42,6 +138,51 @@ export interface InjectedOptionsParam extends BalenaSdk.SdkOptions {
 const BALENA_SDK_SHARED_OPTIONS = 'BALENA_SDK_SHARED_OPTIONS';
 const BALENA_SDK_HAS_USED_SHARED_OPTIONS = 'BALENA_SDK_HAS_USED_SHARED_OPTIONS';
 const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
+
+const sdkTemplate = {
+	auth() {
+		const {
+			addCallbackSupportToModuleFactory,
+		} = require('./util/callbacks') as typeof import('./util/callbacks');
+		return addCallbackSupportToModuleFactory(
+			(require('./auth') as typeof import('./auth')).default,
+		);
+	},
+	models() {
+		// don't try to add callbacks for this, since it's just a namespace
+		// and it would otherwise break lazy loading since it would enumerate
+		// all properties
+		return require('./models') as typeof import('./models');
+	},
+	logs() {
+		const {
+			addCallbackSupportToModuleFactory,
+		} = require('./util/callbacks') as typeof import('./util/callbacks');
+		return addCallbackSupportToModuleFactory(
+			(require('./logs') as typeof import('./logs')).default,
+		);
+	},
+	settings() {
+		const {
+			addCallbackSupportToModuleFactory,
+		} = require('./util/callbacks') as typeof import('./util/callbacks');
+		return addCallbackSupportToModuleFactory(
+			(require('./settings') as typeof import('./settings')).default,
+		);
+	},
+};
+
+export type BalenaSDK = {
+	[key in keyof typeof sdkTemplate]: ReturnType<
+		ReturnType<typeof sdkTemplate[key]>
+	>;
+} & {
+	interceptors: Interceptor[];
+	request: BalenaRequest;
+	pine: Pine;
+	errors: typeof import('balena-errors');
+	version: string;
+};
 
 /**
  * @namespace balena
@@ -68,7 +209,7 @@ const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
  * 	dataDirectory: "/opt/local/balena"
  * });
  */
-export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
+export const getSdk = function ($opts?: SdkOptions) {
 	const opts: InjectedOptionsParam = {
 		apiUrl: 'https://api.balena-cloud.com/',
 		builderUrl: 'https://builder.balena-cloud.com/',
@@ -83,7 +224,7 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
 		.default;
 	const { getRequest } = require('balena-request') as {
 		getRequest: (
-			opts: BalenaSdk.SdkOptions & { auth: InjectedDependenciesParam['auth'] },
+			opts: SdkOptions & { auth: InjectedDependenciesParam['auth'] },
 		) => BalenaRequest;
 	};
 	const BalenaAuth = (require('balena-auth') as typeof import('balena-auth'))
@@ -111,38 +252,6 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
 	 * @namespace settings
 	 * @memberof balena
 	 */
-	const sdkTemplate = {
-		auth() {
-			const {
-				addCallbackSupportToModuleFactory,
-			} = require('./util/callbacks') as typeof import('./util/callbacks');
-			return addCallbackSupportToModuleFactory(
-				(require('./auth') as typeof import('./auth')).default,
-			);
-		},
-		models() {
-			// don't try to add callbacks for this, since it's just a namespace
-			// and it would otherwise break lazy loading since it would enumerate
-			// all properties
-			return require('./models') as typeof import('./models');
-		},
-		logs() {
-			const {
-				addCallbackSupportToModuleFactory,
-			} = require('./util/callbacks') as typeof import('./util/callbacks');
-			return addCallbackSupportToModuleFactory(
-				(require('./logs') as typeof import('./logs')).default,
-			);
-		},
-		settings() {
-			const {
-				addCallbackSupportToModuleFactory,
-			} = require('./util/callbacks') as typeof import('./util/callbacks');
-			return addCallbackSupportToModuleFactory(
-				(require('./settings') as typeof import('./settings')).default,
-			);
-		},
-	};
 
 	let settings: InjectedDependenciesParam['settings'];
 	if (opts.isBrowser) {
@@ -170,10 +279,10 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
 	const pine = (new BalenaPine(
 		{},
 		{ ...opts, auth, request },
-	) as unknown) as BalenaSdk.Pine;
+	) as unknown) as Pine;
 	const pubsub = new PubSub();
 
-	const sdk = {} as BalenaSdk.BalenaSDK;
+	const sdk = {} as BalenaSDK;
 	const deps: InjectedDependenciesParam = {
 		settings,
 		request,
@@ -249,15 +358,15 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
 	 * });
 	 */
 	Object.defineProperty(sdk, 'interceptors', {
-		get(): BalenaSdk.Interceptor[] {
+		get(): Interceptor[] {
 			return request.interceptors;
 		},
-		set(interceptors: BalenaSdk.Interceptor[]) {
+		set(interceptors: Interceptor[]) {
 			return (request.interceptors = interceptors);
 		},
 	});
 
-	const versionHeaderInterceptor: BalenaSdk.Interceptor = {
+	const versionHeaderInterceptor: Interceptor = {
 		request($request) {
 			let { url } = $request;
 
@@ -374,7 +483,7 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
  * 	isBrowser: true,
  * });
  */
-export const setSharedOptions = function (options: BalenaSdk.SdkOptions) {
+export const setSharedOptions = function (options: SdkOptions) {
 	if (globalEnv[BALENA_SDK_HAS_USED_SHARED_OPTIONS]) {
 		console.error(
 			'Shared SDK options have already been used. You may have a race condition in your code.',

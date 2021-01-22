@@ -16,8 +16,8 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 
-import type * as BalenaSdk from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type * as BalenaSdk from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
 
 const getApiKeysModel = function (
@@ -153,7 +153,7 @@ const getApiKeysModel = function (
 		 */
 		async update(
 			id: number,
-			apiKeyInfo: { name?: string; description?: string },
+			apiKeyInfo: { name?: string; description?: string | null },
 		): Promise<void> {
 			if (!apiKeyInfo) {
 				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
