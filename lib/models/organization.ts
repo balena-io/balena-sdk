@@ -154,7 +154,7 @@ const getOrganizationModel = function (
 	const get = async function (
 		handleOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Organization> = {},
-	) {
+	): Promise<BalenaSdk.Organization> {
 		if (handleOrId == null) {
 			throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 		}

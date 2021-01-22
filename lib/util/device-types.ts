@@ -57,13 +57,13 @@ const archCompatibilityMap: Partial<Dictionary<string[]>> = {
 export const isOsArchitectureCompatibleWith = (
 	osArchitecture: string,
 	applicationArchitecture: string,
-) =>
+): boolean =>
 	osArchitecture === applicationArchitecture ||
 	includes(archCompatibilityMap[osArchitecture], applicationArchitecture);
 
 export const isDeviceTypeCompatibleWith = (
 	osDeviceType: DeviceType,
 	targetAppDeviceType: DeviceType,
-) =>
+): boolean =>
 	isOsArchitectureCompatibleWith(osDeviceType.arch, targetAppDeviceType.arch) &&
 	!!osDeviceType.isDependent === !!targetAppDeviceType.isDependent;

@@ -40,7 +40,10 @@ export const getLocalModeSupport = (
 		BalenaSdk.Device,
 		typeof LOCAL_MODE_SUPPORT_PROPERTIES[number]
 	>,
-) => {
+): {
+	supported: boolean;
+	message: string;
+} => {
 	try {
 		checkLocalModeSupported(device);
 		return {

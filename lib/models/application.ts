@@ -535,7 +535,7 @@ const getApplicationModel = function (
 		 * 	console.log('Has any?', hasAny);
 		 * });
 		 */
-		hasAny: async () => {
+		hasAny: async (): Promise<boolean> => {
 			const applications = await exports.getAll({ $select: ['id'] });
 			return applications.length !== 0;
 		},

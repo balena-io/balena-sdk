@@ -238,7 +238,7 @@ const getOrganizationInviteModel = function (
 		 * 	...
 		 * });
 		 */
-		async accept(invitationToken: string) {
+		async accept(invitationToken: string): Promise<void> {
 			try {
 				const { body } = await request.send({
 					method: 'POST',
