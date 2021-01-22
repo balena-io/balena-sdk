@@ -1,14 +1,18 @@
 import type * as BalenaErrors from 'balena-errors';
 import type { EventEmitter } from 'events';
 
-import type * as BalenaPine from '../balena-pine';
+import type {
+	Pine as PineBase,
+	PineStrict as PineStrictBase,
+} from '../balena-pine';
+
 import type {
 	BalenaRequest,
 	BalenaRequestStreamResult,
 } from '../balena-request';
 import type * as DeviceOverallStatus from './device-overall-status';
 import type * as OsTypes from './os-types';
-import type * as Pine from '../pinejs-client-core';
+import type * as PineClient from '../pinejs-client-core';
 import { AtLeast } from '../utils';
 import type * as DeviceState from './device-state';
 import type * as DeviceTypeJson from './device-type-json';
@@ -20,6 +24,7 @@ import {
 	ApplicationInvite,
 	OrganizationInvite,
 	Release,
+	ResourceTypeMap,
 	Image,
 	Device,
 	DeviceTag,
@@ -60,15 +65,16 @@ export type {
 	ExpandResultObject as PineExpandResultObject,
 	TypedResult as PineTypedResult,
 } from '../pinejs-client-core';
-export type { PineStrict } from '../balena-pine';
+
+export type Pine = PineBase<ResourceTypeMap>;
+export type PineStrict = PineStrictBase<ResourceTypeMap>;
 
 // TODO: Drop in the next major
-import type { PineStrict } from '../balena-pine';
 /** @deprecated */
 export type PineWithSelectOnGet = PineStrict;
 
-export type PineOptions<T> = Pine.ODataOptions<T>;
-export type PineSubmitBody<T> = Pine.SubmitBody<T>;
+export type PineOptions<T> = PineClient.ODataOptions<T>;
+export type PineSubmitBody<T> = PineClient.SubmitBody<T>;
 
 export interface Interceptor {
 	request?(response: any): Promise<any>;
@@ -1012,7 +1018,7 @@ export interface BalenaSDK {
 		): Promise<LogsSubscription>;
 	};
 
-	pine: BalenaPine.Pine;
+	pine: Pine;
 
 	interceptors: Interceptor[];
 
