@@ -20,8 +20,7 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
-import type * as BalenaPine from '../../typings/balena-pine';
-import { PineOptions } from '../../typings/balena-sdk';
+import type { PineOptions, Pine } from '../..';
 
 interface DependentResource {
 	id: number;
@@ -29,7 +28,7 @@ interface DependentResource {
 }
 
 export function buildDependentResource<T extends DependentResource>(
-	{ pine }: { pine: BalenaPine.Pine },
+	{ pine }: { pine: Pine },
 	{
 		resourceName,
 		resourceKeyField,

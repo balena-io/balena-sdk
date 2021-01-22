@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { Pine } from '../typings/balena-pine';
 import type { BalenaRequest } from '../typings/balena-request';
 import type * as BalenaSdk from '..';
 
@@ -28,7 +27,7 @@ export interface InjectedDependenciesParam {
 	};
 	request: BalenaRequest;
 	auth: import('balena-auth').default;
-	pine: Pine;
+	pine: BalenaSdk.Pine;
 	pubsub: import('./util/pubsub').PubSub;
 }
 
@@ -171,7 +170,7 @@ export const getSdk = function ($opts?: BalenaSdk.SdkOptions) {
 	const pine = (new BalenaPine(
 		{},
 		{ ...opts, auth, request },
-	) as unknown) as Pine;
+	) as unknown) as BalenaSdk.Pine;
 	const pubsub = new PubSub();
 
 	const sdk = {} as BalenaSdk.BalenaSDK;

@@ -6,7 +6,6 @@ import type {
 	ExactlyExtends,
 	NoInfer,
 } from './utils';
-import type { ResourceTypeMap } from './balena-sdk/models';
 
 export interface WithId {
 	id: number;
@@ -455,7 +454,7 @@ export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
 	pollInterval?: number;
 }
 
-export interface Pine {
+export interface Pine<ResourceTypeMap extends {} = {}> {
 	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	// Fully typed result overloads
 	get<
@@ -550,7 +549,10 @@ export interface Pine {
  * A variant that makes $select mandatory, helping to create
  * requests that explicitly fetch only what your code needs.
  */
-export type PineStrict = Omit<Pine, 'get' | 'prepare' | 'subscribe'> & {
+export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
+	Pine,
+	'get' | 'prepare' | 'subscribe'
+> & {
 	// Fully typed result overloads
 	get<
 		R extends keyof ResourceTypeMap,
