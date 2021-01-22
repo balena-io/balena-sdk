@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'typings: Reorganize the pinejs-client re-exports'
+      hash: 71bb128fed855a6f2c4d7f39f70724bc756a12d7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings/pinejs-client: Provide the resource map as a generic argument'
+      hash: 8f7aed9089a6e4d7fd230ae8d65aca46481889ca
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.22.2
+  date: 2021-01-22T14:24:07.456Z
+- commits:
     - subject: 'tests: Simplify the setup helpers'
       hash: 47f40ed45183face1f9c5cf6880470bf55c66e74
       body: ''
