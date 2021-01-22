@@ -340,7 +340,7 @@ const getOsModel = function (
 	 */
 	const getMaxSatisfyingVersion = async function (
 		deviceType: string,
-		versionOrRange: keyof OsVersions = 'latest',
+		versionOrRange: string = 'latest',
 	): Promise<string> {
 		await getValidatedDeviceType(deviceType);
 		const osVersions = await getSupportedVersions(deviceType);

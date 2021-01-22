@@ -155,7 +155,7 @@ const getApplicationInviteModel = function (
 		async create(
 			nameOrSlugOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<Partial<ApplicationInvite>> {
+		): Promise<ApplicationInvite> {
 			const [{ id }, roles] = await Promise.all([
 				getApplication(nameOrSlugOrId, { $select: 'id' }),
 				roleName
@@ -188,10 +188,10 @@ const getApplicationInviteModel = function (
 				}
 				body.application_membership_role = roleId;
 			}
-			return await pine.post<ApplicationInviteBase>({
+			return (await pine.post<ApplicationInviteBase>({
 				resource: RESOURCE,
 				body,
-			});
+			})) as ApplicationInvite;
 		},
 
 		/**
@@ -240,18 +240,16 @@ const getApplicationInviteModel = function (
 		 */
 		async accept(invitationToken: string): Promise<void> {
 			try {
-				const { body } = await request.send({
+				await request.send({
 					method: 'POST',
 					url: `/user/v1/invitation/${invitationToken}`,
 					baseUrl: apiUrl,
 				});
-				return body;
 			} catch (err) {
 				if (err.statusCode === 401) {
-					return new errors.BalenaNotLoggedIn();
-				} else {
-					return err;
+					throw new errors.BalenaNotLoggedIn();
 				}
+				throw err;
 			}
 		},
 	};

@@ -155,7 +155,7 @@ const getOrganizationInviteModel = function (
 		async create(
 			handleOrId: string | number,
 			{ invitee, roleName, message }: OrganizationInviteOptions,
-		): Promise<Partial<OrganizationInvite>> {
+		): Promise<OrganizationInvite> {
 			const [{ id }, roles] = await Promise.all([
 				getOrganization(handleOrId, { $select: 'id' }),
 				roleName
@@ -188,10 +188,10 @@ const getOrganizationInviteModel = function (
 				}
 				body.organization_membership_role = roleId;
 			}
-			return await pine.post<OrganizationInviteBase>({
+			return (await pine.post<OrganizationInviteBase>({
 				resource: RESOURCE,
 				body,
-			});
+			})) as OrganizationInvite;
 		},
 
 		/**
@@ -240,18 +240,16 @@ const getOrganizationInviteModel = function (
 		 */
 		async accept(invitationToken: string): Promise<void> {
 			try {
-				const { body } = await request.send({
+				await request.send({
 					method: 'POST',
 					url: `/org/v1/invitation/${invitationToken}`,
 					baseUrl: apiUrl,
 				});
-				return body;
 			} catch (err) {
 				if (err.statusCode === 401) {
-					return new errors.BalenaNotLoggedIn();
-				} else {
-					return err;
+					throw new errors.BalenaNotLoggedIn();
 				}
+				throw err;
 			}
 		},
 	};
