@@ -1,5 +1,5 @@
 import * as errors from 'balena-errors';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 type BalenaBuilderRequestError = errors.BalenaError & {
 	body: BuilderBuildFromUrlErrorResponse;

@@ -1,5 +1,5 @@
 import * as bSemver from 'balena-semver';
-import { InjectedDependenciesParam } from '..';
+import type { InjectedDependenciesParam } from '..';
 import type {
 	ResourceTagBase,
 	ApplicationTag,

@@ -22,7 +22,7 @@ import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
 
 import type { BalenaRequestStreamResult } from '../../typings/balena-request';
 import type * as DeviceTypeJson from '../types/device-type-json';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
 
 const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;

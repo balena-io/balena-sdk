@@ -1,4 +1,4 @@
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 /*
 Copyright 2016 Balena
