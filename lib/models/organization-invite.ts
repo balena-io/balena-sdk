@@ -16,21 +16,31 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type {
+	Organization,
 	OrganizationInvite,
+	OrganizationMembershipRoles,
 	PineOptions,
-	OrganizationInviteOptions,
-	BalenaSDK,
 	PineSubmitBody,
-} from '../../typings/balena-sdk';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+} from '..';
 import { mergePineOptions } from '../util';
+
+export interface OrganizationInviteOptions {
+	invitee: string;
+	roleName?: OrganizationMembershipRoles;
+	message?: string;
+}
 
 const RESOURCE = 'invitee__is_invited_to__organization';
 
 const getOrganizationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
-	getOrganization: BalenaSDK['models']['organization']['get'],
+	getOrganization: (
+		handleOrId: string | number,
+		options?: PineOptions<Organization>,
+	) => Promise<Organization>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -145,7 +155,7 @@ const getOrganizationInviteModel = function (
 		async create(
 			handleOrId: string | number,
 			{ invitee, roleName, message }: OrganizationInviteOptions,
-		): Promise<Partial<OrganizationInvite>> {
+		): Promise<OrganizationInvite> {
 			const [{ id }, roles] = await Promise.all([
 				getOrganization(handleOrId, { $select: 'id' }),
 				roleName
@@ -178,10 +188,10 @@ const getOrganizationInviteModel = function (
 				}
 				body.organization_membership_role = roleId;
 			}
-			return await pine.post<OrganizationInviteBase>({
+			return (await pine.post<OrganizationInviteBase>({
 				resource: RESOURCE,
 				body,
-			});
+			})) as OrganizationInvite;
 		},
 
 		/**
@@ -228,20 +238,18 @@ const getOrganizationInviteModel = function (
 		 * 	...
 		 * });
 		 */
-		async accept(invitationToken: string) {
+		async accept(invitationToken: string): Promise<void> {
 			try {
-				const { body } = await request.send({
+				await request.send({
 					method: 'POST',
 					url: `/org/v1/invitation/${invitationToken}`,
 					baseUrl: apiUrl,
 				});
-				return body;
 			} catch (err) {
 				if (err.statusCode === 401) {
-					return new errors.BalenaNotLoggedIn();
-				} else {
-					return err;
+					throw new errors.BalenaNotLoggedIn();
 				}
+				throw err;
 			}
 		},
 	};

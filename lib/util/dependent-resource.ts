@@ -20,7 +20,7 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
-import type { PineOptions, Pine } from '../..';
+import type { Pine, PineOptions } from '..';
 
 interface DependentResource {
 	id: number;

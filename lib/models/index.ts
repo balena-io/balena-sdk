@@ -1,4 +1,4 @@
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 /*
 Copyright 2016 Balena
@@ -96,7 +96,11 @@ const modelsTemplate = {
 };
 
 export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
-	const models = {};
+	const models = {} as {
+		[key in keyof typeof modelsTemplate]: ReturnType<
+			ReturnType<typeof modelsTemplate[key]>
+		>;
+	};
 
 	(Object.keys(modelsTemplate) as Array<keyof typeof modelsTemplate>).forEach(
 		(moduleName) => {

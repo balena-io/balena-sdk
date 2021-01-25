@@ -16,21 +16,31 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type {
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+	Application,
 	ApplicationInvite,
+	ApplicationMembershipRoles,
 	PineOptions,
-	ApplicationInviteOptions,
-	BalenaSDK,
 	PineSubmitBody,
-} from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+} from '..';
 import { mergePineOptions } from '../util';
+
+export interface ApplicationInviteOptions {
+	invitee: string;
+	roleName?: ApplicationMembershipRoles;
+	message?: string;
+}
 
 const RESOURCE = 'invitee__is_invited_to__application';
 
 const getApplicationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
-	getApplication: BalenaSDK['models']['application']['get'],
+	getApplication: (
+		nameOrSlugOrId: string | number,
+		options?: PineOptions<Application>,
+	) => Promise<Application>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -145,7 +155,7 @@ const getApplicationInviteModel = function (
 		async create(
 			nameOrSlugOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<Partial<ApplicationInvite>> {
+		): Promise<ApplicationInvite> {
 			const [{ id }, roles] = await Promise.all([
 				getApplication(nameOrSlugOrId, { $select: 'id' }),
 				roleName
@@ -153,7 +163,7 @@ const getApplicationInviteModel = function (
 							resource: 'application_membership_role',
 							options: {
 								$top: 1,
-								$select: ['id'],
+								$select: 'id',
 								$filter: {
 									name: roleName,
 								},
@@ -178,10 +188,10 @@ const getApplicationInviteModel = function (
 				}
 				body.application_membership_role = roleId;
 			}
-			return await pine.post<ApplicationInviteBase>({
+			return (await pine.post<ApplicationInviteBase>({
 				resource: RESOURCE,
 				body,
-			});
+			})) as ApplicationInvite;
 		},
 
 		/**
@@ -228,20 +238,18 @@ const getApplicationInviteModel = function (
 		 * 	...
 		 * });
 		 */
-		async accept(invitationToken: string) {
+		async accept(invitationToken: string): Promise<void> {
 			try {
-				const { body } = await request.send({
+				await request.send({
 					method: 'POST',
 					url: `/user/v1/invitation/${invitationToken}`,
 					baseUrl: apiUrl,
 				});
-				return body;
 			} catch (err) {
 				if (err.statusCode === 401) {
-					return new errors.BalenaNotLoggedIn();
-				} else {
-					return err;
+					throw new errors.BalenaNotLoggedIn();
 				}
+				throw err;
 			}
 		},
 	};

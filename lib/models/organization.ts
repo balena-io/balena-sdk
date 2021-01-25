@@ -16,8 +16,8 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 
-import type * as BalenaSdk from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type * as BalenaSdk from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import {
 	isId,
 	isNotFoundResponse,
@@ -154,7 +154,7 @@ const getOrganizationModel = function (
 	const get = async function (
 		handleOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Organization> = {},
-	) {
+	): Promise<BalenaSdk.Organization> {
 		if (handleOrId == null) {
 			throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 		}

@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import * as BalenaSdk from '../typings/balena-sdk';
-import { AnyObject } from '../typings/utils';
+import type * as BalenaSdk from '..';
+import type { AnyObject } from '../typings/utils';
 import { Compute, Equals, EqualsTrue } from './utils';
 
 const sdk: BalenaSdk.BalenaSDK = {} as any;
@@ -143,7 +143,7 @@ let aString: string;
 
 	const checkUndefined: typeof result = undefined;
 	if (result === undefined) {
-		throw 'Can be undefined';
+		throw new Error('Can be undefined');
 	}
 
 	aNumber = result.id;
@@ -168,7 +168,7 @@ let aString: string;
 
 	const checkUndefined: typeof result = undefined;
 	if (result === undefined) {
-		throw 'Can be undefined';
+		throw new Error('Can be undefined');
 	}
 
 	aNumber = result.id;
@@ -212,7 +212,7 @@ let aString: string;
 		resource: 'device',
 		options: {
 			$count: {},
-		}
+		},
 	});
 	aNumber = result;
 })();
@@ -224,7 +224,7 @@ let aString: string;
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
 				should_be_running__release: {
-					$count: {}
+					$count: {},
 				},
 				device_tag: {},
 			},
@@ -250,7 +250,7 @@ let aString: string;
 			$expand: {
 				should_be_running__release: {},
 				device_tag: {
-					$count: {}
+					$count: {},
 				},
 			},
 		},
@@ -279,7 +279,6 @@ let aString: string;
 	});
 })();
 
-
 (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
@@ -299,12 +298,15 @@ let aString: string;
 			$select: ['id', 'device_name', 'belongs_to__application', 'asdf'],
 		},
 	});
-	const test: Equals<Compute<typeof result[number]>, {
-		id: any;
-		device_name: any;
-		belongs_to__application: any;
-		asdf: any;
-	}> = EqualsTrue;
+	const test: Equals<
+		Compute<typeof result[number]>,
+		{
+			id: any;
+			device_name: any;
+			belongs_to__application: any;
+			asdf: any;
+		}
+	> = EqualsTrue;
 	// @ts-expect-error - TODO: This should either be never[] or even better the pine.get should error
 	const testTodo: Equals<typeof result, never[]> = EqualsTrue;
 })();
@@ -319,7 +321,7 @@ let aString: string;
 				should_be_running__release: {},
 				asdf: {},
 				device_tag: {
-					$count: {}
+					$count: {},
 				},
 			},
 		},
@@ -346,7 +348,7 @@ let aString: string;
 			$expand: {
 				should_be_running__release: {},
 				device_tag: {
-					$count: {}
+					$count: {},
 				},
 			},
 		},
@@ -361,13 +363,13 @@ let aString: string;
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
 				should_be_running__release: {
-					$select: 'id'
+					$select: 'id',
 				},
 				asdf: {
 					$select: 'id',
 				},
 				device_tag: {
-					$count: {}
+					$count: {},
 				},
 			},
 		},
@@ -381,10 +383,10 @@ let aString: string;
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
 				should_be_running__release: {
-					$select: 'id'
+					$select: 'id',
 				},
 				device_tag: {
-					$count: {}
+					$count: {},
 				},
 			},
 		},
@@ -409,17 +411,17 @@ let aString: string;
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
 				should_be_running__release: {
-					$select: 'id'
+					$select: 'id',
 				},
 				device_tag: {
-					$count: {}
+					$count: {},
 				},
 			},
 		},
 	});
 	const checkUndefined: typeof result = undefined;
 	if (result === undefined) {
-		throw 'Can be undefined';
+		throw new Error('Can be undefined');
 	}
 
 	aNumber = result.id;

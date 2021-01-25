@@ -1,4 +1,4 @@
-import type * as BalenaSdk from '../..';
+import type * as BalenaSdk from '..';
 
 export const isProvisioned = (
 	device: Partial<

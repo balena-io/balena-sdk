@@ -15,19 +15,22 @@ limitations under the License.
 */
 
 import type { SubmitBody } from '../../typings/pinejs-client-core';
-import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import type {
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
 	PineOptions,
 	PineTypedResult,
-	DeviceWithServiceDetails,
-	CurrentService,
-	CurrentServiceWithCommit,
 	Application,
 	ApplicationTag,
 	ApplicationVariable,
 	BuildVariable,
 	Device,
-} from '../..';
+} from '..';
+import type {
+	CurrentService,
+	CurrentServiceWithCommit,
+	DeviceWithServiceDetails,
+} from '../util/device-service-details';
 
 import * as url from 'url';
 
@@ -532,7 +535,7 @@ const getApplicationModel = function (
 		 * 	console.log('Has any?', hasAny);
 		 * });
 		 */
-		hasAny: async () => {
+		hasAny: async (): Promise<boolean> => {
 			const applications = await exports.getAll({ $select: ['id'] });
 			return applications.length !== 0;
 		},
@@ -599,7 +602,7 @@ const getApplicationModel = function (
 								slug: applicationType,
 							},
 							options: {
-								$select: ['id'],
+								$select: 'id',
 							},
 						})
 						.then(function (appType) {

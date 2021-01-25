@@ -16,8 +16,12 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import once = require('lodash/once');
-import type { PineOptions, Service, ServiceEnvironmentVariable } from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type {
+	PineOptions,
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+} from '..';
+import type { Service, ServiceEnvironmentVariable } from '../types/models';
 import { mergePineOptions } from '../util';
 
 const getServiceModel = (

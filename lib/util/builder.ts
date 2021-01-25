@@ -1,6 +1,5 @@
 import * as errors from 'balena-errors';
-import type * as BalenaSdk from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 type BalenaBuilderRequestError = errors.BalenaError & {
 	body: BuilderBuildFromUrlErrorResponse;
@@ -26,6 +25,11 @@ const isBuilderError = (error: any): error is BalenaBuilderRequestError =>
 	typeof error.body === 'object' &&
 	!!error.body.error;
 
+export interface BuilderUrlDeployOptions {
+	url: string;
+	shouldFlatten?: boolean;
+}
+
 export class BuilderHelper {
 	constructor(
 		private deps: InjectedDependenciesParam,
@@ -35,7 +39,7 @@ export class BuilderHelper {
 	public async buildFromUrl(
 		owner: string,
 		appName: string,
-		urlDeployOptions: BalenaSdk.BuilderUrlDeployOptions,
+		urlDeployOptions: BuilderUrlDeployOptions,
 	) {
 		try {
 			const resp = await this.deps.request.send<BuilderBuildFromUrlResponse>({

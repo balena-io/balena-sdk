@@ -1,6 +1,3 @@
-/**
- * Extracted from the enum defined in `device-ts.ts`.
- */
 export enum DeviceOverallStatus {
 	CONFIGURING = 'configuring',
 	IDLE = 'idle',

@@ -16,14 +16,121 @@ limitations under the License.
 
 import once = require('lodash/once');
 import type { BalenaRequestStreamResult } from '../../typings/balena-request';
-import type {
-	BillingAccountInfo,
-	BillingInfo,
-	BillingPlanInfo,
-	InvoiceInfo,
-	TokenBillingSubmitInfo,
-} from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+
+export interface BillingAccountAddressInfo {
+	address1: string;
+	address2: string;
+	city: string;
+	state: string;
+	zip: string;
+	country: string;
+	phone: string;
+}
+
+export interface BillingAccountInfo {
+	account_state: string;
+	first_name: string;
+	last_name: string;
+	company_name: string;
+	cc_emails: string;
+	vat_number: string;
+	address: BillingAccountAddressInfo;
+}
+
+export type BillingInfoType = 'bank_account' | 'credit_card' | 'paypal';
+
+export interface BillingInfo {
+	full_name: string;
+
+	first_name: string;
+	last_name: string;
+	company: string;
+	vat_number: string;
+	address1: string;
+	address2: string;
+	city: string;
+	state: string;
+	zip: string;
+	country: string;
+	phone: string;
+
+	type?: BillingInfoType;
+}
+
+export interface CardBillingInfo extends BillingInfo {
+	card_type: string;
+	year: string;
+	month: string;
+	first_one: string;
+	last_four: string;
+}
+
+export interface BankAccountBillingInfo extends BillingInfo {
+	account_type: string;
+	last_four: string;
+	name_on_account: string;
+	routing_number: string;
+}
+
+export interface TokenBillingSubmitInfo {
+	token_id: string;
+	'g-recaptcha-response'?: string;
+}
+
+export interface BillingPlanInfo {
+	name: string;
+	title: string;
+	code: string;
+	tier: string;
+	currentPeriodEndDate?: string;
+	intervalUnit?: string;
+	intervalLength?: string;
+	addonPlan?: BillingAddonPlanInfo;
+	billing: BillingPlanBillingInfo;
+	support: {
+		name: string;
+		title: string;
+	};
+}
+
+export interface BillingAddonPlanInfo {
+	code: string;
+	currentPeriodEndDate?: string;
+	billing: BillingPlanBillingInfo;
+
+	addOns: Array<{
+		code: string;
+		unitCostCents?: string;
+		quantity?: string;
+	}>;
+}
+
+export interface BillingPlanBillingInfo {
+	currency: string;
+	totalCostCents: string;
+
+	charges: Array<{
+		itemType: string;
+		name: string;
+		code: string;
+		unitCostCents: string;
+		quantity: string;
+		isQuantifiable?: boolean;
+	}>;
+}
+
+export interface InvoiceInfo {
+	closed_at: string;
+	created_at: string;
+	due_on: string;
+	currency: string;
+	invoice_number: string;
+	subtotal_in_cents: string;
+	total_in_cents: string;
+	uuid: string;
+	state: 'pending' | 'paid' | 'failed' | 'past_due';
+}
 
 const getBillingModel = function (
 	deps: InjectedDependenciesParam,

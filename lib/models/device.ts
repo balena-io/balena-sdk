@@ -14,23 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { InjectedOptionsParam, InjectedDependenciesParam } from '..';
+import type {
+	InjectedOptionsParam,
+	InjectedDependenciesParam,
+	PineOptions,
+	PineTypedResult,
+} from '..';
 import {
 	Device,
-	PineOptions,
 	DeviceServiceEnvironmentVariable,
-	OsUpdateActionResult,
 	DeviceVariable,
 	DeviceTag,
 	Application,
-	SupervisorStatus,
-	DeviceTypeJson,
-	DeviceWithServiceDetails,
+} from '../types/models';
+import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
+import type * as DeviceState from '../types/device-state';
+import type { DeviceTypeJson } from './config';
+import {
 	CurrentServiceWithCommit,
-	DeviceState,
-	DeviceMetrics,
-	PineTypedResult,
-} from '../..';
+	DeviceWithServiceDetails,
+} from '../util/device-service-details';
+import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 
 import * as url from 'url';
 
@@ -65,9 +69,12 @@ import {
 	LOCAL_MODE_SUPPORT_PROPERTIES,
 } from '../util/local-mode';
 
-import { SubmitBody, SelectableProps } from '../../typings/pinejs-client-core';
-import { AtLeast } from '../../typings/utils';
-import { DeviceType } from '../../typings/balena-sdk/device-type-json';
+import type {
+	SubmitBody,
+	SelectableProps,
+} from '../../typings/pinejs-client-core';
+import type { AtLeast } from '../../typings/utils';
+import type { DeviceType } from '../types/device-type-json';
 
 // The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 // be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -84,16 +91,33 @@ const MIN_OS_MC = '2.12.0';
 // affected in particular.
 const CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
-export enum OverallStatus {
-	CONFIGURING = 'configuring',
-	IDLE = 'idle',
-	OFFLINE = 'offline',
-	INACTIVE = 'inactive',
-	POST_PROVISIONING = 'post-provisioning',
-	UPDATING = 'updating',
-	ORDERED = 'ordered',
-	PREPARING = 'preparing',
-	SHIPPED = 'shipped',
+export * as DeviceState from '../types/device-state';
+export type { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
+
+export type DeviceMetrics = Pick<
+	Device,
+	| 'memory_usage'
+	| 'memory_total'
+	| 'storage_block_device'
+	| 'storage_usage'
+	| 'storage_total'
+	| 'cpu_usage'
+	| 'cpu_temp'
+	| 'cpu_id'
+	| 'is_undervolted'
+>;
+
+export interface SupervisorStatus {
+	api_port: string;
+	ip_address: string;
+	os_version: string;
+	supervisor_version: string;
+	update_pending: boolean;
+	update_failed: boolean;
+	update_downloaded: boolean;
+	status?: string | null;
+	commit?: string | null;
+	download_progress?: string | null;
 }
 
 const getDeviceModel = function (

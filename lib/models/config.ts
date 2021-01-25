@@ -15,7 +15,36 @@ limitations under the License.
 */
 
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
-import type { DeviceTypeJson, Config } from '../..';
+import type * as DeviceTypeJson from '../types/device-type-json';
+
+export type { DeviceTypeJson };
+
+export interface Config {
+	deployment: string | null;
+	deviceUrlsBase: string;
+	adminUrl: string;
+	apiUrl: string;
+	actionsUrl: string;
+	gitServerUrl: string;
+	pubnub: {
+		subscribe_key: string;
+		publish_key: string;
+	};
+	ga?: GaConfig;
+	mixpanelToken?: string;
+	intercomAppId?: string;
+	recurlyPublicKey?: string;
+	deviceTypes: DeviceTypeJson.DeviceType[];
+	DEVICE_ONLINE_ICON: string;
+	DEVICE_OFFLINE_ICON: string;
+	signupCodeRequired: boolean;
+	supportedSocialProviders: string[];
+}
+
+export interface GaConfig {
+	site: string;
+	id: string;
+}
 
 import once = require('lodash/once');
 import union = require('lodash/union');

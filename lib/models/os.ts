@@ -21,16 +21,36 @@ import * as semver from 'semver';
 import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
 
 import type { BalenaRequestStreamResult } from '../../typings/balena-request';
-import type {
-	DeviceTypeJson,
-	ImgConfigOptions,
-	OsUpdateVersions,
-	OsVersions,
-} from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type * as DeviceTypeJson from '../types/device-type-json';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
 
 const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
+
+export interface ImgConfigOptions {
+	network?: 'ethernet' | 'wifi';
+	appUpdatePollInterval?: number;
+	wifiKey?: string;
+	wifiSsid?: string;
+	ip?: string;
+	gateway?: string;
+	netmask?: string;
+	deviceType?: string;
+	version: string;
+}
+
+export interface OsVersions {
+	latest: string;
+	recommended: string;
+	default: string;
+	versions: string[];
+}
+
+export interface OsUpdateVersions {
+	versions: string[];
+	recommended: string | undefined;
+	current: string | undefined;
+}
 
 const getOsModel = function (
 	deps: InjectedDependenciesParam,
@@ -320,7 +340,7 @@ const getOsModel = function (
 	 */
 	const getMaxSatisfyingVersion = async function (
 		deviceType: string,
-		versionOrRange: keyof OsVersions = 'latest',
+		versionOrRange: string = 'latest',
 	): Promise<string> {
 		await getValidatedDeviceType(deviceType);
 		const osVersions = await getSupportedVersions(deviceType);

@@ -1,14 +1,12 @@
 import * as bSemver from 'balena-semver';
-import { InjectedDependenciesParam } from '..';
-import {
+import type { InjectedDependenciesParam } from '..';
+import type {
 	ResourceTagBase,
 	ApplicationTag,
 	Application,
 	Release,
-	OsVersion,
-	OsVersionsByDeviceType,
 	DeviceType,
-} from '../../typings/balena-sdk';
+} from '../types/models';
 import { Dictionary } from '../../typings/utils';
 import { getAuthDependentMemoize } from '../util/cache';
 
@@ -23,6 +21,25 @@ const BASED_ON_VERSION_TAG_NAME = 'meta-balena-base';
 export enum OsTypes {
 	DEFAULT = 'default',
 	ESR = 'esr',
+}
+
+export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
+
+export interface OsVersion {
+	id: number;
+	rawVersion: string;
+	strippedVersion: string;
+	basedOnVersion?: string;
+	osType: string;
+	line?: OsLines;
+	variant?: string;
+
+	formattedVersion: string;
+	isRecommended?: boolean;
+}
+
+export interface OsVersionsByDeviceType {
+	[deviceTypeSlug: string]: OsVersion[];
 }
 
 const getHostappModel = function (deps: InjectedDependenciesParam) {

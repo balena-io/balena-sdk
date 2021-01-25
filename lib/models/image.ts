@@ -15,8 +15,12 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { Image, PineOptions } from '../..';
-import { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type {
+	Image,
+	PineOptions,
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+} from '..';
 import { mergePineOptions } from '../util';
 import { toWritable } from '../util/types';
 

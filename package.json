@@ -3,7 +3,7 @@
   "version": "15.22.2",
   "description": "The Balena JavaScript SDK",
   "main": "index.js",
-  "types": "typings/balena-sdk/index.d.ts",
+  "types": "index.d.ts",
   "browser": "es2015",
   "homepage": "https://github.com/balena-io/balena-sdk",
   "repository": {
@@ -15,6 +15,7 @@
     "es2018/",
     "typings/",
     "index.js",
+    "index.d.ts",
     "DOCUMENTATION.md"
   ],
   "keywords": [

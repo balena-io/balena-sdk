@@ -1,4 +1,4 @@
-import { SdkOptions } from '../../typings/balena-sdk';
+import type { SdkOptions } from '..';
 
 // If we can't guarantee global state, don't fake it: fail instead.
 let globalEnv: (typeof window | typeof self | typeof global) & {

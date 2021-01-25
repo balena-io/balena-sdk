@@ -1,7 +1,7 @@
 /// <reference types="node" />
-import * as BalenaSdk from '../typings/balena-sdk';
-import { AnyObject } from '../typings/utils';
-import * as PineClient from '../typings/pinejs-client-core';
+import type * as BalenaSdk from '..';
+import type { AnyObject } from '../typings/utils';
+import type * as PineClient from '../typings/pinejs-client-core';
 
 const sdk: BalenaSdk.BalenaSDK = {} as any;
 
