@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'typings: Fix $filter errors for $any with the `1: 1` expression'
+      hash: 25d9863bfbdb829090f5dc104f954d8edce7f481
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.23.1
+  date: 2021-01-26T16:38:30.681Z
+- commits:
     - subject: Fix bugs that custom typings were hiding
       hash: 7318aa721f11416bb6ed4d5c7417f7755cb9e73c
       body: ''
