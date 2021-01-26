@@ -56,6 +56,9 @@ module.exports = function (config) {
 		'TEST_REGISTER_EMAIL',
 		'TEST_REGISTER_PASSWORD',
 		'TEST_REGISTER_USERNAME',
+		'TEST_MEMBER_EMAIL',
+		'TEST_MEMBER_PASSWORD',
+		'TEST_MEMBER_USERNAME',
 	];
 
 	console.log(JSON.stringify(karmaConfig));

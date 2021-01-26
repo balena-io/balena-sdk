@@ -82,6 +82,7 @@ export type {
 	OsVersionsByDeviceType,
 } from './models/hostapp';
 export type { ReleaseWithImageDetails } from './models/release';
+export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
 export type {
 	ImgConfigOptions,

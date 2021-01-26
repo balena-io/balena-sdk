@@ -58,6 +58,11 @@ const buildCredentials = function () {
 		email: env.TEST_EMAIL,
 		password: env.TEST_PASSWORD,
 		username: env.TEST_USERNAME,
+		member: {
+			email: env.TEST_MEMBER_EMAIL,
+			password: env.TEST_MEMBER_PASSWORD,
+			username: env.TEST_MEMBER_USERNAME,
+		},
 		paid: {
 			email: env.TEST_PAID_EMAIL,
 			password: env.TEST_PAID_PASSWORD,
@@ -84,6 +89,9 @@ const buildCredentials = function () {
 			creds.email != null,
 			creds.password != null,
 			creds.username != null,
+			creds.member.email != null,
+			creds.member.password != null,
+			creds.member.username != null,
 			creds.register.email != null,
 			creds.register.password != null,
 			creds.register.username != null,
@@ -181,9 +189,8 @@ export function loginPaidUser() {
 }
 
 export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
-	return beforeFn(async function () {
-		const initialOrg = await getInitialOrganization();
-		return (this.initialOrg = initialOrg);
+	beforeFn(async function () {
+		this.initialOrg = await getInitialOrganization();
 	});
 }
 
@@ -202,11 +209,28 @@ const getDeviceType = memoize(
 	},
 );
 
+const TEST_ORGANIZATION_NAME = 'FooBar';
+
 export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
 	let orgId;
 	beforeFn(async function () {
+		// make sure we start with a clean state
+		const orgs = await balena.models.organization.getAll({
+			$select: ['id', 'name'],
+			$filter: {
+				name: TEST_ORGANIZATION_NAME,
+			},
+		});
+		// just make sure we didn't accidentaly fetched more than intended
+		orgs.forEach(({ name }) =>
+			chai.expect(name).to.equal(TEST_ORGANIZATION_NAME),
+		);
+		await Promise.all(
+			orgs.map(({ id }) => balena.models.organization.remove(id)),
+		);
+
 		const organization = await balena.models.organization.create({
-			name: 'FooBar',
+			name: TEST_ORGANIZATION_NAME,
 		});
 		this.organization = organization;
 		orgId = organization.id;
