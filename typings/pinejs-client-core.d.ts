@@ -148,7 +148,7 @@ interface Lambda<T> {
 		// and allows having secondary filter props inside the $expr:LambdaExpression<T>
 		// that are not props of the T
 		// See: https://github.com/balena-io/balena-sdk/issues/714
-		| { 1: 1 }
+		| { 1: number }
 		| { $and: Array<LambdaExpression<T>> }
 		| { $or: Array<LambdaExpression<T>> }
 		| { $not: LambdaExpression<T> };
