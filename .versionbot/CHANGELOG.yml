@@ -1,4 +1,15 @@
 - commits:
+    - subject: Add methods for managing organization memberships
+      hash: 9a341944fb4b44384d3e533b9ba17d3dcb861f96
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.24.0
+  date: 2021-01-26T19:06:19.872Z
+- commits:
     - subject: >-
         tests: require an email appendage to avoid accidentally deleting
         accounts
