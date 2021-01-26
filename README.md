@@ -113,12 +113,16 @@ Users are encouraged to regularly update the balena SDK to the latest version.
 ## Tests
 
 In order to run the balena SDK test suite, set the following environment variables from an account that exists and doesn't have a billing account code:
-**WARNING: This will delete all applications and public keys of the test user. As such, all emails are required to
+**WARNING: This will delete all applications and public keys of the test users. As such, all emails are required to
 contain the string `+testsdk` to avoid accidental deletion**
 
-- `TEST_EMAIL`: The main account email
-- `TEST_PASSWORD`: The main account password
+- `TEST_EMAIL`: The main account email.
+- `TEST_PASSWORD`: The main account password.
 - `TEST_USERNAME`: The main account username.
+
+- `TEST_MEMBER_EMAIL`: The email of the account for the membership tests.
+- `TEST_MEMBER_PASSWORD`: The password of the account for the membership tests.
+- `TEST_MEMBER_USERNAME`: The username of the account for the membership tests.
 
 You also have to provide the following environment variables from an account that doesn't yet exist:
 

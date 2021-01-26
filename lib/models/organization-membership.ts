@@ -18,13 +18,21 @@ import * as errors from 'balena-errors';
 import type {
 	Organization,
 	OrganizationMembership,
+	OrganizationMembershipRoles,
 	OrganizationMembershipTag,
 	PineOptions,
+	PineSubmitBody,
 	InjectedDependenciesParam,
 } from '..';
 import { mergePineOptions } from '../util';
 
 const RESOURCE = 'organization_membership';
+
+export interface OrganizationMembershipCreationOptions {
+	organization: string | number;
+	username: string;
+	roleName?: OrganizationMembershipRoles;
+}
 
 const getOrganizationMembershipModel = function (
 	deps: InjectedDependenciesParam,
@@ -56,6 +64,23 @@ const getOrganizationMembershipModel = function (
 			},
 		},
 	);
+
+	const getRoleId = async (roleName: string) => {
+		const role = await pine.get({
+			resource: 'organization_membership_role',
+			id: {
+				name: roleName,
+			},
+			options: {
+				$select: 'id',
+			},
+		});
+		// Throw if the user provided a roleName, but we didn't find that role
+		if (!role) {
+			throw new errors.BalenaOrganizationMembershipRoleNotFound(roleName);
+		}
+		return role.id;
+	};
 
 	const exports = {
 		/**
@@ -183,6 +208,117 @@ const getOrganizationMembershipModel = function (
 					options,
 				),
 			);
+		},
+
+		/**
+		 * @summary Creates a new membership for an organization
+		 * @name create
+		 * @public
+		 * @function
+		 * @memberof balena.models.organization.membership
+		 *
+		 * @description This method adds a user to an organization by their usename.
+		 *
+		 * @param {Object} options - membership creation parameters
+		 * @param {String|Number} options.organization - organization handle (string), or id (number)
+		 * @param {String} options.username - the username of the balena user that will become a member
+		 * @param {String} [options.roleName="member"] - the role name to be granted to the membership
+		 *
+		 * @fulfil {Object} - organization membership
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.organization.membership.create({ organization: "myorg", username: "user123", roleName: "member" }).then(function(membership) {
+		 * 	console.log(membership);
+		 * });
+		 *
+		 * @example
+		 * balena.models.organization.membership.create({ organization: 53, username: "user123" }, function(error, membership) {
+		 * 	console.log(membership);
+		 * });
+		 */
+		async create({
+			organization,
+			username,
+			roleName,
+		}: OrganizationMembershipCreationOptions): Promise<OrganizationMembership> {
+			const [{ id }, roleId] = await Promise.all([
+				getOrganization(organization, { $select: 'id' }),
+				roleName ? getRoleId(roleName) : undefined,
+			]);
+			type OrganizationMembershipBase = Omit<OrganizationMembership, 'user'>;
+			type OrganizationMembershipPostBody = OrganizationMembershipBase & {
+				username: string;
+			};
+			const body: PineSubmitBody<OrganizationMembershipPostBody> = {
+				username,
+				is_member_of__organization: id,
+			};
+			if (roleName) {
+				body.organization_membership_role = roleId;
+			}
+			return (await pine.post<OrganizationMembershipBase>({
+				resource: RESOURCE,
+				body,
+			})) as OrganizationMembership;
+		},
+
+		/**
+		 * @summary Changes the role of an organization member
+		 * @name changeRole
+		 * @public
+		 * @function
+		 * @memberof balena.models.organization.membership
+		 *
+		 * @description This method changes the role of an organization member.
+		 *
+		 * @param {Number} id - the id of the membership that will be changed
+		 * @param {String} roleName - the role name to be granted to the membership
+		 *
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.organization.membership.changeRole(123, "member").then(function() {
+		 * 	console.log('OK');
+		 * });
+		 *
+		 * @example
+		 * balena.models.organization.membership.changeRole(123, "administrator", function(error) {
+		 * 	console.log('OK');
+		 * });
+		 */
+		async changeRole(id: number, roleName: string): Promise<void> {
+			const roleId = await getRoleId(roleName);
+			await pine.patch<OrganizationMembership>({
+				resource: 'organization_membership',
+				id,
+				body: {
+					organization_membership_role: roleId,
+				},
+			});
+		},
+
+		/**
+		 * @summary Remove a membership
+		 * @name remove
+		 * @public
+		 * @function
+		 * @memberof balena.models.organization.membership
+		 *
+		 * @param {Number} id - organization membership id
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.organization.membership.remove(123);
+		 *
+		 * @example
+		 * balena.models.organization.membership.remove(123,function(error) {
+		 * 	if (error) throw error;
+		 * 	...
+		 * });
+		 */
+		async remove(id: number): Promise<void> {
+			await pine.delete({ resource: RESOURCE, id });
 		},
 
 		/**

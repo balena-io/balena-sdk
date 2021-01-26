@@ -1,7 +1,14 @@
 // tslint:disable-next-line:import-blacklist
+import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
-import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
+import {
+	balena,
+	credentials,
+	givenAnOrganization,
+	givenInitialOrganization,
+	givenLoggedInUser,
+} from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
@@ -20,17 +27,24 @@ describe('Organization Membership Model', function () {
 	before(async function () {
 		ctx = this;
 		this.userId = await balena.auth.getUserId();
-		this.orgAdminRole = await balena.pine.get({
+		const roles = await balena.pine.get({
 			resource: 'organization_membership_role',
-			id: { name: 'administrator' },
-			options: { $select: 'id' },
+			options: { $select: ['id', 'name'] },
 		});
-		expect(this.orgAdminRole).to.be.an('object');
-		expect(this.orgAdminRole).to.have.property('id').that.is.a('number');
+		this.orgRoleMap = _.keyBy(roles, 'name');
+		roles.forEach((role) => {
+			expect(role).to.be.an('object');
+			expect(role).to.have.property('id').that.is.a('number');
+		});
+		this.orgAdminRole = this.orgRoleMap['administrator'];
+		this.orgMemberRole = this.orgRoleMap['member'];
+		[this.orgAdminRole, this.orgMemberRole].forEach((role) => {
+			expect(role).to.be.an('object');
+		});
 	});
 
 	parallel('balena.models.organization.membership.getAll()', function () {
-		it(`shoud return only the user's own membership [Promise]`, async function () {
+		it(`shoud return only the user's own memberships [Promise]`, async function () {
 			const memberships = await balena.models.organization.membership.getAll();
 
 			assertDeepMatchAndLength(memberships, [
@@ -63,74 +77,330 @@ describe('Organization Membership Model', function () {
 		});
 	});
 
-	describe('balena.models.organization.membership.getAllByOrganization()', function () {
-		it(`shoud return only the user's own membership`, async function () {
-			const memberships = await balena.models.organization.membership.getAllByOrganization(
-				this.initialOrg.id,
-			);
-			assertDeepMatchAndLength(memberships, [
-				{
-					user: { __id: this.userId },
-					is_member_of__organization: { __id: this.initialOrg.id },
-					organization_membership_role: { __id: this.orgAdminRole.id },
-				},
-			]);
+	describe('given a membership [read operations]', function () {
+		let membership: BalenaSdk.OrganizationMembership | undefined;
+		before(async function () {
+			membership = (await balena.models.organization.membership.getAll())[0];
+		});
+
+		parallel('balena.models.organization.membership.get()', function () {
+			it(`should reject when the organization membership is not found`, async function () {
+				const promise = balena.models.organization.membership.get(
+					Math.floor(Date.now() / 1000),
+				);
+
+				await expect(promise).to.be.rejectedWith(
+					'Organization Membership not found',
+				);
+			});
+
+			it(`should be able to retrieve a membership by id`, async function () {
+				membership = await balena.models.organization.membership.get(
+					membership!.id,
+					{
+						$select: 'id',
+						$expand: {
+							user: {
+								$select: 'username',
+							},
+							organization_membership_role: {
+								$select: 'name',
+							},
+						},
+					},
+				);
+				expect(membership).to.have.nested.property(
+					'user[0].username',
+					credentials.username,
+				);
+				expect(membership).to.have.nested.property(
+					'organization_membership_role[0].name',
+					'administrator',
+				);
+			});
+		});
+
+		describe('balena.models.organization.membership.getAllByOrganization()', function () {
+			it(`shoud return only the user's own membership`, async function () {
+				const memberships = await balena.models.organization.membership.getAllByOrganization(
+					this.initialOrg.id,
+				);
+				assertDeepMatchAndLength(memberships, [
+					{
+						user: { __id: this.userId },
+						is_member_of__organization: { __id: this.initialOrg.id },
+						organization_membership_role: { __id: this.orgAdminRole.id },
+					},
+				]);
+			});
 		});
 	});
 
-	describe('balena.models.organization.membership.tags', function () {
-		describe('[contained scenario]', function () {
-			const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
-				model: balena.models.organization.membership
-					.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-				modelNamespace: 'balena.models.organization.membership.tags',
-				resourceName: 'organization',
-				uniquePropertyNames: ['handle'],
-			};
+	describe('given a new organization', function () {
+		givenAnOrganization(before);
 
-			const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
-				model: balena.models.organization.membership
-					.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-				modelNamespace: 'balena.models.organization.membership.tags',
-				resourceName: 'organization_membership',
-				uniquePropertyNames: [],
-			};
+		describe('balena.models.organization.membership.create()', function () {
+			before(function () {
+				ctx = this;
+			});
 
-			before(async function () {
-				const [
-					membership,
-				] = await balena.models.organization.membership.getAllByOrganization(
-					this.initialOrg.id,
-					{
-						$filter: { user: this.userId },
-					},
-				);
+			parallel('[read operations]', function () {
+				it(`should not be able to add a new member to the organization usign a wrong role name`, async function () {
+					const promise = balena.models.organization.membership.create({
+						organization: ctx.organization.id,
+						username: credentials.member.username,
+						// @ts-expect-error
+						roleName: 'unknown role',
+					});
+					await expect(promise).to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaOrganizationMembershipRoleNotFound',
+					);
+				});
 
-				expect(membership).to.be.an('object');
-				expect(membership).to.have.property('id').that.is.a('number');
-				orgTagTestOptions.resourceProvider = () => this.initialOrg;
-				// used for tag creation during the
-				// device.tags.getAllByOrganization() test
-				orgTagTestOptions.setTagResourceProvider = () => membership;
-				orgMembershipTagTestOptions.resourceProvider = () => membership;
+				const randomOrdInfo = {
+					id: Math.floor(Date.now() / 1000),
+					handle: `random_sdk_test_org_handle_${Math.floor(Date.now() / 1000)}`,
+				};
 
-				// Clear all tags, since this is not a fresh organization
-				await balena.pine.delete({
-					resource: 'organization_membership_tag',
-					options: {
-						$filter: { 1: 1 },
-					},
+				['id', 'handle'].forEach((field) => {
+					it(`should not be able to add a new member when using an not existing organization ${field}`, async function () {
+						const promise = balena.models.organization.membership.create({
+							organization: randomOrdInfo[field],
+							username: credentials.member.username,
+							roleName: 'member',
+						});
+						await expect(promise).to.be.rejected.and.eventually.have.property(
+							'code',
+							'BalenaOrganizationNotFound',
+						);
+					});
 				});
 			});
 
-			itShouldSetGetAndRemoveTags(orgMembershipTagTestOptions);
+			describe('[mutating operations]', function () {
+				let membership: BalenaSdk.OrganizationMembership | undefined;
+				afterEach(async function () {
+					await balena.models.organization.membership.remove(membership!.id);
+				});
+				['id', 'handle'].forEach(function (field) {
+					it(`should be able to add a new member to the organization by ${field}`, async function () {
+						membership = await balena.models.organization.membership.create({
+							organization: this.organization[field],
+							username: credentials.member.username,
+						});
 
-			describe('balena.models.organization.membership.tags.getAllByOrganization()', function () {
-				itShouldGetAllTagsByResource(orgTagTestOptions);
+						expect(membership)
+							.to.be.an('object')
+							.that.has.nested.property('organization_membership_role.__id')
+							.that.equals(this.orgMemberRole.id);
+					});
+				});
+
+				it(`should be able to add a new member to the organization without providing a role`, async function () {
+					membership = await balena.models.organization.membership.create({
+						organization: this.organization.id,
+						username: credentials.member.username,
+					});
+
+					expect(membership)
+						.to.be.an('object')
+						.that.has.nested.property('organization_membership_role.__id')
+						.that.equals(this.orgMemberRole.id);
+				});
+
+				(['member', 'administrator'] as const).forEach(function (roleName) {
+					it(`should be able to add a new member to the organization with a given role [${roleName}]`, async function () {
+						membership = await balena.models.organization.membership.create({
+							organization: this.organization.id,
+							username: credentials.member.username,
+							roleName,
+						});
+
+						expect(membership)
+							.to.be.an('object')
+							.that.has.nested.property('organization_membership_role.__id')
+							.that.equals(this.orgRoleMap[roleName].id);
+					});
+				});
+			});
+		});
+
+		describe('given a member organization membership [contained scenario]', function () {
+			let membership: BalenaSdk.OrganizationMembership | undefined;
+			before(async function () {
+				membership = await balena.models.organization.membership.create({
+					organization: this.organization.id,
+					username: credentials.member.username,
+				});
 			});
 
-			describe('balena.models.organization.membership.tags.getAllByOrganizationMembership()', function () {
-				itShouldGetAllTagsByResource(orgMembershipTagTestOptions);
+			describe('balena.models.organization.membership.remove()', function () {
+				it(`should be able to remove a member`, async function () {
+					await balena.models.organization.membership.remove(membership!.id);
+
+					const promise = balena.models.organization.membership.get(
+						membership!.id,
+					);
+					await expect(promise).to.be.rejectedWith(
+						'Organization Membership not found',
+					);
+				});
+			});
+		});
+
+		describe('given an administrator organization membership [contained scenario]', function () {
+			let membership: BalenaSdk.OrganizationMembership | undefined;
+			before(async function () {
+				membership = await balena.models.organization.membership.create({
+					organization: this.organization.id,
+					username: credentials.member.username,
+					roleName: 'administrator',
+				});
+			});
+
+			describe('balena.models.organization.membership.changeRole()', function () {
+				it(`should not be able to change an organization membership to an unknown role`, async function () {
+					const promise = balena.models.organization.membership.changeRole(
+						membership!.id,
+						'unknown role',
+					);
+					await expect(promise).to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaOrganizationMembershipRoleNotFound',
+					);
+				});
+
+				const roleChangeTest = (
+					rolenName: BalenaSdk.OrganizationMembershipRoles,
+				) =>
+					it(`should be able to change an organization membership to "${rolenName}"`, async function () {
+						await balena.models.organization.membership.changeRole(
+							membership!.id,
+							rolenName,
+						);
+
+						membership = await balena.models.organization.membership.get(
+							membership!.id,
+							{
+								$select: 'id',
+								$expand: {
+									user: {
+										$select: 'username',
+									},
+									organization_membership_role: {
+										$select: 'name',
+									},
+								},
+							},
+						);
+						expect(membership).to.have.nested.property(
+							'user[0].username',
+							credentials.member.username,
+						);
+						expect(membership).to.have.nested.property(
+							'organization_membership_role[0].name',
+							rolenName,
+						);
+					});
+
+				roleChangeTest('member');
+				roleChangeTest('administrator');
+			});
+
+			describe('balena.models.organization.membership.remove()', function () {
+				it(`should be able to remove an administrator`, async function () {
+					await balena.models.organization.membership.remove(membership!.id);
+
+					const promise = balena.models.organization.membership.get(
+						membership!.id,
+					);
+
+					await expect(promise).to.be.rejectedWith(
+						'Organization Membership not found',
+					);
+				});
+
+				it(`should not be able to remove the last membership of the organization`, async function () {
+					const [
+						lastAdminMembership,
+					] = await balena.models.organization.membership.getAllByOrganization(
+						this.organization.id,
+						{
+							$select: 'id',
+							$filter: { user: this.userId },
+						},
+					);
+
+					expect(lastAdminMembership).to.be.an('object');
+					expect(lastAdminMembership)
+						.to.have.property('id')
+						.that.is.a('number');
+
+					const promise = balena.models.organization.membership.remove(
+						lastAdminMembership.id,
+					);
+					await expect(promise).to.be.rejectedWith(
+						`It is necessary that each organization that is active, includes at least one organization membership that has an organization membership role that has a name (Auth) that is equal to "administrator"`,
+					);
+				});
+			});
+		});
+
+		describe('balena.models.organization.membership.tags', function () {
+			describe('[contained scenario]', function () {
+				const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
+					model: balena.models.organization.membership
+						.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
+					modelNamespace: 'balena.models.organization.membership.tags',
+					resourceName: 'organization',
+					uniquePropertyNames: ['handle'],
+				};
+
+				const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
+					model: balena.models.organization.membership
+						.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
+					modelNamespace: 'balena.models.organization.membership.tags',
+					resourceName: 'organization_membership',
+					uniquePropertyNames: [],
+				};
+
+				before(async function () {
+					const [
+						membership,
+					] = await balena.models.organization.membership.getAllByOrganization(
+						this.organization.id,
+						{
+							$filter: { user: this.userId },
+						},
+					);
+
+					expect(membership).to.be.an('object');
+					expect(membership).to.have.property('id').that.is.a('number');
+					orgTagTestOptions.resourceProvider = () => this.organization;
+					// used for tag creation during the
+					// device.tags.getAllByOrganization() test
+					orgTagTestOptions.setTagResourceProvider = () => membership;
+					orgMembershipTagTestOptions.resourceProvider = () => membership;
+
+					// Clear all tags, since this is not a fresh organization
+					await balena.pine.delete({
+						resource: 'organization_membership_tag',
+						options: {
+							$filter: { 1: 1 },
+						},
+					});
+				});
+
+				itShouldSetGetAndRemoveTags(orgMembershipTagTestOptions);
+
+				describe('balena.models.organization.membership.tags.getAllByOrganization()', function () {
+					itShouldGetAllTagsByResource(orgTagTestOptions);
+				});
+
+				describe('balena.models.organization.membership.tags.getAllByOrganizationMembership()', function () {
+					itShouldGetAllTagsByResource(orgMembershipTagTestOptions);
+				});
 			});
 		});
 	});

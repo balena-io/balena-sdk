@@ -24,6 +24,10 @@ environment:
     TEST_REGISTER_PASSWORD:
       secure: NVtsC140RoZJmrCHqyKc2A==
     TEST_REGISTER_USERNAME: ci_test_register_user_testsdk1
+    TEST_MEMBER_EMAIL: ci_test_member_user+testsdk1@resin.io
+    TEST_MEMBER_PASSWORD:
+      secure: NVtsC140RoZJmrCHqyKc2A==
+    TEST_MEMBER_USERNAME: ci_test_member_user_testsdk1
     TEST_ONLY_ON_ENVIRONMENT: node
   - nodejs_version: 10
     TEST_EMAIL: ci_test_user+testsdk2@resin.io
@@ -34,6 +38,10 @@ environment:
     TEST_REGISTER_PASSWORD:
       secure: NVtsC140RoZJmrCHqyKc2A==
     TEST_REGISTER_USERNAME: ci_test_register_user_testsdk2
+    TEST_MEMBER_EMAIL: ci_test_member_user+testsdk2@resin.io
+    TEST_MEMBER_PASSWORD:
+      secure: NVtsC140RoZJmrCHqyKc2A==
+    TEST_MEMBER_USERNAME: ci_test_member_user_testsdk2
     TEST_ONLY_ON_ENVIRONMENT: browser
 
 install:
