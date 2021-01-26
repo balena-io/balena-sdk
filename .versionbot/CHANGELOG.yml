@@ -1,4 +1,20 @@
 - commits:
+    - subject: >-
+        tests: require an email appendage to avoid accidentally deleting
+        accounts
+      hash: 45704d00292a8e8946d733fd803945bb5c394b60
+      body: |
+        h/t @thgreasi for the appveyor changes
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 15.23.2
+  date: 2021-01-26T17:15:11.807Z
+- commits:
     - subject: 'typings: Fix $filter errors for $any with the `1: 1` expression'
       hash: 25d9863bfbdb829090f5dc104f954d8edce7f481
       body: ''
