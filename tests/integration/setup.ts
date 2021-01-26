@@ -68,6 +68,16 @@ const buildCredentials = function () {
 			username: env.TEST_REGISTER_USERNAME,
 		},
 	};
+	if (
+		// TODO: this should include the paid account eventually as well
+		![creds.email, creds.register.email].every(
+			(email) => email == null || email.includes('+testsdk'),
+		)
+	) {
+		throw new Error(
+			'Missing environment credentials, all emails must include `+testsdk` to avoid accidental deletion',
+		);
+	}
 
 	if (
 		!_.every([
