@@ -118,7 +118,7 @@ let aString: string;
 	const test: Equals<typeof result, number> = EqualsTrue;
 })();
 
-// Fully Typed result
+// Fully Typed - auto-inferring result
 
 (async () => {
 	const [result] = await sdk.pine.get({
@@ -326,6 +326,56 @@ let aString: string;
 			},
 		},
 	});
+})();
+
+(async () => {
+	const result = await sdk.pine.get({
+		resource: 'device',
+		options: {
+			$select: 'device_name',
+			$filter: {
+				device_tag: {
+					$any: {
+						$alias: 'dt',
+						$expr: {
+							dt: { tag_key: 'test' },
+						},
+					},
+				},
+			},
+		},
+	});
+	const test: Equals<
+		Compute<typeof result[number]>,
+		{
+			device_name: string;
+		}
+	> = EqualsTrue;
+})();
+
+(async () => {
+	const result = await sdk.pine.get({
+		resource: 'device',
+		options: {
+			$select: 'device_name',
+			$filter: {
+				device_tag: {
+					$any: {
+						$alias: 'dt',
+						$expr: {
+							1: 1,
+						},
+					},
+				},
+			},
+		},
+	});
+	const test: Equals<
+		Compute<typeof result[number]>,
+		{
+			device_name: string;
+		}
+	> = EqualsTrue;
 })();
 
 // strictPine
