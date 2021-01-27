@@ -1886,6 +1886,9 @@ const getDeviceModel = function (
 			const { body } = await request.send({
 				url: `/device/v2/${uuid}/state`,
 				baseUrl: apiUrl,
+				headers: {
+					'x-balena-state-format': 'v2+extraContainers',
+				},
 			});
 			return body;
 		},
