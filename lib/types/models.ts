@@ -306,6 +306,7 @@ export interface Device {
 	device_name: string;
 	download_progress?: number;
 	ip_address: string | null;
+	public_address: string | null;
 	mac_address: string | null;
 	is_accessible_by_support_until__date: string | null;
 	is_connected_to_vpn: boolean;
