@@ -65,6 +65,12 @@ const getApplicationModel = function (
 	const releaseModel = once(() =>
 		(require('./release') as typeof import('./release')).default(deps, opts),
 	);
+
+	const membershipModel = (require('./application-membership') as typeof import('./application-membership')).default(
+		deps,
+		(...args: Parameters<typeof exports.get>) => exports.get(...args),
+	);
+
 	const inviteModel = (require('./application-invite') as typeof import('./application-invite')).default(
 		deps,
 		opts,
@@ -1908,6 +1914,12 @@ const getApplicationModel = function (
 			 */
 			remove: buildVarModel.remove,
 		}),
+
+		/**
+		 * @namespace balena.models.application.membership
+		 * @memberof balena.models.application
+		 */
+		membership: addCallbackSupportToModule(membershipModel),
 
 		/**
 		 * @namespace balena.models.application.invite
