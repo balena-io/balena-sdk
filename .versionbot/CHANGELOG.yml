@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'Device: add public_address property'
+      hash: 68f7eb89b4c431e754f2abc73ad80c3c46086235
+      body: |
+        add public_address property on device model
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.24.1
+  date: 2021-01-29T17:02:50.673Z
+- commits:
     - subject: Add methods for managing organization memberships
       hash: 9a341944fb4b44384d3e533b9ba17d3dcb861f96
       body: ''
