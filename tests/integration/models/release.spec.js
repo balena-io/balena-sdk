@@ -1,7 +1,7 @@
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import * as _ from 'lodash';
-import { timeSuite } from '../../util';
+import { delay, timeSuite } from '../../util';
 
 const { expect } = m.chai;
 
@@ -100,8 +100,11 @@ describe('Release Model', function () {
 			const TEST_SOURCE_URL =
 				'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz';
 
-			after(function () {
-				return balena.pine.delete({
+			after(async function () {
+				// TODO: We shouldn't need this, but the API's application->service->image delete cascade
+				// started erroring with data still referenced by image.
+				await delay(10000);
+				await balena.pine.delete({
 					resource: 'release',
 					options: {
 						$filter: {
