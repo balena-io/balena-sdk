@@ -114,8 +114,7 @@ describe('Release Model', function () {
 				});
 			});
 
-			parallel('', function () {
-				// [read operations]
+			parallel('[read operations]', function () {
 				it('should be rejected if the application name does not exist', function () {
 					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
 						url: TEST_SOURCE_URL,
@@ -167,8 +166,9 @@ describe('Release Model', function () {
 							);
 					});
 				});
+			});
 
-				// [mutating operations]
+			describe('[mutating operations]', function () {
 				['id', 'app_name', 'slug'].forEach((prop) => {
 					it(`should be able to create a release using a tarball url given an application ${prop}`, function () {
 						return balena.models.release
