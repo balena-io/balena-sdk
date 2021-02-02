@@ -1,4 +1,21 @@
 - commits:
+    - subject: Remove the workaround for failing cascade deletes on deployFromUrl tests
+      hash: 204d0f6a34e4cc40ff7bc03724d9cbafbb6943dd
+      body: |
+        This reverts commit
+        65c1da9d22d79fa377dba14a4bc75b7e3ef4426e.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-devops/threads/wOEEiorvtaeCtuGc4KVO0YpAy-f
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-devops/threads/wOEEiorvtaeCtuGc4KVO0YpAy-f
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.24.4
+  date: 2021-02-02T17:42:20.233Z
+- commits:
     - subject: Refactor release.createFromUrl tests to async-await
       hash: 71191361d7d34769236a89f6340477d0e5c47f70
       body: ''
