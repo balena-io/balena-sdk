@@ -1,4 +1,32 @@
 - commits:
+    - subject: Run write release.createFromUrl() tests one by one
+      hash: 7e056e01f91b908c78bf66f1af478d5cc857674a
+      body: |
+        W/o this these tests were failing on staging.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests: Workaround the failing  cascade deletes for release.deployFromUrl'
+      hash: 22a8a1a94076e2db32e0ca3bf1f4442ca342ac70
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-devops/threads/wOEEiorvtaeCtuGc4KVO0YpAy-f
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-devops/threads/wOEEiorvtaeCtuGc4KVO0YpAy-f
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.24.2
+  date: 2021-02-02T15:08:55.124Z
+- commits:
     - subject: 'Device: add public_address property'
       hash: 68f7eb89b4c431e754f2abc73ad80c3c46086235
       body: |
