@@ -8,6 +8,8 @@ import { getInitialOrganization } from './utils';
 // tslint:disable-next-line:no-var-requires
 chai.use(require('chai-samsam'));
 
+const { expect } = chai;
+
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 
 let apiUrl: string;
@@ -222,9 +224,7 @@ export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
 			},
 		});
 		// just make sure we didn't accidentaly fetched more than intended
-		orgs.forEach(({ name }) =>
-			chai.expect(name).to.equal(TEST_ORGANIZATION_NAME),
-		);
+		orgs.forEach(({ name }) => expect(name).to.equal(TEST_ORGANIZATION_NAME));
 		await Promise.all(
 			orgs.map(({ id }) => balena.models.organization.remove(id)),
 		);
@@ -255,18 +255,20 @@ export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 			deviceType: 'raspberry-pi',
 			organization: this.initialOrg.id,
 		});
+		expect(application)
+			.to.be.an('object')
+			.that.has.property('id')
+			.that.is.a('number');
 		this.application = application;
-		chai
-			.expect(application.is_for__device_type)
+
+		expect(application.is_for__device_type)
 			.to.be.an('object')
 			.that.has.property('__id')
 			.that.is.a('number');
-		const applicationDeviceType = await getDeviceType(
+		this.applicationDeviceType = await getDeviceType(
 			this.application.is_for__device_type.__id,
 		);
-		this.applicationDeviceType = applicationDeviceType;
-		return chai
-			.expect(this.applicationDeviceType)
+		expect(this.applicationDeviceType)
 			.to.be.an('object')
 			.that.has.property('slug')
 			.that.is.a('string');

@@ -115,25 +115,25 @@ describe('Release Model', function () {
 			});
 
 			parallel('[read operations]', function () {
-				it('should be rejected if the application name does not exist', function () {
+				it('should be rejected if the application name does not exist', async function () {
 					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
 						url: TEST_SOURCE_URL,
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: HelloWorldApp');
+					await expect(promise).to.be.rejectedWith(
+						'Application not found: HelloWorldApp',
+					);
 				});
 
-				it('should be rejected if the application id does not exist', function () {
+				it('should be rejected if the application id does not exist', async function () {
 					const promise = balena.models.release.createFromUrl(999999, {
 						url: TEST_SOURCE_URL,
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: 999999');
+					await expect(promise).to.be.rejectedWith(
+						'Application not found: 999999',
+					);
 				});
 
-				it('should be rejected when the provided tarball url is not found', function () {
+				it('should be rejected when the provided tarball url is not found', async function () {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
 						{
@@ -141,53 +141,46 @@ describe('Release Model', function () {
 								'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz',
 						},
 					);
-					return expect(promise).to.be.rejected.then(function (error) {
-						expect(error).to.have.property('code', 'BalenaRequestError');
-						expect(error).to.have.property('statusCode', 404);
-						return m.chai
-							.expect(error)
-							.to.have.property('message')
-							.that.contains('Failed to fetch tarball from passed URL');
-					});
+					const error = await expect(promise).to.be.rejected;
+					expect(error).to.have.property('code', 'BalenaRequestError');
+					expect(error).to.have.property('statusCode', 404);
+					expect(error)
+						.to.have.property('message')
+						.that.contains('Failed to fetch tarball from passed URL');
 				});
 
-				it('should be rejected when the provided url is not a tarball', function () {
+				it('should be rejected when the provided url is not a tarball', async function () {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
 						{ url: 'https://github.com/balena-io-projects/simple-server-node' },
 					);
-					return expect(promise).to.be.rejected.then(function (error) {
-						expect(error).to.have.property('code', 'BalenaError');
-						return m.chai
-							.expect(error)
-							.to.have.property('message')
-							.that.contains(
-								'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
-							);
-					});
+					const error = await expect(promise).to.be.rejected;
+					expect(error).to.have.property('code', 'BalenaError');
+					expect(error)
+						.to.have.property('message')
+						.that.contains(
+							'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
+						);
 				});
 			});
 
 			describe('[mutating operations]', function () {
 				['id', 'app_name', 'slug'].forEach((prop) => {
-					it(`should be able to create a release using a tarball url given an application ${prop}`, function () {
-						return balena.models.release
-							.createFromUrl(ctx.application[prop], { url: TEST_SOURCE_URL })
-							.then((releaseId) => {
-								expect(releaseId).to.be.a('number');
-								return balena.models.release.get(releaseId).then((release) => {
-									expect(release).to.deep.match({
-										status: 'running',
-										source: 'cloud',
-										id: releaseId,
-										belongs_to__application: { __id: ctx.application.id },
-									});
-									return m.chai
-										.expect(release)
-										.to.have.property('commit')
-										.that.is.a('string');
-								});
-							});
+					it(`should be able to create a release using a tarball url given an application ${prop}`, async function () {
+						const releaseId = await balena.models.release.createFromUrl(
+							ctx.application[prop],
+							{ url: TEST_SOURCE_URL },
+						);
+
+						expect(releaseId).to.be.a('number');
+						const release = await balena.models.release.get(releaseId);
+						expect(release).to.deep.match({
+							status: 'running',
+							source: 'cloud',
+							id: releaseId,
+							belongs_to__application: { __id: ctx.application.id },
+						});
+						expect(release).to.have.property('commit').that.is.a('string');
 					});
 				});
 			});
