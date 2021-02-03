@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove the workaround for failing cascade deletes on deployFromUrl tests
+      hash: c7617fd75bd00561fc444fef8cb469a3e3d5c525
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.24.4
+  date: 2021-02-03T15:31:30.201Z
+- commits:
     - subject: Refactor release.createFromUrl tests to async-await
       hash: 71191361d7d34769236a89f6340477d0e5c47f70
       body: ''
