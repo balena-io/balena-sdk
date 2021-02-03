@@ -97,13 +97,66 @@ describe('Release Model', function () {
 				return;
 			}
 
+			const releaseIds = [];
+
 			const TEST_SOURCE_URL =
-				'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz';
+				'https://github.com/balena-io-examples/balena-node-hello-world/archive/v1.0.0.tar.gz';
+			const TEST_SOURCE_CONTAINER_COUNT = 1;
+
+			async function waitForImagesToBeCreated(appId, releaseCount) {
+				if (releaseCount === 0) {
+					return;
+				}
+				const start = Date.now();
+				while (true) {
+					const imageCount = await balena.pine.get({
+						resource: 'image',
+						options: {
+							$count: {
+								$filter: {
+									is_a_build_of__service: {
+										$any: {
+											$alias: 's',
+											$expr: {
+												s: {
+													application: appId,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					});
+					if (imageCount === TEST_SOURCE_CONTAINER_COUNT * releaseCount) {
+						break;
+					}
+					// don't wait more than 30 seconds
+					const msWaiting = Date.now() - start;
+					if (msWaiting > 30 * 1000) {
+						console.warn(
+							`Giving up waiting before balena.models.release.createFromUrl() cleanup, since ${
+								Date.now() - start
+							}ms have already passed`,
+						);
+						break;
+					}
+					console.info(
+						'Waiting before balena.models.release.createFromUrl() cleanup',
+					);
+					await delay(5000);
+				}
+				console.info(
+					'Continuing balena.models.release.createFromUrl() cleanup',
+				);
+			}
 
 			after(async function () {
-				// TODO: We shouldn't need this, but the API's application->service->image delete cascade
-				// started erroring with data still referenced by image.
-				await delay(10000);
+				// Wait for the builder to create the pending image records of the releases
+				// since otherwise the release or application delete would fail with a DB error.
+				// See: https://www.flowdock.com/app/rulemotion/resin-devops/threads/wOEEiorvtaeCtuGc4KVO0YpAy-f
+				await waitForImagesToBeCreated(this.application.id, releaseIds.length);
+
 				await balena.pine.delete({
 					resource: 'release',
 					options: {
@@ -114,7 +167,8 @@ describe('Release Model', function () {
 				});
 			});
 
-			parallel('[read operations]', function () {
+			parallel('', function () {
+				// [read operations]
 				it('should be rejected if the application name does not exist', async function () {
 					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
 						url: TEST_SOURCE_URL,
@@ -162,9 +216,8 @@ describe('Release Model', function () {
 							'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
 						);
 				});
-			});
 
-			describe('[mutating operations]', function () {
+				// [mutating operations]
 				['id', 'app_name', 'slug'].forEach((prop) => {
 					it(`should be able to create a release using a tarball url given an application ${prop}`, async function () {
 						const releaseId = await balena.models.release.createFromUrl(
@@ -173,6 +226,8 @@ describe('Release Model', function () {
 						);
 
 						expect(releaseId).to.be.a('number');
+						releaseIds.push(releaseId);
+
 						const release = await balena.models.release.get(releaseId);
 						expect(release).to.deep.match({
 							status: 'running',
