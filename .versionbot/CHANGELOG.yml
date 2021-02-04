@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Cleanup orgs & org memberships when resetting the user'
+      hash: af1487c73ac087351f8590c58b3b757200af6c9f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.24.5
+  date: 2021-02-04T19:01:20.161Z
+- commits:
     - subject: Remove the workaround for failing cascade deletes on deployFromUrl tests
       hash: c7617fd75bd00561fc444fef8cb469a3e3d5c525
       body: ''
