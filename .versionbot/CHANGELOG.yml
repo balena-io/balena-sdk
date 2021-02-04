@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add application membership methods
+      hash: 62d78fa3a88e621d5102da9a45190ad72d5a2733
+      body: |
+        add application membership methods
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.24.6
+  date: 2021-02-04T21:58:36.385Z
+- commits:
     - subject: 'tests: Cleanup orgs & org memberships when resetting the user'
       hash: af1487c73ac087351f8590c58b3b757200af6c9f
       body: ''
