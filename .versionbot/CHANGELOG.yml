@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'target state: get the v2ec endpoint via header'
+      hash: 3e1c99652983b8117b28e6dcd40da08f8ba93c12
+      body: >
+        header is backwards-compatible (read: silently ignored) with current
+        APIs
+      footer:
+        Connects-to: 'https://github.com/balena-io/open-balena-api/pull/504'
+        connects-to: 'https://github.com/balena-io/open-balena-api/pull/504'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 15.24.5
+  date: 2021-02-04T21:05:00.899Z
+- commits:
     - subject: Remove the workaround for failing cascade deletes on deployFromUrl tests
       hash: c7617fd75bd00561fc444fef8cb469a3e3d5c525
       body: ''
