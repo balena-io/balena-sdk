@@ -54,6 +54,7 @@ export type {
 /** @deprecated */
 export type PineWithSelectOnGet = PineStrict;
 
+export type { ApplicationMembershipCreationOptions } from './models/application-membership';
 export type { ApplicationInviteOptions } from './models/application-invite';
 export type {
 	BankAccountBillingInfo,

@@ -126,6 +126,13 @@ const sdk = fromSharedOptions();
                 * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
                 * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
                 * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+            * [.membership](#balena.models.application.membership) : <code>object</code>
+                * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
+                * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
+                * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+                * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
+                * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+                * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.application.invite) : <code>object</code>
                 * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
                 * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -478,6 +485,13 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
             * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
             * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+        * [.membership](#balena.models.application.membership) : <code>object</code>
+            * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
+            * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+            * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
+            * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+            * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.application.invite) : <code>object</code>
             * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -704,6 +718,13 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(nameOrSlugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
         * [.set(nameOrSlugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
         * [.remove(nameOrSlugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+    * [.membership](#balena.models.application.membership) : <code>object</code>
+        * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
+        * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+        * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
+        * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+        * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.application.invite) : <code>object</code>
         * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -1264,6 +1285,182 @@ balena.models.application.buildVar.remove(999999, 'VAR').then(function() {
 **Example**  
 ```js
 balena.models.application.buildVar.remove('MyApp', 'VAR', function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.application.membership"></a>
+
+##### application.membership : <code>object</code>
+**Kind**: static namespace of [<code>application</code>](#balena.models.application)  
+
+* [.membership](#balena.models.application.membership) : <code>object</code>
+    * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
+    * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+    * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
+    * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+    * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
+
+<a name="balena.models.application.membership.get"></a>
+
+###### membership.get(membershipId, [options]) ⇒ <code>Promise</code>
+This method returns a single application membership.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
+**Summary**: Get a single application membership  
+**Access**: public  
+**Fulfil**: <code>Object</code> - application membership  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| membershipId | <code>Number</code> |  | application membership id (number). |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.membership.get(5).then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.application.membership.get(5, function(error, memberships) {
+	console.log(memberships);
+});
+```
+<a name="balena.models.application.membership.getAll"></a>
+
+###### membership.getAll([options]) ⇒ <code>Promise</code>
+This method returns all application memberships.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
+**Summary**: Get all application memberships  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - application memberships  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.membership.getAll().then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.application.membership.getAll(function(error, memberships) {
+	console.log(memberships);
+});
+```
+<a name="balena.models.application.membership.getAllByApplication"></a>
+
+###### membership.getAllByApplication(nameOrSlugOrId, [options]) ⇒ <code>Promise</code>
+This method returns all application memberships for a specific application.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
+**Summary**: Get all memberships by application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - application memberships  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.membership.getAllByApplication('MyApp').then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.application.membership.getAllByApplication(123).then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.application.membership.getAllByApplication(123, function(error, memberships) {
+	console.log(memberships);
+});
+```
+<a name="balena.models.application.membership.create"></a>
+
+###### membership.create(options) ⇒ <code>Promise</code>
+This method adds a user to an application by their usename.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
+**Summary**: Creates a new membership for an application  
+**Access**: public  
+**Fulfil**: <code>Object</code> - application membership  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | <code>Object</code> |  | membership creation parameters |
+| options.application | <code>String</code> \| <code>Number</code> |  | application handle (string), or id (number) |
+| options.username | <code>String</code> |  | the username of the balena user that will become a member |
+| [options.roleName] | <code>String</code> | <code>&quot;member&quot;</code> | the role name to be granted to the membership |
+
+**Example**  
+```js
+balena.models.application.membership.create({ application: "myApp", username: "user123", roleName: "member" }).then(function(membership) {
+	console.log(membership);
+});
+```
+**Example**  
+```js
+balena.models.application.membership.create({ application: 53, username: "user123" }, function(error, membership) {
+	console.log(membership);
+});
+```
+<a name="balena.models.application.membership.changeRole"></a>
+
+###### membership.changeRole(id, roleName) ⇒ <code>Promise</code>
+This method changes the role of an application member.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
+**Summary**: Changes the role of an application member  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | the id of the membership that will be changed |
+| roleName | <code>String</code> | the role name to be granted to the membership |
+
+**Example**  
+```js
+balena.models.application.membership.changeRole(123, "member").then(function() {
+	console.log('OK');
+});
+```
+**Example**  
+```js
+balena.models.application.membership.changeRole(123, "administrator", function(error) {
+	console.log('OK');
+});
+```
+<a name="balena.models.application.membership.remove"></a>
+
+###### membership.remove(id) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
+**Summary**: Remove a membership  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | application membership id |
+
+**Example**  
+```js
+balena.models.application.membership.remove(123);
+```
+**Example**  
+```js
+balena.models.application.membership.remove(123,function(error) {
 	if (error) throw error;
 	...
 });
