@@ -142,6 +142,10 @@ export async function resetUser() {
 				},
 			})
 			.catch(_.noop),
+
+		resetInitialOrganization(),
+
+		resetTestOrgs(),
 	]);
 }
 
@@ -190,6 +194,20 @@ export function loginPaidUser() {
 	});
 }
 
+async function resetInitialOrganization() {
+	const userId = await balena.auth.getUserId();
+	const initialOrg = await getInitialOrganization();
+	await balena.pine.delete({
+		resource: 'organization_membership',
+		options: {
+			$filter: {
+				user: { $ne: userId },
+				is_member_of__organization: initialOrg.id,
+			},
+		},
+	});
+}
+
 export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
 	beforeFn(async function () {
 		this.initialOrg = await getInitialOrganization();
@@ -211,7 +229,28 @@ const getDeviceType = memoize(
 	},
 );
 
-const TEST_ORGANIZATION_NAME = 'FooBar';
+const TEST_ORGANIZATION_NAME = 'FooBar sdk test created organization';
+
+async function resetTestOrgs() {
+	const orgs = await balena.pine.get({
+		resource: 'organization',
+		options: {
+			$select: 'id',
+			$filter: {
+				name: TEST_ORGANIZATION_NAME,
+			},
+		},
+	});
+
+	await Promise.all(
+		orgs.map(({ id }) =>
+			balena.pine.delete({
+				resource: 'organization',
+				id,
+			}),
+		),
+	);
+}
 
 export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
 	let orgId;
