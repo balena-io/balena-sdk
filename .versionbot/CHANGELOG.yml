@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'types/models: Add the application uuid property'
+      hash: 226ecd3536885bb179b9c54b05aed00cff90251a
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/2981'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/2981'
+        See: 'https://github.com/balena-io/balena-sdk/issues/1016'
+        see: 'https://github.com/balena-io/balena-sdk/issues/1016'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.25.0
+  date: 2021-02-10T21:16:51.275Z
+- commits:
     - subject: 'tests/setup: Fix bug caused by setting bad release timestamps'
       hash: 0580cc387c595e410c219d6a727c45ce7d2a1a39
       body: |
