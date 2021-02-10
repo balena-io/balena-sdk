@@ -271,27 +271,25 @@ const itShouldCompareVersionsProperly = function (rcompare) {
 	});
 
 	it('correctly sorts a full list', () =>
-		m.chai
-			.expect(
-				[
-					'1.0.0',
-					'2.0.0-rc1+rev5',
-					'2.0.6+rev3.prod',
-					'2.0.0+rev1',
-					'2.0.0',
-					'1.24.0+rev100',
-					'2.0.6+rev3.dev',
-				].sort(rcompare),
-			)
-			.to.deep.equal([
+		expect(
+			[
+				'1.0.0',
+				'2.0.0-rc1+rev5',
 				'2.0.6+rev3.prod',
-				'2.0.6+rev3.dev',
 				'2.0.0+rev1',
 				'2.0.0',
-				'2.0.0-rc1+rev5',
 				'1.24.0+rev100',
-				'1.0.0',
-			]));
+				'2.0.6+rev3.dev',
+			].sort(rcompare),
+		).to.deep.equal([
+			'2.0.6+rev3.prod',
+			'2.0.6+rev3.dev',
+			'2.0.0+rev1',
+			'2.0.0',
+			'2.0.0-rc1+rev5',
+			'1.24.0+rev100',
+			'1.0.0',
+		]));
 };
 
 describe('version comparisons', () =>
@@ -307,14 +305,12 @@ describe('getDeviceOsSemverWithVariant', function () {
 				['Resin OS 2.0-beta.8', ''],
 			],
 			function ([osVersion, osVariant]) {
-				return m.chai
-					.expect(
-						getDeviceOsSemverWithVariant({
-							os_version: osVersion,
-							os_variant: osVariant,
-						}),
-					)
-					.to.equal(null);
+				return expect(
+					getDeviceOsSemverWithVariant({
+						os_version: osVersion,
+						os_variant: osVariant,
+					}),
+				).to.equal(null);
 			},
 		));
 
@@ -337,14 +333,12 @@ describe('getDeviceOsSemverWithVariant', function () {
 				['Resin OS 2.0.6+rev2', '', '2.0.6+rev2'],
 			],
 			function ([osVersion, osVariant, expectation]) {
-				return m.chai
-					.expect(
-						getDeviceOsSemverWithVariant({
-							os_version: osVersion,
-							os_variant: osVariant,
-						}),
-					)
-					.to.equal(expectation);
+				return expect(
+					getDeviceOsSemverWithVariant({
+						os_version: osVersion,
+						os_variant: osVariant,
+					}),
+				).to.equal(expectation);
 			},
 		));
 
@@ -389,14 +383,12 @@ describe('getDeviceOsSemverWithVariant', function () {
 				['balenaOS 2.28.0+rev1', 'dev', '2.28.0+rev1.dev'],
 			],
 			function ([osVersion, osVariant, expectation]) {
-				return m.chai
-					.expect(
-						getDeviceOsSemverWithVariant({
-							os_version: osVersion,
-							os_variant: osVariant,
-						}),
-					)
-					.to.equal(expectation);
+				return expect(
+					getDeviceOsSemverWithVariant({
+						os_version: osVersion,
+						os_variant: osVariant,
+					}),
+				).to.equal(expectation);
 			},
 		));
 
@@ -412,14 +404,12 @@ describe('getDeviceOsSemverWithVariant', function () {
 				['Resin OS 2.0.0+rev5 (dev)', '', '2.0.0+rev5.dev'],
 			],
 			function ([osVersion, osVariant, expectation]) {
-				return m.chai
-					.expect(
-						getDeviceOsSemverWithVariant({
-							os_version: osVersion,
-							os_variant: osVariant,
-						}),
-					)
-					.to.equal(expectation);
+				return expect(
+					getDeviceOsSemverWithVariant({
+						os_version: osVersion,
+						os_variant: osVariant,
+					}),
+				).to.equal(expectation);
 			},
 		));
 
@@ -434,14 +424,12 @@ describe('getDeviceOsSemverWithVariant', function () {
 				['Resin OS 2.0.0+rev5 (prod)', 'prod', '2.0.0+rev5.prod'],
 			],
 			function ([osVersion, osVariant, expectation]) {
-				return m.chai
-					.expect(
-						getDeviceOsSemverWithVariant({
-							os_version: osVersion,
-							os_variant: osVariant,
-						}),
-					)
-					.to.equal(expectation);
+				return expect(
+					getDeviceOsSemverWithVariant({
+						os_version: osVersion,
+						os_variant: osVariant,
+					}),
+				).to.equal(expectation);
 			},
 		));
 });

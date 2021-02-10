@@ -97,9 +97,9 @@ describe('Application Model', function () {
 						deviceType: 'raspberry-pi',
 						organization: ctx.initialOrg.id,
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Invalid application type: non-existing');
+					return expect(promise).to.be.rejectedWith(
+						'Invalid application type: non-existing',
+					);
 				});
 
 				it('should be rejected if the device type is invalid', function () {
@@ -109,9 +109,9 @@ describe('Application Model', function () {
 						deviceType: 'foobarbaz',
 						organization: ctx.initialOrg.id,
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Invalid device type: foobarbaz');
+					return expect(promise).to.be.rejectedWith(
+						'Invalid device type: foobarbaz',
+					);
 				});
 
 				it('should be rejected if the device type is discontinued', function () {
@@ -121,9 +121,9 @@ describe('Application Model', function () {
 						deviceType: 'edge',
 						organization: ctx.initialOrg.id,
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Discontinued device type: edge');
+					return expect(promise).to.be.rejectedWith(
+						'Discontinued device type: edge',
+					);
 				});
 
 				it('should be rejected if the name has less than four characters', function () {
@@ -136,8 +136,7 @@ describe('Application Model', function () {
 					return expect(promise).to.be.rejected.then(function (error) {
 						expect(error).to.have.property('code', 'BalenaRequestError');
 						expect(error).to.have.property('statusCode', 400);
-						return m.chai
-							.expect(error)
+						return expect(error)
 							.to.have.property('message')
 							.that.contains(
 								'It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 100',
@@ -146,17 +145,15 @@ describe('Application Model', function () {
 				});
 
 				it('should be rejected if the user did not provide an organization parameter', () =>
-					m.chai
-						.expect(
-							// @ts-expect-error
-							balena.models.application.create({
-								name: 'FooBar',
-								deviceType: 'raspberry-pi',
-							}),
-						)
-						.to.be.rejectedWith(
-							"undefined is not a valid value for parameter 'organization'",
-						));
+					expect(
+						// @ts-expect-error
+						balena.models.application.create({
+							name: 'FooBar',
+							deviceType: 'raspberry-pi',
+						}),
+					).to.be.rejectedWith(
+						"undefined is not a valid value for parameter 'organization'",
+					));
 
 				it('should be rejected if the user does not have access to find the organization by handle', function () {
 					const promise = balena.models.application.create({
@@ -165,11 +162,9 @@ describe('Application Model', function () {
 						// add some extra invalid characters to the organization's handle just to be sure
 						organization: 'balena-test-non-existing-organization-handle-!@#',
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith(
-							'Organization not found: balena-test-non-existing-organization-handle-!@#',
-						);
+					return expect(promise).to.be.rejectedWith(
+						'Organization not found: balena-test-non-existing-organization-handle-!@#',
+					);
 				});
 
 				it('should be rejected if the user does not have access to find the organization by id', function () {
@@ -179,9 +174,9 @@ describe('Application Model', function () {
 						// This test will fail if org 1 adds the SDK's test user as a member...
 						organization: 1,
 					});
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Organization not found: 1');
+					return expect(promise).to.be.rejectedWith(
+						'Organization not found: 1',
+					);
 				});
 			});
 
@@ -216,12 +211,10 @@ describe('Application Model', function () {
 							)
 							.then((apps) => {
 								expect(apps).to.have.length(appCount);
-								return m.chai
-									.expect(apps[0])
-									.to.have.nested.property(
-										'organization[0].id',
-										this.initialOrg.id,
-									);
+								return expect(apps[0]).to.have.nested.property(
+									'organization[0].id',
+									this.initialOrg.id,
+								);
 							});
 					}),
 				);
@@ -249,8 +242,7 @@ describe('Application Model', function () {
 						})
 						.then(function (app) {
 							expect(app).to.have.property('id').that.is.a('number');
-							m.chai
-								.expect(app.is_for__device_type)
+							expect(app.is_for__device_type)
 								.to.be.an('object')
 								.that.has.property('__id')
 								.that.is.a('number');
@@ -263,14 +255,13 @@ describe('Application Model', function () {
 								.then(function (apps) {
 									expect(apps).to.have.length(appCount);
 									expect(apps[0]).to.have.property('id', app.id);
-									m.chai
-										.expect(apps[0])
+									expect(apps[0])
 										.to.have.property('is_for__device_type')
 										.that.is.an('array');
 									expect(apps[0].is_for__device_type).to.have.length(1);
-									return m.chai
-										.expect(apps[0].is_for__device_type[0])
-										.to.have.property('slug', 'raspberry-pi');
+									return expect(
+										apps[0].is_for__device_type[0],
+									).to.have.property('slug', 'raspberry-pi');
 								});
 						});
 				});
@@ -307,12 +298,12 @@ describe('Application Model', function () {
 									parent: parentApplication.id,
 								})
 								.then(function (childApplication) {
-									m.chai
-										.expect(childApplication.depends_on__application)
-										.to.be.an('object');
-									m.chai
-										.expect(childApplication.depends_on__application)
-										.to.have.property('__id', parentApplication.id);
+									expect(childApplication.depends_on__application).to.be.an(
+										'object',
+									);
+									expect(
+										childApplication.depends_on__application,
+									).to.have.property('__id', parentApplication.id);
 									// application.getAll() doesn't return dependent apps
 									return balena.pine.get({
 										resource: 'application',
@@ -329,12 +320,12 @@ describe('Application Model', function () {
 								});
 						})
 						.then(function ([parentApplication, childApplication]) {
-							m.chai
-								.expect(childApplication.depends_on__application)
-								.to.be.an('object');
-							return m.chai
-								.expect(childApplication.depends_on__application)
-								.to.have.property('__id', parentApplication.id);
+							expect(childApplication.depends_on__application).to.be.an(
+								'object',
+							);
+							return expect(
+								childApplication.depends_on__application,
+							).to.have.property('__id', parentApplication.id);
 						});
 				});
 			});
@@ -345,16 +336,16 @@ describe('Application Model', function () {
 		describe('balena.models.application.remove()', function () {
 			it('should be rejected if the application name does not exist', function () {
 				const promise = balena.models.application.remove('HelloWorldApp');
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Application not found: HelloWorldApp');
+				return expect(promise).to.be.rejectedWith(
+					'Application not found: HelloWorldApp',
+				);
 			});
 
 			it('should be rejected if the application id does not exist', function () {
 				const promise = balena.models.application.remove(999999);
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Application not found: 999999');
+				return expect(promise).to.be.rejectedWith(
+					'Application not found: 999999',
+				);
 			});
 
 			describe('[mutating operations]', function () {
@@ -400,8 +391,7 @@ describe('Application Model', function () {
 						return expect(promise).to.be.rejected.then(function (error) {
 							expect(error).to.have.property('code', 'BalenaRequestError');
 							expect(error).to.have.property('statusCode', 409);
-							return m.chai
-								.expect(error)
+							return expect(error)
 								.to.have.property('message')
 								.that.matches(/\bunique\b/i);
 						});
@@ -422,9 +412,7 @@ describe('Application Model', function () {
 						return balena.models.application
 							.getAppByOwner('FooBar', ctx.initialOrg.handle)
 							.then((application) => {
-								return m.chai
-									.expect(application.id)
-									.to.equal(ctx.application.id);
+								return expect(application.id).to.equal(ctx.application.id);
 							});
 					});
 
@@ -433,11 +421,9 @@ describe('Application Model', function () {
 							'FooBar',
 							'test_org_handle',
 						);
-						return m.chai
-							.expect(promise)
-							.to.eventually.be.rejectedWith(
-								'Application not found: test_org_handle/foobar',
-							);
+						return expect(promise).to.eventually.be.rejectedWith(
+							'Application not found: test_org_handle/foobar',
+						);
 					});
 				});
 
@@ -449,9 +435,7 @@ describe('Application Model', function () {
 
 					it('should eventually become an array containing the application', function () {
 						return balena.models.application.getAll().then((applications) => {
-							return m.chai
-								.expect(applications[0].id)
-								.to.equal(ctx.application.id);
+							return expect(applications[0].id).to.equal(ctx.application.id);
 						});
 					});
 
@@ -459,9 +443,9 @@ describe('Application Model', function () {
 						balena.models.application
 							.getAll({ $expand: { organization: { $select: 'handle' } } })
 							.then((applications) =>
-								m.chai
-									.expect(applications[0].organization[0].handle)
-									.to.equal(credentials.username),
+								expect(applications[0].organization[0].handle).to.equal(
+									credentials.username,
+								),
 							));
 
 					it('should support arbitrary pinejs options [callback]', function (done) {
@@ -471,9 +455,9 @@ describe('Application Model', function () {
 							function (err, applications) {
 								try {
 									expect(err).to.be.null;
-									m.chai
-										.expect(applications[0].organization[0].handle)
-										.to.equal(credentials.username);
+									expect(applications[0].organization[0].handle).to.equal(
+										credentials.username,
+									);
 									done();
 								} catch (err) {
 									done(err);
@@ -510,16 +494,16 @@ describe('Application Model', function () {
 
 					it('should be rejected if the application name does not exist', function () {
 						const promise = balena.models.application.get('HelloWorldApp');
-						return m.chai
-							.expect(promise)
-							.to.be.rejectedWith('Application not found: HelloWorldApp');
+						return expect(promise).to.be.rejectedWith(
+							'Application not found: HelloWorldApp',
+						);
 					});
 
 					it('should be rejected if the application id does not exist', function () {
 						const promise = balena.models.application.get(999999);
-						return m.chai
-							.expect(promise)
-							.to.be.rejectedWith('Application not found: 999999');
+						return expect(promise).to.be.rejectedWith(
+							'Application not found: 999999',
+						);
 					});
 
 					it('should support arbitrary pinejs options', function () {
@@ -528,9 +512,9 @@ describe('Application Model', function () {
 								$expand: { organization: { $select: 'handle' } },
 							})
 							.then((application) =>
-								m.chai
-									.expect(application.organization[0].handle)
-									.to.equal(credentials.username),
+								expect(application.organization[0].handle).to.equal(
+									credentials.username,
+								),
 							);
 					});
 				});
@@ -569,9 +553,9 @@ describe('Application Model', function () {
 						'HelloWorldApp',
 						'newAppName',
 					);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: HelloWorldApp');
+					return expect(promise).to.be.rejectedWith(
+						'Application not found: HelloWorldApp',
+					);
 				});
 
 				describe('[mutating operations]', function () {
@@ -620,16 +604,16 @@ describe('Application Model', function () {
 					const promise = balena.models.application.generateApiKey(
 						'HelloWorldApp',
 					);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: HelloWorldApp');
+					return expect(promise).to.be.rejectedWith(
+						'Application not found: HelloWorldApp',
+					);
 				});
 
 				it('should be rejected if the application id does not exist', function () {
 					const promise = balena.models.application.generateApiKey(999999);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: 999999');
+					return expect(promise).to.be.rejectedWith(
+						'Application not found: 999999',
+					);
 				});
 			});
 
@@ -649,18 +633,18 @@ describe('Application Model', function () {
 					const promise = balena.models.application.generateProvisioningKey(
 						'HelloWorldApp',
 					);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: HelloWorldApp');
+					return expect(promise).to.be.rejectedWith(
+						'Application not found: HelloWorldApp',
+					);
 				});
 
 				it('should be rejected if the application id does not exist', function () {
 					const promise = balena.models.application.generateProvisioningKey(
 						999999,
 					);
-					return m.chai
-						.expect(promise)
-						.to.be.rejectedWith('Application not found: 999999');
+					return expect(promise).to.be.rejectedWith(
+						'Application not found: 999999',
+					);
 				});
 			});
 
@@ -668,7 +652,7 @@ describe('Application Model', function () {
 				it('should throw an error if the expiry time stamp is in the past', function () {
 					const expiryTimestamp = Date.now() - 3600 * 1000;
 
-					return m.chai.expect(
+					return expect(
 						balena.models.application.grantSupportAccess(
 							this.application.id,
 							expiryTimestamp,
@@ -677,7 +661,7 @@ describe('Application Model', function () {
 				});
 
 				it('should throw an error if the expiry time stamp is undefined', function () {
-					return m.chai.expect(
+					return expect(
 						// @ts-expect-error
 						balena.models.application.grantSupportAccess(this.application.id),
 					).to.be.rejected;
@@ -813,12 +797,12 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								m.chai
-									.expect(_.find(result, { name: `BALENA_A_${appParamUpper}` }))
+								expect(_.find(result, { name: `BALENA_A_${appParamUpper}` }))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return m.chai
-									.expect(_.find(result, { name: `BALENA_B_${appParamUpper}` }))
+								return expect(
+									_.find(result, { name: `BALENA_B_${appParamUpper}` }),
+								)
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})
@@ -900,12 +884,10 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								m.chai
-									.expect(_.find(result, { name: `A_BY_${appParam}` }))
+								expect(_.find(result, { name: `A_BY_${appParam}` }))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return m.chai
-									.expect(_.find(result, { name: `B_BY_${appParam}` }))
+								return expect(_.find(result, { name: `B_BY_${appParam}` }))
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})
@@ -987,12 +969,10 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								m.chai
-									.expect(_.find(result, { name: `A_BY_${appParam}` }))
+								expect(_.find(result, { name: `A_BY_${appParam}` }))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return m.chai
-									.expect(_.find(result, { name: `B_BY_${appParam}` }))
+								return expect(_.find(result, { name: `B_BY_${appParam}` }))
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})
@@ -1203,9 +1183,7 @@ describe('Application Model', function () {
 							const promise = balena.models.application.getTargetReleaseHash(
 								this.application.id,
 							);
-							return m.chai
-								.expect(promise)
-								.to.eventually.equal('new-release-commit');
+							return expect(promise).to.eventually.equal('new-release-commit');
 						});
 					});
 
@@ -1217,9 +1195,9 @@ describe('Application Model', function () {
 									const promise = balena.models.application.getTargetReleaseHash(
 										this.application.id,
 									);
-									return m.chai
-										.expect(promise)
-										.to.eventually.equal('old-release-commit');
+									return expect(promise).to.eventually.equal(
+										'old-release-commit',
+									);
 								})
 								.then(() => {
 									const promise = balena.models.application.willTrackNewReleases(
@@ -1251,9 +1229,9 @@ describe('Application Model', function () {
 									const promise = balena.models.application.getTargetReleaseHash(
 										this.application.id,
 									);
-									return m.chai
-										.expect(promise)
-										.to.eventually.equal('new-release-commit');
+									return expect(promise).to.eventually.equal(
+										'new-release-commit',
+									);
 								})
 								.then(() => {
 									const promise = balena.models.application.willTrackNewReleases(
@@ -1469,26 +1447,22 @@ describe('Application Model', function () {
 				// prettier-ignore
 				const dashboardUrl = (/** @type {string} */ (sdkOpts.apiUrl))
 					.replace(/api/, 'dashboard');
-				return m.chai
-					.expect(balena.models.application.getDashboardUrl(1))
-					.to.equal(`${dashboardUrl}/apps/1`);
+				return expect(balena.models.application.getDashboardUrl(1)).to.equal(
+					`${dashboardUrl}/apps/1`,
+				);
 			});
 
 			it('should throw when an application id is not a number', () =>
-				m.chai
-					.expect(() =>
-						// @ts-expect-error
-						balena.models.application.getDashboardUrl('my-app'),
-					)
-					.to.throw());
+				expect(() =>
+					// @ts-expect-error
+					balena.models.application.getDashboardUrl('my-app'),
+				).to.throw());
 
 			it('should throw when an application id is not provided', () =>
-				m.chai
-					.expect(() =>
-						// @ts-expect-error
-						balena.models.application.getDashboardUrl(),
-					)
-					.to.throw());
+				expect(() =>
+					// @ts-expect-error
+					balena.models.application.getDashboardUrl(),
+				).to.throw());
 		}));
 
 	describe('given public apps', function () {
@@ -1539,10 +1513,7 @@ describe('Application Model', function () {
 
 								return apps.forEach(function (app) {
 									expect(app).to.have.property('id').that.is.a('number');
-									m.chai
-										.expect(app)
-										.to.have.property('app_name')
-										.that.is.a('string');
+									expect(app).to.have.property('app_name').that.is.a('string');
 									expect(app).to.have.property('slug').that.is.a('string');
 									return expect(app).to.have.property('is_public', true);
 								});
@@ -1559,10 +1530,7 @@ describe('Application Model', function () {
 								.get(publicApp[prop])
 								.then(function (app) {
 									expect(app).to.have.property('id').that.is.a('number');
-									m.chai
-										.expect(app)
-										.to.have.property('app_name')
-										.that.is.a('string');
+									expect(app).to.have.property('app_name').that.is.a('string');
 									expect(app).to.have.property('slug').that.is.a('string');
 									return expect(app).to.have.property('is_public', true);
 								});
