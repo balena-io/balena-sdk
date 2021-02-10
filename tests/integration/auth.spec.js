@@ -57,12 +57,10 @@ describe('SDK authentication', function () {
 		describe('balena.auth.getToken()', () =>
 			it('should be rejected', function () {
 				const promise = balena.auth.getToken();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			}));
 
 		describe('balena.auth.loginWithToken()', function () {
@@ -87,23 +85,19 @@ describe('SDK authentication', function () {
 		describe('balena.auth.getEmail()', () =>
 			it('should be rejected with an error', function () {
 				const promise = balena.auth.getEmail();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			}));
 
 		describe('balena.auth.getUserId()', () =>
 			it('should be rejected with an error', function () {
 				const promise = balena.auth.getUserId();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			}));
 
 		describe.skip('balena.auth.register()', function () {
@@ -165,9 +159,9 @@ describe('SDK authentication', function () {
 					password: credentials.register.password,
 				});
 
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('This email is already taken');
+				return expect(promise).to.be.rejectedWith(
+					'This email is already taken',
+				);
 			});
 		});
 
@@ -208,23 +202,19 @@ describe('SDK authentication', function () {
 		describe('balena.auth.getEmail()', () =>
 			it('should be rejected with an error', function () {
 				const promise = balena.auth.getEmail();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			}));
 
 		describe('balena.auth.getUserId()', () =>
 			it('should be rejected with an error', function () {
 				const promise = balena.auth.getUserId();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			}));
 	});
 
@@ -301,12 +291,10 @@ describe('SDK authentication', function () {
 
 			it('...should reset the token on logout', () => {
 				const promise = balena.auth.getToken();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			});
 		});
 	});

@@ -35,32 +35,24 @@ describe('Release Model', function () {
 		parallel('balena.models.release.get()', function () {
 			it('should be rejected if the release id does not exist by id', function () {
 				const promise = balena.models.release.get(123);
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Release not found: 123');
+				return expect(promise).to.be.rejectedWith('Release not found: 123');
 			});
 
 			it('should be rejected if the release id does not exist by commit', function () {
 				const promise = balena.models.release.get('7cf02a6');
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Release not found: 7cf02a6');
+				return expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
 			});
 		});
 
 		parallel('balena.models.release.getWithImageDetails()', function () {
 			it('should be rejected if the release id does not exist by id', function () {
 				const promise = balena.models.release.getWithImageDetails(123);
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Release not found: 123');
+				return expect(promise).to.be.rejectedWith('Release not found: 123');
 			});
 
 			it('should be rejected if the release id does not exist by commit', function () {
 				const promise = balena.models.release.getWithImageDetails('7cf02a6');
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Release not found: 7cf02a6');
+				return expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
 			});
 		});
 
@@ -78,16 +70,16 @@ describe('Release Model', function () {
 				const promise = balena.models.release.getAllByApplication(
 					'HelloWorldApp',
 				);
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Application not found: HelloWorldApp');
+				return expect(promise).to.be.rejectedWith(
+					'Application not found: HelloWorldApp',
+				);
 			});
 
 			it('should be rejected if the application id does not exist', function () {
 				const promise = balena.models.release.getAllByApplication(999999);
-				return m.chai
-					.expect(promise)
-					.to.be.rejectedWith('Application not found: 999999');
+				return expect(promise).to.be.rejectedWith(
+					'Application not found: 999999',
+				);
 			});
 		});
 
@@ -536,12 +528,10 @@ describe('Release Model', function () {
 			parallel('balena.models.release.get()', function () {
 				it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
 					const promise = balena.models.release.get('feb23612');
-					return m.chai
-						.expect(promise)
-						.to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaAmbiguousRelease',
-						);
+					return expect(promise).to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaAmbiguousRelease',
+					);
 				});
 
 				it('should get the requested release by the full commit', () =>
@@ -559,12 +549,10 @@ describe('Release Model', function () {
 			parallel('balena.models.release.getWithImageDetails()', function () {
 				it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
 					const promise = balena.models.release.getWithImageDetails('feb23612');
-					return m.chai
-						.expect(promise)
-						.to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaAmbiguousRelease',
-						);
+					return expect(promise).to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaAmbiguousRelease',
+					);
 				});
 
 				it('should get the release with associated images attached by the full commit', function () {

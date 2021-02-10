@@ -589,12 +589,10 @@ describe('OS model', function () {
 					version: 'v1+foo',
 				});
 				return expect(promise).to.be.rejected.then((error) => {
-					m.chai.expect(error).to.have.property('message');
-					m.chai
-						.expect(error.message.replace('&lt;', '<'))
-						.to.contain(
-							'balenaOS versions <= 1.2.0 are no longer supported, please update',
-						);
+					expect(error).to.have.property('message');
+					expect(error.message.replace('&lt;', '<')).to.contain(
+						'balenaOS versions <= 1.2.0 are no longer supported, please update',
+					);
 				});
 			});
 
@@ -603,12 +601,10 @@ describe('OS model', function () {
 					version: '1.2.0',
 				});
 				return expect(promise).to.be.rejected.then((error) => {
-					m.chai.expect(error).to.have.property('message');
-					m.chai
-						.expect(error.message.replace('&lt;', '<'))
-						.to.contain(
-							'balenaOS versions <= 1.2.0 are no longer supported, please update',
-						);
+					expect(error).to.have.property('message');
+					expect(error.message.replace('&lt;', '<')).to.contain(
+						'balenaOS versions <= 1.2.0 are no longer supported, please update',
+					);
 				});
 			});
 

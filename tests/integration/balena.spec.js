@@ -40,9 +40,10 @@ describe('Balena SDK', function () {
 		describe('version', () =>
 			it('should match the package.json version', function () {
 				const mockBalena = getSdk();
-				return m.chai
-					.expect(mockBalena)
-					.to.have.property('version', packageJSON.version);
+				return expect(mockBalena).to.have.property(
+					'version',
+					packageJSON.version,
+				);
 			}));
 	});
 
@@ -84,12 +85,10 @@ describe('Balena SDK', function () {
 			return balena.models.application
 				.getAll()
 				.then(() =>
-					m.chai
-						.expect(interceptor.called)
-						.to.equal(
-							true,
-							'Interceptor set directly should have its request hook called',
-						),
+					expect(interceptor.called).to.equal(
+						true,
+						'Interceptor set directly should have its request hook called',
+					),
 				);
 		});
 
@@ -101,9 +100,10 @@ describe('Balena SDK', function () {
 				const promise = balena.models.application.getAll();
 
 				return promise.then(() =>
-					m.chai
-						.expect(requestInterceptor.called)
-						.to.equal(true, 'Interceptor request hook should be called'),
+					expect(requestInterceptor.called).to.equal(
+						true,
+						'Interceptor request hook should be called',
+					),
 				);
 			}));
 
@@ -119,13 +119,13 @@ describe('Balena SDK', function () {
 
 				const promise = balena.models.application.getAll();
 
-				return m.chai
-					.expect(promise)
+				return expect(promise)
 					.to.be.rejectedWith('replacement error')
 					.then(() =>
-						m.chai
-							.expect(requestErrorInterceptor.called)
-							.to.equal(true, 'Interceptor requestError hook should be called'),
+						expect(requestErrorInterceptor.called).to.equal(
+							true,
+							'Interceptor requestError hook should be called',
+						),
 					);
 			}));
 
@@ -136,9 +136,10 @@ describe('Balena SDK', function () {
 				const promise = balena.models.application.getAll();
 
 				return promise.then(() =>
-					m.chai
-						.expect(responseInterceptor.called)
-						.to.equal(true, 'Interceptor response hook should be called'),
+					expect(responseInterceptor.called).to.equal(
+						true,
+						'Interceptor response hook should be called',
+					),
 				);
 			}));
 
@@ -154,28 +155,22 @@ describe('Balena SDK', function () {
 
 				const promise = balena.models.device.restartApplication(999999);
 
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.then(() =>
-						m.chai
-							.expect(called)
-							.to.equal(
-								true,
-								'responseError should be called when request fails',
-							),
-					);
+				return expect(promise).to.be.rejected.then(() =>
+					expect(called).to.equal(
+						true,
+						'responseError should be called when request fails',
+					),
+				);
 			}));
 
 		describe('version header', function () {
 			const getVersionHeaderResponseInterceptor = function () {
 				var responseInterceptor = function (response) {
 					responseInterceptor.callCount++;
-					m.chai
-						.expect(response.request.headers)
-						.to.have.property(
-							'X-Balena-Client',
-							`${packageJSON.name}/${packageJSON.version}`,
-						);
+					expect(response.request.headers).to.have.property(
+						'X-Balena-Client',
+						`${packageJSON.name}/${packageJSON.version}`,
+					);
 					return response;
 				};
 
@@ -187,9 +182,9 @@ describe('Balena SDK', function () {
 			const getVersionHeaderResponseErrorInterceptor = function () {
 				var responseInterceptor = function (err) {
 					responseInterceptor.callCount++;
-					m.chai
-						.expect(err.requestOptions.headers)
-						.to.not.have.property('X-Balena-Client');
+					expect(err.requestOptions.headers).to.not.have.property(
+						'X-Balena-Client',
+					);
 					throw err;
 				};
 
@@ -206,9 +201,10 @@ describe('Balena SDK', function () {
 					const promise = balena.models.application.getAll();
 
 					return promise.then(() =>
-						m.chai
-							.expect(responseInterceptor.callCount)
-							.to.equal(1, 'Interceptor response hook should be called'),
+						expect(responseInterceptor.callCount).to.equal(
+							1,
+							'Interceptor response hook should be called',
+						),
 					);
 				}));
 
@@ -222,9 +218,10 @@ describe('Balena SDK', function () {
 					});
 
 					return promise.then(() =>
-						m.chai
-							.expect(responseInterceptor.callCount)
-							.to.equal(1, 'Interceptor response hook should be called'),
+						expect(responseInterceptor.callCount).to.equal(
+							1,
+							'Interceptor response hook should be called',
+						),
 					);
 				}));
 
@@ -239,13 +236,12 @@ describe('Balena SDK', function () {
 							url: '/v5/application',
 						});
 
-						return m.chai
-							.expect(promise)
-							.to.be.rejected.then(() =>
-								m.chai
-									.expect(responseInterceptor.callCount)
-									.to.equal(1, 'Interceptor response hook should be called'),
-							);
+						return expect(promise).to.be.rejected.then(() =>
+							expect(responseInterceptor.callCount).to.equal(
+								1,
+								'Interceptor response hook should be called',
+							),
+						);
 					}));
 
 				describe('with a baseUrl option', function () {
@@ -261,9 +257,10 @@ describe('Balena SDK', function () {
 							});
 
 							return promise.then(() =>
-								m.chai
-									.expect(responseInterceptor.callCount)
-									.to.equal(1, 'Interceptor response hook should be called'),
+								expect(responseInterceptor.callCount).to.equal(
+									1,
+									'Interceptor response hook should be called',
+								),
 							);
 						}));
 
@@ -278,13 +275,12 @@ describe('Balena SDK', function () {
 								baseUrl: DIFFERENT_TEST_SERVER_URL,
 							});
 
-							return m.chai
-								.expect(promise)
-								.to.be.rejected.then(() =>
-									m.chai
-										.expect(responseInterceptor.callCount)
-										.to.equal(1, 'Interceptor response hook should be called'),
-								);
+							return expect(promise).to.be.rejected.then(() =>
+								expect(responseInterceptor.callCount).to.equal(
+									1,
+									'Interceptor response hook should be called',
+								),
+							);
 						}));
 				});
 
@@ -300,9 +296,10 @@ describe('Balena SDK', function () {
 							});
 
 							return promise.then(() =>
-								m.chai
-									.expect(responseInterceptor.callCount)
-									.to.equal(1, 'Interceptor response hook should be called'),
+								expect(responseInterceptor.callCount).to.equal(
+									1,
+									'Interceptor response hook should be called',
+								),
 							);
 						}));
 
@@ -316,13 +313,12 @@ describe('Balena SDK', function () {
 								url: `${DIFFERENT_TEST_SERVER_URL}/v5/application`,
 							});
 
-							return m.chai
-								.expect(promise)
-								.to.be.rejected.then(() =>
-									m.chai
-										.expect(responseInterceptor.callCount)
-										.to.equal(1, 'Interceptor response hook should be called'),
-								);
+							return expect(promise).to.be.rejected.then(() =>
+								expect(responseInterceptor.callCount).to.equal(
+									1,
+									'Interceptor response hook should be called',
+								),
+							);
 						}));
 				});
 			});
@@ -367,12 +363,10 @@ describe('Balena SDK', function () {
 				});
 				const testSdk = getSdk(testSdkOpts);
 				const promise = testSdk.models.apiKey.getAll();
-				return m.chai
-					.expect(promise)
-					.to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaNotLoggedIn',
-					);
+				return expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
 			});
 		}));
 });
