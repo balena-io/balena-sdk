@@ -1075,39 +1075,38 @@ describe('Application Model', function () {
 					});
 
 					describe('balena.models.application.willTrackNewReleases()', function () {
-						it('should be configured to track new releases by default', function () {
-							const promise = balena.models.application.willTrackNewReleases(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.true;
+						it('should be configured to track new releases by default', async function () {
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.true;
 						});
 
-						it('...should be false when should_track_latest_release is false', function () {
-							return balena.pine
-								.patch({
-									resource: 'application',
-									id: this.application.id,
-									body: { should_track_latest_release: false },
-								})
-								.then(() => {
-									const promise = balena.models.application.willTrackNewReleases(
-										this.application.id,
-									);
-									return expect(promise).to.eventually.be.false;
-								})
-								.then(() => {
-									return balena.pine.patch({
-										resource: 'application',
-										id: this.application.id,
-										body: { should_track_latest_release: true },
-									});
-								})
-								.then(() => {
-									const promise = balena.models.application.willTrackNewReleases(
-										this.application.id,
-									);
-									return expect(promise).to.eventually.be.true;
-								});
+						it('...should be false when should_track_latest_release is false', async function () {
+							await balena.pine.patch({
+								resource: 'application',
+								id: this.application.id,
+								body: { should_track_latest_release: false },
+							});
+
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.false;
+
+							await balena.pine.patch({
+								resource: 'application',
+								id: this.application.id,
+								body: { should_track_latest_release: true },
+							});
+
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.true;
 						});
 
 						it('...should be true regardless of the current commit', async function () {
