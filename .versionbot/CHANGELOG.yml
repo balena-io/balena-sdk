@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Remove all m.chai.expect repetitions'
+      hash: c241ec6bcf9de06ccc51191c1bd4576d6044cae2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.25.2
+  date: 2021-02-10T22:50:18.167Z
+- commits:
     - subject: Cleanup application.getAllWithDeviceServiceDetails tests
       hash: 8d05fd68f04e4b68117932acb5aec97676fa06d2
       body: ''
