@@ -1137,67 +1137,64 @@ describe('Application Model', function () {
 					});
 
 					describe('balena.models.application.isTrackingLatestRelease()', function () {
-						it('should be tracking the latest release by default', function () {
-							const promise = balena.models.application.isTrackingLatestRelease(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.be.true;
+						it('should be tracking the latest release by default', async function () {
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.true;
 						});
 
-						it('...should be false when should_track_latest_release is false', function () {
-							return balena.pine
-								.patch({
-									resource: 'application',
-									id: this.application.id,
-									body: { should_track_latest_release: false },
-								})
-								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
-										this.application.id,
-									);
-									return expect(promise).to.eventually.be.false;
-								})
-								.then(() => {
-									return balena.pine.patch({
-										resource: 'application',
-										id: this.application.id,
-										body: { should_track_latest_release: true },
-									});
-								})
-								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
-										this.application.id,
-									);
-									return expect(promise).to.eventually.be.true;
-								});
+						it('...should be false when should_track_latest_release is false', async function () {
+							await balena.pine.patch({
+								resource: 'application',
+								id: this.application.id,
+								body: { should_track_latest_release: false },
+							});
+
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.false;
+
+							await balena.pine.patch({
+								resource: 'application',
+								id: this.application.id,
+								body: { should_track_latest_release: true },
+							});
+
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.true;
 						});
 
-						it('...should be false when the current commit is not of the latest release', function () {
-							return balena.pine
-								.patch({
-									resource: 'application',
-									id: this.application.id,
-									body: { should_be_running__release: this.oldRelease.id },
-								})
-								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
-										this.application.id,
-									);
-									return expect(promise).to.eventually.be.false;
-								})
-								.then(() => {
-									return balena.pine.patch({
-										resource: 'application',
-										id: this.application.id,
-										body: { should_be_running__release: this.newRelease.id },
-									});
-								})
-								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
-										this.application.id,
-									);
-									return expect(promise).to.eventually.be.true;
-								});
+						it('...should be false when the current commit is not of the latest release', async function () {
+							await balena.pine.patch({
+								resource: 'application',
+								id: this.application.id,
+								body: { should_be_running__release: this.oldRelease.id },
+							});
+
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.false;
+
+							await balena.pine.patch({
+								resource: 'application',
+								id: this.application.id,
+								body: { should_be_running__release: this.newRelease.id },
+							});
+
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.true;
 						});
 					});
 
