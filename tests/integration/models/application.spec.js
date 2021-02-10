@@ -1290,14 +1290,16 @@ describe('Application Model', function () {
 				'should_be_running__release',
 				'__metadata',
 			];
-			m.chai
-				.expect(_.omit(application, omittedFields))
-				.to.deep.equal(_.omit(this.application, omittedFields));
+
+			expect(_.omit(application, omittedFields)).to.deep.equal(
+				_.omit(this.application, omittedFields),
+			);
 
 			// Check the app's target release after the release got created
-			m.chai
-				.expect(application.should_be_running__release.__id)
-				.to.equal(this.currentRelease.id);
+			expect(application.should_be_running__release).to.have.property(
+				'__id',
+				this.currentRelease.id,
+			);
 
 			const deviceExpectation = {
 				device_name: this.device.device_name,
@@ -1339,64 +1341,50 @@ describe('Application Model', function () {
 
 			expect(application.owns__device).to.have.lengthOf(1);
 			const [deviceDetails] = application.owns__device;
-			m.chai.expect(deviceDetails).to.deep.match(deviceExpectation);
+			expect(deviceDetails).to.deep.match(deviceExpectation);
 
 			// Should include the Device model properties
-			m.chai.expect(deviceDetails.image_install).to.have.lengthOf(3);
+			expect(deviceDetails.image_install).to.have.lengthOf(3);
 
 			deviceDetails.image_install.forEach((imageInstall) => {
-				m.chai
-					.expect(imageInstall)
+				expect(imageInstall)
 					.to.have.property('id')
 					.that.is.oneOf([
 						this.oldWebInstall.id,
 						this.newWebInstall.id,
 						this.newDbInstall.id,
 					]);
-				m.chai
-					.expect(imageInstall)
+				expect(imageInstall)
 					.to.have.property('download_progress')
 					.that.is.oneOf([50, null]);
-				m.chai
-					.expect(imageInstall)
-					.to.have.property('image')
-					.that.has.length(1);
+				expect(imageInstall).to.have.property('image').that.has.length(1);
 				if (expectCommit) {
-					m.chai
-						.expect(imageInstall)
+					expect(imageInstall)
 						.to.have.property('is_provided_by__release')
 						.that.has.length(1);
 				} else {
-					m.chai
-						.expect(imageInstall)
-						.to.not.have.property('is_provided_by__release');
+					expect(imageInstall).to.not.have.property('is_provided_by__release');
 				}
-				m.chai
-					.expect(imageInstall)
+				expect(imageInstall)
 					.to.have.property('install_date')
 					.that.is.a('string');
-				m.chai
-					.expect(imageInstall)
-					.to.have.property('status')
-					.that.is.a('string');
-				m.chai.expect(imageInstall).to.not.have.property('service_id');
-				m.chai.expect(imageInstall).to.not.have.property('image_id');
-				m.chai.expect(imageInstall).to.not.have.property('commit');
+				expect(imageInstall).to.have.property('status').that.is.a('string');
+				expect(imageInstall).to.not.have.property('service_id');
+				expect(imageInstall).to.not.have.property('image_id');
+				expect(imageInstall).to.not.have.property('commit');
 			});
 
-			m.chai.expect(deviceDetails.gateway_download).to.have.lengthOf(0);
+			expect(deviceDetails.gateway_download).to.have.lengthOf(0);
 
 			// Augmented properties
 			// Should filter out deleted image installs
-			m.chai.expect(deviceDetails.current_services.db).to.have.lengthOf(1);
+			expect(deviceDetails.current_services.db).to.have.lengthOf(1);
 
 			// Should have an empty list of gateway downloads
-			m.chai
-				.expect(deviceDetails.current_gateway_downloads)
-				.to.have.lengthOf(0);
+			expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
 		};
 
-		describe('balena.models.application.getWithDeviceServiceDetails()', () =>
+		describe('balena.models.application.getWithDeviceServiceDetails()', function () {
 			it("should retrieve the application and it's devices along with service details", function () {
 				return balena.models.application
 					.getWithDeviceServiceDetails(this.application.id)
@@ -1407,9 +1395,10 @@ describe('Application Model', function () {
 							true,
 						);
 					});
-			}));
+			});
+		});
 
-		describe('balena.models.application.getAllWithDeviceServiceDetails()', () =>
+		describe('balena.models.application.getAllWithDeviceServiceDetails()', function () {
 			it('should retrieve all applications and their devices, along with service details', function () {
 				return balena.models.application
 					.getAllWithDeviceServiceDetails(this.application.id)
@@ -1421,7 +1410,8 @@ describe('Application Model', function () {
 							false,
 						);
 					});
-			}));
+			});
+		});
 
 		describe('when expanding the release of the image installs', function () {
 			// prettier-ignore
