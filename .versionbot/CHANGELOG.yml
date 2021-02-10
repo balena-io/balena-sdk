@@ -1,4 +1,37 @@
 - commits:
+    - subject: Cleanup application.getAllWithDeviceServiceDetails tests
+      hash: 8d05fd68f04e4b68117932acb5aec97676fa06d2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests: Refactor application.isTrackingLatestRelease to async await'
+      hash: c8ac23b676467b04380067b8090fcf61fefa31f8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests: Refactor application.willTrackNewReleases to async await'
+      hash: 05132d2e39b60ce04e438cc945f06f2680942a68
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.25.1
+  date: 2021-02-10T22:18:40.919Z
+- commits:
     - subject: 'types/models: Add the application uuid property'
       hash: 226ecd3536885bb179b9c54b05aed00cff90251a
       body: ''
