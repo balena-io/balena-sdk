@@ -1,4 +1,30 @@
 - commits:
+    - subject: 'tests/setup: Fix bug caused by setting bad release timestamps'
+      hash: 0580cc387c595e410c219d6a727c45ce7d2a1a39
+      body: |
+        The application.should_be_running__release was
+        staying null. The new realistic timestamps approach
+        is what we should have been doing from start.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests: Fix application.willTrackNewReleases missing tests'
+      hash: 034a5069172bea16a74724b30d3cd7bd6550ddef
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.24.7
+  date: 2021-02-10T20:45:00.735Z
+- commits:
     - subject: Add application membership methods
       hash: 62d78fa3a88e621d5102da9a45190ad72d5a2733
       body: |
