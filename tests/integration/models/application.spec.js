@@ -1090,7 +1090,7 @@ describe('Application Model', function () {
 									body: { should_track_latest_release: false },
 								})
 								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
+									const promise = balena.models.application.willTrackNewReleases(
 										this.application.id,
 									);
 									return expect(promise).to.eventually.be.false;
@@ -1103,7 +1103,7 @@ describe('Application Model', function () {
 									});
 								})
 								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
+									const promise = balena.models.application.willTrackNewReleases(
 										this.application.id,
 									);
 									return expect(promise).to.eventually.be.true;

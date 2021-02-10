@@ -443,6 +443,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 
 	beforeFn(async function () {
 		const userId = await balena.auth.getUserId();
+		const oldDate = new Date('2017-01-01').toISOString();
+		const now = new Date().toISOString();
 		const [webService, dbService, [oldRelease, newRelease]] = await Promise.all(
 			[
 				// Register web & DB services
@@ -472,7 +474,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 								status: 'success' as const,
 								source: 'cloud',
 								composition: '{}',
-								start_timestamp: '1234',
+								start_timestamp: oldDate,
 							},
 						}),
 						await balena.pine.post<BalenaSdk.Release>({
@@ -484,7 +486,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 								status: 'success' as const,
 								source: 'cloud',
 								composition: '{}',
-								start_timestamp: '54321',
+								start_timestamp: now,
 							},
 						}),
 					];
@@ -511,8 +513,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					project_type: 'dockerfile',
 					content_hash: 'abc',
 					build_log: 'old web log',
-					start_timestamp: '1234',
-					push_timestamp: '1234',
+					start_timestamp: oldDate,
+					push_timestamp: oldDate,
 					status: 'success',
 				},
 			}),
@@ -523,8 +525,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					project_type: 'dockerfile',
 					content_hash: 'def',
 					build_log: 'new web log',
-					start_timestamp: '54321',
-					push_timestamp: '54321',
+					start_timestamp: now,
+					push_timestamp: now,
 					status: 'success',
 				},
 			}),
@@ -535,8 +537,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					project_type: 'dockerfile',
 					content_hash: 'jkl',
 					build_log: 'old db log',
-					start_timestamp: '123',
-					push_timestamp: '123',
+					start_timestamp: oldDate,
+					push_timestamp: oldDate,
 					status: 'success',
 				},
 			}),
@@ -547,8 +549,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					project_type: 'dockerfile',
 					content_hash: 'ghi',
 					build_log: 'new db log',
-					start_timestamp: '54321',
-					push_timestamp: '54321',
+					start_timestamp: now,
+					push_timestamp: now,
 					status: 'success',
 				},
 			}),
@@ -557,7 +559,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 		this.newWebImage = newWebImage;
 		this.oldDbImage = oldDbImage;
 		this.newDbImage = newDbImage;
-		return Promise.all([
+		await Promise.all([
 			// Tie the images to their corresponding releases
 			balena.pine.post<BalenaSdk.ReleaseImage>({
 				resource: 'image__is_part_of__release',
