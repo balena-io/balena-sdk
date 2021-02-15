@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'application.getAll: Use the new user__has_direct_access_to__application'
+      hash: cd35876f438bd1bb38ff59cf7ae2d6fd68788254
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: >-
+          https://www.flowdock.com/app/rulemotion/p-organizations/threads/9dIPQ9751qYPy0G6PEs26riZCOK
+        see: >-
+          https://www.flowdock.com/app/rulemotion/p-organizations/threads/9dIPQ9751qYPy0G6PEs26riZCOK
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.27.0
+  date: 2021-02-15T19:18:10.260Z
+- commits:
     - subject: Support unique keys in organization.membership.changeRole() & remove()
       hash: 4b2049e8a9a6e16dc37c7b0fa752d2bd926fbfc2
       body: ''
