@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
+import type { ResourceAlternateKey } from '../../typings/pinejs-client-core';
 import type {
 	Organization,
 	OrganizationMembership,
@@ -27,6 +28,11 @@ import type {
 import { mergePineOptions } from '../util';
 
 const RESOURCE = 'organization_membership';
+type ResourceKey =
+	| number
+	| ResourceAlternateKey<
+			Pick<OrganizationMembership, 'user' | 'is_member_of__organization'>
+	  >;
 
 export interface OrganizationMembershipCreationOptions {
 	organization: string | number;
@@ -93,7 +99,7 @@ const getOrganizationMembershipModel = function (
 		 * @description
 		 * This method returns a single organization membership.
 		 *
-		 * @param {Number} membershipId - organization membership id (number).
+		 * @param {number|Object} membershipId - the id or an object with the unique `user` & `is_member_of__organization` numeric pair of the membership
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - organization membership
 		 * @returns {Promise}
@@ -109,10 +115,13 @@ const getOrganizationMembershipModel = function (
 		 * });
 		 */
 		async get(
-			membershipId: number,
+			membershipId: ResourceKey,
 			options: PineOptions<OrganizationMembership> = {},
 		): Promise<OrganizationMembership> {
-			if (typeof membershipId !== 'number') {
+			if (
+				typeof membershipId !== 'number' &&
+				typeof membershipId !== 'object'
+			) {
 				throw new errors.BalenaInvalidParameterError(
 					'membershipId',
 					membershipId,
@@ -272,7 +281,7 @@ const getOrganizationMembershipModel = function (
 		 *
 		 * @description This method changes the role of an organization member.
 		 *
-		 * @param {Number} id - the id of the membership that will be changed
+		 * @param {Number|Object} idOrUniqueKey - the id or an object with the unique `user` & `is_member_of__organization` numeric pair of the membership that will be changed
 		 * @param {String} roleName - the role name to be granted to the membership
 		 *
 		 * @returns {Promise}
@@ -283,15 +292,26 @@ const getOrganizationMembershipModel = function (
 		 * });
 		 *
 		 * @example
+		 * balena.models.organization.membership.changeRole({
+		 * 	user: 123,
+		 * 	is_member_of__organization: 125,
+		 * }, "member").then(function() {
+		 * 	console.log('OK');
+		 * });
+		 *
+		 * @example
 		 * balena.models.organization.membership.changeRole(123, "administrator", function(error) {
 		 * 	console.log('OK');
 		 * });
 		 */
-		async changeRole(id: number, roleName: string): Promise<void> {
+		async changeRole(
+			idOrUniqueKey: ResourceKey,
+			roleName: string,
+		): Promise<void> {
 			const roleId = await getRoleId(roleName);
 			await pine.patch<OrganizationMembership>({
 				resource: 'organization_membership',
-				id,
+				id: idOrUniqueKey,
 				body: {
 					organization_membership_role: roleId,
 				},
@@ -312,13 +332,19 @@ const getOrganizationMembershipModel = function (
 		 * balena.models.organization.membership.remove(123);
 		 *
 		 * @example
+		 * balena.models.organization.membership.remove({
+		 * 	user: 123,
+		 * 	is_member_of__application: 125,
+		 * });
+		 *
+		 * @example
 		 * balena.models.organization.membership.remove(123,function(error) {
 		 * 	if (error) throw error;
 		 * 	...
 		 * });
 		 */
-		async remove(id: number): Promise<void> {
-			await pine.delete({ resource: RESOURCE, id });
+		async remove(idOrUniqueKey: ResourceKey): Promise<void> {
+			await pine.delete({ resource: RESOURCE, id: idOrUniqueKey });
 		},
 
 		/**

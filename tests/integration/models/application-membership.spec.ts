@@ -12,6 +12,19 @@ import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
 
+const keyAlternatives = [
+	['id', (member: BalenaSdk.ApplicationMembership) => member.id],
+	[
+		'alternate key',
+		(member: BalenaSdk.ApplicationMembership) =>
+			_.mapValues(
+				_.pick(member, ['user', 'is_member_of__application']),
+				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
+					'__id' in obj ? obj.__id : obj[0].id,
+			),
+	],
+] as const;
+
 describe('Application Membership Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
@@ -145,7 +158,7 @@ describe('Application Membership Model', function () {
 
 	describe('given a member application membership [contained scenario]', function () {
 		let membership: BalenaSdk.ApplicationMembership | undefined;
-		before(async function () {
+		beforeEach(async function () {
 			membership = await balena.models.application.membership.create({
 				application: this.application.id,
 				username: credentials.member.username,
@@ -153,15 +166,18 @@ describe('Application Membership Model', function () {
 		});
 
 		describe('balena.models.application.membership.remove()', function () {
-			it(`should be able to remove a member`, async function () {
-				await balena.models.application.membership.remove(membership!.id);
+			keyAlternatives.forEach(([title, keyGetter]) => {
+				it(`should be able to remove a member by ${title}`, async function () {
+					const key = keyGetter(membership!);
+					await balena.models.application.membership.remove(key);
 
-				const promise = balena.models.application.membership.get(
-					membership!.id,
-				);
-				await expect(promise).to.be.rejectedWith(
-					'Application Membership not found',
-				);
+					const promise = balena.models.application.membership.get(
+						membership!.id,
+					);
+					await expect(promise).to.be.rejectedWith(
+						'Application Membership not found',
+					);
+				});
 			});
 		});
 	});
@@ -204,12 +220,11 @@ describe('Application Membership Model', function () {
 
 			const roleChangeTest = (
 				rolenName: BalenaSdk.ApplicationMembershipRoles,
-			) =>
-				it(`should be able to change an application membership to "${rolenName}"`, async function () {
-					await balena.models.application.membership.changeRole(
-						membership!.id,
-						rolenName,
-					);
+				[title, keyGetter]: typeof keyAlternatives[number],
+			) => {
+				it(`should be able to change an application membership to "${rolenName}" by ${title}`, async function () {
+					const key = keyGetter(membership!);
+					await balena.models.application.membership.changeRole(key, rolenName);
 
 					membership = await balena.models.application.membership.get(
 						membership!.id,
@@ -217,7 +232,10 @@ describe('Application Membership Model', function () {
 							$select: 'id',
 							$expand: {
 								user: {
-									$select: 'username',
+									$select: ['id', 'username'],
+								},
+								is_member_of__application: {
+									$select: ['id'],
 								},
 								application_membership_role: {
 									$select: 'name',
@@ -225,18 +243,26 @@ describe('Application Membership Model', function () {
 							},
 						},
 					);
+					expect(membership).to.have.nested.property('user[0].id');
 					expect(membership).to.have.nested.property(
 						'user[0].username',
 						credentials.member.username,
+					);
+					expect(membership).to.have.nested.property(
+						'is_member_of__application[0].id',
+						this.application.id,
 					);
 					expect(membership).to.have.nested.property(
 						'application_membership_role[0].name',
 						rolenName,
 					);
 				});
+			};
 
-			roleChangeTest('observer');
-			roleChangeTest('developer');
+			keyAlternatives.forEach((keyAlternative) => {
+				roleChangeTest('observer', keyAlternative);
+				roleChangeTest('developer', keyAlternative);
+			});
 		});
 
 		describe('balena.models.application.membership.remove()', function () {
@@ -336,10 +362,10 @@ describe('Application Membership Model', function () {
 				);
 			});
 
-			it(`should be able to retrieve a membership by id`, async function () {
-				membership = await balena.models.application.membership.get(
-					membership!.id,
-					{
+			keyAlternatives.forEach(([title, keyGetter]) => {
+				it(`should be able to retrieve a membership by ${title}`, async function () {
+					const key = keyGetter(membership!);
+					const result = await balena.models.application.membership.get(key, {
 						$select: 'id',
 						$expand: {
 							user: {
@@ -349,16 +375,16 @@ describe('Application Membership Model', function () {
 								$select: 'name',
 							},
 						},
-					},
-				);
-				expect(membership).to.have.nested.property(
-					'user[0].username',
-					credentials.member.username,
-				);
-				expect(membership).to.have.nested.property(
-					'application_membership_role[0].name',
-					'developer',
-				);
+					});
+					expect(result).to.have.nested.property(
+						'user[0].username',
+						credentials.member.username,
+					);
+					expect(result).to.have.nested.property(
+						'application_membership_role[0].name',
+						'developer',
+					);
+				});
 			});
 		});
 	});
