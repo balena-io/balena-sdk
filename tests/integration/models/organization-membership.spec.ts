@@ -18,6 +18,19 @@ import {
 } from './tags';
 import type * as tagsHelper from './tags';
 
+const keyAlternatives = [
+	['id', (member: BalenaSdk.OrganizationMembership) => member.id],
+	[
+		'alternate key',
+		(member: BalenaSdk.OrganizationMembership) =>
+			_.mapValues(
+				_.pick(member, ['user', 'is_member_of__organization']),
+				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
+					'__id' in obj ? obj.__id : obj[0].id,
+			),
+	],
+] as const;
+
 describe('Organization Membership Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
@@ -94,10 +107,10 @@ describe('Organization Membership Model', function () {
 				);
 			});
 
-			it(`should be able to retrieve a membership by id`, async function () {
-				membership = await balena.models.organization.membership.get(
-					membership!.id,
-					{
+			keyAlternatives.forEach(([title, keyGetter]) => {
+				it(`should be able to retrieve a membership by ${title}`, async function () {
+					const key = keyGetter(membership!);
+					const result = await balena.models.organization.membership.get(key, {
 						$select: 'id',
 						$expand: {
 							user: {
@@ -107,16 +120,16 @@ describe('Organization Membership Model', function () {
 								$select: 'name',
 							},
 						},
-					},
-				);
-				expect(membership).to.have.nested.property(
-					'user[0].username',
-					credentials.username,
-				);
-				expect(membership).to.have.nested.property(
-					'organization_membership_role[0].name',
-					'administrator',
-				);
+					});
+					expect(result).to.have.nested.property(
+						'user[0].username',
+						credentials.username,
+					);
+					expect(result).to.have.nested.property(
+						'organization_membership_role[0].name',
+						'administrator',
+					);
+				});
 			});
 		});
 
@@ -228,7 +241,7 @@ describe('Organization Membership Model', function () {
 
 		describe('given a member organization membership [contained scenario]', function () {
 			let membership: BalenaSdk.OrganizationMembership | undefined;
-			before(async function () {
+			beforeEach(async function () {
 				membership = await balena.models.organization.membership.create({
 					organization: this.organization.id,
 					username: credentials.member.username,
@@ -236,15 +249,18 @@ describe('Organization Membership Model', function () {
 			});
 
 			describe('balena.models.organization.membership.remove()', function () {
-				it(`should be able to remove a member`, async function () {
-					await balena.models.organization.membership.remove(membership!.id);
+				keyAlternatives.forEach(([title, keyGetter]) => {
+					it(`should be able to remove a member by ${title}`, async function () {
+						const key = keyGetter(membership!);
+						await balena.models.organization.membership.remove(key);
 
-					const promise = balena.models.organization.membership.get(
-						membership!.id,
-					);
-					await expect(promise).to.be.rejectedWith(
-						'Organization Membership not found',
-					);
+						const promise = balena.models.organization.membership.get(
+							membership!.id,
+						);
+						await expect(promise).to.be.rejectedWith(
+							'Organization Membership not found',
+						);
+					});
 				});
 			});
 		});
@@ -273,10 +289,12 @@ describe('Organization Membership Model', function () {
 
 				const roleChangeTest = (
 					rolenName: BalenaSdk.OrganizationMembershipRoles,
-				) =>
-					it(`should be able to change an organization membership to "${rolenName}"`, async function () {
+					[title, keyGetter]: typeof keyAlternatives[number],
+				) => {
+					it(`should be able to change an organization membership to "${rolenName}" by ${title}`, async function () {
+						const key = keyGetter(membership!);
 						await balena.models.organization.membership.changeRole(
-							membership!.id,
+							key,
 							rolenName,
 						);
 
@@ -286,7 +304,10 @@ describe('Organization Membership Model', function () {
 								$select: 'id',
 								$expand: {
 									user: {
-										$select: 'username',
+										$select: ['id', 'username'],
+									},
+									is_member_of__organization: {
+										$select: ['id'],
 									},
 									organization_membership_role: {
 										$select: 'name',
@@ -299,13 +320,20 @@ describe('Organization Membership Model', function () {
 							credentials.member.username,
 						);
 						expect(membership).to.have.nested.property(
+							'is_member_of__organization[0].id',
+							this.organization.id,
+						);
+						expect(membership).to.have.nested.property(
 							'organization_membership_role[0].name',
 							rolenName,
 						);
 					});
+				};
 
-				roleChangeTest('member');
-				roleChangeTest('administrator');
+				keyAlternatives.forEach((keyAlternative) => {
+					roleChangeTest('member', keyAlternative);
+					roleChangeTest('administrator', keyAlternative);
+				});
 			});
 
 			describe('balena.models.organization.membership.remove()', function () {

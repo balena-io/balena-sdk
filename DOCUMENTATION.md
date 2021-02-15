@@ -274,7 +274,7 @@ const sdk = fromSharedOptions();
                 * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
                 * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
                 * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
-                * [.changeRole(id, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
+                * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
                 * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.organization.invite) : <code>object</code>
                 * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
@@ -633,7 +633,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
-            * [.changeRole(id, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
+            * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
             * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.organization.invite) : <code>object</code>
             * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
@@ -5335,7 +5335,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
         * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
-        * [.changeRole(id, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
+        * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
         * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.organization.invite) : <code>object</code>
         * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
@@ -5358,7 +5358,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
     * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
     * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
-    * [.changeRole(id, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
+    * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
     * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.organization.membership.get"></a>
@@ -5373,7 +5373,7 @@ This method returns a single organization membership.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| membershipId | <code>Number</code> |  | organization membership id (number). |
+| membershipId | <code>number</code> \| <code>Object</code> |  | the id or an object with the unique `user` & `is_member_of__organization` numeric pair of the membership |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -5478,7 +5478,7 @@ balena.models.organization.membership.create({ organization: 53, username: "user
 ```
 <a name="balena.models.organization.membership.changeRole"></a>
 
-###### membership.changeRole(id, roleName) ⇒ <code>Promise</code>
+###### membership.changeRole(idOrUniqueKey, roleName) ⇒ <code>Promise</code>
 This method changes the role of an organization member.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
@@ -5487,12 +5487,21 @@ This method changes the role of an organization member.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>Number</code> | the id of the membership that will be changed |
+| idOrUniqueKey | <code>Number</code> \| <code>Object</code> | the id or an object with the unique `user` & `is_member_of__organization` numeric pair of the membership that will be changed |
 | roleName | <code>String</code> | the role name to be granted to the membership |
 
 **Example**  
 ```js
 balena.models.organization.membership.changeRole(123, "member").then(function() {
+	console.log('OK');
+});
+```
+**Example**  
+```js
+balena.models.organization.membership.changeRole({
+	user: 123,
+	is_member_of__organization: 125,
+}, "member").then(function() {
 	console.log('OK');
 });
 ```
@@ -5516,6 +5525,13 @@ balena.models.organization.membership.changeRole(123, "administrator", function(
 **Example**  
 ```js
 balena.models.organization.membership.remove(123);
+```
+**Example**  
+```js
+balena.models.organization.membership.remove({
+	user: 123,
+	is_member_of__application: 125,
+});
 ```
 **Example**  
 ```js
