@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
+import type { ResourceAlternateKey } from '../../typings/pinejs-client-core';
 import type {
 	Application,
 	ApplicationMembership,
@@ -26,6 +27,11 @@ import type {
 import { mergePineOptions } from '../util';
 
 const RESOURCE = 'user__is_member_of__application';
+type ResourceKey =
+	| number
+	| ResourceAlternateKey<
+			Pick<ApplicationMembership, 'user' | 'is_member_of__application'>
+	  >;
 
 export interface ApplicationMembershipCreationOptions {
 	application: string | number;
@@ -70,7 +76,7 @@ const getApplicationMembershipModel = function (
 		 * @description
 		 * This method returns a single application membership.
 		 *
-		 * @param {Number} membershipId - application membership id (number).
+		 * @param {number|Object} membershipId - the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - application membership
 		 * @returns {Promise}
@@ -86,10 +92,13 @@ const getApplicationMembershipModel = function (
 		 * });
 		 */
 		async get(
-			membershipId: number,
+			membershipId: ResourceKey,
 			options: PineOptions<ApplicationMembership> = {},
 		): Promise<ApplicationMembership> {
-			if (typeof membershipId !== 'number') {
+			if (
+				typeof membershipId !== 'number' &&
+				typeof membershipId !== 'object'
+			) {
 				throw new errors.BalenaInvalidParameterError(
 					'membershipId',
 					membershipId,
@@ -249,7 +258,7 @@ const getApplicationMembershipModel = function (
 		 *
 		 * @description This method changes the role of an application member.
 		 *
-		 * @param {Number} id - the id of the membership that will be changed
+		 * @param {Number|Object} idOrUniqueKey - the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership that will be changed
 		 * @param {String} roleName - the role name to be granted to the membership
 		 *
 		 * @returns {Promise}
@@ -260,15 +269,26 @@ const getApplicationMembershipModel = function (
 		 * });
 		 *
 		 * @example
+		 * balena.models.application.membership.changeRole({
+		 * 	user: 123,
+		 * 	is_member_of__application: 125,
+		 * }, "member").then(function() {
+		 * 	console.log('OK');
+		 * });
+		 *
+		 * @example
 		 * balena.models.application.membership.changeRole(123, "administrator", function(error) {
 		 * 	console.log('OK');
 		 * });
 		 */
-		async changeRole(id: number, roleName: string): Promise<void> {
+		async changeRole(
+			idOrUniqueKey: ResourceKey,
+			roleName: string,
+		): Promise<void> {
 			const roleId = await getRoleId(roleName);
 			await pine.patch<ApplicationMembership>({
 				resource: RESOURCE,
-				id,
+				id: idOrUniqueKey,
 				body: {
 					application_membership_role: roleId,
 				},
@@ -282,11 +302,17 @@ const getApplicationMembershipModel = function (
 		 * @function
 		 * @memberof balena.models.application.membership
 		 *
-		 * @param {Number} id - application membership id
+		 * @param {Number|Object} idOrUniqueKey - the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership that will be removed
 		 * @returns {Promise}
 		 *
 		 * @example
 		 * balena.models.application.membership.remove(123);
+		 *
+		 * @example
+		 * balena.models.application.membership.remove({
+		 * 	user: 123,
+		 * 	is_member_of__application: 125,
+		 * });
 		 *
 		 * @example
 		 * balena.models.application.membership.remove(123,function(error) {
@@ -294,8 +320,8 @@ const getApplicationMembershipModel = function (
 		 * 	...
 		 * });
 		 */
-		async remove(id: number): Promise<void> {
-			await pine.delete({ resource: RESOURCE, id });
+		async remove(idOrUniqueKey: ResourceKey): Promise<void> {
+			await pine.delete({ resource: RESOURCE, id: idOrUniqueKey });
 		},
 	};
 	return exports;

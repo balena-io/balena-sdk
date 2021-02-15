@@ -131,8 +131,8 @@ const sdk = fromSharedOptions();
                 * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
                 * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
                 * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
-                * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
-                * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
+                * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+                * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.application.invite) : <code>object</code>
                 * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
                 * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -490,8 +490,8 @@ balena.models.device.get(123).catch(function (error) {
             * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
-            * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
-            * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
+            * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+            * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.application.invite) : <code>object</code>
             * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -723,8 +723,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
-        * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
-        * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
+        * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+        * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.application.invite) : <code>object</code>
         * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
@@ -1299,8 +1299,8 @@ balena.models.application.buildVar.remove('MyApp', 'VAR', function(error) {
     * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
-    * [.changeRole(id, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
-    * [.remove(id)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
+    * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
+    * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.application.membership.get"></a>
 
@@ -1314,7 +1314,7 @@ This method returns a single application membership.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| membershipId | <code>Number</code> |  | application membership id (number). |
+| membershipId | <code>number</code> \| <code>Object</code> |  | the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1419,7 +1419,7 @@ balena.models.application.membership.create({ application: 53, username: "user12
 ```
 <a name="balena.models.application.membership.changeRole"></a>
 
-###### membership.changeRole(id, roleName) ⇒ <code>Promise</code>
+###### membership.changeRole(idOrUniqueKey, roleName) ⇒ <code>Promise</code>
 This method changes the role of an application member.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
@@ -1428,12 +1428,21 @@ This method changes the role of an application member.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>Number</code> | the id of the membership that will be changed |
+| idOrUniqueKey | <code>Number</code> \| <code>Object</code> | the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership that will be changed |
 | roleName | <code>String</code> | the role name to be granted to the membership |
 
 **Example**  
 ```js
 balena.models.application.membership.changeRole(123, "member").then(function() {
+	console.log('OK');
+});
+```
+**Example**  
+```js
+balena.models.application.membership.changeRole({
+	user: 123,
+	is_member_of__application: 125,
+}, "member").then(function() {
 	console.log('OK');
 });
 ```
@@ -1445,18 +1454,25 @@ balena.models.application.membership.changeRole(123, "administrator", function(e
 ```
 <a name="balena.models.application.membership.remove"></a>
 
-###### membership.remove(id) ⇒ <code>Promise</code>
+###### membership.remove(idOrUniqueKey) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
 **Summary**: Remove a membership  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>Number</code> | application membership id |
+| idOrUniqueKey | <code>Number</code> \| <code>Object</code> | the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership that will be removed |
 
 **Example**  
 ```js
 balena.models.application.membership.remove(123);
+```
+**Example**  
+```js
+balena.models.application.membership.remove({
+	user: 123,
+	is_member_of__application: 125,
+});
 ```
 **Example**  
 ```js
