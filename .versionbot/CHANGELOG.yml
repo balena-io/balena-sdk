@@ -1,4 +1,27 @@
 - commits:
+    - subject: Support unique keys in organization.membership.changeRole() & remove()
+      hash: 4b2049e8a9a6e16dc37c7b0fa752d2bd926fbfc2
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Support unique keys in application.membership.changeRole() & remove()
+      hash: 00c2305e53f25db7c7d69286196c9829f7fdb504
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.26.0
+  date: 2021-02-15T15:49:31.795Z
+- commits:
     - subject: 'tests: Remove all m.chai.expect repetitions'
       hash: c241ec6bcf9de06ccc51191c1bd4576d6044cae2
       body: ''
