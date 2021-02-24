@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add OSVersion archived property
+      hash: 5fcab336283b12e4e4e43f653c2ebea0534379ce
+      body: |
+        Add OSVersion archived property
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.28.0
+  date: 2021-02-24T15:05:44.587Z
+- commits:
     - subject: 'application.getAll: Use the new user__has_direct_access_to__application'
       hash: cd35876f438bd1bb38ff59cf7ae2d6fd68788254
       body: ''
