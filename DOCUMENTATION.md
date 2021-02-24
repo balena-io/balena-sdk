@@ -258,6 +258,10 @@ const sdk = fromSharedOptions();
             * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+        * [.deviceType](#balena.models.deviceType) : <code>object</code>
+            * [.getDisplayName(deviceTypeSlug)](#balena.models.deviceType.getDisplayName) ⇒ <code>Promise</code>
+            * [.getDeviceSlug(deviceTypeName)](#balena.models.deviceType.getDeviceSlug) ⇒ <code>Promise</code>
+            * [.getSupportedDeviceTypes()](#balena.models.deviceType.getSupportedDeviceTypes) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -617,6 +621,10 @@ balena.models.device.get(123).catch(function (error) {
         * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+    * [.deviceType](#balena.models.deviceType) : <code>object</code>
+        * [.getDisplayName(deviceTypeSlug)](#balena.models.deviceType.getDisplayName) ⇒ <code>Promise</code>
+        * [.getDeviceSlug(deviceTypeName)](#balena.models.deviceType.getDeviceSlug) ⇒ <code>Promise</code>
+        * [.getSupportedDeviceTypes()](#balena.models.deviceType.getSupportedDeviceTypes) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -5092,6 +5100,95 @@ balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(
 balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
 	if (error) throw error;
 	console.log(result.status);
+});
+```
+<a name="balena.models.deviceType"></a>
+
+#### models.deviceType : <code>object</code>
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
+
+* [.deviceType](#balena.models.deviceType) : <code>object</code>
+    * [.getDisplayName(deviceTypeSlug)](#balena.models.deviceType.getDisplayName) ⇒ <code>Promise</code>
+    * [.getDeviceSlug(deviceTypeName)](#balena.models.deviceType.getDeviceSlug) ⇒ <code>Promise</code>
+    * [.getSupportedDeviceTypes()](#balena.models.deviceType.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+
+<a name="balena.models.deviceType.getDisplayName"></a>
+
+##### deviceType.getDisplayName(deviceTypeSlug) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get display name for a device  
+**Access**: public  
+**Fulfil**: <code>String</code> - device display name  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceTypeSlug | <code>String</code> | device type slug |
+
+**Example**  
+```js
+balena.models.deviceType.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
+	console.log(deviceTypeName);
+	// Raspberry Pi
+});
+```
+**Example**  
+```js
+balena.models.deviceType.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
+	if (error) throw error;
+	console.log(deviceTypeName);
+	// Raspberry Pi
+});
+```
+<a name="balena.models.deviceType.getDeviceSlug"></a>
+
+##### deviceType.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get device slug  
+**Access**: public  
+**Fulfil**: <code>String</code> - device slug name  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceTypeName | <code>String</code> | device type name |
+
+**Example**  
+```js
+balena.models.deviceType.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
+	console.log(deviceTypeSlug);
+	// raspberry-pi
+});
+```
+**Example**  
+```js
+balena.models.deviceType.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
+	if (error) throw error;
+	console.log(deviceTypeSlug);
+	// raspberry-pi
+});
+```
+<a name="balena.models.deviceType.getSupportedDeviceTypes"></a>
+
+##### deviceType.getSupportedDeviceTypes() ⇒ <code>Promise</code>
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get supported device types  
+**Access**: public  
+**Fulfil**: <code>String[]</code> - supported device types  
+**Example**  
+```js
+balena.models.deviceType.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
+	supportedDeviceTypes.forEach(function(supportedDeviceType) {
+		console.log('Balena supports:', supportedDeviceType);
+	});
+});
+```
+**Example**  
+```js
+balena.models.deviceType.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
+	if (error) throw error;
+
+	supportedDeviceTypes.forEach(function(supportedDeviceType) {
+		console.log('Balena supports:', supportedDeviceType);
+	});
 });
 ```
 <a name="balena.models.apiKey"></a>

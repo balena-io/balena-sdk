@@ -31,6 +31,13 @@ const modelsTemplate = {
 	device: () => (require('./device') as typeof import('./device')).default,
 
 	/**
+	 * @namespace deviceType
+	 * @memberof balena.models
+	 */
+	deviceType: () =>
+		(require('./device-type') as typeof import('./device-type')).default,
+
+	/**
 	 * @namespace apiKey
 	 * @memberof balena.models
 	 */

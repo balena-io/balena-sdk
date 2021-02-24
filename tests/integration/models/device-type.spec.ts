@@ -1,0 +1,88 @@
+import * as m from 'mochainon';
+import * as parallel from 'mocha.parallel';
+import { balena, givenLoggedInUser } from '../setup';
+import { timeSuite } from '../../util';
+import type * as BalenaSdk from '../../..';
+const { expect } = m.chai;
+
+const DEVICE_TYPE_NAME = 'Raspberry Pi 3';
+const DEVICE_TYPE_SLUG = 'raspberrypi3';
+const DEVICE_TYPE_ID = 1;
+
+describe('Device Type model', function () {
+	timeSuite(before);
+	givenLoggedInUser(before);
+
+	parallel('balena.models.deviceType.getAll()', function () {
+		it('should get all device types', async function () {
+			const deviceTypes = await balena.models.deviceType.getAll();
+			expect(deviceTypes).to.be.an('Array');
+			expect(deviceTypes).to.not.have.length(0);
+		});
+
+		it('should support a callback', function (done) {
+			(balena
+				.models.deviceType.getAll as (...args: any[]) => any)(function (_err: Error, deviceTypes: BalenaSdk.DeviceType[]) {
+				try {
+					expect(deviceTypes).to.be.an('Array');
+					expect(deviceTypes).to.not.have.length(0);
+					done();
+				} catch (err) {
+					done(err);
+				}
+			});
+		});
+	});
+
+	parallel('balena.models.deviceType.getAllSupported()', function () {
+		it('should get all supported device types', async function () {
+			const deviceTypes = await balena.models.deviceType.getAllSupported();
+			expect(deviceTypes).to.be.an('Array');
+			expect(deviceTypes).to.not.have.length(0);
+		});
+	});
+
+	parallel('balena.models.deviceType.get()', function () {
+		it(`should get device type by slug`, async function () {
+			const deviceType = await balena.models.deviceType.get(DEVICE_TYPE_SLUG);
+			expect(deviceType).to.have.property('slug', DEVICE_TYPE_SLUG);
+		});
+
+		it(`should get device type by id`, async function () {
+			const deviceType = await balena.models.deviceType.get(DEVICE_TYPE_ID);
+			expect(deviceType).to.have.property('id', DEVICE_TYPE_ID);
+		});
+	});
+
+	parallel('balena.models.deviceType.getBySlugOrName()', function () {
+		[
+			{ key: 'name', value: DEVICE_TYPE_NAME },
+			{ key: 'slug', value: DEVICE_TYPE_SLUG },
+		].forEach((type) => {
+			it(`should get device type by ${type.key}`, async function () {
+				const deviceType = await balena.models.deviceType.getBySlugOrName(
+					type.value,
+				);
+				expect(deviceType).to.have.property('slug', DEVICE_TYPE_SLUG);
+			});
+		});
+	});
+
+	parallel('balena.models.deviceType.getName()', function () {
+		it(`should get device type display name`, async function () {
+			const deviceTypes = await balena.models.deviceType.getName(
+				DEVICE_TYPE_SLUG,
+			);
+			expect(deviceTypes).to.equal(DEVICE_TYPE_NAME);
+		});
+	});
+
+	parallel('balena.models.deviceType.getSlugByName()', function () {
+		it(`should get device type slug`, async function () {
+			const slug = await balena.models.deviceType.getSlugByName(
+				DEVICE_TYPE_NAME,
+			);
+			expect(slug).to.equal(DEVICE_TYPE_SLUG);
+		});
+	});
+});
