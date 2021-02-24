@@ -33,7 +33,7 @@ export interface OsVersion {
 	osType: string;
 	line?: OsLines;
 	variant?: string;
-
+	archived?: boolean;
 	formattedVersion: string;
 	isRecommended?: boolean;
 }
@@ -102,6 +102,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	const getOsVersionsFromReleases = (
 		releases: Release[],
 		appTags: HostAppTagSet,
+		isArchived: boolean,
 	): OsVersion[] => {
 		return releases.map((release) => {
 			// The variant in the tags is a full noun, such as `production` and `development`.
@@ -125,6 +126,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 				basedOnVersion,
 				variant: normalizedVariant,
 				formattedVersion: `v${version}${lineFormat}`,
+				archived: isArchived,
 			};
 		});
 	};
@@ -149,7 +151,11 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 
 				const appTags = getOsAppTags(hostApp.application_tag ?? []);
 				osVersions = osVersions.concat(
-					getOsVersionsFromReleases(hostApp.owns__release ?? [], appTags),
+					getOsVersionsFromReleases(
+						hostApp.owns__release ?? [],
+						appTags,
+						hostApp.is_archived,
+					),
 				);
 				osVersionsByDeviceType[hostAppDeviceType] = osVersions;
 
@@ -208,7 +214,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 						},
 					},
 				},
-				$select: ['id', 'app_name'],
+				$select: ['id', 'app_name', 'is_archived'],
 				$expand: {
 					application_tag: {
 						$select: ['id', 'tag_key', 'value'],
