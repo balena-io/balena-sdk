@@ -1,4 +1,17 @@
 - commits:
+    - subject: Bump typescript to 4.2
+      hash: 9029d7a23f4bfe9abf9cb57c8fa749737e1f256d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.27.1
+  date: 2021-02-24T14:15:12.623Z
+- commits:
     - subject: 'application.getAll: Use the new user__has_direct_access_to__application'
       hash: cd35876f438bd1bb38ff59cf7ae2d6fd68788254
       body: ''
