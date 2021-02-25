@@ -225,10 +225,10 @@ const sdk = fromSharedOptions();
             * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
-            * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
-            * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
-            * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-            * [.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+            * ~~[.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>~~
+            * ~~[.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>~~
+            * ~~[.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>~~
+            * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
             * [.getManifestByApplication(nameOrSlugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationNameOrSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
@@ -259,9 +259,12 @@ const sdk = fromSharedOptions();
             * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
         * [.deviceType](#balena.models.deviceType) : <code>object</code>
-            * [.getDisplayName(deviceTypeSlug)](#balena.models.deviceType.getDisplayName) ⇒ <code>Promise</code>
-            * [.getDeviceSlug(deviceTypeName)](#balena.models.deviceType.getDeviceSlug) ⇒ <code>Promise</code>
-            * [.getSupportedDeviceTypes()](#balena.models.deviceType.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+            * [.get(idOrSlug, [options])](#balena.models.deviceType.get) ⇒ <code>Promise</code>
+            * [.getAll([options])](#balena.models.deviceType.getAll) ⇒ <code>Promise</code>
+            * [.getAllSupported([options])](#balena.models.deviceType.getAllSupported) ⇒ <code>Promise</code>
+            * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
+            * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
+            * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -304,7 +307,7 @@ const sdk = fromSharedOptions();
             * [.getAllOsVersions(deviceTypes)](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
-            * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+            * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
             * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.release](#balena.models.release) : <code>object</code>
             * [.tags](#balena.models.release.tags) : <code>object</code>
@@ -588,10 +591,10 @@ balena.models.device.get(123).catch(function (error) {
         * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
-        * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
-        * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
-        * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-        * [.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+        * ~~[.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>~~
+        * ~~[.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>~~
+        * ~~[.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>~~
+        * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
         * [.getManifestByApplication(nameOrSlugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationNameOrSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
@@ -622,9 +625,12 @@ balena.models.device.get(123).catch(function (error) {
         * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
     * [.deviceType](#balena.models.deviceType) : <code>object</code>
-        * [.getDisplayName(deviceTypeSlug)](#balena.models.deviceType.getDisplayName) ⇒ <code>Promise</code>
-        * [.getDeviceSlug(deviceTypeName)](#balena.models.deviceType.getDeviceSlug) ⇒ <code>Promise</code>
-        * [.getSupportedDeviceTypes()](#balena.models.deviceType.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+        * [.get(idOrSlug, [options])](#balena.models.deviceType.get) ⇒ <code>Promise</code>
+        * [.getAll([options])](#balena.models.deviceType.getAll) ⇒ <code>Promise</code>
+        * [.getAllSupported([options])](#balena.models.deviceType.getAllSupported) ⇒ <code>Promise</code>
+        * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
+        * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
+        * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
@@ -667,7 +673,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAllOsVersions(deviceTypes)](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
-        * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+        * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
         * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.release](#balena.models.release) : <code>object</code>
         * [.tags](#balena.models.release.tags) : <code>object</code>
@@ -2426,10 +2432,10 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
-    * [.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>
-    * [.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>
-    * [.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>
-    * [.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>
+    * ~~[.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>~~
+    * ~~[.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>~~
+    * ~~[.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>~~
+    * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
     * [.getManifestByApplication(nameOrSlugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationNameOrSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
@@ -4209,7 +4215,9 @@ balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
 ```
 <a name="balena.models.device.getDisplayName"></a>
 
-##### device.getDisplayName(deviceTypeSlug) ⇒ <code>Promise</code>
+##### ~~device.getDisplayName(deviceTypeSlug) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get display name for a device  
 **Access**: public  
@@ -4237,7 +4245,9 @@ balena.models.device.getDisplayName('raspberry-pi', function(error, deviceTypeNa
 ```
 <a name="balena.models.device.getDeviceSlug"></a>
 
-##### device.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>
+##### ~~device.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get device slug  
 **Access**: public  
@@ -4265,7 +4275,9 @@ balena.models.device.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlu
 ```
 <a name="balena.models.device.getSupportedDeviceTypes"></a>
 
-##### device.getSupportedDeviceTypes() ⇒ <code>Promise</code>
+##### ~~device.getSupportedDeviceTypes() ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get supported device types  
 **Access**: public  
@@ -4290,7 +4302,9 @@ balena.models.device.getSupportedDeviceTypes(function(error, supportedDeviceType
 ```
 <a name="balena.models.device.getManifestBySlug"></a>
 
-##### device.getManifestBySlug(slugOrName) ⇒ <code>Promise</code>
+##### ~~device.getManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by slug  
 **Access**: public  
@@ -5108,13 +5122,135 @@ balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', funct
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.deviceType](#balena.models.deviceType) : <code>object</code>
-    * [.getDisplayName(deviceTypeSlug)](#balena.models.deviceType.getDisplayName) ⇒ <code>Promise</code>
-    * [.getDeviceSlug(deviceTypeName)](#balena.models.deviceType.getDeviceSlug) ⇒ <code>Promise</code>
-    * [.getSupportedDeviceTypes()](#balena.models.deviceType.getSupportedDeviceTypes) ⇒ <code>Promise</code>
+    * [.get(idOrSlug, [options])](#balena.models.deviceType.get) ⇒ <code>Promise</code>
+    * [.getAll([options])](#balena.models.deviceType.getAll) ⇒ <code>Promise</code>
+    * [.getAllSupported([options])](#balena.models.deviceType.getAllSupported) ⇒ <code>Promise</code>
+    * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
+    * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
+    * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
 
-<a name="balena.models.deviceType.getDisplayName"></a>
+<a name="balena.models.deviceType.get"></a>
 
-##### deviceType.getDisplayName(deviceTypeSlug) ⇒ <code>Promise</code>
+##### deviceType.get(idOrSlug, [options]) ⇒ <code>Promise</code>
+This method returns a single device type.
+
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get a single deviceType  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device types  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| idOrSlug | <code>String</code> \| <code>Number</code> |  | device type slug (string) or id |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.deviceType.get('raspberry-pi').then(function(deviceType) {
+	console.log(deviceType);
+});
+```
+**Example**  
+```js
+balena.models.deviceType.get('raspberry-pi', function(error, deviceType) {
+	if (error) throw error;
+	console.log(deviceType);
+});
+```
+<a name="balena.models.deviceType.getAll"></a>
+
+##### deviceType.getAll([options]) ⇒ <code>Promise</code>
+This method returns all device types.
+
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get all deviceTypes  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device types  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.deviceType.getAll().then(function(deviceTypes) {
+	console.log(deviceTypes);
+});
+```
+**Example**  
+```js
+balena.models.deviceType.getAll({ $select: ['name', 'slug'] }).then(function(deviceTypes) {
+	console.log(deviceTypes);
+})
+```
+**Example**  
+```js
+balena.models.deviceType.getAll(function(error, deviceTypes) {
+	if (error) throw error;
+	console.log(deviceTypes);
+});
+```
+<a name="balena.models.deviceType.getAllSupported"></a>
+
+##### deviceType.getAllSupported([options]) ⇒ <code>Promise</code>
+This method returns all supported device types.
+
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get all supported deviceTypes  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device types  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.deviceType.getAllSupported().then(function(deviceTypes) {
+	console.log(deviceTypes);
+});
+```
+**Example**  
+```js
+balena.models.deviceType.getAllSupported({ $select: ['name', 'slug'] }).then(function(deviceTypes) {
+	console.log(deviceTypes);
+})
+```
+**Example**  
+```js
+balena.models.deviceType.getAllSupported(function(error, deviceTypes) {
+	if (error) throw error;
+	console.log(deviceTypes);
+});
+```
+<a name="balena.models.deviceType.getBySlugOrName"></a>
+
+##### deviceType.getBySlugOrName(slugOrName) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
+**Summary**: Get a deviceType by slug or name  
+**Access**: public  
+**Fulfil**: <code>Object</code> - device manifest  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| slugOrName | <code>String</code> | deviceType slug |
+
+**Example**  
+```js
+balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(manifest) {
+	console.log(manifest);
+});
+```
+**Example**  
+```js
+balena.models.deviceType.getBySlugOrName('raspberry-pi', function(error, manifest) {
+	if (error) throw error;
+	console.log(manifest);
+});
+```
+<a name="balena.models.deviceType.getName"></a>
+
+##### deviceType.getName(deviceTypeSlug) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get display name for a device  
 **Access**: public  
@@ -5126,22 +5262,22 @@ balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', funct
 
 **Example**  
 ```js
-balena.models.deviceType.getDisplayName('raspberry-pi').then(function(deviceTypeName) {
+balena.models.deviceType.getName('raspberry-pi').then(function(deviceTypeName) {
 	console.log(deviceTypeName);
 	// Raspberry Pi
 });
 ```
 **Example**  
 ```js
-balena.models.deviceType.getDisplayName('raspberry-pi', function(error, deviceTypeName) {
+balena.models.deviceType.getName('raspberry-pi', function(error, deviceTypeName) {
 	if (error) throw error;
 	console.log(deviceTypeName);
 	// Raspberry Pi
 });
 ```
-<a name="balena.models.deviceType.getDeviceSlug"></a>
+<a name="balena.models.deviceType.getSlugByName"></a>
 
-##### deviceType.getDeviceSlug(deviceTypeName) ⇒ <code>Promise</code>
+##### deviceType.getSlugByName(deviceTypeName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get device slug  
 **Access**: public  
@@ -5153,42 +5289,17 @@ balena.models.deviceType.getDisplayName('raspberry-pi', function(error, deviceTy
 
 **Example**  
 ```js
-balena.models.deviceType.getDeviceSlug('Raspberry Pi').then(function(deviceTypeSlug) {
+balena.models.deviceType.getSlugByName('Raspberry Pi').then(function(deviceTypeSlug) {
 	console.log(deviceTypeSlug);
 	// raspberry-pi
 });
 ```
 **Example**  
 ```js
-balena.models.deviceType.getDeviceSlug('Raspberry Pi', function(error, deviceTypeSlug) {
+balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTypeSlug) {
 	if (error) throw error;
 	console.log(deviceTypeSlug);
 	// raspberry-pi
-});
-```
-<a name="balena.models.deviceType.getSupportedDeviceTypes"></a>
-
-##### deviceType.getSupportedDeviceTypes() ⇒ <code>Promise</code>
-**Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
-**Summary**: Get supported device types  
-**Access**: public  
-**Fulfil**: <code>String[]</code> - supported device types  
-**Example**  
-```js
-balena.models.deviceType.getSupportedDeviceTypes().then(function(supportedDeviceTypes) {
-	supportedDeviceTypes.forEach(function(supportedDeviceType) {
-		console.log('Balena supports:', supportedDeviceType);
-	});
-});
-```
-**Example**  
-```js
-balena.models.deviceType.getSupportedDeviceTypes(function(error, supportedDeviceTypes) {
-	if (error) throw error;
-
-	supportedDeviceTypes.forEach(function(supportedDeviceType) {
-		console.log('Balena supports:', supportedDeviceType);
-	});
 });
 ```
 <a name="balena.models.apiKey"></a>
@@ -6184,7 +6295,7 @@ balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3']);
 
 * [.config](#balena.models.config) : <code>object</code>
     * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
-    * [.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>
+    * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
     * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
 
 <a name="balena.models.config.getAll"></a>
@@ -6209,7 +6320,9 @@ balena.models.config.getAll(function(error, config) {
 ```
 <a name="balena.models.config.getDeviceTypes"></a>
 
-##### config.getDeviceTypes() ⇒ <code>Promise</code>
+##### ~~config.getDeviceTypes() ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get device types  
 **Access**: public  
