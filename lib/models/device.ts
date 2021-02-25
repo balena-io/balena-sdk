@@ -1939,6 +1939,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getName
 		 * @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 		 *
 		 * @param {String} deviceTypeSlug - device type slug
