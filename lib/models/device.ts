@@ -2023,6 +2023,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getAll
 		 * @fulfil {String[]} - supported device types
 		 * @returns {Promise}
 		 *
