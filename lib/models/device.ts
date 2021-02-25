@@ -2052,6 +2052,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getBySlugOrName
 		 * @param {String} slugOrName - device slug
 		 * @fulfil {Object} - device manifest
 		 * @returns {Promise}
