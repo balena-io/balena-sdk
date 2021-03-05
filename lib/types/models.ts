@@ -380,10 +380,28 @@ export interface DeviceType {
 	name: string;
 	is_private: boolean;
 	logo: string | null;
-
+	belongs_to__device_family: OptionalNavigationResource<DeviceFamily>;
+	is_default_for__application: ReverseNavigationResource<Application>;
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
 	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
 	describes_device: ReverseNavigationResource<Device>;
+}
+
+export interface DeviceFamily {
+	created_at: string;
+	modified_at: string;
+	id: number;
+	slug: string;
+	name: string;
+	is_manufactured_by__device_manufacturer: OptionalNavigationResource<DeviceManufacturer>;
+}
+
+export interface DeviceManufacturer {
+	created_at: string;
+	modified_at: string;
+	id: number;
+	slug: string;
+	name: string;
 }
 
 export interface OrganizationPrivateDeviceTypeAccess {

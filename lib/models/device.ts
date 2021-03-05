@@ -1939,6 +1939,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getName
 		 * @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 		 *
 		 * @param {String} deviceTypeSlug - device type slug
@@ -1980,6 +1981,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getSlugByName
 		 * @see {@link balena.models.device.getSupportedDeviceTypes} for a list of supported devices
 		 *
 		 * @param {String} deviceTypeName - device type name
@@ -2021,6 +2023,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getAll
 		 * @fulfil {String[]} - supported device types
 		 * @returns {Promise}
 		 *
@@ -2052,6 +2055,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.deviceType.getBySlugOrName
 		 * @param {String} slugOrName - device slug
 		 * @fulfil {Object} - device manifest
 		 * @returns {Promise}

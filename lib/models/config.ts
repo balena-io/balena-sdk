@@ -34,6 +34,7 @@ export interface Config {
 	mixpanelToken?: string;
 	intercomAppId?: string;
 	recurlyPublicKey?: string;
+	/** @deprecated */
 	deviceTypes: DeviceTypeJson.DeviceType[];
 	DEVICE_ONLINE_ICON: string;
 	DEVICE_OFFLINE_ICON: string;
@@ -127,6 +128,7 @@ const getConfigModel = function (
 		 * @function
 		 * @memberof balena.models.config
 		 *
+		 * @deprecated use balena.models.deviceType.getAll
 		 * @fulfil {Object[]} - device types
 		 * @returns {Promise}
 		 *
