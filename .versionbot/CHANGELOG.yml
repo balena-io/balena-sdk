@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add getLatestOsVersions in hostapp model
+      hash: 79b45e9bf60ff07d03d70d11b691f3426bccc740
+      body: |
+        Add getLatestOsVersions method in hostapp model
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.29.0
+  date: 2021-03-08T13:01:32.161Z
+- commits:
     - subject: Add device type model
       hash: d7df6f6659a7016fc07e7df6ace359e67c213b3c
       body: |
