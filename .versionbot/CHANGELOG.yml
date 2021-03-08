@@ -1,4 +1,17 @@
 - commits:
+    - subject: Encapsulate the supervisor api methods into a partial
+      hash: c6f3f32eb28834fc1a7440385bb7df17d6d22dc1
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.28.1
+  date: 2021-03-08T19:27:01.472Z
+- commits:
     - subject: Add device type model
       hash: d7df6f6659a7016fc07e7df6ace359e67c213b3c
       body: |
