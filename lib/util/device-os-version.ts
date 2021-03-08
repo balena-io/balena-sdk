@@ -44,3 +44,31 @@ export const getDeviceOsSemverWithVariant = ({
 
 	return version;
 };
+
+/**
+ * @summary Ensure version compatibility using balena-semver
+ * @name ensureVersionCompatibility
+ * @private
+ * @function
+ *
+ * @param {String} version - version under check
+ * @param {String} minVersion - minimum accepted version
+ * @throws {Error} Will reject if the given version is < than the given minimum version
+ * @returns {void}
+ *
+ * @example
+ * ensureVersionCompatibility(version, MIN_VERSION)
+ * console.log('Is compatible');
+ *
+ */
+export const ensureVersionCompatibility = function (
+	version: string | null,
+	minVersion: string,
+	versionType: 'supervisor' | 'host OS',
+): void {
+	if (version && bSemver.lt(version, minVersion)) {
+		throw new Error(
+			`Incompatible ${versionType} version: ${version} - must be >= ${minVersion}`,
+		);
+	}
+};
