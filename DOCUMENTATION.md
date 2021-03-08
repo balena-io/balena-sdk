@@ -199,7 +199,6 @@ const sdk = fromSharedOptions();
             * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
             * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
             * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
-            * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
             * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
             * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -207,24 +206,13 @@ const sdk = fromSharedOptions();
             * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
             * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
             * [.deactivate(uuidOrId)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
-            * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
             * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
             * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrId, applicationNameOrSlugOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-            * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
-            * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-            * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
-            * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
-            * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
-            * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
-            * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
-            * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
-            * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-            * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
             * ~~[.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>~~
             * ~~[.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>~~
             * ~~[.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>~~
@@ -244,7 +232,6 @@ const sdk = fromSharedOptions();
             * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
             * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
             * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
-            * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
             * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
             * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -258,6 +245,19 @@ const sdk = fromSharedOptions();
             * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+            * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
+            * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
+            * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+            * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
+            * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
+            * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
+            * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
+            * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
+            * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+            * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
+            * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
+            * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
+            * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
         * [.deviceType](#balena.models.deviceType) : <code>object</code>
             * [.get(idOrSlug, [options])](#balena.models.deviceType.get) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.deviceType.getAll) ⇒ <code>Promise</code>
@@ -565,7 +565,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
         * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
         * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
-        * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
         * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
         * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -573,24 +572,13 @@ balena.models.device.get(123).catch(function (error) {
         * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
         * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
         * [.deactivate(uuidOrId)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
-        * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
         * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
         * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrId, applicationNameOrSlugOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-        * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
-        * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-        * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
-        * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
-        * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
-        * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
-        * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
-        * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
-        * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-        * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
         * ~~[.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>~~
         * ~~[.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>~~
         * ~~[.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>~~
@@ -610,7 +598,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
         * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
         * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
-        * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
         * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
         * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -624,6 +611,19 @@ balena.models.device.get(123).catch(function (error) {
         * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+        * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
+        * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
+        * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+        * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
+        * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
+        * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
+        * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
+        * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
+        * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+        * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
+        * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
+        * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
+        * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
     * [.deviceType](#balena.models.deviceType) : <code>object</code>
         * [.get(idOrSlug, [options])](#balena.models.deviceType.get) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.deviceType.getAll) ⇒ <code>Promise</code>
@@ -2406,7 +2406,6 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
     * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
     * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
-    * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
     * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
     * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
@@ -2414,24 +2413,13 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
     * [.remove(uuidOrId)](#balena.models.device.remove) ⇒ <code>Promise</code>
     * [.deactivate(uuidOrId)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
-    * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
     * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
     * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrId, applicationNameOrSlugOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-    * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
-    * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-    * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
-    * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
-    * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
-    * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
-    * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
-    * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
-    * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-    * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
     * ~~[.getDisplayName(deviceTypeSlug)](#balena.models.device.getDisplayName) ⇒ <code>Promise</code>~~
     * ~~[.getDeviceSlug(deviceTypeName)](#balena.models.device.getDeviceSlug) ⇒ <code>Promise</code>~~
     * ~~[.getSupportedDeviceTypes()](#balena.models.device.getSupportedDeviceTypes) ⇒ <code>Promise</code>~~
@@ -2451,7 +2439,6 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
     * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
     * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
-    * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
     * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
     * [.grantSupportAccess(uuidOrId, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
@@ -2465,6 +2452,19 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.trackApplicationRelease(uuidOrId)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
     * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+    * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
+    * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
+    * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+    * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
+    * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
+    * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
+    * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
+    * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
+    * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
+    * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
+    * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
+    * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
+    * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
 
 <a name="balena.models.device.tags"></a>
 
@@ -3433,41 +3433,6 @@ balena.models.device.getApplicationName('7cf02a6', function(error, applicationNa
 	console.log(applicationName);
 });
 ```
-<a name="balena.models.device.getApplicationInfo"></a>
-
-##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get application container information  
-**Access**: public  
-**Fulfil**: <code>Object</code> - application info  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
-	console.log(appInfo);
-});
-```
-**Example**  
-```js
-balena.models.device.getApplicationInfo(123).then(function(appInfo) {
-	console.log(appInfo);
-});
-```
-**Example**  
-```js
-balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
-	if (error) throw error;
-	console.log(appInfo);
-});
-```
 <a name="balena.models.device.has"></a>
 
 ##### device.has(uuidOrId) ⇒ <code>Promise</code>
@@ -3689,31 +3654,6 @@ balena.models.device.deactivate('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="balena.models.device.identify"></a>
-
-##### device.identify(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Identify device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.identify('7cf02a6');
-```
-**Example**  
-```js
-balena.models.device.identify(123);
-```
-**Example**  
-```js
-balena.models.device.identify('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.rename"></a>
 
 ##### device.rename(uuidOrId, newName) ⇒ <code>Promise</code>
@@ -3847,76 +3787,6 @@ balena.models.device.move('7cf02a6', 'MyApp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="balena.models.device.startApplication"></a>
-
-##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Start application on device  
-**Access**: public  
-**Fulfil**: <code>String</code> - application container id  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.startApplication('7cf02a6').then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.startApplication(123).then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.startApplication('7cf02a6', function(error, containerId) {
-	if (error) throw error;
-	console.log(containerId);
-});
-```
-<a name="balena.models.device.stopApplication"></a>
-
-##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Stop application on device  
-**Access**: public  
-**Fulfil**: <code>String</code> - application container id  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.stopApplication(123).then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
-	if (error) throw error;
-	console.log(containerId);
-});
-```
 <a name="balena.models.device.restartApplication"></a>
 
 ##### device.restartApplication(uuidOrId) ⇒ <code>Promise</code>
@@ -3946,213 +3816,6 @@ balena.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="balena.models.device.startService"></a>
-
-##### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Start a service on a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| imageId | <code>Number</code> | id of the image to start |
-
-**Example**  
-```js
-balena.models.device.startService('7cf02a6', 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.startService(1, 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.startService('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
-<a name="balena.models.device.stopService"></a>
-
-##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Stop a service on a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| imageId | <code>Number</code> | id of the image to stop |
-
-**Example**  
-```js
-balena.models.device.stopService('7cf02a6', 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.stopService(1, 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.stopService('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
-<a name="balena.models.device.restartService"></a>
-
-##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Restart a service on a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| imageId | <code>Number</code> | id of the image to restart |
-
-**Example**  
-```js
-balena.models.device.restartService('7cf02a6', 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.restartService(1, 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.restartService('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
-<a name="balena.models.device.reboot"></a>
-
-##### device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Reboot device  
-**Access**: public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
-| [options] | <code>Object</code> |  | options |
-| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
-
-**Example**  
-```js
-balena.models.device.reboot('7cf02a6');
-```
-**Example**  
-```js
-balena.models.device.reboot(123);
-```
-**Example**  
-```js
-balena.models.device.reboot('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="balena.models.device.shutdown"></a>
-
-##### device.shutdown(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Shutdown device  
-**Access**: public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
-| [options] | <code>Object</code> |  | options |
-| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
-
-**Example**  
-```js
-balena.models.device.shutdown('7cf02a6');
-```
-**Example**  
-```js
-balena.models.device.shutdown(123);
-```
-**Example**  
-```js
-balena.models.device.shutdown('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="balena.models.device.purge"></a>
-
-##### device.purge(uuidOrId) ⇒ <code>Promise</code>
-This function clears the user application's `/data` directory.
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Purge device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.purge('7cf02a6');
-```
-**Example**  
-```js
-balena.models.device.purge(123);
-```
-**Example**  
-```js
-balena.models.device.purge('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
-<a name="balena.models.device.update"></a>
-
-##### device.update(uuidOrId, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Trigger an update check on the supervisor  
-**Access**: public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
-| [options] | <code>Object</code> |  | options |
-| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
-
-**Example**  
-```js
-balena.models.device.update('7cf02a6', {
-	force: true
-});
-```
-**Example**  
-```js
-balena.models.device.update(123, {
-	force: true
-});
-```
-**Example**  
-```js
-balena.models.device.update('7cf02a6', {
-	force: true
-}, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.getSupervisorTargetState"></a>
 
 ##### device.getSupervisorTargetState(uuidOrId) ⇒ <code>Promise</code>
@@ -4179,36 +3842,6 @@ balena.models.device.getSupervisorTargetState(123).then(function(state) {
 **Example**  
 ```js
 balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
-	if (error) throw error;
-	console.log(state);
-});
-```
-<a name="balena.models.device.getSupervisorState"></a>
-
-##### device.getSupervisorState(uuidOrId) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get the supervisor state on a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
-	console.log(state);
-});
-```
-**Example**  
-```js
-balena.models.device.getSupervisorState(123).then(function(state) {
-	console.log(state);
-});
-```
-**Example**  
-```js
-balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
 	if (error) throw error;
 	console.log(state);
 });
@@ -4736,33 +4369,6 @@ balena.models.device.hasLockOverride('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="balena.models.device.ping"></a>
-
-##### device.ping(uuidOrId) ⇒ <code>Promise</code>
-This is useful to signal that the supervisor is alive and responding.
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Ping a device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.ping('7cf02a6');
-```
-**Example**  
-```js
-balena.models.device.ping(123);
-```
-**Example**  
-```js
-balena.models.device.ping('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.getStatus"></a>
 
 ##### device.getStatus(uuidOrId) ⇒ <code>Promise</code>
@@ -5114,6 +4720,400 @@ balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(
 balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
 	if (error) throw error;
 	console.log(result.status);
+});
+```
+<a name="balena.models.device.ping"></a>
+
+##### device.ping(uuidOrId) ⇒ <code>Promise</code>
+This is useful to signal that the supervisor is alive and responding.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Ping a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.ping('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.ping(123);
+```
+**Example**  
+```js
+balena.models.device.ping('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.getApplicationInfo"></a>
+
+##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+This is not supported on multicontainer devices, and will be removed in a future major release
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get application container information  
+**Access**: public  
+**Fulfil**: <code>Object</code> - application info  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
+	console.log(appInfo);
+});
+```
+**Example**  
+```js
+balena.models.device.getApplicationInfo(123).then(function(appInfo) {
+	console.log(appInfo);
+});
+```
+**Example**  
+```js
+balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
+	if (error) throw error;
+	console.log(appInfo);
+});
+```
+<a name="balena.models.device.identify"></a>
+
+##### device.identify(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Identify device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.identify('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.identify(123);
+```
+**Example**  
+```js
+balena.models.device.identify('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.startApplication"></a>
+
+##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+This is not supported on multicontainer devices, and will be removed in a future major release
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Start application on device  
+**Access**: public  
+**Fulfil**: <code>String</code> - application container id  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.startApplication('7cf02a6').then(function(containerId) {
+	console.log(containerId);
+});
+```
+**Example**  
+```js
+balena.models.device.startApplication(123).then(function(containerId) {
+	console.log(containerId);
+});
+```
+**Example**  
+```js
+balena.models.device.startApplication('7cf02a6', function(error, containerId) {
+	if (error) throw error;
+	console.log(containerId);
+});
+```
+<a name="balena.models.device.stopApplication"></a>
+
+##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+This is not supported on multicontainer devices, and will be removed in a future major release
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Stop application on device  
+**Access**: public  
+**Fulfil**: <code>String</code> - application container id  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
+	console.log(containerId);
+});
+```
+**Example**  
+```js
+balena.models.device.stopApplication(123).then(function(containerId) {
+	console.log(containerId);
+});
+```
+**Example**  
+```js
+balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
+	if (error) throw error;
+	console.log(containerId);
+});
+```
+<a name="balena.models.device.reboot"></a>
+
+##### device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Reboot device  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
+
+**Example**  
+```js
+balena.models.device.reboot('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.reboot(123);
+```
+**Example**  
+```js
+balena.models.device.reboot('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.shutdown"></a>
+
+##### device.shutdown(uuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Shutdown device  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
+
+**Example**  
+```js
+balena.models.device.shutdown('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.shutdown(123);
+```
+**Example**  
+```js
+balena.models.device.shutdown('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.purge"></a>
+
+##### device.purge(uuidOrId) ⇒ <code>Promise</code>
+This function clears the user application's `/data` directory.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Purge device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.purge('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.purge(123);
+```
+**Example**  
+```js
+balena.models.device.purge('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.update"></a>
+
+##### device.update(uuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Trigger an update check on the supervisor  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.force] | <code>Boolean</code> | <code>false</code> | override update lock |
+
+**Example**  
+```js
+balena.models.device.update('7cf02a6', {
+	force: true
+});
+```
+**Example**  
+```js
+balena.models.device.update(123, {
+	force: true
+});
+```
+**Example**  
+```js
+balena.models.device.update('7cf02a6', {
+	force: true
+}, function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.getSupervisorState"></a>
+
+##### device.getSupervisorState(uuidOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the supervisor state on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
+balena.models.device.getSupervisorState(123).then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
+balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
+	if (error) throw error;
+	console.log(state);
+});
+```
+<a name="balena.models.device.startService"></a>
+
+##### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Start a service on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to start |
+
+**Example**  
+```js
+balena.models.device.startService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.startService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.startService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.device.stopService"></a>
+
+##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Stop a service on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to stop |
+
+**Example**  
+```js
+balena.models.device.stopService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.stopService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.stopService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
+});
+```
+<a name="balena.models.device.restartService"></a>
+
+##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Restart a service on a device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| imageId | <code>Number</code> | id of the image to restart |
+
+**Example**  
+```js
+balena.models.device.restartService('7cf02a6', 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.restartService(1, 123).then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.restartService('7cf02a6', 123, function(error) {
+	if (error) throw error;
+	...
 });
 ```
 <a name="balena.models.deviceType"></a>

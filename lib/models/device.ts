@@ -20,7 +20,7 @@ import type {
 	PineOptions,
 	PineTypedResult,
 } from '..';
-import {
+import type {
 	Device,
 	DeviceServiceEnvironmentVariable,
 	DeviceVariable,
@@ -55,19 +55,24 @@ import { toWritable } from '../util/types';
 
 import {
 	getDeviceOsSemverWithVariant,
+	ensureVersionCompatibility,
 	normalizeDeviceOsVersion,
 } from '../util/device-os-version';
 import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } from '../util/device-service-details';
-
 import {
 	checkLocalModeSupported,
 	getLocalModeSupport,
 	LOCAL_MODE_ENV_VAR,
 	LOCAL_MODE_SUPPORT_PROPERTIES,
 } from '../util/local-mode';
+import {
+	CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+	getSupervisorApiHelper,
+	MIN_SUPERVISOR_MC_API,
+} from './device.supervisor-api.partial';
 
 import type {
 	SubmitBody,
@@ -76,23 +81,11 @@ import type {
 import type { AtLeast } from '../../typings/utils';
 import type { DeviceType } from '../types/device-type-json';
 
-// The min version where /apps API endpoints are implemented is 1.8.0 but we'll
-// be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
-// prerelease supervisor version, which precedes 1.8.0 but comes after 1.8.0-alpha.0
-// according to semver.
-const MIN_SUPERVISOR_APPS_API = '1.8.0-alpha.0';
-
-const MIN_SUPERVISOR_MC_API = '7.0.0';
 const MIN_OS_MC = '2.12.0';
-
-// Degraded network, slow devices, compressed docker binaries and any combination of these factors
-// can cause proxied device requests to surpass the default timeout (currently 30s). This was
-// noticed during tests and the endpoints that resulted in container management actions were
-// affected in particular.
-const CONTAINER_ACTION_ENDPOINT_TIMEOUT = 50000;
 
 export * as DeviceState from '../types/device-state';
 export type { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
+export type { SupervisorStatus } from './device.supervisor-api.partial';
 
 export type DeviceMetrics = Pick<
 	Device,
@@ -106,19 +99,6 @@ export type DeviceMetrics = Pick<
 	| 'cpu_id'
 	| 'is_undervolted'
 >;
-
-export interface SupervisorStatus {
-	api_port: string;
-	ip_address: string;
-	os_version: string;
-	supervisor_version: string;
-	update_pending: boolean;
-	update_failed: boolean;
-	update_downloaded: boolean;
-	status?: string | null;
-	commit?: string | null;
-	download_progress?: string | null;
-}
 
 const getDeviceModel = function (
 	deps: InjectedDependenciesParam,
@@ -238,34 +218,6 @@ const getDeviceModel = function (
 		}
 	};
 
-	/**
-	 * @summary Ensure version compatibility using balena-semver
-	 * @name ensureVersionCompatibility
-	 * @private
-	 * @function
-	 *
-	 * @param {String} version - version under check
-	 * @param {String} minVersion - minimum accepted version
-	 * @throws {Error} Will reject if the given version is < than the given minimum version
-	 * @returns {void}
-	 *
-	 * @example
-	 * ensureVersionCompatibility(version, MIN_VERSION)
-	 * console.log('Is compatible');
-	 *
-	 */
-	const ensureVersionCompatibility = function (
-		version: string | null,
-		minVersion: string,
-		versionType: 'supervisor' | 'host OS',
-	): void {
-		if (version && bSemver.lt(version, minVersion)) {
-			throw new Error(
-				`Incompatible ${versionType} version: ${version} - must be >= ${minVersion}`,
-			);
-		}
-	};
-
 	const addExtraInfo = function <
 		T extends Parameters<typeof normalizeDeviceOsVersion>[0]
 	>(device: T) {
@@ -302,6 +254,7 @@ const getDeviceModel = function (
 	};
 
 	const exports = {
+		_getId: getId,
 		OverallStatus,
 		/**
 		 * @summary Get Dashboard URL for a specific device
@@ -721,74 +674,6 @@ const getDeviceModel = function (
 		},
 
 		/**
-		 * @summary Get application container information
-		 * @name getApplicationInfo
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @description
-		 * This is not supported on multicontainer devices, and will be removed in a future major release
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {Object} - application info
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
-		 * 	console.log(appInfo);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getApplicationInfo(123).then(function(appInfo) {
-		 * 	console.log(appInfo);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
-		 * 	if (error) throw error;
-		 * 	console.log(appInfo);
-		 * });
-		 */
-		getApplicationInfo: async (
-			uuidOrId: string | number,
-		): Promise<{
-			appId: string;
-			commit: string;
-			containerId: string;
-			env: { [key: string]: string | number };
-			imageId: string;
-		}> => {
-			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
-
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureVersionCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_APPS_API,
-				'supervisor',
-			);
-			const appId = device.belongs_to__application[0].id;
-			const { body } = await request.send({
-				method: 'POST',
-				url: `/supervisor/v1/apps/${appId}`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-					method: 'GET',
-				},
-			});
-			return body;
-		},
-
-		/**
 		 * @summary Check if a device exists
 		 * @name has
 		 * @public
@@ -1065,39 +950,6 @@ const getDeviceModel = function (
 		},
 
 		/**
-		 * @summary Identify device
-		 * @name identify
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.identify('7cf02a6');
-		 *
-		 * @example
-		 * balena.models.device.identify(123);
-		 *
-		 * @example
-		 * balena.models.device.identify('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		identify: async (uuidOrId: string | number): Promise<void> => {
-			const device = await exports.get(uuidOrId);
-			await request.send({
-				method: 'POST',
-				url: '/supervisor/v1/blink',
-				baseUrl: apiUrl,
-				body: {
-					uuid: device.uuid,
-				},
-			});
-		},
-
-		/**
 		 * @summary Rename device
 		 * @name rename
 		 * @public
@@ -1290,125 +1142,7 @@ const getDeviceModel = function (
 			});
 		},
 
-		/**
-		 * @summary Start application on device
-		 * @name startApplication
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @description
-		 * This is not supported on multicontainer devices, and will be removed in a future major release
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {String} - application container id
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.startApplication('7cf02a6').then(function(containerId) {
-		 * 	console.log(containerId);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.startApplication(123).then(function(containerId) {
-		 * 	console.log(containerId);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.startApplication('7cf02a6', function(error, containerId) {
-		 * 	if (error) throw error;
-		 * 	console.log(containerId);
-		 * });
-		 */
-		startApplication: async (uuidOrId: string | number): Promise<void> => {
-			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureVersionCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_APPS_API,
-				'supervisor',
-			);
-			const appId = device.belongs_to__application[0].id;
-			const { body } = await request.send({
-				method: 'POST',
-				url: `/supervisor/v1/apps/${appId}/start`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-				},
-				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-			});
-			return body.containerId;
-		},
-
-		/**
-		 * @summary Stop application on device
-		 * @name stopApplication
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @description
-		 * This is not supported on multicontainer devices, and will be removed in a future major release
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {String} - application container id
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
-		 * 	console.log(containerId);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopApplication(123).then(function(containerId) {
-		 * 	console.log(containerId);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
-		 * 	if (error) throw error;
-		 * 	console.log(containerId);
-		 * });
-		 */
-		stopApplication: (uuidOrId: string | number): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				const deviceOptions = {
-					$select: toWritable(['id', 'supervisor_version'] as const),
-					$expand: { belongs_to__application: { $select: 'id' as const } },
-				};
-				const device = (await exports.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureVersionCompatibility(
-					device.supervisor_version,
-					MIN_SUPERVISOR_APPS_API,
-					'supervisor',
-				);
-				const appId = device.belongs_to__application[0].id;
-				const { body } = await request.send({
-					method: 'POST',
-					url: `/supervisor/v1/apps/${appId}/stop`,
-					baseUrl: apiUrl,
-					body: {
-						deviceId: device.id,
-						appId,
-					},
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-				});
-				return body.containerId;
-			}),
-
+		// TODO: Move this in the supervisor helper as well
 		/**
 		 * @summary Restart application on device
 		 * @name restartApplication
@@ -1454,404 +1188,7 @@ const getDeviceModel = function (
 				}
 			}),
 
-		/**
-		 * @summary Start a service on a device
-		 * @name startService
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {Number} imageId - id of the image to start
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.startService('7cf02a6', 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.startService(1, 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.startService('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
-		 */
-		startService: async (
-			uuidOrId: string | number,
-			imageId: number,
-		): Promise<void> => {
-			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureVersionCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_MC_API,
-				'supervisor',
-			);
-			const appId = device.belongs_to__application[0].id;
-			await request.send({
-				method: 'POST',
-				url: `/supervisor/v2/applications/${appId}/start-service`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-					data: {
-						appId,
-						imageId,
-					},
-				},
-				timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-			});
-		},
-
-		/**
-		 * @summary Stop a service on a device
-		 * @name stopService
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {Number} imageId - id of the image to stop
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.stopService('7cf02a6', 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopService(1, 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopService('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
-		 */
-		stopService: (uuidOrId: string | number, imageId: number): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				const deviceOptions = {
-					$select: toWritable(['id', 'supervisor_version'] as const),
-					$expand: { belongs_to__application: { $select: 'id' as const } },
-				};
-				const device = (await exports.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureVersionCompatibility(
-					device.supervisor_version,
-					MIN_SUPERVISOR_MC_API,
-					'supervisor',
-				);
-				const appId = device.belongs_to__application[0].id;
-				await request.send({
-					method: 'POST',
-					url: `/supervisor/v2/applications/${appId}/stop-service`,
-					baseUrl: apiUrl,
-					body: {
-						deviceId: device.id,
-						appId,
-						data: {
-							appId,
-							imageId,
-						},
-					},
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-				});
-			}),
-
-		/**
-		 * @summary Restart a service on a device
-		 * @name restartService
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {Number} imageId - id of the image to restart
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.restartService('7cf02a6', 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.restartService(1, 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.restartService('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
-		 */
-		restartService: (
-			uuidOrId: string | number,
-			imageId: number,
-		): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				const deviceOptions = {
-					$select: toWritable(['id', 'supervisor_version'] as const),
-					$expand: { belongs_to__application: { $select: 'id' as const } },
-				};
-				const device = (await exports.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureVersionCompatibility(
-					device.supervisor_version,
-					MIN_SUPERVISOR_MC_API,
-					'supervisor',
-				);
-				const appId = device.belongs_to__application[0].id;
-				await request.send({
-					method: 'POST',
-					url: `/supervisor/v2/applications/${appId}/restart-service`,
-					baseUrl: apiUrl,
-					body: {
-						deviceId: device.id,
-						appId,
-						data: {
-							appId,
-							imageId,
-						},
-					},
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-				});
-			}),
-
-		/**
-		 * @summary Reboot device
-		 * @name reboot
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {Object} [options] - options
-		 * @param {Boolean} [options.force=false] - override update lock
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.reboot('7cf02a6');
-		 *
-		 * @example
-		 * balena.models.device.reboot(123);
-		 *
-		 * @example
-		 * balena.models.device.reboot('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		reboot: (
-			uuidOrId: string | number,
-			options: { force?: boolean },
-		): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				if (options == null) {
-					options = {};
-				}
-
-				try {
-					const deviceId = await getId(uuidOrId);
-					const { body } = await request.send({
-						method: 'POST',
-						url: '/supervisor/v1/reboot',
-						baseUrl: apiUrl,
-						body: {
-							deviceId,
-							data: {
-								force: Boolean(options?.force),
-							},
-						},
-					});
-					return body;
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingDevice(uuidOrId, err);
-					}
-					throw err;
-				}
-			}),
-
-		/**
-		 * @summary Shutdown device
-		 * @name shutdown
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {Object} [options] - options
-		 * @param {Boolean} [options.force=false] - override update lock
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.shutdown('7cf02a6');
-		 *
-		 * @example
-		 * balena.models.device.shutdown(123);
-		 *
-		 * @example
-		 * balena.models.device.shutdown('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		shutdown: (
-			uuidOrId: string | number,
-			options: { force?: boolean },
-		): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				if (options == null) {
-					options = {};
-				}
-
-				const deviceOptions = {
-					$select: 'id',
-					$expand: { belongs_to__application: { $select: 'id' } },
-				} as const;
-
-				const device = (await exports.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				await request.send({
-					method: 'POST',
-					url: '/supervisor/v1/shutdown',
-					baseUrl: apiUrl,
-					body: {
-						deviceId: device.id,
-						appId: device.belongs_to__application[0].id,
-						data: {
-							force: Boolean(options?.force),
-						},
-					},
-				});
-			}),
-
-		/**
-		 * @summary Purge device
-		 * @name purge
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @description
-		 * This function clears the user application's `/data` directory.
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.purge('7cf02a6');
-		 *
-		 * @example
-		 * balena.models.device.purge(123);
-		 *
-		 * @example
-		 * balena.models.device.purge('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		purge: (uuidOrId: string | number): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				const deviceOptions = {
-					$select: 'id',
-					$expand: { belongs_to__application: { $select: 'id' } },
-				} as const;
-				const device = (await exports.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				await request.send({
-					method: 'POST',
-					url: '/supervisor/v1/purge',
-					baseUrl: apiUrl,
-					body: {
-						deviceId: device.id,
-						appId: device.belongs_to__application[0].id,
-						data: {
-							appId: device.belongs_to__application[0].id,
-						},
-					},
-				});
-			}),
-
-		/**
-		 * @summary Trigger an update check on the supervisor
-		 * @name update
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {Object} [options] - options
-		 * @param {Boolean} [options.force=false] - override update lock
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.update('7cf02a6', {
-		 * 	force: true
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.update(123, {
-		 * 	force: true
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.update('7cf02a6', {
-		 * 	force: true
-		 * }, function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		async update(
-			uuidOrId: string | number,
-			options: { force?: boolean },
-		): Promise<void> {
-			if (options == null) {
-				options = {};
-			}
-
-			const deviceOptions = {
-				$select: 'id',
-				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
-
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			await request.send({
-				method: 'POST',
-				url: '/supervisor/v1/update',
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId: device.belongs_to__application[0].id,
-					data: {
-						force: Boolean(options?.force),
-					},
-				},
-			});
-		},
+		...getSupervisorApiHelper(deps, opts),
 
 		/**
 		 * @summary Get the target supervisor state on a device
@@ -1886,48 +1223,6 @@ const getDeviceModel = function (
 			const { body } = await request.send({
 				url: `/device/v2/${uuid}/state`,
 				baseUrl: apiUrl,
-			});
-			return body;
-		},
-
-		/**
-		 * @summary Get the supervisor state on a device
-		 * @name getSupervisorState
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
-		 * 	console.log(state);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getSupervisorState(123).then(function(state) {
-		 * 	console.log(state);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
-		 * 	if (error) throw error;
-		 * 	console.log(state);
-		 * });
-		 */
-		getSupervisorState: async (
-			uuidOrId: string | number,
-		): Promise<SupervisorStatus> => {
-			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
-			const { body } = await request.send({
-				method: 'POST',
-				url: '/supervisor/v1/device',
-				baseUrl: apiUrl,
-				body: {
-					uuid,
-					method: 'GET',
-				},
 			});
 			return body;
 		},
@@ -2572,52 +1867,6 @@ const getDeviceModel = function (
 				baseUrl: apiUrl,
 			});
 			return body === '1';
-		},
-
-		/**
-		 * @summary Ping a device
-		 * @name ping
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @description
-		 * This is useful to signal that the supervisor is alive and responding.
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.ping('7cf02a6');
-		 *
-		 * @example
-		 * balena.models.device.ping(123);
-		 *
-		 * @example
-		 * balena.models.device.ping('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		ping: async (uuidOrId: string | number): Promise<void> => {
-			const deviceOptions = {
-				$select: 'id',
-				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
-
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			await request.send({
-				method: 'POST',
-				url: '/supervisor/ping',
-				baseUrl: apiUrl,
-				body: {
-					method: 'GET',
-					deviceId: device.id,
-					appId: device.belongs_to__application[0].id,
-				},
-			});
 		},
 
 		/**
