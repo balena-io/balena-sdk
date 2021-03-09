@@ -11,6 +11,7 @@ export interface DeviceType {
 	state?: string;
 	community?: boolean;
 	private?: boolean;
+	contract?: any;
 
 	isDependent?: boolean;
 	imageDownloadAlerts?: DeviceTypeDownloadAlert[];

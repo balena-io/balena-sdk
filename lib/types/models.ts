@@ -380,6 +380,7 @@ export interface DeviceType {
 	name: string;
 	is_private: boolean;
 	logo: string | null;
+	contract: any | null;
 	belongs_to__device_family: OptionalNavigationResource<DeviceFamily>;
 	is_default_for__application: ReverseNavigationResource<Application>;
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
