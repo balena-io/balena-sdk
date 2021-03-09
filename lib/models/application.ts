@@ -691,8 +691,8 @@ const getApplicationModel = function (
 				: undefined;
 
 			const deviceTypeIdPromise = deviceModel()
-				.getDeviceSlug(deviceType)
-				.then(async function (deviceTypeSlug) {
+				.getManifestBySlug(deviceType)
+				.then(async function ({ slug: deviceTypeSlug }) {
 					if (deviceTypeSlug == null) {
 						throw new errors.BalenaInvalidDeviceType(deviceType);
 					}
