@@ -1,5 +1,6 @@
 import type { DeviceOverallStatus } from './device-overall-status';
 export type { DeviceOverallStatus } from './device-overall-status';
+import { Contract } from './contract';
 import { JWTUser } from './jwt';
 import type {
 	PineDeferred,
@@ -380,6 +381,7 @@ export interface DeviceType {
 	name: string;
 	is_private: boolean;
 	logo: string | null;
+	contract: Contract | null;
 	belongs_to__device_family: OptionalNavigationResource<DeviceFamily>;
 	is_default_for__application: ReverseNavigationResource<Application>;
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
