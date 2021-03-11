@@ -1,4 +1,17 @@
 - commits:
+    - subject: Added contract field to device type model
+      hash: 7e1cd6a97d51f9955ad825afa391ad2bb4bf34f4
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+  version: 15.29.0
+  date: 2021-03-10T18:21:48.644Z
+- commits:
     - subject: Encapsulate the supervisor api methods into a partial
       hash: c6f3f32eb28834fc1a7440385bb7df17d6d22dc1
       body: ''
