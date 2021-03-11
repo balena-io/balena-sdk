@@ -28,6 +28,7 @@ export type PineStrict = PineStrictBase<ResourceTypeMap>;
 
 export * from './types/models';
 export * from './types/jwt';
+export * from './types/contract';
 
 export type { Interceptor };
 export type {
