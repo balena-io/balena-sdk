@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update balena-request to 11.4.0
+      hash: 05ed3bc622505289687e99317e24ac075a8d03ae
+      body: |
+        Update open-balena-api from 11.2.0 to 11.4.0
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.30.0
+  date: 2021-03-12T17:03:52.080Z
+- commits:
     - subject: Added contract field to device type model
       hash: 7e1cd6a97d51f9955ad825afa391ad2bb4bf34f4
       body: ''
