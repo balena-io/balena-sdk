@@ -19,7 +19,7 @@ import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 import * as querystring from 'querystring';
 
 import { EventEmitter } from 'events';
-import * as ndjson from 'ndjson';
+import { parse as ndjsonParse } from 'ndjson';
 import { globalEnv } from './util/global-env';
 import { Device } from './types/models';
 
@@ -94,7 +94,7 @@ const getLogs = function (
 		}
 		const emitter = new EventEmitter() as LogsSubscription;
 		const controller = new AbortController();
-		const parser = ndjson.parse();
+		const parser = ndjsonParse();
 
 		request
 			.stream({
