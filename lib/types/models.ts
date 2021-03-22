@@ -300,6 +300,40 @@ export interface Release {
 	release_tag: ReverseNavigationResource<ReleaseTag>;
 }
 
+export interface ReleaseDelta {
+	created_at: string;
+	modified_at: string;
+	id: number;
+	originates_from__release: OptionalNavigationResource<Release>;
+	produces__release: NavigationResource<Release>;
+	status: 'running' | 'failed' | 'cancelled' | 'success';
+	error_message: string | null;
+	size: number | null;
+	update_timestamp: string;
+	end_timestamp: string | null;
+}
+
+export interface ReleaseDeltaIsComposedOfDelta {
+	created_at: string;
+	modified_at: string;
+	release_delta: ReverseNavigationResource<ReleaseDelta>;
+	is_composed_of__delta: ReverseNavigationResource<Delta>;
+	id: number;
+}
+export interface Delta {
+	created_at: string;
+	modified_at: string;
+	id: number;
+	originates_from__image: ReverseNavigationResource<Image>;
+	produces__image: NavigationResource<Image>;
+	version: number;
+	status: string;
+	error_message: string | null;
+	is_stored_at__location: string | null;
+	size: number | null;
+	update_timestamp: string;
+	end_timestamp: string | null;
+}
 export interface Device {
 	id: number;
 	created_at: string;

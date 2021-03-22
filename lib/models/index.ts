@@ -83,6 +83,13 @@ const modelsTemplate = {
 	release: () => (require('./release') as typeof import('./release')).default,
 
 	/**
+	 * @namespace releaseDelta
+	 * @memberof balena.models
+	 */
+	releaseDelta: () =>
+		(require('./release-delta') as typeof import('./release-delta')).default,
+
+	/**
 	 * @namespace service
 	 * @memberof balena.models
 	 */

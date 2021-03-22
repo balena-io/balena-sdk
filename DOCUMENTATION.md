@@ -321,6 +321,9 @@ const sdk = fromSharedOptions();
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
             * [.getLatestByApplication(nameOrSlugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
             * [.createFromUrl(nameOrSlugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+        * [.releaseDelta](#balena.models.releaseDelta) : <code>object</code>
+            * [.getReleaseDeltas(releaseId)](#balena.models.releaseDelta.getReleaseDeltas) ⇒ <code>Promise</code>
+            * [.getOrCreateDeltaSizeBetweenReleases(releaseId1, releaseId2)](#balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -687,6 +690,9 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
         * [.getLatestByApplication(nameOrSlugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
         * [.createFromUrl(nameOrSlugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+    * [.releaseDelta](#balena.models.releaseDelta) : <code>object</code>
+        * [.getReleaseDeltas(releaseId)](#balena.models.releaseDelta.getReleaseDeltas) ⇒ <code>Promise</code>
+        * [.getOrCreateDeltaSizeBetweenReleases(releaseId1, releaseId2)](#balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -6711,6 +6717,70 @@ balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-pr
 balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
 	if (error) throw error;
 	console.log(releaseId);
+});
+```
+<a name="balena.models.releaseDelta"></a>
+
+#### models.releaseDelta : <code>object</code>
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
+
+* [.releaseDelta](#balena.models.releaseDelta) : <code>object</code>
+    * [.getReleaseDeltas(releaseId)](#balena.models.releaseDelta.getReleaseDeltas) ⇒ <code>Promise</code>
+    * [.getOrCreateDeltaSizeBetweenReleases(releaseId1, releaseId2)](#balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases) ⇒ <code>Promise</code>
+
+<a name="balena.models.releaseDelta.getReleaseDeltas"></a>
+
+##### releaseDelta.getReleaseDeltas(releaseId) ⇒ <code>Promise</code>
+This method returns all release generated deltas.
+
+**Kind**: static method of [<code>releaseDelta</code>](#balena.models.releaseDelta)  
+**Summary**: Get release deltas  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - release deltas  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| releaseId | <code>String</code> \| <code>Number</code> | release id |
+
+**Example**  
+```js
+balena.models.releaseDelta.getReleaseDeltas(123, 321).then(function(releaseDeltas) {
+	console.log(releaseDeltas);
+});
+```
+**Example**  
+```js
+balena.models.releaseDelta.getReleaseDeltas(123, 321, function(error, releaseDeltas) {
+	if (error) throw error;
+	console.log(releaseDeltas);
+});
+```
+<a name="balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases"></a>
+
+##### releaseDelta.getOrCreateDeltaSizeBetweenReleases(releaseId1, releaseId2) ⇒ <code>Promise</code>
+This method returns the delta size between two releases.
+
+**Kind**: static method of [<code>releaseDelta</code>](#balena.models.releaseDelta)  
+**Summary**: Get or create delta size between two releases  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - releases delta  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| releaseId1 | <code>String</code> \| <code>Number</code> | first release id |
+| releaseId2 | <code>String</code> \| <code>Number</code> | second release id |
+
+**Example**  
+```js
+balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases(123, 321).then(function(deltaSize) {
+	console.log(deltaSize);
+});
+```
+**Example**  
+```js
+balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases(123, 321, function(error, deltaSize) {
+	if (error) throw error;
+	console.log(deltaSize);
 });
 ```
 <a name="balena.models.service"></a>
