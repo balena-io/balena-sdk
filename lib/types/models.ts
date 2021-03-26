@@ -49,6 +49,8 @@ export interface ResourceTypeMap {
 	plan_feature: PlanFeature;
 	recovery_two_factor: RecoveryTwoFactor;
 	release: Release;
+	release_delta: ReleaseDelta;
+	release_delta__is_composed_of__delta: ReleaseDeltaIsComposedOfDelta;
 	release_tag: ReleaseTag;
 	service: Service;
 	service_environment_variable: ServiceEnvironmentVariable;
