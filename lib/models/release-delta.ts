@@ -24,13 +24,47 @@ const getReleaseDeltaModel = function (deps: InjectedDependenciesParam) {
 
 	const exports = {
 		/**
-		 * @summary Get release deltas
-		 * @name getReleaseDeltas
+		 * @summary Get all releases deltas
+		 * @name getAll
+		 * @public
+		 * @function
+		 * @memberof balena.models.releaseDelta
+		 *
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - releases deltas
+		 * @returns {Promise}
+		 *
+		 * @description
+		 * This method returns all releases generated deltas.
+		 *
+		 * @example
+		 * balena.models.releaseDelta.getAll(123, 321).then(function(releasesDeltas) {
+		 * 	console.log(releasesDeltas);
+		 * });
+		 *
+		 * @example
+		 * balena.models.releaseDelta.getAll(123, 321, function(error, releasesDeltas) {
+		 * 	if (error) throw error;
+		 * 	console.log(releasesDeltas);
+		 * });
+		 */
+		async getAll(
+			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseDelta> = {},
+		): Promise<ReleaseDelta[]> {
+			return pine.get<any>({
+				resource: 'release_delta',
+				options: mergePineOptions({}, options),
+			});
+		},
+		/**
+		 * @summary Get deltas for a specific release
+		 * @name getByRelease
 		 * @public
 		 * @function
 		 * @memberof balena.models.releaseDelta
 		 *
 		 * @param {String|Number} releaseId - release id
+		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release deltas
 		 * @returns {Promise}
 		 *
@@ -38,17 +72,17 @@ const getReleaseDeltaModel = function (deps: InjectedDependenciesParam) {
 		 * This method returns all release generated deltas.
 		 *
 		 * @example
-		 * balena.models.releaseDelta.getReleaseDeltas(123, 321).then(function(releaseDeltas) {
+		 * balena.models.releaseDelta.getByRelease(123, 321).then(function(releaseDeltas) {
 		 * 	console.log(releaseDeltas);
 		 * });
 		 *
 		 * @example
-		 * balena.models.releaseDelta.getReleaseDeltas(123, 321, function(error, releaseDeltas) {
+		 * balena.models.releaseDelta.getByRelease(123, 321, function(error, releaseDeltas) {
 		 * 	if (error) throw error;
 		 * 	console.log(releaseDeltas);
 		 * });
 		 */
-		async getReleaseDeltas(
+		async getByRelease(
 			releaseId: number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseDelta> = {},
 		): Promise<ReleaseDelta[]> {
@@ -69,7 +103,7 @@ const getReleaseDeltaModel = function (deps: InjectedDependenciesParam) {
 		},
 		/**
 		 * @summary Get or create delta size between two releases
-		 * @name getOrCreateDeltaSizeBetweenReleases
+		 * @name create
 		 * @public
 		 * @function
 		 * @memberof balena.models.releaseDelta
@@ -83,17 +117,17 @@ const getReleaseDeltaModel = function (deps: InjectedDependenciesParam) {
 		 * This method returns the delta size between two releases.
 		 *
 		 * @example
-		 * balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases(123, 321).then(function(deltaSize) {
+		 * balena.models.releaseDelta.create(123, 321).then(function(deltaSize) {
 		 * 	console.log(deltaSize);
 		 * });
 		 *
 		 * @example
-		 * balena.models.releaseDelta.getOrCreateDeltaSizeBetweenReleases(123, 321, function(error, deltaSize) {
+		 * balena.models.releaseDelta.create(123, 321, function(error, deltaSize) {
 		 * 	if (error) throw error;
 		 * 	console.log(deltaSize);
 		 * });
 		 */
-		async getOrCreateDeltaSizeBetweenReleases(
+		async create(
 			releaseId1: number,
 			releaseId2: number,
 		): Promise<ReleaseDelta> {
