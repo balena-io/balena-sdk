@@ -1,3 +1,5 @@
+import { AnyObject } from '../../typings/utils';
+
 export interface Contract {
 	slug: string;
 	type: string;
@@ -8,10 +10,10 @@ export interface Contract {
 	description?: string;
 	aliases?: string[];
 	tags?: string[];
-	data?: object;
-	assets?: object;
+	data?: AnyObject;
+	assets?: AnyObject;
 	requires?: string[];
 	provides?: string[];
-	composedOf?: object;
-	partials?: string[];
+	composedOf?: AnyObject;
+	partials?: AnyObject;
 }
