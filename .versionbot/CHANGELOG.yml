@@ -1,4 +1,17 @@
 - commits:
+    - subject: Fix type of contract fields that should be anyObject instead of object
+      hash: c7f94f912766323cd08cdf29159deb95d3e6b152
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+  version: 15.30.2
+  date: 2021-03-31T13:51:16.785Z
+- commits:
     - subject: Update ndjson to 2.x
       hash: c0d22d96e8b2d3f3d9bc28955767548fbbdece08
       body: ''
