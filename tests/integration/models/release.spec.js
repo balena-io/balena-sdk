@@ -12,6 +12,7 @@ import {
 	givenLoggedInUser,
 	givenMulticontainerApplication,
 	IS_BROWSER,
+	applicationRetrievalFields,
 } from '../setup';
 
 import {
@@ -57,7 +58,7 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.getAllByApplication()', function () {
-			['id', 'app_name', 'slug'].forEach((prop) =>
+			applicationRetrievalFields.forEach((prop) =>
 				it(`should eventually become an empty array given an application ${prop}`, function () {
 					const promise = balena.models.release.getAllByApplication(
 						ctx.application[prop],
@@ -210,7 +211,7 @@ describe('Release Model', function () {
 				});
 
 				// [mutating operations]
-				['id', 'app_name', 'slug'].forEach((prop) => {
+				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to create a release using a tarball url given an application ${prop}`, async function () {
 						const releaseId = await balena.models.release.createFromUrl(
 							ctx.application[prop],
@@ -399,7 +400,7 @@ describe('Release Model', function () {
 					/** @type {import('./tags').TagModelBase<import('../../../').ReleaseTag>} */ (balena.models.release.tags),
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'application',
-				uniquePropertyNames: ['app_name', 'slug'],
+				uniquePropertyNames: applicationRetrievalFields,
 			};
 
 			const releaseTagTestOptions = {
@@ -408,7 +409,7 @@ describe('Release Model', function () {
 					/** @type {import('./tags').TagModelBase<import('../../../').ReleaseTag>} */ (balena .models.release.tags),
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'release',
-				uniquePropertyNames: ['commit'],
+				uniquePropertyNames: ['id', 'commit'],
 			};
 
 			before(function () {
@@ -473,7 +474,7 @@ describe('Release Model', function () {
 				});
 
 				parallel('', function () {
-					['id', 'app_name', 'slug'].forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) =>
 						it(`should get the latest release by application ${prop}`, function () {
 							return balena.models.release
 								.getLatestByApplication(ctx.application[prop])

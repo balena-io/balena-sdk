@@ -382,7 +382,7 @@ describe('Organization Membership Model', function () {
 						.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
 					modelNamespace: 'balena.models.organization.membership.tags',
 					resourceName: 'organization',
-					uniquePropertyNames: ['handle'],
+					uniquePropertyNames: ['id', 'handle'],
 				};
 
 				const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
@@ -390,7 +390,7 @@ describe('Organization Membership Model', function () {
 						.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
 					modelNamespace: 'balena.models.organization.membership.tags',
 					resourceName: 'organization_membership',
-					uniquePropertyNames: [],
+					uniquePropertyNames: ['id'],
 				};
 
 				before(async function () {

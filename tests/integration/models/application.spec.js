@@ -14,6 +14,7 @@ import {
 	givenMulticontainerApplicationWithADevice,
 	givenInitialOrganization,
 	sdkOpts,
+	applicationRetrievalFields,
 } from '../setup';
 
 import {
@@ -350,7 +351,7 @@ describe('Application Model', function () {
 
 			describe('[mutating operations]', function () {
 				givenAnApplication(beforeEach);
-				['id', 'app_name', 'slug'].forEach((prop) => {
+				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to remove an existing application by ${prop}`, function () {
 						return balena.models.application
 							.remove(this.application[prop])
@@ -468,7 +469,7 @@ describe('Application Model', function () {
 				});
 
 				parallel('balena.models.application.get()', function () {
-					['id', 'app_name', 'slug'].forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) =>
 						it(`should be able to get an application by ${prop}`, function () {
 							const promise = balena.models.application.get(
 								ctx.application[prop],
@@ -520,7 +521,7 @@ describe('Application Model', function () {
 				});
 
 				parallel('balena.models.application.has()', function () {
-					['id', 'app_name', 'slug'].forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) =>
 						it(`should eventually be true if the application ${prop} exists`, function () {
 							const promise = balena.models.application.has(
 								ctx.application[prop],
@@ -569,7 +570,7 @@ describe('Application Model', function () {
 							originalAppName,
 						);
 					});
-					['id', 'app_name', 'slug'].forEach((prop) => {
+					applicationRetrievalFields.forEach((prop) => {
 						it(`should be able to rename an existing application by ${prop}`, function () {
 							return balena.models.application
 								.rename(this.application[prop], 'newApplicationName_' + prop)
@@ -589,7 +590,7 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.generateApiKey()', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) =>
 					it(`should be able to generate an API key by ${prop}`, function () {
 						return balena.models.application
 							.generateApiKey(this.application[prop])
@@ -618,7 +619,7 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.generateProvisioningKey()', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) =>
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
 							.generateProvisioningKey(this.application[prop])
@@ -712,7 +713,7 @@ describe('Application Model', function () {
 						/** @type {import('./tags').TagModelBase<import('../../../').ApplicationTag>} */ (balena.models.application.tags),
 					modelNamespace: 'balena.models.application.tags',
 					resourceName: 'application',
-					uniquePropertyNames: ['app_name', 'slug'],
+					uniquePropertyNames: applicationRetrievalFields,
 				};
 
 				before(function () {
@@ -729,7 +730,7 @@ describe('Application Model', function () {
 			describe('balena.models.application.configVar', function () {
 				const configVarModel = balena.models.application.configVar;
 
-				['id', 'app_name'].forEach(function (appParam) {
+				applicationRetrievalFields.forEach(function (appParam) {
 					const appParamUpper = appParam.toUpperCase();
 
 					it(`can create a variable by ${appParam}`, function () {
@@ -825,7 +826,7 @@ describe('Application Model', function () {
 			describe('balena.models.application.envVar', function () {
 				const envVarModel = balena.models.application.envVar;
 
-				['id', 'app_name'].forEach(function (appParam) {
+				applicationRetrievalFields.forEach(function (appParam) {
 					it(`can create a variable by ${appParam}`, function () {
 						const promise = envVarModel.set(
 							this.application[appParam],
@@ -910,7 +911,7 @@ describe('Application Model', function () {
 			describe('balena.models.application.buildEnvVar', function () {
 				const envVarModel = balena.models.application.buildVar;
 
-				['id', 'app_name'].forEach(function (appParam) {
+				applicationRetrievalFields.forEach(function (appParam) {
 					it(`can create a variable by ${appParam}`, function () {
 						const promise = envVarModel.set(
 							this.application[appParam],
@@ -1522,7 +1523,7 @@ describe('Application Model', function () {
 				));
 
 			parallel('balena.models.application.get()', function () {
-				['id', 'app_name', 'slug'].forEach((prop) => {
+				applicationRetrievalFields.forEach((prop) => {
 					$it(
 						`should be able to get a public application by ${prop}`,
 						function () {
