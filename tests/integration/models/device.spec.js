@@ -1438,38 +1438,29 @@ describe('Device Model', function () {
 			describe('balena.models.device.hasLockOverride()', function () {
 				givenADevice(before);
 
-				it('should be false by default for a device retrieved by uuid', async function () {
-					const hasLockOverride = await balena.models.device.hasLockOverride(
-						this.device.uuid,
-					);
-					return expect(hasLockOverride).to.be.false;
-				});
-
-				it('should be false by default for a device retrieved by id', async function () {
-					const hasLockOverride = await balena.models.device.hasLockOverride(
-						this.device.id,
-					);
-					return expect(hasLockOverride).to.be.false;
+				['id', 'uuid'].forEach(function (deviceParam) {
+					it(`should be false by default for a device retrieved by ${deviceParam}`, async function () {
+						const hasLockOverride = await balena.models.device.hasLockOverride(
+							this.device[deviceParam],
+						);
+						return expect(hasLockOverride).to.be.false;
+					});
 				});
 			});
 
 			describe('balena.models.device.enableLockOverride()', function () {
 				givenADevice(beforeEach);
 
-				it('should be able to enable lock override by uuid', async function () {
-					await balena.models.device.enableLockOverride(this.device.uuid);
-					const hasLockOverride = await balena.models.device.hasLockOverride(
-						this.device.uuid,
-					);
-					return expect(hasLockOverride).to.be.true;
-				});
-
-				it('should be able to enable lock override by id', async function () {
-					await balena.models.device.enableLockOverride(this.device.id);
-					const hasLockOverride = await balena.models.device.hasLockOverride(
-						this.device.id,
-					);
-					return expect(hasLockOverride).to.be.true;
+				['id', 'uuid'].forEach(function (deviceParam) {
+					it(`should be able to enable lock override by ${deviceParam}`, async function () {
+						await balena.models.device.enableLockOverride(
+							this.device[deviceParam],
+						);
+						const hasLockOverride = await balena.models.device.hasLockOverride(
+							this.device[deviceParam],
+						);
+						return expect(hasLockOverride).to.be.true;
+					});
 				});
 			});
 
@@ -1484,20 +1475,16 @@ describe('Device Model', function () {
 					expect(hasLockOverride).to.be.true;
 				});
 
-				it('should be able to disable lock override by uuid', async function () {
-					await balena.models.device.disableLockOverride(this.device.uuid);
-					const hasLockOverride = await balena.models.device.hasLockOverride(
-						this.device.uuid,
-					);
-					return expect(hasLockOverride).to.be.false;
-				});
-
-				it('should be able to disable lock override by id', async function () {
-					await balena.models.device.disableLockOverride(this.device.id);
-					const hasLockOverride = await balena.models.device.hasLockOverride(
-						this.device.id,
-					);
-					return expect(hasLockOverride).to.be.false;
+				['id', 'uuid'].forEach(function (deviceParam) {
+					it(`should be able to disable lock override by ${deviceParam}`, async function () {
+						await balena.models.device.disableLockOverride(
+							this.device[deviceParam],
+						);
+						const hasLockOverride = await balena.models.device.hasLockOverride(
+							this.device[deviceParam],
+						);
+						return expect(hasLockOverride).to.be.false;
+					});
 				});
 			});
 
