@@ -1764,7 +1764,7 @@ describe('Application Model', function () {
 		before(async function () {
 			const [app] = await balena.models.application.getAll({
 				$top: 1,
-				$select: ['id', 'app_name', 'slug', 'is_public'],
+				$select: ['id', 'app_name', 'slug', 'uuid', 'is_public'],
 				$filter: { is_public: true },
 			});
 			expect(app).to.have.property('is_public', true);
@@ -1901,7 +1901,7 @@ describe('Application Model', function () {
 							.get({
 								resource: 'application',
 								options: {
-									$select: ['id', 'app_name', 'slug', 'is_public'],
+									$select: ['id', 'app_name', 'slug', 'uuid', 'is_public'],
 								},
 							})
 							.then(function (apps) {
@@ -1914,6 +1914,7 @@ describe('Application Model', function () {
 									expect(app).to.have.property('id').that.is.a('number');
 									expect(app).to.have.property('app_name').that.is.a('string');
 									expect(app).to.have.property('slug').that.is.a('string');
+									expect(app).to.have.property('uuid').that.is.a('string');
 									expect(app).to.have.property('is_public', true);
 								});
 							});
@@ -1931,6 +1932,7 @@ describe('Application Model', function () {
 									expect(app).to.have.property('id').that.is.a('number');
 									expect(app).to.have.property('app_name').that.is.a('string');
 									expect(app).to.have.property('slug').that.is.a('string');
+									expect(app).to.have.property('uuid').that.is.a('string');
 									expect(app).to.have.property('is_public', true);
 								});
 						},

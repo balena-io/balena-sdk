@@ -271,7 +271,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @param {String} [context] - extra access filters, undefined or 'directly_accessible'
 		 * @fulfil {Object} - application
@@ -279,6 +279,11 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.get('myorganization/myapp').then(function(application) {
+		 * 	console.log(application);
+		 * });
+		 *
+		 * @example
+		 * balena.models.application.get('1bf99a68cf9e4266986e6dec7a6e8f46').then(function(application) {
 		 * 	console.log(application);
 		 * });
 		 *
@@ -294,17 +299,11 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async get(
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			options?: PineOptions<Application>,
 			context?: 'directly_accessible',
 		): Promise<Application> {
-			if (options == null) {
-				options = {};
-			}
-
-			if (slugOrId == null) {
-				throw new errors.BalenaApplicationNotFound(slugOrId);
-			}
+			options ??= {};
 
 			const accessFilter =
 				context === 'directly_accessible'
@@ -312,39 +311,39 @@ const getApplicationModel = function (
 					: null;
 
 			let application;
-			if (isId(slugOrId)) {
+			if (isId(slugOrUuidOrId)) {
 				application = await pine.get({
 					resource: 'application',
-					id: slugOrId,
+					id: slugOrUuidOrId,
 					options: mergePineOptions(
 						accessFilter != null ? { $filter: accessFilter } : {},
 						options,
 					),
 				});
-				if (application == null) {
-					throw new errors.BalenaApplicationNotFound(slugOrId);
-				}
-			} else {
+			} else if (typeof slugOrUuidOrId === 'string') {
+				const lowerCaseSlugOrUuid = slugOrUuidOrId.toLowerCase();
 				const applications = await pine.get({
 					resource: 'application',
 					options: mergePineOptions(
 						{
 							$filter: {
 								...accessFilter,
-								slug: slugOrId.toLowerCase(),
+								$or: {
+									slug: lowerCaseSlugOrUuid,
+									uuid: lowerCaseSlugOrUuid,
+								},
 							},
 						},
 						options,
 					),
 				});
-				if (applications.length === 0) {
-					throw new errors.BalenaApplicationNotFound(slugOrId);
-				}
-
 				if (applications.length > 1) {
-					throw new errors.BalenaAmbiguousApplication(slugOrId);
+					throw new errors.BalenaAmbiguousApplication(slugOrUuidOrId);
 				}
 				application = applications[0];
+			}
+			if (application == null) {
+				throw new errors.BalenaApplicationNotFound(slugOrUuidOrId);
 			}
 			return normalizeApplication(application);
 		},
