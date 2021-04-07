@@ -1446,6 +1446,98 @@ describe('Device Model', function () {
 						return expect(hasLockOverride).to.be.false;
 					});
 				});
+
+				const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
+
+				it('should be true for a device that has the device config var set to 0 and no app config var', async function () {
+					await balena.models.device.configVar.set(
+						this.device.uuid,
+						OVERRIDE_LOCK_ENV_VAR,
+						'0',
+					);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					return expect(hasLockOverride).to.be.false;
+				});
+
+				it('should be true for a device that has the device config var set to 1 and no app config var', async function () {
+					await balena.models.device.configVar.set(
+						this.device.uuid,
+						OVERRIDE_LOCK_ENV_VAR,
+						'1',
+					);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					return expect(hasLockOverride).to.be.true;
+				});
+
+				it('should be true for a device that has the app config var set to 0 and no device config var', async function () {
+					await balena.models.application.configVar.set(
+						this.application.id,
+						OVERRIDE_LOCK_ENV_VAR,
+						'0',
+					);
+					await balena.models.device.configVar.remove(
+						this.device.uuid,
+						OVERRIDE_LOCK_ENV_VAR,
+					);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					return expect(hasLockOverride).to.be.false;
+				});
+
+				it('should be true for a device that has the app config var set to 1 and no device config var', async function () {
+					await balena.models.application.configVar.set(
+						this.application.id,
+						OVERRIDE_LOCK_ENV_VAR,
+						'1',
+					);
+					await balena.models.device.configVar.remove(
+						this.device.uuid,
+						OVERRIDE_LOCK_ENV_VAR,
+					);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					return expect(hasLockOverride).to.be.true;
+				});
+
+				it('should be false for a device that has the app config var set to 1 and the device config var set to 0', async function () {
+					await balena.models.application.configVar.set(
+						this.application.id,
+						OVERRIDE_LOCK_ENV_VAR,
+						'1',
+					);
+					await balena.models.device.configVar.set(
+						this.device.uuid,
+						OVERRIDE_LOCK_ENV_VAR,
+						'0',
+					);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					return expect(hasLockOverride).to.be.false;
+				});
+
+				it('should be true for a device that has the app config var set to 0 and the device config var set to 1', async function () {
+					await balena.models.application.configVar.set(
+						this.application.id,
+						OVERRIDE_LOCK_ENV_VAR,
+						'0',
+					);
+					await balena.models.device.configVar.set(
+						this.device.uuid,
+						OVERRIDE_LOCK_ENV_VAR,
+						'1',
+					);
+					const hasLockOverride = await balena.models.device.hasLockOverride(
+						this.device.uuid,
+					);
+					return expect(hasLockOverride).to.be.true;
+				});
 			});
 
 			describe('balena.models.device.enableLockOverride()', function () {

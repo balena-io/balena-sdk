@@ -82,6 +82,7 @@ import type { AtLeast } from '../../typings/utils';
 import type { DeviceType } from '../types/device-type-json';
 
 const MIN_OS_MC = '2.12.0';
+const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
 
 export * as DeviceState from '../types/device-state';
 export type { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
@@ -225,20 +226,44 @@ const getDeviceModel = function (
 		return device;
 	};
 
-	const setLockOverriden = async (
+	const getAppliedConfigVariableValue = async (
 		uuidOrId: string | number,
-		shouldOverride: boolean,
-	): Promise<void> => {
-		const deviceId = await getId(uuidOrId);
-		const value = shouldOverride ? '1' : '0';
-		await request.send({
-			method: 'POST',
-			url: `/device/${deviceId}/lock-override`,
-			baseUrl: apiUrl,
-			body: {
-				value,
+		name: string,
+	) => {
+		const options = {
+			$expand: {
+				device_config_variable: {
+					$select: 'value',
+					$filter: {
+						name,
+					},
+				},
+				belongs_to__application: {
+					$select: 'id',
+					$expand: {
+						application_config_variable: {
+							$select: 'value',
+							$filter: {
+								name,
+							},
+						},
+					},
+				},
 			},
-		});
+		} as const;
+
+		const {
+			device_config_variable: [deviceConfig],
+			belongs_to__application: [
+				{
+					application_config_variable: [appConfig],
+				},
+			],
+		} = (await exports.get(uuidOrId, options)) as PineTypedResult<
+			Device,
+			typeof options
+		>;
+		return (deviceConfig ?? appConfig)?.value;
 	};
 
 	const set = async (
@@ -1812,7 +1837,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		enableLockOverride: (uuidOrId: string | number): Promise<void> =>
-			setLockOverriden(uuidOrId, true),
+			configVarModel.set(uuidOrId, OVERRIDE_LOCK_ENV_VAR, '1'),
 
 		/**
 		 * @summary Disable lock override
@@ -1836,7 +1861,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		disableLockOverride: (uuidOrId: string | number): Promise<void> =>
-			setLockOverriden(uuidOrId, false),
+			configVarModel.set(uuidOrId, OVERRIDE_LOCK_ENV_VAR, '0'),
 
 		/**
 		 * @summary Check if a device has the lock override enabled
@@ -1860,13 +1885,12 @@ const getDeviceModel = function (
 		 * });
 		 */
 		hasLockOverride: async (uuidOrId: string | number): Promise<boolean> => {
-			const deviceId = await getId(uuidOrId);
-			const { body } = await request.send({
-				method: 'GET',
-				url: `/device/${deviceId}/lock-override`,
-				baseUrl: apiUrl,
-			});
-			return body === '1';
+			return (
+				(await getAppliedConfigVariableValue(
+					uuidOrId,
+					OVERRIDE_LOCK_ENV_VAR,
+				)) === '1'
+			);
 		},
 
 		/**
