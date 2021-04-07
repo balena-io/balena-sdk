@@ -1,4 +1,33 @@
 - commits:
+    - subject: Manage lock overrides using the config variables instead of the endpoint
+      hash: 55f412455dc99ee2823367b3ade5d71fb48d9aae
+      body: |
+        This also allows the device lock override methods to
+        work on open-balena.
+      footer:
+        Resolves: '#1071'
+        resolves: '#1071'
+        Change-type: minor
+        change-type: minor
+        See: 'https://github.com/balena-io/balena-api/issues/3076'
+        see: 'https://github.com/balena-io/balena-api/issues/3076'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Abstract the device lock override tests by id/uuid
+      hash: 77ea059ac980f99c955b5ffc1a1579b3d807867c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.31.0
+  date: 2021-04-07T11:56:01.795Z
+- commits:
     - subject: Fix type of contract fields that should be anyObject instead of object
       hash: c7f94f912766323cd08cdf29159deb95d3e6b152
       body: ''
