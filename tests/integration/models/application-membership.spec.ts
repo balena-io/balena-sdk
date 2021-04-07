@@ -7,6 +7,7 @@ import {
 	credentials,
 	givenAnApplication,
 	givenLoggedInUser,
+	applicationRetrievalFields,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
@@ -81,7 +82,7 @@ describe('Application Membership Model', function () {
 				)}`,
 			};
 
-			['id', 'app_name', 'slug'].forEach((field) => {
+			applicationRetrievalFields.forEach((field) => {
 				it(`should not be able to add a new member when using an not existing application ${field}`, async function () {
 					const promise = balena.models.application.membership.create({
 						application: randomOrdInfo[field],
@@ -113,7 +114,7 @@ describe('Application Membership Model', function () {
 			afterEach(async function () {
 				await balena.models.application.membership.remove(membership!.id);
 			});
-			['id', 'app_name', 'slug'].forEach(function (field) {
+			applicationRetrievalFields.forEach(function (field) {
 				it(`should be able to add a new member to the application by ${field}`, async function () {
 					membership = await balena.models.application.membership.create({
 						application: this.application[field],

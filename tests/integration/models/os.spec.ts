@@ -9,6 +9,7 @@ import {
 	givenAnApplication,
 	givenLoggedInUser,
 	IS_BROWSER,
+	applicationRetrievalFields,
 } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
@@ -566,7 +567,7 @@ describe('OS model', function () {
 				);
 			});
 
-			['id', 'app_name', 'slug'].forEach((prop) => {
+			applicationRetrievalFields.forEach((prop) => {
 				it(`should be able to get an application config by ${prop}`, function () {
 					const promise = balena.models.os.getConfig(ctx.application[prop], {
 						version: DEFAULT_OS_VERSION,

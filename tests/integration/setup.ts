@@ -4,6 +4,7 @@ import { chai } from 'mochainon';
 import * as memoize from 'memoizee';
 import type * as BalenaSdk from '../../';
 import type { AnyObject } from '../../typings/utils';
+import { toWritable } from '../../lib/util/types';
 import { getInitialOrganization } from './utils';
 // tslint:disable-next-line:no-var-requires
 chai.use(require('chai-samsam'));
@@ -615,3 +616,10 @@ export function givenASupervisorRelease(
 		this.supervisorRelease = supervisorRelease[0];
 	});
 }
+
+export const applicationRetrievalFields = toWritable([
+	'id',
+	'app_name',
+	'slug',
+] as const);
+export const deviceUniqueFields = toWritable(['id', 'uuid'] as const);

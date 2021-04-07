@@ -7,6 +7,7 @@ import {
 	givenAnApplication,
 	givenLoggedInUser,
 	givenMulticontainerApplication,
+	applicationRetrievalFields,
 } from '../setup';
 import { timeSuite } from '../../util';
 const { expect } = m.chai;
@@ -24,7 +25,7 @@ describe('Service Model', function () {
 		});
 
 		parallel('balena.models.service.getAllByApplication()', function () {
-			['id', 'app_name', 'slug'].forEach((prop) => {
+			applicationRetrievalFields.forEach((prop) => {
 				it(`should eventually become an empty array given an application ${prop}`, function () {
 					const promise = balena.models.service.getAllByApplication(
 						ctx.application[prop],

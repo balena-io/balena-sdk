@@ -43,7 +43,7 @@ export interface Options<T extends BalenaSdk.ResourceTagBase> {
 export const itShouldGetAllTagsByResource = function <
 	T extends BalenaSdk.ResourceTagBase
 >(opts: Options<T>) {
-	const { model, resourceName, uniquePropertyNames = [] } = opts;
+	const { model, resourceName, uniquePropertyNames } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	let ctx: Mocha.Context;
@@ -86,7 +86,9 @@ export const itShouldGetAllTagsByResource = function <
 
 		uniquePropertyNames.forEach((uniquePropertyName) => {
 			it(`should be rejected if the ${resourceName} ${uniquePropertyName} does not exist`, function () {
-				const promise = getAllByResource('123456789');
+				const promise = getAllByResource(
+					uniquePropertyName === 'id' ? 123456789 : '123456789',
+				);
 				return expect(promise).to.be.rejectedWith(
 					`${_.startCase(resourceName)} not found: 123456789`,
 				);
@@ -109,7 +111,7 @@ export const itShouldGetAllTagsByResource = function <
 		});
 
 		parallel('', function () {
-			['id', ...uniquePropertyNames].forEach((uniquePropertyName) => {
+			uniquePropertyNames.forEach((uniquePropertyName) => {
 				it(`should retrieve the tag by ${resourceName} ${uniquePropertyName}`, async function () {
 					const tags = await getAllByResource(ctx.resource[uniquePropertyName]);
 					expect(tags).to.have.length(1);
@@ -138,12 +140,7 @@ export const itShouldGetAllTagsByResource = function <
 export const itShouldSetGetAndRemoveTags = function <
 	T extends BalenaSdk.ResourceTagBase
 >(opts: Options<T>) {
-	const {
-		model,
-		resourceName,
-		uniquePropertyNames = [],
-		modelNamespace,
-	} = opts;
+	const { model, resourceName, uniquePropertyNames, modelNamespace } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
 	before(function () {
@@ -153,7 +150,7 @@ export const itShouldSetGetAndRemoveTags = function <
 		this.resource = opts.resourceProvider();
 	});
 
-	['id', ...uniquePropertyNames].forEach((param) =>
+	uniquePropertyNames.forEach((param) =>
 		describe(`given a ${resourceName} ${param}`, function () {
 			const $it = param ? it : it.skip;
 			$it(

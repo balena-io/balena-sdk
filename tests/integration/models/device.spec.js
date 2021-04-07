@@ -5,6 +5,7 @@ import * as superagent from 'superagent';
 
 import {
 	balena,
+	deviceUniqueFields,
 	givenADevice,
 	givenASupervisorRelease,
 	givenAnApplication,
@@ -13,6 +14,7 @@ import {
 	givenInitialOrganization,
 	sdkOpts,
 	IS_BROWSER,
+	applicationRetrievalFields,
 } from '../setup';
 import { timeSuite } from '../../util';
 import {
@@ -175,7 +177,7 @@ describe('Device Model', function () {
 				parallel(
 					'balena.models.device.getManifestByApplication()',
 					function () {
-						['id', 'app_name', 'slug'].forEach((prop) =>
+						applicationRetrievalFields.forEach((prop) =>
 							it(`should return the appropriate manifest for an application ${prop}`, async function () {
 								const manifest = await balena.models.device.getManifestByApplication(
 									ctx.application[prop],
@@ -236,7 +238,7 @@ describe('Device Model', function () {
 						});
 					});
 
-					['id', 'app_name', 'slug'].forEach((prop, i) => {
+					applicationRetrievalFields.forEach((prop, i) => {
 						it(`should be able to register a device to a valid application ${prop}`, async function () {
 							const uuid = balena.models.device.generateUniqueKey();
 							await balena.models.device.register(this.application[prop], uuid);
@@ -296,7 +298,7 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getAllByApplication()', function () {
-					['id', 'app_name', 'slug'].forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) =>
 						it(`should get the device given the right application ${prop}`, async function () {
 							const devices = await balena.models.device.getAllByApplication(
 								ctx.application[prop],
@@ -589,7 +591,7 @@ describe('Device Model', function () {
 						);
 					});
 
-					['id', 'uuid'].forEach((field) =>
+					deviceUniqueFields.forEach((field) =>
 						it(`should retrieve a empty list of mac addresses by ${field}`, async function () {
 							const result = await balena.models.device.getMACAddresses(
 								ctx.device[field],
@@ -614,7 +616,7 @@ describe('Device Model', function () {
 						);
 					});
 
-					['id', 'uuid'].forEach((field) =>
+					deviceUniqueFields.forEach((field) =>
 						it(`should retrieve an empty device metrics object by ${field}`, async function () {
 							const result = await balena.models.device.getMetrics(
 								ctx.device[field],
@@ -721,7 +723,7 @@ describe('Device Model', function () {
 					});
 
 					parallel('', function () {
-						['id', 'uuid'].forEach((field) =>
+						deviceUniqueFields.forEach((field) =>
 							it(`should be able to retrieve the device mac addresses by ${field}`, async function () {
 								const result = await balena.models.device.getMACAddresses(
 									ctx.device[field],
@@ -753,7 +755,7 @@ describe('Device Model', function () {
 					});
 
 					parallel('', function () {
-						['id', 'uuid'].forEach((field) =>
+						deviceUniqueFields.forEach((field) =>
 							it(`should be able to retrieve the device metrics by ${field}`, async function () {
 								const result = await balena.models.device.getMetrics(
 									ctx.device[field],
@@ -1366,7 +1368,7 @@ describe('Device Model', function () {
 					}));
 
 				describe('[mutating operations]', () =>
-					['id', 'uuid'].forEach(function (deviceParam) {
+					deviceUniqueFields.forEach(function (deviceParam) {
 						describe('balena.models.device.isInLocalMode()', function () {
 							it(`should be false by default for a device retrieved by ${deviceParam}`, async function () {
 								const isInLocalMode = await balena.models.device.isInLocalMode(
@@ -1438,7 +1440,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.hasLockOverride()', function () {
 				givenADevice(before);
 
-				['id', 'uuid'].forEach(function (deviceParam) {
+				deviceUniqueFields.forEach(function (deviceParam) {
 					it(`should be false by default for a device retrieved by ${deviceParam}`, async function () {
 						const hasLockOverride = await balena.models.device.hasLockOverride(
 							this.device[deviceParam],
@@ -1543,7 +1545,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.enableLockOverride()', function () {
 				givenADevice(beforeEach);
 
-				['id', 'uuid'].forEach(function (deviceParam) {
+				deviceUniqueFields.forEach(function (deviceParam) {
 					it(`should be able to enable lock override by ${deviceParam}`, async function () {
 						await balena.models.device.enableLockOverride(
 							this.device[deviceParam],
@@ -1567,7 +1569,7 @@ describe('Device Model', function () {
 					expect(hasLockOverride).to.be.true;
 				});
 
-				['id', 'uuid'].forEach(function (deviceParam) {
+				deviceUniqueFields.forEach(function (deviceParam) {
 					it(`should be able to disable lock override by ${deviceParam}`, async function () {
 						await balena.models.device.disableLockOverride(
 							this.device[deviceParam],
@@ -1729,7 +1731,7 @@ describe('Device Model', function () {
 						/** @type {import('./tags').TagModelBase<import('../../../').DeviceTag>} */ (balena .models.device.tags),
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'application',
-					uniquePropertyNames: ['app_name', 'slug'],
+					uniquePropertyNames: applicationRetrievalFields,
 				};
 
 				const deviceTagTestOptions = {
@@ -1738,7 +1740,7 @@ describe('Device Model', function () {
 						/** @type {import('./tags').TagModelBase<import('../../../').DeviceTag>} */ (balena.models.device.tags),
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'device',
-					uniquePropertyNames: ['uuid'],
+					uniquePropertyNames: deviceUniqueFields,
 				};
 
 				before(function () {
@@ -1765,7 +1767,7 @@ describe('Device Model', function () {
 
 				const configVarModel = balena.models.device.configVar;
 
-				['id', 'uuid'].forEach(function (deviceParam) {
+				deviceUniqueFields.forEach(function (deviceParam) {
 					const deviceParamUpper = deviceParam.toUpperCase();
 
 					it(`can create a variable by ${deviceParam}`, function () {
@@ -1871,7 +1873,7 @@ describe('Device Model', function () {
 
 				const envVarModel = balena.models.device.envVar;
 
-				['id', 'uuid'].forEach(function (deviceParam) {
+				deviceUniqueFields.forEach(function (deviceParam) {
 					it(`can create a variable by ${deviceParam}`, function () {
 						const promise = envVarModel.set(
 							this.device[deviceParam],
@@ -2053,7 +2055,7 @@ describe('Device Model', function () {
 				});
 
 				describe('Given an inactive device', () =>
-					['id', 'uuid'].forEach((prop) =>
+					deviceUniqueFields.forEach((prop) =>
 						it(`should return inactive when retrieving by ${prop}`, function () {
 							const promise = balena.models.device.getStatus(this.device[prop]);
 							return expect(promise).to.eventually.equal('inactive');
@@ -2072,7 +2074,7 @@ describe('Device Model', function () {
 						});
 					});
 
-					['id', 'uuid'].forEach((prop) =>
+					deviceUniqueFields.forEach((prop) =>
 						it(`should return idle when retrieving by ${prop}`, function () {
 							const promise = balena.models.device.getStatus(this.device[prop]);
 							return expect(promise).to.eventually.equal('idle');
@@ -2091,7 +2093,7 @@ describe('Device Model', function () {
 						});
 					});
 
-					['id', 'uuid'].forEach((prop) =>
+					deviceUniqueFields.forEach((prop) =>
 						it(`should return offline when retrieving by ${prop}`, function () {
 							const promise = balena.models.device.getStatus(this.device[prop]);
 							return expect(promise).to.eventually.equal('offline');
@@ -2326,7 +2328,7 @@ describe('Device Model', function () {
 					const deviceDetails = await balena.models.device.getWithServiceDetails(
 						this.device.id,
 						{
-							$select: ['id', 'uuid'],
+							$select: deviceUniqueFields,
 							$expand: {
 								belongs_to__application: {
 									$select: ['id', 'app_name'],
@@ -2383,7 +2385,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.serviceVar', function () {
 				const varModel = balena.models.device.serviceVar;
 
-				['id', 'uuid'].forEach(function (deviceParam) {
+				deviceUniqueFields.forEach(function (deviceParam) {
 					it(`can create a variable by ${deviceParam}`, function () {
 						const promise = varModel.set(
 							this.device[deviceParam],
@@ -2897,7 +2899,7 @@ describe('Device Model', function () {
 
 		describe('balena.models.device.move()', function () {
 			describe('when trying to move between applications of the same device type', function () {
-				['id', 'app_name', 'slug'].forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) =>
 					it(`should be able to move a device by device uuid and application ${prop}`, async function () {
 						await balena.models.device.move(
 							this.deviceInfo.uuid,
