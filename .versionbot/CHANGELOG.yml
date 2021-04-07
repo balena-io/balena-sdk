@@ -1,4 +1,17 @@
 - commits:
+    - subject: Refactor the resource get by field tests
+      hash: b0c79a6b50e46d853f60501ccddc887eaf86b34c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.31.1
+  date: 2021-04-07T21:17:50.660Z
+- commits:
     - subject: Manage lock overrides using the config variables instead of the endpoint
       hash: 55f412455dc99ee2823367b3ade5d71fb48d9aae
       body: |
