@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add the auth.getUserActorId() method
+      hash: 7c15854a86fffda21a7a7b5bf01ce5c0ecfdfd83
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.32.0
+  date: 2021-04-08T16:14:12.052Z
+- commits:
     - subject: 'models/application: Fix examples incorrectly showing a short device uuid'
       hash: e38d7c5024f36bd4356343b3479f20329ed6380f
       body: ''
