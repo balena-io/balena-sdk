@@ -1737,6 +1737,12 @@ balena.models.application.getAllWithDeviceServiceDetails(function(error, applica
 
 **Example**  
 ```js
+balena.models.application.get('myorganization/myapp').then(function(application) {
+	console.log(application);
+});
+```
+**Example**  
+```js
 balena.models.application.get('MyApp').then(function(application) {
 	console.log(application);
 });
@@ -1749,7 +1755,7 @@ balena.models.application.get(123).then(function(application) {
 ```
 **Example**  
 ```js
-balena.models.application.get('MyApp', function(error, application) {
+balena.models.application.get('myorganization/myapp', function(error, application) {
 	if (error) throw error;
 	console.log(application);
 });

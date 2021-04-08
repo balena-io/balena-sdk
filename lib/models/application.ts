@@ -315,6 +315,11 @@ const getApplicationModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
+		 * balena.models.application.get('myorganization/myapp').then(function(application) {
+		 * 	console.log(application);
+		 * });
+		 *
+		 * @example
 		 * balena.models.application.get('MyApp').then(function(application) {
 		 * 	console.log(application);
 		 * });
@@ -325,7 +330,7 @@ const getApplicationModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.get('MyApp', function(error, application) {
+		 * balena.models.application.get('myorganization/myapp', function(error, application) {
 		 * 	if (error) throw error;
 		 * 	console.log(application);
 		 * });
