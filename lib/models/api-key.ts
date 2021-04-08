@@ -82,7 +82,7 @@ const getApiKeysModel = function (
 		},
 
 		/**
-		 * @summary Get all API keys
+		 * @summary Get all accessible API keys
 		 * @name getAll
 		 * @public
 		 * @function
@@ -110,14 +110,6 @@ const getApiKeysModel = function (
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
-						// the only way to reason whether
-						// it's a named user api key is whether
-						// it has a name
-						$filter: {
-							name: {
-								$ne: null,
-							},
-						},
 						$orderby: 'name asc',
 					},
 					options,

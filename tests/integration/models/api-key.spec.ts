@@ -44,11 +44,15 @@ describe('API Key model', function () {
 		givenLoggedInUser(before);
 
 		describe('given no named api keys', () => {
-			it('should retrieve an empty array', () => {
-				return balena.models.apiKey.getAll().then(function (apiKeys) {
-					expect(apiKeys).to.be.an('array');
-					expect(apiKeys).to.have.lengthOf(0);
+			it('should retrieve an empty array', async function () {
+				const apiKeys = await balena.models.apiKey.getAll({
+					$filter: {
+						is_of__actor: await balena.auth.getUserActorId(),
+						name: { $ne: null },
+					},
 				});
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(0);
 			});
 		});
 
@@ -60,24 +64,28 @@ describe('API Key model', function () {
 				]),
 			);
 
-			it('should be able to retrieve all api keys created', () => {
-				return balena.models.apiKey.getAll().then(function (apiKeys) {
-					expect(apiKeys).to.be.an('array');
-					expect(apiKeys).to.have.lengthOf(2);
-					expect(apiKeys).to.deep.match([
-						{
-							name: 'apiKey1',
-							description: null,
-						},
-						{
-							name: 'apiKey2',
-							description: 'apiKey2Description',
-						},
-					]);
-					_.forEach(apiKeys, function (apiKey) {
-						expect(apiKey).to.have.property('id').that.is.a('number');
-						expect(apiKey).to.have.property('created_at').that.is.a('string');
-					});
+			it('should be able to retrieve all api keys created', async function () {
+				const apiKeys = await balena.models.apiKey.getAll({
+					$filter: {
+						is_of__actor: await balena.auth.getUserActorId(),
+						name: { $ne: null },
+					},
+				});
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(2);
+				expect(apiKeys).to.deep.match([
+					{
+						name: 'apiKey1',
+						description: null,
+					},
+					{
+						name: 'apiKey2',
+						description: 'apiKey2Description',
+					},
+				]);
+				apiKeys.forEach(function (apiKey) {
+					expect(apiKey).to.have.property('id').that.is.a('number');
+					expect(apiKey).to.have.property('created_at').that.is.a('string');
 				});
 			});
 		});
