@@ -315,6 +315,11 @@ const getApplicationModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
+		 * balena.models.application.get('myorganization/myapp').then(function(application) {
+		 * 	console.log(application);
+		 * });
+		 *
+		 * @example
 		 * balena.models.application.get('MyApp').then(function(application) {
 		 * 	console.log(application);
 		 * });
@@ -325,7 +330,7 @@ const getApplicationModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.get('MyApp', function(error, application) {
+		 * balena.models.application.get('myorganization/myapp', function(error, application) {
 		 * 	if (error) throw error;
 		 * 	console.log(application);
 		 * });
@@ -399,7 +404,7 @@ const getApplicationModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+		 * balena.models.application.getWithDeviceServiceDetails('myorganization/myapp').then(function(device) {
 		 * 	console.log(device);
 		 * })
 		 *
@@ -409,7 +414,7 @@ const getApplicationModel = function (
 		 * })
 		 *
 		 * @example
-		 * balena.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+		 * balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', function(error, device) {
 		 * 	if (error) throw error;
 		 * 	console.log(device);
 		 * });
@@ -1521,13 +1526,13 @@ const getApplicationModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
+			 * balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim');
 			 *
 			 * @example
 			 * balena.models.application.tags.set(123, 'EDITOR', 'vim');
 			 *
 			 * @example
-			 * balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+			 * balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', function(error) {
 			 * 	if (error) throw error;
 			 * });
 			 */
@@ -1545,10 +1550,10 @@ const getApplicationModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.application.tags.remove('7cf02a6', 'EDITOR');
+			 * balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
 			 *
 			 * @example
-			 * balena.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
+			 * balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function(error) {
 			 * 	if (error) throw error;
 			 * });
 			 */
