@@ -355,6 +355,7 @@ const sdk = fromSharedOptions();
         * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
         * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
         * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
+        * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
         * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
         * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
         * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
@@ -7160,6 +7161,7 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
     * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
     * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
     * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
+    * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
     * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
     * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
     * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
@@ -7537,6 +7539,28 @@ balena.auth.getUserId().then(function(userId) {
 balena.auth.getUserId(function(error, userId) {
 	if (error) throw error;
 	console.log(userId);
+});
+```
+<a name="balena.auth.getUserActorId"></a>
+
+#### auth.getUserActorId() ⇒ <code>Promise</code>
+This will only work if you used [login](#balena.auth.login) to log in.
+
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
+**Summary**: Get current logged in user's actor id  
+**Access**: public  
+**Fulfil**: <code>Number</code> - user id  
+**Example**  
+```js
+balena.auth.getUserActorId().then(function(userActorId) {
+	console.log(userActorId);
+});
+```
+**Example**  
+```js
+balena.auth.getUserActorId(function(error, userActorId) {
+	if (error) throw error;
+	console.log(userActorId);
 });
 ```
 <a name="balena.auth.getEmail"></a>
