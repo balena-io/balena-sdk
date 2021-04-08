@@ -855,7 +855,7 @@ balena.models.application.tags.getAll(function(error, tags) {
 
 **Example**  
 ```js
-balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim');
+balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
@@ -863,7 +863,7 @@ balena.models.application.tags.set(123, 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
+balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', function(error) {
 	if (error) throw error;
 });
 ```
@@ -881,11 +881,11 @@ balena.models.application.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 
 **Example**  
 ```js
-balena.models.application.tags.remove('7cf02a6', 'EDITOR');
+balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
 ```
 **Example**  
 ```js
-balena.models.application.tags.remove('7cf02a6', 'EDITOR', function(error) {
+balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function(error) {
 	if (error) throw error;
 });
 ```
@@ -1781,7 +1781,7 @@ associated services' essential details
 
 **Example**  
 ```js
-balena.models.application.getWithDeviceServiceDetails('7cf02a6').then(function(device) {
+balena.models.application.getWithDeviceServiceDetails('myorganization/myapp').then(function(device) {
 	console.log(device);
 })
 ```
@@ -1793,7 +1793,7 @@ balena.models.application.getWithDeviceServiceDetails(123).then(function(device)
 ```
 **Example**  
 ```js
-balena.models.application.getWithDeviceServiceDetails('7cf02a6', function(error, device) {
+balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', function(error, device) {
 	if (error) throw error;
 	console.log(device);
 });
