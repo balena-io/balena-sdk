@@ -22,7 +22,7 @@ const getAuth = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { auth: authBase, pubsub, request } = deps;
+	const { auth: authBase, pubsub, request, pine } = deps;
 	const { apiUrl } = opts;
 
 	const normalizeAuthError = function (err: errors.BalenaRequestError) {
@@ -355,6 +355,40 @@ const getAuth = function (
 	}
 
 	/**
+	 * @summary Get current logged in user's actor id
+	 * @name getUserActorId
+	 * @public
+	 * @function
+	 * @memberof balena.auth
+	 *
+	 * @description This will only work if you used {@link balena.auth.login} to log in.
+	 *
+	 * @fulfil {Number} - user id
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.auth.getUserActorId().then(function(userActorId) {
+	 * 	console.log(userActorId);
+	 * });
+	 *
+	 * @example
+	 * balena.auth.getUserActorId(function(error, userActorId) {
+	 * 	if (error) throw error;
+	 * 	console.log(userActorId);
+	 * });
+	 */
+	async function getUserActorId(): Promise<number> {
+		const { actor } = (await pine.get({
+			resource: 'user',
+			id: await getUserId(),
+			options: {
+				$select: 'actor',
+			},
+		}))!;
+		return actor;
+	}
+
+	/**
 	 * @summary Get current logged in user's email
 	 * @name getEmail
 	 * @public
@@ -462,6 +496,7 @@ const getAuth = function (
 		isLoggedIn,
 		getToken,
 		getUserId,
+		getUserActorId,
 		getEmail,
 		logout,
 		register,
