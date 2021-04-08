@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'models/application: Fix examples incorrectly showing a short device uuid'
+      hash: e38d7c5024f36bd4356343b3479f20329ed6380f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add application.get example using the application slug
+      hash: 4a7c4e77c9f7c006ac753ff47b3d3814ceb73159
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.31.2
+  date: 2021-04-08T11:48:41.294Z
+- commits:
     - subject: Refactor the resource get by field tests
       hash: b0c79a6b50e46d853f60501ccddc887eaf86b34c
       body: ''
