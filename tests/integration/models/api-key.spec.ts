@@ -91,7 +91,7 @@ describe('API Key model', function () {
 		});
 	});
 
-	describe('balena.models.apiKey.getAllNamed()', function () {
+	describe('balena.models.apiKey.getAllNamedUserApiKeys()', function () {
 		givenLoggedInUser(before);
 
 		describe('given no named api keys', () => {
@@ -132,7 +132,7 @@ describe('API Key model', function () {
 		});
 	});
 
-	describe('given a named api key [contained scenario]', function () {
+	describe('given a named user api key [contained scenario]', function () {
 		givenLoggedInUser(before);
 
 		before(function () {
@@ -248,12 +248,7 @@ describe('API Key model', function () {
 			it('should be able to revoke an exising api key', async function () {
 				await expect(balena.models.apiKey.revoke(this.apiKey.id)).to.not.be
 					.rejected;
-				const apiKeys = await balena.models.apiKey.getAll({
-					$filter: {
-						is_of__actor: await balena.auth.getUserActorId(),
-						name: { $ne: null },
-					},
-				});
+				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
 				expect(apiKeys).to.be.an('array');
 				expect(apiKeys).to.have.lengthOf(0);
 			});
