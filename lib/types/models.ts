@@ -55,6 +55,7 @@ export interface ResourceTypeMap {
 	service_install: ServiceInstall;
 	service_instance: ServiceInstance;
 	subscription: Subscription;
+	subscription_addon_discount: SubscriptionAddonDiscount;
 	subscription_prepaid_addon: SubscriptionPrepaidAddon;
 	supervisor_release: SupervisorRelease;
 	support_feature: SupportFeature;
@@ -635,6 +636,7 @@ export interface Subscription {
 
 	is_for__organization: NavigationResource<Organization>;
 	is_for__plan: NavigationResource<Plan>;
+	subscription_addon_discount: ReverseNavigationResource<SubscriptionAddonDiscount>;
 	discounts__plan_addon: ReverseNavigationResource<SubscriptionAddonDiscount>;
 	subscription_prepaid_addon: ReverseNavigationResource<SubscriptionPrepaidAddon>;
 }
@@ -651,6 +653,7 @@ export interface SubscriptionPrepaidAddon {
 }
 
 export interface SubscriptionAddonDiscount {
+	id: number;
 	discount_percentage: number;
 	discounts__plan_addon: NavigationResource<PlanAddon>;
 }
