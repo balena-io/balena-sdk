@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'types/modes: Deprecate Subscription''s discounts__plan_addon property'
+      hash: ba5b427f83c16dd0c7bd6106ab4ba94841e34dc4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 'https://github.com/balena-io/balena-api/pull/3085'
+        see: 'https://github.com/balena-io/balena-api/pull/3085'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'types/models: Add `subscription_addon_discount` to the Subscription'
+      hash: 7cafbc7a7406a35500223d597a7f8a6b35ac5566
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.33.0
+  date: 2021-04-12T11:39:32.410Z
+- commits:
     - subject: Add the auth.getUserActorId() method
       hash: 7c15854a86fffda21a7a7b5bf01ce5c0ecfdfd83
       body: ''
