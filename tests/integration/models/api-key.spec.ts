@@ -83,7 +83,48 @@ describe('API Key model', function () {
 		});
 	});
 
-	describe('given a named api key [contained scenario]', function () {
+	describe('balena.models.apiKey.getAllNamedUserApiKeys()', function () {
+		givenLoggedInUser(before);
+
+		describe('given no named api keys', () => {
+			it('should retrieve an empty array', async function () {
+				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(0);
+			});
+		});
+
+		describe('given two named api keys', function () {
+			before(() =>
+				Promise.all([
+					balena.models.apiKey.create('apiKey1'),
+					balena.models.apiKey.create('apiKey2', 'apiKey2Description'),
+				]),
+			);
+
+			it('should be able to retrieve all api keys created', async function () {
+				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(2);
+				expect(apiKeys).to.deep.match([
+					{
+						name: 'apiKey1',
+						description: null,
+					},
+					{
+						name: 'apiKey2',
+						description: 'apiKey2Description',
+					},
+				]);
+				apiKeys.forEach(function (apiKey) {
+					expect(apiKey).to.have.property('id').that.is.a('number');
+					expect(apiKey).to.have.property('created_at').that.is.a('string');
+				});
+			});
+		});
+	});
+
+	describe('given a named user api key [contained scenario]', function () {
 		givenLoggedInUser(before);
 
 		before(function () {
@@ -196,13 +237,12 @@ describe('API Key model', function () {
 		});
 
 		describe('balena.models.apiKey.revoke()', () => {
-			it('should be able to revoke an exising api key', function () {
-				return expect(balena.models.apiKey.revoke(this.apiKey.id))
-					.to.not.be.rejected.then(() => balena.models.apiKey.getAll())
-					.then(function (apiKeys) {
-						expect(apiKeys).to.be.an('array');
-						expect(apiKeys).to.have.lengthOf(0);
-					});
+			it('should be able to revoke an exising api key', async function () {
+				await expect(balena.models.apiKey.revoke(this.apiKey.id)).to.not.be
+					.rejected;
+				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(0);
 			});
 		});
 	});

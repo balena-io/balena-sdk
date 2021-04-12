@@ -24,7 +24,7 @@ const getApiKeysModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { pine, request } = deps;
+	const { pine, request, sdkInstance } = deps;
 	const { apiUrl } = opts;
 	const exports = {
 		/**
@@ -114,6 +114,51 @@ const getApiKeysModel = function (
 						// it's a named user api key is whether
 						// it has a name
 						$filter: {
+							name: {
+								$ne: null,
+							},
+						},
+						$orderby: 'name asc',
+					},
+					options,
+				),
+			});
+		},
+
+		/**
+		 * @summary Get all named user API keys of the current user
+		 * @name getAllNamedUserApiKeys
+		 * @public
+		 * @function
+		 * @memberof balena.models.apiKey
+		 *
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - apiKeys
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.apiKey.getAllNamedUserApiKeys().then(function(apiKeys) {
+		 * 	console.log(apiKeys);
+		 * });
+		 *
+		 * @example
+		 * balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
+		 * 	if (error) throw error;
+		 * 	console.log(apiKeys);
+		 * });
+		 */
+		async getAllNamedUserApiKeys(
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
+		): Promise<BalenaSdk.ApiKey[]> {
+			return await pine.get({
+				resource: 'api_key',
+				options: mergePineOptions(
+					{
+						$filter: {
+							is_of__actor: await sdkInstance.auth.getUserActorId(),
+							// the only way to reason whether it's
+							// a named user api key vs a deprecated user api key
+							// is whether it has a name.
 							name: {
 								$ne: null,
 							},
