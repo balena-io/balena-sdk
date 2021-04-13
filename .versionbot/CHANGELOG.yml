@@ -1,4 +1,29 @@
 - commits:
+    - subject: Deprecate user__is_member_of__application in favor of the term form
+      hash: 74fc904fe93d8aa47a7239da35b4fcfd7caf3b20
+      body: |
+        Deprecated in favor of its term form
+        user_application_membership.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'types/models: Add `user_application_membership` to the User & Team'
+      hash: 507aef969720181309c4f6b012c5a26dff82fab4
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.34.0
+  date: 2021-04-13T12:50:12.445Z
+- commits:
     - subject: 'types/modes: Deprecate Subscription''s discounts__plan_addon property'
       hash: ba5b427f83c16dd0c7bd6106ab4ba94841e34dc4
       body: ''
