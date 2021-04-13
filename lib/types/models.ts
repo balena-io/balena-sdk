@@ -67,6 +67,7 @@ export interface ResourceTypeMap {
 	user__has__public_key: SSHKey;
 	user__has_direct_access_to__application: UserHasDirectAccessToApplication;
 	user__is_member_of__application: ApplicationMembership;
+	user_application_membership: ApplicationMembership;
 }
 
 export interface Organization {
@@ -111,6 +112,7 @@ export interface User extends JWTUser {
 	organization_membership: ReverseNavigationResource<OrganizationMembership>;
 	// TODO: Consider replacing with user_application_membership in the next major
 	user__is_member_of__application: ReverseNavigationResource<ApplicationMembership>;
+	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
 	team_membership: ReverseNavigationResource<TeamMembership>;
 	has_direct_access_to__application: ReverseNavigationResource<Application>;
 }
@@ -182,6 +184,7 @@ export interface Application {
 	is_directly_accessible_by__user: ReverseNavigationResource<User>;
 	/** includes__user */
 	user__is_member_of__application: ReverseNavigationResource<ApplicationMembership>;
+	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
 	/** is_accessible_by__team */
 	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
 }

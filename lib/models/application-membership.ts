@@ -26,7 +26,7 @@ import type {
 } from '..';
 import { mergePineOptions } from '../util';
 
-const RESOURCE = 'user__is_member_of__application';
+const RESOURCE = 'user_application_membership';
 type ResourceKey =
 	| number
 	| ResourceAlternateKey<
