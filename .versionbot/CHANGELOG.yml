@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'types: Deprecate Device is_in_local_mode property'
+      hash: bbd2696f65c15a9678e2ee2651e2835b5e04597a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.34.1
+  date: 2021-04-14T14:42:52.571Z
+- commits:
     - subject: Deprecate user__is_member_of__application in favor of the term form
       hash: 74fc904fe93d8aa47a7239da35b4fcfd7caf3b20
       body: |
