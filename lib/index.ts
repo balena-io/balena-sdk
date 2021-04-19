@@ -68,6 +68,7 @@ export type {
 	BillingPlanInfo,
 	CardBillingInfo,
 	InvoiceInfo,
+	PlanChangeOptions,
 	TokenBillingSubmitInfo,
 } from './models/billing';
 export type { GaConfig, Config, DeviceTypeJson } from './models/config';
