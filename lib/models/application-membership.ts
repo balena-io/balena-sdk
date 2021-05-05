@@ -161,7 +161,7 @@ const getApplicationMembershipModel = function (
 		 * @description
 		 * This method returns all application memberships for a specific application.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - application memberships
 		 * @returns {Promise}

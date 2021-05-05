@@ -49,6 +49,31 @@ describe('Application Model', function () {
 				});
 			});
 
+			parallel('balena.models.application.getAppByName()', function () {
+				it('should eventually reject [Promise]', async function () {
+					const promise = balena.models.application.getAppByName('testapp');
+					await expect(promise).to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaApplicationNotFound',
+					);
+				});
+
+				it('should eventually reject [callback]', function (done) {
+					balena.models.application.getAppByName(
+						'testapp',
+						// @ts-expect-error
+						function (err) {
+							try {
+								expect(err).to.not.be.undefined;
+								done();
+							} catch (err) {
+								done(err);
+							}
+						},
+					);
+				});
+			});
+
 			parallel('balena.models.application.getAppByOwner()', function () {
 				it('should eventually reject [Promise]', function () {
 					const promise = balena.models.application.getAppByOwner(
@@ -405,6 +430,13 @@ describe('Application Model', function () {
 					it('should eventually be true', function () {
 						const promise = balena.models.application.hasAny();
 						return expect(promise).to.eventually.be.true;
+					});
+				});
+
+				describe('balena.models.application.getAppByName()', function () {
+					it('should find the created application', async function () {
+						const app = await balena.models.application.getAppByName('FooBar');
+						expect(app.id).to.equal(ctx.application.id);
 					});
 				});
 

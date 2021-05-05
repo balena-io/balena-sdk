@@ -144,6 +144,7 @@ const sdk = fromSharedOptions();
             * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
             * [.getWithDeviceServiceDetails(nameOrSlugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+            * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
             * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(nameOrSlugOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
@@ -511,6 +512,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
         * [.getWithDeviceServiceDetails(nameOrSlugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+        * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
         * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(nameOrSlugOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
@@ -751,6 +753,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
     * [.getWithDeviceServiceDetails(nameOrSlugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+    * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
     * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(nameOrSlugOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
@@ -794,7 +797,7 @@ balena.models.device.get(123).catch(function (error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -850,7 +853,7 @@ balena.models.application.tags.getAll(function(error, tags) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | tagKey | <code>String</code> | tag key |
 | value | <code>String</code> \| <code>undefined</code> | tag value |
 
@@ -877,7 +880,7 @@ balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', func
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | tagKey | <code>String</code> | tag key |
 
 **Example**  
@@ -911,7 +914,7 @@ balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -943,7 +946,7 @@ balena.models.application.configVar.getAllByApplication('MyApp', function(error,
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | config variable name |
 
 **Example**  
@@ -974,7 +977,7 @@ balena.models.application.configVar.get('MyApp', 'BALENA_VAR', function(error, v
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | config variable name |
 | value | <code>String</code> | config variable value |
 
@@ -1006,7 +1009,7 @@ balena.models.application.configVar.set('MyApp', 'BALENA_VAR', 'newvalue', funct
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | config variable name |
 
 **Example**  
@@ -1049,7 +1052,7 @@ balena.models.application.configVar.remove('MyApp', 'BALENA_VAR', function(error
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1081,7 +1084,7 @@ balena.models.application.envVar.getAllByApplication('MyApp', function(error, va
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | environment variable name |
 
 **Example**  
@@ -1112,7 +1115,7 @@ balena.models.application.envVar.get('MyApp', 'VAR', function(error, value) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | environment variable name |
 | value | <code>String</code> | environment variable value |
 
@@ -1144,7 +1147,7 @@ balena.models.application.envVar.set('MyApp', 'VAR', 'newvalue', function(error)
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | environment variable name |
 
 **Example**  
@@ -1187,7 +1190,7 @@ balena.models.application.envVar.remove('MyApp', 'VAR', function(error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1219,7 +1222,7 @@ balena.models.application.buildVar.getAllByApplication('MyApp', function(error, 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | build environment variable name |
 
 **Example**  
@@ -1250,7 +1253,7 @@ balena.models.application.buildVar.get('MyApp', 'VAR', function(error, value) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | build environment variable name |
 | value | <code>String</code> | build environment variable value |
 
@@ -1282,7 +1285,7 @@ balena.models.application.buildVar.set('MyApp', 'VAR', 'newvalue', function(erro
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | key | <code>String</code> | build environment variable name |
 
 **Example**  
@@ -1382,7 +1385,7 @@ This method returns all application memberships for a specific application.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1546,7 +1549,7 @@ This method returns all invites for a specific application.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1579,7 +1582,7 @@ This method invites a user by their email to an application.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | options | <code>Object</code> |  | invite creation parameters |
 | options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
 | [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
@@ -1733,7 +1736,7 @@ balena.models.application.getAllWithDeviceServiceDetails(function(error, applica
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1744,6 +1747,7 @@ balena.models.application.get('myorganization/myapp').then(function(application)
 ```
 **Example**  
 ```js
+// Deprecated in favor of application slug
 balena.models.application.get('MyApp').then(function(application) {
 	console.log(application);
 });
@@ -1777,7 +1781,7 @@ associated services' essential details
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1797,6 +1801,25 @@ balena.models.application.getWithDeviceServiceDetails(123).then(function(device)
 balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', function(error, device) {
 	if (error) throw error;
 	console.log(device);
+});
+```
+<a name="balena.models.application.getAppByName"></a>
+
+##### application.getAppByName(appName, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Get a single application using the appname and the handle of the owning organization  
+**Access**: public  
+**Fulfil**: <code>Object</code> - application  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| appName | <code>String</code> |  | application name |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.getAppByName('MyApp').then(function(application) {
+	console.log(application);
 });
 ```
 <a name="balena.models.application.getAppByOwner"></a>
@@ -1829,7 +1852,7 @@ balena.models.application.getAppByOwner('MyApp', 'MyOrg').then(function(applicat
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -1915,7 +1938,7 @@ balena.models.application.create({ name: 'My App', applicationType: 'microservic
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -1940,7 +1963,7 @@ balena.models.application.remove('MyApp', function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | newName | <code>String</code> | new application name (string) |
 
 **Example**  
@@ -1966,7 +1989,7 @@ balena.models.application.rename('MyApp', 'MyRenamedApp', function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -1998,7 +2021,7 @@ be more secure.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2029,7 +2052,7 @@ balena.models.application.generateApiKey('MyApp', function(error, apiKey) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2127,7 +2150,7 @@ balena.models.application.reboot(123, function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2157,7 +2180,7 @@ balena.models.application.willTrackNewReleases('MyApp', function(error, isEnable
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2189,7 +2212,7 @@ and not get updated when the latest release changes.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | fullReleaseHash | <code>String</code> | the hash of a successful release (string) |
 
 **Example**  
@@ -2221,7 +2244,7 @@ balena.models.application.pinToRelease('MyApp', 'f7caf4ff80114deeaefb7ab4447ad9c
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2252,7 +2275,7 @@ The application's current release will be updated with each new successfully bui
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2282,7 +2305,7 @@ balena.models.application.trackLatestRelease('MyApp', function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2307,7 +2330,7 @@ balena.models.device.enableDeviceUrls('MyApp', function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2332,7 +2355,7 @@ balena.models.device.disableDeviceUrls('MyApp', function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | expiryTimestamp | <code>Number</code> | a timestamp in ms for when the support access will expire |
 
 **Example**  
@@ -2358,7 +2381,7 @@ balena.models.application.grantSupportAccess('MyApp', Date.now() + 3600 * 1000, 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -2495,7 +2518,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -2677,7 +2700,7 @@ balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -2848,7 +2871,7 @@ balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -3019,7 +3042,7 @@ balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -3211,7 +3234,7 @@ you have to explicitly define them in a `$select` in the extra options:
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -3774,7 +3797,7 @@ balena.models.device.unsetLocation('7cf02a6', function(error) {
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| applicationNameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| applicationNameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -3977,7 +4000,7 @@ balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest)
 
 | Param | Type | Description |
 | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 
 **Example**  
 ```js
@@ -4021,7 +4044,7 @@ console.log(randomKey);
 
 | Param | Type | Description |
 | --- | --- | --- |
-| applicationNameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string), slug (string) or id (number) |
+| applicationNameOrSlugOrId | <code>String</code> \| <code>Number</code> | application name (string) (deprecated), slug (string) or id (number) |
 | uuid | <code>String</code> | device uuid |
 
 **Example**  
@@ -6172,7 +6195,7 @@ generation is only supported when using a session token, not an API key.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number). |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number). |
 | options | <code>Object</code> |  | OS configuration options to use. |
 | options.version | <code>String</code> |  | Required: the OS version of the image. |
 | [options.network] | <code>String</code> | <code>&#x27;ethernet&#x27;</code> | The network type that the device will use, one of 'ethernet' or 'wifi'. |
@@ -6412,7 +6435,7 @@ balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6632,7 +6655,7 @@ balena.models.release.getWithImageDetails(123, function(error, release) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6664,7 +6687,7 @@ balena.models.release.getAllByApplication('MyApp', function(error, releases) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6696,7 +6719,7 @@ balena.models.release.getLatestByApplication('MyApp', function(error, releases) 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | urlDeployOptions | <code>Object</code> |  | builder options |
 | urlDeployOptions.url | <code>String</code> |  | a url with a tarball of the project to build |
 | [urlDeployOptions.shouldFlatten] | <code>Boolean</code> | <code>true</code> | Should be true when the tarball includes an extra root folder with all the content |
@@ -6782,7 +6805,7 @@ balena.models.service.var.getAllByService(999999, function(error, vars) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6891,7 +6914,7 @@ balena.models.service.var.remove(999999, 'VAR', function(error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string), slug (string) or id (number) |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  

@@ -241,6 +241,7 @@ const getApplicationModel = function (
 		 * @public
 		 * @function
 		 * @memberof balena.models.application
+		 * @deprecated
 		 *
 		 * @description
 		 * This method does not map exactly to the underlying model: it runs a
@@ -309,7 +310,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - application
 		 * @returns {Promise}
@@ -320,6 +321,7 @@ const getApplicationModel = function (
 		 * });
 		 *
 		 * @example
+		 * // Deprecated in favor of application slug
 		 * balena.models.application.get('MyApp').then(function(application) {
 		 * 	console.log(application);
 		 * });
@@ -398,7 +400,7 @@ const getApplicationModel = function (
 		 * understand format. If you want more control, or to see the raw model
 		 * directly, use `application.get(uuidOrId, options)` instead.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - application
 		 * @returns {Promise}
@@ -460,6 +462,53 @@ const getApplicationModel = function (
 
 		/**
 		 * @summary Get a single application using the appname and the handle of the owning organization
+		 * @name getAppByName
+		 * @public
+		 * @function
+		 * @memberof balena.models.application
+		 *
+		 * @param {String} appName - application name
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object} - application
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.application.getAppByName('MyApp').then(function(application) {
+		 * 	console.log(application);
+		 * });
+		 */
+		async getAppByName(
+			appName: string,
+			options?: PineOptions<Application>,
+		): Promise<Application> {
+			if (options == null) {
+				options = {};
+			}
+
+			const applications = await pine.get({
+				resource: 'application',
+				options: mergePineOptions(
+					{
+						$filter: {
+							app_name: appName,
+						},
+					},
+					options,
+				),
+			});
+			if (applications.length === 0) {
+				throw new errors.BalenaApplicationNotFound(appName);
+			}
+
+			if (applications.length > 1) {
+				throw new errors.BalenaAmbiguousApplication(appName);
+			}
+			const [application] = applications;
+			return normalizeApplication(application);
+		},
+
+		/**
+		 * @summary Get a single application using the appname and the handle of the owning organization
 		 * @name getAppByOwner
 		 * @public
 		 * @function
@@ -508,7 +557,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {Boolean} - has application
 		 * @returns {Promise}
 		 *
@@ -727,7 +776,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -763,7 +812,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {String} newName - new application name (string)
 		 * @returns {Promise}
 		 *
@@ -806,7 +855,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -850,7 +899,7 @@ const getApplicationModel = function (
 		 * version (2.4.0+) then generateProvisioningKey should work just as well, but
 		 * be more secure.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {String} - api key
 		 * @returns {Promise}
 		 *
@@ -891,7 +940,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {String} - device provisioning key
 		 * @returns {Promise}
 		 *
@@ -1048,7 +1097,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {Boolean} - is tracking the latest release
 		 * @returns {Promise}
 		 *
@@ -1084,7 +1133,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {Boolean} - is tracking the latest release
 		 * @returns {Promise}
 		 *
@@ -1143,7 +1192,7 @@ const getApplicationModel = function (
 		 * @description Configures the application to run a particular release
 		 * and not get updated when the latest release changes.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {String} fullReleaseHash - the hash of a successful release (string)
 		 * @returns {Promise}
 		 *
@@ -1193,7 +1242,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {String|undefined} - The release hash of the current release
 		 * @returns {Promise}
 		 *
@@ -1236,7 +1285,7 @@ const getApplicationModel = function (
 		 *
 		 * @description The application's current release will be updated with each new successfully built release.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1297,7 +1346,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1335,7 +1384,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1373,7 +1422,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 		 * @returns {Promise}
 		 *
@@ -1421,7 +1470,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1465,7 +1514,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.tags
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application tags
 			 * @returns {Promise}
@@ -1519,7 +1568,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.tags
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} tagKey - tag key
 			 * @param {String|undefined} value - tag value
 			 *
@@ -1545,7 +1594,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.tags
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} tagKey - tag key
 			 * @returns {Promise}
 			 *
@@ -1572,7 +1621,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application config variables
 			 * @returns {Promise}
@@ -1602,7 +1651,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - config variable name
 			 * @fulfil {String|undefined} - the config variable value (or undefined)
 			 * @returns {Promise}
@@ -1632,7 +1681,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - config variable name
 			 * @param {String} value - config variable value
 			 * @returns {Promise}
@@ -1662,7 +1711,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - config variable name
 			 * @returns {Promise}
 			 *
@@ -1697,7 +1746,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application environment variables
 			 * @returns {Promise}
@@ -1727,7 +1776,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - environment variable name
 			 * @fulfil {String|undefined} - the environment variable value (or undefined)
 			 * @returns {Promise}
@@ -1757,7 +1806,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - environment variable name
 			 * @param {String} value - environment variable value
 			 * @returns {Promise}
@@ -1787,7 +1836,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - environment variable name
 			 * @returns {Promise}
 			 *
@@ -1822,7 +1871,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application build environment variables
 			 * @returns {Promise}
@@ -1852,7 +1901,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - build environment variable name
 			 * @fulfil {String|undefined} - the build environment variable value (or undefined)
 			 * @returns {Promise}
@@ -1882,7 +1931,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - build environment variable name
 			 * @param {String} value - build environment variable value
 			 * @returns {Promise}
@@ -1912,7 +1961,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {String} key - build environment variable name
 			 * @returns {Promise}
 			 *

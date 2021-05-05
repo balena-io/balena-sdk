@@ -89,7 +89,7 @@ const getApplicationInviteModel = function (
 		 * @description
 		 * This method returns all invites for a specific application.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - invites
 		 * @returns {Promise}
@@ -133,7 +133,7 @@ const getApplicationInviteModel = function (
 		 *
 		 * @description This method invites a user by their email to an application.
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} options - invite creation parameters
 		 * @param {String} options.invitee - the email/balena_username of the invitee
 		 * @param {String} [options.roleName="developer"] - the role name to be granted to the invitee

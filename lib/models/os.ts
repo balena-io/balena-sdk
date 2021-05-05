@@ -463,7 +463,7 @@ const getOsModel = function (
 	 * Note that an OS version is required. For versions < 2.7.8, config
 	 * generation is only supported when using a session token, not an API key.
 	 *
-	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number).
+	 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number).
 	 * @param {Object} options - OS configuration options to use.
 	 * @param {String} options.version - Required: the OS version of the image.
 	 * @param {String} [options.network='ethernet'] - The network type that
