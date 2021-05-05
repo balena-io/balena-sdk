@@ -15,6 +15,7 @@ import {
 	sdkOpts,
 	IS_BROWSER,
 	applicationRetrievalFields,
+	testDeviceOsInfo,
 } from '../setup';
 import { timeSuite } from '../../util';
 import {
@@ -1294,9 +1295,8 @@ describe('Device Model', function () {
 			describe('Given a device with a production image', function () {
 				givenADevice(before, {
 					is_online: true,
+					...testDeviceOsInfo,
 					os_variant: 'prod',
-					os_version: 'Resin OS 2.7.8+rev1',
-					supervisor_version: '6.4.2',
 					last_connectivity_event: '2019-05-13T16:14',
 				});
 
@@ -1351,9 +1351,8 @@ describe('Device Model', function () {
 			describe('Given a device with a development image', function () {
 				givenADevice(before, {
 					is_online: true,
+					...testDeviceOsInfo,
 					os_variant: 'dev',
-					os_version: 'Resin OS 2.7.8+rev1',
-					supervisor_version: '6.4.2',
 					last_connectivity_event: '2019-05-13T16:14',
 				});
 
@@ -1665,8 +1664,7 @@ describe('Device Model', function () {
 							id: this.device.id,
 							body: {
 								is_online: true,
-								os_variant: 'prod',
-								os_version: 'Resin OS 2.7.8+rev1',
+								...testDeviceOsInfo,
 							},
 						});
 					});
@@ -1689,11 +1687,11 @@ describe('Device Model', function () {
 					it('should not be able to start an OS update when the target os version does not exist', function () {
 						const promise = balena.models.device.startOsUpdate(
 							this.device.uuid,
-							'2.29.1+rev1.prod',
+							'2.49.0+rev1.prod',
 						);
 						return expect(promise)
 							.to.be.rejectedWith(
-								"2.29.1+rev1.prod is not a valid value for parameter 'targetOsVersion'",
+								"2.49.0+rev1.prod is not a valid value for parameter 'targetOsVersion'",
 							)
 							.and.eventually.have.property(
 								'code',
@@ -1706,7 +1704,7 @@ describe('Device Model', function () {
 					it('should not be able to start an OS update for a fake device', function () {
 						const promise = balena.models.device.startOsUpdate(
 							this.device.uuid,
-							'2.29.2+rev1.prod',
+							'2.54.2+rev1.prod',
 						);
 						return expect(promise).to.be.rejected.then(function (error) {
 							expect(error).to.have.property('statusCode', 500);
@@ -2106,8 +2104,7 @@ describe('Device Model', function () {
 		describe('given an online device', function () {
 			givenADevice(before, {
 				is_online: true,
-				os_variant: 'prod',
-				os_version: 'Resin OS 2.7.8+rev1',
+				...testDeviceOsInfo,
 			});
 
 			describe('balena.models.device.get()', function () {
@@ -2573,9 +2570,7 @@ describe('Device Model', function () {
 		describe('given a single online device on the downloading state', function () {
 			givenADevice(before, {
 				is_online: true,
-				os_variant: 'prod',
-				os_version: 'Resin OS 2.7.8+rev1',
-				supervisor_version: '6.4.2',
+				...testDeviceOsInfo,
 				last_connectivity_event: '2019-05-13T16:14',
 			});
 
@@ -2689,7 +2684,7 @@ describe('Device Model', function () {
 
 		describe('given a device that supports multicontainer', function () {
 			givenADevice(beforeEach, {
-				os_version: 'balenaOS 2.56.1+rev1',
+				...testDeviceOsInfo,
 			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {

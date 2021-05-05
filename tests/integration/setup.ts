@@ -333,6 +333,12 @@ const resetDevices = () =>
 		},
 	});
 
+export const testDeviceOsInfo = {
+	os_variant: 'prod',
+	os_version: 'balenaOS 2.48.0+rev1',
+	supervisor_version: '10.8.0',
+};
+
 export function givenADevice(
 	beforeFn: Mocha.HookFunction,
 	extraDeviceProps?: BalenaSdk.PineSubmitBody<BalenaSdk.Device>,
