@@ -241,6 +241,7 @@ const getApplicationModel = function (
 		 * @public
 		 * @function
 		 * @memberof balena.models.application
+		 * @deprecated
 		 *
 		 * @description
 		 * This method does not map exactly to the underlying model: it runs a
