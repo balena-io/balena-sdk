@@ -1548,21 +1548,6 @@ describe('Application Model', function () {
 			});
 		});
 
-		describe('balena.models.application.getAllWithDeviceServiceDetails()', function () {
-			it('should retrieve all applications and their devices, along with service details', function () {
-				return balena.models.application
-					.getAllWithDeviceServiceDetails(this.application.id)
-					.then((applications) => {
-						expect(applications).to.have.lengthOf(1);
-						return itShouldBeAnApplicationWithDeviceServiceDetails.call(
-							this,
-							applications[0],
-							false,
-						);
-					});
-			});
-		});
-
 		describe('when expanding the release of the image installs', function () {
 			const extraServiceDetailOptions = {
 				$expand: {
@@ -1591,20 +1576,6 @@ describe('Application Model', function () {
 							return itShouldBeAnApplicationWithDeviceServiceDetails.call(
 								this,
 								applicationDetails,
-								true,
-							);
-						});
-				}));
-
-			describe('balena.models.application.getAllWithDeviceServiceDetails()', () =>
-				it('should retrieve all applications and their devices, along with service details including their commit', function () {
-					return balena.models.application
-						.getAllWithDeviceServiceDetails(extraServiceDetailOptions)
-						.then((applications) => {
-							expect(applications).to.have.lengthOf(1);
-							return itShouldBeAnApplicationWithDeviceServiceDetails.call(
-								this,
-								applications[0],
 								true,
 							);
 						});
