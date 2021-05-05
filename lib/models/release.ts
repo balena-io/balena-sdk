@@ -249,7 +249,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+	 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - releases
 	 * @returns {Promise}
@@ -298,7 +298,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+	 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object|undefined} - release
 	 * @returns {Promise}
@@ -345,7 +345,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+	 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 	 * @param {Object} urlDeployOptions - builder options
 	 * @param {String} urlDeployOptions.url - a url with a tarball of the project to build
 	 * @param {Boolean} [urlDeployOptions.shouldFlatten=true] - Should be true when the tarball includes an extra root folder with all the content
@@ -404,7 +404,7 @@ const getReleaseModel = function (
 		 * @function
 		 * @memberof balena.models.release.tags
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release tags
 		 * @returns {Promise}

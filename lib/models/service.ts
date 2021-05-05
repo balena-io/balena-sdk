@@ -77,7 +77,7 @@ const getServiceModel = (
 		 * @function
 		 * @memberof balena.models.service
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - services
 		 * @returns {Promise}
@@ -148,7 +148,7 @@ const getServiceModel = (
 			 * @function
 			 * @memberof balena.models.service.var
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - service variables
 			 * @returns {Promise}

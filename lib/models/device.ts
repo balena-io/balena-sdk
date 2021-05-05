@@ -362,7 +362,7 @@ const getDeviceModel = function (
 		 * * `overall_status`
 		 * * `overall_progress`
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - devices
 		 * @returns {Promise}
@@ -1096,7 +1096,7 @@ const getDeviceModel = function (
 		 * @memberof balena.models.device
 		 *
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @param {String|Number} applicationNameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} applicationNameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 *
 		 * @returns {Promise}
 		 *
@@ -1414,7 +1414,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @fulfil {Object} - device manifest
 		 * @returns {Promise}
 		 *
@@ -1475,7 +1475,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} applicationNameOrSlugOrId - application name (string), slug (string) or id (number)
+		 * @param {String|Number} applicationNameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 		 * @param {String} uuid - device uuid
 		 *
 		 * @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
@@ -2591,7 +2591,7 @@ const getDeviceModel = function (
 			 * @function
 			 * @memberof balena.models.device.tags
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - device tags
 			 * @returns {Promise}
@@ -2783,7 +2783,7 @@ const getDeviceModel = function (
 			 * @function
 			 * @memberof balena.models.device.configVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - device config variables
 			 * @returns {Promise}
@@ -2969,7 +2969,7 @@ const getDeviceModel = function (
 			 * @function
 			 * @memberof balena.models.device.envVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - device environment variables
 			 * @returns {Promise}
@@ -3180,7 +3180,7 @@ const getDeviceModel = function (
 			 * @function
 			 * @memberof balena.models.device.serviceVar
 			 *
-			 * @param {String|Number} nameOrSlugOrId - application name (string), slug (string) or id (number)
+			 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - service variables
 			 * @returns {Promise}
