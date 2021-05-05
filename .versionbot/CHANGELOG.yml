@@ -1,4 +1,37 @@
 - commits:
+    - subject: Deprecate application.getAllWithDeviceServiceDetails()
+      hash: 95b7bf7541b72d9ad35af1558b9c89841f2a3f66
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Deprecate targeting/retrieving apps by name in all models
+      hash: c9ee6fec718c1631d1b533592dda8d8f9a641838
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add application.getAppByName method
+      hash: 2a5d548235b71e87ce195578f57f9c4c833c98e5
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.35.0
+  date: 2021-05-05T14:19:23.255Z
+- commits:
     - subject: Abstract & update device os info that are used in tests
       hash: 1672dd269c3372ea9b30bce52b58b41c48f51bc9
       body: |
