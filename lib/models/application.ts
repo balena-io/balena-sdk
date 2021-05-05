@@ -460,6 +460,53 @@ const getApplicationModel = function (
 
 		/**
 		 * @summary Get a single application using the appname and the handle of the owning organization
+		 * @name getAppByName
+		 * @public
+		 * @function
+		 * @memberof balena.models.application
+		 *
+		 * @param {String} appName - application name
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object} - application
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.application.getAppByName('MyApp').then(function(application) {
+		 * 	console.log(application);
+		 * });
+		 */
+		async getAppByName(
+			appName: string,
+			options?: PineOptions<Application>,
+		): Promise<Application> {
+			if (options == null) {
+				options = {};
+			}
+
+			const applications = await pine.get({
+				resource: 'application',
+				options: mergePineOptions(
+					{
+						$filter: {
+							app_name: appName,
+						},
+					},
+					options,
+				),
+			});
+			if (applications.length === 0) {
+				throw new errors.BalenaApplicationNotFound(appName);
+			}
+
+			if (applications.length > 1) {
+				throw new errors.BalenaAmbiguousApplication(appName);
+			}
+			const [application] = applications;
+			return normalizeApplication(application);
+		},
+
+		/**
+		 * @summary Get a single application using the appname and the handle of the owning organization
 		 * @name getAppByOwner
 		 * @public
 		 * @function
