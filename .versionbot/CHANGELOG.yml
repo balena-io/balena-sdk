@@ -1,4 +1,23 @@
 - commits:
+    - subject: Abstract & update device os info that are used in tests
+      hash: 1672dd269c3372ea9b30bce52b58b41c48f51bc9
+      body: |
+        This also fixes those tests failing b/c of relying on a
+        really old invalidated os release.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-tech/threads/3WDfDVeEH8raYKGJ4iSRVaHFw_p
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-tech/threads/3WDfDVeEH8raYKGJ4iSRVaHFw_p
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.34.2
+  date: 2021-05-05T13:48:24.436Z
+- commits:
     - subject: 'types: Deprecate Device is_in_local_mode property'
       hash: bbd2696f65c15a9678e2ee2651e2835b5e04597a
       body: ''
