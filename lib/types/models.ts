@@ -446,6 +446,9 @@ export interface Service {
 	created_at: string;
 	service_name: string;
 	application: NavigationResource<Application>;
+	is_built_by__image: ReverseNavigationResource<Image>;
+	service_environment_variable: ReverseNavigationResource<ServiceEnvironmentVariable>;
+	device_service_environment_variable: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
 export interface Image {
@@ -464,6 +467,7 @@ export interface Image {
 	dockerfile: string;
 	error_message?: string | null;
 	is_a_build_of__service: NavigationResource<Service>;
+	release_image: ReverseNavigationResource<ReleaseImage>;
 }
 
 export interface ReleaseImage {

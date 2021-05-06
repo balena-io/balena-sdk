@@ -322,7 +322,7 @@ const getReleaseModel = function (
 	async function getLatestByApplication(
 		nameOrSlugOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Promise<BalenaSdk.Release> {
+	): Promise<BalenaSdk.Release | undefined> {
 		const [release] = await getAllByApplication(
 			nameOrSlugOrId,
 			mergePineOptions(
