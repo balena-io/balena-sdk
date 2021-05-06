@@ -1,4 +1,27 @@
 - commits:
+    - subject: Add missing types for the Service & Image resources
+      hash: 822491d7a49ee9d2d88a5c115eca98b7af091fe3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'release.getLatestByApplication: Fix the return type to be optional'
+      hash: 69a95806703a2b060b5a45620a48aaf7c3912f39
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.35.1
+  date: 2021-05-06T13:53:12.627Z
+- commits:
     - subject: Deprecate application.getAllWithDeviceServiceDetails()
       hash: 95b7bf7541b72d9ad35af1558b9c89841f2a3f66
       body: ''
