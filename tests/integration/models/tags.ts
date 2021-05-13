@@ -41,7 +41,7 @@ export interface Options<T extends BalenaSdk.ResourceTagBase> {
 }
 
 export const itShouldGetAllTagsByResource = function <
-	T extends BalenaSdk.ResourceTagBase
+	T extends BalenaSdk.ResourceTagBase,
 >(opts: Options<T>) {
 	const { model, resourceName, uniquePropertyNames } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
@@ -138,7 +138,7 @@ export const itShouldGetAllTagsByResource = function <
 };
 
 export const itShouldSetGetAndRemoveTags = function <
-	T extends BalenaSdk.ResourceTagBase
+	T extends BalenaSdk.ResourceTagBase,
 >(opts: Options<T>) {
 	const { model, resourceName, uniquePropertyNames, modelNamespace } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);

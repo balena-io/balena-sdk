@@ -31,20 +31,16 @@ const getOrganizationModel = function (
 ) {
 	const { pine } = deps;
 
-	const membershipModel = (require('./organization-membership') as typeof import('./organization-membership')).default(
-		deps,
-		(...args: Parameters<typeof get>) => get(...args),
-	);
+	const membershipModel = (
+		require('./organization-membership') as typeof import('./organization-membership')
+	).default(deps, (...args: Parameters<typeof get>) => get(...args));
 
-	const inviteModel = (require('./organization-invite') as typeof import('./organization-invite')).default(
-		deps,
-		opts,
-		(...args: Parameters<typeof get>) => get(...args),
-	);
+	const inviteModel = (
+		require('./organization-invite') as typeof import('./organization-invite')
+	).default(deps, opts, (...args: Parameters<typeof get>) => get(...args));
 
-	const {
-		addCallbackSupportToModule,
-	} = require('../util/callbacks') as typeof import('../util/callbacks');
+	const { addCallbackSupportToModule } =
+		require('../util/callbacks') as typeof import('../util/callbacks');
 
 	const getId = async (handleOrId: string | number) => {
 		const { id } = await get(handleOrId, { $select: 'id' });

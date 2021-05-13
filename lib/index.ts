@@ -144,9 +144,8 @@ const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
 
 const sdkTemplate = {
 	auth() {
-		const {
-			addCallbackSupportToModuleFactory,
-		} = require('./util/callbacks') as typeof import('./util/callbacks');
+		const { addCallbackSupportToModuleFactory } =
+			require('./util/callbacks') as typeof import('./util/callbacks');
 		return addCallbackSupportToModuleFactory(
 			(require('./auth') as typeof import('./auth')).default,
 		);
@@ -158,17 +157,15 @@ const sdkTemplate = {
 		return require('./models') as typeof import('./models');
 	},
 	logs() {
-		const {
-			addCallbackSupportToModuleFactory,
-		} = require('./util/callbacks') as typeof import('./util/callbacks');
+		const { addCallbackSupportToModuleFactory } =
+			require('./util/callbacks') as typeof import('./util/callbacks');
 		return addCallbackSupportToModuleFactory(
 			(require('./logs') as typeof import('./logs')).default,
 		);
 	},
 	settings() {
-		const {
-			addCallbackSupportToModuleFactory,
-		} = require('./util/callbacks') as typeof import('./util/callbacks');
+		const { addCallbackSupportToModuleFactory } =
+			require('./util/callbacks') as typeof import('./util/callbacks');
 		return addCallbackSupportToModuleFactory(
 			(require('./settings') as typeof import('./settings')).default,
 		);
@@ -223,8 +220,9 @@ export const getSdk = function ($opts?: SdkOptions) {
 		...$opts,
 	};
 
-	const version = (require('./util/sdk-version') as typeof import('./util/sdk-version'))
-		.default;
+	const version = (
+		require('./util/sdk-version') as typeof import('./util/sdk-version')
+	).default;
 	const { getRequest } = require('balena-request') as {
 		getRequest: (
 			opts: SdkOptions & { auth: InjectedDependenciesParam['auth'] },
@@ -264,7 +262,8 @@ export const getSdk = function ($opts?: SdkOptions) {
 			getAll: notImplemented,
 		};
 	} else {
-		settings = (require('balena-settings-client') as typeof import('balena-settings-client')) as InjectedDependenciesParam['settings'];
+		settings =
+			require('balena-settings-client') as typeof import('balena-settings-client') as InjectedDependenciesParam['settings'];
 		if (opts.dataDirectory == null) {
 			opts.dataDirectory = settings.get('dataDirectory');
 		}
@@ -279,10 +278,10 @@ export const getSdk = function ($opts?: SdkOptions) {
 
 	const auth = new BalenaAuth(opts);
 	const request = getRequest({ ...opts, auth });
-	const pine = (new BalenaPine(
+	const pine = new BalenaPine(
 		{},
 		{ ...opts, auth, request },
-	) as unknown) as Pine;
+	) as unknown as Pine;
 	const pubsub = new PubSub();
 
 	const sdk = {} as BalenaSDK;

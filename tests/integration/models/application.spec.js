@@ -634,9 +634,8 @@ describe('Application Model', function () {
 				);
 
 				it('should be rejected if the application name does not exist', function () {
-					const promise = balena.models.application.generateApiKey(
-						'HelloWorldApp',
-					);
+					const promise =
+						balena.models.application.generateApiKey('HelloWorldApp');
 					return expect(promise).to.be.rejectedWith(
 						'Application not found: HelloWorldApp',
 					);
@@ -663,18 +662,16 @@ describe('Application Model', function () {
 				);
 
 				it('should be rejected if the application name does not exist', function () {
-					const promise = balena.models.application.generateProvisioningKey(
-						'HelloWorldApp',
-					);
+					const promise =
+						balena.models.application.generateProvisioningKey('HelloWorldApp');
 					return expect(promise).to.be.rejectedWith(
 						'Application not found: HelloWorldApp',
 					);
 				});
 
 				it('should be rejected if the application id does not exist', function () {
-					const promise = balena.models.application.generateProvisioningKey(
-						999999,
-					);
+					const promise =
+						balena.models.application.generateProvisioningKey(999999);
 					return expect(promise).to.be.rejectedWith(
 						'Application not found: 999999',
 					);
@@ -729,11 +726,10 @@ describe('Application Model', function () {
 					await balena.models.application.revokeSupportAccess(
 						this.application.id,
 					);
-					const {
-						is_accessible_by_support_until__date: supportExpiry,
-					} = await balena.models.application.get(this.application.id, {
-						$select: 'is_accessible_by_support_until__date',
-					});
+					const { is_accessible_by_support_until__date: supportExpiry } =
+						await balena.models.application.get(this.application.id, {
+							$select: 'is_accessible_by_support_until__date',
+						});
 					expect(supportExpiry).to.equal(null);
 				});
 			});
@@ -1225,23 +1221,26 @@ describe('Application Model', function () {
 							return balena.models.application
 								.pinToRelease(this.application.id, 'old-release-commit')
 								.then(() => {
-									const promise = balena.models.application.getTargetReleaseHash(
-										this.application.id,
-									);
+									const promise =
+										balena.models.application.getTargetReleaseHash(
+											this.application.id,
+										);
 									return expect(promise).to.eventually.equal(
 										'old-release-commit',
 									);
 								})
 								.then(() => {
-									const promise = balena.models.application.willTrackNewReleases(
-										this.application.id,
-									);
+									const promise =
+										balena.models.application.willTrackNewReleases(
+											this.application.id,
+										);
 									return expect(promise).to.eventually.be.false;
 								})
 								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
-										this.application.id,
-									);
+									const promise =
+										balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										);
 									return expect(promise).to.eventually.be.false;
 								});
 						});
@@ -1259,23 +1258,26 @@ describe('Application Model', function () {
 									);
 								})
 								.then(() => {
-									const promise = balena.models.application.getTargetReleaseHash(
-										this.application.id,
-									);
+									const promise =
+										balena.models.application.getTargetReleaseHash(
+											this.application.id,
+										);
 									return expect(promise).to.eventually.equal(
 										'new-release-commit',
 									);
 								})
 								.then(() => {
-									const promise = balena.models.application.willTrackNewReleases(
-										this.application.id,
-									);
+									const promise =
+										balena.models.application.willTrackNewReleases(
+											this.application.id,
+										);
 									return expect(promise).to.eventually.be.true;
 								})
 								.then(() => {
-									const promise = balena.models.application.isTrackingLatestRelease(
-										this.application.id,
-									);
+									const promise =
+										balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										);
 									return expect(promise).to.eventually.be.true;
 								});
 						});

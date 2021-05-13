@@ -30,7 +30,7 @@ export interface CurrentGatewayDownload {
 }
 
 export interface DeviceWithServiceDetails<
-	TCurrentService extends CurrentService = CurrentService
+	TCurrentService extends CurrentService = CurrentService,
 > extends Device {
 	current_services: {
 		[serviceName: string]: TCurrentService[];
@@ -40,7 +40,7 @@ export interface DeviceWithServiceDetails<
 }
 
 export interface DeviceWithServiceDetails<
-	TCurrentService extends CurrentService = CurrentService
+	TCurrentService extends CurrentService = CurrentService,
 > extends Device {
 	current_services: {
 		[serviceName: string]: TCurrentService[];
@@ -155,7 +155,7 @@ function getSingleInstallSummary(
 }
 
 export const generateCurrentServiceDetails = <
-	TCurrentService extends CurrentService = CurrentService
+	TCurrentService extends CurrentService = CurrentService,
 >(
 	rawDevice: Device,
 ): DeviceWithServiceDetails<TCurrentService> => {
@@ -171,10 +171,8 @@ export const generateCurrentServiceDetails = <
 	// but try making it a bit faster for the sake of large fleets.
 	// Uses Object.create(null) so that there are no inherited properties
 	// which could match service names
-	const currentServicesGroupedByName: Record<
-		string,
-		TCurrentService[]
-	> = Object.create(null);
+	const currentServicesGroupedByName: Record<string, TCurrentService[]> =
+		Object.create(null);
 	for (const containerWithServiceName of installs) {
 		const { service_name } = containerWithServiceName;
 		let serviceContainerGroup: TCurrentService[];
@@ -185,8 +183,8 @@ export const generateCurrentServiceDetails = <
 			serviceContainerGroup = currentServicesGroupedByName[service_name];
 		}
 
-		const container: TCurrentService &
-			Partial<WithServiceName> = containerWithServiceName;
+		const container: TCurrentService & Partial<WithServiceName> =
+			containerWithServiceName;
 
 		// remove the extra property that we added for the grouping
 		delete container.service_name;

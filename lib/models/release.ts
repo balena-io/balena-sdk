@@ -47,17 +47,14 @@ const getReleaseModel = function (
 		),
 	);
 
-	const {
-		addCallbackSupportToModule,
-	} = require('../util/callbacks') as typeof import('../util/callbacks');
+	const { addCallbackSupportToModule } =
+		require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const {
-		buildDependentResource,
-	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
+	const { buildDependentResource } =
+		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const builderHelper = once(() => {
-		const {
-			BuilderHelper,
-		} = require('../util/builder') as typeof import('../util/builder');
+		const { BuilderHelper } =
+			require('../util/builder') as typeof import('../util/builder');
 		return new BuilderHelper(deps, opts);
 	});
 

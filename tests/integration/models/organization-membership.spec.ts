@@ -135,9 +135,10 @@ describe('Organization Membership Model', function () {
 
 		describe('balena.models.organization.membership.getAllByOrganization()', function () {
 			it(`shoud return only the user's own membership`, async function () {
-				const memberships = await balena.models.organization.membership.getAllByOrganization(
-					this.initialOrg.id,
-				);
+				const memberships =
+					await balena.models.organization.membership.getAllByOrganization(
+						this.initialOrg.id,
+					);
 				assertDeepMatchAndLength(memberships, [
 					{
 						user: { __id: this.userId },
@@ -350,15 +351,14 @@ describe('Organization Membership Model', function () {
 				});
 
 				it(`should not be able to remove the last membership of the organization`, async function () {
-					const [
-						lastAdminMembership,
-					] = await balena.models.organization.membership.getAllByOrganization(
-						this.organization.id,
-						{
-							$select: 'id',
-							$filter: { user: this.userId },
-						},
-					);
+					const [lastAdminMembership] =
+						await balena.models.organization.membership.getAllByOrganization(
+							this.organization.id,
+							{
+								$select: 'id',
+								$filter: { user: this.userId },
+							},
+						);
 
 					expect(lastAdminMembership).to.be.an('object');
 					expect(lastAdminMembership)
@@ -377,31 +377,32 @@ describe('Organization Membership Model', function () {
 
 		describe('balena.models.organization.membership.tags', function () {
 			describe('[contained scenario]', function () {
-				const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
-					model: balena.models.organization.membership
-						.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-					modelNamespace: 'balena.models.organization.membership.tags',
-					resourceName: 'organization',
-					uniquePropertyNames: ['id', 'handle'],
-				};
+				const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> =
+					{
+						model: balena.models.organization.membership
+							.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
+						modelNamespace: 'balena.models.organization.membership.tags',
+						resourceName: 'organization',
+						uniquePropertyNames: ['id', 'handle'],
+					};
 
-				const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> = {
-					model: balena.models.organization.membership
-						.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-					modelNamespace: 'balena.models.organization.membership.tags',
-					resourceName: 'organization_membership',
-					uniquePropertyNames: ['id'],
-				};
+				const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> =
+					{
+						model: balena.models.organization.membership
+							.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
+						modelNamespace: 'balena.models.organization.membership.tags',
+						resourceName: 'organization_membership',
+						uniquePropertyNames: ['id'],
+					};
 
 				before(async function () {
-					const [
-						membership,
-					] = await balena.models.organization.membership.getAllByOrganization(
-						this.organization.id,
-						{
-							$filter: { user: this.userId },
-						},
-					);
+					const [membership] =
+						await balena.models.organization.membership.getAllByOrganization(
+							this.organization.id,
+							{
+								$filter: { user: this.userId },
+							},
+						);
 
 					expect(membership).to.be.an('object');
 					expect(membership).to.have.property('id').that.is.a('number');

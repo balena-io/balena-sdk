@@ -5,15 +5,15 @@ export const notImplemented = () => {
 	throw new Error('The method is not implemented.');
 };
 
-export const onlyIf = <T extends (...args: any[]) => any>(
-	condition: boolean,
-) => (fn: T) => {
-	if (condition) {
-		return fn;
-	} else {
-		return notImplemented;
-	}
-};
+export const onlyIf =
+	<T extends (...args: any[]) => any>(condition: boolean) =>
+	(fn: T) => {
+		if (condition) {
+			return fn;
+		} else {
+			return notImplemented;
+		}
+	};
 
 export const isId = (v?: any): v is number => typeof v === 'number';
 

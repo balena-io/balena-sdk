@@ -49,13 +49,11 @@ const getOrganizationMembershipModel = function (
 ) {
 	const { pine } = deps;
 
-	const {
-		addCallbackSupportToModule,
-	} = require('../util/callbacks') as typeof import('../util/callbacks');
+	const { addCallbackSupportToModule } =
+		require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const {
-		buildDependentResource,
-	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
+	const { buildDependentResource } =
+		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
 	const tagsModel = buildDependentResource<OrganizationMembershipTag>(
 		{ pine },

@@ -47,16 +47,19 @@ describe('Organization Invite Model', function () {
 					'balena.models.organization.invite.getAllByOrganization()',
 					function () {
 						it('should return an empty Array', function () {
-							const promise = balena.models.organization.invite.getAllByOrganization(
-								ctx.organization.id,
-							);
+							const promise =
+								balena.models.organization.invite.getAllByOrganization(
+									ctx.organization.id,
+								);
 							return expect(promise).to.become([]);
 						});
 
 						it('should support a callback with no options', function (done) {
-							(balena.models.organization.invite.getAllByOrganization as (
-								...args: any[]
-							) => any)(
+							(
+								balena.models.organization.invite.getAllByOrganization as (
+									...args: any[]
+								) => any
+							)(
 								ctx.organization.id,
 								function (
 									_err: Error,
@@ -85,17 +88,18 @@ describe('Organization Invite Model', function () {
 							},
 						);
 						expect(response).to.have.property('id');
-						const invites = await balena.models.organization.invite.getAllByOrganization(
-							this.organization.id,
-							{
-								$expand: {
-									is_invited_to__organization: { $select: ['id'] },
-									invitee: { $select: ['email'] },
-									organization_membership_role: { $select: ['name'] },
+						const invites =
+							await balena.models.organization.invite.getAllByOrganization(
+								this.organization.id,
+								{
+									$expand: {
+										is_invited_to__organization: { $select: ['id'] },
+										invitee: { $select: ['email'] },
+										organization_membership_role: { $select: ['name'] },
+									},
+									$select: ['message'],
 								},
-								$select: ['message'],
-							},
-						);
+							);
 						assertDeepMatchAndLength(invites, [
 							{
 								message: TEST_MESSAGE,
@@ -132,42 +136,44 @@ describe('Organization Invite Model', function () {
 				before(async function () {
 					ctx = this;
 
-					this.organizationInvite = await balena.models.organization.invite.create(
-						this.organization.id,
-						{
-							invitee: TEST_EMAIL,
-							roleName: TEST_ROLE,
-							message: TEST_MESSAGE,
-						},
-					);
+					this.organizationInvite =
+						await balena.models.organization.invite.create(
+							this.organization.id,
+							{
+								invitee: TEST_EMAIL,
+								roleName: TEST_ROLE,
+								message: TEST_MESSAGE,
+							},
+						);
 				});
 
 				parallel(
 					'balena.models.organization.invite.getAllByOrganization()',
 					() => {
 						it('should become the list of organization invites', async function () {
-							const organizationInvites = await balena.models.organization.invite.getAllByOrganization(
-								ctx.organization.id,
-							);
+							const organizationInvites =
+								await balena.models.organization.invite.getAllByOrganization(
+									ctx.organization.id,
+								);
 							expect(organizationInvites).to.have.length(1);
 						});
 
 						it('should support arbitrary pinejs options', async function () {
-							const organizationInvites = await balena.models.organization.invite.getAllByOrganization(
-								ctx.organization.id,
-								{
-									$expand: { invitee: { $select: ['email'] } },
-								},
-							);
+							const organizationInvites =
+								await balena.models.organization.invite.getAllByOrganization(
+									ctx.organization.id,
+									{
+										$expand: { invitee: { $select: ['email'] } },
+									},
+								);
 							assertDeepMatchAndLength(organizationInvites, [
 								{ invitee: [{ email: TEST_EMAIL }] },
 							]);
 						});
 
 						it('should be rejected if the organization is inaccessible', function () {
-							const promise = balena.models.organization.invite.getAllByOrganization(
-								9999,
-							);
+							const promise =
+								balena.models.organization.invite.getAllByOrganization(9999);
 							return expect(promise).to.be.rejected.then((error) => {
 								expect(error).to.have.property(
 									'code',
@@ -186,9 +192,10 @@ describe('Organization Invite Model', function () {
 						await balena.models.organization.invite.revoke(
 							this.organizationInvite.id,
 						);
-						const promise = balena.models.organization.invite.getAllByOrganization(
-							this.organization.id,
-						);
+						const promise =
+							balena.models.organization.invite.getAllByOrganization(
+								this.organization.id,
+							);
 						return expect(promise).to.eventually.have.length(0);
 					});
 				});
@@ -202,17 +209,18 @@ describe('Organization Invite Model', function () {
 							},
 						);
 						expect(response).to.have.property('id');
-						const invites = await balena.models.organization.invite.getAllByOrganization(
-							this.organization.id,
-							{
-								$expand: {
-									is_invited_to__organization: { $select: ['id'] },
-									invitee: { $select: ['email'] },
-									organization_membership_role: { $select: ['name'] },
+						const invites =
+							await balena.models.organization.invite.getAllByOrganization(
+								this.organization.id,
+								{
+									$expand: {
+										is_invited_to__organization: { $select: ['id'] },
+										invitee: { $select: ['email'] },
+										organization_membership_role: { $select: ['name'] },
+									},
+									$select: ['message'],
 								},
-								$select: ['message'],
-							},
-						);
+							);
 						assertDeepMatchAndLength(invites, [
 							{
 								message: null,

@@ -27,15 +27,16 @@ const { expect } = m.chai;
 
 const makeRequest = (url) =>
 	new Promise((resolve) =>
-		superagent.get(url).end((
-			err,
-			res, // have to normalize because of different behaviour in the browser and node
-		) =>
-			resolve({
-				status: res?.status || err.status || 0,
-				isError: !!err,
-				response: res?.text,
-			}),
+		superagent.get(url).end(
+			(
+				err,
+				res, // have to normalize because of different behaviour in the browser and node
+			) =>
+				resolve({
+					status: res?.status || err.status || 0,
+					isError: !!err,
+					response: res?.text,
+				}),
 		),
 	);
 
@@ -86,13 +87,15 @@ describe('Device Model', function () {
 
 		parallel('balena.models.device.getSupportedDeviceTypes()', function () {
 			it('should return a non empty array', async () => {
-				const deviceTypes = await balena.models.device.getSupportedDeviceTypes();
+				const deviceTypes =
+					await balena.models.device.getSupportedDeviceTypes();
 				expect(Array.isArray(deviceTypes)).to.be.true;
 				return expect(deviceTypes).to.not.have.length(0);
 			});
 
 			it('should return all valid display names', async () => {
-				const deviceTypes = await balena.models.device.getSupportedDeviceTypes();
+				const deviceTypes =
+					await balena.models.device.getSupportedDeviceTypes();
 				await Promise.all(
 					deviceTypes.map(async (deviceType) => {
 						const deviceSlug = await balena.models.device.getDeviceSlug(
@@ -180,9 +183,10 @@ describe('Device Model', function () {
 					function () {
 						applicationRetrievalFields.forEach((prop) =>
 							it(`should return the appropriate manifest for an application ${prop}`, async function () {
-								const manifest = await balena.models.device.getManifestByApplication(
-									ctx.application[prop],
-								);
+								const manifest =
+									await balena.models.device.getManifestByApplication(
+										ctx.application[prop],
+									);
 								return expect(manifest.slug).to.equal(
 									ctx.applicationDeviceType.slug,
 								);
@@ -190,18 +194,16 @@ describe('Device Model', function () {
 						);
 
 						it('should be rejected if the application name does not exist', function () {
-							const promise = balena.models.device.getManifestByApplication(
-								'HelloWorldApp',
-							);
+							const promise =
+								balena.models.device.getManifestByApplication('HelloWorldApp');
 							return expect(promise).to.be.rejectedWith(
 								'Application not found: HelloWorldApp',
 							);
 						});
 
 						it('should be rejected if the application id does not exist', function () {
-							const promise = balena.models.device.getManifestByApplication(
-								999999,
-							);
+							const promise =
+								balena.models.device.getManifestByApplication(999999);
 							return expect(promise).to.be.rejectedWith(
 								'Application not found: 999999',
 							);
@@ -310,9 +312,8 @@ describe('Device Model', function () {
 					);
 
 					it('should be rejected if the application name does not exist', function () {
-						const promise = balena.models.device.getAllByApplication(
-							'HelloWorldApp',
-						);
+						const promise =
+							balena.models.device.getAllByApplication('HelloWorldApp');
 						return expect(promise).to.be.rejectedWith(
 							'Application not found: HelloWorldApp',
 						);
@@ -471,9 +472,8 @@ describe('Device Model', function () {
 					});
 
 					it('should be rejected if the device uuid does not exist', function () {
-						const promise = balena.models.device.getApplicationName(
-							'asdfghjkl',
-						);
+						const promise =
+							balena.models.device.getApplicationName('asdfghjkl');
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: asdfghjkl',
 						);
@@ -561,9 +561,8 @@ describe('Device Model', function () {
 					});
 
 					it('should be rejected if the device uuid does not exist', function () {
-						const promise = balena.models.device.getLocalIPAddresses(
-							'asdfghjkl',
-						);
+						const promise =
+							balena.models.device.getLocalIPAddresses('asdfghjkl');
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: asdfghjkl',
 						);
@@ -657,8 +656,8 @@ describe('Device Model', function () {
 							body: {
 								belongs_to__user: userId,
 								belongs_to__application: this.childApplication.id,
-								is_of__device_type: this.childApplication.is_for__device_type
-									.__id,
+								is_of__device_type:
+									this.childApplication.is_for__device_type.__id,
 								uuid: balena.models.device.generateUniqueKey(),
 								is_managed_by__device: this.device.id,
 							},
@@ -670,44 +669,40 @@ describe('Device Model', function () {
 
 					parallel('', function () {
 						it('should get the device given the right parent uuid', async function () {
-							const childDevices = await balena.models.device.getAllByParentDevice(
-								ctx.device.uuid,
-							);
+							const childDevices =
+								await balena.models.device.getAllByParentDevice(
+									ctx.device.uuid,
+								);
 							expect(childDevices).to.have.length(1);
 							expect(childDevices[0].id).to.equal(ctx.childDevice.id);
 						});
 
 						it('should get the device given the right parent id', async function () {
-							const childDevices = await balena.models.device.getAllByParentDevice(
-								ctx.device.id,
-							);
+							const childDevices =
+								await balena.models.device.getAllByParentDevice(ctx.device.id);
 							expect(childDevices).to.have.length(1);
 							expect(childDevices[0].id).to.equal(ctx.childDevice.id);
 						});
 
 						it('should be empty if the parent device has no children', async function () {
-							const childDevices = await balena.models.device.getAllByParentDevice(
-								ctx.childDevice.id,
-							);
+							const childDevices =
+								await balena.models.device.getAllByParentDevice(
+									ctx.childDevice.id,
+								);
 							expect(childDevices).to.have.length(0);
 						});
 
 						it('should be rejected if the parent device does not exist', function () {
-							const promise = balena.models.device.getAllByParentDevice(
-								'asdfghjkl',
-							);
+							const promise =
+								balena.models.device.getAllByParentDevice('asdfghjkl');
 							expect(promise).to.be.rejectedWith('Device not found: asdfghjkl');
 						});
 
 						it('should support arbitrary pinejs options', async function () {
-							const [
-								childDevice,
-							] = await balena.models.device.getAllByParentDevice(
-								ctx.device.id,
-								{
+							const [childDevice] =
+								await balena.models.device.getAllByParentDevice(ctx.device.id, {
 									$select: ['id'],
-								},
-							);
+								});
 							expect(childDevice.id).to.equal(ctx.childDevice.id);
 							expect(childDevice.device_name).to.equal(undefined);
 						});
@@ -902,9 +897,8 @@ describe('Device Model', function () {
 					});
 
 					it('should be rejected if the device uuid does not exist', function () {
-						const promise = balena.models.device.unsetCustomLocation(
-							'asdfghjkl',
-						);
+						const promise =
+							balena.models.device.unsetCustomLocation('asdfghjkl');
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: asdfghjkl',
 						);
@@ -983,11 +977,10 @@ describe('Device Model', function () {
 							this.device.id,
 							expiryTimestamp,
 						);
-						const {
-							is_accessible_by_support_until__date,
-						} = await balena.models.device.get(this.device.id, {
-							$select: 'is_accessible_by_support_until__date',
-						});
+						const { is_accessible_by_support_until__date } =
+							await balena.models.device.get(this.device.id, {
+								$select: 'is_accessible_by_support_until__date',
+							});
 						return expect(
 							Date.parse(is_accessible_by_support_until__date ?? '0'),
 						).to.equal(expiryTimestamp);
@@ -996,21 +989,19 @@ describe('Device Model', function () {
 
 				describe('balena.models.device.revokeSupportAccess()', function () {
 					before(async function () {
-						const {
-							is_accessible_by_support_until__date,
-						} = await balena.models.device.get(this.device.id, {
-							$select: 'is_accessible_by_support_until__date',
-						});
+						const { is_accessible_by_support_until__date } =
+							await balena.models.device.get(this.device.id, {
+								$select: 'is_accessible_by_support_until__date',
+							});
 						expect(is_accessible_by_support_until__date).to.not.be.null;
 					});
 
 					it('...should revoke support access', async function () {
 						await balena.models.device.revokeSupportAccess(this.device.id);
-						const {
-							is_accessible_by_support_until__date,
-						} = await balena.models.device.get(this.device.id, {
-							$select: 'is_accessible_by_support_until__date',
-						});
+						const { is_accessible_by_support_until__date } =
+							await balena.models.device.get(this.device.id, {
+								$select: 'is_accessible_by_support_until__date',
+							});
 						return expect(is_accessible_by_support_until__date).to.be.null;
 					});
 				});
@@ -1379,9 +1370,8 @@ describe('Device Model', function () {
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, function () {
 								const deviceParamValue =
 									deviceParam === 'id' ? 999999 : 'asdfghjkl';
-								const promise = balena.models.device.isInLocalMode(
-									deviceParamValue,
-								);
+								const promise =
+									balena.models.device.isInLocalMode(deviceParamValue);
 								return expect(promise).to.be.rejectedWith(
 									`Device not found: ${deviceParamValue}`,
 								);
@@ -1402,9 +1392,8 @@ describe('Device Model', function () {
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, function () {
 								const deviceParamValue =
 									deviceParam === 'id' ? 999999 : 'asdfghjkl';
-								const promise = balena.models.device.enableLocalMode(
-									deviceParamValue,
-								);
+								const promise =
+									balena.models.device.enableLocalMode(deviceParamValue);
 								return expect(promise).to.be.rejectedWith(
 									`Device not found: ${deviceParamValue}`,
 								);
@@ -1425,9 +1414,8 @@ describe('Device Model', function () {
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, function () {
 								const deviceParamValue =
 									deviceParam === 'id' ? 999999 : 'asdfghjkl';
-								const promise = balena.models.device.disableLocalMode(
-									deviceParamValue,
-								);
+								const promise =
+									balena.models.device.disableLocalMode(deviceParamValue);
 								return expect(promise).to.be.rejectedWith(
 									`Device not found: ${deviceParamValue}`,
 								);
@@ -1974,9 +1962,8 @@ describe('Device Model', function () {
 				givenADevice(before);
 
 				it('should be rejected if the device does not exist', function () {
-					const promise = balena.models.device.getSupervisorTargetState(
-						'asdfghjkl',
-					);
+					const promise =
+						balena.models.device.getSupervisorTargetState('asdfghjkl');
 					return expect(promise).to.be.rejectedWith(
 						'Device not found: asdfghjkl',
 					);
@@ -2207,9 +2194,8 @@ describe('Device Model', function () {
 
 			describe('balena.models.device.getWithServiceDetails()', function () {
 				it('should be rejected if the device name does not exist', function () {
-					const promise = balena.models.device.getWithServiceDetails(
-						'asdfghjkl',
-					);
+					const promise =
+						balena.models.device.getWithServiceDetails('asdfghjkl');
 					return expect(promise).to.be.rejectedWith(
 						'Device not found: asdfghjkl',
 					);
@@ -2242,9 +2228,8 @@ describe('Device Model', function () {
 				});
 
 				it('should retrieve the current service details', async function () {
-					const deviceDetails = await balena.models.device.getWithServiceDetails(
-						this.device.id,
-					);
+					const deviceDetails =
+						await balena.models.device.getWithServiceDetails(this.device.id);
 					expect(deviceDetails).to.deep.match({
 						device_name: this.device.device_name,
 						uuid: this.device.uuid,
@@ -2322,17 +2307,15 @@ describe('Device Model', function () {
 				});
 
 				it('should allow options to change the device fields returned', async function () {
-					const deviceDetails = await balena.models.device.getWithServiceDetails(
-						this.device.id,
-						{
+					const deviceDetails =
+						await balena.models.device.getWithServiceDetails(this.device.id, {
 							$select: deviceUniqueFields,
 							$expand: {
 								belongs_to__application: {
 									$select: ['id', 'app_name'],
 								},
 							},
-						},
-					);
+						});
 					expect(deviceDetails.device_name).to.be.undefined;
 					expect(deviceDetails.current_services).not.to.be.undefined;
 					return expect(deviceDetails.belongs_to__application[0]).to.deep.match(
@@ -2364,9 +2347,8 @@ describe('Device Model', function () {
 							},
 						}),
 					]);
-					const deviceDetails = await balena.models.device.getWithServiceDetails(
-						this.device.id,
-					);
+					const deviceDetails =
+						await balena.models.device.getWithServiceDetails(this.device.id);
 					expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1);
 					return expect(
 						deviceDetails.current_gateway_downloads[0],
@@ -2603,9 +2585,10 @@ describe('Device Model', function () {
 						this.device.id,
 					);
 					expect(releaseHash).to.equal('old-release-commit');
-					const isTracking = await balena.models.device.isTrackingApplicationRelease(
-						this.device.id,
-					);
+					const isTracking =
+						await balena.models.device.isTrackingApplicationRelease(
+							this.device.id,
+						);
 					return expect(isTracking).to.be.false;
 				});
 
@@ -2618,9 +2601,10 @@ describe('Device Model', function () {
 						this.device.id,
 					);
 					expect(releaseHash).to.equal('old-release-commit');
-					const isTracking = await balena.models.device.isTrackingApplicationRelease(
-						this.device.id,
-					);
+					const isTracking =
+						await balena.models.device.isTrackingApplicationRelease(
+							this.device.id,
+						);
 					return expect(isTracking).to.be.false;
 				});
 
@@ -2633,9 +2617,10 @@ describe('Device Model', function () {
 						this.device.id,
 					);
 					expect(releaseHash).to.equal('old-release-commit');
-					const isTracking = await balena.models.device.isTrackingApplicationRelease(
-						this.device.id,
-					);
+					const isTracking =
+						await balena.models.device.isTrackingApplicationRelease(
+							this.device.id,
+						);
 					return expect(isTracking).to.be.false;
 				});
 
@@ -2648,9 +2633,10 @@ describe('Device Model', function () {
 						this.device.id,
 					);
 					expect(releaseHash).to.equal('old-release-commit');
-					const isTracking = await balena.models.device.isTrackingApplicationRelease(
-						this.device.id,
-					);
+					const isTracking =
+						await balena.models.device.isTrackingApplicationRelease(
+							this.device.id,
+						);
 					return expect(isTracking).to.be.false;
 				});
 			});
@@ -2662,9 +2648,10 @@ describe('Device Model', function () {
 						'old-release-commit',
 					);
 					await balena.models.device.trackApplicationRelease(this.device.id);
-					const isTracking = await balena.models.device.isTrackingApplicationRelease(
-						this.device.id,
-					);
+					const isTracking =
+						await balena.models.device.isTrackingApplicationRelease(
+							this.device.id,
+						);
 					return expect(isTracking).to.be.true;
 				});
 
@@ -2674,9 +2661,10 @@ describe('Device Model', function () {
 						'old-release-commit',
 					);
 					await balena.models.device.trackApplicationRelease(this.device.uuid);
-					const isTracking = await balena.models.device.isTrackingApplicationRelease(
-						this.device.id,
-					);
+					const isTracking =
+						await balena.models.device.isTrackingApplicationRelease(
+							this.device.id,
+						);
 					return expect(isTracking).to.be.true;
 				});
 			});
@@ -2771,9 +2759,8 @@ describe('Device Model', function () {
 
 				describe('balena.models.device.getWithServiceDetails()', () =>
 					it('should retrieve the current service details', async function () {
-						const deviceDetails = await balena.models.device.getWithServiceDetails(
-							this.device.id,
-						);
+						const deviceDetails =
+							await balena.models.device.getWithServiceDetails(this.device.id);
 						expect(deviceDetails).to.deep.match({
 							device_name: this.device.device_name,
 							uuid: this.device.uuid,
@@ -2900,9 +2887,10 @@ describe('Device Model', function () {
 							this.deviceInfo.uuid,
 							this.applicationSameDT[prop],
 						);
-						const applicationName = await balena.models.device.getApplicationName(
-							this.deviceInfo.uuid,
-						);
+						const applicationName =
+							await balena.models.device.getApplicationName(
+								this.deviceInfo.uuid,
+							);
 						return expect(applicationName).to.equal(
 							this.applicationSameDT.app_name,
 						);

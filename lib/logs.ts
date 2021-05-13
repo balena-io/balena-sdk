@@ -61,10 +61,9 @@ const getLogs = function (
 ) {
 	const { request } = deps;
 
-	const deviceModel = (require('./models/device') as typeof import('./models/device')).default(
-		deps,
-		opts,
-	);
+	const deviceModel = (
+		require('./models/device') as typeof import('./models/device')
+	).default(deps, opts);
 
 	const getLogsUrl = function (device: Device, options?: LogsOptions) {
 		const query = querystring.stringify(options);

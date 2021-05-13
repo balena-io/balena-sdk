@@ -486,9 +486,9 @@ const getAuth = function (
 	}
 
 	return {
-		twoFactor: (require('./util/callbacks') as typeof import('./util/callbacks')).addCallbackSupportToModule(
-			twoFactor,
-		) as typeof twoFactor,
+		twoFactor: (
+			require('./util/callbacks') as typeof import('./util/callbacks')
+		).addCallbackSupportToModule(twoFactor) as typeof twoFactor,
 		whoami,
 		authenticate,
 		login,

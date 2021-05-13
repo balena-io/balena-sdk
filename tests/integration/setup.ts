@@ -505,63 +505,59 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 		this.oldRelease = oldRelease;
 		this.currentRelease = newRelease;
 
-		const [
-			oldWebImage,
-			newWebImage,
-			oldDbImage,
-			newDbImage,
-		] = await Promise.all([
-			// Register an old & new web image build from the old and new
-			// releases, a db build in the new release only
-			balena.pine.post<BalenaSdk.Image>({
-				resource: 'image',
-				body: {
-					is_a_build_of__service: webService.id,
-					project_type: 'dockerfile',
-					content_hash: 'abc',
-					build_log: 'old web log',
-					start_timestamp: oldDate,
-					push_timestamp: oldDate,
-					status: 'success',
-				},
-			}),
-			balena.pine.post<BalenaSdk.Image>({
-				resource: 'image',
-				body: {
-					is_a_build_of__service: webService.id,
-					project_type: 'dockerfile',
-					content_hash: 'def',
-					build_log: 'new web log',
-					start_timestamp: now,
-					push_timestamp: now,
-					status: 'success',
-				},
-			}),
-			balena.pine.post<BalenaSdk.Image>({
-				resource: 'image',
-				body: {
-					is_a_build_of__service: dbService.id,
-					project_type: 'dockerfile',
-					content_hash: 'jkl',
-					build_log: 'old db log',
-					start_timestamp: oldDate,
-					push_timestamp: oldDate,
-					status: 'success',
-				},
-			}),
-			balena.pine.post<BalenaSdk.Image>({
-				resource: 'image',
-				body: {
-					is_a_build_of__service: dbService.id,
-					project_type: 'dockerfile',
-					content_hash: 'ghi',
-					build_log: 'new db log',
-					start_timestamp: now,
-					push_timestamp: now,
-					status: 'success',
-				},
-			}),
-		]);
+		const [oldWebImage, newWebImage, oldDbImage, newDbImage] =
+			await Promise.all([
+				// Register an old & new web image build from the old and new
+				// releases, a db build in the new release only
+				balena.pine.post<BalenaSdk.Image>({
+					resource: 'image',
+					body: {
+						is_a_build_of__service: webService.id,
+						project_type: 'dockerfile',
+						content_hash: 'abc',
+						build_log: 'old web log',
+						start_timestamp: oldDate,
+						push_timestamp: oldDate,
+						status: 'success',
+					},
+				}),
+				balena.pine.post<BalenaSdk.Image>({
+					resource: 'image',
+					body: {
+						is_a_build_of__service: webService.id,
+						project_type: 'dockerfile',
+						content_hash: 'def',
+						build_log: 'new web log',
+						start_timestamp: now,
+						push_timestamp: now,
+						status: 'success',
+					},
+				}),
+				balena.pine.post<BalenaSdk.Image>({
+					resource: 'image',
+					body: {
+						is_a_build_of__service: dbService.id,
+						project_type: 'dockerfile',
+						content_hash: 'jkl',
+						build_log: 'old db log',
+						start_timestamp: oldDate,
+						push_timestamp: oldDate,
+						status: 'success',
+					},
+				}),
+				balena.pine.post<BalenaSdk.Image>({
+					resource: 'image',
+					body: {
+						is_a_build_of__service: dbService.id,
+						project_type: 'dockerfile',
+						content_hash: 'ghi',
+						build_log: 'new db log',
+						start_timestamp: now,
+						push_timestamp: now,
+						status: 'success',
+					},
+				}),
+			]);
 		this.oldWebImage = oldWebImage;
 		this.newWebImage = newWebImage;
 		this.oldDbImage = oldDbImage;

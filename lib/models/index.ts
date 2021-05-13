@@ -115,9 +115,8 @@ export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
 				enumerable: true,
 				configurable: true,
 				get() {
-					const {
-						addCallbackSupportToModule,
-					} = require('../util/callbacks') as typeof import('../util/callbacks');
+					const { addCallbackSupportToModule } =
+						require('../util/callbacks') as typeof import('../util/callbacks');
 					const moduleFactory = modelsTemplate[moduleName]();
 					// We need the delete first as the current property is read-only
 					// and the delete removes that restriction

@@ -336,9 +336,10 @@ describe('Application Membership Model', function () {
 			'balena.models.application.membership.getAllByApplication()',
 			function () {
 				it(`shoud return only the user's own membership`, async function () {
-					const memberships = await balena.models.application.membership.getAllByApplication(
-						ctx.application.id,
-					);
+					const memberships =
+						await balena.models.application.membership.getAllByApplication(
+							ctx.application.id,
+						);
 					assertDeepMatchAndLength(memberships, [
 						{
 							user: membership!.user,
