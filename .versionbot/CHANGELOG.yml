@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add is_of__class in application model
+      hash: 17bc4ae8bcfd6fbed681eccc7bcf2a90a5801785
+      body: |
+        Add is_of__class in application model
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.36.0
+  date: 2021-05-13T17:59:00.188Z
+- commits:
     - subject: Fix lint after prittier update
       hash: 18c6b8ee635af7aa422e54a5adc94dce34f4346d
       body: |
