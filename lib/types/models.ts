@@ -165,10 +165,10 @@ export interface Application {
 	is_host: boolean;
 	should_track_latest_release: boolean;
 	is_public: boolean;
+	is_of__class: 'fleet' | 'block' | 'app';
 	is_archived: boolean;
 	is_discoverable: boolean;
 	is_stored_at__repository_url: string | null;
-
 	application_type: NavigationResource<ApplicationType>;
 	is_for__device_type: NavigationResource<DeviceType>;
 	depends_on__application: OptionalNavigationResource<Application>;
