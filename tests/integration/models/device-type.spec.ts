@@ -21,8 +21,9 @@ describe('Device Type model', function () {
 		});
 
 		it('should support a callback', function (done) {
-			(balena
-				.models.deviceType.getAll as (...args: any[]) => any)(function (_err: Error, deviceTypes: BalenaSdk.DeviceType[]) {
+			(
+				balena.models.deviceType.getAll as (...args: any[]) => any
+			)(function (_err: Error, deviceTypes: BalenaSdk.DeviceType[]) {
 				try {
 					expect(deviceTypes).to.be.an('Array');
 					expect(deviceTypes).to.not.have.length(0);

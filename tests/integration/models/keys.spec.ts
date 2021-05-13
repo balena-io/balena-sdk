@@ -21,8 +21,9 @@ describe('Key Model', function () {
 				});
 
 				it('should support a callback with no options', function (done) {
-					(balena
-						.models.key.getAll as (...args: any[]) => any)(function (_err: Error, keys: BalenaSdk.SSHKey[]) {
+					(
+						balena.models.key.getAll as (...args: any[]) => any
+					)(function (_err: Error, keys: BalenaSdk.SSHKey[]) {
 						try {
 							expect(keys).to.deep.equal([]);
 							done();

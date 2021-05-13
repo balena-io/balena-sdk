@@ -114,9 +114,9 @@ const getDeviceModel = function (
 	const { apiUrl, deviceUrlsBase } = opts;
 
 	const registerDevice = once(() =>
-		(require('balena-register-device') as typeof import('balena-register-device')).getRegisterDevice(
-			{ request },
-		),
+		(
+			require('balena-register-device') as typeof import('balena-register-device')
+		).getRegisterDevice({ request }),
 	);
 	const configModel = once(() =>
 		(require('./config') as typeof import('./config')).default(deps, opts),
@@ -131,17 +131,16 @@ const getDeviceModel = function (
 		(require('./hostapp') as typeof import('./hostapp')).default(deps),
 	);
 
-	const {
-		addCallbackSupportToModule,
-	} = require('../util/callbacks') as typeof import('../util/callbacks');
+	const { addCallbackSupportToModule } =
+		require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const {
-		buildDependentResource,
-	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
+	const { buildDependentResource } =
+		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const hupActionHelper = once(
 		() =>
-			(require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils'))
-				.hupActionHelper,
+			(
+				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
+			).hupActionHelper,
 	);
 	const deviceTypesUtils = once(
 		() =>
@@ -202,9 +201,8 @@ const getDeviceModel = function (
 
 	const getOsUpdateHelper = once(async () => {
 		const $deviceUrlsBase = await getDeviceUrlsBase();
-		const {
-			getOsUpdateHelper: _getOsUpdateHelper,
-		} = require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
+		const { getOsUpdateHelper: _getOsUpdateHelper } =
+			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
 		return _getOsUpdateHelper($deviceUrlsBase, request);
 	});
 
@@ -220,7 +218,7 @@ const getDeviceModel = function (
 	};
 
 	const addExtraInfo = function <
-		T extends Parameters<typeof normalizeDeviceOsVersion>[0]
+		T extends Parameters<typeof normalizeDeviceOsVersion>[0],
 	>(device: T) {
 		normalizeDeviceOsVersion(device);
 		return device;
@@ -2171,13 +2169,11 @@ const getDeviceModel = function (
 				},
 			} as const;
 
-			const {
-				should_be_running__release,
-				belongs_to__application,
-			} = (await exports.get(uuidOrId, deviceOptions)) as PineTypedResult<
-				Device,
-				typeof deviceOptions
-			>;
+			const { should_be_running__release, belongs_to__application } =
+				(await exports.get(uuidOrId, deviceOptions)) as PineTypedResult<
+					Device,
+					typeof deviceOptions
+				>;
 			if (should_be_running__release.length > 0) {
 				return should_be_running__release[0]!.commit;
 			}

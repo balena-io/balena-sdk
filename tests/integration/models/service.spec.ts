@@ -35,9 +35,8 @@ describe('Service Model', function () {
 			});
 
 			it('should be rejected if the application name does not exist', function () {
-				const promise = balena.models.service.getAllByApplication(
-					'HelloWorldApp',
-				);
+				const promise =
+					balena.models.service.getAllByApplication('HelloWorldApp');
 				return expect(promise).to.be.rejectedWith(
 					'Application not found: HelloWorldApp',
 				);

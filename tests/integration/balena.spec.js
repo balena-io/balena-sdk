@@ -228,7 +228,8 @@ describe('Balena SDK', function () {
 			describe('plain requests', function () {
 				describe('with a relative url & without a baseUrl', () =>
 					it('should not include the version header', function () {
-						const responseInterceptor = getVersionHeaderResponseErrorInterceptor();
+						const responseInterceptor =
+							getVersionHeaderResponseErrorInterceptor();
 						balena.interceptors.push({ responseError: responseInterceptor });
 
 						const promise = balena.request.send({
@@ -266,7 +267,8 @@ describe('Balena SDK', function () {
 
 					describe('to a differnet server', () =>
 						it('should not include the version header', function () {
-							const responseInterceptor = getVersionHeaderResponseErrorInterceptor();
+							const responseInterceptor =
+								getVersionHeaderResponseErrorInterceptor();
 							balena.interceptors.push({ responseError: responseInterceptor });
 
 							const promise = balena.request.send({
@@ -305,7 +307,8 @@ describe('Balena SDK', function () {
 
 					describe('to a differnet server', () =>
 						it('should not include the version header', function () {
-							const responseInterceptor = getVersionHeaderResponseErrorInterceptor();
+							const responseInterceptor =
+								getVersionHeaderResponseErrorInterceptor();
 							balena.interceptors.push({ responseError: responseInterceptor });
 
 							const promise = balena.request.send({

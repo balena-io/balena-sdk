@@ -76,8 +76,9 @@ const getOsModel = function (
 	);
 	const hupActionHelper = once(
 		() =>
-			(require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils'))
-				.hupActionHelper,
+			(
+				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
+			).hupActionHelper,
 	);
 
 	const authDependentMemoizer = getAuthDependentMemoize(pubsub);

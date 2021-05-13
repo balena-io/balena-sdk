@@ -68,9 +68,8 @@ describe('Release Model', function () {
 			);
 
 			it('should be rejected if the application name does not exist', function () {
-				const promise = balena.models.release.getAllByApplication(
-					'HelloWorldApp',
-				);
+				const promise =
+					balena.models.release.getAllByApplication('HelloWorldApp');
 				return expect(promise).to.be.rejectedWith(
 					'Application not found: HelloWorldApp',
 				);
@@ -184,8 +183,7 @@ describe('Release Model', function () {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
 						{
-							url:
-								'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz',
+							url: 'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz',
 						},
 					);
 					const error = await expect(promise).to.be.rejected;

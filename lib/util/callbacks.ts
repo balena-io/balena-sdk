@@ -47,7 +47,7 @@ export const addCallbackSupportToModule = <T extends Dictionary<any>>(
 };
 
 export const addCallbackSupportToModuleFactory = <
-	T extends (...args: any[]) => any
+	T extends (...args: any[]) => any,
 >(
 	moduleFactory: T,
 ): T => {

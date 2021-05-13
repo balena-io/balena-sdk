@@ -47,16 +47,19 @@ describe('Application Invite Model', function () {
 					'balena.models.application.invite.getAllByApplication()',
 					function () {
 						it('shoud return an empty Array', function () {
-							const promise = balena.models.application.invite.getAllByApplication(
-								ctx.application.id,
-							);
+							const promise =
+								balena.models.application.invite.getAllByApplication(
+									ctx.application.id,
+								);
 							return expect(promise).to.become([]);
 						});
 
 						it('should support a callback with no options', function (done) {
-							(balena.models.application.invite.getAllByApplication as (
-								...args: any[]
-							) => any)(
+							(
+								balena.models.application.invite.getAllByApplication as (
+									...args: any[]
+								) => any
+							)(
 								ctx.application.id,
 								function (
 									_err: Error,
@@ -85,17 +88,18 @@ describe('Application Invite Model', function () {
 							},
 						);
 						expect(response).to.have.property('id');
-						const invites = await balena.models.application.invite.getAllByApplication(
-							this.application.id,
-							{
-								$expand: {
-									is_invited_to__application: { $select: ['id'] },
-									invitee: { $select: ['email'] },
-									application_membership_role: { $select: ['name'] },
+						const invites =
+							await balena.models.application.invite.getAllByApplication(
+								this.application.id,
+								{
+									$expand: {
+										is_invited_to__application: { $select: ['id'] },
+										invitee: { $select: ['email'] },
+										application_membership_role: { $select: ['name'] },
+									},
+									$select: ['message'],
 								},
-								$select: ['message'],
-							},
-						);
+							);
 						assertDeepMatchAndLength(invites, [
 							{
 								message: TEST_MESSAGE,
@@ -132,40 +136,39 @@ describe('Application Invite Model', function () {
 				before(async function () {
 					ctx = this;
 
-					this.applicationInvite = await balena.models.application.invite.create(
-						this.application.id,
-						{
+					this.applicationInvite =
+						await balena.models.application.invite.create(this.application.id, {
 							invitee: TEST_EMAIL,
 							roleName: TEST_ROLE,
 							message: TEST_MESSAGE,
-						},
-					);
+						});
 				});
 
 				parallel('balena.models.application.invite.getAllApplication()', () => {
 					it('should become the list of application invites', async function () {
-						const applicationInvites = await balena.models.application.invite.getAllByApplication(
-							ctx.application.id,
-						);
+						const applicationInvites =
+							await balena.models.application.invite.getAllByApplication(
+								ctx.application.id,
+							);
 						expect(applicationInvites).to.have.length(1);
 					});
 
 					it('should support arbitrary pinejs options', async function () {
-						const applicationInvites = await balena.models.application.invite.getAllByApplication(
-							ctx.application.id,
-							{
-								$expand: { invitee: { $select: ['email'] } },
-							},
-						);
+						const applicationInvites =
+							await balena.models.application.invite.getAllByApplication(
+								ctx.application.id,
+								{
+									$expand: { invitee: { $select: ['email'] } },
+								},
+							);
 						assertDeepMatchAndLength(applicationInvites, [
 							{ invitee: [{ email: TEST_EMAIL }] },
 						]);
 					});
 
 					it('should be rejected if the application is inaccessible', function () {
-						const promise = balena.models.application.invite.getAllByApplication(
-							9999,
-						);
+						const promise =
+							balena.models.application.invite.getAllByApplication(9999);
 						return expect(promise).to.be.rejected.then((error) => {
 							expect(error).to.have.property(
 								'code',
@@ -183,9 +186,10 @@ describe('Application Invite Model', function () {
 						await balena.models.application.invite.revoke(
 							this.applicationInvite.id,
 						);
-						const promise = balena.models.application.invite.getAllByApplication(
-							this.application.id,
-						);
+						const promise =
+							balena.models.application.invite.getAllByApplication(
+								this.application.id,
+							);
 						return expect(promise).to.eventually.have.length(0);
 					});
 				});
@@ -199,17 +203,18 @@ describe('Application Invite Model', function () {
 							},
 						);
 						expect(response).to.have.property('id');
-						const invites = await balena.models.application.invite.getAllByApplication(
-							this.application.id,
-							{
-								$expand: {
-									is_invited_to__application: { $select: ['id'] },
-									invitee: { $select: ['email'] },
-									application_membership_role: { $select: ['name'] },
+						const invites =
+							await balena.models.application.invite.getAllByApplication(
+								this.application.id,
+								{
+									$expand: {
+										is_invited_to__application: { $select: ['id'] },
+										invitee: { $select: ['email'] },
+										application_membership_role: { $select: ['name'] },
+									},
+									$select: ['message'],
 								},
-								$select: ['message'],
-							},
-						);
+							);
 						assertDeepMatchAndLength(invites, [
 							{
 								message: null,

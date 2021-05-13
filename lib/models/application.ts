@@ -66,24 +66,23 @@ const getApplicationModel = function (
 		(require('./release') as typeof import('./release')).default(deps, opts),
 	);
 
-	const membershipModel = (require('./application-membership') as typeof import('./application-membership')).default(
-		deps,
-		(...args: Parameters<typeof exports.get>) => exports.get(...args),
+	const membershipModel = (
+		require('./application-membership') as typeof import('./application-membership')
+	).default(deps, (...args: Parameters<typeof exports.get>) =>
+		exports.get(...args),
 	);
 
-	const inviteModel = (require('./application-invite') as typeof import('./application-invite')).default(
-		deps,
-		opts,
-		(...args: Parameters<typeof exports.get>) => exports.get(...args),
+	const inviteModel = (
+		require('./application-invite') as typeof import('./application-invite')
+	).default(deps, opts, (...args: Parameters<typeof exports.get>) =>
+		exports.get(...args),
 	);
 
-	const {
-		addCallbackSupportToModule,
-	} = require('../util/callbacks') as typeof import('../util/callbacks');
+	const { addCallbackSupportToModule } =
+		require('../util/callbacks') as typeof import('../util/callbacks');
 
-	const {
-		buildDependentResource,
-	} = require('../util/dependent-resource') as typeof import('../util/dependent-resource');
+	const { buildDependentResource } =
+		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
 	const tagsModel = buildDependentResource<ApplicationTag>(
 		{ pine },
