@@ -1,4 +1,18 @@
 - commits:
+    - subject: Fix lint after prittier update
+      hash: 18c6b8ee635af7aa422e54a5adc94dce34f4346d
+      body: |
+        Fix lint after prittier update
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.35.2
+  date: 2021-05-13T16:47:06.740Z
+- commits:
     - subject: Add missing types for the Service & Image resources
       hash: 822491d7a49ee9d2d88a5c115eca98b7af091fe3
       body: ''
