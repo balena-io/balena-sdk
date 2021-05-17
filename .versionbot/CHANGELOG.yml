@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'os-update: PATCH target OS release as part of upgrade process'
+      hash: 50f8b3595583d5da84a69c0025cb68fe2bfbc2fc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: 'https://github.com/balena-io/balena-io/issues/2277'
+        connects-to: 'https://github.com/balena-io/balena-io/issues/2277'
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 15.37.1
+  date: 2021-05-17T16:52:10.944Z
+- commits:
     - subject: Add public organization types
       hash: 25c88dffddb3878e6d07d465cced711ec66537ad
       body: |
