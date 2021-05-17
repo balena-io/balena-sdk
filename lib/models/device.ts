@@ -2520,11 +2520,10 @@ const getDeviceModel = function (
 				])
 			)[device.is_of__device_type[0].slug];
 
-			if (
-				!osVersions.some(
-					(v) => bSemver.compare(v.rawVersion, targetOsVersion) === 0,
-				)
-			) {
+			const [release] = osVersions.filter(
+				(v) => bSemver.compare(v.rawVersion, targetOsVersion) === 0,
+			);
+			if (!release) {
 				throw new errors.BalenaInvalidParameterError(
 					'targetOsVersion',
 					targetOsVersion,
@@ -2532,7 +2531,7 @@ const getDeviceModel = function (
 			}
 
 			const osUpdateHelper = await getOsUpdateHelper();
-			return await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
+			return await osUpdateHelper.startOsUpdate(pine, uuid, release);
 		},
 
 		/**

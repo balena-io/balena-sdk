@@ -373,6 +373,7 @@ export interface Device {
 	is_managed_by__service_instance: OptionalNavigationResource<ServiceInstance>;
 	is_managed_by__device: OptionalNavigationResource<Device>;
 	should_be_managed_by__supervisor_release: OptionalNavigationResource<SupervisorRelease>;
+	should_be_operated_by__release: OptionalNavigationResource<Release>;
 
 	device_config_variable: ReverseNavigationResource<DeviceVariable>;
 	device_environment_variable: ReverseNavigationResource<DeviceVariable>;

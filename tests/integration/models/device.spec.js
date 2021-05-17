@@ -1592,7 +1592,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.startOsUpdate()', function () {
 				givenADevice(before);
 
-				describe('given an offline device w/o os info', function () {
+				describe('given an offline device w/o OS info', function () {
 					it('should be rejected if the device does not exist', function () {
 						const promise = balena.models.device.startOsUpdate(
 							'asdfghjkl',
@@ -1625,7 +1625,7 @@ describe('Device Model', function () {
 					});
 				});
 
-				describe('given an online device w/o os info', function () {
+				describe('given an online device w/o OS info', function () {
 					before(function () {
 						return balena.pine.patch({
 							resource: 'device',
@@ -1645,7 +1645,7 @@ describe('Device Model', function () {
 					});
 				});
 
-				describe('given an online device with os info', function () {
+				describe('given an online device with OS info', function () {
 					before(function () {
 						return balena.pine.patch({
 							resource: 'device',
@@ -1657,7 +1657,7 @@ describe('Device Model', function () {
 						});
 					});
 
-					it('should not be able to start an OS update when the target os version is not specified', function () {
+					it('should not be able to start an OS update when the target OS version is not specified', function () {
 						// @ts-expect-error
 						const promise = balena.models.device.startOsUpdate(
 							this.device.uuid,
@@ -1672,7 +1672,7 @@ describe('Device Model', function () {
 							);
 					});
 
-					it('should not be able to start an OS update when the target os version does not exist', function () {
+					it('should not be able to start an OS update when the target OS version does not exist', function () {
 						const promise = balena.models.device.startOsUpdate(
 							this.device.uuid,
 							'2.49.0+rev1.prod',
@@ -1698,7 +1698,7 @@ describe('Device Model', function () {
 							expect(error).to.have.property('statusCode', 500);
 							expect(error).to.have.property(
 								'message',
-								'Request error: [object Object]',
+								'Request error: Internal Server Error',
 							);
 							return expect(error.code).to.not.equal(
 								'BalenaInvalidParameterError',

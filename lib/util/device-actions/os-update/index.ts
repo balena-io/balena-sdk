@@ -1,9 +1,10 @@
 import type * as BalenaRequest from '../../../../typings/balena-request';
 import { DeviceActionsService } from '../device-actions-service';
+import { AnyObject } from '../../../../typings/utils';
 
 const OS_UPDATE_ACTION_NAME = 'resinhup';
 
-// See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
+// See: https://github.com/balena-io/balena-proxy/issues/51#issuecomment-274251469
 export interface OsUpdateActionResult {
 	status: 'idle' | 'in_progress' | 'done' | 'error' | 'configuring';
 	parameters?: {
@@ -22,12 +23,24 @@ export const getOsUpdateHelper = function (
 		request,
 	);
 
-	const startOsUpdate = (uuid: string, targetOsVersion: string) => {
+	// TODO: tighten up typings
+	const startOsUpdate = async (pine: any, uuid: string, release: AnyObject) => {
+		await pine.patch({
+			resource: 'device',
+			options: {
+				$filter: {
+					uuid,
+				},
+			},
+			body: {
+				should_be_operated_by__release: release.id,
+			},
+		});
 		return deviceActionsService.startAction<OsUpdateActionResult>({
 			uuid,
 			actionName: OS_UPDATE_ACTION_NAME,
 			params: {
-				target_version: targetOsVersion,
+				target_version: release.strippedVersion,
 			},
 		});
 	};
