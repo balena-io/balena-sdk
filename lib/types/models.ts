@@ -47,6 +47,7 @@ export interface ResourceTypeMap {
 	plan__has__discount_code: PlanDiscountCode;
 	plan_addon: PlanAddon;
 	plan_feature: PlanFeature;
+	public_organization: PublicOrganization;
 	recovery_two_factor: RecoveryTwoFactor;
 	release: Release;
 	release_tag: ReleaseTag;
@@ -169,6 +170,7 @@ export interface Application {
 	is_archived: boolean;
 	is_discoverable: boolean;
 	is_stored_at__repository_url: string | null;
+	public_organization: OptionalNavigationResource<PublicOrganization>;
 	application_type: NavigationResource<ApplicationType>;
 	is_for__device_type: NavigationResource<DeviceType>;
 	depends_on__application: OptionalNavigationResource<Application>;
@@ -195,6 +197,12 @@ export interface UserHasDirectAccessToApplication {
 	id: number;
 	user: NavigationResource<User>;
 	has_direct_access_to__application: NavigationResource<Application>;
+}
+
+export interface PublicOrganization {
+	id: number;
+	name: string;
+	handle: string;
 }
 
 export interface Invitee {
