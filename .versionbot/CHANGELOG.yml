@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add public organization types
+      hash: 25c88dffddb3878e6d07d465cced711ec66537ad
+      body: |
+        Add public organization types
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.37.0
+  date: 2021-05-17T09:44:23.198Z
+- commits:
     - subject: Add is_of__class in application model
       hash: 17bc4ae8bcfd6fbed681eccc7bcf2a90a5801785
       body: |
