@@ -1,4 +1,31 @@
 - commits:
+    - subject: 'models/billing: Add changePlan method'
+      hash: 31dae69abbdac6b4e50e3deab61e2b9681d464d1
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/3097'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/3097'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update DOCUMENTATION about getAllWithDeviceServiceDetails deprecation
+      hash: b63e00b777202ab4988dcc54616d67350dd3e3b0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 95b7bf7541b72d9ad35af1558b9c89841f2a3f66
+        see: 95b7bf7541b72d9ad35af1558b9c89841f2a3f66
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.38.0
+  date: 2021-05-20T12:43:41.288Z
+- commits:
     - subject: Add public organization types
       hash: 25c88dffddb3878e6d07d465cced711ec66537ad
       body: |
