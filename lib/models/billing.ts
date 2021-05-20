@@ -132,6 +132,12 @@ export interface InvoiceInfo {
 	state: 'pending' | 'paid' | 'failed' | 'past_due';
 }
 
+export interface PlanChangeOptions {
+	tier: string;
+	cycle: 'monthly' | 'annual';
+	planChangeReason?: string;
+}
+
 const getBillingModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
@@ -301,6 +307,44 @@ const getBillingModel = function (
 				body: billingInfo,
 			});
 			return body;
+		},
+
+		/**
+		 * @summary Change the current billing plan
+		 * @name changePlan
+		 * @public
+		 * @function
+		 * @memberof balena.models.billing
+		 *
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
+		 * @param {Object} planChangeOptions - an object containing the billing plan change options
+		 *
+		 * @param {String} billingInfo.tier - the code of the target billing plan
+		 * @param {String} billingInfo.cycle - the billing cycle
+		 * @param {String} [billingInfo.planChangeReason] - the reason for changing the current plan
+		 *
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.billing.changePlan(orgId, { billingCode: 'prototype-v2', cycle: 'annual' }).then(function() {
+		 * 	console.log('Plan changed!');
+		 * });
+		 */
+		changePlan: async (
+			organization: string | number,
+			{ cycle, ...restPlanChangeOptions }: PlanChangeOptions,
+		): Promise<void> => {
+			const orgId = await getOrgId(organization);
+
+			await request.send({
+				method: 'PATCH',
+				url: `/billing/v1/account/${orgId}/plan`,
+				baseUrl: apiUrl,
+				body: {
+					annual: cycle === 'annual',
+					...restPlanChangeOptions,
+				},
+			});
 		},
 
 		/**
