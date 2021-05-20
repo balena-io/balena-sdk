@@ -141,7 +141,7 @@ const sdk = fromSharedOptions();
                 * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
             * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
-            * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
+            * ~~[.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>~~
             * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
             * [.getWithDeviceServiceDetails(nameOrSlugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
@@ -509,7 +509,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
         * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
-        * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
+        * ~~[.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>~~
         * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
         * [.getWithDeviceServiceDetails(nameOrSlugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
@@ -750,7 +750,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
     * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.application.getAll) ⇒ <code>Promise</code>
-    * [.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>
+    * ~~[.getAllWithDeviceServiceDetails([options])](#balena.models.application.getAllWithDeviceServiceDetails) ⇒ <code>Promise</code>~~
     * [.get(nameOrSlugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
     * [.getWithDeviceServiceDetails(nameOrSlugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
@@ -1695,7 +1695,9 @@ balena.models.application.getAll(function(error, applications) {
 ```
 <a name="balena.models.application.getAllWithDeviceServiceDetails"></a>
 
-##### application.getAllWithDeviceServiceDetails([options]) ⇒ <code>Promise</code>
+##### ~~application.getAllWithDeviceServiceDetails([options]) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 This method does not map exactly to the underlying model: it runs a
 larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want more control, or to see the raw model
