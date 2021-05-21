@@ -48,6 +48,7 @@ export interface ResourceTypeMap {
 	plan_addon: PlanAddon;
 	plan_feature: PlanFeature;
 	public_organization: PublicOrganization;
+	public_device: PublicDevice;
 	recovery_two_factor: RecoveryTwoFactor;
 	release: Release;
 	release_tag: ReleaseTag;
@@ -182,6 +183,7 @@ export interface Application {
 	build_environment_variable: ReverseNavigationResource<BuildVariable>;
 	application_tag: ReverseNavigationResource<ApplicationTag>;
 	owns__device: ReverseNavigationResource<Device>;
+	owns__public_device: ReverseNavigationResource<PublicDevice>;
 	owns__release: ReverseNavigationResource<Release>;
 	is_depended_on_by__application: ReverseNavigationResource<Application>;
 	is_directly_accessible_by__user: ReverseNavigationResource<User>;
@@ -203,6 +205,16 @@ export interface PublicOrganization {
 	id: number;
 	name: string;
 	handle: string;
+}
+
+export interface PublicDevice {
+	// TODO: improve the custom pine client rypings to support resources w/o an id field
+	id: undefined;
+	latitude: string;
+	longitude: string;
+	belongs_to__application: NavigationResource<Application>;
+	is_of__device_type: NavigationResource<DeviceType>;
+	was_recently_online: boolean;
 }
 
 export interface Invitee {
