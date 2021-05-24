@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add public device types
+      hash: c9088c4ddfac196353a7db0bfbe5661485e0f80c
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 15.39.0
+  date: 2021-05-24T12:49:36.444Z
+- commits:
     - subject: 'models/billing: Add changePlan method'
       hash: 31dae69abbdac6b4e50e3deab61e2b9681d464d1
       body: ''
