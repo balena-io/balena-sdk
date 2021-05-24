@@ -141,7 +141,7 @@ const sdk = fromSharedOptions();
                 * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
             * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
-            * [.get(slugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
+            * [.get(slugOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
             * [.getWithDeviceServiceDetails(slugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
             * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
@@ -514,7 +514,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
         * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
-        * [.get(slugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
+        * [.get(slugOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
         * [.getWithDeviceServiceDetails(slugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
         * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
@@ -758,7 +758,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
     * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
-    * [.get(slugOrId, [options])](#balena.models.application.get) ⇒ <code>Promise</code>
+    * [.get(slugOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
     * [.getWithDeviceServiceDetails(slugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
     * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
@@ -1703,7 +1703,7 @@ balena.models.application.getAll(function(error, applications) {
 ```
 <a name="balena.models.application.get"></a>
 
-##### application.get(slugOrId, [options]) ⇒ <code>Promise</code>
+##### application.get(slugOrId, [options], [context]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application  
 **Access**: public  
@@ -1713,6 +1713,7 @@ balena.models.application.getAll(function(error, applications) {
 | --- | --- | --- | --- |
 | slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+| [context] | <code>String</code> |  | extra access filters, undefined or 'directly_accessible' |
 
 **Example**  
 ```js
