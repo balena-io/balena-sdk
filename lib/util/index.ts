@@ -117,7 +117,7 @@ export function mergePineOptions<R extends {}>(
 			case '$orderby':
 			case '$top':
 			case '$skip':
-				// @ts-ignore
+				// @ts-expect-error
 				result[option] = extras[option];
 				break;
 

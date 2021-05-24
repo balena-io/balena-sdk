@@ -1,8 +1,8 @@
 {
 	"*.js": [
-		"balena-lint --typescript --fix"
+		"balena-lint --fix"
 	],
 	"*.ts": [
-		"balena-lint --typescript --fix"
+		"balena-lint --fix"
 	]
 }
