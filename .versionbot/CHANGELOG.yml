@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-lint to v6
+      hash: a29ba1ead8c77ea381f3c017ccc9e0710ebf0e77
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.39.1
+  date: 2021-05-24T12:59:59.973Z
+- commits:
     - subject: Add public device types
       hash: c9088c4ddfac196353a7db0bfbe5661485e0f80c
       body: ''
