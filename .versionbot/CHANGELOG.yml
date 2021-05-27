@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update TypeScript to v4.3.2
+      hash: 2bdcb554362cd3a1fe09fcef7e1c5129a4b9a46b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.39.2
+  date: 2021-05-27T12:02:30.401Z
+- commits:
     - subject: Update balena-lint to v6
       hash: a29ba1ead8c77ea381f3c017ccc9e0710ebf0e77
       body: ''
