@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add application settings
+      hash: 67aae18a6b2f0259fd37fde17607fdc18deac9fb
+      body: |
+        Add application settings
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.40.0
+  date: 2021-05-28T11:39:41.073Z
+- commits:
     - subject: Update TypeScript to v4.3.2
       hash: 2bdcb554362cd3a1fe09fcef7e1c5129a4b9a46b
       body: ''
