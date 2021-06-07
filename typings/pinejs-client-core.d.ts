@@ -51,27 +51,31 @@ export type SelectableProps<T> =
 
 export type ExpandableProps<T> = PropsOfType<T, AssociatedResource> & string;
 
-type SelectedProperty<T, K extends keyof T> =
-	T[K] extends NavigationResource<any>
-		? PineDeferred
-		: T[K] extends OptionalNavigationResource<any>
-		? PineDeferred | null
-		: T[K];
+type SelectedProperty<
+	T,
+	K extends keyof T,
+> = T[K] extends NavigationResource<any>
+	? PineDeferred
+	: T[K] extends OptionalNavigationResource<any>
+	? PineDeferred | null
+	: T[K];
 
 type SelectResultObject<T, Props extends keyof T> = {
 	[P in Props]: SelectedProperty<T, P>;
 };
 
-export type TypedSelectResult<T, TParams extends ODataOptions<T>> =
-	TParams['$select'] extends keyof T
-		? SelectResultObject<T, TParams['$select']>
-		: TParams['$select'] extends Array<keyof T>
-		? SelectResultObject<T, TParams['$select'][number]>
-		: TParams['$select'] extends '*'
-		? SelectResultObject<T, SelectableProps<T>>
-		: undefined extends TParams['$select']
-		? SelectResultObject<T, SelectableProps<T>>
-		: never;
+export type TypedSelectResult<
+	T,
+	TParams extends ODataOptions<T>,
+> = TParams['$select'] extends keyof T
+	? SelectResultObject<T, TParams['$select']>
+	: TParams['$select'] extends Array<keyof T>
+	? SelectResultObject<T, TParams['$select'][number]>
+	: TParams['$select'] extends '*'
+	? SelectResultObject<T, SelectableProps<T>>
+	: undefined extends TParams['$select']
+	? SelectResultObject<T, SelectableProps<T>>
+	: never;
 
 type ExpandedProperty<
 	T,
@@ -91,33 +95,39 @@ export type ExpandResultObject<T, Props extends keyof T> = {
 	[P in Props]: ExpandedProperty<T, P, {}>;
 };
 
-type ExpandResourceExpandObject<T, TResourceExpand extends ResourceExpand<T>> =
-	{
-		[P in keyof TResourceExpand]: ExpandedProperty<
-			T,
-			P extends keyof T ? P : never,
-			Exclude<TResourceExpand[P], undefined>
-		>;
-	};
+type ExpandResourceExpandObject<
+	T,
+	TResourceExpand extends ResourceExpand<T>,
+> = {
+	[P in keyof TResourceExpand]: ExpandedProperty<
+		T,
+		P extends keyof T ? P : never,
+		Exclude<TResourceExpand[P], undefined>
+	>;
+};
 
-export type TypedExpandResult<T, TParams extends ODataOptions<T>> =
-	TParams['$expand'] extends ExpandableProps<T>
-		? ExpandResultObject<T, TParams['$expand']>
-		: TParams['$expand'] extends ResourceExpand<T>
-		? keyof TParams['$expand'] extends ExpandableProps<T>
-			? ExpandResourceExpandObject<T, TParams['$expand']>
-			: never
-		: {};
+export type TypedExpandResult<
+	T,
+	TParams extends ODataOptions<T>,
+> = TParams['$expand'] extends ExpandableProps<T>
+	? ExpandResultObject<T, TParams['$expand']>
+	: TParams['$expand'] extends ResourceExpand<T>
+	? keyof TParams['$expand'] extends ExpandableProps<T>
+		? ExpandResourceExpandObject<T, TParams['$expand']>
+		: never
+	: {};
 
-export type TypedResult<T, TParams extends ODataOptions<T> | undefined> =
-	TParams extends ODataOptionsWithCount<T>
-		? number
-		: TParams extends ODataOptions<T>
-		? Omit<TypedSelectResult<T, TParams>, keyof TypedExpandResult<T, TParams>> &
-				TypedExpandResult<T, TParams>
-		: undefined extends TParams
-		? TypedSelectResult<T, { $select: '*' }>
-		: never;
+export type TypedResult<
+	T,
+	TParams extends ODataOptions<T> | undefined,
+> = TParams extends ODataOptionsWithCount<T>
+	? number
+	: TParams extends ODataOptions<T>
+	? Omit<TypedSelectResult<T, TParams>, keyof TypedExpandResult<T, TParams>> &
+			TypedExpandResult<T, TParams>
+	: undefined extends TParams
+	? TypedSelectResult<T, { $select: '*' }>
+	: never;
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
@@ -152,10 +162,12 @@ type AssociatedResourceFilter<T> =
 		? FilterObj<InferAssociatedResourceType<T>>
 		: FilterObj<InferAssociatedResourceType<T>> | number | null;
 
-type ResourceObjFilterPropValue<T, k extends keyof T> =
-	T[k] extends AssociatedResource
-		? AssociatedResourceFilter<T[k]>
-		: T[k] | FilterExpressions<T[k]> | null;
+type ResourceObjFilterPropValue<
+	T,
+	k extends keyof T,
+> = T[k] extends AssociatedResource
+	? AssociatedResourceFilter<T[k]>
+	: T[k] | FilterExpressions<T[k]> | null;
 
 type ResourceObjFilter<T> = {
 	[k in keyof T]?: ResourceObjFilterPropValue<T, k>;
