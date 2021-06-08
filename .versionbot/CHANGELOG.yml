@@ -1,4 +1,18 @@
 - commits:
+    - subject: Fix lint with new linter version
+      hash: 2e5a1a727bbc492d9adb69fd912b9884c1d409f6
+      body: |
+        Fix lint with new linter version
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.39.3
+  date: 2021-06-08T08:03:21.471Z
+- commits:
     - subject: Update TypeScript to v4.3.2
       hash: 2bdcb554362cd3a1fe09fcef7e1c5129a4b9a46b
       body: ''
