@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add getAllNamedUserApiKeys() in the apiKey model
+      hash: 621d6f4bf515e5236e29729ba81efeeebe2c1091
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.40.0
+  date: 2021-06-09T12:47:41.733Z
+- commits:
     - subject: Add missing modified_at in device type
       hash: a21aa6c88b28d4430d16e9fb2bba5d5f9657e6b2
       body: |
