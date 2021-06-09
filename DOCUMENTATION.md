@@ -269,6 +269,7 @@ const sdk = fromSharedOptions();
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
+            * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
             * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
             * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
         * [.key](#balena.models.key) : <code>object</code>
@@ -638,6 +639,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
+        * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
         * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
         * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
     * [.key](#balena.models.key) : <code>object</code>
@@ -5344,6 +5346,7 @@ balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTyp
 * [.apiKey](#balena.models.apiKey) : <code>object</code>
     * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
+    * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
     * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
     * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
 
@@ -5402,6 +5405,31 @@ balena.models.apiKey.getAll().then(function(apiKeys) {
 **Example**  
 ```js
 balena.models.apiKey.getAll(function(error, apiKeys) {
+	if (error) throw error;
+	console.log(apiKeys);
+});
+```
+<a name="balena.models.apiKey.getAllNamedUserApiKeys"></a>
+
+##### apiKey.getAllNamedUserApiKeys([options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
+**Summary**: Get all named user API keys of the current user  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - apiKeys  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.apiKey.getAllNamedUserApiKeys().then(function(apiKeys) {
+	console.log(apiKeys);
+});
+```
+**Example**  
+```js
+balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
 	if (error) throw error;
 	console.log(apiKeys);
 });
