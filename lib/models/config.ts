@@ -80,18 +80,18 @@ const getConfigModel = function (
 		// should be a matter of time for this to be removed.
 		deviceTypes.map(function (deviceType) {
 			if (deviceType.state === 'DISCONTINUED') {
-				deviceType.name = deviceType.name.replace(
+				deviceType.name = deviceType.name?.replace(
 					/(\(PREVIEW|EXPERIMENTAL\))/,
 					'(DISCONTINUED)',
 				);
 			}
 			if (deviceType.state === 'PREVIEW') {
 				deviceType.state = 'ALPHA';
-				deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)');
+				deviceType.name = deviceType.name?.replace('(PREVIEW)', '(ALPHA)');
 			}
 			if (deviceType.state === 'EXPERIMENTAL') {
 				deviceType.state = 'NEW';
-				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(NEW)');
+				deviceType.name = deviceType.name?.replace('(EXPERIMENTAL)', '(NEW)');
 			}
 			return deviceType;
 		});

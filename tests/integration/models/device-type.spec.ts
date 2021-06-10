@@ -7,6 +7,7 @@ import type * as BalenaSdk from '../../..';
 const DEVICE_TYPE_NAME = 'Raspberry Pi 2';
 const DEVICE_TYPE_SLUG = 'raspberry-pi2';
 const DEVICE_TYPE_ALIAS = 'raspberrypi2';
+const DEVICE_TYPE_INSTALL_METHOD = 'externalBoot';
 const DEVICE_TYPE_ID = 1;
 
 describe('Device Type model', function () {
@@ -89,6 +90,35 @@ describe('Device Type model', function () {
 				DEVICE_TYPE_NAME,
 			);
 			expect(slug).to.equal(DEVICE_TYPE_SLUG);
+		});
+	});
+
+	parallel('balena.models.deviceType.getInterpolatedPartials()', function () {
+		it(`should get just the device type partials with template strings resolved`, async function () {
+			const partials = await balena.models.deviceType.getInterpolatedPartials(
+				DEVICE_TYPE_NAME,
+			);
+			expect(partials).to.be.an('object');
+			expect(Object.keys(partials)).to.not.have.length(0);
+		});
+	});
+
+	parallel('balena.models.deviceType.getInstructions()', function () {
+		it(`should get just the full instructions for installing BalenaOS on a device type with templates strings resolved`, async function () {
+			const partials = await balena.models.deviceType.getInstructions(
+				DEVICE_TYPE_NAME,
+			);
+			expect(partials).to.be.an('Array');
+			expect(partials).to.not.have.length(0);
+		});
+	});
+
+	parallel('balena.models.deviceType.getInstallMethod()', function () {
+		it(`should get device type installation method`, async function () {
+			const installMethod = await balena.models.deviceType.getInstallMethod(
+				DEVICE_TYPE_NAME,
+			);
+			expect(installMethod).to.equal(DEVICE_TYPE_INSTALL_METHOD);
 		});
 	});
 });

@@ -1,12 +1,9 @@
+import type { Contract } from './contract';
 import type { Dictionary } from '../../typings/utils';
 
 /* types for the /device-types/v1 endppoints */
 
-export interface DeviceType {
-	slug: string;
-	name: string;
-	aliases: string[];
-
+export interface DeviceType extends Contract {
 	arch: string;
 	state?: string;
 	community?: boolean;

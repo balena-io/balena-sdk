@@ -16,8 +16,78 @@ limitations under the License.
 
 import type { InjectedDependenciesParam, PineOptions } from '..';
 import { DeviceType } from '../types/models';
+import { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
 import * as errors from 'balena-errors';
+import * as Handlebars from 'handlebars';
+import cloneDeep = require('lodash/cloneDeep');
+
+// REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
+import { BalenaOS } from './balenaos-contract';
+
+const traversingCompile = (
+	partials: Partials,
+	initial: Contract,
+	keys: string[],
+): Contract => {
+	return Object.keys(partials).reduce(
+		(interpolated: Contract, partialKey) => {
+			const current = partials[partialKey];
+			if (Array.isArray(current)) {
+				let location: any = interpolated;
+				for (const key of keys) {
+					location = location[key];
+				}
+				// if array of partials, compile the template
+				location[partialKey] = current
+					.map((partial: string) => Handlebars.compile(partial)(interpolated))
+					.filter((n) => n);
+			} else {
+				// if it's another dictionary, keep traversing
+				interpolated = traversingCompile(
+					current,
+					interpolated,
+					keys.concat([partialKey]),
+				);
+			}
+			return interpolated;
+		},
+		{ ...initial },
+	);
+};
+
+const interpolatedPartials = (contract: Contract, initial?: any): Contract => {
+	const fullInitial: Contract = { ...contract, ...initial };
+	if (contract.partials) {
+		return traversingCompile(contract.partials, fullInitial, ['partials']);
+	} else {
+		return fullInitial;
+	}
+};
+
+const calculateInstallMethod = (contract: Contract): string => {
+	const flashProtocol = contract.data?.flashProtocol;
+	const defaultBoot = contract.data?.media?.defaultBoot;
+	if (flashProtocol) {
+		if (flashProtocol === 'RPIBOOT') {
+			return 'internalFlash';
+		} else {
+			return flashProtocol;
+		}
+	} else if (defaultBoot) {
+		if (defaultBoot === 'image') {
+			return 'image';
+		} else if (defaultBoot === 'internal') {
+			return 'externalFlash';
+		} else {
+			return 'externalBoot';
+		}
+	} else {
+		throw new errors.BalenaError(
+			`Unable to determine installation method for contract: ${contract.slug}`,
+		);
+	}
+};
 
 const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
@@ -322,6 +392,113 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 			return (
 				await exports.getBySlugOrName(deviceTypeName, { $select: 'slug' })
 			).slug;
+		},
+
+		/**
+		 * @summary Get a contract with resolved partial templates
+		 * @name getInterpolatedPartials
+		 * @public
+		 * @function
+		 * @memberof balena.models.deviceType
+		 *
+		 * @param {String} deviceTypeSlug - device type slug
+		 * @param {any} initial - Other contract values necessary for interpreting contracts
+		 * @fulfil {Contract} - device type contract with resolved partials
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.deviceType.getInterpolatedPartials('raspberry-pi').then(function(contract) {
+		 *  for (const partial in contract.partials) {
+		 *  	console.log(`${partial}: ${contract.partials[partial]}`);
+		 *  }
+		 * 	// bootDevice: ["Connect power to the Raspberry Pi (v1 / Zero / Zero W)"]
+		 * });
+		 */
+		getInterpolatedPartials: async (
+			deviceTypeSlug: string,
+			initial: any = {},
+		): Promise<Contract> => {
+			const { contract } = await exports.getBySlugOrName(deviceTypeSlug, {
+				$select: 'contract',
+			});
+			if (!contract) {
+				throw new Error('Slug does not contain contract');
+			}
+			return interpolatedPartials(contract, initial);
+		},
+
+		/**
+		 * @summary Get instructions for installing a host OS on a given device type
+		 * @name getInstructions
+		 * @public
+		 * @function
+		 * @memberof balena.models.deviceType
+		 *
+		 * @param {String} deviceTypeSlug - device type slug
+		 * @fulfil {String[]} - step by step instructions for installing the host OS to the device
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.deviceType.getInstructions('raspberry-pi').then(function(instructions) {
+		 *  for (let instruction of instructions.values()) {
+		 * 	 console.log(instruction);
+		 *  }
+		 *  // Insert the sdcard to the host machine.
+		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.
+		 *  // Wait for writing of BalenaOS to complete.
+		 *  // Remove the sdcard from the host machine.
+		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
+		 *  // Connect power to the Raspberry Pi (v1 / Zero / Zero W) to boot the device.
+		 * });
+		 */
+		getInstructions: async (
+			deviceTypeSlug: string,
+		): Promise<any | string[]> => {
+			const { contract } = await exports.getBySlugOrName(deviceTypeSlug, {
+				$select: 'contract',
+			});
+			if (!contract || !contract.partials) {
+				throw new Error(
+					`Instruction partials not defined for ${deviceTypeSlug}`,
+				);
+			}
+			const installMethod = calculateInstallMethod(contract);
+			const interpolatedDeviceType = interpolatedPartials(contract);
+			const interpolatedHostOS = interpolatedPartials(cloneDeep(BalenaOS), {
+				deviceType: interpolatedDeviceType,
+			});
+
+			return interpolatedHostOS.partials?.[installMethod];
+		},
+
+		/**
+		 * @summary Get installation method on a given device type
+		 * @name getInstallMethod
+		 * @public
+		 * @function
+		 * @memberof balena.models.deviceType
+		 *
+		 * @param {String} deviceTypeSlug - device type slug
+		 * @fulfil {String} - the installation method supported for the given device type slug
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.deviceType.getInstallMethod('raspberry-pi').then(function(method) {
+		 * 	console.log(method);
+		 *  // externalBoot
+		 * });
+		 */
+		getInstallMethod: async (
+			deviceTypeSlug: string,
+		): Promise<string | null> => {
+			const { contract } = await exports.getBySlugOrName(deviceTypeSlug, {
+				$select: 'contract',
+			});
+			if (contract) {
+				return calculateInstallMethod(contract);
+			} else {
+				return null;
+			}
 		},
 	};
 
