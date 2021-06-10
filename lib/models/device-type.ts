@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,32 @@ limitations under the License.
 
 import type { InjectedDependenciesParam, PineOptions } from '..';
 import { DeviceType } from '../types/models';
+import { Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
 import * as errors from 'balena-errors';
+import * as Handlebars from 'handlebars';
+import cloneDeep = require('lodash/cloneDeep');
+
+// REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
+import { BalenaOS } from './balenaos-contract';
+
+const interpolatedPartials = (contract: Contract, initial: any = {}) => {
+	const fullInitial = { ...contract, ...initial };
+	if (contract.partials) {
+		const partials = contract.partials;
+		return Object.keys(partials).reduce(
+			(interpolated: any, partialKey) => {
+				interpolated.partials[partialKey] = partials[partialKey].map(
+					(partial: string) => Handlebars.compile(partial)(interpolated),
+				);
+				return interpolated;
+			},
+			{ ...fullInitial },
+		);
+	} else {
+		return fullInitial;
+	}
+};
 
 const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
@@ -280,6 +304,118 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 			return (
 				await exports.getBySlugOrName(deviceTypeSlug, { $select: 'name' })
 			).name;
+		},
+
+		/**
+		 * @summary Get a contract with resolved partial templates
+		 * @name getInterpolatedPartials
+		 * @public
+		 * @function
+		 * @memberof balena.models.deviceType
+		 *
+		 * @param {String} deviceTypeSlug - device type slug
+		 * @param {any} initial - Other contract values necessary for interpreting contracts
+		 * @fulfil {Contract} - device type contract with resolved partials
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.deviceType.getInterpolatedPartials('raspberry-pi').then(function(contract) {
+		 *  for (const partial in contract.partials) {
+		 *  	console.log(`${partial}: ${contract.partials[partial]}`);
+		 *  }
+		 * 	// bootDevice: ["Connect power to the Raspberry Pi (v1 / Zero / Zero W)"]
+		 * });
+		 */
+		getInterpolatedPartials: async (
+			deviceTypeSlug: string,
+			initial: any = {},
+		): Promise<Contract> => {
+			const contract = (
+				await exports.getBySlugOrName(deviceTypeSlug, { $select: 'contract' })
+			).contract;
+			if (!contract) {
+				throw new Error('Slug does not contain contract');
+			}
+			return interpolatedPartials(contract, initial);
+		},
+
+		/**
+		 * @summary Get instructions for installing a host OS on a given device type
+		 * @name getInstructions
+		 * @public
+		 * @function
+		 * @memberof balena.models.deviceType
+		 *
+		 * @param {String} deviceTypeSlug - device type slug
+		 * @fulfil {String[]} - step by step instructions for installing the host OS to the device
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.deviceType.getInstructions('raspberry-pi').then(function(instructions) {
+		 *  for (let instruction of instructions.values()) {
+		 * 	 console.log(instruction);
+		 *  }
+		 *  // Insert the sdcard to the host machine.
+		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.
+		 *  // Wait for writing of BalenaOS to complete.
+		 *  // Remove the sdcard from the host machine.
+		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
+		 *  // Connect power to the Raspberry Pi (v1 / Zero / Zero W) to boot the device.
+		 * });
+		 * @example
+		 * balena.models.deviceType.getInstructions('raspberry-pi', baseInstructions = {
+		 *  `Use the form on the left to configure and download {{name}} for your new {{deviceType.name}}.
+		 *  {{#each instructions}}
+		 *   {{{this}}}
+		 *  {{/each}}
+		 *  Your device should appear in your application dashboard within a few minutes. Have fun!`
+		 * }).then(function(instructions) {
+		 *  for (let instruction of instructions.values()) {
+		 * 	 console.log(instruction);
+		 *  }
+		 *  // Use the form on the left to configure and download BalenaOS for your new Raspberry Pi (v1 / Zero / Zero W).
+		 *  // Insert the sdcard to the host machine.
+		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.
+		 *  // Wait for writing of BalenaOS to complete.
+		 *  // Remove the sdcard from the host machine.
+		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
+		 *  // Connect power to the Raspberry Pi (v1 / Zero / Zero W) to boot the device.
+		 *  // Your device should appear in your application dashboard within a few minutes. Have fun!
+		 * });
+		 */
+		getInstructions: async (
+			deviceTypeSlug: string,
+			baseInstructions?: string,
+		): Promise<string[]> => {
+			const contract = (
+				await exports.getBySlugOrName(deviceTypeSlug, { $select: 'contract' })
+			).contract;
+			if (contract) {
+				const installMethod = contract?.data?.installation?.method;
+				if (!installMethod || !contract.partials) {
+					throw new Error(
+						`Install method or instruction partials not defined for ${deviceTypeSlug}`,
+					);
+				}
+				const interpolatedDeviceType = interpolatedPartials(contract);
+				const interpolatedHostOS = interpolatedPartials(cloneDeep(BalenaOS), {
+					deviceType: interpolatedDeviceType,
+				});
+
+				if (baseInstructions) {
+					return Handlebars.compile(baseInstructions)({
+						...interpolatedHostOS,
+						instructions: interpolatedHostOS.partials[installMethod],
+					})
+						.split('\n')
+						.map((s) => s.trim())
+						.filter((s) => s);
+				} else {
+					return interpolatedHostOS.partials[installMethod];
+				}
+			} else {
+				return [];
+			}
 		},
 
 		/**
