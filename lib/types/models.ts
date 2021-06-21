@@ -84,6 +84,7 @@ export interface Organization {
 	/** includes__organization_membership */
 	organization_membership: ReverseNavigationResource<OrganizationMembership>;
 	owns__team: ReverseNavigationResource<Team>;
+	organization__has_private_access_to__device_type: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
 }
 
 export interface Team {
