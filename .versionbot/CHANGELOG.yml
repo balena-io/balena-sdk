@@ -1,4 +1,31 @@
 - commits:
+    - subject: Add organization__has_private_access_to__device_type typings
+      hash: 39e1e92f1e52ec2ed14f6255af00e162ea7d7766
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Add organization.has_past_due_invoice_since__date'
+      hash: 5368a18613262383b427f727f47d7425b4e9bca6
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        HQ: 'https://github.com/balena-io/balena-io/issues/2208'
+        hq: 'https://github.com/balena-io/balena-io/issues/2208'
+        See: 'https://github.com/balena-io/balena-api/pull/3204'
+        see: 'https://github.com/balena-io/balena-api/pull/3204'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.41.0
+  date: 2021-06-21T15:36:42.652Z
+- commits:
     - subject: Add getAllNamedUserApiKeys() in the apiKey model
       hash: 621d6f4bf515e5236e29729ba81efeeebe2c1091
       body: ''
