@@ -78,6 +78,7 @@ export interface Organization {
 	created_at: string;
 	name: string;
 	handle: string;
+	has_past_due_invoice_since__date: string | null;
 
 	application: ReverseNavigationResource<Application>;
 	/** includes__organization_membership */
