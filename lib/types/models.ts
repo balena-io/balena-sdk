@@ -78,11 +78,13 @@ export interface Organization {
 	created_at: string;
 	name: string;
 	handle: string;
+	has_past_due_invoice_since__date: string | null;
 
 	application: ReverseNavigationResource<Application>;
 	/** includes__organization_membership */
 	organization_membership: ReverseNavigationResource<OrganizationMembership>;
 	owns__team: ReverseNavigationResource<Team>;
+	organization__has_private_access_to__device_type: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
 }
 
 export interface Team {
