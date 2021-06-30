@@ -1,4 +1,19 @@
 - commits:
+    - subject: Delete CODEOWNERS
+      hash: 8508a31773f10f89eceabc3058dd7a4e72350d0f
+      body: ''
+      footer:
+        See: >-
+          https://www.flowdock.com/app/rulemotion/pub/threads/trLcZFnSX9fLZn4LiaIv4xuBbah
+        see: >-
+          https://www.flowdock.com/app/rulemotion/pub/threads/trLcZFnSX9fLZn4LiaIv4xuBbah
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.41.1
+  date: 2021-06-30T15:28:57.198Z
+- commits:
     - subject: Add organization__has_private_access_to__device_type typings
       hash: 39e1e92f1e52ec2ed14f6255af00e162ea7d7766
       body: ''
