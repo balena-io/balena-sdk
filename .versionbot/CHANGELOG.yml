@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests/api-key: Fix a race condition in the apiKey.create() tests'
+      hash: d55c3633644cdceac98078abb210bd1f6e8bc61e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Convert the apiKey tests to async-await
+      hash: a4bc4e751a57690425ff1c74542d5045041b7454
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.42.1
+  date: 2021-07-13T15:24:08.359Z
+- commits:
     - subject: 'models/apiKey: Add getProvisioningApiKeysByApplication() method'
       hash: 3c9af747c0439c6cea799b4a5ba25add73a9e5dc
       body: ''
