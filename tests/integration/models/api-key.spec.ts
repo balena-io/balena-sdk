@@ -9,6 +9,7 @@ import {
 	givenLoggedInUser,
 } from '../setup';
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
+import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
 
 describe('API Key model', function () {
@@ -113,20 +114,41 @@ describe('API Key model', function () {
 		});
 	});
 
-	describe('given an application', function () {
+	describe('given a named user api key, a provisioning api key and a device api key [contained scenario]', function () {
 		givenLoggedInUser(before);
 		givenAnApplication(before);
+		givenADevice(before);
+
+		const ctx: {
+			namedUserApiKey?: BalenaSdk.ApiKey;
+			provisioningApiKey?: BalenaSdk.ApiKey;
+			deviceApiKey?: BalenaSdk.ApiKey;
+		} = {};
+
+		const testSet = [
+			['named user', 'namedUserApiKey'],
+			['provisioning', 'provisioningApiKey'],
+			['device', 'deviceApiKey'],
+		] as const;
+
+		before(async function () {
+			await balena.models.apiKey.create(
+				'apiKeyToBeUpdated',
+				'apiKeyDescriptionToBeUpdated',
+			);
+			const [apiKey] = await balena.models.apiKey.getAll({
+				$filter: { name: 'apiKeyToBeUpdated' },
+			});
+			ctx.namedUserApiKey = apiKey;
+
+			await balena.models.application.generateProvisioningKey(
+				this.application.id,
+			);
+
+			await balena.models.device.generateDeviceKey(this.device.id);
+		});
 
 		describe('balena.models.apiKey.getProvisioningApiKeysByApplication', function () {
-			before(async function () {
-				const apiKey = await balena.models.application.generateProvisioningKey(
-					this.application.id,
-				);
-				expect(apiKey).to.be.a('string').that.has.length(32);
-
-				this.apiKey = apiKey;
-			});
-
 			it('should fail when the application does not exist', async function () {
 				const error = await expect(
 					balena.models.apiKey.getProvisioningApiKeysByApplication(
@@ -140,20 +162,16 @@ describe('API Key model', function () {
 				const apiKeys =
 					await balena.models.apiKey.getProvisioningApiKeysByApplication(
 						this.application.id,
+						{ $orderby: { created_at: 'desc' } },
 					);
 				expect(apiKeys).to.be.an('array');
-				expect(apiKeys).to.have.lengthOf(1);
+				expect(apiKeys).to.have.lengthOf(2);
 				expect(apiKeys[0].name).to.equal(null);
+				ctx.provisioningApiKey = apiKeys[0];
 			});
 		});
 
 		describe('balena.models.apiKey.getDeviceApiKeysByDevice', function () {
-			givenADevice(before);
-
-			before(async function () {
-				await balena.models.device.generateDeviceKey(this.device.id);
-			});
-
 			it('should fail when the device does not exist', async function () {
 				const error = await expect(
 					balena.models.apiKey.getDeviceApiKeysByDevice('nonexistentuuid'),
@@ -168,42 +186,31 @@ describe('API Key model', function () {
 				expect(apiKeys).to.be.an('array');
 				expect(apiKeys).to.have.lengthOf(2);
 				expect(apiKeys[0].name).to.equal(null);
+				ctx.deviceApiKey = apiKeys[0];
 			});
-		});
-	});
-
-	describe('given a named user api key [contained scenario]', function () {
-		givenLoggedInUser(before);
-
-		before(async function () {
-			await balena.models.apiKey.create(
-				'apiKeyToBeUpdated',
-				'apiKeyDescriptionToBeUpdated',
-			);
-			const [apiKey] = await balena.models.apiKey.getAll({
-				$filter: { name: 'apiKeyToBeUpdated' },
-			});
-			this.apiKey = apiKey;
 		});
 
 		describe('balena.models.apiKey.update()', () => {
-			it('should not be able to update the name of an api key to null', function () {
-				return expect(
-					balena.models.apiKey.update(this.apiKey.id, { name: null as any }),
+			it('should not be able to update the name of an api key to null', async function () {
+				await expect(
+					balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+						name: null as any,
+					}),
 				).to.be.rejected;
 			});
 
-			it('should not be able to update the name of an api key to an empty string', function () {
-				return expect(balena.models.apiKey.update(this.apiKey.id, { name: '' }))
-					.to.be.rejected;
+			it('should not be able to update the name of an api key to an empty string', async function () {
+				await expect(
+					balena.models.apiKey.update(ctx.namedUserApiKey!.id, { name: '' }),
+				).to.be.rejected;
 			});
 
 			it('should be able to update the name of an api key', async function () {
-				await balena.models.apiKey.update(this.apiKey.id, {
+				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
 					name: 'updatedApiKeyName',
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
-					$filter: { id: this.apiKey.id },
+					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
 					name: 'updatedApiKeyName',
@@ -212,11 +219,11 @@ describe('API Key model', function () {
 			});
 
 			it('should be able to update the description of an api key to a non empty string', async function () {
-				await balena.models.apiKey.update(this.apiKey.id, {
+				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
 					description: 'updatedApiKeyDescription',
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
-					$filter: { id: this.apiKey.id },
+					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
 					name: 'updatedApiKeyName',
@@ -225,9 +232,11 @@ describe('API Key model', function () {
 			});
 
 			it('should be able to update the description of an api key to an empty string', async function () {
-				await balena.models.apiKey.update(this.apiKey.id, { description: '' });
+				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+					description: '',
+				});
 				const [apiKey] = await balena.models.apiKey.getAll({
-					$filter: { id: this.apiKey.id },
+					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
 					name: 'updatedApiKeyName',
@@ -236,11 +245,11 @@ describe('API Key model', function () {
 			});
 
 			it('should be able to update the description of an api key to null', async function () {
-				await balena.models.apiKey.update(this.apiKey.id, {
+				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
 					description: null,
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
-					$filter: { id: this.apiKey.id },
+					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
 					name: 'updatedApiKeyName',
@@ -248,28 +257,35 @@ describe('API Key model', function () {
 				});
 			});
 
-			it('should be able to update the name & description of an api key', async function () {
-				await balena.models.apiKey.update(this.apiKey.id, {
-					name: 'newllyUpdatedApiKeyName',
-					description: 'newllyUpdatedApiKeyDescription',
-				});
-				const [apiKey] = await balena.models.apiKey.getAll({
-					$filter: { id: this.apiKey.id },
-				});
-				expect(apiKey).to.deep.match({
-					name: 'newllyUpdatedApiKeyName',
-					description: 'newllyUpdatedApiKeyDescription',
+			testSet.forEach(([title, ctxPropName]) => {
+				it(`should be able to update the name & description of a(n) ${title} api key`, async function () {
+					await balena.models.apiKey.update(ctx[ctxPropName]!.id, {
+						name: 'newllyUpdatedApiKeyName' + title,
+						description: 'newllyUpdatedApiKeyDescription' + title,
+					});
+					const apiKey = await balena.pine.get({
+						resource: 'api_key',
+						id: ctx[ctxPropName]!.id,
+					});
+					expect(apiKey).to.be.an('object');
+					expect(apiKey).to.deep.match({
+						name: 'newllyUpdatedApiKeyName' + title,
+						description: 'newllyUpdatedApiKeyDescription' + title,
+					});
 				});
 			});
 		});
 
 		describe('balena.models.apiKey.revoke()', () => {
-			it('should be able to revoke an exising api key', async function () {
-				await expect(balena.models.apiKey.revoke(this.apiKey.id)).to.not.be
-					.rejected;
-				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
-				expect(apiKeys).to.be.an('array');
-				expect(apiKeys).to.have.lengthOf(0);
+			testSet.forEach(([title, ctxPropName]) => {
+				it(`should be able to revoke an exising ${title} api key`, async function () {
+					await balena.models.apiKey.revoke(ctx[ctxPropName]!.id);
+					const apiKey = await balena.pine.get({
+						resource: 'api_key',
+						id: ctx[ctxPropName]!.id,
+					});
+					expect(apiKey).to.be.undefined;
+				});
 			});
 		});
 	});
