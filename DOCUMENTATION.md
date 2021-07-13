@@ -270,6 +270,7 @@ const sdk = fromSharedOptions();
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
             * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
+            * [.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
             * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
             * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
         * [.key](#balena.models.key) : <code>object</code>
@@ -640,6 +641,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
         * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
+        * [.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
         * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
         * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
     * [.key](#balena.models.key) : <code>object</code>
@@ -5347,6 +5349,7 @@ balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTyp
     * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
     * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
+    * [.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
     * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
     * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
 
@@ -5430,6 +5433,32 @@ balena.models.apiKey.getAllNamedUserApiKeys().then(function(apiKeys) {
 **Example**  
 ```js
 balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
+	if (error) throw error;
+	console.log(apiKeys);
+});
+```
+<a name="balena.models.apiKey.getProvisioningApiKeysByApplication"></a>
+
+##### apiKey.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
+**Summary**: Get all provisioning API keys for an application  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - apiKeys  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| nameOrSlugOrId | <code>String</code> \| <code>Number</code> |  | application name (string) (deprecated), slug (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp').then(function(apiKeys) {
+	console.log(apiKeys);
+});
+```
+**Example**  
+```js
+balena.models.apiKey.getProvisioningApiKeysByApplication(123, function(error, apiKeys) {
 	if (error) throw error;
 	console.log(apiKeys);
 });

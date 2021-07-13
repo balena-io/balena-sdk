@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
-import { balena, givenLoggedInUser } from '../setup';
+import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 const { expect } = m.chai;
 
@@ -121,6 +121,43 @@ describe('API Key model', function () {
 					expect(apiKey).to.have.property('created_at').that.is.a('string');
 				});
 			});
+		});
+	});
+
+	describe('balena.models.apiKey.getProvisioningApiKeysByApplication', function () {
+		givenLoggedInUser(before);
+		givenAnApplication(before);
+
+		before(async function () {
+			const apiKey = await balena.models.application.generateProvisioningKey(
+				this.application.id,
+			);
+			expect(apiKey).to.be.a('string').that.has.length(32);
+
+			this.apiKey = apiKey;
+		});
+
+		it('should fail when the application does not exist', function () {
+			return expect(
+				balena.models.apiKey.getProvisioningApiKeysByApplication(
+					'nonExistentApp',
+				),
+			).to.be.rejected.then((error) => {
+				return expect(error).to.have.property(
+					'code',
+					'BalenaApplicationNotFound',
+				);
+			});
+		});
+
+		it('should be able to retrieve the provisioning api keys of an application', function () {
+			return balena.models.apiKey
+				.getProvisioningApiKeysByApplication(this.application.id)
+				.then((apiKeys) => {
+					expect(apiKeys).to.be.an('array');
+					expect(apiKeys).to.have.lengthOf(1);
+					expect(apiKeys[0].name).to.equal(null);
+				});
 		});
 	});
 

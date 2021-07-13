@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+import once = require('lodash/once');
 import * as errors from 'balena-errors';
 
 import type * as BalenaSdk from '..';
@@ -24,6 +24,13 @@ const getApiKeysModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
+	const applicationModel = once(() =>
+		(require('./application') as typeof import('./application')).default(
+			deps,
+			opts,
+		),
+	);
+
 	const { pine, request, sdkInstance } = deps;
 	const { apiUrl } = opts;
 	const exports = {
@@ -162,6 +169,51 @@ const getApiKeysModel = function (
 							name: {
 								$ne: null,
 							},
+						},
+						$orderby: 'name asc',
+					},
+					options,
+				),
+			});
+		},
+
+		/**
+		 * @summary Get all provisioning API keys for an application
+		 * @name getProvisioningApiKeysByApplication
+		 * @public
+		 * @function
+		 * @memberof balena.models.apiKey
+		 *
+		 * @param {String|Number} nameOrSlugOrId - application name (string) (deprecated), slug (string) or id (number)
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - apiKeys
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp').then(function(apiKeys) {
+		 * 	console.log(apiKeys);
+		 * });
+		 *
+		 * @example
+		 * balena.models.apiKey.getProvisioningApiKeysByApplication(123, function(error, apiKeys) {
+		 * 	if (error) throw error;
+		 * 	console.log(apiKeys);
+		 * });
+		 */
+		async getProvisioningApiKeysByApplication(
+			nameOrSlugOrId: string | number,
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
+		): Promise<BalenaSdk.ApiKey[]> {
+			const { actor } = await applicationModel().get(nameOrSlugOrId, {
+				$select: 'actor',
+			});
+
+			return await pine.get({
+				resource: 'api_key',
+				options: mergePineOptions(
+					{
+						$filter: {
+							is_of__actor: actor,
 						},
 						$orderby: 'name asc',
 					},
