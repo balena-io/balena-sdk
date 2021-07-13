@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'models/apiKey: Add getProvisioningApiKeysByApplication() method'
+      hash: 3c9af747c0439c6cea799b4a5ba25add73a9e5dc
+      body: ''
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+        signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+      author: Nitish Agarwal
+      nested: []
+  version: 15.42.0
+  date: 2021-07-13T13:08:22.850Z
+- commits:
     - subject: Delete CODEOWNERS
       hash: 8508a31773f10f89eceabc3058dd7a4e72350d0f
       body: ''
