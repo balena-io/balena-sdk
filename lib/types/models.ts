@@ -163,6 +163,7 @@ export interface Application {
 	id: number;
 	created_at: string;
 	app_name: string;
+	actor: number;
 	slug: string;
 	uuid: string;
 	is_accessible_by_support_until__date: string;
