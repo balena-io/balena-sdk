@@ -24,14 +24,6 @@ describe('API Key model', function () {
 					'apiKeyDescription',
 				);
 				expect(key).to.be.a('string');
-				const apiKeys = await balena.models.apiKey.getAll();
-				expect(apiKeys).to.be.an('array');
-				assertDeepMatchAndLength(apiKeys, [
-					{
-						name: 'apiKey2',
-						description: 'apiKeyDescription',
-					},
-				]);
 			});
 		});
 	});
