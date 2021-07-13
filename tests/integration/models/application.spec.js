@@ -623,13 +623,13 @@ describe('Application Model', function () {
 
 			describe('balena.models.application.generateApiKey()', function () {
 				applicationRetrievalFields.forEach((prop) =>
-					it(`should be able to generate an API key by ${prop}`, function () {
-						return balena.models.application
-							.generateApiKey(this.application[prop])
-							.then(function (apiKey) {
-								expect(_.isString(apiKey)).to.be.true;
-								return expect(apiKey).to.have.length(32);
-							});
+					it(`should be able to generate an API key by ${prop}`, async function () {
+						const apiKey = await balena.models.application.generateApiKey(
+							this.application[prop],
+						);
+
+						expect(apiKey).to.be.a('string');
+						expect(apiKey).to.have.length(32);
 					}),
 				);
 
@@ -650,6 +650,17 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.generateProvisioningKey()', function () {
+				const getProvisioningKeys = async function (appNameOrSlug) {
+					const provisioningKeys =
+						await balena.models.apiKey.getProvisioningApiKeysByApplication(
+							appNameOrSlug,
+						);
+
+					expect(provisioningKeys).to.be.an('array');
+
+					return provisioningKeys;
+				};
+
 				applicationRetrievalFields.forEach((prop) =>
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
@@ -658,6 +669,37 @@ describe('Application Model', function () {
 								expect(_.isString(key)).to.be.true;
 								return expect(key).to.have.length(32);
 							});
+					}),
+				);
+
+				applicationRetrievalFields.forEach((prop) =>
+					it(`should be able to generate a provisioning key by ${prop} with key name as key_${prop}`, async function () {
+						const provisioningKeys = await getProvisioningKeys(
+							this.application[prop],
+						);
+
+						const key = await balena.models.application.generateProvisioningKey(
+							this.application[prop],
+							`key_${prop}`,
+						);
+
+						expect(key).to.be.a('string');
+						expect(key).to.have.length(32);
+						const updatedProvisioningKeys = await getProvisioningKeys(
+							this.application[prop],
+						);
+
+						const provisionKeys = _.differenceWith(
+							updatedProvisioningKeys,
+							provisioningKeys,
+							_.isEqual,
+						);
+
+						expect(provisionKeys).to.have.lengthOf(1);
+						expect(provisionKeys[0]).to.have.property('name');
+						expect(provisionKeys[0])
+							.to.have.property('name')
+							.to.be.equal(`key_${prop}`);
 					}),
 				);
 
