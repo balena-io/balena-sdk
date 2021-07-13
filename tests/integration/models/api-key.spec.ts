@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
-import { timeSuite } from '../../util';
+import { assertDeepMatchAndLength, timeSuite } from '../../util';
 const { expect } = m.chai;
 
 describe('API Key model', function () {
@@ -26,8 +26,7 @@ describe('API Key model', function () {
 				expect(key).to.be.a('string');
 				const apiKeys = await balena.models.apiKey.getAll();
 				expect(apiKeys).to.be.an('array');
-				expect(apiKeys).to.have.lengthOf(1);
-				expect(apiKeys).to.deep.match([
+				assertDeepMatchAndLength(apiKeys, [
 					{
 						name: 'apiKey2',
 						description: 'apiKeyDescription',
@@ -59,8 +58,7 @@ describe('API Key model', function () {
 			it('should be able to retrieve all api keys created', async () => {
 				const apiKeys = await balena.models.apiKey.getAll();
 				expect(apiKeys).to.be.an('array');
-				expect(apiKeys).to.have.lengthOf(2);
-				expect(apiKeys).to.deep.match([
+				assertDeepMatchAndLength(apiKeys, [
 					{
 						name: 'apiKey1',
 						description: null,
@@ -100,8 +98,7 @@ describe('API Key model', function () {
 			it('should be able to retrieve all api keys created', async function () {
 				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
 				expect(apiKeys).to.be.an('array');
-				expect(apiKeys).to.have.lengthOf(2);
-				expect(apiKeys).to.deep.match([
+				assertDeepMatchAndLength(apiKeys, [
 					{
 						name: 'apiKey1',
 						description: null,

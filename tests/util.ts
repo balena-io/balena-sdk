@@ -5,7 +5,7 @@ import { balena } from './integration/setup';
 import type * as BalenaSdk from '..';
 const { expect } = m.chai;
 
-export const assertDeepMatchAndLength = (a: any, b: any) => {
+export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
 	[a, b].forEach((target) =>
 		expect(target).to.have.property('length').that.is.a('number'),
 	);
