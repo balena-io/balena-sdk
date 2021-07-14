@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'tests: Reduce the number of organizations created'
+      hash: 59708dbcee7a3b3882751eb88efa30f1232b0631
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: 'https://github.com/balena-io/balena-api/pull/3239'
+        see: 'https://github.com/balena-io/balena-api/pull/3239'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.42.2
+  date: 2021-07-14T08:44:06.109Z
+- commits:
     - subject: 'tests/api-key: Fix a race condition in the apiKey.create() tests'
       hash: d55c3633644cdceac98078abb210bd1f6e8bc61e
       body: ''
