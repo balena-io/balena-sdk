@@ -1,7 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
-import { balena, givenAnOrganization, givenLoggedInUser } from '../setup';
+import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 const { expect } = m.chai;
@@ -10,6 +10,17 @@ const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my org on balenaCloud';
 const TEST_ROLE = 'member';
 const UNKNOWN_ROLE = 'undefined_role';
+
+const resetOrganizationInvites = async (orgId: number) => {
+	await balena.pine.delete({
+		resource: 'invitee__is_invited_to__organization',
+		options: {
+			$filter: {
+				is_invited_to__organization: orgId,
+			},
+		},
+	});
+};
 
 describe('Organization Invite Model', function () {
 	timeSuite(before);
@@ -24,7 +35,11 @@ describe('Organization Invite Model', function () {
 		givenLoggedInUser(before);
 
 		describe('given an organization', function () {
-			givenAnOrganization(before);
+			givenInitialOrganization(before);
+			before(async function () {
+				this.organization = this.initialOrg;
+				await resetOrganizationInvites(this.organization.id);
+			});
 
 			describe('given no organization invite [contained scenario]', function () {
 				let ctx: Mocha.Context;
@@ -33,14 +48,7 @@ describe('Organization Invite Model', function () {
 				});
 
 				after(async function () {
-					await balena.pine.delete({
-						resource: 'invitee__is_invited_to__organization',
-						options: {
-							$filter: {
-								is_invited_to__organization: this.organization.id,
-							},
-						},
-					});
+					await resetOrganizationInvites(this.organization.id);
 				});
 
 				parallel(

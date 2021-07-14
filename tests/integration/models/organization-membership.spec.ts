@@ -5,7 +5,6 @@ import * as parallel from 'mocha.parallel';
 import {
 	balena,
 	credentials,
-	givenAnOrganization,
 	givenInitialOrganization,
 	givenLoggedInUser,
 } from '../setup';
@@ -151,7 +150,19 @@ describe('Organization Membership Model', function () {
 	});
 
 	describe('given a new organization', function () {
-		givenAnOrganization(before);
+		givenInitialOrganization(before);
+		before(async function () {
+			this.organization = this.initialOrg;
+			await balena.pine.delete({
+				resource: 'organization_membership',
+				options: {
+					$filter: {
+						user: { $ne: this.userId },
+						is_member_of__organization: this.organization.id,
+					},
+				},
+			});
+		});
 
 		describe('balena.models.organization.membership.create()', function () {
 			before(function () {
