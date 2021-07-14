@@ -137,6 +137,7 @@ export interface OrganizationMembership {
 	/** organization */
 	is_member_of__organization: NavigationResource<Organization>;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
+	effective_seat_role: string;
 
 	organization_membership_tag: ReverseNavigationResource<OrganizationMembershipTag>;
 }
