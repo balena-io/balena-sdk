@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'typings: Add the organization_memebership.effective_seat_role field'
+      hash: 8ec09b2401a890106695915516da119ec575d200
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.43.0
+  date: 2021-07-14T21:01:51.691Z
+- commits:
     - subject: 'tests: Reduce the number of organizations created'
       hash: 59708dbcee7a3b3882751eb88efa30f1232b0631
       body: ''
