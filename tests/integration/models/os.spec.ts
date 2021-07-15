@@ -664,6 +664,36 @@ describe('OS model', function () {
 					});
 			});
 
+			it('should be able to configure v2 image with a provisioning key name', async function () {
+				const provisioningKeyName = `provision-key-${new Date()}`;
+				const configOptions = {
+					appUpdatePollInterval: 72,
+					network: 'wifi' as const,
+					wifiKey: 'foobar',
+					wifiSsid: 'foobarbaz',
+					ip: '1.2.3.4',
+					gateway: '5.6.7.8',
+					netmask: '9.10.11.12',
+					version: '2.11.8+rev1.prod',
+					provisioningKeyName,
+				};
+
+				await balena.models.os.getConfig(ctx.application.id, configOptions);
+
+				const provisioningKeys = _.filter(
+					await balena.models.apiKey.getProvisioningApiKeysByApplication(
+						ctx.application.id,
+					),
+					['name', provisioningKeyName],
+				);
+
+				expect(provisioningKeys).to.be.an('array');
+				expect(provisioningKeys.length).is.equal(1);
+				expect(provisioningKeys[0])
+					.to.have.property('name')
+					.to.be.equal(provisioningKeyName);
+			});
+
 			it('should be rejected if the application id does not exist', function () {
 				const promise = balena.models.os.getConfig(999999, {
 					version: DEFAULT_OS_VERSION,
