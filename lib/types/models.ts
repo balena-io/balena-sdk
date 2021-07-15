@@ -668,6 +668,7 @@ export interface Subscription {
 	discount_percentage: number;
 	billing_cycle: SubscriptionBillingCycle;
 	origin: string;
+	is_active: boolean;
 
 	is_for__organization: NavigationResource<Organization>;
 	is_for__plan: NavigationResource<Plan>;
