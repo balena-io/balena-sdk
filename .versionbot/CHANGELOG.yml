@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'typings: Add the subscription.is_active computed term'
+      hash: 7466c8fe384d2c7603460d1c7c3339302eeefd1f
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.44.0
+  date: 2021-07-15T11:39:30.510Z
+- commits:
     - subject: 'typings: Add the organization_memebership.effective_seat_role field'
       hash: 8ec09b2401a890106695915516da119ec575d200
       body: ''
