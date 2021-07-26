@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update generateProvisioningKey to include keyName
+      hash: 5b79ee94aa81496640c2481dbc356207790bbecd
+      body: ''
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+        signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+      author: Nitish Agarwal
+      nested: []
+  version: 15.45.0
+  date: 2021-07-26T10:16:42.712Z
+- commits:
     - subject: 'typings: Add the subscription.is_active computed term'
       hash: 7466c8fe384d2c7603460d1c7c3339302eeefd1f
       body: ''
