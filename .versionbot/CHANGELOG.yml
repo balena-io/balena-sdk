@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add email verification & email request methods
+      hash: a5b30a066e87f5c58cd66ff9b27da8384954b079
+      body: ''
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+        signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+      author: Nitish Agarwal
+      nested: []
+  version: 15.46.0
+  date: 2021-07-27T09:53:47.815Z
+- commits:
     - subject: Update generateProvisioningKey to include keyName
       hash: 5b79ee94aa81496640c2481dbc356207790bbecd
       body: ''
