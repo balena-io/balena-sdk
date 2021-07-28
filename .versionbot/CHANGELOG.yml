@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'apiKey.getAll: Return only NamedUserApiKeys for backwards compatibility'
+      hash: b95666caf36e65bb0d7a2a14f75824be7188cc36
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.46.1
+  date: 2021-07-28T10:29:40.795Z
+- commits:
     - subject: Add email verification & email request methods
       hash: a5b30a066e87f5c58cd66ff9b27da8384954b079
       body: ''
