@@ -110,26 +110,10 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		getAll(
+		async getAll(
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
 		): Promise<BalenaSdk.ApiKey[]> {
-			return pine.get({
-				resource: 'api_key',
-				options: mergePineOptions(
-					{
-						// the only way to reason whether
-						// it's a named user api key is whether
-						// it has a name
-						$filter: {
-							name: {
-								$ne: null,
-							},
-						},
-						$orderby: 'name asc',
-					},
-					options,
-				),
-			});
+			return await exports.getAllNamedUserApiKeys(options);
 		},
 
 		/**
