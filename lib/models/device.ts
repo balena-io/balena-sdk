@@ -657,6 +657,45 @@ const getDeviceModel = function (
 		},
 
 		/**
+		 * @summary Check if the device is running an ESR OS
+		 * @name isESR
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @fulfil {Boolean} - is ESR
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.isESR('7cf02a6').then(function(isESR) {
+		 * 	console.log(isESR);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.isESR(123).then(function(isESR) {
+		 * 	console.log(isESR);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.isESR('7cf02a6', function(error, isESR) {
+		 * 	if (error) throw error;
+		 * 	console.log(isESR);
+		 * });
+		 */
+		isESR: async (uuidOrId: string | number): Promise<boolean> => {
+			const deviceOptions = {
+				$select: 'os_variant',
+			} as const;
+
+			const device = (await exports.get(
+				uuidOrId,
+				deviceOptions,
+			)) as PineTypedResult<Device, typeof deviceOptions>;
+			return !!device.os_variant;
+		},
+
+		/**
 		 * @summary Get application name
 		 * @name getApplicationName
 		 * @public
