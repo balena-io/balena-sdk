@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'typings: Add the release.is_final & is_finalized_at__date properties'
+      hash: d84dc17c3a537d79440924a1d4634177ac18939b
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/3248'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/3248'
+        See: >-
+          https://www.flowdock.com/app/rulemotion/r-supervisor/threads/JN2-gnspQ-v6WaeWCvm9T8NYDY1
+        see: >-
+          https://www.flowdock.com/app/rulemotion/r-supervisor/threads/JN2-gnspQ-v6WaeWCvm9T8NYDY1
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.47.0
+  date: 2021-08-09T23:00:51.490Z
+- commits:
     - subject: 'apiKey.getAll: Return only NamedUserApiKeys for backwards compatibility'
       hash: b95666caf36e65bb0d7a2a14f75824be7188cc36
       body: ''
