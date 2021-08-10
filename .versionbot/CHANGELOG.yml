@@ -1,4 +1,27 @@
 - commits:
+    - subject: Run browser tests using the minified browser bundle
+      hash: bc8c6c67926bf80d41c8f523bc4e5d2a5f1556b0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Move to uglify-js to fix const assignment bug in minified build
+      hash: e03bfe3c4e82ed432917c670e7d5ff2f998299d8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.47.1
+  date: 2021-08-10T12:00:20.993Z
+- commits:
     - subject: 'typings: Add the release.is_final & is_finalized_at__date properties'
       hash: d84dc17c3a537d79440924a1d4634177ac18939b
       body: ''
