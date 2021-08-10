@@ -5,7 +5,7 @@ const { loadEnv } = require('./tests/loadEnv');
 
 getKarmaConfig.DEFAULT_WEBPACK_CONFIG.externals = { fs: true };
 
-const BROWSER_BUNDLE = 'es2015/balena-browser.js';
+const BROWSER_BUNDLE = 'es2015/balena-browser.min.js';
 
 module.exports = function (config) {
 	loadEnv();
