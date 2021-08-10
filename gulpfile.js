@@ -2,13 +2,13 @@ const gulp = require('gulp');
 const gulpMocha = require('gulp-mocha');
 const replace = require('gulp-replace');
 const browserify = require('browserify');
-const uglifyEs = require('uglify-es');
+const uglifyJs = require('uglify-js');
 const uglifyComposer = require('gulp-uglify/composer');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const minimist = require('minimist');
 
-const minify = uglifyComposer(uglifyEs, console);
+const minify = uglifyComposer(uglifyJs, console);
 
 const packageJSON = require('./package.json');
 
