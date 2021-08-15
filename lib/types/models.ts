@@ -302,6 +302,16 @@ export type ReleaseStatus =
 	| 'timeout'
 	| null;
 
+export interface ReleaseVersion {
+	raw: string;
+	major: number;
+	minor: number;
+	patch: number;
+	version: string;
+	build: ReadonlyArray<string>;
+	prerelease: ReadonlyArray<string | number>;
+}
+
 export interface Release {
 	id: number;
 	created_at: string;
@@ -316,6 +326,13 @@ export interface Release {
 	update_timestamp: string | null;
 	end_timestamp: string;
 	release_version: string | null;
+	semver: string;
+	semver_major: number;
+	semver_minor: number;
+	semver_patch: number;
+	revision: number | null;
+	/** This is a computed term */
+	version: ReleaseVersion;
 	is_final: boolean;
 	is_finalized_at__date: string | null;
 
