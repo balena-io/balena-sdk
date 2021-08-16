@@ -1,4 +1,46 @@
 - commits:
+    - subject: Deprecate the release.release_version property
+      hash: ad635d40a3682bd80f50263e560ed3031f27e0a7
+      body: |
+        Setting a 3-digit semver to the release.semver field
+        is the suggested approach.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Add the release versioning properties'
+      hash: 777f01fb2db9fed304cd6896f8138bd0838d1f72
+      body: |
+        Setting a 3-digit semver to the release.semver field
+        is the suggested approach, instead of setting the
+        release.release_version field. This fixes the unique
+        constraint issue that release_version was often
+        causing to users, since in case a duplicate semver is
+        provided, the backend will auto-increment the
+        revision field of the release. A composite
+        release.version field is also added, which has a raw
+        field with the complete unique version of the release.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/3249'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/3249'
+        See: >-
+          https://www.flowdock.com/app/rulemotion/r-supervisor/threads/JN2-gnspQ-v6WaeWCvm9T8NYDY1
+        see: >-
+          https://www.flowdock.com/app/rulemotion/r-supervisor/threads/JN2-gnspQ-v6WaeWCvm9T8NYDY1
+        HQ: 'https://jel.ly.fish/8ea1c390-9a85-402d-978c-4d31dcb0d235'
+        hq: 'https://jel.ly.fish/8ea1c390-9a85-402d-978c-4d31dcb0d235'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.48.0
+  date: 2021-08-15T12:42:50.679Z
+- commits:
     - subject: Run browser tests using the minified browser bundle
       hash: bc8c6c67926bf80d41c8f523bc4e5d2a5f1556b0
       body: ''
