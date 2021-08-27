@@ -62,10 +62,10 @@ describe('Hostapp model', function () {
 		it('should return an empty object for non-existent DTs', async () => {
 			const res = await balena.models.hostapp.getAllOsVersions(['blahbleh']);
 
-			return expect(res).to.deep.equal({});
+			expect(res).to.deep.equal({});
 		});
 
-		it('should cache the results', async () => {
+		it('should cache the results when not providing extra options', async () => {
 			const firstRes = await balena.models.hostapp.getAllOsVersions([
 				'raspberrypi3',
 			]);
@@ -73,6 +73,18 @@ describe('Hostapp model', function () {
 				'raspberrypi3',
 			]);
 			expect(firstRes).to.equal(secondRes);
+		});
+
+		it('should cache the results when providing extra options', async () => {
+			const firstRes = await balena.models.hostapp.getAllOsVersions(
+				['raspberrypi3'],
+				{ $filter: { is_invalidated: false } },
+			);
+			const secondRes = await balena.models.hostapp.getAllOsVersions(
+				['raspberrypi3'],
+				{ $filter: { is_invalidated: false } },
+			);
+			expect(firstRes).to.not.equal(secondRes);
 		});
 	});
 });
