@@ -1,13 +1,7 @@
 import * as bSemver from 'balena-semver';
 import type { InjectedDependenciesParam } from '..';
-import type {
-	ResourceTagBase,
-	ApplicationTag,
-	Application,
-	Release,
-	DeviceType,
-} from '../types/models';
-import { Dictionary } from '../../typings/utils';
+import type { ResourceTagBase, ApplicationTag } from '../types/models';
+import { Dictionary, ResolvableReturnType } from '../../typings/utils';
 import { getAuthDependentMemoize } from '../util/cache';
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
@@ -46,28 +40,30 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	const { pine, pubsub } = deps;
 
 	type HostAppTagSet = ReturnType<typeof getOsAppTags>;
-	type AppWithDeviceType = Application & {
-		is_for__device_type: [{ slug: DeviceType['slug'] }];
-	};
 
 	const sortVersions = (a: OsVersion, b: OsVersion) => {
 		return bSemver.rcompare(a.rawVersion, b.rawVersion);
 	};
 
-	const getTagValue = (tags: ResourceTagBase[], tagKey: string) => {
-		return tags.find((tag) => tag.tag_key === tagKey)?.value;
+	const tagsToDictionary = (
+		tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
+	): Dictionary<string> => {
+		const result: Dictionary<string> = {};
+		for (const { tag_key, value } of tags) {
+			result[tag_key] = value;
+		}
+		return result;
 	};
 
-	const getOsAppTags = (applicationTag: ApplicationTag[]) => {
+	const getOsAppTags = (
+		applicationTags: Array<Pick<ApplicationTag, 'tag_key' | 'value'>>,
+	) => {
+		const tagMap = tagsToDictionary(applicationTags);
 		return {
-			osType:
-				getTagValue(applicationTag, RELEASE_POLICY_TAG_NAME) ?? OsTypes.DEFAULT,
-			nextLineVersionRange:
-				getTagValue(applicationTag, ESR_NEXT_TAG_NAME) ?? '',
-			currentLineVersionRange:
-				getTagValue(applicationTag, ESR_CURRENT_TAG_NAME) ?? '',
-			sunsetLineVersionRange:
-				getTagValue(applicationTag, ESR_SUNSET_TAG_NAME) ?? '',
+			osType: tagMap[RELEASE_POLICY_TAG_NAME] ?? OsTypes.DEFAULT,
+			nextLineVersionRange: tagMap[ESR_NEXT_TAG_NAME] ?? '',
+			currentLineVersionRange: tagMap[ESR_CURRENT_TAG_NAME] ?? '',
+			sunsetLineVersionRange: tagMap[ESR_SUNSET_TAG_NAME] ?? '',
 		};
 	};
 
@@ -100,17 +96,16 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	};
 
 	const getOsVersionsFromReleases = (
-		releases: Release[],
+		releases: HostAppInfo['owns__release'],
 		appTags: HostAppTagSet,
 	): OsVersion[] => {
 		return releases.map((release) => {
+			const tagMap = tagsToDictionary(release.release_tag!);
 			// The variant in the tags is a full noun, such as `production` and `development`.
-			const variant =
-				getTagValue(release.release_tag!, VARIANT_TAG_NAME) ?? 'production';
+			const variant = tagMap[VARIANT_TAG_NAME] ?? 'production';
 			const normalizedVariant = normalizeVariant(variant);
-			const version = getTagValue(release.release_tag!, VERSION_TAG_NAME) ?? '';
-			const basedOnVersion =
-				getTagValue(release.release_tag!, BASED_ON_VERSION_TAG_NAME) ?? version;
+			const version = tagMap[VERSION_TAG_NAME] ?? '';
+			const basedOnVersion = tagMap[BASED_ON_VERSION_TAG_NAME] ?? version;
 			const line = getOsVersionReleaseLine(version, appTags);
 			const lineFormat = line ? ` (${line})` : '';
 
@@ -129,36 +124,24 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		});
 	};
 
-	const transformHostApps = (apps: AppWithDeviceType[]) => {
-		const res: OsVersionsByDeviceType = apps.reduce(
-			(osVersionsByDeviceType: OsVersionsByDeviceType, hostApp) => {
-				if (!hostApp) {
-					return osVersionsByDeviceType;
-				}
+	type HostAppInfo = ResolvableReturnType<typeof getOsVersions>[number];
+	const transformHostApps = (apps: HostAppInfo[]) => {
+		const osVersionsByDeviceType: OsVersionsByDeviceType = {};
+		apps.forEach((hostApp) => {
+			const hostAppDeviceType = hostApp.is_for__device_type[0]?.slug;
+			if (!hostAppDeviceType) {
+				return;
+			}
 
-				const hostAppDeviceType = hostApp.is_for__device_type[0].slug;
+			osVersionsByDeviceType[hostAppDeviceType] ??= [];
 
-				if (!hostAppDeviceType) {
-					return osVersionsByDeviceType;
-				}
+			const appTags = getOsAppTags(hostApp.application_tag ?? []);
+			osVersionsByDeviceType[hostAppDeviceType].push(
+				...getOsVersionsFromReleases(hostApp.owns__release ?? [], appTags),
+			);
+		});
 
-				let osVersions = osVersionsByDeviceType[hostAppDeviceType];
-				if (!osVersions) {
-					osVersions = [];
-				}
-
-				const appTags = getOsAppTags(hostApp.application_tag ?? []);
-				osVersions = osVersions.concat(
-					getOsVersionsFromReleases(hostApp.owns__release ?? [], appTags),
-				);
-				osVersionsByDeviceType[hostAppDeviceType] = osVersions;
-
-				return osVersionsByDeviceType;
-			},
-			{},
-		);
-
-		return res;
+		return osVersionsByDeviceType;
 	};
 
 	// This mutates the passed object.
@@ -191,10 +174,30 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		return osVersionsByDeviceType;
 	};
 
-	const getOsVersions = (deviceTypes: string[]) => {
-		return pine.get<AppWithDeviceType>({
+	const getOsVersions = async (deviceTypes: string[]) => {
+		return await pine.get({
 			resource: 'application',
 			options: {
+				$select: 'is_for__device_type',
+				$expand: {
+					application_tag: {
+						$select: ['tag_key', 'value'],
+					},
+					is_for__device_type: {
+						$select: 'slug',
+					},
+					owns__release: {
+						$select: 'id',
+						$expand: {
+							release_tag: {
+								$select: ['tag_key', 'value'],
+							},
+						},
+						$filter: {
+							is_invalidated: false,
+						},
+					},
+				},
 				$filter: {
 					is_host: true,
 					is_for__device_type: {
@@ -205,26 +208,6 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 									slug: { $in: deviceTypes },
 								},
 							},
-						},
-					},
-				},
-				$select: ['id', 'app_name'],
-				$expand: {
-					application_tag: {
-						$select: ['id', 'tag_key', 'value'],
-					},
-					is_for__device_type: {
-						$select: ['slug'],
-					},
-					owns__release: {
-						$select: ['id'],
-						$expand: {
-							release_tag: {
-								$select: ['id', 'tag_key', 'value'],
-							},
-						},
-						$filter: {
-							is_invalidated: false,
 						},
 					},
 				},
