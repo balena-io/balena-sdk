@@ -1,4 +1,40 @@
 - commits:
+    - subject: Update balena-request to 11.4.1
+      hash: de5c18f7b55d25a23ae3b78fda8ea0ee4494e4ad
+      body: |
+        Update balena-request from 11.4.0 to 11.4.1
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested:
+        - commits:
+            - subject: Allow more lenient gzip decompression
+              hash: 9c7bc3051b279c9d09ec501a78dbe9f506d65650
+              body: >
+                Be more lenient with decoding compressed responses, since (very
+                rarely)
+
+                servers send slightly invalid gzip responses that are still
+                accepted
+
+                by common browsers.
+
+
+                Always using Z_SYNC_FLUSH is what cURL does.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+          version: balena-request-11.4.1
+          date: 2021-08-27T19:10:59.811Z
+  version: 15.48.3
+  date: 2021-08-27T19:53:51.776Z
+- commits:
     - subject: Improve hostapp.getAllOsVersions performance & reduce fetched data
       hash: 61307d83ebaa03d69197b5140ddcb5c50c9c4159
       body: ''
