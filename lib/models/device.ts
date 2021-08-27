@@ -2525,7 +2525,7 @@ const getDeviceModel = function (
 			exports._checkOsUpdateTarget(device, targetOsVersion);
 
 			const osVersions = (
-				await hostappModel().getAllOsVersions([
+				await hostappModel().getAvailableOsVersions([
 					device.is_of__device_type[0].slug,
 				])
 			)[device.is_of__device_type[0].slug];

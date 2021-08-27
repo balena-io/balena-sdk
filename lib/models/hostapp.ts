@@ -230,9 +230,16 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		return await transformVersionSets(transformHostApps(hostapps));
 	};
 
-	const memoizedGetAllOsVersionsBase = authDependentMemoizer(
-		async (deviceTypes: string[]) => {
-			return await getAllOsVersionsBase(deviceTypes);
+	const memoizedGetAllOsVersions = authDependentMemoizer(
+		async (deviceTypes: string[], isInvalidated: null | boolean) => {
+			return await getAllOsVersionsBase(
+				deviceTypes,
+				typeof isInvalidated === 'boolean'
+					? {
+							$filter: { is_invalidated: isInvalidated },
+					  }
+					: undefined,
+			);
 		},
 	);
 
@@ -259,16 +266,33 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	): Promise<OsVersionsByDeviceType> => {
 		if (options == null) {
 			const sortedDeviceTypes = deviceTypes.sort();
-			return await memoizedGetAllOsVersionsBase(sortedDeviceTypes);
+			return await memoizedGetAllOsVersions(sortedDeviceTypes, null);
 		}
 		return await getAllOsVersionsBase(deviceTypes, options);
+	};
+
+	/**
+	 * @summary Get all non-invalidated OS versions for the passed device types
+	 * @name getAvailableOsVersions
+	 * @public
+	 * @function
+	 * @memberof balena.models.hostapp
+	 *
+	 * @param {String[]} deviceTypes - device type slugs
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.hostapp.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
+	 */
+	const getAvailableOsVersions = async (deviceTypes: string[]) => {
+		const sortedDeviceTypes = deviceTypes.sort();
+		return await memoizedGetAllOsVersions(sortedDeviceTypes, false);
 	};
 
 	return {
 		OsTypes,
 		getAllOsVersions,
-		// TODO: The current implementation will be available as getAvailableOsVersions in the next major
-		getAvailableOsVersions: getAllOsVersions,
+		getAvailableOsVersions,
 	};
 };
 
