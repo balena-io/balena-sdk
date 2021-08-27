@@ -306,7 +306,7 @@ const sdk = fromSharedOptions();
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
         * [.hostapp](#balena.models.hostapp) : <code>object</code>
-            * [.getAllOsVersions(deviceTypes)](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
+            * [.getAllOsVersions(deviceTypes, [options])](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -680,7 +680,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
     * [.hostapp](#balena.models.hostapp) : <code>object</code>
-        * [.getAllOsVersions(deviceTypes)](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
+        * [.getAllOsVersions(deviceTypes, [options])](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -6327,18 +6327,23 @@ console.log(result2);
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 <a name="balena.models.hostapp.getAllOsVersions"></a>
 
-##### hostapp.getAllOsVersions(deviceTypes) ⇒ <code>Promise</code>
+##### hostapp.getAllOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>hostapp</code>](#balena.models.hostapp)  
 **Summary**: Get all OS versions for the passed device types  
 **Access**: public  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceTypes | <code>Array.&lt;String&gt;</code> | device type slugs |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| deviceTypes | <code>Array.&lt;String&gt;</code> |  | device type slugs |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
 balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3']);
+```
+**Example**  
+```js
+balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 ```
 <a name="balena.models.config"></a>
 
