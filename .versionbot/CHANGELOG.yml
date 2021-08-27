@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update typescript to 4.4.2
+      hash: 5d6e2b69633d8aca0747a64f121bd4b7e670a3c5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.48.1
+  date: 2021-08-27T07:07:50.896Z
+- commits:
     - subject: Deprecate the release.release_version property
       hash: ad635d40a3682bd80f50263e560ed3031f27e0a7
       body: |
