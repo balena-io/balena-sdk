@@ -247,6 +247,8 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	return {
 		OsTypes,
 		getAllOsVersions,
+		// TODO: The current implementation will be available as getAvailableOsVersions in the next major
+		getAvailableOsVersions: getAllOsVersions,
 	};
 };
 
