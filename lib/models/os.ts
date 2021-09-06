@@ -62,6 +62,10 @@ const getOsModel = function (
 	const configModel = once(() =>
 		(require('./config') as typeof import('./config')).default(deps, opts),
 	);
+	const hostappExports = once(
+		() => require('./hostapp') as typeof import('./hostapp'),
+	);
+	const hostapp = () => hostappExports().default(deps);
 	const applicationModel = once(() =>
 		(require('./application') as typeof import('./application')).default(
 			deps,
@@ -98,6 +102,10 @@ const getOsModel = function (
 	const getValidatedDeviceType = async (deviceTypeSlug: string) => {
 		const types = await _getDeviceTypes();
 		return deviceTypesUtils().getBySlug(types, deviceTypeSlug);
+	};
+
+	const getNormalizedDeviceTypeSlug = async (deviceTypeSlug: string) => {
+		return (await getValidatedDeviceType(deviceTypeSlug)).slug;
 	};
 
 	/**
@@ -428,11 +436,15 @@ const getOsModel = function (
 		version: string = 'latest',
 	): Promise<BalenaRequestStreamResult> {
 		try {
-			await getValidatedDeviceType(deviceType);
+			const slug = await getNormalizedDeviceTypeSlug(deviceType);
 			let ver;
 			if (version === 'latest') {
-				const { latest } = await _getOsVersions(deviceType);
-				ver = latest;
+				const { OsTypes } = hostappExports();
+				const versions = (
+					(await hostapp().getAvailableOsVersions([slug]))[slug] ?? []
+				).filter((v) => v.osType === OsTypes.DEFAULT);
+				ver = (versions.find((v) => v.isRecommended) ?? versions[0])
+					?.rawVersion;
 			} else {
 				ver = normalizeVersion(version);
 			}
@@ -590,7 +602,13 @@ const getOsModel = function (
 		deviceType: string,
 		currentVersion: string,
 	): Promise<OsUpdateVersions> => {
-		const { versions: allVersions } = await getSupportedVersions(deviceType);
+		const slug = await getNormalizedDeviceTypeSlug(deviceType);
+		const { OsTypes } = hostappExports();
+		const allVersions = (
+			(await hostapp().getAvailableOsVersions([slug]))[slug] ?? []
+		)
+			.filter((v) => v.osType === OsTypes.DEFAULT)
+			.map((v) => v.rawVersion);
 		// use bSemver.compare to find the current version in the OS list
 		// to benefit from the baked-in normalization
 		const current = allVersions.find(
