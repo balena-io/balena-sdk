@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'os.getSupportedOsUpdateVersions: Use the hostApp releases'
+      hash: 97727ec085d004022fc167ef1eac74b770b0bc49
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'os.download: Use the hostApp for finding the latest release'
+      hash: 8d1d85c65e6af04886b8de70f149602212353369
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.49.0
+  date: 2021-09-06T17:35:41.134Z
+- commits:
     - subject: Update balena-request to 11.4.1
       hash: de5c18f7b55d25a23ae3b78fda8ea0ee4494e4ad
       body: |
