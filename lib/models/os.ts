@@ -602,7 +602,13 @@ const getOsModel = function (
 		deviceType: string,
 		currentVersion: string,
 	): Promise<OsUpdateVersions> => {
-		const { versions: allVersions } = await getSupportedVersions(deviceType);
+		const slug = await getNormalizedDeviceTypeSlug(deviceType);
+		const { OsTypes } = hostappExports();
+		const allVersions = (
+			(await hostapp().getAvailableOsVersions([slug]))[slug] ?? []
+		)
+			.filter((v) => v.osType === OsTypes.DEFAULT)
+			.map((v) => v.rawVersion);
 		// use bSemver.compare to find the current version in the OS list
 		// to benefit from the baked-in normalization
 		const current = allVersions.find(
