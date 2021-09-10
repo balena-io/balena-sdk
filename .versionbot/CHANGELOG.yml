@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add release.finalize to promote draft releases to final
+      hash: 3ff1a104bb33c7d864aae872ec385df538a38fe2
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Paul Jonathan <pj@balena.io>
+        signed-off-by: Paul Jonathan <pj@balena.io>
+        See: 'https://github.com/balena-io/balena-sdk/issues/1122'
+        see: 'https://github.com/balena-io/balena-sdk/issues/1122'
+      author: toochevere
+      nested: []
+  version: 15.50.0
+  date: 2021-09-10T17:46:20.553Z
+- commits:
     - subject: 'typings: Drop the v5-model-only application_type.is_host_os'
       hash: b5ff0ec9888450ae800813fff34d4f62716b1e70
       body: ''
