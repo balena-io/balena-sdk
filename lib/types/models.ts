@@ -259,7 +259,6 @@ export interface ApplicationType {
 	requires_payment: boolean;
 	needs__os_version_range: string | null;
 	maximum_device_count: number | null;
-	is_host_os: boolean;
 }
 
 export interface ApplicationHostedOnApplication {
