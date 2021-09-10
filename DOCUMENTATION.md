@@ -324,6 +324,7 @@ const sdk = fromSharedOptions();
             * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
             * [.getLatestByApplication(nameOrSlugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
             * [.createFromUrl(nameOrSlugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+            * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -697,6 +698,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
         * [.getLatestByApplication(nameOrSlugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
         * [.createFromUrl(nameOrSlugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+        * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -6476,6 +6478,7 @@ balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
     * [.getAllByApplication(nameOrSlugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
     * [.getLatestByApplication(nameOrSlugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
     * [.createFromUrl(nameOrSlugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+    * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags"></a>
 
@@ -6805,6 +6808,30 @@ balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-pr
 balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
 	if (error) throw error;
 	console.log(releaseId);
+});
+```
+<a name="balena.models.release.finalize"></a>
+
+##### release.finalize(commitOrId) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
+**Summary**: Promotes a 'draft' release to 'final' (non-draft)  
+**Access**: public  
+**Fulfil**: <code>void</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+
+**Example**  
+```js
+balena.models.release.finalize(123).then(function() {
+	console.log('finalized!');
+});
+```
+**Example**  
+```js
+balena.models.release.finalize('7cf02a6').then(function() {
+	console.log('finalized!');
 });
 ```
 <a name="balena.models.service"></a>

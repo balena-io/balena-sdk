@@ -20,6 +20,8 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 
+const releaseRetrievalFields = ['id', 'commit'];
+
 describe('Release Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
@@ -227,6 +229,50 @@ describe('Release Model', function () {
 							belongs_to__application: { __id: ctx.application.id },
 						});
 						expect(release).to.have.property('commit').that.is.a('string');
+					});
+				});
+			});
+		});
+
+		describe(`given ${releaseRetrievalFields.length} draft releases`, function () {
+			const testReleaseByField = {};
+
+			before(async function () {
+				const userId = await balena.auth.getUserId();
+				await Promise.all(
+					releaseRetrievalFields.map(async (field, i) => {
+						testReleaseByField[field] = await balena.pine.post({
+							resource: 'release',
+							body: {
+								belongs_to__application: this.application.id,
+								is_created_by__user: userId,
+								commit: `abcdef${i}`,
+								status: 'success',
+								source: 'cloud',
+								is_final: false,
+								composition: '{}',
+								start_timestamp: new Date().toISOString(),
+							},
+						});
+					}),
+				);
+			});
+
+			describe('balena.model.release.finalize()', function () {
+				parallel('', function () {
+					releaseRetrievalFields.forEach((field) => {
+						it(`should finalize a release by ${field}`, async function () {
+							const draftRelease = testReleaseByField[field];
+							await balena.models.release.finalize(draftRelease[field]);
+							const finalRelease = await balena.models.release.get(
+								draftRelease.id,
+							);
+							expect(finalRelease).to.deep.match({
+								id: draftRelease.id,
+								commit: draftRelease.commit,
+								is_final: true,
+							});
+						});
 					});
 				});
 			});

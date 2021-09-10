@@ -390,6 +390,39 @@ const getReleaseModel = function (
 	}
 
 	/**
+	 * @summary Finalizes a draft release
+	 * @name finalize
+	 * @public
+	 * @function
+	 * @memberof balena.models.release
+	 *
+	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @fulfil {void}
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.release.finalize(123).then(function() {
+	 * 	console.log('finalized!');
+	 * });
+	 *
+	 * @example
+	 * balena.models.release.finalize('7cf02a6').then(function() {
+	 * 	console.log('finalized!');
+	 * });
+	 *
+	 */
+	async function finalize(commitOrId: string | number): Promise<void> {
+		const { id } = await get(commitOrId, { $select: 'id' });
+		await pine.patch<Release>({
+			resource: 'release',
+			id,
+			body: {
+				is_final: true,
+			},
+		});
+	}
+
+	/**
 	 * @namespace balena.models.release.tags
 	 * @memberof balena.models.release
 	 */
@@ -577,6 +610,7 @@ const getReleaseModel = function (
 		getLatestByApplication,
 		getWithImageDetails,
 		createFromUrl,
+		finalize,
 		tags,
 	};
 };
