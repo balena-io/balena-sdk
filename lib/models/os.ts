@@ -274,7 +274,7 @@ const getOsModel = function (
 		deviceType: string,
 		version: string = 'latest',
 	): Promise<number> {
-		await getValidatedDeviceType(deviceType);
+		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		return await _getDownloadSize(deviceType, version);
 	};
 
@@ -308,7 +308,7 @@ const getOsModel = function (
 	const getSupportedVersions = async function (
 		deviceType: string,
 	): Promise<OsVersions> {
-		await getValidatedDeviceType(deviceType);
+		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		return await _getOsVersions(deviceType);
 	};
 
@@ -351,7 +351,7 @@ const getOsModel = function (
 		deviceType: string,
 		versionOrRange: string = 'latest',
 	): Promise<string> {
-		await getValidatedDeviceType(deviceType);
+		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		const osVersions = await getSupportedVersions(deviceType);
 		return _getMaxSatisfyingVersion(versionOrRange, osVersions);
 	};
@@ -390,7 +390,7 @@ const getOsModel = function (
 		version: string = 'latest',
 	): Promise<Date> {
 		try {
-			await getValidatedDeviceType(deviceType);
+			deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 			const ver = normalizeVersion(version);
 			const response = await request.send({
 				method: 'HEAD',
@@ -563,7 +563,7 @@ const getOsModel = function (
 		currentVersion: string,
 		targetVersion: string,
 	): Promise<boolean> => {
-		await getValidatedDeviceType(deviceType);
+		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		return hupActionHelper().isSupportedOsUpdate(
 			deviceType,
 			currentVersion,
@@ -602,10 +602,10 @@ const getOsModel = function (
 		deviceType: string,
 		currentVersion: string,
 	): Promise<OsUpdateVersions> => {
-		const slug = await getNormalizedDeviceTypeSlug(deviceType);
+		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		const { OsTypes } = hostappExports();
 		const allVersions = (
-			(await hostapp().getAvailableOsVersions([slug]))[slug] ?? []
+			(await hostapp().getAvailableOsVersions([deviceType]))[deviceType] ?? []
 		)
 			.filter((v) => v.osType === OsTypes.DEFAULT)
 			.map((v) => v.rawVersion);
@@ -616,7 +616,6 @@ const getOsModel = function (
 		);
 
 		const versions = allVersions.filter((v) =>
-			// avoid the extra call to getValidatedDeviceType, since getSupportedVersions already does that
 			hupActionHelper().isSupportedOsUpdate(deviceType, currentVersion, v),
 		);
 
