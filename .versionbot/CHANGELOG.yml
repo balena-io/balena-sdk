@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'models/os: Always first normalize the device type slug'
+      hash: 72d597c11a9924ce2be18ee6196933551c28c180
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.50.1
+  date: 2021-09-13T22:09:51.957Z
+- commits:
     - subject: Add release.finalize to promote draft releases to final
       hash: 3ff1a104bb33c7d864aae872ec385df538a38fe2
       body: ''
