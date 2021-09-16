@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'os.getConfig: Add typings for the provisioningKeyName option'
+      hash: 30374d8f750247f450552e44d34dd75b46df57aa
+      body: ''
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+        signed-off-by: Nitish Agarwal 1592163+nitishagar@users.noreply.github.com
+      author: Nitish Agarwal
+      nested: []
+  version: 15.51.0
+  date: 2021-09-16T10:09:05.726Z
+- commits:
     - subject: 'models/os: Always first normalize the device type slug'
       hash: 72d597c11a9924ce2be18ee6196933551c28c180
       body: ''
