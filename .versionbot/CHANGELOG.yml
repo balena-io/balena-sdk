@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update balena-request to v11.4.2
+      hash: 09aeebd00e8d4247d9b961275230f384f5729323
+      body: |
+        Update balena-request from 11.4.1 to 11.4.2
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested:
+        - commits:
+            - subject: Allow overriding the default zlib flush setting
+              hash: e3bab85ca37f37aac5e3d84caf91c7884655717d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+          version: balena-request-11.4.2
+          date: 2021-09-20T16:46:49.698Z
+  version: 15.51.1
+  date: 2021-09-20T18:03:51.216Z
+- commits:
     - subject: 'os.getConfig: Add typings for the provisioningKeyName option'
       hash: 30374d8f750247f450552e44d34dd75b46df57aa
       body: ''
