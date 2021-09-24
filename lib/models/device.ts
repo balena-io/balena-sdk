@@ -2300,48 +2300,72 @@ const getDeviceModel = function (
 			uuidOrId: string | number,
 			supervisorVersionOrId: string | number,
 		): Promise<void> => {
-			let deviceId;
-			let releaseId;
 			const deviceOpts = {
 				$select: toWritable([
 					'id',
 					'supervisor_version',
 					'os_version',
 				] as const),
-				$expand: { is_of__device_type: { $select: 'slug' } },
+				$expand: {
+					is_of__device_type: {
+						$select: 'is_of__cpu_architecture',
+					},
+				},
 			} as const;
 
 			const device = (await exports.get(
 				uuidOrId,
 				deviceOpts,
 			)) as PineTypedResult<Device, typeof deviceOpts>;
+
 			ensureVersionCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
 				'supervisor',
 			);
 			ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
-			if (isId(uuidOrId) && isId(supervisorVersionOrId)) {
-				deviceId = uuidOrId;
+
+			let releaseId: number;
+			if (isId(supervisorVersionOrId)) {
 				releaseId = supervisorVersionOrId;
 			} else {
 				const releaseFilterProperty = isId(supervisorVersionOrId)
 					? 'id'
-					: 'supervisor_version';
+					: 'release_version';
 
 				const [supervisorRelease] = await pine.get({
-					resource: 'supervisor_release',
+					resource: 'release',
 					options: {
 						$top: 1,
 						$select: 'id',
 						$filter: {
+							// Note: Allow pinning to draft releases
+							status: 'success' as const,
+							is_invalidated: false,
 							[releaseFilterProperty]: supervisorVersionOrId,
-							is_for__device_type: {
+							belongs_to__application: {
 								$any: {
-									$alias: 'dt',
+									$alias: 'a',
 									$expr: {
-										dt: {
-											slug: device.is_of__device_type[0].slug,
+										$and: [
+											{ a: { slug: { $startswith: 'balena_os/' } } },
+											{ a: { slug: { $endswith: '-supervisor' } } },
+										],
+										a: {
+											is_public: true,
+											is_host: false,
+											is_for__device_type: {
+												$any: {
+													$alias: 'dt',
+													$expr: {
+														dt: {
+															is_of__cpu_architecture:
+																device.is_of__device_type[0]
+																	.is_of__cpu_architecture.__id,
+														},
+													},
+												},
+											},
 										},
 									},
 								},
@@ -2352,12 +2376,11 @@ const getDeviceModel = function (
 				if (supervisorRelease == null) {
 					throw new errors.BalenaReleaseNotFound(supervisorVersionOrId);
 				}
-				deviceId = device.id;
 				releaseId = supervisorRelease.id;
 			}
 			await pine.patch({
 				resource: 'device',
-				id: deviceId,
+				id: device.id,
 				body: { should_be_managed_by__supervisor_release: releaseId },
 			});
 		},
