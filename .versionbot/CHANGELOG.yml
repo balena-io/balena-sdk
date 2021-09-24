@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'device.setSupervisorRelease: Allow draft non-invalidated native releases'
+      hash: abaa494ce03766399e8aa8bbff3fb4a123796007
+      body: ''
+      footer:
+        Resolves: '#1127'
+        resolves: '#1127'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.52.0
+  date: 2021-09-24T17:36:18.155Z
+- commits:
     - subject: Update balena-request to v11.4.2
       hash: 09aeebd00e8d4247d9b961275230f384f5729323
       body: |
