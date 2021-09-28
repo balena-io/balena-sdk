@@ -1324,6 +1324,68 @@ describe('Application Model', function () {
 								});
 						});
 					});
+
+					[
+						[
+							'draft',
+							async function () {
+								this.testNonLatestRelease = await balena.pine.post({
+									resource: 'release',
+									body: {
+										/** @ts-expect-error */
+										belongs_to__application: this.application.id,
+										is_created_by__user: await balena.auth.getUserId(),
+										commit: 'draft-release-commit',
+										status: 'success',
+										source: 'cloud',
+										is_final: false,
+										composition: {},
+										start_timestamp: Date.now(),
+									},
+								});
+							},
+						],
+						[
+							'invalidated',
+							async function () {
+								this.testNonLatestRelease = await balena.pine.post({
+									resource: 'release',
+									body: {
+										/** @ts-expect-error */
+										belongs_to__application: this.application.id,
+										is_created_by__user: await balena.auth.getUserId(),
+										commit: 'invalidated-release-commit',
+										status: 'success',
+										source: 'cloud',
+										is_invalidated: true,
+										composition: {},
+										start_timestamp: Date.now(),
+									},
+								});
+							},
+						],
+					].forEach(([releaseType, prepareFn]) => {
+						describe(`given a new ${releaseType} release`, function () {
+							/** @ts-expect-error */
+							before(prepareFn);
+
+							describe('balena.models.application.isTrackingLatestRelease()', function () {
+								it(`should not account newer ${releaseType} releases as the default`, async function () {
+									expect(
+										await balena.models.application.getTargetReleaseHash(
+											this.application.id,
+										),
+									).to.equal('new-release-commit');
+
+									expect(
+										await balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										),
+									).to.be.true;
+								});
+							});
+						});
+					});
 				});
 			});
 		});

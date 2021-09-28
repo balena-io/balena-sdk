@@ -1134,7 +1134,7 @@ const getApplicationModel = function (
 		},
 
 		/**
-		 * @summary Get whether the application is up to date and is tracking the latest release for updates
+		 * @summary Get whether the application is up to date and is tracking the latest finalized release for updates
 		 * @name isTrackingLatestRelease
 		 * @public
 		 * @function
@@ -1170,6 +1170,9 @@ const getApplicationModel = function (
 						$select: 'id',
 						$top: 1,
 						$filter: {
+							is_final: true,
+							is_passing_tests: true,
+							is_invalidated: false,
 							status: 'success',
 						},
 						$orderby: 'created_at desc',
