@@ -1289,39 +1289,34 @@ describe('Application Model', function () {
 					});
 
 					describe('balena.models.application.trackLatestRelease()', () => {
-						it('...should re-enable latest release tracking', function () {
-							return balena.models.application
-								.isTrackingLatestRelease(this.application.id)
-								.then((result) => {
-									expect(result).to.be.false;
+						it('...should re-enable latest release tracking', async function () {
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.false;
 
-									return balena.models.application.trackLatestRelease(
-										this.application.id,
-									);
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.getTargetReleaseHash(
-											this.application.id,
-										);
-									return expect(promise).to.eventually.equal(
-										'new-release-commit',
-									);
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.willTrackNewReleases(
-											this.application.id,
-										);
-									return expect(promise).to.eventually.be.true;
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.isTrackingLatestRelease(
-											this.application.id,
-										);
-									return expect(promise).to.eventually.be.true;
-								});
+							await balena.models.application.trackLatestRelease(
+								this.application.id,
+							);
+
+							expect(
+								await balena.models.application.getTargetReleaseHash(
+									this.application.id,
+								),
+							).to.equal('new-release-commit');
+
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.true;
+
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.true;
 						});
 					});
 
@@ -1376,6 +1371,42 @@ describe('Application Model', function () {
 											this.application.id,
 										),
 									).to.equal('new-release-commit');
+
+									expect(
+										await balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										),
+									).to.be.true;
+								});
+							});
+
+							describe('balena.models.application.trackLatestRelease()', () => {
+								it(`should not use a ${releaseType} releases as the latest`, async function () {
+									await balena.models.application.pinToRelease(
+										this.application.id,
+										'old-release-commit',
+									);
+									expect(
+										await balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										),
+									).to.be.false;
+
+									await balena.models.application.trackLatestRelease(
+										this.application.id,
+									);
+
+									expect(
+										await balena.models.application.getTargetReleaseHash(
+											this.application.id,
+										),
+									).to.equal('new-release-commit');
+
+									expect(
+										await balena.models.application.willTrackNewReleases(
+											this.application.id,
+										),
+									).to.be.true;
 
 									expect(
 										await balena.models.application.isTrackingLatestRelease(

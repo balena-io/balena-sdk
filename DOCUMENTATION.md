@@ -2283,7 +2283,7 @@ balena.models.application.getTargetReleaseHash('MyApp', function(release) {
 The application's current release will be updated with each new successfully built release.
 
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Configure a specific application to track the latest available release  
+**Summary**: Configure a specific application to track the latest finalized available release  
 **Access**: public  
 
 | Param | Type | Description |
