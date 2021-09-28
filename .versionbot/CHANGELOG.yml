@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'application.trackLatestRelease: Fix using draft/invalidated releases'
+      hash: d069945cd76db0cafbe335f8c0403ce13dd05b24
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'application.isTrackingLatestRelease: Exclude draft&invalidated releases'
+      hash: 4f3bdd45c88079ac809a5740226a588c6d22f549
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.51.2
+  date: 2021-09-28T15:18:49.974Z
+- commits:
     - subject: Update balena-request to v11.4.2
       hash: 09aeebd00e8d4247d9b961275230f384f5729323
       body: |
