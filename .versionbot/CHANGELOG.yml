@@ -1,4 +1,17 @@
 - commits:
+    - subject: Convert application spec to TypeScript
+      hash: 14e34850bd9c362dbee2bf992925d1bbf856c4ca
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.51.3
+  date: 2021-09-28T20:52:19.984Z
+- commits:
     - subject: 'application.trackLatestRelease: Fix using draft/invalidated releases'
       hash: d069945cd76db0cafbe335f8c0403ce13dd05b24
       body: ''
