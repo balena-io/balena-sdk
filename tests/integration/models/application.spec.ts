@@ -1,7 +1,11 @@
+// tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
+import type * as BalenaSdk from '../../..';
+import { toWritable } from '../../../lib/util/types';
 import { timeSuite } from '../../util';
+import type * as tagsHelper from './tags';
 
 const { expect } = m.chai;
 
@@ -109,7 +113,7 @@ describe('Application Model', function () {
 		});
 
 		describe('balena.models.application.create()', function () {
-			let ctx = null;
+			let ctx: Mocha.Context;
 
 			before(function () {
 				ctx = this;
@@ -393,7 +397,7 @@ describe('Application Model', function () {
 			givenAnApplication(before);
 
 			describe('[read operations]', function () {
-				let ctx = null;
+				let ctx: Mocha.Context;
 
 				before(function () {
 					ctx = this;
@@ -777,10 +781,9 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.tags', function () {
-				const tagTestOptions = {
-					// prettier-ignore
-					model:
-						/** @type {import('./tags').TagModelBase<import('../../../').ApplicationTag>} */ (balena.models.application.tags),
+				const tagTestOptions: tagsHelper.Options<BalenaSdk.ApplicationTag> = {
+					model: balena.models.application
+						.tags as tagsHelper.TagModelBase<BalenaSdk.ApplicationTag>,
 					modelNamespace: 'balena.models.application.tags',
 					resourceName: 'application',
 					uniquePropertyNames: applicationRetrievalFields,
@@ -1320,48 +1323,47 @@ describe('Application Model', function () {
 						});
 					});
 
-					[
+					(
 						[
-							'draft',
-							async function () {
-								this.testNonLatestRelease = await balena.pine.post({
-									resource: 'release',
-									body: {
-										/** @ts-expect-error */
-										belongs_to__application: this.application.id,
-										is_created_by__user: await balena.auth.getUserId(),
-										commit: 'draft-release-commit',
-										status: 'success',
-										source: 'cloud',
-										is_final: false,
-										composition: {},
-										start_timestamp: Date.now(),
-									},
-								});
-							},
-						],
-						[
-							'invalidated',
-							async function () {
-								this.testNonLatestRelease = await balena.pine.post({
-									resource: 'release',
-									body: {
-										/** @ts-expect-error */
-										belongs_to__application: this.application.id,
-										is_created_by__user: await balena.auth.getUserId(),
-										commit: 'invalidated-release-commit',
-										status: 'success',
-										source: 'cloud',
-										is_invalidated: true,
-										composition: {},
-										start_timestamp: Date.now(),
-									},
-								});
-							},
-						],
-					].forEach(([releaseType, prepareFn]) => {
+							[
+								'draft',
+								async function () {
+									this.testNonLatestRelease = await balena.pine.post({
+										resource: 'release',
+										body: {
+											belongs_to__application: this.application.id,
+											is_created_by__user: await balena.auth.getUserId(),
+											commit: 'draft-release-commit',
+											status: 'success',
+											source: 'cloud',
+											is_final: false,
+											composition: {},
+											start_timestamp: Date.now(),
+										},
+									});
+								},
+							],
+							[
+								'invalidated',
+								async function () {
+									this.testNonLatestRelease = await balena.pine.post({
+										resource: 'release',
+										body: {
+											belongs_to__application: this.application.id,
+											is_created_by__user: await balena.auth.getUserId(),
+											commit: 'invalidated-release-commit',
+											status: 'success',
+											source: 'cloud',
+											is_invalidated: true,
+											composition: {},
+											start_timestamp: Date.now(),
+										},
+									});
+								},
+							],
+						] as const
+					).forEach(([releaseType, prepareFn]) => {
 						describe(`given a new ${releaseType} release`, function () {
-							/** @ts-expect-error */
 							before(prepareFn);
 
 							describe('balena.models.application.isTrackingLatestRelease()', function () {
@@ -1562,22 +1564,21 @@ describe('Application Model', function () {
 		});
 
 		describe('when expanding the release of the image installs', function () {
-			// prettier-ignore
 			const extraServiceDetailOptions = {
 				$expand: {
-					owns__device: /** @type {import('../../../').PineOptions<import('../../../').Device>} */ ({
+					owns__device: {
 						$expand: {
 							image_install: {
 								$expand: {
 									is_provided_by__release: {
-										$select: ['id', 'commit'],
+										$select: toWritable(['id', 'commit'] as const),
 									},
 								},
 							},
 						},
-					}),
+					},
 				},
-			};
+			} as const;
 
 			describe('balena.models.application.getWithDeviceServiceDetails()', () =>
 				it("should retrieve the application and it's devices along with service details including their commit", function () {
@@ -1614,9 +1615,7 @@ describe('Application Model', function () {
 	describe('helpers', () =>
 		describe('balena.models.application.getDashboardUrl()', function () {
 			it('should return the respective DashboardUrl when an application id is provided', function () {
-				// prettier-ignore
-				const dashboardUrl = (/** @type {string} */ (sdkOpts.apiUrl))
-					.replace(/api/, 'dashboard');
+				const dashboardUrl = sdkOpts.apiUrl!.replace(/api/, 'dashboard');
 				return expect(balena.models.application.getDashboardUrl(1)).to.equal(
 					`${dashboardUrl}/apps/1`,
 				);
@@ -1636,7 +1635,7 @@ describe('Application Model', function () {
 		}));
 
 	describe('given public apps', function () {
-		let publicApp = undefined;
+		let publicApp: Pick<BalenaSdk.Application, 'id' | 'app_name' | 'slug'>;
 
 		before(async function () {
 			const [app] = await balena.pine.get({
