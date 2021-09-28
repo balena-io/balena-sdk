@@ -1289,39 +1289,132 @@ describe('Application Model', function () {
 					});
 
 					describe('balena.models.application.trackLatestRelease()', () => {
-						it('...should re-enable latest release tracking', function () {
-							return balena.models.application
-								.isTrackingLatestRelease(this.application.id)
-								.then((result) => {
-									expect(result).to.be.false;
+						it('...should re-enable latest release tracking', async function () {
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.false;
 
-									return balena.models.application.trackLatestRelease(
+							await balena.models.application.trackLatestRelease(
+								this.application.id,
+							);
+
+							expect(
+								await balena.models.application.getTargetReleaseHash(
+									this.application.id,
+								),
+							).to.equal('new-release-commit');
+
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.true;
+
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.true;
+						});
+					});
+
+					[
+						[
+							'draft',
+							async function () {
+								this.testNonLatestRelease = await balena.pine.post({
+									resource: 'release',
+									body: {
+										/** @ts-expect-error */
+										belongs_to__application: this.application.id,
+										is_created_by__user: await balena.auth.getUserId(),
+										commit: 'draft-release-commit',
+										status: 'success',
+										source: 'cloud',
+										is_final: false,
+										composition: {},
+										start_timestamp: Date.now(),
+									},
+								});
+							},
+						],
+						[
+							'invalidated',
+							async function () {
+								this.testNonLatestRelease = await balena.pine.post({
+									resource: 'release',
+									body: {
+										/** @ts-expect-error */
+										belongs_to__application: this.application.id,
+										is_created_by__user: await balena.auth.getUserId(),
+										commit: 'invalidated-release-commit',
+										status: 'success',
+										source: 'cloud',
+										is_invalidated: true,
+										composition: {},
+										start_timestamp: Date.now(),
+									},
+								});
+							},
+						],
+					].forEach(([releaseType, prepareFn]) => {
+						describe(`given a new ${releaseType} release`, function () {
+							/** @ts-expect-error */
+							before(prepareFn);
+
+							describe('balena.models.application.isTrackingLatestRelease()', function () {
+								it(`should not account newer ${releaseType} releases as the default`, async function () {
+									expect(
+										await balena.models.application.getTargetReleaseHash(
+											this.application.id,
+										),
+									).to.equal('new-release-commit');
+
+									expect(
+										await balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										),
+									).to.be.true;
+								});
+							});
+
+							describe('balena.models.application.trackLatestRelease()', () => {
+								it(`should not use a ${releaseType} releases as the latest`, async function () {
+									await balena.models.application.pinToRelease(
+										this.application.id,
+										'old-release-commit',
+									);
+									expect(
+										await balena.models.application.isTrackingLatestRelease(
+											this.application.id,
+										),
+									).to.be.false;
+
+									await balena.models.application.trackLatestRelease(
 										this.application.id,
 									);
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.getTargetReleaseHash(
+
+									expect(
+										await balena.models.application.getTargetReleaseHash(
 											this.application.id,
-										);
-									return expect(promise).to.eventually.equal(
-										'new-release-commit',
-									);
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.willTrackNewReleases(
+										),
+									).to.equal('new-release-commit');
+
+									expect(
+										await balena.models.application.willTrackNewReleases(
 											this.application.id,
-										);
-									return expect(promise).to.eventually.be.true;
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.isTrackingLatestRelease(
+										),
+									).to.be.true;
+
+									expect(
+										await balena.models.application.isTrackingLatestRelease(
 											this.application.id,
-										);
-									return expect(promise).to.eventually.be.true;
+										),
+									).to.be.true;
 								});
+							});
 						});
 					});
 				});

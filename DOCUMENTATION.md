@@ -2187,7 +2187,7 @@ balena.models.application.willTrackNewReleases('MyApp', function(error, isEnable
 
 ##### application.isTrackingLatestRelease(nameOrSlugOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Get whether the application is up to date and is tracking the latest release for updates  
+**Summary**: Get whether the application is up to date and is tracking the latest finalized release for updates  
 **Access**: public  
 **Fulfil**: <code>Boolean</code> - is tracking the latest release  
 
@@ -2283,7 +2283,7 @@ balena.models.application.getTargetReleaseHash('MyApp', function(release) {
 The application's current release will be updated with each new successfully built release.
 
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Configure a specific application to track the latest available release  
+**Summary**: Configure a specific application to track the latest finalized available release  
 **Access**: public  
 
 | Param | Type | Description |
@@ -6266,6 +6266,7 @@ generation is only supported when using a session token, not an API key.
 | options.version | <code>String</code> |  | Required: the OS version of the image. |
 | [options.network] | <code>String</code> | <code>&#x27;ethernet&#x27;</code> | The network type that the device will use, one of 'ethernet' or 'wifi'. |
 | [options.appUpdatePollInterval] | <code>Number</code> |  | How often the OS checks for updates, in minutes. |
+| [options.provisioningKeyName] | <code>String</code> |  | Name assigned to API key |
 | [options.wifiKey] | <code>String</code> |  | The key for the wifi network the device will connect to. |
 | [options.wifiSsid] | <code>String</code> |  | The ssid for the wifi network the device will connect to. |
 | [options.ip] | <code>String</code> |  | static ip address. |
@@ -6814,7 +6815,7 @@ balena.models.release.createFromUrl('MyApp', { url: 'https://github.com/balena-i
 
 ##### release.finalize(commitOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
-**Summary**: Promotes a 'draft' release to 'final' (non-draft)  
+**Summary**: Finalizes a draft release  
 **Access**: public  
 **Fulfil**: <code>void</code>  
 
