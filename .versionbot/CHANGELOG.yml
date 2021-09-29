@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'auth.isLoggedIn: Treat BalenaExpiredToken errors as logged out indicator'
+      hash: 1f70db1ae2a31cf33baa444a869261804088c778
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.51.4
+  date: 2021-09-28T22:02:20.287Z
+- commits:
     - subject: Convert application spec to TypeScript
       hash: 14e34850bd9c362dbee2bf992925d1bbf856c4ca
       body: ''
