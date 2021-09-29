@@ -290,7 +290,10 @@ const getAuth = function (
 			await getUserDetails(true);
 			return true;
 		} catch (err) {
-			if (err instanceof errors.BalenaNotLoggedIn) {
+			if (
+				err instanceof errors.BalenaNotLoggedIn ||
+				err instanceof errors.BalenaExpiredToken
+			) {
 				return false;
 			}
 			throw err;
