@@ -39,8 +39,13 @@ import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 import * as url from 'url';
 
 import once = require('lodash/once');
+import chunk = require('lodash/chunk');
+import flatten = require('lodash/flatten');
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
+import * as memoizee from 'memoizee';
+
+const CHUNK_SIZE = 50;
 
 import {
 	isId,
@@ -127,6 +132,9 @@ const getDeviceModel = function (
 			opts,
 		),
 	);
+	const releaseModel = once(() =>
+		(require('./release') as typeof import('./release')).default(deps, opts),
+	);
 	const hostappModel = once(() =>
 		(require('./hostapp') as typeof import('./hostapp')).default(deps),
 	);
@@ -188,6 +196,92 @@ const getDeviceModel = function (
 			},
 		},
 	);
+
+	async function batchDeviceOperation(
+		uuidOrIdOrIds: string | number | number[],
+		fn: (apps: {
+			id: number;
+			owns__device: Array<{ id: number }>;
+		}) => Promise<void>,
+	): Promise<void> {
+		if (
+			Array.isArray(uuidOrIdOrIds) &&
+			(!uuidOrIdOrIds.length ||
+				uuidOrIdOrIds.some((id) => typeof id !== 'number'))
+		) {
+			throw new errors.BalenaInvalidParameterError(
+				'uuidOrIdOrIds',
+				uuidOrIdOrIds,
+			);
+		}
+
+		// create a list of UUIDs or chunks of IDs
+		const chunks: Array<string | number[]> =
+			typeof uuidOrIdOrIds === 'string'
+				? [uuidOrIdOrIds]
+				: chunk(
+						!Array.isArray(uuidOrIdOrIds) ? [uuidOrIdOrIds] : uuidOrIdOrIds,
+						CHUNK_SIZE,
+				  );
+
+		const apps: Array<Parameters<typeof fn>[0]> = [];
+		for (const uuidOrIdOrIdsChunk of chunks) {
+			const deviceFilter = Array.isArray(uuidOrIdOrIdsChunk)
+				? {
+						id: { $in: uuidOrIdOrIdsChunk },
+				  }
+				: {
+						uuid: { $startswith: uuidOrIdOrIdsChunk },
+				  };
+			const applicationOptions = {
+				$select: 'id',
+				$expand: {
+					owns__device: {
+						$select: 'id',
+						$filter: deviceFilter,
+					},
+				},
+				$filter: {
+					owns__device: {
+						$any: {
+							$alias: 'd',
+							$expr: {
+								d: deviceFilter,
+							},
+						},
+					},
+				},
+			} as const;
+
+			apps.push(
+				...((await applicationModel().getAll(applicationOptions)) as Array<
+					PineTypedResult<Application, typeof applicationOptions>
+				>),
+			);
+		}
+
+		const deviceIds = flatten(
+			apps.map((app) => app.owns__device.map((d) => d.id)),
+		);
+		if (!deviceIds.length) {
+			throw new errors.BalenaDeviceNotFound(uuidOrIdOrIds.toString());
+		}
+
+		if (typeof uuidOrIdOrIds === 'string' && deviceIds.length > 1) {
+			throw new errors.BalenaAmbiguousDevice(uuidOrIdOrIds);
+		} else if (Array.isArray(uuidOrIdOrIds)) {
+			const deviceIdsSet = new Set(deviceIds);
+			for (const id of uuidOrIdOrIds) {
+				if (!deviceIdsSet.has(id)) {
+					throw new errors.BalenaDeviceNotFound(id);
+				}
+			}
+		}
+
+		for (const app of apps) {
+			await fn(app);
+		}
+	}
 
 	// Infer dashboardUrl from apiUrl if former is undefined
 	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
@@ -2194,7 +2288,7 @@ const getDeviceModel = function (
 		 * @description Configures the device to run a particular release
 		 * and not get updated when the current application release changes.
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @param {String|Number} fullReleaseHashOrId - the hash of a successful release (string) or id (number)
 		 * @returns {Promise}
 		 *
@@ -2215,55 +2309,40 @@ const getDeviceModel = function (
 		 * });
 		 */
 		pinToRelease: async (
-			uuidOrId: string | number,
+			uuidOrIdOrIds: string | number | number[],
 			fullReleaseHashOrId: string | number,
 		): Promise<void> => {
-			let deviceId;
-			let releaseId;
-			if (isId(uuidOrId) && isId(fullReleaseHashOrId)) {
-				deviceId = uuidOrId;
-				releaseId = fullReleaseHashOrId;
-			} else {
-				const releaseFilterProperty = isId(fullReleaseHashOrId)
-					? 'id'
-					: 'commit';
-
-				const deviceOptions = {
-					$select: 'id',
-					$expand: {
-						belongs_to__application: {
-							$select: 'id',
-							$expand: {
-								owns__release: {
-									$top: 1,
-									$select: 'id',
-									$filter: {
-										[releaseFilterProperty]: fullReleaseHashOrId,
-										status: 'success',
-									},
-									$orderby: 'created_at desc',
-								},
-							},
+			const getRelease = memoizee(
+				async (appId: number) => {
+					const releaseFilterProperty = isId(fullReleaseHashOrId)
+						? 'id'
+						: 'commit';
+					return await releaseModel().get(fullReleaseHashOrId, {
+						$top: 1,
+						$select: 'id',
+						$filter: {
+							[releaseFilterProperty]: fullReleaseHashOrId,
+							status: 'success',
+							belongs_to__application: appId,
+						},
+						$orderby: 'created_at desc',
+					});
+				},
+				{ primitive: true, promise: true },
+			);
+			await batchDeviceOperation(uuidOrIdOrIds, async (app) => {
+				const release = await getRelease(app.id);
+				await pine.patch<Device>({
+					resource: 'device',
+					options: {
+						$filter: {
+							id: { $in: app.owns__device.map((d) => d.id) },
 						},
 					},
-				} as const;
-
-				const { id, belongs_to__application } = (await exports.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				const app = belongs_to__application[0];
-				const release = app.owns__release[0];
-				if (!release) {
-					throw new errors.BalenaReleaseNotFound(fullReleaseHashOrId);
-				}
-				deviceId = id;
-				releaseId = release.id;
-			}
-			await pine.patch({
-				resource: 'device',
-				id: deviceId,
-				body: { should_be_running__release: releaseId },
+					body: {
+						should_be_running__release: release.id,
+					},
+				});
 			});
 		},
 
@@ -2371,7 +2450,7 @@ const getDeviceModel = function (
 		 *
 		 * @description The device's current release will be updated with each new successfully built release.
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -2385,10 +2464,23 @@ const getDeviceModel = function (
 		 * 	...
 		 * });
 		 */
-		trackApplicationRelease: (uuidOrId: string | number): Promise<void> =>
-			set(uuidOrId, {
-				should_be_running__release: null,
-			}),
+		trackApplicationRelease: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await batchDeviceOperation(uuidOrIdOrIds, async (app) => {
+				await pine.patch<Device>({
+					resource: 'device',
+					options: {
+						$filter: {
+							id: { $in: app.owns__device.map((d) => d.id) },
+						},
+					},
+					body: {
+						should_be_running__release: null,
+					},
+				});
+			});
+		},
 
 		/**
 		 * @summary Check whether the provided device can update to the target os version
