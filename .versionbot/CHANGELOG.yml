@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add support for batch device pinning to release
+      hash: 81610f8308530e1a0b7f118cf2046da45b70e1a3
+      body: ''
+      footer:
+        Resolves: '#1132'
+        resolves: '#1132'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.52.0
+  date: 2021-10-06T10:37:58.535Z
+- commits:
     - subject: 'auth.isLoggedIn: Treat BalenaExpiredToken errors as logged out indicator'
       hash: 1f70db1ae2a31cf33baa444a869261804088c778
       body: ''
