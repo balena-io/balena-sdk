@@ -2670,6 +2670,57 @@ describe('Device Model', function () {
 			});
 		});
 
+		const BATCH_DEVICE_COUNT = 55;
+		describe(`given ${BATCH_DEVICE_COUNT} registered offline device`, function () {
+			before(async function () {
+				this.devices = await Promise.all(
+					_.times(BATCH_DEVICE_COUNT).map(async () => {
+						const uuid = balena.models.device.generateUniqueKey();
+						const deviceInfo = await balena.models.device.register(
+							this.application.id,
+							uuid,
+						);
+						return deviceInfo;
+					}),
+				);
+			});
+
+			describe('balena.models.device.pinToRelease()', function () {
+				it('should set the batch of devices to a specific release', async function () {
+					await balena.models.device.pinToRelease(
+						this.devices.map((d) => d.id),
+						'old-release-commit',
+					);
+					await Promise.all(
+						this.devices.map(async (d) => {
+							const releaseHash =
+								await balena.models.device.getTargetReleaseHash(d.id);
+							expect(releaseHash).to.equal('old-release-commit');
+							const isTracking =
+								await balena.models.device.isTrackingApplicationRelease(d.id);
+							expect(isTracking).to.be.false;
+						}),
+					);
+				});
+			});
+
+			describe('balena.models.device.trackApplicationRelease()', function () {
+				it('should set the batch of devices to track the current application release', async function () {
+					await balena.models.device.trackApplicationRelease(
+						this.devices.map((d) => d.id),
+					);
+
+					await Promise.all(
+						this.devices.map(async (d) => {
+							const isTracking =
+								await balena.models.device.isTrackingApplicationRelease(d.id);
+							expect(isTracking).to.be.true;
+						}),
+					);
+				});
+			});
+		});
+
 		describe('given a device that supports multicontainer', function () {
 			givenADevice(beforeEach, {
 				...testDeviceOsInfo,
