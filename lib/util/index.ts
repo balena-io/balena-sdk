@@ -83,10 +83,10 @@ export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 //   * That means $expands within expands are combined
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
-export function mergePineOptions<R extends {}>(
-	defaults: Pine.ODataOptionsWithSelect<R>,
-	extras: Pine.ODataOptions<R> | undefined,
-): Pine.ODataOptionsWithSelect<R>;
+export function mergePineOptions<
+	R extends {},
+	TDefault extends Pine.ODataOptions<R>,
+>(defaults: TDefault, extras: Pine.ODataOptions<R> | undefined): TDefault;
 export function mergePineOptions<R extends {}>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,

@@ -18,6 +18,7 @@ import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
 	PineOptions,
+	PineOptionsWithSelect,
 	PineTypedResult,
 } from '..';
 import type {
@@ -41,6 +42,7 @@ import * as url from 'url';
 import once = require('lodash/once');
 import chunk = require('lodash/chunk');
 import flatten = require('lodash/flatten');
+import groupBy = require('lodash/groupBy');
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import * as memoizee from 'memoizee';
@@ -197,13 +199,24 @@ const getDeviceModel = function (
 		},
 	);
 
-	async function batchDeviceOperation(
-		uuidOrIdOrIds: string | number | number[],
+	async function batchDeviceOperation<
+		TOpts extends PineOptionsWithSelect<Device>,
+	>({
+		uuidOrIdOrIds,
+		options,
+		fn,
+	}: {
+		uuidOrIdOrIds: string | number | number[];
+		options?: TOpts;
 		fn: (apps: {
 			id: number;
-			owns__device: Array<{ id: number }>;
-		}) => Promise<void>,
-	): Promise<void> {
+			owns__device: Array<
+				{ id: number } & (TOpts extends PineOptionsWithSelect<Device>
+					? PineTypedResult<Device, TOpts>
+					: {})
+			>;
+		}) => Promise<void>;
+	}): Promise<void> {
 		if (
 			Array.isArray(uuidOrIdOrIds) &&
 			(!uuidOrIdOrIds.length ||
@@ -236,10 +249,13 @@ const getDeviceModel = function (
 			const applicationOptions = {
 				$select: 'id',
 				$expand: {
-					owns__device: {
-						$select: 'id',
-						$filter: deviceFilter,
-					},
+					owns__device: mergePineOptions(
+						{
+							$select: 'id',
+							$filter: deviceFilter,
+						},
+						options,
+					),
 				},
 				$filter: {
 					owns__device: {
@@ -252,11 +268,14 @@ const getDeviceModel = function (
 					},
 				},
 			} as const;
+			type defaultOptionsResult = Array<
+				PineTypedResult<Application, typeof applicationOptions>
+			>;
 
 			apps.push(
-				...((await applicationModel().getAll(applicationOptions)) as Array<
-					PineTypedResult<Application, typeof applicationOptions>
-				>),
+				...((await applicationModel().getAll(
+					applicationOptions,
+				)) as defaultOptionsResult as typeof apps),
 			);
 		}
 
@@ -2330,19 +2349,22 @@ const getDeviceModel = function (
 				},
 				{ primitive: true, promise: true },
 			);
-			await batchDeviceOperation(uuidOrIdOrIds, async (app) => {
-				const release = await getRelease(app.id);
-				await pine.patch<Device>({
-					resource: 'device',
-					options: {
-						$filter: {
-							id: { $in: app.owns__device.map((d) => d.id) },
+			await batchDeviceOperation({
+				uuidOrIdOrIds,
+				fn: async (app) => {
+					const release = await getRelease(app.id);
+					await pine.patch<Device>({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: app.owns__device.map((d) => d.id) },
+							},
 						},
-					},
-					body: {
-						should_be_running__release: release.id,
-					},
-				});
+						body: {
+							should_be_running__release: release.id,
+						},
+					});
+				},
 			});
 		},
 
@@ -2355,7 +2377,7 @@ const getDeviceModel = function (
 		 *
 		 * @description Configures the device to run a particular supervisor release.
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @param {String|Number} supervisorVersionOrId - the version of a released supervisor (string) or id (number)
 		 * @returns {Promise}
 		 *
@@ -2376,68 +2398,77 @@ const getDeviceModel = function (
 		 * });
 		 */
 		setSupervisorRelease: async (
-			uuidOrId: string | number,
+			uuidOrIdOrIds: string | number | number[],
 			supervisorVersionOrId: string | number,
 		): Promise<void> => {
-			let deviceId;
-			let releaseId;
-			const deviceOpts = {
-				$select: toWritable([
-					'id',
-					'supervisor_version',
-					'os_version',
-				] as const),
-				$expand: { is_of__device_type: { $select: 'slug' } },
-			} as const;
-
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOpts,
-			)) as PineTypedResult<Device, typeof deviceOpts>;
-			ensureVersionCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_MC_API,
-				'supervisor',
-			);
-			ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
-			if (isId(uuidOrId) && isId(supervisorVersionOrId)) {
-				deviceId = uuidOrId;
-				releaseId = supervisorVersionOrId;
-			} else {
-				const releaseFilterProperty = isId(supervisorVersionOrId)
-					? 'id'
-					: 'supervisor_version';
-
-				const [supervisorRelease] = await pine.get({
-					resource: 'supervisor_release',
-					options: {
-						$top: 1,
-						$select: 'id',
-						$filter: {
-							[releaseFilterProperty]: supervisorVersionOrId,
-							is_for__device_type: {
-								$any: {
-									$alias: 'dt',
-									$expr: {
-										dt: {
-											slug: device.is_of__device_type[0].slug,
+			const releaseFilterProperty = isId(supervisorVersionOrId)
+				? 'id'
+				: 'supervisor_version';
+			const getRelease = memoizee(
+				async (deviceTypeSlug: string) => {
+					const [supervisorRelease] = await pine.get({
+						resource: 'supervisor_release',
+						options: {
+							$top: 1,
+							$select: 'id',
+							$filter: {
+								[releaseFilterProperty]: supervisorVersionOrId,
+								is_for__device_type: {
+									$any: {
+										$alias: 'dt',
+										$expr: {
+											dt: {
+												slug: deviceTypeSlug,
+											},
 										},
 									},
 								},
 							},
 						},
-					},
-				});
-				if (supervisorRelease == null) {
-					throw new errors.BalenaReleaseNotFound(supervisorVersionOrId);
-				}
-				deviceId = device.id;
-				releaseId = supervisorRelease.id;
-			}
-			await pine.patch({
-				resource: 'device',
-				id: deviceId,
-				body: { should_be_managed_by__supervisor_release: releaseId },
+					});
+					if (supervisorRelease == null) {
+						throw new errors.BalenaReleaseNotFound(supervisorVersionOrId);
+					}
+					return supervisorRelease;
+				},
+				{ primitive: true, promise: true },
+			);
+			await batchDeviceOperation({
+				uuidOrIdOrIds,
+				options: {
+					$select: ['id', 'supervisor_version', 'os_version'],
+					$expand: { is_of__device_type: { $select: 'slug' } },
+				},
+				fn: async (app) => {
+					app.owns__device.forEach((device) => {
+						ensureVersionCompatibility(
+							device.supervisor_version,
+							MIN_SUPERVISOR_MC_API,
+							'supervisor',
+						);
+						ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
+					});
+					const devicesByDeviceType = groupBy(
+						app.owns__device,
+						(device) => device.is_of__device_type[0].slug,
+					);
+					await Promise.all(
+						Object.entries(devicesByDeviceType).map(async ([dt, devices]) => {
+							const release = await getRelease(dt);
+							await pine.patch<Device>({
+								resource: 'device',
+								options: {
+									$filter: {
+										id: { $in: devices.map((d) => d.id) },
+									},
+								},
+								body: {
+									should_be_managed_by__supervisor_release: release.id,
+								},
+							});
+						}),
+					);
+				},
 			});
 		},
 
@@ -2467,18 +2498,21 @@ const getDeviceModel = function (
 		trackApplicationRelease: async (
 			uuidOrIdOrIds: string | number | number[],
 		): Promise<void> => {
-			await batchDeviceOperation(uuidOrIdOrIds, async (app) => {
-				await pine.patch<Device>({
-					resource: 'device',
-					options: {
-						$filter: {
-							id: { $in: app.owns__device.map((d) => d.id) },
+			await batchDeviceOperation({
+				uuidOrIdOrIds,
+				fn: async (app) => {
+					await pine.patch<Device>({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: app.owns__device.map((d) => d.id) },
+							},
 						},
-					},
-					body: {
-						should_be_running__release: null,
-					},
-				});
+						body: {
+							should_be_running__release: null,
+						},
+					});
+				},
 			});
 		},
 

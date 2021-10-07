@@ -2719,6 +2719,51 @@ describe('Device Model', function () {
 					);
 				});
 			});
+
+			describe('balena.models.device.setSupervisorRelease()', function () {
+				givenASupervisorRelease(before);
+
+				it('should set the batch of devices to a specific supervisor release', async function () {
+					await balena.models.device.setSupervisorRelease(
+						this.devices.map((d) => d.id),
+						this.supervisorRelease.supervisor_version,
+					);
+					await Promise.all(
+						this.devices.map(async (d) => {
+							const device = await balena.models.device.get(d.id);
+							expect(
+								device.should_be_managed_by__supervisor_release,
+							).to.have.deep.property('__id', this.supervisorRelease.id);
+						}),
+					);
+				});
+
+				it('should set the batch of devices to a specific supervisor release', async function () {
+					await balena.models.device.setSupervisorRelease(
+						this.devices.map((d) => d.id),
+						this.supervisorRelease.id,
+					);
+					await Promise.all(
+						this.devices.map(async (d) => {
+							const device = await balena.models.device.get(d.id);
+							expect(
+								device.should_be_managed_by__supervisor_release,
+							).to.have.deep.property('__id', this.supervisorRelease.id);
+						}),
+					);
+				});
+
+				it('should fail to set the batch of devices to a specific non-existent supervisor release', async function () {
+					const badRelease = 'nonexistent-supervisor-version';
+					const promise = balena.models.device.setSupervisorRelease(
+						this.devices.map((d) => d.id),
+						badRelease,
+					);
+					await expect(promise).to.be.rejectedWith(
+						`Release not found: ${badRelease}`,
+					);
+				});
+			});
 		});
 
 		describe('given a device that supports multicontainer', function () {
