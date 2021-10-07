@@ -1,8 +1,9 @@
 import * as bSemver from 'balena-semver';
 import type { InjectedDependenciesParam } from '..';
-import type { ResourceTagBase, ApplicationTag } from '../types/models';
+import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
 import { Dictionary, ResolvableReturnType } from '../../typings/utils';
 import { getAuthDependentMemoize } from '../util/cache';
+import { toWritable } from '../util/types';
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
 const ESR_NEXT_TAG_NAME = 'esr-next';
@@ -19,15 +20,15 @@ export enum OsTypes {
 
 export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
 
-export interface OsVersion {
-	id: number;
+const releaseSelectedFields = toWritable(['id', 'known_issue_list'] as const);
+export interface OsVersion
+	extends Pick<Release, typeof releaseSelectedFields[number]> {
 	rawVersion: string;
 	strippedVersion: string;
 	basedOnVersion?: string;
 	osType: string;
 	line?: OsLines;
 	variant?: string;
-
 	formattedVersion: string;
 	isRecommended?: boolean;
 }
@@ -112,7 +113,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
 			// The version coming from release tags doesn't contain the variant, so we append it here
 			return {
-				id: release.id,
+				...release,
 				osType: appTags.osType,
 				line,
 				strippedVersion: version,
@@ -187,7 +188,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 						$select: 'slug',
 					},
 					owns__release: {
-						$select: 'id',
+						$select: releaseSelectedFields,
 						$expand: {
 							release_tag: {
 								$select: ['tag_key', 'value'],
