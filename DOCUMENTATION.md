@@ -242,7 +242,7 @@ const sdk = fromSharedOptions();
             * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
             * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.pinToRelease(uuidOrIdOrIds, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-            * [.setSupervisorRelease(uuidOrId, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
+            * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
             * [.trackApplicationRelease(uuidOrIdOrIds)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
@@ -616,7 +616,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
         * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.pinToRelease(uuidOrIdOrIds, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-        * [.setSupervisorRelease(uuidOrId, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
+        * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
         * [.trackApplicationRelease(uuidOrIdOrIds)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
@@ -2491,7 +2491,7 @@ balena.models.application.revokeSupportAccess('MyApp', function(error) {
     * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
     * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.pinToRelease(uuidOrIdOrIds, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-    * [.setSupervisorRelease(uuidOrId, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
+    * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
     * [.trackApplicationRelease(uuidOrIdOrIds)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
     * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
@@ -4657,7 +4657,7 @@ balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661
 ```
 <a name="balena.models.device.setSupervisorRelease"></a>
 
-##### device.setSupervisorRelease(uuidOrId, supervisorVersionOrId) ⇒ <code>Promise</code>
+##### device.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId) ⇒ <code>Promise</code>
 Configures the device to run a particular supervisor release.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
@@ -4666,7 +4666,7 @@ Configures the device to run a particular supervisor release.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| uuidOrIdOrIds | <code>String</code> \| <code>Number</code> \| <code>Array.&lt;Number&gt;</code> | device uuid (string) or id (number) or array of ids |
 | supervisorVersionOrId | <code>String</code> \| <code>Number</code> | the version of a released supervisor (string) or id (number) |
 
 **Example**  
