@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add support for batch device supervisor updates
+      hash: 0275b6311dcada18b9b11a235576d9f32a263e70
+      body: ''
+      footer:
+        Resolves: '#1134'
+        resolves: '#1134'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.53.0
+  date: 2021-10-07T13:29:08.492Z
+- commits:
     - subject: Add support for batch device pinning to release
       hash: 81610f8308530e1a0b7f118cf2046da45b70e1a3
       body: ''
