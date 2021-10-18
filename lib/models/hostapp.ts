@@ -158,6 +158,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 				if (!recommendedPerOsType[version.osType]) {
 					if (
 						version.variant !== 'dev' &&
+						!version.known_issue_list &&
 						!bSemver.prerelease(version.rawVersion)
 					) {
 						const additionalFormat = version.line
