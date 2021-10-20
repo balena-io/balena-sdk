@@ -1,4 +1,43 @@
 - commits:
+    - subject: 'tests: Register devices in chunks of 10 to avoid uuid conflicts in node'
+      hash: acb6c922176eedda4cc6bef4f28c4bd28a49bcf8
+      body: |
+        The "given 55 registered offline device" was failing
+        on node with "uuid" must be unique.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://ci.appveyor.com/project/resin-io/balena-sdk/build/job/dmjscnj3u43kwyhk
+        see: >-
+          https://ci.appveyor.com/project/resin-io/balena-sdk/build/job/dmjscnj3u43kwyhk
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add known issue check on release isReccomanded logic
+      hash: fcd5c5d3d02d03093761499de87a76c33c215c19
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+    - subject: Add known_issue_list to hostApp.getOsVersions()
+      hash: aa38e638d773ba4cb9ef6f4940c00cc4f4e28145
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 15.54.0
+  date: 2021-10-20T13:09:45.029Z
+- commits:
     - subject: Add support for batch device supervisor updates
       hash: 0275b6311dcada18b9b11a235576d9f32a263e70
       body: ''
