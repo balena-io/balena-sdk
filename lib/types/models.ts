@@ -331,6 +331,7 @@ export interface Release {
 	semver_minor: number;
 	semver_patch: number;
 	revision: number | null;
+	known_issue_list: string | null;
 	/** This is a computed term */
 	version: ReleaseVersion;
 	is_final: boolean;
