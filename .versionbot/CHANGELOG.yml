@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests/device: Async-await conversions & abstraction on multi-field tests'
+      hash: 6f8163fec2162f1f575c26882c84928f9582be56
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.54.1
+  date: 2021-10-22T12:29:19.360Z
+- commits:
     - subject: 'tests: Register devices in chunks of 10 to avoid uuid conflicts in node'
       hash: acb6c922176eedda4cc6bef4f28c4bd28a49bcf8
       body: |
