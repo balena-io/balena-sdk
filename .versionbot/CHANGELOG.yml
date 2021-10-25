@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'application/create: Rely on the hostApps for detecting discontinued DTs'
+      hash: e06bcd7cba5d3933e3f31d19c9525d238605daf2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/r-resinos/threads/9HOl8Dk1KV_anW-oMlTzzDDXy3H
+        see: >-
+          https://www.flowdock.com/app/rulemotion/r-resinos/threads/9HOl8Dk1KV_anW-oMlTzzDDXy3H
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.54.2
+  date: 2021-10-25T14:43:38.402Z
+- commits:
     - subject: 'tests/device: Async-await conversions & abstraction on multi-field tests'
       hash: 6f8163fec2162f1f575c26882c84928f9582be56
       body: ''
