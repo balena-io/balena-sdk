@@ -691,28 +691,42 @@ const getApplicationModel = function (
 				: undefined;
 
 			const deviceTypeIdPromise = deviceModel()
-				.getManifestBySlug(deviceType)
-				.then(async function (deviceManifest) {
-					if (deviceManifest == null) {
+				.getDeviceSlug(deviceType)
+				.then(async function (deviceTypeSlug) {
+					if (deviceTypeSlug == null) {
 						throw new errors.BalenaInvalidDeviceType(deviceType);
-					}
-
-					if (deviceManifest.state === 'DISCONTINUED') {
-						throw new errors.BalenaDiscontinuedDeviceType(deviceType);
 					}
 
 					const dt = await pine.get({
 						resource: 'device_type',
 						id: {
 							// this way we get the un-aliased device type slug
-							slug: deviceManifest.slug,
+							slug: deviceTypeSlug,
 						},
 						options: {
-							$select: ['id'],
+							$select: 'id',
+							$expand: {
+								is_default_for__application: {
+									$select: 'is_archived',
+									$filter: {
+										is_host: true,
+									},
+								},
+							},
 						},
 					});
 					if (dt == null) {
 						throw new errors.BalenaInvalidDeviceType(deviceType);
+					}
+
+					const hostApps = dt.is_default_for__application;
+					// TODO: We are now checking whether all returned hostApps are marked as archived so that we
+					// do not break open-balena. Once open-balena gets hostApps, we can change this to just a $filter on is_archived.
+					if (
+						hostApps.length > 0 &&
+						hostApps.every((hostApp) => hostApp.is_archived)
+					) {
+						throw new errors.BalenaDiscontinuedDeviceType(deviceType);
 					}
 					return dt.id;
 				});
