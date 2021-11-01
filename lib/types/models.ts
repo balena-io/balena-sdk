@@ -333,6 +333,8 @@ export interface Release {
 	revision: number | null;
 	known_issue_list: string | null;
 	/** This is a computed term */
+	raw_version: string;
+	/** This is a computed term */
 	version: ReleaseVersion;
 	is_final: boolean;
 	is_finalized_at__date: string | null;
