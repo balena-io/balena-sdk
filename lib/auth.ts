@@ -520,18 +520,30 @@ const getAuth = function (
 		const email = verificationPayload.email;
 		const verificationToken = verificationPayload.token;
 
-		const { body } = await request.send({
-			method: 'POST',
-			url: '/user/v1/verify-email',
-			body: {
-				verificationToken,
-				email,
-			},
-			baseUrl: apiUrl,
-			sendToken: false,
-		});
+		try {
+			const { body } = await request.send({
+				method: 'POST',
+				url: '/user/v1/verify-email',
+				body: {
+					verificationToken,
+					email,
+				},
+				baseUrl: apiUrl,
+				sendToken: false,
+			});
 
-		return body;
+			return body;
+		} catch (err) {
+			if (err.statusCode === 400) {
+				throw new errors.BalenaRequestError(
+					'Your verification link has expired - log in again to request another one.',
+					err.statusCode,
+					{},
+				);
+			}
+
+			throw err;
+		}
 	}
 
 	/**
