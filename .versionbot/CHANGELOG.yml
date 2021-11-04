@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'typings: Add the release.raw_version property'
+      hash: 368c96284c0687750321135f8e3264c8370dd3e2
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/3398'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/3398'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.55.0
+  date: 2021-11-01T13:03:07.198Z
+- commits:
     - subject: 'application/create: Rely on the hostApps for detecting discontinued DTs'
       hash: e06bcd7cba5d3933e3f31d19c9525d238605daf2
       body: ''
