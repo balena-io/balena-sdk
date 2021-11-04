@@ -2,7 +2,12 @@
 import * as _ from 'lodash';
 import * as m from 'mochainon';
 import * as parallel from 'mocha.parallel';
-import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
+import {
+	balena,
+	givenAnApplication,
+	givenADevice,
+	givenLoggedInUser,
+} from '../setup';
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
 const { expect } = m.chai;
 
@@ -108,36 +113,62 @@ describe('API Key model', function () {
 		});
 	});
 
-	describe('balena.models.apiKey.getProvisioningApiKeysByApplication', function () {
+	describe('given an application', function () {
 		givenLoggedInUser(before);
 		givenAnApplication(before);
 
-		before(async function () {
-			const apiKey = await balena.models.application.generateProvisioningKey(
-				this.application.id,
-			);
-			expect(apiKey).to.be.a('string').that.has.length(32);
-
-			this.apiKey = apiKey;
-		});
-
-		it('should fail when the application does not exist', async function () {
-			const error = await expect(
-				balena.models.apiKey.getProvisioningApiKeysByApplication(
-					'nonExistentOrganization/nonExistentApp',
-				),
-			).to.be.rejected;
-			expect(error).to.have.property('code', 'BalenaApplicationNotFound');
-		});
-
-		it('should be able to retrieve the provisioning api keys of an application', async function () {
-			const apiKeys =
-				await balena.models.apiKey.getProvisioningApiKeysByApplication(
+		describe('balena.models.apiKey.getProvisioningApiKeysByApplication', function () {
+			before(async function () {
+				const apiKey = await balena.models.application.generateProvisioningKey(
 					this.application.id,
 				);
-			expect(apiKeys).to.be.an('array');
-			expect(apiKeys).to.have.lengthOf(1);
-			expect(apiKeys[0].name).to.equal(null);
+				expect(apiKey).to.be.a('string').that.has.length(32);
+
+				this.apiKey = apiKey;
+			});
+
+			it('should fail when the application does not exist', async function () {
+				const error = await expect(
+					balena.models.apiKey.getProvisioningApiKeysByApplication(
+						'nonExistentOrganization/nonExistentApp',
+					),
+				).to.be.rejected;
+				expect(error).to.have.property('code', 'BalenaApplicationNotFound');
+			});
+
+			it('should be able to retrieve the provisioning api keys of an application', async function () {
+				const apiKeys =
+					await balena.models.apiKey.getProvisioningApiKeysByApplication(
+						this.application.id,
+					);
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(1);
+				expect(apiKeys[0].name).to.equal(null);
+			});
+		});
+
+		describe('balena.models.apiKey.getDeviceApiKeysByDevice', function () {
+			givenADevice(before);
+
+			before(async function () {
+				await balena.models.device.generateDeviceKey(this.device.id);
+			});
+
+			it('should fail when the device does not exist', async function () {
+				const error = await expect(
+					balena.models.apiKey.getDeviceApiKeysByDevice('nonexistentuuid'),
+				).to.be.rejected;
+				expect(error).to.have.property('code', 'BalenaDeviceNotFound');
+			});
+
+			it('should be able to retrieve the api keys of a device', async function () {
+				const apiKeys = await balena.models.apiKey.getDeviceApiKeysByDevice(
+					this.device.id,
+				);
+				expect(apiKeys).to.be.an('array');
+				expect(apiKeys).to.have.lengthOf(2);
+				expect(apiKeys[0].name).to.equal(null);
+			});
 		});
 	});
 
