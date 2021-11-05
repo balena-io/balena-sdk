@@ -136,13 +136,16 @@ export async function resetUser() {
 				// only delete named user api keys
 				options: {
 					$filter: {
+						is_of__actor: await balena.auth.getUserActorId(),
 						name: {
 							$ne: null,
 						},
 					},
 				},
 			})
-			.catch(_.noop),
+			.catch((err) =>
+				console.log(`[resetUser] Error while deleting api keys:`, err.message),
+			),
 
 		resetInitialOrganization(),
 

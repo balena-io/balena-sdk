@@ -354,6 +354,7 @@ export interface Release {
 
 export interface Device {
 	id: number;
+	actor: number;
 	created_at: string;
 	modified_at: string;
 	custom_latitude?: string;

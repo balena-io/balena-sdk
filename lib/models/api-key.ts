@@ -30,6 +30,9 @@ const getApiKeysModel = function (
 			opts,
 		),
 	);
+	const deviceModel = once(() =>
+		(require('./device') as typeof import('./device')).default(deps, opts),
+	);
 
 	const { pine, request, sdkInstance } = deps;
 	const { apiUrl } = opts;
@@ -189,6 +192,51 @@ const getApiKeysModel = function (
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
 		): Promise<BalenaSdk.ApiKey[]> {
 			const { actor } = await applicationModel().get(nameOrSlugOrId, {
+				$select: 'actor',
+			});
+
+			return await pine.get({
+				resource: 'api_key',
+				options: mergePineOptions(
+					{
+						$filter: {
+							is_of__actor: actor,
+						},
+						$orderby: 'name asc',
+					},
+					options,
+				),
+			});
+		},
+
+		/**
+		 * @summary Get all API keys for a device
+		 * @name getDeviceApiKeysByDevice
+		 * @public
+		 * @function
+		 * @memberof balena.models.apiKey
+		 *
+		 * @param {String|Number} uuidOrId - device, uuid (string) or id (number)
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - apiKeys
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a6').then(function(apiKeys) {
+		 * 	console.log(apiKeys);
+		 * });
+		 *
+		 * @example
+		 * balena.models.apiKey.getDeviceApiKeysByDevice(123, function(error, apiKeys) {
+		 * 	if (error) throw error;
+		 * 	console.log(apiKeys);
+		 * });
+		 */
+		async getDeviceApiKeysByDevice(
+			uuidOrId: string | number,
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
+		): Promise<BalenaSdk.ApiKey[]> {
+			const { actor } = await deviceModel().get(uuidOrId, {
 				$select: 'actor',
 			});
 
