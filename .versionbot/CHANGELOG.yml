@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'models/apiKey: Add getDeviceApiKeysByDevice() method'
+      hash: da00e1ab4c72da4f48e7aa2ad2c27024bca22b3e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/3399'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/3399'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.56.0
+  date: 2021-11-04T22:14:22.839Z
+- commits:
     - subject: 'typings: Add the release.raw_version property'
       hash: 368c96284c0687750321135f8e3264c8370dd3e2
       body: ''
