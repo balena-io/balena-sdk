@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'models/api-key: Change update() & revoke() to work with all key variants'
+      hash: 842c6ce182fbcfc0e75f2a0b7cfd24818ae777b7
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.57.0
+  date: 2021-11-05T13:18:24.149Z
+- commits:
     - subject: 'models/apiKey: Add getDeviceApiKeysByDevice() method'
       hash: da00e1ab4c72da4f48e7aa2ad2c27024bca22b3e
       body: ''
