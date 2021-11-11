@@ -1,4 +1,37 @@
 - commits:
+    - subject: 'typings: Fix $filters for resources with non numeric ids'
+      hash: 15e6d9ba017637bae52fbe02b32b7ed067c99c69
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'typings: Add application.can_use__application_as_host ReverseNavigation'
+      hash: cb08802404bab2d7533b87233046a377877f0c45
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add missing apiKey.getDeviceApiKeysByDevice docs
+      hash: 65d8ae845671017172b841af8abe009152749909
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.57.1
+  date: 2021-11-11T22:48:29.201Z
+- commits:
     - subject: 'models/api-key: Change update() & revoke() to work with all key variants'
       hash: 842c6ce182fbcfc0e75f2a0b7cfd24818ae777b7
       body: ''
