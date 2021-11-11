@@ -38,7 +38,7 @@ export type AssociatedResource<T = WithId> =
 	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
 
-export type InferAssociatedResourceType<T> = T extends AssociatedResource &
+export type InferAssociatedResourceType<T> = T extends AssociatedResource<{}> &
 	any[]
 	? T[number]
 	: never;
@@ -157,15 +157,16 @@ interface Lambda<T> {
 type OrderByValues = 'asc' | 'desc';
 type OrderBy = string | OrderBy[] | { [index: string]: OrderByValues };
 
-type AssociatedResourceFilter<T> =
-	T extends NonNullable<ReverseNavigationResource>
-		? FilterObj<InferAssociatedResourceType<T>>
-		: FilterObj<InferAssociatedResourceType<T>> | number | null;
+type AssociatedResourceFilter<T> = T extends NonNullable<
+	ReverseNavigationResource<{}>
+>
+	? FilterObj<InferAssociatedResourceType<T>>
+	: FilterObj<InferAssociatedResourceType<T>> | number | null;
 
 type ResourceObjFilterPropValue<
 	T,
 	k extends keyof T,
-> = T[k] extends AssociatedResource
+> = T[k] extends AssociatedResource<{}>
 	? AssociatedResourceFilter<T[k]>
 	: T[k] | FilterExpressions<T[k]> | null;
 

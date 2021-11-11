@@ -271,6 +271,7 @@ const sdk = fromSharedOptions();
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
             * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
             * [.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
+            * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
             * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
             * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
         * [.key](#balena.models.key) : <code>object</code>
@@ -645,6 +646,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
         * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
         * [.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
+        * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
         * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
         * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
     * [.key](#balena.models.key) : <code>object</code>
@@ -5355,6 +5357,7 @@ balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTyp
     * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
     * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
     * [.getProvisioningApiKeysByApplication(nameOrSlugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
+    * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
     * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
     * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
 
@@ -5464,6 +5467,32 @@ balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp')
 **Example**  
 ```js
 balena.models.apiKey.getProvisioningApiKeysByApplication(123, function(error, apiKeys) {
+	if (error) throw error;
+	console.log(apiKeys);
+});
+```
+<a name="balena.models.apiKey.getDeviceApiKeysByDevice"></a>
+
+##### apiKey.getDeviceApiKeysByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
+**Summary**: Get all API keys for a device  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - apiKeys  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device, uuid (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a6').then(function(apiKeys) {
+	console.log(apiKeys);
+});
+```
+**Example**  
+```js
+balena.models.apiKey.getDeviceApiKeysByDevice(123, function(error, apiKeys) {
 	if (error) throw error;
 	console.log(apiKeys);
 });

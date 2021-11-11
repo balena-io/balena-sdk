@@ -197,6 +197,7 @@ export interface Application {
 	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
 	/** is_accessible_by__team */
 	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
+	can_use__application_as_host: ReverseNavigationResource<ApplicationHostedOnApplication>;
 }
 
 export interface UserHasDirectAccessToApplication {
