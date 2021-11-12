@@ -340,6 +340,7 @@ export interface Release {
 	is_final: boolean;
 	is_finalized_at__date: string | null;
 	note: string | null;
+	invalidation_reason: string | null;
 
 	is_created_by__user: OptionalNavigationResource<User>;
 	belongs_to__application: NavigationResource<Application>;
