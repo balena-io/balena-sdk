@@ -93,7 +93,7 @@ describe('Logs', function () {
 		});
 
 		describe('balena.logs.subscribe()', function () {
-			const LOG_SUBSCRIPTION_TIMEOUT = 2000;
+			const LOG_SUBSCRIPTION_TIMEOUT = 5000;
 
 			async function getLogLinesAndUnsubscribe(logs) {
 				const lines = [];
