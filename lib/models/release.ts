@@ -423,6 +423,38 @@ const getReleaseModel = function (
 	}
 
 	/**
+	 * @summary Add a note to a release
+	 * @name note
+	 * @public
+	 * @function
+	 * @memberof balena.models.release
+	 *
+	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Null} note - the note
+	 *
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.release.note('7cf02a6', 'My useful note');
+	 *
+	 * @example
+	 * balena.models.release.note(123, 'My useful note');
+	 */
+	async function note(
+		commitOrId: string | number,
+		noteOrNull: string | null,
+	): Promise<void> {
+		const { id } = await get(commitOrId, { $select: 'id' });
+		await pine.patch<Release>({
+			resource: 'release',
+			id,
+			body: {
+				note: noteOrNull,
+			},
+		});
+	}
+
+	/**
 	 * @namespace balena.models.release.tags
 	 * @memberof balena.models.release
 	 */
@@ -611,6 +643,7 @@ const getReleaseModel = function (
 		getWithImageDetails,
 		createFromUrl,
 		finalize,
+		note,
 		tags,
 	};
 };
