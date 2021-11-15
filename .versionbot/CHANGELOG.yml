@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add 400 error handling for email verification.
+      hash: b6bee1bcbdb3aea6701f81f6401cd47424eea294
+      body: ''
+      footer:
+        Change-Type: patch
+        change-type: patch
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Nitish Agarwal
+      nested: []
+  version: 15.57.2
+  date: 2021-11-15T10:03:32.881Z
+- commits:
     - subject: 'typings: Fix $filters for resources with non numeric ids'
       hash: 15e6d9ba017637bae52fbe02b32b7ed067c99c69
       body: ''
