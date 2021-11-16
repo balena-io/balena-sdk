@@ -437,6 +437,23 @@ describe('Release Model', function () {
 			});
 		});
 
+		describe('balena.models.release.note()', function () {
+			releaseRetrievalFields.forEach((field) => {
+				it(`should set a note using the release ${field}`, async function () {
+					const release = ctx.currentRelease;
+					const note = `This is a note set using field: ${field}`;
+					await balena.models.release.note(release[field], note);
+					const updatedRelease = await balena.models.release.get(release.id, {
+						$select: ['id', 'note'],
+					});
+					expect(updatedRelease).to.deep.match({
+						id: release.id,
+						note: note,
+					});
+				});
+			});
+		});
+
 		describe('balena.models.release.tags', function () {
 			const appTagTestOptions = {
 				// prettier-ignore
