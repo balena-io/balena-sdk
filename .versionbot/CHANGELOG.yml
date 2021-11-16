@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests/logs: Increase the wait time for retrieving the subscribed logs'
+      hash: 7de82b1528354675c54c99bb9df2d88223370966
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'tests/logs: Refactor to async-await'
+      hash: b4264957fd69b0950c7d39e9f32ab0e0a346e893
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.57.2
+  date: 2021-11-15T23:37:53.479Z
+- commits:
     - subject: 'typings: Fix $filters for resources with non numeric ids'
       hash: 15e6d9ba017637bae52fbe02b32b7ed067c99c69
       body: ''
