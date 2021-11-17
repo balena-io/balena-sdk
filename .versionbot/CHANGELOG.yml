@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update typescript to 4.5.2
+      hash: 5f227908d03881df0128db97f3e488977a17be50
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.58.1
+  date: 2021-11-17T22:57:14.101Z
+- commits:
     - subject: 'models/release: Add note() method'
       hash: 65cebcb1376a2b21c3db32a13b272ce5d3bed076
       body: ''
