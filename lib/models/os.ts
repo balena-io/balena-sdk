@@ -346,6 +346,7 @@ const getOsModel = function (
 	 * * `'default'` in which case the recommended version is returned if available,
 	 * or `latest` is returned otherwise.
 	 * Defaults to `'latest'`.
+	 *
 	 * @fulfil {String|null} - the version number, or `null` if no matching versions are found
 	 * @returns {Promise}
 	 *
@@ -359,10 +360,8 @@ const getOsModel = function (
 		versionOrRange: string = 'latest',
 	): Promise<string | null> {
 		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
-		let osVersions =
+		const osVersions =
 			(await hostapp().getAvailableOsVersions([deviceType]))[deviceType] ?? [];
-		const { OsTypes } = hostappExports();
-		osVersions = osVersions.filter((v) => v.osType === OsTypes.DEFAULT);
 		return _getMaxSatisfyingVersion(versionOrRange, osVersions) ?? null;
 	};
 
