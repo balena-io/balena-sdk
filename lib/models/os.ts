@@ -441,9 +441,9 @@ const getOsModel = function (
 			let ver;
 			if (version === 'latest') {
 				const { OsTypes } = hostappExports();
-				const versions = (
-					(await hostapp().getAvailableOsVersions([slug]))[slug] ?? []
-				).filter((v) => v.osType === OsTypes.DEFAULT);
+				const versions = (await hostapp().getAvailableOsVersions(slug)).filter(
+					(v) => v.osType === OsTypes.DEFAULT,
+				);
 				ver = (versions.find((v) => v.isRecommended) ?? versions[0])
 					?.rawVersion;
 			} else {
@@ -606,9 +606,7 @@ const getOsModel = function (
 	): Promise<OsUpdateVersions> => {
 		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		const { OsTypes } = hostappExports();
-		const allVersions = (
-			(await hostapp().getAvailableOsVersions([deviceType]))[deviceType] ?? []
-		)
+		const allVersions = (await hostapp().getAvailableOsVersions(deviceType))
 			.filter((v) => v.osType === OsTypes.DEFAULT)
 			.map((v) => v.rawVersion);
 		// use bSemver.compare to find the current version in the OS list
