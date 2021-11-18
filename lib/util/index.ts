@@ -74,6 +74,14 @@ export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 	throw replacementErr;
 };
 
+// TODO: Make it so that it also infers the extras param
+export function mergePineOptionsTyped<
+	R,
+	P extends Pine.ODataOptionsWithSelect<R>,
+>(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
+	return mergePineOptions(defaults, extras) as P;
+}
+
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
 // The general rules are:

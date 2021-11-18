@@ -1,6 +1,7 @@
 import * as bSemver from 'balena-semver';
-import type { InjectedDependenciesParam } from '..';
+import type { InjectedDependenciesParam, PineOptions } from '..';
 import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
+import { mergePineOptionsTyped } from '../util';
 import { Dictionary, ResolvableReturnType } from '../../typings/utils';
 import { getAuthDependentMemoize } from '../util/cache';
 import { toWritable } from '../util/types';
@@ -39,6 +40,7 @@ export interface OsVersionsByDeviceType {
 
 const getHostappModel = function (deps: InjectedDependenciesParam) {
 	const { pine, pubsub } = deps;
+	const authDependentMemoizer = getAuthDependentMemoize(pubsub);
 
 	type HostAppTagSet = ReturnType<typeof getOsAppTags>;
 
@@ -176,7 +178,10 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		return osVersionsByDeviceType;
 	};
 
-	const getOsVersions = async (deviceTypes: string[]) => {
+	const getOsVersions = async (
+		deviceTypes: string[],
+		options?: PineOptions<Release>,
+	) => {
 		return await pine.get({
 			resource: 'application',
 			options: {
@@ -188,17 +193,17 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 					is_for__device_type: {
 						$select: 'slug',
 					},
-					owns__release: {
-						$select: releaseSelectedFields,
-						$expand: {
-							release_tag: {
-								$select: ['tag_key', 'value'],
+					owns__release: mergePineOptionsTyped(
+						{
+							$select: releaseSelectedFields,
+							$expand: {
+								release_tag: {
+									$select: ['tag_key', 'value'],
+								},
 							},
 						},
-						$filter: {
-							is_invalidated: false,
-						},
-					},
+						options,
+					),
 				},
 				$filter: {
 					is_host: true,
@@ -217,13 +222,26 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		});
 	};
 
-	const getTransformedOsVersions = async (deviceTypes: string[]) => {
-		const hostapps = await getOsVersions(deviceTypes);
-		return transformVersionSets(transformHostApps(hostapps));
+	const getAllOsVersionsBase = async (
+		deviceTypes: string[],
+		options?: PineOptions<Release>,
+	): Promise<OsVersionsByDeviceType> => {
+		const hostapps = await getOsVersions(deviceTypes, options);
+		return await transformVersionSets(transformHostApps(hostapps));
 	};
 
-	const memoizedGetTransformedOsVersions = getAuthDependentMemoize(pubsub)(
-		getTransformedOsVersions,
+	const memoizedGetAllOsVersionsBase = authDependentMemoizer(
+		async (deviceTypes: string[]) => {
+			return await getAllOsVersionsBase(deviceTypes);
+		},
+	);
+
+	const memoizedGetAllValidOsVersions = authDependentMemoizer(
+		async (deviceTypes: string[]) => {
+			return await getAllOsVersionsBase(deviceTypes, {
+				$filter: { is_invalidated: false },
+			});
+		},
 	);
 
 	/**
@@ -234,23 +252,48 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	 * @memberof balena.models.hostapp
 	 *
 	 * @param {String[]} deviceTypes - device type slugs
+	 * @param {Object} [options={}] - extra pine options to use
 	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3']);
+	 *
+	 * @example
+	 * balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
 	const getAllOsVersions = async (
 		deviceTypes: string[],
+		options?: PineOptions<Release>,
 	): Promise<OsVersionsByDeviceType> => {
+		if (options == null) {
+			const sortedDeviceTypes = deviceTypes.sort();
+			return await memoizedGetAllOsVersionsBase(sortedDeviceTypes);
+		}
+		return await getAllOsVersionsBase(deviceTypes, options);
+	};
+
+	/**
+	 * @summary Get all non-invalidated OS versions for the passed device types
+	 * @name getAvailableOsVersions
+	 * @public
+	 * @function
+	 * @memberof balena.models.hostapp
+	 *
+	 * @param {String[]} deviceTypes - device type slugs
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.hostapp.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
+	 */
+	const getAvailableOsVersions = async (deviceTypes: string[]) => {
 		const sortedDeviceTypes = deviceTypes.sort();
-		return memoizedGetTransformedOsVersions(sortedDeviceTypes);
+		return await memoizedGetAllValidOsVersions(sortedDeviceTypes);
 	};
 
 	return {
 		OsTypes,
 		getAllOsVersions,
-		// TODO: The current implementation will be available as getAvailableOsVersions in the next major
-		getAvailableOsVersions: getAllOsVersions,
+		getAvailableOsVersions,
 	};
 };
 
