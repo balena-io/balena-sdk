@@ -298,7 +298,7 @@ const sdk = fromSharedOptions();
         * [.os](#balena.models.os) : <code>object</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
-            * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
+            * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
             * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(slugOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
@@ -674,7 +674,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.os](#balena.models.os) : <code>object</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
-        * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
+        * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
         * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(slugOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
@@ -6065,7 +6065,7 @@ balena.models.organization.remove(123, function(error) {
 * [.os](#balena.models.os) : <code>object</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
-    * [.getMaxSatisfyingVersion(deviceType, versionOrRange)](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
+    * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
     * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
     * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(slugOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
@@ -6130,7 +6130,7 @@ balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions
 ```
 <a name="balena.models.os.getMaxSatisfyingVersion"></a>
 
-##### os.getMaxSatisfyingVersion(deviceType, versionOrRange) ⇒ <code>Promise</code>
+##### os.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the max OS version satisfying the given range  
 **Access**: public  
@@ -6140,6 +6140,7 @@ balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions
 | --- | --- | --- |
 | deviceType | <code>String</code> | device type slug |
 | versionOrRange | <code>String</code> | can be one of * the exact version number, in which case it is returned if the version is supported, or `null` is returned otherwise, * a [semver](https://www.npmjs.com/package/semver)-compatible range specification, in which case the most recent satisfying version is returned if it exists, or `null` is returned, * `'latest'` in which case the most recent version is returned, including pre-releases, * `'recommended'` in which case the recommended version is returned, i.e. the most recent version excluding pre-releases, which can be `null` if only pre-release versions are available, * `'default'` in which case the recommended version is returned if available, or `latest` is returned otherwise. Defaults to `'latest'`. |
+| [osType] | <code>String</code> | can be one of 'default', 'esr' or null to include all types |
 
 **Example**  
 ```js
