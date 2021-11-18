@@ -230,17 +230,16 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		return await transformVersionSets(transformHostApps(hostapps));
 	};
 
-	const memoizedGetAllOsVersionsBase = authDependentMemoizer(
-		async (deviceTypes: string[]) => {
-			return await getAllOsVersionsBase(deviceTypes);
-		},
-	);
-
-	const memoizedGetAllValidOsVersions = authDependentMemoizer(
-		async (deviceTypes: string[]) => {
-			return await getAllOsVersionsBase(deviceTypes, {
-				$filter: { is_invalidated: false },
-			});
+	const memoizedGetAllOsVersions = authDependentMemoizer(
+		async (deviceTypes: string[], isInvalidated: null | boolean) => {
+			return await getAllOsVersionsBase(
+				deviceTypes,
+				typeof isInvalidated === 'boolean'
+					? {
+							$filter: { is_invalidated: isInvalidated },
+					  }
+					: undefined,
+			);
 		},
 	);
 
@@ -267,7 +266,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	): Promise<OsVersionsByDeviceType> => {
 		if (options == null) {
 			const sortedDeviceTypes = deviceTypes.sort();
-			return await memoizedGetAllOsVersionsBase(sortedDeviceTypes);
+			return await memoizedGetAllOsVersions(sortedDeviceTypes, null);
 		}
 		return await getAllOsVersionsBase(deviceTypes, options);
 	};
@@ -287,7 +286,7 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	 */
 	const getAvailableOsVersions = async (deviceTypes: string[]) => {
 		const sortedDeviceTypes = deviceTypes.sort();
-		return await memoizedGetAllValidOsVersions(sortedDeviceTypes);
+		return await memoizedGetAllOsVersions(sortedDeviceTypes, false);
 	};
 
 	return {
