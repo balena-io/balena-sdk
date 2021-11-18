@@ -2524,11 +2524,9 @@ const getDeviceModel = function (
 			// this will throw an error if the action isn't available
 			exports._checkOsUpdateTarget(device, targetOsVersion);
 
-			const osVersions = (
-				await hostappModel().getAvailableOsVersions([
-					device.is_of__device_type[0].slug,
-				])
-			)[device.is_of__device_type[0].slug];
+			const osVersions = await hostappModel().getAvailableOsVersions(
+				device.is_of__device_type[0].slug,
+			);
 
 			if (
 				!osVersions.some(

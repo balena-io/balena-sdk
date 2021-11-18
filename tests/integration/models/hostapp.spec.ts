@@ -138,11 +138,62 @@ describe('Hostapp model', function () {
 	});
 
 	parallel('balena.models.hostapp.getAvailableOsVersions()', function () {
-		it("should contain both balenaOS and balenaOS ESR OS types'", async () => {
+		it('should contain both balenaOS and balenaOS ESR OS types [string device type argument]', async () => {
+			const res = await balena.models.hostapp.getAvailableOsVersions('fincm3');
+			expect(res).to.be.an('array');
+
+			containsVersion(res, {
+				strippedVersion: '2.29.0+rev1',
+				variant: 'dev',
+			});
+			containsVersion(res, {
+				strippedVersion: '2.29.0+rev1',
+				variant: 'prod',
+			});
+			containsVersion(res, {
+				strippedVersion: '2020.04.0',
+				variant: 'dev',
+			});
+			containsVersion(res, {
+				strippedVersion: '2020.04.0',
+				variant: 'prod',
+			});
+		});
+
+		it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
+			const res = await balena.models.hostapp.getAvailableOsVersions([
+				'fincm3',
+			]);
+			expect(res).to.be.an('object');
+			expect(res).to.have.property('fincm3');
+			expect(res).to.not.have.property('raspberrypi3');
+
+			containsVersion(res['fincm3'], {
+				strippedVersion: '2.29.0+rev1',
+				variant: 'dev',
+			});
+			containsVersion(res['fincm3'], {
+				strippedVersion: '2.29.0+rev1',
+				variant: 'prod',
+			});
+			containsVersion(res['fincm3'], {
+				strippedVersion: '2020.04.0',
+				variant: 'dev',
+			});
+			containsVersion(res['fincm3'], {
+				strippedVersion: '2020.04.0',
+				variant: 'prod',
+			});
+		});
+
+		it('should contain both balenaOS and balenaOS ESR OS types [multiple device types]', async () => {
 			const res = await balena.models.hostapp.getAvailableOsVersions([
 				'fincm3',
 				'raspberrypi3',
 			]);
+			expect(res).to.be.an('object');
+			expect(res).to.have.property('fincm3');
+			expect(res).to.have.property('raspberrypi3');
 
 			containsVersion(res['fincm3'], {
 				strippedVersion: '2.29.0+rev1',

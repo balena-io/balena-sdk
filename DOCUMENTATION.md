@@ -6362,10 +6362,12 @@ balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { 
 **Kind**: static method of [<code>hostapp</code>](#balena.models.hostapp)  
 **Summary**: Get all non-invalidated OS versions for the passed device types  
 **Access**: public  
+**Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
+or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceTypes | <code>Array.&lt;String&gt;</code> | device type slugs |
+| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> | device type slug or array of slugs |
 
 **Example**  
 ```js
