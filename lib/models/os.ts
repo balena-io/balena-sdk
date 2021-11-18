@@ -346,6 +346,7 @@ const getOsModel = function (
 	 * * `'default'` in which case the recommended version is returned if available,
 	 * or `latest` is returned otherwise.
 	 * Defaults to `'latest'`.
+	 * @param {String} [osType] - can be one of 'default', 'esr' or null to include all types
 	 *
 	 * @fulfil {String|null} - the version number, or `null` if no matching versions are found
 	 * @returns {Promise}
@@ -358,10 +359,14 @@ const getOsModel = function (
 	const getMaxSatisfyingVersion = async function (
 		deviceType: string,
 		versionOrRange: string = 'latest',
+		osType?: 'default' | 'esr',
 	): Promise<string | null> {
 		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
-		const osVersions =
+		let osVersions =
 			(await hostapp().getAvailableOsVersions([deviceType]))[deviceType] ?? [];
+		if (osType != null) {
+			osVersions = osVersions.filter((v) => v.osType === osType);
+		}
 		return _getMaxSatisfyingVersion(versionOrRange, osVersions) ?? null;
 	};
 
