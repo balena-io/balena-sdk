@@ -243,6 +243,14 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 		},
 	);
 
+	async function getAllOsVersions(
+		deviceType: string,
+		options?: PineOptions<Release>,
+	): Promise<OsVersion[]>;
+	async function getAllOsVersions(
+		deviceTypes: string[],
+		options?: PineOptions<Release>,
+	): Promise<OsVersionsByDeviceType>;
 	/**
 	 * @summary Get all OS versions for the passed device types
 	 * @name getAllOsVersions
@@ -250,8 +258,10 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	 * @function
 	 * @memberof balena.models.hostapp
 	 *
-	 * @param {String[]} deviceTypes - device type slugs
+	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
 	 * @param {Object} [options={}] - extra pine options to use
+	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
+	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @returns {Promise}
 	 *
 	 * @example
@@ -260,16 +270,21 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	 * @example
 	 * balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
-	const getAllOsVersions = async (
-		deviceTypes: string[],
+	async function getAllOsVersions(
+		deviceTypes: string[] | string,
 		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType> => {
-		if (options == null) {
-			const sortedDeviceTypes = deviceTypes.sort();
-			return await memoizedGetAllOsVersions(sortedDeviceTypes, null);
-		}
-		return await getAllOsVersionsBase(deviceTypes, options);
-	};
+	): Promise<OsVersionsByDeviceType | OsVersion[]> {
+		const singleDeviceTypeArg =
+			typeof deviceTypes === 'string' ? deviceTypes : false;
+		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
+		const versionsByDt =
+			options == null
+				? await memoizedGetAllOsVersions(deviceTypes.sort(), null)
+				: await getAllOsVersionsBase(deviceTypes, options);
+		return singleDeviceTypeArg
+			? versionsByDt[singleDeviceTypeArg] ?? []
+			: versionsByDt;
+	}
 
 	/**
 	 * @summary Get all non-invalidated OS versions for the passed device types
