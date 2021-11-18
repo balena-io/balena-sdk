@@ -286,6 +286,12 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 			: versionsByDt;
 	}
 
+	async function getAvailableOsVersions(
+		deviceType: string,
+	): Promise<OsVersion[]>;
+	async function getAvailableOsVersions(
+		deviceTypes: string[],
+	): Promise<OsVersionsByDeviceType>;
 	/**
 	 * @summary Get all non-invalidated OS versions for the passed device types
 	 * @name getAvailableOsVersions
@@ -293,16 +299,28 @@ const getHostappModel = function (deps: InjectedDependenciesParam) {
 	 * @function
 	 * @memberof balena.models.hostapp
 	 *
-	 * @param {String[]} deviceTypes - device type slugs
+	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
+	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
+	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @returns {Promise}
 	 *
 	 * @example
 	 * balena.models.hostapp.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
 	 */
-	const getAvailableOsVersions = async (deviceTypes: string[]) => {
-		const sortedDeviceTypes = deviceTypes.sort();
-		return await memoizedGetAllOsVersions(sortedDeviceTypes, false);
-	};
+	async function getAvailableOsVersions(
+		deviceTypes: string[] | string,
+	): Promise<OsVersionsByDeviceType | OsVersion[]> {
+		const singleDeviceTypeArg =
+			typeof deviceTypes === 'string' ? deviceTypes : false;
+		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
+		const versionsByDt = await memoizedGetAllOsVersions(
+			deviceTypes.sort(),
+			false,
+		);
+		return singleDeviceTypeArg
+			? versionsByDt[singleDeviceTypeArg] ?? []
+			: versionsByDt;
+	}
 
 	return {
 		OsTypes,
