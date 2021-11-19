@@ -83,11 +83,7 @@ export type {
 export type { ReleaseWithImageDetails } from './models/release';
 export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
-export type {
-	ImgConfigOptions,
-	OsVersions,
-	OsUpdateVersions,
-} from './models/os';
+export type { ImgConfigOptions, OsUpdateVersions } from './models/os';
 export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
 export type {

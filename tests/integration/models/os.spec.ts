@@ -21,7 +21,6 @@ const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
 
 const {
 	_getDeviceTypes,
-	_getOsVersions,
 	_getDownloadSize,
 	_getMaxSatisfyingVersion,
 	_clearDeviceTypesEndpointCaches,
@@ -43,20 +42,6 @@ const itShouldClear_getDeviceTypesCache = (stepFn: () => Resolvable<void>) =>
 		[result1, result2].forEach((dtArray) =>
 			dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
 		);
-
-		expect(result1).to.deep.equal(result2);
-		expect(p1).to.not.equal(p2);
-	});
-
-// tslint:disable-next-line:variable-name
-const itShouldClear_getOsVersionsCache = (stepFn: () => Resolvable<void>) =>
-	it('should clear the result cache of balena.models.os._getOsVersions()', async function () {
-		const p1 = _getOsVersions('raspberry-pi');
-		const result1 = await p1;
-		await stepFn();
-
-		const p2 = _getOsVersions('raspberry-pi');
-		const result2 = await p2;
 
 		expect(result1).to.deep.equal(result2);
 		expect(p1).to.not.equal(p2);
@@ -219,73 +204,6 @@ describe('OS model', function () {
 		});
 	});
 
-	describe('balena.models.os.getSupportedVersions()', function () {
-		parallel('given a valid device slug', function () {
-			const expectSorted = (
-				array: string[],
-				comparator: <T extends string | null | undefined>(a: T, b: T) => number, // re-sorting could fail when the system is not using a stable
-			) =>
-				// sorting algorithm, in which case items of the same value
-				// might swap positions in the array
-				array.forEach(function (item, i) {
-					if (i === 0) {
-						return;
-					}
-
-					const previousItem = array[i - 1];
-					expect(comparator(previousItem, item)).to.be.lte(0);
-				});
-
-			const areValidVersions = function (osVersions: BalenaSdk.OsVersions) {
-				expect(osVersions).to.be.an('object');
-				expect(osVersions).to.have.property('versions').that.is.an('array');
-				expect(osVersions.versions).to.not.have.lengthOf(0);
-
-				expectSorted(osVersions.versions, bSemver.rcompare);
-
-				expect(osVersions).to.have.property('latest').that.is.a('string');
-				expect(osVersions).to.have.property('recommended').that.is.a('string');
-				expect(osVersions).to.have.property('default').that.is.a('string');
-				expect(osVersions.default).to.equal(osVersions.recommended);
-
-				return true;
-			};
-
-			it('should eventually return the valid versions object', function () {
-				const promise = balena.models.os.getSupportedVersions('raspberry-pi');
-				return expect(promise).to.eventually.satisfy(areValidVersions);
-			});
-
-			it('should eventually return the valid versions object if passing a device type alias', function () {
-				const promise = balena.models.os.getSupportedVersions('raspberrypi');
-				return expect(promise).to.eventually.satisfy(areValidVersions);
-			});
-
-			it('should cache the results', () =>
-				balena.models.os
-					.getSupportedVersions('raspberry-pi')
-					.then((result1) =>
-						balena.models.os
-							.getSupportedVersions('raspberry-pi')
-							.then((result2) => expect(result1).to.equal(result2)),
-					));
-
-			it('should cache the supported versions independently for each device type', () =>
-				Promise.all([
-					balena.models.os.getSupportedVersions('raspberry-pi'),
-					balena.models.os.getSupportedVersions('raspberrypi3'),
-				]).then(function ([deviceType1Versions, deviceType2Versions]) {
-					expect(deviceType1Versions).not.to.equal(deviceType2Versions);
-				}));
-		});
-
-		describe('given an invalid device slug', () =>
-			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.getSupportedVersions('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith('No such device type');
-			}));
-	});
-
 	describe('balena.models.os._getDeviceTypes()', function () {
 		it('should cache the results', function () {
 			const p1 = _getDeviceTypes();
@@ -299,21 +217,6 @@ describe('OS model', function () {
 		});
 
 		describeAllAuthUserChanges(itShouldClear_getDeviceTypesCache);
-	});
-
-	describe('balena.models.os._getOsVersions()', function () {
-		it('should cache the results', function () {
-			const p1 = _getOsVersions('raspberry-pi');
-			return p1.then(function (result1) {
-				const p2 = _getOsVersions('raspberry-pi');
-				return p2.then(function (result2) {
-					expect(result1).to.equal(result2);
-					expect(p1).to.equal(p2);
-				});
-			});
-		});
-
-		describeAllAuthUserChanges(itShouldClear_getOsVersionsCache);
 	});
 
 	describe('balena.models.os.getDownloadSize()', function () {
@@ -388,8 +291,6 @@ describe('OS model', function () {
 
 	describe('balena.models.os._clearDeviceTypesEndpointCaches()', function () {
 		itShouldClear_getDeviceTypesCache(() => _clearDeviceTypesEndpointCaches());
-
-		itShouldClear_getOsVersionsCache(() => _clearDeviceTypesEndpointCaches());
 
 		itShouldClear_getDownloadSizeCache(() => _clearDeviceTypesEndpointCaches());
 	});

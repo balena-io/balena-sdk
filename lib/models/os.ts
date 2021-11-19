@@ -41,13 +41,6 @@ export interface ImgConfigOptions {
 	version: string;
 }
 
-export interface OsVersions {
-	latest: string;
-	recommended: string;
-	default: string;
-	versions: string[];
-}
-
 export interface OsUpdateVersions {
 	versions: string[];
 	recommended: string | undefined;
@@ -101,13 +94,9 @@ const getOsModel = function (
 		() => Promise<DeviceTypeJson.DeviceType[]>
 	>(() => configModel().getDeviceTypes());
 
-	const getValidatedDeviceType = async (deviceTypeSlug: string) => {
-		const types = await _getDeviceTypes();
-		return deviceTypesUtils().getBySlug(types, deviceTypeSlug);
-	};
-
 	const getNormalizedDeviceTypeSlug = async (deviceTypeSlug: string) => {
-		return (await getValidatedDeviceType(deviceTypeSlug)).slug;
+		const types = await _getDeviceTypes();
+		return deviceTypesUtils().getBySlug(types, deviceTypeSlug).slug;
 	};
 
 	/**
@@ -129,44 +118,6 @@ const getOsModel = function (
 		},
 	);
 
-	const isDevelopmentVersion = (version: string) =>
-		/(\.|\+|-)dev/.test(version);
-
-	/**
-	 * @summary Get OS versions
-	 * @description Utility method exported for testability.
-	 * @name _getOsVersions
-	 * @private
-	 * @function
-	 * @memberof balena.models.os
-	 */
-	const _getOsVersions = authDependentMemoizer(async (deviceType: string) => {
-		const {
-			body: { versions, latest },
-		} = (await request.send({
-			method: 'GET',
-			url: `/device-types/v1/${deviceType}/images`,
-			baseUrl: apiUrl,
-		})) as {
-			body: { versions: any[]; latest: any };
-		};
-		versions.sort(bSemver.rcompare);
-		const potentialRecommendedVersions = versions.filter(
-			(version) =>
-				!(semver.prerelease(version) || isDevelopmentVersion(version)),
-		);
-		const recommended =
-			(potentialRecommendedVersions != null
-				? potentialRecommendedVersions[0]
-				: undefined) || null;
-		return {
-			versions,
-			recommended,
-			latest,
-			default: recommended || latest,
-		};
-	});
-
 	/**
 	 * @summary Clears the cached results from the `device-types/v1` endpoint.
 	 * @description Utility method exported for testability.
@@ -178,7 +129,6 @@ const getOsModel = function (
 	const _clearDeviceTypesEndpointCaches = () => {
 		_getDeviceTypes.clear();
 		_getDownloadSize.clear();
-		_getOsVersions.clear();
 	};
 
 	const normalizeVersion = (v: string) => {
@@ -288,40 +238,6 @@ const getOsModel = function (
 	): Promise<number> {
 		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
 		return await _getDownloadSize(deviceType, version);
-	};
-
-	/**
-	 * @summary Get OS supported versions
-	 * @name getSupportedVersions
-	 * @public
-	 * @function
-	 * @memberof balena.models.os
-	 *
-	 * @param {String} deviceType - device type slug
-	 * @fulfil {Object} - the versions information, of the following structure:
-	 * * versions - an array of strings,
-	 * containing exact version numbers supported by the current environment
-	 * * recommended - the recommended version, i.e. the most recent version
-	 * that is _not_ pre-release, can be `null`
-	 * * latest - the most recent version, including pre-releases
-	 * * default - recommended (if available) or latest otherwise
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
-	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
-	 * });
-	 *
-	 * balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
-	 * 	if (error) throw error;
-	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
-	 * });
-	 */
-	const getSupportedVersions = async function (
-		deviceType: string,
-	): Promise<OsVersions> {
-		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
-		return await _getOsVersions(deviceType);
 	};
 
 	/**
@@ -672,11 +588,9 @@ const getOsModel = function (
 	return {
 		_getDeviceTypes,
 		_getDownloadSize,
-		_getOsVersions,
 		_clearDeviceTypesEndpointCaches,
 		_getMaxSatisfyingVersion,
 		getDownloadSize,
-		getSupportedVersions,
 		getMaxSatisfyingVersion,
 		getLastModified,
 		download,
