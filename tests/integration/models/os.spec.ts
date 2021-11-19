@@ -129,74 +129,94 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os._getMaxSatisfyingVersion()', function () {
-		const osVersions = {
-			versions: [
-				'2.0.1+rev2.prod',
-				'2.0.1+rev2.dev',
-				'2.0.0.rev1',
-				'2.0.0-rc1.rev2-dev',
-				'2.0.0-rc1.rev2',
-				'1.24.1',
-				'1.24.0',
-				'1.8.0',
-			],
-			recommended: '1.24.1',
-			latest: '2.0.0.rev1',
-			default: '1.24.1',
-		};
+		const osVersions = [
+			{
+				rawVersion: '2.85.2+rev3.prod',
+				isRecommended: true,
+			},
+			{ rawVersion: '2.85.2+rev3.dev' },
+			{ rawVersion: '2.83.10+rev1.prod' },
+			{ rawVersion: '2.83.10+rev1.dev' },
+			{ rawVersion: '2.80.5+rev1.prod' },
+			{ rawVersion: '2.80.5+rev1.dev' },
+			{ rawVersion: '2.80.3+rev1.prod' },
+			{ rawVersion: '2.80.3+rev1.dev' },
+			{ rawVersion: '2.75.0+rev1.prod' },
+			{ rawVersion: '2.75.0+rev1.dev' },
+			{ rawVersion: '2.73.1+rev1.prod' },
+			{ rawVersion: '2.73.1+rev1.dev' },
+			{ rawVersion: '2.0.0.rev1.prod' },
+			{ rawVersion: '2.0.0.rev1.dev' },
+		];
 
 		it("should support 'latest'", () =>
 			expect(_getMaxSatisfyingVersion('latest', osVersions)).to.equal(
-				osVersions.latest,
+				'2.85.2+rev3.prod',
 			));
 
 		it("should support 'recommended'", () =>
 			expect(_getMaxSatisfyingVersion('recommended', osVersions)).to.equal(
-				osVersions.recommended,
+				'2.85.2+rev3.prod',
 			));
 
 		it("should support 'default'", () =>
 			expect(_getMaxSatisfyingVersion('default', osVersions)).to.equal(
-				osVersions.default,
+				'2.85.2+rev3.prod',
 			));
 
 		it('should support exact version', () =>
-			expect(_getMaxSatisfyingVersion('1.24.1', osVersions)).to.equal(
-				'1.24.1',
+			expect(_getMaxSatisfyingVersion('2.73.1+rev1.prod', osVersions)).to.equal(
+				'2.73.1+rev1.prod',
+			));
+
+		it('should support stripped version', () =>
+			expect(_getMaxSatisfyingVersion('2.73.1', osVersions)).to.equal(
+				'2.73.1+rev1.prod',
 			));
 
 		it('should support exact non-semver version', () =>
 			expect(_getMaxSatisfyingVersion('2.0.0.rev1', osVersions)).to.equal(
-				'2.0.0.rev1',
+				'2.0.0.rev1.prod',
 			));
 
 		it('should return an exact match, if it exists, when given a specific version', () =>
 			// Concern here is that semver says .dev is equivalent to .prod, but
 			// we want provide an exact version and use _exactly_ that version.
-			expect(_getMaxSatisfyingVersion('2.0.1+rev2.dev', osVersions)).to.equal(
-				'2.0.1+rev2.dev',
+			expect(_getMaxSatisfyingVersion('2.73.1+rev1.dev', osVersions)).to.equal(
+				'2.73.1+rev1.dev',
 			));
 
 		it('should return an equivalent result, if no exact result exists, when given a specific version', () =>
-			expect(_getMaxSatisfyingVersion('2.0.1+rev2', osVersions)).to.equal(
-				'2.0.1+rev2.prod',
+			expect(_getMaxSatisfyingVersion('2.73.1+rev1', osVersions)).to.equal(
+				'2.73.1+rev1.prod',
 			));
 
-		it('should support semver ranges', () =>
-			expect(_getMaxSatisfyingVersion('^1.24.0', osVersions)).to.equal(
-				'1.24.1',
+		it('should support ^ semver ranges', () =>
+			expect(_getMaxSatisfyingVersion('^2.0.1', osVersions)).to.equal(
+				'2.85.2+rev3.prod',
+			));
+
+		it('should support ~ semver ranges', () =>
+			expect(_getMaxSatisfyingVersion('~2.80.3', osVersions)).to.equal(
+				'2.80.5+rev1.prod',
 			));
 
 		it('should support non-semver version ranges', () =>
-			expect(_getMaxSatisfyingVersion('^2.0.0.rev1', osVersions)).to.equal(
-				'2.0.1+rev2.prod',
+			expect(_getMaxSatisfyingVersion('^2.0.1.rev1', osVersions)).to.equal(
+				'2.85.2+rev3.prod',
 			));
 
-		it('should drop unsupported exact versions', () =>
-			expect(_getMaxSatisfyingVersion('1.24.5', osVersions)).to.equal(null));
+		it('should drop unsupported exact versions', () => {
+			expect(_getMaxSatisfyingVersion('2.8.8+rev8.prod', osVersions)).to.equal(
+				null,
+			);
+			expect(_getMaxSatisfyingVersion('2.8.8', osVersions)).to.equal(null);
+		});
 
-		it('should drop unsupported semver ranges', () =>
-			expect(_getMaxSatisfyingVersion('~1.30.0', osVersions)).to.equal(null));
+		it('should drop unsupported semver ranges', () => {
+			expect(_getMaxSatisfyingVersion('~2.8.8', osVersions)).to.equal(null);
+			expect(_getMaxSatisfyingVersion('^2.999.0', osVersions)).to.equal(null);
+		});
 	});
 
 	describe('balena.models.os.getSupportedVersions()', function () {

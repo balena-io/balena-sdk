@@ -6143,13 +6143,8 @@ balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions
 
 **Example**  
 ```js
-balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
-	console.log('Supported OS versions for raspberry-pi', osVersions);
-});
-
-balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
-	if (error) throw error;
-	console.log('Supported OS versions for raspberry-pi', osVersions);
+balena.models.os.getMaxSatisfyingVersion('raspberry-pi', '^2.11.0').then(function(version) {
+	console.log(version);
 });
 ```
 <a name="balena.models.os.getLastModified"></a>
