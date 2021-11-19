@@ -24,6 +24,7 @@ import type { BalenaRequestStreamResult } from 'balena-request';
 import type * as DeviceTypeJson from '../types/device-type-json';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
+import type { OsVersion } from './hostapp';
 
 const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
 
@@ -223,13 +224,23 @@ const getOsModel = function (
 	 */
 	const _getMaxSatisfyingVersion = function (
 		versionOrRange: string,
-		osVersions: OsVersions,
+		osVersions: Array<Pick<OsVersion, 'rawVersion' | 'isRecommended'>>,
 	) {
-		if (['default', 'latest', 'recommended'].includes(versionOrRange)) {
-			return osVersions[versionOrRange as keyof OsVersions] as string;
+		if (versionOrRange === 'recommended') {
+			return osVersions.find((v) => v.isRecommended)?.rawVersion;
 		}
 
-		const semverVersions = osVersions.versions.map(fixNonSemver);
+		if (versionOrRange === 'latest') {
+			return osVersions[0]?.rawVersion;
+		}
+
+		if (versionOrRange === 'default') {
+			return (osVersions.find((v) => v.isRecommended) ?? osVersions[0])
+				?.rawVersion;
+		}
+
+		const versions = osVersions.map((v) => v.rawVersion);
+		const semverVersions = versions.map(fixNonSemver);
 
 		// TODO: Once we integrate balena-semver, balena-semver should learn to handle this itself
 		const semverVersionOrRange = fixNonSemver(versionOrRange);
@@ -339,22 +350,20 @@ const getOsModel = function (
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
-	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
-	 * });
-	 *
-	 * balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
-	 * 	if (error) throw error;
-	 * 	console.log('Supported OS versions for raspberry-pi', osVersions);
+	 * balena.models.os.getMaxSatisfyingVersion('raspberry-pi', '^2.11.0').then(function(version) {
+	 * 	console.log(version);
 	 * });
 	 */
 	const getMaxSatisfyingVersion = async function (
 		deviceType: string,
 		versionOrRange: string = 'latest',
-	): Promise<string> {
+	): Promise<string | null> {
 		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
-		const osVersions = await getSupportedVersions(deviceType);
-		return _getMaxSatisfyingVersion(versionOrRange, osVersions);
+		let osVersions =
+			(await hostapp().getAvailableOsVersions([deviceType]))[deviceType] ?? [];
+		const { OsTypes } = hostappExports();
+		osVersions = osVersions.filter((v) => v.osType === OsTypes.DEFAULT);
+		return _getMaxSatisfyingVersion(versionOrRange, osVersions) ?? null;
 	};
 
 	/**
