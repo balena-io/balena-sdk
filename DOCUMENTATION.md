@@ -296,6 +296,8 @@ const sdk = fromSharedOptions();
             * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
             * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
         * [.os](#balena.models.os) : <code>object</code>
+            * [.getAvailableOsVersions(deviceTypes)](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+            * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
             * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
@@ -304,9 +306,6 @@ const sdk = fromSharedOptions();
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-        * [.hostapp](#balena.models.hostapp) : <code>object</code>
-            * [.getAllOsVersions(deviceTypes, [options])](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
-            * [.getAvailableOsVersions(deviceTypes)](#balena.models.hostapp.getAvailableOsVersions) ⇒ <code>Promise</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -671,6 +670,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
         * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
     * [.os](#balena.models.os) : <code>object</code>
+        * [.getAvailableOsVersions(deviceTypes)](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+        * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
         * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
@@ -679,9 +680,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-    * [.hostapp](#balena.models.hostapp) : <code>object</code>
-        * [.getAllOsVersions(deviceTypes, [options])](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
-        * [.getAvailableOsVersions(deviceTypes)](#balena.models.hostapp.getAvailableOsVersions) ⇒ <code>Promise</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -6061,6 +6059,8 @@ balena.models.organization.remove(123, function(error) {
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.os](#balena.models.os) : <code>object</code>
+    * [.getAvailableOsVersions(deviceTypes)](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+    * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
     * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
@@ -6070,6 +6070,53 @@ balena.models.organization.remove(123, function(error) {
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
 
+<a name="balena.models.os.getAvailableOsVersions"></a>
+
+##### os.getAvailableOsVersions(deviceTypes) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
+**Summary**: Get the supported OS versions for the provided device type(s)  
+**Access**: public  
+**Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
+or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> | device type slug or array of slugs |
+
+**Example**  
+```js
+balena.models.os.getAvailableOsVersions('raspberrypi3');
+```
+**Example**  
+```js
+balena.models.os.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
+```
+<a name="balena.models.os.getAllOsVersions"></a>
+
+##### os.getAllOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
+**Summary**: Get all OS versions for the provided device type(s), inlcuding invalidated ones  
+**Access**: public  
+**Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
+or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> |  | device type slug or array of slugs |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.os.getAllOsVersions('raspberrypi3');
+```
+**Example**  
+```js
+balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3']);
+```
+**Example**  
+```js
+balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
+```
 <a name="balena.models.os.getDownloadSize"></a>
 
 ##### os.getDownloadSize(deviceType, [version]) ⇒ <code>Promise</code>
@@ -6286,56 +6333,6 @@ console.log(result1);
 
 const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
 console.log(result2);
-```
-<a name="balena.models.hostapp"></a>
-
-#### models.hostapp : <code>object</code>
-**Beta** The hostapp methods are still in beta and might change in a non-major release.
-
-**Kind**: static namespace of [<code>models</code>](#balena.models)  
-
-* [.hostapp](#balena.models.hostapp) : <code>object</code>
-    * [.getAllOsVersions(deviceTypes, [options])](#balena.models.hostapp.getAllOsVersions) ⇒ <code>Promise</code>
-    * [.getAvailableOsVersions(deviceTypes)](#balena.models.hostapp.getAvailableOsVersions) ⇒ <code>Promise</code>
-
-<a name="balena.models.hostapp.getAllOsVersions"></a>
-
-##### hostapp.getAllOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>hostapp</code>](#balena.models.hostapp)  
-**Summary**: Get all OS versions for the passed device types  
-**Access**: public  
-**Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
-or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> |  | device type slug or array of slugs |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3']);
-```
-**Example**  
-```js
-balena.models.hostapp.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
-```
-<a name="balena.models.hostapp.getAvailableOsVersions"></a>
-
-##### hostapp.getAvailableOsVersions(deviceTypes) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>hostapp</code>](#balena.models.hostapp)  
-**Summary**: Get all non-invalidated OS versions for the passed device types  
-**Access**: public  
-**Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
-or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> | device type slug or array of slugs |
-
-**Example**  
-```js
-balena.models.hostapp.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
 ```
 <a name="balena.models.config"></a>
 
