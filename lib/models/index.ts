@@ -63,14 +63,6 @@ const modelsTemplate = {
 	os: () => (require('./os') as typeof import('./os')).default,
 
 	/**
-	 * @namespace hostapp
-	 * @memberof balena.models
-	 * @description
-	 * **Beta** The hostapp methods are still in beta and might change in a non-major release.
-	 */
-	hostapp: () => (require('./hostapp') as typeof import('./hostapp')).default,
-
-	/**
 	 * @namespace config
 	 * @memberof balena.models
 	 */

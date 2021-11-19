@@ -74,16 +74,17 @@ export type {
 	OverallStatus,
 	SupervisorStatus,
 } from './models/device';
-export type {
-	OsTypes,
-	OsLines,
-	OsVersion,
-	OsVersionsByDeviceType,
-} from './models/hostapp';
 export type { ReleaseWithImageDetails } from './models/release';
 export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
-export type { ImgConfigOptions, OsUpdateVersions } from './models/os';
+export type {
+	ImgConfigOptions,
+	OsLines,
+	OsTypes,
+	OsUpdateVersions,
+	OsVersion,
+	OsVersionsByDeviceType,
+} from './models/os';
 export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
 export type {

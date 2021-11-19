@@ -137,8 +137,8 @@ const getDeviceModel = function (
 	const releaseModel = once(() =>
 		(require('./release') as typeof import('./release')).default(deps, opts),
 	);
-	const hostappModel = once(() =>
-		(require('./hostapp') as typeof import('./hostapp')).default(deps),
+	const osModel = once(() =>
+		(require('./os') as typeof import('./os')).default(deps, opts),
 	);
 
 	const { addCallbackSupportToModule } =
@@ -2524,7 +2524,7 @@ const getDeviceModel = function (
 			// this will throw an error if the action isn't available
 			exports._checkOsUpdateTarget(device, targetOsVersion);
 
-			const osVersions = await hostappModel().getAvailableOsVersions(
+			const osVersions = await osModel().getAvailableOsVersions(
 				device.is_of__device_type[0].slug,
 			);
 

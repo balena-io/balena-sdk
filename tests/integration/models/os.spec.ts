@@ -23,87 +23,118 @@ const {
 	_getDeviceTypes,
 	_getDownloadSize,
 	_getMaxSatisfyingVersion,
-	_clearDeviceTypesEndpointCaches,
+	_clearDeviceTypesAndOsVersionCaches,
 } = balena.models.os as ReturnType<
 	typeof import('../../../lib/models/os').default
 >;
 
-// tslint:disable-next-line:variable-name
-const itShouldClear_getDeviceTypesCache = (stepFn: () => Resolvable<void>) =>
-	it('should clear the result cache of balena.models.os._getDeviceTypes()', async function () {
-		const p1 = _getDeviceTypes();
-		const result1 = await p1;
-		await stepFn();
+const containsVersion = (
+	versions: BalenaSdk.OsVersion[],
+	expected: Partial<BalenaSdk.OsVersion>,
+) => {
+	const os = _.find(versions, expected);
+	expect(os).to.not.be.undefined;
+};
 
-		const p2 = _getDeviceTypes();
-		const result2 = await p2;
+const itShouldClearMethodCacheFactory = <T>(
+	title: string,
+	fn: () => Resolvable<T>,
+	prepareFn?: (result: T) => T,
+) => {
+	return (stepFn: () => Resolvable<void>) =>
+		it(`should clear the result cache of ${title}`, async function () {
+			const p1 = fn();
+			let result1 = await p1;
+			await stepFn();
 
+			const p2 = fn();
+			let result2 = await p2;
+
+			if (prepareFn) {
+				// @ts-expect-error
+				result1 = prepareFn(result1);
+				// @ts-expect-error
+				result2 = prepareFn(result2);
+			}
+
+			expect(p1).to.not.equal(p2);
+			if (!['string', 'number'].includes(typeof result1)) {
+				expect(result1).to.not.equal(result2);
+			}
+			expect(result1).to.deep.equal(result2);
+		});
+};
+
+const itShouldClear = {
+	getAllOsVersions: itShouldClearMethodCacheFactory(
+		'balena.models.os.getAllOsVersions()',
+		() => balena.models.os.getAllOsVersions('raspberry-pi'),
+	),
+	getAvailableOsVersions: itShouldClearMethodCacheFactory(
+		'balena.models.os.getAvailableOsVersions()',
+		() => balena.models.os.getAvailableOsVersions('raspberry-pi'),
+	),
+	getDeviceTypesCache: itShouldClearMethodCacheFactory(
+		'balena.models.os._getDeviceTypes()',
+		() => _getDeviceTypes(),
 		// the endpoint doesn't sort the device types atm
-		[result1, result2].forEach((dtArray) =>
-			dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
-		);
+		(dtArray) => dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
+	),
+	getDownloadSizeCache: itShouldClearMethodCacheFactory(
+		'balena.models.os._getDownloadSize()',
+		() => _getDownloadSize('raspberry-pi', '1.26.1'),
+	),
+};
 
-		expect(result1).to.deep.equal(result2);
-		expect(p1).to.not.equal(p2);
-	});
-
-// tslint:disable-next-line:variable-name
-const itShouldClear_getDownloadSizeCache = (stepFn: () => Resolvable<void>) =>
-	it('should clear the result cache of balena.models.os._getDownloadSize()', async function () {
-		const p1 = _getDownloadSize('raspberry-pi', '1.26.1');
-		const result1 = await p1;
-		await stepFn();
-
-		const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
-		const result2 = await p2;
-
-		expect(result1).to.deep.equal(result2);
-		expect(p1).to.not.equal(p2);
-	});
-
-const describeAllAuthUserChanges = function (
+const describeCacheInvalidationChanges = function (
 	itFnWithStep: (fn: () => Resolvable<void>) => Mocha.Test,
 ) {
-	describe('when not logged in', function () {
-		beforeEach(() => balena.auth.logout());
+	describe('cache invalidation', function () {
+		describe('when not logged in', function () {
+			beforeEach(() => balena.auth.logout());
 
-		describe('balena.auth.logout()', () =>
-			itFnWithStep(() => balena.auth.logout()));
+			describe('balena.auth.logout()', () =>
+				itFnWithStep(() => balena.auth.logout()));
 
-		describe('balena.auth.login()', () =>
-			itFnWithStep(() =>
-				balena.auth.login({
-					email: credentials.email,
-					password: credentials.password,
-				}),
-			));
+			describe('balena.auth.login()', () =>
+				itFnWithStep(() =>
+					balena.auth.login({
+						email: credentials.email,
+						password: credentials.password,
+					}),
+				));
 
-		describe('balena.auth.loginWithToken()', () =>
-			itFnWithStep(() =>
-				balena.auth.authenticate(credentials).then(balena.auth.loginWithToken),
-			));
-	});
+			describe('balena.auth.loginWithToken()', () =>
+				itFnWithStep(() =>
+					balena.auth
+						.authenticate(credentials)
+						.then(balena.auth.loginWithToken),
+				));
+		});
 
-	describe('when logged in with credentials', function () {
-		givenLoggedInUser(beforeEach);
+		describe('when logged in with credentials', function () {
+			givenLoggedInUser(beforeEach);
 
-		afterEach(() => balena.auth.logout());
+			afterEach(() => balena.auth.logout());
 
-		describe('balena.auth.logout()', () =>
-			itFnWithStep(() => balena.auth.logout()));
+			describe('balena.auth.logout()', () =>
+				itFnWithStep(() => balena.auth.logout()));
 
-		describe('balena.auth.login()', () =>
-			itFnWithStep(() =>
-				balena.auth.login({
-					email: credentials.email,
-					password: credentials.password,
-				}),
-			));
+			describe('balena.auth.login()', () =>
+				itFnWithStep(() =>
+					balena.auth.login({
+						email: credentials.email,
+						password: credentials.password,
+					}),
+				));
 
-		describe('balena.auth.loginWithToken()', () =>
-			itFnWithStep(() =>
-				balena.auth.authenticate(credentials).then(balena.auth.loginWithToken),
-			));
+			describe('balena.auth.loginWithToken()', () =>
+				itFnWithStep(() =>
+					balena.auth
+						.authenticate(credentials)
+						.then(balena.auth.loginWithToken),
+				));
+		});
 	});
 };
 
@@ -111,6 +142,242 @@ describe('OS model', function () {
 	timeSuite(before);
 	before(function () {
 		return balena.auth.logout();
+	});
+
+	describe('balena.models.os.getAllOsVersions()', function () {
+		parallel('', function () {
+			it('should contain both balenaOS and balenaOS ESR OS types [string device type argument]', async () => {
+				const res = await balena.models.os.getAllOsVersions('fincm3');
+				expect(res).to.be.an('array');
+
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
+				const res = await balena.models.os.getAllOsVersions(['fincm3']);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.not.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [multiple device types]', async () => {
+				const res = await balena.models.os.getAllOsVersions([
+					'fincm3',
+					'raspberrypi3',
+				]);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should return an empty object for non-existent DTs', async () => {
+				const res = await balena.models.os.getAllOsVersions(['blahbleh']);
+
+				expect(res).to.deep.equal({});
+			});
+
+			it('should cache the results when not providing extra options', async () => {
+				const firstRes = await balena.models.os.getAllOsVersions([
+					'raspberrypi3',
+				]);
+				const secondRes = await balena.models.os.getAllOsVersions([
+					'raspberrypi3',
+				]);
+				expect(firstRes).to.equal(secondRes);
+			});
+
+			it('should not cache the results when providing extra options', async () => {
+				const firstRes = await balena.models.os.getAllOsVersions(
+					['raspberrypi3'],
+					{ $filter: { is_invalidated: false } },
+				);
+				const secondRes = await balena.models.os.getAllOsVersions(
+					['raspberrypi3'],
+					{ $filter: { is_invalidated: false } },
+				);
+				expect(firstRes).to.not.equal(secondRes);
+			});
+		});
+
+		describeCacheInvalidationChanges(itShouldClear.getAllOsVersions);
+	});
+
+	describe('balena.models.os.getAvailableOsVersions()', function () {
+		parallel('', function () {
+			it('should contain both balenaOS and balenaOS ESR OS types [string device type argument]', async () => {
+				const res = await balena.models.os.getAvailableOsVersions('fincm3');
+				expect(res).to.be.an('array');
+
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
+				const res = await balena.models.os.getAvailableOsVersions(['fincm3']);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.not.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [multiple device types]', async () => {
+				const res = await balena.models.os.getAvailableOsVersions([
+					'fincm3',
+					'raspberrypi3',
+				]);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should return an empty object for non-existent DTs', async () => {
+				const res = await balena.models.os.getAvailableOsVersions(['blahbleh']);
+
+				expect(res).to.deep.equal({});
+			});
+
+			it('should cache the results', async () => {
+				const firstRes = await balena.models.os.getAvailableOsVersions([
+					'raspberrypi3',
+				]);
+				const secondRes = await balena.models.os.getAvailableOsVersions([
+					'raspberrypi3',
+				]);
+				expect(firstRes).to.equal(secondRes);
+			});
+		});
+
+		describeCacheInvalidationChanges(itShouldClear.getAvailableOsVersions);
 	});
 
 	describe('balena.models.os._getMaxSatisfyingVersion()', function () {
@@ -216,7 +483,7 @@ describe('OS model', function () {
 			});
 		});
 
-		describeAllAuthUserChanges(itShouldClear_getDeviceTypesCache);
+		describeCacheInvalidationChanges(itShouldClear.getDeviceTypesCache);
 	});
 
 	describe('balena.models.os.getDownloadSize()', function () {
@@ -286,13 +553,20 @@ describe('OS model', function () {
 			});
 		});
 
-		describeAllAuthUserChanges(itShouldClear_getDownloadSizeCache);
+		describeCacheInvalidationChanges(itShouldClear.getDownloadSizeCache);
 	});
 
-	describe('balena.models.os._clearDeviceTypesEndpointCaches()', function () {
-		itShouldClear_getDeviceTypesCache(() => _clearDeviceTypesEndpointCaches());
-
-		itShouldClear_getDownloadSizeCache(() => _clearDeviceTypesEndpointCaches());
+	describe('balena.models.os._clearDeviceTypesAndOsVersionCaches()', function () {
+		itShouldClear.getDeviceTypesCache(() =>
+			_clearDeviceTypesAndOsVersionCaches(),
+		);
+		itShouldClear.getDownloadSizeCache(() =>
+			_clearDeviceTypesAndOsVersionCaches(),
+		);
+		itShouldClear.getAllOsVersions(() => _clearDeviceTypesAndOsVersionCaches());
+		itShouldClear.getAvailableOsVersions(() =>
+			_clearDeviceTypesAndOsVersionCaches(),
+		);
 	});
 
 	describe('balena.models.os.getLastModified()', function () {
