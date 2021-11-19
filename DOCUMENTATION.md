@@ -297,7 +297,6 @@ const sdk = fromSharedOptions();
             * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
         * [.os](#balena.models.os) : <code>object</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
-            * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
             * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
@@ -673,7 +672,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
     * [.os](#balena.models.os) : <code>object</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
-        * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
         * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
@@ -6064,7 +6062,6 @@ balena.models.organization.remove(123, function(error) {
 
 * [.os](#balena.models.os) : <code>object</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
-    * [.getSupportedVersions(deviceType)](#balena.models.os.getSupportedVersions) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
     * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
     * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
@@ -6097,35 +6094,6 @@ balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 balena.models.os.getDownloadSize('raspberry-pi', function(error, size) {
 	if (error) throw error;
 	console.log('The OS download size for raspberry-pi', size);
-});
-```
-<a name="balena.models.os.getSupportedVersions"></a>
-
-##### os.getSupportedVersions(deviceType) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#balena.models.os)  
-**Summary**: Get OS supported versions  
-**Access**: public  
-**Fulfil**: <code>Object</code> - the versions information, of the following structure:
-* versions - an array of strings,
-containing exact version numbers supported by the current environment
-* recommended - the recommended version, i.e. the most recent version
-that is _not_ pre-release, can be `null`
-* latest - the most recent version, including pre-releases
-* default - recommended (if available) or latest otherwise  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceType | <code>String</code> | device type slug |
-
-**Example**  
-```js
-balena.models.os.getSupportedVersions('raspberry-pi').then(function(osVersions) {
-	console.log('Supported OS versions for raspberry-pi', osVersions);
-});
-
-balena.models.os.getSupportedVersions('raspberry-pi', function(error, osVersions) {
-	if (error) throw error;
-	console.log('Supported OS versions for raspberry-pi', osVersions);
 });
 ```
 <a name="balena.models.os.getMaxSatisfyingVersion"></a>
