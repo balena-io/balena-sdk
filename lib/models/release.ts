@@ -423,6 +423,53 @@ const getReleaseModel = function (
 	}
 
 	/**
+	 * @summary Set the is_invalidated property of a release to true or false
+	 * @name setIsInvalidated
+	 * @public
+	 * @function
+	 * @memberof balena.models.release
+	 *
+	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {Boolean} isInvalidated - boolean value, true for invalidated, false for validated
+	 * @fulfil {void}
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.release.setIsInvalidated(123, true).then(function() {
+	 * 	console.log('invalidated!');
+	 * });
+	 *
+	 * @example
+	 * balena.models.release.setIsInvalidated('7cf02a6', true).then(function() {
+	 * 	console.log('invalidated!');
+	 * });
+	 *
+	 * @example
+	 * balena.models.release.setIsInvalidated(123, false).then(function() {
+	 * 	console.log('validated!');
+	 * });
+	 *
+	 * @example
+	 * balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
+	 * 	console.log('validated!');
+	 * });
+	 *
+	 */
+	async function setIsInvalidated(
+		commitOrId: string | number,
+		isInvalidated: boolean,
+	): Promise<void> {
+		const { id } = await get(commitOrId, { $select: 'id' });
+		await pine.patch<Release>({
+			resource: 'release',
+			id,
+			body: {
+				is_invalidated: isInvalidated,
+			},
+		});
+	}
+
+	/**
 	 * @summary Add a note to a release
 	 * @name note
 	 * @public
@@ -643,6 +690,7 @@ const getReleaseModel = function (
 		getWithImageDetails,
 		createFromUrl,
 		finalize,
+		setIsInvalidated,
 		note,
 		tags,
 	};
