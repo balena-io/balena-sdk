@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add release setIsInvalidated function
+      hash: 670b0229be2871a3aaa174fcd08fc2eb90e1a7bd
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+        signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 15.59.0
+  date: 2021-11-24T20:45:35.254Z
+- commits:
     - subject: Update typescript to 4.5.2
       hash: 5f227908d03881df0128db97f3e488977a17be50
       body: ''
