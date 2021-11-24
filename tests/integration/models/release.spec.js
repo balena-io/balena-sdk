@@ -276,6 +276,44 @@ describe('Release Model', function () {
 					});
 				});
 			});
+
+			describe('balena.model.release.setIsInvalidated()', function () {
+				releaseRetrievalFields.forEach((field) => {
+					parallel('', function () {
+						it(`should invalidate a release by ${field}`, async function () {
+							const release = testReleaseByField[field];
+							await balena.models.release.setIsInvalidated(
+								release[field],
+								true,
+							);
+							const invalidatedRelease = await balena.models.release.get(
+								release.id,
+								{ $select: 'is_invalidated' },
+							);
+							expect(invalidatedRelease).to.deep.match({
+								is_invalidated: true,
+							});
+						});
+					});
+
+					parallel('', function () {
+						it(`should validate a release by ${field}`, async function () {
+							const release = testReleaseByField[field];
+							await balena.models.release.setIsInvalidated(
+								release[field],
+								false,
+							);
+							const validatedRelease = await balena.models.release.get(
+								release.id,
+								{ $select: 'is_invalidated' },
+							);
+							expect(validatedRelease).to.deep.match({
+								is_invalidated: false,
+							});
+						});
+					});
+				});
+			});
 		});
 	});
 
