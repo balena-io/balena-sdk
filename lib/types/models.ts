@@ -8,6 +8,9 @@ import type {
 	OptionalNavigationResource,
 	ReverseNavigationResource,
 } from '../../typings/pinejs-client-core';
+import type { AnyObject } from '../../typings/utils';
+
+type JsonType = AnyObject;
 
 // TODO: Drop in the next major
 export { SocialServiceAccount } from './jwt';
@@ -316,7 +319,7 @@ export interface Release {
 	id: number;
 	created_at: string;
 	commit: string;
-	composition: string | null;
+	composition: JsonType | null;
 	contract: string | null;
 	status: ReleaseStatus;
 	source: string;

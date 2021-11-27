@@ -250,7 +250,7 @@ describe('Release Model', function () {
 								status: 'success',
 								source: 'cloud',
 								is_final: false,
-								composition: '{}',
+								composition: {},
 								start_timestamp: new Date().toISOString(),
 							},
 						});
