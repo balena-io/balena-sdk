@@ -1,4 +1,4 @@
-import type * as BalenaRequest from '../../../../typings/balena-request';
+import type { BalenaRequest } from 'balena-request';
 import { DeviceActionsService } from '../device-actions-service';
 
 const OS_UPDATE_ACTION_NAME = 'resinhup';
@@ -15,7 +15,7 @@ export interface OsUpdateActionResult {
 
 export const getOsUpdateHelper = function (
 	deviceUrlsBase: string,
-	request: BalenaRequest.BalenaRequest,
+	request: BalenaRequest,
 ) {
 	const deviceActionsService = new DeviceActionsService(
 		deviceUrlsBase,

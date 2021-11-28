@@ -1,4 +1,4 @@
-import type * as BalenaRequest from '../../../typings/balena-request';
+import type { BalenaRequest } from 'balena-request';
 
 interface MakeActionRequestParams {
 	uuid: string;
@@ -26,10 +26,7 @@ const DEVICE_ACTIONS_API_VERSION = 'v1';
 export class DeviceActionsService {
 	private actionsEndpoint: string;
 
-	constructor(
-		deviceUrlsBase: string,
-		private request: BalenaRequest.BalenaRequest,
-	) {
+	constructor(deviceUrlsBase: string, private request: BalenaRequest) {
 		this.actionsEndpoint = `https://actions.${deviceUrlsBase}/${DEVICE_ACTIONS_API_VERSION}`;
 	}
 

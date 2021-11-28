@@ -20,7 +20,7 @@ import * as semver from 'semver';
 
 import { isNotFoundResponse, onlyIf, treatAsMissingApplication } from '../util';
 
-import type { BalenaRequestStreamResult } from '../../typings/balena-request';
+import type { BalenaRequestStreamResult } from 'balena-request';
 import type * as DeviceTypeJson from '../types/device-type-json';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
