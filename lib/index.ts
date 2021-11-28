@@ -51,10 +51,6 @@ export type {
 	TypedResult as PineTypedResult,
 } from '../typings/pinejs-client-core';
 
-// TODO: Drop in the next major
-/** @deprecated */
-export type PineWithSelectOnGet = PineStrict;
-
 export type { ApplicationMembershipCreationOptions } from './models/application-membership';
 export type { ApplicationInviteOptions } from './models/application-invite';
 export type {
@@ -78,19 +74,16 @@ export type {
 	OverallStatus,
 	SupervisorStatus,
 } from './models/device';
-export type {
-	OsTypes,
-	OsLines,
-	OsVersion,
-	OsVersionsByDeviceType,
-} from './models/hostapp';
 export type { ReleaseWithImageDetails } from './models/release';
 export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
 export type {
 	ImgConfigOptions,
-	OsVersions,
+	OsLines,
+	OsTypes,
 	OsUpdateVersions,
+	OsVersion,
+	OsVersionsByDeviceType,
 } from './models/os';
 export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';

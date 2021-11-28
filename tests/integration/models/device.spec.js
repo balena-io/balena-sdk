@@ -46,75 +46,6 @@ describe('Device Model', function () {
 	givenInitialOrganization(before);
 
 	describe('given no applications', function () {
-		parallel('balena.models.device.getDisplayName()', function () {
-			it('should get the display name for a known slug', async function () {
-				const result = await balena.models.device.getDisplayName(
-					'raspberry-pi2',
-				);
-				expect(result).to.equal('Raspberry Pi 2');
-			});
-
-			it('should get the display name given a device type alias', async function () {
-				const result = await balena.models.device.getDisplayName(
-					'raspberrypi2',
-				);
-				expect(result).to.equal('Raspberry Pi 2');
-			});
-
-			it('should eventually be undefined if the slug is invalid', async function () {
-				const result = await balena.models.device.getDisplayName('asdf');
-				expect(result).to.be.undefined;
-			});
-		});
-
-		parallel('balena.models.device.getDeviceSlug()', function () {
-			it('should eventually be the slug from a display name', async function () {
-				const result = await balena.models.device.getDeviceSlug(
-					'Raspberry Pi 2',
-				);
-				expect(result).to.equal('raspberry-pi2');
-			});
-
-			it('should eventually be the slug if passing already a slug', async function () {
-				const result = await balena.models.device.getDeviceSlug(
-					'raspberry-pi2',
-				);
-				expect(result).to.equal('raspberry-pi2');
-			});
-
-			it('should eventually be undefined if the display name is invalid', async function () {
-				const result = await balena.models.device.getDeviceSlug('asdf');
-				expect(result).to.be.undefined;
-			});
-
-			it('should eventually be the slug if passing an alias', async function () {
-				const result = await balena.models.device.getDeviceSlug('raspberrypi2');
-				expect(result).to.equal('raspberry-pi2');
-			});
-		});
-
-		parallel('balena.models.device.getSupportedDeviceTypes()', function () {
-			it('should return a non empty array', async () => {
-				const deviceTypes =
-					await balena.models.device.getSupportedDeviceTypes();
-				expect(Array.isArray(deviceTypes)).to.be.true;
-				return expect(deviceTypes).to.not.have.length(0);
-			});
-
-			it('should return all valid display names', async () => {
-				const deviceTypes =
-					await balena.models.device.getSupportedDeviceTypes();
-				await Promise.all(
-					deviceTypes.map(async (deviceType) => {
-						const deviceSlug = await balena.models.device.getDeviceSlug(
-							deviceType,
-						);
-						expect(deviceSlug).to.be.a('string');
-					}),
-				);
-			});
-		});
-
 		parallel('balena.models.device.getManifestBySlug()', function () {
 			it('should become the manifest if the slug is valid', async () => {
 				const manifest = await balena.models.device.getManifestBySlug(
@@ -201,11 +132,12 @@ describe('Device Model', function () {
 							}),
 						);
 
-						it('should be rejected if the application name does not exist', function () {
-							const promise =
-								balena.models.device.getManifestByApplication('HelloWorldApp');
+						it('should be rejected if the application slug does not exist', function () {
+							const promise = balena.models.device.getManifestByApplication(
+								`${ctx.initialOrg.handle}/helloworldapp`,
+							);
 							return expect(promise).to.be.rejectedWith(
-								'Application not found: HelloWorldApp',
+								`Application not found: ${ctx.initialOrg.handle}/helloworldapp`,
 							);
 						});
 
@@ -221,11 +153,14 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.register()', function () {
-				it('should be rejected if the application name does not exist', function () {
+				it(`should be rejected if the application slug does not exist`, function () {
 					const uuid = balena.models.device.generateUniqueKey();
-					const promise = balena.models.device.register('HelloWorldApp', uuid);
+					const promise = balena.models.device.register(
+						`${this.initialOrg.handle}/helloworldapp`,
+						uuid,
+					);
 					return expect(promise).to.be.rejectedWith(
-						'Application not found: HelloWorldApp',
+						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
 					);
 				});
 
@@ -254,7 +189,7 @@ describe('Device Model', function () {
 							const uuid = balena.models.device.generateUniqueKey();
 							await balena.models.device.register(this.application[prop], uuid);
 							const apps = await balena.models.device.getAllByApplication(
-								this.application.app_name,
+								this.application.slug,
 							);
 							expect(apps).to.have.length(i + 1);
 						});
@@ -319,11 +254,12 @@ describe('Device Model', function () {
 						}),
 					);
 
-					it('should be rejected if the application name does not exist', function () {
-						const promise =
-							balena.models.device.getAllByApplication('HelloWorldApp');
+					it('should be rejected if the application slug does not exist', function () {
+						const promise = balena.models.device.getAllByApplication(
+							`${ctx.initialOrg.handle}/helloworldapp`,
+						);
 						return expect(promise).to.be.rejectedWith(
-							'Application not found: HelloWorldApp',
+							`Application not found: ${ctx.initialOrg.handle}/helloworldapp`,
 						);
 					});
 
@@ -653,7 +589,9 @@ describe('Device Model', function () {
 						ctx = this;
 					});
 
-					after(() => balena.models.application.remove('ChildApp'));
+					after(async function () {
+						await balena.models.application.remove(this.childApplication.id);
+					});
 
 					parallel('', function () {
 						it('should get the device given the right parent uuid', async function () {
@@ -2122,7 +2060,7 @@ describe('Device Model', function () {
 				const uuid =
 					this.shortUuid + balena.models.device.generateUniqueKey().slice(7);
 				const deviceInfo = await balena.models.device.register(
-					this.application.app_name,
+					this.application.slug,
 					uuid,
 				);
 				return (this.deviceInfo = deviceInfo);
@@ -2154,8 +2092,8 @@ describe('Device Model', function () {
 					this.uuidRoot + balena.models.device.generateUniqueKey().slice(16);
 
 				return Promise.all([
-					balena.models.device.register(this.application.app_name, uuid1),
-					balena.models.device.register(this.application.app_name, uuid2),
+					balena.models.device.register(this.application.slug, uuid1),
+					balena.models.device.register(this.application.slug, uuid2),
 				]);
 			});
 
@@ -2937,7 +2875,7 @@ describe('Device Model', function () {
 
 			const uuid = balena.models.device.generateUniqueKey();
 			this.deviceInfo = await balena.models.device.register(
-				this.application1.app_name,
+				this.application1.slug,
 				uuid,
 			);
 		});
@@ -3013,10 +2951,10 @@ describe('Device Model', function () {
 				it('should be rejected with an incompatibility error', function () {
 					const promise = balena.models.device.move(
 						this.deviceInfo.uuid,
-						this.applicationIncompatibleDT.app_name,
+						this.applicationIncompatibleDT.slug,
 					);
 					return expect(promise).to.be.rejectedWith(
-						`Incompatible application: ${this.applicationIncompatibleDT.app_name}`,
+						`Incompatible application: ${this.applicationIncompatibleDT.slug}`,
 					);
 				});
 			});
@@ -3088,9 +3026,9 @@ describe('Device Model', function () {
 				it(`should be rejected with an incompatibility error when trying to move an ${deviceArch} device to an ${appArch} application`, function () {
 					const device = this.devices[deviceArch];
 					const app = this.apps[appArch];
-					const promise = balena.models.device.move(device.uuid, app.app_name);
+					const promise = balena.models.device.move(device.uuid, app.slug);
 					return expect(promise).to.be.rejectedWith(
-						`Incompatible application: ${app.app_name}`,
+						`Incompatible application: ${app.slug}`,
 					);
 				});
 			});
@@ -3107,7 +3045,7 @@ describe('Device Model', function () {
 					const applicationName = await balena.models.device.getApplicationName(
 						device.id,
 					);
-					return expect(applicationName).to.equal(app.app_name);
+					expect(applicationName).to.equal(app.app_name);
 				});
 			});
 		});

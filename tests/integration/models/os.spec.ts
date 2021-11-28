@@ -21,104 +21,120 @@ const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
 
 const {
 	_getDeviceTypes,
-	_getOsVersions,
 	_getDownloadSize,
 	_getMaxSatisfyingVersion,
-	_clearDeviceTypesEndpointCaches,
+	_clearDeviceTypesAndOsVersionCaches,
 } = balena.models.os as ReturnType<
 	typeof import('../../../lib/models/os').default
 >;
 
-// tslint:disable-next-line:variable-name
-const itShouldClear_getDeviceTypesCache = (stepFn: () => Resolvable<void>) =>
-	it('should clear the result cache of balena.models.os._getDeviceTypes()', async function () {
-		const p1 = _getDeviceTypes();
-		const result1 = await p1;
-		await stepFn();
+const containsVersion = (
+	versions: BalenaSdk.OsVersion[],
+	expected: Partial<BalenaSdk.OsVersion>,
+) => {
+	const os = _.find(versions, expected);
+	expect(os).to.not.be.undefined;
+};
 
-		const p2 = _getDeviceTypes();
-		const result2 = await p2;
+const itShouldClearMethodCacheFactory = <T>(
+	title: string,
+	fn: () => Resolvable<T>,
+	prepareFn?: (result: T) => T,
+) => {
+	return (stepFn: () => Resolvable<void>) =>
+		it(`should clear the result cache of ${title}`, async function () {
+			const p1 = fn();
+			let result1 = await p1;
+			await stepFn();
 
+			const p2 = fn();
+			let result2 = await p2;
+
+			if (prepareFn) {
+				// @ts-expect-error
+				result1 = prepareFn(result1);
+				// @ts-expect-error
+				result2 = prepareFn(result2);
+			}
+
+			expect(p1).to.not.equal(p2);
+			if (!['string', 'number'].includes(typeof result1)) {
+				expect(result1).to.not.equal(result2);
+			}
+			expect(result1).to.deep.equal(result2);
+		});
+};
+
+const itShouldClear = {
+	getAllOsVersions: itShouldClearMethodCacheFactory(
+		'balena.models.os.getAllOsVersions()',
+		() => balena.models.os.getAllOsVersions('raspberry-pi'),
+	),
+	getAvailableOsVersions: itShouldClearMethodCacheFactory(
+		'balena.models.os.getAvailableOsVersions()',
+		() => balena.models.os.getAvailableOsVersions('raspberry-pi'),
+	),
+	getDeviceTypesCache: itShouldClearMethodCacheFactory(
+		'balena.models.os._getDeviceTypes()',
+		() => _getDeviceTypes(),
 		// the endpoint doesn't sort the device types atm
-		[result1, result2].forEach((dtArray) =>
-			dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
-		);
+		(dtArray) => dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
+	),
+	getDownloadSizeCache: itShouldClearMethodCacheFactory(
+		'balena.models.os._getDownloadSize()',
+		() => _getDownloadSize('raspberry-pi', '1.26.1'),
+	),
+};
 
-		expect(result1).to.deep.equal(result2);
-		expect(p1).to.not.equal(p2);
-	});
-
-// tslint:disable-next-line:variable-name
-const itShouldClear_getOsVersionsCache = (stepFn: () => Resolvable<void>) =>
-	it('should clear the result cache of balena.models.os._getOsVersions()', async function () {
-		const p1 = _getOsVersions('raspberry-pi');
-		const result1 = await p1;
-		await stepFn();
-
-		const p2 = _getOsVersions('raspberry-pi');
-		const result2 = await p2;
-
-		expect(result1).to.deep.equal(result2);
-		expect(p1).to.not.equal(p2);
-	});
-
-// tslint:disable-next-line:variable-name
-const itShouldClear_getDownloadSizeCache = (stepFn: () => Resolvable<void>) =>
-	it('should clear the result cache of balena.models.os._getDownloadSize()', async function () {
-		const p1 = _getDownloadSize('raspberry-pi', '1.26.1');
-		const result1 = await p1;
-		await stepFn();
-
-		const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
-		const result2 = await p2;
-
-		expect(result1).to.deep.equal(result2);
-		expect(p1).to.not.equal(p2);
-	});
-
-const describeAllAuthUserChanges = function (
+const describeCacheInvalidationChanges = function (
 	itFnWithStep: (fn: () => Resolvable<void>) => Mocha.Test,
 ) {
-	describe('when not logged in', function () {
-		beforeEach(() => balena.auth.logout());
+	describe('cache invalidation', function () {
+		describe('when not logged in', function () {
+			beforeEach(() => balena.auth.logout());
 
-		describe('balena.auth.logout()', () =>
-			itFnWithStep(() => balena.auth.logout()));
+			describe('balena.auth.logout()', () =>
+				itFnWithStep(() => balena.auth.logout()));
 
-		describe('balena.auth.login()', () =>
-			itFnWithStep(() =>
-				balena.auth.login({
-					email: credentials.email,
-					password: credentials.password,
-				}),
-			));
+			describe('balena.auth.login()', () =>
+				itFnWithStep(() =>
+					balena.auth.login({
+						email: credentials.email,
+						password: credentials.password,
+					}),
+				));
 
-		describe('balena.auth.loginWithToken()', () =>
-			itFnWithStep(() =>
-				balena.auth.authenticate(credentials).then(balena.auth.loginWithToken),
-			));
-	});
+			describe('balena.auth.loginWithToken()', () =>
+				itFnWithStep(() =>
+					balena.auth
+						.authenticate(credentials)
+						.then(balena.auth.loginWithToken),
+				));
+		});
 
-	describe('when logged in with credentials', function () {
-		givenLoggedInUser(beforeEach);
+		describe('when logged in with credentials', function () {
+			givenLoggedInUser(beforeEach);
 
-		afterEach(() => balena.auth.logout());
+			afterEach(() => balena.auth.logout());
 
-		describe('balena.auth.logout()', () =>
-			itFnWithStep(() => balena.auth.logout()));
+			describe('balena.auth.logout()', () =>
+				itFnWithStep(() => balena.auth.logout()));
 
-		describe('balena.auth.login()', () =>
-			itFnWithStep(() =>
-				balena.auth.login({
-					email: credentials.email,
-					password: credentials.password,
-				}),
-			));
+			describe('balena.auth.login()', () =>
+				itFnWithStep(() =>
+					balena.auth.login({
+						email: credentials.email,
+						password: credentials.password,
+					}),
+				));
 
-		describe('balena.auth.loginWithToken()', () =>
-			itFnWithStep(() =>
-				balena.auth.authenticate(credentials).then(balena.auth.loginWithToken),
-			));
+			describe('balena.auth.loginWithToken()', () =>
+				itFnWithStep(() =>
+					balena.auth
+						.authenticate(credentials)
+						.then(balena.auth.loginWithToken),
+				));
+		});
 	});
 };
 
@@ -128,142 +144,331 @@ describe('OS model', function () {
 		return balena.auth.logout();
 	});
 
+	describe('balena.models.os.getAllOsVersions()', function () {
+		parallel('', function () {
+			it('should contain both balenaOS and balenaOS ESR OS types [string device type argument]', async () => {
+				const res = await balena.models.os.getAllOsVersions('fincm3');
+				expect(res).to.be.an('array');
+
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
+				const res = await balena.models.os.getAllOsVersions(['fincm3']);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.not.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [multiple device types]', async () => {
+				const res = await balena.models.os.getAllOsVersions([
+					'fincm3',
+					'raspberrypi3',
+				]);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should return an empty object for non-existent DTs', async () => {
+				const res = await balena.models.os.getAllOsVersions(['blahbleh']);
+
+				expect(res).to.deep.equal({});
+			});
+
+			it('should cache the results when not providing extra options', async () => {
+				const firstRes = await balena.models.os.getAllOsVersions([
+					'raspberrypi3',
+				]);
+				const secondRes = await balena.models.os.getAllOsVersions([
+					'raspberrypi3',
+				]);
+				expect(firstRes).to.equal(secondRes);
+			});
+
+			it('should not cache the results when providing extra options', async () => {
+				const firstRes = await balena.models.os.getAllOsVersions(
+					['raspberrypi3'],
+					{ $filter: { is_invalidated: false } },
+				);
+				const secondRes = await balena.models.os.getAllOsVersions(
+					['raspberrypi3'],
+					{ $filter: { is_invalidated: false } },
+				);
+				expect(firstRes).to.not.equal(secondRes);
+			});
+		});
+
+		describeCacheInvalidationChanges(itShouldClear.getAllOsVersions);
+	});
+
+	describe('balena.models.os.getAvailableOsVersions()', function () {
+		parallel('', function () {
+			it('should contain both balenaOS and balenaOS ESR OS types [string device type argument]', async () => {
+				const res = await balena.models.os.getAvailableOsVersions('fincm3');
+				expect(res).to.be.an('array');
+
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res, {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
+				const res = await balena.models.os.getAvailableOsVersions(['fincm3']);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.not.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should contain both balenaOS and balenaOS ESR OS types [multiple device types]', async () => {
+				const res = await balena.models.os.getAvailableOsVersions([
+					'fincm3',
+					'raspberrypi3',
+				]);
+				expect(res).to.be.an('object');
+				expect(res).to.have.property('fincm3');
+				expect(res).to.have.property('raspberrypi3');
+
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['fincm3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2.29.0+rev1',
+					variant: 'prod',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'dev',
+				});
+				containsVersion(res['raspberrypi3'], {
+					strippedVersion: '2020.04.0',
+					variant: 'prod',
+				});
+			});
+
+			it('should return an empty object for non-existent DTs', async () => {
+				const res = await balena.models.os.getAvailableOsVersions(['blahbleh']);
+
+				expect(res).to.deep.equal({});
+			});
+
+			it('should cache the results', async () => {
+				const firstRes = await balena.models.os.getAvailableOsVersions([
+					'raspberrypi3',
+				]);
+				const secondRes = await balena.models.os.getAvailableOsVersions([
+					'raspberrypi3',
+				]);
+				expect(firstRes).to.equal(secondRes);
+			});
+		});
+
+		describeCacheInvalidationChanges(itShouldClear.getAvailableOsVersions);
+	});
+
 	describe('balena.models.os._getMaxSatisfyingVersion()', function () {
-		const osVersions = {
-			versions: [
-				'2.0.1+rev2.prod',
-				'2.0.1+rev2.dev',
-				'2.0.0.rev1',
-				'2.0.0-rc1.rev2-dev',
-				'2.0.0-rc1.rev2',
-				'1.24.1',
-				'1.24.0',
-				'1.8.0',
-			],
-			recommended: '1.24.1',
-			latest: '2.0.0.rev1',
-			default: '1.24.1',
-		};
+		const osVersions = [
+			{
+				rawVersion: '2.85.2+rev3.prod',
+				isRecommended: true,
+			},
+			{ rawVersion: '2.85.2+rev3.dev' },
+			{ rawVersion: '2.83.10+rev1.prod' },
+			{ rawVersion: '2.83.10+rev1.dev' },
+			{ rawVersion: '2.80.5+rev1.prod' },
+			{ rawVersion: '2.80.5+rev1.dev' },
+			{ rawVersion: '2.80.3+rev1.prod' },
+			{ rawVersion: '2.80.3+rev1.dev' },
+			{ rawVersion: '2.75.0+rev1.prod' },
+			{ rawVersion: '2.75.0+rev1.dev' },
+			{ rawVersion: '2.73.1+rev1.prod' },
+			{ rawVersion: '2.73.1+rev1.dev' },
+			{ rawVersion: '2.0.0.rev1.prod' },
+			{ rawVersion: '2.0.0.rev1.dev' },
+		];
 
 		it("should support 'latest'", () =>
 			expect(_getMaxSatisfyingVersion('latest', osVersions)).to.equal(
-				osVersions.latest,
+				'2.85.2+rev3.prod',
 			));
 
 		it("should support 'recommended'", () =>
 			expect(_getMaxSatisfyingVersion('recommended', osVersions)).to.equal(
-				osVersions.recommended,
+				'2.85.2+rev3.prod',
 			));
 
 		it("should support 'default'", () =>
 			expect(_getMaxSatisfyingVersion('default', osVersions)).to.equal(
-				osVersions.default,
+				'2.85.2+rev3.prod',
 			));
 
 		it('should support exact version', () =>
-			expect(_getMaxSatisfyingVersion('1.24.1', osVersions)).to.equal(
-				'1.24.1',
+			expect(_getMaxSatisfyingVersion('2.73.1+rev1.prod', osVersions)).to.equal(
+				'2.73.1+rev1.prod',
+			));
+
+		it('should support stripped version', () =>
+			expect(_getMaxSatisfyingVersion('2.73.1', osVersions)).to.equal(
+				'2.73.1+rev1.prod',
 			));
 
 		it('should support exact non-semver version', () =>
 			expect(_getMaxSatisfyingVersion('2.0.0.rev1', osVersions)).to.equal(
-				'2.0.0.rev1',
+				'2.0.0.rev1.prod',
 			));
 
 		it('should return an exact match, if it exists, when given a specific version', () =>
 			// Concern here is that semver says .dev is equivalent to .prod, but
 			// we want provide an exact version and use _exactly_ that version.
-			expect(_getMaxSatisfyingVersion('2.0.1+rev2.dev', osVersions)).to.equal(
-				'2.0.1+rev2.dev',
+			expect(_getMaxSatisfyingVersion('2.73.1+rev1.dev', osVersions)).to.equal(
+				'2.73.1+rev1.dev',
 			));
 
 		it('should return an equivalent result, if no exact result exists, when given a specific version', () =>
-			expect(_getMaxSatisfyingVersion('2.0.1+rev2', osVersions)).to.equal(
-				'2.0.1+rev2.prod',
+			expect(_getMaxSatisfyingVersion('2.73.1+rev1', osVersions)).to.equal(
+				'2.73.1+rev1.prod',
 			));
 
-		it('should support semver ranges', () =>
-			expect(_getMaxSatisfyingVersion('^1.24.0', osVersions)).to.equal(
-				'1.24.1',
+		it('should support ^ semver ranges', () =>
+			expect(_getMaxSatisfyingVersion('^2.0.1', osVersions)).to.equal(
+				'2.85.2+rev3.prod',
+			));
+
+		it('should support ~ semver ranges', () =>
+			expect(_getMaxSatisfyingVersion('~2.80.3', osVersions)).to.equal(
+				'2.80.5+rev1.prod',
 			));
 
 		it('should support non-semver version ranges', () =>
-			expect(_getMaxSatisfyingVersion('^2.0.0.rev1', osVersions)).to.equal(
-				'2.0.1+rev2.prod',
+			expect(_getMaxSatisfyingVersion('^2.0.1.rev1', osVersions)).to.equal(
+				'2.85.2+rev3.prod',
 			));
 
-		it('should drop unsupported exact versions', () =>
-			expect(_getMaxSatisfyingVersion('1.24.5', osVersions)).to.equal(null));
-
-		it('should drop unsupported semver ranges', () =>
-			expect(_getMaxSatisfyingVersion('~1.30.0', osVersions)).to.equal(null));
-	});
-
-	describe('balena.models.os.getSupportedVersions()', function () {
-		parallel('given a valid device slug', function () {
-			const expectSorted = (
-				array: string[],
-				comparator: <T extends string | null | undefined>(a: T, b: T) => number, // re-sorting could fail when the system is not using a stable
-			) =>
-				// sorting algorithm, in which case items of the same value
-				// might swap positions in the array
-				array.forEach(function (item, i) {
-					if (i === 0) {
-						return;
-					}
-
-					const previousItem = array[i - 1];
-					expect(comparator(previousItem, item)).to.be.lte(0);
-				});
-
-			const areValidVersions = function (osVersions: BalenaSdk.OsVersions) {
-				expect(osVersions).to.be.an('object');
-				expect(osVersions).to.have.property('versions').that.is.an('array');
-				expect(osVersions.versions).to.not.have.lengthOf(0);
-
-				expectSorted(osVersions.versions, bSemver.rcompare);
-
-				expect(osVersions).to.have.property('latest').that.is.a('string');
-				expect(osVersions).to.have.property('recommended').that.is.a('string');
-				expect(osVersions).to.have.property('default').that.is.a('string');
-				expect(osVersions.default).to.equal(osVersions.recommended);
-
-				return true;
-			};
-
-			it('should eventually return the valid versions object', function () {
-				const promise = balena.models.os.getSupportedVersions('raspberry-pi');
-				return expect(promise).to.eventually.satisfy(areValidVersions);
-			});
-
-			it('should eventually return the valid versions object if passing a device type alias', function () {
-				const promise = balena.models.os.getSupportedVersions('raspberrypi');
-				return expect(promise).to.eventually.satisfy(areValidVersions);
-			});
-
-			it('should cache the results', () =>
-				balena.models.os
-					.getSupportedVersions('raspberry-pi')
-					.then((result1) =>
-						balena.models.os
-							.getSupportedVersions('raspberry-pi')
-							.then((result2) => expect(result1).to.equal(result2)),
-					));
-
-			it('should cache the supported versions independently for each device type', () =>
-				Promise.all([
-					balena.models.os.getSupportedVersions('raspberry-pi'),
-					balena.models.os.getSupportedVersions('raspberrypi3'),
-				]).then(function ([deviceType1Versions, deviceType2Versions]) {
-					expect(deviceType1Versions).not.to.equal(deviceType2Versions);
-				}));
+		it('should drop unsupported exact versions', () => {
+			expect(_getMaxSatisfyingVersion('2.8.8+rev8.prod', osVersions)).to.equal(
+				null,
+			);
+			expect(_getMaxSatisfyingVersion('2.8.8', osVersions)).to.equal(null);
 		});
 
-		describe('given an invalid device slug', () =>
-			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.getSupportedVersions('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith('No such device type');
-			}));
+		it('should drop unsupported semver ranges', () => {
+			expect(_getMaxSatisfyingVersion('~2.8.8', osVersions)).to.equal(null);
+			expect(_getMaxSatisfyingVersion('^2.999.0', osVersions)).to.equal(null);
+		});
 	});
 
 	describe('balena.models.os._getDeviceTypes()', function () {
@@ -278,22 +483,7 @@ describe('OS model', function () {
 			});
 		});
 
-		describeAllAuthUserChanges(itShouldClear_getDeviceTypesCache);
-	});
-
-	describe('balena.models.os._getOsVersions()', function () {
-		it('should cache the results', function () {
-			const p1 = _getOsVersions('raspberry-pi');
-			return p1.then(function (result1) {
-				const p2 = _getOsVersions('raspberry-pi');
-				return p2.then(function (result2) {
-					expect(result1).to.equal(result2);
-					expect(p1).to.equal(p2);
-				});
-			});
-		});
-
-		describeAllAuthUserChanges(itShouldClear_getOsVersionsCache);
+		describeCacheInvalidationChanges(itShouldClear.getDeviceTypesCache);
 	});
 
 	describe('balena.models.os.getDownloadSize()', function () {
@@ -363,15 +553,20 @@ describe('OS model', function () {
 			});
 		});
 
-		describeAllAuthUserChanges(itShouldClear_getDownloadSizeCache);
+		describeCacheInvalidationChanges(itShouldClear.getDownloadSizeCache);
 	});
 
-	describe('balena.models.os._clearDeviceTypesEndpointCaches()', function () {
-		itShouldClear_getDeviceTypesCache(() => _clearDeviceTypesEndpointCaches());
-
-		itShouldClear_getOsVersionsCache(() => _clearDeviceTypesEndpointCaches());
-
-		itShouldClear_getDownloadSizeCache(() => _clearDeviceTypesEndpointCaches());
+	describe('balena.models.os._clearDeviceTypesAndOsVersionCaches()', function () {
+		itShouldClear.getDeviceTypesCache(() =>
+			_clearDeviceTypesAndOsVersionCaches(),
+		);
+		itShouldClear.getDownloadSizeCache(() =>
+			_clearDeviceTypesAndOsVersionCaches(),
+		);
+		itShouldClear.getAllOsVersions(() => _clearDeviceTypesAndOsVersionCaches());
+		itShouldClear.getAvailableOsVersions(() =>
+			_clearDeviceTypesAndOsVersionCaches(),
+		);
 	});
 
 	describe('balena.models.os.getLastModified()', function () {

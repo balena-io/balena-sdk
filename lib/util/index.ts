@@ -60,10 +60,10 @@ export const treatAsMissingOrganization = (
 };
 
 export const treatAsMissingApplication = (
-	nameOrId: string | number,
+	slugOrId: string | number,
 	err: Error,
 ) => {
-	const replacementErr = new errors.BalenaApplicationNotFound(nameOrId);
+	const replacementErr = new errors.BalenaApplicationNotFound(slugOrId);
 	replacementErr.stack = err.stack || '';
 	throw replacementErr;
 };
@@ -73,6 +73,14 @@ export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 	replacementErr.stack = err.stack || '';
 	throw replacementErr;
 };
+
+// TODO: Make it so that it also infers the extras param
+export function mergePineOptionsTyped<
+	R,
+	P extends Pine.ODataOptionsWithSelect<R>,
+>(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
+	return mergePineOptions(defaults, extras) as P;
+}
 
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
