@@ -1,4 +1,46 @@
 - commits:
+    - subject: Update balena-request to 11.5.0
+      hash: cae3aa1f30194beeba40e1398cdaef3dc37ff1e6
+      body: |
+        Update balena-request from 11.4.2 to 11.5.0
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Convert tests to JavaScript and drop coffeescript
+              hash: 0098dcd5be16c1eebbe722fd29d4a7597a8411bb
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+            - subject: Fix the jsdoc generation
+              hash: a8779e0bf665f29493afa16aea41a140b02e133d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+            - subject: Convert to typescript and publish typings
+              hash: 44106facfa8b770e786c04bdb01b1071fa737b45
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+          version: balena-request-11.5.0
+          date: 2021-11-28T13:07:15.557Z
+  version: 15.59.2
+  date: 2021-11-28T13:22:51.063Z
+- commits:
     - subject: Fix the typings of the Image contract field
       hash: 8ffb7462892a75d0d5b17bd2563634c4321b5291
       body: ''
