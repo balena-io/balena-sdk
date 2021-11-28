@@ -1,4 +1,29 @@
 - commits:
+    - subject: Fix the typings of the Image contract field
+      hash: 8ffb7462892a75d0d5b17bd2563634c4321b5291
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fix the typings for the Release contract field
+      hash: 1caca3e7a1c4a319d0ba2344fc50d7498d1e3353
+      body: ''
+      footer:
+        Resolves: '#1153'
+        resolves: '#1153'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 15.59.1
+  date: 2021-11-28T08:56:49.333Z
+- commits:
     - subject: Add release setIsInvalidated function
       hash: 670b0229be2871a3aaa174fcd08fc2eb90e1a7bd
       body: ''
