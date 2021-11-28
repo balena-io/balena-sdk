@@ -6892,7 +6892,7 @@ balena.models.release.setIsInvalidated(123, true).then(function() {
 **Example**  
 ```js
 balena.models.release.setIsInvalidated('7cf02a6', true).then(function() {
-	console.log('isvalidated!');
+	console.log('invalidated!');
 });
 ```
 **Example**  
