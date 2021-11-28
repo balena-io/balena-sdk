@@ -18,7 +18,7 @@ import type {
 	Pine as PineBase,
 	PineStrict as PineStrictBase,
 } from '../typings/balena-pine';
-import type { BalenaRequest, Interceptor } from '../typings/balena-request';
+import type { BalenaRequest, Interceptor } from 'balena-request';
 import type { ResourceTypeMap } from './types/models';
 
 import { globalEnv } from './util/global-env';

@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import once = require('lodash/once');
-import type { BalenaRequestStreamResult } from '../../typings/balena-request';
+import type { BalenaRequestStreamResult } from 'balena-request';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
 export interface BillingAccountAddressInfo {
