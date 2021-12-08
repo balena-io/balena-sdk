@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add description field to generateProvisioningKey for apps.
+      hash: 27cbc1f2565a31ca6cbe1a5950b14ae995f04bf7
+      body: ''
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Nitish Agarwal
+      nested: []
+  version: 16.1.0
+  date: 2021-12-08T13:43:24.038Z
+- commits:
     - subject: '**BREAKING**: Merge the hostApp model into the OS model'
       hash: fa3ffa3fa24f9d8459e7b03fbce4fdd28efac1ab
       body: ''
