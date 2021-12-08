@@ -791,7 +791,7 @@ describe('Application Model', function () {
 					}),
 				);
 
-				applicationRetrievalFields.forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop} with key name as key_${prop}`, async function () {
 						const provisioningKeys = await getProvisioningKeys(
 							this.application[prop],
@@ -819,8 +819,38 @@ describe('Application Model', function () {
 						expect(provisionKeys[0])
 							.to.have.property('name')
 							.to.be.equal(`key_${prop}`);
-					}),
-				);
+					});
+
+					it(`should be able to generate a provisioning key by ${prop} with description as 'Provisioning key generated with name key_${prop}'`, async function () {
+						const provisioningKeys = await getProvisioningKeys(
+							this.application[prop],
+						);
+
+						const key = await balena.models.application.generateProvisioningKey(
+							this.application[prop],
+							`key_${prop}`,
+							`Provisioning key generated with name key_${prop}`,
+						);
+
+						expect(key).to.be.a('string');
+						expect(key).to.have.length(32);
+						const updatedProvisioningKeys = await getProvisioningKeys(
+							this.application[prop],
+						);
+
+						const provisionKeys = _.differenceWith(
+							updatedProvisioningKeys,
+							provisioningKeys,
+							_.isEqual,
+						);
+
+						expect(provisionKeys).to.have.lengthOf(1);
+						expect(provisionKeys[0]).to.have.property('name');
+						expect(provisionKeys[0])
+							.to.have.property('description')
+							.to.be.equal(`Provisioning key generated with name key_${prop}`);
+					});
+				});
 
 				it('should be rejected if the application slug does not exist', function () {
 					const promise = balena.models.application.generateProvisioningKey(
