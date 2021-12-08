@@ -955,6 +955,7 @@ const getApplicationModel = function (
 		 *
 		 * @param {String|Number} slugOrId - application slug (string) or id (number)
 		 * @param {String} [keyName] - Provisioning key name
+		 * @param {String} [keyDescription] - Description for provisioning key
 		 * @fulfil {String} - device provisioning key
 		 * @returns {Promise}
 		 *
@@ -977,6 +978,7 @@ const getApplicationModel = function (
 		generateProvisioningKey: async (
 			slugOrId: string | number,
 			keyName?: string,
+			keyDescription?: string,
 		): Promise<string> => {
 			try {
 				const applicationId = await getId(slugOrId);
@@ -989,6 +991,7 @@ const getApplicationModel = function (
 						actorTypeId: applicationId,
 						roles: ['provisioning-api-key'],
 						name: keyName,
+						description: keyDescription,
 					},
 				});
 				return body;
