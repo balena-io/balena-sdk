@@ -128,6 +128,53 @@ describe('Config Model', function () {
 		});
 	});
 
+	describe('balena.models.config.getConfigVarSchema()', function () {
+		it('Fetching config var schema without deviceType', async function () {
+			const result = await balena.models.config.getConfigVarSchema();
+			expect(result).to.be.an('object');
+			expect(result).to.have.property('reservedNames').that.is.an('array');
+			expect(result).to.have.property('reservedNamespaces').that.is.an('array');
+			expect(result).to.have.property('whiteListedNames').that.is.an('array');
+			expect(result)
+				.to.have.property('whiteListedNamespaces')
+				.that.is.an('array');
+			expect(result).to.have.property('blackListedNames').that.is.an('array');
+			expect(result)
+				.to.have.property('configVarSchema')
+				.that.has.property('properties')
+				.that.has.property('BALENA_SUPERVISOR_HARDWARE_METRICS')
+				.that.is.an('object');
+			expect(result)
+				.to.have.property('configVarSchema')
+				.that.has.property('properties')
+				.that.does.not.have.property('BALENA_HOST_CONFIG_hdmi_mode');
+		});
+
+		it('Fetching config var schema with deviceType', async function () {
+			const result = await balena.models.config.getConfigVarSchema(
+				'raspberry-pi',
+			);
+			expect(result).to.be.an('object');
+			expect(result).to.have.property('reservedNames').that.is.an('array');
+			expect(result).to.have.property('reservedNamespaces').that.is.an('array');
+			expect(result).to.have.property('whiteListedNames').that.is.an('array');
+			expect(result)
+				.to.have.property('whiteListedNamespaces')
+				.that.is.an('array');
+			expect(result).to.have.property('blackListedNames').that.is.an('array');
+			expect(result)
+				.to.have.property('configVarSchema')
+				.that.has.property('properties')
+				.that.has.property('BALENA_SUPERVISOR_HARDWARE_METRICS')
+				.that.is.an('object');
+			expect(result)
+				.to.have.property('configVarSchema')
+				.that.has.property('properties')
+				.that.has.property('BALENA_HOST_CONFIG_hdmi_mode')
+				.that.is.an('object');
+		});
+	});
+
 	parallel('balena.models.config.getDeviceOptions()', function () {
 		it('should become the device options', () =>
 			balena.models.config

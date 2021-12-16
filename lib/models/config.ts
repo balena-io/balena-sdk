@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import type { JSONSchema6Definition } from 'json-schema';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import type * as DeviceTypeJson from '../types/device-type-json';
 
@@ -42,6 +43,10 @@ export interface Config {
 	supportedSocialProviders: string[];
 }
 
+export type ConfigVarDefinition = JSONSchema6Definition & {
+	will_reboot?: boolean;
+	warning?: string;
+};
 export interface GaConfig {
 	site: string;
 	id: string;
@@ -188,6 +193,41 @@ const getConfigModel = function (
 				| DeviceTypeJson.DeviceTypeOptions
 				| DeviceTypeJson.DeviceInitializationOptions
 			>(manifest.options, manifest.initialization?.options);
+		},
+
+		/**
+		 * @summary Get configuration variables schema for a device type
+		 * @name getConfigVarSchema
+		 * @public
+		 * @function
+		 * @memberof balena.models.config
+		 *
+		 * @param {String} deviceType - device type slug
+		 * @fulfil {Object[]} - configuration options
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.config.getConfigVarSchema('raspberry-pi').then(function(options) {
+		 * 	console.log(options);
+		 * });
+		 *
+		 * @example
+		 * balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options) {
+		 * 	if (error) throw error;
+		 * 	console.log(options);
+		 * });
+		 */
+		getConfigVarSchema: async (
+			deviceType?: string,
+		): Promise<ConfigVarDefinition> => {
+			const { body } = await request.send({
+				method: 'GET',
+				url: `/config/vars${
+					typeof deviceType === 'string' ? `?deviceType=${deviceType}` : ''
+				}`,
+				baseUrl: apiUrl,
+			});
+			return body;
 		},
 	};
 
