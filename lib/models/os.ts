@@ -301,7 +301,7 @@ const getOsModel = function (
 		return osVersionsByDeviceType;
 	};
 
-	const _getAllOsVersionsBase = async (
+	const _getAllOsVersions = async (
 		deviceTypes: string[],
 		options?: PineOptions<Release>,
 	): Promise<OsVersionsByDeviceType> => {
@@ -309,9 +309,9 @@ const getOsModel = function (
 		return await _transformVersionSets(_transformHostApps(hostapps));
 	};
 
-	const _memoizedGetAllOsVersionsBase = authDependentMemoizer(
+	const _memoizedGetAllOsVersions = authDependentMemoizer(
 		async (deviceTypes: string[], listedByDefault: boolean | null) => {
-			return await _getAllOsVersionsBase(
+			return await _getAllOsVersions(
 				deviceTypes,
 				listedByDefault
 					? {
@@ -356,7 +356,7 @@ const getOsModel = function (
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt = await _memoizedGetAllOsVersionsBase(
+		const versionsByDt = await _memoizedGetAllOsVersions(
 			deviceTypes.sort(),
 			true,
 		);
@@ -404,8 +404,8 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt =
 			options == null
-				? await _memoizedGetAllOsVersionsBase(deviceTypes.sort(), null)
-				: await _getAllOsVersionsBase(deviceTypes, options);
+				? await _memoizedGetAllOsVersions(deviceTypes.sort(), null)
+				: await _getAllOsVersions(deviceTypes, options);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
 			: versionsByDt;
@@ -458,7 +458,7 @@ const getOsModel = function (
 	const _clearDeviceTypesAndOsVersionCaches = () => {
 		_getDeviceTypes.clear();
 		_getDownloadSize.clear();
-		_memoizedGetAllOsVersionsBase.clear();
+		_memoizedGetAllOsVersions.clear();
 	};
 
 	const normalizeVersion = (v: string) => {
