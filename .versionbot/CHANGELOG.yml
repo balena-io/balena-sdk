@@ -1,4 +1,37 @@
 - commits:
+    - subject: 'os.getAvailableOsVersions: Exclude draft and non-successful releases'
+      hash: 51a8b0dfcf82d15d43229c7dd48b39d025ed0705
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'os.getAllOsVersions: Deprecate OsVersion.isRecommended'
+      hash: 7516b0870beb4d47b21c0cd35cd3be8d48bef986
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'os.getAllOsVersions: Deprecate OsVersion.formattedVersion'
+      hash: 3c08b2f9f98bfe30ab361f64a3e35ab86f90ec46
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.2.2
+  date: 2021-12-17T15:55:18.147Z
+- commits:
     - subject: Drop require-npm4-to-publish
       hash: 048ff951ea5820a2e662fd7568d733a6c76d20a0
       body: ''
