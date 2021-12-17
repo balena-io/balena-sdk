@@ -310,6 +310,7 @@ const sdk = fromSharedOptions();
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
             * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+            * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
         * [.release](#balena.models.release) : <code>object</code>
             * [.tags](#balena.models.release.tags) : <code>object</code>
                 * [.getAllByApplication(slugOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
@@ -684,6 +685,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
         * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+        * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
     * [.release](#balena.models.release) : <code>object</code>
         * [.tags](#balena.models.release.tags) : <code>object</code>
             * [.getAllByApplication(slugOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
@@ -6344,6 +6346,7 @@ console.log(result2);
     * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
     * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
     * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
+    * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
 
 <a name="balena.models.config.getAll"></a>
 
@@ -6408,6 +6411,31 @@ balena.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 **Example**  
 ```js
 balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
+	if (error) throw error;
+	console.log(options);
+});
+```
+<a name="balena.models.config.getConfigVarSchema"></a>
+
+##### config.getConfigVarSchema(deviceType) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>config</code>](#balena.models.config)  
+**Summary**: Get configuration variables schema for a device type  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - configuration options  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>String</code> | device type slug |
+
+**Example**  
+```js
+balena.models.config.getConfigVarSchema('raspberry-pi').then(function(options) {
+	console.log(options);
+});
+```
+**Example**  
+```js
+balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options) {
 	if (error) throw error;
 	console.log(options);
 });
