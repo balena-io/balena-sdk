@@ -60,7 +60,9 @@ export interface OsVersion
 	osType: string;
 	line?: OsLines;
 	variant?: string;
+	/** @deprecated */
 	formattedVersion: string;
+	/** @deprecated */
 	isRecommended?: boolean;
 }
 
@@ -299,7 +301,7 @@ const getOsModel = function (
 		return osVersionsByDeviceType;
 	};
 
-	const _getAllOsVersionsBase = async (
+	const _getAllOsVersions = async (
 		deviceTypes: string[],
 		options?: PineOptions<Release>,
 	): Promise<OsVersionsByDeviceType> => {
@@ -307,13 +309,17 @@ const getOsModel = function (
 		return await _transformVersionSets(_transformHostApps(hostapps));
 	};
 
-	const _memoizedGetAllOsVersionsBase = authDependentMemoizer(
-		async (deviceTypes: string[], isInvalidated: null | boolean) => {
-			return await _getAllOsVersionsBase(
+	const _memoizedGetAllOsVersions = authDependentMemoizer(
+		async (deviceTypes: string[], listedByDefault: boolean | null) => {
+			return await _getAllOsVersions(
 				deviceTypes,
-				typeof isInvalidated === 'boolean'
+				listedByDefault
 					? {
-							$filter: { is_invalidated: isInvalidated },
+							$filter: {
+								is_final: true,
+								is_invalidated: false,
+								status: 'success',
+							},
 					  }
 					: undefined,
 			);
@@ -350,9 +356,9 @@ const getOsModel = function (
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt = await _memoizedGetAllOsVersionsBase(
+		const versionsByDt = await _memoizedGetAllOsVersions(
 			deviceTypes.sort(),
-			false,
+			true,
 		);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
@@ -398,8 +404,8 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt =
 			options == null
-				? await _memoizedGetAllOsVersionsBase(deviceTypes.sort(), null)
-				: await _getAllOsVersionsBase(deviceTypes, options);
+				? await _memoizedGetAllOsVersions(deviceTypes.sort(), null)
+				: await _getAllOsVersions(deviceTypes, options);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
 			: versionsByDt;
@@ -452,7 +458,7 @@ const getOsModel = function (
 	const _clearDeviceTypesAndOsVersionCaches = () => {
 		_getDeviceTypes.clear();
 		_getDownloadSize.clear();
-		_memoizedGetAllOsVersionsBase.clear();
+		_memoizedGetAllOsVersions.clear();
 	};
 
 	const normalizeVersion = (v: string) => {
