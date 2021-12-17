@@ -62,6 +62,7 @@ export interface OsVersion
 	variant?: string;
 	/** @deprecated */
 	formattedVersion: string;
+	/** @deprecated */
 	isRecommended?: boolean;
 }
 
