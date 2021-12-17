@@ -60,6 +60,7 @@ export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
 const releaseSelectedFields = toWritable(['id', 'known_issue_list'] as const);
 export interface OsVersion
 	extends Pick<Release, typeof releaseSelectedFields[number]> {
+	/** @deprecated use OsVersion.raw_version. */
 	rawVersion: string;
 	strippedVersion: string;
 	basedOnVersion?: string;
