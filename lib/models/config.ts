@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { JSONSchema6Definition } from 'json-schema';
+import type { JSONSchema6 } from 'json-schema';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import type * as DeviceTypeJson from '../types/device-type-json';
 
@@ -43,10 +43,21 @@ export interface Config {
 	supportedSocialProviders: string[];
 }
 
-export type ConfigVarDefinition = JSONSchema6Definition & {
+export type ConfigVarSchema = JSONSchema6 & {
 	will_reboot?: boolean;
 	warning?: string;
 };
+
+export interface ConfigVarDefinition {
+	blackListedNames: string[];
+	configVarSchema: ConfigVarSchema;
+	invalidRegex: string;
+	reservedNames: string[];
+	reservedNamespaces: string[];
+	whiteListedNames: string[];
+	whiteListedNamespaces: string[];
+}
+
 export interface GaConfig {
 	site: string;
 	id: string;
