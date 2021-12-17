@@ -1,4 +1,17 @@
 - commits:
+    - subject: FIx the return type of config.getConfigVarSchema()
+      hash: 7ff41b8b3ef1f1d057bc2e87bd5675e3038dd79c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.2.3
+  date: 2021-12-17T17:41:36.323Z
+- commits:
     - subject: 'os.getAvailableOsVersions: Exclude draft and non-successful releases'
       hash: 51a8b0dfcf82d15d43229c7dd48b39d025ed0705
       body: ''
