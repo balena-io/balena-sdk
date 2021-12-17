@@ -67,7 +67,12 @@ export type {
 	PlanChangeOptions,
 	TokenBillingSubmitInfo,
 } from './models/billing';
-export type { GaConfig, Config, DeviceTypeJson } from './models/config';
+export type {
+	GaConfig,
+	Config,
+	ConfigVarDefinition,
+	DeviceTypeJson,
+} from './models/config';
 export type {
 	DeviceState,
 	DeviceMetrics,
