@@ -1,4 +1,17 @@
 - commits:
+    - subject: Drop require-npm4-to-publish
+      hash: 048ff951ea5820a2e662fd7568d733a6c76d20a0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.2.1
+  date: 2021-12-17T13:25:17.053Z
+- commits:
     - subject: 'minor: Add Configuration Variables Schema method'
       hash: e61cf974765b8540fff1416e4ee05edce86b83c8
       body: ''
