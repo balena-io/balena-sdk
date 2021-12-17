@@ -57,7 +57,11 @@ export enum OsVariant {
 
 export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
 
-const releaseSelectedFields = toWritable(['id', 'known_issue_list'] as const);
+const releaseSelectedFields = toWritable([
+	'id',
+	'known_issue_list',
+	'raw_version',
+] as const);
 export interface OsVersion
 	extends Pick<Release, typeof releaseSelectedFields[number]> {
 	/** @deprecated use OsVersion.raw_version. */
@@ -221,25 +225,46 @@ const getOsModel = function (
 	const _getOsVersionsFromReleases = (
 		releases: HostAppInfo['owns__release'],
 		appTags: HostAppTagSet,
-	): OsVersion[] => {
-		const OsVariants = Object.keys(OsVariant);
-		return releases.map((release) => {
+	) => {
+		const OsVariantNames = Object.keys(OsVariant);
+		const OsVariantKeywords = new Set(Object.values(OsVariant) as string[]);
+		return releases.map((release): OsVersion => {
 			const tagMap = tagsToDictionary(release.release_tag!);
-			/** Ideally 'production' | 'development' | undefined. */
-			const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
-			const variant =
-				typeof fullVariantName === 'string'
-					? OsVariants.includes(fullVariantName)
-						? OsVariant[fullVariantName as keyof typeof OsVariant]
-						: fullVariantName
-					: undefined;
-			const version = tagMap[VERSION_TAG_NAME] ?? '';
+			const releaseSemverObj = !release.raw_version.startsWith('0.0.0')
+				? bSemver.parse(release.raw_version)
+				: null;
+
+			let version: string;
+			let variant: string | undefined;
+			if (releaseSemverObj != null) {
+				version = releaseSemverObj.version;
+				const nonVariantBuildParts = releaseSemverObj.build.filter(
+					(b) => !OsVariantKeywords.has(b),
+				);
+				if (nonVariantBuildParts.length > 0) {
+					version += `+${nonVariantBuildParts.join('.')}`;
+				}
+				variant = releaseSemverObj.build.find((b) => OsVariantKeywords.has(b));
+			} else {
+				// TODO: Drop this `else` once we migrate all version & variant tags to release.semver field
+				/** Ideally 'production' | 'development' | undefined. */
+				const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
+				variant =
+					typeof fullVariantName === 'string'
+						? OsVariantNames.includes(fullVariantName)
+							? OsVariant[fullVariantName as keyof typeof OsVariant]
+							: fullVariantName
+						: undefined;
+
+				version = tagMap[VERSION_TAG_NAME] ?? '';
+				// Backfill the native rel
+				// TODO: This potentially generates an invalid semver and we should be doing
+				// something like `.join(!version.includes('+') ? '+' : '.')`,  but this needs
+				// discussion since otherwise it will break all ESR released as of writing this.
+				release.raw_version = [version, variant].filter((x) => !!x).join('.');
+			}
 			const basedOnVersion = tagMap[BASED_ON_VERSION_TAG_NAME] ?? version;
 			const line = getOsVersionReleaseLine(version, appTags);
-			// TODO: This potentially generates an invalid semver and we should be doing
-			// something like `.join(!version.includes('+') ? '+' : '.')`,  but this needs
-			// discussion since otherwise it will break all ESR released as of writing this.
-			const rawVersion = [version, variant].filter((x) => !!x).join('.');
 
 			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
 			// The version coming from release tags doesn't contain the variant, so we append it here
@@ -248,7 +273,7 @@ const getOsModel = function (
 				osType: appTags.osType,
 				line,
 				strippedVersion: version,
-				rawVersion,
+				rawVersion: release.raw_version,
 				basedOnVersion,
 				variant,
 				formattedVersion: `v${version}${line ? ` (${line})` : ''}`,
