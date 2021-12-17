@@ -228,12 +228,15 @@ const getOsModel = function (
 		return releases.map((release) => {
 			const tagMap = tagsToDictionary(release.release_tag!);
 			// The variant in the tags is a full noun, such as `production` and `development`.
-			const variant = tagMap[VARIANT_TAG_NAME] ?? 'production';
-			const normalizedVariant = normalizeVariant(variant);
+			const fullVariantName = tagMap[VARIANT_TAG_NAME] ?? 'production';
+			const variant = normalizeVariant(fullVariantName);
 			const version = tagMap[VERSION_TAG_NAME] ?? '';
 			const basedOnVersion = tagMap[BASED_ON_VERSION_TAG_NAME] ?? version;
 			const line = getOsVersionReleaseLine(version, appTags);
 			const lineFormat = line ? ` (${line})` : '';
+			const rawVersion = [version, variant]
+				.filter((x) => !!x)
+				.join(!version.includes('+') ? '+' : '.');
 
 			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
 			// The version coming from release tags doesn't contain the variant, so we append it here
@@ -242,9 +245,9 @@ const getOsModel = function (
 				osType: appTags.osType,
 				line,
 				strippedVersion: version,
-				rawVersion: `${version}.${normalizedVariant}`,
+				rawVersion,
 				basedOnVersion,
-				variant: normalizedVariant,
+				variant,
 				formattedVersion: `v${version}${lineFormat}`,
 			};
 		});
