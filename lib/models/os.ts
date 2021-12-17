@@ -310,12 +310,16 @@ const getOsModel = function (
 	};
 
 	const _memoizedGetAllOsVersionsBase = authDependentMemoizer(
-		async (deviceTypes: string[], isInvalidated: null | boolean) => {
+		async (deviceTypes: string[], listedByDefault: boolean | null) => {
 			return await _getAllOsVersionsBase(
 				deviceTypes,
-				typeof isInvalidated === 'boolean'
+				listedByDefault
 					? {
-							$filter: { is_invalidated: isInvalidated },
+							$filter: {
+								is_final: true,
+								is_invalidated: false,
+								status: 'success',
+							},
 					  }
 					: undefined,
 			);
@@ -354,7 +358,7 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt = await _memoizedGetAllOsVersionsBase(
 			deviceTypes.sort(),
-			false,
+			true,
 		);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
