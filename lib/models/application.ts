@@ -467,6 +467,7 @@ const getApplicationModel = function (
 		 *
 		 * @param {String} appName - application name
 		 * @param {Object} [options={}] - extra pine options to use
+		 * @param {String} [context] - extra access filters, undefined or 'directly_accessible'
 		 * @fulfil {Object} - application
 		 * @returns {Promise}
 		 *
@@ -478,16 +479,23 @@ const getApplicationModel = function (
 		async getAppByName(
 			appName: string,
 			options?: PineOptions<Application>,
+			context?: 'directly_accessible',
 		): Promise<Application> {
 			if (options == null) {
 				options = {};
 			}
+
+			const accessFilter =
+				context === 'directly_accessible'
+					? isDirectlyAccessibleByUserFilter
+					: null;
 
 			const applications = await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
 						$filter: {
+							...accessFilter,
 							app_name: appName,
 						},
 					},

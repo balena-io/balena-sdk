@@ -497,6 +497,15 @@ describe('Application Model', function () {
 						const app = await balena.models.application.getAppByName('FooBar');
 						expect(app.id).to.equal(ctx.application.id);
 					});
+
+					it('should find the created application [directly_accessible]', async function () {
+						const app = await balena.models.application.getAppByName(
+							'FooBar',
+							{},
+							'directly_accessible',
+						);
+						expect(app.id).to.equal(ctx.application.id);
+					});
 				});
 
 				parallel('balena.models.application.getAppByOwner()', function () {
@@ -1792,7 +1801,7 @@ describe('Application Model', function () {
 				function () {
 					applicationRetrievalFields.forEach((prop) =>
 						$it(
-							`should be able to get the public application by ${prop}`,
+							`should not return the public application by ${prop}`,
 							async function () {
 								const promise = balena.models.application.get(
 									publicApp[prop],
@@ -1826,6 +1835,28 @@ describe('Application Model', function () {
 					);
 				},
 			);
+
+			describe('balena.models.application.getAppByName()', function () {
+				$it(`should be able to get the public application`, async function () {
+					const app = await balena.models.application.getAppByName(
+						publicApp.app_name,
+					);
+					expect(app.id).to.equal(publicApp.id);
+				});
+			});
+
+			describe('balena.models.application.getAppByName() [directly_accessible]', function () {
+				$it(`should not return the public application`, async function () {
+					const promise = balena.models.application.getAppByName(
+						publicApp.app_name,
+						{},
+						'directly_accessible',
+					);
+					await expect(promise).to.eventually.be.rejectedWith(
+						`Application not found: ${publicApp.app_name}`,
+					);
+				});
+			});
 
 			describe('balena.models.application.getAll()', function () {
 				$it('should be able to get the public application', async function () {
