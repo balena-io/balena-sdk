@@ -48,6 +48,13 @@ export enum OsTypes {
 	ESR = 'esr',
 }
 
+// Do not change the enum key names b/c they need to
+// match with the release_tag values.
+export enum OsVariant {
+	production = 'prod',
+	development = 'dev',
+}
+
 export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
 
 const releaseSelectedFields = toWritable(['id', 'known_issue_list'] as const);
@@ -165,17 +172,6 @@ const getOsModel = function (
 		}
 	};
 
-	const normalizeVariant = (variant: string) => {
-		switch (variant) {
-			case 'production':
-				return 'prod';
-			case 'development':
-				return 'dev';
-			default:
-				return variant;
-		}
-	};
-
 	type HostAppInfo = ResolvableReturnType<typeof _getOsVersions>[number];
 	const _getOsVersions = async (
 		deviceTypes: string[],
@@ -225,15 +221,24 @@ const getOsModel = function (
 		releases: HostAppInfo['owns__release'],
 		appTags: HostAppTagSet,
 	): OsVersion[] => {
+		const OsVariants = Object.keys(OsVariant);
 		return releases.map((release) => {
 			const tagMap = tagsToDictionary(release.release_tag!);
-			// The variant in the tags is a full noun, such as `production` and `development`.
-			const variant = tagMap[VARIANT_TAG_NAME] ?? 'production';
-			const normalizedVariant = normalizeVariant(variant);
+			/** Ideally 'production' | 'development' | undefined. */
+			const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
+			const variant =
+				typeof fullVariantName === 'string'
+					? OsVariants.includes(fullVariantName)
+						? OsVariant[fullVariantName as keyof typeof OsVariant]
+						: fullVariantName
+					: undefined;
 			const version = tagMap[VERSION_TAG_NAME] ?? '';
 			const basedOnVersion = tagMap[BASED_ON_VERSION_TAG_NAME] ?? version;
 			const line = getOsVersionReleaseLine(version, appTags);
-			const lineFormat = line ? ` (${line})` : '';
+			// TODO: This potentially generates an invalid semver and we should be doing
+			// something like `.join(!version.includes('+') ? '+' : '.')`,  but this needs
+			// discussion since otherwise it will break all ESR released as of writing this.
+			const rawVersion = [version, variant].filter((x) => !!x).join('.');
 
 			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
 			// The version coming from release tags doesn't contain the variant, so we append it here
@@ -242,10 +247,10 @@ const getOsModel = function (
 				osType: appTags.osType,
 				line,
 				strippedVersion: version,
-				rawVersion: `${version}.${normalizedVariant}`,
+				rawVersion,
 				basedOnVersion,
-				variant: normalizedVariant,
-				formattedVersion: `v${version}${lineFormat}`,
+				variant,
+				formattedVersion: `v${version}${line ? ` (${line})` : ''}`,
 			};
 		});
 	};
