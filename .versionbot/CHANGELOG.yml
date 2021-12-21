@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'application.getAppByName: Add ''directly_accessible'' convenience filter'
+      hash: 70c12e25aa6cbd348e8b78ede695146bd639686d
+      body: ''
+      footer:
+        Resolves: '#1163'
+        resolves: '#1163'
+        See: >-
+          https://www.flowdock.com/app/rulemotion/i-cli/threads/VnT1qqVb13PkQO_GnPsKZB1l_fZ
+        see: >-
+          https://www.flowdock.com/app/rulemotion/i-cli/threads/VnT1qqVb13PkQO_GnPsKZB1l_fZ
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.3.0
+  date: 2021-12-21T01:30:54.748Z
+- commits:
     - subject: FIx the return type of config.getConfigVarSchema()
       hash: 7ff41b8b3ef1f1d057bc2e87bd5675e3038dd79c
       body: ''
