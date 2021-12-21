@@ -381,7 +381,30 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os._getMaxSatisfyingVersion()', function () {
-		const osVersions = [
+		const esrOsVersions = [
+			{
+				rawVersion: '2021.10.2.prod',
+				isRecommended: true,
+			},
+			{ rawVersion: '2021.10.2.dev' },
+			{ rawVersion: '2021.07.1.prod' },
+			{ rawVersion: '2021.07.1.dev' },
+			{ rawVersion: '2021.04.0.prod' },
+			{ rawVersion: '2021.04.0.dev' },
+			{ rawVersion: '2021.01.0.prod' },
+			{ rawVersion: '2021.01.0.dev' },
+			{ rawVersion: '2020.07.2.prod' },
+			{ rawVersion: '2020.07.2.dev' },
+			{ rawVersion: '2020.07.1.prod' },
+			{ rawVersion: '2020.07.1.dev' },
+			{ rawVersion: '2020.07.0.prod' },
+			{ rawVersion: '2020.07.0.dev' },
+			{ rawVersion: '2020.04.1.prod' },
+			{ rawVersion: '2020.04.1.dev' },
+			{ rawVersion: '2020.04.0.prod' },
+			{ rawVersion: '2020.04.0.dev' },
+		];
+		const defaultOsVersions = [
 			{
 				rawVersion: '2.85.2+rev3.prod',
 				isRecommended: true,
@@ -401,18 +424,30 @@ describe('OS model', function () {
 			{ rawVersion: '2.0.0.rev1.dev' },
 		];
 
+		const osVersions = [...esrOsVersions, ...defaultOsVersions];
+
 		it("should support 'latest'", () =>
 			expect(_getMaxSatisfyingVersion('latest', osVersions)).to.equal(
+				'2021.10.2.prod',
+			));
+
+		it("should support 'latest' with among default OS versions", () =>
+			expect(_getMaxSatisfyingVersion('latest', defaultOsVersions)).to.equal(
 				'2.85.2+rev3.prod',
+			));
+
+		it("should support 'latest' with among esr OS versions", () =>
+			expect(_getMaxSatisfyingVersion('latest', esrOsVersions)).to.equal(
+				'2021.10.2.prod',
 			));
 
 		it("should support 'recommended'", () =>
-			expect(_getMaxSatisfyingVersion('recommended', osVersions)).to.equal(
-				'2.85.2+rev3.prod',
-			));
+			expect(
+				_getMaxSatisfyingVersion('recommended', defaultOsVersions),
+			).to.equal('2.85.2+rev3.prod'));
 
 		it("should support 'default'", () =>
-			expect(_getMaxSatisfyingVersion('default', osVersions)).to.equal(
+			expect(_getMaxSatisfyingVersion('default', defaultOsVersions)).to.equal(
 				'2.85.2+rev3.prod',
 			));
 
@@ -438,24 +473,39 @@ describe('OS model', function () {
 				'2.73.1+rev1.dev',
 			));
 
+		it('should return an exact match, if it exists, when given a specific ESR version', () =>
+			expect(_getMaxSatisfyingVersion('2020.07.2.dev', osVersions)).to.equal(
+				'2020.07.2.dev',
+			));
+
 		it('should return an equivalent result, if no exact result exists, when given a specific version', () =>
 			expect(_getMaxSatisfyingVersion('2.73.1+rev1', osVersions)).to.equal(
 				'2.73.1+rev1.prod',
 			));
 
-		it('should support ^ semver ranges', () =>
+		it('should support ^ semver ranges in default OS releases', () =>
 			expect(_getMaxSatisfyingVersion('^2.0.1', osVersions)).to.equal(
 				'2.85.2+rev3.prod',
 			));
 
-		it('should support ~ semver ranges', () =>
+		it('should support ~ semver ranges in default OS releases', () =>
 			expect(_getMaxSatisfyingVersion('~2.80.3', osVersions)).to.equal(
 				'2.80.5+rev1.prod',
 			));
 
+		it('should support ^ semver ranges in ESR OS releases', () =>
+			expect(_getMaxSatisfyingVersion('^2020.04.0', osVersions)).to.equal(
+				'2020.07.2.prod',
+			));
+
+		it('should support ~ semver ranges in ESR OS releases', () =>
+			expect(_getMaxSatisfyingVersion('~2020.04.0', osVersions)).to.equal(
+				'2020.04.1.prod',
+			));
+
 		it('should support non-semver version ranges', () =>
-			expect(_getMaxSatisfyingVersion('^2.0.1.rev1', osVersions)).to.equal(
-				'2.85.2+rev3.prod',
+			expect(_getMaxSatisfyingVersion('^2020.04.0', osVersions)).to.equal(
+				'2020.07.2.prod',
 			));
 
 		it('should drop unsupported exact versions', () => {
