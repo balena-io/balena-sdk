@@ -493,6 +493,18 @@ describe('OS model', function () {
 				'2.80.5+rev1.prod',
 			));
 
+		it('should support > semver ranges in default OS releases', () => {
+			expect(_getMaxSatisfyingVersion('>2.80.3', defaultOsVersions)).to.equal(
+				'2.85.2+rev3.prod',
+			);
+			expect(
+				_getMaxSatisfyingVersion('>2.80.3+rev1.prod', defaultOsVersions),
+			).to.equal('2.85.2+rev3.prod');
+			expect(_getMaxSatisfyingVersion('>2.80.3', osVersions)).to.equal(
+				'2021.10.2.prod',
+			);
+		});
+
 		it('should support ^ semver ranges in ESR OS releases', () =>
 			expect(_getMaxSatisfyingVersion('^2020.04.0', osVersions)).to.equal(
 				'2020.07.2.prod',
@@ -502,6 +514,18 @@ describe('OS model', function () {
 			expect(_getMaxSatisfyingVersion('~2020.04.0', osVersions)).to.equal(
 				'2020.04.1.prod',
 			));
+
+		it('should support > semver ranges in ESR OS releases', () => {
+			expect(_getMaxSatisfyingVersion('>2020.04.0', esrOsVersions)).to.equal(
+				'2021.10.2.prod',
+			);
+			expect(
+				_getMaxSatisfyingVersion('>2020.04.0.prod', esrOsVersions),
+			).to.equal('2021.10.2.prod');
+			expect(_getMaxSatisfyingVersion('>2020.04.0', osVersions)).to.equal(
+				'2021.10.2.prod',
+			);
+		});
 
 		it('should support non-semver version ranges', () =>
 			expect(_getMaxSatisfyingVersion('^2020.04.0', osVersions)).to.equal(
