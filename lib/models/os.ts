@@ -81,8 +81,6 @@ export interface OsVersionsByDeviceType {
 	[deviceTypeSlug: string]: OsVersion[];
 }
 
-const BALENAOS_VERSION_REGEX = /v?\d+\.\d+\.\d+(\.rev\d+)?((\-|\+).+)?/;
-
 export interface ImgConfigOptions {
 	network?: 'ethernet' | 'wifi';
 	appUpdatePollInterval?: number;
@@ -500,26 +498,11 @@ const getOsModel = function (
 			return v;
 		}
 		const vNormalized = v[0] === 'v' ? v.substring(1) : v;
-		if (!BALENAOS_VERSION_REGEX.test(vNormalized)) {
+		// We still don't want to allow `balenaOS` prefixes, which balena-semver allows.
+		if (!bSemver.valid(vNormalized) || !/^\d/.test(vNormalized)) {
 			throw new Error(`Invalid semver version: ${v}`);
 		}
 		return vNormalized;
-	};
-
-	const fixNonSemver = (version: string) => {
-		if (version == null) {
-			return version;
-		}
-
-		return version.replace(/\.rev(\d+)/, '+FIXED-rev$1');
-	};
-
-	const unfixNonSemver = (version: string) => {
-		if (version == null) {
-			return version;
-		}
-
-		return version.replace(/\+FIXED-rev(\d+)/, '.rev$1');
 	};
 
 	/**
@@ -548,22 +531,15 @@ const getOsModel = function (
 		}
 
 		const versions = osVersions.map((v) => v.rawVersion);
-		const semverVersions = versions.map(fixNonSemver);
-
-		// TODO: Once we integrate balena-semver, balena-semver should learn to handle this itself
-		const semverVersionOrRange = fixNonSemver(versionOrRange);
-		if (semverVersions.includes(semverVersionOrRange)) {
+		if (versions.includes(versionOrRange)) {
 			// If the _exact_ version you're looking for exists, it's not a range, and
 			// we should return it exactly, not any old equivalent version.
-			return unfixNonSemver(semverVersionOrRange);
+			return versionOrRange;
 		}
 
-		const maxVersion = bSemver.maxSatisfying(
-			semverVersions,
-			semverVersionOrRange,
-		);
+		const maxVersion = bSemver.maxSatisfying(versions, versionOrRange);
 
-		return unfixNonSemver(maxVersion!);
+		return maxVersion;
 	};
 
 	/**
