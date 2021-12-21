@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'os.getMaxSatisfyingVersion: Add support for ESR releases'
+      hash: 4144692232be3f79cfbee1d7359ed4b56b8eabe7
+      body: ''
+      footer:
+        Resolves: '#389'
+        resolves: '#389'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.4.0
+  date: 2021-12-21T18:13:27.249Z
+- commits:
     - subject: 'application.getAppByName: Add ''directly_accessible'' convenience filter'
       hash: 70c12e25aa6cbd348e8b78ede695146bd639686d
       body: ''
