@@ -111,7 +111,6 @@
     "memoizee": "^0.4.15",
     "moment": "^2.29.1",
     "ndjson": "^2.0.0",
-    "semver": "^7.3.4",
     "tslib": "^2.1.0"
   },
   "versionist": {

@@ -16,7 +16,6 @@ limitations under the License.
 
 import * as bSemver from 'balena-semver';
 import once = require('lodash/once');
-import * as semver from 'semver';
 
 import {
 	isNotFoundResponse,
@@ -530,7 +529,7 @@ const getOsModel = function (
 			return unfixNonSemver(semverVersionOrRange);
 		}
 
-		const maxVersion = semver.maxSatisfying(
+		const maxVersion = bSemver.maxSatisfying(
 			semverVersions,
 			semverVersionOrRange,
 		);
