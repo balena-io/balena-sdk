@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'os.getMaxSatisfyingVersion: Add ">" semver range tests'
+      hash: 0a0fd896963d089261cc3608d85e7cd0d0d53185
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.4.1
+  date: 2021-12-21T23:16:23.237Z
+- commits:
     - subject: 'os.getMaxSatisfyingVersion: Add support for ESR releases'
       hash: 4144692232be3f79cfbee1d7359ed4b56b8eabe7
       body: ''
