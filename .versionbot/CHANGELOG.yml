@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'os.getAllOsVersions: Add support for invariant OS releases'
+      hash: cd8e00ea6e259c21655b869f141a7d74da10b96e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.5.0
+  date: 2021-12-22T13:51:57.337Z
+- commits:
     - subject: 'os.getMaxSatisfyingVersion: Add ">" semver range tests'
       hash: 0a0fd896963d089261cc3608d85e7cd0d0d53185
       body: ''
