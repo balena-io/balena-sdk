@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'models.os: Use the native hostApp OS release version if it is set'
+      hash: f93a62a533d9371358ea3176f089b3ad3006193d
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'models.os: Deprecate OsVersion.rawVersion in favor or raw_version'
+      hash: ccfe1b260ef94651f3775075b929da4a6828871c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.6.0
+  date: 2021-12-22T14:32:00.087Z
+- commits:
     - subject: 'os.getAllOsVersions: Add support for invariant OS releases'
       hash: cd8e00ea6e259c21655b869f141a7d74da10b96e
       body: ''
