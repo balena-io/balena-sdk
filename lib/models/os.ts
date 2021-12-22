@@ -94,6 +94,7 @@ export interface ImgConfigOptions {
 	netmask?: string;
 	deviceType?: string;
 	version: string;
+	developmentMode?: boolean;
 }
 
 export interface OsUpdateVersions {
@@ -780,6 +781,7 @@ const getOsModel = function (
 	 * @param {Number} [options.appUpdatePollInterval] - How often the OS checks
 	 * for updates, in minutes.
 	 * @param {String} [options.provisioningKeyName] - Name assigned to API key
+	 * @param {Boolean} [options.developmentMode] - Controls delopment mode for unified balenaOS releases.
 	 * @param {String} [options.wifiKey] - The key for the wifi network the
 	 * device will connect to.
 	 * @param {String} [options.wifiSsid] - The ssid for the wifi network the
@@ -821,7 +823,10 @@ const getOsModel = function (
 				method: 'POST',
 				url: '/download-config',
 				baseUrl: apiUrl,
-				body: Object.assign(options, { appId: applicationId }),
+				body: {
+					...options,
+					appId: applicationId,
+				},
 			});
 			return body;
 		} catch (err) {
