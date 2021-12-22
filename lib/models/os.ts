@@ -505,9 +505,6 @@ const getOsModel = function (
 		return vNormalized;
 	};
 
-	const deviceImageUrl = (deviceType: string, version: string) =>
-		`/download?deviceType=${deviceType}&version=${version}`;
-
 	const fixNonSemver = (version: string) => {
 		if (version == null) {
 			return version;
@@ -680,10 +677,14 @@ const getOsModel = function (
 	): Promise<Date> {
 		try {
 			deviceType = await getNormalizedDeviceTypeSlug(deviceType);
-			const ver = normalizeVersion(version);
+			version = normalizeVersion(version);
 			const response = await request.send({
 				method: 'HEAD',
-				url: deviceImageUrl(deviceType, ver),
+				url: '/download',
+				qs: {
+					deviceType,
+					version,
+				},
 				baseUrl: apiUrl,
 			});
 			return new Date(response.headers.get('last-modified')!);
@@ -707,6 +708,7 @@ const getOsModel = function (
 	 * Unsupported (unpublished) version will result in rejection.
 	 * The version **must** be the exact version number.
 	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
+	 * @param {Object} options - OS configuration options to use.
 	 * @fulfil {ReadableStream} - download stream
 	 * @returns {Promise}
 	 *
@@ -723,22 +725,28 @@ const getOsModel = function (
 	const download = onlyIf(!isBrowser)(async function (
 		deviceType: string,
 		version: string = 'latest',
+		// TODO: make the downloadOptions the only argument in the next major
+		options: { developmentMode?: boolean } = {},
 	): Promise<BalenaRequestStreamResult> {
 		try {
 			const slug = await getNormalizedDeviceTypeSlug(deviceType);
-			let ver;
 			if (version === 'latest') {
 				const versions = (await getAvailableOsVersions(slug)).filter(
 					(v) => v.osType === OsTypes.DEFAULT,
 				);
-				ver = (versions.find((v) => v.isRecommended) ?? versions[0])
+				version = (versions.find((v) => v.isRecommended) ?? versions[0])
 					?.rawVersion;
 			} else {
-				ver = normalizeVersion(version);
+				version = normalizeVersion(version);
 			}
 			return await request.stream({
 				method: 'GET',
-				url: deviceImageUrl(deviceType, ver),
+				url: '/download',
+				qs: {
+					...(typeof options === 'object' && options),
+					deviceType,
+					version,
+				},
 				baseUrl: apiUrl,
 				// optionally authenticated, so we send the token in all cases
 			});

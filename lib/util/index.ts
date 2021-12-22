@@ -6,8 +6,8 @@ export const notImplemented = () => {
 };
 
 export const onlyIf =
-	<T extends (...args: any[]) => any>(condition: boolean) =>
-	(fn: T) => {
+	(condition: boolean) =>
+	<T extends (...args: any[]) => any>(fn: T) => {
 		if (condition) {
 			return fn;
 		} else {
