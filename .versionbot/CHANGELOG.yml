@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'os.download: Fix the inferred method typings'
+      hash: 96a726b358629063a9fe859972d782c3ebdb75eb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'os.download: Accept additional configuration options'
+      hash: 4ff5071842223ca260eca5077f445bab5b3ae11f
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.7.0
+  date: 2021-12-22T17:54:04.554Z
+- commits:
     - subject: 'models.os: Use the native hostApp OS release version if it is set'
       hash: f93a62a533d9371358ea3176f089b3ad3006193d
       body: ''
