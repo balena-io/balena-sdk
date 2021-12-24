@@ -14,14 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
-
-import * as querystring from 'querystring';
-
 import { EventEmitter } from 'events';
 import { parse as ndjsonParse } from 'ndjson';
 import { globalEnv } from './util/global-env';
 import { Device } from './types/models';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const AbortController: typeof window.AbortController =
 	'AbortController' in globalEnv
@@ -65,20 +62,13 @@ const getLogs = function (
 		require('./models/device') as typeof import('./models/device')
 	).default(deps, opts);
 
-	const getLogsUrl = function (device: Device, options?: LogsOptions) {
-		const query = querystring.stringify(options);
-		return `/device/v2/${device.uuid}/logs?${query}`;
-	};
-
 	const getLogsFromApi = async function (
 		device: Device,
 		options?: LogsOptions,
 	) {
-		if (options == null) {
-			options = {};
-		}
 		const { body } = await request.send({
-			url: getLogsUrl(device, options),
+			url: `/device/v2/${device.uuid}/logs`,
+			qs: options ?? {},
 			baseUrl: opts.apiUrl,
 		});
 		return body;
@@ -88,16 +78,18 @@ const getLogs = function (
 		device: Device,
 		options?: LogsOptions,
 	): LogsSubscription {
-		if (options == null) {
-			options = {};
-		}
+		options ??= {};
 		const emitter = new EventEmitter() as LogsSubscription;
 		const controller = new AbortController();
 		const parser = ndjsonParse();
 
 		request
 			.stream({
-				url: getLogsUrl(device, Object.assign({}, options, { stream: 1 })),
+				url: `/device/v2/${device.uuid}/logs`,
+				qs: {
+					...options,
+					stream: 1,
+				},
 				baseUrl: opts.apiUrl,
 				signal: controller.signal,
 			})
