@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Stop using mochainon'
+      hash: dcbf45331d4cd37cc42f26da3fafed32a9ab8df6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.8.2
+  date: 2021-12-24T17:23:32.282Z
+- commits:
     - subject: 'logs: Stop using the querystring module'
       hash: c850abfea2492d01a1f0292c260c7fdf14db7109
       body: ''
