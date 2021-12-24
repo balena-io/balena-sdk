@@ -1,4 +1,19 @@
 - commits:
+    - subject: Support upgrading .dev to unified OS releases
+      hash: 00aebd0b24837871e0809b9ccbcbe3ebbbfc2692
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: 'https://github.com/balena-io-modules/balena-hup-action-utils/pull/25'
+        see: 'https://github.com/balena-io-modules/balena-hup-action-utils/pull/25'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.9.0
+  date: 2021-12-24T18:24:20.435Z
+- commits:
     - subject: 'tests: Stop using mochainon'
       hash: dcbf45331d4cd37cc42f26da3fafed32a9ab8df6
       body: ''
