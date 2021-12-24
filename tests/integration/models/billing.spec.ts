@@ -2,7 +2,7 @@ import * as _fs from 'fs';
 // TODO: change this to type-only import once TS 3.8 gets released
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import {
 	balena,
 	givenLoggedInUser,
@@ -12,7 +12,6 @@ import {
 } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
-const { expect } = m.chai;
 
 describe('Billing Model', function () {
 	timeSuite(before);

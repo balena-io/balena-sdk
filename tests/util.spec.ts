@@ -1,9 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as bSemver from 'balena-semver';
-
-const { expect } = m.chai;
 
 // HACK: Avoid typescript trying to resolve built es2015 files
 const nodeRequire = require;
@@ -231,16 +229,14 @@ describe('Pine option merging', function () {
 	});
 
 	it('rejects any unknown extra options', () =>
-		m.chai
-			// @ts-expect-error
-			.expect(() => mergePineOptions({}, { unknownKey: 'value' }))
-			.to.throw('Unknown pine option: unknownKey'));
+		// @ts-expect-error
+		expect(() => mergePineOptions({}, { unknownKey: 'value' })).to.throw(
+			'Unknown pine option: unknownKey',
+		));
 
 	it('ignores any unknown default options', () =>
-		m.chai
-			// @ts-expect-error
-			.expect(() => mergePineOptions({ unknownKey: 'value' }, {}))
-			.not.to.throw());
+		// @ts-expect-error
+		expect(() => mergePineOptions({ unknownKey: 'value' }, {})).not.to.throw());
 });
 
 const itShouldCompareVersionsProperly = function (rcompare) {

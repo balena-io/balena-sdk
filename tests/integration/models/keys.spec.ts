@@ -1,12 +1,11 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import PUBLIC_KEY from '../../data/public-key';
 import { balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
-const { expect } = m.chai;
 
 describe('Key Model', function () {
 	timeSuite(before);

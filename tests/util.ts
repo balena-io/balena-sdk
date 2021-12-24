@@ -1,9 +1,8 @@
 import 'chai-samsam';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import { balena } from './integration/setup';
 import type * as BalenaSdk from '..';
-const { expect } = m.chai;
 
 export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
 	[a, b].forEach((target) =>

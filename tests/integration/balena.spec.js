@@ -1,4 +1,5 @@
-import * as m from 'mochainon';
+import { expect } from 'chai';
+import * as sinon from 'sinon';
 import * as packageJSON from '../../package.json';
 import {
 	balena,
@@ -8,8 +9,6 @@ import {
 	givenLoggedInUser,
 } from './setup';
 import { timeSuite } from '../util';
-
-const { expect } = m.chai;
 
 const DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/';
 
@@ -80,7 +79,7 @@ describe('Balena SDK', function () {
 			};
 
 		it("should update if the array is set directly (not only if it's mutated)", function () {
-			const interceptor = m.sinon.mock().returnsArg(0);
+			const interceptor = sinon.mock().returnsArg(0);
 			balena.interceptors = [{ request: ignoreWhoamiCalls(interceptor) }];
 			return balena.models.application
 				.getAll({ $top: 1 })
@@ -94,7 +93,7 @@ describe('Balena SDK', function () {
 
 		describe('for request', () =>
 			it('should be able to intercept requests', function () {
-				const requestInterceptor = m.sinon.mock().returnsArg(0);
+				const requestInterceptor = sinon.mock().returnsArg(0);
 				balena.interceptors.push({ request: requestInterceptor });
 
 				const promise = balena.models.application.getAll({ $top: 1 });
@@ -109,8 +108,8 @@ describe('Balena SDK', function () {
 
 		describe('for requestError', () =>
 			it('should intercept request errors from other interceptors', function () {
-				const requestInterceptor = m.sinon.mock().throws(new Error('rejected'));
-				const requestErrorInterceptor = m.sinon
+				const requestInterceptor = sinon.mock().throws(new Error('rejected'));
+				const requestErrorInterceptor = sinon
 					.mock()
 					.throws(new Error('replacement error'));
 
@@ -131,7 +130,7 @@ describe('Balena SDK', function () {
 
 		describe('for response', () =>
 			it('should be able to intercept responses', function () {
-				const responseInterceptor = m.sinon.mock().returnsArg(0);
+				const responseInterceptor = sinon.mock().returnsArg(0);
 				balena.interceptors.push({ response: responseInterceptor });
 				const promise = balena.models.application.getAll({ $top: 1 });
 
