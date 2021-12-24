@@ -1,7 +1,7 @@
 import * as bSemver from 'balena-semver';
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import {
 	balena,
@@ -14,7 +14,6 @@ import {
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 import type { Resolvable } from '../../../typings/utils';
-const { expect } = m.chai;
 
 const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
 	expect(promise).to.eventually.have.property(prop);

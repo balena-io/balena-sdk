@@ -1,15 +1,16 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
-import { chai } from 'mochainon';
+import * as chai from 'chai';
+import { expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import * as memoize from 'memoizee';
 import type * as BalenaSdk from '../../';
 import type { AnyObject } from '../../typings/utils';
 import { toWritable } from '../../lib/util/types';
 import { getInitialOrganization } from './utils';
+chai.use(chaiAsPromised);
 // tslint:disable-next-line:no-var-requires
 chai.use(require('chai-samsam'));
-
-const { expect } = chai;
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 

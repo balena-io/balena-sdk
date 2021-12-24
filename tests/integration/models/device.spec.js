@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import * as superagent from 'superagent';
 
@@ -22,8 +22,6 @@ import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
 } from './tags';
-
-const { expect } = m.chai;
 
 const makeRequest = (url) =>
 	new Promise((resolve) =>

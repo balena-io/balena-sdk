@@ -1,10 +1,9 @@
 // tslint:disable-next-line:import-blacklist
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
-const { expect } = m.chai;
 import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my org on balenaCloud';

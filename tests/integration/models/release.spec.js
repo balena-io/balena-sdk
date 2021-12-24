@@ -1,9 +1,7 @@
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import * as _ from 'lodash';
 import { delay, timeSuite } from '../../util';
-
-const { expect } = m.chai;
 
 import {
 	balena,

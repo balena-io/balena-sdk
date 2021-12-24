@@ -1,6 +1,6 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import * as parallel from 'mocha.parallel';
 import {
 	balena,
@@ -10,7 +10,6 @@ import {
 	applicationRetrievalFields,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
-const { expect } = m.chai;
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
 
 const keyAlternatives = [

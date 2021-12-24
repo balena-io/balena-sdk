@@ -1,7 +1,5 @@
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import { timeSuite } from '../util';
-
-const { expect } = m.chai;
 
 import {
 	balena,

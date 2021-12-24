@@ -1,4 +1,4 @@
-import * as m from 'mochainon';
+import { expect } from 'chai';
 import {
 	balena,
 	givenAnApplication,
@@ -6,7 +6,6 @@ import {
 	givenMulticontainerApplication,
 } from '../setup';
 import { timeSuite } from '../../util';
-const { expect } = m.chai;
 
 describe('Image Model', function () {
 	timeSuite(before);
