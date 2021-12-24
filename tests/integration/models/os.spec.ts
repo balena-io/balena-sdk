@@ -773,15 +773,24 @@ describe('OS model', function () {
 						),
 					).to.eventually.equal(false)));
 
-			describe('given a supported os update path', () =>
-				it('should return true', () =>
-					expect(
-						balena.models.os.isSupportedOsUpdate(
-							'raspberrypi3',
-							'2.0.0+rev1.prod',
-							'2.2.0+rev2.prod',
-						),
-					).to.eventually.equal(true)));
+			describe('given a supported os update path', () => {
+				[
+					['2.0.0+rev1.prod', '2.2.0+rev2.prod'],
+					['2.8.0+rev1.dev', '2.10.0+rev2.dev'],
+					['2.2.0+rev2.prod', '2.88.4'],
+					['2.2.0+rev2.dev', '2.88.4'],
+				].forEach(([current, target]) => {
+					it(`should return true when updating ${current} -> ${target}`, async () => {
+						expect(
+							await balena.models.os.isSupportedOsUpdate(
+								'raspberrypi3',
+								current,
+								target,
+							),
+						).to.equal(true);
+					});
+				});
+			});
 		});
 	});
 
