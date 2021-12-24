@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'logs: Stop using the querystring module'
+      hash: c850abfea2492d01a1f0292c260c7fdf14db7109
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.8.1
+  date: 2021-12-23T12:27:51.348Z
+- commits:
     - subject: 'os.getConfig: Accept additional developmentMode configuration option'
       hash: 58c5279963f91ecd4eaf5504e4be321408ada431
       body: ''
