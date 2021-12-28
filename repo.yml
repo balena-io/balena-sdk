@@ -2,6 +2,8 @@ type: 'node'
 upstream:
   - repo: 'balena-auth'
     url: 'https://github.com/balena-io-modules/balena-auth'
+  - repo: 'balena-hup-action-utils'
+    url: 'https://github.com/balena-io-modules/balena-hup-action-utils'
   - repo: 'balena-pine'
     url: 'https://github.com/balena-io-modules/balena-pine'
   - repo: 'balena-register-device'
