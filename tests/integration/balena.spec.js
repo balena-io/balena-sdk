@@ -46,7 +46,7 @@ describe('Balena SDK', function () {
 			}));
 	});
 
-	it('should expose a balena-pine instance', () =>
+	it('should expose a pinejs client instance', () =>
 		expect(balena.pine).to.exist);
 
 	it('should expose an balena-errors instance', () =>

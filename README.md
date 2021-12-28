@@ -59,7 +59,6 @@ following sample `pkg` section should be added to your application's
       "node_modules/balena-sdk/**/*.js"
     ],
     "assets": [
-      "node_modules/balena-pine/**/*",
       "node_modules/pinejs-client-core/**/*"
     ]
   }

@@ -455,6 +455,7 @@ export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
 }
 
 export interface Pine<ResourceTypeMap extends {} = {}> {
+	apiPrefix: string;
 	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	// Fully typed result overloads
 	get<
