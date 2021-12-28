@@ -1,4 +1,17 @@
 - commits:
+    - subject: Stop relying on the balena-pine module
+      hash: d1c9a6568e0c5bf4770fd8046bc6f32439583f02
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.9.2
+  date: 2021-12-28T15:37:02.735Z
+- commits:
     - subject: Enable nested changelogs for balena-hup-action-utils
       hash: e9d988c8eaab222a1123279f88e1b89bd4200a25
       body: ''
