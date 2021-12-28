@@ -1,4 +1,17 @@
 - commits:
+    - subject: Enable nested changelogs for balena-hup-action-utils
+      hash: e9d988c8eaab222a1123279f88e1b89bd4200a25
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.9.1
+  date: 2021-12-28T13:51:06.330Z
+- commits:
     - subject: Support upgrading .dev to unified OS releases
       hash: 00aebd0b24837871e0809b9ccbcbe3ebbbfc2692
       body: ''
