@@ -434,7 +434,7 @@ balena.request.send({ url: 'http://api.balena-cloud.com/ping' });
 <a name="balena.pine"></a>
 
 ### balena.pine : <code>Object</code>
-The balena-pine instance used internally. This should not be necessary
+The pinejs-client instance used internally. This should not be necessary
 in normal usage, but can be useful if you want to directly make pine
 queries to the api for some resource that isn't directly supported
 in the SDK.

@@ -14,17 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type {
-	Pine as PineBase,
-	PineStrict as PineStrictBase,
-} from '../typings/balena-pine';
+import type { Pine } from './pine';
 import type { BalenaRequest, Interceptor } from 'balena-request';
-import type { ResourceTypeMap } from './types/models';
-
 import { globalEnv } from './util/global-env';
 
-export type Pine = PineBase<ResourceTypeMap>;
-export type PineStrict = PineStrictBase<ResourceTypeMap>;
+export type { Pine, PineStrict } from './pine';
 
 export * from './types/models';
 export * from './types/jwt';
@@ -229,7 +223,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 	};
 	const BalenaAuth = (require('balena-auth') as typeof import('balena-auth'))
 		.default;
-	const { BalenaPine } = require('balena-pine') as typeof import('balena-pine');
+	const { createPinejsClient } = require('./pine') as typeof import('./pine');
 	const errors = require('balena-errors') as typeof import('balena-errors');
 	const { PubSub } = require('./util/pubsub') as typeof import('./util/pubsub');
 
@@ -277,10 +271,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 
 	const auth = new BalenaAuth(opts);
 	const request = getRequest({ ...opts, auth });
-	const pine = new BalenaPine(
-		{},
-		{ ...opts, auth, request },
-	) as unknown as Pine;
+	const pine = createPinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 
 	const sdk = {} as BalenaSDK;
@@ -412,7 +403,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 	 * @memberof balena
 	 *
 	 * @description
-	 * The balena-pine instance used internally. This should not be necessary
+	 * The pinejs-client instance used internally. This should not be necessary
 	 * in normal usage, but can be useful if you want to directly make pine
 	 * queries to the api for some resource that isn't directly supported
 	 * in the SDK.
