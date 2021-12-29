@@ -386,7 +386,7 @@ const getOsModel = function (
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt = await _memoizedGetAllOsVersions(
-			deviceTypes.sort(),
+			deviceTypes.slice().sort(),
 			true,
 		);
 		return singleDeviceTypeArg
@@ -433,7 +433,7 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt =
 			options == null
-				? await _memoizedGetAllOsVersions(deviceTypes.sort(), null)
+				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), null)
 				: await _getAllOsVersions(deviceTypes, options);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
