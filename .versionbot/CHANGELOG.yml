@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'os: Avoid mutating the args in getAvailableOsVersions & getAllOsVersion'
+      hash: 398f0b75da0a6d12fbee5ca0cfa92559cf2364aa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.9.4
+  date: 2021-12-29T13:02:23.738Z
+- commits:
     - subject: 'os: Replace semver normalization with balena-semver'
       hash: 718a6c13b7a2a405aeb356be70e48c07ddf6b636
       body: ''
