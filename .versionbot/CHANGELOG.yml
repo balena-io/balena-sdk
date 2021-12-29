@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'os: Replace semver normalization with balena-semver'
+      hash: 718a6c13b7a2a405aeb356be70e48c07ddf6b636
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.9.3
+  date: 2021-12-28T20:59:18.723Z
+- commits:
     - subject: Stop relying on the balena-pine module
       hash: d1c9a6568e0c5bf4770fd8046bc6f32439583f02
       body: ''
