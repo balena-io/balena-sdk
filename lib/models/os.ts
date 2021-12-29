@@ -101,6 +101,10 @@ export interface OsUpdateVersions {
 	current: string | undefined;
 }
 
+const sortVersions = (a: OsVersion, b: OsVersion) => {
+	return bSemver.rcompare(a.rawVersion, b.rawVersion);
+};
+
 const getOsModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
@@ -131,10 +135,6 @@ const getOsModel = function (
 	);
 
 	const authDependentMemoizer = getAuthDependentMemoize(pubsub);
-
-	const sortVersions = (a: OsVersion, b: OsVersion) => {
-		return bSemver.rcompare(a.rawVersion, b.rawVersion);
-	};
 
 	const tagsToDictionary = (
 		tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
@@ -296,18 +296,13 @@ const getOsModel = function (
 			);
 		});
 
-		return osVersionsByDeviceType;
-	};
-
-	// This mutates the passed object.
-	const _transformVersionSets = (
-		osVersionsByDeviceType: OsVersionsByDeviceType,
-	) => {
+		// transform version sets
 		Object.keys(osVersionsByDeviceType).forEach((deviceType) => {
 			osVersionsByDeviceType[deviceType].sort(sortVersions);
-			const recommendedPerOsType: Dictionary<boolean> = {};
 
+			// TODO: Drop in next major
 			// Note: the recommended version settings might come from the server in the future, for now we just set it to the latest version for each os type.
+			const recommendedPerOsType: Dictionary<boolean> = {};
 			osVersionsByDeviceType[deviceType].forEach((version) => {
 				if (!recommendedPerOsType[version.osType]) {
 					if (
@@ -335,7 +330,7 @@ const getOsModel = function (
 		options?: PineOptions<Release>,
 	): Promise<OsVersionsByDeviceType> => {
 		const hostapps = await _getOsVersions(deviceTypes, options);
-		return await _transformVersionSets(_transformHostApps(hostapps));
+		return await _transformHostApps(hostapps);
 	};
 
 	const _memoizedGetAllOsVersions = authDependentMemoizer(
@@ -386,7 +381,7 @@ const getOsModel = function (
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt = await _memoizedGetAllOsVersions(
-			deviceTypes.sort(),
+			deviceTypes.slice().sort(),
 			true,
 		);
 		return singleDeviceTypeArg
@@ -433,7 +428,7 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt =
 			options == null
-				? await _memoizedGetAllOsVersions(deviceTypes.sort(), null)
+				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), null)
 				: await _getAllOsVersions(deviceTypes, options);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
