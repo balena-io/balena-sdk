@@ -1,4 +1,27 @@
 - commits:
+    - subject: Alias device.getManifestBySlug as config.getDeviceTypeManifestBySlug
+      hash: 45fee8a702af732ae1a1e5c3be889d0d41d05481
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Deprecate device.getManifestByApplication
+      hash: ff429ffc3c17444c8f0160a6608ba220489be10e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.11.0
+  date: 2021-12-30T14:45:59.694Z
+- commits:
     - subject: 'application.get: Add support for retrieving applications by uuid'
       hash: 3374abeed77a93fd05a2363eac125bdf55b246b8
       body: ''
