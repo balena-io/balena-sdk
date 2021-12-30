@@ -623,5 +623,9 @@ export function givenASupervisorRelease(
 	});
 }
 
-export const applicationRetrievalFields = toWritable(['id', 'slug'] as const);
+export const applicationRetrievalFields = toWritable([
+	'id',
+	'slug',
+	'uuid',
+] as const);
 export const deviceUniqueFields = toWritable(['id', 'uuid'] as const);

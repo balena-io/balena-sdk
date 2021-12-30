@@ -42,7 +42,7 @@ export interface ApplicationMembershipCreationOptions {
 const getApplicationMembershipModel = function (
 	deps: InjectedDependenciesParam,
 	getApplication: (
-		slugOrId: string | number,
+		slugOrUuidOrId: string | number,
 		options?: PineOptions<Application>,
 	) => Promise<Application>,
 ) {
@@ -161,7 +161,7 @@ const getApplicationMembershipModel = function (
 		 * @description
 		 * This method returns all application memberships for a specific application.
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - application memberships
 		 * @returns {Promise}
@@ -182,10 +182,10 @@ const getApplicationMembershipModel = function (
 		 * });
 		 */
 		async getAllByApplication(
-			slugOrId: number | string,
+			slugOrUuidOrId: number | string,
 			options: PineOptions<ApplicationMembership> = {},
 		): Promise<ApplicationMembership[]> {
-			const { id } = await getApplication(slugOrId, {
+			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
 			return await exports.getAll(
