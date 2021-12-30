@@ -1,4 +1,17 @@
 - commits:
+    - subject: Fix buggy tests causing flakiness on node 16
+      hash: 2486c98537ad06c1a63b39157712a5ca81d5d6ea
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.11.1
+  date: 2021-12-30T18:30:27.077Z
+- commits:
     - subject: Alias device.getManifestBySlug as config.getDeviceTypeManifestBySlug
       hash: 45fee8a702af732ae1a1e5c3be889d0d41d05481
       body: ''
