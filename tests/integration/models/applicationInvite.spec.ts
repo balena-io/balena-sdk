@@ -13,9 +13,27 @@ const UNKNOWN_ROLE = 'undefined_role';
 describe('Application Invite Model', function () {
 	timeSuite(before);
 	describe('When user is logged out', function () {
+		before(() => balena.auth.logout());
 		describe('balena.models.application.invite.getAllByApplication()', function () {
-			const promise = balena.models.application.invite.getAllByApplication(1);
-			return expect(promise).to.be.rejectedWith('UnAuthorized');
+			it('should be rejected with an unauthorized error', async () => {
+				// Use a public app to confirm to make sure the app invite request
+				// is rejecting with a 401
+				const [publicApp] = await balena.models.application.getAll({
+					$top: 1,
+					$select: 'id',
+					$filter: {
+						is_public: true,
+					},
+				});
+
+				const promise = balena.models.application.invite.getAllByApplication(
+					publicApp?.id ?? 1,
+				);
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					publicApp ? 'BalenaNotLoggedIn' : 'BalenaApplicationNotFound',
+				);
+			});
 		});
 	});
 
