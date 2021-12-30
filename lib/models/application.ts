@@ -89,8 +89,8 @@ const getApplicationModel = function (
 			resourceName: 'application_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'application',
-			async getResourceId(slugOrId: string | number): Promise<number> {
-				const { id } = await exports.get(slugOrId, { $select: 'id' });
+			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
@@ -102,8 +102,8 @@ const getApplicationModel = function (
 			resourceName: 'application_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(slugOrId: string | number): Promise<number> {
-				const { id } = await exports.get(slugOrId, { $select: 'id' });
+			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
@@ -114,8 +114,8 @@ const getApplicationModel = function (
 			resourceName: 'application_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(slugOrId: string | number): Promise<number> {
-				const { id } = await exports.get(slugOrId, { $select: 'id' });
+			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
@@ -126,8 +126,8 @@ const getApplicationModel = function (
 			resourceName: 'build_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(slugOrId: string | number): Promise<number> {
-				const { id } = await exports.get(slugOrId, { $select: 'id' });
+			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
 		},
@@ -138,11 +138,11 @@ const getApplicationModel = function (
 
 	// Internal method for name/id disambiguation
 	// Note that this throws an exception for missing names, but not missing ids
-	const getId = async (slugOrId: string | number) => {
-		if (isId(slugOrId)) {
-			return slugOrId;
+	const getId = async (slugOrUuidOrId: string | number) => {
+		if (isId(slugOrUuidOrId)) {
+			return slugOrUuidOrId;
 		} else {
-			const { id } = await exports.get(slugOrId, { $select: 'id' });
+			const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 			return id;
 		}
 	};
@@ -355,7 +355,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - application
 		 * @returns {Promise}
@@ -377,10 +377,10 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async getDirectlyAccessible(
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			options?: PineOptions<Application>,
 		): Promise<Application> {
-			return await exports.get(slugOrId, options, 'directly_accessible');
+			return await exports.get(slugOrUuidOrId, options, 'directly_accessible');
 		},
 
 		/**
@@ -397,7 +397,7 @@ const getApplicationModel = function (
 		 * understand format. If you want more control, or to see the raw model
 		 * directly, use `application.get(uuidOrId, options)` instead.
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object} - application
 		 * @returns {Promise}
@@ -419,7 +419,7 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async getWithDeviceServiceDetails(
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			options?: PineOptions<Application>,
 		): Promise<
 			Application & {
@@ -444,7 +444,7 @@ const getApplicationModel = function (
 			);
 
 			const app = (await exports.get(
-				slugOrId,
+				slugOrUuidOrId,
 				serviceOptions,
 			)) as Application & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
@@ -562,7 +562,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @fulfil {Boolean} - has application
 		 * @returns {Promise}
 		 *
@@ -582,9 +582,9 @@ const getApplicationModel = function (
 		 * 	console.log(hasApp);
 		 * });
 		 */
-		has: async (slugOrId: string | number): Promise<boolean> => {
+		has: async (slugOrUuidOrId: string | number): Promise<boolean> => {
 			try {
-				await exports.get(slugOrId, { $select: ['id'] });
+				await exports.get(slugOrUuidOrId, { $select: ['id'] });
 				return true;
 			} catch (err) {
 				if (err instanceof errors.BalenaApplicationNotFound) {
@@ -798,7 +798,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -812,16 +812,16 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		remove: async (slugOrId: string | number): Promise<void> => {
+		remove: async (slugOrUuidOrId: string | number): Promise<void> => {
 			try {
-				const applicationId = await getId(slugOrId);
+				const applicationId = await getId(slugOrUuidOrId);
 				await pine.delete({
 					resource: 'application',
 					id: applicationId,
 				});
 			} catch (err) {
 				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrId, err);
+					treatAsMissingApplication(slugOrUuidOrId, err);
 				}
 				throw err;
 			}
@@ -834,7 +834,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {String} newName - new application name (string)
 		 * @returns {Promise}
 		 *
@@ -850,11 +850,11 @@ const getApplicationModel = function (
 		 * });
 		 */
 		rename: async (
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			newAppName: string,
 		): Promise<void> => {
 			try {
-				const applicationId = await getId(slugOrId);
+				const applicationId = await getId(slugOrUuidOrId);
 				await pine.patch({
 					resource: 'application',
 					id: applicationId,
@@ -864,7 +864,7 @@ const getApplicationModel = function (
 				});
 			} catch (err) {
 				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrId, err);
+					treatAsMissingApplication(slugOrUuidOrId, err);
 				}
 				throw err;
 			}
@@ -877,7 +877,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -891,10 +891,10 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		restart: (slugOrId: string | number): Promise<void> =>
+		restart: (slugOrUuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
 				try {
-					const applicationId = await getId(slugOrId);
+					const applicationId = await getId(slugOrUuidOrId);
 
 					await request.send({
 						method: 'POST',
@@ -903,7 +903,7 @@ const getApplicationModel = function (
 					});
 				} catch (err) {
 					if (isNotFoundResponse(err)) {
-						treatAsMissingApplication(slugOrId, err);
+						treatAsMissingApplication(slugOrUuidOrId, err);
 					}
 					throw err;
 				}
@@ -921,7 +921,7 @@ const getApplicationModel = function (
 		 * version (2.4.0+) then generateProvisioningKey should work just as well, but
 		 * be more secure.
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @fulfil {String} - api key
 		 * @returns {Promise}
 		 *
@@ -941,10 +941,12 @@ const getApplicationModel = function (
 		 * 	console.log(apiKey);
 		 * });
 		 */
-		generateApiKey: async (slugOrId: string | number): Promise<string> => {
+		generateApiKey: async (
+			slugOrUuidOrId: string | number,
+		): Promise<string> => {
 			// Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
 			// doesn't exist. TODO: Can use getId once https://github.com/balena-io/balena-api/issues/110 is resolved
-			const { id } = await exports.get(slugOrId, { $select: 'id' });
+			const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 			const { body } = await request.send({
 				method: 'POST',
 				url: `/application/${id}/generate-api-key`,
@@ -960,7 +962,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {String} [keyName] - Provisioning key name
 		 * @param {String} [keyDescription] - Description for provisioning key
 		 * @fulfil {String} - device provisioning key
@@ -983,12 +985,12 @@ const getApplicationModel = function (
 		 * });
 		 */
 		generateProvisioningKey: async (
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			keyName?: string,
 			keyDescription?: string,
 		): Promise<string> => {
 			try {
-				const applicationId = await getId(slugOrId);
+				const applicationId = await getId(slugOrUuidOrId);
 				const { body } = await request.send({
 					method: 'POST',
 					url: '/api-key/v1/',
@@ -1004,7 +1006,7 @@ const getApplicationModel = function (
 				return body;
 			} catch (err) {
 				if (isNoApplicationForKeyResponse(err)) {
-					treatAsMissingApplication(slugOrId, err);
+					treatAsMissingApplication(slugOrUuidOrId, err);
 				}
 				throw err;
 			}
@@ -1128,7 +1130,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @fulfil {Boolean} - is tracking the latest release
 		 * @returns {Promise}
 		 *
@@ -1148,11 +1150,14 @@ const getApplicationModel = function (
 		 * });
 		 */
 		willTrackNewReleases: async (
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 		): Promise<boolean> => {
-			const { should_track_latest_release } = await exports.get(slugOrId, {
-				$select: 'should_track_latest_release',
-			});
+			const { should_track_latest_release } = await exports.get(
+				slugOrUuidOrId,
+				{
+					$select: 'should_track_latest_release',
+				},
+			);
 			return should_track_latest_release;
 		},
 
@@ -1163,7 +1168,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @fulfil {Boolean} - is tracking the latest release
 		 * @returns {Promise}
 		 *
@@ -1183,7 +1188,7 @@ const getApplicationModel = function (
 		 * });
 		 */
 		isTrackingLatestRelease: async (
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 		): Promise<boolean> => {
 			const appOptions = {
 				$select: 'should_track_latest_release',
@@ -1204,7 +1209,7 @@ const getApplicationModel = function (
 			} as const;
 
 			const application = (await exports.get(
-				slugOrId,
+				slugOrUuidOrId,
 				appOptions,
 			)) as PineTypedResult<Application, typeof appOptions>;
 			const trackedRelease = application.should_be_running__release[0];
@@ -1225,7 +1230,7 @@ const getApplicationModel = function (
 		 * @description Configures the application to run a particular release
 		 * and not get updated when the latest release changes.
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {String} fullReleaseHash - the hash of a successful release (string)
 		 * @returns {Promise}
 		 *
@@ -1246,10 +1251,10 @@ const getApplicationModel = function (
 		 * });
 		 */
 		pinToRelease: async (
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			fullReleaseHash: string,
 		): Promise<void> => {
-			const applicationId = await getId(slugOrId);
+			const applicationId = await getId(slugOrUuidOrId);
 			const release = await releaseModel().get(fullReleaseHash, {
 				$select: 'id',
 				$top: 1,
@@ -1275,7 +1280,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @fulfil {String|undefined} - The release hash of the current release
 		 * @returns {Promise}
 		 *
@@ -1295,7 +1300,7 @@ const getApplicationModel = function (
 		 * });
 		 */
 		getTargetReleaseHash: async (
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 		): Promise<string | undefined> => {
 			const appOptions = {
 				$select: 'id',
@@ -1303,7 +1308,7 @@ const getApplicationModel = function (
 			} as const;
 
 			const application = (await exports.get(
-				slugOrId,
+				slugOrUuidOrId,
 				appOptions,
 			)) as PineTypedResult<Application, typeof appOptions>;
 			return application.should_be_running__release[0]?.commit;
@@ -1318,7 +1323,7 @@ const getApplicationModel = function (
 		 *
 		 * @description The application's current release will be updated with each new successfully built release.
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1337,7 +1342,9 @@ const getApplicationModel = function (
 		 * 	...
 		 * });
 		 */
-		trackLatestRelease: async (slugOrId: string | number): Promise<void> => {
+		trackLatestRelease: async (
+			slugOrUuidOrId: string | number,
+		): Promise<void> => {
 			const appOptions = {
 				$select: 'id',
 				$expand: {
@@ -1356,7 +1363,7 @@ const getApplicationModel = function (
 			} as const;
 
 			const application = (await exports.get(
-				slugOrId,
+				slugOrUuidOrId,
 				appOptions,
 			)) as PineTypedResult<Application, typeof appOptions>;
 			const body: SubmitBody<Application> = {
@@ -1380,7 +1387,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1394,8 +1401,10 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		enableDeviceUrls: async (slugOrId: string | number): Promise<void> => {
-			const { id } = await exports.get(slugOrId, { $select: 'id' });
+		enableDeviceUrls: async (
+			slugOrUuidOrId: string | number,
+		): Promise<void> => {
+			const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 			await pine.patch<Device>({
 				resource: 'device',
 				body: {
@@ -1416,7 +1425,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1430,8 +1439,10 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		disableDeviceUrls: async (slugOrId: string | number): Promise<void> => {
-			const { id } = await exports.get(slugOrId, { $select: 'id' });
+		disableDeviceUrls: async (
+			slugOrUuidOrId: string | number,
+		): Promise<void> => {
+			const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 			await pine.patch<Device>({
 				resource: 'device',
 				body: {
@@ -1452,7 +1463,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 		 * @returns {Promise}
 		 *
@@ -1468,7 +1479,7 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async grantSupportAccess(
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			expiryTimestamp: number,
 		): Promise<void> {
 			if (expiryTimestamp == null || expiryTimestamp <= Date.now()) {
@@ -1479,7 +1490,7 @@ const getApplicationModel = function (
 			}
 
 			try {
-				const applicationId = await getId(slugOrId);
+				const applicationId = await getId(slugOrUuidOrId);
 				await pine.patch({
 					resource: 'application',
 					id: applicationId,
@@ -1487,7 +1498,7 @@ const getApplicationModel = function (
 				});
 			} catch (err) {
 				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrId, err);
+					treatAsMissingApplication(slugOrUuidOrId, err);
 				}
 				throw err;
 			}
@@ -1500,7 +1511,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1514,9 +1525,11 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		revokeSupportAccess: async (slugOrId: string | number): Promise<void> => {
+		revokeSupportAccess: async (
+			slugOrUuidOrId: string | number,
+		): Promise<void> => {
 			try {
-				const applicationId = await getId(slugOrId);
+				const applicationId = await getId(slugOrUuidOrId);
 				await pine.patch({
 					resource: 'application',
 					id: applicationId,
@@ -1524,7 +1537,7 @@ const getApplicationModel = function (
 				});
 			} catch (err) {
 				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrId, err);
+					treatAsMissingApplication(slugOrUuidOrId, err);
 				}
 				throw err;
 			}
@@ -1542,7 +1555,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.tags
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application tags
 			 * @returns {Promise}
@@ -1596,7 +1609,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.tags
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} tagKey - tag key
 			 * @param {String|undefined} value - tag value
 			 *
@@ -1622,7 +1635,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.tags
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} tagKey - tag key
 			 * @returns {Promise}
 			 *
@@ -1649,7 +1662,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application config variables
 			 * @returns {Promise}
@@ -1679,7 +1692,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - config variable name
 			 * @fulfil {String|undefined} - the config variable value (or undefined)
 			 * @returns {Promise}
@@ -1709,7 +1722,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - config variable name
 			 * @param {String} value - config variable value
 			 * @returns {Promise}
@@ -1739,7 +1752,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.configVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - config variable name
 			 * @returns {Promise}
 			 *
@@ -1774,7 +1787,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application environment variables
 			 * @returns {Promise}
@@ -1804,7 +1817,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - environment variable name
 			 * @fulfil {String|undefined} - the environment variable value (or undefined)
 			 * @returns {Promise}
@@ -1834,7 +1847,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - environment variable name
 			 * @param {String} value - environment variable value
 			 * @returns {Promise}
@@ -1864,7 +1877,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.envVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - environment variable name
 			 * @returns {Promise}
 			 *
@@ -1899,7 +1912,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - application build environment variables
 			 * @returns {Promise}
@@ -1929,7 +1942,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - build environment variable name
 			 * @fulfil {String|undefined} - the build environment variable value (or undefined)
 			 * @returns {Promise}
@@ -1959,7 +1972,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - build environment variable name
 			 * @param {String} value - build environment variable value
 			 * @returns {Promise}
@@ -1989,7 +2002,7 @@ const getApplicationModel = function (
 			 * @function
 			 * @memberof balena.models.application.buildVar
 			 *
-			 * @param {String|Number} slugOrId - application slug (string) or id (number)
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 			 * @param {String} key - build environment variable name
 			 * @returns {Promise}
 			 *

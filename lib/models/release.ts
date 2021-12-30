@@ -246,7 +246,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} slugOrId - application slug (string) or id (number)
+	 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object[]} - releases
 	 * @returns {Promise}
@@ -268,10 +268,10 @@ const getReleaseModel = function (
 	 * });
 	 */
 	async function getAllByApplication(
-		slugOrId: string | number,
+		slugOrUuidOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release[]> {
-		const { id } = await applicationModel().get(slugOrId, {
+		const { id } = await applicationModel().get(slugOrUuidOrId, {
 			$select: 'id',
 		});
 		return await pine.get({
@@ -295,7 +295,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} slugOrId - application slug (string) or id (number)
+	 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object|undefined} - release
 	 * @returns {Promise}
@@ -317,11 +317,11 @@ const getReleaseModel = function (
 	 * });
 	 */
 	async function getLatestByApplication(
-		slugOrId: string | number,
+		slugOrUuidOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release | undefined> {
 		const [release] = await getAllByApplication(
-			slugOrId,
+			slugOrUuidOrId,
 			mergePineOptions(
 				{
 					$top: 1,
@@ -342,7 +342,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} slugOrId - application slug (string) or id (number)
+	 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 	 * @param {Object} urlDeployOptions - builder options
 	 * @param {String} urlDeployOptions.url - a url with a tarball of the project to build
 	 * @param {Boolean} [urlDeployOptions.shouldFlatten=true] - Should be true when the tarball includes an extra root folder with all the content
@@ -366,7 +366,7 @@ const getReleaseModel = function (
 	 * });
 	 */
 	async function createFromUrl(
-		slugOrId: string | number,
+		slugOrUuidOrId: string | number,
 		urlDeployOptions: BuilderUrlDeployOptions,
 	): Promise<number> {
 		const appOptions = {
@@ -379,7 +379,7 @@ const getReleaseModel = function (
 		} as const;
 
 		const { app_name, organization } = (await applicationModel().get(
-			slugOrId,
+			slugOrUuidOrId,
 			appOptions,
 		)) as PineTypedResult<Application, typeof appOptions>;
 		return await builderHelper().buildFromUrl(
@@ -513,7 +513,7 @@ const getReleaseModel = function (
 		 * @function
 		 * @memberof balena.models.release.tags
 		 *
-		 * @param {String|Number} slugOrId - application slug (string) or id (number)
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release tags
 		 * @returns {Promise}
@@ -535,10 +535,10 @@ const getReleaseModel = function (
 		 * });
 		 */
 		async getAllByApplication(
-			slugOrId: string | number,
+			slugOrUuidOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
-			const { id } = await applicationModel().get(slugOrId, {
+			const { id } = await applicationModel().get(slugOrUuidOrId, {
 				$select: 'id',
 			});
 			return await tagsModel.getAll(

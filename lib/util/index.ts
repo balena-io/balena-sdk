@@ -60,10 +60,10 @@ export const treatAsMissingOrganization = (
 };
 
 export const treatAsMissingApplication = (
-	slugOrId: string | number,
+	slugOrUuidOrId: string | number,
 	err: Error,
 ) => {
-	const replacementErr = new errors.BalenaApplicationNotFound(slugOrId);
+	const replacementErr = new errors.BalenaApplicationNotFound(slugOrUuidOrId);
 	replacementErr.stack = err.stack || '';
 	throw replacementErr;
 };

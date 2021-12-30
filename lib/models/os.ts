@@ -744,7 +744,7 @@ const getOsModel = function (
 	 * Note that an OS version is required. For versions < 2.7.8, config
 	 * generation is only supported when using a session token, not an API key.
 	 *
-	 * @param {String|Number} slugOrId - application slug (string) or id (number).
+	 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number).
 	 * @param {Object} options - OS configuration options to use.
 	 * @param {String} options.version - Required: the OS version of the image.
 	 * @param {String} [options.network='ethernet'] - The network type that
@@ -778,7 +778,7 @@ const getOsModel = function (
 	 * });
 	 */
 	const getConfig = async function (
-		slugOrId: string | number,
+		slugOrUuidOrId: string | number,
 		options: ImgConfigOptions,
 	): Promise<object> {
 		if (!options?.version) {
@@ -788,7 +788,7 @@ const getOsModel = function (
 		options.network = options.network ?? 'ethernet';
 
 		try {
-			const applicationId = await applicationModel()._getId(slugOrId);
+			const applicationId = await applicationModel()._getId(slugOrUuidOrId);
 
 			const { body } = await request.send({
 				method: 'POST',
@@ -802,7 +802,7 @@ const getOsModel = function (
 			return body;
 		} catch (err) {
 			if (isNotFoundResponse(err)) {
-				treatAsMissingApplication(slugOrId, err);
+				treatAsMissingApplication(slugOrUuidOrId, err);
 			}
 			throw err;
 		}
