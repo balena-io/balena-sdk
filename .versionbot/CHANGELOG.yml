@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Convert auth spec to async await'
+      hash: d78a82337a8c2948084f4fc77382d38475885411
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.11.2
+  date: 2021-12-30T19:00:54.994Z
+- commits:
     - subject: Fix buggy tests causing flakiness on node 16
       hash: 2486c98537ad06c1a63b39157712a5ca81d5d6ea
       body: ''
