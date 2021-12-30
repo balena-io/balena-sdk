@@ -1364,15 +1364,15 @@ const getDeviceModel = function (
 		},
 
 		/**
-		 * @summary Get a device manifest by slug
+		 * @summary Get a device type manifest by slug
 		 * @name getManifestBySlug
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
 		 *
 		 * @deprecated use balena.models.deviceType.getBySlugOrName
-		 * @param {String} slugOrName - device slug
-		 * @fulfil {Object} - device manifest
+		 * @param {String} slugOrName - device type slug
+		 * @fulfil {Object} - device type manifest
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1388,19 +1388,9 @@ const getDeviceModel = function (
 		 */
 		getManifestBySlug: async (
 			slugOrName: string,
-		): Promise<DeviceTypeJson.DeviceType> => {
-			const deviceTypes = await configModel().getDeviceTypes();
-			const deviceManifest = deviceTypes.find(
-				(deviceType) =>
-					deviceType.name === slugOrName ||
-					deviceType.slug === slugOrName ||
-					deviceType.aliases?.includes(slugOrName),
-			);
-			if (deviceManifest == null) {
-				throw new errors.BalenaInvalidDeviceType(slugOrName);
-			}
-			return deviceManifest;
-		},
+		): Promise<DeviceTypeJson.DeviceType> =>
+			// TODO: Drop in the next major
+			configModel().getDeviceTypeManifestBySlug(slugOrName),
 
 		// TODO: Drop in the next major
 		/**
@@ -1443,7 +1433,9 @@ const getDeviceModel = function (
 				slugOrUuidOrId,
 				applicationOptions,
 			)) as PineTypedResult<Application, typeof applicationOptions>;
-			return await exports.getManifestBySlug(app.is_for__device_type[0].slug);
+			return await configModel().getDeviceTypeManifestBySlug(
+				app.is_for__device_type[0].slug,
+			);
 		},
 
 		/**

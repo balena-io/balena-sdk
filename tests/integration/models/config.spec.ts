@@ -127,6 +127,31 @@ describe('Config Model', function () {
 		});
 	});
 
+	parallel('balena.models.config.getDeviceTypeManifestBySlug()', function () {
+		it('should become the manifest if the slug is valid', async () => {
+			const manifest = await balena.models.config.getDeviceTypeManifestBySlug(
+				'raspberry-pi',
+			);
+			expect(_.isPlainObject(manifest)).to.be.true;
+			expect(manifest.slug).to.exist;
+			expect(manifest.name).to.exist;
+			return expect(manifest.options).to.exist;
+		});
+
+		it('should be rejected if the device slug is invalid', function () {
+			const promise =
+				balena.models.config.getDeviceTypeManifestBySlug('foobar');
+			return expect(promise).to.be.rejectedWith('Invalid device type: foobar');
+		});
+
+		it('should become the manifest given a device type alias', async () => {
+			const manifest = await balena.models.config.getDeviceTypeManifestBySlug(
+				'raspberrypi',
+			);
+			return expect(manifest.slug).to.equal('raspberry-pi');
+		});
+	});
+
 	describe('balena.models.config.getConfigVarSchema()', function () {
 		it('Fetching config var schema without deviceType', async function () {
 			const result = await balena.models.config.getConfigVarSchema();
