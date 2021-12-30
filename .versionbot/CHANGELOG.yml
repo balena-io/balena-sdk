@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'appveyor: Add test node 14 & node 16 test runners'
+      hash: 832c516d5eb821fe4bf07a50a4e827a29d299aa9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.11.3
+  date: 2021-12-30T19:53:52.845Z
+- commits:
     - subject: 'tests: Convert auth spec to async await'
       hash: d78a82337a8c2948084f4fc77382d38475885411
       body: ''
