@@ -58,8 +58,8 @@ const getApplicationModel = function (
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
 
-	const deviceModel = once(() =>
-		(require('./device') as typeof import('./device')).default(deps, opts),
+	const configModel = once(() =>
+		(require('./config') as typeof import('./config')).default(deps, opts),
 	);
 	const releaseModel = once(() =>
 		(require('./release') as typeof import('./release')).default(deps, opts),
@@ -699,8 +699,8 @@ const getApplicationModel = function (
 				? exports.get(parent, { $select: ['id'] })
 				: undefined;
 
-			const deviceTypeIdPromise = deviceModel()
-				.getManifestBySlug(deviceType)
+			const deviceTypeIdPromise = configModel()
+				.getDeviceTypeManifestBySlug(deviceType)
 				.then(async function ({ slug: deviceTypeSlug }) {
 					if (deviceTypeSlug == null) {
 						throw new errors.BalenaInvalidDeviceType(deviceType);

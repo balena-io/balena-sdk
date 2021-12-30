@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+import * as errors from 'balena-errors';
 import type { JSONSchema6 } from 'json-schema';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import type * as DeviceTypeJson from '../types/device-type-json';
@@ -63,7 +63,6 @@ export interface GaConfig {
 	id: string;
 }
 
-import once = require('lodash/once');
 import union = require('lodash/union');
 
 const getConfigModel = function (
@@ -72,10 +71,6 @@ const getConfigModel = function (
 ) {
 	const { request } = deps;
 	const { apiUrl } = opts;
-
-	const deviceModel = once(() =>
-		(require('./device') as typeof import('./device')).default(deps, opts),
-	);
 
 	const normalizeDeviceTypes = (
 		deviceTypes: DeviceTypeJson.DeviceType[], // Patch device types to be marked as ALPHA and BETA instead
@@ -170,6 +165,45 @@ const getConfigModel = function (
 		},
 
 		/**
+		 * @summary Get a device type manifest by slug
+		 * @name getDeviceTypeManifestBySlug
+		 * @public
+		 * @function
+		 * @memberof balena.models.config
+		 *
+		 * @deprecated use balena.models.deviceType.getBySlugOrName
+		 * @param {String} slugOrName - device type slug
+		 * @fulfil {Object} - device type manifest
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi').then(function(manifest) {
+		 * 	console.log(manifest);
+		 * });
+		 *
+		 * @example
+		 * balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi', function(error, manifest) {
+		 * 	if (error) throw error;
+		 * 	console.log(manifest);
+		 * });
+		 */
+		getDeviceTypeManifestBySlug: async (
+			slugOrName: string,
+		): Promise<DeviceTypeJson.DeviceType> => {
+			const deviceTypes = await exports.getDeviceTypes();
+			const deviceManifest = deviceTypes.find(
+				(deviceType) =>
+					deviceType.name === slugOrName ||
+					deviceType.slug === slugOrName ||
+					deviceType.aliases?.includes(slugOrName),
+			);
+			if (deviceManifest == null) {
+				throw new errors.BalenaInvalidDeviceType(slugOrName);
+			}
+			return deviceManifest;
+		},
+
+		/**
 		 * @summary Get configuration/initialization options for a device type
 		 * @name getDeviceOptions
 		 * @public
@@ -199,7 +233,7 @@ const getConfigModel = function (
 				| DeviceTypeJson.DeviceInitializationOptions
 			>
 		> => {
-			const manifest = await deviceModel().getManifestBySlug(deviceType);
+			const manifest = await exports.getDeviceTypeManifestBySlug(deviceType);
 			return union<
 				| DeviceTypeJson.DeviceTypeOptions
 				| DeviceTypeJson.DeviceInitializationOptions

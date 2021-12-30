@@ -216,7 +216,7 @@ const sdk = fromSharedOptions();
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-            * [.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+            * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
             * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -309,6 +309,7 @@ const sdk = fromSharedOptions();
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
+            * ~~[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code>~~
             * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
             * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
         * [.release](#balena.models.release) : <code>object</code>
@@ -591,7 +592,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-        * [.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+        * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
         * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -684,6 +685,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
+        * ~~[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code>~~
         * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
     * [.release](#balena.models.release) : <code>object</code>
@@ -2492,7 +2494,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-    * [.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+    * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
     * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -3920,13 +3922,13 @@ balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) 
 ***Deprecated***
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get a device manifest by slug  
+**Summary**: Get a device type manifest by slug  
 **Access**: public  
-**Fulfil**: <code>Object</code> - device manifest  
+**Fulfil**: <code>Object</code> - device type manifest  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrName | <code>String</code> | device slug |
+| slugOrName | <code>String</code> | device type slug |
 
 **Example**  
 ```js
@@ -3943,7 +3945,9 @@ balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest)
 ```
 <a name="balena.models.device.getManifestByApplication"></a>
 
-##### device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>
+##### ~~device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by application name  
 **Access**: public  
@@ -6354,6 +6358,7 @@ console.log(result2);
 * [.config](#balena.models.config) : <code>object</code>
     * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
     * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
+    * ~~[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code>~~
     * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
 
@@ -6398,6 +6403,33 @@ balena.models.config.getDeviceTypes(function(error, deviceTypes) {
 	if (error) throw error;
 	console.log(deviceTypes);
 })
+```
+<a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
+
+##### ~~config.getDeviceTypeManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+**Kind**: static method of [<code>config</code>](#balena.models.config)  
+**Summary**: Get a device type manifest by slug  
+**Access**: public  
+**Fulfil**: <code>Object</code> - device type manifest  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| slugOrName | <code>String</code> | device type slug |
+
+**Example**  
+```js
+balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi').then(function(manifest) {
+	console.log(manifest);
+});
+```
+**Example**  
+```js
+balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi', function(error, manifest) {
+	if (error) throw error;
+	console.log(manifest);
+});
 ```
 <a name="balena.models.config.getDeviceOptions"></a>
 
