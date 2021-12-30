@@ -24,9 +24,16 @@ const resetOrganizationInvites = async (orgId: number) => {
 describe('Organization Invite Model', function () {
 	timeSuite(before);
 	describe('When user is logged out', function () {
+		before(() => balena.auth.logout());
 		describe('balena.models.organization.invite.getAllByOrganization()', function () {
-			const promise = balena.models.organization.invite.getAllByOrganization(1);
-			return expect(promise).to.be.rejectedWith('UnAuthorized');
+			it('should be rejected with an unauthorized error', async () => {
+				const promise =
+					balena.models.organization.invite.getAllByOrganization(1);
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
+			});
 		});
 	});
 
