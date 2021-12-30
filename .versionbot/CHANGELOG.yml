@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'application.get: Add support for retrieving applications by uuid'
+      hash: 3374abeed77a93fd05a2363eac125bdf55b246b8
+      body: ''
+      footer:
+        Resolves: '#1016'
+        resolves: '#1016'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'package.json: Rename the lint-fix npm script to lint:fix'
+      hash: 4acbde69c5c1d35727aaff1b825a8f9e011b4372
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.10.0
+  date: 2021-12-30T13:29:33.515Z
+- commits:
     - subject: 'os: Avoid mutating the args in getAvailableOsVersions & getAllOsVersion'
       hash: 398f0b75da0a6d12fbee5ca0cfa92559cf2364aa
       body: ''
