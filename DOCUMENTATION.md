@@ -216,7 +216,7 @@ const sdk = fromSharedOptions();
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-            * [.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+            * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
             * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -591,7 +591,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-        * [.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+        * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
         * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -2492,7 +2492,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-    * [.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+    * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
     * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -3943,7 +3943,9 @@ balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest)
 ```
 <a name="balena.models.device.getManifestByApplication"></a>
 
-##### device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>
+##### ~~device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by application name  
 **Access**: public  

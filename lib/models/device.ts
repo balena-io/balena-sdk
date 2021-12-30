@@ -1402,6 +1402,7 @@ const getDeviceModel = function (
 			return deviceManifest;
 		},
 
+		// TODO: Drop in the next major
 		/**
 		 * @summary Get a device manifest by application name
 		 * @name getManifestByApplication
@@ -1409,6 +1410,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated use balena.models.application.get & balena.models.deviceType.getBySlugOrName
 		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @fulfil {Object} - device manifest
 		 * @returns {Promise}
