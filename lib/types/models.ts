@@ -29,6 +29,7 @@ export interface ResourceTypeMap {
 	device_service_environment_variable: DeviceServiceEnvironmentVariable;
 	device_tag: DeviceTag;
 	device_type: DeviceType;
+	device_type_alias: DeviceTypeAlias;
 	feature: Feature;
 	gateway_download: GatewayDownload;
 	image: Image;
@@ -432,6 +433,13 @@ export interface DeviceType {
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
 	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
 	describes_device: ReverseNavigationResource<Device>;
+	device_type_alias: ReverseNavigationResource<DeviceTypeAlias>;
+}
+
+export interface DeviceTypeAlias {
+	id: number;
+	is_referenced_by__alias: string;
+	references__device_type: NavigationResource<DeviceType>;
 }
 
 export interface DeviceFamily {

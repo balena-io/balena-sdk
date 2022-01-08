@@ -25,6 +25,7 @@ import type {
 	ApplicationVariable,
 	BuildVariable,
 	Device,
+	DeviceType,
 } from '..';
 import type {
 	CurrentServiceWithCommit,
@@ -58,8 +59,8 @@ const getApplicationModel = function (
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
 
-	const configModel = once(() =>
-		(require('./config') as typeof import('./config')).default(deps, opts),
+	const deviceTypeModel = once(() =>
+		(require('./device-type') as typeof import('./device-type')).default(deps),
 	);
 	const releaseModel = once(() =>
 		(require('./release') as typeof import('./release')).default(deps, opts),
@@ -699,46 +700,33 @@ const getApplicationModel = function (
 				? exports.get(parent, { $select: ['id'] })
 				: undefined;
 
-			const deviceTypeIdPromise = configModel()
-				.getDeviceTypeManifestBySlug(deviceType)
-				.then(async function ({ slug: deviceTypeSlug }) {
-					if (deviceTypeSlug == null) {
-						throw new errors.BalenaInvalidDeviceType(deviceType);
-					}
-
-					const dt = await pine.get({
-						resource: 'device_type',
-						id: {
-							// this way we get the un-aliased device type slug
-							slug: deviceTypeSlug,
-						},
-						options: {
-							$select: 'id',
-							$expand: {
-								is_default_for__application: {
-									$select: 'is_archived',
-									$filter: {
-										is_host: true,
-									},
-								},
+			const deviceTypeIdPromise = (async () => {
+				const deviceTypeOptions = {
+					$select: 'id',
+					$expand: {
+						is_default_for__application: {
+							$select: 'is_archived',
+							$filter: {
+								is_host: true,
 							},
 						},
-					});
-					if (dt == null) {
-						throw new errors.BalenaInvalidDeviceType(deviceType);
-					}
-
-					const hostApps = dt.is_default_for__application;
-					// TODO: We are now checking whether all returned hostApps are marked as archived so that we
-					// do not break open-balena. Once open-balena gets hostApps, we can change this to just a $filter on is_archived.
-					if (
-						hostApps.length > 0 &&
-						hostApps.every((hostApp) => hostApp.is_archived)
-					) {
-						throw new errors.BalenaDiscontinuedDeviceType(deviceType);
-					}
-					return dt.id;
-				});
+					},
+				} as const;
+				const dt = (await deviceTypeModel().get(
+					deviceType,
+					deviceTypeOptions,
+				)) as PineTypedResult<DeviceType, typeof deviceTypeOptions>;
+				const hostApps = dt.is_default_for__application;
+				// TODO: We are now checking whether all returned hostApps are marked as archived so that we
+				// do not break open-balena. Once open-balena gets hostApps, we can change this to just a $filter on is_archived.
+				if (
+					hostApps.length > 0 &&
+					hostApps.every((hostApp) => hostApp.is_archived)
+				) {
+					throw new errors.BalenaDiscontinuedDeviceType(deviceType);
+				}
+				return dt.id;
+			})();
 
 			const organizationPromise = pine
 				.get({

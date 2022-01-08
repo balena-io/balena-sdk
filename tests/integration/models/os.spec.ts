@@ -19,7 +19,7 @@ const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
 	expect(promise).to.eventually.have.property(prop);
 
 const {
-	_getDeviceTypes,
+	_getNormalizedDeviceTypeSlug,
 	_getDownloadSize,
 	_getMaxSatisfyingVersion,
 	_clearDeviceTypesAndOsVersionCaches,
@@ -74,10 +74,8 @@ const itShouldClear = {
 		() => balena.models.os.getAvailableOsVersions('raspberry-pi'),
 	),
 	getDeviceTypesCache: itShouldClearMethodCacheFactory(
-		'balena.models.os._getDeviceTypes()',
-		() => _getDeviceTypes(),
-		// the endpoint doesn't sort the device types atm
-		(dtArray) => dtArray.sort((a, b) => a.slug.localeCompare(b.slug)),
+		'balena.models.os._getNormalizedDeviceTypeSlug()',
+		() => _getNormalizedDeviceTypeSlug('raspberrypi'),
 	),
 	getDownloadSizeCache: itShouldClearMethodCacheFactory(
 		'balena.models.os._getDownloadSize()',
@@ -544,16 +542,16 @@ describe('OS model', function () {
 		});
 	});
 
-	describe('balena.models.os._getDeviceTypes()', function () {
-		it('should cache the results', function () {
-			const p1 = _getDeviceTypes();
-			return p1.then(function (result1) {
-				const p2 = _getDeviceTypes();
-				return p2.then(function (result2) {
-					expect(result1).to.equal(result2);
-					expect(p1).to.equal(p2);
-				});
-			});
+	describe('balena.models.os._getNormalizedDeviceTypeSlug()', function () {
+		it('should cache the results', async function () {
+			const p1 = _getNormalizedDeviceTypeSlug('raspberrypi');
+			const p2 = _getNormalizedDeviceTypeSlug('raspberrypi');
+			expect(p1).to.equal(p2);
+			// wait for the promises to resolve before starting the new request
+			await p1;
+			await p2;
+			const p3 = _getNormalizedDeviceTypeSlug('raspberrypi');
+			expect(p1).to.equal(p3);
 		});
 
 		describeCacheInvalidationChanges(itShouldClear.getDeviceTypesCache);
@@ -610,7 +608,9 @@ describe('OS model', function () {
 		describe('given an invalid device slug', () =>
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.getDownloadSize('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith('No such device type');
+				return expect(promise).to.be.rejectedWith(
+					'Invalid device type: foo-bar-baz',
+				);
 			}));
 	});
 
@@ -674,7 +674,9 @@ describe('OS model', function () {
 		describe('given an invalid device slug', () =>
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.getLastModified('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith('No such device type');
+				return expect(promise).to.be.rejectedWith(
+					'Invalid device type: foo-bar-baz',
+				);
 			}));
 	});
 
@@ -717,7 +719,9 @@ describe('OS model', function () {
 		describe('given an invalid device slug', () =>
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.download('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith('No such device type');
+				return expect(promise).to.be.rejectedWith(
+					'Invalid device type: foo-bar-baz',
+				);
 			}));
 	});
 
@@ -729,7 +733,9 @@ describe('OS model', function () {
 					'2.0.0+rev1.prod',
 					'2.29.2+rev1.prod',
 				);
-				return expect(promise).to.be.rejectedWith('No such device type');
+				return expect(promise).to.be.rejectedWith(
+					'Invalid device type: foo-bar-baz',
+				);
 			}));
 
 		describe('given a valid device slug', function () {
@@ -801,7 +807,9 @@ describe('OS model', function () {
 					'foo-bar-baz',
 					'2.9.6+rev1.prod',
 				);
-				return expect(promise).to.be.rejectedWith('No such device type');
+				return expect(promise).to.be.rejectedWith(
+					'Invalid device type: foo-bar-baz',
+				);
 			}));
 
 		describe('given a valid device slug', () =>

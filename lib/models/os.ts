@@ -25,7 +25,6 @@ import {
 } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type { Dictionary, ResolvableReturnType } from '../../typings/utils';
-import type * as DeviceTypeJson from '../types/device-type-json';
 import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
 import type {
 	InjectedDependenciesParam,
@@ -112,14 +111,14 @@ const getOsModel = function (
 	const { pine, request, pubsub } = deps;
 	const { apiUrl, isBrowser } = opts;
 
-	const configModel = once(() =>
-		(require('./config') as typeof import('./config')).default(deps, opts),
-	);
 	const applicationModel = once(() =>
 		(require('./application') as typeof import('./application')).default(
 			deps,
 			opts,
 		),
+	);
+	const deviceTypeModel = once(() =>
+		(require('./device-type') as typeof import('./device-type')).default(deps),
 	);
 	const deviceTypesUtils = once(
 		// Hopefully TS 3.9 will allow us to drop this type cast
@@ -436,21 +435,21 @@ const getOsModel = function (
 	}
 
 	/**
-	 * @summary Get device types with caching
+	 * @summary Resolve the canonical device type slug
 	 * @description Utility method exported for testability.
-	 * @name _getDeviceTypes
+	 * @name _getNormalizedDeviceTypeSlug
 	 * @private
 	 * @function
 	 * @memberof balena.models.os
 	 */
-	const _getDeviceTypes = authDependentMemoizer<
-		() => Promise<DeviceTypeJson.DeviceType[]>
-	>(() => configModel().getDeviceTypes());
-
-	const getNormalizedDeviceTypeSlug = async (deviceTypeSlug: string) => {
-		const types = await _getDeviceTypes();
-		return deviceTypesUtils().getBySlug(types, deviceTypeSlug).slug;
-	};
+	const _getNormalizedDeviceTypeSlug = authDependentMemoizer(
+		async (deviceTypeSlug: string) => {
+			const dt = await deviceTypeModel().get(deviceTypeSlug, {
+				$select: 'slug',
+			});
+			return dt.slug;
+		},
+	);
 
 	/**
 	 * @summary Get OS versions download size
@@ -480,7 +479,7 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 */
 	const _clearDeviceTypesAndOsVersionCaches = () => {
-		_getDeviceTypes.clear();
+		_getNormalizedDeviceTypeSlug.clear();
 		_getDownloadSize.clear();
 		_memoizedGetAllOsVersions.clear();
 	};
@@ -565,7 +564,7 @@ const getOsModel = function (
 		deviceType: string,
 		version: string = 'latest',
 	): Promise<number> {
-		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
+		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		return await _getDownloadSize(deviceType, version);
 	};
 
@@ -606,7 +605,7 @@ const getOsModel = function (
 		versionOrRange: string = 'latest',
 		osType?: 'default' | 'esr',
 	): Promise<string | null> {
-		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
+		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		let osVersions = await getAvailableOsVersions(deviceType);
 		if (osType != null) {
 			osVersions = osVersions.filter((v) => v.osType === osType);
@@ -648,7 +647,7 @@ const getOsModel = function (
 		version: string = 'latest',
 	): Promise<Date> {
 		try {
-			deviceType = await getNormalizedDeviceTypeSlug(deviceType);
+			deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 			version = normalizeVersion(version);
 			const response = await request.send({
 				method: 'HEAD',
@@ -701,7 +700,7 @@ const getOsModel = function (
 		options: { developmentMode?: boolean } = {},
 	): Promise<BalenaRequestStreamResult> {
 		try {
-			const slug = await getNormalizedDeviceTypeSlug(deviceType);
+			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
 				const versions = (await getAvailableOsVersions(slug)).filter(
 					(v) => v.osType === OsTypes.DEFAULT,
@@ -836,7 +835,7 @@ const getOsModel = function (
 		currentVersion: string,
 		targetVersion: string,
 	): Promise<boolean> => {
-		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
+		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		return hupActionHelper().isSupportedOsUpdate(
 			deviceType,
 			currentVersion,
@@ -875,7 +874,7 @@ const getOsModel = function (
 		deviceType: string,
 		currentVersion: string,
 	): Promise<OsUpdateVersions> => {
-		deviceType = await getNormalizedDeviceTypeSlug(deviceType);
+		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		const allVersions = (await getAvailableOsVersions(deviceType))
 			.filter((v) => v.osType === OsTypes.DEFAULT)
 			.map((v) => v.rawVersion);
@@ -927,7 +926,7 @@ const getOsModel = function (
 	};
 
 	return {
-		_getDeviceTypes,
+		_getNormalizedDeviceTypeSlug,
 		_getDownloadSize,
 		_clearDeviceTypesAndOsVersionCaches,
 		_getMaxSatisfyingVersion,

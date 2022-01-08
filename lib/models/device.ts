@@ -86,7 +86,7 @@ import type {
 	SelectableProps,
 } from '../../typings/pinejs-client-core';
 import type { AtLeast } from '../../typings/utils';
-import type { DeviceType } from '../types/device-type-json';
+import type { DeviceType } from '../types/models';
 
 const MIN_OS_MC = '2.12.0';
 const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
@@ -1230,37 +1230,50 @@ const getDeviceModel = function (
 			applicationSlugOrUuidOrId: string | number,
 		): Promise<void> => {
 			const deviceOptions = {
-				$select: 'uuid',
-				$expand: { is_of__device_type: { $select: 'slug' } },
+				$select: toWritable(['uuid', 'is_managed_by__device'] as const),
+				$expand: {
+					is_of__device_type: {
+						$select: 'is_of__cpu_architecture',
+						$expand: {
+							is_of__cpu_architecture: {
+								$select: 'slug',
+							},
+						},
+					},
+				},
 			} as const;
 
 			const applicationOptions = {
-				$select: 'id',
-				$expand: { is_for__device_type: { $select: 'slug' } },
+				$select: toWritable(['id', 'depends_on__application'] as const),
+				$expand: {
+					is_for__device_type: {
+						$select: 'is_of__cpu_architecture',
+						$expand: {
+							is_of__cpu_architecture: {
+								$select: 'slug',
+							},
+						},
+					},
+				},
 			} as const;
 
-			const [device, deviceTypes, application] = await Promise.all([
+			const [device, application] = await Promise.all([
 				exports.get(uuidOrId, deviceOptions) as Promise<
 					PineTypedResult<Device, typeof deviceOptions>
 				>,
-				configModel().getDeviceTypes(),
 				applicationModel().get(
 					applicationSlugOrUuidOrId,
 					applicationOptions,
 				) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
 			]);
-			const osDeviceType = deviceTypesUtils().getBySlug(
-				deviceTypes,
-				device.is_of__device_type[0].slug,
-			);
-			const targetAppDeviceType = deviceTypesUtils().getBySlug(
-				deviceTypes,
-				application.is_for__device_type[0].slug,
-			);
-			const isCompatibleMove = deviceTypesUtils().isDeviceTypeCompatibleWith(
-				osDeviceType,
-				targetAppDeviceType,
-			);
+
+			const isCompatibleMove =
+				deviceTypesUtils().isOsArchitectureCompatibleWith(
+					device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
+					application.is_for__device_type[0].is_of__cpu_architecture[0].slug,
+				) &&
+				(device.is_managed_by__device == null) ===
+					(application.depends_on__application == null);
 			if (!isCompatibleMove) {
 				throw new errors.BalenaInvalidDeviceType(
 					`Incompatible application: ${applicationSlugOrUuidOrId}`,
