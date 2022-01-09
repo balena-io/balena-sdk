@@ -468,9 +468,9 @@ type of error thrown by the SDK.
 **Example**  
 ```js
 balena.models.device.get(123).catch(function (error) {
-  if (error.code === balena.errors.BalenaDeviceNotFound.code) {
+  if (error.code === balena.errors.BalenaDeviceNotFound.prototype.code) {
     ...
-  } else if (error.code === balena.errors.BalenaRequestError.code) {
+  } else if (error.code === balena.errors.BalenaRequestError.prototype.code) {
     ...
   }
 });
