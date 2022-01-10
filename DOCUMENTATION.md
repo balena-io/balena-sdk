@@ -5126,13 +5126,19 @@ This method returns a single device type.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| idOrSlug | <code>String</code> \| <code>Number</code> |  | device type slug (string) or id |
+| idOrSlug | <code>String</code> \| <code>Number</code> |  | device type slug (string) or alias (string) or id |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
 balena.models.deviceType.get('raspberry-pi').then(function(deviceType) {
 	console.log(deviceType);
+});
+```
+**Example**  
+```js
+balena.models.deviceType.get('raspberrypi').then(function(deviceType) {
+	console.log('resolved alias:', deviceType);
 });
 ```
 **Example**  
