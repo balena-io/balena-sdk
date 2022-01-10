@@ -1,4 +1,17 @@
 - commits:
+    - subject: Fix jsdoc example for balena.errors
+      hash: d08f5dbf27ea012ba08195250a476d6562acea2d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+        signed-off-by: Ken Bannister <kb2ma@runbox.com>
+      author: Ken Bannister
+      nested: []
+  version: 16.11.3
+  date: 2022-01-09T15:48:59.741Z
+- commits:
     - subject: 'tests: Convert auth spec to async await'
       hash: d78a82337a8c2948084f4fc77382d38475885411
       body: ''
