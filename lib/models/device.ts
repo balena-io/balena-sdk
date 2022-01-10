@@ -152,10 +152,6 @@ const getDeviceModel = function (
 				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
 			).hupActionHelper,
 	);
-	const deviceTypesUtils = once(
-		() =>
-			require('../util/device-types') as typeof import('../util/device-types'),
-	);
 	const dateUtils = once(
 		() => require('../util/date') as typeof import('../util/date'),
 	);
@@ -1268,7 +1264,7 @@ const getDeviceModel = function (
 			]);
 
 			const isCompatibleMove =
-				deviceTypesUtils().isOsArchitectureCompatibleWith(
+				osModel().isArchitectureCompatibleWith(
 					device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
 					application.is_for__device_type[0].is_of__cpu_architecture[0].slug,
 				) &&

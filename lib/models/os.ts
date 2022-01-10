@@ -104,6 +104,16 @@ const sortVersions = (a: OsVersion, b: OsVersion) => {
 	return bSemver.rcompare(a.rawVersion, b.rawVersion);
 };
 
+/**
+ * device/os architectures that show in the keys are also able to
+ * run app containers compiled for the architectures in the values
+ * @private
+ */
+const archCompatibilityMap: Partial<Dictionary<string[]>> = {
+	aarch64: ['armv7hf', 'rpi'],
+	armv7hf: ['rpi'],
+};
+
 const getOsModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
@@ -119,12 +129,6 @@ const getOsModel = function (
 	);
 	const deviceTypeModel = once(() =>
 		(require('./device-type') as typeof import('./device-type')).default(deps),
-	);
-	const deviceTypesUtils = once(
-		// Hopefully TS 3.9 will allow us to drop this type cast
-		// and infer the types from the require
-		() =>
-			require('../util/device-types') as typeof import('../util/device-types'),
 	);
 	const hupActionHelper = once(
 		() =>
@@ -918,11 +922,16 @@ const getOsModel = function (
 	 * const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
 	 * console.log(result2);
 	 */
-	const isArchitectureCompatibleWith: ReturnType<
-		typeof deviceTypesUtils
-	>['isOsArchitectureCompatibleWith'] = function (...args) {
-		// Wrap with a function so that we can lazy load the deviceTypesUtils
-		return deviceTypesUtils().isOsArchitectureCompatibleWith(...args);
+	const isArchitectureCompatibleWith = (
+		osArchitecture: string,
+		applicationArchitecture: string,
+	): boolean => {
+		const compatibleArches = archCompatibilityMap[osArchitecture];
+		return (
+			osArchitecture === applicationArchitecture ||
+			(Array.isArray(compatibleArches) &&
+				compatibleArches.includes(applicationArchitecture))
+		);
 	};
 
 	return {
