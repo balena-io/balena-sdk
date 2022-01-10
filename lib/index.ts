@@ -434,9 +434,9 @@ export const getSdk = function ($opts?: SdkOptions) {
 	 *
 	 * @example
 	 * balena.models.device.get(123).catch(function (error) {
-	 *   if (error.code === balena.errors.BalenaDeviceNotFound.code) {
+	 *   if (error.code === balena.errors.BalenaDeviceNotFound.prototype.code) {
 	 *     ...
-	 *   } else if (error.code === balena.errors.BalenaRequestError.code) {
+	 *   } else if (error.code === balena.errors.BalenaRequestError.prototype.code) {
 	 *     ...
 	 *   }
 	 * });
