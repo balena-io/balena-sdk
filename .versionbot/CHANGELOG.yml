@@ -1,4 +1,29 @@
 - commits:
+    - subject: Replace DeviceTypeJson usage for alias resolution with model queries
+      hash: 2d049ed50c4e845c8ecf2c27caacd7534a5de704
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'models/device-type: Support aliases as argument of the get() method'
+      hash: 436011248b2877ef032b0d79baff6d96fcdde0c7
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: 'https://github.com/balena-io/balena-api/pull/3493'
+        depends-on: 'https://github.com/balena-io/balena-api/pull/3493'
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.12.0
+  date: 2022-01-10T13:18:58.746Z
+- commits:
     - subject: Fix jsdoc example for balena.errors
       hash: d08f5dbf27ea012ba08195250a476d6562acea2d
       body: ''
