@@ -4,8 +4,9 @@ import { balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
-const DEVICE_TYPE_NAME = 'Raspberry Pi 3';
-const DEVICE_TYPE_SLUG = 'raspberrypi3';
+const DEVICE_TYPE_NAME = 'Raspberry Pi 2';
+const DEVICE_TYPE_SLUG = 'raspberry-pi2';
+const DEVICE_TYPE_ALIAS = 'raspberrypi2';
 const DEVICE_TYPE_ID = 1;
 
 describe('Device Type model', function () {
@@ -43,9 +44,14 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.get()', function () {
-		it(`should get device type by slug`, async function () {
-			const deviceType = await balena.models.deviceType.get(DEVICE_TYPE_SLUG);
-			expect(deviceType).to.have.property('slug', DEVICE_TYPE_SLUG);
+		[
+			{ titlePart: 'slug', value: DEVICE_TYPE_SLUG },
+			{ titlePart: 'alias', value: DEVICE_TYPE_ALIAS },
+		].forEach(({ titlePart, value }) => {
+			it(`should get device type by ${titlePart}`, async function () {
+				const deviceType = await balena.models.deviceType.get(value);
+				expect(deviceType).to.have.property('slug', DEVICE_TYPE_SLUG);
+			});
 		});
 
 		it(`should get device type by id`, async function () {

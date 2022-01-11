@@ -30,7 +30,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * @function
 		 * @memberof balena.models.deviceType
 		 *
-		 * @param {String|Number} idOrSlug - device type slug (string) or id
+		 * @param {String|Number} idOrSlug - device type slug (string) or alias (string) or id
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - device types
 		 * @returns {Promise}
@@ -41,6 +41,11 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * @example
 		 * balena.models.deviceType.get('raspberry-pi').then(function(deviceType) {
 		 * 	console.log(deviceType);
+		 * });
+		 *
+		 * @example
+		 * balena.models.deviceType.get('raspberrypi').then(function(deviceType) {
+		 * 	console.log('resolved alias:', deviceType);
 		 * });
 		 *
 		 * @example
@@ -61,11 +66,37 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 				throw new errors.BalenaInvalidDeviceType(idOrSlug);
 			}
 
-			const deviceType = await pine.get({
-				resource: 'device_type',
-				id: typeof idOrSlug === 'string' ? { slug: idOrSlug } : idOrSlug,
-				options,
-			});
+			let deviceType: DeviceType | undefined;
+			if (typeof idOrSlug === 'string') {
+				deviceType = (
+					await exports.getAll(
+						mergePineOptions(
+							{
+								$top: 1,
+								$filter: {
+									device_type_alias: {
+										$any: {
+											$alias: 'dta',
+											$expr: {
+												dta: {
+													is_referenced_by__alias: idOrSlug,
+												},
+											},
+										},
+									},
+								},
+							},
+							options,
+						),
+					)
+				)[0];
+			} else {
+				deviceType = await pine.get({
+					resource: 'device_type',
+					id: idOrSlug,
+					options,
+				});
+			}
 
 			if (deviceType == null) {
 				throw new errors.BalenaInvalidDeviceType(idOrSlug.toString());
