@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'config.getConfigVarSchema: Send the token only when using a device type'
+      hash: 3a844dcf2f877e428dbc907db79809fed3c8a8bc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.12.1
+  date: 2022-01-17T14:37:28.414Z
+- commits:
     - subject: Replace DeviceTypeJson usage for alias resolution with model queries
       hash: 2d049ed50c4e845c8ecf2c27caacd7534a5de704
       body: ''
