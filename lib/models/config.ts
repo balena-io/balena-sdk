@@ -271,6 +271,7 @@ const getConfigModel = function (
 					typeof deviceType === 'string' ? `?deviceType=${deviceType}` : ''
 				}`,
 				baseUrl: apiUrl,
+				sendToken: typeof deviceType === 'string',
 			});
 			return body;
 		},
