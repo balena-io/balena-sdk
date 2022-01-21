@@ -335,10 +335,8 @@ export interface Release {
 	is_created_by__user: OptionalNavigationResource<User>;
 	belongs_to__application: NavigationResource<Application>;
 
-	contains__image: ReverseNavigationResource<{
-		id: number;
-		image: NavigationResource<Image>;
-	}>;
+	contains__image: ReverseNavigationResource<ReleaseImage>;
+	release_image: ReverseNavigationResource<ReleaseImage>;
 	should_be_running_on__application: ReverseNavigationResource<Application>;
 	is_running_on__device: ReverseNavigationResource<Device>;
 	should_be_running_on__device: ReverseNavigationResource<Device>;
