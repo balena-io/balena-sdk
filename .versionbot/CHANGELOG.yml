@@ -1,4 +1,31 @@
 - commits:
+    - subject: 'models: Deprecate the release.contains__image in favor of the term form'
+      hash: f3eae5575eb5fe46b41d1cebfd852be98b310ab2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: 'models: Add the release_image term form property in the Release typings'
+      hash: c8fe417933df0402bd00be1918de990ae10646f6
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: >-
+          https://www.flowdock.com/app/rulemotion/r-beginners/threads/TDQW8r5EnnQSygJhsPNO9k8moDi
+        see: >-
+          https://www.flowdock.com/app/rulemotion/r-beginners/threads/TDQW8r5EnnQSygJhsPNO9k8moDi
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.13.0
+  date: 2022-01-21T12:36:08.037Z
+- commits:
     - subject: 'config.getConfigVarSchema: Send the token only when using a device type'
       hash: 3a844dcf2f877e428dbc907db79809fed3c8a8bc
       body: ''
