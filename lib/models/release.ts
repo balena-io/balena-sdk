@@ -198,7 +198,7 @@ const getReleaseModel = function (
 
 		const baseReleaseOptions = {
 			$expand: {
-				contains__image: {
+				release_image: {
 					$expand: {
 						image: mergePineOptions(
 							baseImageOptions,
@@ -218,11 +218,11 @@ const getReleaseModel = function (
 		)) as PineTypedResult<Release, typeof baseReleaseOptions>;
 		const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
 
-		// Squash .contains__image[x].image[0] into a simple array
-		const images = rawRelease.contains__image.map(
+		// Squash .release_image[x].image[0] into a simple array
+		const images = rawRelease.release_image.map(
 			(imageJoin) => imageJoin.image[0],
 		);
-		delete release.contains__image;
+		delete release.release_image;
 
 		release.images = images
 			.map(function ({ is_a_build_of__service, ...imageData }) {
