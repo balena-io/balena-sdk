@@ -1,4 +1,19 @@
 - commits:
+    - subject: Deprecate the logoUrl field of the DeviceTypeJson.DeviceType type
+      hash: 8f7b4dff641da965837fcd704853f2c5e09610e3
+      body: ''
+      footer:
+        Resolves: '#1188'
+        resolves: '#1188'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.13.2
+  date: 2022-01-25T23:36:08.348Z
+- commits:
     - subject: Replace internal use of release.contains__image with release_image
       hash: dfa5e737be01efbf54476d05536524ca8d7b1cf8
       body: ''
