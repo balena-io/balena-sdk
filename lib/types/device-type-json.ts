@@ -31,6 +31,7 @@ export interface DeviceType {
 	};
 	/** Holds the latest balenaOS version */
 	buildId?: string;
+	/** @deprecated Use the logo field from the models.deviceType.get() method. */
 	logoUrl?: string;
 }
 
