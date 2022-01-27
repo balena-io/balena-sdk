@@ -149,9 +149,9 @@ interface Lambda<T> {
 		// that are not props of the T
 		// See: https://github.com/balena-io/balena-sdk/issues/714
 		| { 1: number }
-		| { $and: Array<LambdaExpression<T>> }
-		| { $or: Array<LambdaExpression<T>> }
-		| { $not: LambdaExpression<T> };
+		| { $and?: Array<LambdaExpression<T>> }
+		| { $or?: Array<LambdaExpression<T>> }
+		| { $not?: LambdaExpression<T> };
 }
 
 type OrderByValues = 'asc' | 'desc';
