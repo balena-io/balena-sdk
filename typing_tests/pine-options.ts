@@ -694,6 +694,140 @@ export const appOptionsFNullIdValid1: BalenaSdk.PineOptions<BalenaSdk.Applicatio
 		},
 	};
 
+export const imageOptions$orValid1: BalenaSdk.PineOptions<BalenaSdk.Image> = {
+	$filter: {
+		status: 'success',
+		release_image: {
+			$any: {
+				$alias: 'ri',
+				$expr: {
+					ri: {
+						is_part_of__release: {
+							$any: {
+								$alias: 'ipor',
+								$expr: {
+									ipor: {
+										status: 'success',
+										belongs_to__application: {
+											$any: {
+												$alias: 'bta',
+												$expr: {
+													bta: {
+														slug: 'fleetSlug',
+													},
+												},
+											},
+										},
+										should_be_running_on__application: {
+											$any: {
+												$alias: 'sbroa',
+												$expr: {
+													sbroa: {
+														slug: 'fleetSlug',
+													},
+												},
+											},
+										},
+									},
+									$or: [
+										{ ipor: { commit: '50ff99284f6a4a36a70f9c4a2b37650f' } },
+										{ ipor: { semver: '1.2.3', is_final: true } },
+										{
+											ipor: { raw_version: '1.2.3-123456789', is_final: false },
+										},
+									],
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		is_a_build_of__service: {
+			$any: {
+				$alias: 'iabos',
+				$expr: {
+					iabos: {
+						service_name: 'main',
+					},
+				},
+			},
+		},
+	},
+};
+
+export const imageOptionsConditional$orValid1: BalenaSdk.PineOptions<BalenaSdk.Image> =
+	{
+		$filter: {
+			status: 'success',
+			release_image: {
+				$any: {
+					$alias: 'ri',
+					$expr: {
+						ri: {
+							is_part_of__release: {
+								$any: {
+									$alias: 'ipor',
+									$expr: {
+										ipor: {
+											status: 'success',
+											belongs_to__application: {
+												$any: {
+													$alias: 'bta',
+													$expr: {
+														bta: {
+															slug: 'fleetSlug',
+														},
+													},
+												},
+											},
+											should_be_running_on__application: {
+												$any: {
+													$alias: 'sbroa',
+													$expr: {
+														sbroa: {
+															slug: 'fleetSlug',
+														},
+													},
+												},
+											},
+										},
+										...(Math.random() > 0.5 && {
+											$or: [
+												{
+													ipor: { commit: '50ff99284f6a4a36a70f9c4a2b37650f' },
+												},
+												{ ipor: { semver: '1.2.3', is_final: true } },
+												{
+													ipor: {
+														raw_version: '1.2.3-123456789',
+														is_final: false,
+													},
+												},
+											],
+										}),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			...(Math.random() > 0.5 && {
+				is_a_build_of__service: {
+					$any: {
+						$alias: 'iabos',
+						$expr: {
+							iabos: {
+								service_name: 'main',
+							},
+						},
+					},
+				},
+			}),
+		},
+	};
+
 export const appOptionsEFValid1: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
 		$expand: [

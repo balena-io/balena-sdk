@@ -77,6 +77,83 @@ let aString: string;
 	const test: Equals<typeof result, BalenaSdk.Device | undefined> = EqualsTrue;
 })();
 
+(async () => {
+	const fleetSlug = 'fleetSlug';
+	const maybeRelease: string | null = '1.2.3';
+	const maybeService: string | null = 'main';
+	const result = await sdk.pine.get<BalenaSdk.Image>({
+		resource: 'image',
+		options: {
+			$top: 1,
+			$select: 'is_stored_at__image_location',
+			$filter: {
+				status: 'success',
+				release_image: {
+					$any: {
+						$alias: 'ri',
+						$expr: {
+							ri: {
+								is_part_of__release: {
+									$any: {
+										$alias: 'ipor',
+										$expr: {
+											ipor: {
+												status: 'success' as const,
+												belongs_to__application: {
+													$any: {
+														$alias: 'bta',
+														$expr: {
+															bta: {
+																slug: fleetSlug,
+															},
+														},
+													},
+												},
+												...(maybeRelease == null && {
+													should_be_running_on__application: {
+														$any: {
+															$alias: 'sbroa',
+															$expr: {
+																sbroa: {
+																	slug: fleetSlug,
+																},
+															},
+														},
+													},
+												}),
+											},
+											$or: [
+												{ ipor: { commit: maybeRelease } },
+												{ ipor: { semver: maybeRelease, is_final: true } },
+												{
+													ipor: { raw_version: maybeRelease, is_final: false },
+												},
+											],
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				...(maybeService != null && {
+					is_a_build_of__service: {
+						$any: {
+							$alias: 'iabos',
+							$expr: {
+								iabos: {
+									service_name: maybeService,
+								},
+							},
+						},
+					},
+				}),
+			},
+		},
+	});
+	const test: Equals<typeof result, BalenaSdk.Image[]> = EqualsTrue;
+})();
+
 // Explicitly providing the result type
 
 (async () => {
@@ -374,6 +451,162 @@ let aString: string;
 		Compute<typeof result[number]>,
 		{
 			device_name: string;
+		}
+	> = EqualsTrue;
+})();
+
+(async () => {
+	const fleetSlug = 'fleetSlug';
+	const maybeRelease: string | null = '1.2.3';
+	const result = await sdk.pine.get({
+		resource: 'image',
+		options: {
+			$top: 1,
+			$select: 'is_stored_at__image_location',
+			$filter: {
+				status: 'success',
+				release_image: {
+					$any: {
+						$alias: 'ri',
+						$expr: {
+							ri: {
+								is_part_of__release: {
+									$any: {
+										$alias: 'ipor',
+										$expr: {
+											ipor: {
+												status: 'success' as const,
+												belongs_to__application: {
+													$any: {
+														$alias: 'bta',
+														$expr: {
+															bta: {
+																slug: fleetSlug,
+															},
+														},
+													},
+												},
+												...(maybeRelease == null && {
+													should_be_running_on__application: {
+														$any: {
+															$alias: 'sbroa',
+															$expr: {
+																sbroa: {
+																	slug: fleetSlug,
+																},
+															},
+														},
+													},
+												}),
+											},
+											$or: [
+												{ ipor: { commit: maybeRelease } },
+												{ ipor: { semver: maybeRelease, is_final: true } },
+												{
+													ipor: { raw_version: maybeRelease, is_final: false },
+												},
+											],
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	});
+	const test: Equals<
+		Compute<typeof result[number]>,
+		{
+			is_stored_at__image_location: string;
+		}
+	> = EqualsTrue;
+})();
+
+(async () => {
+	const fleetSlug = 'string';
+	const maybeRelease: string | null = '1.2.3';
+	const maybeService: string | null = 'main';
+	const result = await sdk.pine.get({
+		resource: 'image',
+		options: {
+			$top: 1,
+			$select: 'is_stored_at__image_location',
+			$filter: {
+				status: 'success',
+				release_image: {
+					$any: {
+						$alias: 'ri',
+						$expr: {
+							ri: {
+								is_part_of__release: {
+									$any: {
+										$alias: 'ipor',
+										$expr: {
+											ipor: {
+												status: 'success' as const,
+												belongs_to__application: {
+													$any: {
+														$alias: 'bta',
+														$expr: {
+															bta: {
+																slug: fleetSlug,
+															},
+														},
+													},
+												},
+												...(maybeRelease == null && {
+													should_be_running_on__application: {
+														$any: {
+															$alias: 'sbroa',
+															$expr: {
+																sbroa: {
+																	slug: fleetSlug,
+																},
+															},
+														},
+													},
+												}),
+											},
+											...(maybeRelease != null && {
+												$or: [
+													{ ipor: { commit: maybeRelease } },
+													{ ipor: { semver: maybeRelease, is_final: true } },
+													{
+														ipor: {
+															raw_version: maybeRelease,
+															is_final: false,
+														},
+													},
+												],
+											}),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			...(maybeService != null && {
+				is_a_build_of__service: {
+					$any: {
+						$alias: 'iabos',
+						$expr: {
+							iabos: {
+								service_name: maybeService,
+							},
+						},
+					},
+				},
+			}),
+		},
+	});
+	const test: Equals<
+		Compute<typeof result[number]>,
+		{
+			is_stored_at__image_location: string;
 		}
 	> = EqualsTrue;
 })();
