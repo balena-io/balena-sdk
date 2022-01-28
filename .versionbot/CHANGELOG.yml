@@ -1,4 +1,20 @@
 - commits:
+    - subject: "typings: Fix conditional $or/$and/$not $filters"
+      hash: 66154499284b87164cc566f883d6f7e76ccde6a3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://www.flowdock.com/app/rulemotion/balenalabs/threads/A9tGPitlQxoqMTpiPg6u-CsLltk
+        see: https://www.flowdock.com/app/rulemotion/balenalabs/threads/A9tGPitlQxoqMTpiPg6u-CsLltk
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.13.4
+  title: "typings: Fix conditional $or/$and/$not $filters"
+  date: 2022-01-27T22:28:10.937Z
+- commits:
     - subject: Deprecate the supportsBlink field of the DeviceTypeJson.DeviceType type
       hash: 4345664e0a7cae107be549fc786bc5cd57bdec78
       body: ""
