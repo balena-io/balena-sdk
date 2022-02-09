@@ -947,6 +947,39 @@ describe('Device Model', function () {
 						return expect(deviceApiKey).to.have.length(32);
 					});
 
+					it(`should be able to generate a device key with name and description`, async function () {
+						const deviceApiKey =
+							await balena.models.apiKey.getDeviceApiKeysByDevice(
+								this.device.id,
+							);
+
+						const key = await balena.models.device.generateDeviceKey(
+							this.device.id,
+							'device_key',
+							`Device key generated for device ${this.device.id}`,
+						);
+
+						expect(key).to.be.a('string');
+						expect(key).to.have.length(32);
+						const updatedDeviceKeys =
+							await balena.models.apiKey.getDeviceApiKeysByDevice(
+								this.device.id,
+							);
+
+						const deviceKeys = _.differenceWith(
+							updatedDeviceKeys,
+							deviceApiKey,
+							_.isEqual,
+						);
+
+						expect(deviceKeys).to.have.lengthOf(1);
+						expect(deviceKeys[0]).to.have.property('name', 'device_key');
+						expect(deviceKeys[0]).to.have.property(
+							'description',
+							`Device key generated for device ${this.device.id}`,
+						);
+					});
+
 					it('should be rejected if the device name does not exist', function () {
 						const promise = balena.models.device.generateDeviceKey('asdfghjkl');
 						return expect(promise).to.be.rejectedWith(
