@@ -38,15 +38,13 @@ const BalenaOS: Contract = {
 		],
 		jetsonFlash: [
 			`Put the device in recovery mode and connect to the host computer via USB`,
-			`{{#each deviceType.partials.jetsonNotes}}{{{this}}} {{/each}}`,
+			`{{#if deviceType.partials.jetsonNotes}}{{#each deviceType.partials.jetsonNotes}}{{{this}}} {{/each}}{{/if}}`,
 			`Unzip the {{name}} image and use the Jetson Flash tool to flash the {{deviceType.name}} found at <a href="https://github.com/balena-os/jetson-flash">https://github.com/balena-os/jetson-flash</a>.`,
 			`Wait for writing of {{name}} to complete.`,
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
 		custom: [
-			`{{#each deviceType.partials.instructions}}
-				{{{this}}}
-			{{/each}}`,
+			`{{#each deviceType.partials.instructions}}{{{this}}} {{/each}}`,
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
 	},
