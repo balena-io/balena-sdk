@@ -1537,6 +1537,8 @@ const getDeviceModel = function (
 		 * @memberof balena.models.device
 		 *
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String} [keyName] - Device key name
+		 * @param {String} [keyDescription] - Description for device key
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1555,13 +1557,21 @@ const getDeviceModel = function (
 		 * 	console.log(deviceApiKey);
 		 * });
 		 */
-		generateDeviceKey: async (uuidOrId: string | number): Promise<string> => {
+		generateDeviceKey: async (
+			uuidOrId: string | number,
+			keyName?: string,
+			keyDescription?: string,
+		): Promise<string> => {
 			try {
 				const deviceId = await getId(uuidOrId);
 				const { body } = await request.send({
 					method: 'POST',
 					url: `/api-key/device/${deviceId}/device-key`,
 					baseUrl: apiUrl,
+					body: {
+						name: keyName,
+						description: keyDescription,
+					},
 				});
 				return body;
 			} catch (err) {

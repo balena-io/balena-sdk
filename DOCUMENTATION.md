@@ -219,7 +219,7 @@ const sdk = fromSharedOptions();
             * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
-            * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+            * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
             * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
             * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -595,7 +595,7 @@ balena.models.device.get(123).catch(function (error) {
         * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
-        * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+        * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
         * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
         * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -2497,7 +2497,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
-    * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+    * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
     * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
     * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -4026,7 +4026,7 @@ balena.models.device.register('myorganization/myapp', uuid, function(error, regi
 ```
 <a name="balena.models.device.generateDeviceKey"></a>
 
-##### device.generateDeviceKey(uuidOrId) ⇒ <code>Promise</code>
+##### device.generateDeviceKey(uuidOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Generate a device key  
 **Access**: public  
@@ -4034,6 +4034,8 @@ balena.models.device.register('myorganization/myapp', uuid, function(error, regi
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| [keyName] | <code>String</code> | Device key name |
+| [keyDescription] | <code>String</code> | Description for device key |
 
 **Example**  
 ```js
