@@ -402,17 +402,14 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 					deviceType: interpolatedDeviceType,
 				});
 
+				let instructions: string[] = interpolatedHostOS.partials[installMethod];
 				if (baseInstructions) {
-					return Handlebars.compile(baseInstructions)({
+					instructions = Handlebars.compile(baseInstructions)({
 						...interpolatedHostOS,
-						instructions: interpolatedHostOS.partials[installMethod],
-					})
-						.split('\n')
-						.map((s) => s.trim())
-						.filter((s) => s);
-				} else {
-					return interpolatedHostOS.partials[installMethod];
+						instructions,
+					}).split('\n');
 				}
+				return instructions.map((s) => s.trim()).filter((s) => s);
 			} else {
 				return [];
 			}
