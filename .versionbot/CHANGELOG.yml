@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add name and description field to generateDeviceKey for device.
+      hash: acdbdd5164af283240270c7fe36075f4f5dc0b87
+      body: ""
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Nitish Agarwal
+      nested: []
+  version: 16.14.0
+  title: "'Add name and description field to generateDeviceKey for device.'"
+  date: 2022-02-15T09:27:49.508Z
+- commits:
     - subject: "typings: Fix conditional $or/$and/$not $filters"
       hash: 66154499284b87164cc566f883d6f7e76ccde6a3
       body: ""
