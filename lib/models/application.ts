@@ -634,6 +634,7 @@ const getApplicationModel = function (
 		 * @param {Object} options - application creation parameters
 		 * @param {String} options.name - application name
 		 * @param {String} [options.applicationType] - application type slug e.g. microservices-starter
+		 * @param {String} [options.applicationClass] - application class: 'app' | 'fleet' | 'block'
 		 * @param {String} options.deviceType - device type slug
 		 * @param {(Number|String)} [options.parent] - parent application name or id
 		 * @param {(String|Number)} options.organization - handle (string) or id (number) of the organization that the application will belong to or null
@@ -643,6 +644,11 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi' }).then(function(application) {
+		 * 	console.log(application);
+		 * });
+		 *
+		 * @example
+		 * balena.models.application.create({ name: 'My Block', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
 		 * 	console.log(application);
 		 * });
 		 *
@@ -660,12 +666,14 @@ const getApplicationModel = function (
 		async create({
 			name,
 			applicationType,
+			applicationClass,
 			deviceType,
 			parent,
 			organization,
 		}: {
 			name: string;
 			applicationType?: string;
+			applicationClass?: 'app' | 'fleet' | 'block';
 			deviceType: string;
 			parent?: number | string;
 			organization: number | string;
@@ -771,6 +779,10 @@ const getApplicationModel = function (
 
 			if (organizationId) {
 				body.organization = organizationId;
+			}
+
+			if (applicationClass) {
+				body.is_of__class = applicationClass;
 			}
 
 			return await pine.post({
