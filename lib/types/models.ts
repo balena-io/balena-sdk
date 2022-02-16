@@ -150,6 +150,7 @@ export interface ApiKey {
 	created_at: string;
 	name: string;
 	description: string | null;
+	expiryDate: string | null;
 
 	is_of__actor: PineDeferred;
 }
