@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add applicationClass parameter to application create function for
+        setting is_of__class property
+      hash: 03572ea47e5a8533baf2e583982850b38555ff84
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+        signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 16.15.0
+  title: "'Add applicationClass parameter to application create function for
+    setting is_of__class property'"
+  date: 2022-02-16T13:35:17.994Z
+- commits:
     - subject: Add name and description field to generateDeviceKey for device.
       hash: acdbdd5164af283240270c7fe36075f4f5dc0b87
       body: ""
