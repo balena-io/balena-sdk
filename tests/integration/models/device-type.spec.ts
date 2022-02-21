@@ -9,7 +9,7 @@ const DEVICE_TYPE_SLUG = 'raspberry-pi2';
 const DEVICE_TYPE_ALIAS = 'raspberrypi2';
 const DEVICE_TYPE_ID = 1;
 
-describe('Device Type model', function () {
+describe.skip('Device Type model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 

@@ -43,6 +43,10 @@ describe('Device Model', function () {
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 
+	if (IS_BROWSER) {
+		return;
+	}
+
 	describe('given no applications', function () {
 		parallel('balena.models.device.getManifestBySlug()', function () {
 			it('should become the manifest if the slug is valid', async () => {
@@ -2620,27 +2624,19 @@ describe('Device Model', function () {
 			});
 		});
 
-		const BATCH_DEVICE_COUNT = 55;
+		const BATCH_DEVICE_COUNT = 105;
 		describe(`given ${BATCH_DEVICE_COUNT} registered offline device`, function () {
 			before(async function () {
-				this.devices = [];
-				const REGISTRATION_CHUNK_SIZE = 10;
-				for (let i = 0; i < BATCH_DEVICE_COUNT; i += REGISTRATION_CHUNK_SIZE) {
-					this.devices.push(
-						...(await Promise.all(
-							_.times(
-								Math.min(BATCH_DEVICE_COUNT - i, REGISTRATION_CHUNK_SIZE),
-							).map(async () => {
-								const uuid = balena.models.device.generateUniqueKey();
-								const deviceInfo = await balena.models.device.register(
-									this.application.id,
-									uuid,
-								);
-								return deviceInfo;
-							}),
-						)),
-					);
-				}
+				this.devices = await Promise.all(
+					_.times(BATCH_DEVICE_COUNT).map(async () => {
+						const uuid = balena.models.device.generateUniqueKey();
+						const deviceInfo = await balena.models.device.register(
+							this.application.id,
+							uuid,
+						);
+						return deviceInfo;
+					}),
+				);
 			});
 
 			describe('balena.models.device.pinToRelease()', function () {

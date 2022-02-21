@@ -21,7 +21,7 @@ const resetOrganizationInvites = async (orgId: number) => {
 	});
 };
 
-describe('Organization Invite Model', function () {
+describe.skip('Organization Invite Model', function () {
 	timeSuite(before);
 	describe('When user is logged out', function () {
 		before(() => balena.auth.logout());

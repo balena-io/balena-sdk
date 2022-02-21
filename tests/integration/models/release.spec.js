@@ -20,7 +20,7 @@ import {
 
 const releaseRetrievalFields = ['id', 'commit'];
 
-describe('Release Model', function () {
+describe.skip('Release Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 
