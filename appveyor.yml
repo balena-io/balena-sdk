@@ -15,7 +15,7 @@ matrix:
 # what combinations to test
 environment:
   matrix:
-  - nodejs_version: 12
+  - nodejs_version: 16
     TEST_EMAIL: ci_test_user+testsdk1@resin.io
     TEST_PASSWORD:
       secure: NVtsC140RoZJmrCHqyKc2A==
