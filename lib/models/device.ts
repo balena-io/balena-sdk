@@ -916,15 +916,13 @@ const getDeviceModel = function (
 		getLocalIPAddresses: async (
 			uuidOrId: string | number,
 		): Promise<string[]> => {
-			const { is_online, ip_address, vpn_address } = await exports.get(
-				uuidOrId,
-				{ $select: ['is_online', 'ip_address', 'vpn_address'] },
-			);
+			const { is_online, ip_address } = await exports.get(uuidOrId, {
+				$select: ['is_online', 'ip_address'],
+			});
 			if (!is_online) {
 				throw new Error(`The device is offline: ${uuidOrId}`);
 			}
-			const ips = (ip_address ?? '').split(' ');
-			return ips.filter((ip) => ip !== vpn_address);
+			return (ip_address ?? '').split(' ');
 		},
 
 		/**
