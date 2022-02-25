@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove unnecessary vpn address filtering when fetching local addresses
+      hash: 12266a3c9349e5d944ba203e56f2fe80b5e97970
+      body: |
+        This has been handled by the supervisor since v2.2.0 / balenaOS v1.14
+        from 2016-09-23 and is not relevant for any supported devices
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 16.15.1
+  title: "'Remove unnecessary vpn address filtering when fetching local addresses'"
+  date: 2022-02-24T20:47:13.290Z
+- commits:
     - subject: Add applicationClass parameter to application create function for
         setting is_of__class property
       hash: 03572ea47e5a8533baf2e583982850b38555ff84
