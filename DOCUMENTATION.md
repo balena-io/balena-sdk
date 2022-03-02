@@ -1947,6 +1947,7 @@ balena.models.application.hasAny(function(error, hasAny) {
 | options | <code>Object</code> | application creation parameters |
 | options.name | <code>String</code> | application name |
 | [options.applicationType] | <code>String</code> | application type slug e.g. microservices-starter |
+| [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
 | [options.parent] | <code>Number</code> \| <code>String</code> | parent application name or id |
 | options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
@@ -1954,6 +1955,12 @@ balena.models.application.hasAny(function(error, hasAny) {
 **Example**  
 ```js
 balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi' }).then(function(application) {
+	console.log(application);
+});
+```
+**Example**  
+```js
+balena.models.application.create({ name: 'My Block', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
