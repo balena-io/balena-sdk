@@ -1,4 +1,48 @@
 - commits:
+    - subject: Add support for named imports from .mjs files
+      hash: 9c41612f46495f8629785657bc20588e8e68e487
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update npx command to fix ts-compatibility tests
+      hash: 9251199e0ff6db1aaefa1f3fab826cd5d1a09112
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Regenerate Documentation
+      hash: c317c03b3907896d54c8ac85348c24e9bb6f44cb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update typescript to 4.6.2
+      hash: 66509d9263259db1d336fabf03e0294ff139ea3c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.16.0
+  title: "'Add support for named imports from .mjs files'"
+  date: 2022-03-03T07:03:25.588Z
+- commits:
     - subject: Remove unnecessary vpn address filtering when fetching local addresses
       hash: 12266a3c9349e5d944ba203e56f2fe80b5e97970
       body: |
