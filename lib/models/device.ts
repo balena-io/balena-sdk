@@ -2541,7 +2541,7 @@ const getDeviceModel = function (
 
 			if (
 				!osVersions.some(
-					(v) => bSemver.compare(v.rawVersion, targetOsVersion) === 0,
+					(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
 				)
 			) {
 				throw new errors.BalenaInvalidParameterError(

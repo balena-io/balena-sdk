@@ -101,7 +101,7 @@ export interface OsUpdateVersions {
 }
 
 const sortVersions = (a: OsVersion, b: OsVersion) => {
-	return bSemver.rcompare(a.rawVersion, b.rawVersion);
+	return bSemver.rcompare(a.raw_version, b.raw_version);
 };
 
 /**
@@ -275,9 +275,11 @@ const getOsModel = function (
 				osType: appTags.osType,
 				line,
 				strippedVersion: version,
+				// TODO: Drop in the next major
 				rawVersion: release.raw_version,
 				basedOnVersion,
 				variant,
+				// TODO: Drop in the next major
 				formattedVersion: `v${version}${line ? ` (${line})` : ''}`,
 			};
 		});
@@ -311,7 +313,7 @@ const getOsModel = function (
 					if (
 						version.variant !== 'dev' &&
 						!version.known_issue_list &&
-						!bSemver.prerelease(version.rawVersion)
+						!bSemver.prerelease(version.raw_version)
 					) {
 						const additionalFormat = version.line
 							? ` (${version.line}, recommended)`
@@ -513,22 +515,22 @@ const getOsModel = function (
 	 */
 	const _getMaxSatisfyingVersion = function (
 		versionOrRange: string,
-		osVersions: Array<Pick<OsVersion, 'rawVersion' | 'isRecommended'>>,
+		osVersions: Array<Pick<OsVersion, 'raw_version' | 'isRecommended'>>,
 	) {
 		if (versionOrRange === 'recommended') {
-			return osVersions.find((v) => v.isRecommended)?.rawVersion;
+			return osVersions.find((v) => v.isRecommended)?.raw_version;
 		}
 
 		if (versionOrRange === 'latest') {
-			return osVersions[0]?.rawVersion;
+			return osVersions[0]?.raw_version;
 		}
 
 		if (versionOrRange === 'default') {
 			return (osVersions.find((v) => v.isRecommended) ?? osVersions[0])
-				?.rawVersion;
+				?.raw_version;
 		}
 
-		const versions = osVersions.map((v) => v.rawVersion);
+		const versions = osVersions.map((v) => v.raw_version);
 		if (versions.includes(versionOrRange)) {
 			// If the _exact_ version you're looking for exists, it's not a range, and
 			// we should return it exactly, not any old equivalent version.
@@ -710,7 +712,7 @@ const getOsModel = function (
 					(v) => v.osType === OsTypes.DEFAULT,
 				);
 				version = (versions.find((v) => v.isRecommended) ?? versions[0])
-					?.rawVersion;
+					?.raw_version;
 			} else {
 				version = normalizeVersion(version);
 			}
@@ -881,7 +883,7 @@ const getOsModel = function (
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		const allVersions = (await getAvailableOsVersions(deviceType))
 			.filter((v) => v.osType === OsTypes.DEFAULT)
-			.map((v) => v.rawVersion);
+			.map((v) => v.raw_version);
 		// use bSemver.compare to find the current version in the OS list
 		// to benefit from the baked-in normalization
 		const current = allVersions.find(
