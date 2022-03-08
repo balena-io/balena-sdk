@@ -1,4 +1,18 @@
 - commits:
+    - subject: Replace internal use of deprecated OsVersion.rawVersion with raw_version
+      hash: f29ac61bb82fe7008b92180864fd1e3f3d752445
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.16.1
+  title: "'Replace internal use of deprecated OsVersion.rawVersion with raw_version'"
+  date: 2022-03-08T14:58:30.031Z
+- commits:
     - subject: Add support for named imports from .mjs files
       hash: 9c41612f46495f8629785657bc20588e8e68e487
       body: ""
