@@ -46,7 +46,7 @@
     "build-es2015": "npm run build-es2015:fast && gulp pack-browser --buildDir es2015",
     "build-es2018": "rimraf es2018 && tsc --target es2018 --outDir es2018 && gulp inject-version --buildDir es2018 && gulp pack-browser --buildDir es2018",
     "build": "npm run lint && npm run build-es2015 && npm run build-es2018 && npm run docs",
-    "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs \"es2015/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
+    "docs": "jsdoc2md --partial doc/all-docs.hbs --partial doc/sdk.hbs --template doc/DOCUMENTATION.hbs --files \"es2015/**/!(balena-browser*.js)\" > DOCUMENTATION.md; sed -i \"$(($(wc -l < DOCUMENTATION.md)-$(wc -l < doc/sdk.hbs))),$ d\" DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "lint": "balena-lint -e js -e ts --tests typings lib tests mjs_tests gulpfile.js",
     "lint:fix": "balena-lint -e js -e ts --fix typings lib tests mjs_tests gulpfile.js",
