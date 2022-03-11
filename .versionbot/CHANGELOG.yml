@@ -1,4 +1,18 @@
 - commits:
+    - subject: "device.getWithServiceDetails: Add the release id in the service info"
+      hash: fd01e59371d7691401eef605598bc50b5e62a0fb
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+        signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 16.17.0
+  title: "'device.getWithServiceDetails: Add the release id in the service info'"
+  date: 2022-03-11T12:50:59.901Z
+- commits:
     - subject: Replace internal use of deprecated OsVersion.rawVersion with raw_version
       hash: f29ac61bb82fe7008b92180864fd1e3f3d752445
       body: ""
