@@ -2261,6 +2261,12 @@ describe('Device Model', function () {
 					// Augmented properties
 					// Should filter out deleted image installs
 					expect(deviceDetails.current_services.db).to.have.lengthOf(1);
+					const currentServices =
+						_.flatten(Object.values(deviceDetails.current_services)) ?? [];
+					currentServices.forEach((currentService) => {
+						expect(currentService).to.have.property('commit');
+						expect(currentService).to.have.property('release_id');
+					});
 					// Should have an empty list of gateway downloads
 					expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
 				});
