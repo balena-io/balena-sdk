@@ -1,9 +1,59 @@
-Welcome to the Balena SDK documentation.
+Welcome to the Balena SDK documentation. This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
 
-This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
+## Installation
+
+Install the balena SDK by running:
+
+```sh
+$ npm install --save balena-sdk
+```
+
+### Bundling for browsers
+
+If you're using webpack, browserify, or a similar tool then you probably want to bundle the balena SDK into your application yourself, rather than using the pre-built `balena-browser.js` bundle. 
+
+If you intend to do that, be sure to remove the following dependencies that are actually unnecessary in the browser, because they're only used in Node environments. This will significantly reduce the size of your resulting bundle:
+
+* fs
+* path
+* balena-settings-client
+* node-localstorage
+
+### Bundling with pkg
+
+The balena SDK includes builds for various ECMAScript versions that are
+dynamically selected at runtime (using 
+[@balena/es-version](https://github.com/balena-io-modules/balena-es-version)).
+For this reason, packagers like [pkg](https://github.com/vercel/pkg) are not
+able to automatically detect which assets to include in the output package. The
+following sample `pkg` section should be added to your application's
+`package.json` file to instruct `pkg` to bundle the required assets:
+
+```json
+  "pkg": {
+    "scripts": [
+      "node_modules/balena-sdk/**/*.js"
+    ],
+    "assets": [
+      "node_modules/pinejs-client-core/**/*"
+    ]
+  }
+```
+
+For more information, please refer to the respective
+[documentation from the `pkg` project](https://github.com/vercel/pkg#config).
+
+## Trying balenaSDK in the browser
+
+BalenaSDK is widely utilized in the [balenaCloud dashboard](https://dashboard.balena-cloud.com/) to perform operations. The SDK has been made available in the browser console by default to test balenaSDK queries on the go. 
+To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.com/) and open the [browser developer console](https://support.monday.com/hc/en-us/articles/360002197259-How-to-Open-the-Developer-Console). There, you will find balenaSDK initialized in the console and ready to run SDK queries.
+
+![](https://user-images.githubusercontent.com/22801822/157650701-d47ee5bc-28e4-4ca9-9aba-e208d47698c3.png)
+
 
 If you feel something is missing, not clear or could be improved, please don't hesitate to open an
 [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
+
 
 ## Modules
 
@@ -93,14 +143,6 @@ same defaults as the main SDK factory function.
 import { fromSharedOptions } from 'balena-sdk';
 const sdk = fromSharedOptions();
 ```
-
-## Trying balenaSDK in the browser
-
-BalenaSDK is widely utilized in the [balenaCloud dashboard](https://dashboard.balena-cloud.com/) to perform operations. The SDK has been made available in the browser console by default to test balenaSDK queries on the go. 
-To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.com/) and open the [browser developer console](https://support.monday.com/hc/en-us/articles/360002197259-How-to-Open-the-Developer-Console). There, you will find balenaSDK initialized in the console and ready to run SDK queries.
-
-![](https://user-images.githubusercontent.com/22801822/157650701-d47ee5bc-28e4-4ca9-9aba-e208d47698c3.png)
-
 <a name="balena"></a>
 
 ## balena : <code>object</code>
@@ -115,94 +157,94 @@ To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.co
     * [.models](#balena.models) : <code>object</code>
         * [.application](#balena.models.application) : <code>object</code>
             * [.tags](#balena.models.application.tags) : <code>object</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
-                * [.set(slugOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
-                * [.remove(slugOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+                * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+                * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
             * [.configVar](#balena.models.application.configVar) : <code>object</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(slugOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
-                * [.set(slugOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
-                * [.remove(slugOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(slugOrUuidOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+                * [.set(slugOrUuidOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+                * [.remove(slugOrUuidOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
             * [.envVar](#balena.models.application.envVar) : <code>object</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(slugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
-                * [.set(slugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
-                * [.remove(slugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(slugOrUuidOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+                * [.set(slugOrUuidOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+                * [.remove(slugOrUuidOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
             * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(slugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
-                * [.set(slugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
-                * [.remove(slugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.get(slugOrUuidOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+                * [.set(slugOrUuidOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+                * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
             * [.membership](#balena.models.application.membership) : <code>object</code>
                 * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
                 * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
                 * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
                 * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.application.invite) : <code>object</code>
                 * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
-                * [.create(slugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+                * [.create(slugOrUuidOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
                 * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
                 * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
             * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
             * [.getAllDirectlyAccessible([options])](#balena.models.application.getAllDirectlyAccessible) ⇒ <code>Promise</code>
-            * [.get(slugOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
-            * [.getDirectlyAccessible(slugOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
-            * [.getWithDeviceServiceDetails(slugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
-            * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
+            * [.get(slugOrUuidOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
+            * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
+            * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+            * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
             * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
-            * [.has(slugOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
+            * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
-            * [.remove(slugOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
-            * [.rename(slugOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
-            * [.restart(slugOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-            * ~~[.generateApiKey(slugOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-            * [.generateProvisioningKey(slugOrId, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+            * [.remove(slugOrUuidOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+            * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
+            * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
+            * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
+            * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
             * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
-            * [.willTrackNewReleases(slugOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
-            * [.isTrackingLatestRelease(slugOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
-            * [.pinToRelease(slugOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
-            * [.getTargetReleaseHash(slugOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
-            * [.trackLatestRelease(slugOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
-            * [.enableDeviceUrls(slugOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
-            * [.disableDeviceUrls(slugOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
-            * [.grantSupportAccess(slugOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
-            * [.revokeSupportAccess(slugOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
+            * [.willTrackNewReleases(slugOrUuidOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
+            * [.isTrackingLatestRelease(slugOrUuidOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
+            * [.pinToRelease(slugOrUuidOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
+            * [.getTargetReleaseHash(slugOrUuidOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
+            * [.trackLatestRelease(slugOrUuidOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
+            * [.enableDeviceUrls(slugOrUuidOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+            * [.disableDeviceUrls(slugOrUuidOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+            * [.grantSupportAccess(slugOrUuidOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+            * [.revokeSupportAccess(slugOrUuidOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
         * [.device](#balena.models.device) : <code>object</code>
             * [.tags](#balena.models.device.tags) : <code>object</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
             * [.configVar](#balena.models.device.configVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
             * [.envVar](#balena.models.device.envVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
             * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
             * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
             * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
             * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
@@ -220,14 +262,14 @@ To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.co
             * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
             * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-            * [.move(uuidOrId, applicationSlugOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
+            * [.move(uuidOrId, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-            * [.getManifestByApplication(slugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+            * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-            * [.register(applicationSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
-            * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+            * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
+            * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
             * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
             * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
             * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -276,7 +318,7 @@ To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.co
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
             * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
-            * [.getProvisioningApiKeysByApplication(slugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
+            * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
             * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
             * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
             * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
@@ -309,39 +351,40 @@ To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.co
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
             * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
-            * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
-            * [.getConfig(slugOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+            * [.download(deviceType, [version], options)](#balena.models.os.download) ⇒ <code>Promise</code>
+            * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
+            * ~~[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code>~~
             * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
             * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
         * [.release](#balena.models.release) : <code>object</code>
             * [.tags](#balena.models.release.tags) : <code>object</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
                 * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
                 * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
                 * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
             * [.get(commitOrId, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
             * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getLatestByApplication(slugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
-            * [.createFromUrl(slugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
+            * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
             * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
             * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
             * [.note(commitOrId, note)](#balena.models.release.note) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
-                * [.getAllByApplication(slugOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
                 * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
                 * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
                 * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
         * [.image](#balena.models.image) : <code>object</code>
             * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
             * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
@@ -442,7 +485,7 @@ balena.request.send({ url: 'http://api.balena-cloud.com/ping' });
 <a name="balena.pine"></a>
 
 ### balena.pine : <code>Object</code>
-The balena-pine instance used internally. This should not be necessary
+The pinejs-client instance used internally. This should not be necessary
 in normal usage, but can be useful if you want to directly make pine
 queries to the api for some resource that isn't directly supported
 in the SDK.
@@ -475,9 +518,9 @@ type of error thrown by the SDK.
 **Example**  
 ```js
 balena.models.device.get(123).catch(function (error) {
-  if (error.code === balena.errors.BalenaDeviceNotFound.code) {
+  if (error.code === balena.errors.BalenaDeviceNotFound.prototype.code) {
     ...
-  } else if (error.code === balena.errors.BalenaRequestError.code) {
+  } else if (error.code === balena.errors.BalenaRequestError.prototype.code) {
     ...
   }
 });
@@ -490,94 +533,94 @@ balena.models.device.get(123).catch(function (error) {
 * [.models](#balena.models) : <code>object</code>
     * [.application](#balena.models.application) : <code>object</code>
         * [.tags](#balena.models.application.tags) : <code>object</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
-            * [.set(slugOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
-            * [.remove(slugOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+            * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+            * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
         * [.configVar](#balena.models.application.configVar) : <code>object</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(slugOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
-            * [.set(slugOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
-            * [.remove(slugOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(slugOrUuidOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+            * [.set(slugOrUuidOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+            * [.remove(slugOrUuidOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
         * [.envVar](#balena.models.application.envVar) : <code>object</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(slugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
-            * [.set(slugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
-            * [.remove(slugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(slugOrUuidOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+            * [.set(slugOrUuidOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+            * [.remove(slugOrUuidOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
         * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(slugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
-            * [.set(slugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
-            * [.remove(slugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.get(slugOrUuidOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+            * [.set(slugOrUuidOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+            * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
         * [.membership](#balena.models.application.membership) : <code>object</code>
             * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
             * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
             * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.application.invite) : <code>object</code>
             * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
-            * [.create(slugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+            * [.create(slugOrUuidOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
             * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
             * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
         * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
         * [.getAllDirectlyAccessible([options])](#balena.models.application.getAllDirectlyAccessible) ⇒ <code>Promise</code>
-        * [.get(slugOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
-        * [.getDirectlyAccessible(slugOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
-        * [.getWithDeviceServiceDetails(slugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
-        * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
+        * [.get(slugOrUuidOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
+        * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
+        * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+        * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
         * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
-        * [.has(slugOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
+        * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
-        * [.remove(slugOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
-        * [.rename(slugOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
-        * [.restart(slugOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-        * ~~[.generateApiKey(slugOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-        * [.generateProvisioningKey(slugOrId, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+        * [.remove(slugOrUuidOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+        * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
+        * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
+        * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
+        * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
         * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
-        * [.willTrackNewReleases(slugOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
-        * [.isTrackingLatestRelease(slugOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
-        * [.pinToRelease(slugOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
-        * [.getTargetReleaseHash(slugOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
-        * [.trackLatestRelease(slugOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
-        * [.enableDeviceUrls(slugOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
-        * [.disableDeviceUrls(slugOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
-        * [.grantSupportAccess(slugOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
-        * [.revokeSupportAccess(slugOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
+        * [.willTrackNewReleases(slugOrUuidOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
+        * [.isTrackingLatestRelease(slugOrUuidOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
+        * [.pinToRelease(slugOrUuidOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
+        * [.getTargetReleaseHash(slugOrUuidOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
+        * [.trackLatestRelease(slugOrUuidOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
+        * [.enableDeviceUrls(slugOrUuidOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+        * [.disableDeviceUrls(slugOrUuidOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+        * [.grantSupportAccess(slugOrUuidOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+        * [.revokeSupportAccess(slugOrUuidOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
     * [.device](#balena.models.device) : <code>object</code>
         * [.tags](#balena.models.device.tags) : <code>object</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
             * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
         * [.configVar](#balena.models.device.configVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
         * [.envVar](#balena.models.device.envVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
         * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
         * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
         * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
         * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
@@ -595,14 +638,14 @@ balena.models.device.get(123).catch(function (error) {
         * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
         * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-        * [.move(uuidOrId, applicationSlugOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
+        * [.move(uuidOrId, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-        * [.getManifestByApplication(slugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+        * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-        * [.register(applicationSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
-        * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+        * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
+        * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
         * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
         * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
         * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -651,7 +694,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
         * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
-        * [.getProvisioningApiKeysByApplication(slugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
+        * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
         * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
         * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
         * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
@@ -684,39 +727,40 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
         * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
-        * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
-        * [.getConfig(slugOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+        * [.download(deviceType, [version], options)](#balena.models.os.download) ⇒ <code>Promise</code>
+        * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
+        * ~~[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code>~~
         * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
         * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
     * [.release](#balena.models.release) : <code>object</code>
         * [.tags](#balena.models.release.tags) : <code>object</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
             * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
             * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
         * [.get(commitOrId, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
         * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getLatestByApplication(slugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
-        * [.createFromUrl(slugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
+        * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
         * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
         * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
         * [.note(commitOrId, note)](#balena.models.release.note) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
-            * [.getAllByApplication(slugOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
             * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
             * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
             * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
     * [.image](#balena.models.image) : <code>object</code>
         * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
         * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
@@ -736,66 +780,66 @@ balena.models.device.get(123).catch(function (error) {
 
 * [.application](#balena.models.application) : <code>object</code>
     * [.tags](#balena.models.application.tags) : <code>object</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
-        * [.set(slugOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
-        * [.remove(slugOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+        * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+        * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
     * [.configVar](#balena.models.application.configVar) : <code>object</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(slugOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
-        * [.set(slugOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
-        * [.remove(slugOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(slugOrUuidOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+        * [.set(slugOrUuidOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+        * [.remove(slugOrUuidOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
     * [.envVar](#balena.models.application.envVar) : <code>object</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(slugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
-        * [.set(slugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
-        * [.remove(slugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(slugOrUuidOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+        * [.set(slugOrUuidOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+        * [.remove(slugOrUuidOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
     * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(slugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
-        * [.set(slugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
-        * [.remove(slugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.get(slugOrUuidOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+        * [.set(slugOrUuidOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+        * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
     * [.membership](#balena.models.application.membership) : <code>object</code>
         * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
         * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
         * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.application.invite) : <code>object</code>
         * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
-        * [.create(slugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+        * [.create(slugOrUuidOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
         * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
         * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
     * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
     * [.getAllDirectlyAccessible([options])](#balena.models.application.getAllDirectlyAccessible) ⇒ <code>Promise</code>
-    * [.get(slugOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
-    * [.getDirectlyAccessible(slugOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
-    * [.getWithDeviceServiceDetails(slugOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
-    * [.getAppByName(appName, [options])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
+    * [.get(slugOrUuidOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
+    * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
+    * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
+    * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
     * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
-    * [.has(slugOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
+    * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
-    * [.remove(slugOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
-    * [.rename(slugOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
-    * [.restart(slugOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-    * ~~[.generateApiKey(slugOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-    * [.generateProvisioningKey(slugOrId, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+    * [.remove(slugOrUuidOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+    * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
+    * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
+    * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
+    * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
     * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
-    * [.willTrackNewReleases(slugOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
-    * [.isTrackingLatestRelease(slugOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
-    * [.pinToRelease(slugOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
-    * [.getTargetReleaseHash(slugOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
-    * [.trackLatestRelease(slugOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
-    * [.enableDeviceUrls(slugOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
-    * [.disableDeviceUrls(slugOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
-    * [.grantSupportAccess(slugOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
-    * [.revokeSupportAccess(slugOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
+    * [.willTrackNewReleases(slugOrUuidOrId)](#balena.models.application.willTrackNewReleases) ⇒ <code>Promise</code>
+    * [.isTrackingLatestRelease(slugOrUuidOrId)](#balena.models.application.isTrackingLatestRelease) ⇒ <code>Promise</code>
+    * [.pinToRelease(slugOrUuidOrId, fullReleaseHash)](#balena.models.application.pinToRelease) ⇒ <code>Promise</code>
+    * [.getTargetReleaseHash(slugOrUuidOrId)](#balena.models.application.getTargetReleaseHash) ⇒ <code>Promise</code>
+    * [.trackLatestRelease(slugOrUuidOrId)](#balena.models.application.trackLatestRelease) ⇒ <code>Promise</code>
+    * [.enableDeviceUrls(slugOrUuidOrId)](#balena.models.application.enableDeviceUrls) ⇒ <code>Promise</code>
+    * [.disableDeviceUrls(slugOrUuidOrId)](#balena.models.application.disableDeviceUrls) ⇒ <code>Promise</code>
+    * [.grantSupportAccess(slugOrUuidOrId, expiryTimestamp)](#balena.models.application.grantSupportAccess) ⇒ <code>Promise</code>
+    * [.revokeSupportAccess(slugOrUuidOrId)](#balena.models.application.revokeSupportAccess) ⇒ <code>Promise</code>
 
 <a name="balena.models.application.tags"></a>
 
@@ -803,14 +847,14 @@ balena.models.device.get(123).catch(function (error) {
 **Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
 * [.tags](#balena.models.application.tags) : <code>object</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
-    * [.set(slugOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
-    * [.remove(slugOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
+    * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
+    * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.application.tags.getAllByApplication"></a>
 
-###### tags.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Get all application tags for an application  
 **Access**: public  
@@ -818,7 +862,7 @@ balena.models.device.get(123).catch(function (error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -867,14 +911,14 @@ balena.models.application.tags.getAll(function(error, tags) {
 ```
 <a name="balena.models.application.tags.set"></a>
 
-###### tags.set(slugOrId, tagKey, value) ⇒ <code>Promise</code>
+###### tags.set(slugOrUuidOrId, tagKey, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Set an application tag  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | tagKey | <code>String</code> | tag key |
 | value | <code>String</code> \| <code>undefined</code> | tag value |
 
@@ -894,14 +938,14 @@ balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', func
 ```
 <a name="balena.models.application.tags.remove"></a>
 
-###### tags.remove(slugOrId, tagKey) ⇒ <code>Promise</code>
+###### tags.remove(slugOrUuidOrId, tagKey) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Remove an application tag  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | tagKey | <code>String</code> | tag key |
 
 **Example**  
@@ -920,14 +964,14 @@ balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function
 **Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
 * [.configVar](#balena.models.application.configVar) : <code>object</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(slugOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
-    * [.set(slugOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
-    * [.remove(slugOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.configVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(slugOrUuidOrId, key)](#balena.models.application.configVar.get) ⇒ <code>Promise</code>
+    * [.set(slugOrUuidOrId, key, value)](#balena.models.application.configVar.set) ⇒ <code>Promise</code>
+    * [.remove(slugOrUuidOrId, key)](#balena.models.application.configVar.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.application.configVar.getAllByApplication"></a>
 
-###### configVar.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### configVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Get all config variables for an application  
 **Access**: public  
@@ -935,7 +979,7 @@ balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -959,7 +1003,7 @@ balena.models.application.configVar.getAllByApplication('myorganization/myapp', 
 ```
 <a name="balena.models.application.configVar.get"></a>
 
-###### configVar.get(slugOrId, key) ⇒ <code>Promise</code>
+###### configVar.get(slugOrUuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Get the value of a specific config variable  
 **Access**: public  
@@ -967,7 +1011,7 @@ balena.models.application.configVar.getAllByApplication('myorganization/myapp', 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | config variable name |
 
 **Example**  
@@ -991,14 +1035,14 @@ balena.models.application.configVar.get('myorganization/myapp', 'BALENA_VAR', fu
 ```
 <a name="balena.models.application.configVar.set"></a>
 
-###### configVar.set(slugOrId, key, value) ⇒ <code>Promise</code>
+###### configVar.set(slugOrUuidOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Set the value of a specific config variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | config variable name |
 | value | <code>String</code> | config variable value |
 
@@ -1023,14 +1067,14 @@ balena.models.application.configVar.set('myorganization/myapp', 'BALENA_VAR', 'n
 ```
 <a name="balena.models.application.configVar.remove"></a>
 
-###### configVar.remove(slugOrId, key) ⇒ <code>Promise</code>
+###### configVar.remove(slugOrUuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.application.configVar)  
 **Summary**: Clear the value of a specific config variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | config variable name |
 
 **Example**  
@@ -1058,14 +1102,14 @@ balena.models.application.configVar.remove('myorganization/myapp', 'BALENA_VAR',
 **Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
 * [.envVar](#balena.models.application.envVar) : <code>object</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(slugOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
-    * [.set(slugOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
-    * [.remove(slugOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.envVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(slugOrUuidOrId, key)](#balena.models.application.envVar.get) ⇒ <code>Promise</code>
+    * [.set(slugOrUuidOrId, key, value)](#balena.models.application.envVar.set) ⇒ <code>Promise</code>
+    * [.remove(slugOrUuidOrId, key)](#balena.models.application.envVar.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.application.envVar.getAllByApplication"></a>
 
-###### envVar.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### envVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Get all environment variables for an application  
 **Access**: public  
@@ -1073,7 +1117,7 @@ balena.models.application.configVar.remove('myorganization/myapp', 'BALENA_VAR',
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1097,7 +1141,7 @@ balena.models.application.envVar.getAllByApplication('myorganization/myapp', fun
 ```
 <a name="balena.models.application.envVar.get"></a>
 
-###### envVar.get(slugOrId, key) ⇒ <code>Promise</code>
+###### envVar.get(slugOrUuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Get the value of a specific environment variable  
 **Access**: public  
@@ -1105,7 +1149,7 @@ balena.models.application.envVar.getAllByApplication('myorganization/myapp', fun
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | environment variable name |
 
 **Example**  
@@ -1129,14 +1173,14 @@ balena.models.application.envVar.get('myorganization/myapp', 'VAR', function(err
 ```
 <a name="balena.models.application.envVar.set"></a>
 
-###### envVar.set(slugOrId, key, value) ⇒ <code>Promise</code>
+###### envVar.set(slugOrUuidOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Set the value of a specific environment variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | environment variable name |
 | value | <code>String</code> | environment variable value |
 
@@ -1161,14 +1205,14 @@ balena.models.application.envVar.set('myorganization/myapp', 'VAR', 'newvalue', 
 ```
 <a name="balena.models.application.envVar.remove"></a>
 
-###### envVar.remove(slugOrId, key) ⇒ <code>Promise</code>
+###### envVar.remove(slugOrUuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.application.envVar)  
 **Summary**: Clear the value of a specific environment variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | environment variable name |
 
 **Example**  
@@ -1196,14 +1240,14 @@ balena.models.application.envVar.remove('myorganization/myapp', 'VAR', function(
 **Kind**: static namespace of [<code>application</code>](#balena.models.application)  
 
 * [.buildVar](#balena.models.application.buildVar) : <code>object</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(slugOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
-    * [.set(slugOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
-    * [.remove(slugOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.buildVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.get(slugOrUuidOrId, key)](#balena.models.application.buildVar.get) ⇒ <code>Promise</code>
+    * [.set(slugOrUuidOrId, key, value)](#balena.models.application.buildVar.set) ⇒ <code>Promise</code>
+    * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.application.buildVar.getAllByApplication"></a>
 
-###### buildVar.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### buildVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
 **Summary**: Get all build environment variables for an application  
 **Access**: public  
@@ -1211,7 +1255,7 @@ balena.models.application.envVar.remove('myorganization/myapp', 'VAR', function(
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1235,7 +1279,7 @@ balena.models.application.buildVar.getAllByApplication('myorganization/myapp', f
 ```
 <a name="balena.models.application.buildVar.get"></a>
 
-###### buildVar.get(slugOrId, key) ⇒ <code>Promise</code>
+###### buildVar.get(slugOrUuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
 **Summary**: Get the value of a specific build environment variable  
 **Access**: public  
@@ -1243,7 +1287,7 @@ balena.models.application.buildVar.getAllByApplication('myorganization/myapp', f
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | build environment variable name |
 
 **Example**  
@@ -1267,14 +1311,14 @@ balena.models.application.buildVar.get('myorganization/myapp', 'VAR', function(e
 ```
 <a name="balena.models.application.buildVar.set"></a>
 
-###### buildVar.set(slugOrId, key, value) ⇒ <code>Promise</code>
+###### buildVar.set(slugOrUuidOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
 **Summary**: Set the value of a specific build environment variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | build environment variable name |
 | value | <code>String</code> | build environment variable value |
 
@@ -1299,14 +1343,14 @@ balena.models.application.buildVar.set('myorganization/myapp', 'VAR', 'newvalue'
 ```
 <a name="balena.models.application.buildVar.remove"></a>
 
-###### buildVar.remove(slugOrId, key) ⇒ <code>Promise</code>
+###### buildVar.remove(slugOrUuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>buildVar</code>](#balena.models.application.buildVar)  
 **Summary**: Clear the value of a specific build environment variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | key | <code>String</code> | build environment variable name |
 
 **Example**  
@@ -1336,7 +1380,7 @@ balena.models.application.buildVar.remove('myorganization/myapp', 'VAR', functio
 * [.membership](#balena.models.application.membership) : <code>object</code>
     * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
     * [.changeRole(idOrUniqueKey, roleName)](#balena.models.application.membership.changeRole) ⇒ <code>Promise</code>
     * [.remove(idOrUniqueKey)](#balena.models.application.membership.remove) ⇒ <code>Promise</code>
@@ -1396,7 +1440,7 @@ balena.models.application.membership.getAll(function(error, memberships) {
 ```
 <a name="balena.models.application.membership.getAllByApplication"></a>
 
-###### membership.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### membership.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 This method returns all application memberships for a specific application.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
@@ -1406,7 +1450,7 @@ This method returns all application memberships for a specific application.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1527,8 +1571,8 @@ balena.models.application.membership.remove(123,function(error) {
 
 * [.invite](#balena.models.application.invite) : <code>object</code>
     * [.getAll([options])](#balena.models.application.invite.getAll) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
-    * [.create(slugOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.invite.getAllByApplication) ⇒ <code>Promise</code>
+    * [.create(slugOrUuidOrId, options, [message])](#balena.models.application.invite.create) ⇒ <code>Promise</code>
     * [.revoke(id)](#balena.models.application.invite.revoke) ⇒ <code>Promise</code>
     * [.accept(invitationToken)](#balena.models.application.invite.accept) ⇒ <code>Promise</code>
 
@@ -1560,7 +1604,7 @@ balena.models.application.invite.getAll(function(error, invites) {
 ```
 <a name="balena.models.application.invite.getAllByApplication"></a>
 
-###### invite.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### invite.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 This method returns all invites for a specific application.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
@@ -1570,7 +1614,7 @@ This method returns all invites for a specific application.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1593,7 +1637,7 @@ balena.models.application.invite.getAllByApplication(123, function(error, invite
 ```
 <a name="balena.models.application.invite.create"></a>
 
-###### invite.create(slugOrId, options, [message]) ⇒ <code>Promise</code>
+###### invite.create(slugOrUuidOrId, options, [message]) ⇒ <code>Promise</code>
 This method invites a user by their email to an application.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.application.invite)  
@@ -1603,7 +1647,7 @@ This method invites a user by their email to an application.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | options | <code>Object</code> |  | invite creation parameters |
 | options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
 | [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
@@ -1742,7 +1786,7 @@ balena.models.application.getAllDirectlyAccessible(function(error, applications)
 ```
 <a name="balena.models.application.get"></a>
 
-##### application.get(slugOrId, [options], [context]) ⇒ <code>Promise</code>
+##### application.get(slugOrUuidOrId, [options], [context]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application  
 **Access**: public  
@@ -1750,13 +1794,19 @@ balena.models.application.getAllDirectlyAccessible(function(error, applications)
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 | [context] | <code>String</code> |  | extra access filters, undefined or 'directly_accessible' |
 
 **Example**  
 ```js
 balena.models.application.get('myorganization/myapp').then(function(application) {
+	console.log(application);
+});
+```
+**Example**  
+```js
+balena.models.application.get('1bf99a68cf9e4266986e6dec7a6e8f46').then(function(application) {
 	console.log(application);
 });
 ```
@@ -1775,7 +1825,7 @@ balena.models.application.get('myorganization/myapp', function(error, applicatio
 ```
 <a name="balena.models.application.getDirectlyAccessible"></a>
 
-##### application.getDirectlyAccessible(slugOrId, [options]) ⇒ <code>Promise</code>
+##### application.getDirectlyAccessible(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application directly accessible by the user  
 **Access**: public  
@@ -1783,7 +1833,7 @@ balena.models.application.get('myorganization/myapp', function(error, applicatio
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1807,7 +1857,7 @@ balena.models.application.getDirectlyAccessible('myorganization/myapp', function
 ```
 <a name="balena.models.application.getWithDeviceServiceDetails"></a>
 
-##### application.getWithDeviceServiceDetails(slugOrId, [options]) ⇒ <code>Promise</code>
+##### application.getWithDeviceServiceDetails(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
 larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want more control, or to see the raw model
@@ -1821,7 +1871,7 @@ associated services' essential details
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -1845,7 +1895,7 @@ balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', fu
 ```
 <a name="balena.models.application.getAppByName"></a>
 
-##### application.getAppByName(appName, [options]) ⇒ <code>Promise</code>
+##### application.getAppByName(appName, [options], [context]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application using the appname and the handle of the owning organization  
 **Access**: public  
@@ -1855,6 +1905,7 @@ balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', fu
 | --- | --- | --- | --- |
 | appName | <code>String</code> |  | application name |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+| [context] | <code>String</code> |  | extra access filters, undefined or 'directly_accessible' |
 
 **Example**  
 ```js
@@ -1884,7 +1935,7 @@ balena.models.application.getAppByOwner('myorganization/myapp', 'MyOrg').then(fu
 ```
 <a name="balena.models.application.has"></a>
 
-##### application.has(slugOrId) ⇒ <code>Promise</code>
+##### application.has(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Check if an application exists  
 **Access**: public  
@@ -1892,7 +1943,7 @@ balena.models.application.getAppByOwner('myorganization/myapp', 'MyOrg').then(fu
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -1978,14 +2029,14 @@ balena.models.application.create({ name: 'My App', applicationType: 'microservic
 ```
 <a name="balena.models.application.remove"></a>
 
-##### application.remove(slugOrId) ⇒ <code>Promise</code>
+##### application.remove(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Remove application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2003,14 +2054,14 @@ balena.models.application.remove('myorganization/myapp', function(error) {
 ```
 <a name="balena.models.application.rename"></a>
 
-##### application.rename(slugOrId, newName) ⇒ <code>Promise</code>
+##### application.rename(slugOrUuidOrId, newName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Rename application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | newName | <code>String</code> | new application name (string) |
 
 **Example**  
@@ -2029,14 +2080,14 @@ balena.models.application.rename('myorganization/myapp', 'MyRenamedApp', functio
 ```
 <a name="balena.models.application.restart"></a>
 
-##### application.restart(slugOrId) ⇒ <code>Promise</code>
+##### application.restart(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Restart application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2054,7 +2105,7 @@ balena.models.application.restart('myorganization/myapp', function(error) {
 ```
 <a name="balena.models.application.generateApiKey"></a>
 
-##### ~~application.generateApiKey(slugOrId) ⇒ <code>Promise</code>~~
+##### ~~application.generateApiKey(slugOrUuidOrId) ⇒ <code>Promise</code>~~
 ***Deprecated***
 
 Generally you shouldn't use this method: if you're provisioning a recent BalenaOS
@@ -2068,7 +2119,7 @@ be more secure.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2091,7 +2142,7 @@ balena.models.application.generateApiKey('myorganization/myapp', function(error,
 ```
 <a name="balena.models.application.generateProvisioningKey"></a>
 
-##### application.generateProvisioningKey(slugOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
+##### application.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Generate a device provisioning key for a specific application  
 **Access**: public  
@@ -2099,7 +2150,7 @@ balena.models.application.generateApiKey('myorganization/myapp', function(error,
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | [keyName] | <code>String</code> | Provisioning key name |
 | [keyDescription] | <code>String</code> | Description for provisioning key |
 
@@ -2191,7 +2242,7 @@ balena.models.application.reboot(123, function(error) {
 ```
 <a name="balena.models.application.willTrackNewReleases"></a>
 
-##### application.willTrackNewReleases(slugOrId) ⇒ <code>Promise</code>
+##### application.willTrackNewReleases(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get whether the application is configured to receive updates whenever a new release is available  
 **Access**: public  
@@ -2199,7 +2250,7 @@ balena.models.application.reboot(123, function(error) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2221,7 +2272,7 @@ balena.models.application.willTrackNewReleases('myorganization/myapp', function(
 ```
 <a name="balena.models.application.isTrackingLatestRelease"></a>
 
-##### application.isTrackingLatestRelease(slugOrId) ⇒ <code>Promise</code>
+##### application.isTrackingLatestRelease(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get whether the application is up to date and is tracking the latest finalized release for updates  
 **Access**: public  
@@ -2229,7 +2280,7 @@ balena.models.application.willTrackNewReleases('myorganization/myapp', function(
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2251,7 +2302,7 @@ balena.models.application.isTrackingLatestRelease('myorganization/myapp', functi
 ```
 <a name="balena.models.application.pinToRelease"></a>
 
-##### application.pinToRelease(slugOrId, fullReleaseHash) ⇒ <code>Promise</code>
+##### application.pinToRelease(slugOrUuidOrId, fullReleaseHash) ⇒ <code>Promise</code>
 Configures the application to run a particular release
 and not get updated when the latest release changes.
 
@@ -2261,7 +2312,7 @@ and not get updated when the latest release changes.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | fullReleaseHash | <code>String</code> | the hash of a successful release (string) |
 
 **Example**  
@@ -2285,7 +2336,7 @@ balena.models.application.pinToRelease('myorganization/myapp', 'f7caf4ff80114dee
 ```
 <a name="balena.models.application.getTargetReleaseHash"></a>
 
-##### application.getTargetReleaseHash(slugOrId) ⇒ <code>Promise</code>
+##### application.getTargetReleaseHash(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get the hash of the current release for a specific application  
 **Access**: public  
@@ -2293,7 +2344,7 @@ balena.models.application.pinToRelease('myorganization/myapp', 'f7caf4ff80114dee
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2315,7 +2366,7 @@ balena.models.application.getTargetReleaseHash('myorganization/myapp', function(
 ```
 <a name="balena.models.application.trackLatestRelease"></a>
 
-##### application.trackLatestRelease(slugOrId) ⇒ <code>Promise</code>
+##### application.trackLatestRelease(slugOrUuidOrId) ⇒ <code>Promise</code>
 The application's current release will be updated with each new successfully built release.
 
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
@@ -2324,7 +2375,7 @@ The application's current release will be updated with each new successfully bui
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2347,14 +2398,14 @@ balena.models.application.trackLatestRelease('myorganization/myapp', function(er
 ```
 <a name="balena.models.application.enableDeviceUrls"></a>
 
-##### application.enableDeviceUrls(slugOrId) ⇒ <code>Promise</code>
+##### application.enableDeviceUrls(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Enable device urls for all devices that belong to an application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2372,14 +2423,14 @@ balena.models.device.enableDeviceUrls('myorganization/myapp', function(error) {
 ```
 <a name="balena.models.application.disableDeviceUrls"></a>
 
-##### application.disableDeviceUrls(slugOrId) ⇒ <code>Promise</code>
+##### application.disableDeviceUrls(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Disable device urls for all devices that belong to an application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2397,14 +2448,14 @@ balena.models.device.disableDeviceUrls('myorganization/myapp', function(error) {
 ```
 <a name="balena.models.application.grantSupportAccess"></a>
 
-##### application.grantSupportAccess(slugOrId, expiryTimestamp) ⇒ <code>Promise</code>
+##### application.grantSupportAccess(slugOrUuidOrId, expiryTimestamp) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Grant support access to an application until a specified time  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | expiryTimestamp | <code>Number</code> | a timestamp in ms for when the support access will expire |
 
 **Example**  
@@ -2423,14 +2474,14 @@ balena.models.application.grantSupportAccess('myorganization/myapp', Date.now() 
 ```
 <a name="balena.models.application.revokeSupportAccess"></a>
 
-##### application.revokeSupportAccess(slugOrId) ⇒ <code>Promise</code>
+##### application.revokeSupportAccess(slugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Revoke support access to an application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -2453,32 +2504,32 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
 
 * [.device](#balena.models.device) : <code>object</code>
     * [.tags](#balena.models.device.tags) : <code>object</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
         * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
     * [.configVar](#balena.models.device.configVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
     * [.envVar](#balena.models.device.envVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
     * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
     * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
     * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
     * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
@@ -2496,14 +2547,14 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.note(uuidOrId, note)](#balena.models.device.note) ⇒ <code>Promise</code>
     * [.setCustomLocation(uuidOrId, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrId)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-    * [.move(uuidOrId, applicationSlugOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
+    * [.move(uuidOrId, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-    * [.getManifestByApplication(slugOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>
+    * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-    * [.register(applicationSlugOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
-    * [.generateDeviceKey(uuidOrId)](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
+    * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
+    * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
     * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
     * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
     * [.enableDeviceUrl(uuidOrId)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
@@ -2548,7 +2599,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
 **Kind**: static namespace of [<code>device</code>](#balena.models.device)  
 
 * [.tags](#balena.models.device.tags) : <code>object</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
     * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
@@ -2556,7 +2607,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
 
 <a name="balena.models.device.tags.getAllByApplication"></a>
 
-###### tags.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Get all device tags for an application  
 **Access**: public  
@@ -2564,7 +2615,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -2699,7 +2750,7 @@ balena.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
 
 * [.configVar](#balena.models.device.configVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
     * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
@@ -2738,7 +2789,7 @@ balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 ```
 <a name="balena.models.device.configVar.getAllByApplication"></a>
 
-###### configVar.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### configVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get all device config variables by application  
 **Access**: public  
@@ -2746,7 +2797,7 @@ balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -2870,7 +2921,7 @@ balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR', function(error) {
 
 * [.envVar](#balena.models.device.envVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
     * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
@@ -2909,7 +2960,7 @@ balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
 ```
 <a name="balena.models.device.envVar.getAllByApplication"></a>
 
-###### envVar.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### envVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get all device environment variables by application  
 **Access**: public  
@@ -2917,7 +2968,7 @@ balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -3041,7 +3092,7 @@ balena.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
 
 * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
     * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
@@ -3080,7 +3131,7 @@ balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) 
 ```
 <a name="balena.models.device.serviceVar.getAllByApplication"></a>
 
-###### serviceVar.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### serviceVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get all device service variable overrides by application  
 **Access**: public  
@@ -3088,7 +3139,7 @@ balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -3266,7 +3317,7 @@ balena.models.device.getAll(function(error, devices) {
 ```
 <a name="balena.models.device.getAllByApplication"></a>
 
-##### device.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+##### device.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 This method returns all devices of a specific application.
 In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
@@ -3280,7 +3331,7 @@ you have to explicitly define them in a `$select` in the extra options:
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -3835,7 +3886,7 @@ balena.models.device.unsetLocation('7cf02a6', function(error) {
 ```
 <a name="balena.models.device.move"></a>
 
-##### device.move(uuidOrId, applicationSlugOrId) ⇒ <code>Promise</code>
+##### device.move(uuidOrId, applicationSlugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Move a device to another application  
 **Access**: public  
@@ -3843,7 +3894,7 @@ balena.models.device.unsetLocation('7cf02a6', function(error) {
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| applicationSlugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| applicationSlugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -3928,13 +3979,13 @@ balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) 
 ***Deprecated***
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get a device manifest by slug  
+**Summary**: Get a device type manifest by slug  
 **Access**: public  
-**Fulfil**: <code>Object</code> - device manifest  
+**Fulfil**: <code>Object</code> - device type manifest  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrName | <code>String</code> | device slug |
+| slugOrName | <code>String</code> | device type slug |
 
 **Example**  
 ```js
@@ -3951,7 +4002,9 @@ balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest)
 ```
 <a name="balena.models.device.getManifestByApplication"></a>
 
-##### device.getManifestByApplication(slugOrId) ⇒ <code>Promise</code>
+##### ~~device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device manifest by application name  
 **Access**: public  
@@ -3959,7 +4012,7 @@ balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest)
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 
 **Example**  
 ```js
@@ -3995,7 +4048,7 @@ console.log(randomKey);
 ```
 <a name="balena.models.device.register"></a>
 
-##### device.register(applicationSlugOrId, uuid) ⇒ <code>Promise</code>
+##### device.register(applicationSlugOrUuidOrId, uuid) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Register a new device with a Balena application.  
 **Access**: public  
@@ -4003,7 +4056,7 @@ console.log(randomKey);
 
 | Param | Type | Description |
 | --- | --- | --- |
-| applicationSlugOrId | <code>String</code> \| <code>Number</code> | application slug (string) or id (number) |
+| applicationSlugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | uuid | <code>String</code> | device uuid |
 
 **Example**  
@@ -4030,7 +4083,7 @@ balena.models.device.register('myorganization/myapp', uuid, function(error, regi
 ```
 <a name="balena.models.device.generateDeviceKey"></a>
 
-##### device.generateDeviceKey(uuidOrId) ⇒ <code>Promise</code>
+##### device.generateDeviceKey(uuidOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Generate a device key  
 **Access**: public  
@@ -4038,6 +4091,8 @@ balena.models.device.register('myorganization/myapp', uuid, function(error, regi
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| [keyName] | <code>String</code> | Device key name |
+| [keyDescription] | <code>String</code> | Description for device key |
 
 **Example**  
 ```js
@@ -5130,13 +5185,19 @@ This method returns a single device type.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| idOrSlug | <code>String</code> \| <code>Number</code> |  | device type slug (string) or id |
+| idOrSlug | <code>String</code> \| <code>Number</code> |  | device type slug (string) or alias (string) or id |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
 balena.models.deviceType.get('raspberry-pi').then(function(deviceType) {
 	console.log(deviceType);
+});
+```
+**Example**  
+```js
+balena.models.deviceType.get('raspberrypi').then(function(deviceType) {
+	console.log('resolved alias:', deviceType);
 });
 ```
 **Example**  
@@ -5300,7 +5361,7 @@ balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTyp
     * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
     * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
-    * [.getProvisioningApiKeysByApplication(slugOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
+    * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
     * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
     * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
     * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
@@ -5391,7 +5452,7 @@ balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
 ```
 <a name="balena.models.apiKey.getProvisioningApiKeysByApplication"></a>
 
-##### apiKey.getProvisioningApiKeysByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+##### apiKey.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Get all provisioning API keys for an application  
 **Access**: public  
@@ -5399,7 +5460,7 @@ balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6082,8 +6143,8 @@ balena.models.organization.remove(123, function(error) {
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
     * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
-    * [.download(deviceType, [version])](#balena.models.os.download) ⇒ <code>Promise</code>
-    * [.getConfig(slugOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
+    * [.download(deviceType, [version], options)](#balena.models.os.download) ⇒ <code>Promise</code>
+    * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
@@ -6211,7 +6272,7 @@ balena.models.os.getLastModified('raspberry-pi', function(error, date) {
 ```
 <a name="balena.models.os.download"></a>
 
-##### os.download(deviceType, [version]) ⇒ <code>Promise</code>
+##### os.download(deviceType, [version], options) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Download an OS image  
 **Access**: public  
@@ -6221,6 +6282,7 @@ balena.models.os.getLastModified('raspberry-pi', function(error, date) {
 | --- | --- | --- |
 | deviceType | <code>String</code> | device type slug |
 | [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest' Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
+| options | <code>Object</code> | OS configuration options to use. |
 
 **Example**  
 ```js
@@ -6235,7 +6297,7 @@ balena.models.os.download('raspberry-pi', function(error, stream) {
 ```
 <a name="balena.models.os.getConfig"></a>
 
-##### os.getConfig(slugOrId, options) ⇒ <code>Promise</code>
+##### os.getConfig(slugOrUuidOrId, options) ⇒ <code>Promise</code>
 Builds the config.json for a device in the given application, with the given
 options.
 
@@ -6249,12 +6311,13 @@ generation is only supported when using a session token, not an API key.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number). |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number). |
 | options | <code>Object</code> |  | OS configuration options to use. |
 | options.version | <code>String</code> |  | Required: the OS version of the image. |
 | [options.network] | <code>String</code> | <code>&#x27;ethernet&#x27;</code> | The network type that the device will use, one of 'ethernet' or 'wifi'. |
 | [options.appUpdatePollInterval] | <code>Number</code> |  | How often the OS checks for updates, in minutes. |
 | [options.provisioningKeyName] | <code>String</code> |  | Name assigned to API key |
+| [options.developmentMode] | <code>Boolean</code> |  | Controls delopment mode for unified balenaOS releases. |
 | [options.wifiKey] | <code>String</code> |  | The key for the wifi network the device will connect to. |
 | [options.wifiSsid] | <code>String</code> |  | The ssid for the wifi network the device will connect to. |
 | [options.ip] | <code>String</code> |  | static ip address. |
@@ -6360,6 +6423,7 @@ console.log(result2);
 * [.config](#balena.models.config) : <code>object</code>
     * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
     * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
+    * ~~[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code>~~
     * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
     * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
 
@@ -6404,6 +6468,33 @@ balena.models.config.getDeviceTypes(function(error, deviceTypes) {
 	if (error) throw error;
 	console.log(deviceTypes);
 })
+```
+<a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
+
+##### ~~config.getDeviceTypeManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
+***Deprecated***
+
+**Kind**: static method of [<code>config</code>](#balena.models.config)  
+**Summary**: Get a device type manifest by slug  
+**Access**: public  
+**Fulfil**: <code>Object</code> - device type manifest  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| slugOrName | <code>String</code> | device type slug |
+
+**Example**  
+```js
+balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi').then(function(manifest) {
+	console.log(manifest);
+});
+```
+**Example**  
+```js
+balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi', function(error, manifest) {
+	if (error) throw error;
+	console.log(manifest);
+});
 ```
 <a name="balena.models.config.getDeviceOptions"></a>
 
@@ -6462,16 +6553,16 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 
 * [.release](#balena.models.release) : <code>object</code>
     * [.tags](#balena.models.release.tags) : <code>object</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
         * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
         * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
     * [.get(commitOrId, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
     * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getLatestByApplication(slugOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
-    * [.createFromUrl(slugOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
+    * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
     * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
     * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
     * [.note(commitOrId, note)](#balena.models.release.note) ⇒ <code>Promise</code>
@@ -6482,7 +6573,7 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 **Kind**: static namespace of [<code>release</code>](#balena.models.release)  
 
 * [.tags](#balena.models.release.tags) : <code>object</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
     * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
@@ -6490,7 +6581,7 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 
 <a name="balena.models.release.tags.getAllByApplication"></a>
 
-###### tags.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags for an application  
 **Access**: public  
@@ -6498,7 +6589,7 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6710,7 +6801,7 @@ balena.models.release.getWithImageDetails(123, function(error, release) {
 ```
 <a name="balena.models.release.getAllByApplication"></a>
 
-##### release.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+##### release.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get all releases from an application  
 **Access**: public  
@@ -6718,7 +6809,7 @@ balena.models.release.getWithImageDetails(123, function(error, release) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6742,7 +6833,7 @@ balena.models.release.getAllByApplication('myorganization/myapp', function(error
 ```
 <a name="balena.models.release.getLatestByApplication"></a>
 
-##### release.getLatestByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+##### release.getLatestByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get the latest successful release for an application  
 **Access**: public  
@@ -6750,7 +6841,7 @@ balena.models.release.getAllByApplication('myorganization/myapp', function(error
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6774,7 +6865,7 @@ balena.models.release.getLatestByApplication('myorganization/myapp', function(er
 ```
 <a name="balena.models.release.createFromUrl"></a>
 
-##### release.createFromUrl(slugOrId, urlDeployOptions) ⇒ <code>Promise</code>
+##### release.createFromUrl(slugOrUuidOrId, urlDeployOptions) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Create a new release built from the source in the provided url  
 **Access**: public  
@@ -6782,7 +6873,7 @@ balena.models.release.getLatestByApplication('myorganization/myapp', function(er
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | urlDeployOptions | <code>Object</code> |  | builder options |
 | urlDeployOptions.url | <code>String</code> |  | a url with a tarball of the project to build |
 | [urlDeployOptions.shouldFlatten] | <code>Boolean</code> | <code>true</code> | Should be true when the tarball includes an extra root folder with all the content |
@@ -6895,11 +6986,11 @@ balena.models.release.note(123, 'My useful note');
 * [.service](#balena.models.service) : <code>object</code>
     * [.var](#balena.models.service.var) : <code>object</code>
         * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
         * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
         * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
         * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="balena.models.service.var"></a>
 
@@ -6908,7 +6999,7 @@ balena.models.release.note(123, 'My useful note');
 
 * [.var](#balena.models.service.var) : <code>object</code>
     * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
     * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
     * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
     * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
@@ -6941,7 +7032,7 @@ balena.models.service.var.getAllByService(999999, function(error, vars) {
 ```
 <a name="balena.models.service.var.getAllByApplication"></a>
 
-###### var.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+###### var.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get all service variables by application  
 **Access**: public  
@@ -6949,7 +7040,7 @@ balena.models.service.var.getAllByService(999999, function(error, vars) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -7050,7 +7141,7 @@ balena.models.service.var.remove(999999, 'VAR', function(error) {
 ```
 <a name="balena.models.service.getAllByApplication"></a>
 
-##### service.getAllByApplication(slugOrId, [options]) ⇒ <code>Promise</code>
+##### service.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>service</code>](#balena.models.service)  
 **Summary**: Get all services from an application  
 **Access**: public  
@@ -7058,7 +7149,7 @@ balena.models.service.var.remove(999999, 'VAR', function(error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| slugOrId | <code>String</code> \| <code>Number</code> |  | application slug (string) or id (number) |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -8061,3 +8152,4 @@ balena.settings.getAll(function(error, settings) {
 	if (error) throw error;
 	console.log(settings);
 });
+```
