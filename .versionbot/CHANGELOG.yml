@@ -1,4 +1,18 @@
 - commits:
+    - subject: "minor: Add trying SDK in the browser"
+      hash: 50a6ca1844869eaccaf3275361a4016f7a284c05
+      body: >
+        Add information about using SDK in the browser as a partial. Solving:
+        https://github.com/balena-io/docs/issues/2205
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 16.18.0
+  title: "'patch: Add trying SDK in the browser'"
+  date: 2022-03-14T19:40:22.550Z
+- commits:
     - subject: "device.getWithServiceDetails: Add the release id in the service info"
       hash: fd01e59371d7691401eef605598bc50b5e62a0fb
       body: ""
