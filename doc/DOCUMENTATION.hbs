@@ -1,8 +1,58 @@
-Welcome to the Balena SDK documentation.
+Welcome to the Balena SDK documentation. This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
 
-This document aims to describe all the functions supported by the SDK, as well as showing examples of their expected usage.
+## Installation
+
+Install the balena SDK by running:
+
+```sh
+$ npm install --save balena-sdk
+```
+
+### Bundling for browsers
+
+If you're using webpack, browserify, or a similar tool then you probably want to bundle the balena SDK into your application yourself, rather than using the pre-built `balena-browser.js` bundle. 
+
+If you intend to do that, be sure to remove the following dependencies that are actually unnecessary in the browser, because they're only used in Node environments. This will significantly reduce the size of your resulting bundle:
+
+* fs
+* path
+* balena-settings-client
+* node-localstorage
+
+### Bundling with pkg
+
+The balena SDK includes builds for various ECMAScript versions that are
+dynamically selected at runtime (using 
+[@balena/es-version](https://github.com/balena-io-modules/balena-es-version)).
+For this reason, packagers like [pkg](https://github.com/vercel/pkg) are not
+able to automatically detect which assets to include in the output package. The
+following sample `pkg` section should be added to your application's
+`package.json` file to instruct `pkg` to bundle the required assets:
+
+```json
+  "pkg": {
+    "scripts": [
+      "node_modules/balena-sdk/**/*.js"
+    ],
+    "assets": [
+      "node_modules/pinejs-client-core/**/*"
+    ]
+  }
+```
+
+For more information, please refer to the respective
+[documentation from the `pkg` project](https://github.com/vercel/pkg#config).
+
+## Trying balenaSDK in the browser
+
+BalenaSDK is widely utilized in the [balenaCloud dashboard](https://dashboard.balena-cloud.com/) to perform operations. The SDK has been made available in the browser console by default to test balenaSDK queries on the go. 
+To use it, head to the [balenaCloud dashboard](https://dashboard.balena-cloud.com/) and open the [browser developer console](https://support.monday.com/hc/en-us/articles/360002197259-How-to-Open-the-Developer-Console). There, you will find balenaSDK initialized in the console and ready to run SDK queries.
+
+![](https://user-images.githubusercontent.com/22801822/157650701-d47ee5bc-28e4-4ca9-9aba-e208d47698c3.png)
+
 
 If you feel something is missing, not clear or could be improved, please don't hesitate to open an
 [issue in GitHub](https://github.com/balena-io/balena-sdk/issues/new), we'll be happy to help.
+
 
 {{>main}}
