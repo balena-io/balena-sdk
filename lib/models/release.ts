@@ -469,6 +469,7 @@ const getReleaseModel = function (
 		});
 	}
 
+	// TODO: Rename to `setNote` in the next major
 	/**
 	 * @summary Add a note to a release
 	 * @name note
@@ -477,7 +478,7 @@ const getReleaseModel = function (
 	 * @memberof balena.models.release
 	 *
 	 * @param {String|Number} commitOrId - release commit (string) or id (number)
-	 * @param {String|Null} note - the note
+	 * @param {String|Null} noteOrNull - the note
 	 *
 	 * @returns {Promise}
 	 *
@@ -497,6 +498,38 @@ const getReleaseModel = function (
 			id,
 			body: {
 				note: noteOrNull,
+			},
+		});
+	}
+
+	/**
+	 * @summary Add a known issue list to a release
+	 * @name setKnownIssueList
+	 * @public
+	 * @function
+	 * @memberof balena.models.release
+	 *
+	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Null} knownIssueListOrNull - the known issue list
+	 *
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.release.setKnownIssueList('7cf02a6', 'This is an issue');
+	 *
+	 * @example
+	 * balena.models.release.setKnownIssueList(123, 'This is an issue');
+	 */
+	async function setKnownIssueList(
+		commitOrId: string | number,
+		knownIssueListOrNull: string | null,
+	): Promise<void> {
+		const { id } = await get(commitOrId, { $select: 'id' });
+		await pine.patch<Release>({
+			resource: 'release',
+			id,
+			body: {
+				known_issue_list: knownIssueListOrNull,
 			},
 		});
 	}
@@ -692,6 +725,7 @@ const getReleaseModel = function (
 		finalize,
 		setIsInvalidated,
 		note,
+		setKnownIssueList,
 		tags,
 	};
 };
