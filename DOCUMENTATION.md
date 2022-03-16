@@ -376,7 +376,8 @@ const sdk = fromSharedOptions();
             * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
             * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
             * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-            * [.note(commitOrId, note)](#balena.models.release.note) ⇒ <code>Promise</code>
+            * [.note(commitOrId, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+            * [.setKnownIssueList(commitOrId, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -752,7 +753,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
         * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
         * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-        * [.note(commitOrId, note)](#balena.models.release.note) ⇒ <code>Promise</code>
+        * [.note(commitOrId, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+        * [.setKnownIssueList(commitOrId, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -6565,7 +6567,8 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
     * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
     * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
     * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-    * [.note(commitOrId, note)](#balena.models.release.note) ⇒ <code>Promise</code>
+    * [.note(commitOrId, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+    * [.setKnownIssueList(commitOrId, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags"></a>
 
@@ -6960,7 +6963,7 @@ balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
 ```
 <a name="balena.models.release.note"></a>
 
-##### release.note(commitOrId, note) ⇒ <code>Promise</code>
+##### release.note(commitOrId, noteOrNull) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Add a note to a release  
 **Access**: public  
@@ -6968,7 +6971,7 @@ balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
 | Param | Type | Description |
 | --- | --- | --- |
 | commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
-| note | <code>String</code> \| <code>Null</code> | the note |
+| noteOrNull | <code>String</code> \| <code>Null</code> | the note |
 
 **Example**  
 ```js
@@ -6977,6 +6980,26 @@ balena.models.release.note('7cf02a6', 'My useful note');
 **Example**  
 ```js
 balena.models.release.note(123, 'My useful note');
+```
+<a name="balena.models.release.setKnownIssueList"></a>
+
+##### release.setKnownIssueList(commitOrId, knownIssueListOrNull) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>release</code>](#balena.models.release)  
+**Summary**: Add a known issue list to a release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| knownIssueListOrNull | <code>String</code> \| <code>Null</code> | the known issue list |
+
+**Example**  
+```js
+balena.models.release.setKnownIssueList('7cf02a6', 'This is an issue');
+```
+**Example**  
+```js
+balena.models.release.setKnownIssueList(123, 'This is an issue');
 ```
 <a name="balena.models.service"></a>
 

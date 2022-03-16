@@ -490,6 +490,26 @@ describe('Release Model', function () {
 			});
 		});
 
+		describe('balena.models.release.setKnownIssueList()', function () {
+			releaseRetrievalFields.forEach((field) => {
+				it(`should set the known issue list using the release ${field}`, async function () {
+					const release = ctx.currentRelease;
+					const knownIssueList = `This is a note set using field: ${field}`;
+					await balena.models.release.setKnownIssueList(
+						release[field],
+						knownIssueList,
+					);
+					const updatedRelease = await balena.models.release.get(release.id, {
+						$select: ['id', 'known_issue_list'],
+					});
+					expect(updatedRelease).to.deep.match({
+						id: release.id,
+						known_issue_list: knownIssueList,
+					});
+				});
+			});
+		});
+
 		describe('balena.models.release.tags', function () {
 			const appTagTestOptions = {
 				// prettier-ignore
