@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add release.setKnownIssueList function for setting a release's known
+        issue list
+      hash: 474d84e71b6614a5e4610eee92addc607efca5b3
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+        signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 16.19.0
+  title: "'Add release.setKnownIssueList function for setting a release's known
+    issue list'"
+  date: 2022-03-16T17:09:05.209Z
+- commits:
     - subject: "minor: Add trying SDK in the browser"
       hash: 50a6ca1844869eaccaf3275361a4016f7a284c05
       body: >
