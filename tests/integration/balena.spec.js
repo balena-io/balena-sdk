@@ -11,6 +11,7 @@ import {
 import { timeSuite } from '../util';
 
 const DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/';
+const apiVersion = 'v6';
 
 describe('Balena SDK', function () {
 	timeSuite(before);
@@ -233,7 +234,7 @@ describe('Balena SDK', function () {
 
 						const promise = balena.request.send({
 							method: 'GET',
-							url: '/v5/application',
+							url: `/${apiVersion}/application`,
 						});
 
 						return expect(promise).to.be.rejected.then(() =>
@@ -252,7 +253,7 @@ describe('Balena SDK', function () {
 
 							const promise = balena.request.send({
 								method: 'GET',
-								url: '/v5/application',
+								url: `/${apiVersion}/application`,
 								baseUrl: sdkOpts.apiUrl,
 							});
 
@@ -272,7 +273,7 @@ describe('Balena SDK', function () {
 
 							const promise = balena.request.send({
 								method: 'GET',
-								url: '/v5/application',
+								url: `/${apiVersion}/application`,
 								baseUrl: DIFFERENT_TEST_SERVER_URL,
 							});
 
@@ -293,7 +294,7 @@ describe('Balena SDK', function () {
 
 							const promise = balena.request.send({
 								method: 'GET',
-								url: `${sdkOpts.apiUrl}/v5/application`,
+								url: `${sdkOpts.apiUrl}/${apiVersion}/application`,
 							});
 
 							return promise.then(() =>
@@ -312,7 +313,7 @@ describe('Balena SDK', function () {
 
 							const promise = balena.request.send({
 								method: 'GET',
-								url: `${DIFFERENT_TEST_SERVER_URL}/v5/application`,
+								url: `${DIFFERENT_TEST_SERVER_URL}/${apiVersion}/application`,
 							});
 
 							return expect(promise).to.be.rejected.then(() =>
