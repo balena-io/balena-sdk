@@ -111,7 +111,7 @@
     "balena-errors": "^4.7.1",
     "balena-hup-action-utils": "~4.1.0",
     "balena-register-device": "^7.1.0",
-    "balena-request": "^11.5.0",
+    "balena-request": "^11.5.3",
     "balena-semver": "^2.3.0",
     "balena-settings-client": "^4.0.6",
     "lodash": "^4.17.21",
