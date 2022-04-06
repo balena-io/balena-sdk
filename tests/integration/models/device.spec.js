@@ -1656,7 +1656,7 @@ describe('Device Model', function () {
 							expect(error).to.have.property('statusCode', 500);
 							expect(error).to.have.property(
 								'message',
-								'Request error: [object Object]',
+								'Request error: Device is not online',
 							);
 							return expect(error.code).to.not.equal(
 								'BalenaInvalidParameterError',
