@@ -1,4 +1,43 @@
 - commits:
+    - subject: Fix extracting a meaningful error message instead of "[object Object]"
+      hash: e768dc51607d156a99312578e46bc2d95770ce56
+      body: |
+        Update balena-request from 11.5.3 to 11.5.5
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io-modules/balena-request/pull/164
+        see: https://github.com/balena-io-modules/balena-request/pull/164
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Fix extracting the response error from object response bodies
+              hash: 78dff444e207df7d6838f0e8bdf25b8673c065d6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+          version: balena-request-11.5.5
+          title: "'Fix extracting the response error from object response bodies'"
+          date: 2022-04-06T15:35:57.195Z
+        - commits:
+            - subject: Drop explicit karma-chrome-launcher devDependency
+              hash: db032a369a48b9707665189e2a42497105f1c596
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+          version: balena-request-11.5.4
+          title: "'Drop explicit karma-chrome-launcher devDependency'"
+          date: 2022-04-06T12:08:34.148Z
+  version: 16.19.2
+  title: "'Fix extracting a meaningful error message instead of \"[object Object]\"'"
+  date: 2022-04-06T16:27:21.352Z
+- commits:
     - subject: Update balena-request dependency to v11.5.3
       hash: 914cf832c4ece2e010784d0d7e33b1a7f2c22437
       body: ""
