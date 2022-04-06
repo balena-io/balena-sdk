@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: Update v5 model endpoint prefix references"
+      hash: 8cab46ad7b8c3c5bf825824749547e59092a9590
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.19.3
+  title: "'tests: Update v5 model endpoint prefix references'"
+  date: 2022-04-06T17:42:22.564Z
+- commits:
     - subject: Fix extracting a meaningful error message instead of "[object Object]"
       hash: e768dc51607d156a99312578e46bc2d95770ce56
       body: |
