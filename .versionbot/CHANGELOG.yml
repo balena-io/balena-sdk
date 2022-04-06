@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update balena-request dependency to v11.5.3
+      hash: 914cf832c4ece2e010784d0d7e33b1a7f2c22437
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+        signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 16.19.1
+  title: "'Update balena-request dependency to v11.5.3'"
+  date: 2022-04-05T17:08:39.357Z
+- commits:
     - subject: Add release.setKnownIssueList function for setting a release's known
         issue list
       hash: 474d84e71b6614a5e4610eee92addc607efca5b3
