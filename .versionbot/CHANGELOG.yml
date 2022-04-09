@@ -1,4 +1,41 @@
 - commits:
+    - subject: "patch: bump @types/mocha from 5.2.7 to 9.1.0"
+      hash: 6c29407589755f6bd7b0732180a4e1712ce31b53
+      body: >
+        Bumps
+        [@types/mocha](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/mocha)
+        from 5.2.7 to 9.1.0.
+
+        - [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+
+        - [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/mocha)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: "@types/mocha"
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+    - subject: Add dependabot configuration
+      hash: 8877acf9b8504b65feb689a57099599b4c95b228
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.19.4
+  title: "'patch: bump @types/mocha from 5.2.7 to 9.1.0'"
+  date: 2022-04-09T08:19:36.927Z
+- commits:
     - subject: "tests: Update v5 model endpoint prefix references"
       hash: 8cab46ad7b8c3c5bf825824749547e59092a9590
       body: ""
