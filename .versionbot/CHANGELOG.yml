@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add dependabot configuration
+      hash: 8877acf9b8504b65feb689a57099599b4c95b228
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.19.4
+  title: "'Add dependabot configuration'"
+  date: 2022-04-09T06:45:20.416Z
+- commits:
     - subject: "tests: Update v5 model endpoint prefix references"
       hash: 8cab46ad7b8c3c5bf825824749547e59092a9590
       body: ""
