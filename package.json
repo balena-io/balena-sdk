@@ -62,7 +62,7 @@
     "@balena/lint": "^6.1.1",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^9.1.0",
     "@types/ndjson": "^2.0.0",
     "@types/sinon": "^10.0.6",
     "balena-config-karma": "^3.0.0",
