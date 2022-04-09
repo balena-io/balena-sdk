@@ -1,4 +1,18 @@
 - commits:
+    - subject: Bump karma to v6
+      hash: cae5254525ab7b1381d43f79fbd1ff4d63ae546d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.19.5
+  title: "'Bump karma to v6'"
+  date: 2022-04-09T20:15:54.812Z
+- commits:
     - subject: Add dependabot configuration
       hash: 8877acf9b8504b65feb689a57099599b4c95b228
       body: ""
