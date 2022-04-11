@@ -1,1 +1,1 @@
-exports.loadEnv = () => require('dotenv').config({ silent: true });
+exports.loadEnv = () => require('dotenv').config();
