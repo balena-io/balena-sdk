@@ -23,20 +23,22 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 
-const makeRequest = (url) =>
-	new Promise((resolve) =>
-		superagent.get(url).end(
-			(
-				err,
-				res, // have to normalize because of different behaviour in the browser and node
-			) =>
-				resolve({
-					status: res?.status || err.status || 0,
-					isError: !!err,
-					response: res?.text,
-				}),
-		),
-	);
+const makeRequest = async (url) => {
+	try {
+		const res = await superagent.get(url);
+		return {
+			status: res.status,
+			isError: false,
+			response: res.text,
+		};
+	} catch (err) {
+		return {
+			status: err.status,
+			isError: true,
+			response: err.response?.text,
+		};
+	}
+};
 
 describe('Device Model', function () {
 	timeSuite(before);

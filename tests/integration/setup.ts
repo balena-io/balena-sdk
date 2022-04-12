@@ -88,21 +88,18 @@ const buildCredentials = function () {
 		);
 	}
 
-	if (
-		!_.every([
-			creds.email != null,
-			creds.password != null,
-			creds.username != null,
-			creds.member.email != null,
-			creds.member.password != null,
-			creds.member.username != null,
-			creds.register.email != null,
-			creds.register.password != null,
-			creds.register.username != null,
-		])
-	) {
-		throw new Error('Missing environment credentials');
-	}
+	['', 'member', 'register'].forEach((path) => {
+		const credsSet = path ? creds[path] : creds;
+		['email', 'password', 'username'].forEach((prop) => {
+			if (credsSet[prop] == null) {
+				throw new Error(
+					`Missing environment credentials for ${['creds', path, prop]
+						.filter((x) => x)
+						.join('.')}`,
+				);
+			}
+		});
+	});
 
 	return creds;
 };
