@@ -1,4 +1,44 @@
 - commits:
+    - subject: "tests: Update to work with latest major of superagent"
+      hash: f141912cfc09c930aa31f88afed006c8210c70d5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "patch: bump superagent from 3.8.3 to 7.1.2"
+      hash: ae3974af1965386bf236b7ae295e4a9ecc285f0c
+      body: >
+        Bumps [superagent](https://github.com/visionmedia/superagent) from 3.8.3
+        to 7.1.2.
+
+        - [Release notes](https://github.com/visionmedia/superagent/releases)
+
+        - [Changelog](https://github.com/visionmedia/superagent/blob/master/HISTORY.md)
+
+        - [Commits](https://github.com/visionmedia/superagent/commits)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: superagent
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.19.7
+  title: "'patch: bump superagent from 3.8.3 to 7.1.2'"
+  date: 2022-04-12T18:01:18.368Z
+- commits:
     - subject: "patch: bump dotenv from 4.0.0 to 16.0.0"
       hash: b2ddda64df84d5a109b2adc1ee847ff5aef17000
       body: >
