@@ -105,7 +105,7 @@
     "@types/json-schema": "^7.0.9",
     "@types/lodash": "^4.14.168",
     "@types/memoizee": "^0.4.5",
-    "@types/node": "^10.17.55",
+    "@types/node": "^17.0.24",
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^4.1.0",
     "balena-errors": "^4.7.1",
