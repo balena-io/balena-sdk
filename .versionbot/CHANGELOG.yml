@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Remove additional quotes"
+      hash: a6d3d4ea6f4e194efad51330008c0d67c2745837
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 16.19.8
+  title: "'patch: Remove additional quotes'"
+  date: 2022-04-20T18:19:59.893Z
+- commits:
     - subject: "tests: Update to work with latest major of superagent"
       hash: f141912cfc09c930aa31f88afed006c8210c70d5
       body: ""
