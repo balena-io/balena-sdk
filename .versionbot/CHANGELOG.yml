@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Remove documentation.md from the NPM package"
+      hash: 1e4e33bfbb0e07fa89e5213d81e41dfbd36447ce
+      body: ""
+      footer: {}
+      author: Vipul Gupta
+      nested: []
+  version: 16.19.9
+  title: "'patch: Remove documentation.md from the NPM package'"
+  date: 2022-04-26T20:21:31.993Z
+- commits:
     - subject: "patch: Remove additional quotes"
       hash: a6d3d4ea6f4e194efad51330008c0d67c2745837
       body: ""
