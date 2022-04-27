@@ -472,7 +472,7 @@ const getOsModel = function (
 				url: `/device-types/v1/${deviceType}/images/${version}/download-size`,
 				baseUrl: apiUrl,
 			});
-			return body.size;
+			return body.size as number;
 		},
 	);
 
@@ -937,8 +937,14 @@ const getOsModel = function (
 	};
 
 	return {
-		_getNormalizedDeviceTypeSlug,
-		_getDownloadSize,
+		// Cast the exported types for internal methods so `@types/memoizee` can be a dev depenency.
+		_getNormalizedDeviceTypeSlug: _getNormalizedDeviceTypeSlug as (
+			deviceTypeSlug: string,
+		) => Promise<string>,
+		_getDownloadSize: _getDownloadSize as (
+			deviceType: string,
+			version: string,
+		) => Promise<number>,
 		_clearDeviceTypesAndOsVersionCaches,
 		_getMaxSatisfyingVersion,
 		OsTypes,

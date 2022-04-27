@@ -61,6 +61,8 @@
     "@balena/lint": "^6.1.1",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",
+    "@types/lodash": "^4.14.182",
+    "@types/memoizee": "^0.4.7",
     "@types/mocha": "^5.2.7",
     "@types/ndjson": "^2.0.0",
     "@types/sinon": "^10.0.6",
@@ -102,8 +104,6 @@
   "dependencies": {
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
-    "@types/lodash": "^4.14.168",
-    "@types/memoizee": "^0.4.5",
     "@types/node": "^10.17.55",
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^4.1.0",
