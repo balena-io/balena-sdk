@@ -266,7 +266,7 @@ const getApiKeysModel = function (
 		 * @memberof balena.models.apiKey
 		 *
 		 * @param {Number} id - API key id
-		 * @param {Object} apiKeyInfo - an object with the updated name or description
+		 * @param {Object} apiKeyInfo - an object with the updated name|description|expiryDate
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -274,6 +274,9 @@ const getApiKeysModel = function (
 		 *
 		 * @example
 		 * balena.models.apiKey.update(123, { description: 'updated description' });
+		 *
+		 * @example
+		 * balena.models.apiKey.update(123, { expiryDate: '2022-04-29' });
 		 *
 		 * @example
 		 * balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
@@ -286,7 +289,11 @@ const getApiKeysModel = function (
 		 */
 		async update(
 			id: number,
-			apiKeyInfo: { name?: string; description?: string | null },
+			apiKeyInfo: {
+				name?: string;
+				description?: string | null;
+				expiryDate?: string | null;
+			},
 		): Promise<void> {
 			if (!apiKeyInfo) {
 				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
@@ -300,6 +307,7 @@ const getApiKeysModel = function (
 			const body = {
 				name: apiKeyInfo.name,
 				description: apiKeyInfo.description,
+				expiry_date: apiKeyInfo.expiryDate,
 			};
 			await pine.patch<BalenaSdk.ApiKey>({
 				resource: 'api_key',

@@ -999,13 +999,13 @@ describe('OS model', function () {
 				const provisioningKeys =
 					await balena.models.apiKey.getProvisioningApiKeysByApplication(
 						ctx.application.id,
-						{ $filter: { expiryDate: provisioningKeyExpiryDate } },
+						{ $filter: { expiry_date: provisioningKeyExpiryDate } },
 					);
 
 				expect(provisioningKeys).to.be.an('array');
 				expect(provisioningKeys.length).is.equal(1);
 				expect(provisioningKeys[0])
-					.to.have.property('name')
+					.to.have.property('expiry_date')
 					.to.be.equal(provisioningKeyExpiryDate);
 			});
 

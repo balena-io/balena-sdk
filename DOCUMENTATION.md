@@ -5514,7 +5514,7 @@ balena.models.apiKey.getDeviceApiKeysByDevice(123, function(error, apiKeys) {
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>Number</code> | API key id |
-| apiKeyInfo | <code>Object</code> | an object with the updated name or description |
+| apiKeyInfo | <code>Object</code> | an object with the updated name|description|expiryDate |
 
 **Example**  
 ```js
@@ -5523,6 +5523,10 @@ balena.models.apiKey.update(123, { name: 'updatedName' });
 **Example**  
 ```js
 balena.models.apiKey.update(123, { description: 'updated description' });
+```
+**Example**  
+```js
+balena.models.apiKey.update(123, { expiryDate: '2022-04-29' });
 ```
 **Example**  
 ```js
@@ -6319,6 +6323,7 @@ generation is only supported when using a session token, not an API key.
 | [options.network] | <code>String</code> | <code>&#x27;ethernet&#x27;</code> | The network type that the device will use, one of 'ethernet' or 'wifi'. |
 | [options.appUpdatePollInterval] | <code>Number</code> |  | How often the OS checks for updates, in minutes. |
 | [options.provisioningKeyName] | <code>String</code> |  | Name assigned to API key |
+| [options.provisioningKeyExpiryDate] | <code>String</code> |  | Expiry Date assigned to API key |
 | [options.developmentMode] | <code>Boolean</code> |  | Controls delopment mode for unified balenaOS releases. |
 | [options.wifiKey] | <code>String</code> |  | The key for the wifi network the device will connect to. |
 | [options.wifiSsid] | <code>String</code> |  | The ssid for the wifi network the device will connect to. |
