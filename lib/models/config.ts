@@ -27,7 +27,8 @@ export interface Config {
 	apiUrl: string;
 	actionsUrl: string;
 	gitServerUrl: string;
-	pubnub: {
+	/** @deprecated */
+	pubnub?: {
 		subscribe_key: string;
 		publish_key: string;
 	};

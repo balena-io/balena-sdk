@@ -80,12 +80,6 @@ describe('Config Model', function () {
 					expect(_.isEmpty(config)).to.be.false;
 				}));
 
-			it('should include the pubnub keys', () =>
-				balena.models.config.getAll().then(function ({ pubnub }) {
-					expect(pubnub.publish_key).to.be.a('string').that.has.length(0);
-					expect(pubnub.subscribe_key).to.be.a('string').that.has.length(0);
-				}));
-
 			it('should include the mixpanel token', () =>
 				balena.models.config.getAll().then(function ({ mixpanelToken }) {
 					expect(mixpanelToken).to.be.a('string');
