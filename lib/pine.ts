@@ -10,7 +10,9 @@ interface BackendParams {
 	apiKey?: string;
 	request: {
 		// TODO: Should be the type of balena-request
-		send: (options: AnyObject) => Promise<{ body: any }>;
+		send: (
+			options: AnyObject,
+		) => Promise<{ body: any; headers: Record<string, any> }>;
 	};
 	auth: import('balena-auth').default;
 }
@@ -71,7 +73,9 @@ class PinejsClient extends PinejsClientCore<PinejsClient> {
 		};
 
 		try {
-			const { body } = await request.send(options);
+			const { body, headers } = await request.send(options);
+			console.log('*** response.body', typeof body, body);
+			console.log('*** response.headers', headers);
 			return body;
 		} catch (err) {
 			if (err.statusCode !== 401) {
