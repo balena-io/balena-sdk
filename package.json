@@ -84,7 +84,7 @@
     "karma-env-preprocessor": "^0.1.1",
     "lint-staged": "^10.5.4",
     "mjs-mocha": "^3.0.0",
-    "mocha": "^3.5.3",
+    "mocha": "^10.0.0",
     "mocha.parallel": "^0.15.6",
     "mockttp": "^2.7.0",
     "rimraf": "^3.0.2",
