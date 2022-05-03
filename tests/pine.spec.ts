@@ -50,15 +50,15 @@ describe('Pine', function () {
 		beforeEach(async function () {
 			this.pine = buildPineInstance(mockServer.url);
 			mockServer
-				.get('/user/v1/refresh-token')
+				.forGet('/user/v1/refresh-token')
 				.thenReply(200, tokens.johndoe.token);
 			mockServer
-				.get('/foo')
+				.forGet('/foo')
 				.withHeaders({
 					Authorization: `Bearer ${tokens.johndoe.token}`,
 				})
-				.thenJSON(200, { hello: 'world' });
-			await mockServer.get('/foo').thenCallback(function (req) {
+				.thenJson(200, { hello: 'world' });
+			await mockServer.forGet('/foo').thenCallback(function (req) {
 				if (req.url.endsWith(`?apikey=${tokens.johndoe.token}`)) {
 					return {
 						status: 200,
@@ -82,8 +82,8 @@ describe('Pine', function () {
 						beforeEach(async function () {
 							this.pine = buildPineInstance(mockServer.url);
 							await mockServer
-								.get('/public_resource')
-								.thenJSON(200, { hello: 'public world' });
+								.forGet('/public_resource')
+								.thenJson(200, { hello: 'public world' });
 						});
 
 						describe('given there is no api key', function () {
@@ -186,8 +186,8 @@ describe('Pine', function () {
 						beforeEach(async function () {
 							this.pine = buildPineInstance(mockServer.url);
 							await mockServer
-								.get('/public_resource')
-								.thenJSON(200, { hello: 'public world' });
+								.forGet('/public_resource')
+								.thenJson(200, { hello: 'public world' });
 						});
 
 						it('should be successful', async function () {
@@ -241,9 +241,9 @@ describe('Pine', function () {
 				describe('given a POST endpoint that mirrors the request body', function () {
 					beforeEach(async function () {
 						this.pine = buildPineInstance(mockServer.url);
-						await mockServer.post('/foo').thenCallback((req) => ({
+						await mockServer.forPost('/foo').thenCallback(async (req) => ({
 							status: 200,
-							json: req.body.json,
+							json: await req.body.getJson(),
 						}));
 					});
 
@@ -273,9 +273,9 @@ describe('Pine', function () {
 							};
 
 							await mockServer
-								.get(`/${apiVersion}/application`)
+								.forGet(`/${apiVersion}/application`)
 								.withQuery({ $orderby: 'app_name asc' })
-								.thenJSON(200, this.applications);
+								.thenJson(200, this.applications);
 						});
 
 						it('should make the correct request', async function () {
@@ -293,7 +293,7 @@ describe('Pine', function () {
 						beforeEach(async function () {
 							this.pine = buildPineInstance(mockServer.url);
 							await mockServer
-								.get(`/${apiVersion}/application`)
+								.forGet(`/${apiVersion}/application`)
 								.thenReply(500, 'Internal Server Error');
 						});
 
@@ -313,10 +313,10 @@ describe('Pine', function () {
 							this.pine = buildPineInstance(mockServer.url);
 
 							await mockServer
-								.post(`/${apiVersion}/application`)
-								.thenCallback((req) => ({
+								.forPost(`/${apiVersion}/application`)
+								.thenCallback(async (req) => ({
 									status: 201,
-									json: req.body.json,
+									json: await req.body.getJson(),
 								}));
 						});
 
@@ -340,7 +340,7 @@ describe('Pine', function () {
 						beforeEach(async function () {
 							this.pine = buildPineInstance(mockServer.url);
 							await mockServer
-								.get(`/${apiVersion}/application`)
+								.forGet(`/${apiVersion}/application`)
 								.thenReply(404, 'Unsupported device type');
 						});
 
