@@ -1,4 +1,30 @@
 - commits:
+    - subject: "patch: bump mockttp from 0.9.1 to 2.7.0"
+      hash: fa44187e4e510171666f046d6a3a658f59956fd4
+      body: >-
+        Bumps [mockttp](https://github.com/httptoolkit/mockttp) from 0.9.1 to
+        2.7.0.
+
+        - [Release notes](https://github.com/httptoolkit/mockttp/releases)
+
+        - [Commits](https://github.com/httptoolkit/mockttp/compare/v0.9.1...v2.7.0)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: mockttp
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer: {}
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.19.11
+  title: "'patch: bump mockttp from 0.9.1 to 2.0.0'"
+  date: 2022-05-03T11:57:12.390Z
+- commits:
     - subject: Reduce the prod typing dependencies
       hash: 47bd9a204d82d465874ef3a6765eb93f16880b16
       body: ""
