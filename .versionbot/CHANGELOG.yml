@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: bump mockttp from 0.9.1 to 3.0.0"
+      hash: b56c34cdfd69fbb6087551bfb8bf200811073bce
+      body: >
+        Bumps [mockttp](https://github.com/httptoolkit/mockttp) from 0.9.1 to
+        3.0.0.
+
+        - [Release notes](https://github.com/httptoolkit/mockttp/releases)
+
+        - [Commits](https://github.com/httptoolkit/mockttp/compare/v0.9.1...v3.0.0)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: mockttp
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.19.11
+  title: "'patch: bump mockttp from 0.9.1 to 3.0.0'"
+  date: 2022-05-03T11:01:56.943Z
+- commits:
     - subject: Reduce the prod typing dependencies
       hash: 47bd9a204d82d465874ef3a6765eb93f16880b16
       body: ""
