@@ -1,4 +1,18 @@
 - commits:
+    - subject: "config.getAll: Deprecate the pubnub property and mark as optional"
+      hash: c36325efa798653685c6b7595d653eacee634830
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.19.12
+  title: "'config.getAll: Deprecate the pubnub property and mark as optional'"
+  date: 2022-05-03T13:38:03.596Z
+- commits:
     - subject: "patch: bump mockttp from 0.9.1 to 2.7.0"
       hash: fa44187e4e510171666f046d6a3a658f59956fd4
       body: >-
