@@ -10,7 +10,7 @@ $ npm install --save balena-sdk
 
 ### Bundling for browsers
 
-If you're using webpack, browserify, or a similar tool then you probably want to bundle the balena SDK into your application yourself, rather than using the pre-built `balena-browser.js` bundle. 
+If you're using webpack, browserify, or a similar tool then you probably want to bundle the balena SDK into your application yourself, rather than using the pre-built `balena-browser.min.js` bundle. 
 
 If you intend to do that, be sure to remove the following dependencies that are actually unnecessary in the browser, because they're only used in Node environments. This will significantly reduce the size of your resulting bundle:
 
