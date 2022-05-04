@@ -1,4 +1,59 @@
 - commits:
+    - subject: Bump mockttp to v3.0.0
+      hash: 5e789e348120ea6b96cacf436692112de22f34c0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "**BREAKING**: Stop actively supporting node 12"
+      hash: 0539cf052c7641d3ed22f907e5a9ffd603360c55
+      body: |
+        Node 12 may well still work with the SDK for
+        quite a while, but we'll no longer actively test
+        against them since they are now
+        characterized as EOL, and it's quite possible
+        that it may stop working entirely in any future
+        release.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "**BREAKING**: Stop publishing an unminified browser bundle"
+      hash: 78d793989e3b500e1dac2248d072dba87591ca2f
+      body: ""
+      footer:
+        Resolves: "#1222"
+        resolves: "#1222"
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update balena-settings-client to v5.0.0
+      hash: 693c53bbcb29bdb69d9f734c788f21e533f057a0
+      body: |
+        Update balena-settings-client from 4.0.6 to 5.0.0
+      footer:
+        Resolves: "#1231"
+        resolves: "#1231"
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.0.0
+  title: "'v17'"
+  date: 2022-05-04T21:14:06.757Z
+- commits:
     - subject: "models.apiKey: Update apiKeyInfo with expiryDate option"
       hash: 58765109d8a165f93f94fe069cc4e879949f23fe
       body: ""
