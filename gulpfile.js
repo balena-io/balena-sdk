@@ -24,7 +24,6 @@ const OPTIONS = {
 	files: {
 		tests: ['tests/**/*.spec.js', 'tests/**/*.spec.ts'],
 		browserEntry: 'index.js',
-		browserOutput: 'balena-browser.js',
 		browserMinifiedOutput: 'balena-browser.min.js',
 	},
 	directories: {
@@ -74,10 +73,6 @@ gulp.task('pack-browser', function () {
 		.exclude('balena-settings-client')
 		.exclude('node-localstorage')
 		.bundle();
-
-	bundle
-		.pipe(source(OPTIONS.files.browserOutput))
-		.pipe(gulp.dest(OPTIONS.directories.build));
 
 	return bundle
 		.pipe(source(OPTIONS.files.browserMinifiedOutput))
