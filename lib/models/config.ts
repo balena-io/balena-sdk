@@ -36,8 +36,8 @@ export interface Config {
 	mixpanelToken?: string;
 	intercomAppId?: string;
 	recurlyPublicKey?: string;
-	/** @deprecated */
-	deviceTypes: DeviceTypeJson.DeviceType[];
+	/** @deprecated Will be removed in a future API version. */
+	deviceTypes?: DeviceTypeJson.DeviceType[];
 	DEVICE_ONLINE_ICON: string;
 	DEVICE_OFFLINE_ICON: string;
 	signupCodeRequired: boolean;
