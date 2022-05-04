@@ -266,6 +266,42 @@ describe('API Key model', function () {
 				});
 			});
 
+			it('should not be able to update the expiryDate of an api key to a in-valid date string', async function () {
+				await expect(
+					balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+						expiryDate: 'in-valid date',
+					}),
+				).to.be.rejected;
+			});
+
+			it('should be able to update the expiryDate of an api key to a valid date string', async function () {
+				const validDate = new Date().toISOString();
+				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+					expiryDate: validDate,
+				});
+
+				const [apiKey] = await balena.models.apiKey.getAll({
+					$filter: { id: ctx.namedUserApiKey!.id },
+				});
+				expect(apiKey).to.deep.match({
+					name: 'updatedApiKeyName',
+					expiry_date: validDate,
+				});
+			});
+
+			it('should be able to update the expiryDate of an api key to null', async function () {
+				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+					expiryDate: null,
+				});
+				const [apiKey] = await balena.models.apiKey.getAll({
+					$filter: { id: ctx.namedUserApiKey!.id },
+				});
+				expect(apiKey).to.deep.match({
+					name: 'updatedApiKeyName',
+					expiry_date: null,
+				});
+			});
+
 			testSet.forEach(([title, ctxPropName]) => {
 				it(`should be able to update the name & description of a(n) ${title} api key`, async function () {
 					await balena.models.apiKey.update(ctx[ctxPropName]!.id, {

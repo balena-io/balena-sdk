@@ -84,6 +84,7 @@ export interface ImgConfigOptions {
 	network?: 'ethernet' | 'wifi';
 	appUpdatePollInterval?: number;
 	provisioningKeyName?: string;
+	provisioningKeyExpiryDate?: string;
 	wifiKey?: string;
 	wifiSsid?: string;
 	ip?: string;
@@ -757,6 +758,7 @@ const getOsModel = function (
 	 * @param {Number} [options.appUpdatePollInterval] - How often the OS checks
 	 * for updates, in minutes.
 	 * @param {String} [options.provisioningKeyName] - Name assigned to API key
+	 * @param {String} [options.provisioningKeyExpiryDate] - Expiry Date assigned to API key
 	 * @param {Boolean} [options.developmentMode] - Controls delopment mode for unified balenaOS releases.
 	 * @param {String} [options.wifiKey] - The key for the wifi network the
 	 * device will connect to.
