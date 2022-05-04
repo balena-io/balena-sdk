@@ -1,4 +1,29 @@
 - commits:
+    - subject: "models.apiKey: Update apiKeyInfo with expiryDate option"
+      hash: 58765109d8a165f93f94fe069cc4e879949f23fe
+      body: ""
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Nitish Agarwal
+      nested: []
+    - subject: "os.getConfig: Add typings for the provisioningKeyExpiryDate option"
+      hash: fd6299eb1d5cdf54727af23bea7fb6d746bc92b2
+      body: ""
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Balena CI
+      nested: []
+  version: 16.20.0
+  title: "'Add typings for provisioningKeyExpiryDate to os.getConfig and
+    expiryDate to model.apiKey'"
+  date: 2022-05-04T17:26:27.299Z
+- commits:
     - subject: "config.getAll: Mark the deviceTypes property as optional"
       hash: 5ad014924e9497a49754384c4d1fd0924e4c0583
       body: ""
