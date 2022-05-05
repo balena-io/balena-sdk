@@ -24,8 +24,6 @@ export interface Config {
 	deployment: string | null;
 	deviceUrlsBase: string;
 	adminUrl: string;
-	apiUrl: string;
-	actionsUrl: string;
 	gitServerUrl: string;
 	/** @deprecated */
 	pubnub?: {
