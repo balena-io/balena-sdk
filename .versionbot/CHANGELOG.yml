@@ -1,4 +1,33 @@
 - commits:
+    - subject: "patch: bump tmp from 0.0.31 to 0.2.1"
+      hash: e905a6a8054297c89e75447e5ff48ca92e13bd49
+      body: >
+        Bumps [tmp](https://github.com/raszi/node-tmp) from 0.0.31 to 0.2.1.
+
+        - [Release notes](https://github.com/raszi/node-tmp/releases)
+
+        - [Changelog](https://github.com/raszi/node-tmp/blob/master/CHANGELOG.md)
+
+        - [Commits](https://github.com/raszi/node-tmp/compare/v0.0.31...v0.2.1)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: tmp
+          dependency-type: direct:development
+          update-type: version-update:semver-minor
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.20.2
+  title: "'patch: bump tmp from 0.0.31 to 0.2.1'"
+  date: 2022-05-05T10:28:10.551Z
+- commits:
     - subject: Drop the non-populated apiUrl & actionsUrl properties from Config type
       hash: 77d10a4546c8e0265fa176fc3be4d63db5e55ff5
       body: ""
