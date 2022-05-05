@@ -1,4 +1,18 @@
 - commits:
+    - subject: Drop the non-populated apiUrl & actionsUrl properties from Config type
+      hash: 77d10a4546c8e0265fa176fc3be4d63db5e55ff5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.20.1
+  title: "'Drop the non-populated apiUrl & actionsUrl properties from Config type'"
+  date: 2022-05-05T06:40:56.261Z
+- commits:
     - subject: "models.apiKey: Update apiKeyInfo with expiryDate option"
       hash: 58765109d8a165f93f94fe069cc4e879949f23fe
       body: ""
