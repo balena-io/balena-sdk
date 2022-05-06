@@ -67,7 +67,7 @@
     "@types/ndjson": "^2.0.0",
     "@types/sinon": "^10.0.6",
     "balena-config-karma": "^3.0.0",
-    "browserify": "^14.5.0",
+    "browserify": "^17.0.0",
     "catch-uncommitted": "^1.6.2",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
