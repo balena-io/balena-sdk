@@ -1,4 +1,18 @@
 - commits:
+    - subject: bump @types/node from 10.17.60 to 12.20.500
+      hash: 141d825a0f2cea35fe1c592b37fea360975e719e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.20.4
+  title: "'bump @types/node from 10.17.60 to 12.20.500'"
+  date: 2022-05-09T13:11:39.565Z
+- commits:
     - subject: "patch: bump browserify from 14.5.0 to 17.0.0"
       hash: 2ee532e8dcc3eda0c54296f468f7f9a9e637071a
       body: >
