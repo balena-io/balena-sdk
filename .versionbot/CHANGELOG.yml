@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: bump lint-staged from 10.5.4 to 12.4.2"
+      hash: c51c32f3c19fac2e30727c848d26f00b6be4f431
+      body: >
+        Bumps [lint-staged](https://github.com/okonet/lint-staged) from 10.5.4
+        to 12.4.2.
+
+        - [Release notes](https://github.com/okonet/lint-staged/releases)
+
+        - [Commits](https://github.com/okonet/lint-staged/compare/v10.5.4...v12.4.2)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: lint-staged
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.20.6
+  title: "'patch: bump lint-staged from 10.5.4 to 12.4.2'"
+  date: 2022-05-25T12:37:54.276Z
+- commits:
     - subject: Update TypeScript to v4.7
       hash: b1c46a7801602ff894a4e3ce47673c15a8330359
       body: ""
