@@ -56,7 +56,7 @@ export class DeviceActionsService {
 			extraOptions,
 		});
 
-	private makeActionRequest = async <T extends {} | string = any>({
+	private makeActionRequest = async <T>({
 		method,
 		uuid,
 		actionNameOrId,

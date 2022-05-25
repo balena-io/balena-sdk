@@ -36,8 +36,8 @@ export function buildDependentResource<T extends DependentResource>(
 		getResourceId,
 	}: {
 		resourceName: string; // e.g. device_tag
-		resourceKeyField: keyof T; // e.g. tag_key
-		parentResourceName: keyof T; // e.g. device
+		resourceKeyField: keyof T & string; // e.g. tag_key
+		parentResourceName: keyof T & string; // e.g. device
 		getResourceId: (uuidOrId: string | number) => Promise<number>; // e.g. getId(uuidOrId)
 	},
 ) {
@@ -50,7 +50,7 @@ export function buildDependentResource<T extends DependentResource>(
 			return pine.get<T>({
 				resource: resourceName,
 				options: mergePineOptions(
-					{ $orderby: `${resourceKeyField} asc` },
+					{ $orderby: { [resourceKeyField]: 'asc' } },
 					options,
 				),
 			});
