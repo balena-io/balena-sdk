@@ -965,6 +965,7 @@ const getApplicationModel = function (
 		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {String} [keyName] - Provisioning key name
 		 * @param {String} [keyDescription] - Description for provisioning key
+		 * @param {String} [keyExpiryDate] - Expiry Date for provisioning key
 		 * @fulfil {String} - device provisioning key
 		 * @returns {Promise}
 		 *
@@ -979,6 +980,11 @@ const getApplicationModel = function (
 		 * });
 		 *
 		 * @example
+		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01').then(function(key) {
+		 * 	console.log(key);
+		 * });
+		 *
+		 * @example
 		 * balena.models.application.generateProvisioningKey('myorganization/myapp', function(error, key) {
 		 * 	if (error) throw error;
 		 * 	console.log(key);
@@ -988,6 +994,7 @@ const getApplicationModel = function (
 			slugOrUuidOrId: string | number,
 			keyName?: string,
 			keyDescription?: string,
+			keyExpiryDate?: string,
 		): Promise<string> => {
 			try {
 				const applicationId = await getId(slugOrUuidOrId);
@@ -1001,6 +1008,7 @@ const getApplicationModel = function (
 						roles: ['provisioning-api-key'],
 						name: keyName,
 						description: keyDescription,
+						expiryDate: keyExpiryDate,
 					},
 				});
 				return body;
