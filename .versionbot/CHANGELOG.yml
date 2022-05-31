@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: bump lint-staged from 10.5.4 to 12.4.3"
+      hash: 214a45edfab1a249d5327efd50429fa2d29bdf9b
+      body: >
+        Bumps [lint-staged](https://github.com/okonet/lint-staged) from 10.5.4
+        to 12.4.3.
+
+        - [Release notes](https://github.com/okonet/lint-staged/releases)
+
+        - [Commits](https://github.com/okonet/lint-staged/compare/v10.5.4...v12.4.3)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: lint-staged
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.20.7
+  title: "'patch: bump lint-staged from 10.5.4 to 12.4.3'"
+  date: 2022-05-31T13:09:31.266Z
+- commits:
     - subject: Deprecate the needsPasswordReset field of the JWTUser
       hash: e715cd1a69b0047d4855c80e65946e79bab9a05f
       body: ""
