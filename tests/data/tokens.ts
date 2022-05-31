@@ -12,7 +12,6 @@ export default {
 			iat: 1426783312,
 			intercomUserHash:
 				'e03778dd29e157445f272acc921170cf2810b62f502645265cc349d6deda3524',
-			needsPasswordReset: false,
 			permissions: [],
 			public_key: false,
 			social_service_account: null,
