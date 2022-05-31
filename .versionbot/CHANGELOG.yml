@@ -1,4 +1,16 @@
 - commits:
+    - subject: Deprecate the needsPasswordReset field of the JWTUser
+      hash: e715cd1a69b0047d4855c80e65946e79bab9a05f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.20.6
+  title: "'Deprecate the needsPasswordReset field of the JWTUser'"
+  date: 2022-05-31T07:09:56.714Z
+- commits:
     - subject: Update TypeScript to v4.7
       hash: b1c46a7801602ff894a4e3ce47673c15a8330359
       body: ""
