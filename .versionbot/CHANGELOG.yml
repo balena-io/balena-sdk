@@ -1,4 +1,28 @@
 - commits:
+    - subject: "os: Refactor the computation of OS releases"
+      hash: 79f8c2708b0cf03278c674310a3d831c8ff92e7d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "os: Use the model's release variant when the native fields are used"
+      hash: 5cf2963dd513c80d8572fe5b3d3bb552a4ef5a37
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.21.0
+  title: "'os: Start using the model's release variant'"
+  date: 2022-06-01T08:15:00.004Z
+- commits:
     - subject: Deprecate the needsPasswordReset field of the JWTUser
       hash: e715cd1a69b0047d4855c80e65946e79bab9a05f
       body: ""
