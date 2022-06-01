@@ -30,6 +30,7 @@ import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
 	PineOptions,
+	PineTypedResult,
 } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
 import { toWritable } from '../util/types';
@@ -56,13 +57,26 @@ export enum OsVariant {
 
 export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
 
-const releaseSelectedFields = toWritable([
-	'id',
-	'known_issue_list',
-	'raw_version',
-] as const);
+const baseReleasePineOptions = {
+	$select: toWritable([
+		'id',
+		'known_issue_list',
+		'raw_version',
+		'variant',
+	] as const),
+	$expand: {
+		release_tag: {
+			$select: toWritable(['tag_key', 'value'] as const),
+		},
+	},
+};
+
 export interface OsVersion
-	extends Pick<Release, typeof releaseSelectedFields[number]> {
+	extends Omit<
+		PineTypedResult<Release, typeof baseReleasePineOptions>,
+		// TODO: Drop the variant Omit and mark it as non-nullable in the next major
+		'variant'
+	> {
 	/** @deprecated use OsVersion.raw_version. */
 	rawVersion: string;
 	strippedVersion: string;
@@ -115,6 +129,46 @@ const archCompatibilityMap: Partial<Dictionary<string[]>> = {
 	armv7hf: ['rpi'],
 };
 
+const tagsToDictionary = (
+	tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
+): Dictionary<string> => {
+	const result: Dictionary<string> = {};
+	for (const { tag_key, value } of tags) {
+		result[tag_key] = value;
+	}
+	return result;
+};
+
+const getOsAppTags = (
+	applicationTags: Array<Pick<ApplicationTag, 'tag_key' | 'value'>>,
+) => {
+	const tagMap = tagsToDictionary(applicationTags);
+	return {
+		osType: tagMap[RELEASE_POLICY_TAG_NAME] ?? OsTypes.DEFAULT,
+		nextLineVersionRange: tagMap[ESR_NEXT_TAG_NAME] ?? '',
+		currentLineVersionRange: tagMap[ESR_CURRENT_TAG_NAME] ?? '',
+		sunsetLineVersionRange: tagMap[ESR_SUNSET_TAG_NAME] ?? '',
+	};
+};
+
+type HostAppTagSet = ReturnType<typeof getOsAppTags>;
+const getOsVersionReleaseLine = (version: string, appTags: HostAppTagSet) => {
+	// All patches belong to the same line.
+	if (bSemver.satisfies(version, `^${appTags.nextLineVersionRange}`)) {
+		return 'next';
+	}
+	if (bSemver.satisfies(version, `^${appTags.currentLineVersionRange}`)) {
+		return 'current';
+	}
+	if (bSemver.satisfies(version, `^${appTags.sunsetLineVersionRange}`)) {
+		return 'sunset';
+	}
+
+	if (appTags.osType?.toLowerCase() === OsTypes.ESR) {
+		return 'outdated';
+	}
+};
+
 const getOsModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
@@ -140,46 +194,6 @@ const getOsModel = function (
 
 	const authDependentMemoizer = getAuthDependentMemoize(pubsub);
 
-	const tagsToDictionary = (
-		tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
-	): Dictionary<string> => {
-		const result: Dictionary<string> = {};
-		for (const { tag_key, value } of tags) {
-			result[tag_key] = value;
-		}
-		return result;
-	};
-
-	type HostAppTagSet = ReturnType<typeof getOsAppTags>;
-	const getOsAppTags = (
-		applicationTags: Array<Pick<ApplicationTag, 'tag_key' | 'value'>>,
-	) => {
-		const tagMap = tagsToDictionary(applicationTags);
-		return {
-			osType: tagMap[RELEASE_POLICY_TAG_NAME] ?? OsTypes.DEFAULT,
-			nextLineVersionRange: tagMap[ESR_NEXT_TAG_NAME] ?? '',
-			currentLineVersionRange: tagMap[ESR_CURRENT_TAG_NAME] ?? '',
-			sunsetLineVersionRange: tagMap[ESR_SUNSET_TAG_NAME] ?? '',
-		};
-	};
-
-	const getOsVersionReleaseLine = (version: string, appTags: HostAppTagSet) => {
-		// All patches belong to the same line.
-		if (bSemver.satisfies(version, `^${appTags.nextLineVersionRange}`)) {
-			return 'next';
-		}
-		if (bSemver.satisfies(version, `^${appTags.currentLineVersionRange}`)) {
-			return 'current';
-		}
-		if (bSemver.satisfies(version, `^${appTags.sunsetLineVersionRange}`)) {
-			return 'sunset';
-		}
-
-		if (appTags.osType?.toLowerCase() === OsTypes.ESR) {
-			return 'outdated';
-		}
-	};
-
 	type HostAppInfo = ResolvableReturnType<typeof _getOsVersions>[number];
 	const _getOsVersions = async (
 		deviceTypes: string[],
@@ -196,17 +210,7 @@ const getOsModel = function (
 					is_for__device_type: {
 						$select: 'slug',
 					},
-					owns__release: mergePineOptionsTyped(
-						{
-							$select: releaseSelectedFields,
-							$expand: {
-								release_tag: {
-									$select: ['tag_key', 'value'],
-								},
-							},
-						},
-						options,
-					),
+					owns__release: mergePineOptionsTyped(baseReleasePineOptions, options),
 				},
 				$filter: {
 					is_host: true,
@@ -230,25 +234,16 @@ const getOsModel = function (
 		appTags: HostAppTagSet,
 	) => {
 		const OsVariantNames = Object.keys(OsVariant);
-		const OsVariantKeywords = new Set(Object.values(OsVariant) as string[]);
 		return releases.map((release): OsVersion => {
-			const tagMap = tagsToDictionary(release.release_tag!);
+			const tagMap = tagsToDictionary(release.release_tag);
 			const releaseSemverObj = !release.raw_version.startsWith('0.0.0')
 				? bSemver.parse(release.raw_version)
 				: null;
 
-			let version: string;
-			let variant: string | undefined;
-			if (releaseSemverObj != null) {
-				version = releaseSemverObj.version;
-				const nonVariantBuildParts = releaseSemverObj.build.filter(
-					(b) => !OsVariantKeywords.has(b),
-				);
-				if (nonVariantBuildParts.length > 0) {
-					version += `+${nonVariantBuildParts.join('.')}`;
-				}
-				variant = releaseSemverObj.build.find((b) => OsVariantKeywords.has(b));
-			} else {
+			let strippedVersion: string;
+			// TODO: Stop converting empty strings to undefined in the next major
+			let variant = release.variant || undefined;
+			if (releaseSemverObj == null) {
 				// TODO: Drop this `else` once we migrate all version & variant tags to release.semver field
 				/** Ideally 'production' | 'development' | undefined. */
 				const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
@@ -259,29 +254,39 @@ const getOsModel = function (
 							: fullVariantName
 						: undefined;
 
-				version = tagMap[VERSION_TAG_NAME] ?? '';
-				// Backfill the native rel
+				strippedVersion = tagMap[VERSION_TAG_NAME] ?? '';
+				// Backfill the native release_version field
 				// TODO: This potentially generates an invalid semver and we should be doing
 				// something like `.join(!version.includes('+') ? '+' : '.')`,  but this needs
 				// discussion since otherwise it will break all ESR released as of writing this.
-				release.raw_version = [version, variant].filter((x) => !!x).join('.');
+				release.raw_version = [strippedVersion, variant]
+					.filter((x) => !!x)
+					.join('.');
+			} else {
+				strippedVersion = [
+					releaseSemverObj.version,
+					// build parts w/o variant
+					releaseSemverObj.build.filter((b) => b !== release.variant).join('.'),
+				]
+					.filter((x) => !!x)
+					.join('+');
 			}
-			const basedOnVersion = tagMap[BASED_ON_VERSION_TAG_NAME] ?? version;
-			const line = getOsVersionReleaseLine(version, appTags);
+			const line = getOsVersionReleaseLine(strippedVersion, appTags);
 
 			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
 			// The version coming from release tags doesn't contain the variant, so we append it here
 			return {
 				...release,
+				// TODO: Drop the explicit assignment once we no longer convert empty strings to undefined
+				variant,
 				osType: appTags.osType,
 				line,
-				strippedVersion: version,
+				strippedVersion,
 				// TODO: Drop in the next major
 				rawVersion: release.raw_version,
-				basedOnVersion,
-				variant,
+				basedOnVersion: tagMap[BASED_ON_VERSION_TAG_NAME] ?? strippedVersion,
 				// TODO: Drop in the next major
-				formattedVersion: `v${version}${line ? ` (${line})` : ''}`,
+				formattedVersion: `v${strippedVersion}${line ? ` (${line})` : ''}`,
 			};
 		});
 	};
