@@ -776,10 +776,11 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.generateProvisioningKey()', function () {
-				const getProvisioningKeys = async function (appNameOrSlug) {
+				const getProvisioningKeys = async function (appNameOrSlug, options?) {
 					const provisioningKeys =
 						await balena.models.apiKey.getProvisioningApiKeysByApplication(
 							appNameOrSlug,
+							options,
 						);
 
 					expect(provisioningKeys).to.be.an('array');
@@ -856,6 +857,37 @@ describe('Application Model', function () {
 						expect(provisionKeys[0])
 							.to.have.property('description')
 							.to.be.equal(`Provisioning key generated with name key_${prop}`);
+					});
+
+					it(`should be able to generate a provisioning key by ${prop} with expiry-date`, async function () {
+						const provisioningKeys = await getProvisioningKeys(
+							this.application[prop],
+						);
+
+						const key = await balena.models.application.generateProvisioningKey(
+							this.application[prop],
+							`key_${prop}`,
+							`Provisioning key generated with name key_${prop}`,
+							'2030-01-01',
+						);
+
+						expect(key).to.be.a('string');
+						expect(key).to.have.length(32);
+						const updatedProvisioningKeys = await getProvisioningKeys(
+							this.application[prop],
+						);
+
+						const provisionKeys = _.differenceWith(
+							updatedProvisioningKeys,
+							provisioningKeys,
+							_.isEqual,
+						);
+
+						expect(provisionKeys).to.have.lengthOf(1);
+						expect(provisionKeys[0]).to.have.property('expiry_date');
+						expect(provisionKeys[0])
+							.to.have.property('expiry_date')
+							.to.be.equal('2030-01-01T00:00:00.000Z');
 					});
 				});
 
