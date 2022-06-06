@@ -316,6 +316,7 @@ export interface Release {
 	start_timestamp: string;
 	update_timestamp: string | null;
 	end_timestamp: string;
+	phase: 'next' | 'current' | 'sunset' | 'end-of-life' | null;
 	/** @deprecated */
 	release_version: string | null;
 	semver: string;

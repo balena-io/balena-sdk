@@ -63,6 +63,7 @@ const baseReleasePineOptions = {
 		'known_issue_list',
 		'raw_version',
 		'variant',
+		'phase',
 	] as const),
 	$expand: {
 		release_tag: {
@@ -152,21 +153,31 @@ const getOsAppTags = (
 };
 
 type HostAppTagSet = ReturnType<typeof getOsAppTags>;
-const getOsVersionReleaseLine = (version: string, appTags: HostAppTagSet) => {
-	// All patches belong to the same line.
-	if (bSemver.satisfies(version, `^${appTags.nextLineVersionRange}`)) {
-		return 'next';
+// TODO: Drop this function & just use `release.phase` in the next major
+const getOsVersionReleaseLine = (
+	phase: Release['phase'],
+	version: string,
+	appTags: HostAppTagSet,
+) => {
+	if (phase == null) {
+		// All patches belong to the same line.
+		if (bSemver.satisfies(version, `^${appTags.nextLineVersionRange}`)) {
+			return 'next';
+		}
+		if (bSemver.satisfies(version, `^${appTags.currentLineVersionRange}`)) {
+			return 'current';
+		}
+		if (bSemver.satisfies(version, `^${appTags.sunsetLineVersionRange}`)) {
+			return 'sunset';
+		}
+		if (appTags.osType?.toLowerCase() === OsTypes.ESR) {
+			return 'outdated';
+		}
 	}
-	if (bSemver.satisfies(version, `^${appTags.currentLineVersionRange}`)) {
-		return 'current';
-	}
-	if (bSemver.satisfies(version, `^${appTags.sunsetLineVersionRange}`)) {
-		return 'sunset';
-	}
-
-	if (appTags.osType?.toLowerCase() === OsTypes.ESR) {
+	if (phase === 'end-of-life') {
 		return 'outdated';
 	}
+	return phase;
 };
 
 const getOsModel = function (
@@ -271,7 +282,10 @@ const getOsModel = function (
 					.filter((x) => !!x)
 					.join('+');
 			}
-			const line = getOsVersionReleaseLine(strippedVersion, appTags);
+			// TODO: Drop this call & just use `release.phase` in the next major
+			const line =
+				getOsVersionReleaseLine(release.phase, strippedVersion, appTags) ??
+				undefined;
 
 			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
 			// The version coming from release tags doesn't contain the variant, so we append it here
