@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add provisioning key expiry date to generateDeviceProvisioningKey
+      hash: 795411ca32e56de1caffa8f6a1baf070361cc3e3
+      body: ""
+      footer:
+        Change-Type: patch
+        change-type: patch
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Nitish Agarwal
+      nested: []
+  version: 16.21.1
+  title: "'Add provisioning key expiry date to generateDeviceProvisioningKey'"
+  date: 2022-06-02T15:46:00.955Z
+- commits:
     - subject: "os: Refactor the computation of OS releases"
       hash: 79f8c2708b0cf03278c674310a3d831c8ff92e7d
       body: ""
