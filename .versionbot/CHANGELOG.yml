@@ -1,4 +1,20 @@
 - commits:
+    - subject: "os: Start using the release.phase field in the available versions"
+      hash: 40c9a29b88914a839c77afb496eccd177e9a81eb
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: https://github.com/balena-io/open-balena-api/pull/1031
+        depends-on: https://github.com/balena-io/open-balena-api/pull/1031
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.22.0
+  title: "'os: Start using the release.phase field in the available versions'"
+  date: 2022-06-06T20:58:03.303Z
+- commits:
     - subject: Add provisioning key expiry date to generateDeviceProvisioningKey
       hash: 795411ca32e56de1caffa8f6a1baf070361cc3e3
       body: ""
