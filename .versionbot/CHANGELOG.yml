@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: bump lint-staged from 10.5.4 to 13.0.1"
+      hash: d3ec5aa0d9b0c86fcd8817112aee9a1cf188f059
+      body: >
+        Bumps [lint-staged](https://github.com/okonet/lint-staged) from 10.5.4
+        to 13.0.1.
+
+        - [Release notes](https://github.com/okonet/lint-staged/releases)
+
+        - [Commits](https://github.com/okonet/lint-staged/compare/v10.5.4...v13.0.1)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: lint-staged
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.22.1
+  title: "'patch: bump lint-staged from 10.5.4 to 13.0.1'"
+  date: 2022-06-09T12:52:07.205Z
+- commits:
     - subject: "os: Start using the release.phase field in the available versions"
       hash: 40c9a29b88914a839c77afb496eccd177e9a81eb
       body: ""
