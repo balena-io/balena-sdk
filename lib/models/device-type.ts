@@ -25,21 +25,61 @@ import cloneDeep = require('lodash/cloneDeep');
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
 import { BalenaOS } from './balenaos-contract';
 
+const traversingCompile = (partials: any, initial: any, keys: string[]) => {
+	return Object.keys(partials).reduce(
+		(interpolated: any, partialKey) => {
+			const current = partials[partialKey];
+			let location = interpolated;
+			for (const key of keys) {
+				location = location[key];
+			}
+			if (Array.isArray(current)) {
+				// if array of partials, compile the template
+				location[partialKey] = current.map((partial: string) =>
+					Handlebars.compile(partial)(interpolated),
+				);
+			} else {
+				// if it's another dictionary, keep traversing
+				location[partialKey] = traversingCompile(
+					current,
+					interpolated,
+					keys.concat([partialKey]),
+				);
+			}
+			return interpolated;
+		},
+		{ ...initial },
+	);
+};
+
 const interpolatedPartials = (contract: Contract, initial: any = {}) => {
 	const fullInitial = { ...contract, ...initial };
 	if (contract.partials) {
-		const partials = contract.partials;
-		return Object.keys(partials).reduce(
-			(interpolated: any, partialKey) => {
-				interpolated.partials[partialKey] = partials[partialKey].map(
-					(partial: string) => Handlebars.compile(partial)(interpolated),
-				);
-				return interpolated;
-			},
-			{ ...fullInitial },
-		);
+		return traversingCompile(contract.partials, fullInitial, ['partials']);
 	} else {
 		return fullInitial;
+	}
+};
+
+const calculateInstallMethod = (contract: Contract): string => {
+	const flashProtocol = contract.data?.flashProtocol;
+	const defaultBoot = contract.data?.media?.defaultBoot;
+	if (flashProtocol) {
+		if (flashProtocol === 'RPIBOOT') {
+			return 'internalFlash';
+		} else {
+			return flashProtocol;
+		}
+	} else if (defaultBoot) {
+		if (defaultBoot === 'internal') {
+			return 'externalFlash';
+		} else {
+			return 'externalBoot';
+		}
+	} else {
+		throw new errors.BalenaError(
+			`Unable to determine installation method for contract: ${contract.slug}`,
+		);
 	}
 };
 
@@ -362,56 +402,37 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
 		 *  // Connect power to the Raspberry Pi (v1 / Zero / Zero W) to boot the device.
 		 * });
-		 * @example
-		 * balena.models.deviceType.getInstructions('raspberry-pi', baseInstructions = {
-		 *  `Use the form on the left to configure and download {{name}} for your new {{deviceType.name}}.
-		 *  {{#each instructions}}
-		 *   {{{this}}}
-		 *  {{/each}}
-		 *  Your device should appear in your application dashboard within a few minutes. Have fun!`
-		 * }).then(function(instructions) {
-		 *  for (let instruction of instructions.values()) {
-		 * 	 console.log(instruction);
-		 *  }
-		 *  // Use the form on the left to configure and download BalenaOS for your new Raspberry Pi (v1 / Zero / Zero W).
-		 *  // Insert the sdcard to the host machine.
-		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.
-		 *  // Wait for writing of BalenaOS to complete.
-		 *  // Remove the sdcard from the host machine.
-		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
-		 *  // Connect power to the Raspberry Pi (v1 / Zero / Zero W) to boot the device.
-		 *  // Your device should appear in your application dashboard within a few minutes. Have fun!
-		 * });
 		 */
 		getInstructions: async (
 			deviceTypeSlug: string,
-			baseInstructions?: string,
-		): Promise<string[]> => {
+		): Promise<any | string[]> => {
+			const contract = (
+				await exports.getBySlugOrName(deviceTypeSlug, { $select: 'contract' })
+			).contract;
+			if (!contract || !contract.partials) {
+				throw new Error(
+					`Instruction partials not defined for ${deviceTypeSlug}`,
+				);
+			}
+			const installMethod = calculateInstallMethod(contract);
+			const interpolatedDeviceType = interpolatedPartials(contract);
+			const interpolatedHostOS = interpolatedPartials(cloneDeep(BalenaOS), {
+				deviceType: interpolatedDeviceType,
+			});
+
+			return interpolatedHostOS.partials[installMethod];
+		},
+
+		getInstallMethod: async (
+			deviceTypeSlug: string,
+		): Promise<string | null> => {
 			const contract = (
 				await exports.getBySlugOrName(deviceTypeSlug, { $select: 'contract' })
 			).contract;
 			if (contract) {
-				const installMethod = contract?.data?.installation?.method;
-				if (!installMethod || !contract.partials) {
-					throw new Error(
-						`Install method or instruction partials not defined for ${deviceTypeSlug}`,
-					);
-				}
-				const interpolatedDeviceType = interpolatedPartials(contract);
-				const interpolatedHostOS = interpolatedPartials(cloneDeep(BalenaOS), {
-					deviceType: interpolatedDeviceType,
-				});
-
-				let instructions: string[] = interpolatedHostOS.partials[installMethod];
-				if (baseInstructions) {
-					instructions = Handlebars.compile(baseInstructions)({
-						...interpolatedHostOS,
-						instructions,
-					}).split('\n');
-				}
-				return instructions.map((s) => s.trim()).filter((s) => s);
+				return calculateInstallMethod(contract);
 			} else {
-				return [];
+				return null;
 			}
 		},
 

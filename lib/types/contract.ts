@@ -1,5 +1,7 @@
 import { AnyObject, Dictionary } from '../../typings/utils';
 
+type Partials = Dictionary<string[] | Partials>;
+
 export interface Contract {
 	slug: string;
 	type: string;
@@ -15,5 +17,5 @@ export interface Contract {
 	requires?: string[];
 	provides?: string[];
 	composedOf?: AnyObject;
-	partials?: Dictionary<string[]>;
+	partials?: Partials;
 }
