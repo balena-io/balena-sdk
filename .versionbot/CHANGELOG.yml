@@ -1,4 +1,38 @@
 - commits:
+    - subject: Standardize trim and filter of instructions
+      hash: b0c284517112182bdf80a19ea59bdd23e7017d9c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+    - subject: Add check for jetson notes  field
+      hash: 78c7bdd7246b57d5eea71c0a872c01c8d82e5d8f
+      body: ""
+      footer:
+        Change-Type: patch
+        change-type: patch
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+    - subject: Add contract partial based instruction generation
+      hash: 13e26b28175f6c94f8d42bfdcede14864b6ae87b
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+  version: 16.23.0
+  title: "'Add contract partial based instruction generation'"
+  date: 2022-06-14T21:54:25.686Z
+- commits:
     - subject: "os: Start using the release.phase field in the available versions"
       hash: 40c9a29b88914a839c77afb496eccd177e9a81eb
       body: ""
