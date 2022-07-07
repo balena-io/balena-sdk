@@ -67,16 +67,30 @@ const getApiKeysModel = function (
 		 * 	if (error) throw error;
 		 * 	console.log(apiKey);
 		 * });
+		 *
+		 * @example
+		 * balena.models.apiKey.create(apiKeyName, apiKeyDescription, apiKeyExpiryDate, function(error, apiKey) {
+		 * 	if (error) throw error;
+		 * 	console.log(apiKey);
+		 * });
 		 */
 		async create(
 			name: string,
 			description: string | null = null,
+			expiryDate: string | null = null,
 		): Promise<string> {
-			const apiKeyBody: { name: string; description?: string | null } = {
+			const apiKeyBody: {
+				name: string;
+				description?: string | null;
+				expiryDate?: string | null;
+			} = {
 				name,
 			};
 			if (typeof description === 'string' && !!description) {
 				apiKeyBody.description = description;
+			}
+			if (typeof expiryDate === 'string' && !!expiryDate) {
+				apiKeyBody.expiryDate = expiryDate;
 			}
 			try {
 				const { body } = await request.send({

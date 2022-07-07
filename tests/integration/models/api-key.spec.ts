@@ -30,6 +30,27 @@ describe('API Key model', function () {
 				);
 				expect(key).to.be.a('string');
 			});
+
+			it('should be able to create a new api key with expiry-date', async function () {
+				const tomorrowDate = new Date(Date.now() + 86400000).toISOString(); // one day in future
+				const key = await balena.models.apiKey.create(
+					'apiKeyWithExpiry',
+					'apiKeyDescription',
+					tomorrowDate,
+				);
+				expect(key).to.be.a('string');
+
+				const userKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
+
+				expect(userKeys).to.be.an('array');
+				const userKeyWithExpiry = userKeys.filter(
+					(elem) => elem.name === 'apiKeyWithExpiry',
+				);
+				expect(userKeyWithExpiry).to.not.be.empty;
+				expect(userKeyWithExpiry[0])
+					.to.have.property('expiry_date')
+					.to.be.equal(tomorrowDate);
+			});
 		});
 	});
 
