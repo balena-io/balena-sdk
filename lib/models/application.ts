@@ -980,7 +980,7 @@ const getApplicationModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01').then(function(key) {
+		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *

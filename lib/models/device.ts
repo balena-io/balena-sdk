@@ -1554,11 +1554,18 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * 	console.log(deviceApiKey);
 		 * });
+		 *
+		 * @example
+		 * balena.models.device.generateDeviceKey('7cf02a6', 'device-key-name', 'device-key-description', '2030-01-01T00:00:00Z', function(error, deviceApiKey) {
+		 * 	if (error) throw error;
+		 * 	console.log(deviceApiKey);
+		 * });
 		 */
 		generateDeviceKey: async (
 			uuidOrId: string | number,
 			keyName?: string,
 			keyDescription?: string,
+			keyExpiryDate?: string,
 		): Promise<string> => {
 			try {
 				const deviceId = await getId(uuidOrId);
@@ -1569,6 +1576,7 @@ const getDeviceModel = function (
 					body: {
 						name: keyName,
 						description: keyDescription,
+						expiryDate: keyExpiryDate,
 					},
 				});
 				return body;
