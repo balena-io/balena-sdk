@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add expiry-date for generation of user and device keys
+      hash: 9ed3643ed9e2180ee9b4aef3c32a1d5a745d554a
+      body: ""
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+        signed-off-by: Nitish Agarwal <1592163+nitishagar@users.noreply.github.com>
+      author: Nitish Agarwal
+      nested: []
+  version: 16.23.0
+  title: "'Add expiryDate for generation of user and device keys'"
+  date: 2022-07-07T12:22:14.983Z
+- commits:
     - subject: "os: Start using the release.phase field in the available versions"
       hash: 40c9a29b88914a839c77afb496eccd177e9a81eb
       body: ""
