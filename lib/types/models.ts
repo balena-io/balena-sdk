@@ -184,6 +184,7 @@ export interface Application {
 	owns__device: ReverseNavigationResource<Device>;
 	owns__public_device: ReverseNavigationResource<PublicDevice>;
 	owns__release: ReverseNavigationResource<Release>;
+	service: ReverseNavigationResource<Service>;
 	is_depended_on_by__application: ReverseNavigationResource<Application>;
 	is_directly_accessible_by__user: ReverseNavigationResource<User>;
 	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
