@@ -1,4 +1,18 @@
 - commits:
+    - subject: "types: Add missing Application to Service relation"
+      hash: a38ced5f200903d96ab3e6e13c3efb3f3761414e
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.24.0
+  title: "'types: Add missing Application to Service relation'"
+  date: 2022-07-08T17:43:16.397Z
+- commits:
     - subject: Add expiry-date for generation of user and device keys
       hash: 9ed3643ed9e2180ee9b4aef3c32a1d5a745d554a
       body: ""
