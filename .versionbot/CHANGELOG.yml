@@ -1,4 +1,35 @@
 - commits:
+    - subject: "patch: bump catch-uncommitted from 1.6.2 to 2.0.0"
+      hash: b2498995e1c98f7871fbdf53390503a6e76cba1e
+      body: >
+        Bumps
+        [catch-uncommitted](https://github.com/resin-io-modules/catch-uncommitted)
+        from 1.6.2 to 2.0.0.
+
+        - [Release notes](https://github.com/resin-io-modules/catch-uncommitted/releases)
+
+        - [Changelog](https://github.com/balena-io-modules/catch-uncommitted/blob/master/CHANGELOG.md)
+
+        - [Commits](https://github.com/resin-io-modules/catch-uncommitted/compare/v1.6.2...v2.0.0)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: catch-uncommitted
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.24.1
+  title: "'patch: bump catch-uncommitted from 1.6.2 to 2.0.0'"
+  date: 2022-07-11T07:42:02.342Z
+- commits:
     - subject: "types: Add missing Application to Service relation"
       hash: a38ced5f200903d96ab3e6e13c3efb3f3761414e
       body: ""
