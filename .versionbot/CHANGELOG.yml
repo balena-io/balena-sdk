@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update Husky to v7
+      hash: 9aab4c042d26b23838bf6faeb7b5ebae9b382e04
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://typicode.github.io/husky/#/?id=migrate-from-v4-to-v8
+        see: https://typicode.github.io/husky/#/?id=migrate-from-v4-to-v8
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.24.1
+  title: "'Update Husky to v7'"
+  date: 2022-07-21T14:04:26.953Z
+- commits:
     - subject: "types: Add missing Application to Service relation"
       hash: a38ced5f200903d96ab3e6e13c3efb3f3761414e
       body: ""
