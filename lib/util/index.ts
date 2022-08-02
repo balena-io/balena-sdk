@@ -82,6 +82,17 @@ export function mergePineOptionsTyped<
 	return mergePineOptions(defaults, extras) as P;
 }
 
+const knownPineOptionKeys = new Set([
+	'$top',
+	'$skip',
+	'$select',
+	'$expand',
+	'$filter',
+	'$orderby',
+]);
+
+const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
+
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
 // The general rules are:
@@ -107,51 +118,45 @@ export function mergePineOptions<R extends {}>(
 		return defaults;
 	}
 
+	// TOOD: Consider dropping in the next major
+	const unknownPineOption = Object.keys(extras).find(
+		(key) => !knownPineOptionKeys.has(key),
+	);
+	if (unknownPineOption != null) {
+		throw new Error(`Unknown pine option: ${unknownPineOption}`);
+	}
+
 	const result = { ...defaults };
 
-	for (const option of Object.keys(extras) as Array<keyof typeof extras>) {
-		switch (option) {
-			case '$select':
-				let extraSelect = extras.$select;
-				if (extraSelect != null) {
-					if (!Array.isArray(extraSelect) && extraSelect !== '*') {
-						extraSelect = [extraSelect];
-					}
-				}
-
-				result.$select = extraSelect;
-				break;
-
-			case '$orderby':
-			case '$top':
-			case '$skip':
-				// @ts-expect-error
-				result[option] = extras[option];
-				break;
-
-			case '$filter':
-				const extraFilter = extras.$filter;
-				if (!extraFilter) {
-					// the result already holds the defaults
-					break;
-				}
-				const defaultFilter = defaults.$filter;
-				if (!defaultFilter) {
-					result.$filter = extraFilter;
-				} else {
-					result.$filter = {
-						$and: [defaultFilter, extraFilter],
-					};
-				}
-				break;
-
-			case '$expand':
-				result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
-				break;
-
-			default:
-				throw new Error(`Unknown pine option: ${option}`);
+	if (extras.$select != null) {
+		let extraSelect = extras.$select;
+		if (extraSelect != null) {
+			if (!Array.isArray(extraSelect) && extraSelect !== '*') {
+				extraSelect = [extraSelect];
+			}
 		}
+
+		result.$select = extraSelect;
+	}
+
+	for (const key of passthroughPineOptionKeys) {
+		if (key in extras) {
+			// @ts-expect-error
+			result[key] = extras[key];
+		}
+	}
+
+	if (extras.$filter != null) {
+		result.$filter =
+			defaults.$filter != null
+				? {
+						$and: [defaults.$filter, extras.$filter],
+				  }
+				: extras.$filter;
+	}
+
+	if (extras.$expand != null) {
+		result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
 	}
 
 	return result;
@@ -166,39 +171,19 @@ const mergeExpandOptions = <T>(
 	}
 
 	// We only need to clone the defaultExpand as it's the only one we mutate
-	defaultExpand = convertExpandToObject(defaultExpand, true);
-	extraExpand = convertExpandToObject(extraExpand);
+	const $defaultExpand = convertExpandToObject(defaultExpand, true);
+	const $extraExpand = convertExpandToObject(extraExpand);
 
-	for (const expandKey of Object.keys(extraExpand || {}) as Array<
+	for (const expandKey of Object.keys($extraExpand || {}) as Array<
 		keyof typeof extraExpand
 	>) {
-		const extraExpandOptions = extraExpand[expandKey]! || {};
-		defaultExpand[expandKey] = defaultExpand[expandKey] || {};
-		const expandOptions = defaultExpand[expandKey]!;
-
-		if (extraExpandOptions.$select) {
-			expandOptions.$select = extraExpandOptions.$select;
-		}
-
-		if (extraExpandOptions.$filter) {
-			if (expandOptions.$filter) {
-				expandOptions.$filter = {
-					$and: [expandOptions.$filter, extraExpandOptions.$filter],
-				};
-			} else {
-				expandOptions.$filter = extraExpandOptions.$filter;
-			}
-		}
-
-		if (extraExpandOptions.$expand) {
-			expandOptions.$expand = mergeExpandOptions(
-				expandOptions.$expand,
-				extraExpandOptions.$expand,
-			);
-		}
+		$defaultExpand[expandKey] = mergePineOptions(
+			$defaultExpand[expandKey] ?? {},
+			$extraExpand[expandKey],
+		);
 	}
 
-	return defaultExpand;
+	return $defaultExpand;
 };
 
 // Converts a valid expand object in any format into a new object
@@ -235,11 +220,12 @@ const convertExpandToObject = <T extends {}>(
 	>) {
 		const expandRelationshipOptions = expandOption[expandKey];
 
-		const invalidKeys = Object.keys(expandRelationshipOptions! || {}).filter(
-			(key) => key !== '$select' && key !== '$expand' && key !== '$filter',
+		// TOOD: Consider dropping in the next major
+		const unknownPineOption = Object.keys(expandRelationshipOptions || {}).find(
+			(key) => !knownPineOptionKeys.has(key),
 		);
-		if (invalidKeys.length > 0) {
-			throw new Error(`Unknown pine expand options: ${invalidKeys}`);
+		if (unknownPineOption != null) {
+			throw new Error(`Unknown pine expand options: ${unknownPineOption}`);
 		}
 	}
 
