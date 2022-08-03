@@ -1,4 +1,18 @@
 - commits:
+    - subject: Refactor the internal mergePineOptions utility
+      hash: 5a0fb3952dfd79aa73be3c4dec5cf75ca7c7810a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.24.2
+  title: "'Refactor the internal mergePineOptions utility'"
+  date: 2022-08-02T16:55:58.822Z
+- commits:
     - subject: Update Husky to v7
       hash: 9aab4c042d26b23838bf6faeb7b5ebae9b382e04
       body: ""
