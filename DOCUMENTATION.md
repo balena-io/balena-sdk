@@ -69,6 +69,15 @@ If you feel something is missing, not clear or could be improved, please don't h
 <dd></dd>
 </dl>
 
+## Functions
+
+<dl>
+<dt><a href="#groupByMap">groupByMap()</a></dt>
+<dd><p>Useful when you want to avoid having to manually parse the key
+or when need order guarantees while iterating the keys.</p>
+</dd>
+</dl>
+
 <a name="module_balena-sdk"></a>
 
 ## balena-sdk
@@ -200,7 +209,7 @@ const sdk = fromSharedOptions();
             * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
-            * [.remove(slugOrUuidOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+            * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
             * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
             * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
             * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
@@ -577,7 +586,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
-        * [.remove(slugOrUuidOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+        * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
         * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
         * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
         * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
@@ -825,7 +834,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
-    * [.remove(slugOrUuidOrId)](#balena.models.application.remove) ⇒ <code>Promise</code>
+    * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
     * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
     * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
     * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
@@ -2031,14 +2040,14 @@ balena.models.application.create({ name: 'My App', applicationType: 'microservic
 ```
 <a name="balena.models.application.remove"></a>
 
-##### application.remove(slugOrUuidOrId) ⇒ <code>Promise</code>
+##### application.remove(slugOrUuidOrIdOrIds) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Remove application  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
+| slugOrUuidOrIdOrIds | <code>String</code> \| <code>Number</code> \| <code>Array.&lt;Number&gt;</code> | application slug (string), uuid (string) or id (number) or array of ids |
 
 **Example**  
 ```js
@@ -8202,3 +8211,10 @@ balena.settings.getAll(function(error, settings) {
 	console.log(settings);
 });
 ```
+<a name="groupByMap"></a>
+
+## groupByMap()
+Useful when you want to avoid having to manually parse the key
+or when need order guarantees while iterating the keys.
+
+**Kind**: global function  
