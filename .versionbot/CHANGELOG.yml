@@ -1,4 +1,40 @@
 - commits:
+    - subject: "application.remove: Support batch deletions by providing multiple IDs"
+      hash: 8238a338e95f773e4ff439dcb93b275ff0250d64
+      body: ""
+      footer:
+        Resolves: "#1255"
+        resolves: "#1255"
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Refactor the request batching implementation to be generic
+      hash: c3eeda42c2924d1d84beeca7077fd3aa7c6a8d1b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Change pine options merging to extend the default `$select`ed properties
+      hash: 47dd4bd69f49589717e635f5dc8903b056f449be
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.25.0
+  title: "'application.remove: Support batch deletions by providing multiple IDs'"
+  date: 2022-08-04T14:10:56.891Z
+- commits:
     - subject: Refactor the internal mergePineOptions utility
       hash: 5a0fb3952dfd79aa73be3c4dec5cf75ca7c7810a
       body: ""
