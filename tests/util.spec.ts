@@ -113,10 +113,22 @@ describe('Pine option merging', function () {
 		});
 	});
 
+	it('extends $select params for expand options for the same relationship, if present', function () {
+		const result = mergePineOptions(
+			{ $expand: { device: { $select: ['id'] } } },
+			{ $expand: { device: { $select: ['name'] } } },
+		);
+
+		return expect(result).to.deep.equal({
+			$expand: { device: { $select: ['id', 'name'] } },
+		});
+	});
+
 	it('overrides $select params for expand options for the same relationship, if present', function () {
 		const result = mergePineOptions(
 			{ $expand: { device: { $select: ['id'] } } },
 			{ $expand: { device: { $select: ['name'] } } },
+			true,
 		);
 
 		return expect(result).to.deep.equal({

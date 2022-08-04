@@ -18,7 +18,6 @@ import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
 	PineOptions,
-	PineOptionsWithSelect,
 	PineTypedResult,
 } from '..';
 import type {
@@ -40,14 +39,10 @@ import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 import * as url from 'url';
 
 import once = require('lodash/once');
-import chunk = require('lodash/chunk');
-import flatten = require('lodash/flatten');
 import groupBy = require('lodash/groupBy');
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import * as memoizee from 'memoizee';
-
-const CHUNK_SIZE = 50;
 
 import {
 	isId,
@@ -195,108 +190,15 @@ const getDeviceModel = function (
 		},
 	);
 
-	async function batchDeviceOperation<
-		TOpts extends PineOptionsWithSelect<Device>,
-	>({
-		uuidOrIdOrIds,
-		options,
-		fn,
-	}: {
-		uuidOrIdOrIds: string | number | number[];
-		options?: TOpts;
-		fn: (apps: {
-			id: number;
-			owns__device: Array<
-				{ id: number } & (TOpts extends PineOptionsWithSelect<Device>
-					? PineTypedResult<Device, TOpts>
-					: {})
-			>;
-		}) => Promise<void>;
-	}): Promise<void> {
-		if (
-			Array.isArray(uuidOrIdOrIds) &&
-			(!uuidOrIdOrIds.length ||
-				uuidOrIdOrIds.some((id) => typeof id !== 'number'))
-		) {
-			throw new errors.BalenaInvalidParameterError(
-				'uuidOrIdOrIds',
-				uuidOrIdOrIds,
-			);
-		}
-
-		// create a list of UUIDs or chunks of IDs
-		const chunks: Array<string | number[]> =
-			typeof uuidOrIdOrIds === 'string'
-				? [uuidOrIdOrIds]
-				: chunk(
-						!Array.isArray(uuidOrIdOrIds) ? [uuidOrIdOrIds] : uuidOrIdOrIds,
-						CHUNK_SIZE,
-				  );
-
-		const apps: Array<Parameters<typeof fn>[0]> = [];
-		for (const uuidOrIdOrIdsChunk of chunks) {
-			const deviceFilter = Array.isArray(uuidOrIdOrIdsChunk)
-				? {
-						id: { $in: uuidOrIdOrIdsChunk },
-				  }
-				: {
-						uuid: { $startswith: uuidOrIdOrIdsChunk },
-				  };
-			const applicationOptions = {
-				$select: 'id',
-				$expand: {
-					owns__device: mergePineOptions(
-						{
-							$select: 'id',
-							$filter: deviceFilter,
-						},
-						options,
-					),
-				},
-				$filter: {
-					owns__device: {
-						$any: {
-							$alias: 'd',
-							$expr: {
-								d: deviceFilter,
-							},
-						},
-					},
-				},
-			} as const;
-			type defaultOptionsResult = Array<
-				PineTypedResult<Application, typeof applicationOptions>
-			>;
-
-			apps.push(
-				...((await applicationModel().getAll(
-					applicationOptions,
-				)) as defaultOptionsResult as typeof apps),
-			);
-		}
-
-		const deviceIds = flatten(
-			apps.map((app) => app.owns__device.map((d) => d.id)),
-		);
-		if (!deviceIds.length) {
-			throw new errors.BalenaDeviceNotFound(uuidOrIdOrIds.toString());
-		}
-
-		if (typeof uuidOrIdOrIds === 'string' && deviceIds.length > 1) {
-			throw new errors.BalenaAmbiguousDevice(uuidOrIdOrIds);
-		} else if (Array.isArray(uuidOrIdOrIds)) {
-			const deviceIdsSet = new Set(deviceIds);
-			for (const id of uuidOrIdOrIds) {
-				if (!deviceIdsSet.has(id)) {
-					throw new errors.BalenaDeviceNotFound(id);
-				}
-			}
-		}
-
-		for (const app of apps) {
-			await fn(app);
-		}
-	}
+	const batchDeviceOperation = once(() =>
+		(
+			require('../util/request-batching') as typeof import('../util/request-batching')
+		).batchResourceOperationFactory<Device>({
+			getAll: exports.getAll,
+			NotFoundError: errors.BalenaDeviceNotFound,
+			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
+		}),
+	);
 
 	// Infer dashboardUrl from apiUrl if former is undefined
 	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
@@ -2252,15 +2154,16 @@ const getDeviceModel = function (
 				},
 				{ primitive: true, promise: true },
 			);
-			await batchDeviceOperation({
+			await batchDeviceOperation()({
 				uuidOrIdOrIds,
-				fn: async (app) => {
-					const release = await getRelease(app.id);
+				groupByNavigationPoperty: 'belongs_to__application',
+				fn: async (devices, appId) => {
+					const release = await getRelease(appId);
 					await pine.patch<Device>({
 						resource: 'device',
 						options: {
 							$filter: {
-								id: { $in: app.owns__device.map((d) => d.id) },
+								id: { $in: devices.map((d) => d.id) },
 							},
 						},
 						body: {
@@ -2336,14 +2239,14 @@ const getDeviceModel = function (
 				},
 				{ primitive: true, promise: true },
 			);
-			await batchDeviceOperation({
+			await batchDeviceOperation()({
 				uuidOrIdOrIds,
 				options: {
 					$select: ['id', 'supervisor_version', 'os_version'],
 					$expand: { is_of__device_type: { $select: 'slug' } },
 				},
-				fn: async (app) => {
-					app.owns__device.forEach((device) => {
+				fn: async (devices) => {
+					devices.forEach((device) => {
 						ensureVersionCompatibility(
 							device.supervisor_version,
 							MIN_SUPERVISOR_MC_API,
@@ -2352,24 +2255,26 @@ const getDeviceModel = function (
 						ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
 					});
 					const devicesByDeviceType = groupBy(
-						app.owns__device,
+						devices,
 						(device) => device.is_of__device_type[0].slug,
 					);
 					await Promise.all(
-						Object.entries(devicesByDeviceType).map(async ([dt, devices]) => {
-							const release = await getRelease(dt);
-							await pine.patch<Device>({
-								resource: 'device',
-								options: {
-									$filter: {
-										id: { $in: devices.map((d) => d.id) },
+						Object.entries(devicesByDeviceType).map(
+							async ([dt, devicesOfType]) => {
+								const release = await getRelease(dt);
+								await pine.patch<Device>({
+									resource: 'device',
+									options: {
+										$filter: {
+											id: { $in: devicesOfType.map((d) => d.id) },
+										},
 									},
-								},
-								body: {
-									should_be_managed_by__supervisor_release: release.id,
-								},
-							});
-						}),
+									body: {
+										should_be_managed_by__supervisor_release: release.id,
+									},
+								});
+							},
+						),
 					);
 				},
 			});
@@ -2401,14 +2306,14 @@ const getDeviceModel = function (
 		trackApplicationRelease: async (
 			uuidOrIdOrIds: string | number | number[],
 		): Promise<void> => {
-			await batchDeviceOperation({
+			await batchDeviceOperation()({
 				uuidOrIdOrIds,
-				fn: async (app) => {
+				fn: async (devices) => {
 					await pine.patch<Device>({
 						resource: 'device',
 						options: {
 							$filter: {
-								id: { $in: app.owns__device.map((d) => d.id) },
+								id: { $in: devices.map((d) => d.id) },
 							},
 						},
 						body: {

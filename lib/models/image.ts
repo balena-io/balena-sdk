@@ -74,7 +74,13 @@ const getImageModel = function (
 			const image = await pine.get({
 				resource: 'image',
 				id,
-				options: mergePineOptions(baseOptions, options) as typeof baseOptions,
+				options: mergePineOptions(
+					baseOptions,
+					options,
+					// TODO: Mark the build_log as explicitRead in the next API model version
+					// so that we can remove this & the explicit property selection from here.
+					true,
+				) as typeof baseOptions,
 			});
 			if (image == null) {
 				throw new errors.BalenaImageNotFound(id);

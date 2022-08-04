@@ -134,6 +134,16 @@ const getApplicationModel = function (
 		},
 	);
 
+	const batchApplicationOperation = once(() =>
+		(
+			require('../util/request-batching') as typeof import('../util/request-batching')
+		).batchResourceOperationFactory<Application>({
+			getAll: exports.getAll,
+			NotFoundError: errors.BalenaApplicationNotFound,
+			AmbiguousResourceError: errors.BalenaAmbiguousApplication,
+		}),
+	);
+
 	// Infer dashboardUrl from apiUrl if former is undefined
 	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
 
@@ -798,7 +808,7 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+		 * @param {String|Number|Number[]} slugOrUuidOrIdOrIds - application slug (string), uuid (string) or id (number) or array of ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -812,19 +822,37 @@ const getApplicationModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		remove: async (slugOrUuidOrId: string | number): Promise<void> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
-				await pine.delete({
-					resource: 'application',
-					id: applicationId,
-				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
+		remove: async (
+			slugOrUuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			if (typeof slugOrUuidOrIdOrIds === 'string') {
+				try {
+					const applicationId = await getId(slugOrUuidOrIdOrIds);
+					await pine.delete({
+						resource: 'application',
+						id: applicationId,
+					});
+				} catch (err) {
+					if (isNotFoundResponse(err)) {
+						treatAsMissingApplication(slugOrUuidOrIdOrIds, err);
+					}
+					throw err;
 				}
-				throw err;
+				return;
 			}
+			await batchApplicationOperation()({
+				uuidOrIdOrIds: slugOrUuidOrIdOrIds,
+				fn: async (applications) => {
+					await pine.delete({
+						resource: 'application',
+						options: {
+							$filter: {
+								id: { $in: applications.map((d) => d.id) },
+							},
+						},
+					});
+				},
+			});
 		},
 
 		/**
