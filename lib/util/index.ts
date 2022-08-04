@@ -261,3 +261,22 @@ const convertExpandToObject = <T extends {}>(
 
 	return expandOption;
 };
+
+/**
+ * Useful when you want to avoid having to manually parse the key
+ * or when need order guarantees while iterating the keys.
+ * @private
+ */
+export const groupByMap = <K, V>(entries: V[], iteratee: (item: V) => K) => {
+	const result = new Map<K, V[]>();
+	for (const entry of entries) {
+		const key = iteratee(entry);
+		let keyGroup = result.get(key);
+		if (keyGroup == null) {
+			keyGroup = [];
+			result.set(key, keyGroup);
+		}
+		keyGroup.push(entry);
+	}
+	return result;
+};
