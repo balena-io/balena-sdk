@@ -1,4 +1,18 @@
 - commits:
+    - subject: Deprecate the public_key from the user JWT
+      hash: 51f0d62d9e71aaa99565b3ffd03637f201422b08
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.25.1
+  title: "'Deprecate the public_key from the user JWT'"
+  date: 2022-08-05T11:58:08.709Z
+- commits:
     - subject: "application.remove: Support batch deletions by providing multiple IDs"
       hash: 8238a338e95f773e4ff439dcb93b275ff0250d64
       body: ""
