@@ -23,6 +23,7 @@ export type { Pine, PineStrict } from './pine';
 export * from './types/models';
 export * from './types/jwt';
 export * from './types/contract';
+export * from './types/user-invite';
 
 export type { Interceptor };
 export type {

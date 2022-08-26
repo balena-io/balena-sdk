@@ -69,15 +69,6 @@ If you feel something is missing, not clear or could be improved, please don't h
 <dd></dd>
 </dl>
 
-## Functions
-
-<dl>
-<dt><a href="#groupByMap">groupByMap()</a></dt>
-<dd><p>Useful when you want to avoid having to manually parse the key
-or when need order guarantees while iterating the keys.</p>
-</dd>
-</dl>
-
 <a name="module_balena-sdk"></a>
 
 ## balena-sdk
@@ -8211,10 +8202,3 @@ balena.settings.getAll(function(error, settings) {
 	console.log(settings);
 });
 ```
-<a name="groupByMap"></a>
-
-## groupByMap()
-Useful when you want to avoid having to manually parse the key
-or when need order guarantees while iterating the keys.
-
-**Kind**: global function  
