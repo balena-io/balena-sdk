@@ -1,4 +1,28 @@
 - commits:
+    - subject: Pin TypeScript to 4.7 until upstream dependencies are updated
+      hash: 979b2a6c29734da792fc2d4fbd1644637c34c66c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "types: Add the InvitationTokenDecodedPayload type"
+      hash: c0877db26efbde5907d6b322e58c21570c6adc35
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.26.0
+  title: "'types: Add the InvitationTokenDecodedPayload type'"
+  date: 2022-08-26T08:34:23.591Z
+- commits:
     - subject: Deprecate the public_key from the user JWT
       hash: 51f0d62d9e71aaa99565b3ffd03637f201422b08
       body: ""
