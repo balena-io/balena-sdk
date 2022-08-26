@@ -19,7 +19,7 @@ export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
 	expect(a).to.have.lengthOf(b.length);
 };
 
-export const describeExpandAssertions = async <T>(
+export const describeExpandAssertions = async <T extends {}>(
 	params: BalenaSdk.PineParams<T>,
 ) => {
 	const expand = params.options?.$expand;
