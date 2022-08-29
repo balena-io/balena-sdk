@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update TypeScript to v4.8
+      hash: b1e463143d532718b525481c0098431c20353300
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.26.1
+  title: "'Update TypeScript to v4.8'"
+  date: 2022-08-29T07:13:05.100Z
+- commits:
     - subject: Pin TypeScript to 4.7 until upstream dependencies are updated
       hash: 979b2a6c29734da792fc2d4fbd1644637c34c66c
       body: ""
