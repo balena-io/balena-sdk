@@ -1,4 +1,26 @@
 - commits:
+    - subject: Skip running tests in flowzone till we can inject env vars
+      hash: d1cbd35bbab56ca806abb2e12b2959106d98d54d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Switch from balenaCI to flowzone
+      hash: 93c029e00dccef2401cfa8db36cc6b77cd14bf6b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 16.26.3
+  title: ""
+  date: 2022-09-21T12:49:23.400Z
+- commits:
     - subject: Update balena-register-device to 8.0.0
       hash: 1eb28196a8e773a1ba3f1bfbeb455c8abac0b432
       body: |
