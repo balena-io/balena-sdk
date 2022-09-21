@@ -1,0 +1,46 @@
+# https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+name: "Test custom"
+description: "Custom test step to run during a pull request"
+# this inputs are always provided by flowzone, so they must always be defined on the composite action
+inputs:
+  json:
+    description: "JSON stringified object containing all the inputs from the calling workflow"
+    required: true
+  secrets:
+    description: "JSON stringified object containing all the secrets from the calling workflow"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: lts/*
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        if [ -e package-lock.json ]; then
+          npm ci
+        else
+          npm i
+        fi
+
+    - name: Run custom node tests
+      shell: bash
+      env:
+        TEST_EMAIL: ${{ fromJSON(inputs.secrets).TEST_EMAIL }}
+        TEST_PASSWORD: ${{ fromJSON(inputs.secrets).TEST_PASSWORD }}
+        TEST_USERNAME: ${{ fromJSON(inputs.secrets).TEST_USERNAME }}
+        TEST_REGISTER_EMAIL: ${{ fromJSON(inputs.secrets).TEST_REGISTER_EMAIL }}
+        TEST_REGISTER_PASSWORD: ${{ fromJSON(inputs.secrets).TEST_REGISTER_PASSWORD }}
+        TEST_REGISTER_USERNAME: ${{ fromJSON(inputs.secrets).TEST_REGISTER_USERNAME }}
+        TEST_MEMBER_EMAIL: ${{ fromJSON(inputs.secrets).TEST_MEMBER_EMAIL }}
+        TEST_MEMBER_PASSWORD: ${{ fromJSON(inputs.secrets).TEST_MEMBER_PASSWORD }}
+        TEST_MEMBER_USERNAME: ${{ fromJSON(inputs.secrets).TEST_MEMBER_USERNAME }}
+        TEST_ONLY_ON_ENVIRONMENT: node
+        GHCR_USER: "anything != flowzone, to re-enable the tests for the custom script"
+      run: |
+        node -v
+        npm -v
+        npm test
