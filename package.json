@@ -114,9 +114,9 @@
     "balena-request": "^11.5.5",
     "balena-semver": "^2.3.0",
     "balena-settings-client": "^4.0.6",
+    "date-fns": "^2.29.3",
     "lodash": "^4.17.21",
     "memoizee": "^0.4.15",
-    "moment": "^2.29.1",
     "ndjson": "^2.0.0",
     "pinejs-client-core": "^6.9.6",
     "tslib": "^2.1.0"
