@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove moment in favor of date-fns
+      hash: eeb54985a14acd5b8500edf90bd0a0cd60237008
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+        signed-off-by: Matthew Yarmolinsky <matthew-timothy@balena.io>
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 16.26.4
+  title: ""
+  date: 2022-09-23T17:04:35.961Z
+- commits:
     - subject: Skip running tests in flowzone till we can inject env vars
       hash: d1cbd35bbab56ca806abb2e12b2959106d98d54d
       body: ""
