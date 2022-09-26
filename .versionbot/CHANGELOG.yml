@@ -1,4 +1,16 @@
 - commits:
+    - subject: Delete redundant .resinci.yml
+      hash: 0157a7b278b3b18316eef83cc65f0c6aeaafed9a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 16.26.5
+  title: ""
+  date: 2022-09-26T12:55:45.316Z
+- commits:
     - subject: Remove moment in favor of date-fns
       hash: eeb54985a14acd5b8500edf90bd0a0cd60237008
       body: ""
