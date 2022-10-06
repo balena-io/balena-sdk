@@ -8,7 +8,7 @@ import type {
 	PineFilter,
 } from '..';
 
-const CHUNK_SIZE = 50;
+const CHUNK_SIZE = 200;
 
 export function batchResourceOperationFactory<
 	T extends { id: number; uuid: string },
