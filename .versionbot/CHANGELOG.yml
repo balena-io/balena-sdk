@@ -1,4 +1,20 @@
 - commits:
+    - subject: Fix request batching not chunking the items of the operation
+      hash: a496304b655a83bd4ccdc1a90de1ad9132f478c0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: "#1257"
+        see: "#1257"
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.26.6
+  title: ""
+  date: 2022-10-06T23:54:12.408Z
+- commits:
     - subject: Delete redundant .resinci.yml
       hash: 0157a7b278b3b18316eef83cc65f0c6aeaafed9a
       body: ""
