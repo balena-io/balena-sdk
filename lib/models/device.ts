@@ -276,14 +276,22 @@ const getDeviceModel = function (
 	};
 
 	const set = async (
-		uuidOrId: string | number,
+		uuidOrIdOrIds: string | number | number[],
 		body: SubmitBody<Device>,
 	): Promise<void> => {
-		const { id } = await exports.get(uuidOrId, { $select: 'id' });
-		await pine.patch({
-			resource: 'device',
-			body,
-			id,
+		await batchDeviceOperation()({
+			uuidOrIdOrIds,
+			fn: async (devices) => {
+				await pine.patch<Device>({
+					resource: 'device',
+					options: {
+						$filter: {
+							id: { $in: devices.map((d) => d.id) },
+						},
+					},
+					body,
+				});
+			},
 		});
 	};
 
@@ -925,7 +933,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -939,12 +947,20 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		remove: async (uuidOrId: string | number): Promise<void> => {
-			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
-			await pine.delete({
-				resource: 'device',
-				id: {
-					uuid,
+		remove: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await batchDeviceOperation()({
+				uuidOrIdOrIds,
+				fn: async (devices) => {
+					await pine.delete({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: devices.map((d) => d.id) },
+							},
+						},
+					});
 				},
 			});
 		},
@@ -956,7 +972,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -970,14 +986,11 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		deactivate: async (uuidOrId: string | number): Promise<void> => {
-			const { id } = await exports.get(uuidOrId, { $select: 'id' });
-			await pine.patch({
-				resource: 'device',
-				body: {
-					is_active: false,
-				},
-				id,
+		deactivate: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await set(uuidOrIdOrIds, {
+				is_active: false,
 			});
 		},
 
@@ -1004,10 +1017,14 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		rename: (uuidOrId: string | number, newName: string): Promise<void> =>
-			set(uuidOrId, {
+		rename: async (
+			uuidOrId: string | number,
+			newName: string,
+		): Promise<void> => {
+			await set(uuidOrId, {
 				device_name: newName,
-			}),
+			});
+		},
 
 		/**
 		 * @summary Note a device
@@ -1016,7 +1033,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @param {String} note - the note
 		 *
 		 * @returns {Promise}
@@ -1032,8 +1049,12 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		note: (uuidOrId: string | number, note: string): Promise<void> =>
-			set(uuidOrId, { note }),
+		note: async (
+			uuidOrIdOrIds: string | number | number[],
+			note: string,
+		): Promise<void> => {
+			await set(uuidOrIdOrIds, { note });
+		},
 
 		/**
 		 * @summary Set a custom location for a device
@@ -1042,7 +1063,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @param {Object} location - the location ({ latitude: 123, longitude: 456 })
 		 *
 		 * @returns {Promise}
@@ -1058,14 +1079,15 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		setCustomLocation: (
-			uuidOrId: string | number,
+		setCustomLocation: async (
+			uuidOrIdOrIds: string | number | number[],
 			location: { latitude: string | number; longitude: string | number },
-		): Promise<void> =>
-			set(uuidOrId, {
+		): Promise<void> => {
+			await set(uuidOrIdOrIds, {
 				custom_latitude: String(location.latitude),
 				custom_longitude: String(location.longitude),
-			}),
+			});
+		},
 
 		/**
 		 * @summary Clear the custom location of a device
@@ -1074,7 +1096,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 *
 		 * @returns {Promise}
 		 *
@@ -1089,11 +1111,14 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		unsetCustomLocation: (uuidOrId: string | number): Promise<void> =>
-			exports.setCustomLocation(uuidOrId, {
+		unsetCustomLocation: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await exports.setCustomLocation(uuidOrIdOrIds, {
 				latitude: '',
 				longitude: '',
-			}),
+			});
+		},
 
 		/**
 		 * @summary Move a device to another application
@@ -1102,7 +1127,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @param {String|Number} applicationSlugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 *
 		 * @returns {Promise}
@@ -1122,23 +1147,9 @@ const getDeviceModel = function (
 		 * });
 		 */
 		move: async (
-			uuidOrId: string | number,
+			uuidOrIdOrIds: string | number | number[],
 			applicationSlugOrUuidOrId: string | number,
 		): Promise<void> => {
-			const deviceOptions = {
-				$select: toWritable(['uuid', 'is_managed_by__device'] as const),
-				$expand: {
-					is_of__device_type: {
-						$select: 'is_of__cpu_architecture',
-						$expand: {
-							is_of__cpu_architecture: {
-								$select: 'slug',
-							},
-						},
-					},
-				},
-			} as const;
-
 			const applicationOptions = {
 				$select: toWritable(['id', 'depends_on__application'] as const),
 				$expand: {
@@ -1152,37 +1163,57 @@ const getDeviceModel = function (
 					},
 				},
 			} as const;
+			const application = (await applicationModel().get(
+				applicationSlugOrUuidOrId,
+				applicationOptions,
+			)) as PineTypedResult<Application, typeof applicationOptions>;
+			const appCpuArchSlug =
+				application.is_for__device_type[0].is_of__cpu_architecture[0].slug;
 
-			const [device, application] = await Promise.all([
-				exports.get(uuidOrId, deviceOptions) as Promise<
-					PineTypedResult<Device, typeof deviceOptions>
-				>,
-				applicationModel().get(
-					applicationSlugOrUuidOrId,
-					applicationOptions,
-				) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
-			]);
-
-			const isCompatibleMove =
-				osModel().isArchitectureCompatibleWith(
-					device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
-					application.is_for__device_type[0].is_of__cpu_architecture[0].slug,
-				) &&
-				(device.is_managed_by__device == null) ===
-					(application.depends_on__application == null);
-			if (!isCompatibleMove) {
-				throw new errors.BalenaInvalidDeviceType(
-					`Incompatible application: ${applicationSlugOrUuidOrId}`,
-				);
-			}
-
-			await pine.patch<Device>({
-				resource: 'device',
-				body: {
-					belongs_to__application: application.id,
+			const deviceOptions = {
+				$select: 'is_managed_by__device',
+				$expand: {
+					is_of__device_type: {
+						$select: 'is_of__cpu_architecture',
+						$expand: {
+							is_of__cpu_architecture: {
+								$select: 'slug',
+							},
+						},
+					},
 				},
-				id: {
-					uuid: device.uuid,
+			} as const;
+			await batchDeviceOperation()({
+				uuidOrIdOrIds,
+				options: deviceOptions,
+				groupByNavigationPoperty: 'belongs_to__application',
+				fn: async (devices) => {
+					for (const device of devices) {
+						const isCompatibleMove =
+							osModel().isArchitectureCompatibleWith(
+								device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
+								appCpuArchSlug,
+							) &&
+							(device.is_managed_by__device == null) ===
+								(application.depends_on__application == null);
+						if (!isCompatibleMove) {
+							throw new errors.BalenaInvalidDeviceType(
+								`Incompatible application: ${applicationSlugOrUuidOrId}`,
+							);
+						}
+					}
+
+					await pine.patch<Device>({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: devices.map((d) => d.id) },
+							},
+						},
+						body: {
+							belongs_to__application: application.id,
+						},
+					});
 				},
 			});
 		},
@@ -1575,7 +1606,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1589,10 +1620,13 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		enableDeviceUrl: (uuidOrId: string | number): Promise<void> =>
-			set(uuidOrId, {
+		enableDeviceUrl: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await set(uuidOrIdOrIds, {
 				is_web_accessible: true,
-			}),
+			});
+		},
 
 		/**
 		 * @summary Disable device url for a device
@@ -1601,7 +1635,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1615,10 +1649,13 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		disableDeviceUrl: (uuidOrId: string | number): Promise<void> =>
-			set(uuidOrId, {
+		disableDeviceUrl: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await set(uuidOrIdOrIds, {
 				is_web_accessible: false,
-			}),
+			});
+		},
 
 		/**
 		 * @summary Enable local mode
@@ -1906,7 +1943,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
 		 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 		 * @returns {Promise}
 		 *
@@ -1922,7 +1959,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		async grantSupportAccess(
-			uuidOrId: string | number,
+			uuidOrIdOrIds: string | number | number[],
 			expiryTimestamp: number,
 		): Promise<void> {
 			if (expiryTimestamp == null || expiryTimestamp <= Date.now()) {
@@ -1932,7 +1969,7 @@ const getDeviceModel = function (
 				);
 			}
 
-			return await set(uuidOrId, {
+			await set(uuidOrIdOrIds, {
 				// @ts-expect-error a number is valid to set but it will always be returned as an ISO string so the typings specify string rather than string | number
 				is_accessible_by_support_until__date: expiryTimestamp,
 			});
@@ -1945,7 +1982,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1959,10 +1996,13 @@ const getDeviceModel = function (
 		 * 	if (error) throw error;
 		 * });
 		 */
-		revokeSupportAccess: (uuidOrId: string | number): Promise<void> =>
-			set(uuidOrId, {
+		revokeSupportAccess: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await set(uuidOrIdOrIds, {
 				is_accessible_by_support_until__date: null,
-			}),
+			});
+		},
 
 		/**
 		 * @summary Get a string showing when a device was last set as online
@@ -2200,21 +2240,8 @@ const getDeviceModel = function (
 		trackApplicationRelease: async (
 			uuidOrIdOrIds: string | number | number[],
 		): Promise<void> => {
-			await batchDeviceOperation()({
-				uuidOrIdOrIds,
-				fn: async (devices) => {
-					await pine.patch<Device>({
-						resource: 'device',
-						options: {
-							$filter: {
-								id: { $in: devices.map((d) => d.id) },
-							},
-						},
-						body: {
-							should_be_running__release: null,
-						},
-					});
-				},
+			await set(uuidOrIdOrIds, {
+				should_be_running__release: null,
 			});
 		},
 
