@@ -132,7 +132,9 @@ export function batchResourceOperationFactory<
 			associatedResourceId,
 			associatedItems,
 		] of itemsByAccosiactedResource.entries()) {
-			await fn(associatedItems, associatedResourceId);
+			for (const chunkedAssociatedItems of chunk(associatedItems, CHUNK_SIZE)) {
+				await fn(chunkedAssociatedItems, associatedResourceId);
+			}
 		}
 	}
 
