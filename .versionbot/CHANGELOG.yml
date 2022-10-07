@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add support for batch operations for more device modifying methods
+      hash: 4c506a79bab2e3ec7203db0d1a672f1c5056b729
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.27.0
+  title: ""
+  date: 2022-10-07T18:42:53.725Z
+- commits:
     - subject: Fix request batching chunking when there is no grouping navigation prop
       hash: 41df48a6304f12979e4f1df77227eec41362904c
       body: ""
