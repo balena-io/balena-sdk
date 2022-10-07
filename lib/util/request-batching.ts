@@ -108,15 +108,9 @@ export function batchResourceOperationFactory<
 			throw new NotFoundError(uuidOrIdOrIds.toString());
 		}
 
-		if (!groupByNavigationPoperty) {
-			await fn(items);
-			return;
-		}
-
-		const itemsByAccosiactedResource = groupByMap(
-			items,
-			(item) => item[groupByNavigationPoperty]!.__id,
-		);
+		const itemsByAccosiactedResource = groupByNavigationPoperty
+			? groupByMap(items, (item) => item[groupByNavigationPoperty]!.__id)
+			: new Map([[undefined, items]]);
 		if (typeof uuidOrIdOrIds === 'string' && resourceIds.length > 1) {
 			throw new AmbiguousResourceError(uuidOrIdOrIds);
 		} else if (Array.isArray(uuidOrIdOrIds)) {
