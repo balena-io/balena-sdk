@@ -1,4 +1,28 @@
 - commits:
+    - subject: Fix request batching chunking when there is no grouping navigation prop
+      hash: 41df48a6304f12979e4f1df77227eec41362904c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "request-batching: Increase the batch size to 200 items"
+      hash: 1f72425be70cffa9a236a491e273ddcb0ffc090e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.26.7
+  title: ""
+  date: 2022-10-07T15:44:16.819Z
+- commits:
     - subject: Fix request batching not chunking the items of the operation
       hash: a496304b655a83bd4ccdc1a90de1ad9132f478c0
       body: ""
