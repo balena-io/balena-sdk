@@ -2175,6 +2175,50 @@ const getDeviceModel = function (
 		},
 
 		/**
+		 * @summary Configure a specific device to track the current application release
+		 * @name trackApplicationRelease
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @description The device's current release will be updated with each new successfully built release.
+		 *
+		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
+		 * 	...
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
+		 * 	if (error) throw error;
+		 * 	...
+		 * });
+		 */
+		trackApplicationRelease: async (
+			uuidOrIdOrIds: string | number | number[],
+		): Promise<void> => {
+			await batchDeviceOperation()({
+				uuidOrIdOrIds,
+				fn: async (devices) => {
+					await pine.patch<Device>({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: devices.map((d) => d.id) },
+							},
+						},
+						body: {
+							should_be_running__release: null,
+						},
+					});
+				},
+			});
+		},
+
+		/**
 		 * @summary Set a specific device to run a particular supervisor release
 		 * @name setSupervisorRelease
 		 * @public
@@ -2276,50 +2320,6 @@ const getDeviceModel = function (
 							},
 						),
 					);
-				},
-			});
-		},
-
-		/**
-		 * @summary Configure a specific device to track the current application release
-		 * @name trackApplicationRelease
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @description The device's current release will be updated with each new successfully built release.
-		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
-		 */
-		trackApplicationRelease: async (
-			uuidOrIdOrIds: string | number | number[],
-		): Promise<void> => {
-			await batchDeviceOperation()({
-				uuidOrIdOrIds,
-				fn: async (devices) => {
-					await pine.patch<Device>({
-						resource: 'device',
-						options: {
-							$filter: {
-								id: { $in: devices.map((d) => d.id) },
-							},
-						},
-						body: {
-							should_be_running__release: null,
-						},
-					});
 				},
 			});
 		},

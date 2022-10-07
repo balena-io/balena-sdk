@@ -8,7 +8,7 @@ import type {
 	PineFilter,
 } from '..';
 
-const CHUNK_SIZE = 50;
+const CHUNK_SIZE = 200;
 
 export function batchResourceOperationFactory<
 	T extends { id: number; uuid: string },
@@ -108,15 +108,9 @@ export function batchResourceOperationFactory<
 			throw new NotFoundError(uuidOrIdOrIds.toString());
 		}
 
-		if (!groupByNavigationPoperty) {
-			await fn(items);
-			return;
-		}
-
-		const itemsByAccosiactedResource = groupByMap(
-			items,
-			(item) => item[groupByNavigationPoperty]!.__id,
-		);
+		const itemsByAccosiactedResource = groupByNavigationPoperty
+			? groupByMap(items, (item) => item[groupByNavigationPoperty]!.__id)
+			: new Map([[undefined, items]]);
 		if (typeof uuidOrIdOrIds === 'string' && resourceIds.length > 1) {
 			throw new AmbiguousResourceError(uuidOrIdOrIds);
 		} else if (Array.isArray(uuidOrIdOrIds)) {

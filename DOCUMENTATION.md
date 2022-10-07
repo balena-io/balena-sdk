@@ -290,8 +290,8 @@ const sdk = fromSharedOptions();
             * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
             * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.pinToRelease(uuidOrIdOrIds, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-            * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
             * [.trackApplicationRelease(uuidOrIdOrIds)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
+            * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
@@ -667,8 +667,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
         * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.pinToRelease(uuidOrIdOrIds, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-        * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
         * [.trackApplicationRelease(uuidOrIdOrIds)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
+        * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
@@ -2584,8 +2584,8 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
     * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.pinToRelease(uuidOrIdOrIds, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-    * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
     * [.trackApplicationRelease(uuidOrIdOrIds)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
+    * [.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuid, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
     * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
@@ -4672,6 +4672,32 @@ balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661
 	...
 });
 ```
+<a name="balena.models.device.trackApplicationRelease"></a>
+
+##### device.trackApplicationRelease(uuidOrIdOrIds) ⇒ <code>Promise</code>
+The device's current release will be updated with each new successfully built release.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Configure a specific device to track the current application release  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrIdOrIds | <code>String</code> \| <code>Number</code> \| <code>Array.&lt;Number&gt;</code> | device uuid (string) or id (number) or ids |
+
+**Example**  
+```js
+balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
+	if (error) throw error;
+	...
+});
+```
 <a name="balena.models.device.setSupervisorRelease"></a>
 
 ##### device.setSupervisorRelease(uuidOrIdOrIds, supervisorVersionOrId) ⇒ <code>Promise</code>
@@ -4701,32 +4727,6 @@ balena.models.device.setSupervisorRelease(123, 'v11.4.14').then(function() {
 **Example**  
 ```js
 balena.models.device.setSupervisorRelease('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
-<a name="balena.models.device.trackApplicationRelease"></a>
-
-##### device.trackApplicationRelease(uuidOrIdOrIds) ⇒ <code>Promise</code>
-The device's current release will be updated with each new successfully built release.
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Configure a specific device to track the current application release  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrIdOrIds | <code>String</code> \| <code>Number</code> \| <code>Array.&lt;Number&gt;</code> | device uuid (string) or id (number) or ids |
-
-**Example**  
-```js
-balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
 	if (error) throw error;
 	...
 });
