@@ -268,7 +268,7 @@ const sdk = fromSharedOptions();
             * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
             * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-            * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
+            * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
             * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
             * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
             * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
@@ -645,7 +645,7 @@ balena.models.device.get(123).catch(function (error) {
         * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
         * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-        * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
+        * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
         * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
         * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
         * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
@@ -2562,7 +2562,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
     * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-    * [.register(applicationSlugOrUuidOrId, uuid)](#balena.models.device.register) ⇒ <code>Promise</code>
+    * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
     * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
     * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
     * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
@@ -4057,7 +4057,7 @@ console.log(randomKey);
 ```
 <a name="balena.models.device.register"></a>
 
-##### device.register(applicationSlugOrUuidOrId, uuid) ⇒ <code>Promise</code>
+##### device.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Register a new device with a Balena application.  
 **Access**: public  
@@ -4067,11 +4067,19 @@ console.log(randomKey);
 | --- | --- | --- |
 | applicationSlugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
 | uuid | <code>String</code> | device uuid |
+| [deviceTypeSlug] | <code>String</code> | device type slug (string) or alias (string) |
 
 **Example**  
 ```js
 var uuid = balena.models.device.generateUniqueKey();
 balena.models.device.register('myorganization/myapp', uuid).then(function(registrationInfo) {
+	console.log(registrationInfo);
+});
+```
+**Example**  
+```js
+var uuid = balena.models.device.generateUniqueKey();
+balena.models.device.register('myorganization/myapp', uuid, 'raspberry-pi').then(function(registrationInfo) {
 	console.log(registrationInfo);
 });
 ```
