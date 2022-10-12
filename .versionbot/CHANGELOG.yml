@@ -1,4 +1,21 @@
 - commits:
+    - subject: "device.register: Allow providing a device type for the registered
+        device"
+      hash: 93c69c7dd734618220dddedf1acbbd764b337ff7
+      body: ""
+      footer:
+        Resolves: "#1270"
+        resolves: "#1270"
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.28.0
+  title: ""
+  date: 2022-10-12T06:43:28.586Z
+- commits:
     - subject: Add support for batch operations for more device modifying methods
       hash: 4c506a79bab2e3ec7203db0d1a672f1c5056b729
       body: ""
