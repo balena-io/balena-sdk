@@ -129,6 +129,9 @@ const getDeviceModel = function (
 			opts,
 		),
 	);
+	const deviceTypeModel = once(() =>
+		(require('./device-type') as typeof import('./device-type')).default(deps),
+	);
 	const releaseModel = once(() =>
 		(require('./release') as typeof import('./release')).default(deps, opts),
 	);
@@ -1406,6 +1409,7 @@ const getDeviceModel = function (
 		 *
 		 * @param {String|Number} applicationSlugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {String} uuid - device uuid
+		 * @param {String} [deviceTypeSlug] - device type slug (string) or alias (string)
 		 *
 		 * @fulfil {Object} Device registration info ({ id: "...", uuid: "...", api_key: "..." })
 		 * @returns {Promise}
@@ -1413,6 +1417,12 @@ const getDeviceModel = function (
 		 * @example
 		 * var uuid = balena.models.device.generateUniqueKey();
 		 * balena.models.device.register('myorganization/myapp', uuid).then(function(registrationInfo) {
+		 * 	console.log(registrationInfo);
+		 * });
+		 *
+		 * @example
+		 * var uuid = balena.models.device.generateUniqueKey();
+		 * balena.models.device.register('myorganization/myapp', uuid, 'raspberry-pi').then(function(registrationInfo) {
 		 * 	console.log(registrationInfo);
 		 * });
 		 *
@@ -1432,29 +1442,63 @@ const getDeviceModel = function (
 		async register(
 			applicationSlugOrUuidOrId: string | number,
 			uuid: string,
+			deviceTypeSlug?: string,
 		): Promise<{
 			id: number;
 			uuid: string;
 			api_key: string;
 		}> {
-			const applicationOptions = {
-				$select: 'id',
-				$expand: { is_for__device_type: { $select: 'slug' } },
+			const deviceTypeOptions = {
+				$select: 'slug',
+				$expand: {
+					is_of__cpu_architecture: {
+						$select: 'slug',
+					},
+				},
 			} as const;
 
-			const [userId, apiKey, application] = await Promise.all([
+			const applicationOptions = {
+				$select: 'id',
+				$expand: { is_for__device_type: deviceTypeOptions },
+			} as const;
+
+			const [userId, apiKey, application, deviceType] = await Promise.all([
 				sdkInstance.auth.getUserId(),
 				applicationModel().generateProvisioningKey(applicationSlugOrUuidOrId),
 				applicationModel().get(
 					applicationSlugOrUuidOrId,
 					applicationOptions,
 				) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
+				typeof deviceTypeSlug === 'string'
+					? (deviceTypeModel().get(deviceTypeSlug, {
+							$select: 'slug',
+							$expand: {
+								is_of__cpu_architecture: {
+									$select: 'slug',
+								},
+							},
+					  }) as Promise<
+							PineTypedResult<DeviceType, typeof deviceTypeOptions>
+					  >)
+					: null,
 			]);
+			if (deviceType != null) {
+				const isCompatibleParameter = osModel().isArchitectureCompatibleWith(
+					deviceType.is_of__cpu_architecture[0].slug,
+					application.is_for__device_type[0].is_of__cpu_architecture[0].slug,
+				);
+				if (!isCompatibleParameter) {
+					throw new errors.BalenaInvalidDeviceType(
+						`Incompatible device type: ${deviceTypeSlug}`,
+					);
+				}
+			}
+
 			return await registerDevice().register({
 				userId,
 				applicationId: application.id,
 				uuid,
-				deviceType: application.is_for__device_type[0].slug,
+				deviceType: (deviceType ?? application.is_for__device_type[0]).slug,
 				provisioningApiKey: apiKey,
 				apiEndpoint: apiUrl!,
 			});
