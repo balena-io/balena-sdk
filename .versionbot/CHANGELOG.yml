@@ -1,4 +1,18 @@
 - commits:
+    - subject: "flowzone: Run the node tests using the latest LTS version"
+      hash: d6e497829f5b687ab45d2e473d888a76b9996064
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.28.1
+  title: ""
+  date: 2022-10-14T18:17:33.333Z
+- commits:
     - subject: "device.register: Allow providing a device type for the registered
         device"
       hash: 93c69c7dd734618220dddedf1acbbd764b337ff7
@@ -2270,8 +2284,7 @@
             - subject: Allow more lenient gzip decompression
               hash: 9c7bc3051b279c9d09ec501a78dbe9f506d65650
               body: >
-                Be more lenient with decoding compressed responses, since (very
-                rarely)
+                Be more lenient with decoding compressed responses, since (very rarely)
 
                 servers send slightly invalid gzip responses that are still accepted
 
@@ -10755,8 +10768,8 @@
       subject: Upgrade to new resin-request, resin-pine and resin-register-device
     - author: Tim Perry
       body: >-
-        One bug solved en route here, highlighted by minification: we depended
-        on the
+        One bug solved en route here, highlighted by minification: we depended on
+        the
 
         function name of errors thrown by Resin-Request, which isn't dependable
 
