@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests to run on node 18
+      hash: 1838f590aaf27da8cc84952ffb9ea96b48e0f5b3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "deviceType.getAllSupported: Require a valid & final release to exist"
+      hash: a32e4666ba7e4ea273606854f1c16c99df6a97d6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.zulipchat.com/#narrow/stream/350505-aspect.2Fcommunication/topic/Device-type.20listings.20on.20Docs.20.26.20Hub.20Conflicts
+        see: https://balena.zulipchat.com/#narrow/stream/350505-aspect.2Fcommunication/topic/Device-type.20listings.20on.20Docs.20.26.20Hub.20Conflicts
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.28.2
+  title: ""
+  date: 2022-10-27T15:33:07.297Z
+- commits:
     - subject: "flowzone: Run the node tests using the latest LTS version"
       hash: d6e497829f5b687ab45d2e473d888a76b9996064
       body: ""
