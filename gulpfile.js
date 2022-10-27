@@ -12,8 +12,6 @@ const minify = uglifyComposer(uglifyJs, console);
 
 const packageJSON = require('./package.json');
 
-const { loadEnv } = require('./tests/loadEnv');
-
 const cliOptions = minimist(process.argv.slice(2), {
 	string: 'buildDir',
 	default: { buildDir: 'es2015' },
@@ -36,7 +34,7 @@ const OPTIONS = {
 };
 
 gulp.task('test', function (cb) {
-	loadEnv();
+	require('dotenv').config();
 
 	const { TEST_ONLY_ON_ENVIRONMENT } = process.env;
 	if (TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT !== 'node') {

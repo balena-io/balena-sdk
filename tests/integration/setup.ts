@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as memoize from 'memoizee';
 import type * as BalenaSdk from '../../';
-import type { AnyObject } from '../../typings/utils';
+import type { Dictionary } from '../../typings/utils';
 import { toWritable } from '../../lib/util/types';
 import { getInitialOrganization } from './utils';
 chai.use(chaiAsPromised);
@@ -14,33 +14,30 @@ chai.use(require('chai-samsam'));
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 
-let apiUrl: string;
-let env: AnyObject;
 export let balenaSdkExports: typeof BalenaSdk;
 let opts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
 	// tslint:disable-next-line:no-var-requires
 	require('js-polyfills/es6');
 	balenaSdkExports = window.balenaSdk;
-	// @ts-expect-error
-	env = window.__env__;
 
-	apiUrl = env.TEST_API_URL || 'https://api.balena-cloud.com';
+	const apiUrl = process.env.TEST_API_URL || 'https://api.balena-cloud.com';
 	opts = {
 		apiUrl,
-		builderUrl: env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
+		builderUrl:
+			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
 	};
 } else {
 	// tslint:disable-next-line:no-var-requires
 	balenaSdkExports = require('../..');
 	// tslint:disable-next-line:no-var-requires
 	const settings = require('balena-settings-client');
-	({ env } = process);
 
-	apiUrl = env.TEST_API_URL || settings.get('apiUrl');
+	const apiUrl = process.env.TEST_API_URL || settings.get('apiUrl');
 	opts = {
 		apiUrl,
-		builderUrl: env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
+		builderUrl:
+			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
 		dataDirectory: settings.get('dataDirectory'),
 	};
 }
@@ -50,6 +47,7 @@ _.assign(opts, {
 	retries: 3,
 });
 
+const env = process.env as Dictionary<string>;
 console.log(`Running SDK tests against: ${opts.apiUrl}`);
 console.log(`TEST_USERNAME: ${env?.TEST_USERNAME}`);
 
