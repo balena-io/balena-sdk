@@ -1,23 +1,61 @@
 const _ = require('lodash');
 const getKarmaConfig = require('balena-config-karma');
 const packageJSON = require('./package.json');
-const { loadEnv } = require('./tests/loadEnv');
-
-getKarmaConfig.DEFAULT_WEBPACK_CONFIG.externals = { fs: true };
 
 const BROWSER_BUNDLE = 'es2015/balena-browser.min.js';
 
 module.exports = function (config) {
-	loadEnv();
+	require('dotenv').config();
+	const envVars = [
+		'TEST_API_URL',
+		'TEST_EMAIL',
+		'TEST_PASSWORD',
+		'TEST_USERNAME',
+		'TEST_MEMBER_EMAIL',
+		'TEST_MEMBER_PASSWORD',
+		'TEST_MEMBER_USERNAME',
+		'TEST_REGISTER_EMAIL',
+		'TEST_REGISTER_PASSWORD',
+		'TEST_REGISTER_USERNAME',
+	];
 
 	const karmaConfig = getKarmaConfig(packageJSON);
-	karmaConfig.plugins.push(require('karma-env-preprocessor'));
+	karmaConfig.webpack.resolve.fallback = {
+		constants: false,
+		crypto: require.resolve('crypto-browserify'),
+		domain: require.resolve('domain-browser'),
+		dns: false,
+		fs: false,
+		net: false,
+		os: require.resolve('os-browserify'),
+		path: false,
+		stream: require.resolve('stream-browserify'),
+		url: false,
+		util: require.resolve('util'),
+		zlib: require.resolve('browserify-zlib'),
+	};
+	karmaConfig.webpack.plugins = [
+		new getKarmaConfig.webpack.ProvidePlugin({
+			// Polyfills or mocks for various node stuff
+			process: 'process/browser',
+			Buffer: ['buffer', 'Buffer'],
+		}),
+		new getKarmaConfig.webpack.EnvironmentPlugin(envVars),
+	];
+	karmaConfig.webpack.module.rules.push({
+		test: /\.m?js/,
+		resolve: {
+			fullySpecified: false,
+		},
+	});
+	karmaConfig.webpack.experiments = {
+		asyncWebAssembly: true,
+	};
 	// do not pre-process the browser build
 	karmaConfig.preprocessors = _.omitBy(
 		karmaConfig.preprocessors,
 		(_value, key) => key.startsWith('es2015/') || key.startsWith('es2018/'),
 	);
-	karmaConfig.preprocessors['tests/**/*.js'] = ['webpack', 'sourcemap', 'env'];
 	karmaConfig.client = {
 		mocha: {
 			timeout: 5 * 60 * 1000,
@@ -39,29 +77,6 @@ module.exports = function (config) {
 		karmaConfig.files = [];
 		karmaConfig.failOnEmptyTestSuite = false;
 	}
-
-	karmaConfig.browserConsoleLogOptions = {
-		level: 'log',
-		format: '%b %T: %m',
-		terminal: true,
-	};
-
-	karmaConfig.envPreprocessor = [
-		'TEST_API_URL',
-		'TEST_EMAIL',
-		'TEST_PASSWORD',
-		'TEST_USERNAME',
-		'TEST_PAID_EMAIL',
-		'TEST_PAID_PASSWORD',
-		'TEST_REGISTER_EMAIL',
-		'TEST_REGISTER_PASSWORD',
-		'TEST_REGISTER_USERNAME',
-		'TEST_MEMBER_EMAIL',
-		'TEST_MEMBER_PASSWORD',
-		'TEST_MEMBER_USERNAME',
-	];
-
-	console.log(JSON.stringify(karmaConfig));
 
 	return config.set(karmaConfig);
 };
