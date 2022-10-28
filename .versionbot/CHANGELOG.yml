@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add contract partial based instruction generation
+      hash: 8d003f8870586f028acc93658de2644133178d8c
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+  version: 16.29.0
+  date: 2022-10-28T18:20:04.509Z
+- commits:
     - subject: Update tests to run on node 18
       hash: 1838f590aaf27da8cc84952ffb9ea96b48e0f5b3
       body: ""
@@ -2310,7 +2323,8 @@
             - subject: Allow more lenient gzip decompression
               hash: 9c7bc3051b279c9d09ec501a78dbe9f506d65650
               body: >
-                Be more lenient with decoding compressed responses, since (very rarely)
+                Be more lenient with decoding compressed responses, since (very
+                rarely)
 
                 servers send slightly invalid gzip responses that are still accepted
 
@@ -10794,8 +10808,8 @@
       subject: Upgrade to new resin-request, resin-pine and resin-register-device
     - author: Tim Perry
       body: >-
-        One bug solved en route here, highlighted by minification: we depended on
-        the
+        One bug solved en route here, highlighted by minification: we depended
+        on the
 
         function name of errors thrown by Resin-Request, which isn't dependable
 
