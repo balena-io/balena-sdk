@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update balena-errors to v4.7.3
+      hash: a3dc9fc18e0db6bdaa052502db222f5870b58323
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 16.28.3
+  title: ""
+  date: 2022-11-03T10:53:47.700Z
+- commits:
     - subject: Update tests to run on node 18
       hash: 1838f590aaf27da8cc84952ffb9ea96b48e0f5b3
       body: ""
