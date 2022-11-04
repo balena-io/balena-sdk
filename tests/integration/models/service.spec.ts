@@ -1,7 +1,7 @@
 // tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import { expect } from 'chai';
-import * as parallel from 'mocha.parallel';
+import parallel from 'mocha.parallel';
 import {
 	balena,
 	givenAnApplication,

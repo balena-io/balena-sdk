@@ -2,15 +2,15 @@
 import * as _ from 'lodash';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as memoize from 'memoizee';
+import chaiAsPromised from 'chai-as-promised';
+import chaiSamsam from 'chai-samsam';
+import memoizee from 'memoizee';
 import type * as BalenaSdk from '../../';
 import type { Dictionary } from '../../typings/utils';
 import { toWritable } from '../../lib/util/types';
 import { getInitialOrganization } from './utils';
 chai.use(chaiAsPromised);
-// tslint:disable-next-line:no-var-requires
-chai.use(require('chai-samsam'));
+chai.use(chaiSamsam);
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 
@@ -214,7 +214,7 @@ export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
 	});
 }
 
-const getDeviceType = memoize(
+const getDeviceType = memoizee(
 	(deviceTypeId: number) =>
 		balena.pine.get({
 			resource: 'device_type',

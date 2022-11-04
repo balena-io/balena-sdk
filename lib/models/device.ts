@@ -42,7 +42,7 @@ import once = require('lodash/once');
 import groupBy = require('lodash/groupBy');
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
-import * as memoizee from 'memoizee';
+import memoizee from 'memoizee';
 
 import {
 	isId,

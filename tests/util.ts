@@ -1,6 +1,6 @@
 import 'chai-samsam';
 import { expect } from 'chai';
-import * as parallel from 'mocha.parallel';
+import parallel from 'mocha.parallel';
 import { balena } from './integration/setup';
 import type * as BalenaSdk from '..';
 
