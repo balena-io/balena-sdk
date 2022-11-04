@@ -2778,6 +2778,7 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {
+				this.timeout(60 * 1000);
 				givenASupervisorRelease(before);
 
 				it('should set the batch of devices to a specific supervisor release', async function () {
