@@ -12,6 +12,7 @@
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "moduleResolution": "node",
+        "esModuleInterop": true,
         "allowJs": true,
         "importHelpers": true
     },

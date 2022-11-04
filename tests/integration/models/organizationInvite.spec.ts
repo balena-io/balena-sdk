@@ -1,6 +1,6 @@
 // tslint:disable-next-line:import-blacklist
 import { expect } from 'chai';
-import * as parallel from 'mocha.parallel';
+import parallel from 'mocha.parallel';
 import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';

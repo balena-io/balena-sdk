@@ -1,4 +1,4 @@
-import * as memoizee from 'memoizee';
+import memoizee from 'memoizee';
 import type { PubSub } from './pubsub';
 const DEFAULT_CACHING_INTERVAL = 10 * 60 * 1000; // 10 minutes
 
