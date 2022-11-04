@@ -1,4 +1,34 @@
 - commits:
+    - subject: Use deep imports for date-fns to improve tree-shaking
+      hash: db4d99bd589ead7c94dfb38835c72aa7f9c81081
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.zulipchat.com/#narrow/stream/346007-balena-io.2FbalenaCloud/topic/moment.20-.3E.20date-fns
+        see: https://balena.zulipchat.com/#narrow/stream/346007-balena-io.2FbalenaCloud/topic/moment.20-.3E.20date-fns
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Enable esModuleInterop build option
+      hash: 6aa14da9aa2580dcad6c7f2490b3a7c8edec3322
+      body: |
+        Had to enable esModuleInterop, b/c
+        otherwise the date-fns/formatDistance import
+        not returning anything, even though TS was
+        happy.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.28.4
+  title: ""
+  date: 2022-11-04T16:40:26.421Z
+- commits:
     - subject: Update balena-errors to v4.7.3
       hash: a3dc9fc18e0db6bdaa052502db222f5870b58323
       body: ""
