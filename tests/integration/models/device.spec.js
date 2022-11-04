@@ -2778,8 +2778,27 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {
-				this.timeout(60 * 1000);
-				givenASupervisorRelease(before);
+				before(async function () {
+					const [oldSupervisorRelease] = await balena.pine.get({
+						resource: 'supervisor_release',
+						options: {
+							$select: 'id',
+							$filter: {
+								supervisor_version: 'v11.12.3',
+								is_for__device_type: this.application.is_for__device_type.__id,
+							},
+						},
+					});
+					// Set all devices to a supervisor release so that the service installs are already set.
+					// We shouldn't need to do this.
+					for (const d of this.devices) {
+						await balena.models.device.setSupervisorRelease(
+							d.id,
+							oldSupervisorRelease.id,
+						);
+					}
+				});
+				givenASupervisorRelease(before, 'v11.12.4');
 
 				it('should set the batch of devices to a specific supervisor release', async function () {
 					await balena.models.device.setSupervisorRelease(
