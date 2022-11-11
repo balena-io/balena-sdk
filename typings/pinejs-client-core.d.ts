@@ -154,8 +154,18 @@ interface Lambda<T> {
 		| { $not?: LambdaExpression<T> };
 }
 
-type OrderByValues = 'asc' | 'desc';
-type OrderBy = string | OrderBy[] | { [index: string]: OrderByValues };
+type OrderByDirection = 'asc' | 'desc';
+type OrderBy<T = any> =
+	| string // TODO next major: Change to: `${keyof T & string} ${OrderByDirection}` | [keyof T & string, OrderByDirection]
+	| Array<OrderBy<T>>
+	| { [k in keyof T]?: OrderByDirection }
+	| ({
+			[k in ExpandableProps<T>]?: {
+				$count: ODataCountOptions<InferAssociatedResourceType<T[k]>>;
+			};
+	  } & {
+			$dir: OrderByDirection;
+	  });
 
 type AssociatedResourceFilter<T> = T extends NonNullable<
 	ReverseNavigationResource<{}>
@@ -323,17 +333,19 @@ export interface ODataOptionsWithoutCount<T> {
 	$select?: Array<SelectableProps<T>> | SelectableProps<T> | '*';
 	$filter?: Filter<T>;
 	$expand?: Expand<T>;
-	$orderby?: OrderBy;
+	$orderby?: OrderBy<T>;
 	$top?: number;
 	$skip?: number;
 }
 
+export type ODataCountOptions<T> = Pick<ODataOptionsWithoutCount<T>, '$filter'>;
+
 export interface ODataOptions<T> extends ODataOptionsWithoutCount<T> {
-	$count?: ODataOptionsWithoutCount<T>;
+	$count?: ODataCountOptions<T>;
 }
 
 export interface ODataOptionsWithCount<T> extends ODataOptionsWithoutCount<T> {
-	$count: NonNullable<ODataOptions<T>['$count']>;
+	$count: NonNullable<ODataCountOptions<T>>;
 }
 
 // TODO: Rename to ODataOptionsStrict on the next major
