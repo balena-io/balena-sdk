@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix release end_timestamp type
+      hash: 7bf0c406d09126a69f4711db8e9a4b12a5e559b0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.29.1
+  title: ""
+  date: 2022-11-12T23:34:03.778Z
+- commits:
     - subject: Support filtered $count operations inside $filter & $orderby
       hash: b36810a4b65909dea8725a4b9c060d06f2b82d2f
       body: |
