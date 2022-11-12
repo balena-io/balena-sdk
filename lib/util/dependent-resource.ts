@@ -50,7 +50,11 @@ export function buildDependentResource<T extends DependentResource>(
 			return pine.get<T>({
 				resource: resourceName,
 				options: mergePineOptions(
-					{ $orderby: { [resourceKeyField]: 'asc' } },
+					{
+						$orderby: {
+							[resourceKeyField]: 'asc',
+						} as PineOptions<T>['$orderby'],
+					},
 					options,
 				),
 			});
