@@ -1,4 +1,198 @@
 - commits:
+    - subject: Support filtered $count operations inside $filter & $orderby
+      hash: b36810a4b65909dea8725a4b9c060d06f2b82d2f
+      body: |
+        Update pinejs-client-core from 6.9.6 to 6.12.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Deprecate the 'a/count' notation in $orderby
+              hash: f1aaa244418a413860cde2a42a0a3e44d00249d2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+            - subject: "Deprecate the $count: { $op: number } notation"
+              hash: 7501cc05ede27af86604ca0720f2ca5f99334f02
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+            - subject: "Add support for `$filter: { $op: [{ $count: {} }, number] }` notation"
+              hash: 4a5c6ba07ce6e0e54bbea64c70be64c31e956080
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.12.0
+          title: ""
+          date: 2022-11-10T22:13:38.655Z
+        - commits:
+            - subject: "Deprecate non-$filter props inside `$expand: { a: { $count: {...}}}`"
+              hash: 97066f1d1359eb0d340a216fa9aec1ba81dc8052
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+            - subject: "Add support for `$orderby: { a: { $count: ... }, $dir: 'asc' }`
+                notation"
+              hash: 570f0400e518efc0499a0111873768b5dc4c94f5
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+                See: https://jel.ly.fish/thread-f02087f0-7415-42ac-9b54-75fd10fd0c5c
+                see: https://jel.ly.fish/thread-f02087f0-7415-42ac-9b54-75fd10fd0c5c
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.11.0
+          title: ""
+          date: 2022-11-09T15:59:01.304Z
+        - commits:
+            - subject: Refactor the deprecation message definitions
+              hash: 941b08a4359d11bef0d36645d2b4b358a3b1090e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.10.7
+          title: ""
+          date: 2022-11-07T17:51:35.292Z
+        - commits:
+            - subject: "tests: Support `.only` & `.skip` in the higher level test functions"
+              hash: 9326a2d23d40831be6100241ae92fdec57404806
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.10.6
+          title: ""
+          date: 2022-10-31T13:32:10.558Z
+        - commits:
+            - subject: "Flowzone: Use inherited secrets"
+              hash: b3bf8b0cae0c40980f76a952d1890a228d48bd3c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.10.5
+          title: ""
+          date: 2022-10-14T16:25:25.721Z
+        - commits:
+            - subject: Specify node 10 as the minimum supported node engine in the
+                package.json
+              hash: e0f8b12d1e7c0b792fcd16de9e938e90a368ba14
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Replace balenaCI with flowzone
+              hash: 941af23d810b6924face6164ee601ee4b686bef7
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.10.4
+          title: ""
+          date: 2022-09-26T09:38:22.584Z
+        - commits:
+            - subject: Fix $count typings to only allow $filter under it
+              hash: d4cb65524ba2076df05f03574ce39acd547daa63
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                See: https://docs.oasis-open.org/odata/odata/v4.01/os/abnf/odata-abnf-construction-rules.txt
+                see: https://docs.oasis-open.org/odata/odata/v4.01/os/abnf/odata-abnf-construction-rules.txt
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+          version: pinejs-client-js-6.10.3
+          title: "'Fix  typings to only allow  under it'"
+          date: 2022-09-15T15:20:32.755Z
+        - commits:
+            - subject: Update dependencies
+              hash: edc7575ac0976037506deb076d034e7cf08ce5bb
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Remove circleci
+              hash: 59c5a36292a80149b305d83a4d22b4d2dbe3001d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: pinejs-client-js-6.10.2
+          title: "'Remove circleci/update deps'"
+          date: 2022-04-08T13:22:23.848Z
+        - commits:
+            - subject: Do not await the _request() result to allow enhanced promises
+                downstream
+              hash: a209138f928809869d68e05cdcea4c2bf0d1fac1
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+              author: Thodoris Greasidis
+          version: pinejs-client-js-6.10.1
+          title: "'Avoid modifying the resulting promise when retries are not used'"
+          date: 2022-02-08T23:33:07.778Z
+        - commits:
+            - subject: Add optional retry logic to client
+              hash: d5496ebe73a0db28ac1c123575e80c9d25367d48
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Paul Jonathan Zoulin
+          version: pinejs-client-js-6.10.0
+          date: 2022-01-24T19:05:04.020Z
+  version: 16.29.0
+  title: ""
+  date: 2022-11-12T08:40:37.612Z
+- commits:
     - subject: Use deep imports for date-fns to improve tree-shaking
       hash: db4d99bd589ead7c94dfb38835c72aa7f9c81081
       body: ""
