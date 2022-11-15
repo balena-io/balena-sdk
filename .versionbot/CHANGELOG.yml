@@ -1,4 +1,23 @@
 - commits:
+    - subject: fixed documentation examples
+      hash: c38940c1540dc2ec8122a5c71eab0cd18291903e
+      body: ""
+      footer:
+        Change-Type: patch
+        change-type: patch
+      author: builder555
+      nested: []
+    - subject: fixed documentation examples
+      hash: 411196deb47c9edf19355a54d3deb0c7ee3bc800
+      body: ""
+      footer:
+        Change-Type: minor
+        change-type: minor
+      author: builder555
+      nested: []
+  version: 16.30.0
+  date: 2022-11-15T16:33:20.853Z
+- commits:
     - subject: Fix release end_timestamp type
       hash: 7bf0c406d09126a69f4711db8e9a4b12a5e559b0
       body: ""
@@ -2560,7 +2579,8 @@
             - subject: Allow more lenient gzip decompression
               hash: 9c7bc3051b279c9d09ec501a78dbe9f506d65650
               body: >
-                Be more lenient with decoding compressed responses, since (very rarely)
+                Be more lenient with decoding compressed responses, since (very
+                rarely)
 
                 servers send slightly invalid gzip responses that are still accepted
 
@@ -11044,8 +11064,8 @@
       subject: Upgrade to new resin-request, resin-pine and resin-register-device
     - author: Tim Perry
       body: >-
-        One bug solved en route here, highlighted by minification: we depended on
-        the
+        One bug solved en route here, highlighted by minification: we depended
+        on the
 
         function name of errors thrown by Resin-Request, which isn't dependable
 
