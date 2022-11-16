@@ -266,7 +266,6 @@ export const getSdk = function ($opts?: SdkOptions) {
 	if ('apiKey' in opts) {
 		// to prevent exposing it to balena-request directly
 		// which would add it as a query sting option
-		// @ts-expect-error
 		delete opts.apiKey;
 	}
 
