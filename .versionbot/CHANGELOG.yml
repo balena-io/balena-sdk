@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 4.9.3
+      hash: 9d81b8779cdd720e8c90b83e15257b33999bbdc9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.29.2
+  title: ""
+  date: 2022-11-16T08:29:18.733Z
+- commits:
     - subject: Fix release end_timestamp type
       hash: 7bf0c406d09126a69f4711db8e9a4b12a5e559b0
       body: ""
