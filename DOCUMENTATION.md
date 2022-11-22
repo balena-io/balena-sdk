@@ -151,6 +151,7 @@ const sdk = fromSharedOptions();
 * [balena](#balena) : <code>object</code>
     * [.interceptors](#balena.interceptors) : <code>Array.&lt;Interceptor&gt;</code>
         * [.Interceptor](#balena.interceptors.Interceptor) : <code>object</code>
+    * [.utils](#balena.utils) : <code>Object</code>
     * [.request](#balena.request) : <code>Object</code>
     * [.pine](#balena.pine) : <code>Object</code>
     * [.errors](#balena.errors) : <code>Object</code>
@@ -429,6 +430,7 @@ const sdk = fromSharedOptions();
     * [.settings](#balena.settings) : <code>object</code>
         * [.get([key])](#balena.settings.get) ⇒ <code>Promise</code>
         * [.getAll()](#balena.settings.getAll) ⇒ <code>Promise</code>
+    * [.utils](#balena.utils) : <code>object</code>
 
 <a name="balena.interceptors"></a>
 
@@ -469,6 +471,22 @@ rejects with an error.
 | [requestError] | <code>function</code> | Callback invoked if an error happens before a request. Called with the error itself, caused by a preceeding request interceptor rejecting/throwing an error for the request, or a failing in preflight token validation. Should return (or resolve to) new request options, or throw/reject. |
 | [responseError] | <code>function</code> | Callback invoked if an error happens in the response. Called with the error itself, caused by a preceeding response interceptor rejecting/throwing an error for the request, a network error, or an error response from the server. Should return (or resolve to) a new response, or throw/reject. |
 
+<a name="balena.utils"></a>
+
+### balena.utils : <code>Object</code>
+The utils instance used internally. This should not be necessary
+in normal usage, but can be useful to handle some specific cases.
+
+**Kind**: static property of [<code>balena</code>](#balena)  
+**Summary**: Balena utils instance  
+**Access**: public  
+**Example**  
+```js
+balena.utils.mergePineOptions(
+ { $expand: { device: { $select: ['id'] } } },
+ { $expand: { device: { $select: ['name'] } } },
+);
+```
 <a name="balena.request"></a>
 
 ### balena.request : <code>Object</code>
@@ -8210,3 +8228,7 @@ balena.settings.getAll(function(error, settings) {
 	console.log(settings);
 });
 ```
+<a name="balena.utils"></a>
+
+### balena.utils : <code>object</code>
+**Kind**: static namespace of [<code>balena</code>](#balena)  

@@ -1,6 +1,10 @@
 import * as errors from 'balena-errors';
 import type * as Pine from '../../typings/pinejs-client-core';
 
+export interface BalenaUtils {
+	mergePineOptions: typeof mergePineOptions;
+}
+
 export const notImplemented = () => {
 	throw new Error('The method is not implemented.');
 };
