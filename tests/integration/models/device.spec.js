@@ -2349,8 +2349,6 @@ describe('Device Model', function () {
 						expect(imageInstall).to.not.have.property('commit');
 					});
 
-					expect(deviceDetails.gateway_download).to.have.lengthOf(0);
-
 					// Augmented properties
 					// Should filter out deleted image installs
 					expect(deviceDetails.current_services.db).to.have.lengthOf(1);
@@ -2360,8 +2358,6 @@ describe('Device Model', function () {
 						expect(currentService).to.have.property('commit');
 						expect(currentService).to.have.property('release_id');
 					});
-					// Should have an empty list of gateway downloads
-					expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
 				});
 
 				it('should allow options to change the device fields returned', async function () {
@@ -2382,70 +2378,6 @@ describe('Device Model', function () {
 							app_name: this.application.app_name,
 						},
 					);
-				});
-
-				describe('given gateway downloads', function () {
-					before(async function () {
-						await Promise.all([
-							balena.pine.post({
-								resource: 'gateway_download',
-								body: {
-									image: this.newWebImage.id,
-									status: 'Downloading',
-									is_downloaded_by__device: this.device.id,
-									download_progress: 50,
-								},
-							}),
-							balena.pine.post({
-								resource: 'gateway_download',
-								body: {
-									image: this.oldWebImage.id,
-									status: 'deleted',
-									is_downloaded_by__device: this.device.id,
-									download_progress: 100,
-								},
-							}),
-						]);
-					});
-
-					it('should not return gateway downloads, when not explicitly expanding them', async function () {
-						const deviceDetails =
-							await balena.models.device.getWithServiceDetails(this.device.id);
-						expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
-					});
-
-					it('should return gateway downloads, when manually expanding them', async function () {
-						const deviceDetails =
-							await balena.models.device.getWithServiceDetails(this.device.id, {
-								$expand: {
-									gateway_download: {
-										$select: ['id', 'download_progress', 'status'],
-										$filter: {
-											status: {
-												$ne: 'deleted',
-											},
-										},
-										$expand: {
-											image: {
-												$select: ['id'],
-												$expand: {
-													is_a_build_of__service: {
-														$select: ['id', 'service_name'],
-													},
-												},
-											},
-										},
-									},
-								},
-							});
-						expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1);
-						expect(deviceDetails.current_gateway_downloads[0]).to.deep.match({
-							service_id: this.webService.id,
-							image_id: this.newWebImage.id,
-							status: 'Downloading',
-							download_progress: 50,
-						});
-					});
 				});
 			});
 

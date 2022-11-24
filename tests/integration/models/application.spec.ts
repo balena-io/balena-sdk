@@ -1709,14 +1709,9 @@ describe('Application Model', function () {
 				expect(imageInstall).to.not.have.property('commit');
 			});
 
-			expect(deviceDetails.gateway_download).to.have.lengthOf(0);
-
 			// Augmented properties
 			// Should filter out deleted image installs
 			expect(deviceDetails.current_services.db).to.have.lengthOf(1);
-
-			// Should have an empty list of gateway downloads
-			expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
 		};
 
 		describe('balena.models.application.getWithDeviceServiceDetails()', function () {

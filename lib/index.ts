@@ -90,7 +90,6 @@ export type { BuilderUrlDeployOptions } from './util/builder';
 export type {
 	CurrentService,
 	CurrentServiceWithCommit,
-	CurrentGatewayDownload,
 	DeviceWithServiceDetails,
 } from './util/device-service-details';
 export type {
