@@ -1,4 +1,18 @@
 - commits:
+    - subject: "device.getWithServiceDetails: Stop auto-expanding the gateway_downloads"
+      hash: c6846f529245ceee6d2a1de621249b0ac4f8ca20
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.zulipchat.com/#narrow/stream/345889-loop.2Fbalena-os/topic/Python.20SDK.20doesn't.20work.20with.20device.20API.20key
+        see: https://balena.zulipchat.com/#narrow/stream/345889-loop.2Fbalena-os/topic/Python.20SDK.20doesn't.20work.20with.20device.20API.20key
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.29.3
+  title: ""
+  date: 2022-11-24T12:16:07.452Z
+- commits:
     - subject: Update TypeScript to 4.9.3
       hash: 9d81b8779cdd720e8c90b83e15257b33999bbdc9
       body: ""
