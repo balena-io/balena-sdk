@@ -78,9 +78,6 @@ const getApplicationModel = function (
 		exports.get(...args),
 	);
 
-	const { addCallbackSupportToModule } =
-		require('../util/callbacks') as typeof import('../util/callbacks');
-
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
@@ -1583,7 +1580,7 @@ const getApplicationModel = function (
 		 * @namespace balena.models.application.tags
 		 * @memberof balena.models.application
 		 */
-		tags: addCallbackSupportToModule({
+		tags: {
 			/**
 			 * @summary Get all application tags for an application
 			 * @name getAllByApplication
@@ -1684,13 +1681,13 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: tagsModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.configVar
 		 * @memberof balena.models.application
 		 */
-		configVar: addCallbackSupportToModule({
+		configVar: {
 			/**
 			 * @summary Get all config variables for an application
 			 * @name getAllByApplication
@@ -1809,13 +1806,13 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: configVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.envVar
 		 * @memberof balena.models.application
 		 */
-		envVar: addCallbackSupportToModule({
+		envVar: {
 			/**
 			 * @summary Get all environment variables for an application
 			 * @name getAllByApplication
@@ -1934,13 +1931,13 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: envVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.buildVar
 		 * @memberof balena.models.application
 		 */
-		buildVar: addCallbackSupportToModule({
+		buildVar: {
 			/**
 			 * @summary Get all build environment variables for an application
 			 * @name getAllByApplication
@@ -2059,19 +2056,19 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: buildVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.membership
 		 * @memberof balena.models.application
 		 */
-		membership: addCallbackSupportToModule(membershipModel),
+		membership: membershipModel,
 
 		/**
 		 * @namespace balena.models.application.invite
 		 * @memberof balena.models.application
 		 */
-		invite: addCallbackSupportToModule(inviteModel),
+		invite: inviteModel,
 	};
 
 	return exports;

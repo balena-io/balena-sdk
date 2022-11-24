@@ -55,7 +55,7 @@ describe('Organization Membership Model', function () {
 	});
 
 	parallel('balena.models.organization.membership.getAll()', function () {
-		it(`shoud return only the user's own memberships [Promise]`, async function () {
+		it(`shoud return only the user's own memberships`, async function () {
 			const memberships = await balena.models.organization.membership.getAll();
 
 			assertDeepMatchAndLength(memberships, [
@@ -65,26 +65,6 @@ describe('Organization Membership Model', function () {
 					organization_membership_role: { __id: ctx.orgAdminRole.id },
 				},
 			]);
-		});
-
-		it(`shoud return only the user's own membership [callback]`, function (done) {
-			balena.models.organization.membership.getAll(
-				// @ts-expect-error
-				(_err: Error, memberships: BalenaSdk.OrganizationMembership[]) => {
-					try {
-						assertDeepMatchAndLength(memberships, [
-							{
-								user: { __id: ctx.userId },
-								is_member_of__organization: { __id: ctx.initialOrg.id },
-								organization_membership_role: { __id: ctx.orgAdminRole.id },
-							},
-						]);
-						done();
-					} catch (err) {
-						done(err);
-					}
-				},
-			);
 		});
 	});
 

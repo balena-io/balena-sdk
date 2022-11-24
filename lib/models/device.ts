@@ -139,9 +139,6 @@ const getDeviceModel = function (
 		(require('./os') as typeof import('./os')).default(deps, opts),
 	);
 
-	const { addCallbackSupportToModule } =
-		require('../util/callbacks') as typeof import('../util/callbacks');
-
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const hupActionHelper = once(
@@ -2582,7 +2579,7 @@ const getDeviceModel = function (
 		 * @namespace balena.models.device.tags
 		 * @memberof balena.models.device
 		 */
-		tags: addCallbackSupportToModule({
+		tags: {
 			/**
 			 * @summary Get all device tags for an application
 			 * @name getAllByApplication
@@ -2738,13 +2735,13 @@ const getDeviceModel = function (
 			 * });
 			 */
 			remove: tagsModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.configVar
 		 * @memberof balena.models.device
 		 */
-		configVar: addCallbackSupportToModule({
+		configVar: {
 			/**
 			 * @summary Get all config variables for a device
 			 * @name getAllByDevice
@@ -2924,13 +2921,13 @@ const getDeviceModel = function (
 			 * });
 			 */
 			remove: configVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.envVar
 		 * @memberof balena.models.device
 		 */
-		envVar: addCallbackSupportToModule({
+		envVar: {
 			/**
 			 * @summary Get all environment variables for a device
 			 * @name getAllByDevice
@@ -3110,13 +3107,13 @@ const getDeviceModel = function (
 			 * });
 			 */
 			remove: envVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.serviceVar
 		 * @memberof balena.models.device
 		 */
-		serviceVar: addCallbackSupportToModule({
+		serviceVar: {
 			/**
 			 * @summary Get all service variable overrides for a device
 			 * @name getAllByDevice
@@ -3437,7 +3434,7 @@ const getDeviceModel = function (
 					},
 				});
 			},
-		}),
+		},
 	};
 
 	return exports;
