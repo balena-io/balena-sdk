@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add utils and export mergePineOptions `balena.utils.mergePineOptions()`
+      hash: 5c10581848255f451cbfe29ea74711bf7f53bde8
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andrea Rosci <andrear@balena.io>
+        signed-off-by: Andrea Rosci <andrear@balena.io>
+      author: JSReds
+      nested: []
+  version: 16.30.0
+  title: ""
+  date: 2022-11-24T17:55:44.523Z
+- commits:
     - subject: "device.getWithServiceDetails: Stop auto-expanding the gateway_downloads"
       hash: c6846f529245ceee6d2a1de621249b0ac4f8ca20
       body: ""
