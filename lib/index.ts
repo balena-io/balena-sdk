@@ -174,6 +174,7 @@ export type BalenaSDK = {
 	interceptors: Interceptor[];
 	request: BalenaRequest;
 	pine: Pine;
+	utils: import('./util').BalenaUtils;
 	errors: typeof import('balena-errors');
 	version: string;
 };
@@ -245,6 +246,11 @@ export const getSdk = function ($opts?: SdkOptions) {
 
 	/**
 	 * @namespace settings
+	 * @memberof balena
+	 */
+
+	/**
+	 * @namespace utils
 	 * @memberof balena
 	 */
 
@@ -355,6 +361,31 @@ export const getSdk = function ($opts?: SdkOptions) {
 		},
 		set(interceptors: Interceptor[]) {
 			return (request.interceptors = interceptors);
+		},
+	});
+
+	/**
+	 * @summary Balena utils instance
+	 * @member {Object} utils
+	 * @public
+	 * @memberof balena
+	 *
+	 * @description
+	 * The utils instance used internally. This should not be necessary
+	 * in normal usage, but can be useful to handle some specific cases.
+	 *
+	 * @example
+	 * balena.utils.mergePineOptions(
+	 *  { $expand: { device: { $select: ['id'] } } },
+	 *  { $expand: { device: { $select: ['name'] } } },
+	 * );
+	 */
+	Object.defineProperty(sdk, 'utils', {
+		enumerable: true,
+		configurable: true,
+		get() {
+			const { mergePineOptions } = require('./util') as typeof import('./util');
+			return { mergePineOptions };
 		},
 	});
 
