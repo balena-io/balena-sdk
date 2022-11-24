@@ -1,6 +1,5 @@
 import type {
 	Device,
-	GatewayDownload,
 	Image,
 	ImageInstall,
 	PineExpand,
@@ -23,23 +22,12 @@ export interface CurrentServiceWithCommit extends CurrentService {
 	release_id: number;
 }
 
-export interface CurrentGatewayDownload {
-	id: number;
-	image_id: number;
-	service_id: number;
-	download_progress: number;
-	status: string;
-}
-
 export interface DeviceWithServiceDetails<
 	TCurrentService extends CurrentService = CurrentService,
 > extends Device {
 	current_services: {
 		[serviceName: string]: TCurrentService[];
 	};
-
-	/** @deprecated */
-	current_gateway_downloads: CurrentGatewayDownload[];
 }
 
 // Pine expand options necessary for getting raw service data for a device
@@ -79,13 +67,7 @@ interface WithServiceName {
 
 function getSingleInstallSummary(
 	rawData: ImageInstall,
-): CurrentService & WithServiceName;
-function getSingleInstallSummary(
-	rawData: GatewayDownload,
-): CurrentGatewayDownload & WithServiceName;
-function getSingleInstallSummary(
-	rawData: ImageInstall | GatewayDownload,
-): (CurrentService | CurrentGatewayDownload) & WithServiceName {
+): CurrentService & WithServiceName {
 	const image = (rawData.image as Image[])[0];
 	const service = (image.is_a_build_of__service as Service[])[0];
 
@@ -106,15 +88,13 @@ function getSingleInstallSummary(
 		};
 	}
 
-	const result: (
-		| (CurrentService &
+	const result:
+		| CurrentService &
 				Partial<
 					Pick<ImageInstall, 'installs__image' | 'is_provided_by__release'>
-				>)
-		| CurrentGatewayDownload
-	) &
-		Partial<Pick<ImageInstall, 'image'>> &
-		WithServiceName = {
+				> &
+				Partial<Pick<ImageInstall, 'image'>> &
+				WithServiceName = {
 		...rawData,
 		service_id: service.id,
 		// add this extra property to make grouping the services easier
@@ -143,14 +123,6 @@ export const generateCurrentServiceDetails = <
 	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
 	) as Array<TCurrentService & WithServiceName>;
-
-	// TODO: Remove the gateway_download property in the nexj major.
-	// For backwards compatibility we default it to an empty array,
-	// except if the user has explicitely $expanded it.
-	rawDevice.gateway_download ??= [];
-	const downloads = rawDevice.gateway_download.map((gd) =>
-		getSingleInstallSummary(gd),
-	);
 
 	// Essentially a groupBy(installs, 'service_name')
 	// but try making it a bit faster for the sake of large fleets.
@@ -186,6 +158,5 @@ export const generateCurrentServiceDetails = <
 
 	const device = rawDevice as DeviceWithServiceDetails<TCurrentService>;
 	device.current_services = currentServicesGroupedByName;
-	device.current_gateway_downloads = downloads;
 	return device;
 };
