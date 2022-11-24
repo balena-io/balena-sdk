@@ -1,4 +1,99 @@
 - commits:
+    - subject: Drop support for callbacks
+      hash: 3fe198173ca2a6c383dfb50df6be5e1b48394011
+      body: ""
+      footer:
+        Resolves: "#874"
+        resolves: "#874"
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "getWithServiceDetails: Drop the current_gateway_downloads property"
+      hash: 7b05b31a808f45d4663a68db85b56551ea304b6d
+      body: ""
+      footer:
+        Resolves: "#1284"
+        resolves: "#1284"
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop the deprecated needsPasswordReset from the JWT typings
+      hash: 2cb5f2c0e59528dd664c5442734591f06a6e408c
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Bump mockttp to v3.0.0
+      hash: 4caade62d76bf7ede1192114bb395ff5dbd2cfc2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "**BREAKING**: Stop actively supporting node 12"
+      hash: b8d64e98d4133270efbc58b061eac50766f4065c
+      body: |
+        Node 12 may well still work with the SDK for
+        quite a while, but we'll no longer actively test
+        against them since they are now
+        characterized as EOL, and it's quite possible
+        that it may stop working entirely in any future
+        release.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "**BREAKING**: Stop publishing an unminified browser bundle"
+      hash: 46f91c7b5809da9f0eb22101faf1c2763d1fa97b
+      body: ""
+      footer:
+        Resolves: "#1222"
+        resolves: "#1222"
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update balena-settings-client to v5.0.0
+      hash: f3dd205bf16f11046e096efde51b66811ab63585
+      body: |
+        Update balena-settings-client from 4.0.6 to 5.0.0
+      footer:
+        Resolves: "#1231"
+        resolves: "#1231"
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "device.getWithServiceDetails: Stop auto-expanding the gateway_downloads"
+      hash: c6846f529245ceee6d2a1de621249b0ac4f8ca20
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.zulipchat.com/#narrow/stream/345889-loop.2Fbalena-os/topic/Python.20SDK.20doesn't.20work.20with.20device.20API.20key
+        see: https://balena.zulipchat.com/#narrow/stream/345889-loop.2Fbalena-os/topic/Python.20SDK.20doesn't.20work.20with.20device.20API.20key
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.0.0
+  title: ""
+  date: 2022-11-24T08:45:04.734Z
+- commits:
     - subject: Update TypeScript to 4.9.3
       hash: 9d81b8779cdd720e8c90b83e15257b33999bbdc9
       body: ""
