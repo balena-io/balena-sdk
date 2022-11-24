@@ -37,16 +37,7 @@ export interface DeviceWithServiceDetails<
 		[serviceName: string]: TCurrentService[];
 	};
 
-	current_gateway_downloads: CurrentGatewayDownload[];
-}
-
-export interface DeviceWithServiceDetails<
-	TCurrentService extends CurrentService = CurrentService,
-> extends Device {
-	current_services: {
-		[serviceName: string]: TCurrentService[];
-	};
-
+	/** @deprecated */
 	current_gateway_downloads: CurrentGatewayDownload[];
 }
 
@@ -74,24 +65,6 @@ export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
 						$select: ['id', 'commit'],
 					},
 				}),
-			},
-		},
-		gateway_download: {
-			$select: ['id', 'download_progress', 'status'],
-			$filter: {
-				status: {
-					$ne: 'deleted',
-				},
-			},
-			$expand: {
-				image: {
-					$select: ['id'],
-					$expand: {
-						is_a_build_of__service: {
-							$select: ['id', 'service_name'],
-						},
-					},
-				},
 			},
 		},
 	};
@@ -165,7 +138,11 @@ export const generateCurrentServiceDetails = <
 		getSingleInstallSummary(ii),
 	) as Array<TCurrentService & WithServiceName>;
 
-	const downloads = rawDevice.gateway_download!.map((gd) =>
+	// TODO: Remove the gateway_download property in the nexj major.
+	// For backwards compatibility we default it to an empty array,
+	// except if the user has explicitely $expanded it.
+	rawDevice.gateway_download ??= [];
+	const downloads = rawDevice.gateway_download.map((gd) =>
 		getSingleInstallSummary(gd),
 	);
 
