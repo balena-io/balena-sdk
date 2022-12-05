@@ -227,6 +227,66 @@ describe('Billing Model', function () {
 			);
 		});
 
+		describe('balena.models.billing.updateAccountInfo()', function () {
+			givenABillingAccountIt(
+				'should throw when no parameters are provided',
+				function () {
+					const promise = (balena.models.billing.updateAccountInfo as any)();
+					return expect(promise).to.be.rejected.and.eventually.have.property(
+						'code',
+						'BalenaInvalidParameterError',
+					);
+				},
+			);
+
+			givenABillingAccountIt(
+				'should throw when no billing account info parameter is provided',
+				function () {
+					const promise = (balena.models.billing.updateAccountInfo as any)(
+						this.initialOrg.id,
+					);
+					return expect(promise).to.be.rejected.then((error) =>
+						expect(error).to.have.property('statusCode', 400),
+					);
+				},
+			);
+
+			givenABillingAccountIt(
+				'should throw when the email in the billing account info parameter is not a valid email',
+				function () {
+					const promise = balena.models.billing.updateAccountInfo(
+						this.initialOrg.id,
+						{
+							email: '',
+						},
+					);
+					return expect(promise).to.be.rejected.then((error) =>
+						expect(error).to.have.property('statusCode', 400),
+					);
+				},
+			);
+
+			givenABillingAccountIt(
+				'should successfully update billing email',
+				function () {
+					const email = 'hello@balena.io';
+					const promise = balena.models.billing.updateAccountInfo(
+						this.initialOrg.id,
+						{
+							email,
+						},
+					);
+					expect(promise).to.be.fulfilled;
+					const updatedAccountInfo = balena.models.billing.getAccount(
+						this.initialOrg.id,
+					);
+					expect(updatedAccountInfo)
+						.to.eventually.have.property('email')
+						.that.equals(email);
+				},
+			);
+		});
+
 		describe('balena.models.billing.getPlan()', function () {
 			givenABillingAccountIt(
 				'should return a paid tier billing plan object',
