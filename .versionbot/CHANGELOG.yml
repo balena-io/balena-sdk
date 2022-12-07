@@ -1,4 +1,37 @@
 - commits:
+    - subject: "patch: bump catch-uncommitted from 1.6.2 to 2.0.0"
+      hash: eef2f8ef1abec6fe825a55c37a771070a3efb94a
+      body: >
+        Bumps
+        [catch-uncommitted](https://github.com/resin-io-modules/catch-uncommitted)
+        from 1.6.2 to 2.0.0.
+
+        - [Release notes](https://github.com/resin-io-modules/catch-uncommitted/releases)
+
+        - [Changelog](https://github.com/balena-io-modules/catch-uncommitted/blob/master/CHANGELOG.md)
+
+        - [Commits](https://github.com/resin-io-modules/catch-uncommitted/compare/v1.6.2...v2.0.0)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: catch-uncommitted
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.30.1
+  title: ""
+  date: 2022-12-07T09:26:22.165Z
+- commits:
     - subject: Add utils and export mergePineOptions `balena.utils.mergePineOptions()`
       hash: 5c10581848255f451cbfe29ea74711bf7f53bde8
       body: ""
