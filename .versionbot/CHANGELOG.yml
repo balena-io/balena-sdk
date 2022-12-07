@@ -1,4 +1,35 @@
 - commits:
+    - subject: "patch: bump sinon from 13.0.2 to 15.0.0"
+      hash: 2f5436c6b8069e9beebbc018176644a4a42c2f79
+      body: >
+        Bumps [sinon](https://github.com/sinonjs/sinon) from 13.0.2 to 15.0.0.
+
+        - [Release notes](https://github.com/sinonjs/sinon/releases)
+
+        - [Changelog](https://github.com/sinonjs/sinon/blob/main/docs/changelog.md)
+
+        - [Commits](https://github.com/sinonjs/sinon/compare/v13.0.2...v15.0.0)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: sinon
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: dependabot[bot]
+      nested: []
+  version: 16.30.2
+  title: ""
+  date: 2022-12-07T13:07:20.577Z
+- commits:
     - subject: "patch: bump catch-uncommitted from 1.6.2 to 2.0.0"
       hash: eef2f8ef1abec6fe825a55c37a771070a3efb94a
       body: >
