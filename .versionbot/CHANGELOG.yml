@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Flowzone: Allow external contributions"
+      hash: 0194aafccf061255aa0d8a46642372b4d2f26d76
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.30.2
+  title: ""
+  date: 2022-12-13T13:42:31.676Z
+- commits:
     - subject: "patch: bump catch-uncommitted from 1.6.2 to 2.0.0"
       hash: eef2f8ef1abec6fe825a55c37a771070a3efb94a
       body: >
