@@ -1,4 +1,21 @@
 - commits:
+    - subject: Add `updateAccountInfo` method to billing model for updating billing
+        account info
+      hash: d7521ae2f9724f3545f535f232673ed47814d54d
+      body: ""
+      footer:
+        Changelog-entry: Add `updateAccountInfo` method to billing model for updating
+          billing account info
+        changelog-entry: Add `updateAccountInfo` method to billing model for updating
+          billing account info
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 16.31.0
+  title: ""
+  date: 2022-12-16T13:47:53.230Z
+- commits:
     - subject: "Flowzone: Allow external contributions"
       hash: 0194aafccf061255aa0d8a46642372b4d2f26d76
       body: ""
