@@ -135,7 +135,7 @@ const describeCacheInvalidationChanges = function (
 	});
 };
 
-describe('OS model', function () {
+describe.skip('OS model', function () {
 	timeSuite(before);
 	before(function () {
 		return balena.auth.logout();

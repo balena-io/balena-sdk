@@ -7,7 +7,7 @@ import {
 } from '../setup';
 import { timeSuite } from '../../util';
 
-describe('Image Model', function () {
+describe.skip('Image Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 

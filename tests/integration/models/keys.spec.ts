@@ -7,7 +7,7 @@ import { balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
-describe('Key Model', function () {
+describe.skip('Key Model', function () {
 	timeSuite(before);
 	describe('given no keys', function () {
 		describe('balena.models.key.getAll()', function () {

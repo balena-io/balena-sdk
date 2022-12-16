@@ -5,7 +5,7 @@ import parallel from 'mocha.parallel';
 import { balena, credentials, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 
-describe('Organization model', function () {
+describe.skip('Organization model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 

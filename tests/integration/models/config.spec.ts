@@ -66,7 +66,7 @@ const itNormalizesDeviceTypes = function () {
 	});
 };
 
-describe('Config Model', function () {
+describe.skip('Config Model', function () {
 	timeSuite(before);
 	before(function () {
 		return balena.auth.logout();

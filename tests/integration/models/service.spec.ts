@@ -11,7 +11,7 @@ import {
 } from '../setup';
 import { timeSuite } from '../../util';
 
-describe('Service Model', function () {
+describe.skip('Service Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 

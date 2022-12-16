@@ -24,7 +24,7 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 
-describe('Application Model', function () {
+describe.skip('Application Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);

@@ -11,7 +11,7 @@ import {
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
-describe('API Key model', function () {
+describe.skip('API Key model', function () {
 	timeSuite(before);
 
 	describe('balena.models.apiKey.create()', function () {

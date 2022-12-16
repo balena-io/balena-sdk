@@ -10,7 +10,7 @@ const TEST_MESSAGE = 'Hey!, Join my app on balenaCloud';
 const TEST_ROLE = 'developer';
 const UNKNOWN_ROLE = 'undefined_role';
 
-describe('Application Invite Model', function () {
+describe.skip('Application Invite Model', function () {
 	timeSuite(before);
 	describe('When user is logged out', function () {
 		before(() => balena.auth.logout());
