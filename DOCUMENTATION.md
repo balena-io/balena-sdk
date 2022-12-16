@@ -395,6 +395,7 @@ const sdk = fromSharedOptions();
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
             * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
             * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+            * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
             * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
             * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
             * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
@@ -789,6 +790,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
         * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
         * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+        * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
         * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
         * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
         * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
@@ -7318,6 +7320,7 @@ balena.models.image.getLogs(123, function(error, logs) {
     * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
     * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
     * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+    * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
     * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
     * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
     * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
@@ -7424,6 +7427,26 @@ balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }, function
 	if (error) throw error;
 	console.log(billingInfo);
 });
+```
+<a name="balena.models.billing.updateAccountInfo"></a>
+
+##### billing.updateAccountInfo(organization, accountInfo)
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
+**Summary**: Update the current billing account information  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+| accountInfo | <code>Partial.&lt;Pick.&lt;BillingAccountInfo, (&#x27;email&#x27;\|&#x27;cc\_emails&#x27;)&gt;&gt;</code> | an object containing billing account info |
+
+**Example**  
+```js
+balena.models.billing.updateAccountInfo(orgId, { email: 'hello@balena.io' })
+```
+**Example**  
+```js
+balena.models.billing.updateAccountInfo(orgId, { email: 'hello@balena.io' })
 ```
 <a name="balena.models.billing.changePlan"></a>
 

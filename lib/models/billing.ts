@@ -33,6 +33,7 @@ export interface BillingAccountInfo {
 	first_name: string;
 	last_name: string;
 	company_name: string;
+	email: string;
 	cc_emails: string;
 	vat_number: string;
 	address: BillingAccountAddressInfo;
@@ -307,6 +308,36 @@ const getBillingModel = function (
 				body: billingInfo,
 			});
 			return body;
+		},
+
+		/**
+		 * @summary Update the current billing account information
+		 * @name updateAccountInfo
+		 * @public
+		 * @function
+		 * @memberof balena.models.billing
+		 *
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
+		 * @param {Partial<Pick<BillingAccountInfo, 'email' | 'cc_emails'>>} accountInfo - an object containing billing account info
+		 *
+		 * @example
+		 * balena.models.billing.updateAccountInfo(orgId, { email: 'hello@balena.io' })
+		 *
+		 * @example
+		 * balena.models.billing.updateAccountInfo(orgId, { email: 'hello@balena.io' })
+		 */
+		updateAccountInfo: async (
+			organization: string | number,
+			accountInfo: Partial<Pick<BillingAccountInfo, 'email' | 'cc_emails'>>,
+		): Promise<void> => {
+			const orgId = await getOrgId(organization);
+
+			await request.send({
+				method: 'PATCH',
+				url: `/billing/v1/account/${orgId}`,
+				baseUrl: apiUrl,
+				body: accountInfo,
+			});
 		},
 
 		/**
