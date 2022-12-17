@@ -1,4 +1,16 @@
 - commits:
+    - subject: Replace appveyor with flowzone
+      hash: 281a120e82b362d9a495e106913fc422264c091a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.31.1
+  title: ""
+  date: 2022-12-17T19:46:46.675Z
+- commits:
     - subject: Add `updateAccountInfo` method to billing model for updating billing
         account info
       hash: d7521ae2f9724f3545f535f232673ed47814d54d
