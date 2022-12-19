@@ -431,6 +431,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated
 		 * @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - devices
