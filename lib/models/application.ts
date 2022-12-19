@@ -685,6 +685,7 @@ const getApplicationModel = function (
 			applicationType?: string;
 			applicationClass?: 'app' | 'fleet' | 'block';
 			deviceType: string;
+			/** @deprecated */
 			parent?: number | string;
 			organization: number | string;
 		}): Promise<Application> {
