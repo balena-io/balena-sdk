@@ -1,4 +1,32 @@
 - commits:
+    - subject: "application.create: Deprecate the `parent` option"
+      hash: fdd220b8b52fd62ea55c2e2ab845ec81c086b5ab
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Deprecate the device.getAllByParentDevice() method
+      hash: a539a421ba75cc0daf5309b560304778ca3d1a98
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Simplify the device.move() checks
+      hash: d5092ed9aa0de33487bfa624d7bdb530b85c6ca4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.31.2
+  title: ""
+  date: 2022-12-20T11:25:13.835Z
+- commits:
     - subject: Replace appveyor with flowzone
       hash: 281a120e82b362d9a495e106913fc422264c091a
       body: ""
