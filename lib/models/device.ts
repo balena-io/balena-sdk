@@ -431,6 +431,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated
 		 * @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - devices
@@ -1154,7 +1155,7 @@ const getDeviceModel = function (
 			applicationSlugOrUuidOrId: string | number,
 		): Promise<void> => {
 			const applicationOptions = {
-				$select: toWritable(['id', 'depends_on__application'] as const),
+				$select: 'id',
 				$expand: {
 					is_for__device_type: {
 						$select: 'is_of__cpu_architecture',
@@ -1174,7 +1175,7 @@ const getDeviceModel = function (
 				application.is_for__device_type[0].is_of__cpu_architecture[0].slug;
 
 			const deviceOptions = {
-				$select: 'is_managed_by__device',
+				$select: 'is_of__device_type',
 				$expand: {
 					is_of__device_type: {
 						$select: 'is_of__cpu_architecture',
@@ -1192,13 +1193,10 @@ const getDeviceModel = function (
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices) => {
 					for (const device of devices) {
-						const isCompatibleMove =
-							osModel().isArchitectureCompatibleWith(
-								device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
-								appCpuArchSlug,
-							) &&
-							(device.is_managed_by__device == null) ===
-								(application.depends_on__application == null);
+						const isCompatibleMove = osModel().isArchitectureCompatibleWith(
+							device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
+							appCpuArchSlug,
+						);
 						if (!isCompatibleMove) {
 							throw new errors.BalenaInvalidDeviceType(
 								`Incompatible application: ${applicationSlugOrUuidOrId}`,
