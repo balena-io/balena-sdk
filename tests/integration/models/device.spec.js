@@ -2053,6 +2053,77 @@ describe('Device Model', function () {
 						'900000',
 					);
 				});
+
+				it(`should fallback to v2 if version is not 3`, async function () {
+					const state = await balena.models.device.getSupervisorTargetState(
+						this.device.id,
+						4,
+					);
+					// check application apps to be indexed by application id (proves we've got a v2)
+					expect(state.local.apps[this.application.id]).to.be.an('object');
+				});
+
+				it(`should return a state v3 if version is set to 3`, async function () {
+					const state = await balena.models.device.getSupervisorTargetState(
+						this.device.id,
+						3,
+					);
+					// basic check for v3 format
+					expect(state[this.device.uuid].apps[this.application.uuid]).to.be.an(
+						'object',
+					);
+				});
+			});
+
+			describe.only('balena.models.device.getSupervisorTargetStateForApp()', function () {
+				givenADevice(before);
+
+				it('should be rejected if the fleet does not exist', function () {
+					const promise =
+						balena.models.device.getSupervisorTargetStateForApp('asdfghjkl');
+					return expect(promise).to.be.rejectedWith(
+						'Application not found: asdfghjkl',
+					);
+				});
+
+				it(`should give a device's target state (v3) for a _generic_ device of a fleet`, async function () {
+					const state =
+						await balena.models.device.getSupervisorTargetStateForApp(
+							this.application.uuid,
+						);
+
+					// basic check for v3 format
+					expect(
+						state[this.application.uuid].apps[this.application.uuid],
+					).to.be.an('object');
+
+					// check the name
+					expect(state[this.application.uuid].name).to.be.a('string');
+					expect(state[this.application.uuid].name).to.equal(
+						this.application.app_name,
+					);
+
+					// and the structure
+					expect(state[this.application.uuid].apps).to.be.an('object');
+
+					// finally, check configuration type and values
+					expect(state[this.application.uuid].config).to.be.an('object');
+					expect(
+						state[this.application.uuid].config[
+							'RESIN_SUPERVISOR_NATIVE_LOGGER'
+						],
+					).to.equal('true');
+					expect(
+						state[this.application.uuid].config[
+							'RESIN_SUPERVISOR_POLL_INTERVAL'
+						],
+					).to.equal('900000');
+				});
+
+				it.skip(`should give a device's target state (v3) for a _generic_ device of a fleet and a specific release`, async function () {
+					// Due to the complexity of setting up a release for the fleet to test here, this one is currently skipped.
+					// Will be revisited later when the value of the test is greater than it's cost
+				});
 			});
 
 			describe('balena.models.device.getSupervisorState()', function () {

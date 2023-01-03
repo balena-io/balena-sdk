@@ -246,7 +246,7 @@ const sdk = fromSharedOptions();
             * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+            * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
             * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
             * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
             * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -265,7 +265,8 @@ const sdk = fromSharedOptions();
             * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-            * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
+            * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
+            * [.getSupervisorTargetStateForFleet(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForFleet) ⇒ <code>Promise</code>
             * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
             * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
@@ -641,7 +642,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+        * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
         * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
         * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
         * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -660,7 +661,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-        * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
+        * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
+        * [.getSupervisorTargetStateForFleet(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForFleet) ⇒ <code>Promise</code>
         * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
         * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
@@ -2559,7 +2561,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+    * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
     * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
     * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
     * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -2578,7 +2580,8 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-    * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
+    * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
+    * [.getSupervisorTargetStateForFleet(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForFleet) ⇒ <code>Promise</code>
     * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
     * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
@@ -3390,7 +3393,9 @@ balena.models.device.getAllByApplication('myorganization/myapp', function(error,
 ```
 <a name="balena.models.device.getAllByParentDevice"></a>
 
-##### device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>
+##### ~~device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by parent device  
 **Access**: public  
@@ -3974,7 +3979,7 @@ balena.models.device.restartApplication('7cf02a6', function(error) {
 ```
 <a name="balena.models.device.getSupervisorTargetState"></a>
 
-##### device.getSupervisorTargetState(uuidOrId) ⇒ <code>Promise</code>
+##### device.getSupervisorTargetState(uuidOrId, version) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the target supervisor state on a device  
 **Access**: public  
@@ -3982,6 +3987,7 @@ balena.models.device.restartApplication('7cf02a6', function(error) {
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+| version | <code>Number</code> | (optional) target state version (2 or 3), default to 2 |
 
 **Example**  
 ```js
@@ -3997,8 +4003,44 @@ balena.models.device.getSupervisorTargetState(123).then(function(state) {
 ```
 **Example**  
 ```js
+balena.models.device.getSupervisorTargetState(123, 3).then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
 balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
 	if (error) throw error;
+	console.log(state);
+});
+```
+<a name="balena.models.device.getSupervisorTargetStateForFleet"></a>
+
+##### device.getSupervisorTargetStateForFleet(uuidOrId, release) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get the target supervisor state on a "generic" device on a fleet  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | fleet uuid (string) or id (number) |
+| release | <code>String</code> | (optional) release uuid (default tracked) |
+
+**Example**  
+```js
+balena.models.device.getSupervisorTargetStateForFleet('7cf02a6').then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
+balena.models.device.getSupervisorTargetStateForFleet(123).then(function(state) {
+	console.log(state);
+});
+```
+**Example**  
+```js
+balena.models.device.getSupervisorTargetStateForFleet(123, '7cf02a6').then(function(state) {
 	console.log(state);
 });
 ```

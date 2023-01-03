@@ -1275,6 +1275,7 @@ const getDeviceModel = function (
 		 * @memberof balena.models.device
 		 *
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @param {Number} version - (optional) target state version (2 or 3), default to 2
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1288,6 +1289,11 @@ const getDeviceModel = function (
 		 * });
 		 *
 		 * @example
+		 * balena.models.device.getSupervisorTargetState(123, 3).then(function(state) {
+		 * 	console.log(state);
+		 * });
+		 *
+		 * @example
 		 * balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
 		 * 	if (error) throw error;
 		 * 	console.log(state);
@@ -1295,10 +1301,52 @@ const getDeviceModel = function (
 		 */
 		getSupervisorTargetState: async (
 			uuidOrId: string | number,
+			version?: number,
 		): Promise<DeviceState.DeviceState> => {
 			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
 			const { body } = await request.send({
-				url: `/device/v2/${uuid}/state`,
+				url: `/device/v${version !== 3 ? 2 : 3}/${uuid}/state`,
+				baseUrl: apiUrl,
+			});
+			return body;
+		},
+
+		/**
+		 * @summary Get the target supervisor state on a "generic" device on a fleet
+		 * @name getSupervisorTargetStateForFleet
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @param {String|Number} uuidOrId - fleet uuid (string) or id (number)
+		 * @param {String} release - (optional) release uuid (default tracked)
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.getSupervisorTargetStateForFleet('7cf02a6').then(function(state) {
+		 * 	console.log(state);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.getSupervisorTargetStateForFleet(123).then(function(state) {
+		 * 	console.log(state);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.getSupervisorTargetStateForFleet(123, '7cf02a6').then(function(state) {
+		 * 	console.log(state);
+		 * });
+		 *
+		 */
+		getSupervisorTargetStateForApp: async (
+			slugOrUuidOrId: string | number,
+			release?: number,
+		): Promise<DeviceState.DeviceState> => {
+			const { uuid } = await applicationModel().get(slugOrUuidOrId, {
+				$select: 'uuid',
+			});
+			const { body } = await request.send({
+				url: `/device/v3/fleet/${uuid}/state/${release ?? ''}`,
 				baseUrl: apiUrl,
 			});
 			return body;
