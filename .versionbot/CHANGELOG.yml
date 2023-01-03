@@ -1,4 +1,18 @@
 - commits:
+    - subject: add support for target state v3
+      hash: 35b30af81ca2c1b1cbabe8c65dfc00db395e6363
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Edwin Joassart <edwin.joassart@balena.io>
+        signed-off-by: Edwin Joassart <edwin.joassart@balena.io>
+      author: Edwin Joassart
+      nested: []
+  version: 16.31.3
+  title: ""
+  date: 2023-01-03T17:09:24.351Z
+- commits:
     - subject: "application.create: Deprecate the `parent` option"
       hash: fdd220b8b52fd62ea55c2e2ab845ec81c086b5ab
       body: ""
