@@ -367,6 +367,8 @@ export interface Device {
 	is_locked_until__date: string;
 	is_web_accessible: boolean;
 	is_active: boolean;
+	/** This is a computed term */
+	is_frozen: boolean;
 	is_online: boolean;
 	last_connectivity_event: string | null;
 	last_vpn_event: string;
