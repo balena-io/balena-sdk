@@ -1,4 +1,16 @@
 - commits:
+    - subject: "typings: Add the device.is_frozen field"
+      hash: d808b7dd910a4afd35e12f1e2d57c6b36f30cb6c
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.32.0
+  title: ""
+  date: 2023-01-05T23:10:26.233Z
+- commits:
     - subject: "application.create: Deprecate the `parent` option"
       hash: fdd220b8b52fd62ea55c2e2ab845ec81c086b5ab
       body: ""
