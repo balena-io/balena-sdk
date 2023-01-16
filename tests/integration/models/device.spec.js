@@ -100,40 +100,6 @@ describe('Device Model', function () {
 						return expect(two).to.not.equal(three);
 					});
 				});
-
-				parallel(
-					'balena.models.device.getManifestByApplication()',
-					function () {
-						applicationRetrievalFields.forEach((prop) =>
-							it(`should return the appropriate manifest for an application ${prop}`, async function () {
-								const manifest =
-									await balena.models.device.getManifestByApplication(
-										ctx.application[prop],
-									);
-								return expect(manifest.slug).to.equal(
-									ctx.applicationDeviceType.slug,
-								);
-							}),
-						);
-
-						it('should be rejected if the application slug does not exist', function () {
-							const promise = balena.models.device.getManifestByApplication(
-								`${ctx.initialOrg.handle}/helloworldapp`,
-							);
-							return expect(promise).to.be.rejectedWith(
-								`Application not found: ${ctx.initialOrg.handle}/helloworldapp`,
-							);
-						});
-
-						it('should be rejected if the application id does not exist', function () {
-							const promise =
-								balena.models.device.getManifestByApplication(999999);
-							return expect(promise).to.be.rejectedWith(
-								'Application not found: 999999',
-							);
-						});
-					},
-				);
 			});
 
 			describe('balena.models.device.register()', function () {

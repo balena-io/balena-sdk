@@ -31,7 +31,6 @@ import type {
 } from '../types/models';
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
-import type { DeviceTypeJson } from './config';
 import {
 	CurrentServiceWithCommit,
 	DeviceWithServiceDetails,
@@ -124,9 +123,6 @@ const getDeviceModel = function (
 			require('balena-register-device') as typeof import('balena-register-device')
 		).getRegisterDevice({ request }),
 	);
-	const configModel = once(() =>
-		(require('./config') as typeof import('./config')).default(deps, opts),
-	);
 	const applicationModel = once(() =>
 		(require('./application') as typeof import('./application')).default(
 			deps,
@@ -211,7 +207,10 @@ const getDeviceModel = function (
 		if (deviceUrlsBase != null) {
 			return deviceUrlsBase;
 		}
-		return (await configModel().getAll()).deviceUrlsBase;
+		const configModel = (
+			require('./config') as typeof import('./config')
+		).default(deps, opts);
+		return (await configModel.getAll()).deviceUrlsBase;
 	});
 
 	const getOsUpdateHelper = once(async () => {
@@ -1310,52 +1309,6 @@ const getDeviceModel = function (
 				baseUrl: apiUrl,
 			});
 			return body;
-		},
-
-		// TODO: Drop in the next major
-		/**
-		 * @summary Get a device manifest by application name
-		 * @name getManifestByApplication
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated use balena.models.application.get & balena.models.deviceType.getBySlugOrName
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-		 * @fulfil {Object} - device manifest
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getManifestByApplication('myorganization/myapp').then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getManifestByApplication(123).then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getManifestByApplication('myorganization/myapp', function(error, manifest) {
-		 * 	if (error) throw error;
-		 * 	console.log(manifest);
-		 * });
-		 */
-		getManifestByApplication: async (
-			slugOrUuidOrId: string | number,
-		): Promise<DeviceTypeJson.DeviceType> => {
-			const applicationOptions = {
-				$select: 'id',
-				$expand: { is_for__device_type: { $select: 'slug' } },
-			} as const;
-
-			const app = (await applicationModel().get(
-				slugOrUuidOrId,
-				applicationOptions,
-			)) as PineTypedResult<Application, typeof applicationOptions>;
-			return await configModel().getDeviceTypeManifestBySlug(
-				app.is_for__device_type[0].slug,
-			);
 		},
 
 		/**
