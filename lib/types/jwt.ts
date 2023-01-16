@@ -17,8 +17,6 @@ export interface JWTUser {
 	last_name?: string;
 	loginAs?: boolean;
 	permissions?: string[];
-	/** @deprecated */
-	public_key?: boolean;
 	twoFactorRequired?: boolean;
 	username: string;
 
