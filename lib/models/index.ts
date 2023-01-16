@@ -97,7 +97,7 @@ const modelsTemplate = {
 export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
 	const models = {} as {
 		[key in keyof typeof modelsTemplate]: ReturnType<
-			ReturnType<typeof modelsTemplate[key]>
+			ReturnType<(typeof modelsTemplate)[key]>
 		>;
 	};
 

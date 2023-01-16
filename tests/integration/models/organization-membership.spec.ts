@@ -300,7 +300,7 @@ describe('Organization Membership Model', function () {
 
 				const roleChangeTest = (
 					rolenName: BalenaSdk.OrganizationMembershipRoles,
-					[title, keyGetter]: typeof keyAlternatives[number],
+					[title, keyGetter]: (typeof keyAlternatives)[number],
 				) => {
 					it(`should be able to change an organization membership to "${rolenName}" by ${title}`, async function () {
 						const key = keyGetter(membership!);
