@@ -1,4 +1,24 @@
 - commits:
+    - subject: Drop no longer used .travis.yml & .hound.yml
+      hash: 69ded63730b899e097235360e8d6c40f26113a88
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Rerun prettier
+      hash: 782843aaebc92d2bc2c228d8a531ecbf450d06a1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.32.1
+  title: ""
+  date: 2023-01-16T20:56:36.936Z
+- commits:
     - subject: "typings: Add the device.is_frozen field"
       hash: d808b7dd910a4afd35e12f1e2d57c6b36f30cb6c
       body: ""
