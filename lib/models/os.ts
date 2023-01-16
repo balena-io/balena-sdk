@@ -78,8 +78,6 @@ export interface OsVersion
 		// TODO: Drop the variant Omit and mark it as non-nullable in the next major
 		'variant'
 	> {
-	/** @deprecated use OsVersion.raw_version. */
-	rawVersion: string;
 	strippedVersion: string;
 	basedOnVersion?: string;
 	osType: string;
@@ -287,8 +285,6 @@ const getOsModel = function (
 				getOsVersionReleaseLine(release.phase, strippedVersion, appTags) ??
 				undefined;
 
-			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
-			// The version coming from release tags doesn't contain the variant, so we append it here
 			return {
 				...release,
 				// TODO: Drop the explicit assignment once we no longer convert empty strings to undefined
@@ -296,8 +292,6 @@ const getOsModel = function (
 				osType: appTags.osType,
 				line,
 				strippedVersion,
-				// TODO: Drop in the next major
-				rawVersion: release.raw_version,
 				basedOnVersion: tagMap[BASED_ON_VERSION_TAG_NAME] ?? strippedVersion,
 				// TODO: Drop in the next major
 				formattedVersion: `v${strippedVersion}${line ? ` (${line})` : ''}`,
