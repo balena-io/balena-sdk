@@ -168,7 +168,7 @@ const sdkTemplate = {
 
 export type BalenaSDK = {
 	[key in keyof typeof sdkTemplate]: ReturnType<
-		ReturnType<typeof sdkTemplate[key]>
+		ReturnType<(typeof sdkTemplate)[key]>
 	>;
 } & {
 	interceptors: Interceptor[];
