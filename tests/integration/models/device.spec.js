@@ -49,34 +49,6 @@ describe('Device Model', function () {
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 
-	describe('given no applications', function () {
-		parallel('balena.models.device.getManifestBySlug()', function () {
-			it('should become the manifest if the slug is valid', async () => {
-				const manifest = await balena.models.device.getManifestBySlug(
-					'raspberry-pi',
-				);
-				expect(_.isPlainObject(manifest)).to.be.true;
-				expect(manifest.slug).to.exist;
-				expect(manifest.name).to.exist;
-				return expect(manifest.options).to.exist;
-			});
-
-			it('should be rejected if the device slug is invalid', function () {
-				const promise = balena.models.device.getManifestBySlug('foobar');
-				return expect(promise).to.be.rejectedWith(
-					'Invalid device type: foobar',
-				);
-			});
-
-			it('should become the manifest given a device type alias', async () => {
-				const manifest = await balena.models.device.getManifestBySlug(
-					'raspberrypi',
-				);
-				return expect(manifest.slug).to.equal('raspberry-pi');
-			});
-		});
-	});
-
 	describe('given an application', function () {
 		givenAnApplication(before);
 

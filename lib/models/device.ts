@@ -1312,35 +1312,6 @@ const getDeviceModel = function (
 			return body;
 		},
 
-		/**
-		 * @summary Get a device type manifest by slug
-		 * @name getManifestBySlug
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated use balena.models.deviceType.getBySlugOrName
-		 * @param {String} slugOrName - device type slug
-		 * @fulfil {Object} - device type manifest
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
-		 * 	if (error) throw error;
-		 * 	console.log(manifest);
-		 * });
-		 */
-		getManifestBySlug: async (
-			slugOrName: string,
-		): Promise<DeviceTypeJson.DeviceType> =>
-			// TODO: Drop in the next major
-			configModel().getDeviceTypeManifestBySlug(slugOrName),
-
 		// TODO: Drop in the next major
 		/**
 		 * @summary Get a device manifest by application name
