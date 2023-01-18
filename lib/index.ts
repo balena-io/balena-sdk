@@ -39,7 +39,7 @@ export type {
 	ODataOptions as PineOptions,
 	SubmitBody as PineSubmitBody,
 	ODataOptionsWithFilter as PineOptionsWithFilter,
-	ODataOptionsWithSelect as PineOptionsStrict,
+	ODataOptionsStrict as PineOptionsStrict,
 	SelectableProps as PineSelectableProps,
 	ExpandableProps as PineExpandableProps,
 	ExpandResultObject as PineExpandResultObject,
