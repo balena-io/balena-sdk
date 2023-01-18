@@ -412,8 +412,7 @@ export interface ParamsObjWithCount<T> extends ParamsObj<T> {
 	options: { $count: NonNullable<ODataOptions<T>['$count']> };
 }
 
-// TODO: Rename to ParamsObjStrict on the next major
-export type ParamsObjWithSelect<T> = Omit<ParamsObj<T>, 'options'> & {
+export type ParamsObjStrict<T> = Omit<ParamsObj<T>, 'options'> & {
 	options: ODataOptionsWithSelect<T>;
 };
 
@@ -591,38 +590,33 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 		P extends { resource: R } & ParamsObjWithId<
 			ResourceTypeMap[P['resource']]
 		> &
-			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>,
+			ParamsObjStrict<ResourceTypeMap[P['resource']]>,
 	>(
 		params: ExactlyExtends<
 			P,
 			ParamsObjWithId<ResourceTypeMap[P['resource']]> &
-				ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+				ParamsObjStrict<ResourceTypeMap[P['resource']]>
 		>,
 	): Promise<
 		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
 	>;
 	get<
 		R extends keyof ResourceTypeMap,
-		P extends { resource: R } & ParamsObjWithSelect<
-			ResourceTypeMap[P['resource']]
-		>,
+		P extends { resource: R } & ParamsObjStrict<ResourceTypeMap[P['resource']]>,
 	>(
-		params: ExactlyExtends<
-			P,
-			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
-		>,
+		params: ExactlyExtends<P, ParamsObjStrict<ResourceTypeMap[P['resource']]>>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
 	get<T extends {}>(params: ParamsObjWithCount<NoInfer<T>>): Promise<number>;
 	get<T extends {}>(
-		params: ParamsObjWithId<NoInfer<T>> & ParamsObjWithSelect<NoInfer<T>>,
+		params: ParamsObjWithId<NoInfer<T>> & ParamsObjStrict<NoInfer<T>>,
 	): Promise<T | undefined>;
-	get<T extends {}>(params: ParamsObjWithSelect<NoInfer<T>>): Promise<T[]>;
+	get<T extends {}>(params: ParamsObjStrict<NoInfer<T>>): Promise<T[]>;
 	get<T extends {}, Result extends number>(
 		params: ParamsObj<NoInfer<T>>,
 	): Promise<Result>;
 	get<T extends {}, Result>(
-		params: ParamsObjWithSelect<NoInfer<T>>,
+		params: ParamsObjStrict<NoInfer<T>>,
 	): Promise<Result>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
@@ -632,13 +626,13 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 	): PreparedFn<T, Promise<number>, R>;
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithId<R> &
-			ParamsObjWithSelect<R> & {
+			ParamsObjStrict<R> & {
 				method?: 'GET';
 			},
 	): PreparedFn<T, Promise<R | undefined>, R>;
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObj<R> &
-			ParamsObjWithSelect<R> & {
+			ParamsObjStrict<R> & {
 				method?: 'GET';
 			},
 	): PreparedFn<T, Promise<R[]>, R>;
@@ -660,13 +654,13 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 	): Poll<number>;
 	subscribe<T>(
 		params: SubscribeParamsWithId<T> &
-			ParamsObjWithSelect<T> & {
+			ParamsObjStrict<T> & {
 				method?: 'GET';
 			},
 	): Poll<T | undefined>;
 	subscribe<T>(
 		params: SubscribeParams<T> &
-			ParamsObjWithSelect<T> & {
+			ParamsObjStrict<T> & {
 				method?: 'GET';
 			},
 	): Poll<T[]>;
