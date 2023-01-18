@@ -159,7 +159,6 @@ const sdk = fromSharedOptions();
         * [.application](#balena.models.application) : <code>object</code>
             * [.tags](#balena.models.application.tags) : <code>object</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-                * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
                 * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
                 * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
             * [.configVar](#balena.models.application.configVar) : <code>object</code>
@@ -179,7 +178,6 @@ const sdk = fromSharedOptions();
                 * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
             * [.membership](#balena.models.application.membership) : <code>object</code>
                 * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
-                * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
                 * [.getAllByUser(usernameOrId, [options])](#balena.models.application.membership.getAllByUser) ⇒ <code>Promise</code>
                 * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
@@ -223,7 +221,6 @@ const sdk = fromSharedOptions();
             * [.tags](#balena.models.device.tags) : <code>object</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-                * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
             * [.configVar](#balena.models.device.configVar) : <code>object</code>
@@ -248,10 +245,8 @@ const sdk = fromSharedOptions();
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
             * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
-            * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
-            * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
             * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
             * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
             * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -265,13 +260,11 @@ const sdk = fromSharedOptions();
             * [.remove(uuidOrIdOrIds)](#balena.models.device.remove) ⇒ <code>Promise</code>
             * [.deactivate(uuidOrIdOrIds)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
             * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
-            * [.note(uuidOrIdOrIds, note)](#balena.models.device.note) ⇒ <code>Promise</code>
+            * [.setNote(uuidOrIdOrIds, note)](#balena.models.device.setNote) ⇒ <code>Promise</code>
             * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-            * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-            * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
             * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -339,7 +332,6 @@ const sdk = fromSharedOptions();
         * [.organization](#balena.models.organization) : <code>object</code>
             * [.membership](#balena.models.organization.membership) : <code>object</code>
                 * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
-                * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
                 * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
                 * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
                 * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
@@ -361,7 +353,7 @@ const sdk = fromSharedOptions();
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
             * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
-            * [.download(deviceType, [version], options)](#balena.models.os.download) ⇒ <code>Promise</code>
+            * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
@@ -376,7 +368,6 @@ const sdk = fromSharedOptions();
             * [.tags](#balena.models.release.tags) : <code>object</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
                 * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-                * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
                 * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
                 * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
             * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
@@ -386,7 +377,7 @@ const sdk = fromSharedOptions();
             * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
             * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
             * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-            * [.note(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+            * [.setNote(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.setNote) ⇒ <code>Promise</code>
             * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
@@ -566,7 +557,6 @@ balena.models.device.get(123).catch(function (error) {
     * [.application](#balena.models.application) : <code>object</code>
         * [.tags](#balena.models.application.tags) : <code>object</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
             * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
             * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
         * [.configVar](#balena.models.application.configVar) : <code>object</code>
@@ -586,7 +576,6 @@ balena.models.device.get(123).catch(function (error) {
             * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
         * [.membership](#balena.models.application.membership) : <code>object</code>
             * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
-            * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByUser(usernameOrId, [options])](#balena.models.application.membership.getAllByUser) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
@@ -630,7 +619,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.tags](#balena.models.device.tags) : <code>object</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-            * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
             * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
         * [.configVar](#balena.models.device.configVar) : <code>object</code>
@@ -655,10 +643,8 @@ balena.models.device.get(123).catch(function (error) {
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
         * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
-        * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
-        * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
         * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
         * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
         * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -672,13 +658,11 @@ balena.models.device.get(123).catch(function (error) {
         * [.remove(uuidOrIdOrIds)](#balena.models.device.remove) ⇒ <code>Promise</code>
         * [.deactivate(uuidOrIdOrIds)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
         * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
-        * [.note(uuidOrIdOrIds, note)](#balena.models.device.note) ⇒ <code>Promise</code>
+        * [.setNote(uuidOrIdOrIds, note)](#balena.models.device.setNote) ⇒ <code>Promise</code>
         * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-        * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-        * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
         * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -746,7 +730,6 @@ balena.models.device.get(123).catch(function (error) {
     * [.organization](#balena.models.organization) : <code>object</code>
         * [.membership](#balena.models.organization.membership) : <code>object</code>
             * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
-            * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
             * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
@@ -768,7 +751,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
         * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
-        * [.download(deviceType, [version], options)](#balena.models.os.download) ⇒ <code>Promise</code>
+        * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
@@ -783,7 +766,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.tags](#balena.models.release.tags) : <code>object</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
             * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-            * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
             * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
             * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
         * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
@@ -793,7 +775,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
         * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
         * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-        * [.note(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+        * [.setNote(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.setNote) ⇒ <code>Promise</code>
         * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
@@ -827,7 +809,6 @@ balena.models.device.get(123).catch(function (error) {
 * [.application](#balena.models.application) : <code>object</code>
     * [.tags](#balena.models.application.tags) : <code>object</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
         * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
         * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
     * [.configVar](#balena.models.application.configVar) : <code>object</code>
@@ -847,7 +828,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.remove(slugOrUuidOrId, key)](#balena.models.application.buildVar.remove) ⇒ <code>Promise</code>
     * [.membership](#balena.models.application.membership) : <code>object</code>
         * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
-        * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByUser(usernameOrId, [options])](#balena.models.application.membership.getAllByUser) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
@@ -895,7 +875,6 @@ balena.models.device.get(123).catch(function (error) {
 
 * [.tags](#balena.models.application.tags) : <code>object</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.application.tags.getAll) ⇒ <code>Promise</code>
     * [.set(slugOrUuidOrId, tagKey, value)](#balena.models.application.tags.set) ⇒ <code>Promise</code>
     * [.remove(slugOrUuidOrId, tagKey)](#balena.models.application.tags.remove) ⇒ <code>Promise</code>
 
@@ -927,31 +906,6 @@ balena.models.application.tags.getAllByApplication(999999).then(function(tags) {
 **Example**  
 ```js
 balena.models.application.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
-<a name="balena.models.application.tags.getAll"></a>
-
-###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
-**Summary**: Get all application tags  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - application tags  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.application.tags.getAll().then(function(tags) {
-	console.log(tags);
-});
-```
-**Example**  
-```js
-balena.models.application.tags.getAll(function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
@@ -1426,7 +1380,6 @@ balena.models.application.buildVar.remove('myorganization/myapp', 'VAR', functio
 
 * [.membership](#balena.models.application.membership) : <code>object</code>
     * [.get(membershipId, [options])](#balena.models.application.membership.get) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.application.membership.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.application.membership.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByUser(usernameOrId, [options])](#balena.models.application.membership.getAllByUser) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.membership.create) ⇒ <code>Promise</code>
@@ -1457,32 +1410,6 @@ balena.models.application.membership.get(5).then(function(memberships) {
 **Example**  
 ```js
 balena.models.application.membership.get(5, function(error, memberships) {
-	console.log(memberships);
-});
-```
-<a name="balena.models.application.membership.getAll"></a>
-
-###### membership.getAll([options]) ⇒ <code>Promise</code>
-This method returns all application memberships.
-
-**Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
-**Summary**: Get all application memberships  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - application memberships  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.application.membership.getAll().then(function(memberships) {
-	console.log(memberships);
-});
-```
-**Example**  
-```js
-balena.models.application.membership.getAll(function(error, memberships) {
 	console.log(memberships);
 });
 ```
@@ -2583,7 +2510,6 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.tags](#balena.models.device.tags) : <code>object</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-        * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
         * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
     * [.configVar](#balena.models.device.configVar) : <code>object</code>
@@ -2608,10 +2534,8 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
     * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
-    * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByOrganization(handleOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
-    * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
     * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
     * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
     * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -2625,13 +2549,11 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.remove(uuidOrIdOrIds)](#balena.models.device.remove) ⇒ <code>Promise</code>
     * [.deactivate(uuidOrIdOrIds)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
     * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
-    * [.note(uuidOrIdOrIds, note)](#balena.models.device.note) ⇒ <code>Promise</code>
+    * [.setNote(uuidOrIdOrIds, note)](#balena.models.device.setNote) ⇒ <code>Promise</code>
     * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-    * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-    * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
     * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -2682,7 +2604,6 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
 * [.tags](#balena.models.device.tags) : <code>object</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.device.tags.getAll) ⇒ <code>Promise</code>
     * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
     * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
 
@@ -2746,31 +2667,6 @@ balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 **Example**  
 ```js
 balena.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
-<a name="balena.models.device.tags.getAll"></a>
-
-###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
-**Summary**: Get all device tags  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - device tags  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.device.tags.getAll().then(function(tags) {
-	console.log(tags);
-});
-```
-**Example**  
-```js
-balena.models.device.tags.getAll(function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
@@ -3434,43 +3330,6 @@ balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new
 ```js
 dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c659dfeaccd8')
 ```
-<a name="balena.models.device.getAll"></a>
-
-##### device.getAll([options]) ⇒ <code>Promise</code>
-This method returns all devices that the current user can access.
-In order to have the following computed properties in the result
-you have to explicitly define them in a `$select` in the extra options:
-* `overall_status`
-* `overall_progress`
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get all devices  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - devices  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.device.getAll().then(function(devices) {
-	console.log(devices);
-});
-```
-**Example**  
-```js
-balena.models.device.getAll({ $select: ['overall_status', 'overall_progress'] }).then(function(device) {
-	console.log(device);
-})
-```
-**Example**  
-```js
-balena.models.device.getAll(function(error, devices) {
-	if (error) throw error;
-	console.log(devices);
-});
-```
 <a name="balena.models.device.getAllByApplication"></a>
 
 ##### device.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -3555,40 +3414,6 @@ balena.models.device.getAllByOrganization('myorganization', { $select: ['overall
 **Example**  
 ```js
 balena.models.device.getAllByOrganization('myorganization', function(error, devices) {
-	if (error) throw error;
-	console.log(devices);
-});
-```
-<a name="balena.models.device.getAllByParentDevice"></a>
-
-##### ~~device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get all devices by parent device  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - devices  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| parentUuidOrId | <code>String</code> \| <code>Number</code> |  | parent device uuid (string) or id (number) |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
-	console.log(devices);
-});
-```
-**Example**  
-```js
-balena.models.device.getAllByParentDevice(123).then(function(devices) {
-	console.log(devices);
-});
-```
-**Example**  
-```js
-balena.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });
@@ -4009,9 +3834,9 @@ balena.models.device.rename('7cf02a6', 'NewName', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="balena.models.device.note"></a>
+<a name="balena.models.device.setNote"></a>
 
-##### device.note(uuidOrIdOrIds, note) ⇒ <code>Promise</code>
+##### device.setNote(uuidOrIdOrIds, note) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Note a device  
 **Access**: public  
@@ -4023,15 +3848,15 @@ balena.models.device.rename('7cf02a6', 'NewName', function(error) {
 
 **Example**  
 ```js
-balena.models.device.note('7cf02a6', 'My useful note');
+balena.models.device.setNote('7cf02a6', 'My useful note');
 ```
 **Example**  
 ```js
-balena.models.device.note(123, 'My useful note');
+balena.models.device.setNote(123, 'My useful note');
 ```
 **Example**  
 ```js
-balena.models.device.note('7cf02a6', 'My useful note', function(error) {
+balena.models.device.setNote('7cf02a6', 'My useful note', function(error) {
 	if (error) throw error;
 });
 ```
@@ -4144,66 +3969,6 @@ balena.models.device.getSupervisorTargetState(123).then(function(state) {
 balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
 	if (error) throw error;
 	console.log(state);
-});
-```
-<a name="balena.models.device.getManifestBySlug"></a>
-
-##### ~~device.getManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get a device type manifest by slug  
-**Access**: public  
-**Fulfil**: <code>Object</code> - device type manifest  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| slugOrName | <code>String</code> | device type slug |
-
-**Example**  
-```js
-balena.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
-	if (error) throw error;
-	console.log(manifest);
-});
-```
-<a name="balena.models.device.getManifestByApplication"></a>
-
-##### ~~device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get a device manifest by application name  
-**Access**: public  
-**Fulfil**: <code>Object</code> - device manifest  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.getManifestByApplication('myorganization/myapp').then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.device.getManifestByApplication(123).then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.device.getManifestByApplication('myorganization/myapp', function(error, manifest) {
-	if (error) throw error;
-	console.log(manifest);
 });
 ```
 <a name="balena.models.device.generateUniqueKey"></a>
@@ -5967,7 +5732,6 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 * [.organization](#balena.models.organization) : <code>object</code>
     * [.membership](#balena.models.organization.membership) : <code>object</code>
         * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
-        * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
         * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
@@ -5991,7 +5755,6 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
 
 * [.membership](#balena.models.organization.membership) : <code>object</code>
     * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
     * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
     * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
@@ -6022,32 +5785,6 @@ balena.models.organization.membership.get(5).then(function(memberships) {
 **Example**  
 ```js
 balena.models.organization.membership.get(5, function(error, memberships) {
-	console.log(memberships);
-});
-```
-<a name="balena.models.organization.membership.getAll"></a>
-
-###### membership.getAll([options]) ⇒ <code>Promise</code>
-This method returns all organization memberships.
-
-**Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
-**Summary**: Get all organization memberships  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - organization memberships  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.organization.membership.getAll().then(function(memberships) {
-	console.log(memberships);
-});
-```
-**Example**  
-```js
-balena.models.organization.membership.getAll(function(error, memberships) {
 	console.log(memberships);
 });
 ```
@@ -6469,7 +6206,7 @@ balena.models.organization.remove(123, function(error) {
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
     * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
-    * [.download(deviceType, [version], options)](#balena.models.os.download) ⇒ <code>Promise</code>
+    * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
@@ -6598,27 +6335,35 @@ balena.models.os.getLastModified('raspberry-pi', function(error, date) {
 ```
 <a name="balena.models.os.download"></a>
 
-##### os.download(deviceType, [version], options) ⇒ <code>Promise</code>
+##### os.download(options) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Download an OS image  
 **Access**: public  
 **Fulfil**: <code>ReadableStream</code> - download stream  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceType | <code>String</code> | device type slug |
-| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest' Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
-| options | <code>Object</code> | OS configuration options to use. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | <code>Object</code> |  | OS image options to use. |
+| options.deviceType | <code>String</code> |  | device type slug |
+| [options.version] | <code>String</code> | <code>&#x27;latest&#x27;</code> | semver-compatible version or 'latest', defaults to 'latest' Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. |
+| [options.developmentMode] | <code>Boolean</code> |  | controls development mode for unified balenaOS releases. |
+| [options.appId] | <code>Number</code> |  | the application ID (number). |
+| [options.fileType] | <code>String</code> |  | download file type. One of '.img' or '.zip' or '.gz'. |
+| [options.imageType] | <code>String</code> |  | download file type. One of 'raw' or 'flasher' |
+| [options.appUpdatePollInterval] | <code>Number</code> |  | how often the OS checks for updates, in minutes. |
+| [options.network] | <code>String</code> |  | the network type that the device will use, one of 'ethernet' or 'wifi'. |
+| [options.wifiKey] | <code>String</code> |  | the key for the wifi network the device will connect to if network is wifi. |
+| [options.wifiSsid] | <code>String</code> |  | the ssid for the wifi network the device will connect to if network is wifi. |
 
 **Example**  
 ```js
-balena.models.os.download('raspberry-pi').then(function(stream) {
+balena.models.os.download({deviceType: 'raspberry-pi'}).then(function(stream) {
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 });
 
-balena.models.os.download('raspberry-pi', function(error, stream) {
+balena.models.os.download({deviceType: 'raspberry-pi', appId: 1234, fileType: '.zip'}, function(error, stream) {
 	if (error) throw error;
-	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+	stream.pipe(fs.createWriteStream('foo/bar/image.zip'));
 });
 ```
 <a name="balena.models.os.getConfig"></a>
@@ -6644,7 +6389,7 @@ generation is only supported when using a session token, not an API key.
 | [options.appUpdatePollInterval] | <code>Number</code> |  | How often the OS checks for updates, in minutes. |
 | [options.provisioningKeyName] | <code>String</code> |  | Name assigned to API key |
 | [options.provisioningKeyExpiryDate] | <code>String</code> |  | Expiry Date assigned to API key |
-| [options.developmentMode] | <code>Boolean</code> |  | Controls delopment mode for unified balenaOS releases. |
+| [options.developmentMode] | <code>Boolean</code> |  | Controls development mode for unified balenaOS releases. |
 | [options.wifiKey] | <code>String</code> |  | The key for the wifi network the device will connect to. |
 | [options.wifiSsid] | <code>String</code> |  | The ssid for the wifi network the device will connect to. |
 | [options.ip] | <code>String</code> |  | static ip address. |
@@ -6882,7 +6627,6 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
     * [.tags](#balena.models.release.tags) : <code>object</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
         * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-        * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
         * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
         * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
     * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
@@ -6892,7 +6636,7 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
     * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
     * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
     * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-    * [.note(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+    * [.setNote(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.setNote) ⇒ <code>Promise</code>
     * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags"></a>
@@ -6903,7 +6647,6 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 * [.tags](#balena.models.release.tags) : <code>object</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
     * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
     * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
     * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
 
@@ -6973,31 +6716,6 @@ balena.models.release.tags.getAllByRelease({application: 456, rawVersion: '0.0.0
 **Example**  
 ```js
 balena.models.release.tags.getAllByRelease(123, function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
-<a name="balena.models.release.tags.getAll"></a>
-
-###### tags.getAll([options]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
-**Summary**: Get all release tags  
-**Access**: public  
-**Fulfil**: <code>Object[]</code> - release tags  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.release.tags.getAll().then(function(tags) {
-	console.log(tags);
-});
-```
-**Example**  
-```js
-balena.models.release.tags.getAll(function(error, tags) {
 	if (error) throw error;
 	console.log(tags)
 });
@@ -7324,9 +7042,9 @@ balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
 	console.log('validated!');
 });
 ```
-<a name="balena.models.release.note"></a>
+<a name="balena.models.release.setNote"></a>
 
-##### release.note(commitOrIdOrRawVersion, noteOrNull) ⇒ <code>Promise</code>
+##### release.setNote(commitOrIdOrRawVersion, noteOrNull) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Add a note to a release  
 **Access**: public  
@@ -7338,15 +7056,15 @@ balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
 
 **Example**  
 ```js
-balena.models.release.note('7cf02a6', 'My useful note');
+balena.models.release.setNote('7cf02a6', 'My useful note');
 ```
 **Example**  
 ```js
-balena.models.release.note(123, 'My useful note');
+balena.models.release.setNote(123, 'My useful note');
 ```
 **Example**  
 ```js
-balena.models.release.note({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
+balena.models.release.setNote({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
 ```
 <a name="balena.models.release.setKnownIssueList"></a>
 
