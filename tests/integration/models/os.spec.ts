@@ -233,6 +233,33 @@ describe('OS model', function () {
 				});
 			});
 
+			const variantRegex = /\.(dev|prod)$/;
+			it('should have the correct variant for all non-unified OS releases', async () => {
+				const osVersions = await balena.models.os.getAvailableOsVersions(
+					'fincm3',
+				);
+				expect(osVersions).to.be.an('array');
+				for (const osVersion of osVersions) {
+					const variant = variantRegex.exec(osVersion.raw_version)?.[1];
+					if (variant) {
+						expect(osVersion).to.have.property('variant', variant);
+					}
+				}
+			});
+
+			it('should have an empty variant for all unified OS releases', async () => {
+				const osVersions = await balena.models.os.getAvailableOsVersions(
+					'fincm3',
+				);
+				expect(osVersions).to.be.an('array');
+				for (const osVersion of osVersions) {
+					const variant = variantRegex.exec(osVersion.raw_version)?.[1];
+					if (!variant) {
+						expect(osVersion).to.have.property('variant', '');
+					}
+				}
+			});
+
 			it('should return an empty object for non-existent DTs', async () => {
 				const res = await balena.models.os.getAllOsVersions(['blahbleh']);
 
