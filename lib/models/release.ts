@@ -522,10 +522,9 @@ const getReleaseModel = function (
 		});
 	}
 
-	// TODO: Rename to `setNote` in the next major
 	/**
 	 * @summary Add a note to a release
-	 * @name note
+	 * @name setNote
 	 * @public
 	 * @function
 	 * @memberof balena.models.release
@@ -536,16 +535,16 @@ const getReleaseModel = function (
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.release.note('7cf02a6', 'My useful note');
+	 * balena.models.release.setNote('7cf02a6', 'My useful note');
 	 *
 	 * @example
-	 * balena.models.release.note(123, 'My useful note');
+	 * balena.models.release.setNote(123, 'My useful note');
 	 *
 	 * @example
-	 * balena.models.release.note({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
+	 * balena.models.release.setNote({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
 	 *
 	 */
-	async function note(
+	async function setNote(
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		noteOrNull: string | null,
 	): Promise<void> {
@@ -798,7 +797,7 @@ const getReleaseModel = function (
 		createFromUrl,
 		finalize,
 		setIsInvalidated,
-		note,
+		setNote,
 		setKnownIssueList,
 		tags,
 	};
