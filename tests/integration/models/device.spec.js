@@ -819,16 +819,19 @@ describe('Device Model', function () {
 					});
 				});
 
-				describe('balena.models.device.note()', function () {
+				describe('balena.models.device.setNote()', function () {
 					it('should be rejected if the device uuid does not exist', function () {
-						const promise = balena.models.device.note('asdfghjkl', 'My note');
+						const promise = balena.models.device.setNote(
+							'asdfghjkl',
+							'My note',
+						);
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: asdfghjkl',
 						);
 					});
 
 					it('should be rejected if the device id does not exist', function () {
-						const promise = balena.models.device.note(999999, 'My note');
+						const promise = balena.models.device.setNote(999999, 'My note');
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: 999999',
 						);
@@ -836,7 +839,7 @@ describe('Device Model', function () {
 
 					describe('[contained scenario]', function () {
 						it('should be able to note a device by uuid', async function () {
-							await balena.models.device.note(
+							await balena.models.device.setNote(
 								this.device.uuid,
 								'What you do today can improve all your tomorrows by uuid',
 							);
@@ -847,7 +850,7 @@ describe('Device Model', function () {
 						});
 
 						it('should be able to note a device by id', async function () {
-							await balena.models.device.note(
+							await balena.models.device.setNote(
 								this.device.id,
 								'What you do today can improve all your tomorrows by id',
 							);
