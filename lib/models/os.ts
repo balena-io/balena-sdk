@@ -684,12 +684,12 @@ const getOsModel = function (
 	 * @function
 	 * @memberof balena.models.os
 	 *
-	 * @param {String} deviceType - device type slug
-	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'
+	 * @param {Object} options - OS image options to use.
+	 * @param {String} options.deviceType - device type slug
+	 * @param {String} [options.version='latest'] - semver-compatible version or 'latest', defaults to 'latest'
 	 * Unsupported (unpublished) version will result in rejection.
 	 * The version **must** be the exact version number.
-	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
-	 * @param {Object} options - OS configuration options to use.
+	 * @param {Boolean} [options.developmentMode] - Controls development mode for unified balenaOS releases.
 	 * @fulfil {ReadableStream} - download stream
 	 * @returns {Promise}
 	 *
@@ -703,12 +703,15 @@ const getOsModel = function (
 	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	 * });
 	 */
-	const download = onlyIf(!isBrowser)(async function (
-		deviceType: string,
-		version: string = 'latest',
-		// TODO: make the downloadOptions the only argument in the next major
-		options: { developmentMode?: boolean } = {},
-	): Promise<BalenaRequestStreamResult> {
+	const download = onlyIf(!isBrowser)(async function ({
+		deviceType,
+		version = 'latest',
+		...restOptions
+	}: {
+		deviceType: string;
+		version?: string;
+		developmentMode?: boolean;
+	}): Promise<BalenaRequestStreamResult> {
 		try {
 			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
@@ -724,7 +727,7 @@ const getOsModel = function (
 				method: 'GET',
 				url: '/download',
 				qs: {
-					...(typeof options === 'object' && options),
+					...restOptions,
 					deviceType,
 					version,
 				},
@@ -762,7 +765,7 @@ const getOsModel = function (
 	 * for updates, in minutes.
 	 * @param {String} [options.provisioningKeyName] - Name assigned to API key
 	 * @param {String} [options.provisioningKeyExpiryDate] - Expiry Date assigned to API key
-	 * @param {Boolean} [options.developmentMode] - Controls delopment mode for unified balenaOS releases.
+	 * @param {Boolean} [options.developmentMode] - Controls development mode for unified balenaOS releases.
 	 * @param {String} [options.wifiKey] - The key for the wifi network the
 	 * device will connect to.
 	 * @param {String} [options.wifiSsid] - The ssid for the wifi network the
