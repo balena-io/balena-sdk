@@ -77,16 +77,11 @@ const baseReleasePineOptions = {
 };
 
 export interface OsVersion
-	extends Omit<
-		PineTypedResult<Release, typeof baseReleasePineOptions>,
-		// TODO: Drop the variant Omit and mark it as non-nullable in the next major
-		'variant'
-	> {
+	extends PineTypedResult<Release, typeof baseReleasePineOptions> {
 	strippedVersion: string;
 	basedOnVersion?: string;
 	osType: string;
 	line?: OsLines;
-	variant?: string;
 	/** @deprecated */
 	isRecommended?: boolean;
 }
@@ -253,18 +248,17 @@ const getOsModel = function (
 				: null;
 
 			let strippedVersion: string;
-			// TODO: Stop converting empty strings to undefined in the next major
-			let variant = release.variant || undefined;
+			let variant: string = release.variant;
 			if (releaseSemverObj == null) {
 				// TODO: Drop this `else` once we migrate all version & variant tags to release.semver field
 				/** Ideally 'production' | 'development' | undefined. */
 				const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
-				variant =
-					typeof fullVariantName === 'string'
-						? OsVariantNames.includes(fullVariantName)
-							? OsVariant[fullVariantName as keyof typeof OsVariant]
-							: fullVariantName
-						: undefined;
+				if (typeof fullVariantName === 'string') {
+					// TODO: Drop this once we migrate all variant tags to the release.variant field.
+					variant = OsVariantNames.includes(fullVariantName)
+						? OsVariant[fullVariantName as keyof typeof OsVariant]
+						: fullVariantName;
+				}
 
 				strippedVersion = tagMap[VERSION_TAG_NAME] ?? '';
 				// Backfill the native release_version field
@@ -290,7 +284,7 @@ const getOsModel = function (
 
 			return {
 				...release,
-				// TODO: Drop the explicit assignment once we no longer convert empty strings to undefined
+				// TODO: Drop the explicit assignment once the variant field of all OS releases is backfilled.
 				variant,
 				osType: appTags.osType,
 				line,
