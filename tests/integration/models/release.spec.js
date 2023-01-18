@@ -535,14 +535,14 @@ describe('Release Model', function () {
 			});
 		});
 
-		describe('balena.models.release.note()', function () {
+		describe('balena.models.release.setNote()', function () {
 			uniquePropertyNames.forEach((field) => {
 				const fieldLabel = getFieldLabel(field);
 				it(`should set a note using the release ${fieldLabel}`, async () => {
 					const release = ctx.currentRelease;
 					const noteParam = getParam(field, release);
 					const note = `This is a note set using field: ${fieldLabel}`;
-					await balena.models.release.note(noteParam, note);
+					await balena.models.release.setNote(noteParam, note);
 					const updatedRelease = await balena.models.release.get(release.id, {
 						$select: ['id', 'note'],
 					});
