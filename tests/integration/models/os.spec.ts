@@ -719,14 +719,14 @@ describe('OS model', function () {
 		describe('given a valid device slug', function () {
 			it('should contain a valid mime property', () =>
 				balena.models.os
-					.download('raspberry-pi')
+					.download({ deviceType: 'raspberry-pi' })
 					.then((stream) =>
 						expect(stream.mime).to.equal('application/octet-stream'),
 					));
 
 			it('should contain a valid mime property if passing a device type alias', () =>
 				balena.models.os
-					.download('raspberrypi')
+					.download({ deviceType: 'raspberrypi' })
 					.then((stream) =>
 						expect(stream.mime).to.equal('application/octet-stream'),
 					));
@@ -734,7 +734,7 @@ describe('OS model', function () {
 			it('should be able to download the image', function () {
 				const tmpFile = tmp.tmpNameSync();
 				return balena.models.os
-					.download('raspberry-pi')
+					.download({ deviceType: 'raspberry-pi' })
 					.then((stream) => stream.pipe(fs.createWriteStream(tmpFile)))
 					.then(rindle.wait)
 					.then(() => fs.promises.stat(tmpFile))
@@ -745,7 +745,9 @@ describe('OS model', function () {
 
 		describe('given an invalid device slug', () =>
 			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.download('foo-bar-baz');
+				const promise = balena.models.os.download({
+					deviceType: 'foo-bar-baz',
+				});
 				return expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
