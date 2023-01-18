@@ -5,7 +5,7 @@ import type * as BalenaSdk from '..';
 // the @ts-expect-error comments would move to the wrong place
 
 // @ts-expect-error
-export const noTopSelect: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
+export const noTopSelect: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> = {
 	$expand: {
 		owns__device: {
 			$select: 'id',
@@ -17,20 +17,22 @@ export const noTopSelect: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application>
 };
 
 // @ts-expect-error
-export const noTopSelect2: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$filter: {
-		id: 5,
-	},
-};
+export const noTopSelect2: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$filter: {
+			id: 5,
+		},
+	};
 
-export const noTopSelectFixed: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	$filter: {
-		id: 5,
-	},
-};
+export const noTopSelectFixed: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		$filter: {
+			id: 5,
+		},
+	};
 
-export const propExpand: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
+export const propExpand: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> = {
 	$select: 'id',
 	// @ts-expect-error
 	$expand: 'owns__device',
@@ -39,96 +41,103 @@ export const propExpand: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> 
 	},
 };
 
-export const propExpandArray: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	// @ts-expect-error
-	$expand: ['owns__device'],
-	$filter: {
-		id: 5,
-	},
-};
-
-export const expandWithNoSelect: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	// @ts-expect-error
-	$expand: {
-		owns__device: {},
-	},
-	$filter: {
-		id: 5,
-	},
-};
-
-export const expandWithNoSelect2: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	// @ts-expect-error
-	$expand: {
-		owns__device: {
-			$filter: {
-				id: 5,
-			},
+export const propExpandArray: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		// @ts-expect-error
+		$expand: ['owns__device'],
+		$filter: {
+			id: 5,
 		},
-	},
-	$filter: {
-		id: 5,
-	},
-};
+	};
 
-export const expandWithNoSelectFixed: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	$expand: {
-		owns__device: {
-			$select: 'id',
+export const expandWithNoSelect: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		// @ts-expect-error
+		$expand: {
+			owns__device: {},
 		},
-	},
-	$filter: {
-		id: 5,
-	},
-};
+		$filter: {
+			id: 5,
+		},
+	};
 
-export const nestedExpandWithNoSelect3: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	// @ts-expect-error
-	$expand: {
-		owns__device: {
-			$expand: {
-				device_environment_variable: {
-					$select: ['name', 'value'],
+export const expandWithNoSelect2: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		// @ts-expect-error
+		$expand: {
+			owns__device: {
+				$filter: {
+					id: 5,
 				},
 			},
 		},
-	},
-};
+		$filter: {
+			id: 5,
+		},
+	};
 
-export const nestedExpandWithNoSelect4: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	// @ts-expect-error
-	$expand: {
-		owns__device: {
-			$select: 'id',
-			$expand: {
-				device_environment_variable: {},
+export const expandWithNoSelectFixed: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		$expand: {
+			owns__device: {
+				$select: 'id',
 			},
 		},
-	},
-};
+		$filter: {
+			id: 5,
+		},
+	};
 
-export const nestedExpandWithNoSelectFixed: BalenaSdk.PineOptionsWithSelect<BalenaSdk.Application> = {
-	$select: 'id',
-	$expand: {
-		owns__device: {
-			$select: 'id',
-			$expand: {
-				device_environment_variable: {
-					$select: ['name', 'value'],
+export const nestedExpandWithNoSelect3: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		// @ts-expect-error
+		$expand: {
+			owns__device: {
+				$expand: {
+					device_environment_variable: {
+						$select: ['name', 'value'],
+					},
 				},
 			},
-			$filter: {
-				id: 5,
+		},
+	};
+
+export const nestedExpandWithNoSelect4: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		// @ts-expect-error
+		$expand: {
+			owns__device: {
+				$select: 'id',
+				$expand: {
+					device_environment_variable: {},
+				},
 			},
 		},
-	},
-	$filter: {
-		id: 5,
-	},
-};
+	};
+
+export const nestedExpandWithNoSelectFixed: BalenaSdk.PineOptionsStrict<BalenaSdk.Application> =
+	{
+		$select: 'id',
+		$expand: {
+			owns__device: {
+				$select: 'id',
+				$expand: {
+					device_environment_variable: {
+						$select: ['name', 'value'],
+					},
+				},
+				$filter: {
+					id: 5,
+				},
+			},
+		},
+		$filter: {
+			id: 5,
+		},
+	};
