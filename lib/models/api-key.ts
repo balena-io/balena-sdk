@@ -165,23 +165,30 @@ const getApiKeysModel = function (
 		 */
 		async getAllNamedUserApiKeys(
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
-			return await exports.getAll(
-				mergePineOptions(
-					{
-						$filter: {
-							is_of__actor: await sdkInstance.auth.getUserActorId(),
-							// the only way to reason whether it's
-							// a named user api key vs a deprecated user api key
-							// is whether it has a name.
-							name: {
-								$ne: null,
-							},
+		): Promise<BalenaSdk.ApiKey[] | number> {
+			const internalOptions = {
+				$filter: {
+					is_of__actor: await sdkInstance.auth.getUserActorId(),
+					// the only way to reason whether it's
+					// a named user api key vs a deprecated user api key
+					// is whether it has a name.
+					name: {
+						$ne: null,
+					},
+				},
+			};
+			if (options.$count) {
+				return await pine.get({
+					resource: 'api_key',
+					options: {
+						$count: {
+							...internalOptions,
+							...options.$count,
 						},
 					},
-					options,
-				),
-			);
+				});
+			}
+			return await exports.getAll(mergePineOptions(internalOptions, options));
 		},
 
 		/**
@@ -210,21 +217,30 @@ const getApiKeysModel = function (
 		async getProvisioningApiKeysByApplication(
 			slugOrUuidOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+		): Promise<BalenaSdk.ApiKey[] | number> {
 			const { actor } = await applicationModel().get(slugOrUuidOrId, {
 				$select: 'actor',
 			});
 
-			return await exports.getAll(
-				mergePineOptions(
-					{
-						$filter: {
-							is_of__actor: actor,
+			const internalOptions = {
+				$filter: {
+					is_of__actor: actor,
+				},
+			};
+
+			if (options.$count) {
+				return await pine.get({
+					resource: 'api_key',
+					options: {
+						$count: {
+							...internalOptions,
+							...options.$count,
 						},
 					},
-					options,
-				),
-			);
+				});
+			}
+
+			return await exports.getAll(mergePineOptions(internalOptions, options));
 		},
 
 		/**
@@ -253,22 +269,31 @@ const getApiKeysModel = function (
 		async getDeviceApiKeysByDevice(
 			uuidOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+		): Promise<BalenaSdk.ApiKey[] | number> {
 			const { actor } = await deviceModel().get(uuidOrId, {
 				$select: 'actor',
 			});
+			const internalOptions = {
+				$filter: {
+					is_of__actor: actor,
+				},
+			};
+
+			if (options.$count) {
+				return await pine.get({
+					resource: 'api_key',
+					options: {
+						$count: {
+							...internalOptions,
+							...options.$count,
+						},
+					},
+				});
+			}
 
 			return await pine.get({
 				resource: 'api_key',
-				options: mergePineOptions(
-					{
-						$filter: {
-							is_of__actor: actor,
-						},
-						$orderby: 'name asc',
-					},
-					options,
-				),
+				options: mergePineOptions(internalOptions, options),
 			});
 		},
 
