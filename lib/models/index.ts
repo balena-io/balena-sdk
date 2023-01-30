@@ -87,6 +87,13 @@ const modelsTemplate = {
 	image: () => (require('./image') as typeof import('./image')).default,
 
 	/**
+	 * @namespace creditBundle
+	 * @memberof balena.models
+	 */
+	creditBundle: () =>
+		(require('./credit-bundle') as typeof import('./credit-bundle')).default,
+
+	/**
 	 * @namespace billing
 	 * @memberof balena.models
 	 * @description **Note!** The billing methods are available on Balena.io exclusively.
