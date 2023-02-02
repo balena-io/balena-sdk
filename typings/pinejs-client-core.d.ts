@@ -20,9 +20,9 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
-export type ConceptTypeNavigationResource<T = WithId> = [T] | number;
-export type NavigationResource<T = WithId> = [T] | PineDeferred;
-export type OptionalNavigationResource<T = WithId> =
+export type ConceptTypeNavigationResource<T extends {}> = [T] | number;
+export type NavigationResource<T extends {}> = [T] | PineDeferred;
+export type OptionalNavigationResource<T extends {}> =
 	| []
 	| [T]
 	| PineDeferred
@@ -33,9 +33,9 @@ export type OptionalNavigationResource<T = WithId> =
  * Selecting is not suggested,
  * in that case it holds a deferred to the original resource.
  */
-export type ReverseNavigationResource<T = WithId> = T[] | undefined;
+export type ReverseNavigationResource<T extends {}> = T[] | undefined;
 
-export type AssociatedResource<T = WithId> =
+export type AssociatedResource<T extends {}> =
 	| ConceptTypeNavigationResource<T>
 	| NavigationResource<T>
 	| OptionalNavigationResource<T>
@@ -163,7 +163,7 @@ interface Lambda<T> {
 }
 
 type OrderByDirection = 'asc' | 'desc';
-type OrderBy<T = any> =
+type OrderBy<T> =
 	| string // TODO next major: Change to: `${keyof T & string} ${OrderByDirection}` | [keyof T & string, OrderByDirection]
 	| Array<OrderBy<T>>
 	| { [k in keyof T]?: OrderByDirection }
