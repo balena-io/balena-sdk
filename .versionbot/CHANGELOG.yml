@@ -1,4 +1,16 @@
 - commits:
+    - subject: Improve pine typings for public resources without id fields
+      hash: 3b19617112795c11119a40aa8c2a0cce89be6ca5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.32.2
+  title: ""
+  date: 2023-02-02T09:19:25.837Z
+- commits:
     - subject: Drop no longer used .travis.yml & .hound.yml
       hash: 69ded63730b899e097235360e8d6c40f26113a88
       body: ""
