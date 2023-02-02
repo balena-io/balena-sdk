@@ -164,7 +164,7 @@ interface Lambda<T> {
 
 type OrderByDirection = 'asc' | 'desc';
 type OrderBy<T> =
-	| string // TODO next major: Change to: `${keyof T & string} ${OrderByDirection}` | [keyof T & string, OrderByDirection]
+	| `${string} ${OrderByDirection}` // TODO next major: Change to: `${keyof T & string} ${OrderByDirection}` | [keyof T & string, OrderByDirection]
 	| Array<OrderBy<T>>
 	| { [k in keyof T]?: OrderByDirection }
 	| ({
