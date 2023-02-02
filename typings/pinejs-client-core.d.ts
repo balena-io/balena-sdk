@@ -45,11 +45,12 @@ export type InferAssociatedResourceType<T> = T extends AssociatedResource<{}> &
 
 export type SelectableProps<T> =
 	// This allows us to get proper results when T is any/AnyObject, otherwise this returned never
-	PropsOfType<T, ReverseNavigationResource> extends StringKeyof<T>
+	PropsOfType<T, ReverseNavigationResource<{}>> extends StringKeyof<T>
 		? StringKeyof<T>
-		: Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource>>; // This is the normal typed case
+		: Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<{}>>>; // This is the normal typed case
 
-export type ExpandableProps<T> = PropsOfType<T, AssociatedResource> & string;
+export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<{}>> &
+	string;
 
 type SelectedProperty<
 	T,
@@ -367,7 +368,7 @@ export type ODataOptionsWithFilter<T> = ODataOptions<T> &
 	Required<Pick<ODataOptions<T>, '$filter'>>;
 
 export type SubmitBody<T> = {
-	[k in keyof T]?: T[k] extends AssociatedResource ? number | null : T[k];
+	[k in keyof T]?: T[k] extends AssociatedResource<{}> ? number | null : T[k];
 };
 
 type BaseResourceId =

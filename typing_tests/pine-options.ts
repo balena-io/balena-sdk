@@ -861,6 +861,19 @@ export const appOptionsEFValid1: BalenaSdk.PineOptions<BalenaSdk.Application> =
 		],
 	};
 
+export const appOptionsExpandResourceWoNumericIdEFValid1: BalenaSdk.PineOptions<BalenaSdk.Application> =
+	{
+		$expand: [
+			{
+				owns__public_device: {
+					$filter: {
+						was_recently_online: true,
+					},
+				},
+			},
+		],
+	};
+
 export const anyObjectOptionsValid1: BalenaSdk.PineOptions<AnyObject> = {
 	$select: ['id', 'app_name'],
 	$expand: {
