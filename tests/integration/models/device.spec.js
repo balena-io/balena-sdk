@@ -2347,6 +2347,7 @@ describe('Device Model', function () {
 						expect(imageInstall).to.not.have.property('service_id');
 						expect(imageInstall).to.not.have.property('image_id');
 						expect(imageInstall).to.not.have.property('commit');
+						expect(imageInstall).to.not.have.property('raw_version');
 					});
 
 					expect(deviceDetails.gateway_download).to.have.lengthOf(0);
@@ -2358,6 +2359,7 @@ describe('Device Model', function () {
 						_.flatten(Object.values(deviceDetails.current_services)) ?? [];
 					currentServices.forEach((currentService) => {
 						expect(currentService).to.have.property('commit');
+						expect(currentService).to.have.property('raw_version');
 						expect(currentService).to.have.property('release_id');
 					});
 					// Should have an empty list of gateway downloads
