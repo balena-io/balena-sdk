@@ -520,15 +520,15 @@ const getDeviceModel = function (
 			}
 
 			let device;
-			if (isId(uuidOrId)) {
+			const isPotentiallyFullUuid =
+				typeof uuidOrId === 'string' &&
+				(uuidOrId.length === 32 || uuidOrId.length === 62);
+			if (isPotentiallyFullUuid || isId(uuidOrId)) {
 				device = await pine.get({
 					resource: 'device',
-					id: uuidOrId,
+					id: isPotentiallyFullUuid ? { uuid: uuidOrId } : uuidOrId,
 					options,
 				});
-				if (device == null) {
-					throw new errors.BalenaDeviceNotFound(uuidOrId);
-				}
 			} else {
 				const devices = await pine.get({
 					resource: 'device',
@@ -541,14 +541,13 @@ const getDeviceModel = function (
 						options,
 					),
 				});
-				if (devices.length === 0) {
-					throw new errors.BalenaDeviceNotFound(uuidOrId);
-				}
-
 				if (devices.length > 1) {
 					throw new errors.BalenaAmbiguousDevice(uuidOrId);
 				}
 				device = devices[0];
+			}
+			if (device == null) {
+				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
 			return addExtraInfo(device) as Device;
 		},
