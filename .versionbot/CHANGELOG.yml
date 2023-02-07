@@ -1,4 +1,18 @@
 - commits:
+    - subject: Optimize the device.get method
+      hash: 66e9d96e1a04b9e028737ecdedcdb91f5bfbc4b6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.zulipchat.com/#narrow/stream/346007-balena-io.2FbalenaCloud/topic/SDK.20uuidOrId
+        see: https://balena.zulipchat.com/#narrow/stream/346007-balena-io.2FbalenaCloud/topic/SDK.20uuidOrId
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.32.3
+  title: ""
+  date: 2023-02-07T22:21:59.637Z
+- commits:
     - subject: Improve pine typings for public resources without id fields
       hash: 3b19617112795c11119a40aa8c2a0cce89be6ca5
       body: ""
