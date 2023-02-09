@@ -1,4 +1,21 @@
 - commits:
+    - subject: Add configVarInvalidRegex to Config Var typing
+      hash: b1a9831540ae693f02e99a2d9d44841c76187a87
+      body: |
+        This is part of the work for enabling the creation of configuration
+        variables with a colon character as a means to allow Raspberry PI users
+        to enable the second HDMI port on RPI4 and others.
+      footer:
+        Relates-to: balena-io/open-balena-api#1199
+        relates-to: balena-io/open-balena-api#1199
+        Change-type: minor
+        change-type: minor
+      author: Felipe Lalanne
+      nested: []
+  version: 16.34.0
+  title: ""
+  date: 2023-02-09T16:54:13.648Z
+- commits:
     - subject: "CurrentServiceWithCommit: Add release `raw_version` to type"
       hash: 0ded12d5defad8665ce94cd3b5c9fe67de114ea3
       body: ""
