@@ -1,4 +1,16 @@
 - commits:
+    - subject: "CurrentServiceWithCommit: Add release `raw_version` to type"
+      hash: 0ded12d5defad8665ce94cd3b5c9fe67de114ea3
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 16.33.0
+  title: ""
+  date: 2023-02-09T14:42:42.519Z
+- commits:
     - subject: Optimize the device.get method
       hash: 66e9d96e1a04b9e028737ecdedcdb91f5bfbc4b6
       body: ""
