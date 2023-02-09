@@ -19,6 +19,7 @@ export interface CurrentService {
 
 export interface CurrentServiceWithCommit extends CurrentService {
 	commit: string;
+	raw_version: string;
 	release_id: number;
 }
 
@@ -62,7 +63,7 @@ export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
 				},
 				...(expandRelease && {
 					is_provided_by__release: {
-						$select: ['id', 'commit'],
+						$select: ['id', 'commit', 'raw_version'],
 					},
 				}),
 			},
@@ -88,15 +89,20 @@ function getSingleInstallSummary(
 	const image = (rawData.image as Image[])[0];
 	const service = (image.is_a_build_of__service as Service[])[0];
 
-	let releaseInfo: { commit?: string; release_id?: number } = {};
+	let releaseInfo: {
+		commit?: string;
+		raw_version?: string;
+		release_id?: number;
+	} = {};
 	if (
 		'is_provided_by__release' in rawData &&
 		rawData.is_provided_by__release != null
 	) {
 		const release = (rawData.is_provided_by__release as Release[])[0];
 		releaseInfo = {
-			commit: release != null ? release.commit : undefined,
-			release_id: release != null ? release.id : undefined,
+			commit: release?.commit,
+			raw_version: release?.raw_version,
+			release_id: release?.id,
 		};
 	}
 
