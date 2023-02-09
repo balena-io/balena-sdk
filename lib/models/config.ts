@@ -51,6 +51,7 @@ export interface ConfigVarDefinition {
 	blackListedNames: string[];
 	configVarSchema: ConfigVarSchema;
 	invalidRegex: string;
+	configVarInvalidRegex: string;
 	reservedNames: string[];
 	reservedNamespaces: string[];
 	whiteListedNames: string[];
