@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add `CreditBundle` model
+      hash: 0dbb6d7fb0e2d91e957c299a53e9e7f7cc67ef4f
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 16.35.0
+  title: ""
+  date: 2023-02-10T15:54:48.576Z
+- commits:
     - subject: Add configVarInvalidRegex to Config Var typing
       hash: b1a9831540ae693f02e99a2d9d44841c76187a87
       body: |
