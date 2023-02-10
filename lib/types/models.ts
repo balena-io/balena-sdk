@@ -23,6 +23,7 @@ export interface ResourceTypeMap {
 	application_type: ApplicationType;
 	build_environment_variable: BuildVariable;
 	cpu_architecture: CpuArchitecture;
+	credit_bundle: CreditBundle;
 	device: Device;
 	device_config_variable: DeviceVariable;
 	device_environment_variable: DeviceVariable;
@@ -616,6 +617,26 @@ export interface OrganizationMembershipTag extends ResourceTagBase {
 
 export interface ReleaseTag extends ResourceTagBase {
 	release: NavigationResource<Release>;
+}
+
+export interface CreditBundle {
+	id: number;
+	created_at: string;
+	is_created_by__user: OptionalNavigationResource<User>;
+	original_quantity: number;
+	total_balance: number;
+	total_cost: number;
+	payment_status:
+		| 'processing'
+		| 'paid'
+		| 'failed'
+		| 'complimentary'
+		| 'cancelled'
+		| 'refunded';
+	belongs_to__organization: NavigationResource<Organization>;
+	is_for__feature: NavigationResource<Feature>;
+	is_associated_with__invoice_id: string | null;
+	error_message: string | null;
 }
 
 // Billing model
