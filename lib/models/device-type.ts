@@ -30,7 +30,7 @@ const traversingCompile = (
 	initial: Contract,
 	path: string[],
 ): Contract => {
-	let interpolated: Contract = { ...initial }
+	let interpolated: Contract = { ...initial };
 	for (const partialKey of Object.keys(partials)) {
 		const current = partials[partialKey];
 		if (Array.isArray(current)) {
@@ -52,7 +52,7 @@ const traversingCompile = (
 		}
 	}
 	return interpolated;
-}
+};
 
 const interpolatedPartials = (contract: Contract): Contract => {
 	if (contract.partials) {
@@ -417,7 +417,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 				$select: 'contract',
 			});
 			if (!contract) {
-				throw new Error(`Could not find contract for device type ${deviceTypeSlug}`);
+				throw new Error(
+					`Could not find contract for device type ${deviceTypeSlug}`,
+				);
 			}
 			return interpolatedPartials(contract);
 		},
@@ -458,8 +460,13 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 				);
 			}
 			const installMethod = calculateInstallMethod(contract);
-			const interpolatedDeviceType = interpolatedPartials(contract);
-			const interpolatedHostOS = interpolatedPartials({...cloneDeep(BalenaOS), ...interpolatedDeviceType});
+			const interpolatedDeviceType = {
+				deviceType: interpolatedPartials(contract),
+			};
+			const interpolatedHostOS = interpolatedPartials({
+				...cloneDeep(BalenaOS),
+				...interpolatedDeviceType,
+			});
 
 			return interpolatedHostOS.partials?.[installMethod];
 		},

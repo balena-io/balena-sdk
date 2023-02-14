@@ -246,7 +246,7 @@ const sdk = fromSharedOptions();
             * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+            * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
             * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
             * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
             * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -315,7 +315,7 @@ const sdk = fromSharedOptions();
             * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
             * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
             * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
-            * [.getInterpolatedPartials(deviceTypeSlug, initial)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
+            * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
             * [.getInstructions(deviceTypeSlug)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
             * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
@@ -393,6 +393,9 @@ const sdk = fromSharedOptions();
         * [.image](#balena.models.image) : <code>object</code>
             * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
             * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
+        * [.creditBundle](#balena.models.creditBundle) : <code>object</code>
+            * [.getAllByOrg(orgId, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
+            * [.create(orgId, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
         * [.billing](#balena.models.billing) : <code>object</code>
             * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -644,7 +647,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+        * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
         * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
         * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
         * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -713,7 +716,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
         * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
         * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
-        * [.getInterpolatedPartials(deviceTypeSlug, initial)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
+        * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
         * [.getInstructions(deviceTypeSlug)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
         * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
@@ -791,6 +794,9 @@ balena.models.device.get(123).catch(function (error) {
     * [.image](#balena.models.image) : <code>object</code>
         * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
         * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
+    * [.creditBundle](#balena.models.creditBundle) : <code>object</code>
+        * [.getAllByOrg(orgId, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
+        * [.create(orgId, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
     * [.billing](#balena.models.billing) : <code>object</code>
         * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -2565,7 +2571,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>
+    * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
     * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
     * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
     * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
@@ -3396,7 +3402,9 @@ balena.models.device.getAllByApplication('myorganization/myapp', function(error,
 ```
 <a name="balena.models.device.getAllByParentDevice"></a>
 
-##### device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>
+##### ~~device.getAllByParentDevice(parentUuidOrId, [options]) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by parent device  
 **Access**: public  
@@ -5222,7 +5230,7 @@ balena.models.device.restartService('7cf02a6', 123, function(error) {
     * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
     * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
     * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
-    * [.getInterpolatedPartials(deviceTypeSlug, initial)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
+    * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
     * [.getInstructions(deviceTypeSlug)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
     * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
 
@@ -5407,7 +5415,7 @@ balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTyp
 ```
 <a name="balena.models.deviceType.getInterpolatedPartials"></a>
 
-##### deviceType.getInterpolatedPartials(deviceTypeSlug, initial) ⇒ <code>Promise</code>
+##### deviceType.getInterpolatedPartials(deviceTypeSlug) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get a contract with resolved partial templates  
 **Access**: public  
@@ -5416,7 +5424,6 @@ balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTyp
 | Param | Type | Description |
 | --- | --- | --- |
 | deviceTypeSlug | <code>String</code> | device type slug |
-| initial | <code>any</code> | Other contract values necessary for interpreting contracts |
 
 **Example**  
 ```js
@@ -7382,6 +7389,54 @@ balena.models.image.getLogs(123).then(function(logs) {
 balena.models.image.getLogs(123, function(error, logs) {
 	if (error) throw error;
 	console.log(logs);
+});
+```
+<a name="balena.models.creditBundle"></a>
+
+#### models.creditBundle : <code>object</code>
+**Kind**: static namespace of [<code>models</code>](#balena.models)  
+
+* [.creditBundle](#balena.models.creditBundle) : <code>object</code>
+    * [.getAllByOrg(orgId, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
+    * [.create(orgId, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
+
+<a name="balena.models.creditBundle.getAllByOrg"></a>
+
+##### creditBundle.getAllByOrg(orgId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>creditBundle</code>](#balena.models.creditBundle)  
+**Summary**: Get all of the credit bundles purchased by the given org  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - credit bundles  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| orgId | <code>String</code> \| <code>Number</code> |  | handle (string) or id (number) of the target organization. |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.creditBundle.getAllByOrg(orgId).then(function(creditBundles) {
+	console.log(creditBundles);
+});
+```
+<a name="balena.models.creditBundle.create"></a>
+
+##### creditBundle.create(orgId, featureId, creditsToPurchase) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>creditBundle</code>](#balena.models.creditBundle)  
+**Summary**: Purchase a credit bundle for the given feature and org of the given quantity  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - credit bundles  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| orgId | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+| featureId | <code>String</code> \| <code>Number</code> | id (number) of the feature for which credits are being purchased. |
+| creditsToPurchase | <code>String</code> \| <code>Number</code> | number of credits being purchased. |
+
+**Example**  
+```js
+balena.models.creditBundle.create(orgId, featureId, creditsToPurchase).then(function(creditBundle) {
+	console.log(creditBundle);
 });
 ```
 <a name="balena.models.billing"></a>

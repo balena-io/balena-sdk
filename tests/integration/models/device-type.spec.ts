@@ -100,6 +100,12 @@ describe('Device Type model', function () {
 			);
 			expect(partials).to.be.an('object');
 			expect(Object.keys(partials)).to.not.have.length(0);
+			expect(partials)
+				.to.have.property('partials')
+				.to.have.property('bootDevice');
+			expect(partials?.partials?.bootDevice[0]).to.equal(
+				'Connect power to the Raspberry Pi 2',
+			);
 		});
 	});
 
@@ -110,6 +116,14 @@ describe('Device Type model', function () {
 			);
 			expect(partials).to.be.an('Array');
 			expect(partials).to.not.have.length(0);
+			expect(partials).to.eql([
+				'Insert the sdcard to the host machine.',
+				'Write the balenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
+				'Wait for writing of balenaOS to complete.',
+				'Remove the sdcard from the host machine.',
+				'Insert the freshly flashed sdcard into the Raspberry Pi 2.',
+				'Connect power to the Raspberry Pi 2 to boot the device.',
+			]);
 		});
 	});
 
