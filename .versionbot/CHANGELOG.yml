@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add contract partial based instruction generation
+      hash: 424fc463a236379a85047aa6c473db0ba740b935
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Micah Halter <micah@balena.io>
+        signed-off-by: Micah Halter <micah@balena.io>
+      author: Micah Halter
+      nested: []
+  version: 16.36.0
+  title: ""
+  date: 2023-02-16T14:28:58.323Z
+- commits:
     - subject: Add `CreditBundle` model
       hash: 0dbb6d7fb0e2d91e957c299a53e9e7f7cc67ef4f
       body: ""
