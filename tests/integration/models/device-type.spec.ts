@@ -7,6 +7,7 @@ import type * as BalenaSdk from '../../..';
 const DEVICE_TYPE_NAME = 'Raspberry Pi 2';
 const DEVICE_TYPE_SLUG = 'raspberry-pi2';
 const DEVICE_TYPE_ALIAS = 'raspberrypi2';
+const DEVICE_TYPE_INSTALL_METHOD = 'externalBoot';
 const DEVICE_TYPE_ID = 1;
 
 describe('Device Type model', function () {
@@ -89,6 +90,49 @@ describe('Device Type model', function () {
 				DEVICE_TYPE_NAME,
 			);
 			expect(slug).to.equal(DEVICE_TYPE_SLUG);
+		});
+	});
+
+	parallel('balena.models.deviceType.getInterpolatedPartials()', function () {
+		it(`should get just the device type partials with template strings resolved`, async function () {
+			const partials = await balena.models.deviceType.getInterpolatedPartials(
+				DEVICE_TYPE_NAME,
+			);
+			expect(partials).to.be.an('object');
+			expect(Object.keys(partials)).to.not.have.length(0);
+			expect(partials)
+				.to.have.property('partials')
+				.to.have.property('bootDevice');
+			expect(partials?.partials?.bootDevice[0]).to.equal(
+				'Connect power to the Raspberry Pi 2',
+			);
+		});
+	});
+
+	parallel('balena.models.deviceType.getInstructions()', function () {
+		it(`should get just the full instructions for installing BalenaOS on a device type with templates strings resolved`, async function () {
+			const partials = await balena.models.deviceType.getInstructions(
+				DEVICE_TYPE_NAME,
+			);
+			expect(partials).to.be.an('Array');
+			expect(partials).to.not.have.length(0);
+			expect(partials).to.eql([
+				'Insert the sdcard to the host machine.',
+				'Write the balenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
+				'Wait for writing of balenaOS to complete.',
+				'Remove the sdcard from the host machine.',
+				'Insert the freshly flashed sdcard into the Raspberry Pi 2.',
+				'Connect power to the Raspberry Pi 2 to boot the device.',
+			]);
+		});
+	});
+
+	parallel('balena.models.deviceType.getInstallMethod()', function () {
+		it(`should get device type installation method`, async function () {
+			const installMethod = await balena.models.deviceType.getInstallMethod(
+				DEVICE_TYPE_NAME,
+			);
+			expect(installMethod).to.equal(DEVICE_TYPE_INSTALL_METHOD);
 		});
 	});
 });
