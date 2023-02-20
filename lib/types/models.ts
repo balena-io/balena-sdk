@@ -670,6 +670,8 @@ export interface Plan {
 	annual_price: number;
 	can_self_serve: boolean;
 	is_legacy: boolean;
+	is_valid_from__date: string | null;
+	is_valid_until__date: string | null;
 
 	plan_feature: ReverseNavigationResource<PlanFeature>;
 	offers__plan_addon: ReverseNavigationResource<PlanAddon>;
