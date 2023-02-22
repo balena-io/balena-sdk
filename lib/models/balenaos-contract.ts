@@ -44,8 +44,8 @@ const BalenaOS: Contract = {
 			`Wait for writing of {{name}} to complete.`,
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
-		radxaFlash: [
-			`Enable maskrom mode and connect the device to your computer.`,
+		usbMassStorage: [
+			`{{#each deviceType.partials.instructions}}{{{this}}} {{/each}}`,
 		],
 		edisonFlash: {
 			Linux: [
