@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Stop using flowzone internal env vars to for skipping npm test"
+      hash: f2b97331c0c90bdf405fda02e7fc78c21f27c40b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.36.2
+  title: ""
+  date: 2023-02-24T18:53:38.952Z
+- commits:
     - subject: Add plan validity date fields
       hash: 508703829d26d64971f5a3fbeb92cd891c057762
       body: ""
