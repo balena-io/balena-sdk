@@ -52,7 +52,6 @@ runs:
         export TEST_MEMBER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-11":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
         export TEST_MEMBER_PASSWORD=${{ fromJSON(inputs.secrets).TEST_MEMBER_PASSWORD }}
         export TEST_ONLY_ON_ENVIRONMENT=${{ fromJSON('{"windows-2019":"node","ubuntu-20.04":"node","macos-11":"browser"}')[env.os_value || 'windows-2019' ]  }}
-        export GHCR_USER="anything != flowzone, to re-enable the tests for the custom script"
 
         echo "TEST_EMAIL_KEY: [ ${TEST_EMAIL_KEY} ]"
         echo "TEST_EMAIL: [ ${TEST_EMAIL} ]"
