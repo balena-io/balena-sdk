@@ -4,11 +4,14 @@ import { balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
-const DEVICE_TYPE_NAME = 'Raspberry Pi 2';
-const DEVICE_TYPE_SLUG = 'raspberry-pi2';
-const DEVICE_TYPE_ALIAS = 'raspberrypi2';
-const DEVICE_TYPE_INSTALL_METHOD = 'externalBoot';
-const DEVICE_TYPE_ID = 1;
+const RPI2_DEVICE_TYPE_NAME = 'Raspberry Pi 2';
+const RPI2_DEVICE_TYPE_SLUG = 'raspberry-pi2';
+const RPI2_DEVICE_TYPE_ALIAS = 'raspberrypi2';
+const RPI2_DEVICE_TYPE_INSTALL_METHOD = 'externalBoot';
+const RPI2_DEVICE_TYPE_ID = 1;
+
+const RADXA_ZERO_DEVICE_TYPE_SLUG = 'radxa-zero';
+const RADXA_ZERO_DEVICE_TYPE_INSTALL_METHOD = 'usbMassStorage';
 
 describe('Device Type model', function () {
 	timeSuite(before);
@@ -46,31 +49,33 @@ describe('Device Type model', function () {
 
 	parallel('balena.models.deviceType.get()', function () {
 		[
-			{ titlePart: 'slug', value: DEVICE_TYPE_SLUG },
-			{ titlePart: 'alias', value: DEVICE_TYPE_ALIAS },
+			{ titlePart: 'slug', value: RPI2_DEVICE_TYPE_SLUG },
+			{ titlePart: 'alias', value: RPI2_DEVICE_TYPE_ALIAS },
 		].forEach(({ titlePart, value }) => {
 			it(`should get device type by ${titlePart}`, async function () {
 				const deviceType = await balena.models.deviceType.get(value);
-				expect(deviceType).to.have.property('slug', DEVICE_TYPE_SLUG);
+				expect(deviceType).to.have.property('slug', RPI2_DEVICE_TYPE_SLUG);
 			});
 		});
 
 		it(`should get device type by id`, async function () {
-			const deviceType = await balena.models.deviceType.get(DEVICE_TYPE_ID);
-			expect(deviceType).to.have.property('id', DEVICE_TYPE_ID);
+			const deviceType = await balena.models.deviceType.get(
+				RPI2_DEVICE_TYPE_ID,
+			);
+			expect(deviceType).to.have.property('id', RPI2_DEVICE_TYPE_ID);
 		});
 	});
 
 	parallel('balena.models.deviceType.getBySlugOrName()', function () {
 		[
-			{ key: 'name', value: DEVICE_TYPE_NAME },
-			{ key: 'slug', value: DEVICE_TYPE_SLUG },
+			{ key: 'name', value: RPI2_DEVICE_TYPE_NAME },
+			{ key: 'slug', value: RPI2_DEVICE_TYPE_SLUG },
 		].forEach((type) => {
 			it(`should get device type by ${type.key}`, async function () {
 				const deviceType = await balena.models.deviceType.getBySlugOrName(
 					type.value,
 				);
-				expect(deviceType).to.have.property('slug', DEVICE_TYPE_SLUG);
+				expect(deviceType).to.have.property('slug', RPI2_DEVICE_TYPE_SLUG);
 			});
 		});
 	});
@@ -78,25 +83,25 @@ describe('Device Type model', function () {
 	parallel('balena.models.deviceType.getName()', function () {
 		it(`should get device type display name`, async function () {
 			const deviceTypes = await balena.models.deviceType.getName(
-				DEVICE_TYPE_SLUG,
+				RPI2_DEVICE_TYPE_SLUG,
 			);
-			expect(deviceTypes).to.equal(DEVICE_TYPE_NAME);
+			expect(deviceTypes).to.equal(RPI2_DEVICE_TYPE_NAME);
 		});
 	});
 
 	parallel('balena.models.deviceType.getSlugByName()', function () {
 		it(`should get device type slug`, async function () {
 			const slug = await balena.models.deviceType.getSlugByName(
-				DEVICE_TYPE_NAME,
+				RPI2_DEVICE_TYPE_NAME,
 			);
-			expect(slug).to.equal(DEVICE_TYPE_SLUG);
+			expect(slug).to.equal(RPI2_DEVICE_TYPE_SLUG);
 		});
 	});
 
 	parallel('balena.models.deviceType.getInterpolatedPartials()', function () {
 		it(`should get just the device type partials with template strings resolved`, async function () {
 			const partials = await balena.models.deviceType.getInterpolatedPartials(
-				DEVICE_TYPE_NAME,
+				RPI2_DEVICE_TYPE_NAME,
 			);
 			expect(partials).to.be.an('object');
 			expect(Object.keys(partials)).to.not.have.length(0);
@@ -110,13 +115,13 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.getInstructions()', function () {
-		it(`should get just the full instructions for installing BalenaOS on a device type with templates strings resolved`, async function () {
-			const partials = await balena.models.deviceType.getInstructions(
-				DEVICE_TYPE_NAME,
+		it(`should get just the full instructions for installing BalenaOS on devices types with templates strings resolved`, async function () {
+			const partialsRpi2 = await balena.models.deviceType.getInstructions(
+				RPI2_DEVICE_TYPE_SLUG,
 			);
-			expect(partials).to.be.an('Array');
-			expect(partials).to.not.have.length(0);
-			expect(partials).to.eql([
+			expect(partialsRpi2).to.be.an('Array');
+			expect(partialsRpi2).to.not.have.length(0);
+			expect(partialsRpi2).to.eql([
 				'Insert the sdcard to the host machine.',
 				'Write the balenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
 				'Wait for writing of balenaOS to complete.',
@@ -124,15 +129,32 @@ describe('Device Type model', function () {
 				'Insert the freshly flashed sdcard into the Raspberry Pi 2.',
 				'Connect power to the Raspberry Pi 2 to boot the device.',
 			]);
+
+			const partialsRadxaZero = await balena.models.deviceType.getInstructions(
+				RADXA_ZERO_DEVICE_TYPE_SLUG,
+			);
+			expect(partialsRadxaZero).to.be.an('Array');
+			expect(partialsRadxaZero).to.not.have.length(0);
+			expect(partialsRadxaZero).to.eql([
+				"Use the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom>maskrom mode</a> instructions provided by the vendor and make sure the board's USB2 port is used for provisioning. Install on your PC the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools>tools</a> required for flashing. Clear eMMC and set it in UMS mode. Make sure to use <a href=https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin>this loader</a> when following the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries>sideloading instructions</a>. Write the OS to the internal eMMC storage device. We recommend using <a href=http://www.etcher.io/>Etcher</a>. Once the OS has been written to the eMMC you need to repower your board. ",
+			]);
 		});
 	});
 
 	parallel('balena.models.deviceType.getInstallMethod()', function () {
 		it(`should get device type installation method`, async function () {
-			const installMethod = await balena.models.deviceType.getInstallMethod(
-				DEVICE_TYPE_NAME,
+			const installMethodPi2 = await balena.models.deviceType.getInstallMethod(
+				RPI2_DEVICE_TYPE_SLUG,
 			);
-			expect(installMethod).to.equal(DEVICE_TYPE_INSTALL_METHOD);
+			const installMethodRadxaZero =
+				await balena.models.deviceType.getInstallMethod(
+					RADXA_ZERO_DEVICE_TYPE_SLUG,
+				);
+
+			expect(installMethodPi2).to.equal(RPI2_DEVICE_TYPE_INSTALL_METHOD);
+			expect(installMethodRadxaZero).to.equal(
+				RADXA_ZERO_DEVICE_TYPE_INSTALL_METHOD,
+			);
 		});
 	});
 });

@@ -165,6 +165,12 @@ Before submitting a PR, please make sure that you
 * don't have uncommited changes on the documentation or the build output
 * don't have any `.only` or `.skip` in your tests
 * include typings for new methods
+* ran the lint script on the modified files
+
+```
+$ npm run lint:fix
+```
+
 * include tests and that they pass
 
 ```sh
