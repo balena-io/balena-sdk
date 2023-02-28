@@ -1,4 +1,33 @@
 - commits:
+    - subject: "models/device-type: Add test for Radxa Zero instructions"
+      hash: f6b78068c77ba7c8bdaa156a237ed1693b41b83f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "lib/models: Add radxaFlash protocol for Radxa boards"
+      hash: 7c8f72cc3ed7cc3ab1272a33fb2ea163c6c94b62
+      body: |
+        The Radxa boards use different flashing mechanisms
+        depending on the device model. Let's add a common
+        step for them, which is entering maskrom mode. The
+        actual procedure for entering this mode is detailed
+        in the contract partials for each device.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 16.36.3
+  title: ""
+  date: 2023-02-28T08:54:38.206Z
+- commits:
     - subject: "tests: Stop using flowzone internal env vars to for skipping npm test"
       hash: f2b97331c0c90bdf405fda02e7fc78c21f27c40b
       body: ""
