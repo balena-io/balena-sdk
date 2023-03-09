@@ -21,6 +21,7 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
 import type { Pine, PineOptions } from '..';
+import { Dictionary } from '../../typings/utils';
 
 interface DependentResource {
 	id: number;
@@ -38,7 +39,9 @@ export function buildDependentResource<T extends DependentResource>(
 		resourceName: string; // e.g. device_tag
 		resourceKeyField: keyof T & string; // e.g. tag_key
 		parentResourceName: keyof T & string; // e.g. device
-		getResourceId: (uuidOrId: string | number) => Promise<number>; // e.g. getId(uuidOrId)
+		getResourceId: (
+			uuidOrIdOrDict: string | number | Dictionary<unknown>,
+		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
 	const exports = {
@@ -61,7 +64,7 @@ export function buildDependentResource<T extends DependentResource>(
 		},
 
 		async getAllByParent(
-			parentParam: string | number,
+			parentParam: string | number | Dictionary<unknown>,
 			options?: PineOptions<T>,
 		): Promise<T[]> {
 			if (options == null) {
@@ -81,7 +84,7 @@ export function buildDependentResource<T extends DependentResource>(
 		},
 
 		async get(
-			parentParam: string | number,
+			parentParam: string | number | Dictionary<unknown>,
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
@@ -101,7 +104,7 @@ export function buildDependentResource<T extends DependentResource>(
 		},
 
 		async set(
-			parentParam: string | number,
+			parentParam: string | number | Dictionary<unknown>,
 			key: string,
 			value: string,
 		): Promise<void> {
@@ -138,7 +141,10 @@ export function buildDependentResource<T extends DependentResource>(
 			}
 		},
 
-		async remove(parentParam: string | number, key: string): Promise<void> {
+		async remove(
+			parentParam: string | number | Dictionary<unknown>,
+			key: string,
+		): Promise<void> {
 			const parentId = await getResourceId(parentParam);
 			await pine.delete({
 				resource: `${resourceName}`,

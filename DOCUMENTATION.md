@@ -372,19 +372,19 @@ const sdk = fromSharedOptions();
         * [.release](#balena.models.release) : <code>object</code>
             * [.tags](#balena.models.release.tags) : <code>object</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-                * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+                * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
-                * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
-                * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
-            * [.get(commitOrId, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
-            * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+                * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+                * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+            * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
+            * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
             * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
             * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
-            * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
-            * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-            * [.note(commitOrId, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
-            * [.setKnownIssueList(commitOrId, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
+            * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
+            * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
+            * [.note(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+            * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
                 * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -776,19 +776,19 @@ balena.models.device.get(123).catch(function (error) {
     * [.release](#balena.models.release) : <code>object</code>
         * [.tags](#balena.models.release.tags) : <code>object</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-            * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+            * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
-            * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
-            * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
-        * [.get(commitOrId, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
-        * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+            * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+            * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+        * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
+        * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
         * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
         * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
-        * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
-        * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-        * [.note(commitOrId, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
-        * [.setKnownIssueList(commitOrId, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
+        * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
+        * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
+        * [.note(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+        * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
             * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
@@ -6772,19 +6772,19 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 * [.release](#balena.models.release) : <code>object</code>
     * [.tags](#balena.models.release.tags) : <code>object</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+        * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
-        * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
-        * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
-    * [.get(commitOrId, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
-    * [.getWithImageDetails(commitOrId, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
+        * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+        * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+    * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
+    * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
     * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
     * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
-    * [.finalize(commitOrId)](#balena.models.release.finalize) ⇒ <code>Promise</code>
-    * [.setIsInvalidated(commitOrId, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-    * [.note(commitOrId, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
-    * [.setKnownIssueList(commitOrId, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
+    * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
+    * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
+    * [.note(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.note) ⇒ <code>Promise</code>
+    * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags"></a>
 
@@ -6793,10 +6793,10 @@ balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options)
 
 * [.tags](#balena.models.release.tags) : <code>object</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByRelease(commitOrId, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
+    * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.release.tags.getAll) ⇒ <code>Promise</code>
-    * [.set(commitOrId, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
-    * [.remove(commitOrId, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+    * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
+    * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.release.tags.getAllByApplication"></a>
 
@@ -6832,7 +6832,7 @@ balena.models.release.tags.getAllByApplication('myorganization/myapp', function(
 ```
 <a name="balena.models.release.tags.getAllByRelease"></a>
 
-###### tags.getAllByRelease(commitOrId, [options]) ⇒ <code>Promise</code>
+###### tags.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags for a release  
 **Access**: public  
@@ -6840,7 +6840,7 @@ balena.models.release.tags.getAllByApplication('myorganization/myapp', function(
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> |  | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> |  | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6852,6 +6852,12 @@ balena.models.release.tags.getAllByRelease(123).then(function(tags) {
 **Example**  
 ```js
 balena.models.release.tags.getAllByRelease('7cf02a6').then(function(tags) {
+	console.log(tags);
+});
+```
+**Example**  
+```js
+balena.models.release.tags.getAllByRelease({application: 456, rawVersion: '0.0.0'}).then(function(tags) {
 	console.log(tags);
 });
 ```
@@ -6889,14 +6895,14 @@ balena.models.release.tags.getAll(function(error, tags) {
 ```
 <a name="balena.models.release.tags.set"></a>
 
-###### tags.set(commitOrId, tagKey, value) ⇒ <code>Promise</code>
+###### tags.set(commitOrIdOrRawVersion, tagKey, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Set a release tag  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | tagKey | <code>String</code> | tag key |
 | value | <code>String</code> \| <code>undefined</code> | tag value |
 
@@ -6910,20 +6916,24 @@ balena.models.release.tags.set('7cf02a6', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
+balena.models.release.tags.set({application: 456, rawVersion: '0.0.0'}, 'EDITOR', 'vim');
+```
+**Example**  
+```js
 balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
 	if (error) throw error;
 });
 ```
 <a name="balena.models.release.tags.remove"></a>
 
-###### tags.remove(commitOrId, tagKey) ⇒ <code>Promise</code>
+###### tags.remove(commitOrIdOrRawVersion, tagKey) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Remove a release tag  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | tagKey | <code>String</code> | tag key |
 
 **Example**  
@@ -6936,13 +6946,17 @@ balena.models.release.tags.remove('7cf02a6', 'EDITOR');
 ```
 **Example**  
 ```js
+balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDITOR');
+```
+**Example**  
+```js
 balena.models.release.tags.remove(123, 'EDITOR', function(error) {
 	if (error) throw error;
 });
 ```
 <a name="balena.models.release.get"></a>
 
-##### release.get(commitOrId, [options]) ⇒ <code>Promise</code>
+##### release.get(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get a specific release  
 **Access**: public  
@@ -6950,7 +6964,7 @@ balena.models.release.tags.remove(123, 'EDITOR', function(error) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> |  | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> |  | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -6967,6 +6981,12 @@ balena.models.release.get('7cf02a6').then(function(release) {
 ```
 **Example**  
 ```js
+balena.models.release.get({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	console.log(release);
+});
+```
+**Example**  
+```js
 balena.models.release.get(123, function(error, release) {
 	if (error) throw error;
 	console.log(release);
@@ -6974,7 +6994,7 @@ balena.models.release.get(123, function(error, release) {
 ```
 <a name="balena.models.release.getWithImageDetails"></a>
 
-##### release.getWithImageDetails(commitOrId, [options]) ⇒ <code>Promise</code>
+##### release.getWithImageDetails(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
 larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want significantly more control, or to see the
@@ -6987,7 +7007,7 @@ raw model directly, use `release.get(id, options)` instead.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> |  | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> |  | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | [options] | <code>Object</code> | <code>{}</code> | a map of extra pine options |
 | [options.release] | <code>Boolean</code> | <code>{}</code> | extra pine options for releases |
 | [options.image] | <code>Object</code> | <code>{}</code> | extra pine options for images |
@@ -7001,6 +7021,12 @@ balena.models.release.getWithImageDetails(123).then(function(release) {
 **Example**  
 ```js
 balena.models.release.getWithImageDetails('7cf02a6').then(function(release) {
+	console.log(release);
+});
+```
+**Example**  
+```js
+balena.models.release.getWithImageDetails({application: 456, raw_version: '0.0.0'}).then(function(release) {
 	console.log(release);
 });
 ```
@@ -7118,7 +7144,7 @@ balena.models.release.createFromUrl('myorganization/myapp', { url: 'https://gith
 ```
 <a name="balena.models.release.finalize"></a>
 
-##### release.finalize(commitOrId) ⇒ <code>Promise</code>
+##### release.finalize(commitOrIdOrRawVersion) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Finalizes a draft release  
 **Access**: public  
@@ -7126,7 +7152,7 @@ balena.models.release.createFromUrl('myorganization/myapp', { url: 'https://gith
 
 | Param | Type | Description |
 | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 
 **Example**  
 ```js
@@ -7140,9 +7166,15 @@ balena.models.release.finalize('7cf02a6').then(function() {
 	console.log('finalized!');
 });
 ```
+**Example**  
+```js
+balena.models.release.finalize({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	console.log('finalized!');
+});
+```
 <a name="balena.models.release.setIsInvalidated"></a>
 
-##### release.setIsInvalidated(commitOrId, isInvalidated) ⇒ <code>Promise</code>
+##### release.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Set the is_invalidated property of a release to true or false  
 **Access**: public  
@@ -7150,7 +7182,7 @@ balena.models.release.finalize('7cf02a6').then(function() {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | isInvalidated | <code>Boolean</code> | boolean value, true for invalidated, false for validated |
 
 **Example**  
@@ -7167,6 +7199,12 @@ balena.models.release.setIsInvalidated('7cf02a6', true).then(function() {
 ```
 **Example**  
 ```js
+balena.models.release.setIsInvalidated({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	console.log('invalidated!);
+});
+```
+**Example**  
+```js
 balena.models.release.setIsInvalidated(123, false).then(function() {
 	console.log('validated!');
 });
@@ -7179,14 +7217,14 @@ balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
 ```
 <a name="balena.models.release.note"></a>
 
-##### release.note(commitOrId, noteOrNull) ⇒ <code>Promise</code>
+##### release.note(commitOrIdOrRawVersion, noteOrNull) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Add a note to a release  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | noteOrNull | <code>String</code> \| <code>Null</code> | the note |
 
 **Example**  
@@ -7197,16 +7235,20 @@ balena.models.release.note('7cf02a6', 'My useful note');
 ```js
 balena.models.release.note(123, 'My useful note');
 ```
+**Example**  
+```js
+balena.models.release.note({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
+```
 <a name="balena.models.release.setKnownIssueList"></a>
 
-##### release.setKnownIssueList(commitOrId, knownIssueListOrNull) ⇒ <code>Promise</code>
+##### release.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Add a known issue list to a release  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| commitOrId | <code>String</code> \| <code>Number</code> | release commit (string) or id (number) |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
 | knownIssueListOrNull | <code>String</code> \| <code>Null</code> | the known issue list |
 
 **Example**  
@@ -7216,6 +7258,10 @@ balena.models.release.setKnownIssueList('7cf02a6', 'This is an issue');
 **Example**  
 ```js
 balena.models.release.setKnownIssueList(123, 'This is an issue');
+```
+**Example**  
+```js
+balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'}, 'This is an issue');
 ```
 <a name="balena.models.service"></a>
 
