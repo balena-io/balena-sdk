@@ -643,7 +643,8 @@ const getApplicationModel = function (
 		 *
 		 * @param {Object} options - application creation parameters
 		 * @param {String} options.name - application name
-		 * @param {String} [options.applicationType] - application type slug e.g. microservices-starter
+		 * @deprecated
+		 * @param {String} [options.applicationType] - application type slug e.g. microservices
 		 * @param {String} [options.applicationClass] - application class: 'app' | 'fleet' | 'block'
 		 * @param {String} options.deviceType - device type slug
 		 * @param {(Number|String)} [options.parent] - parent application name or id
@@ -653,7 +654,7 @@ const getApplicationModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi' }).then(function(application) {
+		 * balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi' }).then(function(application) {
 		 * 	console.log(application);
 		 * });
 		 *
@@ -663,13 +664,7 @@ const getApplicationModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
-		 * 	console.log(application);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
-		 * 	if (error) throw error;
+		 * balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 		 * 	console.log(application);
 		 * });
 		 */
@@ -682,6 +677,7 @@ const getApplicationModel = function (
 			organization,
 		}: {
 			name: string;
+			/** @deprecated */
 			applicationType?: string;
 			applicationClass?: 'app' | 'fleet' | 'block';
 			deviceType: string;

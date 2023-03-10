@@ -94,18 +94,6 @@ describe('Application Membership Model', function () {
 					);
 				});
 			});
-
-			it(`should not be able to add a new member to a starter application with a given role operator`, async function () {
-				const promise = balena.models.application.membership.create({
-					application: ctx.application.id,
-					username: credentials.member.username,
-					roleName: 'operator',
-				});
-
-				await expect(promise).to.be.rejectedWith(
-					'It is necessary that each user application membership that has an application membership role that has a name (Auth) that is not equal to "developer" and is not equal to "observer", has an application that has an application type that has a slug that is not equal to "microservices-starter"',
-				);
-			});
 		});
 
 		describe('[mutating operations]', function () {
@@ -204,17 +192,6 @@ describe('Application Membership Model', function () {
 				await expect(promise).to.be.rejected.and.eventually.have.property(
 					'code',
 					'BalenaApplicationMembershipRoleNotFound',
-				);
-			});
-
-			it(`should not be able to change an application membership to an operator role on a starter application `, async function () {
-				const promise = balena.models.application.membership.changeRole(
-					membership!.id,
-					'operator',
-				);
-
-				await expect(promise).to.be.rejectedWith(
-					'It is necessary that each user application membership that has an application membership role that has a name (Auth) that is not equal to "developer" and is not equal to "observer", has an application that has an application type that has a slug that is not equal to "microservices-starter"',
 				);
 			});
 

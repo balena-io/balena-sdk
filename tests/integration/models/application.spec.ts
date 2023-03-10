@@ -187,7 +187,6 @@ describe('Application Model', function () {
 				it('should be rejected if the device type is invalid', function () {
 					const promise = balena.models.application.create({
 						name: 'FooBar',
-						applicationType: 'microservices-starter',
 						deviceType: 'foobarbaz',
 						organization: ctx.initialOrg.id,
 					});
@@ -199,7 +198,6 @@ describe('Application Model', function () {
 				it('should be rejected if the device type is discontinued', function () {
 					const promise = balena.models.application.create({
 						name: 'FooBar',
-						applicationType: 'microservices-starter',
 						deviceType: 'edge',
 						organization: ctx.initialOrg.id,
 					});
@@ -211,7 +209,6 @@ describe('Application Model', function () {
 				it('should be rejected if the name has less than four characters', function () {
 					const promise = balena.models.application.create({
 						name: 'Foo',
-						applicationType: 'microservices-starter',
 						deviceType: 'raspberry-pi',
 						organization: ctx.initialOrg.id,
 					});
@@ -320,7 +317,6 @@ describe('Application Model', function () {
 					return balena.models.application
 						.create({
 							name: 'FooBarWithAppType',
-							applicationType: 'microservices-starter',
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
 						})
@@ -356,7 +352,6 @@ describe('Application Model', function () {
 				it('...should be able to create an application using a device type alias', async function () {
 					await balena.models.application.create({
 						name: 'FooBarDeviceTypeAlias',
-						applicationType: 'microservices-starter',
 						deviceType: 'raspberrypi',
 						organization: this.initialOrg.id,
 					});
@@ -366,45 +361,6 @@ describe('Application Model', function () {
 						'directly_accessible',
 					);
 					await expect(promise).to.eventually.have.length(appCount);
-				});
-
-				it('should be able to create a child application', async function () {
-					const parentApplication = await balena.models.application.create({
-						name: 'FooBarParent',
-						applicationType: 'microservices-starter',
-						deviceType: 'raspberry-pi',
-						organization: this.initialOrg.id,
-					});
-
-					const childApplication = await balena.models.application.create({
-						name: 'FooBarChild',
-						applicationType: 'microservices-starter',
-						deviceType: 'generic',
-						organization: this.initialOrg.id,
-						parent: parentApplication.id,
-					});
-					expect(childApplication.depends_on__application).to.be.an('object');
-					expect(childApplication.depends_on__application).to.have.property(
-						'__id',
-						parentApplication.id,
-					);
-
-					const [retrievedParentApplication, retrievedChildApplication] =
-						await balena.models.application.getAll({
-							$select: ['id', 'depends_on__application'],
-							$filter: {
-								id: {
-									$in: [parentApplication.id, childApplication.id],
-								},
-							},
-							$orderby: { id: 'asc' },
-						});
-					expect(retrievedChildApplication.depends_on__application).to.be.an(
-						'object',
-					);
-					expect(
-						retrievedChildApplication.depends_on__application,
-					).to.have.property('__id', retrievedParentApplication.id);
 				});
 			});
 		});
@@ -467,7 +423,6 @@ describe('Application Model', function () {
 					it('should reject if trying to create an app with the same name', function () {
 						const promise = balena.models.application.create({
 							name: 'FooBar',
-							applicationType: 'microservices-starter',
 							deviceType: 'beaglebone-black',
 							organization: this.initialOrg.id,
 						});

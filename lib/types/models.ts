@@ -32,6 +32,7 @@ export interface ResourceTypeMap {
 	device_type: DeviceType;
 	device_type_alias: DeviceTypeAlias;
 	feature: Feature;
+	/** @deprecated */
 	gateway_download: GatewayDownload;
 	image: Image;
 	image_install: ImageInstall;
@@ -246,6 +247,7 @@ export interface ApplicationType {
 	name: string;
 	slug: string;
 	description: string | null;
+	/** @deprecated */
 	supports_gateway_mode: boolean;
 	supports_multicontainer: boolean;
 	supports_web_url: boolean;
@@ -419,6 +421,7 @@ export interface Device {
 	manages__device: ReverseNavigationResource<Device>;
 	service_install: ReverseNavigationResource<ServiceInstall>;
 	image_install: ReverseNavigationResource<ImageInstall>;
+	/** @deprecated */
 	gateway_download: ReverseNavigationResource<GatewayDownload>;
 }
 
@@ -550,6 +553,7 @@ export interface ImageInstall {
 	is_provided_by__release: NavigationResource<Release>;
 }
 
+/** @deprecated */
 export interface GatewayDownload {
 	id: number;
 	download_progress: number;
