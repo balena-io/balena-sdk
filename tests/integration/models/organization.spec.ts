@@ -57,7 +57,7 @@ describe('Organization model', function () {
 			});
 		});
 
-		parallel('balena.models.organization.remove()', function () {
+		describe('balena.models.organization.remove()', function () {
 			it('should be rejected if the organization handle does not exist', function () {
 				const randomTestOrgHandle = `testOrgRandom_${Date.now()}`;
 				const promise = balena.models.organization.get(randomTestOrgHandle);
@@ -122,7 +122,7 @@ describe('Organization model', function () {
 			});
 		});
 
-		parallel('balena.models.organization.remove()', function () {
+		describe('balena.models.organization.remove()', function () {
 			[
 				{ prop: 'id', getOrg: () => ctx.newOrg1 },
 				{ prop: 'handle', getOrg: () => ctx.newOrg2 },

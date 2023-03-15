@@ -424,6 +424,7 @@ const getDeviceModel = function (
 			);
 		},
 
+		// TODO: Delete in the next major
 		/**
 		 * @summary Get all devices by parent device
 		 * @name getAllByParentDevice

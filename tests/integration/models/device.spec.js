@@ -616,81 +616,6 @@ describe('Device Model', function () {
 					);
 				});
 
-				describe('balena.models.device.getAllByParentDevice()', function () {
-					before(async function () {
-						const [userId, childApplication] = await Promise.all([
-							balena.auth.getUserId(),
-							balena.models.application.create({
-								name: 'ChildApp',
-								applicationType: 'microservices-starter',
-								deviceType: 'generic',
-								organization: this.initialOrg.id,
-								parent: this.application.id,
-							}),
-						]);
-						// We don't use the built-in .register or resin-register-device,
-						// because they don't yet support parent devices.
-						this.childApplication = childApplication;
-						this.childDevice = await balena.pine.post({
-							resource: 'device',
-							body: {
-								belongs_to__user: userId,
-								belongs_to__application: this.childApplication.id,
-								is_of__device_type:
-									this.childApplication.is_for__device_type.__id,
-								uuid: balena.models.device.generateUniqueKey(),
-								is_managed_by__device: this.device.id,
-							},
-						});
-						ctx = this;
-					});
-
-					after(async function () {
-						await balena.models.application.remove(this.childApplication.id);
-					});
-
-					parallel('', function () {
-						it('should get the device given the right parent uuid', async function () {
-							const childDevices =
-								await balena.models.device.getAllByParentDevice(
-									ctx.device.uuid,
-								);
-							expect(childDevices).to.have.length(1);
-							expect(childDevices[0].id).to.equal(ctx.childDevice.id);
-						});
-
-						it('should get the device given the right parent id', async function () {
-							const childDevices =
-								await balena.models.device.getAllByParentDevice(ctx.device.id);
-							expect(childDevices).to.have.length(1);
-							expect(childDevices[0].id).to.equal(ctx.childDevice.id);
-						});
-
-						it('should be empty if the parent device has no children', async function () {
-							const childDevices =
-								await balena.models.device.getAllByParentDevice(
-									ctx.childDevice.id,
-								);
-							expect(childDevices).to.have.length(0);
-						});
-
-						it('should be rejected if the parent device does not exist', function () {
-							const promise =
-								balena.models.device.getAllByParentDevice('asdfghjkl');
-							expect(promise).to.be.rejectedWith('Device not found: asdfghjkl');
-						});
-
-						it('should support arbitrary pinejs options', async function () {
-							const [childDevice] =
-								await balena.models.device.getAllByParentDevice(ctx.device.id, {
-									$select: ['id'],
-								});
-							expect(childDevice.id).to.equal(ctx.childDevice.id);
-							expect(childDevice.device_name).to.equal(undefined);
-						});
-					});
-				});
-
 				describe('balena.models.device.getMACAddresses()', function () {
 					givenADevice(before, {
 						mac_address: '00:11:22:33:44:55 66:77:88:99:AA:BB',
@@ -2385,70 +2310,6 @@ describe('Device Model', function () {
 						},
 					);
 				});
-
-				describe('given gateway downloads', function () {
-					before(async function () {
-						await Promise.all([
-							balena.pine.post({
-								resource: 'gateway_download',
-								body: {
-									image: this.newWebImage.id,
-									status: 'Downloading',
-									is_downloaded_by__device: this.device.id,
-									download_progress: 50,
-								},
-							}),
-							balena.pine.post({
-								resource: 'gateway_download',
-								body: {
-									image: this.oldWebImage.id,
-									status: 'deleted',
-									is_downloaded_by__device: this.device.id,
-									download_progress: 100,
-								},
-							}),
-						]);
-					});
-
-					it('should not return gateway downloads, when not explicitly expanding them', async function () {
-						const deviceDetails =
-							await balena.models.device.getWithServiceDetails(this.device.id);
-						expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
-					});
-
-					it('should return gateway downloads, when manually expanding them', async function () {
-						const deviceDetails =
-							await balena.models.device.getWithServiceDetails(this.device.id, {
-								$expand: {
-									gateway_download: {
-										$select: ['id', 'download_progress', 'status'],
-										$filter: {
-											status: {
-												$ne: 'deleted',
-											},
-										},
-										$expand: {
-											image: {
-												$select: ['id'],
-												$expand: {
-													is_a_build_of__service: {
-														$select: ['id', 'service_name'],
-													},
-												},
-											},
-										},
-									},
-								},
-							});
-						expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(1);
-						expect(deviceDetails.current_gateway_downloads[0]).to.deep.match({
-							service_id: this.webService.id,
-							image_id: this.newWebImage.id,
-							status: 'Downloading',
-							download_progress: 50,
-						});
-					});
-				});
 			});
 
 			describe('balena.models.device.serviceVar', function () {
@@ -2615,17 +2476,6 @@ describe('Device Model', function () {
 				it('should be rejected if the device id does not exist', async function () {
 					const promise = balena.models.device.deactivate(999999);
 					await expect(promise).to.be.rejectedWith('Device not found: 999999');
-				});
-
-				it('should be rejected if the device is in a Strarter application with statusCode 400', async function () {
-					const promise = balena.models.device.deactivate(this.device.uuid);
-					await expect(promise).to.be.rejected.then(function (error) {
-						expect(error).to.have.property('statusCode', 400);
-						expect(error).to.have.property(
-							'message',
-							'Request error: Cannot deactivate devices of Starter applications.',
-						);
-					});
 				});
 			});
 		});
@@ -3027,25 +2877,21 @@ describe('Device Model', function () {
 			] = await Promise.all([
 				balena.models.application.create({
 					name: 'FooBar',
-					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
 					name: 'BarBaz',
-					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
 					name: 'BazFoo',
-					applicationType: 'microservices-starter',
 					deviceType: 'raspberry-pi2',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
 					name: 'BarBazNuc',
-					applicationType: 'microservices-starter',
 					deviceType: 'intel-nuc',
 					organization: this.initialOrg.id,
 				}),
@@ -3148,19 +2994,16 @@ describe('Device Model', function () {
 			const apps = await Promise.all([
 				balena.models.application.create({
 					name: 'FooBarArmv6',
-					applicationType: 'microservices-starter',
 					deviceType: 'raspberry-pi',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
 					name: 'FooBar32',
-					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
 					name: 'BarBaz64',
-					applicationType: 'microservices-starter',
 					deviceType: 'raspberrypi3-64',
 					organization: this.initialOrg.id,
 				}),

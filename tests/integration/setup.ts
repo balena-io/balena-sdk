@@ -290,7 +290,6 @@ export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 	beforeFn(async function () {
 		const application = await balena.models.application.create({
 			name: 'FooBar',
-			applicationType: 'microservices-starter',
 			deviceType: 'raspberry-pi',
 			organization: this.initialOrg.id,
 		});

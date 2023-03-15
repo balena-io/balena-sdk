@@ -200,7 +200,7 @@ const sdk = fromSharedOptions();
             * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
             * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
-            * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
+            * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
             * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
             * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
             * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
@@ -601,7 +601,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
         * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
-        * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
+        * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
         * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
         * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
         * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
@@ -856,7 +856,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
     * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
-    * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
+    * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
     * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
     * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
     * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
@@ -2020,7 +2020,9 @@ balena.models.application.hasAny(function(error, hasAny) {
 ```
 <a name="balena.models.application.create"></a>
 
-##### application.create(options) ⇒ <code>Promise</code>
+##### ~~application.create(options) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Create an application  
 **Access**: public  
@@ -2030,7 +2032,7 @@ balena.models.application.hasAny(function(error, hasAny) {
 | --- | --- | --- |
 | options | <code>Object</code> | application creation parameters |
 | options.name | <code>String</code> | application name |
-| [options.applicationType] | <code>String</code> | application type slug e.g. microservices-starter |
+| [options.applicationType] | <code>String</code> | application type slug e.g. microservices |
 | [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
 | [options.parent] | <code>Number</code> \| <code>String</code> | parent application name or id |
@@ -2038,7 +2040,7 @@ balena.models.application.hasAny(function(error, hasAny) {
 
 **Example**  
 ```js
-balena.models.application.create({ name: 'My App', applicationType: 'essentials', deviceType: 'raspberry-pi' }).then(function(application) {
+balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
@@ -2050,14 +2052,7 @@ balena.models.application.create({ name: 'My Block', applicationClass: 'block', 
 ```
 **Example**  
 ```js
-balena.models.application.create({ name: 'My App', applicationType: 'microservices', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
-	console.log(application);
-});
-```
-**Example**  
-```js
-balena.models.application.create({ name: 'My App', applicationType: 'microservices-starter', deviceType: 'raspberry-pi' }, function(error, application) {
-	if (error) throw error;
+balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
 	console.log(application);
 });
 ```
