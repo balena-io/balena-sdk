@@ -1,4 +1,32 @@
 - commits:
+    - subject: Avoid running write operation tests in parallel to support retries
+      hash: eb6400c8382521d1e2563cc6cd0e3345d2b26869
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Retry failing tests twice
+      hash: cc60b33c0be7c16944b26b1821d84896328038f1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fix tests per removal of `microservices-starter` application type
+      hash: c16b7ecbc7817b7cebeaa228a988f37379d357ad
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+  version: 16.36.4
+  title: ""
+  date: 2023-03-15T16:07:51.007Z
+- commits:
     - subject: "models/device-type: Add test for Radxa Zero instructions"
       hash: f6b78068c77ba7c8bdaa156a237ed1693b41b83f
       body: ""
