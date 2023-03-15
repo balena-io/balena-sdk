@@ -159,8 +159,7 @@ describe('Release Model', function () {
 				});
 			});
 
-			parallel('', function () {
-				// [read operations]
+			parallel('[read operations]', function () {
 				it('should be rejected if the application name does not exist', async function () {
 					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
 						url: TEST_SOURCE_URL,
@@ -207,8 +206,9 @@ describe('Release Model', function () {
 							'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
 						);
 				});
+			});
 
-				// [mutating operations]
+			describe('[mutating operations]', function () {
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to create a release using a tarball url given an application ${prop}`, async function () {
 						const releaseId = await balena.models.release.createFromUrl(
@@ -257,19 +257,17 @@ describe('Release Model', function () {
 			});
 
 			describe('balena.model.release.finalize()', function () {
-				parallel('', function () {
-					releaseRetrievalFields.forEach((field) => {
-						it(`should finalize a release by ${field}`, async function () {
-							const draftRelease = testReleaseByField[field];
-							await balena.models.release.finalize(draftRelease[field]);
-							const finalRelease = await balena.models.release.get(
-								draftRelease.id,
-							);
-							expect(finalRelease).to.deep.match({
-								id: draftRelease.id,
-								commit: draftRelease.commit,
-								is_final: true,
-							});
+				releaseRetrievalFields.forEach((field) => {
+					it(`should finalize a release by ${field}`, async function () {
+						const draftRelease = testReleaseByField[field];
+						await balena.models.release.finalize(draftRelease[field]);
+						const finalRelease = await balena.models.release.get(
+							draftRelease.id,
+						);
+						expect(finalRelease).to.deep.match({
+							id: draftRelease.id,
+							commit: draftRelease.commit,
+							is_final: true,
 						});
 					});
 				});
@@ -277,37 +275,27 @@ describe('Release Model', function () {
 
 			describe('balena.model.release.setIsInvalidated()', function () {
 				releaseRetrievalFields.forEach((field) => {
-					parallel('', function () {
-						it(`should invalidate a release by ${field}`, async function () {
-							const release = testReleaseByField[field];
-							await balena.models.release.setIsInvalidated(
-								release[field],
-								true,
-							);
-							const invalidatedRelease = await balena.models.release.get(
-								release.id,
-								{ $select: 'is_invalidated' },
-							);
-							expect(invalidatedRelease).to.deep.match({
-								is_invalidated: true,
-							});
+					it(`should invalidate a release by ${field}`, async function () {
+						const release = testReleaseByField[field];
+						await balena.models.release.setIsInvalidated(release[field], true);
+						const invalidatedRelease = await balena.models.release.get(
+							release.id,
+							{ $select: 'is_invalidated' },
+						);
+						expect(invalidatedRelease).to.deep.match({
+							is_invalidated: true,
 						});
 					});
 
-					parallel('', function () {
-						it(`should validate a release by ${field}`, async function () {
-							const release = testReleaseByField[field];
-							await balena.models.release.setIsInvalidated(
-								release[field],
-								false,
-							);
-							const validatedRelease = await balena.models.release.get(
-								release.id,
-								{ $select: 'is_invalidated' },
-							);
-							expect(validatedRelease).to.deep.match({
-								is_invalidated: false,
-							});
+					it(`should validate a release by ${field}`, async function () {
+						const release = testReleaseByField[field];
+						await balena.models.release.setIsInvalidated(release[field], false);
+						const validatedRelease = await balena.models.release.get(
+							release.id,
+							{ $select: 'is_invalidated' },
+						);
+						expect(validatedRelease).to.deep.match({
+							is_invalidated: false,
 						});
 					});
 				});
