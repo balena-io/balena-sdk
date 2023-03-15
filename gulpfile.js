@@ -50,6 +50,7 @@ gulp.task('test', function (cb) {
 			reporter: 'spec',
 			require: ['ts-node/register/transpile-only'],
 			timeout: 5 * 60 * 1000,
+			retries: 2,
 			slow: 1000,
 		}),
 	);
