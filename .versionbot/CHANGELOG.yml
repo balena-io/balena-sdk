@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Improve jetsonFlash provisioning partial"
+      hash: 6ccd09ce5372f221e6410f69bf779a98b39d1a5a
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 16.36.5
+  title: ""
+  date: 2023-03-16T19:32:14.798Z
+- commits:
     - subject: Avoid running write operation tests in parallel to support retries
       hash: eb6400c8382521d1e2563cc6cd0e3345d2b26869
       body: ""
