@@ -52,7 +52,7 @@ const getCreditBundleModel = function (
 		 * @function
 		 * @memberof balena.models.creditBundle
 		 *
-		 * @param {(String|Number)} orgId - handle (string) or id (number) of the target organization.
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
 		 * @param {Object} [options={}] - extra pine options to use
 		 *
 		 * @fulfil {Object[]} - credit bundles
@@ -87,9 +87,12 @@ const getCreditBundleModel = function (
 		 * @function
 		 * @memberof balena.models.creditBundle
 		 *
-		 * @param {(String|Number)} orgId - handle (string) or id (number) of the target organization.
-		 * @param {(String|Number)} featureId - id (number) of the feature for which credits are being purchased.
-		 * @param {(String|Number)} creditsToPurchase - number of credits being purchased.
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
+		 * @param {(Number)} featureId - id (number) of the feature for which credits are being purchased.
+		 * @param {(Number)} creditsToPurchase - number of credits being purchased.
+		 * @param {(Number)} [currentFleetSize] - current fleet size of the org.
+		 * @param {(Number)} [expectedFleetSize] - expected fleet size of the org.
+		 * @param {(Number)} [expectedFleetSizeMonths] - expected fleet size in months of the org.
 		 *
 		 * @fulfil {Object[]} - credit bundles
 		 * @returns {Promise}
@@ -105,12 +108,18 @@ const getCreditBundleModel = function (
 			organization: string | number,
 			featureId: number,
 			creditsToPurchase: number,
+			currentFleetSize?: number,
+			expectedFleetSize?: number,
+			expectedFleetSizeMonths?: number,
 		): Promise<CreditBundle> => {
 			const orgId = await getOrgId(organization);
 			const body: SubmitBody<CreditBundle> = {
 				belongs_to__organization: orgId,
 				is_for__feature: featureId,
 				original_quantity: creditsToPurchase,
+				is_for__current_fleet_size: currentFleetSize,
+				is_for__expected_fleet_size: expectedFleetSize,
+				is_for__expected_fleet_size_in_months: expectedFleetSizeMonths,
 			};
 			return await pine.post({
 				resource: 'credit_bundle',

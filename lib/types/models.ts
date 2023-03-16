@@ -641,6 +641,9 @@ export interface CreditBundle {
 	is_for__feature: NavigationResource<Feature>;
 	is_associated_with__invoice_id: string | null;
 	error_message: string | null;
+	is_for__current_fleet_size: number | null;
+	is_for__expected_fleet_size: number | null;
+	is_for__expected_fleet_size_in_months: number | null;
 }
 
 // Billing model
