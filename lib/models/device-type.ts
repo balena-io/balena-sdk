@@ -86,6 +86,19 @@ const calculateInstallMethod = (contract: Contract): string => {
 	}
 };
 
+function getInstructionsFromContract(contract: Contract) {
+	const installMethod = calculateInstallMethod(contract);
+	const interpolatedDeviceType = {
+		deviceType: interpolatedPartials(contract),
+	};
+	const interpolatedHostOS = interpolatedPartials({
+		...cloneDeep(BalenaOS),
+		...interpolatedDeviceType,
+	});
+
+	return interpolatedHostOS.partials?.[installMethod];
+}
+
 const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
 
@@ -431,8 +444,8 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * @function
 		 * @memberof balena.models.deviceType
 		 *
-		 * @param {String} deviceTypeSlug - device type slug
-		 * @fulfil {String[]} - step by step instructions for installing the host OS to the device
+		 * @param {String|Object} deviceTypeSlugOrContract - device type slug or contract
+		 * @fulfil {Object | String[]} - step by step instructions for installing the host OS to the device
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -449,26 +462,25 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * });
 		 */
 		getInstructions: async (
-			deviceTypeSlug: string,
+			deviceTypeSlugOrContract: string | Contract,
 		): Promise<any | string[]> => {
-			const { contract } = await exports.getBySlugOrName(deviceTypeSlug, {
-				$select: 'contract',
-			});
-			if (!contract || !contract.partials) {
-				throw new Error(
-					`Instruction partials not defined for ${deviceTypeSlug}`,
-				);
+			let contract: DeviceType['contract'];
+			if (typeof deviceTypeSlugOrContract === 'string') {
+				({ contract } = await exports.getBySlugOrName(
+					deviceTypeSlugOrContract,
+					{
+						$select: 'contract',
+					},
+				));
+				if (!contract || !contract.partials) {
+					throw new Error(
+						`Instruction partials not defined for ${deviceTypeSlugOrContract}`,
+					);
+				}
+			} else {
+				contract = deviceTypeSlugOrContract;
 			}
-			const installMethod = calculateInstallMethod(contract);
-			const interpolatedDeviceType = {
-				deviceType: interpolatedPartials(contract),
-			};
-			const interpolatedHostOS = interpolatedPartials({
-				...cloneDeep(BalenaOS),
-				...interpolatedDeviceType,
-			});
-
-			return interpolatedHostOS.partials?.[installMethod];
+			return getInstructionsFromContract(contract)!;
 		},
 
 		/**
