@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.0.2
+      hash: 2b4930c4e89ce67a0e9d3d6b04642ec53fa3e254
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.36.6
+  title: ""
+  date: 2023-03-20T23:00:59.020Z
+- commits:
     - subject: "patch: Improve jetsonFlash provisioning partial"
       hash: 6ccd09ce5372f221e6410f69bf779a98b39d1a5a
       body: ""
