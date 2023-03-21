@@ -115,46 +115,64 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.getInstructions()', function () {
-		it(`should get just the full instructions for installing BalenaOS on devices types with templates strings resolved`, async function () {
-			const partialsRpi2 = await balena.models.deviceType.getInstructions(
-				RPI2_DEVICE_TYPE_SLUG,
-			);
-			expect(partialsRpi2).to.be.an('Array');
-			expect(partialsRpi2).to.not.have.length(0);
-			expect(partialsRpi2).to.eql([
-				'Insert the sdcard to the host machine.',
-				'Write the balenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
-				'Wait for writing of balenaOS to complete.',
-				'Remove the sdcard from the host machine.',
-				'Insert the freshly flashed sdcard into the Raspberry Pi 2.',
-				'Connect power to the Raspberry Pi 2 to boot the device.',
-			]);
+		(
+			[
+				[
+					RPI2_DEVICE_TYPE_SLUG,
+					[
+						'Insert the sdcard to the host machine.',
+						'Write the balenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
+						'Wait for writing of balenaOS to complete.',
+						'Remove the sdcard from the host machine.',
+						'Insert the freshly flashed sdcard into the Raspberry Pi 2.',
+						'Connect power to the Raspberry Pi 2 to boot the device.',
+					],
+				],
+				[
+					RADXA_ZERO_DEVICE_TYPE_SLUG,
+					[
+						"Use the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom>maskrom mode</a> instructions provided by the vendor and make sure the board's USB2 port is used for provisioning. Install on your PC the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools>tools</a> required for flashing. Clear eMMC and set it in UMS mode. Make sure to use <a href=https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin>this loader</a> when following the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries>sideloading instructions</a>. Write the OS to the internal eMMC storage device. We recommend using <a href=http://www.etcher.io/>Etcher</a>. Once the OS has been written to the eMMC you need to repower your board. ",
+					],
+				],
+			] as const
+		).forEach(([deviceTypeSlug, instructions]) => {
+			it(`should get just the full instructions for installing BalenaOS for ${deviceTypeSlug} with templates strings resolved when passing the slug`, async function () {
+				const result = await balena.models.deviceType.getInstructions(
+					deviceTypeSlug,
+				);
+				expect(result).to.be.an('Array');
+				expect(result).to.not.have.length(0);
+				expect(result).to.eql(instructions);
+			});
 
-			const partialsRadxaZero = await balena.models.deviceType.getInstructions(
-				RADXA_ZERO_DEVICE_TYPE_SLUG,
-			);
-			expect(partialsRadxaZero).to.be.an('Array');
-			expect(partialsRadxaZero).to.not.have.length(0);
-			expect(partialsRadxaZero).to.eql([
-				"Use the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom>maskrom mode</a> instructions provided by the vendor and make sure the board's USB2 port is used for provisioning. Install on your PC the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools>tools</a> required for flashing. Clear eMMC and set it in UMS mode. Make sure to use <a href=https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin>this loader</a> when following the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries>sideloading instructions</a>. Write the OS to the internal eMMC storage device. We recommend using <a href=http://www.etcher.io/>Etcher</a>. Once the OS has been written to the eMMC you need to repower your board. ",
-			]);
+			it(`should get just the full instructions for installing BalenaOS for ${deviceTypeSlug} with templates strings resolved when passing the contract `, async function () {
+				const { contract } = await balena.models.deviceType.get(
+					deviceTypeSlug,
+					{ $select: 'contract' },
+				);
+				const result = await balena.models.deviceType.getInstructions(
+					contract!,
+				);
+				expect(result).to.be.an('Array');
+				expect(result).to.not.have.length(0);
+				expect(result).to.eql(instructions);
+			});
 		});
 	});
 
 	parallel('balena.models.deviceType.getInstallMethod()', function () {
-		it(`should get device type installation method`, async function () {
-			const installMethodPi2 = await balena.models.deviceType.getInstallMethod(
-				RPI2_DEVICE_TYPE_SLUG,
-			);
-			const installMethodRadxaZero =
-				await balena.models.deviceType.getInstallMethod(
-					RADXA_ZERO_DEVICE_TYPE_SLUG,
+		(
+			[
+				[RPI2_DEVICE_TYPE_SLUG, RPI2_DEVICE_TYPE_INSTALL_METHOD],
+				[RADXA_ZERO_DEVICE_TYPE_SLUG, RADXA_ZERO_DEVICE_TYPE_INSTALL_METHOD],
+			] as const
+		).forEach(([deviceTypeSlug, installationMethod]) => {
+			it(`should get device type installation method for ${deviceTypeSlug}`, async function () {
+				const result = await balena.models.deviceType.getInstallMethod(
+					deviceTypeSlug,
 				);
-
-			expect(installMethodPi2).to.equal(RPI2_DEVICE_TYPE_INSTALL_METHOD);
-			expect(installMethodRadxaZero).to.equal(
-				RADXA_ZERO_DEVICE_TYPE_INSTALL_METHOD,
-			);
+				expect(result).to.equal(installationMethod);
+			});
 		});
 	});
 });

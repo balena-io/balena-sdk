@@ -316,7 +316,7 @@ const sdk = fromSharedOptions();
             * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
             * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
             * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
-            * [.getInstructions(deviceTypeSlug)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
+            * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
             * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
             * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
@@ -717,7 +717,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
         * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
         * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
-        * [.getInstructions(deviceTypeSlug)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
+        * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
         * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
         * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
@@ -5226,7 +5226,7 @@ balena.models.device.restartService('7cf02a6', 123, function(error) {
     * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
     * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
     * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
-    * [.getInstructions(deviceTypeSlug)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
+    * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
     * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
 
 <a name="balena.models.deviceType.get"></a>
@@ -5431,15 +5431,15 @@ balena.models.deviceType.getInterpolatedPartials('raspberry-pi').then(function(c
 ```
 <a name="balena.models.deviceType.getInstructions"></a>
 
-##### deviceType.getInstructions(deviceTypeSlug) ⇒ <code>Promise</code>
+##### deviceType.getInstructions(deviceTypeSlugOrContract) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get instructions for installing a host OS on a given device type  
 **Access**: public  
-**Fulfil**: <code>String[]</code> - step by step instructions for installing the host OS to the device  
+**Fulfil**: <code>Object \| String[]</code> - step by step instructions for installing the host OS to the device  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceTypeSlug | <code>String</code> | device type slug |
+| deviceTypeSlugOrContract | <code>String</code> \| <code>Object</code> | device type slug or contract |
 
 **Example**  
 ```js
