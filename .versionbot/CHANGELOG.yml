@@ -1,4 +1,17 @@
 - commits:
+    - subject: "device-type/getInstructions: Overload to accept the device type
+        contract"
+      hash: 2c118e035153304494b6388fe6c57358aed678f3
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.37.0
+  title: ""
+  date: 2023-03-21T08:27:32.228Z
+- commits:
     - subject: Update TypeScript to 5.0.2
       hash: 2b4930c4e89ce67a0e9d3d6b04642ec53fa3e254
       body: ""
