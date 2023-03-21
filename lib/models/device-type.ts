@@ -23,7 +23,16 @@ import * as Handlebars from 'handlebars';
 import cloneDeep = require('lodash/cloneDeep');
 
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
-import { BalenaOS } from './balenaos-contract';
+import {
+	aliases as contractAliases,
+	BalenaOS as BalenaOsContract,
+} from './balenaos-contract';
+
+const handlebarsRuntimeOptions = {
+	helpers: {
+		resolveContractAlias: (slug: string) => contractAliases[slug] ?? slug,
+	},
+};
 
 const traversingCompile = (
 	partials: Partials,
@@ -40,7 +49,9 @@ const traversingCompile = (
 			}
 			// if array of partials, compile the template
 			location[partialKey] = current
-				.map((partial) => Handlebars.compile(partial)(interpolated))
+				.map((partial) =>
+					Handlebars.compile(partial)(interpolated, handlebarsRuntimeOptions),
+				)
 				.filter((n) => n);
 		} else {
 			// if it's another dictionary, keep traversing
@@ -92,7 +103,7 @@ function getInstructionsFromContract(contract: Contract) {
 		deviceType: interpolatedPartials(contract),
 	};
 	const interpolatedHostOS = interpolatedPartials({
-		...cloneDeep(BalenaOS),
+		...cloneDeep(BalenaOsContract),
 		...interpolatedDeviceType,
 	});
 
