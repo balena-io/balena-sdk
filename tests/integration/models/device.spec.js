@@ -61,17 +61,17 @@ describe('Device Model', function () {
 				});
 
 				describe('balena.models.device.getAll()', () =>
-					it('should become an empty array', function () {
-						const promise = balena.models.device.getAll();
-						return expect(promise).to.become([]);
+					it('should become an empty array', async function () {
+						const result = await balena.models.device.getAll();
+						expect(result).to.deep.equal([]);
 					}));
 
 				describe('balena.models.device.getAllByApplication()', () =>
-					it('should become an empty array', function () {
-						const promise = balena.models.device.getAllByApplication(
+					it('should become an empty array', async function () {
+						const result = await balena.models.device.getAllByApplication(
 							ctx.application.id,
 						);
-						return expect(promise).to.become([]);
+						expect(result).to.deep.equal([]);
 					}));
 
 				describe('balena.models.device.getAllByOrganization()', () =>

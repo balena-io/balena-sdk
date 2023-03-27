@@ -60,12 +60,12 @@ describe('Application Invite Model', function () {
 				});
 
 				describe('balena.models.application.invite.getAllByApplication()', function () {
-					it('shoud return an empty Array', function () {
-						const promise =
-							balena.models.application.invite.getAllByApplication(
+					it('shoud return an empty Array', async function () {
+						const result =
+							await balena.models.application.invite.getAllByApplication(
 								ctx.application.id,
 							);
-						return expect(promise).to.become([]);
+						expect(result).to.deep.equal([]);
 					});
 				});
 

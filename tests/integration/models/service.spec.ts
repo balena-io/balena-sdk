@@ -25,11 +25,11 @@ describe('Service Model', function () {
 
 		parallel('balena.models.service.getAllByApplication()', function () {
 			applicationRetrievalFields.forEach((prop) => {
-				it(`should eventually become an empty array given an application ${prop}`, function () {
-					const promise = balena.models.service.getAllByApplication(
+				it(`should eventually become an empty array given an application ${prop}`, async function () {
+					const result = await balena.models.service.getAllByApplication(
 						ctx.application[prop],
 					);
-					return expect(promise).to.become([]);
+					expect(result).to.deep.equal([]);
 				});
 			});
 
