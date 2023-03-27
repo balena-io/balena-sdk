@@ -1,4 +1,16 @@
 - commits:
+    - subject: Deprecate the device-type.json's instructions field
+      hash: d25129e7700348eae5d5690c17c47aeb033999d3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.38.1
+  title: ""
+  date: 2023-03-27T15:11:18.990Z
+- commits:
     - subject: Add aliases for the DT contrast slugs used in getInstructions
       hash: d47f707acf9b0a15259aac449ef3d42c1497f9d7
       body: ""
