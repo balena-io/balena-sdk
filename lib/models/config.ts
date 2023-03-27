@@ -94,6 +94,7 @@ const getConfigModel = function (
 				deviceType.state = 'NEW';
 				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(NEW)');
 			}
+			delete deviceType.instructions;
 			return deviceType;
 		});
 

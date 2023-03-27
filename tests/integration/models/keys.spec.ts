@@ -12,9 +12,9 @@ describe('Key Model', function () {
 		describe('balena.models.key.getAll()', function () {
 			givenLoggedInUser(before);
 
-			it('should become an empty array', function () {
-				const promise = balena.models.key.getAll();
-				return expect(promise).to.become([]);
+			it('should become an empty array', async function () {
+				const result = await balena.models.key.getAll();
+				expect(result).to.deep.equal([]);
 			});
 		});
 
@@ -33,16 +33,13 @@ describe('Key Model', function () {
 					});
 			});
 
-			it('should be able to create a key from a non trimmed string', function () {
+			it('should be able to create a key from a non trimmed string', async function () {
 				const key = PUBLIC_KEY;
-				return balena.models.key
-					.create('MyOtherKey', `    ${key}    `)
-					.then(() => balena.models.key.getAll())
-					.then(function (keys) {
-						expect(keys).to.have.length(1);
-						expect(keys[0].public_key).to.equal(key.replace(/\n/g, ''));
-						expect(keys[0].title).to.equal('MyOtherKey');
-					});
+				await balena.models.key.create('MyOtherKey', `    ${key}    `);
+				const keys = await balena.models.key.getAll();
+				expect(keys).to.have.length(1);
+				expect(keys[0].public_key).to.equal(key.replace(/\n/g, ''));
+				expect(keys[0].title).to.equal('MyOtherKey');
 			});
 		});
 	});

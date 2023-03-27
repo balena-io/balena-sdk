@@ -57,12 +57,12 @@ describe('Organization Invite Model', function () {
 				});
 
 				describe('balena.models.organization.invite.getAllByOrganization()', function () {
-					it('should return an empty Array', function () {
-						const promise =
-							balena.models.organization.invite.getAllByOrganization(
+					it('should return an empty Array', async function () {
+						const result =
+							await balena.models.organization.invite.getAllByOrganization(
 								ctx.organization.id,
 							);
-						return expect(promise).to.become([]);
+						expect(result).to.deep.equal([]);
 					});
 				});
 

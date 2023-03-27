@@ -69,9 +69,9 @@ export const itShouldGetAllTagsByResource = function <
 	});
 
 	parallel('', function () {
-		it('should become an empty array by default', function () {
-			const promise = getAllByResource(ctx.resource.id);
-			return expect(promise).to.become([]);
+		it('should become an empty array by default', async function () {
+			const result = await getAllByResource(ctx.resource.id);
+			expect(result).to.deep.equal([]);
 		});
 
 		it(`should be rejected if the ${resourceName} id does not exist`, function () {
