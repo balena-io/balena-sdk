@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { toWritable } from '../../../lib/util/types';
+import { toWritable } from '../../../src/util/types';
 import { timeSuite } from '../../util';
 import type * as tagsHelper from './tags';
 

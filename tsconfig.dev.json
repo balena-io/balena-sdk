@@ -7,7 +7,7 @@
     "include": [
         "typings/**/*",
         "tests/**/*",
-        "lib/**/*",
+        "src/**/*",
         "gulpfile.js"
     ]
 }
