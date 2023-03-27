@@ -4,7 +4,7 @@ import * as mockttp from 'mockttp';
 import { expect } from 'chai';
 import { IS_BROWSER } from './integration/setup';
 import tokens from './data/tokens';
-import { createPinejsClient } from '../lib/pine';
+import { createPinejsClient } from '../src/pine';
 
 const mockServer = mockttp.getLocal();
 

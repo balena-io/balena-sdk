@@ -24,7 +24,7 @@ const {
 	_getMaxSatisfyingVersion,
 	_clearDeviceTypesAndOsVersionCaches,
 } = balena.models.os as ReturnType<
-	typeof import('../../../lib/models/os').default
+	typeof import('../../../src/models/os').default
 >;
 
 const containsVersion = (

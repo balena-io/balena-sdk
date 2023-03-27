@@ -7,7 +7,7 @@ import chaiSamsam from 'chai-samsam';
 import memoizee from 'memoizee';
 import type * as BalenaSdk from '../../';
 import type { Dictionary } from '../../typings/utils';
-import { toWritable } from '../../lib/util/types';
+import { toWritable } from '../../src/util/types';
 import { getInitialOrganization } from './utils';
 chai.use(chaiAsPromised);
 chai.use(chaiSamsam);

@@ -47,10 +47,10 @@
     "build": "npm run lint && npm run build-es2015 && npm run build-es2018 && npm run docs",
     "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs --files \"es2015/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
-    "lint": "balena-lint -e js -e ts --tests typings lib tests mjs_tests gulpfile.js",
-    "lint:fix": "balena-lint -e js -e ts --fix typings lib tests mjs_tests gulpfile.js",
+    "lint": "balena-lint -e js -e ts --tests typings src tests mjs_tests gulpfile.js",
+    "lint:fix": "balena-lint -e js -e ts --fix typings src tests mjs_tests gulpfile.js",
     "prepack": "npm run build",
-    "watch": "npm run build && watch \"npm run lint\" \"lib\" \"tests\"",
+    "watch": "npm run build && watch \"npm run lint\" \"src\" \"tests\"",
     "prepare": "husky install"
   },
   "author": "Juan Cruz Viotti <juan@balena.io>",

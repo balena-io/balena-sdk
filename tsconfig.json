@@ -23,6 +23,6 @@
     "include": [
         "typings/*.d.ts",
         "tests/typings/*.d.ts",
-        "lib/**/*",
+        "src/**/*",
     ]
 }
