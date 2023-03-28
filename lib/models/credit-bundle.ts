@@ -52,7 +52,7 @@ const getCreditBundleModel = function (
 		 * @function
 		 * @memberof balena.models.creditBundle
 		 *
-		 * @param {(String|Number)} orgId - handle (string) or id (number) of the target organization.
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
 		 * @param {Object} [options={}] - extra pine options to use
 		 *
 		 * @fulfil {Object[]} - credit bundles
@@ -87,9 +87,9 @@ const getCreditBundleModel = function (
 		 * @function
 		 * @memberof balena.models.creditBundle
 		 *
-		 * @param {(String|Number)} orgId - handle (string) or id (number) of the target organization.
-		 * @param {(String|Number)} featureId - id (number) of the feature for which credits are being purchased.
-		 * @param {(String|Number)} creditsToPurchase - number of credits being purchased.
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
+		 * @param {Number} featureId - id (number) of the feature for which credits are being purchased.
+		 * @param {Number} creditsToPurchase - number of credits being purchased.
 		 *
 		 * @fulfil {Object[]} - credit bundles
 		 * @returns {Promise}
