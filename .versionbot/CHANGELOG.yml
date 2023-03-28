@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix credit-bundle jsdocs
+      hash: db958ceb3360fc61662a545b3a5d4e91b7a63e5a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Josh Bowling
+      nested: []
+  version: 16.38.2
+  title: ""
+  date: 2023-03-28T07:50:05.631Z
+- commits:
     - subject: Deprecate the device-type.json's instructions field
       hash: d25129e7700348eae5d5690c17c47aeb033999d3
       body: ""
