@@ -2,6 +2,9 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import * as superagent from 'superagent';
+import subYears from 'date-fns/subYears';
+import subDays from 'date-fns/subDays';
+import addDays from 'date-fns/addDays';
 
 import {
 	balena,
@@ -2476,6 +2479,129 @@ describe('Device Model', function () {
 				it('should be rejected if the device id does not exist', async function () {
 					const promise = balena.models.device.deactivate(999999);
 					await expect(promise).to.be.rejectedWith('Device not found: 999999');
+				});
+			});
+
+			describe('balena.models.device.history', function () {
+				const historyModel = balena.models.device.history;
+
+				const testDeviceHistory = (entries, application, device) => {
+					expect(
+						entries.filter((entry) => entry.end_timestamp == null),
+					).to.have.length(1);
+					expect(
+						entries.filter((entry) => entry.end_timestamp != null),
+					).to.have.length.greaterThanOrEqual(1);
+					entries.map((entry) => {
+						expect(entry.belongs_to__application.__id).to.equal(application.id);
+						expect(entry.tracks__device.__id).to.equal(device.id);
+						expect(entry.uuid).to.equal(device.uuid);
+					});
+				};
+
+				for (const identifier of ['id', 'uuid', 'slug']) {
+					it(`should retrieve multiple device history entries by application ${identifier}`, async function () {
+						const result = await historyModel.getAllByApplication(
+							this.application[identifier],
+						);
+						testDeviceHistory(result, this.application, this.device);
+					});
+				}
+
+				for (const identifier of ['id', 'uuid']) {
+					it(`should retrieve multiple device history entries by device ${identifier}`, async function () {
+						const result = await historyModel.getAllByDevice(
+							this.device[identifier],
+							{},
+						);
+						testDeviceHistory(result, this.application, this.device);
+					});
+				}
+
+				for (const testSet of [
+					{
+						method: 'getAllByApplication',
+						model: 'application',
+					},
+					{ method: 'getAllByDevice', model: 'device' },
+				]) {
+					it(`should retrieve device history by ${testSet.model} within specific time frame`, async function () {
+						const result = await historyModel[testSet.method](
+							this[testSet.model]['id'],
+							{
+								fromDate: subDays(new Date(), 1),
+								toDate: addDays(new Date(), 1),
+							},
+						);
+						testDeviceHistory(result, this.application, this.device);
+					});
+
+					it(`should retrieve exactly one device history entry by ${testSet.model} within specific time frame`, async function () {
+						const result = await historyModel[testSet.method](
+							this[testSet.model]['id'],
+							{
+								fromDate: subDays(new Date(), 1),
+								toDate: addDays(new Date(), 1),
+								$top: 1,
+							},
+						);
+						expect(result).to.be.an('array').to.have.length(1);
+					});
+
+					it(`should retrieve empty device history by ${testSet.model} for time frame too far in the past `, async function () {
+						const result = await historyModel[testSet.method](
+							this[testSet.model]['id'],
+							{
+								fromDate: subYears(new Date(), 2),
+								toDate: subYears(new Date(), 1),
+							},
+						);
+						expect(result).to.be.empty;
+					});
+
+					it(`should throw an error when getting device history by ${testSet.model}, when providing invalid fromDate filter option`, async function () {
+						for (const invalidParam of [
+							null,
+							1,
+							undefined,
+							'invalid',
+							{},
+							[],
+						]) {
+							expect(
+								historyModel[testSet.method](this[testSet.model]['id'], {
+									fromDate: invalidParam,
+								}),
+							).to.be.rejected;
+						}
+					});
+
+					it(`should throw an error when getting device history by ${testSet.model}, when providing invalid toDate filter option`, async function () {
+						for (const invalidParam of [
+							null,
+							1,
+							undefined,
+							'invalid',
+							{},
+							[],
+						]) {
+							expect(
+								historyModel[testSet.method](this[testSet.model]['id'], {
+									toDate: invalidParam,
+								}),
+							).to.be.rejected;
+						}
+					});
+				}
+				it(`should throw an error when getting device history entries for an invalid device uuid`, async function () {
+					expect(
+						historyModel.getAllByDevice(
+							this.device.uuid + 'invalidExtraDigits',
+						),
+					).to.be.rejected;
+
+					expect(historyModel.getAllByDevice(this.device.uuid.slice(0, 7))).to
+						.be.rejected;
 				});
 			});
 		});

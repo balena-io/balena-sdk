@@ -27,6 +27,7 @@ export interface ResourceTypeMap {
 	device: Device;
 	device_config_variable: DeviceVariable;
 	device_environment_variable: DeviceVariable;
+	device_history: DeviceHistory;
 	device_service_environment_variable: DeviceServiceEnvironmentVariable;
 	device_tag: DeviceTag;
 	device_type: DeviceType;
@@ -743,4 +744,24 @@ export interface SubscriptionAddonDiscount {
 	id: number;
 	discount_percentage: number;
 	discounts__plan_addon: NavigationResource<PlanAddon>;
+}
+
+export interface DeviceHistory {
+	created_at: string;
+	id: number;
+	end_timestamp: string | null;
+	is_created_by__actor: number;
+	is_ended_by__actor: number;
+	tracks__device: NavigationResource<Device>;
+	tracks__actor: number;
+	uuid: string | null;
+	belongs_to__application: NavigationResource<Application>;
+	is_active: boolean;
+	is_running__release: OptionalNavigationResource<Release>;
+	should_be_running__release: OptionalNavigationResource<Release>;
+	os_version: string | null;
+	os_variant: string | null;
+	supervisor_version: string | null;
+	is_of__device_type: OptionalNavigationResource<Device>;
+	should_be_managed_by__release: OptionalNavigationResource<Release>;
 }

@@ -19,6 +19,7 @@ import type {
 	InjectedDependenciesParam,
 	PineOptions,
 	PineTypedResult,
+	PineFilter,
 } from '..';
 import type {
 	Device,
@@ -26,6 +27,7 @@ import type {
 	DeviceVariable,
 	DeviceTag,
 	Application,
+	DeviceHistory,
 } from '../types/models';
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
@@ -48,6 +50,7 @@ import {
 	isId,
 	isNoDeviceForKeyResponse,
 	isNotFoundResponse,
+	isFullUuid,
 	mergePineOptions,
 	treatAsMissingDevice,
 	withSupervisorLockedError,
@@ -83,6 +86,8 @@ import type {
 import type { AtLeast } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
 
+import subDays from 'date-fns/subDays';
+
 const MIN_OS_MC = '2.12.0';
 const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
 
@@ -102,6 +107,8 @@ export type DeviceMetrics = Pick<
 	| 'cpu_id'
 	| 'is_undervolted'
 >;
+
+const DEFAULT_DAYS_OF_REQUESTED_HISTORY = 7;
 
 const getDeviceModel = function (
 	deps: InjectedDependenciesParam,
@@ -296,6 +303,33 @@ const getDeviceModel = function (
 				});
 			},
 		});
+	};
+
+	const historyTimeRangeFilterWithGuard = (
+		fromDate?: Date,
+		toDate?: Date,
+	): PineFilter<DeviceHistory> => {
+		let fromDateFilter;
+		let toDateFilter;
+		if (fromDate != null) {
+			if (!(fromDate instanceof Date)) {
+				throw new errors.BalenaInvalidParameterError('fromDate', fromDate);
+			}
+			fromDateFilter = { $ge: fromDate };
+		}
+
+		if (toDate != null) {
+			if (!(toDate instanceof Date)) {
+				throw new errors.BalenaInvalidParameterError('toDate', toDate);
+			}
+			toDateFilter = { $le: toDate };
+		}
+
+		const timeRangeFilter =
+			fromDateFilter || toDateFilter
+				? { created_at: { ...fromDateFilter, ...toDateFilter } }
+				: {};
+		return timeRangeFilter;
 	};
 
 	const exports = {
@@ -521,9 +555,7 @@ const getDeviceModel = function (
 			}
 
 			let device;
-			const isPotentiallyFullUuid =
-				typeof uuidOrId === 'string' &&
-				(uuidOrId.length === 32 || uuidOrId.length === 62);
+			const isPotentiallyFullUuid = isFullUuid(uuidOrId);
 			if (isPotentiallyFullUuid || isId(uuidOrId)) {
 				device = await pine.get({
 					resource: 'device',
@@ -3436,6 +3468,132 @@ const getDeviceModel = function (
 				});
 			},
 		}),
+
+		/**
+		 * @namespace balena.models.device.history
+		 * @memberof balena.models.device
+		 */
+		history: {
+			/**
+			 * @summary Get all history entries for a device
+			 * @name getAllByDevice
+			 * @public
+			 * @function
+			 * @memberof balena.models.device.history
+			 *
+			 * @param {String|Number} uuidOrId - device uuid (32 / 62 digits string) or id (number)
+			 * @param {Object} [options] - options
+			 * @param {Date} [options.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
+			 * @param {Date} [options.toDate] - history entries younger or equal to this date
+			 * @fulfil {Object[]} - device history
+			 * @returns {Promise}
+			 *
+			 * @example
+			 * balena.models.device.history.getAllByDevice('7cf02a687b74206f92cb455969cf8e98').then(function(entries) {
+			 * 	console.log(entries);
+			 * });
+			 *
+			 * @example
+			 * balena.models.device.history.getAllByDevice(999999).then(function(entries) {
+			 * 	console.log(entries);
+			 * });
+			 *
+			 *
+			 * @example
+			 * // get all device history entries between now - 20 days and now - 10 days
+			 * balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
+			 */
+			async getAllByDevice(
+				uuidOrId: string | number,
+				{
+					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
+					toDate,
+					...options
+				}: PineOptions<DeviceHistory> & { fromDate?: Date; toDate?: Date } = {},
+			): Promise<DeviceHistory[]> {
+				let $filter: PineFilter<DeviceHistory> =
+					historyTimeRangeFilterWithGuard(fromDate, toDate);
+
+				if (isId(uuidOrId)) {
+					$filter = { ...$filter, tracks__device: uuidOrId };
+				} else if (isFullUuid(uuidOrId)) {
+					$filter = {
+						...$filter,
+						uuid: uuidOrId,
+					};
+				} else {
+					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+				}
+
+				return await pine.get<DeviceHistory>({
+					resource: 'device_history',
+					options: mergePineOptions(
+						{
+							$filter,
+						},
+						options,
+					),
+				});
+			},
+
+			/**
+			 * @summary Get all device history entries by application with time frame
+			 * @name getAllByApplication
+			 * @public
+			 * @function
+			 * @memberof balena.models.device.history
+			 *
+			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+			 * @param {Object} [options] - options
+			 * @param {Date} [options.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
+			 * @param {Date} [options.toDate] - history entries younger or equal to this date
+			 * @fulfil {Object[]} - device history
+			 * @returns {Promise}
+			 *
+			 * @example
+			 * balena.models.device.history.getAllByApplication('myorganization/myapp').then(function(entries) {
+			 * 	console.log(entries);
+			 * });
+			 *
+			 * @example
+			 * balena.models.device.history.getAllByApplication(999999).then(function(entries) {
+			 * 	console.log(entries);
+			 * });
+			 *
+			 *  @example
+			 * // get all device history entries between now - 20 days and now - 10 days
+			 * balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
+			 *
+			 */
+			async getAllByApplication(
+				slugOrUuidOrId: string | number,
+				{
+					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
+					toDate,
+					...options
+				}: PineOptions<DeviceHistory> & { fromDate?: Date; toDate?: Date } = {},
+			): Promise<DeviceHistory[]> {
+				const { id: applicationId } = await applicationModel().get(
+					slugOrUuidOrId,
+					{
+						$select: 'id',
+					},
+				);
+
+				return await pine.get<DeviceHistory>({
+					resource: 'device_history',
+					options: mergePineOptions(
+						{
+							$filter: {
+								...historyTimeRangeFilterWithGuard(fromDate, toDate),
+								belongs_to__application: applicationId,
+							},
+						},
+						options,
+					),
+				});
+			},
+		},
 	};
 
 	return exports;
