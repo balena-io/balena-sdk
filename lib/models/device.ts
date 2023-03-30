@@ -49,11 +49,9 @@ import memoizee from 'memoizee';
 import {
 	isId,
 	isNoDeviceForKeyResponse,
-	isNotFoundResponse,
 	isFullUuid,
 	mergePineOptions,
 	treatAsMissingDevice,
-	withSupervisorLockedError,
 } from '../util';
 
 import { toWritable } from '../util/types';
@@ -74,7 +72,6 @@ import {
 	LOCAL_MODE_SUPPORT_PROPERTIES,
 } from '../util/local-mode';
 import {
-	CONTAINER_ACTION_ENDPOINT_TIMEOUT,
 	getSupervisorApiHelper,
 	MIN_SUPERVISOR_MC_API,
 } from './device.supervisor-api.partial';
@@ -1250,52 +1247,6 @@ const getDeviceModel = function (
 				},
 			});
 		},
-
-		// TODO: Move this in the supervisor helper as well
-		/**
-		 * @summary Restart application on device
-		 * @name restartApplication
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @description
-		 * This function restarts the Docker container running
-		 * the application on the device, but doesn't reboot
-		 * the device itself.
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.restartApplication('7cf02a6');
-		 *
-		 * @example
-		 * balena.models.device.restartApplication(123);
-		 *
-		 * @example
-		 * balena.models.device.restartApplication('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
-		 */
-		restartApplication: (uuidOrId: string | number): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				try {
-					const deviceId = await getId(uuidOrId);
-					const { body } = await request.send({
-						method: 'POST',
-						url: `/device/${deviceId}/restart`,
-						baseUrl: apiUrl,
-						timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-					});
-					return body;
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingDevice(uuidOrId, err);
-					}
-					throw err;
-				}
-			}),
 
 		...getSupervisorApiHelper(deps, opts),
 

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import * as bSemver from 'balena-semver';
 import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
@@ -221,6 +222,81 @@ export const getSupervisorApiHelper = function (
 				},
 			});
 		},
+
+		/**
+		 * @summary Restart application on device
+		 * @name restartApplication
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @description
+		 * This function restarts the Docker container running
+		 * the application on the device, but doesn't reboot
+		 * the device itself.
+		 *
+		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.restartApplication('7cf02a6');
+		 *
+		 * @example
+		 * balena.models.device.restartApplication(123);
+		 *
+		 * @example
+		 * balena.models.device.restartApplication('7cf02a6', function(error) {
+		 * 	if (error) throw error;
+		 * });
+		 */
+		restartApplication: (uuidOrId: string | number): Promise<void> =>
+			withSupervisorLockedError(async () => {
+				try {
+					const deviceOptions = {
+						$select: toWritable(['id', 'supervisor_version'] as const),
+						$expand: { belongs_to__application: { $select: 'id' as const } },
+					};
+					const device = (await sdkInstance.models.device.get(
+						uuidOrId,
+						deviceOptions,
+					)) as PineTypedResult<Device, typeof deviceOptions>;
+					// TODO: Drop this once we drop support for ResinOS v2.11.0.
+					if (
+						!bSemver.valid(device.supervisor_version) ||
+						bSemver.lt(device.supervisor_version, '7.0.0')
+					) {
+						return (
+							await request.send({
+								method: 'POST',
+								url: `/device/${device.id}/restart`,
+								baseUrl: apiUrl,
+								timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+							})
+						).body;
+					}
+
+					const appId = device.belongs_to__application[0].id;
+					const { body } = await request.send({
+						method: 'POST',
+						url: `/supervisor/v1/restart`,
+						baseUrl: apiUrl,
+						body: {
+							deviceId: device.id,
+							appId,
+							data: {
+								appId,
+							},
+						},
+						timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+					});
+					return body;
+				} catch (err) {
+					if (isNotFoundResponse(err)) {
+						treatAsMissingDevice(uuidOrId, err);
+					}
+					throw err;
+				}
+			}),
 
 		/**
 		 * @summary Start application on device
