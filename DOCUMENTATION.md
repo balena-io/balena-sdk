@@ -243,6 +243,9 @@ const sdk = fromSharedOptions();
                 * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
                 * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
                 * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+            * [.history](#balena.models.device.history) : <code>object</code>
+                * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
+                * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
             * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
@@ -394,8 +397,8 @@ const sdk = fromSharedOptions();
             * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
             * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
         * [.creditBundle](#balena.models.creditBundle) : <code>object</code>
-            * [.getAllByOrg(orgId, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
-            * [.create(orgId, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
+            * [.getAllByOrg(organization, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
+            * [.create(organization, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
         * [.billing](#balena.models.billing) : <code>object</code>
             * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -644,6 +647,9 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
             * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
             * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+        * [.history](#balena.models.device.history) : <code>object</code>
+            * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
+            * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
         * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
@@ -795,8 +801,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
         * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
     * [.creditBundle](#balena.models.creditBundle) : <code>object</code>
-        * [.getAllByOrg(orgId, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
-        * [.create(orgId, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
+        * [.getAllByOrg(organization, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
+        * [.create(organization, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
     * [.billing](#balena.models.billing) : <code>object</code>
         * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
@@ -2563,6 +2569,9 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
         * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
         * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
         * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+    * [.history](#balena.models.device.history) : <code>object</code>
+        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
+        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
     * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
@@ -3294,6 +3303,81 @@ balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
 	if (error) throw error;
 	...
 });
+```
+<a name="balena.models.device.history"></a>
+
+##### device.history : <code>object</code>
+**Kind**: static namespace of [<code>device</code>](#balena.models.device)  
+
+* [.history](#balena.models.device.history) : <code>object</code>
+    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
+    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
+
+<a name="balena.models.device.history.getAllByDevice"></a>
+
+###### history.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>history</code>](#balena.models.device.history)  
+**Summary**: Get all history entries for a device  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device history  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (32 / 62 digits string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.fromDate] | <code>Date</code> | <code>subDays(new Date(), 7)</code> | history entries older or equal to this date - default now() - 7 days |
+| [options.toDate] | <code>Date</code> |  | history entries younger or equal to this date |
+
+**Example**  
+```js
+balena.models.device.history.getAllByDevice('7cf02a687b74206f92cb455969cf8e98').then(function(entries) {
+	console.log(entries);
+});
+```
+**Example**  
+```js
+balena.models.device.history.getAllByDevice(999999).then(function(entries) {
+	console.log(entries);
+});
+```
+**Example**  
+```js
+// get all device history entries between now - 20 days and now - 10 days
+balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
+```
+<a name="balena.models.device.history.getAllByApplication"></a>
+
+###### history.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>history</code>](#balena.models.device.history)  
+**Summary**: Get all device history entries by application with time frame  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - device history  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
+| [options] | <code>Object</code> |  | options |
+| [options.fromDate] | <code>Date</code> | <code>subDays(new Date(), 7)</code> | history entries older or equal to this date - default now() - 7 days |
+| [options.toDate] | <code>Date</code> |  | history entries younger or equal to this date |
+
+**Example**  
+```js
+balena.models.device.history.getAllByApplication('myorganization/myapp').then(function(entries) {
+	console.log(entries);
+});
+```
+**Example**  
+```js
+balena.models.device.history.getAllByApplication(999999).then(function(entries) {
+	console.log(entries);
+});
+
+ 
+```
+**Example**  
+```js
+// get all device history entries between now - 20 days and now - 10 days
+balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
 ```
 <a name="balena.models.device.getDashboardUrl"></a>
 
@@ -7392,12 +7476,12 @@ balena.models.image.getLogs(123, function(error, logs) {
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.creditBundle](#balena.models.creditBundle) : <code>object</code>
-    * [.getAllByOrg(orgId, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
-    * [.create(orgId, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
+    * [.getAllByOrg(organization, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
+    * [.create(organization, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
 
 <a name="balena.models.creditBundle.getAllByOrg"></a>
 
-##### creditBundle.getAllByOrg(orgId, [options]) ⇒ <code>Promise</code>
+##### creditBundle.getAllByOrg(organization, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>creditBundle</code>](#balena.models.creditBundle)  
 **Summary**: Get all of the credit bundles purchased by the given org  
 **Access**: public  
@@ -7405,7 +7489,7 @@ balena.models.image.getLogs(123, function(error, logs) {
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| orgId | <code>String</code> \| <code>Number</code> |  | handle (string) or id (number) of the target organization. |
+| organization | <code>String</code> \| <code>Number</code> |  | handle (string) or id (number) of the target organization. |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
@@ -7416,7 +7500,7 @@ balena.models.creditBundle.getAllByOrg(orgId).then(function(creditBundles) {
 ```
 <a name="balena.models.creditBundle.create"></a>
 
-##### creditBundle.create(orgId, featureId, creditsToPurchase) ⇒ <code>Promise</code>
+##### creditBundle.create(organization, featureId, creditsToPurchase) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>creditBundle</code>](#balena.models.creditBundle)  
 **Summary**: Purchase a credit bundle for the given feature and org of the given quantity  
 **Access**: public  
@@ -7424,9 +7508,9 @@ balena.models.creditBundle.getAllByOrg(orgId).then(function(creditBundles) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| orgId | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
-| featureId | <code>String</code> \| <code>Number</code> | id (number) of the feature for which credits are being purchased. |
-| creditsToPurchase | <code>String</code> \| <code>Number</code> | number of credits being purchased. |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+| featureId | <code>Number</code> | id (number) of the feature for which credits are being purchased. |
+| creditsToPurchase | <code>Number</code> | number of credits being purchased. |
 
 **Example**  
 ```js
