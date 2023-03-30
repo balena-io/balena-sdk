@@ -1,4 +1,26 @@
 - commits:
+    - subject: Add `device history` model
+      hash: 6cdc45fccfafd9eb0d67043ba5b9029fd47c25f8
+      body: >
+        `device history` is read only and model is added with
+
+        - getAllByDevice
+
+        - getAllByApplication
+
+
+        Changelog-entry: Enable audit logging and reviewing device changes. The SDK defaults to fetch last 7 days of history
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: fisehara <harald@balena.io>
+        signed-off-by: fisehara <harald@balena.io>
+      author: fisehara
+      nested: []
+  version: 16.39.0
+  title: ""
+  date: 2023-03-30T15:11:52.226Z
+- commits:
     - subject: Fix credit-bundle jsdocs
       hash: db958ceb3360fc61662a545b3a5d4e91b7a63e5a
       body: ""
