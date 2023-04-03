@@ -46,7 +46,8 @@ export const BalenaOS: Contract = {
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
 		usbMassStorage: [
-			`{{#each deviceType.partials.instructions}}{{{this}}} {{/each}}`,
+			`{{#each deviceType.partials.instructions}}{{{this}}} 
+			{{/each}}`,
 		],
 		edisonFlash: {
 			Linux: [
