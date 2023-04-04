@@ -442,7 +442,7 @@ export const getSupervisorApiHelper = function (
 		 */
 		reboot: (
 			uuidOrId: string | number,
-			options: { force?: boolean },
+			options?: { force?: boolean },
 		): Promise<void> =>
 			withSupervisorLockedError(async () => {
 				if (options == null) {
