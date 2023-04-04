@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Split instruction strings on linebreak"
+      hash: 815e9a7700f6592c5a5b6f90d390606c1e166a2d
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 16.39.1
+  title: ""
+  date: 2023-04-04T07:48:20.539Z
+- commits:
     - subject: Add `device history` model
       hash: 6cdc45fccfafd9eb0d67043ba5b9029fd47c25f8
       body: >
