@@ -21,6 +21,7 @@ import { mergePineOptions } from '../util';
 import * as errors from 'balena-errors';
 import * as Handlebars from 'handlebars';
 import cloneDeep = require('lodash/cloneDeep');
+import flatten = require('lodash/flatten');
 
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
 import {
@@ -48,10 +49,16 @@ const traversingCompile = (
 				location = location[key];
 			}
 			// if array of partials, compile the template
-			location[partialKey] = current
-				.map((partial) =>
-					Handlebars.compile(partial)(interpolated, handlebarsRuntimeOptions),
-				)
+			// TODO: Replace `flatten` with flatMap in the next major.
+			location[partialKey] = flatten(
+				current.map((partial) =>
+					Handlebars.compile(partial)(
+						interpolated,
+						handlebarsRuntimeOptions,
+					).split(`\n`),
+				),
+			)
+				.map((n) => n.trim())
 				.filter((n) => n);
 		} else {
 			// if it's another dictionary, keep traversing
