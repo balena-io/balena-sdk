@@ -1,4 +1,29 @@
 - commits:
+    - subject: "device.reboot: Fix the typings requiring a second argument"
+      hash: af6f7f98483dab7f7c150ad3b7614896f806f63a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "device.restartApplication: Use the supervisor endpoint to issue
+        restarts"
+      hash: 417a03b6b6891a9f472ecdae2b992f2c01a89f84
+      body: ""
+      footer:
+        Resolves: "#717"
+        resolves: "#717"
+        Change-type: minor
+        change-type: minor
+        See: https://github.com/balena-io/open-balena-api/issues/141
+        see: https://github.com/balena-io/open-balena-api/issues/141
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.40.0
+  title: ""
+  date: 2023-04-05T06:04:03.606Z
+- commits:
     - subject: "patch: Split instruction strings on linebreak"
       hash: 815e9a7700f6592c5a5b6f90d390606c1e166a2d
       body: ""
