@@ -267,7 +267,6 @@ const sdk = fromSharedOptions();
             * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-            * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
             * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
@@ -301,6 +300,7 @@ const sdk = fromSharedOptions();
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+            * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
             * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
@@ -671,7 +671,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-        * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
         * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
@@ -705,6 +704,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+        * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
         * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
@@ -2593,7 +2593,6 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-    * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
     * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
@@ -2627,6 +2626,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
+    * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
     * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
@@ -4036,35 +4036,6 @@ balena.models.device.move('7cf02a6', 'myorganization/myapp', function(error) {
 	if (error) throw error;
 });
 ```
-<a name="balena.models.device.restartApplication"></a>
-
-##### device.restartApplication(uuidOrId) ⇒ <code>Promise</code>
-This function restarts the Docker container running
-the application on the device, but doesn't reboot
-the device itself.
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Restart application on device  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.restartApplication('7cf02a6');
-```
-**Example**  
-```js
-balena.models.device.restartApplication(123);
-```
-**Example**  
-```js
-balena.models.device.restartApplication('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.getSupervisorTargetState"></a>
 
 ##### device.getSupervisorTargetState(uuidOrId) ⇒ <code>Promise</code>
@@ -4987,6 +4958,35 @@ balena.models.device.identify(123);
 **Example**  
 ```js
 balena.models.device.identify('7cf02a6', function(error) {
+	if (error) throw error;
+});
+```
+<a name="balena.models.device.restartApplication"></a>
+
+##### device.restartApplication(uuidOrId) ⇒ <code>Promise</code>
+This function restarts the Docker container running
+the application on the device, but doesn't reboot
+the device itself.
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Restart application on device  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
+
+**Example**  
+```js
+balena.models.device.restartApplication('7cf02a6');
+```
+**Example**  
+```js
+balena.models.device.restartApplication(123);
+```
+**Example**  
+```js
+balena.models.device.restartApplication('7cf02a6', function(error) {
 	if (error) throw error;
 });
 ```
