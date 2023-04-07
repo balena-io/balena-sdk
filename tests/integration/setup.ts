@@ -476,24 +476,37 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 								belongs_to__application: this.application.id,
 								is_created_by__user: userId,
 								commit: 'old-release-commit',
+								semver: '0.0.0',
 								status: 'success' as const,
 								source: 'cloud',
 								composition: {},
 								start_timestamp: oldDate,
 							},
 						}),
-						await balena.pine.post<BalenaSdk.Release>({
-							resource: 'release',
-							body: {
-								belongs_to__application: this.application.id,
-								is_created_by__user: userId,
-								commit: 'new-release-commit',
-								status: 'success' as const,
-								source: 'cloud',
-								composition: {},
-								start_timestamp: now,
-							},
-						}),
+						await balena.pine
+							.post<BalenaSdk.Release>({
+								resource: 'release',
+								body: {
+									belongs_to__application: this.application.id,
+									is_created_by__user: userId,
+									commit: 'new-release-commit',
+									semver: '1.0.0',
+									status: 'success' as const,
+									source: 'cloud',
+									composition: {},
+									start_timestamp: now,
+								},
+							})
+							.then(({ id }) =>
+								balena.models.release.get(id, {
+									$select: [
+										'id',
+										'commit',
+										'raw_version',
+										'belongs_to__application',
+									],
+								}),
+							),
 					];
 				})(),
 			],

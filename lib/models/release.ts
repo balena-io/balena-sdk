@@ -27,6 +27,11 @@ import { toWritable } from '../util/types';
 import type { Application, ReleaseTag, Release, User } from '../types/models';
 import type { BuilderUrlDeployOptions } from '../util/builder';
 
+export interface ReleaseRawVersionApplicationPair {
+	application: string | number;
+	rawVersion: string;
+}
+
 export interface ReleaseWithImageDetails extends Release {
 	images: Array<{
 		id: number;
@@ -64,8 +69,16 @@ const getReleaseModel = function (
 			resourceName: 'release_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'release',
-			getResourceId: async (commitOrId: string | number): Promise<number> =>
-				(await get(commitOrId, { $select: 'id' })).id,
+			getResourceId: async (commitOrIdOrRawVersion): Promise<number> => {
+				const { id } = await get(
+					commitOrIdOrRawVersion as
+						| string
+						| number
+						| ReleaseRawVersionApplicationPair,
+					{ $select: 'id' },
+				);
+				return id;
+			},
 		},
 	);
 
@@ -76,7 +89,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 	 * @param {Object} [options={}] - extra pine options to use
 	 * @fulfil {Object} - release
 	 * @returns {Promise}
@@ -92,47 +105,73 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
+	 * balena.models.release.get({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	 * 	console.log(release);
+	 * });
+	 *
+	 * @example
 	 * balena.models.release.get(123, function(error, release) {
 	 * 	if (error) throw error;
 	 * 	console.log(release);
 	 * });
 	 */
 	async function get(
-		commitOrId: string | number,
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release> {
-		if (commitOrId == null) {
-			throw new errors.BalenaReleaseNotFound(commitOrId);
+		if (commitOrIdOrRawVersion == null) {
+			throw new errors.BalenaReleaseNotFound(commitOrIdOrRawVersion);
 		}
 
-		if (isId(commitOrId)) {
+		if (isId(commitOrIdOrRawVersion)) {
 			const release = await pine.get({
 				resource: 'release',
-				id: commitOrId,
+				id: commitOrIdOrRawVersion,
 				options: mergePineOptions({}, options),
 			});
 			if (release == null) {
-				throw new errors.BalenaReleaseNotFound(commitOrId);
+				throw new errors.BalenaReleaseNotFound(commitOrIdOrRawVersion);
 			}
 			return release;
 		} else {
+			let $filter;
+			if (typeof commitOrIdOrRawVersion === 'object') {
+				const { rawVersion, application } = commitOrIdOrRawVersion;
+				const { id } = await applicationModel().get(application, {
+					$select: 'id',
+				});
+				$filter = {
+					raw_version: rawVersion,
+					belongs_to__application: id,
+				};
+			} else {
+				$filter = {
+					commit: { $startswith: commitOrIdOrRawVersion },
+				};
+			}
 			const releases = await pine.get({
 				resource: 'release',
 				options: mergePineOptions(
 					{
-						$filter: {
-							commit: { $startswith: commitOrId },
-						},
+						$filter,
 					},
 					options,
 				),
 			});
 			if (releases.length === 0) {
-				throw new errors.BalenaReleaseNotFound(commitOrId);
+				throw new errors.BalenaReleaseNotFound(
+					typeof commitOrIdOrRawVersion === 'string'
+						? commitOrIdOrRawVersion
+						: `unique pair ${Object.keys(commitOrIdOrRawVersion).join(
+								' & ',
+						  )}: ${Object.values(commitOrIdOrRawVersion).join(' & ')}`,
+				);
 			}
 
 			if (releases.length > 1) {
-				throw new errors.BalenaAmbiguousRelease(commitOrId);
+				throw new errors.BalenaAmbiguousRelease(
+					commitOrIdOrRawVersion as string, // only the `string` commitOrIdOrRawVersions can result in this error
+				);
 			}
 			return releases[0];
 		}
@@ -151,7 +190,7 @@ const getReleaseModel = function (
 	 * understand format. If you want significantly more control, or to see the
 	 * raw model directly, use `release.get(id, options)` instead.
 	 *
-	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 	 * @param {Object} [options={}] - a map of extra pine options
 	 * @param {Boolean} [options.release={}] - extra pine options for releases
 	 * @param {Object} [options.image={}] - extra pine options for images
@@ -169,6 +208,11 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
+	 * balena.models.release.getWithImageDetails({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	 * 	console.log(release);
+	 * });
+	 *
+	 * @example
 	 * balena.models.release.getWithImageDetails(123, { image: { $select: 'build_log' } })
 	 * .then(function(release) {
 	 * 	console.log(release.images[0].build_log);
@@ -181,7 +225,7 @@ const getReleaseModel = function (
 	 * });
 	 */
 	async function getWithImageDetails(
-		commitOrId: string | number,
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		options: {
 			release?: BalenaSdk.PineOptions<BalenaSdk.Release>;
 			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
@@ -213,7 +257,7 @@ const getReleaseModel = function (
 		} as const;
 
 		const rawRelease = (await get(
-			commitOrId,
+			commitOrIdOrRawVersion,
 			mergePineOptions(baseReleaseOptions, options.release),
 		)) as PineTypedResult<Release, typeof baseReleaseOptions>;
 		const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
@@ -396,7 +440,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 	 * @fulfil {void}
 	 * @returns {Promise}
 	 *
@@ -410,9 +454,16 @@ const getReleaseModel = function (
 	 * 	console.log('finalized!');
 	 * });
 	 *
+	 * @example
+	 * balena.models.release.finalize({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	 * 	console.log('finalized!');
+	 * });
+	 *
 	 */
-	async function finalize(commitOrId: string | number): Promise<void> {
-		const { id } = await get(commitOrId, { $select: 'id' });
+	async function finalize(
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
+	): Promise<void> {
+		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
 		await pine.patch<Release>({
 			resource: 'release',
 			id,
@@ -429,7 +480,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 	 * @param {Boolean} isInvalidated - boolean value, true for invalidated, false for validated
 	 * @fulfil {void}
 	 * @returns {Promise}
@@ -445,6 +496,11 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
+	 * balena.models.release.setIsInvalidated({application: 456, raw_version: '0.0.0'}).then(function(release) {
+	 * 	console.log('invalidated!);
+	 * });
+	 *
+	 * @example
 	 * balena.models.release.setIsInvalidated(123, false).then(function() {
 	 * 	console.log('validated!');
 	 * });
@@ -456,10 +512,10 @@ const getReleaseModel = function (
 	 *
 	 */
 	async function setIsInvalidated(
-		commitOrId: string | number,
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		isInvalidated: boolean,
 	): Promise<void> {
-		const { id } = await get(commitOrId, { $select: 'id' });
+		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
 		await pine.patch<Release>({
 			resource: 'release',
 			id,
@@ -477,7 +533,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 	 * @param {String|Null} noteOrNull - the note
 	 *
 	 * @returns {Promise}
@@ -487,12 +543,16 @@ const getReleaseModel = function (
 	 *
 	 * @example
 	 * balena.models.release.note(123, 'My useful note');
+	 *
+	 * @example
+	 * balena.models.release.note({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
+	 *
 	 */
 	async function note(
-		commitOrId: string | number,
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		noteOrNull: string | null,
 	): Promise<void> {
-		const { id } = await get(commitOrId, { $select: 'id' });
+		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
 		await pine.patch<Release>({
 			resource: 'release',
 			id,
@@ -509,7 +569,7 @@ const getReleaseModel = function (
 	 * @function
 	 * @memberof balena.models.release
 	 *
-	 * @param {String|Number} commitOrId - release commit (string) or id (number)
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 	 * @param {String|Null} knownIssueListOrNull - the known issue list
 	 *
 	 * @returns {Promise}
@@ -519,12 +579,15 @@ const getReleaseModel = function (
 	 *
 	 * @example
 	 * balena.models.release.setKnownIssueList(123, 'This is an issue');
+	 *
+	 * @example
+	 * balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'}, 'This is an issue');
 	 */
 	async function setKnownIssueList(
-		commitOrId: string | number,
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		knownIssueListOrNull: string | null,
 	): Promise<void> {
-		const { id } = await get(commitOrId, { $select: 'id' });
+		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
 		await pine.patch<Release>({
 			resource: 'release',
 			id,
@@ -602,7 +665,7 @@ const getReleaseModel = function (
 		 * @function
 		 * @memberof balena.models.release.tags
 		 *
-		 * @param {String|Number} commitOrId - release commit (string) or id (number)
+		 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - release tags
 		 * @returns {Promise}
@@ -618,13 +681,21 @@ const getReleaseModel = function (
 		 * });
 		 *
 		 * @example
+		 * balena.models.release.tags.getAllByRelease({application: 456, rawVersion: '0.0.0'}).then(function(tags) {
+		 * 	console.log(tags);
+		 * });
+		 *
+		 * @example
 		 * balena.models.release.tags.getAllByRelease(123, function(error, tags) {
 		 * 	if (error) throw error;
 		 * 	console.log(tags)
 		 * });
 		 */
 		async getAllByRelease(
-			commitOrId: string | number,
+			commitOrIdOrRawVersion:
+				| string
+				| number
+				| ReleaseRawVersionApplicationPair,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
 			const releaseOpts = {
@@ -634,10 +705,10 @@ const getReleaseModel = function (
 				},
 			} as const;
 
-			const release = (await get(commitOrId, releaseOpts)) as PineTypedResult<
-				Release,
-				typeof releaseOpts
-			>;
+			const release = (await get(
+				commitOrIdOrRawVersion,
+				releaseOpts,
+			)) as PineTypedResult<Release, typeof releaseOpts>;
 			return release.release_tag;
 		},
 
@@ -672,7 +743,7 @@ const getReleaseModel = function (
 		 * @function
 		 * @memberof balena.models.release.tags
 		 *
-		 * @param {String|Number} commitOrId - release commit (string) or id (number)
+		 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 		 * @param {String} tagKey - tag key
 		 * @param {String|undefined} value - tag value
 		 *
@@ -683,6 +754,9 @@ const getReleaseModel = function (
 		 *
 		 * @example
 		 * balena.models.release.tags.set('7cf02a6', 'EDITOR', 'vim');
+		 *
+		 * @example
+		 * balena.models.release.tags.set({application: 456, rawVersion: '0.0.0'}, 'EDITOR', 'vim');
 		 *
 		 * @example
 		 * balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
@@ -698,7 +772,7 @@ const getReleaseModel = function (
 		 * @function
 		 * @memberof balena.models.release.tags
 		 *
-		 * @param {String|Number} commitOrId - release commit (string) or id (number)
+		 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
 		 * @param {String} tagKey - tag key
 		 * @returns {Promise}
 		 *
@@ -707,6 +781,9 @@ const getReleaseModel = function (
 		 *
 		 * @example
 		 * balena.models.release.tags.remove('7cf02a6', 'EDITOR');
+		 *
+		 * @example
+		 * balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDITOR');
 		 *
 		 * @example
 		 * balena.models.release.tags.remove(123, 'EDITOR', function(error) {

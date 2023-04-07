@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import * as _ from 'lodash';
 import { delay, timeSuite } from '../../util';
+import { getFieldLabel, getParam } from '../utils';
 
 import {
 	balena,
@@ -18,7 +19,11 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 
-const releaseRetrievalFields = ['id', 'commit'];
+const uniquePropertyNames = [
+	'id',
+	'commit',
+	{ belongs_to__application: 'application', raw_version: 'rawVersion' },
+];
 
 describe('Release Model', function () {
 	timeSuite(before);
@@ -34,50 +39,70 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.get()', function () {
-			it('should be rejected if the release id does not exist by id', function () {
+			it('should be rejected if the release id does not exist by id', async () => {
 				const promise = balena.models.release.get(123);
-				return expect(promise).to.be.rejectedWith('Release not found: 123');
+				await expect(promise).to.be.rejectedWith('Release not found: 123');
 			});
 
-			it('should be rejected if the release id does not exist by commit', function () {
+			it('should be rejected if the release id does not exist by commit', async () => {
 				const promise = balena.models.release.get('7cf02a6');
-				return expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
+				await expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
+			});
+
+			it('should be rejected if the release id does not exist by raw_version', async () => {
+				const promise = balena.models.release.get({
+					application: ctx.application.id,
+					rawVersion: '10.0.0',
+				});
+				await expect(promise).to.be.rejectedWith(
+					`Release not found: unique pair application & rawVersion: ${ctx.application.id} & 10.0.0`,
+				);
 			});
 		});
 
 		parallel('balena.models.release.getWithImageDetails()', function () {
-			it('should be rejected if the release id does not exist by id', function () {
+			it('should be rejected if the release id does not exist by id', async () => {
 				const promise = balena.models.release.getWithImageDetails(123);
-				return expect(promise).to.be.rejectedWith('Release not found: 123');
+				await expect(promise).to.be.rejectedWith('Release not found: 123');
 			});
 
-			it('should be rejected if the release id does not exist by commit', function () {
+			it('should be rejected if the release id does not exist by commit', async () => {
 				const promise = balena.models.release.getWithImageDetails('7cf02a6');
-				return expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
+				await expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
+			});
+
+			it('should be rejected if the release id does not exist by raw_version', async () => {
+				const promise = balena.models.release.getWithImageDetails({
+					application: ctx.application.id,
+					rawVersion: '10.0.0',
+				});
+				await expect(promise).to.be.rejectedWith(
+					`Release not found: unique pair application & rawVersion: ${ctx.application.id} & 10.0.0`,
+				);
 			});
 		});
 
 		parallel('balena.models.release.getAllByApplication()', function () {
 			applicationRetrievalFields.forEach((prop) =>
-				it(`should eventually become an empty array given an application ${prop}`, function () {
-					const promise = balena.models.release.getAllByApplication(
+				it(`should eventually become an empty array given an application ${prop}`, async () => {
+					const releases = await balena.models.release.getAllByApplication(
 						ctx.application[prop],
 					);
-					return expect(promise).to.become([]);
+					expect(releases).to.have.lengthOf(0);
 				}),
 			);
 
-			it('should be rejected if the application name does not exist', function () {
+			it('should be rejected if the application name does not exist', async () => {
 				const promise =
 					balena.models.release.getAllByApplication('HelloWorldApp');
-				return expect(promise).to.be.rejectedWith(
+				await expect(promise).to.be.rejectedWith(
 					'Application not found: HelloWorldApp',
 				);
 			});
 
-			it('should be rejected if the application id does not exist', function () {
+			it('should be rejected if the application id does not exist', async () => {
 				const promise = balena.models.release.getAllByApplication(999999);
-				return expect(promise).to.be.rejectedWith(
+				await expect(promise).to.be.rejectedWith(
 					'Application not found: 999999',
 				);
 			});
@@ -95,7 +120,7 @@ describe('Release Model', function () {
 				'https://github.com/balena-io-examples/balena-node-hello-world/archive/v1.0.0.tar.gz';
 			const TEST_SOURCE_CONTAINER_COUNT = 1;
 
-			async function waitForImagesToBeCreated(appId, releaseCount) {
+			const waitForImagesToBeCreated = async (appId, releaseCount) => {
 				if (releaseCount === 0) {
 					return;
 				}
@@ -141,7 +166,7 @@ describe('Release Model', function () {
 				console.info(
 					'Continuing balena.models.release.createFromUrl() cleanup',
 				);
-			}
+			};
 
 			after(async function () {
 				// Wait for the builder to create the pending image records of the releases
@@ -160,7 +185,7 @@ describe('Release Model', function () {
 			});
 
 			parallel('[read operations]', function () {
-				it('should be rejected if the application name does not exist', async function () {
+				it('should be rejected if the application name does not exist', async () => {
 					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
 						url: TEST_SOURCE_URL,
 					});
@@ -169,7 +194,7 @@ describe('Release Model', function () {
 					);
 				});
 
-				it('should be rejected if the application id does not exist', async function () {
+				it('should be rejected if the application id does not exist', async () => {
 					const promise = balena.models.release.createFromUrl(999999, {
 						url: TEST_SOURCE_URL,
 					});
@@ -178,7 +203,7 @@ describe('Release Model', function () {
 					);
 				});
 
-				it('should be rejected when the provided tarball url is not found', async function () {
+				it('should be rejected when the provided tarball url is not found', async () => {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
 						{
@@ -193,7 +218,7 @@ describe('Release Model', function () {
 						.that.contains('Failed to fetch tarball from passed URL');
 				});
 
-				it('should be rejected when the provided url is not a tarball', async function () {
+				it('should be rejected when the provided url is not a tarball', async () => {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
 						{ url: 'https://github.com/balena-io-projects/simple-server-node' },
@@ -210,7 +235,7 @@ describe('Release Model', function () {
 
 			describe('[mutating operations]', function () {
 				applicationRetrievalFields.forEach((prop) => {
-					it(`should be able to create a release using a tarball url given an application ${prop}`, async function () {
+					it(`should be able to create a release using a tarball url given an application ${prop}`, async () => {
 						const releaseId = await balena.models.release.createFromUrl(
 							ctx.application[prop],
 							{ url: TEST_SOURCE_URL },
@@ -232,19 +257,20 @@ describe('Release Model', function () {
 			});
 		});
 
-		describe(`given ${releaseRetrievalFields.length} draft releases`, function () {
+		describe(`given ${uniquePropertyNames.length} draft releases`, function () {
 			const testReleaseByField = {};
 
 			before(async function () {
 				const userId = await balena.auth.getUserId();
 				await Promise.all(
-					releaseRetrievalFields.map(async (field, i) => {
-						testReleaseByField[field] = await balena.pine.post({
+					uniquePropertyNames.map(async (field, i) => {
+						const release = await balena.pine.post({
 							resource: 'release',
 							body: {
 								belongs_to__application: this.application.id,
 								is_created_by__user: userId,
 								commit: `abcdef${i}`,
+								semver: '1.1.1',
 								status: 'success',
 								source: 'cloud',
 								is_final: false,
@@ -252,21 +278,44 @@ describe('Release Model', function () {
 								start_timestamp: new Date().toISOString(),
 							},
 						});
+						testReleaseByField[field] = await balena.models.release.get(
+							release.id,
+							{
+								$select: [
+									'id',
+									'commit',
+									'raw_version',
+									'belongs_to__application',
+								],
+							},
+						);
 					}),
 				);
 			});
 
 			describe('balena.model.release.finalize()', function () {
-				releaseRetrievalFields.forEach((field) => {
-					it(`should finalize a release by ${field}`, async function () {
+				uniquePropertyNames.forEach((field) => {
+					const fieldLabel = getFieldLabel(field);
+					it(`should finalize a release by ${fieldLabel}`, async () => {
 						const draftRelease = testReleaseByField[field];
-						await balena.models.release.finalize(draftRelease[field]);
-						const finalRelease = await balena.models.release.get(
+						const finalizeParam = getParam(field, draftRelease);
+						await balena.models.release.finalize(finalizeParam);
+						testReleaseByField[field] = await balena.models.release.get(
 							draftRelease.id,
+							{
+								$select: [
+									'id',
+									'commit',
+									'raw_version',
+									'is_final',
+									'belongs_to__application',
+								],
+							},
 						);
-						expect(finalRelease).to.deep.match({
+						expect(testReleaseByField[field]).to.deep.match({
 							id: draftRelease.id,
 							commit: draftRelease.commit,
+							raw_version: draftRelease.raw_version,
 							is_final: true,
 						});
 					});
@@ -274,10 +323,12 @@ describe('Release Model', function () {
 			});
 
 			describe('balena.model.release.setIsInvalidated()', function () {
-				releaseRetrievalFields.forEach((field) => {
-					it(`should invalidate a release by ${field}`, async function () {
+				uniquePropertyNames.forEach((field) => {
+					const fieldLabel = getFieldLabel(field);
+					it(`should invalidate a release by ${fieldLabel}`, async () => {
 						const release = testReleaseByField[field];
-						await balena.models.release.setIsInvalidated(release[field], true);
+						const invalidateParam = getParam(field, release);
+						await balena.models.release.setIsInvalidated(invalidateParam, true);
 						const invalidatedRelease = await balena.models.release.get(
 							release.id,
 							{ $select: 'is_invalidated' },
@@ -287,9 +338,10 @@ describe('Release Model', function () {
 						});
 					});
 
-					it(`should validate a release by ${field}`, async function () {
+					it(`should validate a release by ${fieldLabel}`, async () => {
 						const release = testReleaseByField[field];
-						await balena.models.release.setIsInvalidated(release[field], false);
+						const validateParam = getParam(field, release);
+						await balena.models.release.setIsInvalidated(validateParam, false);
 						const validatedRelease = await balena.models.release.get(
 							release.id,
 							{ $select: 'is_invalidated' },
@@ -313,54 +365,63 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.get()', function () {
-			it('should get the requested release by id', function () {
-				return balena.models.release
-					.get(ctx.currentRelease.id)
-					.then((release) => {
-						return expect(release).to.deep.match({
-							status: 'success',
-							source: 'cloud',
-							commit: 'new-release-commit',
-							id: ctx.currentRelease.id,
-							belongs_to__application: { __id: ctx.application.id },
-						});
-					});
+			it('should get the requested release by id', async () => {
+				const release = await balena.models.release.get(ctx.currentRelease.id);
+				await expect(release).to.deep.match({
+					status: 'success',
+					source: 'cloud',
+					commit: 'new-release-commit',
+					id: ctx.currentRelease.id,
+					belongs_to__application: { __id: ctx.application.id },
+				});
 			});
 
-			it('should get the requested release by commit', function () {
-				return balena.models.release
-					.get(ctx.currentRelease.commit)
-					.then((release) => {
-						return expect(release).to.deep.match({
-							status: 'success',
-							source: 'cloud',
-							commit: 'new-release-commit',
-							id: ctx.currentRelease.id,
-							belongs_to__application: { __id: ctx.application.id },
-						});
-					});
+			it('should get the requested release by commit', async () => {
+				const release = await balena.models.release.get(
+					ctx.currentRelease.commit,
+				);
+				await expect(release).to.deep.match({
+					status: 'success',
+					source: 'cloud',
+					commit: 'new-release-commit',
+					id: ctx.currentRelease.id,
+					belongs_to__application: { __id: ctx.application.id },
+				});
 			});
 
-			it('should get the requested release by shorter commit', function () {
-				return balena.models.release
-					.get(ctx.currentRelease.commit.slice(0, 7))
-					.then((release) => {
-						return expect(release).to.deep.match({
-							status: 'success',
-							source: 'cloud',
-							commit: 'new-release-commit',
-							id: ctx.currentRelease.id,
-							belongs_to__application: { __id: ctx.application.id },
-						});
-					});
+			it('should get the requested release by shorter commit', async () => {
+				const release = await balena.models.release.get(
+					ctx.currentRelease.commit.slice(0, 7),
+				);
+				await expect(release).to.deep.match({
+					status: 'success',
+					source: 'cloud',
+					commit: 'new-release-commit',
+					id: ctx.currentRelease.id,
+					belongs_to__application: { __id: ctx.application.id },
+				});
+			});
+
+			it('should get the requested release by raw_version', async () => {
+				const release = await balena.models.release.get({
+					application: ctx.application.id,
+					rawVersion: ctx.currentRelease.raw_version,
+				});
+				await expect(release).to.deep.match({
+					status: 'success',
+					source: 'cloud',
+					commit: 'new-release-commit',
+					id: ctx.currentRelease.id,
+					belongs_to__application: { __id: ctx.application.id },
+				});
 			});
 		});
 
 		describe('balena.models.release.getAllByApplication()', () =>
-			it('should load both releases', function () {
-				return balena.models.release
+			it('should load both releases', async function () {
+				await balena.models.release
 					.getAllByApplication(this.application.id)
-					.then(function (releases) {
+					.then((releases) => {
 						expect(releases).to.have.lengthOf(2);
 
 						// Need to sort explicitly because releases were both created
@@ -369,7 +430,7 @@ describe('Release Model', function () {
 							releases,
 							(release) => release.start_timestamp,
 						);
-						return expect(sortedReleases).to.deep.match([
+						expect(sortedReleases).to.deep.match([
 							{
 								status: 'success',
 								source: 'cloud',
@@ -385,88 +446,103 @@ describe('Release Model', function () {
 			}));
 
 		parallel('balena.models.release.getWithImageDetails()', function () {
-			it('should get the release with associated images attached by id', function () {
-				return balena.models.release
-					.getWithImageDetails(ctx.currentRelease.id)
-					.then(function (release) {
-						expect(release).to.deep.match({
-							commit: 'new-release-commit',
-							status: 'success',
-							source: 'cloud',
-							images: [{ service_name: 'db' }, { service_name: 'web' }],
-							user: {
-								username: credentials.username,
-							},
-						});
+			it('should get the release with associated images attached by id', async () => {
+				const release = await balena.models.release.getWithImageDetails(
+					ctx.currentRelease.id,
+				);
+				expect(release).to.deep.match({
+					commit: 'new-release-commit',
+					status: 'success',
+					source: 'cloud',
+					images: [{ service_name: 'db' }, { service_name: 'web' }],
+					user: {
+						username: credentials.username,
+					},
+				});
 
-						return expect(release.images[0]).to.not.have.property('build_log');
-					});
+				await expect(release.images[0]).to.not.have.property('build_log');
 			});
 
-			it('should get the release with associated images attached by commit', function () {
-				return balena.models.release
-					.getWithImageDetails(ctx.currentRelease.commit)
-					.then(function (release) {
-						expect(release).to.deep.match({
-							commit: 'new-release-commit',
-							status: 'success',
-							source: 'cloud',
-							images: [{ service_name: 'db' }, { service_name: 'web' }],
-							user: {
-								username: credentials.username,
-							},
-						});
+			it('should get the release with associated images attached by commit', async () => {
+				const release = await balena.models.release.getWithImageDetails(
+					ctx.currentRelease.commit,
+				);
+				expect(release).to.deep.match({
+					commit: 'new-release-commit',
+					status: 'success',
+					source: 'cloud',
+					images: [{ service_name: 'db' }, { service_name: 'web' }],
+					user: {
+						username: credentials.username,
+					},
+				});
 
-						return expect(release.images[0]).to.not.have.property('build_log');
-					});
+				expect(release.images[0]).to.not.have.property('build_log');
 			});
 
-			it('should get the release with associated images attached by shorter commit', function () {
-				return balena.models.release
-					.getWithImageDetails(ctx.currentRelease.commit.slice(0, 7))
-					.then(function (release) {
-						expect(release).to.deep.match({
-							commit: 'new-release-commit',
-							status: 'success',
-							source: 'cloud',
-							images: [{ service_name: 'db' }, { service_name: 'web' }],
-							user: {
-								username: credentials.username,
-							},
-						});
-
-						return expect(release.images[0]).to.not.have.property('build_log');
-					});
+			it('should get the release with associated images attached by shorter commit', async () => {
+				const release = await balena.models.release.getWithImageDetails(
+					ctx.currentRelease.commit.slice(0, 7),
+				);
+				expect(release).to.deep.match({
+					commit: 'new-release-commit',
+					status: 'success',
+					source: 'cloud',
+					images: [{ service_name: 'db' }, { service_name: 'web' }],
+					user: {
+						username: credentials.username,
+					},
+				});
+				expect(release.images[0]).to.not.have.property('build_log');
 			});
 
-			it('should allow extra options to also get the build log', function () {
-				return balena.models.release
-					.getWithImageDetails(ctx.currentRelease.id, {
+			it('should get the release with associated images attached by raw_version', async () => {
+				const release = await balena.models.release.getWithImageDetails({
+					application: ctx.application.id,
+					rawVersion: ctx.currentRelease.raw_version,
+				});
+				expect(release).to.deep.match({
+					commit: 'new-release-commit',
+					status: 'success',
+					source: 'cloud',
+					images: [{ service_name: 'db' }, { service_name: 'web' }],
+					user: {
+						username: credentials.username,
+					},
+				});
+				expect(release.images[0]).to.not.have.property('build_log');
+			});
+
+			it('should allow extra options to also get the build log', async () => {
+				const release = await balena.models.release.getWithImageDetails(
+					ctx.currentRelease.id,
+					{
 						image: { $select: 'build_log' },
-					})
-					.then((release) =>
-						expect(release).to.deep.match({
-							images: [
-								{
-									service_name: 'db',
-									build_log: 'db log',
-								},
-								{
-									service_name: 'web',
-									build_log: 'web log',
-								},
-							],
-						}),
-					);
+					},
+				);
+				expect(release).to.deep.match({
+					images: [
+						{
+							service_name: 'db',
+							build_log: 'db log',
+						},
+						{
+							service_name: 'web',
+							build_log: 'web log',
+						},
+					],
+				});
 			});
 		});
 
 		describe('balena.models.release.note()', function () {
-			releaseRetrievalFields.forEach((field) => {
-				it(`should set a note using the release ${field}`, async function () {
+			uniquePropertyNames.forEach((field) => {
+				const fieldLabel = getFieldLabel(field);
+				it(`should set a note using the release ${fieldLabel}`, async () => {
 					const release = ctx.currentRelease;
-					const note = `This is a note set using field: ${field}`;
-					await balena.models.release.note(release[field], note);
+					const noteParam = getParam(field, release);
+					const note = `This is a note set using field: ${fieldLabel}`;
+					await balena.models.release.note(noteParam, note);
 					const updatedRelease = await balena.models.release.get(release.id, {
 						$select: ['id', 'note'],
 					});
@@ -479,12 +555,14 @@ describe('Release Model', function () {
 		});
 
 		describe('balena.models.release.setKnownIssueList()', function () {
-			releaseRetrievalFields.forEach((field) => {
-				it(`should set the known issue list using the release ${field}`, async function () {
+			uniquePropertyNames.forEach((field) => {
+				const fieldLabel = getFieldLabel(field);
+				it(`should set the known issue list using the release ${fieldLabel}`, async () => {
 					const release = ctx.currentRelease;
-					const knownIssueList = `This is a note set using field: ${field}`;
+					const knownIssuesParam = getParam(field, release);
+					const knownIssueList = `This is an issue set using field: ${fieldLabel}`;
 					await balena.models.release.setKnownIssueList(
-						release[field],
+						knownIssuesParam,
 						knownIssueList,
 					);
 					const updatedRelease = await balena.models.release.get(release.id, {
@@ -514,7 +592,7 @@ describe('Release Model', function () {
 					/** @type {import('./tags').TagModelBase<import('../../../').ReleaseTag>} */ (balena .models.release.tags),
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'release',
-				uniquePropertyNames: ['id', 'commit'],
+				uniquePropertyNames,
 			};
 
 			before(function () {
@@ -580,17 +658,17 @@ describe('Release Model', function () {
 
 				parallel('', function () {
 					applicationRetrievalFields.forEach((prop) =>
-						it(`should get the latest release by application ${prop}`, function () {
-							return balena.models.release
-								.getLatestByApplication(ctx.application[prop])
-								.then((release) => {
-									return expect(release).to.deep.match({
-										status: 'success',
-										source: 'cloud',
-										commit: 'errored-then-fixed-release-commit',
-										belongs_to__application: { __id: ctx.application.id },
-									});
-								});
+						it(`should get the latest release by application ${prop}`, async () => {
+							const release =
+								await balena.models.release.getLatestByApplication(
+									ctx.application[prop],
+								);
+							expect(release).to.deep.match({
+								status: 'success',
+								source: 'cloud',
+								commit: 'errored-then-fixed-release-commit',
+								belongs_to__application: { __id: ctx.application.id },
+							});
 						}),
 					);
 				});
@@ -598,79 +676,74 @@ describe('Release Model', function () {
 		});
 
 		describe('given two releases that share the same commit root', function () {
-			before(function () {
+			before(async function () {
 				const { application } = this;
-				return balena.auth.getUserId().then((userId) =>
-					balena.pine
-						.post({
-							resource: 'release',
-							body: {
-								belongs_to__application: application.id,
-								is_created_by__user: userId,
-								commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-								status: 'success',
-								source: 'cloud',
-								composition: {},
-								start_timestamp: 64321,
-							},
-						})
-						.then(() =>
-							balena.pine.post({
-								resource: 'release',
-								body: {
-									belongs_to__application: application.id,
-									is_created_by__user: userId,
-									commit: 'feb236123bf740d48900c19027d4a02127d4a021',
-									status: 'success',
-									source: 'cloud',
-									composition: {},
-									start_timestamp: 74321,
-								},
-							}),
-						),
-				);
+				const userId = await balena.auth.getUserId();
+				await balena.pine.post({
+					resource: 'release',
+					body: {
+						belongs_to__application: application.id,
+						is_created_by__user: userId,
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+						status: 'success',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 64321,
+					},
+				});
+				await balena.pine.post({
+					resource: 'release',
+					body: {
+						belongs_to__application: application.id,
+						is_created_by__user: userId,
+						commit: 'feb236123bf740d48900c19027d4a02127d4a021',
+						status: 'success',
+						source: 'cloud',
+						composition: {},
+						start_timestamp: 74321,
+					},
+				});
 			});
 
 			parallel('balena.models.release.get()', function () {
-				it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
+				it('should be rejected with an error if there is an ambiguation between shorter commits', async () => {
 					const promise = balena.models.release.get('feb23612');
-					return expect(promise).to.be.rejected.and.eventually.have.property(
+					await expect(promise).to.be.rejected.and.eventually.have.property(
 						'code',
 						'BalenaAmbiguousRelease',
 					);
 				});
 
-				it('should get the requested release by the full commit', () =>
-					balena.models.release
-						.get('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
-						.then((release) =>
-							expect(release).to.deep.match({
-								commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-								status: 'success',
-								source: 'cloud',
-							}),
-						));
+				it('should get the requested release by the full commit', async () => {
+					const release = await balena.models.release.get(
+						'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+					);
+					expect(release).to.deep.match({
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+						status: 'success',
+						source: 'cloud',
+					});
+				});
 			});
 
 			parallel('balena.models.release.getWithImageDetails()', function () {
-				it('should be rejected with an error if there is an ambiguation between shorter commits', function () {
+				it('should be rejected with an error if there is an ambiguation between shorter commits', async () => {
 					const promise = balena.models.release.getWithImageDetails('feb23612');
-					return expect(promise).to.be.rejected.and.eventually.have.property(
+					await expect(promise).to.be.rejected.and.eventually.have.property(
 						'code',
 						'BalenaAmbiguousRelease',
 					);
 				});
 
-				it('should get the release with associated images attached by the full commit', function () {
-					return balena.models.release
-						.getWithImageDetails('feb2361230dc40dba6dca9a18f2c19dc8f2c19dc')
-						.then((release) =>
-							expect(release).to.deep.match({
-								commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-								status: 'success',
-								source: 'cloud',
-							}),
-						);
+				it('should get the release with associated images attached by the full commit', async () => {
+					const release = await balena.models.release.getWithImageDetails(
+						'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+					);
+					expect(release).to.deep.match({
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+						status: 'success',
+						source: 'cloud',
+					});
 				});
 			});
 		});
