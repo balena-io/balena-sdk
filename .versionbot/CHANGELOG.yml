@@ -1,4 +1,21 @@
 - commits:
+    - subject: "Release model: Add support for getting/patching releases by
+        `application` & `rawVersion` pairs"
+      hash: 9086f70becf3fc7ffc8f5e21f52dd509d14b46f4
+      body: ""
+      footer:
+        Changelog-entry: "Release model: Add support for getting/patching releases by
+          `application` & `rawVersion` pairs"
+        changelog-entry: "Release model: Add support for getting/patching releases by
+          `application` & `rawVersion` pairs"
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 16.41.0
+  title: ""
+  date: 2023-04-07T13:17:25.193Z
+- commits:
     - subject: "device.reboot: Fix the typings requiring a second argument"
       hash: af6f7f98483dab7f7c150ad3b7614896f806f63a
       body: ""
