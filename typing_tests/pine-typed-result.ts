@@ -150,6 +150,22 @@ let aStringOrUndefined: string | undefined;
 	aAny = result.device_tag;
 }
 
+{
+	type deviceOptionsSelectActor = PineClient.TypedResult<
+		BalenaSdk.Device,
+		{
+			$select: 'actor';
+		}
+	>;
+
+	const result: deviceOptionsSelectActor = {} as any;
+
+	aNumber = result.actor;
+
+	// @ts-expect-error
+	aAny = result.device_tag;
+}
+
 // $expand w/o $select
 
 {
@@ -197,12 +213,29 @@ let aStringOrUndefined: string | undefined;
 }
 
 {
-	type deviceOptionsExpandReverseNavigationResourceString = PineClient.TypedResult<
+	type deviceOptionsExpandActorString = PineClient.TypedResult<
 		BalenaSdk.Device,
 		{
-			$expand: 'device_tag';
+			$expand: 'actor';
 		}
 	>;
+
+	const result: deviceOptionsExpandActorString = {} as any;
+
+	aNumber = result.id;
+	aString = result.device_name;
+	aNumber = result.actor[0].id;
+	aString = result.actor[0].created_at;
+}
+
+{
+	type deviceOptionsExpandReverseNavigationResourceString =
+		PineClient.TypedResult<
+			BalenaSdk.Device,
+			{
+				$expand: 'device_tag';
+			}
+		>;
 
 	const result: deviceOptionsExpandReverseNavigationResourceString = {} as any;
 
@@ -264,13 +297,14 @@ let aStringOrUndefined: string | undefined;
 }
 
 {
-	type deviceOptionsExpandReverseNavigationResourceString = PineClient.TypedResult<
-		BalenaSdk.Device,
-		{
-			$select: 'id';
-			$expand: 'device_tag';
-		}
-	>;
+	type deviceOptionsExpandReverseNavigationResourceString =
+		PineClient.TypedResult<
+			BalenaSdk.Device,
+			{
+				$select: 'id';
+				$expand: 'device_tag';
+			}
+		>;
 
 	const result: deviceOptionsExpandReverseNavigationResourceString = {} as any;
 
@@ -339,15 +373,16 @@ let aStringOrUndefined: string | undefined;
 }
 
 {
-	type deviceOptionsExpandReverseNavigationResourceString = PineClient.TypedResult<
-		BalenaSdk.Device,
-		{
-			$select: 'id';
-			$expand: {
-				device_tag: {};
-			};
-		}
-	>;
+	type deviceOptionsExpandReverseNavigationResourceString =
+		PineClient.TypedResult<
+			BalenaSdk.Device,
+			{
+				$select: 'id';
+				$expand: {
+					device_tag: {};
+				};
+			}
+		>;
 
 	const result: deviceOptionsExpandReverseNavigationResourceString = {} as any;
 
@@ -420,6 +455,27 @@ let aStringOrUndefined: string | undefined;
 }
 
 {
+	type deviceOptionsExpandActorString = PineClient.TypedResult<
+		BalenaSdk.Device,
+		{
+			$expand: {
+				actor: {
+					$select: 'id';
+				};
+			};
+		}
+	>;
+
+	const result: deviceOptionsExpandActorString = {} as any;
+
+	aNumber = result.id;
+	aString = result.device_name;
+	aNumber = result.actor[0].id;
+	// @ts-expect-error
+	aString = result.actor[0].created_at;
+}
+
+{
 	type deviceOptionsExpandNavigationResourceString = PineClient.TypedResult<
 		AnyObject,
 		{
@@ -451,17 +507,18 @@ let aStringOrUndefined: string | undefined;
 }
 
 {
-	type deviceOptionsExpandReverseNavigationResourceString = PineClient.TypedResult<
-		BalenaSdk.Device,
-		{
-			$select: 'id';
-			$expand: {
-				device_tag: {
-					$select: 'tag_key';
+	type deviceOptionsExpandReverseNavigationResourceString =
+		PineClient.TypedResult<
+			BalenaSdk.Device,
+			{
+				$select: 'id';
+				$expand: {
+					device_tag: {
+						$select: 'tag_key';
+					};
 				};
-			};
-		}
-	>;
+			}
+		>;
 
 	const result: deviceOptionsExpandReverseNavigationResourceString = {} as any;
 

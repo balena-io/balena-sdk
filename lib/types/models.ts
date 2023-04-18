@@ -2,10 +2,10 @@ import type { DeviceOverallStatus } from './device-overall-status';
 export type { DeviceOverallStatus } from './device-overall-status';
 import { Contract } from './contract';
 import type {
-	PineDeferred,
 	NavigationResource,
 	OptionalNavigationResource,
 	ReverseNavigationResource,
+	ConceptTypeNavigationResource,
 } from '../../typings/pinejs-client-core';
 import type { AnyObject } from '../../typings/utils';
 
@@ -13,6 +13,7 @@ type JsonType = AnyObject;
 type JsonTypeString = string;
 
 export interface ResourceTypeMap {
+	actor: Actor;
 	api_key: ApiKey;
 	application: Application;
 	application__can_use__application_as_host: ApplicationHostedOnApplication;
@@ -107,9 +108,21 @@ export interface RecoveryTwoFactor {
 	belongs_to__user: NavigationResource<User>;
 }
 
+export interface Actor {
+	id: number;
+	created_at: string;
+	modified_at: string;
+
+	is_of__user?: OptionalNavigationResource<User>;
+	is_of__application?: OptionalNavigationResource<Application>;
+	is_of__device?: OptionalNavigationResource<Device>;
+	is_of__public_device?: OptionalNavigationResource<PublicDevice>;
+	api_key?: OptionalNavigationResource<ApiKey>;
+}
+
 export interface User {
 	id: number;
-	actor: number;
+	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
 	username: string;
 
@@ -155,14 +168,14 @@ export interface ApiKey {
 	description: string | null;
 	expiry_date: string | null;
 
-	is_of__actor: PineDeferred;
+	is_of__actor: NavigationResource<Actor>;
 }
 
 export interface Application {
 	id: number;
 	created_at: string;
 	app_name: string;
-	actor: number;
+	actor: ConceptTypeNavigationResource<Actor>;
 	slug: string;
 	uuid: string;
 	is_accessible_by_support_until__date: string;
@@ -356,7 +369,7 @@ export interface Release {
 
 export interface Device {
 	id: number;
-	actor: number;
+	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
 	modified_at: string;
 	custom_latitude?: string;
