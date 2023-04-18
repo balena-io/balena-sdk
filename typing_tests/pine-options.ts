@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
-import type { InferAssociatedResourceType } from '../typings/pinejs-client-core';
+import type * as PineClient from '../typings/pinejs-client-core';
 import type { AnyObject } from '../typings/utils';
 import { Equals, EqualsTrue } from './utils';
 
@@ -579,8 +579,22 @@ export const releaseExpandablePropsTest: Equals<
 	ReleaseExpandablePropsExpectation
 > = EqualsTrue;
 
+type UserExpandablePropsExpectation =
+	| 'actor'
+	| 'organization_membership'
+	| 'user_application_membership'
+	| 'team_membership'
+	| 'has_direct_access_to__application';
+
+export const userExpandablePropsTest: Equals<
+	BalenaSdk.PineExpandableProps<BalenaSdk.User>,
+	UserExpandablePropsExpectation
+> = EqualsTrue;
+
 export const deviceIsRunningReleaseAssociatedResourceType: Equals<
-	InferAssociatedResourceType<BalenaSdk.Device['is_running__release']>,
+	PineClient.InferAssociatedResourceType<
+		BalenaSdk.Device['is_running__release']
+	>,
 	BalenaSdk.Release
 > = EqualsTrue;
 

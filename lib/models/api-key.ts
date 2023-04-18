@@ -211,9 +211,13 @@ const getApiKeysModel = function (
 			slugOrUuidOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
 		): Promise<BalenaSdk.ApiKey[]> {
-			const { actor } = await applicationModel().get(slugOrUuidOrId, {
-				$select: 'actor',
-			});
+			const appOpts = {
+				$select: 'actor' as const,
+			};
+			const { actor } = (await applicationModel().get(
+				slugOrUuidOrId,
+				appOpts,
+			)) as BalenaSdk.PineTypedResult<BalenaSdk.Application, typeof appOpts>;
 
 			return await exports.getAll(
 				mergePineOptions(
@@ -254,9 +258,13 @@ const getApiKeysModel = function (
 			uuidOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
 		): Promise<BalenaSdk.ApiKey[]> {
-			const { actor } = await deviceModel().get(uuidOrId, {
-				$select: 'actor',
-			});
+			const deviceOpts = {
+				$select: 'actor' as const,
+			};
+			const { actor } = (await deviceModel().get(
+				uuidOrId,
+				deviceOpts,
+			)) as BalenaSdk.PineTypedResult<BalenaSdk.Device, typeof deviceOpts>;
 
 			return await pine.get({
 				resource: 'api_key',

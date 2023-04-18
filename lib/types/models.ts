@@ -5,6 +5,7 @@ import type {
 	NavigationResource,
 	OptionalNavigationResource,
 	ReverseNavigationResource,
+	ConceptTypeNavigationResource,
 } from '../../typings/pinejs-client-core';
 import type { AnyObject } from '../../typings/utils';
 
@@ -121,7 +122,7 @@ export interface Actor {
 
 export interface User {
 	id: number;
-	actor: number | [Actor];
+	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
 	username: string;
 
@@ -174,7 +175,7 @@ export interface Application {
 	id: number;
 	created_at: string;
 	app_name: string;
-	actor: number | [Actor];
+	actor: ConceptTypeNavigationResource<Actor>;
 	slug: string;
 	uuid: string;
 	is_accessible_by_support_until__date: string;
@@ -368,7 +369,7 @@ export interface Release {
 
 export interface Device {
 	id: number;
-	actor: number | [Actor];
+	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
 	modified_at: string;
 	custom_latitude?: string;

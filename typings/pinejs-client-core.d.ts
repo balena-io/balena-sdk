@@ -1,5 +1,6 @@
 import type {
 	AnyObject,
+	PropsAssignableWithType,
 	PropsOfType,
 	StringKeyof,
 	Dictionary,
@@ -19,6 +20,7 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
+export type ConceptTypeNavigationResource<T = WithId> = [T] | number;
 export type NavigationResource<T = WithId> = [T] | PineDeferred;
 export type OptionalNavigationResource<T = WithId> =
 	| []
@@ -34,6 +36,7 @@ export type OptionalNavigationResource<T = WithId> =
 export type ReverseNavigationResource<T = WithId> = T[] | undefined;
 
 export type AssociatedResource<T = WithId> =
+	| ConceptTypeNavigationResource<T>
 	| NavigationResource<T>
 	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
@@ -42,7 +45,7 @@ export type InferAssociatedResourceType<T> = T extends AssociatedResource<{}> &
 	any[]
 	? T[number]
 	: never;
-
+type x = Exclude<AssociatedResource<{}>, number>;
 export type SelectableProps<T> =
 	// This allows us to get proper results when T is any/AnyObject, otherwise this returned never
 	PropsOfType<T, ReverseNavigationResource<{}>> extends StringKeyof<T>
@@ -50,6 +53,8 @@ export type SelectableProps<T> =
 		: Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<{}>>>; // This is the normal typed case
 
 export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<{}>> &
+	// TODO: Drop me once Pine unifies ConceptTypeNavigationResource with NavigationResource
+	PropsAssignableWithType<T, [] | [any] | any[]> &
 	string;
 
 type SelectedProperty<
@@ -59,6 +64,8 @@ type SelectedProperty<
 	? PineDeferred
 	: T[K] extends OptionalNavigationResource<any>
 	? PineDeferred | null
+	: T[K] extends ConceptTypeNavigationResource<any>
+	? Exclude<T[K], any[]>
 	: T[K];
 
 type SelectResultObject<T, Props extends keyof T> = {
@@ -84,7 +91,7 @@ type ExpandedProperty<
 	KOpts extends ODataOptions<InferAssociatedResourceType<T[K]>>,
 > = KOpts extends ODataOptionsWithCount<any>
 	? number
-	: T[K] extends NavigationResource<any>
+	: T[K] extends NavigationResource<any> | ConceptTypeNavigationResource<any>
 	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
 	: T[K] extends OptionalNavigationResource<any>
 	? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
