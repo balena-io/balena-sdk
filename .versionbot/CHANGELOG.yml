@@ -1,4 +1,26 @@
 - commits:
+    - subject: Add support for pine queries on Concept Type properties
+      hash: 2da182dc83fac63eb7d29dc00cfdcf40865969b2
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Properly type Actor properties on resources
+      hash: b8d55511c5faff1d28cbd1f93988f7ffb6a55b3a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: fisehara <harald@balena.io>
+        signed-off-by: fisehara <harald@balena.io>
+      author: fisehara
+      nested: []
+  version: 16.42.0
+  title: ""
+  date: 2023-04-18T18:38:08.173Z
+- commits:
     - subject: "Release model: Add support for getting/patching releases by
         `application` & `rawVersion` pairs"
       hash: 9086f70becf3fc7ffc8f5e21f52dd509d14b46f4
