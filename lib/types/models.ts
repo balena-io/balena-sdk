@@ -117,7 +117,7 @@ export interface Actor {
 	is_of__application?: OptionalNavigationResource<Application>;
 	is_of__device?: OptionalNavigationResource<Device>;
 	is_of__public_device?: OptionalNavigationResource<PublicDevice>;
-	api_key?: OptionalNavigationResource<ApiKey>;
+	api_key?: ReverseNavigationResource<ApiKey>;
 }
 
 export interface User {
