@@ -1,4 +1,29 @@
 - commits:
+    - subject: Add test case DeviceHistory expandable resources
+      hash: 8d6160dd6e65964043fd64115a3ca08cb0d03764
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: fisehara <harald@balena.io>
+        signed-off-by: fisehara <harald@balena.io>
+      author: fisehara
+      nested: []
+    - subject: Make DeviceHistory referenced resources expandable
+      hash: 04d3aea7e86ca90bf9b456d21161c5e0b586f9ad
+      body: |
+        Add NavigationResource for Actor and fix DeviceType resource
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: fisehara <harald@balena.io>
+        signed-off-by: fisehara <harald@balena.io>
+      author: fisehara
+      nested: []
+  version: 16.43.0
+  title: ""
+  date: 2023-04-19T08:21:57.502Z
+- commits:
     - subject: Add support for pine queries on Concept Type properties
       hash: 2da182dc83fac63eb7d29dc00cfdcf40865969b2
       body: ""
