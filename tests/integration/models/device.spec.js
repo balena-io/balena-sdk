@@ -2559,6 +2559,24 @@ describe('Device Model', function () {
 						expect(result).to.be.empty;
 					});
 
+					it(`should expand actor attributes when getting device history by ${testSet.model}`, async function () {
+						const result = await historyModel[testSet.method](
+							this[testSet.model]['id'],
+							{
+								fromDate: subDays(new Date(), 1),
+								toDate: addDays(new Date(), 1),
+								$top: 1,
+								$expand: {
+									is_ended_by__actor: {
+										$expand: { is_of__user: { $select: 'username' } },
+									},
+								},
+								$orderby: 'created_at asc',
+							},
+						);
+						expect(result).to.be.an('array').to.have.length(1);
+					});
+
 					it(`should throw an error when getting device history by ${testSet.model}, when providing invalid fromDate filter option`, async function () {
 						for (const invalidParam of [
 							null,

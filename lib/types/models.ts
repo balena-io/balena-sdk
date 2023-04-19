@@ -763,10 +763,10 @@ export interface DeviceHistory {
 	created_at: string;
 	id: number;
 	end_timestamp: string | null;
-	is_created_by__actor: number;
-	is_ended_by__actor: number;
+	is_created_by__actor: OptionalNavigationResource<Actor>;
+	is_ended_by__actor: OptionalNavigationResource<Actor>;
 	tracks__device: NavigationResource<Device>;
-	tracks__actor: number;
+	tracks__actor: OptionalNavigationResource<Actor>;
 	uuid: string | null;
 	belongs_to__application: NavigationResource<Application>;
 	is_active: boolean;
@@ -775,6 +775,6 @@ export interface DeviceHistory {
 	os_version: string | null;
 	os_variant: string | null;
 	supervisor_version: string | null;
-	is_of__device_type: OptionalNavigationResource<Device>;
+	is_of__device_type: OptionalNavigationResource<DeviceType>;
 	should_be_managed_by__release: OptionalNavigationResource<Release>;
 }
