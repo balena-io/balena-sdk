@@ -2566,11 +2566,12 @@ describe('Device Model', function () {
 								fromDate: subDays(new Date(), 1),
 								toDate: addDays(new Date(), 1),
 								$top: 1,
-								$orderby: 'created_at asc',
 								$expand: {
-									is_created_by__actor: { $expand: 'is_of__user' },
-									is_ended_by__actor: { $expand: 'is_of__user' },
+									is_ended_by__actor: {
+										$expand: { is_of__user: { $select: 'username' } },
+									},
 								},
+								$orderby: 'created_at asc',
 							},
 						);
 						expect(result).to.be.an('array').to.have.length(1);
