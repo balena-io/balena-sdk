@@ -9,6 +9,10 @@
         "strictNullChecks": true,
         "sourceMap": false,
         "target": "es2015",
+        "lib": [
+            "dom",
+            "es2019"
+        ],
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "moduleResolution": "node",
