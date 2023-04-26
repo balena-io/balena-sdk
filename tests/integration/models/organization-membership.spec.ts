@@ -7,6 +7,7 @@ import {
 	credentials,
 	givenInitialOrganization,
 	givenLoggedInUser,
+	organizationRetrievalFields,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
@@ -187,7 +188,7 @@ describe('Organization Membership Model', function () {
 					handle: `random_sdk_test_org_handle_${Math.floor(Date.now() / 1000)}`,
 				};
 
-				['id', 'handle'].forEach((field) => {
+				organizationRetrievalFields.forEach((field) => {
 					it(`should not be able to add a new member when using an not existing organization ${field}`, async function () {
 						const promise = balena.models.organization.membership.create({
 							organization: randomOrdInfo[field],
@@ -207,7 +208,7 @@ describe('Organization Membership Model', function () {
 				afterEach(async function () {
 					await balena.models.organization.membership.remove(membership!.id);
 				});
-				['id', 'handle'].forEach(function (field) {
+				organizationRetrievalFields.forEach(function (field) {
 					it(`should be able to add a new member to the organization by ${field}`, async function () {
 						membership = await balena.models.organization.membership.create({
 							organization: this.organization[field],

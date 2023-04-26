@@ -18,6 +18,7 @@ import {
 	sdkOpts,
 	IS_BROWSER,
 	applicationRetrievalFields,
+	organizationRetrievalFields,
 	testDeviceOsInfo,
 } from '../setup';
 import { timeSuite } from '../../util';
@@ -99,6 +100,14 @@ describe('Device Model', function () {
 							ctx.application.id,
 						);
 						return expect(promise).to.become([]);
+					}));
+
+				describe('balena.models.device.getAllByOrganization()', () =>
+					it('should become an empty array', async function () {
+						const result = await balena.models.device.getAllByOrganization(
+							ctx.initialOrg.id,
+						);
+						expect(result).to.deep.equal([]);
 					}));
 
 				parallel('balena.models.device.generateUniqueKey()', function () {
@@ -341,6 +350,56 @@ describe('Device Model', function () {
 					it('should be able to retrieve computed terms', async function () {
 						const [device] = await balena.models.device.getAllByApplication(
 							ctx.application.id,
+							{
+								$select: ['overall_status', 'overall_progress'],
+							},
+						);
+						return expect(device).to.deep.match({
+							overall_status: 'inactive',
+							overall_progress: null,
+						});
+					});
+				});
+
+				parallel('balena.models.device.getAllByOrganization()', function () {
+					organizationRetrievalFields.forEach((prop) =>
+						it(`should get the device given the right organization ${prop}`, async function () {
+							const devices = await balena.models.device.getAllByOrganization(
+								ctx.initialOrg[prop],
+							);
+							expect(devices).to.have.length(1);
+							return expect(devices[0].id).to.equal(ctx.device.id);
+						}),
+					);
+
+					it('should be rejected if the organization slug does not exist', function () {
+						const promise = balena.models.device.getAllByOrganization(
+							'A handle that can not exist',
+						);
+						return expect(promise).to.be.rejectedWith(
+							`Organization not found: A handle that can not exist`,
+						);
+					});
+
+					it('should be rejected if the organization id does not exist', function () {
+						const promise = balena.models.device.getAllByOrganization(999999);
+						return expect(promise).to.be.rejectedWith(
+							'Organization not found: 999999',
+						);
+					});
+
+					it('should support arbitrary pinejs options', async function () {
+						const [device] = await balena.models.device.getAllByOrganization(
+							ctx.initialOrg.id,
+							{ $select: ['id'] },
+						);
+						expect(device.id).to.equal(ctx.device.id);
+						return expect(device.device_name).to.equal(undefined);
+					});
+
+					it('should be able to retrieve computed terms', async function () {
+						const [device] = await balena.models.device.getAllByOrganization(
+							ctx.initialOrg.id,
 							{
 								$select: ['overall_status', 'overall_progress'],
 							},
