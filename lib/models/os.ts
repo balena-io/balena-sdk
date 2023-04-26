@@ -88,8 +88,6 @@ export interface OsVersion
 	line?: OsLines;
 	variant?: string;
 	/** @deprecated */
-	formattedVersion: string;
-	/** @deprecated */
 	isRecommended?: boolean;
 }
 
@@ -298,8 +296,6 @@ const getOsModel = function (
 				line,
 				strippedVersion,
 				basedOnVersion: tagMap[BASED_ON_VERSION_TAG_NAME] ?? strippedVersion,
-				// TODO: Drop in the next major
-				formattedVersion: `v${strippedVersion}${line ? ` (${line})` : ''}`,
 			};
 		});
 	};
@@ -334,12 +330,7 @@ const getOsModel = function (
 						!version.known_issue_list &&
 						!bSemver.prerelease(version.raw_version)
 					) {
-						const additionalFormat = version.line
-							? ` (${version.line}, recommended)`
-							: ' (recommended)';
-
 						version.isRecommended = true;
-						version.formattedVersion = `v${version.strippedVersion}${additionalFormat}`;
 						recommendedPerOsType[version.osType] = true;
 					}
 				}
