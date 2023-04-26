@@ -527,50 +527,6 @@ const getDeviceModel = function (
 			);
 		},
 
-		// TODO: Delete in the next major
-		/**
-		 * @summary Get all devices by parent device
-		 * @name getAllByParentDevice
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - devices
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getAllByParentDevice(123).then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
-		 * 	if (error) throw error;
-		 * 	console.log(devices);
-		 * });
-		 */
-		async getAllByParentDevice(
-			parentUuidOrId: string | number,
-			options?: PineOptions<Device>,
-		): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
-
-			const { id } = await exports.get(parentUuidOrId, { $select: 'id' });
-			return await exports.getAll(
-				mergePineOptions({ $filter: { is_managed_by__device: id } }, options),
-			);
-		},
-
 		/**
 		 * @summary Get a single device
 		 * @name get
