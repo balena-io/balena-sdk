@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add device.getAllByOrganization()
+      hash: cae28e8a6b2ec00c3be8df046ec1d334993816e1
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Deprecate Device's is_managed_by__device & manages__device properties
+      hash: 7dd18a0f6087fa4e4fb002700d27550c1539356f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.44.0
+  title: ""
+  date: 2023-04-27T18:36:49.103Z
+- commits:
     - subject: Add test case DeviceHistory expandable resources
       hash: 8d6160dd6e65964043fd64115a3ca08cb0d03764
       body: ""
@@ -3092,7 +3112,8 @@
             - subject: Allow more lenient gzip decompression
               hash: 9c7bc3051b279c9d09ec501a78dbe9f506d65650
               body: >
-                Be more lenient with decoding compressed responses, since (very rarely)
+                Be more lenient with decoding compressed responses, since (very
+                rarely)
 
                 servers send slightly invalid gzip responses that are still accepted
 
@@ -11576,8 +11597,8 @@
       subject: Upgrade to new resin-request, resin-pine and resin-register-device
     - author: Tim Perry
       body: >-
-        One bug solved en route here, highlighted by minification: we depended on
-        the
+        One bug solved en route here, highlighted by minification: we depended
+        on the
 
         function name of errors thrown by Resin-Request, which isn't dependable
 
