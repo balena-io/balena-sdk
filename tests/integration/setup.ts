@@ -630,6 +630,10 @@ export function givenASupervisorRelease(
 	});
 }
 
+export const organizationRetrievalFields = toWritable([
+	'id',
+	'handle',
+] as const);
 export const applicationRetrievalFields = toWritable([
 	'id',
 	'slug',

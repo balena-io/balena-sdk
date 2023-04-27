@@ -17,6 +17,7 @@ import {
 	givenInitialOrganization,
 	sdkOpts,
 	applicationRetrievalFields,
+	organizationRetrievalFields,
 } from '../setup';
 
 import {
@@ -274,7 +275,7 @@ describe('Application Model', function () {
 					}),
 				);
 
-				['id', 'handle'].forEach((prop) =>
+				organizationRetrievalFields.forEach((prop) =>
 					it(`should be able to create an application using the user's initial organization ${prop}`, async function () {
 						await balena.models.application.create({
 							name: `FooBarByOrg${_.startCase(prop)}`,

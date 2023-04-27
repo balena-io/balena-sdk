@@ -249,6 +249,7 @@ const sdk = fromSharedOptions();
             * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+            * [.getAllByOrganization(slugOrUuidOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
             * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
             * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
             * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
@@ -653,6 +654,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+        * [.getAllByOrganization(slugOrUuidOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
         * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
         * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
         * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
@@ -2575,6 +2577,7 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options])](#balena.models.device.getAll) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
+    * [.getAllByOrganization(slugOrUuidOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
     * ~~[.getAllByParentDevice(parentUuidOrId, [options])](#balena.models.device.getAllByParentDevice) ⇒ <code>Promise</code>~~
     * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
     * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
@@ -3475,6 +3478,50 @@ balena.models.device.getAllByApplication('myorganization/myapp', { $select: ['ov
 **Example**  
 ```js
 balena.models.device.getAllByApplication('myorganization/myapp', function(error, devices) {
+	if (error) throw error;
+	console.log(devices);
+});
+```
+<a name="balena.models.device.getAllByOrganization"></a>
+
+##### device.getAllByOrganization(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
+This method returns all devices of a specific application.
+In order to have the following computed properties in the result
+you have to explicitly define them in a `$select` in the extra options:
+* `overall_status`
+* `overall_progress`
+
+**Kind**: static method of [<code>device</code>](#balena.models.device)  
+**Summary**: Get all devices by organization  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - devices  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.device.getAllByOrganization('myorganization').then(function(devices) {
+	console.log(devices);
+});
+```
+**Example**  
+```js
+balena.models.device.getAllByOrganization(123).then(function(devices) {
+	console.log(devices);
+});
+```
+**Example**  
+```js
+balena.models.device.getAllByOrganization('myorganization', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+	console.log(device);
+})
+```
+**Example**  
+```js
+balena.models.device.getAllByOrganization('myorganization', function(error, devices) {
 	if (error) throw error;
 	console.log(devices);
 });

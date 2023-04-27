@@ -2,7 +2,12 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import { balena, credentials, givenLoggedInUser } from '../setup';
+import {
+	balena,
+	credentials,
+	givenLoggedInUser,
+	organizationRetrievalFields,
+} from '../setup';
 import { timeSuite } from '../../util';
 
 describe('Organization model', function () {
@@ -114,7 +119,7 @@ describe('Organization model', function () {
 		});
 
 		parallel('balena.models.organization.get()', function () {
-			['id', 'handle'].forEach((prop) => {
+			organizationRetrievalFields.forEach((prop) => {
 				it(`should retrieve an organization by ${prop}`, async function () {
 					const orgs = await balena.models.organization.get(ctx.newOrg1[prop]);
 					expect(orgs).to.deep.match(ctx.newOrg1);

@@ -455,6 +455,78 @@ const getDeviceModel = function (
 			);
 		},
 
+		/**
+		 * @summary Get all devices by organization
+		 * @name getAllByOrganization
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @description
+		 * This method returns all devices of a specific application.
+		 * In order to have the following computed properties in the result
+		 * you have to explicitly define them in a `$select` in the extra options:
+		 * * `overall_status`
+		 * * `overall_progress`
+		 *
+		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - devices
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.getAllByOrganization('myorganization').then(function(devices) {
+		 * 	console.log(devices);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.getAllByOrganization(123).then(function(devices) {
+		 * 	console.log(devices);
+		 * });
+		 *
+		 * @example
+		 * balena.models.device.getAllByOrganization('myorganization', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+		 * 	console.log(device);
+		 * })
+		 *
+		 * @example
+		 * balena.models.device.getAllByOrganization('myorganization', function(error, devices) {
+		 * 	if (error) throw error;
+		 * 	console.log(devices);
+		 * });
+		 */
+		async getAllByOrganization(
+			slugOrUuidOrId: string | number,
+			options?: PineOptions<Device>,
+		): Promise<Device[]> {
+			if (options == null) {
+				options = {};
+			}
+
+			const { id } = await sdkInstance.models.organization.get(slugOrUuidOrId, {
+				$select: 'id',
+			});
+			return await exports.getAll(
+				mergePineOptions(
+					{
+						$filter: {
+							belongs_to__application: {
+								$any: {
+									$alias: 'bta',
+									$expr: {
+										bta: {
+											organization: id,
+										},
+									},
+								},
+							},
+						},
+					},
+					options,
+				),
+			);
+		},
+
 		// TODO: Delete in the next major
 		/**
 		 * @summary Get all devices by parent device
