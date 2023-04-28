@@ -127,6 +127,7 @@
     "lodash": "^4.17.21",
     "memoizee": "^0.4.15",
     "ndjson": "^2.0.0",
+    "p-throttle": "^4.1.1",
     "pinejs-client-core": "^6.12.0",
     "tslib": "^2.1.0"
   },

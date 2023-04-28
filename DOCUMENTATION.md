@@ -122,6 +122,8 @@ startup and before any calls to `fromSharedOptions()` are made.
 | [options.apiUrl] | <code>String</code> | <code>&#x27;https://api.balena-cloud.com/&#x27;</code> | the balena API url to use. |
 | [options.builderUrl] | <code>String</code> | <code>&#x27;https://builder.balena-cloud.com/&#x27;</code> | the balena builder url to use. |
 | [options.deviceUrlsBase] | <code>String</code> | <code>&#x27;balena-devices.com&#x27;</code> | the base balena device API url to use. |
+| [options.requestLimit] | <code>Number</code> |  | the number of requests per requestLimitInterval that the SDK should respect. |
+| [options.requestLimitInterval] | <code>Number</code> | <code>60000</code> | the timespan that the requestLimit should apply to in milliseconds, defaults to 60000 (1 minute). |
 | [options.dataDirectory] | <code>String</code> | <code>&#x27;$HOME/.balena&#x27;</code> | *ignored in the browser*, the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. |
 | [options.isBrowser] | <code>Boolean</code> |  | the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value. |
 | [options.debug] | <code>Boolean</code> |  | when set will print some extra debug information. |
