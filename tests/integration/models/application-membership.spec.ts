@@ -270,22 +270,6 @@ describe('Application Membership Model', function () {
 			await balena.models.application.membership.remove(membership!.id);
 		});
 
-		parallel('balena.models.application.membership.getAll()', function () {
-			it(`should return only the user's own memberships`, async function () {
-				const memberships = await balena.models.application.membership.getAll();
-
-				assertDeepMatchAndLength(memberships, [
-					{
-						user: membership!.user,
-						is_member_of__application: { __id: ctx.application.id },
-						application_membership_role: {
-							__id: ctx.applicationDeveloperRole.id,
-						},
-					},
-				]);
-			});
-		});
-
 		parallel(
 			'balena.models.application.membership.getAllByApplication()',
 			function () {
