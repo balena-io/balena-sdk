@@ -60,12 +60,6 @@ describe('Device Model', function () {
 					ctx = this;
 				});
 
-				describe('balena.models.device.getAll()', () =>
-					it('should become an empty array', async function () {
-						const result = await balena.models.device.getAll();
-						expect(result).to.deep.equal([]);
-					}));
-
 				describe('balena.models.device.getAllByApplication()', () =>
 					it('should become an empty array', async function () {
 						const result = await balena.models.device.getAllByApplication(
@@ -221,32 +215,6 @@ describe('Device Model', function () {
 				let ctx = null;
 				before(function () {
 					ctx = this;
-				});
-
-				parallel('balena.models.device.getAll()', function () {
-					it('should become the device', async function () {
-						const devices = await balena.models.device.getAll();
-						expect(devices).to.have.length(1);
-						return expect(devices[0].id).to.equal(ctx.device.id);
-					});
-
-					it('should support arbitrary pinejs options', async function () {
-						const [device] = await balena.models.device.getAll({
-							$select: ['id'],
-						});
-						expect(device.id).to.equal(ctx.device.id);
-						return expect(device.device_name).to.equal(undefined);
-					});
-
-					it('should be able to retrieve computed terms', async () => {
-						const [device] = await balena.models.device.getAll({
-							$select: ['overall_status', 'overall_progress'],
-						});
-						return expect(device).to.deep.match({
-							overall_status: 'inactive',
-							overall_progress: null,
-						});
-					});
 				});
 
 				parallel('balena.models.device.getAllByApplication()', function () {
@@ -1043,19 +1011,25 @@ describe('Device Model', function () {
 
 					it('should be able to remove the device by uuid', async function () {
 						await balena.models.device.remove(this.device.uuid);
-						const devices = await balena.models.device.getAll();
+						const devices = await balena.models.device.getAllByApplication(
+							this.application.id,
+						);
 						return expect(devices).to.deep.equal([]);
 					});
 
 					it('should be able to remove the device by id', async function () {
 						await balena.models.device.remove(this.device.id);
-						const devices = await balena.models.device.getAll();
+						const devices = await balena.models.device.getAllByApplication(
+							this.application.id,
+						);
 						return expect(devices).to.deep.equal([]);
 					});
 
 					it('should be able to remove the device using a shorter uuid', async function () {
 						await balena.models.device.remove(this.device.uuid.slice(0, 7));
-						const devices = await balena.models.device.getAll();
+						const devices = await balena.models.device.getAllByApplication(
+							this.application.id,
+						);
 						return expect(devices).to.deep.equal([]);
 					});
 				});

@@ -194,7 +194,7 @@ const getDeviceModel = function (
 		(
 			require('../util/request-batching') as typeof import('../util/request-batching')
 		).batchResourceOperationFactory<Device>({
-			getAll: exports.getAll,
+			getAll,
 			NotFoundError: errors.BalenaDeviceNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
 		}),
@@ -325,6 +325,18 @@ const getDeviceModel = function (
 		return timeRangeFilter;
 	};
 
+	async function getAll(options?: PineOptions<Device>): Promise<Device[]> {
+		if (options == null) {
+			options = {};
+		}
+
+		const devices = await pine.get({
+			resource: 'device',
+			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
+		});
+		return devices.map(addExtraInfo) as Device[];
+	}
+
 	const exports = {
 		_getId: getId,
 		OverallStatus,
@@ -347,52 +359,6 @@ const getDeviceModel = function (
 			}
 
 			return url.resolve(dashboardUrl, `/devices/${uuid}/summary`);
-		},
-
-		/**
-		 * @summary Get all devices
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - devices
-		 * @returns {Promise}
-		 *
-		 * @description
-		 * This method returns all devices that the current user can access.
-		 * In order to have the following computed properties in the result
-		 * you have to explicitly define them in a `$select` in the extra options:
-		 * * `overall_status`
-		 * * `overall_progress`
-		 *
-		 * @example
-		 * balena.models.device.getAll().then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getAll({ $select: ['overall_status', 'overall_progress'] }).then(function(device) {
-		 * 	console.log(device);
-		 * })
-		 *
-		 * @example
-		 * balena.models.device.getAll(function(error, devices) {
-		 * 	if (error) throw error;
-		 * 	console.log(devices);
-		 * });
-		 */
-		async getAll(options?: PineOptions<Device>): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
-
-			const devices = await pine.get({
-				resource: 'device',
-				options: mergePineOptions({ $orderby: 'device_name asc' }, options),
-			});
-			return devices.map(addExtraInfo) as Device[];
 		},
 
 		/**
@@ -446,7 +412,7 @@ const getDeviceModel = function (
 			const { id } = await applicationModel().get(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
+			return await getAll(
 				mergePineOptions({ $filter: { belongs_to__application: id } }, options),
 			);
 		},
@@ -502,7 +468,7 @@ const getDeviceModel = function (
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
+			return await getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -689,7 +655,7 @@ const getDeviceModel = function (
 				options = {};
 			}
 
-			const devices = await exports.getAll(
+			const devices = await getAll(
 				mergePineOptions({ $filter: { device_name: name } }, options),
 			);
 			if (devices.length === 0) {
