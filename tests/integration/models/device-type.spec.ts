@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
-import type * as BalenaSdk from '../../..';
 
 const RPI2_DEVICE_TYPE_NAME = 'Raspberry Pi 2';
 const RPI2_DEVICE_TYPE_SLUG = 'raspberry-pi2';
@@ -17,25 +16,11 @@ describe('Device Type model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
 
-	parallel('balena.models.deviceType.getAll()', function () {
+	describe('balena.models.deviceType.getAll()', function () {
 		it('should get all device types', async function () {
 			const deviceTypes = await balena.models.deviceType.getAll();
 			expect(deviceTypes).to.be.an('Array');
 			expect(deviceTypes).to.not.have.length(0);
-		});
-
-		it('should support a callback', function (done) {
-			(
-				balena.models.deviceType.getAll as (...args: any[]) => any
-			)(function (_err: Error, deviceTypes: BalenaSdk.DeviceType[]) {
-				try {
-					expect(deviceTypes).to.be.an('Array');
-					expect(deviceTypes).to.not.have.length(0);
-					done();
-				} catch (err) {
-					done(err);
-				}
-			});
 		});
 	});
 

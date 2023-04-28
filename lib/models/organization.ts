@@ -39,9 +39,6 @@ const getOrganizationModel = function (
 		require('./organization-invite') as typeof import('./organization-invite')
 	).default(deps, opts, (...args: Parameters<typeof get>) => get(...args));
 
-	const { addCallbackSupportToModule } =
-		require('../util/callbacks') as typeof import('../util/callbacks');
-
 	const getId = async (handleOrId: string | number) => {
 		const { id } = await get(handleOrId, { $select: 'id' });
 		return id;
@@ -208,12 +205,12 @@ const getOrganizationModel = function (
 		 * @namespace balena.models.organization.membership
 		 * @memberof balena.models.organization
 		 */
-		membership: addCallbackSupportToModule(membershipModel),
+		membership: membershipModel,
 		/**
 		 * @namespace balena.models.organization.invite
 		 * @memberof balena.models.organization
 		 */
-		invite: addCallbackSupportToModule(inviteModel),
+		invite: inviteModel,
 	};
 };
 

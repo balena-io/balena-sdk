@@ -271,7 +271,7 @@ describe('Application Membership Model', function () {
 		});
 
 		parallel('balena.models.application.membership.getAll()', function () {
-			it(`should return only the user's own memberships [Promise]`, async function () {
+			it(`should return only the user's own memberships`, async function () {
 				const memberships = await balena.models.application.membership.getAll();
 
 				assertDeepMatchAndLength(memberships, [
@@ -284,34 +284,12 @@ describe('Application Membership Model', function () {
 					},
 				]);
 			});
-
-			it(`should return only the user's own membership [callback]`, function (done) {
-				balena.models.application.membership.getAll(
-					// @ts-expect-error
-					(_err: Error, memberships: BalenaSdk.ApplicationMembership[]) => {
-						try {
-							assertDeepMatchAndLength(memberships, [
-								{
-									user: membership!.user,
-									is_member_of__application: { __id: ctx.application.id },
-									application_membership_role: {
-										__id: ctx.applicationDeveloperRole.id,
-									},
-								},
-							]);
-							done();
-						} catch (err) {
-							done(err);
-						}
-					},
-				);
-			});
 		});
 
 		parallel(
 			'balena.models.application.membership.getAllByApplication()',
 			function () {
-				it(`shoud return only the user's own membership`, async function () {
+				it(`should return only the user's own membership`, async function () {
 					const memberships =
 						await balena.models.application.membership.getAllByApplication(
 							ctx.application.id,

@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
-import type * as BalenaSdk from '../../..';
 import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my app on balenaCloud';
@@ -60,39 +59,15 @@ describe('Application Invite Model', function () {
 					});
 				});
 
-				parallel(
-					'balena.models.application.invite.getAllByApplication()',
-					function () {
-						it('shoud return an empty Array', function () {
-							const promise =
-								balena.models.application.invite.getAllByApplication(
-									ctx.application.id,
-								);
-							return expect(promise).to.become([]);
-						});
-
-						it('should support a callback with no options', function (done) {
-							(
-								balena.models.application.invite.getAllByApplication as (
-									...args: any[]
-								) => any
-							)(
+				describe('balena.models.application.invite.getAllByApplication()', function () {
+					it('shoud return an empty Array', function () {
+						const promise =
+							balena.models.application.invite.getAllByApplication(
 								ctx.application.id,
-								function (
-									_err: Error,
-									applicationInvite: BalenaSdk.ApplicationInvite[],
-								) {
-									try {
-										expect(applicationInvite).to.deep.equal([]);
-										done();
-									} catch (err) {
-										done(err);
-									}
-								},
 							);
-						});
-					},
-				);
+						return expect(promise).to.become([]);
+					});
+				});
 
 				describe('balena.models.application.invite.create()', function () {
 					it('should create and return an application invite', async function () {

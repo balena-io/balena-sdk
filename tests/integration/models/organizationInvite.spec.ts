@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
-import type * as BalenaSdk from '../../..';
 import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my org on balenaCloud';
@@ -57,39 +56,15 @@ describe('Organization Invite Model', function () {
 					await resetOrganizationInvites(this.organization.id);
 				});
 
-				parallel(
-					'balena.models.organization.invite.getAllByOrganization()',
-					function () {
-						it('should return an empty Array', function () {
-							const promise =
-								balena.models.organization.invite.getAllByOrganization(
-									ctx.organization.id,
-								);
-							return expect(promise).to.become([]);
-						});
-
-						it('should support a callback with no options', function (done) {
-							(
-								balena.models.organization.invite.getAllByOrganization as (
-									...args: any[]
-								) => any
-							)(
+				describe('balena.models.organization.invite.getAllByOrganization()', function () {
+					it('should return an empty Array', function () {
+						const promise =
+							balena.models.organization.invite.getAllByOrganization(
 								ctx.organization.id,
-								function (
-									_err: Error,
-									organizationInvite: BalenaSdk.OrganizationInvite[],
-								) {
-									try {
-										expect(organizationInvite).to.deep.equal([]);
-										done();
-									} catch (err) {
-										done(err);
-									}
-								},
 							);
-						});
-					},
-				);
+						return expect(promise).to.become([]);
+					});
+				});
 
 				describe('balena.models.organization.invite.create()', function () {
 					it('should create and return an organization invite', async function () {
