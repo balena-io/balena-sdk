@@ -14,11 +14,8 @@ const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 	resourceName: string,
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
-	return function (
-		idOrUniqueParam: number | string | Dictionary<unknown>,
-		cb?: (err: Error | null, result?: any) => void,
-	) {
-		return (model as any)[propName](idOrUniqueParam, cb) as Promise<
+	return function (idOrUniqueParam: number | string | Dictionary<unknown>) {
+		return (model as any)[propName](idOrUniqueParam) as Promise<
 			BalenaSdk.ResourceTagBase[]
 		>;
 	};
@@ -72,21 +69,9 @@ export const itShouldGetAllTagsByResource = function <
 	});
 
 	parallel('', function () {
-		it('should become an empty array by default [Promise]', function () {
+		it('should become an empty array by default', function () {
 			const promise = getAllByResource(ctx.resource.id);
 			return expect(promise).to.become([]);
-		});
-
-		it('should become an empty array by default [callback]', function (done) {
-			getAllByResource(ctx.resource.id, function (err, tags) {
-				try {
-					expect(err).to.be.null;
-					expect(tags).to.deep.equal([]);
-					done();
-				} catch (err) {
-					done(err);
-				}
-			});
 		});
 
 		it(`should be rejected if the ${resourceName} id does not exist`, function () {
@@ -160,20 +145,6 @@ export const itShouldGetAllTagsByResource = function <
 					expect(tags).to.have.length(1);
 					expect(tags[0].tag_key).to.equal('EDITOR');
 					expect(tags[0].value).to.equal('vim');
-				});
-			});
-
-			it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
-				getAllByResource(ctx.resource.id, function (err, tags) {
-					try {
-						expect(err).to.be.null;
-						expect(tags).to.have.length(1);
-						expect(tags[0].tag_key).to.equal('EDITOR');
-						expect(tags[0].value).to.equal('vim');
-						done();
-					} catch (err) {
-						done(err);
-					}
 				});
 			});
 		});

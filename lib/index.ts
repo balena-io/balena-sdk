@@ -137,11 +137,7 @@ const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
 
 const sdkTemplate = {
 	auth() {
-		const { addCallbackSupportToModuleFactory } =
-			require('./util/callbacks') as typeof import('./util/callbacks');
-		return addCallbackSupportToModuleFactory(
-			(require('./auth') as typeof import('./auth')).default,
-		);
+		return (require('./auth') as typeof import('./auth')).default;
 	},
 	models() {
 		// don't try to add callbacks for this, since it's just a namespace
@@ -150,18 +146,10 @@ const sdkTemplate = {
 		return require('./models') as typeof import('./models');
 	},
 	logs() {
-		const { addCallbackSupportToModuleFactory } =
-			require('./util/callbacks') as typeof import('./util/callbacks');
-		return addCallbackSupportToModuleFactory(
-			(require('./logs') as typeof import('./logs')).default,
-		);
+		return (require('./logs') as typeof import('./logs')).default;
 	},
 	settings() {
-		const { addCallbackSupportToModuleFactory } =
-			require('./util/callbacks') as typeof import('./util/callbacks');
-		return addCallbackSupportToModuleFactory(
-			(require('./settings') as typeof import('./settings')).default,
-		);
+		return (require('./settings') as typeof import('./settings')).default;
 	},
 };
 

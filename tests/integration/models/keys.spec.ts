@@ -5,7 +5,6 @@ import parallel from 'mocha.parallel';
 import PUBLIC_KEY from '../../data/public-key';
 import { balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
-import type * as BalenaSdk from '../../..';
 
 describe('Key Model', function () {
 	timeSuite(before);
@@ -13,24 +12,9 @@ describe('Key Model', function () {
 		describe('balena.models.key.getAll()', function () {
 			givenLoggedInUser(before);
 
-			parallel('', function () {
-				it('should become an empty array', function () {
-					const promise = balena.models.key.getAll();
-					return expect(promise).to.become([]);
-				});
-
-				it('should support a callback with no options', function (done) {
-					(
-						balena.models.key.getAll as (...args: any[]) => any
-					)(function (_err: Error, keys: BalenaSdk.SSHKey[]) {
-						try {
-							expect(keys).to.deep.equal([]);
-							done();
-						} catch (err) {
-							done(err);
-						}
-					});
-				});
+			it('should become an empty array', function () {
+				const promise = balena.models.key.getAll();
+				return expect(promise).to.become([]);
 			});
 		});
 
