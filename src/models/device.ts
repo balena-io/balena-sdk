@@ -2566,30 +2566,6 @@ const getDeviceModel = function (
 			getAllByDevice: tagsModel.getAllByParent,
 
 			/**
-			 * @summary Get all device tags
-			 * @name getAll
-			 * @public
-			 * @function
-			 * @memberof balena.models.device.tags
-			 *
-			 * @param {Object} [options={}] - extra pine options to use
-			 * @fulfil {Object[]} - device tags
-			 * @returns {Promise}
-			 *
-			 * @example
-			 * balena.models.device.tags.getAll().then(function(tags) {
-			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.tags.getAll(function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
-			 */
-			getAll: tagsModel.getAll,
-
-			/**
 			 * @summary Set a device tag
 			 * @name set
 			 * @public

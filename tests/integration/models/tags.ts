@@ -14,7 +14,10 @@ const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 	resourceName: string,
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
-	return function (idOrUniqueParam: number | string | Dictionary<unknown>) {
+	return function (
+		idOrUniqueParam: number | string | Dictionary<unknown>,
+		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
+	) {
 		return (model as any)[propName](idOrUniqueParam) as Promise<
 			BalenaSdk.ResourceTagBase[]
 		>;
@@ -299,9 +302,12 @@ export const itShouldSetGetAndRemoveTags = function <
 			]);
 		});
 
-		parallel(`${modelNamespace}.getAll()`, function () {
-			it('should retrieve all the tags', async function () {
-				let tags = await model.getAll();
+		const getAllByResourceMethodName =
+			getAllByResourcePropNameProvider(resourceName);
+
+		parallel(`${modelNamespace}.${getAllByResourceMethodName}()`, function () {
+			it('should retrieve all the tags by ', async function () {
+				let tags = await getAllByResource(ctx.resource.id);
 				tags = _.sortBy(tags, 'tag_key');
 				expect(tags.length).to.be.gte(2);
 				// exclude tags that the user can access b/c of public apps
@@ -315,7 +321,9 @@ export const itShouldSetGetAndRemoveTags = function <
 			});
 
 			it('should retrieve the filtered tag', async function () {
-				const tags = await model.getAll({ $filter: { tag_key: 'EDITOR' } });
+				const tags = await getAllByResource(ctx.resource.id, {
+					$filter: { tag_key: 'EDITOR' },
+				});
 				expect(tags.length).to.be.gte(1);
 				// exclude tags that the user can access b/c of public apps
 				const tagsOfUsersResource = tags.filter(

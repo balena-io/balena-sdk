@@ -1609,30 +1609,6 @@ const getApplicationModel = function (
 			getAllByApplication: tagsModel.getAllByParent,
 
 			/**
-			 * @summary Get all application tags
-			 * @name getAll
-			 * @public
-			 * @function
-			 * @memberof balena.models.application.tags
-			 *
-			 * @param {Object} [options={}] - extra pine options to use
-			 * @fulfil {Object[]} - application tags
-			 * @returns {Promise}
-			 *
-			 * @example
-			 * balena.models.application.tags.getAll().then(function(tags) {
-			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.tags.getAll(function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
-			 */
-			getAll: tagsModel.getAll,
-
-			/**
 			 * @summary Set an application tag
 			 * @name set
 			 * @public
