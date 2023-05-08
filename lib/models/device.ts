@@ -469,7 +469,7 @@ const getDeviceModel = function (
 		 * * `overall_status`
 		 * * `overall_progress`
 		 *
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+		 * @param {String|Number} handleOrId - organization handle (string) or id (number).
 		 * @param {Object} [options={}] - extra pine options to use
 		 * @fulfil {Object[]} - devices
 		 * @returns {Promise}
@@ -496,14 +496,14 @@ const getDeviceModel = function (
 		 * });
 		 */
 		async getAllByOrganization(
-			slugOrUuidOrId: string | number,
+			handleOrId: string | number,
 			options?: PineOptions<Device>,
 		): Promise<Device[]> {
 			if (options == null) {
 				options = {};
 			}
 
-			const { id } = await sdkInstance.models.organization.get(slugOrUuidOrId, {
+			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
 			return await exports.getAll(
