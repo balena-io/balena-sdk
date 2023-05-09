@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix device.getAllByOrganization parameter docs
+      hash: b0ac935ec4a8e59cd69f27824077fe2de867d145
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+  version: 16.44.1
+  title: ""
+  date: 2023-05-09T13:45:49.211Z
+- commits:
     - subject: Add device.getAllByOrganization()
       hash: cae28e8a6b2ec00c3be8df046ec1d334993816e1
       body: ""
