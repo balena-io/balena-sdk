@@ -1687,12 +1687,13 @@ const getDeviceModel = function (
 		 * });
 		 */
 		getDeviceUrl: async (uuidOrId: string | number): Promise<string> => {
-			const hasDeviceUrl = await exports.hasDeviceUrl(uuidOrId);
-			if (!hasDeviceUrl) {
+			const { is_web_accessible, uuid } = await exports.get(uuidOrId, {
+				$select: ['is_web_accessible', 'uuid'],
+			});
+			if (!is_web_accessible) {
 				throw new Error(`Device is not web accessible: ${uuidOrId}`);
 			}
 			const $deviceUrlsBase = await getDeviceUrlsBase();
-			const { uuid } = await exports.get(uuidOrId, { $select: 'uuid' });
 			return `https://${uuid}.${$deviceUrlsBase}`;
 		},
 
