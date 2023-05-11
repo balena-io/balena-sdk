@@ -30,7 +30,7 @@ export function batchResourceOperationFactory<
 	async function batchResourceOperation<
 		TOpts extends PineOptionsStrict<T>,
 	>(options: {
-		uuidOrIdOrIds: number | number[] | string | string[];
+		uuidOrIdOrArray: number | number[] | string | string[];
 		options?: TOpts;
 		fn: (items: Array<Item<TOpts>>) => Promise<void>;
 		groupByNavigationPoperty?: undefined;
@@ -38,42 +38,42 @@ export function batchResourceOperationFactory<
 	async function batchResourceOperation<
 		TOpts extends PineOptionsStrict<T>,
 	>(options: {
-		uuidOrIdOrIds: number | number[] | string | string[];
+		uuidOrIdOrArray: number | number[] | string | string[];
 		options?: TOpts;
 		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 		groupByNavigationPoperty: PineSelectableProps<T>;
 	}): Promise<void>;
 	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
-		uuidOrIdOrIds,
+		uuidOrIdOrArray,
 		options,
 		groupByNavigationPoperty,
 		fn,
 	}: {
-		uuidOrIdOrIds: number | number[] | string | string[];
+		uuidOrIdOrArray: number | number[] | string | string[];
 		options?: TOpts;
 		fn: (items: Array<Item<TOpts>>, ownerId?: number) => Promise<void>;
 		groupByNavigationPoperty?: PineSelectableProps<T>;
 	}): Promise<void> {
-		if (Array.isArray(uuidOrIdOrIds)) {
-			if (!uuidOrIdOrIds.length) {
+		if (Array.isArray(uuidOrIdOrArray)) {
+			if (!uuidOrIdOrArray.length) {
 				throw new errors.BalenaInvalidParameterError(
-					'uuidOrIdOrIds',
-					uuidOrIdOrIds,
+					'uuidOrIdOrArray',
+					uuidOrIdOrArray,
 				);
 			}
-			let lastType = typeof uuidOrIdOrIds[0];
-			for (const param of uuidOrIdOrIds) {
+			let lastType = typeof uuidOrIdOrArray[0];
+			for (const param of uuidOrIdOrArray) {
 				const type = typeof param;
 				if (type !== 'number' && type !== 'string') {
 					throw new errors.BalenaInvalidParameterError(
-						'uuidOrIdOrIds',
-						uuidOrIdOrIds,
+						'uuidOrIdOrArray',
+						uuidOrIdOrArray,
 					);
 				}
 				if (lastType !== type) {
 					throw new errors.BalenaInvalidParameterError(
-						'uuidOrIdOrIds',
-						uuidOrIdOrIds,
+						'uuidOrIdOrArray',
+						uuidOrIdOrArray,
 					);
 				}
 				if (
@@ -82,8 +82,8 @@ export function batchResourceOperationFactory<
 					param.length !== 62
 				) {
 					throw new errors.BalenaInvalidParameterError(
-						'uuidOrIdOrIds',
-						uuidOrIdOrIds,
+						'uuidOrIdOrArray',
+						uuidOrIdOrArray,
 					);
 				}
 				lastType = type;
@@ -92,12 +92,12 @@ export function batchResourceOperationFactory<
 
 		// create a list of UUIDs or chunks of IDs
 		const chunks: Array<string | number | string[] | number[]> = !Array.isArray(
-			uuidOrIdOrIds,
+			uuidOrIdOrArray,
 		)
-			? [uuidOrIdOrIds]
-			: typeof uuidOrIdOrIds[0] === 'string'
-			? chunk(uuidOrIdOrIds as string[], UUID_CHUNK_SIZE)
-			: chunk(uuidOrIdOrIds as number[], ID_CHUNK_SIZE);
+			? [uuidOrIdOrArray]
+			: typeof uuidOrIdOrArray[0] === 'string'
+			? chunk(uuidOrIdOrArray as string[], UUID_CHUNK_SIZE)
+			: chunk(uuidOrIdOrArray as number[], ID_CHUNK_SIZE);
 
 		const items: Array<
 			Item<TOpts> &
@@ -105,29 +105,29 @@ export function batchResourceOperationFactory<
 					[groupByNavigationPoperty: string]: { __id: number };
 				}>
 		> = [];
-		for (const uuidOrIdOrIdsChunk of chunks) {
+		for (const uuidOrIdOrArrayChunk of chunks) {
 			const resourceFilter: PineFilter<{ id: number; uuid: string }> =
-				Array.isArray(uuidOrIdOrIdsChunk)
-					? typeof uuidOrIdOrIdsChunk[0] === 'string'
+				Array.isArray(uuidOrIdOrArrayChunk)
+					? typeof uuidOrIdOrArrayChunk[0] === 'string'
 						? {
-								uuid: { $in: uuidOrIdOrIdsChunk as string[] },
+								uuid: { $in: uuidOrIdOrArrayChunk as string[] },
 						  }
 						: {
-								id: { $in: uuidOrIdOrIdsChunk as number[] },
+								id: { $in: uuidOrIdOrArrayChunk as number[] },
 						  }
-					: typeof uuidOrIdOrIdsChunk === 'string'
+					: typeof uuidOrIdOrArrayChunk === 'string'
 					? {
-							uuid: { $startswith: uuidOrIdOrIdsChunk },
+							uuid: { $startswith: uuidOrIdOrArrayChunk },
 					  }
 					: {
-							id: uuidOrIdOrIdsChunk,
+							id: uuidOrIdOrArrayChunk,
 					  };
 			const combinedOptions = mergePineOptions(
 				{
 					$select: [
 						'id',
-						...(Array.isArray(uuidOrIdOrIdsChunk) &&
-						typeof uuidOrIdOrIdsChunk[0] === 'string'
+						...(Array.isArray(uuidOrIdOrArrayChunk) &&
+						typeof uuidOrIdOrArrayChunk[0] === 'string'
 							? ['uuid']
 							: []),
 						...(groupByNavigationPoperty ? [groupByNavigationPoperty] : []),
@@ -141,20 +141,20 @@ export function batchResourceOperationFactory<
 		}
 
 		if (!items.length) {
-			throw new NotFoundError(uuidOrIdOrIds.toString());
+			throw new NotFoundError(uuidOrIdOrArray.toString());
 		}
 
 		const itemsByAccosiactedResource = groupByNavigationPoperty
 			? groupByMap(items, (item) => item[groupByNavigationPoperty]!.__id)
 			: new Map([[undefined, items]]);
-		if (typeof uuidOrIdOrIds === 'string' && items.length > 1) {
-			throw new AmbiguousResourceError(uuidOrIdOrIds);
-		} else if (Array.isArray(uuidOrIdOrIds)) {
+		if (typeof uuidOrIdOrArray === 'string' && items.length > 1) {
+			throw new AmbiguousResourceError(uuidOrIdOrArray);
+		} else if (Array.isArray(uuidOrIdOrArray)) {
 			const identifierProperty =
-				typeof uuidOrIdOrIds[0] === 'string' ? 'uuid' : 'id';
+				typeof uuidOrIdOrArray[0] === 'string' ? 'uuid' : 'id';
 			const resourceIdentifiers = items.map((item) => item[identifierProperty]);
 			const resourceIdsSet = new Set(resourceIdentifiers);
-			for (const identifier of uuidOrIdOrIds) {
+			for (const identifier of uuidOrIdOrArray) {
 				if (!resourceIdsSet.has(identifier)) {
 					throw new NotFoundError(identifier);
 				}

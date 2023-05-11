@@ -2855,38 +2855,40 @@ describe('Device Model', function () {
 				}
 			});
 
-			describe('balena.models.device.pinToRelease()', function () {
-				it('should set the batch of devices to a specific release', async function () {
-					await balena.models.device.pinToRelease(
-						this.devices.map((d) => d.id),
-						'old-release-commit',
-					);
-					await Promise.all(
-						this.devices.map(async (d) => {
-							const releaseHash =
-								await balena.models.device.getTargetReleaseHash(d.id);
-							expect(releaseHash).to.equal('old-release-commit');
-							const isTracking =
-								await balena.models.device.isTrackingApplicationRelease(d.id);
-							expect(isTracking).to.be.false;
-						}),
-					);
+			['id', 'uuid'].forEach((prop) => {
+				describe('balena.models.device.pinToRelease()', function () {
+					it(`should set the batch of devices to a specific release using an array of ${prop}s`, async function () {
+						await balena.models.device.pinToRelease(
+							this.devices.map((d) => d[prop]),
+							'old-release-commit',
+						);
+						await Promise.all(
+							this.devices.map(async (d) => {
+								const releaseHash =
+									await balena.models.device.getTargetReleaseHash(d.id);
+								expect(releaseHash).to.equal('old-release-commit');
+								const isTracking =
+									await balena.models.device.isTrackingApplicationRelease(d.id);
+								expect(isTracking).to.be.false;
+							}),
+						);
+					});
 				});
-			});
 
-			describe('balena.models.device.trackApplicationRelease()', function () {
-				it('should set the batch of devices to track the current application release', async function () {
-					await balena.models.device.trackApplicationRelease(
-						this.devices.map((d) => d.id),
-					);
+				describe('balena.models.device.trackApplicationRelease()', function () {
+					it(`should set the batch of devices to track the current application release using an array of ${prop}s`, async function () {
+						await balena.models.device.trackApplicationRelease(
+							this.devices.map((d) => d[prop]),
+						);
 
-					await Promise.all(
-						this.devices.map(async (d) => {
-							const isTracking =
-								await balena.models.device.isTrackingApplicationRelease(d.id);
-							expect(isTracking).to.be.true;
-						}),
-					);
+						await Promise.all(
+							this.devices.map(async (d) => {
+								const isTracking =
+									await balena.models.device.isTrackingApplicationRelease(d.id);
+								expect(isTracking).to.be.true;
+							}),
+						);
+					});
 				});
 			});
 
@@ -2913,34 +2915,21 @@ describe('Device Model', function () {
 				});
 				givenASupervisorRelease(before, 'v11.12.4');
 
-				it('should set the batch of devices to a specific supervisor release', async function () {
-					await balena.models.device.setSupervisorRelease(
-						this.devices.map((d) => d.id),
-						this.supervisorRelease.supervisor_version,
-					);
-					await Promise.all(
-						this.devices.map(async (d) => {
-							const device = await balena.models.device.get(d.id);
-							expect(
-								device.should_be_managed_by__supervisor_release,
-							).to.have.deep.property('__id', this.supervisorRelease.id);
-						}),
-					);
-				});
-
-				it('should set the batch of devices to a specific supervisor release', async function () {
-					await balena.models.device.setSupervisorRelease(
-						this.devices.map((d) => d.id),
-						this.supervisorRelease.id,
-					);
-					await Promise.all(
-						this.devices.map(async (d) => {
-							const device = await balena.models.device.get(d.id);
-							expect(
-								device.should_be_managed_by__supervisor_release,
-							).to.have.deep.property('__id', this.supervisorRelease.id);
-						}),
-					);
+				['supervisor_version', 'id'].forEach((svReleaseProp) => {
+					it(`should set the batch of devices to a specific supervisor release using the supervisor releases's ${svReleaseProp}`, async function () {
+						await balena.models.device.setSupervisorRelease(
+							this.devices.map((d) => d.id),
+							this.supervisorRelease[svReleaseProp],
+						);
+						await Promise.all(
+							this.devices.map(async (d) => {
+								const device = await balena.models.device.get(d.id);
+								expect(
+									device.should_be_managed_by__supervisor_release,
+								).to.have.deep.property('__id', this.supervisorRelease.id);
+							}),
+						);
+					});
 				});
 
 				it('should fail to set the batch of devices to a specific non-existent supervisor release', async function () {

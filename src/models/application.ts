@@ -789,7 +789,7 @@ const getApplicationModel = function (
 				return;
 			}
 			await batchApplicationOperation()({
-				uuidOrIdOrIds: slugOrUuidOrIdOrIds,
+				uuidOrIdOrArray: slugOrUuidOrIdOrIds,
 				fn: async (applications) => {
 					await pine.delete({
 						resource: 'application',

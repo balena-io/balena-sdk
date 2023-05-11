@@ -282,11 +282,11 @@ const getDeviceModel = function (
 	};
 
 	const set = async (
-		uuidOrIdOrIds: string | number | number[],
+		uuidOrIdOrArray: string | string[] | number | number[],
 		body: SubmitBody<Device>,
 	): Promise<void> => {
 		await batchDeviceOperation()({
-			uuidOrIdOrIds,
+			uuidOrIdOrArray,
 			fn: async (devices) => {
 				await pine.patch<Device>({
 					resource: 'device',
@@ -378,7 +378,7 @@ const getDeviceModel = function (
 		> = {};
 
 		await batchDeviceOperation()({
-			uuidOrIdOrIds: uuidOrUuids,
+			uuidOrIdOrArray: uuidOrUuids,
 			options: {
 				$select: [
 					'uuid',
@@ -968,7 +968,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -978,10 +978,10 @@ const getDeviceModel = function (
 		 * balena.models.device.remove(123);
 		 */
 		remove: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				fn: async (devices) => {
 					await pine.delete({
 						resource: 'device',
@@ -1002,7 +1002,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1012,9 +1012,9 @@ const getDeviceModel = function (
 		 * balena.models.device.deactivate(123);
 		 */
 		deactivate: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_active: false,
 			});
 		},
@@ -1053,7 +1053,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String} note - the note
 		 *
 		 * @returns {Promise}
@@ -1065,10 +1065,10 @@ const getDeviceModel = function (
 		 * balena.models.device.setNote(123, 'My useful note');
 		 */
 		setNote: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			note: string,
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, { note });
+			await set(uuidOrIdOrArray, { note });
 		},
 
 		/**
@@ -1078,7 +1078,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {Object} location - the location ({ latitude: 123, longitude: 456 })
 		 *
 		 * @returns {Promise}
@@ -1090,10 +1090,10 @@ const getDeviceModel = function (
 		 * balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 		 */
 		setCustomLocation: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			location: { latitude: string | number; longitude: string | number },
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				custom_latitude: String(location.latitude),
 				custom_longitude: String(location.longitude),
 			});
@@ -1106,7 +1106,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 *
 		 * @returns {Promise}
 		 *
@@ -1117,9 +1117,9 @@ const getDeviceModel = function (
 		 * balena.models.device.unsetCustomLocation(123);
 		 */
 		unsetCustomLocation: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await exports.setCustomLocation(uuidOrIdOrIds, {
+			await exports.setCustomLocation(uuidOrIdOrArray, {
 				latitude: '',
 				longitude: '',
 			});
@@ -1132,7 +1132,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} applicationSlugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 *
 		 * @returns {Promise}
@@ -1147,7 +1147,7 @@ const getDeviceModel = function (
 		 * balena.models.device.move(123, 456);
 		 */
 		move: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			applicationSlugOrUuidOrId: string | number,
 		): Promise<void> => {
 			const applicationOptions = {
@@ -1184,7 +1184,7 @@ const getDeviceModel = function (
 				},
 			} as const;
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				options: deviceOptions,
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices) => {
@@ -1532,7 +1532,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1542,9 +1542,9 @@ const getDeviceModel = function (
 		 * balena.models.device.enableDeviceUrl(123);
 		 */
 		enableDeviceUrl: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_web_accessible: true,
 			});
 		},
@@ -1556,7 +1556,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1566,9 +1566,9 @@ const getDeviceModel = function (
 		 * balena.models.device.disableDeviceUrl(123);
 		 */
 		disableDeviceUrl: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_web_accessible: false,
 			});
 		},
@@ -1813,7 +1813,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 		 * @returns {Promise}
 		 *
@@ -1824,7 +1824,7 @@ const getDeviceModel = function (
 		 * balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 		 */
 		async grantSupportAccess(
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			expiryTimestamp: number,
 		): Promise<void> {
 			if (expiryTimestamp == null || expiryTimestamp <= Date.now()) {
@@ -1834,7 +1834,7 @@ const getDeviceModel = function (
 				);
 			}
 
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				// @ts-expect-error a number is valid to set but it will always be returned as an ISO string so the typings specify string rather than string | number
 				is_accessible_by_support_until__date: expiryTimestamp,
 			});
@@ -1847,7 +1847,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1857,9 +1857,9 @@ const getDeviceModel = function (
 		 * balena.models.device.revokeSupportAccess(123);
 		 */
 		revokeSupportAccess: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_accessible_by_support_until__date: null,
 			});
 		},
@@ -2007,7 +2007,7 @@ const getDeviceModel = function (
 		 * @description Configures the device to run a particular release
 		 * and not get updated when the current application release changes.
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} fullReleaseHashOrId - the hash of a successful release (string) or id (number)
 		 * @returns {Promise}
 		 *
@@ -2022,7 +2022,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		pinToRelease: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			fullReleaseHashOrId: string | number,
 		): Promise<void> => {
 			const getRelease = memoizee(
@@ -2044,7 +2044,7 @@ const getDeviceModel = function (
 				{ primitive: true, promise: true },
 			);
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices, appId) => {
 					const release = await getRelease(appId);
@@ -2072,7 +2072,7 @@ const getDeviceModel = function (
 		 *
 		 * @description The device's current release will be updated with each new successfully built release.
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -2081,9 +2081,9 @@ const getDeviceModel = function (
 		 * });
 		 */
 		trackApplicationRelease: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				should_be_running__release: null,
 			});
 		},
@@ -2097,7 +2097,7 @@ const getDeviceModel = function (
 		 *
 		 * @description Configures the device to run a particular supervisor release.
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} supervisorVersionOrId - the version of a released supervisor (string) or id (number)
 		 * @returns {Promise}
 		 *
@@ -2112,7 +2112,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		setSupervisorRelease: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			supervisorVersionOrId: string | number,
 		): Promise<void> => {
 			const releaseFilterProperty = isId(supervisorVersionOrId)
@@ -2148,7 +2148,7 @@ const getDeviceModel = function (
 				{ primitive: true, promise: true },
 			);
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				options: {
 					$select: ['id', 'supervisor_version', 'os_version'],
 					$expand: { is_of__device_type: { $select: 'slug' } },
