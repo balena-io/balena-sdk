@@ -91,6 +91,7 @@ export interface OsVersion
 	isRecommended?: boolean;
 }
 
+/** @deprecated */
 export interface OsVersionsByDeviceType {
 	[deviceTypeSlug: string]: OsVersion[];
 }
