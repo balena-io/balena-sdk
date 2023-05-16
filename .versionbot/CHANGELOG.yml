@@ -1,4 +1,32 @@
 - commits:
+    - subject: Update flowzone's macos runner to v12
+      hash: 0217b18d0410cb47254a586fe61a24b1bc602a4f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add device type yocto properties to typings
+      hash: 2659041f88cd5130020ab8a57ecc90a1533f10f2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+    - subject: Optimize getDeviceUrl request in one query
+      hash: 9b30c54425eff504f3e3c6a2948d9f1ed2fe8225
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+  version: 16.44.2
+  title: ""
+  date: 2023-05-16T09:40:50.769Z
+- commits:
     - subject: Fix device.getAllByOrganization parameter docs
       hash: b0ac935ec4a8e59cd69f27824077fe2de867d145
       body: ""
