@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import * as errors from 'balena-errors';
 import * as bSemver from 'balena-semver';
 import once = require('lodash/once');
 
@@ -471,6 +472,58 @@ const getOsModel = function (
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
 			: versionsByDt;
+	}
+
+	/**
+	 * @summary Get the OS release for the provided device type & version
+	 * @name getOsRelease
+	 * @public
+	 * @function
+	 * @memberof balena.models.os
+	 *
+	 * @param {String} deviceType - device type
+	 * @param {String} semver - the semver of the OS release without the variant
+	 * @param {String} [variant=''] - the variant of the OS release, or not provided for unified OS releases
+	 * @param {Object} [options={}] - extra pine options to use
+	 * @fulfil {Object} - An array of OsVersion objects when a single device type slug is provided,
+	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.os.getOsRelease('raspberrypi3', '2.101.7+rev1');
+	 */
+	async function getOsRelease<TP extends PineOptions<Release> | undefined>(
+		deviceType: string,
+		semver: string,
+		variant = '',
+		options?: TP,
+	): Promise<
+		| (OsVersion &
+				Pick<Release, 'semver'> &
+				IfDefined<TP, PineTypedResult<Release, TP>>)
+		| undefined
+	> {
+		const releases = (await getAllOsVersions(
+			deviceType,
+			mergePineOptionsTyped(
+				{
+					$select: 'semver',
+					$filter: {
+						semver,
+						variant,
+					},
+				},
+				options,
+			),
+		)) as Array<
+			OsVersion &
+				Pick<Release, 'semver'> &
+				IfDefined<TP, PineTypedResult<Release, TP>>
+		>;
+		if (releases.length > 0) {
+			throw new errors.BalenaAmbiguousRelease(semver);
+		}
+		return releases[0];
 	}
 
 	/**
@@ -972,6 +1025,7 @@ const getOsModel = function (
 
 	return {
 		// Cast the exported types for internal methods so `@types/memoizee` can be a dev depenency.
+		getOsRelease,
 		_getNormalizedDeviceTypeSlug: _getNormalizedDeviceTypeSlug as (
 			deviceTypeSlug: string,
 		) => Promise<string>,
