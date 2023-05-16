@@ -1,5 +1,6 @@
 import * as errors from 'balena-errors';
 import type * as Pine from '../../typings/pinejs-client-core';
+import type { IfDefined } from '../../typings/utils';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
@@ -87,6 +88,13 @@ export function mergePineOptionsTyped<
 >(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
 	return mergePineOptions(defaults, extras) as P;
 }
+
+export type ExtendedPineTypedResult<
+	T,
+	TBaseResult,
+	ExtraPineOptions extends Pine.ODataOptions<T> | undefined,
+> = TBaseResult &
+	IfDefined<ExtraPineOptions, Pine.TypedResult<T, ExtraPineOptions>>;
 
 const knownPineOptionKeys = new Set([
 	'$top',

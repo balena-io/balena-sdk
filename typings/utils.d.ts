@@ -23,6 +23,8 @@ export type TypeOrDictionary<T> =
 			[key: string]: T;
 	  };
 
+export type IfDefined<T, P> = undefined extends T ? {} : P;
+
 export type Resolvable<R> = R | PromiseLike<R>;
 
 export type ResolvableReturnType<T extends (...args: any[]) => any> =

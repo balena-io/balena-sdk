@@ -22,6 +22,7 @@ import {
 	onlyIf,
 	treatAsMissingApplication,
 	mergePineOptionsTyped,
+	type ExtendedPineTypedResult,
 } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type {
@@ -414,14 +415,16 @@ const getOsModel = function (
 			: versionsByDt;
 	}
 
-	async function getAllOsVersions(
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceType: string,
-		options?: PineOptions<Release>,
-	): Promise<OsVersion[]>;
-	async function getAllOsVersions(
+		options?: TP,
+	): Promise<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceTypes: string[],
-		options?: PineOptions<Release>,
-	): Promise<Dictionary<OsVersion[]>>;
+		options?: TP,
+	): Promise<
+		Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+	>;
 	/**
 	 * @summary Get all OS versions for the provided device type(s), inlcuding invalidated ones
 	 * @name getAllOsVersions
@@ -444,17 +447,20 @@ const getOsModel = function (
 	 * @example
 	 * balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
-	async function getAllOsVersions(
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceTypes: string[] | string,
-		options?: PineOptions<Release>,
-	): Promise<TypeOrDictionary<OsVersion[]>> {
+		options?: TP,
+	): Promise<
+		TypeOrDictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+	> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt =
+		const versionsByDt = (
 			options == null
 				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), null)
-				: await _getAllOsVersions(deviceTypes, options);
+				: await _getAllOsVersions(deviceTypes, options)
+		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
 			: versionsByDt;
