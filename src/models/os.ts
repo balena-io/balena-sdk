@@ -112,6 +112,21 @@ export interface OsUpdateVersions {
 	current: string | undefined;
 }
 
+export interface DownloadConfig
+	extends Pick<
+		ImgConfigOptions,
+		| 'developmentMode'
+		| 'appUpdatePollInterval'
+		| 'network'
+		| 'wifiKey'
+		| 'wifiSsid'
+	> {
+	deviceType: string;
+	version?: string;
+	appId?: number;
+	fileType?: '.img' | '.zip' | '.gz';
+}
+
 const sortVersions = (a: OsVersion, b: OsVersion) => {
 	return bSemver.rcompare(a.raw_version, b.raw_version);
 };
@@ -689,29 +704,31 @@ const getOsModel = function (
 	 * @param {String} [options.version='latest'] - semver-compatible version or 'latest', defaults to 'latest'
 	 * Unsupported (unpublished) version will result in rejection.
 	 * The version **must** be the exact version number.
-	 * @param {Boolean} [options.developmentMode] - Controls development mode for unified balenaOS releases.
+	 * @param {Boolean} [options.developmentMode] - controls development mode for unified balenaOS releases.
+	 * @param {Number} [options.appId] - the application ID (number).
+	 * @param {String} [options.fileType] - download file type. One of '.img' or '.zip' or '.gz'.
+	 * @param {Number} [options.appUpdatePollInterval] - how often the OS checks for updates, in minutes.
+	 * @param {String} [options.network] - the network type that the device will use, one of 'ethernet' or 'wifi'.
+	 * @param {String} [options.wifiKey] - the key for the wifi network the device will connect to if network is wifi.
+	 * @param {String} [options.wifiSsid] - the ssid for the wifi network the device will connect to if network is wifi.
 	 * @fulfil {ReadableStream} - download stream
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.os.download('raspberry-pi').then(function(stream) {
+	 * balena.models.os.download({deviceType: 'raspberry-pi'}).then(function(stream) {
 	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	 * });
 	 *
-	 * balena.models.os.download('raspberry-pi', function(error, stream) {
+	 * balena.models.os.download({deviceType: 'raspberry-pi', appId: 1234, fileType: '.zip'}, function(error, stream) {
 	 * 	if (error) throw error;
-	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.zip'));
 	 * });
 	 */
 	const download = onlyIf(!isBrowser)(async function ({
 		deviceType,
 		version = 'latest',
 		...restOptions
-	}: {
-		deviceType: string;
-		version?: string;
-		developmentMode?: boolean;
-	}): Promise<BalenaRequestStreamResult> {
+	}: DownloadConfig): Promise<BalenaRequestStreamResult> {
 		try {
 			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
