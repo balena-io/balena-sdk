@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,12 @@ import {
 	mergePineOptionsTyped,
 } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
-import type { Dictionary, ResolvableReturnType } from '../../typings/utils';
+import type {
+	Dictionary,
+	IfDefined,
+	ResolvableReturnType,
+	TypeOrDictionary,
+} from '../../typings/utils';
 import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
 import type {
 	InjectedDependenciesParam,
@@ -307,7 +312,7 @@ const getOsModel = function (
 	};
 
 	const _transformHostApps = (apps: HostAppInfo[]) => {
-		const osVersionsByDeviceType: OsVersionsByDeviceType = {};
+		const osVersionsByDeviceType: Dictionary<OsVersion[]> = {};
 		apps.forEach((hostApp) => {
 			const hostAppDeviceType = hostApp.is_for__device_type[0]?.slug;
 			if (!hostAppDeviceType) {
@@ -354,7 +359,7 @@ const getOsModel = function (
 	const _getAllOsVersions = async (
 		deviceTypes: string[],
 		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType> => {
+	): Promise<Dictionary<OsVersion[]>> => {
 		const hostapps = await _getOsVersions(deviceTypes, options);
 		return await _transformHostApps(hostapps);
 	};
@@ -381,7 +386,7 @@ const getOsModel = function (
 	): Promise<OsVersion[]>;
 	async function getAvailableOsVersions(
 		deviceTypes: string[],
-	): Promise<OsVersionsByDeviceType>;
+	): Promise<Dictionary<OsVersion[]>>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
 	 * @name getAvailableOsVersions
@@ -402,7 +407,7 @@ const getOsModel = function (
 	 */
 	async function getAvailableOsVersions(
 		deviceTypes: string[] | string,
-	): Promise<OsVersionsByDeviceType | OsVersion[]> {
+	): Promise<TypeOrDictionary<OsVersion[]>> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
@@ -415,14 +420,16 @@ const getOsModel = function (
 			: versionsByDt;
 	}
 
-	async function getAllOsVersions(
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceType: string,
-		options?: PineOptions<Release>,
-	): Promise<OsVersion[]>;
-	async function getAllOsVersions(
+		options?: TP,
+	): Promise<Array<OsVersion & IfDefined<TP, PineTypedResult<Release, TP>>>>;
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceTypes: string[],
-		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType>;
+		options?: TP,
+	): Promise<
+		Dictionary<Array<OsVersion & IfDefined<TP, PineTypedResult<Release, TP>>>>
+	>;
 	/**
 	 * @summary Get all OS versions for the provided device type(s), inlcuding invalidated ones
 	 * @name getAllOsVersions
@@ -445,17 +452,22 @@ const getOsModel = function (
 	 * @example
 	 * balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
-	async function getAllOsVersions(
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceTypes: string[] | string,
-		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType | OsVersion[]> {
+		options?: TP,
+	): Promise<
+		TypeOrDictionary<
+			Array<OsVersion & IfDefined<TP, PineTypedResult<Release, TP>>>
+		>
+	> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt =
+		const versionsByDt = (
 			options == null
 				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), null)
-				: await _getAllOsVersions(deviceTypes, options);
+				: await _getAllOsVersions(deviceTypes, options)
+		) as Dictionary<Array<OsVersion & PineTypedResult<Release, TP>>>;
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
 			: versionsByDt;
