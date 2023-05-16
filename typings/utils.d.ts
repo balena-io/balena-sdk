@@ -17,6 +17,12 @@ export interface Dictionary<T> {
 	[key: string]: T;
 }
 
+export type TypeOrDictionary<T> =
+	| T
+	| {
+			[key: string]: T;
+	  };
+
 export type Resolvable<R> = R | PromiseLike<R>;
 
 export type ResolvableReturnType<T extends (...args: any[]) => any> =
