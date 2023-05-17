@@ -1,4 +1,16 @@
 - commits:
+    - subject: Deprecate the OsVersionsByDeviceType type
+      hash: d5a85e768905674a1d19c5a3e3b9bcbd1d2fe0fa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.44.3
+  title: ""
+  date: 2023-05-17T18:25:32.429Z
+- commits:
     - subject: Update flowzone's macos runner to v12
       hash: 0217b18d0410cb47254a586fe61a24b1bc602a4f
       body: ""
