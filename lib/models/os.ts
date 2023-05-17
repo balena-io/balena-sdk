@@ -24,7 +24,11 @@ import {
 	mergePineOptionsTyped,
 } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
-import type { Dictionary, ResolvableReturnType } from '../../typings/utils';
+import type {
+	Dictionary,
+	ResolvableReturnType,
+	TypeOrDictionary,
+} from '../../typings/utils';
 import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
 import type {
 	InjectedDependenciesParam,
@@ -91,6 +95,7 @@ export interface OsVersion
 	isRecommended?: boolean;
 }
 
+/** @deprecated */
 export interface OsVersionsByDeviceType {
 	[deviceTypeSlug: string]: OsVersion[];
 }
@@ -306,7 +311,7 @@ const getOsModel = function (
 	};
 
 	const _transformHostApps = (apps: HostAppInfo[]) => {
-		const osVersionsByDeviceType: OsVersionsByDeviceType = {};
+		const osVersionsByDeviceType: Dictionary<OsVersion[]> = {};
 		apps.forEach((hostApp) => {
 			const hostAppDeviceType = hostApp.is_for__device_type[0]?.slug;
 			if (!hostAppDeviceType) {
@@ -353,7 +358,7 @@ const getOsModel = function (
 	const _getAllOsVersions = async (
 		deviceTypes: string[],
 		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType> => {
+	): Promise<Dictionary<OsVersion[]>> => {
 		const hostapps = await _getOsVersions(deviceTypes, options);
 		return await _transformHostApps(hostapps);
 	};
@@ -380,7 +385,7 @@ const getOsModel = function (
 	): Promise<OsVersion[]>;
 	async function getAvailableOsVersions(
 		deviceTypes: string[],
-	): Promise<OsVersionsByDeviceType>;
+	): Promise<Dictionary<OsVersion[]>>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
 	 * @name getAvailableOsVersions
@@ -401,7 +406,7 @@ const getOsModel = function (
 	 */
 	async function getAvailableOsVersions(
 		deviceTypes: string[] | string,
-	): Promise<OsVersionsByDeviceType | OsVersion[]> {
+	): Promise<TypeOrDictionary<OsVersion[]>> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
@@ -421,7 +426,7 @@ const getOsModel = function (
 	async function getAllOsVersions(
 		deviceTypes: string[],
 		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType>;
+	): Promise<Dictionary<OsVersion[]>>;
 	/**
 	 * @summary Get all OS versions for the provided device type(s), inlcuding invalidated ones
 	 * @name getAllOsVersions
@@ -447,7 +452,7 @@ const getOsModel = function (
 	async function getAllOsVersions(
 		deviceTypes: string[] | string,
 		options?: PineOptions<Release>,
-	): Promise<OsVersionsByDeviceType | OsVersion[]> {
+	): Promise<TypeOrDictionary<OsVersion[]>> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
