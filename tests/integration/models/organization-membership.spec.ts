@@ -396,23 +396,19 @@ describe('Organization Membership Model', function () {
 
 		describe('balena.models.organization.membership.tags', function () {
 			describe('[contained scenario]', function () {
-				const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> =
-					{
-						model: balena.models.organization.membership
-							.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-						modelNamespace: 'balena.models.organization.membership.tags',
-						resourceName: 'organization',
-						uniquePropertyNames: ['id', 'handle'],
-					};
+				const orgTagTestOptions: tagsHelper.Options = {
+					model: balena.models.organization.membership.tags,
+					modelNamespace: 'balena.models.organization.membership.tags',
+					resourceName: 'organization',
+					uniquePropertyNames: ['id', 'handle'],
+				};
 
-				const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> =
-					{
-						model: balena.models.organization.membership
-							.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-						modelNamespace: 'balena.models.organization.membership.tags',
-						resourceName: 'organization_membership',
-						uniquePropertyNames: ['id'],
-					};
+				const orgMembershipTagTestOptions: tagsHelper.Options = {
+					model: balena.models.organization.membership.tags,
+					modelNamespace: 'balena.models.organization.membership.tags',
+					resourceName: 'organization_membership',
+					uniquePropertyNames: ['id'],
+				};
 
 				before(async function () {
 					const [membership] =

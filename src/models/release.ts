@@ -709,30 +709,6 @@ const getReleaseModel = function (
 		},
 
 		/**
-		 * @summary Get all release tags
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.release.tags
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - release tags
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.release.tags.getAll().then(function(tags) {
-		 * 	console.log(tags);
-		 * });
-		 *
-		 * @example
-		 * balena.models.release.tags.getAll(function(error, tags) {
-		 * 	if (error) throw error;
-		 * 	console.log(tags)
-		 * });
-		 */
-		getAll: tagsModel.getAll,
-
-		/**
 		 * @summary Set a release tag
 		 * @name set
 		 * @public

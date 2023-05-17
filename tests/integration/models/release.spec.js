@@ -593,18 +593,14 @@ describe('Release Model', function () {
 
 		describe('balena.models.release.tags', function () {
 			const appTagTestOptions = {
-				// prettier-ignore
-				model:
-					/** @type {import('./tags').TagModelBase<import('../../../').ReleaseTag>} */ (balena.models.release.tags),
+				model: balena.models.release.tags,
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'application',
 				uniquePropertyNames: applicationRetrievalFields,
 			};
 
 			const releaseTagTestOptions = {
-				// prettier-ignore
-				model:
-					/** @type {import('./tags').TagModelBase<import('../../../').ReleaseTag>} */ (balena .models.release.tags),
+				model: balena.models.release.tags,
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'release',
 				uniquePropertyNames,

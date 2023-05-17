@@ -1665,18 +1665,14 @@ describe('Device Model', function () {
 				givenADevice(before);
 
 				const appTagTestOptions = {
-					// prettier-ignore
-					model:
-						/** @type {import('./tags').TagModelBase<import('../../../').DeviceTag>} */ (balena .models.device.tags),
+					model: balena.models.device.tags,
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'application',
 					uniquePropertyNames: applicationRetrievalFields,
 				};
 
 				const deviceTagTestOptions = {
-					// prettier-ignore
-					model:
-						/** @type {import('./tags').TagModelBase<import('../../../').DeviceTag>} */ (balena.models.device.tags),
+					model: balena.models.device.tags,
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'device',
 					uniquePropertyNames: deviceUniqueFields,

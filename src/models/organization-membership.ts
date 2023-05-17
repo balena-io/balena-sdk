@@ -459,30 +459,6 @@ const getOrganizationMembershipModel = function (
 			getAllByOrganizationMembership: tagsModel.getAllByParent,
 
 			/**
-			 * @summary Get all organization membership tags
-			 * @name getAll
-			 * @public
-			 * @function
-			 * @memberof balena.models.organization.memberships.tags
-			 *
-			 * @param {Object} [options={}] - extra pine options to use
-			 * @fulfil {Object[]} - organization membership tags
-			 * @returns {Promise}
-			 *
-			 * @example
-			 * balena.models.organization.memberships.tags.getAll().then(function(tags) {
-			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.organization.memberships.tags.getAll(function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
-			 */
-			getAll: tagsModel.getAll,
-
-			/**
 			 * @summary Set an organization membership tag
 			 * @name set
 			 * @public

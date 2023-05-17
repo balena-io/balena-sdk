@@ -806,9 +806,8 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.tags', function () {
-				const tagTestOptions: tagsHelper.Options<BalenaSdk.ApplicationTag> = {
-					model: balena.models.application
-						.tags as tagsHelper.TagModelBase<BalenaSdk.ApplicationTag>,
+				const tagTestOptions: tagsHelper.Options = {
+					model: balena.models.application.tags,
 					modelNamespace: 'balena.models.application.tags',
 					resourceName: 'application',
 					uniquePropertyNames: applicationRetrievalFields,
