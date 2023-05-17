@@ -125,6 +125,7 @@ export interface DownloadConfig
 	version?: string;
 	appId?: number;
 	fileType?: '.img' | '.zip' | '.gz';
+	imageType?: 'raw' | 'flasher';
 }
 
 const sortVersions = (a: OsVersion, b: OsVersion) => {
@@ -707,6 +708,7 @@ const getOsModel = function (
 	 * @param {Boolean} [options.developmentMode] - controls development mode for unified balenaOS releases.
 	 * @param {Number} [options.appId] - the application ID (number).
 	 * @param {String} [options.fileType] - download file type. One of '.img' or '.zip' or '.gz'.
+	 * @param {String} [options.imageType] - download file type. One of 'raw' or 'flasher'
 	 * @param {Number} [options.appUpdatePollInterval] - how often the OS checks for updates, in minutes.
 	 * @param {String} [options.network] - the network type that the device will use, one of 'ethernet' or 'wifi'.
 	 * @param {String} [options.wifiKey] - the key for the wifi network the device will connect to if network is wifi.
