@@ -218,6 +218,68 @@ const getOrganizationMembershipModel = function (
 		},
 
 		/**
+		 * @summary Get all memberships by user
+		 * @name getAllByUser
+		 * @public
+		 * @function
+		 * @memberof balena.models.organization.membership
+		 *
+		 * @description
+		 * This method returns all organization memberships for a specific user.
+		 *
+		 * @param {String|Number} usernameOrId - the user's username (string) or id (number)
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - organization memberships
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.organization.membership.getAllByUser('balena_os').then(function(memberships) {
+		 * 	console.log(memberships);
+		 * });
+		 *
+		 * @example
+		 * balena.models.organization.membership.getAllByUser(123).then(function(memberships) {
+		 * 	console.log(memberships);
+		 * });
+		 */
+		async getAllByUser(
+			usernameOrId: number | string,
+			options: PineOptions<OrganizationMembership> = {},
+		): Promise<OrganizationMembership[]> {
+			if (
+				typeof usernameOrId !== 'number' &&
+				typeof usernameOrId !== 'string'
+			) {
+				throw new errors.BalenaInvalidParameterError(
+					'usernameOrId',
+					usernameOrId,
+				);
+			}
+			return await exports.getAll(
+				mergePineOptions(
+					{
+						$filter: {
+							user:
+								typeof usernameOrId === 'number'
+									? usernameOrId
+									: {
+											$any: {
+												$alias: 'u',
+												$expr: {
+													u: {
+														username: usernameOrId,
+													},
+												},
+											},
+									  },
+						},
+					},
+					options,
+				),
+			);
+		},
+
+		/**
 		 * @summary Creates a new membership for an organization
 		 * @name create
 		 * @public

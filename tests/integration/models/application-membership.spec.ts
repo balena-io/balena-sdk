@@ -260,10 +260,13 @@ describe('Application Membership Model', function () {
 	describe('given a membership [read operations]', function () {
 		let membership: BalenaSdk.ApplicationMembership | undefined;
 		before(async function () {
+			ctx.username = credentials.member.username;
 			membership = await balena.models.application.membership.create({
-				application: this.application.id,
-				username: credentials.member.username,
+				application: ctx.application.id,
+				username: ctx.username,
 			});
+			// @ts-expect-error Fix the return types of all create methods to be fully typed
+			ctx.userId = membership!.user.__id;
 		});
 
 		after(async function () {
@@ -325,6 +328,29 @@ describe('Application Membership Model', function () {
 							},
 						},
 					]);
+				});
+			},
+		);
+
+		parallel(
+			'balena.models.application.membership.getAllByUser()',
+			function () {
+				(['userId', 'username'] as const).forEach((prop) => {
+					it(`shoud return only the user's own membership by ${prop}`, async function () {
+						const memberships =
+							await balena.models.application.membership.getAllByUser(
+								ctx[prop],
+							);
+						assertDeepMatchAndLength(memberships, [
+							{
+								user: { __id: ctx.userId },
+								is_member_of__application: { __id: ctx.application.id },
+								application_membership_role: {
+									__id: ctx.applicationDeveloperRole.id,
+								},
+							},
+						]);
+					});
 				});
 			},
 		);
