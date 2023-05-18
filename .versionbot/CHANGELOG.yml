@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add the application.membership.getAllByUser() method
+      hash: 34f71f16c42cb2673b91eadc969e483beaa869a1
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add the organization.membership.getAllByUser() method
+      hash: 02a27e59f9aab9972388f6ed61ce98f970e5593c
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.45.0
+  title: ""
+  date: 2023-05-18T10:10:35.907Z
+- commits:
     - subject: Deprecate the OsVersionsByDeviceType type
       hash: d5a85e768905674a1d19c5a3e3b9bcbd1d2fe0fa
       body: ""
