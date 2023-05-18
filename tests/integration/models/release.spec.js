@@ -264,6 +264,7 @@ describe('Release Model', function () {
 				const userId = await balena.auth.getUserId();
 				await Promise.all(
 					uniquePropertyNames.map(async (field, i) => {
+						const fieldKey = getFieldLabel(field);
 						const release = await balena.pine.post({
 							resource: 'release',
 							body: {
@@ -278,7 +279,7 @@ describe('Release Model', function () {
 								start_timestamp: new Date().toISOString(),
 							},
 						});
-						testReleaseByField[field] = await balena.models.release.get(
+						testReleaseByField[fieldKey] = await balena.models.release.get(
 							release.id,
 							{
 								$select: [
@@ -294,63 +295,77 @@ describe('Release Model', function () {
 			});
 
 			describe('balena.model.release.finalize()', function () {
-				uniquePropertyNames.forEach((field) => {
-					const fieldLabel = getFieldLabel(field);
-					it(`should finalize a release by ${fieldLabel}`, async () => {
-						const draftRelease = testReleaseByField[field];
-						const finalizeParam = getParam(field, draftRelease);
-						await balena.models.release.finalize(finalizeParam);
-						testReleaseByField[field] = await balena.models.release.get(
-							draftRelease.id,
-							{
-								$select: [
-									'id',
-									'commit',
-									'raw_version',
-									'is_final',
-									'belongs_to__application',
-								],
-							},
-						);
-						expect(testReleaseByField[field]).to.deep.match({
-							id: draftRelease.id,
-							commit: draftRelease.commit,
-							raw_version: draftRelease.raw_version,
-							is_final: true,
+				uniquePropertyNames
+					.map((key) => [key, getFieldLabel(key)])
+					.forEach(([field, fieldLabel], index) => {
+						it(`should finalize a release by ${fieldLabel}`, async () => {
+							const draftRelease = testReleaseByField[fieldLabel];
+							const finalizeParam = getParam(field, draftRelease);
+							await balena.models.release.finalize(finalizeParam);
+							const freshRelease = await balena.models.release.get(
+								draftRelease.id,
+								{
+									$select: [
+										'id',
+										'commit',
+										'raw_version',
+										'is_final',
+										'belongs_to__application',
+									],
+								},
+							);
+							expect(freshRelease).to.deep.match({
+								id: draftRelease.id,
+								commit: draftRelease.commit,
+								raw_version: draftRelease.raw_version.replace(
+									/-(\d)+$/,
+									index > 0 ? `+rev${index}` : '',
+								),
+								is_final: true,
+							});
+							// Only update the releases in the context if the tests pass
+							// otherwise retries could conceal errors.
+							testReleaseByField[fieldLabel] = freshRelease;
 						});
 					});
-				});
 			});
 
 			describe('balena.model.release.setIsInvalidated()', function () {
-				uniquePropertyNames.forEach((field) => {
-					const fieldLabel = getFieldLabel(field);
-					it(`should invalidate a release by ${fieldLabel}`, async () => {
-						const release = testReleaseByField[field];
-						const invalidateParam = getParam(field, release);
-						await balena.models.release.setIsInvalidated(invalidateParam, true);
-						const invalidatedRelease = await balena.models.release.get(
-							release.id,
-							{ $select: 'is_invalidated' },
-						);
-						expect(invalidatedRelease).to.deep.match({
-							is_invalidated: true,
+				uniquePropertyNames
+					.map((key) => [key, getFieldLabel(key)])
+					.forEach(([field, fieldLabel]) => {
+						it(`should invalidate a release by ${fieldLabel}`, async () => {
+							const release = testReleaseByField[fieldLabel];
+							const invalidateParam = getParam(field, release);
+							await balena.models.release.setIsInvalidated(
+								invalidateParam,
+								true,
+							);
+							const invalidatedRelease = await balena.models.release.get(
+								release.id,
+								{ $select: 'is_invalidated' },
+							);
+							expect(invalidatedRelease).to.deep.match({
+								is_invalidated: true,
+							});
 						});
-					});
 
-					it(`should validate a release by ${fieldLabel}`, async () => {
-						const release = testReleaseByField[field];
-						const validateParam = getParam(field, release);
-						await balena.models.release.setIsInvalidated(validateParam, false);
-						const validatedRelease = await balena.models.release.get(
-							release.id,
-							{ $select: 'is_invalidated' },
-						);
-						expect(validatedRelease).to.deep.match({
-							is_invalidated: false,
+						it(`should validate a release by ${fieldLabel}`, async () => {
+							const release = testReleaseByField[fieldLabel];
+							const validateParam = getParam(field, release);
+							await balena.models.release.setIsInvalidated(
+								validateParam,
+								false,
+							);
+							const validatedRelease = await balena.models.release.get(
+								release.id,
+								{ $select: 'is_invalidated' },
+							);
+							expect(validatedRelease).to.deep.match({
+								is_invalidated: false,
+							});
 						});
 					});
-				});
 			});
 		});
 	});
