@@ -2537,12 +2537,12 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
+		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(result) {
 		 * 	console.log(result.status);
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod', function(error, status) {
+		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod', function(error, result) {
 		 * 	if (error) throw error;
 		 * 	console.log(result.status);
 		 * });
@@ -2604,12 +2604,12 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
+		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(result) {
 		 * 	console.log(result.status);
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
+		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, result) {
 		 * 	if (error) throw error;
 		 * 	console.log(result.status);
 		 * });
