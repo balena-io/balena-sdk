@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix the release.finalize() tests
+      hash: 5549552910caa6b80586792000d70df12a52a47e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 16.45.1
+  title: ""
+  date: 2023-05-18T22:43:17.265Z
+- commits:
     - subject: Add the application.membership.getAllByUser() method
       hash: 34f71f16c42cb2673b91eadc969e483beaa869a1
       body: ""
