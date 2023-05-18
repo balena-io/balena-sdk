@@ -38,6 +38,7 @@ describe('Organization Membership Model', function () {
 	let ctx: Mocha.Context;
 	before(async function () {
 		ctx = this;
+		this.username = await balena.auth.whoami();
 		this.userId = await balena.auth.getUserId();
 		const roles = await balena.pine.get({
 			resource: 'organization_membership_role',
@@ -147,6 +148,27 @@ describe('Organization Membership Model', function () {
 				]);
 			});
 		});
+
+		parallel(
+			'balena.models.organization.membership.getAllByUser()',
+			function () {
+				(['userId', 'username'] as const).forEach((prop) => {
+					it(`shoud return only the user's own membership by ${prop}`, async function () {
+						const memberships =
+							await balena.models.organization.membership.getAllByUser(
+								ctx[prop],
+							);
+						assertDeepMatchAndLength(memberships, [
+							{
+								user: { __id: ctx.userId },
+								is_member_of__organization: { __id: ctx.initialOrg.id },
+								organization_membership_role: { __id: ctx.orgAdminRole.id },
+							},
+						]);
+					});
+				});
+			},
+		);
 	});
 
 	describe('given a new organization', function () {

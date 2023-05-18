@@ -340,6 +340,7 @@ const sdk = fromSharedOptions();
                 * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
                 * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
                 * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+                * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
                 * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
                 * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
                 * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
@@ -745,6 +746,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+            * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
             * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
             * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
@@ -5936,6 +5938,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
         * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+        * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
         * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
         * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
@@ -5959,6 +5962,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
     * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.organization.membership.getAll) ⇒ <code>Promise</code>
     * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
+    * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
     * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
     * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
@@ -6046,6 +6050,33 @@ balena.models.organization.membership.getAllByOrganization(123).then(function(me
 **Example**  
 ```js
 balena.models.organization.membership.getAllByOrganization(123, function(error, memberships) {
+	console.log(memberships);
+});
+```
+<a name="balena.models.organization.membership.getAllByUser"></a>
+
+###### membership.getAllByUser(usernameOrId, [options]) ⇒ <code>Promise</code>
+This method returns all organization memberships for a specific user.
+
+**Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
+**Summary**: Get all memberships by user  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - organization memberships  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| usernameOrId | <code>String</code> \| <code>Number</code> |  | the user's username (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.organization.membership.getAllByUser('balena_os').then(function(memberships) {
+	console.log(memberships);
+});
+```
+**Example**  
+```js
+balena.models.organization.membership.getAllByUser(123).then(function(memberships) {
 	console.log(memberships);
 });
 ```
