@@ -119,39 +119,6 @@ const getApplicationMembershipModel = function (
 		},
 
 		/**
-		 * @summary Get all application memberships
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.application.membership
-		 *
-		 * @description
-		 * This method returns all application memberships.
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - application memberships
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.application.membership.getAll().then(function(memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.getAll(function(error, memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 */
-		getAll(
-			options: PineOptions<ApplicationMembership> = {},
-		): Promise<ApplicationMembership[]> {
-			return pine.get({
-				resource: RESOURCE,
-				options,
-			});
-		},
-
-		/**
 		 * @summary Get all memberships by application
 		 * @name getAllByApplication
 		 * @public
@@ -188,12 +155,13 @@ const getApplicationMembershipModel = function (
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
-				mergePineOptions(
+			return await pine.get({
+				resource: RESOURCE,
+				options: mergePineOptions(
 					{ $filter: { is_member_of__application: id } },
 					options,
 				),
-			);
+			});
 		},
 
 		/**
@@ -234,8 +202,9 @@ const getApplicationMembershipModel = function (
 					usernameOrId,
 				);
 			}
-			return await exports.getAll(
-				mergePineOptions(
+			return await pine.get({
+				resource: RESOURCE,
+				options: mergePineOptions(
 					{
 						$filter: {
 							user:
@@ -255,7 +224,7 @@ const getApplicationMembershipModel = function (
 					},
 					options,
 				),
-			);
+			});
 		},
 
 		/**
