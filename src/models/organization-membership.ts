@@ -137,39 +137,6 @@ const getOrganizationMembershipModel = function (
 		},
 
 		/**
-		 * @summary Get all organization memberships
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.organization.membership
-		 *
-		 * @description
-		 * This method returns all organization memberships.
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - organization memberships
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.organization.membership.getAll().then(function(memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 *
-		 * @example
-		 * balena.models.organization.membership.getAll(function(error, memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 */
-		getAll(
-			options: PineOptions<OrganizationMembership> = {},
-		): Promise<OrganizationMembership[]> {
-			return pine.get({
-				resource: RESOURCE,
-				options,
-			});
-		},
-
-		/**
 		 * @summary Get all memberships by organization
 		 * @name getAllByOrganization
 		 * @public
@@ -206,12 +173,13 @@ const getOrganizationMembershipModel = function (
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
-				mergePineOptions(
+			return await pine.get({
+				resource: RESOURCE,
+				options: mergePineOptions(
 					{ $filter: { is_member_of__organization: id } },
 					options,
 				),
-			);
+			});
 		},
 
 		/**
@@ -252,8 +220,9 @@ const getOrganizationMembershipModel = function (
 					usernameOrId,
 				);
 			}
-			return await exports.getAll(
-				mergePineOptions(
+			return await pine.get({
+				resource: RESOURCE,
+				options: mergePineOptions(
 					{
 						$filter: {
 							user:
@@ -273,7 +242,7 @@ const getOrganizationMembershipModel = function (
 					},
 					options,
 				),
-			);
+			});
 		},
 
 		/**

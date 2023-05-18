@@ -56,15 +56,17 @@ describe('Organization Membership Model', function () {
 		});
 	});
 
-	parallel('balena.models.organization.membership.getAll()', function () {
-		it(`should return only the user's own memberships`, async function () {
-			const memberships = await balena.models.organization.membership.getAll();
-
+	describe('balena.models.organization.membership.getAllByOrganization()', function () {
+		it(`should return only the user's own membership`, async function () {
+			const memberships =
+				await balena.models.organization.membership.getAllByOrganization(
+					this.initialOrg.id,
+				);
 			assertDeepMatchAndLength(memberships, [
 				{
-					user: { __id: ctx.userId },
-					is_member_of__organization: { __id: ctx.initialOrg.id },
-					organization_membership_role: { __id: ctx.orgAdminRole.id },
+					user: { __id: this.userId },
+					is_member_of__organization: { __id: this.initialOrg.id },
+					organization_membership_role: { __id: this.orgAdminRole.id },
 				},
 			]);
 		});
@@ -73,7 +75,11 @@ describe('Organization Membership Model', function () {
 	describe('given a membership [read operations]', function () {
 		let membership: BalenaSdk.OrganizationMembership | undefined;
 		before(async function () {
-			membership = (await balena.models.organization.membership.getAll())[0];
+			membership = (
+				await balena.models.organization.membership.getAllByOrganization(
+					this.initialOrg.id,
+				)
+			)[0];
 		});
 
 		parallel('balena.models.organization.membership.get()', function () {
