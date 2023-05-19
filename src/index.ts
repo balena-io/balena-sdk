@@ -44,6 +44,7 @@ export type {
 	ExpandableProps as PineExpandableProps,
 	ExpandResultObject as PineExpandResultObject,
 	TypedResult as PineTypedResult,
+	PostResult as PinePostResult,
 } from '../typings/pinejs-client-core';
 
 export type { ApplicationMembershipCreationOptions } from './models/application-membership';

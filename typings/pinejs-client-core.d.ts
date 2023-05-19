@@ -45,7 +45,7 @@ export type InferAssociatedResourceType<T> = T extends AssociatedResource<{}> &
 	any[]
 	? T[number]
 	: never;
-type x = Exclude<AssociatedResource<{}>, number>;
+
 export type SelectableProps<T> =
 	// This allows us to get proper results when T is any/AnyObject, otherwise this returned never
 	PropsOfType<T, ReverseNavigationResource<{}>> extends StringKeyof<T>
@@ -136,6 +136,11 @@ export type TypedResult<
 	: undefined extends TParams
 	? TypedSelectResult<T, { $select: '*' }>
 	: never;
+
+export type PostResult<T> = SelectResultObject<
+	T,
+	Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<{}>>>
+>;
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
@@ -506,7 +511,17 @@ export interface Pine<ResourceTypeMap extends {} = {}> {
 	get<T extends {}>(params: ParamsObjWithId<T>): Promise<T | undefined>;
 	get<T extends {}>(params: ParamsObj<T>): Promise<T[]>;
 	get<T extends {}, Result>(params: ParamsObj<T>): Promise<Result>;
-	post<T>(params: ParamsObj<T>): Promise<T & { id: number }>;
+	post<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>,
+	>(
+		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>> & {
+			body: {};
+		},
+	): Promise<PostResult<ResourceTypeMap[P['resource']]>>;
+	post<T>(
+		params: ParamsObj<T> & { body: {} },
+	): Promise<PostResult<T & { id: number }>>;
 	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
 	getOrCreate<T>(params: GetOrCreateParams<T>): Promise<T>;
