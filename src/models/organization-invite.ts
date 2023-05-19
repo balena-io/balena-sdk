@@ -23,6 +23,7 @@ import type {
 	PineSubmitBody,
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
+	PinePostResult,
 } from '..';
 import { mergePineOptions } from '../util';
 
@@ -155,7 +156,7 @@ const getOrganizationInviteModel = function (
 		async create(
 			handleOrId: string | number,
 			{ invitee, roleName, message }: OrganizationInviteOptions,
-		): Promise<OrganizationInvite> {
+		): Promise<PinePostResult<OrganizationInvite>> {
 			const [{ id }, roles] = await Promise.all([
 				getOrganization(handleOrId, { $select: 'id' }),
 				roleName
@@ -191,7 +192,7 @@ const getOrganizationInviteModel = function (
 			return (await pine.post<OrganizationInviteBase>({
 				resource: RESOURCE,
 				body,
-			})) as OrganizationInvite;
+			})) as PinePostResult<OrganizationInvite>;
 		},
 
 		/**

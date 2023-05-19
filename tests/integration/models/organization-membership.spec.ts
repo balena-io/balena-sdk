@@ -18,10 +18,15 @@ import {
 import type * as tagsHelper from './tags';
 
 const keyAlternatives = [
-	['id', (member: BalenaSdk.OrganizationMembership) => member.id],
+	['id', (member: Pick<BalenaSdk.OrganizationMembership, 'id'>) => member.id],
 	[
 		'alternate key',
-		(member: BalenaSdk.OrganizationMembership) =>
+		(
+			member: Pick<
+				BalenaSdk.OrganizationMembership,
+				'user' | 'is_member_of__organization'
+			>,
+		) =>
 			_.mapValues(
 				_.pick(member, ['user', 'is_member_of__organization']),
 				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
@@ -212,7 +217,9 @@ describe('Organization Membership Model', function () {
 			});
 
 			describe('[mutating operations]', function () {
-				let membership: BalenaSdk.OrganizationMembership | undefined;
+				let membership:
+					| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+					| undefined;
 				afterEach(async function () {
 					await balena.models.organization.membership.remove(membership!.id);
 				});
@@ -260,7 +267,9 @@ describe('Organization Membership Model', function () {
 		});
 
 		describe('given a member organization membership [contained scenario]', function () {
-			let membership: BalenaSdk.OrganizationMembership | undefined;
+			let membership:
+				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+				| undefined;
 			beforeEach(async function () {
 				membership = await balena.models.organization.membership.create({
 					organization: this.organization.id,
@@ -286,7 +295,10 @@ describe('Organization Membership Model', function () {
 		});
 
 		describe('given an administrator organization membership [contained scenario]', function () {
-			let membership: BalenaSdk.OrganizationMembership | undefined;
+			let membership:
+				| BalenaSdk.OrganizationMembership
+				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+				| undefined;
 			before(async function () {
 				membership = await balena.models.organization.membership.create({
 					organization: this.organization.id,

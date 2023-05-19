@@ -142,12 +142,15 @@ const getKeyModel = function (
 	 * 	console.log(key);
 	 * });
 	 */
-	async function create(title: string, key: string): Promise<BalenaSdk.SSHKey> {
+	async function create(
+		title: string,
+		key: string,
+	): Promise<BalenaSdk.PinePostResult<BalenaSdk.SSHKey>> {
 		// Avoid ugly whitespaces
 		key = key.trim();
 
 		const userId = await sdkInstance.auth.getUserId();
-		return pine.post<BalenaSdk.SSHKey>({
+		return await pine.post({
 			resource: 'user__has__public_key',
 			body: {
 				title,

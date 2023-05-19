@@ -26,6 +26,7 @@ import type {
 	BuildVariable,
 	Device,
 	DeviceType,
+	PinePostResult,
 } from '..';
 import type {
 	CurrentServiceWithCommit,
@@ -681,7 +682,7 @@ const getApplicationModel = function (
 			/** @deprecated */
 			parent?: number | string;
 			organization: number | string;
-		}): Promise<Application> {
+		}): Promise<PinePostResult<Application>> {
 			if (organization == null) {
 				throw new errors.BalenaInvalidParameterError(
 					'organization',

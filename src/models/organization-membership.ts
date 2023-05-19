@@ -24,6 +24,7 @@ import type {
 	PineOptions,
 	PineSubmitBody,
 	InjectedDependenciesParam,
+	PinePostResult,
 } from '..';
 import { mergePineOptions } from '../util';
 
@@ -276,7 +277,9 @@ const getOrganizationMembershipModel = function (
 			organization,
 			username,
 			roleName,
-		}: OrganizationMembershipCreationOptions): Promise<OrganizationMembership> {
+		}: OrganizationMembershipCreationOptions): Promise<
+			PinePostResult<OrganizationMembership>
+		> {
 			const [{ id }, roleId] = await Promise.all([
 				getOrganization(organization, { $select: 'id' }),
 				roleName ? getRoleId(roleName) : undefined,
@@ -295,7 +298,7 @@ const getOrganizationMembershipModel = function (
 			return (await pine.post<OrganizationMembershipBase>({
 				resource: RESOURCE,
 				body,
-			})) as OrganizationMembership;
+			})) as PinePostResult<OrganizationMembership>;
 		},
 
 		/**

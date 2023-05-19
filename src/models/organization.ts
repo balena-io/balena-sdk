@@ -73,8 +73,8 @@ const getOrganizationModel = function (
 	 */
 	const create = function (
 		organization: BalenaSdk.PineSubmitBody<BalenaSdk.Organization>,
-	): Promise<BalenaSdk.Organization> {
-		return pine.post<BalenaSdk.Organization>({
+	): Promise<BalenaSdk.PinePostResult<BalenaSdk.Organization>> {
+		return pine.post({
 			resource: 'organization',
 			body: organization,
 		});

@@ -23,6 +23,7 @@ import type {
 	ApplicationMembershipRoles,
 	PineOptions,
 	PineSubmitBody,
+	PinePostResult,
 } from '..';
 import { mergePineOptions } from '../util';
 
@@ -155,7 +156,7 @@ const getApplicationInviteModel = function (
 		async create(
 			slugOrUuidOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<ApplicationInvite> {
+		): Promise<PinePostResult<ApplicationInvite>> {
 			const [{ id }, roles] = await Promise.all([
 				getApplication(slugOrUuidOrId, { $select: 'id' }),
 				roleName
@@ -191,7 +192,7 @@ const getApplicationInviteModel = function (
 			return (await pine.post<ApplicationInviteBase>({
 				resource: RESOURCE,
 				body,
-			})) as ApplicationInvite;
+			})) as PinePostResult<ApplicationInvite>;
 		},
 
 		/**
