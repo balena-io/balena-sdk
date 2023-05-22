@@ -376,7 +376,7 @@ let aString: string;
 		},
 	});
 	const test: Equals<
-		Compute<typeof result[number]>,
+		Compute<(typeof result)[number]>,
 		{
 			id: any;
 			device_name: any;
@@ -423,7 +423,7 @@ let aString: string;
 		},
 	});
 	const test: Equals<
-		Compute<typeof result[number]>,
+		Compute<(typeof result)[number]>,
 		{
 			device_name: string;
 		}
@@ -448,7 +448,7 @@ let aString: string;
 		},
 	});
 	const test: Equals<
-		Compute<typeof result[number]>,
+		Compute<(typeof result)[number]>,
 		{
 			device_name: string;
 		}
@@ -517,7 +517,7 @@ let aString: string;
 		},
 	});
 	const test: Equals<
-		Compute<typeof result[number]>,
+		Compute<(typeof result)[number]>,
 		{
 			is_stored_at__image_location: string;
 		}
@@ -604,7 +604,7 @@ let aString: string;
 		},
 	});
 	const test: Equals<
-		Compute<typeof result[number]>,
+		Compute<(typeof result)[number]>,
 		{
 			is_stored_at__image_location: string;
 		}
@@ -726,7 +726,7 @@ let aString: string;
 		options: {
 			$count: {
 				$filter: {
-					// TODO: this should error
+					// TODO: This should error
 					asdf: 4,
 					belongs_to__application: {
 						organization: 1,
@@ -759,4 +759,83 @@ let aString: string;
 	});
 
 	aNumber = result;
+})();
+
+// pine.post
+(async () => {
+	await sdk.pine.post<BalenaSdk.Application>({
+		resource: 'application',
+		body: {
+			organization: 3,
+			// @ts-expect-error
+			asdf: 4,
+		},
+	});
+})();
+
+(async () => {
+	const result = await sdk.pine.post<BalenaSdk.Application>({
+		resource: 'application',
+		body: {
+			organization: 3,
+		},
+	});
+
+	aNumber = result.id;
+	aString = result.app_name;
+	aNumber = result.organization.__id;
+	aNumberOrUndefined = result.should_be_running__release?.__id;
+
+	// @ts-expect-error
+	aAny = result.owns__device;
+})();
+
+(async () => {
+	// @ts-expect-error
+	await sdk.pine.post<BalenaSdk.Application>({
+		resource: 'application',
+	});
+	// @ts-expect-error
+	await sdk.pine.post({
+		resource: 'application',
+	});
+})();
+
+(async () => {
+	const result = await sdk.pine.post({
+		resource: 'application',
+		body: {
+			organization: 3,
+		},
+	});
+	aNumber = result.id;
+	aString = result.app_name;
+	aNumber = result.organization.__id;
+	aNumberOrUndefined = result.should_be_running__release?.__id;
+
+	// @ts-expect-error
+	aAny = result.owns__device;
+})();
+
+(async () => {
+	const result = await sdk.pine.post({
+		resource: 'application',
+		body: {
+			organization: 3,
+			// TODO: This should error
+			asdf: 4,
+		},
+	});
+	aNumber = result.id;
+	// @ts-expect-error TODO: This should not fail
+	aString = result.app_name;
+	// @ts-expect-error TODO: This should not fail
+	aNumber = result.organization.__id;
+	// @ts-expect-error TODO: This should not fail
+	aNumberOrUndefined = result.should_be_running__release?.__id;
+	// TODO: This should error
+	aNumberOrUndefined = result.asdf;
+
+	// @ts-expect-error
+	aAny = result.owns__device;
 })();

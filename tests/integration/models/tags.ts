@@ -9,16 +9,16 @@ import { getFieldLabel, getParam } from '../utils';
 const getAllByResourcePropNameProvider = (resourceName: string) =>
 	`getAllBy${_.upperFirst(_.camelCase(resourceName))}`;
 
-const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
-	model: TagModelBase<T>,
+const getAllByResourceFactory = function (
+	model: TagModelBase,
 	resourceName: string,
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
 	return function (
 		idOrUniqueParam: number | string | Dictionary<unknown>,
-		cb?: (err: Error | null, result?: any) => void,
+		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
 	) {
-		return (model as any)[propName](idOrUniqueParam, cb) as Promise<
+		return (model as any)[propName](idOrUniqueParam, options) as Promise<
 			BalenaSdk.ResourceTagBase[]
 		>;
 	};
@@ -27,10 +27,7 @@ const getAllByResourceFactory = function <T extends BalenaSdk.ResourceTagBase>(
 const getTagKey = (key: string | { [key: string]: string }) =>
 	typeof key === 'string' ? key : Object.keys(key).join('___');
 
-export interface TagModelBase<T extends BalenaSdk.ResourceTagBase> {
-	getAll(
-		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
-	): Promise<T[]>;
+export interface TagModelBase {
 	set(
 		uuidOrIdOrDict: string | number | Dictionary<unknown>,
 		tagKey: string,
@@ -42,8 +39,8 @@ export interface TagModelBase<T extends BalenaSdk.ResourceTagBase> {
 	): Promise<void>;
 }
 
-export interface Options<T extends BalenaSdk.ResourceTagBase> {
-	model: TagModelBase<T>;
+export interface Options {
+	model: TagModelBase;
 	modelNamespace: string;
 	resourceName: string;
 	/** uniquePropertyNames: properties with ids coming from ctx should come first */
@@ -52,9 +49,7 @@ export interface Options<T extends BalenaSdk.ResourceTagBase> {
 	setTagResourceProvider?: () => { id: number };
 }
 
-export const itShouldGetAllTagsByResource = function <
-	T extends BalenaSdk.ResourceTagBase,
->(opts: Options<T>) {
+export const itShouldGetAllTagsByResource = function (opts: Options) {
 	const { model, resourceName, uniquePropertyNames } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
@@ -72,21 +67,9 @@ export const itShouldGetAllTagsByResource = function <
 	});
 
 	parallel('', function () {
-		it('should become an empty array by default [Promise]', function () {
-			const promise = getAllByResource(ctx.resource.id);
-			return expect(promise).to.become([]);
-		});
-
-		it('should become an empty array by default [callback]', function (done) {
-			getAllByResource(ctx.resource.id, function (err, tags) {
-				try {
-					expect(err).to.be.null;
-					expect(tags).to.deep.equal([]);
-					done();
-				} catch (err) {
-					done(err);
-				}
-			});
+		it('should become an empty array by default', async function () {
+			const result = await getAllByResource(ctx.resource.id);
+			expect(result).to.deep.equal([]);
 		});
 
 		it(`should be rejected if the ${resourceName} id does not exist`, function () {
@@ -162,27 +145,11 @@ export const itShouldGetAllTagsByResource = function <
 					expect(tags[0].value).to.equal('vim');
 				});
 			});
-
-			it(`should retrieve the tag by ${resourceName} id [callback]`, function (done) {
-				getAllByResource(ctx.resource.id, function (err, tags) {
-					try {
-						expect(err).to.be.null;
-						expect(tags).to.have.length(1);
-						expect(tags[0].tag_key).to.equal('EDITOR');
-						expect(tags[0].value).to.equal('vim');
-						done();
-					} catch (err) {
-						done(err);
-					}
-				});
-			});
 		});
 	});
 };
 
-export const itShouldSetGetAndRemoveTags = function <
-	T extends BalenaSdk.ResourceTagBase,
->(opts: Options<T>) {
+export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 	const { model, resourceName, uniquePropertyNames, modelNamespace } = opts;
 	const getAllByResource = getAllByResourceFactory(model, resourceName);
 
@@ -328,9 +295,12 @@ export const itShouldSetGetAndRemoveTags = function <
 			]);
 		});
 
-		parallel(`${modelNamespace}.getAll()`, function () {
-			it('should retrieve all the tags', async function () {
-				let tags = await model.getAll();
+		const getAllByResourceMethodName =
+			getAllByResourcePropNameProvider(resourceName);
+
+		parallel(`${modelNamespace}.${getAllByResourceMethodName}()`, function () {
+			it('should retrieve all the tags by ', async function () {
+				let tags = await getAllByResource(ctx.resource.id);
 				tags = _.sortBy(tags, 'tag_key');
 				expect(tags.length).to.be.gte(2);
 				// exclude tags that the user can access b/c of public apps
@@ -344,7 +314,9 @@ export const itShouldSetGetAndRemoveTags = function <
 			});
 
 			it('should retrieve the filtered tag', async function () {
-				const tags = await model.getAll({ $filter: { tag_key: 'EDITOR' } });
+				const tags = await getAllByResource(ctx.resource.id, {
+					$filter: { tag_key: 'EDITOR' },
+				});
 				expect(tags.length).to.be.gte(1);
 				// exclude tags that the user can access b/c of public apps
 				const tagsOfUsersResource = tags.filter(

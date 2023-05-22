@@ -2,7 +2,7 @@ import * as errors from 'balena-errors';
 import chunk = require('lodash/chunk');
 import { groupByMap, mergePineOptions } from '.';
 import type {
-	PineOptionsWithSelect,
+	PineOptionsStrict,
 	PineSelectableProps,
 	PineTypedResult,
 	PineFilter,
@@ -17,16 +17,16 @@ export function batchResourceOperationFactory<
 	NotFoundError,
 	AmbiguousResourceError,
 }: {
-	getAll: (options?: PineOptionsWithSelect<T>) => Promise<T[]>;
+	getAll: (options?: PineOptionsStrict<T>) => Promise<T[]>;
 	NotFoundError: new (id: string | number) => Error;
 	AmbiguousResourceError: new (id: string | number) => Error;
 }) {
-	type Item<TOpts> = { id: number } & (TOpts extends PineOptionsWithSelect<T>
+	type Item<TOpts> = { id: number } & (TOpts extends PineOptionsStrict<T>
 		? PineTypedResult<T, TOpts>
 		: {});
 
 	async function batchResourceOperation<
-		TOpts extends PineOptionsWithSelect<T>,
+		TOpts extends PineOptionsStrict<T>,
 	>(options: {
 		uuidOrIdOrIds: string | number | number[];
 		options?: TOpts;
@@ -34,16 +34,14 @@ export function batchResourceOperationFactory<
 		groupByNavigationPoperty?: undefined;
 	}): Promise<void>;
 	async function batchResourceOperation<
-		TOpts extends PineOptionsWithSelect<T>,
+		TOpts extends PineOptionsStrict<T>,
 	>(options: {
 		uuidOrIdOrIds: string | number | number[];
 		options?: TOpts;
 		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 		groupByNavigationPoperty: PineSelectableProps<T>;
 	}): Promise<void>;
-	async function batchResourceOperation<
-		TOpts extends PineOptionsWithSelect<T>,
-	>({
+	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
 		uuidOrIdOrIds,
 		options,
 		groupByNavigationPoperty,
@@ -98,7 +96,7 @@ export function batchResourceOperationFactory<
 					$filter: resourceFilter as PineFilter<T>,
 				},
 				options,
-			) as PineOptionsWithSelect<T>;
+			) as PineOptionsStrict<T>;
 
 			items.push(...((await getAll(combinedOptions)) as typeof items));
 		}

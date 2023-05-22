@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { toWritable } from '../../../lib/util/types';
+import { toWritable } from '../../../src/util/types';
 import { timeSuite } from '../../util';
 import type * as tagsHelper from './tags';
 
@@ -33,127 +33,49 @@ describe('Application Model', function () {
 	describe('given no applications', function () {
 		describe('[read operations]', function () {
 			parallel('balena.models.application.getAll()', function () {
-				it('should include public apps [promise]', async function () {
+				it('should include public apps', async function () {
 					const applications = await balena.models.application.getAll();
 					const publicApps = applications.filter((app) => app.is_public);
 					expect(publicApps).to.have.length.that.is.greaterThan(0);
 				});
 
-				it('should include public apps [callback]', function (done) {
-					// @ts-expect-error
-					balena.models.application.getAll(function (err, applications) {
-						try {
-							expect(err).to.be.null;
-							const publicApps = applications.filter((app) => app.is_public);
-							expect(publicApps).to.have.length.that.is.greaterThan(0);
-							done();
-						} catch (err) {
-							done(err);
-						}
-					});
-				});
-
-				it('should eventually become an empty array of accessible apps [Promise]', async function () {
+				it('should eventually become an empty array of accessible apps', async function () {
 					const apps = await balena.models.application.getAll(
 						{},
 						'directly_accessible',
 					);
 					expect(apps).to.deep.equal([]);
 				});
-
-				it('should eventually become an empty array of accessible apps [callback]', function (done) {
-					balena.models.application.getAll(
-						{},
-						'directly_accessible',
-						// @ts-expect-error
-						function (err, applications) {
-							try {
-								expect(err).to.be.null;
-								expect(applications).to.deep.equal([]);
-								done();
-							} catch (err) {
-								done(err);
-							}
-						},
-					);
-				});
 			});
 
 			parallel(
 				'balena.models.application.getAllDirectlyAccessible()',
 				function () {
-					it('should eventually become an empty array of accessible apps [Promise]', async function () {
+					it('should eventually become an empty array of accessible apps', async function () {
 						const apps =
 							await balena.models.application.getAllDirectlyAccessible();
 						expect(apps).to.deep.equal([]);
-					});
-
-					it('should eventually become an empty array of accessible apps [callback]', function (done) {
-						balena.models.application.getAllDirectlyAccessible(
-							{},
-							// @ts-expect-error
-							function (err, applications) {
-								try {
-									expect(err).to.be.null;
-									expect(applications).to.deep.equal([]);
-									done();
-								} catch (err) {
-									done(err);
-								}
-							},
-						);
 					});
 				},
 			);
 
 			parallel('balena.models.application.getAppByName()', function () {
-				it('should eventually reject [Promise]', async function () {
+				it('should eventually reject', async function () {
 					const promise = balena.models.application.getAppByName('testapp');
 					await expect(promise).to.be.rejected.and.eventually.have.property(
 						'code',
 						'BalenaApplicationNotFound',
 					);
 				});
-
-				it('should eventually reject [callback]', function (done) {
-					balena.models.application.getAppByName(
-						'testapp',
-						// @ts-expect-error
-						function (err) {
-							try {
-								expect(err).to.not.be.undefined;
-								done();
-							} catch (err) {
-								done(err);
-							}
-						},
-					);
-				});
 			});
 
 			parallel('balena.models.application.getAppByOwner()', function () {
-				it('should eventually reject [Promise]', function () {
+				it('should eventually reject', function () {
 					const promise = balena.models.application.getAppByOwner(
 						'testapp',
 						'FooBar',
 					);
 					return expect(promise).to.be.rejected;
-				});
-
-				it('should eventually reject [callback]', function (done) {
-					balena.models.application.getAppByOwner(
-						'testapp',
-						'FooBar',
-						// @ts-expect-error
-						function (err) {
-							try {
-								expect(err).to.not.be.undefined;
-								done();
-							} catch (err) {
-								done(err);
-							}
-						},
-					);
 				});
 			});
 
@@ -492,33 +414,13 @@ describe('Application Model', function () {
 						expect(applications[0].id).to.equal(ctx.application.id);
 					});
 
-					it('should support arbitrary pinejs options [Promise]', async function () {
+					it('should support arbitrary pinejs options', async function () {
 						const applications = await balena.models.application.getAll(
 							{ $expand: { organization: { $select: 'handle' } } },
 							'directly_accessible',
 						);
 						expect(applications[0].organization[0].handle).to.equal(
 							credentials.username,
-						);
-					});
-
-					it('should support arbitrary pinejs options [callback]', function (done) {
-						balena.models.application.getAll(
-							{ $expand: { organization: { $select: 'handle' } } },
-							'directly_accessible',
-
-							// @ts-expect-error
-							function (err, applications) {
-								try {
-									expect(err).to.be.null;
-									expect(applications[0].organization[0].handle).to.equal(
-										credentials.username,
-									);
-									done();
-								} catch (err) {
-									done(err);
-								}
-							},
 						);
 					});
 				});
@@ -533,31 +435,13 @@ describe('Application Model', function () {
 							expect(applications[0].id).to.equal(ctx.application.id);
 						});
 
-						it('should support arbitrary pinejs options [Promise]', async function () {
+						it('should support arbitrary pinejs options', async function () {
 							const applications =
 								await balena.models.application.getAllDirectlyAccessible({
 									$expand: { organization: { $select: 'handle' } },
 								});
 							expect(applications[0].organization[0].handle).to.equal(
 								credentials.username,
-							);
-						});
-
-						it('should support arbitrary pinejs options [callback]', function (done) {
-							balena.models.application.getAllDirectlyAccessible(
-								{ $expand: { organization: { $select: 'handle' } } },
-								// @ts-expect-error
-								function (err, applications) {
-									try {
-										expect(err).to.be.null;
-										expect(applications[0].organization[0].handle).to.equal(
-											credentials.username,
-										);
-										done();
-									} catch (err) {
-										done(err);
-									}
-								},
 							);
 						});
 					},
@@ -922,9 +806,8 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.tags', function () {
-				const tagTestOptions: tagsHelper.Options<BalenaSdk.ApplicationTag> = {
-					model: balena.models.application
-						.tags as tagsHelper.TagModelBase<BalenaSdk.ApplicationTag>,
+				const tagTestOptions: tagsHelper.Options = {
+					model: balena.models.application.tags,
 					modelNamespace: 'balena.models.application.tags',
 					resourceName: 'application',
 					uniquePropertyNames: applicationRetrievalFields,
@@ -1665,14 +1548,9 @@ describe('Application Model', function () {
 				expect(imageInstall).to.not.have.property('commit');
 			});
 
-			expect(deviceDetails.gateway_download).to.have.lengthOf(0);
-
 			// Augmented properties
 			// Should filter out deleted image installs
 			expect(deviceDetails.current_services.db).to.have.lengthOf(1);
-
-			// Should have an empty list of gateway downloads
-			expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
 		};
 
 		describe('balena.models.application.getWithDeviceServiceDetails()', function () {

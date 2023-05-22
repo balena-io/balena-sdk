@@ -31,7 +31,6 @@ import type {
 } from '../types/models';
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
-import type { DeviceTypeJson } from './config';
 import {
 	CurrentServiceWithCommit,
 	DeviceWithServiceDetails,
@@ -124,9 +123,6 @@ const getDeviceModel = function (
 			require('balena-register-device') as typeof import('balena-register-device')
 		).getRegisterDevice({ request }),
 	);
-	const configModel = once(() =>
-		(require('./config') as typeof import('./config')).default(deps, opts),
-	);
 	const applicationModel = once(() =>
 		(require('./application') as typeof import('./application')).default(
 			deps,
@@ -142,9 +138,6 @@ const getDeviceModel = function (
 	const osModel = once(() =>
 		(require('./os') as typeof import('./os')).default(deps, opts),
 	);
-
-	const { addCallbackSupportToModule } =
-		require('../util/callbacks') as typeof import('../util/callbacks');
 
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
@@ -201,7 +194,7 @@ const getDeviceModel = function (
 		(
 			require('../util/request-batching') as typeof import('../util/request-batching')
 		).batchResourceOperationFactory<Device>({
-			getAll: exports.getAll,
+			getAll,
 			NotFoundError: errors.BalenaDeviceNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
 		}),
@@ -214,7 +207,10 @@ const getDeviceModel = function (
 		if (deviceUrlsBase != null) {
 			return deviceUrlsBase;
 		}
-		return (await configModel().getAll()).deviceUrlsBase;
+		const configModel = (
+			require('./config') as typeof import('./config')
+		).default(deps, opts);
+		return (await configModel.getAll()).deviceUrlsBase;
 	});
 
 	const getOsUpdateHelper = once(async () => {
@@ -329,6 +325,18 @@ const getDeviceModel = function (
 		return timeRangeFilter;
 	};
 
+	async function getAll(options?: PineOptions<Device>): Promise<Device[]> {
+		if (options == null) {
+			options = {};
+		}
+
+		const devices = await pine.get({
+			resource: 'device',
+			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
+		});
+		return devices.map(addExtraInfo) as Device[];
+	}
+
 	const exports = {
 		_getId: getId,
 		OverallStatus,
@@ -351,52 +359,6 @@ const getDeviceModel = function (
 			}
 
 			return url.resolve(dashboardUrl, `/devices/${uuid}/summary`);
-		},
-
-		/**
-		 * @summary Get all devices
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - devices
-		 * @returns {Promise}
-		 *
-		 * @description
-		 * This method returns all devices that the current user can access.
-		 * In order to have the following computed properties in the result
-		 * you have to explicitly define them in a `$select` in the extra options:
-		 * * `overall_status`
-		 * * `overall_progress`
-		 *
-		 * @example
-		 * balena.models.device.getAll().then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getAll({ $select: ['overall_status', 'overall_progress'] }).then(function(device) {
-		 * 	console.log(device);
-		 * })
-		 *
-		 * @example
-		 * balena.models.device.getAll(function(error, devices) {
-		 * 	if (error) throw error;
-		 * 	console.log(devices);
-		 * });
-		 */
-		async getAll(options?: PineOptions<Device>): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
-
-			const devices = await pine.get({
-				resource: 'device',
-				options: mergePineOptions({ $orderby: 'device_name asc' }, options),
-			});
-			return devices.map(addExtraInfo) as Device[];
 		},
 
 		/**
@@ -450,7 +412,7 @@ const getDeviceModel = function (
 			const { id } = await applicationModel().get(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
+			return await getAll(
 				mergePineOptions({ $filter: { belongs_to__application: id } }, options),
 			);
 		},
@@ -506,7 +468,7 @@ const getDeviceModel = function (
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
+			return await getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -524,50 +486,6 @@ const getDeviceModel = function (
 					},
 					options,
 				),
-			);
-		},
-
-		// TODO: Delete in the next major
-		/**
-		 * @summary Get all devices by parent device
-		 * @name getAllByParentDevice
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @param {String|Number} parentUuidOrId - parent device uuid (string) or id (number)
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - devices
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getAllByParentDevice('7cf02a6').then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getAllByParentDevice(123).then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getAllByParentDevice('7cf02a6', function(error, devices) {
-		 * 	if (error) throw error;
-		 * 	console.log(devices);
-		 * });
-		 */
-		async getAllByParentDevice(
-			parentUuidOrId: string | number,
-			options?: PineOptions<Device>,
-		): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
-
-			const { id } = await exports.get(parentUuidOrId, { $select: 'id' });
-			return await exports.getAll(
-				mergePineOptions({ $filter: { is_managed_by__device: id } }, options),
 			);
 		},
 
@@ -737,7 +655,7 @@ const getDeviceModel = function (
 				options = {};
 			}
 
-			const devices = await exports.getAll(
+			const devices = await getAll(
 				mergePineOptions({ $filter: { device_name: name } }, options),
 			);
 			if (devices.length === 0) {
@@ -1133,7 +1051,7 @@ const getDeviceModel = function (
 
 		/**
 		 * @summary Note a device
-		 * @name note
+		 * @name setNote
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
@@ -1144,17 +1062,17 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.note('7cf02a6', 'My useful note');
+		 * balena.models.device.setNote('7cf02a6', 'My useful note');
 		 *
 		 * @example
-		 * balena.models.device.note(123, 'My useful note');
+		 * balena.models.device.setNote(123, 'My useful note');
 		 *
 		 * @example
-		 * balena.models.device.note('7cf02a6', 'My useful note', function(error) {
+		 * balena.models.device.setNote('7cf02a6', 'My useful note', function(error) {
 		 * 	if (error) throw error;
 		 * });
 		 */
-		note: async (
+		setNote: async (
 			uuidOrIdOrIds: string | number | number[],
 			note: string,
 		): Promise<void> => {
@@ -1357,81 +1275,6 @@ const getDeviceModel = function (
 				baseUrl: apiUrl,
 			});
 			return body;
-		},
-
-		/**
-		 * @summary Get a device type manifest by slug
-		 * @name getManifestBySlug
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated use balena.models.deviceType.getBySlugOrName
-		 * @param {String} slugOrName - device type slug
-		 * @fulfil {Object} - device type manifest
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
-		 * 	if (error) throw error;
-		 * 	console.log(manifest);
-		 * });
-		 */
-		getManifestBySlug: async (
-			slugOrName: string,
-		): Promise<DeviceTypeJson.DeviceType> =>
-			// TODO: Drop in the next major
-			configModel().getDeviceTypeManifestBySlug(slugOrName),
-
-		// TODO: Drop in the next major
-		/**
-		 * @summary Get a device manifest by application name
-		 * @name getManifestByApplication
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated use balena.models.application.get & balena.models.deviceType.getBySlugOrName
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-		 * @fulfil {Object} - device manifest
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getManifestByApplication('myorganization/myapp').then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getManifestByApplication(123).then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getManifestByApplication('myorganization/myapp', function(error, manifest) {
-		 * 	if (error) throw error;
-		 * 	console.log(manifest);
-		 * });
-		 */
-		getManifestByApplication: async (
-			slugOrUuidOrId: string | number,
-		): Promise<DeviceTypeJson.DeviceType> => {
-			const applicationOptions = {
-				$select: 'id',
-				$expand: { is_for__device_type: { $select: 'slug' } },
-			} as const;
-
-			const app = (await applicationModel().get(
-				slugOrUuidOrId,
-				applicationOptions,
-			)) as PineTypedResult<Application, typeof applicationOptions>;
-			return await configModel().getDeviceTypeManifestBySlug(
-				app.is_for__device_type[0].slug,
-			);
 		},
 
 		/**
@@ -2636,7 +2479,7 @@ const getDeviceModel = function (
 		 * @namespace balena.models.device.tags
 		 * @memberof balena.models.device
 		 */
-		tags: addCallbackSupportToModule({
+		tags: {
 			/**
 			 * @summary Get all device tags for an application
 			 * @name getAllByApplication
@@ -2723,30 +2566,6 @@ const getDeviceModel = function (
 			getAllByDevice: tagsModel.getAllByParent,
 
 			/**
-			 * @summary Get all device tags
-			 * @name getAll
-			 * @public
-			 * @function
-			 * @memberof balena.models.device.tags
-			 *
-			 * @param {Object} [options={}] - extra pine options to use
-			 * @fulfil {Object[]} - device tags
-			 * @returns {Promise}
-			 *
-			 * @example
-			 * balena.models.device.tags.getAll().then(function(tags) {
-			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.tags.getAll(function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
-			 */
-			getAll: tagsModel.getAll,
-
-			/**
 			 * @summary Set a device tag
 			 * @name set
 			 * @public
@@ -2792,13 +2611,13 @@ const getDeviceModel = function (
 			 * });
 			 */
 			remove: tagsModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.configVar
 		 * @memberof balena.models.device
 		 */
-		configVar: addCallbackSupportToModule({
+		configVar: {
 			/**
 			 * @summary Get all config variables for a device
 			 * @name getAllByDevice
@@ -2978,13 +2797,13 @@ const getDeviceModel = function (
 			 * });
 			 */
 			remove: configVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.envVar
 		 * @memberof balena.models.device
 		 */
-		envVar: addCallbackSupportToModule({
+		envVar: {
 			/**
 			 * @summary Get all environment variables for a device
 			 * @name getAllByDevice
@@ -3164,13 +2983,13 @@ const getDeviceModel = function (
 			 * });
 			 */
 			remove: envVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.serviceVar
 		 * @memberof balena.models.device
 		 */
-		serviceVar: addCallbackSupportToModule({
+		serviceVar: {
 			/**
 			 * @summary Get all service variable overrides for a device
 			 * @name getAllByDevice
@@ -3491,7 +3310,7 @@ const getDeviceModel = function (
 					},
 				});
 			},
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.device.history

@@ -22,6 +22,7 @@ import {
 	onlyIf,
 	treatAsMissingApplication,
 	mergePineOptionsTyped,
+	type ExtendedPineTypedResult,
 } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type {
@@ -77,20 +78,11 @@ const baseReleasePineOptions = {
 };
 
 export interface OsVersion
-	extends Omit<
-		PineTypedResult<Release, typeof baseReleasePineOptions>,
-		// TODO: Drop the variant Omit and mark it as non-nullable in the next major
-		'variant'
-	> {
-	/** @deprecated use OsVersion.raw_version. */
-	rawVersion: string;
+	extends PineTypedResult<Release, typeof baseReleasePineOptions> {
 	strippedVersion: string;
 	basedOnVersion?: string;
 	osType: string;
 	line?: OsLines;
-	variant?: string;
-	/** @deprecated */
-	formattedVersion: string;
 	/** @deprecated */
 	isRecommended?: boolean;
 }
@@ -119,6 +111,22 @@ export interface OsUpdateVersions {
 	versions: string[];
 	recommended: string | undefined;
 	current: string | undefined;
+}
+
+export interface DownloadConfig
+	extends Pick<
+		ImgConfigOptions,
+		| 'developmentMode'
+		| 'appUpdatePollInterval'
+		| 'network'
+		| 'wifiKey'
+		| 'wifiSsid'
+	> {
+	deviceType: string;
+	version?: string;
+	appId?: number;
+	fileType?: '.img' | '.zip' | '.gz';
+	imageType?: 'raw' | 'flasher';
 }
 
 const sortVersions = (a: OsVersion, b: OsVersion) => {
@@ -257,18 +265,17 @@ const getOsModel = function (
 				: null;
 
 			let strippedVersion: string;
-			// TODO: Stop converting empty strings to undefined in the next major
-			let variant = release.variant || undefined;
+			let variant: string = release.variant;
 			if (releaseSemverObj == null) {
 				// TODO: Drop this `else` once we migrate all version & variant tags to release.semver field
 				/** Ideally 'production' | 'development' | undefined. */
 				const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
-				variant =
-					typeof fullVariantName === 'string'
-						? OsVariantNames.includes(fullVariantName)
-							? OsVariant[fullVariantName as keyof typeof OsVariant]
-							: fullVariantName
-						: undefined;
+				if (typeof fullVariantName === 'string') {
+					// TODO: Drop this once we migrate all variant tags to the release.variant field.
+					variant = OsVariantNames.includes(fullVariantName)
+						? OsVariant[fullVariantName as keyof typeof OsVariant]
+						: fullVariantName;
+				}
 
 				strippedVersion = tagMap[VERSION_TAG_NAME] ?? '';
 				// Backfill the native release_version field
@@ -292,20 +299,14 @@ const getOsModel = function (
 				getOsVersionReleaseLine(release.phase, strippedVersion, appTags) ??
 				undefined;
 
-			// TODO: Don't append the variant and sent it as a separate parameter when requesting a download when we don't use /device-types anymore and the API and image maker can handle it. Also rename `rawVersion` -> `versionWithVariant` if it is needed (it might not be needed anymore).
-			// The version coming from release tags doesn't contain the variant, so we append it here
 			return {
 				...release,
-				// TODO: Drop the explicit assignment once we no longer convert empty strings to undefined
+				// TODO: Drop the explicit assignment once the variant field of all OS releases is backfilled.
 				variant,
 				osType: appTags.osType,
 				line,
 				strippedVersion,
-				// TODO: Drop in the next major
-				rawVersion: release.raw_version,
 				basedOnVersion: tagMap[BASED_ON_VERSION_TAG_NAME] ?? strippedVersion,
-				// TODO: Drop in the next major
-				formattedVersion: `v${strippedVersion}${line ? ` (${line})` : ''}`,
 			};
 		});
 	};
@@ -340,12 +341,7 @@ const getOsModel = function (
 						!version.known_issue_list &&
 						!bSemver.prerelease(version.raw_version)
 					) {
-						const additionalFormat = version.line
-							? ` (${version.line}, recommended)`
-							: ' (recommended)';
-
 						version.isRecommended = true;
-						version.formattedVersion = `v${version.strippedVersion}${additionalFormat}`;
 						recommendedPerOsType[version.osType] = true;
 					}
 				}
@@ -419,14 +415,16 @@ const getOsModel = function (
 			: versionsByDt;
 	}
 
-	async function getAllOsVersions(
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceType: string,
-		options?: PineOptions<Release>,
-	): Promise<OsVersion[]>;
-	async function getAllOsVersions(
+		options?: TP,
+	): Promise<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceTypes: string[],
-		options?: PineOptions<Release>,
-	): Promise<Dictionary<OsVersion[]>>;
+		options?: TP,
+	): Promise<
+		Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+	>;
 	/**
 	 * @summary Get all OS versions for the provided device type(s), inlcuding invalidated ones
 	 * @name getAllOsVersions
@@ -449,17 +447,20 @@ const getOsModel = function (
 	 * @example
 	 * balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
-	async function getAllOsVersions(
+	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
 		deviceTypes: string[] | string,
-		options?: PineOptions<Release>,
-	): Promise<TypeOrDictionary<OsVersion[]>> {
+		options?: TP,
+	): Promise<
+		TypeOrDictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+	> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt =
+		const versionsByDt = (
 			options == null
 				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), null)
-				: await _getAllOsVersions(deviceTypes, options);
+				: await _getAllOsVersions(deviceTypes, options)
+		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
 			: versionsByDt;
@@ -705,31 +706,37 @@ const getOsModel = function (
 	 * @function
 	 * @memberof balena.models.os
 	 *
-	 * @param {String} deviceType - device type slug
-	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'
+	 * @param {Object} options - OS image options to use.
+	 * @param {String} options.deviceType - device type slug
+	 * @param {String} [options.version='latest'] - semver-compatible version or 'latest', defaults to 'latest'
 	 * Unsupported (unpublished) version will result in rejection.
 	 * The version **must** be the exact version number.
-	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
-	 * @param {Object} options - OS configuration options to use.
+	 * @param {Boolean} [options.developmentMode] - controls development mode for unified balenaOS releases.
+	 * @param {Number} [options.appId] - the application ID (number).
+	 * @param {String} [options.fileType] - download file type. One of '.img' or '.zip' or '.gz'.
+	 * @param {String} [options.imageType] - download file type. One of 'raw' or 'flasher'
+	 * @param {Number} [options.appUpdatePollInterval] - how often the OS checks for updates, in minutes.
+	 * @param {String} [options.network] - the network type that the device will use, one of 'ethernet' or 'wifi'.
+	 * @param {String} [options.wifiKey] - the key for the wifi network the device will connect to if network is wifi.
+	 * @param {String} [options.wifiSsid] - the ssid for the wifi network the device will connect to if network is wifi.
 	 * @fulfil {ReadableStream} - download stream
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.os.download('raspberry-pi').then(function(stream) {
+	 * balena.models.os.download({deviceType: 'raspberry-pi'}).then(function(stream) {
 	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
 	 * });
 	 *
-	 * balena.models.os.download('raspberry-pi', function(error, stream) {
+	 * balena.models.os.download({deviceType: 'raspberry-pi', appId: 1234, fileType: '.zip'}, function(error, stream) {
 	 * 	if (error) throw error;
-	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
+	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.zip'));
 	 * });
 	 */
-	const download = onlyIf(!isBrowser)(async function (
-		deviceType: string,
-		version: string = 'latest',
-		// TODO: make the downloadOptions the only argument in the next major
-		options: { developmentMode?: boolean } = {},
-	): Promise<BalenaRequestStreamResult> {
+	const download = onlyIf(!isBrowser)(async function ({
+		deviceType,
+		version = 'latest',
+		...restOptions
+	}: DownloadConfig): Promise<BalenaRequestStreamResult> {
 		try {
 			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
@@ -745,7 +752,7 @@ const getOsModel = function (
 				method: 'GET',
 				url: '/download',
 				qs: {
-					...(typeof options === 'object' && options),
+					...restOptions,
 					deviceType,
 					version,
 				},
@@ -783,7 +790,7 @@ const getOsModel = function (
 	 * for updates, in minutes.
 	 * @param {String} [options.provisioningKeyName] - Name assigned to API key
 	 * @param {String} [options.provisioningKeyExpiryDate] - Expiry Date assigned to API key
-	 * @param {Boolean} [options.developmentMode] - Controls delopment mode for unified balenaOS releases.
+	 * @param {Boolean} [options.developmentMode] - Controls development mode for unified balenaOS releases.
 	 * @param {String} [options.wifiKey] - The key for the wifi network the
 	 * device will connect to.
 	 * @param {String} [options.wifiSsid] - The ssid for the wifi network the

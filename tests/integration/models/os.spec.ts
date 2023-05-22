@@ -24,7 +24,7 @@ const {
 	_getMaxSatisfyingVersion,
 	_clearDeviceTypesAndOsVersionCaches,
 } = balena.models.os as ReturnType<
-	typeof import('../../../lib/models/os').default
+	typeof import('../../../src/models/os').default
 >;
 
 const containsVersion = (
@@ -233,6 +233,33 @@ describe('OS model', function () {
 				});
 			});
 
+			const variantRegex = /\.(dev|prod)$/;
+			it('should have the correct variant for all non-unified OS releases', async () => {
+				const osVersions = await balena.models.os.getAvailableOsVersions(
+					'fincm3',
+				);
+				expect(osVersions).to.be.an('array');
+				for (const osVersion of osVersions) {
+					const variant = variantRegex.exec(osVersion.raw_version)?.[1];
+					if (variant) {
+						expect(osVersion).to.have.property('variant', variant);
+					}
+				}
+			});
+
+			it('should have an empty variant for all unified OS releases', async () => {
+				const osVersions = await balena.models.os.getAvailableOsVersions(
+					'fincm3',
+				);
+				expect(osVersions).to.be.an('array');
+				for (const osVersion of osVersions) {
+					const variant = variantRegex.exec(osVersion.raw_version)?.[1];
+					if (!variant) {
+						expect(osVersion).to.have.property('variant', '');
+					}
+				}
+			});
+
 			it('should return an empty object for non-existent DTs', async () => {
 				const res = await balena.models.os.getAllOsVersions(['blahbleh']);
 
@@ -381,46 +408,44 @@ describe('OS model', function () {
 		const esrOsVersions = [
 			{
 				raw_version: '2021.10.2.prod',
-				rawVersion: '2021.10.2.prod',
 				isRecommended: true,
 			},
-			{ raw_version: '2021.10.2.dev', rawVersion: '2021.10.2.dev' },
-			{ raw_version: '2021.07.1.prod', rawVersion: '2021.07.1.prod' },
-			{ raw_version: '2021.07.1.dev', rawVersion: '2021.07.1.dev' },
-			{ raw_version: '2021.04.0.prod', rawVersion: '2021.04.0.prod' },
-			{ raw_version: '2021.04.0.dev', rawVersion: '2021.04.0.dev' },
-			{ raw_version: '2021.01.0.prod', rawVersion: '2021.01.0.prod' },
-			{ raw_version: '2021.01.0.dev', rawVersion: '2021.01.0.dev' },
-			{ raw_version: '2020.07.2.prod', rawVersion: '2020.07.2.prod' },
-			{ raw_version: '2020.07.2.dev', rawVersion: '2020.07.2.dev' },
-			{ raw_version: '2020.07.1.prod', rawVersion: '2020.07.1.prod' },
-			{ raw_version: '2020.07.1.dev', rawVersion: '2020.07.1.dev' },
-			{ raw_version: '2020.07.0.prod', rawVersion: '2020.07.0.prod' },
-			{ raw_version: '2020.07.0.dev', rawVersion: '2020.07.0.dev' },
-			{ raw_version: '2020.04.1.prod', rawVersion: '2020.04.1.prod' },
-			{ raw_version: '2020.04.1.dev', rawVersion: '2020.04.1.dev' },
-			{ raw_version: '2020.04.0.prod', rawVersion: '2020.04.0.prod' },
-			{ raw_version: '2020.04.0.dev', rawVersion: '2020.04.0.dev' },
+			{ raw_version: '2021.10.2.dev' },
+			{ raw_version: '2021.07.1.prod' },
+			{ raw_version: '2021.07.1.dev' },
+			{ raw_version: '2021.04.0.prod' },
+			{ raw_version: '2021.04.0.dev' },
+			{ raw_version: '2021.01.0.prod' },
+			{ raw_version: '2021.01.0.dev' },
+			{ raw_version: '2020.07.2.prod' },
+			{ raw_version: '2020.07.2.dev' },
+			{ raw_version: '2020.07.1.prod' },
+			{ raw_version: '2020.07.1.dev' },
+			{ raw_version: '2020.07.0.prod' },
+			{ raw_version: '2020.07.0.dev' },
+			{ raw_version: '2020.04.1.prod' },
+			{ raw_version: '2020.04.1.dev' },
+			{ raw_version: '2020.04.0.prod' },
+			{ raw_version: '2020.04.0.dev' },
 		];
 		const defaultOsVersions = [
 			{
 				raw_version: '2.85.2+rev3.prod',
-				rawVersion: '2.85.2+rev3.prod',
 				isRecommended: true,
 			},
-			{ raw_version: '2.85.2+rev3.dev', rawVersion: '2.85.2+rev3.dev' },
-			{ raw_version: '2.83.10+rev1.prod', rawVersion: '2.83.10+rev1.prod' },
-			{ raw_version: '2.83.10+rev1.dev', rawVersion: '2.83.10+rev1.dev' },
-			{ raw_version: '2.80.5+rev1.prod', rawVersion: '2.80.5+rev1.prod' },
-			{ raw_version: '2.80.5+rev1.dev', rawVersion: '2.80.5+rev1.dev' },
-			{ raw_version: '2.80.3+rev1.prod', rawVersion: '2.80.3+rev1.prod' },
-			{ raw_version: '2.80.3+rev1.dev', rawVersion: '2.80.3+rev1.dev' },
-			{ raw_version: '2.75.0+rev1.prod', rawVersion: '2.75.0+rev1.prod' },
-			{ raw_version: '2.75.0+rev1.dev', rawVersion: '2.75.0+rev1.dev' },
-			{ raw_version: '2.73.1+rev1.prod', rawVersion: '2.73.1+rev1.prod' },
-			{ raw_version: '2.73.1+rev1.dev', rawVersion: '2.73.1+rev1.dev' },
-			{ raw_version: '2.0.0.rev1.prod', rawVersion: '2.0.0.rev1.prod' },
-			{ raw_version: '2.0.0.rev1.dev', rawVersion: '2.0.0.rev1.dev' },
+			{ raw_version: '2.85.2+rev3.dev' },
+			{ raw_version: '2.83.10+rev1.prod' },
+			{ raw_version: '2.83.10+rev1.dev' },
+			{ raw_version: '2.80.5+rev1.prod' },
+			{ raw_version: '2.80.5+rev1.dev' },
+			{ raw_version: '2.80.3+rev1.prod' },
+			{ raw_version: '2.80.3+rev1.dev' },
+			{ raw_version: '2.75.0+rev1.prod' },
+			{ raw_version: '2.75.0+rev1.dev' },
+			{ raw_version: '2.73.1+rev1.prod' },
+			{ raw_version: '2.73.1+rev1.dev' },
+			{ raw_version: '2.0.0.rev1.prod' },
+			{ raw_version: '2.0.0.rev1.dev' },
 		];
 
 		const osVersions = [...esrOsVersions, ...defaultOsVersions];
@@ -694,14 +719,14 @@ describe('OS model', function () {
 		describe('given a valid device slug', function () {
 			it('should contain a valid mime property', () =>
 				balena.models.os
-					.download('raspberry-pi')
+					.download({ deviceType: 'raspberry-pi' })
 					.then((stream) =>
 						expect(stream.mime).to.equal('application/octet-stream'),
 					));
 
 			it('should contain a valid mime property if passing a device type alias', () =>
 				balena.models.os
-					.download('raspberrypi')
+					.download({ deviceType: 'raspberrypi' })
 					.then((stream) =>
 						expect(stream.mime).to.equal('application/octet-stream'),
 					));
@@ -709,7 +734,7 @@ describe('OS model', function () {
 			it('should be able to download the image', function () {
 				const tmpFile = tmp.tmpNameSync();
 				return balena.models.os
-					.download('raspberry-pi')
+					.download({ deviceType: 'raspberry-pi' })
 					.then((stream) => stream.pipe(fs.createWriteStream(tmpFile)))
 					.then(rindle.wait)
 					.then(() => fs.promises.stat(tmpFile))
@@ -720,7 +745,9 @@ describe('OS model', function () {
 
 		describe('given an invalid device slug', () =>
 			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.download('foo-bar-baz');
+				const promise = balena.models.os.download({
+					deviceType: 'foo-bar-baz',
+				});
 				return expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);

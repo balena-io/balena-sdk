@@ -23,6 +23,7 @@ import type {
 	PineOptions,
 	PineSubmitBody,
 	InjectedDependenciesParam,
+	PinePostResult,
 } from '..';
 import { mergePineOptions } from '../util';
 
@@ -119,39 +120,6 @@ const getApplicationMembershipModel = function (
 		},
 
 		/**
-		 * @summary Get all application memberships
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.application.membership
-		 *
-		 * @description
-		 * This method returns all application memberships.
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - application memberships
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.application.membership.getAll().then(function(memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.getAll(function(error, memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 */
-		getAll(
-			options: PineOptions<ApplicationMembership> = {},
-		): Promise<ApplicationMembership[]> {
-			return pine.get({
-				resource: RESOURCE,
-				options,
-			});
-		},
-
-		/**
 		 * @summary Get all memberships by application
 		 * @name getAllByApplication
 		 * @public
@@ -188,12 +156,13 @@ const getApplicationMembershipModel = function (
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
-				mergePineOptions(
+			return await pine.get({
+				resource: RESOURCE,
+				options: mergePineOptions(
 					{ $filter: { is_member_of__application: id } },
 					options,
 				),
-			);
+			});
 		},
 
 		/**
@@ -234,8 +203,9 @@ const getApplicationMembershipModel = function (
 					usernameOrId,
 				);
 			}
-			return await exports.getAll(
-				mergePineOptions(
+			return await pine.get({
+				resource: RESOURCE,
+				options: mergePineOptions(
 					{
 						$filter: {
 							user:
@@ -255,7 +225,7 @@ const getApplicationMembershipModel = function (
 					},
 					options,
 				),
-			);
+			});
 		},
 
 		/**
@@ -289,7 +259,9 @@ const getApplicationMembershipModel = function (
 			application,
 			username,
 			roleName,
-		}: ApplicationMembershipCreationOptions): Promise<ApplicationMembership> {
+		}: ApplicationMembershipCreationOptions): Promise<
+			PinePostResult<ApplicationMembership>
+		> {
 			const [{ id }, roleId] = await Promise.all([
 				getApplication(application, { $select: 'id' }),
 				roleName ? getRoleId(roleName) : undefined,
@@ -308,7 +280,7 @@ const getApplicationMembershipModel = function (
 			return (await pine.post<ApplicationMembershipBase>({
 				resource: RESOURCE,
 				body,
-			})) as ApplicationMembership;
+			})) as PinePostResult<ApplicationMembership>;
 		},
 
 		/**

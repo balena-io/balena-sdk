@@ -16,11 +16,7 @@ export interface JWTUser {
 	jwt_secret: string;
 	last_name?: string;
 	loginAs?: boolean;
-	/** @deprecated */
-	needsPasswordReset?: boolean;
 	permissions?: string[];
-	/** @deprecated */
-	public_key?: boolean;
 	twoFactorRequired?: boolean;
 	username: string;
 

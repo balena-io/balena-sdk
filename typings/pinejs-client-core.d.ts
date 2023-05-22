@@ -20,9 +20,9 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
-export type ConceptTypeNavigationResource<T = WithId> = [T] | number;
-export type NavigationResource<T = WithId> = [T] | PineDeferred;
-export type OptionalNavigationResource<T = WithId> =
+export type ConceptTypeNavigationResource<T extends {}> = [T] | number;
+export type NavigationResource<T extends {}> = [T] | PineDeferred;
+export type OptionalNavigationResource<T extends {}> =
 	| []
 	| [T]
 	| PineDeferred
@@ -33,9 +33,9 @@ export type OptionalNavigationResource<T = WithId> =
  * Selecting is not suggested,
  * in that case it holds a deferred to the original resource.
  */
-export type ReverseNavigationResource<T = WithId> = T[] | undefined;
+export type ReverseNavigationResource<T extends {}> = T[] | undefined;
 
-export type AssociatedResource<T = WithId> =
+export type AssociatedResource<T extends {}> =
 	| ConceptTypeNavigationResource<T>
 	| NavigationResource<T>
 	| OptionalNavigationResource<T>
@@ -45,7 +45,7 @@ export type InferAssociatedResourceType<T> = T extends AssociatedResource<{}> &
 	any[]
 	? T[number]
 	: never;
-type x = Exclude<AssociatedResource<{}>, number>;
+
 export type SelectableProps<T> =
 	// This allows us to get proper results when T is any/AnyObject, otherwise this returned never
 	PropsOfType<T, ReverseNavigationResource<{}>> extends StringKeyof<T>
@@ -137,6 +137,11 @@ export type TypedResult<
 	? TypedSelectResult<T, { $select: '*' }>
 	: never;
 
+export type PostResult<T> = SelectResultObject<
+	T,
+	Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<{}>>>
+>;
+
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
 type RawFilter =
@@ -163,8 +168,8 @@ interface Lambda<T> {
 }
 
 type OrderByDirection = 'asc' | 'desc';
-type OrderBy<T = any> =
-	| string // TODO next major: Change to: `${keyof T & string} ${OrderByDirection}` | [keyof T & string, OrderByDirection]
+type OrderBy<T> =
+	| `${string} ${OrderByDirection}` // TODO next major: Change to: `${keyof T & string} ${OrderByDirection}` | [keyof T & string, OrderByDirection]
 	| Array<OrderBy<T>>
 	| { [k in keyof T]?: OrderByDirection }
 	| ({
@@ -322,7 +327,7 @@ export type ResourceExpand<T> = {
 };
 
 type ResourceExpandWithSelect<T> = {
-	[k in ExpandableProps<T>]?: ODataOptionsWithSelect<
+	[k in ExpandableProps<T>]?: ODataOptionsStrict<
 		InferAssociatedResourceType<T[k]>
 	>;
 };
@@ -356,8 +361,7 @@ export interface ODataOptionsWithCount<T> extends ODataOptionsWithoutCount<T> {
 	$count: NonNullable<ODataCountOptions<T>>;
 }
 
-// TODO: Rename to ODataOptionsStrict on the next major
-export type ODataOptionsWithSelect<T> = Omit<
+export type ODataOptionsStrict<T> = Omit<
 	ODataOptions<T>,
 	'$select' | '$expand' | '$count'
 > &
@@ -412,9 +416,8 @@ export interface ParamsObjWithCount<T> extends ParamsObj<T> {
 	options: { $count: NonNullable<ODataOptions<T>['$count']> };
 }
 
-// TODO: Rename to ParamsObjStrict on the next major
-export type ParamsObjWithSelect<T> = Omit<ParamsObj<T>, 'options'> & {
-	options: ODataOptionsWithSelect<T>;
+export type ParamsObjStrict<T> = Omit<ParamsObj<T>, 'options'> & {
+	options: ODataOptionsStrict<T>;
 };
 
 export interface ParamsObjWithFilter<T> extends ParamsObj<T> {
@@ -508,7 +511,17 @@ export interface Pine<ResourceTypeMap extends {} = {}> {
 	get<T extends {}>(params: ParamsObjWithId<T>): Promise<T | undefined>;
 	get<T extends {}>(params: ParamsObj<T>): Promise<T[]>;
 	get<T extends {}, Result>(params: ParamsObj<T>): Promise<Result>;
-	post<T>(params: ParamsObj<T>): Promise<T & { id: number }>;
+	post<
+		R extends keyof ResourceTypeMap,
+		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>,
+	>(
+		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>> & {
+			body: {};
+		},
+	): Promise<PostResult<ResourceTypeMap[P['resource']]>>;
+	post<T>(
+		params: ParamsObj<T> & { body: {} },
+	): Promise<PostResult<T & { id: number }>>;
 	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
 	getOrCreate<T>(params: GetOrCreateParams<T>): Promise<T>;
@@ -591,38 +604,33 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 		P extends { resource: R } & ParamsObjWithId<
 			ResourceTypeMap[P['resource']]
 		> &
-			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>,
+			ParamsObjStrict<ResourceTypeMap[P['resource']]>,
 	>(
 		params: ExactlyExtends<
 			P,
 			ParamsObjWithId<ResourceTypeMap[P['resource']]> &
-				ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
+				ParamsObjStrict<ResourceTypeMap[P['resource']]>
 		>,
 	): Promise<
 		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
 	>;
 	get<
 		R extends keyof ResourceTypeMap,
-		P extends { resource: R } & ParamsObjWithSelect<
-			ResourceTypeMap[P['resource']]
-		>,
+		P extends { resource: R } & ParamsObjStrict<ResourceTypeMap[P['resource']]>,
 	>(
-		params: ExactlyExtends<
-			P,
-			ParamsObjWithSelect<ResourceTypeMap[P['resource']]>
-		>,
+		params: ExactlyExtends<P, ParamsObjStrict<ResourceTypeMap[P['resource']]>>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
 	get<T extends {}>(params: ParamsObjWithCount<NoInfer<T>>): Promise<number>;
 	get<T extends {}>(
-		params: ParamsObjWithId<NoInfer<T>> & ParamsObjWithSelect<NoInfer<T>>,
+		params: ParamsObjWithId<NoInfer<T>> & ParamsObjStrict<NoInfer<T>>,
 	): Promise<T | undefined>;
-	get<T extends {}>(params: ParamsObjWithSelect<NoInfer<T>>): Promise<T[]>;
+	get<T extends {}>(params: ParamsObjStrict<NoInfer<T>>): Promise<T[]>;
 	get<T extends {}, Result extends number>(
 		params: ParamsObj<NoInfer<T>>,
 	): Promise<Result>;
 	get<T extends {}, Result>(
-		params: ParamsObjWithSelect<NoInfer<T>>,
+		params: ParamsObjStrict<NoInfer<T>>,
 	): Promise<Result>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
@@ -632,13 +640,13 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 	): PreparedFn<T, Promise<number>, R>;
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithId<R> &
-			ParamsObjWithSelect<R> & {
+			ParamsObjStrict<R> & {
 				method?: 'GET';
 			},
 	): PreparedFn<T, Promise<R | undefined>, R>;
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObj<R> &
-			ParamsObjWithSelect<R> & {
+			ParamsObjStrict<R> & {
 				method?: 'GET';
 			},
 	): PreparedFn<T, Promise<R[]>, R>;
@@ -660,13 +668,13 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 	): Poll<number>;
 	subscribe<T>(
 		params: SubscribeParamsWithId<T> &
-			ParamsObjWithSelect<T> & {
+			ParamsObjStrict<T> & {
 				method?: 'GET';
 			},
 	): Poll<T | undefined>;
 	subscribe<T>(
 		params: SubscribeParams<T> &
-			ParamsObjWithSelect<T> & {
+			ParamsObjStrict<T> & {
 				method?: 'GET';
 			},
 	): Poll<T[]>;

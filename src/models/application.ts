@@ -26,6 +26,7 @@ import type {
 	BuildVariable,
 	Device,
 	DeviceType,
+	PinePostResult,
 } from '..';
 import type {
 	CurrentServiceWithCommit,
@@ -77,9 +78,6 @@ const getApplicationModel = function (
 	).default(deps, opts, (...args: Parameters<typeof exports.get>) =>
 		exports.get(...args),
 	);
-
-	const { addCallbackSupportToModule } =
-		require('../util/callbacks') as typeof import('../util/callbacks');
 
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
@@ -684,7 +682,7 @@ const getApplicationModel = function (
 			/** @deprecated */
 			parent?: number | string;
 			organization: number | string;
-		}): Promise<Application> {
+		}): Promise<PinePostResult<Application>> {
 			if (organization == null) {
 				throw new errors.BalenaInvalidParameterError(
 					'organization',
@@ -1580,7 +1578,7 @@ const getApplicationModel = function (
 		 * @namespace balena.models.application.tags
 		 * @memberof balena.models.application
 		 */
-		tags: addCallbackSupportToModule({
+		tags: {
 			/**
 			 * @summary Get all application tags for an application
 			 * @name getAllByApplication
@@ -1610,30 +1608,6 @@ const getApplicationModel = function (
 			 * });
 			 */
 			getAllByApplication: tagsModel.getAllByParent,
-
-			/**
-			 * @summary Get all application tags
-			 * @name getAll
-			 * @public
-			 * @function
-			 * @memberof balena.models.application.tags
-			 *
-			 * @param {Object} [options={}] - extra pine options to use
-			 * @fulfil {Object[]} - application tags
-			 * @returns {Promise}
-			 *
-			 * @example
-			 * balena.models.application.tags.getAll().then(function(tags) {
-			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.tags.getAll(function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
-			 */
-			getAll: tagsModel.getAll,
 
 			/**
 			 * @summary Set an application tag
@@ -1681,13 +1655,13 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: tagsModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.configVar
 		 * @memberof balena.models.application
 		 */
-		configVar: addCallbackSupportToModule({
+		configVar: {
 			/**
 			 * @summary Get all config variables for an application
 			 * @name getAllByApplication
@@ -1806,13 +1780,13 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: configVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.envVar
 		 * @memberof balena.models.application
 		 */
-		envVar: addCallbackSupportToModule({
+		envVar: {
 			/**
 			 * @summary Get all environment variables for an application
 			 * @name getAllByApplication
@@ -1931,13 +1905,13 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: envVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.buildVar
 		 * @memberof balena.models.application
 		 */
-		buildVar: addCallbackSupportToModule({
+		buildVar: {
 			/**
 			 * @summary Get all build environment variables for an application
 			 * @name getAllByApplication
@@ -2056,19 +2030,19 @@ const getApplicationModel = function (
 			 * });
 			 */
 			remove: buildVarModel.remove,
-		}),
+		},
 
 		/**
 		 * @namespace balena.models.application.membership
 		 * @memberof balena.models.application
 		 */
-		membership: addCallbackSupportToModule(membershipModel),
+		membership: membershipModel,
 
 		/**
 		 * @namespace balena.models.application.invite
 		 * @memberof balena.models.application
 		 */
-		invite: addCallbackSupportToModule(inviteModel),
+		invite: inviteModel,
 	};
 
 	return exports;

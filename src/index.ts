@@ -39,11 +39,12 @@ export type {
 	ODataOptions as PineOptions,
 	SubmitBody as PineSubmitBody,
 	ODataOptionsWithFilter as PineOptionsWithFilter,
-	ODataOptionsWithSelect as PineOptionsWithSelect,
+	ODataOptionsStrict as PineOptionsStrict,
 	SelectableProps as PineSelectableProps,
 	ExpandableProps as PineExpandableProps,
 	ExpandResultObject as PineExpandResultObject,
 	TypedResult as PineTypedResult,
+	PostResult as PinePostResult,
 } from '../typings/pinejs-client-core';
 
 export type { ApplicationMembershipCreationOptions } from './models/application-membership';
@@ -90,7 +91,6 @@ export type { BuilderUrlDeployOptions } from './util/builder';
 export type {
 	CurrentService,
 	CurrentServiceWithCommit,
-	CurrentGatewayDownload,
 	DeviceWithServiceDetails,
 } from './util/device-service-details';
 export type {
@@ -138,11 +138,7 @@ const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
 
 const sdkTemplate = {
 	auth() {
-		const { addCallbackSupportToModuleFactory } =
-			require('./util/callbacks') as typeof import('./util/callbacks');
-		return addCallbackSupportToModuleFactory(
-			(require('./auth') as typeof import('./auth')).default,
-		);
+		return (require('./auth') as typeof import('./auth')).default;
 	},
 	models() {
 		// don't try to add callbacks for this, since it's just a namespace
@@ -151,18 +147,10 @@ const sdkTemplate = {
 		return require('./models') as typeof import('./models');
 	},
 	logs() {
-		const { addCallbackSupportToModuleFactory } =
-			require('./util/callbacks') as typeof import('./util/callbacks');
-		return addCallbackSupportToModuleFactory(
-			(require('./logs') as typeof import('./logs')).default,
-		);
+		return (require('./logs') as typeof import('./logs')).default;
 	},
 	settings() {
-		const { addCallbackSupportToModuleFactory } =
-			require('./util/callbacks') as typeof import('./util/callbacks');
-		return addCallbackSupportToModuleFactory(
-			(require('./settings') as typeof import('./settings')).default,
-		);
+		return (require('./settings') as typeof import('./settings')).default;
 	},
 };
 

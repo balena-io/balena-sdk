@@ -49,34 +49,6 @@ describe('Device Model', function () {
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 
-	describe('given no applications', function () {
-		parallel('balena.models.device.getManifestBySlug()', function () {
-			it('should become the manifest if the slug is valid', async () => {
-				const manifest = await balena.models.device.getManifestBySlug(
-					'raspberry-pi',
-				);
-				expect(_.isPlainObject(manifest)).to.be.true;
-				expect(manifest.slug).to.exist;
-				expect(manifest.name).to.exist;
-				return expect(manifest.options).to.exist;
-			});
-
-			it('should be rejected if the device slug is invalid', function () {
-				const promise = balena.models.device.getManifestBySlug('foobar');
-				return expect(promise).to.be.rejectedWith(
-					'Invalid device type: foobar',
-				);
-			});
-
-			it('should become the manifest given a device type alias', async () => {
-				const manifest = await balena.models.device.getManifestBySlug(
-					'raspberrypi',
-				);
-				return expect(manifest.slug).to.equal('raspberry-pi');
-			});
-		});
-	});
-
 	describe('given an application', function () {
 		givenAnApplication(before);
 
@@ -88,18 +60,12 @@ describe('Device Model', function () {
 					ctx = this;
 				});
 
-				describe('balena.models.device.getAll()', () =>
-					it('should become an empty array', function () {
-						const promise = balena.models.device.getAll();
-						return expect(promise).to.become([]);
-					}));
-
 				describe('balena.models.device.getAllByApplication()', () =>
-					it('should become an empty array', function () {
-						const promise = balena.models.device.getAllByApplication(
+					it('should become an empty array', async function () {
+						const result = await balena.models.device.getAllByApplication(
 							ctx.application.id,
 						);
-						return expect(promise).to.become([]);
+						expect(result).to.deep.equal([]);
 					}));
 
 				describe('balena.models.device.getAllByOrganization()', () =>
@@ -128,40 +94,6 @@ describe('Device Model', function () {
 						return expect(two).to.not.equal(three);
 					});
 				});
-
-				parallel(
-					'balena.models.device.getManifestByApplication()',
-					function () {
-						applicationRetrievalFields.forEach((prop) =>
-							it(`should return the appropriate manifest for an application ${prop}`, async function () {
-								const manifest =
-									await balena.models.device.getManifestByApplication(
-										ctx.application[prop],
-									);
-								return expect(manifest.slug).to.equal(
-									ctx.applicationDeviceType.slug,
-								);
-							}),
-						);
-
-						it('should be rejected if the application slug does not exist', function () {
-							const promise = balena.models.device.getManifestByApplication(
-								`${ctx.initialOrg.handle}/helloworldapp`,
-							);
-							return expect(promise).to.be.rejectedWith(
-								`Application not found: ${ctx.initialOrg.handle}/helloworldapp`,
-							);
-						});
-
-						it('should be rejected if the application id does not exist', function () {
-							const promise =
-								balena.models.device.getManifestByApplication(999999);
-							return expect(promise).to.be.rejectedWith(
-								'Application not found: 999999',
-							);
-						});
-					},
-				);
 			});
 
 			describe('balena.models.device.register()', function () {
@@ -283,32 +215,6 @@ describe('Device Model', function () {
 				let ctx = null;
 				before(function () {
 					ctx = this;
-				});
-
-				parallel('balena.models.device.getAll()', function () {
-					it('should become the device', async function () {
-						const devices = await balena.models.device.getAll();
-						expect(devices).to.have.length(1);
-						return expect(devices[0].id).to.equal(ctx.device.id);
-					});
-
-					it('should support arbitrary pinejs options', async function () {
-						const [device] = await balena.models.device.getAll({
-							$select: ['id'],
-						});
-						expect(device.id).to.equal(ctx.device.id);
-						return expect(device.device_name).to.equal(undefined);
-					});
-
-					it('should be able to retrieve computed terms', async () => {
-						const [device] = await balena.models.device.getAll({
-							$select: ['overall_status', 'overall_progress'],
-						});
-						return expect(device).to.deep.match({
-							overall_status: 'inactive',
-							overall_progress: null,
-						});
-					});
 				});
 
 				parallel('balena.models.device.getAllByApplication()', function () {
@@ -881,16 +787,19 @@ describe('Device Model', function () {
 					});
 				});
 
-				describe('balena.models.device.note()', function () {
+				describe('balena.models.device.setNote()', function () {
 					it('should be rejected if the device uuid does not exist', function () {
-						const promise = balena.models.device.note('asdfghjkl', 'My note');
+						const promise = balena.models.device.setNote(
+							'asdfghjkl',
+							'My note',
+						);
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: asdfghjkl',
 						);
 					});
 
 					it('should be rejected if the device id does not exist', function () {
-						const promise = balena.models.device.note(999999, 'My note');
+						const promise = balena.models.device.setNote(999999, 'My note');
 						return expect(promise).to.be.rejectedWith(
 							'Device not found: 999999',
 						);
@@ -898,7 +807,7 @@ describe('Device Model', function () {
 
 					describe('[contained scenario]', function () {
 						it('should be able to note a device by uuid', async function () {
-							await balena.models.device.note(
+							await balena.models.device.setNote(
 								this.device.uuid,
 								'What you do today can improve all your tomorrows by uuid',
 							);
@@ -909,7 +818,7 @@ describe('Device Model', function () {
 						});
 
 						it('should be able to note a device by id', async function () {
-							await balena.models.device.note(
+							await balena.models.device.setNote(
 								this.device.id,
 								'What you do today can improve all your tomorrows by id',
 							);
@@ -1102,19 +1011,25 @@ describe('Device Model', function () {
 
 					it('should be able to remove the device by uuid', async function () {
 						await balena.models.device.remove(this.device.uuid);
-						const devices = await balena.models.device.getAll();
+						const devices = await balena.models.device.getAllByApplication(
+							this.application.id,
+						);
 						return expect(devices).to.deep.equal([]);
 					});
 
 					it('should be able to remove the device by id', async function () {
 						await balena.models.device.remove(this.device.id);
-						const devices = await balena.models.device.getAll();
+						const devices = await balena.models.device.getAllByApplication(
+							this.application.id,
+						);
 						return expect(devices).to.deep.equal([]);
 					});
 
 					it('should be able to remove the device using a shorter uuid', async function () {
 						await balena.models.device.remove(this.device.uuid.slice(0, 7));
-						const devices = await balena.models.device.getAll();
+						const devices = await balena.models.device.getAllByApplication(
+							this.application.id,
+						);
 						return expect(devices).to.deep.equal([]);
 					});
 				});
@@ -1750,18 +1665,14 @@ describe('Device Model', function () {
 				givenADevice(before);
 
 				const appTagTestOptions = {
-					// prettier-ignore
-					model:
-						/** @type {import('./tags').TagModelBase<import('../../../').DeviceTag>} */ (balena .models.device.tags),
+					model: balena.models.device.tags,
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'application',
 					uniquePropertyNames: applicationRetrievalFields,
 				};
 
 				const deviceTagTestOptions = {
-					// prettier-ignore
-					model:
-						/** @type {import('./tags').TagModelBase<import('../../../').DeviceTag>} */ (balena.models.device.tags),
+					model: balena.models.device.tags,
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'device',
 					uniquePropertyNames: deviceUniqueFields,
@@ -2337,8 +2248,6 @@ describe('Device Model', function () {
 						expect(imageInstall).to.not.have.property('raw_version');
 					});
 
-					expect(deviceDetails.gateway_download).to.have.lengthOf(0);
-
 					// Augmented properties
 					// Should filter out deleted image installs
 					expect(deviceDetails.current_services.db).to.have.lengthOf(1);
@@ -2349,8 +2258,6 @@ describe('Device Model', function () {
 						expect(currentService).to.have.property('raw_version');
 						expect(currentService).to.have.property('release_id');
 					});
-					// Should have an empty list of gateway downloads
-					expect(deviceDetails.current_gateway_downloads).to.have.lengthOf(0);
 				});
 
 				it('should allow options to change the device fields returned', async function () {

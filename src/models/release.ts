@@ -52,9 +52,6 @@ const getReleaseModel = function (
 		),
 	);
 
-	const { addCallbackSupportToModule } =
-		require('../util/callbacks') as typeof import('../util/callbacks');
-
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const builderHelper = once(() => {
@@ -525,10 +522,9 @@ const getReleaseModel = function (
 		});
 	}
 
-	// TODO: Rename to `setNote` in the next major
 	/**
 	 * @summary Add a note to a release
-	 * @name note
+	 * @name setNote
 	 * @public
 	 * @function
 	 * @memberof balena.models.release
@@ -539,16 +535,16 @@ const getReleaseModel = function (
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.release.note('7cf02a6', 'My useful note');
+	 * balena.models.release.setNote('7cf02a6', 'My useful note');
 	 *
 	 * @example
-	 * balena.models.release.note(123, 'My useful note');
+	 * balena.models.release.setNote(123, 'My useful note');
 	 *
 	 * @example
-	 * balena.models.release.note({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
+	 * balena.models.release.setNote({ application: 456, rawVersion: '0.0.0' }, 'My useful note');
 	 *
 	 */
-	async function note(
+	async function setNote(
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		noteOrNull: string | null,
 	): Promise<void> {
@@ -601,7 +597,7 @@ const getReleaseModel = function (
 	 * @namespace balena.models.release.tags
 	 * @memberof balena.models.release
 	 */
-	const tags = addCallbackSupportToModule({
+	const tags = {
 		/**
 		 * @summary Get all release tags for an application
 		 * @name getAllByApplication
@@ -713,30 +709,6 @@ const getReleaseModel = function (
 		},
 
 		/**
-		 * @summary Get all release tags
-		 * @name getAll
-		 * @public
-		 * @function
-		 * @memberof balena.models.release.tags
-		 *
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object[]} - release tags
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.release.tags.getAll().then(function(tags) {
-		 * 	console.log(tags);
-		 * });
-		 *
-		 * @example
-		 * balena.models.release.tags.getAll(function(error, tags) {
-		 * 	if (error) throw error;
-		 * 	console.log(tags)
-		 * });
-		 */
-		getAll: tagsModel.getAll,
-
-		/**
 		 * @summary Set a release tag
 		 * @name set
 		 * @public
@@ -791,7 +763,7 @@ const getReleaseModel = function (
 		 * });
 		 */
 		remove: tagsModel.remove,
-	});
+	};
 
 	return {
 		get,
@@ -801,7 +773,7 @@ const getReleaseModel = function (
 		createFromUrl,
 		finalize,
 		setIsInvalidated,
-		note,
+		setNote,
 		setKnownIssueList,
 		tags,
 	};

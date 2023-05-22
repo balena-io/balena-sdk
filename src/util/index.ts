@@ -1,5 +1,6 @@
 import * as errors from 'balena-errors';
 import type * as Pine from '../../typings/pinejs-client-core';
+import type { IfDefined } from '../../typings/utils';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
@@ -83,10 +84,17 @@ export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 // TODO: Make it so that it also infers the extras param
 export function mergePineOptionsTyped<
 	R extends {},
-	P extends Pine.ODataOptionsWithSelect<R>,
+	P extends Pine.ODataOptionsStrict<R>,
 >(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
 	return mergePineOptions(defaults, extras) as P;
 }
+
+export type ExtendedPineTypedResult<
+	T,
+	TBaseResult,
+	ExtraPineOptions extends Pine.ODataOptions<T> | undefined,
+> = TBaseResult &
+	IfDefined<ExtraPineOptions, Pine.TypedResult<T, ExtraPineOptions>>;
 
 const knownPineOptionKeys = new Set([
 	'$top',

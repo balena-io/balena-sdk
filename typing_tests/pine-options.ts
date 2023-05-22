@@ -488,7 +488,37 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 		],
 	};
 
-// valid selects
+export const string$OrderbyWoDirection: BalenaSdk.PineOptions<BalenaSdk.Application> =
+	{
+		// @ts-expect-error
+		$orderby: 'id',
+	};
+
+export const string$OrderbyWoPropPrefix: BalenaSdk.PineOptions<BalenaSdk.Application> =
+	{
+		// @ts-expect-error
+		$orderby: 'asc',
+	};
+
+export const string$OrderbyInvalidDirection: BalenaSdk.PineOptions<BalenaSdk.Application> =
+	{
+		// @ts-expect-error
+		$orderby: 'id ascending',
+	};
+
+export const string$OrderbyInvalidDirectionCase: BalenaSdk.PineOptions<BalenaSdk.Application> =
+	{
+		// @ts-expect-error
+		$orderby: 'id Asc',
+	};
+
+export const string$OrderbyInvalidNestedPropertyPath: BalenaSdk.PineOptions<BalenaSdk.Organization> =
+	{
+		// TODO: This should error
+		$orderby: 'application_type/wrong_property asc',
+	};
+
+// valid $select
 
 export const appOptionsEValid1: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$select: ['app_name'],
@@ -498,7 +528,7 @@ export const deviceOptionsEValid2: BalenaSdk.PineOptions<BalenaSdk.Device> = {
 	$select: ['note', 'device_name', 'uuid'],
 };
 
-// valid expands
+// valid $expand
 
 export const appOptionsEValid2: BalenaSdk.PineOptions<BalenaSdk.Application> = {
 	$expand: {
@@ -635,7 +665,7 @@ export const appOptionsEValid31: BalenaSdk.PineOptions<BalenaSdk.Application> =
 		],
 	};
 
-// valid filters
+// valid $filter
 
 export const appOptionsEValidf1: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
@@ -940,3 +970,19 @@ export const anyObjectOptionsValid1: BalenaSdk.PineOptions<AnyObject> = {
 		},
 	},
 };
+
+// valid $orderby
+
+export const string$OrderbyAsc: BalenaSdk.PineOptions<BalenaSdk.Application> = {
+	$orderby: 'id asc',
+};
+
+export const string$OrderbyDesc: BalenaSdk.PineOptions<BalenaSdk.Application> =
+	{
+		$orderby: 'id asc',
+	};
+
+export const string$OrderbyNestedProp: BalenaSdk.PineOptions<BalenaSdk.Organization> =
+	{
+		$orderby: 'application_type/slug asc',
+	};

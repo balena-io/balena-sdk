@@ -20,6 +20,7 @@ import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
 	PineOptions,
+	PinePostResult,
 } from '..';
 import { SubmitBody } from '../../typings/pinejs-client-core';
 import { mergePineOptions } from '../util';
@@ -105,7 +106,7 @@ const getCreditBundleModel = function (
 			organization: string | number,
 			featureId: number,
 			creditsToPurchase: number,
-		): Promise<CreditBundle> => {
+		): Promise<PinePostResult<CreditBundle>> => {
 			const orgId = await getOrgId(organization);
 			const body: SubmitBody<CreditBundle> = {
 				belongs_to__organization: orgId,

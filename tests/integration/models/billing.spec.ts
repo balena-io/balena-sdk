@@ -121,9 +121,11 @@ describe('Billing Model', function () {
 		});
 
 		describe('balena.models.billing.getInvoices()', function () {
-			it('should return no invoices', function () {
-				const promise = balena.models.billing.getInvoices(this.initialOrg.id);
-				return expect(promise).to.become([]);
+			it('should return no invoices', async function () {
+				const result = await balena.models.billing.getInvoices(
+					this.initialOrg.id,
+				);
+				expect(result).to.deep.equal([]);
 			});
 		});
 

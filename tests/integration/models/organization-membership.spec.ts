@@ -18,10 +18,15 @@ import {
 import type * as tagsHelper from './tags';
 
 const keyAlternatives = [
-	['id', (member: BalenaSdk.OrganizationMembership) => member.id],
+	['id', (member: Pick<BalenaSdk.OrganizationMembership, 'id'>) => member.id],
 	[
 		'alternate key',
-		(member: BalenaSdk.OrganizationMembership) =>
+		(
+			member: Pick<
+				BalenaSdk.OrganizationMembership,
+				'user' | 'is_member_of__organization'
+			>,
+		) =>
 			_.mapValues(
 				_.pick(member, ['user', 'is_member_of__organization']),
 				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
@@ -56,44 +61,30 @@ describe('Organization Membership Model', function () {
 		});
 	});
 
-	parallel('balena.models.organization.membership.getAll()', function () {
-		it(`shoud return only the user's own memberships [Promise]`, async function () {
-			const memberships = await balena.models.organization.membership.getAll();
-
+	describe('balena.models.organization.membership.getAllByOrganization()', function () {
+		it(`should return only the user's own membership`, async function () {
+			const memberships =
+				await balena.models.organization.membership.getAllByOrganization(
+					this.initialOrg.id,
+				);
 			assertDeepMatchAndLength(memberships, [
 				{
-					user: { __id: ctx.userId },
-					is_member_of__organization: { __id: ctx.initialOrg.id },
-					organization_membership_role: { __id: ctx.orgAdminRole.id },
+					user: { __id: this.userId },
+					is_member_of__organization: { __id: this.initialOrg.id },
+					organization_membership_role: { __id: this.orgAdminRole.id },
 				},
 			]);
-		});
-
-		it(`shoud return only the user's own membership [callback]`, function (done) {
-			balena.models.organization.membership.getAll(
-				// @ts-expect-error
-				(_err: Error, memberships: BalenaSdk.OrganizationMembership[]) => {
-					try {
-						assertDeepMatchAndLength(memberships, [
-							{
-								user: { __id: ctx.userId },
-								is_member_of__organization: { __id: ctx.initialOrg.id },
-								organization_membership_role: { __id: ctx.orgAdminRole.id },
-							},
-						]);
-						done();
-					} catch (err) {
-						done(err);
-					}
-				},
-			);
 		});
 	});
 
 	describe('given a membership [read operations]', function () {
 		let membership: BalenaSdk.OrganizationMembership | undefined;
 		before(async function () {
-			membership = (await balena.models.organization.membership.getAll())[0];
+			membership = (
+				await balena.models.organization.membership.getAllByOrganization(
+					this.initialOrg.id,
+				)
+			)[0];
 		});
 
 		parallel('balena.models.organization.membership.get()', function () {
@@ -134,7 +125,7 @@ describe('Organization Membership Model', function () {
 		});
 
 		describe('balena.models.organization.membership.getAllByOrganization()', function () {
-			it(`shoud return only the user's own membership`, async function () {
+			it(`should return only the user's own membership`, async function () {
 				const memberships =
 					await balena.models.organization.membership.getAllByOrganization(
 						this.initialOrg.id,
@@ -226,7 +217,9 @@ describe('Organization Membership Model', function () {
 			});
 
 			describe('[mutating operations]', function () {
-				let membership: BalenaSdk.OrganizationMembership | undefined;
+				let membership:
+					| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+					| undefined;
 				afterEach(async function () {
 					await balena.models.organization.membership.remove(membership!.id);
 				});
@@ -274,7 +267,9 @@ describe('Organization Membership Model', function () {
 		});
 
 		describe('given a member organization membership [contained scenario]', function () {
-			let membership: BalenaSdk.OrganizationMembership | undefined;
+			let membership:
+				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+				| undefined;
 			beforeEach(async function () {
 				membership = await balena.models.organization.membership.create({
 					organization: this.organization.id,
@@ -300,7 +295,10 @@ describe('Organization Membership Model', function () {
 		});
 
 		describe('given an administrator organization membership [contained scenario]', function () {
-			let membership: BalenaSdk.OrganizationMembership | undefined;
+			let membership:
+				| BalenaSdk.OrganizationMembership
+				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+				| undefined;
 			before(async function () {
 				membership = await balena.models.organization.membership.create({
 					organization: this.organization.id,
@@ -410,23 +408,19 @@ describe('Organization Membership Model', function () {
 
 		describe('balena.models.organization.membership.tags', function () {
 			describe('[contained scenario]', function () {
-				const orgTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> =
-					{
-						model: balena.models.organization.membership
-							.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-						modelNamespace: 'balena.models.organization.membership.tags',
-						resourceName: 'organization',
-						uniquePropertyNames: ['id', 'handle'],
-					};
+				const orgTagTestOptions: tagsHelper.Options = {
+					model: balena.models.organization.membership.tags,
+					modelNamespace: 'balena.models.organization.membership.tags',
+					resourceName: 'organization',
+					uniquePropertyNames: ['id', 'handle'],
+				};
 
-				const orgMembershipTagTestOptions: tagsHelper.Options<BalenaSdk.OrganizationMembershipTag> =
-					{
-						model: balena.models.organization.membership
-							.tags as tagsHelper.TagModelBase<BalenaSdk.OrganizationMembershipTag>,
-						modelNamespace: 'balena.models.organization.membership.tags',
-						resourceName: 'organization_membership',
-						uniquePropertyNames: ['id'],
-					};
+				const orgMembershipTagTestOptions: tagsHelper.Options = {
+					model: balena.models.organization.membership.tags,
+					modelNamespace: 'balena.models.organization.membership.tags',
+					resourceName: 'organization_membership',
+					uniquePropertyNames: ['id'],
+				};
 
 				before(async function () {
 					const [membership] =
