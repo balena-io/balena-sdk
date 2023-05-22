@@ -370,7 +370,7 @@ const sdk = fromSharedOptions();
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-            * [.getSupervisorImageForDT(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDT) ⇒ <code>Promise.&lt;String&gt;</code>
+            * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -774,7 +774,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-        * [.getSupervisorImageForDT(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDT) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -6332,7 +6332,7 @@ balena.models.organization.remove(123, function(error) {
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-    * [.getSupervisorImageForDT(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDT) ⇒ <code>Promise.&lt;String&gt;</code>
+    * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
 
 <a name="balena.models.os.getAvailableOsVersions"></a>
 
@@ -6609,9 +6609,9 @@ console.log(result1);
 const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
 console.log(result2);
 ```
-<a name="balena.models.os.getSupervisorImageForDT"></a>
+<a name="balena.models.os.getSupervisorImageForDeviceType"></a>
 
-##### os.getSupervisorImageForDT(deviceTypeId, version) ⇒ <code>Promise.&lt;String&gt;</code>
+##### os.getSupervisorImageForDeviceType(deviceTypeId, version) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns image name for a specific supervisor version for a Device Type  
 **Returns**: <code>Promise.&lt;String&gt;</code> - - Docker image name for the Supervisor version and arch  
