@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add the requestLimit & requestLimitInterval options to the SDK factory
+      hash: 9a92f9b8da880b53379522f6201cadcd7fcb97bd
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.1.0
+  title: ""
+  date: 2023-05-24T18:28:06.683Z
+- commits:
     - subject: Update dependencies
       hash: c709c49f64ffc53e2a2c0477b5b28c6db56c064d
       body: ""
