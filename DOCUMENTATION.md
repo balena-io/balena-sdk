@@ -271,12 +271,8 @@ const sdk = fromSharedOptions();
             * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
             * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
             * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-            * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-            * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
             * [.getSupervisorTargetStateForApp(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForApp) ⇒ <code>Promise</code>
-            * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-            * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
             * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
             * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
             * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -675,12 +671,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
         * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
         * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-        * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-        * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
         * [.getSupervisorTargetStateForApp(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForApp) ⇒ <code>Promise</code>
-        * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-        * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
         * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
         * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
         * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -2572,12 +2564,8 @@ balena.models.application.revokeSupportAccess('myorganization/myapp', function(e
     * [.setCustomLocation(uuidOrIdOrIds, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
     * [.unsetCustomLocation(uuidOrIdOrIds)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
     * [.move(uuidOrIdOrIds, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-    * [.getSupervisorTargetState(uuidOrId)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-    * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
     * [.getSupervisorTargetStateForApp(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForApp) ⇒ <code>Promise</code>
-    * ~~[.getManifestBySlug(slugOrName)](#balena.models.device.getManifestBySlug) ⇒ <code>Promise</code>~~
-    * ~~[.getManifestByApplication(slugOrUuidOrId)](#balena.models.device.getManifestByApplication) ⇒ <code>Promise</code>~~
     * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
     * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
     * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
@@ -4030,66 +4018,6 @@ balena.models.device.getSupervisorTargetStateForApp(123).then(function(state) {
 ```js
 balena.models.device.getSupervisorTargetStateForApp(123, '7cf02a6').then(function(state) {
 	console.log(state);
-});
-```
-<a name="balena.models.device.getManifestBySlug"></a>
-
-##### ~~device.getManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get a device type manifest by slug  
-**Access**: public  
-**Fulfil**: <code>Object</code> - device type manifest  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| slugOrName | <code>String</code> | device type slug |
-
-**Example**  
-```js
-balena.models.device.getManifestBySlug('raspberry-pi').then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.device.getManifestBySlug('raspberry-pi', function(error, manifest) {
-	if (error) throw error;
-	console.log(manifest);
-});
-```
-<a name="balena.models.device.getManifestByApplication"></a>
-
-##### ~~device.getManifestByApplication(slugOrUuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get a device manifest by application name  
-**Access**: public  
-**Fulfil**: <code>Object</code> - device manifest  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.getManifestByApplication('myorganization/myapp').then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.device.getManifestByApplication(123).then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.device.getManifestByApplication('myorganization/myapp', function(error, manifest) {
-	if (error) throw error;
-	console.log(manifest);
 });
 ```
 <a name="balena.models.device.generateUniqueKey"></a>
