@@ -92,11 +92,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.ping(123);
-		 *
-		 * @example
-		 * balena.models.device.ping('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		ping: async (uuidOrId: string | number): Promise<void> => {
 			const deviceOptions = {
@@ -142,12 +137,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.getApplicationInfo(123).then(function(appInfo) {
-		 * 	console.log(appInfo);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
-		 * 	if (error) throw error;
 		 * 	console.log(appInfo);
 		 * });
 		 */
@@ -203,11 +192,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.identify(123);
-		 *
-		 * @example
-		 * balena.models.device.identify('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		identify: async (uuidOrId: string | number): Promise<void> => {
 			const device = await sdkInstance.models.device.get(uuidOrId, {
@@ -243,11 +227,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.restartApplication(123);
-		 *
-		 * @example
-		 * balena.models.device.restartApplication('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		restartApplication: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -322,12 +301,6 @@ export const getSupervisorApiHelper = function (
 		 * balena.models.device.startApplication(123).then(function(containerId) {
 		 * 	console.log(containerId);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.startApplication('7cf02a6', function(error, containerId) {
-		 * 	if (error) throw error;
-		 * 	console.log(containerId);
-		 * });
 		 */
 		startApplication: async (uuidOrId: string | number): Promise<void> => {
 			const deviceOptions = {
@@ -381,12 +354,6 @@ export const getSupervisorApiHelper = function (
 		 * balena.models.device.stopApplication(123).then(function(containerId) {
 		 * 	console.log(containerId);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
-		 * 	if (error) throw error;
-		 * 	console.log(containerId);
-		 * });
 		 */
 		stopApplication: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -434,11 +401,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.reboot(123);
-		 *
-		 * @example
-		 * balena.models.device.reboot('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		reboot: (
 			uuidOrId: string | number,
@@ -488,11 +450,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.shutdown(123);
-		 *
-		 * @example
-		 * balena.models.device.shutdown('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		shutdown: (
 			uuidOrId: string | number,
@@ -544,11 +501,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.purge(123);
-		 *
-		 * @example
-		 * balena.models.device.purge('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		purge: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -594,13 +546,6 @@ export const getSupervisorApiHelper = function (
 		 * @example
 		 * balena.models.device.update(123, {
 		 * 	force: true
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.update('7cf02a6', {
-		 * 	force: true
-		 * }, function(error) {
-		 * 	if (error) throw error;
 		 * });
 		 */
 		async update(
@@ -653,12 +598,6 @@ export const getSupervisorApiHelper = function (
 		 * balena.models.device.getSupervisorState(123).then(function(state) {
 		 * 	console.log(state);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
-		 * 	if (error) throw error;
-		 * 	console.log(state);
-		 * });
 		 */
 		getSupervisorState: async (
 			uuidOrId: string | number,
@@ -696,12 +635,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.startService(1, 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.startService('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
 		 * 	...
 		 * });
 		 */
@@ -759,12 +692,6 @@ export const getSupervisorApiHelper = function (
 		 * balena.models.device.stopService(1, 123).then(function() {
 		 * 	...
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopService('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		stopService: (uuidOrId: string | number, imageId: number): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -816,12 +743,6 @@ export const getSupervisorApiHelper = function (
 		 *
 		 * @example
 		 * balena.models.device.restartService(1, 123).then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.restartService('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
 		 * 	...
 		 * });
 		 */

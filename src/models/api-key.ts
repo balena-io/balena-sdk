@@ -61,18 +61,6 @@ const getApiKeysModel = function (
 		 * balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
 		 * 	console.log(apiKey);
 		 * });
-		 *
-		 * @example
-		 * balena.models.apiKey.create(apiKeyName, function(error, apiKey) {
-		 * 	if (error) throw error;
-		 * 	console.log(apiKey);
-		 * });
-		 *
-		 * @example
-		 * balena.models.apiKey.create(apiKeyName, apiKeyDescription, apiKeyExpiryDate, function(error, apiKey) {
-		 * 	if (error) throw error;
-		 * 	console.log(apiKey);
-		 * });
 		 */
 		async create(
 			name: string,
@@ -120,12 +108,6 @@ const getApiKeysModel = function (
 		 * balena.models.apiKey.getAll().then(function(apiKeys) {
 		 * 	console.log(apiKeys);
 		 * });
-		 *
-		 * @example
-		 * balena.models.apiKey.getAll(function(error, apiKeys) {
-		 * 	if (error) throw error;
-		 * 	console.log(apiKeys);
-		 * });
 		 */
 		async getAll(
 			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
@@ -154,12 +136,6 @@ const getApiKeysModel = function (
 		 *
 		 * @example
 		 * balena.models.apiKey.getAllNamedUserApiKeys().then(function(apiKeys) {
-		 * 	console.log(apiKeys);
-		 * });
-		 *
-		 * @example
-		 * balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
-		 * 	if (error) throw error;
 		 * 	console.log(apiKeys);
 		 * });
 		 */
@@ -198,12 +174,6 @@ const getApiKeysModel = function (
 		 *
 		 * @example
 		 * balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp').then(function(apiKeys) {
-		 * 	console.log(apiKeys);
-		 * });
-		 *
-		 * @example
-		 * balena.models.apiKey.getProvisioningApiKeysByApplication(123, function(error, apiKeys) {
-		 * 	if (error) throw error;
 		 * 	console.log(apiKeys);
 		 * });
 		 */
@@ -245,12 +215,6 @@ const getApiKeysModel = function (
 		 *
 		 * @example
 		 * balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a6').then(function(apiKeys) {
-		 * 	console.log(apiKeys);
-		 * });
-		 *
-		 * @example
-		 * balena.models.apiKey.getDeviceApiKeysByDevice(123, function(error, apiKeys) {
-		 * 	if (error) throw error;
 		 * 	console.log(apiKeys);
 		 * });
 		 */
@@ -302,12 +266,6 @@ const getApiKeysModel = function (
 		 *
 		 * @example
 		 * balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
-		 *
-		 * @example
-		 * balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
-		 * 	if (error) throw error;
-		 * 	console.log(apiKeys);
-		 * });
 		 */
 		async update(
 			id: number,
@@ -350,11 +308,6 @@ const getApiKeysModel = function (
 		 *
 		 * @example
 		 * balena.models.apiKey.revoke(123);
-		 *
-		 * @example
-		 * balena.models.apiKey.revoke(123, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		async revoke(id: number): Promise<void> {
 			await pine.delete({

@@ -591,11 +591,6 @@ const getOsModel = function (
 	 * balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 	 * 	console.log('The OS download size for raspberry-pi', size);
 	 * });
-	 *
-	 * balena.models.os.getDownloadSize('raspberry-pi', function(error, size) {
-	 * 	if (error) throw error;
-	 * 	console.log('The OS download size for raspberry-pi', size);
-	 * });
 	 */
 	const getDownloadSize = async function (
 		deviceType: string,
@@ -673,11 +668,6 @@ const getOsModel = function (
 	 * balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
 	 * 	console.log('The raspberry-pi image was last modified in ' + date);
 	 * });
-	 *
-	 * balena.models.os.getLastModified('raspberry-pi', function(error, date) {
-	 * 	if (error) throw error;
-	 * 	console.log('The raspberry-pi image was last modified in ' + date);
-	 * });
 	 */
 	const getLastModified = async function (
 		deviceType: string,
@@ -730,11 +720,6 @@ const getOsModel = function (
 	 * @example
 	 * balena.models.os.download({deviceType: 'raspberry-pi'}).then(function(stream) {
 	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
-	 * });
-	 *
-	 * balena.models.os.download({deviceType: 'raspberry-pi', appId: 1234, fileType: '.zip'}, function(error, stream) {
-	 * 	if (error) throw error;
-	 * 	stream.pipe(fs.createWriteStream('foo/bar/image.zip'));
 	 * });
 	 */
 	const download = onlyIf(!isBrowser)(async function ({
@@ -814,11 +799,6 @@ const getOsModel = function (
 	 * balena.models.os.getConfig(123, { version: '2.12.7+rev1.prod' }).then(function(config) {
 	 * 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 	 * });
-	 *
-	 * balena.models.os.getConfig('myorganization/myapp', { version: '2.12.7+rev1.prod' }, function(error, config) {
-	 * 	if (error) throw error;
-	 * 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
-	 * });
 	 */
 	const getConfig = async function (
 		slugOrUuidOrId: string | number,
@@ -868,11 +848,6 @@ const getOsModel = function (
 	 * balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(isSupported) {
 	 * 	console.log(isSupported);
 	 * });
-	 *
-	 * balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod', function(error, config) {
-	 * 	if (error) throw error;
-	 * 	console.log(isSupported);
-	 * });
 	 */
 	const isSupportedOsUpdate = async (
 		deviceType: string,
@@ -906,11 +881,6 @@ const getOsModel = function (
 	 *
 	 * @example
 	 * balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod').then(function(isSupported) {
-	 * 	console.log(isSupported);
-	 * });
-	 *
-	 * balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod', function(error, config) {
-	 * 	if (error) throw error;
 	 * 	console.log(isSupported);
 	 * });
 	 */

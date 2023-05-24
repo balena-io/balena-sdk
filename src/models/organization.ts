@@ -64,12 +64,6 @@ const getOrganizationModel = function (
 	 * balena.models.organization.create({ name:'MyOrganization' }).then(function(organization) {
 	 * 	console.log(organization);
 	 * });
-	 *
-	 * @example
-	 * balena.models.organization.create({ name:'MyOrganization' }, function(error, organization) {
-	 * 	if (error) throw error;
-	 * 	console.log(organization);
-	 * });
 	 */
 	const create = function (
 		organization: BalenaSdk.PineSubmitBody<BalenaSdk.Organization>,
@@ -93,12 +87,6 @@ const getOrganizationModel = function (
 	 *
 	 * @example
 	 * balena.models.organization.getAll().then(function(organizations) {
-	 * 	console.log(organizations);
-	 * });
-	 *
-	 * @example
-	 * balena.models.organization.getAll(function(error, organizations) {
-	 * 	if (error) throw error;
 	 * 	console.log(organizations);
 	 * });
 	 */
@@ -137,12 +125,6 @@ const getOrganizationModel = function (
 	 * balena.models.organization.get(123).then(function(organization) {
 	 * 	console.log(organization);
 	 * });
-	 *
-	 * @example
-	 * balena.models.organization.get('myorganization', function(error, organization) {
-	 * 	if (error) throw error;
-	 * 	console.log(organization);
-	 * });
 	 */
 	const get = async function (
 		handleOrId: string | number,
@@ -175,11 +157,6 @@ const getOrganizationModel = function (
 	 *
 	 * @example
 	 * balena.models.organization.remove(123);
-	 *
-	 * @example
-	 * balena.models.organization.remove(123, function(error) {
-	 * 	if (error) throw error;
-	 * });
 	 */
 	const remove = async function (handleOrId: string | number): Promise<void> {
 		try {

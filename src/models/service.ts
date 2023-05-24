@@ -86,12 +86,6 @@ const getServiceModel = (
 		 * balena.models.service.getAllByApplication(123).then(function(services) {
 		 * 	console.log(services);
 		 * });
-		 *
-		 * @example
-		 * balena.models.service.getAllByApplication('myorganization/myapp', function(error, services) {
-		 * 	if (error) throw error;
-		 * 	console.log(services);
-		 * });
 		 */
 		async getAllByApplication(
 			slugOrUuidOrId: string | number,
@@ -127,12 +121,6 @@ const getServiceModel = (
 			 * balena.models.service.var.getAllByService(999999).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
-			 *
-			 * @example
-			 * balena.models.service.var.getAllByService(999999, function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
-			 * });
 			 */
 			getAllByService: varModel.getAllByParent,
 
@@ -156,12 +144,6 @@ const getServiceModel = (
 			 * @example
 			 * balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
-			 * });
-			 *
-			 * @example
-			 * balena.models.service.var.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
 			 * });
 			 */
 			async getAllByApplication(
@@ -209,12 +191,6 @@ const getServiceModel = (
 			 * balena.models.service.var.get(999999, 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
-			 *
-			 * @example
-			 * balena.models.service.var.get(999999, 'VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
-			 * });
 			 */
 			get: varModel.get,
 
@@ -234,12 +210,6 @@ const getServiceModel = (
 			 * balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
-			 *
-			 * @example
-			 * balena.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
-			 * 	if (error) throw error;
-			 * 	...
-			 * });
 			 */
 			set: varModel.set,
 
@@ -256,12 +226,6 @@ const getServiceModel = (
 			 *
 			 * @example
 			 * balena.models.service.var.remove(999999, 'VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.service.var.remove(999999, 'VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */

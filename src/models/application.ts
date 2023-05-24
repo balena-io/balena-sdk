@@ -219,12 +219,6 @@ const getApplicationModel = function (
 		 * balena.models.application.getAll().then(function(applications) {
 		 * 	console.log(applications);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.getAll(function(error, applications) {
-		 * 	if (error) throw error;
-		 * 	console.log(applications);
-		 * });
 		 */
 		async getAll(
 			options?: PineOptions<Application>,
@@ -260,12 +254,6 @@ const getApplicationModel = function (
 		 * balena.models.application.getAllDirectlyAccessible().then(function(applications) {
 		 * 	console.log(applications);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.getAllDirectlyAccessible(function(error, applications) {
-		 * 	if (error) throw error;
-		 * 	console.log(applications);
-		 * });
 		 */
 		async getAllDirectlyAccessible(
 			options?: PineOptions<Application>,
@@ -298,12 +286,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.get(123).then(function(application) {
-		 * 	console.log(application);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.get('myorganization/myapp', function(error, application) {
-		 * 	if (error) throw error;
 		 * 	console.log(application);
 		 * });
 		 */
@@ -378,12 +360,6 @@ const getApplicationModel = function (
 		 * balena.models.application.getDirectlyAccessible(123).then(function(application) {
 		 * 	console.log(application);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.getDirectlyAccessible('myorganization/myapp', function(error, application) {
-		 * 	if (error) throw error;
-		 * 	console.log(application);
-		 * });
 		 */
 		async getDirectlyAccessible(
 			slugOrUuidOrId: string | number,
@@ -420,12 +396,6 @@ const getApplicationModel = function (
 		 * balena.models.application.getWithDeviceServiceDetails(123).then(function(device) {
 		 * 	console.log(device);
 		 * })
-		 *
-		 * @example
-		 * balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', function(error, device) {
-		 * 	if (error) throw error;
-		 * 	console.log(device);
-		 * });
 		 */
 		async getWithDeviceServiceDetails(
 			slugOrUuidOrId: string | number,
@@ -584,12 +554,6 @@ const getApplicationModel = function (
 		 * balena.models.application.has(123).then(function(hasApp) {
 		 * 	console.log(hasApp);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.has('myorganization/myapp', function(error, hasApp) {
-		 * 	if (error) throw error;
-		 * 	console.log(hasApp);
-		 * });
 		 */
 		has: async (slugOrUuidOrId: string | number): Promise<boolean> => {
 			try {
@@ -615,12 +579,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.hasAny().then(function(hasAny) {
-		 * 	console.log('Has any?', hasAny);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.hasAny(function(error, hasAny) {
-		 * 	if (error) throw error;
 		 * 	console.log('Has any?', hasAny);
 		 * });
 		 */
@@ -811,11 +769,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.remove(123);
-		 *
-		 * @example
-		 * balena.models.application.remove('myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		remove: async (
 			slugOrUuidOrIdOrIds: string | number | number[],
@@ -866,11 +819,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.rename(123, 'MyRenamedApp');
-		 *
-		 * @example
-		 * balena.models.application.rename('myorganization/myapp', 'MyRenamedApp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		rename: async (
 			slugOrUuidOrId: string | number,
@@ -908,11 +856,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.restart(123);
-		 *
-		 * @example
-		 * balena.models.application.restart('myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		restart: (slugOrUuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -955,12 +898,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.generateApiKey(123).then(function(apiKey) {
-		 * 	console.log(apiKey);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.generateApiKey('myorganization/myapp', function(error, apiKey) {
-		 * 	if (error) throw error;
 		 * 	console.log(apiKey);
 		 * });
 		 */
@@ -1006,12 +943,6 @@ const getApplicationModel = function (
 		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
 		 * 	console.log(key);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.generateProvisioningKey('myorganization/myapp', function(error, key) {
-		 * 	if (error) throw error;
-		 * 	console.log(key);
-		 * });
 		 */
 		generateProvisioningKey: async (
 			slugOrUuidOrId: string | number,
@@ -1055,11 +986,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.purge(123);
-		 *
-		 * @example
-		 * balena.models.application.purge(123, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		purge: (appId: number): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -1090,11 +1016,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.shutdown(123);
-		 *
-		 * @example
-		 * balena.models.application.shutdown(123, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		shutdown: (appId: number, options?: { force?: boolean }): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -1129,11 +1050,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.reboot(123);
-		 *
-		 * @example
-		 * balena.models.application.reboot(123, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		reboot: (appId: number, options?: { force?: boolean }): Promise<void> =>
 			withSupervisorLockedError(async () => {
@@ -1174,11 +1090,6 @@ const getApplicationModel = function (
 		 * balena.models.application.willTrackNewReleases(123).then(function(isEnabled) {
 		 * 	console.log(isEnabled);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.willTrackNewReleases('myorganization/myapp', function(error, isEnabled) {
-		 * 	console.log(isEnabled);
-		 * });
 		 */
 		willTrackNewReleases: async (
 			slugOrUuidOrId: string | number,
@@ -1210,11 +1121,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.isTrackingLatestRelease(123).then(function(isEnabled) {
-		 * 	console.log(isEnabled);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.isTrackingLatestRelease('myorganization/myapp', function(error, isEnabled) {
 		 * 	console.log(isEnabled);
 		 * });
 		 */
@@ -1272,12 +1178,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.pinToRelease('myorganization/myapp', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
-		 * 	if (error) throw error;
 		 * 	...
 		 * });
 		 */
@@ -1366,12 +1266,6 @@ const getApplicationModel = function (
 		 * balena.models.application.trackLatestRelease(123).then(function() {
 		 * 	...
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.trackLatestRelease('myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		trackLatestRelease: async (
 			slugOrUuidOrId: string | number,
@@ -1426,11 +1320,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.enableDeviceUrls(123);
-		 *
-		 * @example
-		 * balena.models.device.enableDeviceUrls('myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		enableDeviceUrls: async (
 			slugOrUuidOrId: string | number,
@@ -1464,11 +1353,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.disableDeviceUrls(123);
-		 *
-		 * @example
-		 * balena.models.device.disableDeviceUrls('myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		disableDeviceUrls: async (
 			slugOrUuidOrId: string | number,
@@ -1503,11 +1387,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
-		 *
-		 * @example
-		 * balena.models.application.grantSupportAccess('myorganization/myapp', Date.now() + 3600 * 1000, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		async grantSupportAccess(
 			slugOrUuidOrId: string | number,
@@ -1550,11 +1429,6 @@ const getApplicationModel = function (
 		 *
 		 * @example
 		 * balena.models.application.revokeSupportAccess(123);
-		 *
-		 * @example
-		 * balena.models.application.revokeSupportAccess('myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		revokeSupportAccess: async (
 			slugOrUuidOrId: string | number,
@@ -1600,12 +1474,6 @@ const getApplicationModel = function (
 			 * balena.models.application.tags.getAllByApplication(999999).then(function(tags) {
 			 * 	console.log(tags);
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
 			 */
 			getAllByApplication: tagsModel.getAllByParent,
 
@@ -1627,11 +1495,6 @@ const getApplicationModel = function (
 			 *
 			 * @example
 			 * balena.models.application.tags.set(123, 'EDITOR', 'vim');
-			 *
-			 * @example
-			 * balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', function(error) {
-			 * 	if (error) throw error;
-			 * });
 			 */
 			set: tagsModel.set,
 
@@ -1648,11 +1511,6 @@ const getApplicationModel = function (
 			 *
 			 * @example
 			 * balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
-			 *
-			 * @example
-			 * balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function(error) {
-			 * 	if (error) throw error;
-			 * });
 			 */
 			remove: tagsModel.remove,
 		},
@@ -1683,12 +1541,6 @@ const getApplicationModel = function (
 			 * balena.models.application.configVar.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.configVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
-			 * });
 			 */
 			getAllByApplication: configVarModel.getAllByParent,
 
@@ -1712,12 +1564,6 @@ const getApplicationModel = function (
 			 * @example
 			 * balena.models.application.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 			 * 	console.log(value);
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.configVar.get('myorganization/myapp', 'BALENA_VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
 			 * });
 			 */
 			get: configVarModel.get,
@@ -1743,12 +1589,6 @@ const getApplicationModel = function (
 			 * balena.models.application.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.configVar.set('myorganization/myapp', 'BALENA_VAR', 'newvalue', function(error) {
-			 * 	if (error) throw error;
-			 * 	...
-			 * });
 			 */
 			set: configVarModel.set,
 
@@ -1770,12 +1610,6 @@ const getApplicationModel = function (
 			 *
 			 * @example
 			 * balena.models.application.configVar.remove(999999, 'BALENA_VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.configVar.remove('myorganization/myapp', 'BALENA_VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */
@@ -1808,12 +1642,6 @@ const getApplicationModel = function (
 			 * balena.models.application.envVar.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.envVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
-			 * });
 			 */
 			getAllByApplication: envVarModel.getAllByParent,
 
@@ -1837,12 +1665,6 @@ const getApplicationModel = function (
 			 * @example
 			 * balena.models.application.envVar.get(999999, 'VAR').then(function(value) {
 			 * 	console.log(value);
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.envVar.get('myorganization/myapp', 'VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
 			 * });
 			 */
 			get: envVarModel.get,
@@ -1868,12 +1690,6 @@ const getApplicationModel = function (
 			 * balena.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.envVar.set('myorganization/myapp', 'VAR', 'newvalue', function(error) {
-			 * 	if (error) throw error;
-			 * 	...
-			 * });
 			 */
 			set: envVarModel.set,
 
@@ -1895,12 +1711,6 @@ const getApplicationModel = function (
 			 *
 			 * @example
 			 * balena.models.application.envVar.remove(999999, 'VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.envVar.remove('myorganization/myapp', 'VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */
@@ -1933,12 +1743,6 @@ const getApplicationModel = function (
 			 * balena.models.application.buildVar.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.buildVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
-			 * });
 			 */
 			getAllByApplication: buildVarModel.getAllByParent,
 
@@ -1962,12 +1766,6 @@ const getApplicationModel = function (
 			 * @example
 			 * balena.models.application.buildVar.get(999999, 'VAR').then(function(value) {
 			 * 	console.log(value);
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.buildVar.get('myorganization/myapp', 'VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
 			 * });
 			 */
 			get: buildVarModel.get,
@@ -1993,12 +1791,6 @@ const getApplicationModel = function (
 			 * balena.models.application.buildVar.set(999999, 'VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
-			 *
-			 * @example
-			 * balena.models.application.buildVar.set('myorganization/myapp', 'VAR', 'newvalue', function(error) {
-			 * 	if (error) throw error;
-			 * 	...
-			 * });
 			 */
 			set: buildVarModel.set,
 
@@ -2020,12 +1812,6 @@ const getApplicationModel = function (
 			 *
 			 * @example
 			 * balena.models.application.buildVar.remove(999999, 'VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.application.buildVar.remove('myorganization/myapp', 'VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */

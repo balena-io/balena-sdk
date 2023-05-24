@@ -65,11 +65,6 @@ const getOrganizationInviteModel = function (
 		 * balena.models.organization.invite.getAll().then(function(invites) {
 		 * 	console.log(invites);
 		 * });
-		 *
-		 * @example
-		 * balena.models.organization.invite.getAll(function(error, invites) {
-		 * 	console.log(invites);
-		 * });
 		 */
 		getAll(
 			options: PineOptions<OrganizationInvite> = {},
@@ -102,11 +97,6 @@ const getOrganizationInviteModel = function (
 		 *
 		 * @example
 		 * balena.models.organization.invite.getAllByOrganization(123).then(function(invites) {
-		 * 	console.log(invites);
-		 * });
-		 *
-		 * @example
-		 * balena.models.organization.invite.getAllByOrganization(123, function(error, invites) {
 		 * 	console.log(invites);
 		 * });
 		 */
@@ -145,11 +135,6 @@ const getOrganizationInviteModel = function (
 		 *
 		 * @example
 		 * balena.models.organization.invite.create('MyOrg', { invitee: "invitee@example.org", roleName: "developer", message: "join my org" }).then(function(invite) {
-		 * 	console.log(invite);
-		 * });
-		 *
-		 * @example
-		 * balena.models.organization.invite.create(53, { invitee: "invitee@example.org" }, function(error, invite) {
 		 * 	console.log(invite);
 		 * });
 		 */
@@ -207,12 +192,6 @@ const getOrganizationInviteModel = function (
 		 *
 		 * @example
 		 * balena.models.organization.invite.revoke(123);
-		 *
-		 * @example
-		 * balena.models.organization.invite.revoke(123,function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		async revoke(id: number): Promise<void> {
 			await pine.delete({ resource: RESOURCE, id });
@@ -232,12 +211,6 @@ const getOrganizationInviteModel = function (
 		 *
 		 * @example
 		 * balena.models.organization.invite.accept("qwerty-invitation-token");
-		 *
-		 * @example
-		 * balena.models.organization.invite.accept("qwerty-invitation-token", function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		async accept(invitationToken: string): Promise<void> {
 			try {

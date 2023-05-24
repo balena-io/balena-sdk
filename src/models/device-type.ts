@@ -142,12 +142,6 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * balena.models.deviceType.get('raspberrypi').then(function(deviceType) {
 		 * 	console.log('resolved alias:', deviceType);
 		 * });
-		 *
-		 * @example
-		 * balena.models.deviceType.get('raspberry-pi', function(error, deviceType) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceType);
-		 * });
 		 */
 		async get(
 			idOrSlug: number | string,
@@ -222,12 +216,6 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * balena.models.deviceType.getAll({ $select: ['name', 'slug'] }).then(function(deviceTypes) {
 		 * 	console.log(deviceTypes);
 		 * })
-		 *
-		 * @example
-		 * balena.models.deviceType.getAll(function(error, deviceTypes) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceTypes);
-		 * });
 		 */
 		async getAll(options?: PineOptions<DeviceType>): Promise<DeviceType[]> {
 			if (options == null) {
@@ -265,12 +253,6 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * balena.models.deviceType.getAllSupported({ $select: ['name', 'slug'] }).then(function(deviceTypes) {
 		 * 	console.log(deviceTypes);
 		 * })
-		 *
-		 * @example
-		 * balena.models.deviceType.getAllSupported(function(error, deviceTypes) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceTypes);
-		 * });
 		 */
 		async getAllSupported(
 			options?: PineOptions<DeviceType>,
@@ -330,12 +312,6 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(manifest) {
 		 * 	console.log(manifest);
 		 * });
-		 *
-		 * @example
-		 * balena.models.deviceType.getBySlugOrName('raspberry-pi', function(error, manifest) {
-		 * 	if (error) throw error;
-		 * 	console.log(manifest);
-		 * });
 		 */
 		getBySlugOrName: async (
 			slugOrName: string,
@@ -375,13 +351,6 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(deviceTypeName);
 		 * 	// Raspberry Pi
 		 * });
-		 *
-		 * @example
-		 * balena.models.deviceType.getName('raspberry-pi', function(error, deviceTypeName) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceTypeName);
-		 * 	// Raspberry Pi
-		 * });
 		 */
 		getName: async (deviceTypeSlug: string): Promise<string> => {
 			return (
@@ -402,13 +371,6 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 *
 		 * @example
 		 * balena.models.deviceType.getSlugByName('Raspberry Pi').then(function(deviceTypeSlug) {
-		 * 	console.log(deviceTypeSlug);
-		 * 	// raspberry-pi
-		 * });
-		 *
-		 * @example
-		 * balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTypeSlug) {
-		 * 	if (error) throw error;
 		 * 	console.log(deviceTypeSlug);
 		 * 	// raspberry-pi
 		 * });

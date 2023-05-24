@@ -116,17 +116,6 @@ const getAuth = function (
 	 * 		console.log('My username is:', username);
 	 * 	}
 	 * });
-	 *
-	 * @example
-	 * balena.auth.whoami(function(error, username) {
-	 * 	if (error) throw error;
-	 *
-	 * 	if (!username) {
-	 * 		console.log('I\'m not logged in!');
-	 * 	} else {
-	 * 		console.log('My username is:', username);
-	 * 	}
-	 * });
 	 */
 	async function whoami(): Promise<string | undefined> {
 		try {
@@ -162,12 +151,6 @@ const getAuth = function (
 	 *
 	 * @example
 	 * balena.auth.authenticate(credentials).then(function(token) {
-	 * 	console.log('My token is:', token);
-	 * });
-	 *
-	 * @example
-	 * balena.auth.authenticate(credentials, function(error, token) {
-	 * 	if (error) throw error;
 	 * 	console.log('My token is:', token);
 	 * });
 	 */
@@ -215,11 +198,6 @@ const getAuth = function (
 	 *
 	 * @example
 	 * balena.auth.login(credentials);
-	 *
-	 * @example
-	 * balena.auth.login(credentials, function(error) {
-	 * 	if (error) throw error;
-	 * });
 	 */
 	async function login(credentials: {
 		email: string;
@@ -244,11 +222,6 @@ const getAuth = function (
 	 *
 	 * @example
 	 * balena.auth.loginWithToken(authToken);
-	 *
-	 * @example
-	 * balena.auth.loginWithToken(authToken, function(error) {
-	 * 	if (error) throw error;
-	 * });
 	 */
 	function loginWithToken(authToken: string): Promise<void> {
 		memoizedUserWhoami.clear();
@@ -267,17 +240,6 @@ const getAuth = function (
 	 *
 	 * @example
 	 * balena.auth.isLoggedIn().then(function(isLoggedIn) {
-	 * 	if (isLoggedIn) {
-	 * 		console.log('I\'m in!');
-	 * 	} else {
-	 * 		console.log('Too bad!');
-	 * 	}
-	 * });
-	 *
-	 * @example
-	 * balena.auth.isLoggedIn(function(error, isLoggedIn) {
-	 * 	if (error) throw error;
-	 *
 	 * 	if (isLoggedIn) {
 	 * 		console.log('I\'m in!');
 	 * 	} else {
@@ -316,12 +278,6 @@ const getAuth = function (
 	 * balena.auth.getToken().then(function(token) {
 	 * 	console.log(token);
 	 * });
-	 *
-	 * @example
-	 * balena.auth.getToken(function(error, token) {
-	 * 	if (error) throw error;
-	 * 	console.log(token);
-	 * });
 	 */
 	function getToken(): Promise<string> {
 		return auth.getKey().catch(function (err) {
@@ -345,12 +301,6 @@ const getAuth = function (
 	 * balena.auth.getUserId().then(function(userId) {
 	 * 	console.log(userId);
 	 * });
-	 *
-	 * @example
-	 * balena.auth.getUserId(function(error, userId) {
-	 * 	if (error) throw error;
-	 * 	console.log(userId);
-	 * });
 	 */
 	async function getUserId(): Promise<number> {
 		const { id } = await getUserDetails();
@@ -371,12 +321,6 @@ const getAuth = function (
 	 *
 	 * @example
 	 * balena.auth.getUserActorId().then(function(userActorId) {
-	 * 	console.log(userActorId);
-	 * });
-	 *
-	 * @example
-	 * balena.auth.getUserActorId(function(error, userActorId) {
-	 * 	if (error) throw error;
 	 * 	console.log(userActorId);
 	 * });
 	 */
@@ -407,12 +351,6 @@ const getAuth = function (
 	 * balena.auth.getEmail().then(function(email) {
 	 * 	console.log(email);
 	 * });
-	 *
-	 * @example
-	 * balena.auth.getEmail(function(error, email) {
-	 * 	if (error) throw error;
-	 * 	console.log(email);
-	 * });
 	 */
 	async function getEmail(): Promise<string> {
 		const { email } = await getUserDetails();
@@ -430,11 +368,6 @@ const getAuth = function (
 	 *
 	 * @example
 	 * balena.auth.logout();
-	 *
-	 * @example
-	 * balena.auth.logout(function(error) {
-	 * 	if (error) throw error;
-	 * });
 	 */
 	function logout(): Promise<void> {
 		memoizedUserWhoami.clear();
@@ -463,16 +396,6 @@ const getAuth = function (
 	 * }).then(function(token) {
 	 * 	console.log(token);
 	 * });
-	 *
-	 * @example
-	 * balena.auth.register({
-	 * 	email: 'johndoe@gmail.com',
-	 * 	password: 'secret'
-	 * }, function(error, token) {
-	 * 	if (error) throw error;
-	 * 	console.log(token);
-	 * });
-	 *
 	 */
 	async function register(credentials: {
 		email: string;

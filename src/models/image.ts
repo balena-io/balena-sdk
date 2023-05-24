@@ -46,12 +46,6 @@ const getImageModel = function (
 		 * balena.models.image.get(123).then(function(image) {
 		 * 	console.log(image);
 		 * });
-		 *
-		 * @example
-		 * balena.models.image.get(123, function(error, image) {
-		 * 	if (error) throw error;
-		 * 	console.log(image);
-		 * });
 		 */
 		async get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
 			const baseOptions = {
@@ -101,12 +95,6 @@ const getImageModel = function (
 		 *
 		 * @example
 		 * balena.models.image.getLogs(123).then(function(logs) {
-		 * 	console.log(logs);
-		 * });
-		 *
-		 * @example
-		 * balena.models.image.getLogs(123, function(error, logs) {
-		 * 	if (error) throw error;
 		 * 	console.log(logs);
 		 * });
 		 */

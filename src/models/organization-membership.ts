@@ -104,11 +104,6 @@ const getOrganizationMembershipModel = function (
 		 * balena.models.organization.membership.get(5).then(function(memberships) {
 		 * 	console.log(memberships);
 		 * });
-		 *
-		 * @example
-		 * balena.models.organization.membership.get(5, function(error, memberships) {
-		 * 	console.log(memberships);
-		 * });
 		 */
 		async get(
 			membershipId: ResourceKey,
@@ -159,11 +154,6 @@ const getOrganizationMembershipModel = function (
 		 *
 		 * @example
 		 * balena.models.organization.membership.getAllByOrganization(123).then(function(memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 *
-		 * @example
-		 * balena.models.organization.membership.getAllByOrganization(123, function(error, memberships) {
 		 * 	console.log(memberships);
 		 * });
 		 */
@@ -267,11 +257,6 @@ const getOrganizationMembershipModel = function (
 		 * balena.models.organization.membership.create({ organization: "myorg", username: "user123", roleName: "member" }).then(function(membership) {
 		 * 	console.log(membership);
 		 * });
-		 *
-		 * @example
-		 * balena.models.organization.membership.create({ organization: 53, username: "user123" }, function(error, membership) {
-		 * 	console.log(membership);
-		 * });
 		 */
 		async create({
 			organization,
@@ -327,11 +312,6 @@ const getOrganizationMembershipModel = function (
 		 * }, "member").then(function() {
 		 * 	console.log('OK');
 		 * });
-		 *
-		 * @example
-		 * balena.models.organization.membership.changeRole(123, "administrator", function(error) {
-		 * 	console.log('OK');
-		 * });
 		 */
 		async changeRole(
 			idOrUniqueKey: ResourceKey,
@@ -365,12 +345,6 @@ const getOrganizationMembershipModel = function (
 		 * 	user: 123,
 		 * 	is_member_of__application: 125,
 		 * });
-		 *
-		 * @example
-		 * balena.models.organization.membership.remove(123,function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		async remove(idOrUniqueKey: ResourceKey): Promise<void> {
 			await pine.delete({ resource: RESOURCE, id: idOrUniqueKey });
@@ -401,12 +375,6 @@ const getOrganizationMembershipModel = function (
 			 * @example
 			 * balena.models.organization.memberships.tags.getAllByOrganization(999999).then(function(tags) {
 			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.organization.memberships.tags.getAllByOrganization('MyOrg', function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
 			 * });
 			 */
 			async getAllByOrganization(
@@ -452,12 +420,6 @@ const getOrganizationMembershipModel = function (
 			 * balena.models.organization.memberships.tags.getAllByOrganizationMembership(5).then(function(tags) {
 			 * 	console.log(tags);
 			 * });
-			 *
-			 * @example
-			 * balena.models.organization.memberships.tags.getAllByOrganizationMembership(5, function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
 			 */
 			getAllByOrganizationMembership: tagsModel.getAllByParent,
 
@@ -476,11 +438,6 @@ const getOrganizationMembershipModel = function (
 			 *
 			 * @example
 			 * balena.models.organization.memberships.tags.set(5, 'EDITOR', 'vim');
-			 *
-			 * @example
-			 * balena.models.organization.memberships.tags.set(5, 'EDITOR', 'vim', function(error) {
-			 * 	if (error) throw error;
-			 * });
 			 */
 			set: tagsModel.set,
 
@@ -497,11 +454,6 @@ const getOrganizationMembershipModel = function (
 			 *
 			 * @example
 			 * balena.models.organization.memberships.tags.remove(5, 'EDITOR');
-			 *
-			 * @example
-			 * balena.models.organization.memberships.tags.remove(5, 'EDITOR', function(error) {
-			 * 	if (error) throw error;
-			 * });
 			 */
 			remove: tagsModel.remove,
 		},

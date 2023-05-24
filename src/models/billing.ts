@@ -177,12 +177,6 @@ const getBillingModel = function (
 		 * balena.models.billing.getAccount(orgId).then(function(billingAccount) {
 		 * 	console.log(billingAccount);
 		 * });
-		 *
-		 * @example
-		 * balena.models.billing.getAccount(orgId, function(error, billingAccount) {
-		 * 	if (error) throw error;
-		 * 	console.log(billingAccount);
-		 * });
 		 */
 
 		getAccount: async (
@@ -213,12 +207,6 @@ const getBillingModel = function (
 		 * balena.models.billing.getPlan(orgId).then(function(billingPlan) {
 		 * 	console.log(billingPlan);
 		 * });
-		 *
-		 * @example
-		 * balena.models.billing.getPlan(orgId, function(error, billingPlan) {
-		 * 	if (error) throw error;
-		 * 	console.log(billingPlan);
-		 * });
 		 */
 		getPlan: async (
 			organization: string | number,
@@ -247,12 +235,6 @@ const getBillingModel = function (
 		 *
 		 * @example
 		 * balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
-		 * 	console.log(billingInfo);
-		 * });
-		 *
-		 * @example
-		 * balena.models.billing.getBillingInfo(orgId, function(error, billingInfo) {
-		 * 	if (error) throw error;
 		 * 	console.log(billingInfo);
 		 * });
 		 */
@@ -286,12 +268,6 @@ const getBillingModel = function (
 		 *
 		 * @example
 		 * balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }).then(function(billingInfo) {
-		 * 	console.log(billingInfo);
-		 * });
-		 *
-		 * @example
-		 * balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }, function(error, billingInfo) {
-		 * 	if (error) throw error;
 		 * 	console.log(billingInfo);
 		 * });
 		 */
@@ -392,12 +368,6 @@ const getBillingModel = function (
 		 *
 		 * @example
 		 * balena.models.billing.getInvoices(orgId).then(function(invoices) {
-		 * 	console.log(invoices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.billing.getInvoices(orgId, function(error, invoices) {
-		 * 	if (error) throw error;
 		 * 	console.log(invoices);
 		 * });
 		 */
