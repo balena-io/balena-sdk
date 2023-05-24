@@ -294,3 +294,51 @@ export const groupByMap = <K, V>(entries: V[], iteratee: (item: V) => K) => {
 	}
 	return result;
 };
+
+const DEFAULT_CONCURRENCY_LIMIT = 50;
+
+export const limitedMap = <T, U>(
+	arr: T[],
+	fn: (currentValue: T, index: number, array: T[]) => Promise<U>,
+	{
+		concurrency = DEFAULT_CONCURRENCY_LIMIT,
+	}: {
+		concurrency?: number;
+	} = {},
+): Promise<U[]> => {
+	if (concurrency >= arr.length) {
+		return Promise.all(arr.map(fn));
+	}
+	return new Promise<U[]>((resolve, reject) => {
+		const result: U[] = new Array(arr.length);
+		let inFlight = 0;
+		let idx = 0;
+		const runNext = async () => {
+			// Store the idx to use for this call before incrementing the main counter
+			const i = idx;
+			idx++;
+			if (i >= arr.length) {
+				return;
+			}
+			try {
+				inFlight++;
+				result[i] = await fn(arr[i], i, arr);
+				runNext();
+			} catch (err) {
+				// Stop any further iterations
+				idx = arr.length;
+				// Clear the results so far for gc
+				result.length = 0;
+				reject(err);
+			} finally {
+				inFlight--;
+				if (inFlight === 0) {
+					resolve(result);
+				}
+			}
+		};
+		while (inFlight < concurrency) {
+			runNext();
+		}
+	});
+};

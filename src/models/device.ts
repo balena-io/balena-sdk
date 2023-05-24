@@ -51,9 +51,8 @@ import {
 	isFullUuid,
 	mergePineOptions,
 	treatAsMissingDevice,
+	limitedMap,
 } from '../util';
-
-import { toWritable } from '../util/types';
 
 import {
 	getDeviceOsSemverWithVariant,
@@ -79,7 +78,11 @@ import type {
 	SubmitBody,
 	SelectableProps,
 } from '../../typings/pinejs-client-core';
-import type { AtLeast } from '../../typings/utils';
+import type {
+	AtLeast,
+	Dictionary,
+	ResolvableReturnType,
+} from '../../typings/utils';
 import type { DeviceType } from '../types/models';
 
 import subDays from 'date-fns/subDays';
@@ -335,6 +338,94 @@ const getDeviceModel = function (
 			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
 		});
 		return devices.map(addExtraInfo) as Device[];
+	}
+
+	async function startOsUpdate(
+		uuidOrUuids: string,
+		targetOsVersion: string,
+	): Promise<OsUpdateActionResult>;
+	async function startOsUpdate(
+		uuidOrUuids: string[],
+		targetOsVersion: string,
+	): Promise<Dictionary<OsUpdateActionResult>>;
+	async function startOsUpdate(
+		uuidOrUuids: string | string[],
+		targetOsVersion: string,
+	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
+		if (!targetOsVersion) {
+			throw new errors.BalenaInvalidParameterError(
+				'targetOsVersion',
+				targetOsVersion,
+			);
+		}
+
+		const getDeviceType = memoizee(
+			async (deviceTypeId: number) =>
+				await sdkInstance.models.deviceType.get(deviceTypeId, {
+					$select: 'slug',
+				}),
+			{ primitive: true, promise: true },
+		);
+		const getAvailableOsVersions = memoizee(
+			async (slug: string) =>
+				await sdkInstance.models.os.getAvailableOsVersions(slug),
+			{ primitive: true, promise: true },
+		);
+
+		const osUpdateHelper = await getOsUpdateHelper();
+		const results: Dictionary<
+			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
+		> = {};
+
+		await batchDeviceOperation()({
+			uuidOrIdOrIds: uuidOrUuids,
+			options: {
+				$select: [
+					'uuid',
+					'is_online',
+					'os_version',
+					'supervisor_version',
+					'os_variant',
+				],
+			},
+			groupByNavigationPoperty: 'is_of__device_type',
+			fn: async (devices, deviceTypeId) => {
+				const dt = await getDeviceType(deviceTypeId);
+				for (const device of devices) {
+					// this will throw an error if the action isn't available
+					exports._checkOsUpdateTarget(
+						{
+							...device,
+							is_of__device_type: [dt],
+						},
+						targetOsVersion,
+					);
+
+					const osVersions = await getAvailableOsVersions(dt.slug);
+
+					if (
+						!osVersions.some(
+							(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
+						)
+					) {
+						throw new errors.BalenaInvalidParameterError(
+							'targetOsVersion',
+							targetOsVersion,
+						);
+					}
+				}
+				await limitedMap(devices, async (device) => {
+					results[device.uuid] = await osUpdateHelper.startOsUpdate(
+						device.uuid,
+						targetOsVersion,
+					);
+				});
+			},
+		});
+		if (Array.isArray(uuidOrUuids)) {
+			return results;
+		}
+		return results[uuidOrUuids];
 	}
 
 	const exports = {
@@ -2176,7 +2267,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String} uuid - full device uuid
+		 * @param {String|String[]} uuidOrUuids - full device uuid or array of full uuids
 		 * @param {String} targetOsVersion - semver-compatible version for the target device
 		 * Unsupported (unpublished) version will result in rejection.
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
@@ -2189,50 +2280,7 @@ const getDeviceModel = function (
 		 * 	console.log(result.status);
 		 * });
 		 */
-		startOsUpdate: async (
-			uuid: string,
-			targetOsVersion: string,
-		): Promise<OsUpdateActionResult> => {
-			if (!targetOsVersion) {
-				throw new errors.BalenaInvalidParameterError(
-					'targetOsVersion',
-					targetOsVersion,
-				);
-			}
-
-			const deviceOpts = {
-				$select: toWritable(['is_online', 'os_version', 'os_variant'] as const),
-				$expand: { is_of__device_type: { $select: 'slug' as const } },
-			};
-
-			const device = (await exports.get(uuid, deviceOpts)) as PineTypedResult<
-				Device,
-				typeof deviceOpts
-			> &
-				Pick<Device, 'uuid'>;
-
-			device.uuid = uuid;
-			// this will throw an error if the action isn't available
-			exports._checkOsUpdateTarget(device, targetOsVersion);
-
-			const osVersions = await osModel().getAvailableOsVersions(
-				device.is_of__device_type[0].slug,
-			);
-
-			if (
-				!osVersions.some(
-					(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
-				)
-			) {
-				throw new errors.BalenaInvalidParameterError(
-					'targetOsVersion',
-					targetOsVersion,
-				);
-			}
-
-			const osUpdateHelper = await getOsUpdateHelper();
-			return await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
-		},
+		startOsUpdate,
 
 		/**
 		 * @summary Get the OS update status of a device

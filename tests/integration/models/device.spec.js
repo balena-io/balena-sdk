@@ -1542,120 +1542,163 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.startOsUpdate()', function () {
-				givenADevice(before);
-
-				describe('given an offline device w/o os info', function () {
-					it('should be rejected if the device does not exist', function () {
-						const promise = balena.models.device.startOsUpdate(
-							'asdfghjkl',
-							'2.29.2+rev1.prod',
-						);
-						return expect(promise).to.be.rejectedWith(
-							'Device not found: asdfghjkl',
-						);
-					});
-
-					it('should not be able to start an OS update without providing a targetOsVersion parameter', async function () {
-						// @ts-expect-error
-						const promise = balena.models.device.startOsUpdate(
-							this.device.uuid,
-						);
-						await expect(promise).to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaInvalidParameterError',
-						);
-					});
-
-					it('should not be able to start an OS update for an offline device', async function () {
-						const promise = balena.models.device.startOsUpdate(
-							this.device.uuid,
-							'2.29.2+rev1.prod',
-						);
-						await expect(promise).to.be.rejectedWith(
-							`The device is offline: ${this.device.uuid}`,
-						);
-					});
-				});
-
-				describe('given an online device w/o os info', function () {
-					before(function () {
-						return balena.pine.patch({
-							resource: 'device',
-							id: this.device.id,
-							body: { is_online: true },
+			['single uuid', 'array of uuids'].forEach((paramType) => {
+				describe(`balena.models.device.startOsUpdate() called with ${paramType}`, function () {
+					givenADevice(before);
+					describe('given an offline device w/o os info', function () {
+						it('should be rejected if the device does not exist and using using short uuid', async function () {
+							const promise =
+								paramType === 'array of uuids'
+									? balena.models.device.startOsUpdate(
+											['asdfghjkl'],
+											'2.29.2+rev1.prod',
+									  )
+									: balena.models.device.startOsUpdate(
+											'asdfghjkl',
+											'2.29.2+rev1.prod',
+									  );
+							await expect(promise).to.be.rejectedWith(
+								paramType === 'array of uuids'
+									? `Invalid parameter: asdfghjkl is not a valid value for parameter 'uuidOrIdOrArray'`
+									: 'Device not found: asdfghjkl',
+							);
 						});
-					});
 
-					it('should not be able to start an OS update for a device that has not yet reported its current version', function () {
-						const promise = balena.models.device.startOsUpdate(
-							this.device.uuid,
-							'2.29.2+rev1.prod',
-						);
-						return expect(promise).to.be.rejectedWith(
-							`The current os version of the device is not available: ${this.device.uuid}`,
-						);
-					});
-				});
-
-				describe('given an online device with os info', function () {
-					before(function () {
-						return balena.pine.patch({
-							resource: 'device',
-							id: this.device.id,
-							body: {
-								is_online: true,
-								...testDeviceOsInfo,
-							},
+						it('should be rejected if the device does not exist and using using full uuid', async function () {
+							const promise =
+								paramType === 'array of uuids'
+									? balena.models.device.startOsUpdate(
+											['asdfghjkld8047d2ae2546389241ea0a'],
+											'2.29.2+rev1.prod',
+									  )
+									: balena.models.device.startOsUpdate(
+											'asdfghjkld8047d2ae2546389241ea0a',
+											'2.29.2+rev1.prod',
+									  );
+							await expect(promise).to.be.rejectedWith(
+								'Device not found: asdfghjkld8047d2ae2546389241ea0a',
+							);
 						});
-					});
 
-					it('should not be able to start an OS update when the target os version is not specified', async function () {
-						// @ts-expect-error
-						const promise = balena.models.device.startOsUpdate(
-							this.device.uuid,
-						);
-						await expect(promise)
-							.to.be.rejectedWith(
-								"undefined is not a valid value for parameter 'targetOsVersion'",
-							)
-							.and.eventually.have.property(
+						it('should not be able to start an OS update without providing a targetOsVersion parameter', async function () {
+							const promise =
+								paramType === 'array of uuids'
+									? // @ts-expect-error
+									  balena.models.device.startOsUpdate([this.device.uuid])
+									: // @ts-expect-error
+									  balena.models.device.startOsUpdate(this.device.uuid);
+							await expect(promise).to.be.rejected.and.eventually.have.property(
 								'code',
 								'BalenaInvalidParameterError',
 							);
+						});
+
+						it('should not be able to start an OS update for an offline device', async function () {
+							const promise =
+								paramType === 'array of uuids'
+									? balena.models.device.startOsUpdate(
+											[this.device.uuid],
+											'2.29.2+rev1.prod',
+									  )
+									: balena.models.device.startOsUpdate(
+											this.device.uuid,
+											'2.29.2+rev1.prod',
+									  );
+							await expect(promise).to.be.rejectedWith(
+								`The device is offline: ${this.device.uuid}`,
+							);
+						});
 					});
 
-					it('should not be able to start an OS update when the target os version does not exist', async function () {
-						const promise = balena.models.device.startOsUpdate(
-							this.device.uuid,
-							'2.49.0+rev1.prod',
-						);
-						await expect(promise)
-							.to.be.rejectedWith(
-								"2.49.0+rev1.prod is not a valid value for parameter 'targetOsVersion'",
-							)
-							.and.eventually.have.property(
-								'code',
-								'BalenaInvalidParameterError',
+					describe('given an online device w/o os info', function () {
+						before(async function () {
+							await balena.pine.patch({
+								resource: 'device',
+								id: this.device.id,
+								body: { is_online: true },
+							});
+						});
+
+						it('should not be able to start an OS update for a device that has not yet reported its current version', async function () {
+							const promise =
+								paramType === 'array of uuids'
+									? balena.models.device.startOsUpdate(
+											[this.device.uuid],
+											'2.29.2+rev1.prod',
+									  )
+									: balena.models.device.startOsUpdate(
+											this.device.uuid,
+											'2.29.2+rev1.prod',
+									  );
+							await expect(promise).to.be.rejectedWith(
+								`The current os version of the device is not available: ${this.device.uuid}`,
 							);
+						});
 					});
 
-					// just to confirm that the above checks do not give false positives,
-					// allow the request to reach the actions server and document the current error
-					it('should not be able to start an OS update for a fake device', function () {
-						const promise = balena.models.device.startOsUpdate(
-							this.device.uuid,
-							'2.54.2+rev1.prod',
-						);
-						return expect(promise).to.be.rejected.then(function (error) {
-							expect(error).to.have.property('statusCode', 500);
-							expect(error).to.have.property(
-								'message',
-								'Request error: Device is not online',
+					describe('given an online device with os info', function () {
+						before(async function () {
+							await balena.pine.patch({
+								resource: 'device',
+								id: this.device.id,
+								body: {
+									is_online: true,
+									...testDeviceOsInfo,
+								},
+							});
+						});
+
+						it('should not be able to start an OS update when the target os version is not specified', async function () {
+							// @ts-expect-error
+							const promise = balena.models.device.startOsUpdate(
+								paramType === 'array of uuids'
+									? [this.device.uuid]
+									: this.device.uuid,
 							);
-							return expect(error.code).to.not.equal(
-								'BalenaInvalidParameterError',
+							await expect(promise)
+								.to.be.rejectedWith(
+									"undefined is not a valid value for parameter 'targetOsVersion'",
+								)
+								.and.eventually.have.property(
+									'code',
+									'BalenaInvalidParameterError',
+								);
+						});
+
+						it('should not be able to start an OS update when the target os version does not exist', async function () {
+							const promise = balena.models.device.startOsUpdate(
+								paramType === 'array of uuids'
+									? [this.device.uuid]
+									: this.device.uuid,
+								'2.49.0+rev1.prod',
 							);
+							await expect(promise)
+								.to.be.rejectedWith(
+									"2.49.0+rev1.prod is not a valid value for parameter 'targetOsVersion'",
+								)
+								.and.eventually.have.property(
+									'code',
+									'BalenaInvalidParameterError',
+								);
+						});
+
+						// just to confirm that the above checks do not give false positives,
+						// allow the request to reach the actions server and document the current error
+						it('should not be able to start an OS update for a fake device', async function () {
+							const promise = balena.models.device.startOsUpdate(
+								paramType === 'array of uuids'
+									? [this.device.uuid]
+									: this.device.uuid,
+								'2.54.2+rev1.prod',
+							);
+							await expect(promise).to.be.rejected.then(function (error) {
+								expect(error).to.have.property('statusCode', 500);
+								expect(error).to.have.property(
+									'message',
+									'Request error: Device is not online',
+								);
+								expect(error.code).to.not.equal('BalenaInvalidParameterError');
+							});
 						});
 					});
 				});
