@@ -1,4 +1,35 @@
 - commits:
+    - subject: Add a method to retrieve the supervisor image for a DT
+      hash: b64ee7ec80343f9846367b3b8794ef77421fe25b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Edwin Joassart
+      nested: []
+    - subject: Add util to list images referenced in a target state v3
+      hash: 9cbebb75cde280394871d6dd04758c237a2229aa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Edwin Joassart
+      nested: []
+    - subject: Add a method for retrieving an application's virtual device target
+        supervisor state
+      hash: 3bc2fe3d7b6f20b733dba326e8895c7bba2e1c2f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Edwin Joassart <edwin.joassart@balena.io>
+        signed-off-by: Edwin Joassart <edwin.joassart@balena.io>
+      author: Edwin Joassart
+      nested: []
+  version: 17.0.1
+  title: ""
+  date: 2023-05-24T15:35:03.815Z
+- commits:
     - subject: Fully type the result of os.getAllOsVersions when providing pine options
       hash: 484a0db3ae90ea8170005162fe83a4ed10830f32
       body: ""
