@@ -122,6 +122,8 @@ export interface SdkOptions {
 	isBrowser?: boolean;
 	debug?: boolean;
 	deviceUrlsBase?: string;
+	requestLimit?: number;
+	requestLimitInterval?: number;
 }
 
 export interface InjectedOptionsParam extends SdkOptions {
@@ -265,6 +267,13 @@ export const getSdk = function ($opts?: SdkOptions) {
 
 	const auth = new BalenaAuth(opts);
 	const request = getRequest({ ...opts, auth });
+	if (opts.requestLimit != null && opts.requestLimit > 0) {
+		const pThrottle = require('p-throttle') as typeof import('p-throttle');
+		request.send = pThrottle({
+			limit: opts.requestLimit,
+			interval: opts.requestLimitInterval ?? 60 * 1000,
+		})(request.send);
+	}
 	const pine = createPinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 
@@ -482,6 +491,8 @@ export const getSdk = function ($opts?: SdkOptions) {
  * @param {String} [options.apiUrl='https://api.balena-cloud.com/'] - the balena API url to use.
  * @param {String} [options.builderUrl='https://builder.balena-cloud.com/'] - the balena builder url to use.
  * @param {String} [options.deviceUrlsBase='balena-devices.com'] - the base balena device API url to use.
+ * @param {Number} [options.requestLimit] - the number of requests per requestLimitInterval that the SDK should respect.
+ * @param {Number} [options.requestLimitInterval = 60000] - the timespan that the requestLimit should apply to in milliseconds, defaults to 60000 (1 minute).
  * @param {String} [options.dataDirectory='$HOME/.balena'] - *ignored in the browser*, the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`.
  * @param {Boolean} [options.isBrowser] - the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value.
  * @param {Boolean} [options.debug] - when set will print some extra debug information.
