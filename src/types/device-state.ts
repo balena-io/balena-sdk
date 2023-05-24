@@ -45,3 +45,24 @@ export interface DeviceState {
 		}>;
 	};
 }
+
+export interface DeviceStateV3 {
+	[deviceUuid: string]: {
+		name?: string;
+		config: Dictionary<string>;
+		apps: {
+			[appUuid: string]: {
+				release_uuid?: string;
+				releases: {
+					[releaseUuid: string]: {
+						services: {
+							[serviceName: string]: {
+								image: string;
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+}

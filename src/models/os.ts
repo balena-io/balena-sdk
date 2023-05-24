@@ -30,7 +30,12 @@ import type {
 	ResolvableReturnType,
 	TypeOrDictionary,
 } from '../../typings/utils';
-import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
+import type {
+	ResourceTagBase,
+	ApplicationTag,
+	Release,
+	SupervisorRelease,
+} from '../types/models';
 import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
@@ -969,6 +974,40 @@ const getOsModel = function (
 		);
 	};
 
+	/**
+	 * @summary Returns image name for a specific supervisor version for a Device Type
+	 * @name getSupervisorImageForDeviceType
+	 * @public
+	 * @function
+	 * @memberof balena.models.os
+	 *
+	 * @param {Number} deviceTypeId - The Id for the Device Type
+	 * @param {String} version - The semver version string for the supervisor
+	 * @returns {Promise<String>} - Docker image name for the Supervisor version and arch
+	 *
+	 * @example
+	 * const result = balena.models.os.getSupervisorImageForDT(60, 'v12.11.0').then(result => console.log(result))
+	 * // 60 would be raspberrypi4-64 on balena-cloud
+	 *
+	 */
+	const getSupervisorReleaseByDeviceType = async (
+		deviceTypeId: number,
+		version: string,
+	): Promise<SupervisorRelease | null> => {
+		const results: any = await pine.get<SupervisorRelease>({
+			resource: 'supervisor_release',
+			options: {
+				$top: 1,
+				$filter: {
+					is_for__device_type: deviceTypeId,
+					supervisor_version: version,
+				},
+			},
+		});
+
+		return results?.[0] ?? null;
+	};
+
 	return {
 		// Cast the exported types for internal methods so `@types/memoizee` can be a dev depenency.
 		_getNormalizedDeviceTypeSlug: _getNormalizedDeviceTypeSlug as (
@@ -991,6 +1030,7 @@ const getOsModel = function (
 		isSupportedOsUpdate,
 		getSupportedOsUpdateVersions,
 		isArchitectureCompatibleWith,
+		getSupervisorReleaseByDeviceType,
 	};
 };
 

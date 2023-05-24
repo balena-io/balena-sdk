@@ -1115,4 +1115,29 @@ describe('OS model', function () {
 				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () => expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(true));
 			});
 		}));
+
+	describe('supervisor', () =>
+		describe('balena.models.os.getSupervisorReleaseByDeviceType()', function () {
+			it('should return null if no image was found', async () => {
+				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
+					1,
+					'v999.99.99',
+				);
+				expect(svImage).to.equal(null);
+			});
+
+			it('should return the right string when asking for raspberrypi4-64 and v12.11.0', async () => {
+				const dtId: number = await balena.models.deviceType
+					.get('raspberrypi4-64')
+					.then((res) => res.id);
+
+				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
+					dtId,
+					'v12.11.0',
+				);
+				expect(svImage?.image_name).to.equal(
+					'registry2.balena-cloud.com/v2/4ca706e1c624daff7e519b3009746b2c',
+				);
+			});
+		}));
 });
