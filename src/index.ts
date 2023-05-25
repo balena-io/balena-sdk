@@ -272,6 +272,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		request.send = pThrottle({
 			limit: opts.requestLimit,
 			interval: opts.requestLimitInterval ?? 60 * 1000,
+			strict: true,
 		})(request.send);
 	}
 	const pine = createPinejsClient({}, { ...opts, auth, request });
