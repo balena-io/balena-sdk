@@ -1,4 +1,16 @@
 - commits:
+    - subject: Drop the callback examples from the docs
+      hash: 5d9bb410c83cbf2c0a8f031ab746984ffe912b5a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.1.1
+  title: ""
+  date: 2023-05-25T08:12:20.868Z
+- commits:
     - subject: Add the requestLimit & requestLimitInterval options to the SDK factory
       hash: 9a92f9b8da880b53379522f6201cadcd7fcb97bd
       body: ""
