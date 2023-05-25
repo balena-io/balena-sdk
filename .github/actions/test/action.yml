@@ -52,6 +52,9 @@ runs:
         export TEST_MEMBER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
         export TEST_MEMBER_PASSWORD=${{ fromJSON(inputs.secrets).TEST_MEMBER_PASSWORD }}
         export TEST_ONLY_ON_ENVIRONMENT=${{ fromJSON('{"windows-2019":"node","ubuntu-20.04":"node","macos-12":"browser"}')[env.os_value || 'windows-2019' ]  }}
+        export TEST_2FA_EMAIL=${{ fromJSON(inputs.secrets).TEST_2FA_EMAIL }}
+        export TEST_2FA_PASSWORD=${{ fromJSON(inputs.secrets).TEST_2FA_PASSWORD }}
+        export TEST_2FA_SECRET=${{ fromJSON(inputs.secrets).TEST_2FA_SECRET }}
 
         echo "TEST_EMAIL_KEY: [ ${TEST_EMAIL_KEY} ]"
         echo "TEST_EMAIL: [ ${TEST_EMAIL} ]"
