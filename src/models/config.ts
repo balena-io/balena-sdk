@@ -113,12 +113,6 @@ const getConfigModel = function (
 		 * balena.models.config.getAll().then(function(config) {
 		 * 	console.log(config);
 		 * });
-		 *
-		 * @example
-		 * balena.models.config.getAll(function(error, config) {
-		 * 	if (error) throw error;
-		 * 	console.log(config);
-		 * });
 		 */
 		getAll: async (): Promise<Config> => {
 			const { body } = await request.send({
@@ -146,12 +140,6 @@ const getConfigModel = function (
 		 * balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 		 * 	console.log(deviceTypes);
 		 * });
-		 *
-		 * @example
-		 * balena.models.config.getDeviceTypes(function(error, deviceTypes) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceTypes);
-		 * })
 		 */
 		getDeviceTypes: async (): Promise<DeviceTypeJson.DeviceType[]> => {
 			const { body: deviceTypes } = await request.send({
@@ -179,12 +167,6 @@ const getConfigModel = function (
 		 *
 		 * @example
 		 * balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi').then(function(manifest) {
-		 * 	console.log(manifest);
-		 * });
-		 *
-		 * @example
-		 * balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi', function(error, manifest) {
-		 * 	if (error) throw error;
 		 * 	console.log(manifest);
 		 * });
 		 */
@@ -219,12 +201,6 @@ const getConfigModel = function (
 		 * balena.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 		 * 	console.log(options);
 		 * });
-		 *
-		 * @example
-		 * balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
-		 * 	if (error) throw error;
-		 * 	console.log(options);
-		 * });
 		 */
 		getDeviceOptions: async (
 			deviceType: string,
@@ -254,12 +230,6 @@ const getConfigModel = function (
 		 *
 		 * @example
 		 * balena.models.config.getConfigVarSchema('raspberry-pi').then(function(options) {
-		 * 	console.log(options);
-		 * });
-		 *
-		 * @example
-		 * balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options) {
-		 * 	if (error) throw error;
 		 * 	console.log(options);
 		 * });
 		 */

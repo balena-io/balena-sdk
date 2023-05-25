@@ -33,12 +33,6 @@ const getSettings = function ({ settings }: InjectedDependenciesParam) {
 		 * balena.settings.get('apiUrl').then(function(apiUrl) {
 		 * 	console.log(apiUrl);
 		 * });
-		 *
-		 * @example
-		 * balena.settings.get('apiUrl', function(error, apiUrl) {
-		 * 	if (error) throw error;
-		 * 	console.log(apiUrl);
-		 * });
 		 */
 		get: async (key: string): Promise<string> => settings.get(key),
 
@@ -54,12 +48,6 @@ const getSettings = function ({ settings }: InjectedDependenciesParam) {
 		 *
 		 * @example
 		 * balena.settings.getAll().then(function(settings) {
-		 * 	console.log(settings);
-		 * });
-		 *
-		 * @example
-		 * balena.settings.getAll(function(error, settings) {
-		 * 	if (error) throw error;
 		 * 	console.log(settings);
 		 * });
 		 */

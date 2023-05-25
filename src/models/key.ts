@@ -44,12 +44,6 @@ const getKeyModel = function (
 	 * balena.models.key.getAll().then(function(keys) {
 	 * 	console.log(keys);
 	 * });
-	 *
-	 * @example
-	 * balena.models.key.getAll(function(error, keys) {
-	 * 	if (error) throw error;
-	 * 	console.log(keys);
-	 * });
 	 */
 	function getAll(
 		options: BalenaSdk.PineOptions<BalenaSdk.SSHKey> = {},
@@ -73,12 +67,6 @@ const getKeyModel = function (
 	 *
 	 * @example
 	 * balena.models.key.get(51).then(function(key) {
-	 * 	console.log(key);
-	 * });
-	 *
-	 * @example
-	 * balena.models.key.get(51, function(error, key) {
-	 * 	if (error) throw error;
 	 * 	console.log(key);
 	 * });
 	 */
@@ -105,11 +93,6 @@ const getKeyModel = function (
 	 *
 	 * @example
 	 * balena.models.key.remove(51);
-	 *
-	 * @example
-	 * balena.models.key.remove(51, function(error) {
-	 * 	if (error) throw error;
-	 * });
 	 */
 	function remove(id: number): Promise<string> {
 		return pine.delete<BalenaSdk.SSHKey>({
@@ -133,12 +116,6 @@ const getKeyModel = function (
 	 *
 	 * @example
 	 * balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
-	 * 	console.log(key);
-	 * });
-	 *
-	 * @example
-	 * balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
-	 * 	if (error) throw error;
 	 * 	console.log(key);
 	 * });
 	 */

@@ -394,12 +394,6 @@ const getDeviceModel = function (
 		 * balena.models.device.getAllByApplication('myorganization/myapp', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 		 * 	console.log(device);
 		 * })
-		 *
-		 * @example
-		 * balena.models.device.getAllByApplication('myorganization/myapp', function(error, devices) {
-		 * 	if (error) throw error;
-		 * 	console.log(devices);
-		 * });
 		 */
 		async getAllByApplication(
 			slugOrUuidOrId: string | number,
@@ -450,12 +444,6 @@ const getDeviceModel = function (
 		 * balena.models.device.getAllByOrganization('myorganization', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 		 * 	console.log(device);
 		 * })
-		 *
-		 * @example
-		 * balena.models.device.getAllByOrganization('myorganization', function(error, devices) {
-		 * 	if (error) throw error;
-		 * 	console.log(devices);
-		 * });
 		 */
 		async getAllByOrganization(
 			handleOrId: string | number,
@@ -522,12 +510,6 @@ const getDeviceModel = function (
 		 * balena.models.device.get('7cf02a6', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 		 * 	console.log(device);
 		 * })
-		 *
-		 * @example
-		 * balena.models.device.get('7cf02a6', function(error, device) {
-		 * 	if (error) throw error;
-		 * 	console.log(device);
-		 * });
 		 */
 		async get(
 			uuidOrId: string | number,
@@ -600,12 +582,6 @@ const getDeviceModel = function (
 		 * balena.models.device.getWithServiceDetails(123).then(function(device) {
 		 * 	console.log(device);
 		 * })
-		 *
-		 * @example
-		 * balena.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
-		 * 	if (error) throw error;
-		 * 	console.log(device);
-		 * });
 		 */
 		async getWithServiceDetails(
 			uuidOrId: string | number,
@@ -638,12 +614,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getByName('MyDevice').then(function(devices) {
-		 * 	console.log(devices);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getByName('MyDevice', function(error, devices) {
-		 * 	if (error) throw error;
 		 * 	console.log(devices);
 		 * });
 		 */
@@ -684,12 +654,6 @@ const getDeviceModel = function (
 		 * balena.models.device.getName(123).then(function(deviceName) {
 		 * 	console.log(deviceName);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.getName('7cf02a6', function(error, deviceName) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceName);
-		 * });
 		 */
 		getName: async (uuidOrId: string | number): Promise<string> => {
 			const { device_name } = await exports.get(uuidOrId, {
@@ -716,12 +680,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getApplicationName(123).then(function(applicationName) {
-		 * 	console.log(applicationName);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
-		 * 	if (error) throw error;
 		 * 	console.log(applicationName);
 		 * });
 		 */
@@ -758,12 +716,6 @@ const getDeviceModel = function (
 		 * balena.models.device.has(123).then(function(hasDevice) {
 		 * 	console.log(hasDevice);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.has('7cf02a6', function(error, hasDevice) {
-		 * 	if (error) throw error;
-		 * 	console.log(hasDevice);
-		 * });
 		 */
 		has: async (uuidOrId: string | number): Promise<boolean> => {
 			try {
@@ -797,12 +749,6 @@ const getDeviceModel = function (
 		 * balena.models.device.isOnline(123).then(function(isOnline) {
 		 * 	console.log('Is device online?', isOnline);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.isOnline('7cf02a6', function(error, isOnline) {
-		 * 	if (error) throw error;
-		 * 	console.log('Is device online?', isOnline);
-		 * });
 		 */
 		isOnline: async (uuidOrId: string | number): Promise<boolean> => {
 			const { is_online } = await exports.get(uuidOrId, {
@@ -832,15 +778,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
-		 * 	localIPAddresses.forEach(function(localIP) {
-		 * 		console.log(localIP);
-		 * 	});
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
-		 * 	if (error) throw error;
-		 *
 		 * 	localIPAddresses.forEach(function(localIP) {
 		 * 		console.log(localIP);
 		 * 	});
@@ -882,15 +819,6 @@ const getDeviceModel = function (
 		 * 		console.log(mac);
 		 * 	});
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.getMACAddresses('7cf02a6', function(error, macAddresses) {
-		 * 	if (error) throw error;
-		 *
-		 * 	macAddresses.forEach(function(mac) {
-		 * 		console.log(mac);
-		 * 	});
-		 * });
 		 */
 		getMACAddresses: async (uuidOrId: string | number): Promise<string[]> => {
 			const { mac_address } = await exports.get(uuidOrId, {
@@ -920,13 +848,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getMetrics(123).then(function(deviceMetrics) {
-		 * 	console.log(deviceMetrics);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getMetrics('7cf02a6', function(error, deviceMetrics) {
-		 * 	if (error) throw error;
-		 *
 		 * 	console.log(deviceMetrics);
 		 * });
 		 */
@@ -964,11 +885,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.remove(123);
-		 *
-		 * @example
-		 * balena.models.device.remove('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		remove: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1003,11 +919,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.deactivate(123);
-		 *
-		 * @example
-		 * balena.models.device.deactivate('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		deactivate: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1034,11 +945,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.rename(123, 'NewName');
-		 *
-		 * @example
-		 * balena.models.device.rename('7cf02a6', 'NewName', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		rename: async (
 			uuidOrId: string | number,
@@ -1066,11 +972,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.setNote(123, 'My useful note');
-		 *
-		 * @example
-		 * balena.models.device.setNote('7cf02a6', 'My useful note', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		setNote: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1096,11 +997,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
-		 *
-		 * @example
-		 * balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		setCustomLocation: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1128,11 +1024,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.unsetCustomLocation(123);
-		 *
-		 * @example
-		 * balena.models.device.unsetLocation('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		unsetCustomLocation: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1163,11 +1054,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.move(123, 456);
-		 *
-		 * @example
-		 * balena.models.device.move('7cf02a6', 'myorganization/myapp', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		move: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1263,12 +1149,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getSupervisorTargetState(123, 3).then(function(state) {
-		 * 	console.log(state);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
-		 * 	if (error) throw error;
 		 * 	console.log(state);
 		 * });
 		 */
@@ -1375,13 +1255,6 @@ const getDeviceModel = function (
 		 * balena.models.device.register(123, uuid).then(function(registrationInfo) {
 		 * 	console.log(registrationInfo);
 		 * });
-		 *
-		 * @example
-		 * var uuid = balena.models.device.generateUniqueKey();
-		 * balena.models.device.register('myorganization/myapp', uuid, function(error, registrationInfo) {
-		 * 	if (error) throw error;
-		 * 	console.log(registrationInfo);
-		 * });
 		 */
 		async register(
 			applicationSlugOrUuidOrId: string | number,
@@ -1469,18 +1342,6 @@ const getDeviceModel = function (
 		 * balena.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
 		 * 	console.log(deviceApiKey);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceApiKey);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.generateDeviceKey('7cf02a6', 'device-key-name', 'device-key-description', '2030-01-01T00:00:00Z', function(error, deviceApiKey) {
-		 * 	if (error) throw error;
-		 * 	console.log(deviceApiKey);
-		 * });
 		 */
 		generateDeviceKey: async (
 			uuidOrId: string | number,
@@ -1533,15 +1394,6 @@ const getDeviceModel = function (
 		 * 		console.log('The device has device URL enabled');
 		 * 	}
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
-		 * 	if (error) throw error;
-		 *
-		 * 	if (hasDeviceUrl) {
-		 * 		console.log('The device has device URL enabled');
-		 * 	}
-		 * });
 		 */
 		hasDeviceUrl: async (uuidOrId: string | number): Promise<boolean> => {
 			const { is_web_accessible } = await exports.get(uuidOrId, {
@@ -1568,12 +1420,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getDeviceUrl(123).then(function(url) {
-		 * 	console.log(url);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getDeviceUrl('7cf02a6', function(error, url) {
-		 * 	if (error) throw error;
 		 * 	console.log(url);
 		 * });
 		 */
@@ -1603,11 +1449,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.enableDeviceUrl(123);
-		 *
-		 * @example
-		 * balena.models.device.enableDeviceUrl('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		enableDeviceUrl: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1632,11 +1473,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.disableDeviceUrl(123);
-		 *
-		 * @example
-		 * balena.models.device.disableDeviceUrl('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		disableDeviceUrl: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -1661,11 +1497,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.enableLocalMode(123);
-		 *
-		 * @example
-		 * balena.models.device.enableLocalMode('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		async enableLocalMode(uuidOrId: string | number): Promise<void> {
 			const selectedProps: Array<SelectableProps<Device>> = [
@@ -1692,11 +1523,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.disableLocalMode(123);
-		 *
-		 * @example
-		 * balena.models.device.disableLocalMode('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		disableLocalMode: (uuidOrId: string | number): Promise<void> =>
 			exports.configVar.set(uuidOrId, LOCAL_MODE_ENV_VAR, '0'),
@@ -1721,15 +1547,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.isInLocalMode(123).then(function(isInLocalMode) {
-		 * 	if (isInLocalMode) {
-		 * 		console.log('The device has local mode enabled');
-		 * 	}
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.isInLocalMode('7cf02a6', function(error, isInLocalMode) {
-		 * 	if (error) throw error;
-		 *
 		 * 	if (isInLocalMode) {
 		 * 		console.log('The device has local mode enabled');
 		 * 	}
@@ -1772,11 +1589,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.enableLockOverride(123);
-		 *
-		 * @example
-		 * balena.models.device.enableLockOverride('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		enableLockOverride: (uuidOrId: string | number): Promise<void> =>
 			configVarModel.set(uuidOrId, OVERRIDE_LOCK_ENV_VAR, '1'),
@@ -1796,11 +1608,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.disableLockOverride(123);
-		 *
-		 * @example
-		 * balena.models.device.disableLockOverride('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		disableLockOverride: (uuidOrId: string | number): Promise<void> =>
 			configVarModel.set(uuidOrId, OVERRIDE_LOCK_ENV_VAR, '0'),
@@ -1820,11 +1627,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.hasLockOverride(123);
-		 *
-		 * @example
-		 * balena.models.device.hasLockOverride('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		hasLockOverride: async (uuidOrId: string | number): Promise<boolean> => {
 			return (
@@ -1860,12 +1662,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.getStatus(123).then(function(status) {
-		 * 	console.log(status);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getStatus('7cf02a6', function(error, status) {
-		 * 	if (error) throw error;
 		 * 	console.log(status);
 		 * });
 		 */
@@ -1907,12 +1703,6 @@ const getDeviceModel = function (
 		 * balena.models.device.getProgress(123).then(function(progress) {
 		 * 	console.log(progress);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.getProgress('7cf02a6', function(error, progress) {
-		 * 	if (error) throw error;
-		 * 	console.log(progress);
-		 * });
 		 */
 		async getProgress(uuidOrId: string | number): Promise<number | null> {
 			if (typeof uuidOrId !== 'string' && typeof uuidOrId !== 'number') {
@@ -1941,11 +1731,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
-		 *
-		 * @example
-		 * balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		async grantSupportAccess(
 			uuidOrIdOrIds: string | number | number[],
@@ -1979,11 +1764,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.revokeSupportAccess(123);
-		 *
-		 * @example
-		 * balena.models.device.revokeSupportAccess('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		revokeSupportAccess: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -2062,11 +1842,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEnabled) {
-		 * 	console.log(isEnabled);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.isTrackingApplicationRelease('7cf02a6', function(error, isEnabled) {
 		 * 	console.log(isEnabled);
 		 * });
 		 */
@@ -2154,12 +1929,6 @@ const getDeviceModel = function (
 		 * balena.models.device.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
 		 * 	...
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		pinToRelease: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -2219,12 +1988,6 @@ const getDeviceModel = function (
 		 * balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
 		 * 	...
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
-		 * 	if (error) throw error;
-		 * 	...
-		 * });
 		 */
 		trackApplicationRelease: async (
 			uuidOrIdOrIds: string | number | number[],
@@ -2254,12 +2017,6 @@ const getDeviceModel = function (
 		 *
 		 * @example
 		 * balena.models.device.setSupervisorRelease(123, 'v11.4.14').then(function() {
-		 * 	...
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.setSupervisorRelease('7cf02a6', 123, function(error) {
-		 * 	if (error) throw error;
 		 * 	...
 		 * });
 		 */
@@ -2431,12 +2188,6 @@ const getDeviceModel = function (
 		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
 		 * 	console.log(result.status);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod', function(error, status) {
-		 * 	if (error) throw error;
-		 * 	console.log(result.status);
-		 * });
 		 */
 		startOsUpdate: async (
 			uuid: string,
@@ -2498,12 +2249,6 @@ const getDeviceModel = function (
 		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
 		 * 	console.log(result.status);
 		 * });
-		 *
-		 * @example
-		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
-		 * 	if (error) throw error;
-		 * 	console.log(result.status);
-		 * });
 		 */
 		getOsUpdateStatus: async (uuid: string): Promise<OsUpdateActionResult> => {
 			try {
@@ -2548,12 +2293,6 @@ const getDeviceModel = function (
 			 * @example
 			 * balena.models.device.tags.getAllByApplication(999999).then(function(tags) {
 			 * 	console.log(tags);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
 			 * });
 			 */
 			async getAllByApplication(
@@ -2604,12 +2343,6 @@ const getDeviceModel = function (
 			 * balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 			 * 	console.log(tags);
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
-			 * 	if (error) throw error;
-			 * 	console.log(tags)
-			 * });
 			 */
 			getAllByDevice: tagsModel.getAllByParent,
 
@@ -2631,11 +2364,6 @@ const getDeviceModel = function (
 			 *
 			 * @example
 			 * balena.models.device.tags.set(123, 'EDITOR', 'vim');
-			 *
-			 * @example
-			 * balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
-			 * 	if (error) throw error;
-			 * });
 			 */
 			set: tagsModel.set,
 
@@ -2652,11 +2380,6 @@ const getDeviceModel = function (
 			 *
 			 * @example
 			 * balena.models.device.tags.remove('7cf02a6', 'EDITOR');
-			 *
-			 * @example
-			 * balena.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
-			 * 	if (error) throw error;
-			 * });
 			 */
 			remove: tagsModel.remove,
 		},
@@ -2687,12 +2410,6 @@ const getDeviceModel = function (
 			 * balena.models.device.configVar.getAllByDevice(999999).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
-			 * });
 			 */
 			getAllByDevice: configVarModel.getAllByParent,
 
@@ -2716,12 +2433,6 @@ const getDeviceModel = function (
 			 * @example
 			 * balena.models.device.configVar.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.configVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
 			 * });
 			 */
 			async getAllByApplication(
@@ -2778,12 +2489,6 @@ const getDeviceModel = function (
 			 * balena.models.device.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
-			 * });
 			 */
 			get: configVarModel.get,
 
@@ -2808,12 +2513,6 @@ const getDeviceModel = function (
 			 * balena.models.device.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue', function(error) {
-			 * 	if (error) throw error;
-			 * 	...
-			 * });
 			 */
 			set: configVarModel.set,
 
@@ -2835,12 +2534,6 @@ const getDeviceModel = function (
 			 *
 			 * @example
 			 * balena.models.device.configVar.remove(999999, 'BALENA_VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */
@@ -2873,12 +2566,6 @@ const getDeviceModel = function (
 			 * balena.models.device.envVar.getAllByDevice(999999).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
-			 * });
 			 */
 			getAllByDevice: envVarModel.getAllByParent,
 
@@ -2902,12 +2589,6 @@ const getDeviceModel = function (
 			 * @example
 			 * balena.models.device.envVar.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.envVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
 			 * });
 			 */
 			async getAllByApplication(
@@ -2964,12 +2645,6 @@ const getDeviceModel = function (
 			 * balena.models.device.envVar.get(999999, 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
-			 * });
 			 */
 			get: envVarModel.get,
 
@@ -2994,12 +2669,6 @@ const getDeviceModel = function (
 			 * balena.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
-			 * 	if (error) throw error;
-			 * 	...
-			 * });
 			 */
 			set: envVarModel.set,
 
@@ -3021,12 +2690,6 @@ const getDeviceModel = function (
 			 *
 			 * @example
 			 * balena.models.device.envVar.remove(999999, 'VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */
@@ -3058,12 +2721,6 @@ const getDeviceModel = function (
 			 * @example
 			 * balena.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
 			 * 	console.log(vars);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
 			 * });
 			 */
 			async getAllByDevice(
@@ -3113,12 +2770,6 @@ const getDeviceModel = function (
 			 * @example
 			 * balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
 			 * 	console.log(vars);
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.serviceVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-			 * 	if (error) throw error;
-			 * 	console.log(vars)
 			 * });
 			 */
 			async getAllByApplication(
@@ -3186,12 +2837,6 @@ const getDeviceModel = function (
 			 * balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
-			 *
-			 * @example
-			 * balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
-			 * 	if (error) throw error;
-			 * 	console.log(value)
-			 * });
 			 */
 			async get(
 				uuidOrId: string | number,
@@ -3242,12 +2887,6 @@ const getDeviceModel = function (
 			 *
 			 * @example
 			 * balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */
@@ -3323,12 +2962,6 @@ const getDeviceModel = function (
 			 *
 			 * @example
 			 * balena.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
-			 * 	...
-			 * });
-			 *
-			 * @example
-			 * balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
-			 * 	if (error) throw error;
 			 * 	...
 			 * });
 			 */

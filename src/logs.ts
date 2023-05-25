@@ -203,15 +203,6 @@ const getLogs = function (
 		 * 		console.log(line);
 		 * 	});
 		 * });
-		 *
-		 * @example
-		 * balena.logs.subscribe('7cf02a6', function(error, logs) {
-		 * 	if (error) throw error;
-		 *
-		 * 	logs.on('line', function(line) {
-		 * 		console.log(line);
-		 * 	});
-		 * });
 		 */
 		async subscribe(
 			uuidOrId: string | number,
@@ -248,15 +239,6 @@ const getLogs = function (
 		 *
 		 * @example
 		 * balena.logs.history(123).then(function(lines) {
-		 * 	lines.forEach(function(line) {
-		 * 		console.log(line);
-		 * 	});
-		 * });
-		 *
-		 * @example
-		 * balena.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
-		 * 	if (error) throw error;
-		 *
 		 * 	lines.forEach(function(line) {
 		 * 		console.log(line);
 		 * 	});

@@ -916,13 +916,6 @@ balena.models.application.tags.getAllByApplication(999999).then(function(tags) {
 	console.log(tags);
 });
 ```
-**Example**  
-```js
-balena.models.application.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
 <a name="balena.models.application.tags.set"></a>
 
 ###### tags.set(slugOrUuidOrId, tagKey, value) ⇒ <code>Promise</code>
@@ -944,12 +937,6 @@ balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim');
 ```js
 balena.models.application.tags.set(123, 'EDITOR', 'vim');
 ```
-**Example**  
-```js
-balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.application.tags.remove"></a>
 
 ###### tags.remove(slugOrUuidOrId, tagKey) ⇒ <code>Promise</code>
@@ -965,12 +952,6 @@ balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim', func
 **Example**  
 ```js
 balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
-```
-**Example**  
-```js
-balena.models.application.tags.remove('myorganization/myapp', 'EDITOR', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.application.configVar"></a>
 
@@ -1008,13 +989,6 @@ balena.models.application.configVar.getAllByApplication(999999).then(function(va
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.application.configVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.application.configVar.get"></a>
 
 ###### configVar.get(slugOrUuidOrId, key) ⇒ <code>Promise</code>
@@ -1038,13 +1012,6 @@ balena.models.application.configVar.get('myorganization/myapp', 'BALENA_VAR').th
 ```js
 balena.models.application.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 	console.log(value);
-});
-```
-**Example**  
-```js
-balena.models.application.configVar.get('myorganization/myapp', 'BALENA_VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
 });
 ```
 <a name="balena.models.application.configVar.set"></a>
@@ -1072,13 +1039,6 @@ balena.models.application.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(f
 	...
 });
 ```
-**Example**  
-```js
-balena.models.application.configVar.set('myorganization/myapp', 'BALENA_VAR', 'newvalue', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.application.configVar.remove"></a>
 
 ###### configVar.remove(slugOrUuidOrId, key) ⇒ <code>Promise</code>
@@ -1100,13 +1060,6 @@ balena.models.application.configVar.remove('myorganization/myapp', 'BALENA_VAR')
 **Example**  
 ```js
 balena.models.application.configVar.remove(999999, 'BALENA_VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.application.configVar.remove('myorganization/myapp', 'BALENA_VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -1146,13 +1099,6 @@ balena.models.application.envVar.getAllByApplication(999999).then(function(vars)
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.application.envVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.application.envVar.get"></a>
 
 ###### envVar.get(slugOrUuidOrId, key) ⇒ <code>Promise</code>
@@ -1176,13 +1122,6 @@ balena.models.application.envVar.get('myorganization/myapp', 'VAR').then(functio
 ```js
 balena.models.application.envVar.get(999999, 'VAR').then(function(value) {
 	console.log(value);
-});
-```
-**Example**  
-```js
-balena.models.application.envVar.get('myorganization/myapp', 'VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
 });
 ```
 <a name="balena.models.application.envVar.set"></a>
@@ -1210,13 +1149,6 @@ balena.models.application.envVar.set(999999, 'VAR', 'newvalue').then(function() 
 	...
 });
 ```
-**Example**  
-```js
-balena.models.application.envVar.set('myorganization/myapp', 'VAR', 'newvalue', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.application.envVar.remove"></a>
 
 ###### envVar.remove(slugOrUuidOrId, key) ⇒ <code>Promise</code>
@@ -1238,13 +1170,6 @@ balena.models.application.envVar.remove('myorganization/myapp', 'VAR').then(func
 **Example**  
 ```js
 balena.models.application.envVar.remove(999999, 'VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.application.envVar.remove('myorganization/myapp', 'VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -1284,13 +1209,6 @@ balena.models.application.buildVar.getAllByApplication(999999).then(function(var
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.application.buildVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.application.buildVar.get"></a>
 
 ###### buildVar.get(slugOrUuidOrId, key) ⇒ <code>Promise</code>
@@ -1314,13 +1232,6 @@ balena.models.application.buildVar.get('myorganization/myapp', 'VAR').then(funct
 ```js
 balena.models.application.buildVar.get(999999, 'VAR').then(function(value) {
 	console.log(value);
-});
-```
-**Example**  
-```js
-balena.models.application.buildVar.get('myorganization/myapp', 'VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
 });
 ```
 <a name="balena.models.application.buildVar.set"></a>
@@ -1348,13 +1259,6 @@ balena.models.application.buildVar.set(999999, 'VAR', 'newvalue').then(function(
 	...
 });
 ```
-**Example**  
-```js
-balena.models.application.buildVar.set('myorganization/myapp', 'VAR', 'newvalue', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.application.buildVar.remove"></a>
 
 ###### buildVar.remove(slugOrUuidOrId, key) ⇒ <code>Promise</code>
@@ -1376,13 +1280,6 @@ balena.models.application.buildVar.remove('myorganization/myapp', 'VAR').then(fu
 **Example**  
 ```js
 balena.models.application.buildVar.remove(999999, 'VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.application.buildVar.remove('myorganization/myapp', 'VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -1420,12 +1317,6 @@ balena.models.application.membership.get(5).then(function(memberships) {
 	console.log(memberships);
 });
 ```
-**Example**  
-```js
-balena.models.application.membership.get(5, function(error, memberships) {
-	console.log(memberships);
-});
-```
 <a name="balena.models.application.membership.getAllByApplication"></a>
 
 ###### membership.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -1450,12 +1341,6 @@ balena.models.application.membership.getAllByApplication('myorganization/myapp')
 **Example**  
 ```js
 balena.models.application.membership.getAllByApplication(123).then(function(memberships) {
-	console.log(memberships);
-});
-```
-**Example**  
-```js
-balena.models.application.membership.getAllByApplication(123, function(error, memberships) {
 	console.log(memberships);
 });
 ```
@@ -1509,12 +1394,6 @@ balena.models.application.membership.create({ application: "myApp", username: "u
 	console.log(membership);
 });
 ```
-**Example**  
-```js
-balena.models.application.membership.create({ application: 53, username: "user123" }, function(error, membership) {
-	console.log(membership);
-});
-```
 <a name="balena.models.application.membership.changeRole"></a>
 
 ###### membership.changeRole(idOrUniqueKey, roleName) ⇒ <code>Promise</code>
@@ -1544,12 +1423,6 @@ balena.models.application.membership.changeRole({
 	console.log('OK');
 });
 ```
-**Example**  
-```js
-balena.models.application.membership.changeRole(123, "administrator", function(error) {
-	console.log('OK');
-});
-```
 <a name="balena.models.application.membership.remove"></a>
 
 ###### membership.remove(idOrUniqueKey) ⇒ <code>Promise</code>
@@ -1570,13 +1443,6 @@ balena.models.application.membership.remove(123);
 balena.models.application.membership.remove({
 	user: 123,
 	is_member_of__application: 125,
-});
-```
-**Example**  
-```js
-balena.models.application.membership.remove(123,function(error) {
-	if (error) throw error;
-	...
 });
 ```
 <a name="balena.models.application.invite"></a>
@@ -1611,12 +1477,6 @@ balena.models.application.invite.getAll().then(function(invites) {
 	console.log(invites);
 });
 ```
-**Example**  
-```js
-balena.models.application.invite.getAll(function(error, invites) {
-	console.log(invites);
-});
-```
 <a name="balena.models.application.invite.getAllByApplication"></a>
 
 ###### invite.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -1644,12 +1504,6 @@ balena.models.application.invite.getAllByApplication(123).then(function(invites)
 	console.log(invites);
 });
 ```
-**Example**  
-```js
-balena.models.application.invite.getAllByApplication(123, function(error, invites) {
-	console.log(invites);
-});
-```
 <a name="balena.models.application.invite.create"></a>
 
 ###### invite.create(slugOrUuidOrId, options, [message]) ⇒ <code>Promise</code>
@@ -1674,12 +1528,6 @@ balena.models.application.invite.create('myorganization/myapp', { invitee: "invi
 	console.log(invite);
 });
 ```
-**Example**  
-```js
-balena.models.application.invite.create(53, { invitee: "invitee@example.org" }, function(error, invite) {
-	console.log(invite);
-});
-```
 <a name="balena.models.application.invite.revoke"></a>
 
 ###### invite.revoke(id) ⇒ <code>Promise</code>
@@ -1694,13 +1542,6 @@ balena.models.application.invite.create(53, { invitee: "invitee@example.org" }, 
 **Example**  
 ```js
 balena.models.application.invite.revoke(123);
-```
-**Example**  
-```js
-balena.models.application.invite.revoke(123,function(error) {
-	if (error) throw error;
-	...
-});
 ```
 <a name="balena.models.application.invite.accept"></a>
 
@@ -1718,13 +1559,6 @@ This method adds the calling user to the application.
 **Example**  
 ```js
 balena.models.application.invite.accept("qwerty-invitation-token");
-```
-**Example**  
-```js
-balena.models.application.invite.accept("qwerty-invitation-token", function(error) {
-	if (error) throw error;
-	...
-});
 ```
 <a name="balena.models.application.getDashboardUrl"></a>
 
@@ -1767,13 +1601,6 @@ balena.models.application.getAll().then(function(applications) {
 	console.log(applications);
 });
 ```
-**Example**  
-```js
-balena.models.application.getAll(function(error, applications) {
-	if (error) throw error;
-	console.log(applications);
-});
-```
 <a name="balena.models.application.getAllDirectlyAccessible"></a>
 
 ##### application.getAllDirectlyAccessible([options]) ⇒ <code>Promise</code>
@@ -1789,13 +1616,6 @@ balena.models.application.getAll(function(error, applications) {
 **Example**  
 ```js
 balena.models.application.getAllDirectlyAccessible().then(function(applications) {
-	console.log(applications);
-});
-```
-**Example**  
-```js
-balena.models.application.getAllDirectlyAccessible(function(error, applications) {
-	if (error) throw error;
 	console.log(applications);
 });
 ```
@@ -1831,13 +1651,6 @@ balena.models.application.get(123).then(function(application) {
 	console.log(application);
 });
 ```
-**Example**  
-```js
-balena.models.application.get('myorganization/myapp', function(error, application) {
-	if (error) throw error;
-	console.log(application);
-});
-```
 <a name="balena.models.application.getDirectlyAccessible"></a>
 
 ##### application.getDirectlyAccessible(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -1860,13 +1673,6 @@ balena.models.application.getDirectlyAccessible('myorganization/myapp').then(fun
 **Example**  
 ```js
 balena.models.application.getDirectlyAccessible(123).then(function(application) {
-	console.log(application);
-});
-```
-**Example**  
-```js
-balena.models.application.getDirectlyAccessible('myorganization/myapp', function(error, application) {
-	if (error) throw error;
 	console.log(application);
 });
 ```
@@ -1900,13 +1706,6 @@ balena.models.application.getWithDeviceServiceDetails('myorganization/myapp').th
 balena.models.application.getWithDeviceServiceDetails(123).then(function(device) {
 	console.log(device);
 })
-```
-**Example**  
-```js
-balena.models.application.getWithDeviceServiceDetails('myorganization/myapp', function(error, device) {
-	if (error) throw error;
-	console.log(device);
-});
 ```
 <a name="balena.models.application.getAppByName"></a>
 
@@ -1972,13 +1771,6 @@ balena.models.application.has(123).then(function(hasApp) {
 	console.log(hasApp);
 });
 ```
-**Example**  
-```js
-balena.models.application.has('myorganization/myapp', function(error, hasApp) {
-	if (error) throw error;
-	console.log(hasApp);
-});
-```
 <a name="balena.models.application.hasAny"></a>
 
 ##### application.hasAny() ⇒ <code>Promise</code>
@@ -1989,13 +1781,6 @@ balena.models.application.has('myorganization/myapp', function(error, hasApp) {
 **Example**  
 ```js
 balena.models.application.hasAny().then(function(hasAny) {
-	console.log('Has any?', hasAny);
-});
-```
-**Example**  
-```js
-balena.models.application.hasAny(function(error, hasAny) {
-	if (error) throw error;
 	console.log('Has any?', hasAny);
 });
 ```
@@ -2056,12 +1841,6 @@ balena.models.application.remove('myorganization/myapp');
 ```js
 balena.models.application.remove(123);
 ```
-**Example**  
-```js
-balena.models.application.remove('myorganization/myapp', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.application.rename"></a>
 
 ##### application.rename(slugOrUuidOrId, newName) ⇒ <code>Promise</code>
@@ -2082,12 +1861,6 @@ balena.models.application.rename('myorganization/myapp', 'MyRenamedApp');
 ```js
 balena.models.application.rename(123, 'MyRenamedApp');
 ```
-**Example**  
-```js
-balena.models.application.rename('myorganization/myapp', 'MyRenamedApp', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.application.restart"></a>
 
 ##### application.restart(slugOrUuidOrId) ⇒ <code>Promise</code>
@@ -2106,12 +1879,6 @@ balena.models.application.restart('myorganization/myapp');
 **Example**  
 ```js
 balena.models.application.restart(123);
-```
-**Example**  
-```js
-balena.models.application.restart('myorganization/myapp', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.application.generateApiKey"></a>
 
@@ -2140,13 +1907,6 @@ balena.models.application.generateApiKey('myorganization/myapp').then(function(a
 **Example**  
 ```js
 balena.models.application.generateApiKey(123).then(function(apiKey) {
-	console.log(apiKey);
-});
-```
-**Example**  
-```js
-balena.models.application.generateApiKey('myorganization/myapp', function(error, apiKey) {
-	if (error) throw error;
 	console.log(apiKey);
 });
 ```
@@ -2183,13 +1943,6 @@ balena.models.application.generateProvisioningKey(123, 'api key name', 'api key 
 	console.log(key);
 });
 ```
-**Example**  
-```js
-balena.models.application.generateProvisioningKey('myorganization/myapp', function(error, key) {
-	if (error) throw error;
-	console.log(key);
-});
-```
 <a name="balena.models.application.purge"></a>
 
 ##### application.purge(appId) ⇒ <code>Promise</code>
@@ -2204,12 +1957,6 @@ balena.models.application.generateProvisioningKey('myorganization/myapp', functi
 **Example**  
 ```js
 balena.models.application.purge(123);
-```
-**Example**  
-```js
-balena.models.application.purge(123, function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.application.shutdown"></a>
 
@@ -2228,12 +1975,6 @@ balena.models.application.purge(123, function(error) {
 ```js
 balena.models.application.shutdown(123);
 ```
-**Example**  
-```js
-balena.models.application.shutdown(123, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.application.reboot"></a>
 
 ##### application.reboot(appId, [options]) ⇒ <code>Promise</code>
@@ -2250,12 +1991,6 @@ balena.models.application.shutdown(123, function(error) {
 **Example**  
 ```js
 balena.models.application.reboot(123);
-```
-**Example**  
-```js
-balena.models.application.reboot(123, function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.application.willTrackNewReleases"></a>
 
@@ -2278,12 +2013,6 @@ balena.models.application.willTrackNewReleases('myorganization/myapp').then(func
 **Example**  
 ```js
 balena.models.application.willTrackNewReleases(123).then(function(isEnabled) {
-	console.log(isEnabled);
-});
-```
-**Example**  
-```js
-balena.models.application.willTrackNewReleases('myorganization/myapp', function(error, isEnabled) {
 	console.log(isEnabled);
 });
 ```
@@ -2311,12 +2040,6 @@ balena.models.application.isTrackingLatestRelease(123).then(function(isEnabled) 
 	console.log(isEnabled);
 });
 ```
-**Example**  
-```js
-balena.models.application.isTrackingLatestRelease('myorganization/myapp', function(error, isEnabled) {
-	console.log(isEnabled);
-});
-```
 <a name="balena.models.application.pinToRelease"></a>
 
 ##### application.pinToRelease(slugOrUuidOrId, fullReleaseHash) ⇒ <code>Promise</code>
@@ -2341,13 +2064,6 @@ balena.models.application.pinToRelease('myorganization/myapp', 'f7caf4ff80114dee
 **Example**  
 ```js
 balena.models.application.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.application.pinToRelease('myorganization/myapp', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -2406,13 +2122,6 @@ balena.models.application.trackLatestRelease(123).then(function() {
 	...
 });
 ```
-**Example**  
-```js
-balena.models.application.trackLatestRelease('myorganization/myapp', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.application.enableDeviceUrls"></a>
 
 ##### application.enableDeviceUrls(slugOrUuidOrId) ⇒ <code>Promise</code>
@@ -2432,12 +2141,6 @@ balena.models.application.enableDeviceUrls('myorganization/myapp');
 ```js
 balena.models.application.enableDeviceUrls(123);
 ```
-**Example**  
-```js
-balena.models.device.enableDeviceUrls('myorganization/myapp', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.application.disableDeviceUrls"></a>
 
 ##### application.disableDeviceUrls(slugOrUuidOrId) ⇒ <code>Promise</code>
@@ -2456,12 +2159,6 @@ balena.models.application.disableDeviceUrls('myorganization/myapp');
 **Example**  
 ```js
 balena.models.application.disableDeviceUrls(123);
-```
-**Example**  
-```js
-balena.models.device.disableDeviceUrls('myorganization/myapp', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.application.grantSupportAccess"></a>
 
@@ -2483,12 +2180,6 @@ balena.models.application.grantSupportAccess('myorganization/myapp', Date.now() 
 ```js
 balena.models.application.grantSupportAccess(123, Date.now() + 3600 * 1000);
 ```
-**Example**  
-```js
-balena.models.application.grantSupportAccess('myorganization/myapp', Date.now() + 3600 * 1000, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.application.revokeSupportAccess"></a>
 
 ##### application.revokeSupportAccess(slugOrUuidOrId) ⇒ <code>Promise</code>
@@ -2507,12 +2198,6 @@ balena.models.application.revokeSupportAccess('myorganization/myapp');
 **Example**  
 ```js
 balena.models.application.revokeSupportAccess(123);
-```
-**Example**  
-```js
-balena.models.application.revokeSupportAccess('myorganization/myapp', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device"></a>
 
@@ -2646,13 +2331,6 @@ balena.models.device.tags.getAllByApplication(999999).then(function(tags) {
 	console.log(tags);
 });
 ```
-**Example**  
-```js
-balena.models.device.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
 <a name="balena.models.device.tags.getAllByDevice"></a>
 
 ###### tags.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
@@ -2678,13 +2356,6 @@ balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 	console.log(tags);
 });
 ```
-**Example**  
-```js
-balena.models.device.tags.getAllByDevice('7cf02a6', function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
 <a name="balena.models.device.tags.set"></a>
 
 ###### tags.set(uuidOrId, tagKey, value) ⇒ <code>Promise</code>
@@ -2706,12 +2377,6 @@ balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
 ```js
 balena.models.device.tags.set(123, 'EDITOR', 'vim');
 ```
-**Example**  
-```js
-balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.tags.remove"></a>
 
 ###### tags.remove(uuidOrId, tagKey) ⇒ <code>Promise</code>
@@ -2727,12 +2392,6 @@ balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim', function(error) {
 **Example**  
 ```js
 balena.models.device.tags.remove('7cf02a6', 'EDITOR');
-```
-**Example**  
-```js
-balena.models.device.tags.remove('7cf02a6', 'EDITOR', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.configVar"></a>
 
@@ -2771,13 +2430,6 @@ balena.models.device.configVar.getAllByDevice(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.device.configVar.getAllByDevice('7cf02a6', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.device.configVar.getAllByApplication"></a>
 
 ###### configVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -2801,13 +2453,6 @@ balena.models.device.configVar.getAllByApplication('myorganization/myapp').then(
 ```js
 balena.models.device.configVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
-});
-```
-**Example**  
-```js
-balena.models.device.configVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
 });
 ```
 <a name="balena.models.device.configVar.get"></a>
@@ -2835,13 +2480,6 @@ balena.models.device.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 	console.log(value);
 });
 ```
-**Example**  
-```js
-balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
-});
-```
 <a name="balena.models.device.configVar.set"></a>
 
 ###### configVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
@@ -2867,13 +2505,6 @@ balena.models.device.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(functi
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.configVar.remove"></a>
 
 ###### configVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
@@ -2895,13 +2526,6 @@ balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR').then(function() {
 **Example**  
 ```js
 balena.models.device.configVar.remove(999999, 'BALENA_VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -2942,13 +2566,6 @@ balena.models.device.envVar.getAllByDevice(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.device.envVar.getAllByDevice('7cf02a6', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.device.envVar.getAllByApplication"></a>
 
 ###### envVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -2972,13 +2589,6 @@ balena.models.device.envVar.getAllByApplication('myorganization/myapp').then(fun
 ```js
 balena.models.device.envVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
-});
-```
-**Example**  
-```js
-balena.models.device.envVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
 });
 ```
 <a name="balena.models.device.envVar.get"></a>
@@ -3006,13 +2616,6 @@ balena.models.device.envVar.get(999999, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
-**Example**  
-```js
-balena.models.device.envVar.get('7cf02a6', 'VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
-});
-```
 <a name="balena.models.device.envVar.set"></a>
 
 ###### envVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
@@ -3038,13 +2641,6 @@ balena.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.envVar.remove"></a>
 
 ###### envVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
@@ -3066,13 +2662,6 @@ balena.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
 **Example**  
 ```js
 balena.models.device.envVar.remove(999999, 'VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.envVar.remove('7cf02a6', 'VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -3113,13 +2702,6 @@ balena.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.device.serviceVar.getAllByDevice('7cf02a6', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.device.serviceVar.getAllByApplication"></a>
 
 ###### serviceVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -3143,13 +2725,6 @@ balena.models.device.serviceVar.getAllByApplication('myorganization/myapp').then
 ```js
 balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
-});
-```
-**Example**  
-```js
-balena.models.device.serviceVar.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
 });
 ```
 <a name="balena.models.device.serviceVar.get"></a>
@@ -3178,13 +2753,6 @@ balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
-**Example**  
-```js
-balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
-});
-```
 <a name="balena.models.device.serviceVar.set"></a>
 
 ###### serviceVar.set(uuidOrId, id, key, value) ⇒ <code>Promise</code>
@@ -3211,13 +2779,6 @@ balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(functio
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.serviceVar.remove"></a>
 
 ###### serviceVar.remove(uuidOrId, id, key) ⇒ <code>Promise</code>
@@ -3240,13 +2801,6 @@ balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
 **Example**  
 ```js
 balena.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -3381,13 +2935,6 @@ balena.models.device.getAllByApplication('myorganization/myapp', { $select: ['ov
 	console.log(device);
 })
 ```
-**Example**  
-```js
-balena.models.device.getAllByApplication('myorganization/myapp', function(error, devices) {
-	if (error) throw error;
-	console.log(devices);
-});
-```
 <a name="balena.models.device.getAllByOrganization"></a>
 
 ##### device.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
@@ -3424,13 +2971,6 @@ balena.models.device.getAllByOrganization(123).then(function(devices) {
 balena.models.device.getAllByOrganization('myorganization', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 	console.log(device);
 })
-```
-**Example**  
-```js
-balena.models.device.getAllByOrganization('myorganization', function(error, devices) {
-	if (error) throw error;
-	console.log(devices);
-});
 ```
 <a name="balena.models.device.get"></a>
 
@@ -3469,13 +3009,6 @@ balena.models.device.get('7cf02a6', { $select: ['overall_status', 'overall_progr
 	console.log(device);
 })
 ```
-**Example**  
-```js
-balena.models.device.get('7cf02a6', function(error, device) {
-	if (error) throw error;
-	console.log(device);
-});
-```
 <a name="balena.models.device.getWithServiceDetails"></a>
 
 ##### device.getWithServiceDetails(uuidOrId, [options]) ⇒ <code>Promise</code>
@@ -3507,13 +3040,6 @@ balena.models.device.getWithServiceDetails(123).then(function(device) {
 	console.log(device);
 })
 ```
-**Example**  
-```js
-balena.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
-	if (error) throw error;
-	console.log(device);
-});
-```
 <a name="balena.models.device.getByName"></a>
 
 ##### device.getByName(name) ⇒ <code>Promise</code>
@@ -3529,13 +3055,6 @@ balena.models.device.getWithServiceDetails('7cf02a6', function(error, device) {
 **Example**  
 ```js
 balena.models.device.getByName('MyDevice').then(function(devices) {
-	console.log(devices);
-});
-```
-**Example**  
-```js
-balena.models.device.getByName('MyDevice', function(error, devices) {
-	if (error) throw error;
 	console.log(devices);
 });
 ```
@@ -3563,13 +3082,6 @@ balena.models.device.getName(123).then(function(deviceName) {
 	console.log(deviceName);
 });
 ```
-**Example**  
-```js
-balena.models.device.getName('7cf02a6', function(error, deviceName) {
-	if (error) throw error;
-	console.log(deviceName);
-});
-```
 <a name="balena.models.device.getApplicationName"></a>
 
 ##### device.getApplicationName(uuidOrId) ⇒ <code>Promise</code>
@@ -3591,13 +3103,6 @@ balena.models.device.getApplicationName('7cf02a6').then(function(applicationName
 **Example**  
 ```js
 balena.models.device.getApplicationName(123).then(function(applicationName) {
-	console.log(applicationName);
-});
-```
-**Example**  
-```js
-balena.models.device.getApplicationName('7cf02a6', function(error, applicationName) {
-	if (error) throw error;
 	console.log(applicationName);
 });
 ```
@@ -3625,13 +3130,6 @@ balena.models.device.has(123).then(function(hasDevice) {
 	console.log(hasDevice);
 });
 ```
-**Example**  
-```js
-balena.models.device.has('7cf02a6', function(error, hasDevice) {
-	if (error) throw error;
-	console.log(hasDevice);
-});
-```
 <a name="balena.models.device.isOnline"></a>
 
 ##### device.isOnline(uuidOrId) ⇒ <code>Promise</code>
@@ -3653,13 +3151,6 @@ balena.models.device.isOnline('7cf02a6').then(function(isOnline) {
 **Example**  
 ```js
 balena.models.device.isOnline(123).then(function(isOnline) {
-	console.log('Is device online?', isOnline);
-});
-```
-**Example**  
-```js
-balena.models.device.isOnline('7cf02a6', function(error, isOnline) {
-	if (error) throw error;
 	console.log('Is device online?', isOnline);
 });
 ```
@@ -3687,16 +3178,6 @@ balena.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddress
 **Example**  
 ```js
 balena.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
-	localIPAddresses.forEach(function(localIP) {
-		console.log(localIP);
-	});
-});
-```
-**Example**  
-```js
-balena.models.device.getLocalIPAddresses('7cf02a6', function(error, localIPAddresses) {
-	if (error) throw error;
-
 	localIPAddresses.forEach(function(localIP) {
 		console.log(localIP);
 	});
@@ -3730,16 +3211,6 @@ balena.models.device.getMACAddresses(123).then(function(macAddresses) {
 	});
 });
 ```
-**Example**  
-```js
-balena.models.device.getMACAddresses('7cf02a6', function(error, macAddresses) {
-	if (error) throw error;
-
-	macAddresses.forEach(function(mac) {
-		console.log(mac);
-	});
-});
-```
 <a name="balena.models.device.getMetrics"></a>
 
 ##### device.getMetrics(uuidOrId) ⇒ <code>Promise</code>
@@ -3764,14 +3235,6 @@ balena.models.device.getMetrics(123).then(function(deviceMetrics) {
 	console.log(deviceMetrics);
 });
 ```
-**Example**  
-```js
-balena.models.device.getMetrics('7cf02a6', function(error, deviceMetrics) {
-	if (error) throw error;
-
-	console.log(deviceMetrics);
-});
-```
 <a name="balena.models.device.remove"></a>
 
 ##### device.remove(uuidOrIdOrIds) ⇒ <code>Promise</code>
@@ -3791,12 +3254,6 @@ balena.models.device.remove('7cf02a6');
 ```js
 balena.models.device.remove(123);
 ```
-**Example**  
-```js
-balena.models.device.remove('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.deactivate"></a>
 
 ##### device.deactivate(uuidOrIdOrIds) ⇒ <code>Promise</code>
@@ -3815,12 +3272,6 @@ balena.models.device.deactivate('7cf02a6');
 **Example**  
 ```js
 balena.models.device.deactivate(123);
-```
-**Example**  
-```js
-balena.models.device.deactivate('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.rename"></a>
 
@@ -3842,12 +3293,6 @@ balena.models.device.rename('7cf02a6', 'NewName');
 ```js
 balena.models.device.rename(123, 'NewName');
 ```
-**Example**  
-```js
-balena.models.device.rename('7cf02a6', 'NewName', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.setNote"></a>
 
 ##### device.setNote(uuidOrIdOrIds, note) ⇒ <code>Promise</code>
@@ -3867,12 +3312,6 @@ balena.models.device.setNote('7cf02a6', 'My useful note');
 **Example**  
 ```js
 balena.models.device.setNote(123, 'My useful note');
-```
-**Example**  
-```js
-balena.models.device.setNote('7cf02a6', 'My useful note', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.setCustomLocation"></a>
 
@@ -3894,12 +3333,6 @@ balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 45
 ```js
 balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 ```
-**Example**  
-```js
-balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 }, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.unsetCustomLocation"></a>
 
 ##### device.unsetCustomLocation(uuidOrIdOrIds) ⇒ <code>Promise</code>
@@ -3918,12 +3351,6 @@ balena.models.device.unsetCustomLocation('7cf02a6');
 **Example**  
 ```js
 balena.models.device.unsetCustomLocation(123);
-```
-**Example**  
-```js
-balena.models.device.unsetLocation('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.move"></a>
 
@@ -3948,12 +3375,6 @@ balena.models.device.move(123, 'myorganization/myapp');
 **Example**  
 ```js
 balena.models.device.move(123, 456);
-```
-**Example**  
-```js
-balena.models.device.move('7cf02a6', 'myorganization/myapp', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.getSupervisorTargetState"></a>
 
@@ -3982,13 +3403,6 @@ balena.models.device.getSupervisorTargetState(123).then(function(state) {
 **Example**  
 ```js
 balena.models.device.getSupervisorTargetState(123, 3).then(function(state) {
-	console.log(state);
-});
-```
-**Example**  
-```js
-balena.models.device.getSupervisorTargetState('7cf02a6', function(error, state) {
-	if (error) throw error;
 	console.log(state);
 });
 ```
@@ -4070,14 +3484,6 @@ balena.models.device.register(123, uuid).then(function(registrationInfo) {
 	console.log(registrationInfo);
 });
 ```
-**Example**  
-```js
-var uuid = balena.models.device.generateUniqueKey();
-balena.models.device.register('myorganization/myapp', uuid, function(error, registrationInfo) {
-	if (error) throw error;
-	console.log(registrationInfo);
-});
-```
 <a name="balena.models.device.generateDeviceKey"></a>
 
 ##### device.generateDeviceKey(uuidOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
@@ -4100,20 +3506,6 @@ balena.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
 **Example**  
 ```js
 balena.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
-	console.log(deviceApiKey);
-});
-```
-**Example**  
-```js
-balena.models.device.generateDeviceKey('7cf02a6', function(error, deviceApiKey) {
-	if (error) throw error;
-	console.log(deviceApiKey);
-});
-```
-**Example**  
-```js
-balena.models.device.generateDeviceKey('7cf02a6', 'device-key-name', 'device-key-description', '2030-01-01T00:00:00Z', function(error, deviceApiKey) {
-	if (error) throw error;
 	console.log(deviceApiKey);
 });
 ```
@@ -4145,16 +3537,6 @@ balena.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 	}
 });
 ```
-**Example**  
-```js
-balena.models.device.hasDeviceUrl('7cf02a6', function(error, hasDeviceUrl) {
-	if (error) throw error;
-
-	if (hasDeviceUrl) {
-		console.log('The device has device URL enabled');
-	}
-});
-```
 <a name="balena.models.device.getDeviceUrl"></a>
 
 ##### device.getDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
@@ -4179,13 +3561,6 @@ balena.models.device.getDeviceUrl(123).then(function(url) {
 	console.log(url);
 });
 ```
-**Example**  
-```js
-balena.models.device.getDeviceUrl('7cf02a6', function(error, url) {
-	if (error) throw error;
-	console.log(url);
-});
-```
 <a name="balena.models.device.enableDeviceUrl"></a>
 
 ##### device.enableDeviceUrl(uuidOrIdOrIds) ⇒ <code>Promise</code>
@@ -4204,12 +3579,6 @@ balena.models.device.enableDeviceUrl('7cf02a6');
 **Example**  
 ```js
 balena.models.device.enableDeviceUrl(123);
-```
-**Example**  
-```js
-balena.models.device.enableDeviceUrl('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.disableDeviceUrl"></a>
 
@@ -4230,12 +3599,6 @@ balena.models.device.disableDeviceUrl('7cf02a6');
 ```js
 balena.models.device.disableDeviceUrl(123);
 ```
-**Example**  
-```js
-balena.models.device.disableDeviceUrl('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.enableLocalMode"></a>
 
 ##### device.enableLocalMode(uuidOrId) ⇒ <code>Promise</code>
@@ -4255,12 +3618,6 @@ balena.models.device.enableLocalMode('7cf02a6');
 ```js
 balena.models.device.enableLocalMode(123);
 ```
-**Example**  
-```js
-balena.models.device.enableLocalMode('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.disableLocalMode"></a>
 
 ##### device.disableLocalMode(uuidOrId) ⇒ <code>Promise</code>
@@ -4279,12 +3636,6 @@ balena.models.device.disableLocalMode('7cf02a6');
 **Example**  
 ```js
 balena.models.device.disableLocalMode(123);
-```
-**Example**  
-```js
-balena.models.device.disableLocalMode('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.isInLocalMode"></a>
 
@@ -4309,16 +3660,6 @@ balena.models.device.isInLocalMode('7cf02a6').then(function(isInLocalMode) {
 **Example**  
 ```js
 balena.models.device.isInLocalMode(123).then(function(isInLocalMode) {
-	if (isInLocalMode) {
-		console.log('The device has local mode enabled');
-	}
-});
-```
-**Example**  
-```js
-balena.models.device.isInLocalMode('7cf02a6', function(error, isInLocalMode) {
-	if (error) throw error;
-
 	if (isInLocalMode) {
 		console.log('The device has local mode enabled');
 	}
@@ -4361,12 +3702,6 @@ balena.models.device.enableLockOverride('7cf02a6');
 ```js
 balena.models.device.enableLockOverride(123);
 ```
-**Example**  
-```js
-balena.models.device.enableLockOverride('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.disableLockOverride"></a>
 
 ##### device.disableLockOverride(uuidOrId) ⇒ <code>Promise</code>
@@ -4386,12 +3721,6 @@ balena.models.device.disableLockOverride('7cf02a6');
 ```js
 balena.models.device.disableLockOverride(123);
 ```
-**Example**  
-```js
-balena.models.device.disableLockOverride('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.hasLockOverride"></a>
 
 ##### device.hasLockOverride(uuidOrId) ⇒ <code>Promise</code>
@@ -4410,12 +3739,6 @@ balena.models.device.hasLockOverride('7cf02a6');
 **Example**  
 ```js
 balena.models.device.hasLockOverride(123);
-```
-**Example**  
-```js
-balena.models.device.hasLockOverride('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.getStatus"></a>
 
@@ -4443,13 +3766,6 @@ balena.models.device.getStatus('7cf02a6').then(function(status) {
 **Example**  
 ```js
 balena.models.device.getStatus(123).then(function(status) {
-	console.log(status);
-});
-```
-**Example**  
-```js
-balena.models.device.getStatus('7cf02a6', function(error, status) {
-	if (error) throw error;
 	console.log(status);
 });
 ```
@@ -4482,13 +3798,6 @@ balena.models.device.getProgress(123).then(function(progress) {
 	console.log(progress);
 });
 ```
-**Example**  
-```js
-balena.models.device.getProgress('7cf02a6', function(error, progress) {
-	if (error) throw error;
-	console.log(progress);
-});
-```
 <a name="balena.models.device.grantSupportAccess"></a>
 
 ##### device.grantSupportAccess(uuidOrIdOrIds, expiryTimestamp) ⇒ <code>Promise</code>
@@ -4509,12 +3818,6 @@ balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
 ```js
 balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 ```
-**Example**  
-```js
-balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.revokeSupportAccess"></a>
 
 ##### device.revokeSupportAccess(uuidOrIdOrIds) ⇒ <code>Promise</code>
@@ -4533,12 +3836,6 @@ balena.models.device.revokeSupportAccess('7cf02a6');
 **Example**  
 ```js
 balena.models.device.revokeSupportAccess(123);
-```
-**Example**  
-```js
-balena.models.device.revokeSupportAccess('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.lastOnline"></a>
 
@@ -4596,12 +3893,6 @@ balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEna
 	console.log(isEnabled);
 });
 ```
-**Example**  
-```js
-balena.models.device.isTrackingApplicationRelease('7cf02a6', function(error, isEnabled) {
-	console.log(isEnabled);
-});
-```
 <a name="balena.models.device.getTargetReleaseHash"></a>
 
 ##### device.getTargetReleaseHash(uuidOrId) ⇒ <code>Promise</code>
@@ -4653,13 +3944,6 @@ balena.models.device.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.trackApplicationRelease"></a>
 
 ##### device.trackApplicationRelease(uuidOrIdOrIds) ⇒ <code>Promise</code>
@@ -4676,13 +3960,6 @@ The device's current release will be updated with each new successfully built re
 **Example**  
 ```js
 balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.trackApplicationRelease('7cf02a6', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -4712,13 +3989,6 @@ balena.models.device.setSupervisorRelease(123, 'v11.4.14').then(function() {
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.setSupervisorRelease('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.startOsUpdate"></a>
 
 ##### device.startOsUpdate(uuid, targetOsVersion) ⇒ <code>Promise</code>
@@ -4738,13 +4008,6 @@ balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+r
 	console.log(result.status);
 });
 ```
-**Example**  
-```js
-balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod', function(error, status) {
-	if (error) throw error;
-	console.log(result.status);
-});
-```
 <a name="balena.models.device.getOsUpdateStatus"></a>
 
 ##### device.getOsUpdateStatus(uuid) ⇒ <code>Promise</code>
@@ -4760,13 +4023,6 @@ balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+r
 **Example**  
 ```js
 balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
-	console.log(result.status);
-});
-```
-**Example**  
-```js
-balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98', function(error, status) {
-	if (error) throw error;
 	console.log(result.status);
 });
 ```
@@ -4790,12 +4046,6 @@ balena.models.device.ping('7cf02a6');
 **Example**  
 ```js
 balena.models.device.ping(123);
-```
-**Example**  
-```js
-balena.models.device.ping('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.getApplicationInfo"></a>
 
@@ -4825,13 +4075,6 @@ balena.models.device.getApplicationInfo(123).then(function(appInfo) {
 	console.log(appInfo);
 });
 ```
-**Example**  
-```js
-balena.models.device.getApplicationInfo('7cf02a6', function(error, appInfo) {
-	if (error) throw error;
-	console.log(appInfo);
-});
-```
 <a name="balena.models.device.identify"></a>
 
 ##### device.identify(uuidOrId) ⇒ <code>Promise</code>
@@ -4850,12 +4093,6 @@ balena.models.device.identify('7cf02a6');
 **Example**  
 ```js
 balena.models.device.identify(123);
-```
-**Example**  
-```js
-balena.models.device.identify('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.restartApplication"></a>
 
@@ -4879,12 +4116,6 @@ balena.models.device.restartApplication('7cf02a6');
 **Example**  
 ```js
 balena.models.device.restartApplication(123);
-```
-**Example**  
-```js
-balena.models.device.restartApplication('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.startApplication"></a>
 
@@ -4911,13 +4142,6 @@ balena.models.device.startApplication('7cf02a6').then(function(containerId) {
 **Example**  
 ```js
 balena.models.device.startApplication(123).then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.startApplication('7cf02a6', function(error, containerId) {
-	if (error) throw error;
 	console.log(containerId);
 });
 ```
@@ -4949,13 +4173,6 @@ balena.models.device.stopApplication(123).then(function(containerId) {
 	console.log(containerId);
 });
 ```
-**Example**  
-```js
-balena.models.device.stopApplication('7cf02a6', function(error, containerId) {
-	if (error) throw error;
-	console.log(containerId);
-});
-```
 <a name="balena.models.device.reboot"></a>
 
 ##### device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>
@@ -4976,12 +4193,6 @@ balena.models.device.reboot('7cf02a6');
 **Example**  
 ```js
 balena.models.device.reboot(123);
-```
-**Example**  
-```js
-balena.models.device.reboot('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.shutdown"></a>
 
@@ -5004,12 +4215,6 @@ balena.models.device.shutdown('7cf02a6');
 ```js
 balena.models.device.shutdown(123);
 ```
-**Example**  
-```js
-balena.models.device.shutdown('7cf02a6', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.purge"></a>
 
 ##### device.purge(uuidOrId) ⇒ <code>Promise</code>
@@ -5030,12 +4235,6 @@ balena.models.device.purge('7cf02a6');
 **Example**  
 ```js
 balena.models.device.purge(123);
-```
-**Example**  
-```js
-balena.models.device.purge('7cf02a6', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.device.update"></a>
 
@@ -5062,14 +4261,6 @@ balena.models.device.update(123, {
 	force: true
 });
 ```
-**Example**  
-```js
-balena.models.device.update('7cf02a6', {
-	force: true
-}, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.device.getSupervisorState"></a>
 
 ##### device.getSupervisorState(uuidOrId) ⇒ <code>Promise</code>
@@ -5090,13 +4281,6 @@ balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
 **Example**  
 ```js
 balena.models.device.getSupervisorState(123).then(function(state) {
-	console.log(state);
-});
-```
-**Example**  
-```js
-balena.models.device.getSupervisorState('7cf02a6', function(error, state) {
-	if (error) throw error;
 	console.log(state);
 });
 ```
@@ -5124,13 +4308,6 @@ balena.models.device.startService(1, 123).then(function() {
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.startService('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.stopService"></a>
 
 ##### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
@@ -5155,13 +4332,6 @@ balena.models.device.stopService(1, 123).then(function() {
 	...
 });
 ```
-**Example**  
-```js
-balena.models.device.stopService('7cf02a6', 123, function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.device.restartService"></a>
 
 ##### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
@@ -5183,13 +4353,6 @@ balena.models.device.restartService('7cf02a6', 123).then(function() {
 **Example**  
 ```js
 balena.models.device.restartService(1, 123).then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.device.restartService('7cf02a6', 123, function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -5236,13 +4399,6 @@ balena.models.deviceType.get('raspberrypi').then(function(deviceType) {
 	console.log('resolved alias:', deviceType);
 });
 ```
-**Example**  
-```js
-balena.models.deviceType.get('raspberry-pi', function(error, deviceType) {
-	if (error) throw error;
-	console.log(deviceType);
-});
-```
 <a name="balena.models.deviceType.getAll"></a>
 
 ##### deviceType.getAll([options]) ⇒ <code>Promise</code>
@@ -5268,13 +4424,6 @@ balena.models.deviceType.getAll().then(function(deviceTypes) {
 balena.models.deviceType.getAll({ $select: ['name', 'slug'] }).then(function(deviceTypes) {
 	console.log(deviceTypes);
 })
-```
-**Example**  
-```js
-balena.models.deviceType.getAll(function(error, deviceTypes) {
-	if (error) throw error;
-	console.log(deviceTypes);
-});
 ```
 <a name="balena.models.deviceType.getAllSupported"></a>
 
@@ -5302,13 +4451,6 @@ balena.models.deviceType.getAllSupported({ $select: ['name', 'slug'] }).then(fun
 	console.log(deviceTypes);
 })
 ```
-**Example**  
-```js
-balena.models.deviceType.getAllSupported(function(error, deviceTypes) {
-	if (error) throw error;
-	console.log(deviceTypes);
-});
-```
 <a name="balena.models.deviceType.getBySlugOrName"></a>
 
 ##### deviceType.getBySlugOrName(slugOrName) ⇒ <code>Promise</code>
@@ -5324,13 +4466,6 @@ balena.models.deviceType.getAllSupported(function(error, deviceTypes) {
 **Example**  
 ```js
 balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(manifest) {
-	console.log(manifest);
-});
-```
-**Example**  
-```js
-balena.models.deviceType.getBySlugOrName('raspberry-pi', function(error, manifest) {
-	if (error) throw error;
 	console.log(manifest);
 });
 ```
@@ -5353,14 +4488,6 @@ balena.models.deviceType.getName('raspberry-pi').then(function(deviceTypeName) {
 	// Raspberry Pi
 });
 ```
-**Example**  
-```js
-balena.models.deviceType.getName('raspberry-pi', function(error, deviceTypeName) {
-	if (error) throw error;
-	console.log(deviceTypeName);
-	// Raspberry Pi
-});
-```
 <a name="balena.models.deviceType.getSlugByName"></a>
 
 ##### deviceType.getSlugByName(deviceTypeName) ⇒ <code>Promise</code>
@@ -5376,14 +4503,6 @@ balena.models.deviceType.getName('raspberry-pi', function(error, deviceTypeName)
 **Example**  
 ```js
 balena.models.deviceType.getSlugByName('Raspberry Pi').then(function(deviceTypeSlug) {
-	console.log(deviceTypeSlug);
-	// raspberry-pi
-});
-```
-**Example**  
-```js
-balena.models.deviceType.getSlugByName('Raspberry Pi', function(error, deviceTypeSlug) {
-	if (error) throw error;
 	console.log(deviceTypeSlug);
 	// raspberry-pi
 });
@@ -5495,20 +4614,6 @@ balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey)
 	console.log(apiKey);
 });
 ```
-**Example**  
-```js
-balena.models.apiKey.create(apiKeyName, function(error, apiKey) {
-	if (error) throw error;
-	console.log(apiKey);
-});
-```
-**Example**  
-```js
-balena.models.apiKey.create(apiKeyName, apiKeyDescription, apiKeyExpiryDate, function(error, apiKey) {
-	if (error) throw error;
-	console.log(apiKey);
-});
-```
 <a name="balena.models.apiKey.getAll"></a>
 
 ##### apiKey.getAll([options]) ⇒ <code>Promise</code>
@@ -5527,13 +4632,6 @@ balena.models.apiKey.getAll().then(function(apiKeys) {
 	console.log(apiKeys);
 });
 ```
-**Example**  
-```js
-balena.models.apiKey.getAll(function(error, apiKeys) {
-	if (error) throw error;
-	console.log(apiKeys);
-});
-```
 <a name="balena.models.apiKey.getAllNamedUserApiKeys"></a>
 
 ##### apiKey.getAllNamedUserApiKeys([options]) ⇒ <code>Promise</code>
@@ -5549,13 +4647,6 @@ balena.models.apiKey.getAll(function(error, apiKeys) {
 **Example**  
 ```js
 balena.models.apiKey.getAllNamedUserApiKeys().then(function(apiKeys) {
-	console.log(apiKeys);
-});
-```
-**Example**  
-```js
-balena.models.apiKey.getAllNamedUserApiKeys(function(error, apiKeys) {
-	if (error) throw error;
 	console.log(apiKeys);
 });
 ```
@@ -5578,13 +4669,6 @@ balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp')
 	console.log(apiKeys);
 });
 ```
-**Example**  
-```js
-balena.models.apiKey.getProvisioningApiKeysByApplication(123, function(error, apiKeys) {
-	if (error) throw error;
-	console.log(apiKeys);
-});
-```
 <a name="balena.models.apiKey.getDeviceApiKeysByDevice"></a>
 
 ##### apiKey.getDeviceApiKeysByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
@@ -5601,13 +4685,6 @@ balena.models.apiKey.getProvisioningApiKeysByApplication(123, function(error, ap
 **Example**  
 ```js
 balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a6').then(function(apiKeys) {
-	console.log(apiKeys);
-});
-```
-**Example**  
-```js
-balena.models.apiKey.getDeviceApiKeysByDevice(123, function(error, apiKeys) {
-	if (error) throw error;
 	console.log(apiKeys);
 });
 ```
@@ -5639,13 +4716,6 @@ balena.models.apiKey.update(123, { expiryDate: '2022-04-29' });
 ```js
 balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' });
 ```
-**Example**  
-```js
-balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated description' }, function(error, apiKeys) {
-	if (error) throw error;
-	console.log(apiKeys);
-});
-```
 <a name="balena.models.apiKey.revoke"></a>
 
 ##### apiKey.revoke(id) ⇒ <code>Promise</code>
@@ -5660,12 +4730,6 @@ balena.models.apiKey.update(123, { name: 'updatedName', description: 'updated de
 **Example**  
 ```js
 balena.models.apiKey.revoke(123);
-```
-**Example**  
-```js
-balena.models.apiKey.revoke(123, function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.key"></a>
 
@@ -5696,13 +4760,6 @@ balena.models.key.getAll().then(function(keys) {
 	console.log(keys);
 });
 ```
-**Example**  
-```js
-balena.models.key.getAll(function(error, keys) {
-	if (error) throw error;
-	console.log(keys);
-});
-```
 <a name="balena.models.key.get"></a>
 
 ##### key.get(id) ⇒ <code>Promise</code>
@@ -5721,13 +4778,6 @@ balena.models.key.get(51).then(function(key) {
 	console.log(key);
 });
 ```
-**Example**  
-```js
-balena.models.key.get(51, function(error, key) {
-	if (error) throw error;
-	console.log(key);
-});
-```
 <a name="balena.models.key.remove"></a>
 
 ##### key.remove(id) ⇒ <code>Promise</code>
@@ -5742,12 +4792,6 @@ balena.models.key.get(51, function(error, key) {
 **Example**  
 ```js
 balena.models.key.remove(51);
-```
-**Example**  
-```js
-balena.models.key.remove(51, function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.key.create"></a>
 
@@ -5765,13 +4809,6 @@ balena.models.key.remove(51, function(error) {
 **Example**  
 ```js
 balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
-	console.log(key);
-});
-```
-**Example**  
-```js
-balena.models.key.create('Main', 'ssh-rsa AAAAB....', function(error, key) {
-	if (error) throw error;
 	console.log(key);
 });
 ```
@@ -5833,12 +4870,6 @@ balena.models.organization.membership.get(5).then(function(memberships) {
 	console.log(memberships);
 });
 ```
-**Example**  
-```js
-balena.models.organization.membership.get(5, function(error, memberships) {
-	console.log(memberships);
-});
-```
 <a name="balena.models.organization.membership.getAllByOrganization"></a>
 
 ###### membership.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
@@ -5863,12 +4894,6 @@ balena.models.organization.membership.getAllByOrganization('MyOrg').then(functio
 **Example**  
 ```js
 balena.models.organization.membership.getAllByOrganization(123).then(function(memberships) {
-	console.log(memberships);
-});
-```
-**Example**  
-```js
-balena.models.organization.membership.getAllByOrganization(123, function(error, memberships) {
 	console.log(memberships);
 });
 ```
@@ -5922,12 +4947,6 @@ balena.models.organization.membership.create({ organization: "myorg", username: 
 	console.log(membership);
 });
 ```
-**Example**  
-```js
-balena.models.organization.membership.create({ organization: 53, username: "user123" }, function(error, membership) {
-	console.log(membership);
-});
-```
 <a name="balena.models.organization.membership.changeRole"></a>
 
 ###### membership.changeRole(idOrUniqueKey, roleName) ⇒ <code>Promise</code>
@@ -5957,12 +4976,6 @@ balena.models.organization.membership.changeRole({
 	console.log('OK');
 });
 ```
-**Example**  
-```js
-balena.models.organization.membership.changeRole(123, "administrator", function(error) {
-	console.log('OK');
-});
-```
 <a name="balena.models.organization.membership.remove"></a>
 
 ###### membership.remove(id) ⇒ <code>Promise</code>
@@ -5983,13 +4996,6 @@ balena.models.organization.membership.remove(123);
 balena.models.organization.membership.remove({
 	user: 123,
 	is_member_of__application: 125,
-});
-```
-**Example**  
-```js
-balena.models.organization.membership.remove(123,function(error) {
-	if (error) throw error;
-	...
 });
 ```
 <a name="balena.models.organization.invite"></a>
@@ -6024,12 +5030,6 @@ balena.models.organization.invite.getAll().then(function(invites) {
 	console.log(invites);
 });
 ```
-**Example**  
-```js
-balena.models.organization.invite.getAll(function(error, invites) {
-	console.log(invites);
-});
-```
 <a name="balena.models.organization.invite.getAllByOrganization"></a>
 
 ###### invite.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
@@ -6057,12 +5057,6 @@ balena.models.organization.invite.getAllByOrganization(123).then(function(invite
 	console.log(invites);
 });
 ```
-**Example**  
-```js
-balena.models.organization.invite.getAllByOrganization(123, function(error, invites) {
-	console.log(invites);
-});
-```
 <a name="balena.models.organization.invite.create"></a>
 
 ###### invite.create(handleOrId, options, [message]) ⇒ <code>Promise</code>
@@ -6087,12 +5081,6 @@ balena.models.organization.invite.create('MyOrg', { invitee: "invitee@example.or
 	console.log(invite);
 });
 ```
-**Example**  
-```js
-balena.models.organization.invite.create(53, { invitee: "invitee@example.org" }, function(error, invite) {
-	console.log(invite);
-});
-```
 <a name="balena.models.organization.invite.revoke"></a>
 
 ###### invite.revoke(id) ⇒ <code>Promise</code>
@@ -6107,13 +5095,6 @@ balena.models.organization.invite.create(53, { invitee: "invitee@example.org" },
 **Example**  
 ```js
 balena.models.organization.invite.revoke(123);
-```
-**Example**  
-```js
-balena.models.organization.invite.revoke(123,function(error) {
-	if (error) throw error;
-	...
-});
 ```
 <a name="balena.models.organization.invite.accept"></a>
 
@@ -6131,13 +5112,6 @@ This method adds the calling user to the organization.
 **Example**  
 ```js
 balena.models.organization.invite.accept("qwerty-invitation-token");
-```
-**Example**  
-```js
-balena.models.organization.invite.accept("qwerty-invitation-token", function(error) {
-	if (error) throw error;
-	...
-});
 ```
 <a name="balena.models.organization.create"></a>
 
@@ -6161,13 +5135,6 @@ balena.models.organization.create({ name:'MyOrganization' }).then(function(organ
 	console.log(organization);
 });
 ```
-**Example**  
-```js
-balena.models.organization.create({ name:'MyOrganization' }, function(error, organization) {
-	if (error) throw error;
-	console.log(organization);
-});
-```
 <a name="balena.models.organization.getAll"></a>
 
 ##### organization.getAll([options]) ⇒ <code>Promise</code>
@@ -6183,13 +5150,6 @@ balena.models.organization.create({ name:'MyOrganization' }, function(error, org
 **Example**  
 ```js
 balena.models.organization.getAll().then(function(organizations) {
-	console.log(organizations);
-});
-```
-**Example**  
-```js
-balena.models.organization.getAll(function(error, organizations) {
-	if (error) throw error;
 	console.log(organizations);
 });
 ```
@@ -6218,13 +5178,6 @@ balena.models.organization.get(123).then(function(organization) {
 	console.log(organization);
 });
 ```
-**Example**  
-```js
-balena.models.organization.get('myorganization', function(error, organization) {
-	if (error) throw error;
-	console.log(organization);
-});
-```
 <a name="balena.models.organization.remove"></a>
 
 ##### organization.remove(handleOrId) ⇒ <code>Promise</code>
@@ -6239,12 +5192,6 @@ balena.models.organization.get('myorganization', function(error, organization) {
 **Example**  
 ```js
 balena.models.organization.remove(123);
-```
-**Example**  
-```js
-balena.models.organization.remove(123, function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.os"></a>
 
@@ -6331,11 +5278,6 @@ balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_in
 balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 	console.log('The OS download size for raspberry-pi', size);
 });
-
-balena.models.os.getDownloadSize('raspberry-pi', function(error, size) {
-	if (error) throw error;
-	console.log('The OS download size for raspberry-pi', size);
-});
 ```
 <a name="balena.models.os.getMaxSatisfyingVersion"></a>
 
@@ -6379,11 +5321,6 @@ balena.models.os.getLastModified('raspberry-pi').then(function(date) {
 balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
 	console.log('The raspberry-pi image was last modified in ' + date);
 });
-
-balena.models.os.getLastModified('raspberry-pi', function(error, date) {
-	if (error) throw error;
-	console.log('The raspberry-pi image was last modified in ' + date);
-});
 ```
 <a name="balena.models.os.download"></a>
 
@@ -6411,11 +5348,6 @@ balena.models.os.getLastModified('raspberry-pi', function(error, date) {
 ```js
 balena.models.os.download({deviceType: 'raspberry-pi'}).then(function(stream) {
 	stream.pipe(fs.createWriteStream('foo/bar/image.img'));
-});
-
-balena.models.os.download({deviceType: 'raspberry-pi', appId: 1234, fileType: '.zip'}, function(error, stream) {
-	if (error) throw error;
-	stream.pipe(fs.createWriteStream('foo/bar/image.zip'));
 });
 ```
 <a name="balena.models.os.getConfig"></a>
@@ -6457,11 +5389,6 @@ balena.models.os.getConfig('myorganization/myapp', { version: '2.12.7+rev1.prod'
 balena.models.os.getConfig(123, { version: '2.12.7+rev1.prod' }).then(function(config) {
 	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
 });
-
-balena.models.os.getConfig('myorganization/myapp', { version: '2.12.7+rev1.prod' }, function(error, config) {
-	if (error) throw error;
-	fs.writeFile('foo/bar/config.json', JSON.stringify(config));
-});
 ```
 <a name="balena.models.os.isSupportedOsUpdate"></a>
 
@@ -6480,11 +5407,6 @@ balena.models.os.getConfig('myorganization/myapp', { version: '2.12.7+rev1.prod'
 **Example**  
 ```js
 balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(isSupported) {
-	console.log(isSupported);
-});
-
-balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod', function(error, config) {
-	if (error) throw error;
 	console.log(isSupported);
 });
 ```
@@ -6509,11 +5431,6 @@ that is _not_ pre-release, can be `null`
 **Example**  
 ```js
 balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod').then(function(isSupported) {
-	console.log(isSupported);
-});
-
-balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod', function(error, config) {
-	if (error) throw error;
 	console.log(isSupported);
 });
 ```
@@ -6582,13 +5499,6 @@ balena.models.config.getAll().then(function(config) {
 	console.log(config);
 });
 ```
-**Example**  
-```js
-balena.models.config.getAll(function(error, config) {
-	if (error) throw error;
-	console.log(config);
-});
-```
 <a name="balena.models.config.getDeviceTypes"></a>
 
 ##### ~~config.getDeviceTypes() ⇒ <code>Promise</code>~~
@@ -6603,13 +5513,6 @@ balena.models.config.getAll(function(error, config) {
 balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 	console.log(deviceTypes);
 });
-```
-**Example**  
-```js
-balena.models.config.getDeviceTypes(function(error, deviceTypes) {
-	if (error) throw error;
-	console.log(deviceTypes);
-})
 ```
 <a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
 
@@ -6631,13 +5534,6 @@ balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi').then(function(m
 	console.log(manifest);
 });
 ```
-**Example**  
-```js
-balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi', function(error, manifest) {
-	if (error) throw error;
-	console.log(manifest);
-});
-```
 <a name="balena.models.config.getDeviceOptions"></a>
 
 ##### config.getDeviceOptions(deviceType) ⇒ <code>Promise</code>
@@ -6656,13 +5552,6 @@ balena.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 	console.log(options);
 });
 ```
-**Example**  
-```js
-balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
-	if (error) throw error;
-	console.log(options);
-});
-```
 <a name="balena.models.config.getConfigVarSchema"></a>
 
 ##### config.getConfigVarSchema(deviceType) ⇒ <code>Promise</code>
@@ -6678,13 +5567,6 @@ balena.models.config.getDeviceOptions('raspberry-pi', function(error, options) {
 **Example**  
 ```js
 balena.models.config.getConfigVarSchema('raspberry-pi').then(function(options) {
-	console.log(options);
-});
-```
-**Example**  
-```js
-balena.models.config.getConfigVarSchema('raspberry-pi', function(error, options) {
-	if (error) throw error;
 	console.log(options);
 });
 ```
@@ -6745,13 +5627,6 @@ balena.models.release.tags.getAllByApplication(999999).then(function(tags) {
 	console.log(tags);
 });
 ```
-**Example**  
-```js
-balena.models.release.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
 <a name="balena.models.release.tags.getAllByRelease"></a>
 
 ###### tags.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
@@ -6783,13 +5658,6 @@ balena.models.release.tags.getAllByRelease({application: 456, rawVersion: '0.0.0
 	console.log(tags);
 });
 ```
-**Example**  
-```js
-balena.models.release.tags.getAllByRelease(123, function(error, tags) {
-	if (error) throw error;
-	console.log(tags)
-});
-```
 <a name="balena.models.release.tags.set"></a>
 
 ###### tags.set(commitOrIdOrRawVersion, tagKey, value) ⇒ <code>Promise</code>
@@ -6815,12 +5683,6 @@ balena.models.release.tags.set('7cf02a6', 'EDITOR', 'vim');
 ```js
 balena.models.release.tags.set({application: 456, rawVersion: '0.0.0'}, 'EDITOR', 'vim');
 ```
-**Example**  
-```js
-balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.models.release.tags.remove"></a>
 
 ###### tags.remove(commitOrIdOrRawVersion, tagKey) ⇒ <code>Promise</code>
@@ -6844,12 +5706,6 @@ balena.models.release.tags.remove('7cf02a6', 'EDITOR');
 **Example**  
 ```js
 balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDITOR');
-```
-**Example**  
-```js
-balena.models.release.tags.remove(123, 'EDITOR', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.models.release.get"></a>
 
@@ -6879,13 +5735,6 @@ balena.models.release.get('7cf02a6').then(function(release) {
 **Example**  
 ```js
 balena.models.release.get({application: 456, raw_version: '0.0.0'}).then(function(release) {
-	console.log(release);
-});
-```
-**Example**  
-```js
-balena.models.release.get(123, function(error, release) {
-	if (error) throw error;
 	console.log(release);
 });
 ```
@@ -6934,13 +5783,6 @@ balena.models.release.getWithImageDetails(123, { image: { $select: 'build_log' }
 	console.log(release.images[0].build_log);
 });
 ```
-**Example**  
-```js
-balena.models.release.getWithImageDetails(123, function(error, release) {
-	if (error) throw error;
-	console.log(release);
-});
-```
 <a name="balena.models.release.getAllByApplication"></a>
 
 ##### release.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -6963,13 +5805,6 @@ balena.models.release.getAllByApplication('myorganization/myapp').then(function(
 **Example**  
 ```js
 balena.models.release.getAllByApplication(123).then(function(releases) {
-	console.log(releases);
-});
-```
-**Example**  
-```js
-balena.models.release.getAllByApplication('myorganization/myapp', function(error, releases) {
-	if (error) throw error;
 	console.log(releases);
 });
 ```
@@ -6998,13 +5833,6 @@ balena.models.release.getLatestByApplication(123).then(function(releases) {
 	console.log(releases);
 });
 ```
-**Example**  
-```js
-balena.models.release.getLatestByApplication('myorganization/myapp', function(error, releases) {
-	if (error) throw error;
-	console.log(releases);
-});
-```
 <a name="balena.models.release.createFromUrl"></a>
 
 ##### release.createFromUrl(slugOrUuidOrId, urlDeployOptions) ⇒ <code>Promise</code>
@@ -7029,13 +5857,6 @@ balena.models.release.createFromUrl('myorganization/myapp', { url: 'https://gith
 **Example**  
 ```js
 balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
-	console.log(releaseId);
-});
-```
-**Example**  
-```js
-balena.models.release.createFromUrl('myorganization/myapp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
-	if (error) throw error;
 	console.log(releaseId);
 });
 ```
@@ -7205,13 +6026,6 @@ balena.models.service.var.getAllByService(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.service.var.getAllByService(999999, function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.service.var.getAllByApplication"></a>
 
 ###### var.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -7237,13 +6051,6 @@ balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 	console.log(vars);
 });
 ```
-**Example**  
-```js
-balena.models.service.var.getAllByApplication('myorganization/myapp', function(error, vars) {
-	if (error) throw error;
-	console.log(vars)
-});
-```
 <a name="balena.models.service.var.get"></a>
 
 ###### var.get(id, key) ⇒ <code>Promise</code>
@@ -7261,13 +6068,6 @@ balena.models.service.var.getAllByApplication('myorganization/myapp', function(e
 ```js
 balena.models.service.var.get(999999, 'VAR').then(function(value) {
 	console.log(value);
-});
-```
-**Example**  
-```js
-balena.models.service.var.get(999999, 'VAR', function(error, value) {
-	if (error) throw error;
-	console.log(value)
 });
 ```
 <a name="balena.models.service.var.set"></a>
@@ -7289,13 +6089,6 @@ balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
-**Example**  
-```js
-balena.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
-	if (error) throw error;
-	...
-});
-```
 <a name="balena.models.service.var.remove"></a>
 
 ###### var.remove(id, key) ⇒ <code>Promise</code>
@@ -7311,13 +6104,6 @@ balena.models.service.var.set(999999, 'VAR', 'newvalue', function(error) {
 **Example**  
 ```js
 balena.models.service.var.remove(999999, 'VAR').then(function() {
-	...
-});
-```
-**Example**  
-```js
-balena.models.service.var.remove(999999, 'VAR', function(error) {
-	if (error) throw error;
 	...
 });
 ```
@@ -7343,13 +6129,6 @@ balena.models.service.getAllByApplication('myorganization/myapp').then(function(
 **Example**  
 ```js
 balena.models.service.getAllByApplication(123).then(function(services) {
-	console.log(services);
-});
-```
-**Example**  
-```js
-balena.models.service.getAllByApplication('myorganization/myapp', function(error, services) {
-	if (error) throw error;
 	console.log(services);
 });
 ```
@@ -7381,13 +6160,6 @@ balena.models.image.get(123).then(function(image) {
 	console.log(image);
 });
 ```
-**Example**  
-```js
-balena.models.image.get(123, function(error, image) {
-	if (error) throw error;
-	console.log(image);
-});
-```
 <a name="balena.models.image.getLogs"></a>
 
 ##### image.getLogs(id) ⇒ <code>Promise</code>
@@ -7403,13 +6175,6 @@ balena.models.image.get(123, function(error, image) {
 **Example**  
 ```js
 balena.models.image.getLogs(123).then(function(logs) {
-	console.log(logs);
-});
-```
-**Example**  
-```js
-balena.models.image.getLogs(123, function(error, logs) {
-	if (error) throw error;
 	console.log(logs);
 });
 ```
@@ -7496,13 +6261,6 @@ balena.models.billing.getAccount(orgId).then(function(billingAccount) {
 	console.log(billingAccount);
 });
 ```
-**Example**  
-```js
-balena.models.billing.getAccount(orgId, function(error, billingAccount) {
-	if (error) throw error;
-	console.log(billingAccount);
-});
-```
 <a name="balena.models.billing.getPlan"></a>
 
 ##### billing.getPlan(organization) ⇒ <code>Promise</code>
@@ -7518,13 +6276,6 @@ balena.models.billing.getAccount(orgId, function(error, billingAccount) {
 **Example**  
 ```js
 balena.models.billing.getPlan(orgId).then(function(billingPlan) {
-	console.log(billingPlan);
-});
-```
-**Example**  
-```js
-balena.models.billing.getPlan(orgId, function(error, billingPlan) {
-	if (error) throw error;
 	console.log(billingPlan);
 });
 ```
@@ -7546,13 +6297,6 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
-**Example**  
-```js
-balena.models.billing.getBillingInfo(orgId, function(error, billingInfo) {
-	if (error) throw error;
-	console.log(billingInfo);
-});
-```
 <a name="balena.models.billing.updateBillingInfo"></a>
 
 ##### billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Promise</code>
@@ -7571,13 +6315,6 @@ balena.models.billing.getBillingInfo(orgId, function(error, billingInfo) {
 **Example**  
 ```js
 balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }).then(function(billingInfo) {
-	console.log(billingInfo);
-});
-```
-**Example**  
-```js
-balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }, function(error, billingInfo) {
-	if (error) throw error;
 	console.log(billingInfo);
 });
 ```
@@ -7637,13 +6374,6 @@ balena.models.billing.changePlan(orgId, { billingCode: 'prototype-v2', cycle: 'a
 **Example**  
 ```js
 balena.models.billing.getInvoices(orgId).then(function(invoices) {
-	console.log(invoices);
-});
-```
-**Example**  
-```js
-balena.models.billing.getInvoices(orgId, function(error, invoices) {
-	if (error) throw error;
 	console.log(invoices);
 });
 ```
@@ -7728,16 +6458,6 @@ balena.auth.twoFactor.isEnabled().then(function(isEnabled) {
 	}
 });
 ```
-**Example**  
-```js
-balena.auth.twoFactor.isEnabled(function(error, isEnabled) {
-	if (error) throw error;
-
-	if (isEnabled) {
-		console.log('2FA is enabled for this account');
-	}
-});
-```
 <a name="balena.auth.twoFactor.isPassed"></a>
 
 ##### twoFactor.isPassed() ⇒ <code>Promise</code>
@@ -7748,16 +6468,6 @@ balena.auth.twoFactor.isEnabled(function(error, isEnabled) {
 **Example**  
 ```js
 balena.auth.twoFactor.isPassed().then(function(isPassed) {
-	if (isPassed) {
-		console.log('2FA challenge passed');
-	}
-});
-```
-**Example**  
-```js
-balena.auth.twoFactor.isPassed(function(error, isPassed) {
-	if (error) throw error;
-
 	if (isPassed) {
 		console.log('2FA challenge passed');
 	}
@@ -7785,13 +6495,6 @@ as it takes care of that as well.
 const token = balena.auth.twoFactor.verify('1234');
 balena.auth.loginWithToken(token);
 ```
-**Example**  
-```js
-balena.auth.twoFactor.verify('1234', function(error, token) {
-	if (error) throw error;
-	console.log(token);
-});
-```
 <a name="balena.auth.twoFactor.getSetupKey"></a>
 
 ##### twoFactor.getSetupKey() ⇒ <code>Promise</code>
@@ -7805,13 +6508,6 @@ Retrieves a setup key for enabling two factor authentication.
 ```js
 const setupKey = balena.auth.twoFactor.getSetupKey();
 console.log(setupKey);
-```
-**Example**  
-```js
-balena.auth.twoFactor.getSetupKey(function(error, setupKey) {
-	if (error) throw error;
-	console.log(setupKey);
-});
 ```
 <a name="balena.auth.twoFactor.enable"></a>
 
@@ -7832,13 +6528,6 @@ Enables two factor authentication.
 const token = balena.auth.twoFactor.enable('1234');
 balena.auth.loginWithToken(token);
 ```
-**Example**  
-```js
-balena.auth.twoFactor.enable('1234', function(error, token) {
-	if (error) throw error;
-	console.log(token);
-});
-```
 <a name="balena.auth.twoFactor.challenge"></a>
 
 ##### twoFactor.challenge(code) ⇒ <code>Promise</code>
@@ -7856,12 +6545,6 @@ as it takes care of saving the token and email as well.
 **Example**  
 ```js
 balena.auth.twoFactor.challenge('1234');
-```
-**Example**  
-```js
-balena.auth.twoFactor.challenge('1234', function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.auth.twoFactor.disable"></a>
 
@@ -7882,13 +6565,6 @@ Disables two factor authentication.
 const token = balena.auth.twoFactor.disable('1234');
 balena.auth.loginWithToken(token);
 ```
-**Example**  
-```js
-balena.auth.twoFactor.disable('1234', function(error, token) {
-	if (error) throw error;
-	console.log(token);
-});
-```
 <a name="balena.auth.whoami"></a>
 
 #### auth.whoami() ⇒ <code>Promise</code>
@@ -7901,18 +6577,6 @@ This will only work if you used [login](#balena.auth.login) to log in.
 **Example**  
 ```js
 balena.auth.whoami().then(function(username) {
-	if (!username) {
-		console.log('I\'m not logged in!');
-	} else {
-		console.log('My username is:', username);
-	}
-});
-```
-**Example**  
-```js
-balena.auth.whoami(function(error, username) {
-	if (error) throw error;
-
 	if (!username) {
 		console.log('I\'m not logged in!');
 	} else {
@@ -7946,13 +6610,6 @@ balena.auth.authenticate(credentials).then(function(token) {
 	console.log('My token is:', token);
 });
 ```
-**Example**  
-```js
-balena.auth.authenticate(credentials, function(error, token) {
-	if (error) throw error;
-	console.log('My token is:', token);
-});
-```
 <a name="balena.auth.login"></a>
 
 #### auth.login(credentials) ⇒ <code>Promise</code>
@@ -7972,12 +6629,6 @@ If the login is successful, the token is persisted between sessions.
 ```js
 balena.auth.login(credentials);
 ```
-**Example**  
-```js
-balena.auth.login(credentials, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.auth.loginWithToken"></a>
 
 #### auth.loginWithToken(authToken) ⇒ <code>Promise</code>
@@ -7995,12 +6646,6 @@ Login to balena with a session token or api key instead of with credentials.
 ```js
 balena.auth.loginWithToken(authToken);
 ```
-**Example**  
-```js
-balena.auth.loginWithToken(authToken, function(error) {
-	if (error) throw error;
-});
-```
 <a name="balena.auth.isLoggedIn"></a>
 
 #### auth.isLoggedIn() ⇒ <code>Promise</code>
@@ -8011,18 +6656,6 @@ balena.auth.loginWithToken(authToken, function(error) {
 **Example**  
 ```js
 balena.auth.isLoggedIn().then(function(isLoggedIn) {
-	if (isLoggedIn) {
-		console.log('I\'m in!');
-	} else {
-		console.log('Too bad!');
-	}
-});
-```
-**Example**  
-```js
-balena.auth.isLoggedIn(function(error, isLoggedIn) {
-	if (error) throw error;
-
 	if (isLoggedIn) {
 		console.log('I\'m in!');
 	} else {
@@ -8045,13 +6678,6 @@ balena.auth.getToken().then(function(token) {
 	console.log(token);
 });
 ```
-**Example**  
-```js
-balena.auth.getToken(function(error, token) {
-	if (error) throw error;
-	console.log(token);
-});
-```
 <a name="balena.auth.getUserId"></a>
 
 #### auth.getUserId() ⇒ <code>Promise</code>
@@ -8064,13 +6690,6 @@ This will only work if you used [login](#balena.auth.login) to log in.
 **Example**  
 ```js
 balena.auth.getUserId().then(function(userId) {
-	console.log(userId);
-});
-```
-**Example**  
-```js
-balena.auth.getUserId(function(error, userId) {
-	if (error) throw error;
 	console.log(userId);
 });
 ```
@@ -8089,13 +6708,6 @@ balena.auth.getUserActorId().then(function(userActorId) {
 	console.log(userActorId);
 });
 ```
-**Example**  
-```js
-balena.auth.getUserActorId(function(error, userActorId) {
-	if (error) throw error;
-	console.log(userActorId);
-});
-```
 <a name="balena.auth.getEmail"></a>
 
 #### auth.getEmail() ⇒ <code>Promise</code>
@@ -8111,13 +6723,6 @@ balena.auth.getEmail().then(function(email) {
 	console.log(email);
 });
 ```
-**Example**  
-```js
-balena.auth.getEmail(function(error, email) {
-	if (error) throw error;
-	console.log(email);
-});
-```
 <a name="balena.auth.logout"></a>
 
 #### auth.logout() ⇒ <code>Promise</code>
@@ -8127,12 +6732,6 @@ balena.auth.getEmail(function(error, email) {
 **Example**  
 ```js
 balena.auth.logout();
-```
-**Example**  
-```js
-balena.auth.logout(function(error) {
-	if (error) throw error;
-});
 ```
 <a name="balena.auth.register"></a>
 
@@ -8155,16 +6754,6 @@ balena.auth.register({
 	email: 'johndoe@gmail.com',
 	password: 'secret'
 }).then(function(token) {
-	console.log(token);
-});
-```
-**Example**  
-```js
-balena.auth.register({
-	email: 'johndoe@gmail.com',
-	password: 'secret'
-}, function(error, token) {
-	if (error) throw error;
 	console.log(token);
 });
 ```
@@ -8251,16 +6840,6 @@ balena.logs.subscribe(123).then(function(logs) {
 	});
 });
 ```
-**Example**  
-```js
-balena.logs.subscribe('7cf02a6', function(error, logs) {
-	if (error) throw error;
-
-	logs.on('line', function(line) {
-		console.log(line);
-	});
-});
-```
 <a name="balena.logs.history"></a>
 
 #### logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
@@ -8288,16 +6867,6 @@ balena.logs.history('7cf02a6').then(function(lines) {
 **Example**  
 ```js
 balena.logs.history(123).then(function(lines) {
-	lines.forEach(function(line) {
-		console.log(line);
-	});
-});
-```
-**Example**  
-```js
-balena.logs.history('7cf02a6', { count: 20 }, function(error, lines) {
-	if (error) throw error;
-
 	lines.forEach(function(line) {
 		console.log(line);
 	});
@@ -8377,13 +6946,6 @@ balena.settings.get('apiUrl').then(function(apiUrl) {
 	console.log(apiUrl);
 });
 ```
-**Example**  
-```js
-balena.settings.get('apiUrl', function(error, apiUrl) {
-	if (error) throw error;
-	console.log(apiUrl);
-});
-```
 <a name="balena.settings.getAll"></a>
 
 #### settings.getAll() ⇒ <code>Promise</code>
@@ -8394,13 +6956,6 @@ balena.settings.get('apiUrl', function(error, apiUrl) {
 **Example**  
 ```js
 balena.settings.getAll().then(function(settings) {
-	console.log(settings);
-});
-```
-**Example**  
-```js
-balena.settings.getAll(function(error, settings) {
-	if (error) throw error;
 	console.log(settings);
 });
 ```

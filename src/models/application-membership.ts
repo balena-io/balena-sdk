@@ -86,11 +86,6 @@ const getApplicationMembershipModel = function (
 		 * balena.models.application.membership.get(5).then(function(memberships) {
 		 * 	console.log(memberships);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.get(5, function(error, memberships) {
-		 * 	console.log(memberships);
-		 * });
 		 */
 		async get(
 			membershipId: ResourceKey,
@@ -141,11 +136,6 @@ const getApplicationMembershipModel = function (
 		 *
 		 * @example
 		 * balena.models.application.membership.getAllByApplication(123).then(function(memberships) {
-		 * 	console.log(memberships);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.getAllByApplication(123, function(error, memberships) {
 		 * 	console.log(memberships);
 		 * });
 		 */
@@ -249,11 +239,6 @@ const getApplicationMembershipModel = function (
 		 * balena.models.application.membership.create({ application: "myApp", username: "user123", roleName: "member" }).then(function(membership) {
 		 * 	console.log(membership);
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.create({ application: 53, username: "user123" }, function(error, membership) {
-		 * 	console.log(membership);
-		 * });
 		 */
 		async create({
 			application,
@@ -309,11 +294,6 @@ const getApplicationMembershipModel = function (
 		 * }, "member").then(function() {
 		 * 	console.log('OK');
 		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.changeRole(123, "administrator", function(error) {
-		 * 	console.log('OK');
-		 * });
 		 */
 		async changeRole(
 			idOrUniqueKey: ResourceKey,
@@ -346,12 +326,6 @@ const getApplicationMembershipModel = function (
 		 * balena.models.application.membership.remove({
 		 * 	user: 123,
 		 * 	is_member_of__application: 125,
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.membership.remove(123,function(error) {
-		 * 	if (error) throw error;
-		 * 	...
 		 * });
 		 */
 		async remove(idOrUniqueKey: ResourceKey): Promise<void> {

@@ -105,12 +105,6 @@ const getReleaseModel = function (
 	 * balena.models.release.get({application: 456, raw_version: '0.0.0'}).then(function(release) {
 	 * 	console.log(release);
 	 * });
-	 *
-	 * @example
-	 * balena.models.release.get(123, function(error, release) {
-	 * 	if (error) throw error;
-	 * 	console.log(release);
-	 * });
 	 */
 	async function get(
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
@@ -214,12 +208,6 @@ const getReleaseModel = function (
 	 * .then(function(release) {
 	 * 	console.log(release.images[0].build_log);
 	 * });
-	 *
-	 * @example
-	 * balena.models.release.getWithImageDetails(123, function(error, release) {
-	 * 	if (error) throw error;
-	 * 	console.log(release);
-	 * });
 	 */
 	async function getWithImageDetails(
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
@@ -301,12 +289,6 @@ const getReleaseModel = function (
 	 * balena.models.release.getAllByApplication(123).then(function(releases) {
 	 * 	console.log(releases);
 	 * });
-	 *
-	 * @example
-	 * balena.models.release.getAllByApplication('myorganization/myapp', function(error, releases) {
-	 * 	if (error) throw error;
-	 * 	console.log(releases);
-	 * });
 	 */
 	async function getAllByApplication(
 		slugOrUuidOrId: string | number,
@@ -350,12 +332,6 @@ const getReleaseModel = function (
 	 * balena.models.release.getLatestByApplication(123).then(function(releases) {
 	 * 	console.log(releases);
 	 * });
-	 *
-	 * @example
-	 * balena.models.release.getLatestByApplication('myorganization/myapp', function(error, releases) {
-	 * 	if (error) throw error;
-	 * 	console.log(releases);
-	 * });
 	 */
 	async function getLatestByApplication(
 		slugOrUuidOrId: string | number,
@@ -397,12 +373,6 @@ const getReleaseModel = function (
 	 *
 	 * @example
 	 * balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }).then(function(releaseId) {
-	 * 	console.log(releaseId);
-	 * });
-	 *
-	 * @example
-	 * balena.models.release.createFromUrl('myorganization/myapp', { url: 'https://github.com/balena-io-projects/simple-server-node/archive/v1.0.0.tar.gz' }, function(error, releaseId) {
-	 * 	if (error) throw error;
 	 * 	console.log(releaseId);
 	 * });
 	 */
@@ -619,12 +589,6 @@ const getReleaseModel = function (
 		 * balena.models.release.tags.getAllByApplication(999999).then(function(tags) {
 		 * 	console.log(tags);
 		 * });
-		 *
-		 * @example
-		 * balena.models.release.tags.getAllByApplication('myorganization/myapp', function(error, tags) {
-		 * 	if (error) throw error;
-		 * 	console.log(tags)
-		 * });
 		 */
 		async getAllByApplication(
 			slugOrUuidOrId: string | number,
@@ -680,12 +644,6 @@ const getReleaseModel = function (
 		 * balena.models.release.tags.getAllByRelease({application: 456, rawVersion: '0.0.0'}).then(function(tags) {
 		 * 	console.log(tags);
 		 * });
-		 *
-		 * @example
-		 * balena.models.release.tags.getAllByRelease(123, function(error, tags) {
-		 * 	if (error) throw error;
-		 * 	console.log(tags)
-		 * });
 		 */
 		async getAllByRelease(
 			commitOrIdOrRawVersion:
@@ -729,11 +687,6 @@ const getReleaseModel = function (
 		 *
 		 * @example
 		 * balena.models.release.tags.set({application: 456, rawVersion: '0.0.0'}, 'EDITOR', 'vim');
-		 *
-		 * @example
-		 * balena.models.release.tags.set(123, 'EDITOR', 'vim', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		set: tagsModel.set,
 
@@ -756,11 +709,6 @@ const getReleaseModel = function (
 		 *
 		 * @example
 		 * balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDITOR');
-		 *
-		 * @example
-		 * balena.models.release.tags.remove(123, 'EDITOR', function(error) {
-		 * 	if (error) throw error;
-		 * });
 		 */
 		remove: tagsModel.remove,
 	};

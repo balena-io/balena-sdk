@@ -39,15 +39,6 @@ const get2fa = function (
 	 * 		console.log('2FA is enabled for this account');
 	 * 	}
 	 * });
-	 *
-	 * @example
-	 * balena.auth.twoFactor.isEnabled(function(error, isEnabled) {
-	 * 	if (error) throw error;
-	 *
-	 * 	if (isEnabled) {
-	 * 		console.log('2FA is enabled for this account');
-	 * 	}
-	 * });
 	 */
 	async function isEnabled(): Promise<boolean> {
 		const twoFactorRequired = await auth.needs2FA();
@@ -66,15 +57,6 @@ const get2fa = function (
 	 *
 	 * @example
 	 * balena.auth.twoFactor.isPassed().then(function(isPassed) {
-	 * 	if (isPassed) {
-	 * 		console.log('2FA challenge passed');
-	 * 	}
-	 * });
-	 *
-	 * @example
-	 * balena.auth.twoFactor.isPassed(function(error, isPassed) {
-	 * 	if (error) throw error;
-	 *
 	 * 	if (isPassed) {
 	 * 		console.log('2FA challenge passed');
 	 * 	}
@@ -104,12 +86,6 @@ const get2fa = function (
 	 * @example
 	 * const token = balena.auth.twoFactor.verify('1234');
 	 * balena.auth.loginWithToken(token);
-	 *
-	 * @example
-	 * balena.auth.twoFactor.verify('1234', function(error, token) {
-	 * 	if (error) throw error;
-	 * 	console.log(token);
-	 * });
 	 */
 	async function verify(code: string): Promise<string> {
 		const { body: token } = await request.send<string>({
@@ -136,12 +112,6 @@ const get2fa = function (
 	 * @example
 	 * const setupKey = balena.auth.twoFactor.getSetupKey();
 	 * console.log(setupKey);
-	 *
-	 * @example
-	 * balena.auth.twoFactor.getSetupKey(function(error, setupKey) {
-	 * 	if (error) throw error;
-	 * 	console.log(setupKey);
-	 * });
 	 */
 	async function getSetupKey(): Promise<string> {
 		const { body: setupKey } = await request.send<string>({
@@ -168,12 +138,6 @@ const get2fa = function (
 	 * @example
 	 * const token = balena.auth.twoFactor.enable('1234');
 	 * balena.auth.loginWithToken(token);
-	 *
-	 * @example
-	 * balena.auth.twoFactor.enable('1234', function(error, token) {
-	 * 	if (error) throw error;
-	 * 	console.log(token);
-	 * });
 	 */
 	const enable = async (code: string): Promise<string> => {
 		const token = await verify(code);
@@ -196,11 +160,6 @@ const get2fa = function (
 	 *
 	 * @example
 	 * balena.auth.twoFactor.challenge('1234');
-	 *
-	 * @example
-	 * balena.auth.twoFactor.challenge('1234', function(error) {
-	 * 	if (error) throw error;
-	 * });
 	 */
 	async function challenge(code: string): Promise<void> {
 		const token = await verify(code);
@@ -223,12 +182,6 @@ const get2fa = function (
 	 * @example
 	 * const token = balena.auth.twoFactor.disable('1234');
 	 * balena.auth.loginWithToken(token);
-	 *
-	 * @example
-	 * balena.auth.twoFactor.disable('1234', function(error, token) {
-	 * 	if (error) throw error;
-	 * 	console.log(token);
-	 * });
 	 */
 	async function disable(password: string): Promise<string> {
 		const { body: token } = await request.send<string>({
