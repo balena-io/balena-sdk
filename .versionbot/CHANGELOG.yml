@@ -1,4 +1,16 @@
 - commits:
+    - subject: Switch to a stricter request limiting queuing mode
+      hash: 4302addfba8a773f1b528d4e12e4dd070593d149
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.1.2
+  title: ""
+  date: 2023-05-25T15:40:23.870Z
+- commits:
     - subject: Drop the callback examples from the docs
       hash: 5d9bb410c83cbf2c0a8f031ab746984ffe912b5a
       body: ""
