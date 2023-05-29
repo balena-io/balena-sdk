@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add support to short uuid on device.serviceVar.set
+      hash: 7b38ccb080e1d0028e6d9730738722f2122b0854
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+  version: 17.1.3
+  title: ""
+  date: 2023-05-29T14:17:14.708Z
+- commits:
     - subject: Switch to a stricter request limiting queuing mode
       hash: 4302addfba8a773f1b528d4e12e4dd070593d149
       body: ""
