@@ -2471,6 +2471,22 @@ describe('Device Model', function () {
 						),
 					]);
 				});
+
+				it('can set and then retrieve a device service var by short uuid', async function () {
+					const shortUUID = this.device['uuid'].slice(0, 6);
+					await varModel.set(
+						shortUUID,
+						this.webService.id,
+						'EDITOR_BY_SHORT_UUID',
+						'vim',
+					);
+					const result = await varModel.get(
+						shortUUID,
+						this.webService.id,
+						'EDITOR_BY_SHORT_UUID',
+					);
+					return expect(result).to.equal('vim');
+				});
 			});
 
 			describe('balena.models.device.isTrackingApplicationRelease()', function () {

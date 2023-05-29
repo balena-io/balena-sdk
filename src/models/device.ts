@@ -2898,18 +2898,24 @@ const getDeviceModel = function (
 			): Promise<void> {
 				value = String(value);
 
-				const deviceFilter = isId(uuidOrId)
-					? uuidOrId
-					: {
-							$any: {
-								$alias: 'd',
-								$expr: {
-									d: {
-										uuid: uuidOrId,
-									},
+				let deviceFilter;
+				if (isId(uuidOrId)) {
+					deviceFilter = uuidOrId;
+				} else if (isFullUuid(uuidOrId)) {
+					deviceFilter = {
+						$any: {
+							$alias: 'd',
+							$expr: {
+								d: {
+									uuid: uuidOrId,
 								},
 							},
-					  };
+						},
+					};
+				} else {
+					const device = await exports.get(uuidOrId, { $select: 'id' });
+					deviceFilter = device.id;
+				}
 
 				const serviceInstalls = await pine.get({
 					resource: 'service_install',
