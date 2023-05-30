@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { timeSuite } from '../util';
+import { authenticator } from 'otplib';
 
 import {
 	balena,
@@ -7,6 +8,7 @@ import {
 	credentials,
 	givenLoggedInUser,
 	givenLoggedInUserWithApiKey,
+	loginUserWith2FA,
 } from './setup';
 
 describe('SDK authentication', function () {
@@ -321,6 +323,54 @@ describe('SDK authentication', function () {
 					'code',
 					'BalenaNotLoggedIn',
 				);
+			});
+		});
+	});
+
+	describe('given a user without 2FA', function () {
+		givenLoggedInUser(before);
+
+		describe('balena.auth.twoFactor.isEnabled()', function () {
+			it('should not be enabled', async () => {
+				expect(await balena.auth.twoFactor.isEnabled()).to.be.false;
+			});
+		});
+
+		describe('balena.auth.twoFactor.isPassed()', function () {
+			it('should be true', async () => {
+				expect(await balena.auth.twoFactor.isPassed()).to.be.true;
+			});
+		});
+	});
+
+	describe('given a user with 2FA', function () {
+		const has2FAAccount = credentials.twoFactor.email != null;
+
+		const given2FAUserIt = (description, testFn) => {
+			const $it = has2FAAccount ? it : it.skip;
+			$it(description, testFn);
+		};
+
+		before(async () => {
+			if (!has2FAAccount) {
+				return;
+			}
+			await loginUserWith2FA();
+		});
+
+		describe('balena.auth.twoFactor.isEnabled()', function () {
+			given2FAUserIt('should be true', async () => {
+				expect(await balena.auth.twoFactor.isEnabled()).to.be.true;
+			});
+		});
+		describe('balena.auth.twoFactor.isPassed()', function () {
+			given2FAUserIt('should false when 2FA is not passed', async () => {
+				expect(await balena.auth.twoFactor.isPassed()).to.be.false;
+			});
+			given2FAUserIt('should be true when 2FA is passed', async () => {
+				const code = authenticator.generate(credentials.twoFactor.secret);
+				await balena.auth.twoFactor.challenge(code);
+				expect(await balena.auth.twoFactor.isPassed()).to.be.true;
 			});
 		});
 	});

@@ -74,6 +74,11 @@ const buildCredentials = function () {
 			password: env.TEST_REGISTER_PASSWORD,
 			username: env.TEST_REGISTER_USERNAME,
 		},
+		twoFactor: {
+			email: env.TEST_2FA_EMAIL,
+			password: env.TEST_2FA_PASSWORD,
+			secret: env.TEST_2FA_SECRET,
+		},
 	};
 	if (
 		// TODO: this should include the paid account eventually as well
@@ -185,6 +190,13 @@ export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
 	afterFn(() => resetUser());
+}
+
+export function loginUserWith2FA() {
+	return balena.auth.login({
+		email: credentials.twoFactor.email,
+		password: credentials.twoFactor.password,
+	});
 }
 
 export function loginPaidUser() {

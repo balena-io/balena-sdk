@@ -41,8 +41,8 @@ const get2fa = function (
 	 * });
 	 */
 	async function isEnabled(): Promise<boolean> {
-		const twoFactorRequired = await auth.needs2FA();
-		return twoFactorRequired != null;
+		const twoFactorStatus = await auth.get2FAStatus();
+		return twoFactorStatus !== 'not_required';
 	}
 
 	/**
