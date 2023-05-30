@@ -1,4 +1,73 @@
 - commits:
+    - subject: Add 2fa tests
+      hash: 969559251e183c0cba203404e6a4642c64e4a6b4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+    - subject: Fix auth.twoFactor.isEnabled() regression returning always true
+      hash: 77c194aa66c17287f88ecc6d488dbace759d4c1a
+      body: |
+        Update balena-auth from 4.1.0 to 4.2.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Add a get2FAStatus() method
+              hash: 266c8bc9b12d13fd96ce0ae6b12d7767a27030d8
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-4.2.0
+          title: ""
+          date: 2023-05-25T12:06:34.551Z
+        - commits:
+            - subject: Fix async tests not waiting for the result
+              hash: 027af56893911b7b6a95c6743eb90cae86cc3f86
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-4.1.3
+          title: ""
+          date: 2023-05-25T08:28:54.576Z
+        - commits:
+            - subject: Delete redundant .resinci.yml
+              hash: eca476bec2b6ddd9c41809f3bca4c2c2f776fe69
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-4.1.2
+          title: ""
+          date: 2022-09-26T12:39:48.984Z
+        - commits:
+            - subject: Replace balenaCI with flowzone
+              hash: 349377a015dcbc7d963b950dc63ba2b2a03ad6a7
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-4.1.1
+          title: ""
+          date: 2022-09-22T22:01:40.204Z
+  version: 17.1.4
+  title: ""
+  date: 2023-05-30T06:58:26.026Z
+- commits:
     - subject: Add support to short uuid on device.serviceVar.set
       hash: 7b38ccb080e1d0028e6d9730738722f2122b0854
       body: ""
