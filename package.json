@@ -114,7 +114,7 @@
   "dependencies": {
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
-    "@types/node": "^14.0.0",
+    "@types/node": "^16.18.34",
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^4.2.0",
     "balena-errors": "^4.7.3",
