@@ -1,4 +1,16 @@
 - commits:
+    - subject: Access other models internally via the shared current sdk instance
+      hash: 4ea321fa304c47ef8bfa474adbd45a430f6b6b40
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.2.2
+  title: ""
+  date: 2023-06-01T15:12:15.596Z
+- commits:
     - subject: Convert the remaining .js tests to .ts
       hash: c4cd34fbeeb8815eba2684d071df313d14689238
       body: ""
