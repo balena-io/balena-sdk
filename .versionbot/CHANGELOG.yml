@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert the remaining .js tests to .ts
+      hash: c4cd34fbeeb8815eba2684d071df313d14689238
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.2.1
+  title: ""
+  date: 2023-06-01T13:02:29.958Z
+- commits:
     - subject: Extends batch device actions to accept arrays of full UUIDs
       hash: 3344ea5c83d0a3698293d4e989d29397fcd6a59b
       body: ""
