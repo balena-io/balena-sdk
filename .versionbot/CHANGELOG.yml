@@ -1,4 +1,26 @@
 - commits:
+    - subject: Extends batch device actions to accept arrays of full UUIDs
+      hash: 3344ea5c83d0a3698293d4e989d29397fcd6a59b
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "device.startOsUpdate: Add support for providing an array of UUIDs"
+      hash: 2aa208c0b086c6885948672ccd068458c7f10139
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Enpal.20HUP
+        see: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Enpal.20HUP
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.2.0
+  title: ""
+  date: 2023-06-01T10:37:18.645Z
+- commits:
     - subject: Add 2fa tests
       hash: 969559251e183c0cba203404e6a4642c64e4a6b4
       body: ""
