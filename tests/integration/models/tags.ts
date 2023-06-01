@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { Dictionary } from 'pinejs-client-core';
+import type { Dictionary } from '../../../typings/utils';
 import { getFieldLabel, getParam } from '../utils';
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>

@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
+// tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
+import type * as BalenaSdk from '../../..';
 import { delay, timeSuite } from '../../util';
 import { getFieldLabel, getParam } from '../utils';
 
@@ -18,6 +20,8 @@ import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
 } from './tags';
+import type * as tagsHelper from './tags';
+import type { Dictionary } from '../../../typings/utils';
 
 const uniquePropertyNames = [
 	'id',
@@ -32,7 +36,7 @@ describe('Release Model', function () {
 	describe('given an application with no releases', function () {
 		givenAnApplication(before);
 
-		let ctx = null;
+		let ctx: Mocha.Context;
 
 		before(function () {
 			ctx = this;
@@ -114,7 +118,7 @@ describe('Release Model', function () {
 				return;
 			}
 
-			const releaseIds = [];
+			const releaseIds: number[] = [];
 
 			const TEST_SOURCE_URL =
 				'https://github.com/balena-io-examples/balena-node-hello-world/archive/v1.0.0.tar.gz';
@@ -258,7 +262,7 @@ describe('Release Model', function () {
 		});
 
 		describe(`given ${uniquePropertyNames.length} draft releases`, function () {
-			const testReleaseByField = {};
+			const testReleaseByField: Dictionary<BalenaSdk.Release> = {};
 
 			before(async function () {
 				const userId = await balena.auth.getUserId();
@@ -296,7 +300,7 @@ describe('Release Model', function () {
 
 			describe('balena.model.release.finalize()', function () {
 				uniquePropertyNames
-					.map((key) => [key, getFieldLabel(key)])
+					.map((key) => [key, getFieldLabel(key)] as const)
 					.forEach(([field, fieldLabel], index) => {
 						it(`should finalize a release by ${fieldLabel}`, async () => {
 							const draftRelease = testReleaseByField[fieldLabel];
@@ -332,7 +336,7 @@ describe('Release Model', function () {
 
 			describe('balena.model.release.setIsInvalidated()', function () {
 				uniquePropertyNames
-					.map((key) => [key, getFieldLabel(key)])
+					.map((key) => [key, getFieldLabel(key)] as const)
 					.forEach(([field, fieldLabel]) => {
 						it(`should invalidate a release by ${fieldLabel}`, async () => {
 							const release = testReleaseByField[fieldLabel];
@@ -373,7 +377,7 @@ describe('Release Model', function () {
 	describe('given a multicontainer application with two releases', function () {
 		givenMulticontainerApplication(before);
 
-		let ctx = null;
+		let ctx: Mocha.Context;
 
 		before(function () {
 			ctx = this;
@@ -563,7 +567,7 @@ describe('Release Model', function () {
 					});
 					expect(updatedRelease).to.deep.match({
 						id: release.id,
-						note: note,
+						note,
 					});
 				});
 			});
@@ -592,14 +596,14 @@ describe('Release Model', function () {
 		});
 
 		describe('balena.models.release.tags', function () {
-			const appTagTestOptions = {
+			const appTagTestOptions: tagsHelper.Options = {
 				model: balena.models.release.tags,
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'application',
 				uniquePropertyNames: applicationRetrievalFields,
 			};
 
-			const releaseTagTestOptions = {
+			const releaseTagTestOptions: tagsHelper.Options = {
 				model: balena.models.release.tags,
 				modelNamespace: 'balena.models.release.tags',
 				resourceName: 'release',
