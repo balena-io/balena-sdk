@@ -16,13 +16,10 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type * as BalenaSdk from '..';
-import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type { InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
 
-const getKeyModel = function (
-	deps: InjectedDependenciesParam,
-	_opts: InjectedOptionsParam,
-) {
+const getKeyModel = function (deps: InjectedDependenciesParam) {
 	const {
 		pine,
 		// Do not destructure sub-modules, to allow lazy loading only when needed.

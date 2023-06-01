@@ -44,14 +44,11 @@ const getReleaseModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { pine } = deps;
-	const applicationModel = once(() =>
-		(require('./application') as typeof import('./application')).default(
-			deps,
-			opts,
-		),
-	);
-
+	const {
+		pine,
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
+	} = deps;
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 	const builderHelper = once(() => {
@@ -128,7 +125,7 @@ const getReleaseModel = function (
 			let $filter;
 			if (typeof commitOrIdOrRawVersion === 'object') {
 				const { rawVersion, application } = commitOrIdOrRawVersion;
-				const { id } = await applicationModel().get(application, {
+				const { id } = await sdkInstance.models.application.get(application, {
 					$select: 'id',
 				});
 				$filter = {
@@ -294,7 +291,7 @@ const getReleaseModel = function (
 		slugOrUuidOrId: string | number,
 		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
 	): Promise<BalenaSdk.Release[]> {
-		const { id } = await applicationModel().get(slugOrUuidOrId, {
+		const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 			$select: 'id',
 		});
 		return await pine.get({
@@ -389,10 +386,11 @@ const getReleaseModel = function (
 			},
 		} as const;
 
-		const { app_name, organization } = (await applicationModel().get(
-			slugOrUuidOrId,
-			appOptions,
-		)) as PineTypedResult<Application, typeof appOptions>;
+		const { app_name, organization } =
+			(await sdkInstance.models.application.get(
+				slugOrUuidOrId,
+				appOptions,
+			)) as PineTypedResult<Application, typeof appOptions>;
 		return await builderHelper().buildFromUrl(
 			organization[0].handle,
 			app_name,
@@ -594,7 +592,7 @@ const getReleaseModel = function (
 			slugOrUuidOrId: string | number,
 			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
 		): Promise<BalenaSdk.ReleaseTag[]> {
-			const { id } = await applicationModel().get(slugOrUuidOrId, {
+			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
 			return await tagsModel.getAll(

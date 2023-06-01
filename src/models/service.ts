@@ -15,27 +15,15 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import once = require('lodash/once');
-import type {
-	PineOptions,
-	InjectedDependenciesParam,
-	InjectedOptionsParam,
-} from '..';
+import type { PineOptions, InjectedDependenciesParam } from '..';
 import type { Service, ServiceEnvironmentVariable } from '../types/models';
 import { mergePineOptions } from '../util';
 
-const getServiceModel = (
-	deps: InjectedDependenciesParam,
-	opts: InjectedOptionsParam,
-) => {
-	const { pine } = deps;
-	const applicationModel = once(() =>
-		(require('./application') as typeof import('./application')).default(
-			deps,
-			opts,
-		),
-	);
-
+const getServiceModel = ({
+	pine,
+	// Do not destructure sub-modules, to allow lazy loading only when needed.
+	sdkInstance,
+}: InjectedDependenciesParam) => {
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
@@ -91,7 +79,7 @@ const getServiceModel = (
 			slugOrUuidOrId: string | number,
 			options: PineOptions<Service> = {},
 		): Promise<Service[]> {
-			const { id } = await applicationModel().get(slugOrUuidOrId, {
+			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
 			return pine.get({
@@ -150,9 +138,12 @@ const getServiceModel = (
 				slugOrUuidOrId: string | number,
 				options: PineOptions<ServiceEnvironmentVariable> = {},
 			): Promise<ServiceEnvironmentVariable[]> {
-				const { id } = await applicationModel().get(slugOrUuidOrId, {
-					$select: 'id',
-				});
+				const { id } = await sdkInstance.models.application.get(
+					slugOrUuidOrId,
+					{
+						$select: 'id',
+					},
+				);
 				return varModel.getAll(
 					mergePineOptions(
 						{

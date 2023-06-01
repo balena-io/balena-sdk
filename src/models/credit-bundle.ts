@@ -14,32 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import once = require('lodash/once');
 import type {
 	CreditBundle,
 	InjectedDependenciesParam,
-	InjectedOptionsParam,
 	PineOptions,
 	PinePostResult,
 } from '..';
 import { SubmitBody } from '../../typings/pinejs-client-core';
 import { mergePineOptions } from '../util';
 
-const getCreditBundleModel = function (
-	deps: InjectedDependenciesParam,
-	opts: InjectedOptionsParam,
-) {
-	const { pine } = deps;
-
-	const organizationModel = once(() =>
-		(require('./organization') as typeof import('./organization')).default(
-			deps,
-			opts,
-		),
-	);
-
+const getCreditBundleModel = function ({
+	pine,
+	// Do not destructure sub-modules, to allow lazy loading only when needed.
+	sdkInstance,
+}: InjectedDependenciesParam) {
 	const getOrgId = async (organization: string | number): Promise<number> => {
-		const { id } = await organizationModel().get(organization, {
+		const { id } = await sdkInstance.models.organization.get(organization, {
 			$select: 'id',
 		});
 		return id;

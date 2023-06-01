@@ -103,6 +103,7 @@ export type {
 } from './logs';
 
 export interface InjectedDependenciesParam {
+	// Do not destructure sub-modules, to allow lazy loading only when needed.
 	sdkInstance: BalenaSDK;
 	settings: {
 		get(key: string): string;

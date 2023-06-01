@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import once = require('lodash/once');
 import * as errors from 'balena-errors';
 
 import type * as BalenaSdk from '..';
@@ -21,21 +20,14 @@ import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { mergePineOptions } from '../util';
 
 const getApiKeysModel = function (
-	deps: InjectedDependenciesParam,
-	opts: InjectedOptionsParam,
+	{
+		pine,
+		request,
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
+	}: InjectedDependenciesParam,
+	{ apiUrl }: InjectedOptionsParam,
 ) {
-	const applicationModel = once(() =>
-		(require('./application') as typeof import('./application')).default(
-			deps,
-			opts,
-		),
-	);
-	const deviceModel = once(() =>
-		(require('./device') as typeof import('./device')).default(deps, opts),
-	);
-
-	const { pine, request, sdkInstance } = deps;
-	const { apiUrl } = opts;
 	const exports = {
 		/**
 		 * @summary Creates a new user API key
@@ -184,7 +176,7 @@ const getApiKeysModel = function (
 			const appOpts = {
 				$select: 'actor' as const,
 			};
-			const { actor } = (await applicationModel().get(
+			const { actor } = (await sdkInstance.models.application.get(
 				slugOrUuidOrId,
 				appOpts,
 			)) as BalenaSdk.PineTypedResult<BalenaSdk.Application, typeof appOpts>;
@@ -225,7 +217,7 @@ const getApiKeysModel = function (
 			const deviceOpts = {
 				$select: 'actor' as const,
 			};
-			const { actor } = (await deviceModel().get(
+			const { actor } = (await sdkInstance.models.device.get(
 				uuidOrId,
 				deviceOpts,
 			)) as BalenaSdk.PineTypedResult<BalenaSdk.Device, typeof deviceOpts>;
