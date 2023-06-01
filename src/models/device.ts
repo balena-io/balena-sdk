@@ -51,9 +51,8 @@ import {
 	isFullUuid,
 	mergePineOptions,
 	treatAsMissingDevice,
+	limitedMap,
 } from '../util';
-
-import { toWritable } from '../util/types';
 
 import {
 	getDeviceOsSemverWithVariant,
@@ -79,7 +78,11 @@ import type {
 	SubmitBody,
 	SelectableProps,
 } from '../../typings/pinejs-client-core';
-import type { AtLeast } from '../../typings/utils';
+import type {
+	AtLeast,
+	Dictionary,
+	ResolvableReturnType,
+} from '../../typings/utils';
 import type { DeviceType } from '../types/models';
 
 import subDays from 'date-fns/subDays';
@@ -279,11 +282,11 @@ const getDeviceModel = function (
 	};
 
 	const set = async (
-		uuidOrIdOrIds: string | number | number[],
+		uuidOrIdOrArray: string | string[] | number | number[],
 		body: SubmitBody<Device>,
 	): Promise<void> => {
 		await batchDeviceOperation()({
-			uuidOrIdOrIds,
+			uuidOrIdOrArray,
 			fn: async (devices) => {
 				await pine.patch<Device>({
 					resource: 'device',
@@ -335,6 +338,94 @@ const getDeviceModel = function (
 			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
 		});
 		return devices.map(addExtraInfo) as Device[];
+	}
+
+	async function startOsUpdate(
+		uuidOrUuids: string,
+		targetOsVersion: string,
+	): Promise<OsUpdateActionResult>;
+	async function startOsUpdate(
+		uuidOrUuids: string[],
+		targetOsVersion: string,
+	): Promise<Dictionary<OsUpdateActionResult>>;
+	async function startOsUpdate(
+		uuidOrUuids: string | string[],
+		targetOsVersion: string,
+	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
+		if (!targetOsVersion) {
+			throw new errors.BalenaInvalidParameterError(
+				'targetOsVersion',
+				targetOsVersion,
+			);
+		}
+
+		const getDeviceType = memoizee(
+			async (deviceTypeId: number) =>
+				await sdkInstance.models.deviceType.get(deviceTypeId, {
+					$select: 'slug',
+				}),
+			{ primitive: true, promise: true },
+		);
+		const getAvailableOsVersions = memoizee(
+			async (slug: string) =>
+				await sdkInstance.models.os.getAvailableOsVersions(slug),
+			{ primitive: true, promise: true },
+		);
+
+		const osUpdateHelper = await getOsUpdateHelper();
+		const results: Dictionary<
+			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
+		> = {};
+
+		await batchDeviceOperation()({
+			uuidOrIdOrArray: uuidOrUuids,
+			options: {
+				$select: [
+					'uuid',
+					'is_online',
+					'os_version',
+					'supervisor_version',
+					'os_variant',
+				],
+			},
+			groupByNavigationPoperty: 'is_of__device_type',
+			fn: async (devices, deviceTypeId) => {
+				const dt = await getDeviceType(deviceTypeId);
+				for (const device of devices) {
+					// this will throw an error if the action isn't available
+					exports._checkOsUpdateTarget(
+						{
+							...device,
+							is_of__device_type: [dt],
+						},
+						targetOsVersion,
+					);
+
+					const osVersions = await getAvailableOsVersions(dt.slug);
+
+					if (
+						!osVersions.some(
+							(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
+						)
+					) {
+						throw new errors.BalenaInvalidParameterError(
+							'targetOsVersion',
+							targetOsVersion,
+						);
+					}
+				}
+				await limitedMap(devices, async (device) => {
+					results[device.uuid] = await osUpdateHelper.startOsUpdate(
+						device.uuid,
+						targetOsVersion,
+					);
+				});
+			},
+		});
+		if (Array.isArray(uuidOrUuids)) {
+			return results;
+		}
+		return results[uuidOrUuids];
 	}
 
 	const exports = {
@@ -877,7 +968,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -887,10 +978,10 @@ const getDeviceModel = function (
 		 * balena.models.device.remove(123);
 		 */
 		remove: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				fn: async (devices) => {
 					await pine.delete({
 						resource: 'device',
@@ -911,7 +1002,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -921,9 +1012,9 @@ const getDeviceModel = function (
 		 * balena.models.device.deactivate(123);
 		 */
 		deactivate: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_active: false,
 			});
 		},
@@ -962,7 +1053,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String} note - the note
 		 *
 		 * @returns {Promise}
@@ -974,10 +1065,10 @@ const getDeviceModel = function (
 		 * balena.models.device.setNote(123, 'My useful note');
 		 */
 		setNote: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			note: string,
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, { note });
+			await set(uuidOrIdOrArray, { note });
 		},
 
 		/**
@@ -987,7 +1078,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {Object} location - the location ({ latitude: 123, longitude: 456 })
 		 *
 		 * @returns {Promise}
@@ -999,10 +1090,10 @@ const getDeviceModel = function (
 		 * balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 		 */
 		setCustomLocation: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			location: { latitude: string | number; longitude: string | number },
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				custom_latitude: String(location.latitude),
 				custom_longitude: String(location.longitude),
 			});
@@ -1015,7 +1106,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 *
 		 * @returns {Promise}
 		 *
@@ -1026,9 +1117,9 @@ const getDeviceModel = function (
 		 * balena.models.device.unsetCustomLocation(123);
 		 */
 		unsetCustomLocation: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await exports.setCustomLocation(uuidOrIdOrIds, {
+			await exports.setCustomLocation(uuidOrIdOrArray, {
 				latitude: '',
 				longitude: '',
 			});
@@ -1041,7 +1132,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} applicationSlugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 *
 		 * @returns {Promise}
@@ -1056,7 +1147,7 @@ const getDeviceModel = function (
 		 * balena.models.device.move(123, 456);
 		 */
 		move: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			applicationSlugOrUuidOrId: string | number,
 		): Promise<void> => {
 			const applicationOptions = {
@@ -1093,7 +1184,7 @@ const getDeviceModel = function (
 				},
 			} as const;
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				options: deviceOptions,
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices) => {
@@ -1441,7 +1532,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1451,9 +1542,9 @@ const getDeviceModel = function (
 		 * balena.models.device.enableDeviceUrl(123);
 		 */
 		enableDeviceUrl: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_web_accessible: true,
 			});
 		},
@@ -1465,7 +1556,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1475,9 +1566,9 @@ const getDeviceModel = function (
 		 * balena.models.device.disableDeviceUrl(123);
 		 */
 		disableDeviceUrl: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_web_accessible: false,
 			});
 		},
@@ -1722,7 +1813,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {Number} expiryTimestamp - a timestamp in ms for when the support access will expire
 		 * @returns {Promise}
 		 *
@@ -1733,7 +1824,7 @@ const getDeviceModel = function (
 		 * balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 		 */
 		async grantSupportAccess(
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			expiryTimestamp: number,
 		): Promise<void> {
 			if (expiryTimestamp == null || expiryTimestamp <= Date.now()) {
@@ -1743,7 +1834,7 @@ const getDeviceModel = function (
 				);
 			}
 
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				// @ts-expect-error a number is valid to set but it will always be returned as an ISO string so the typings specify string rather than string | number
 				is_accessible_by_support_until__date: expiryTimestamp,
 			});
@@ -1756,7 +1847,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1766,9 +1857,9 @@ const getDeviceModel = function (
 		 * balena.models.device.revokeSupportAccess(123);
 		 */
 		revokeSupportAccess: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				is_accessible_by_support_until__date: null,
 			});
 		},
@@ -1916,7 +2007,7 @@ const getDeviceModel = function (
 		 * @description Configures the device to run a particular release
 		 * and not get updated when the current application release changes.
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} fullReleaseHashOrId - the hash of a successful release (string) or id (number)
 		 * @returns {Promise}
 		 *
@@ -1931,7 +2022,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		pinToRelease: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			fullReleaseHashOrId: string | number,
 		): Promise<void> => {
 			const getRelease = memoizee(
@@ -1953,7 +2044,7 @@ const getDeviceModel = function (
 				{ primitive: true, promise: true },
 			);
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices, appId) => {
 					const release = await getRelease(appId);
@@ -1981,7 +2072,7 @@ const getDeviceModel = function (
 		 *
 		 * @description The device's current release will be updated with each new successfully built release.
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1990,9 +2081,9 @@ const getDeviceModel = function (
 		 * });
 		 */
 		trackApplicationRelease: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrIds, {
+			await set(uuidOrIdOrArray, {
 				should_be_running__release: null,
 			});
 		},
@@ -2006,7 +2097,7 @@ const getDeviceModel = function (
 		 *
 		 * @description Configures the device to run a particular supervisor release.
 		 *
-		 * @param {String|Number|Number[]} uuidOrIdOrIds - device uuid (string) or id (number) or array of ids
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} supervisorVersionOrId - the version of a released supervisor (string) or id (number)
 		 * @returns {Promise}
 		 *
@@ -2021,7 +2112,7 @@ const getDeviceModel = function (
 		 * });
 		 */
 		setSupervisorRelease: async (
-			uuidOrIdOrIds: string | number | number[],
+			uuidOrIdOrArray: string | string[] | number | number[],
 			supervisorVersionOrId: string | number,
 		): Promise<void> => {
 			const releaseFilterProperty = isId(supervisorVersionOrId)
@@ -2057,7 +2148,7 @@ const getDeviceModel = function (
 				{ primitive: true, promise: true },
 			);
 			await batchDeviceOperation()({
-				uuidOrIdOrIds,
+				uuidOrIdOrArray,
 				options: {
 					$select: ['id', 'supervisor_version', 'os_version'],
 					$expand: { is_of__device_type: { $select: 'slug' } },
@@ -2176,7 +2267,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String} uuid - full device uuid
+		 * @param {String|String[]} uuidOrUuids - full device uuid or array of full uuids
 		 * @param {String} targetOsVersion - semver-compatible version for the target device
 		 * Unsupported (unpublished) version will result in rejection.
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
@@ -2189,50 +2280,7 @@ const getDeviceModel = function (
 		 * 	console.log(result.status);
 		 * });
 		 */
-		startOsUpdate: async (
-			uuid: string,
-			targetOsVersion: string,
-		): Promise<OsUpdateActionResult> => {
-			if (!targetOsVersion) {
-				throw new errors.BalenaInvalidParameterError(
-					'targetOsVersion',
-					targetOsVersion,
-				);
-			}
-
-			const deviceOpts = {
-				$select: toWritable(['is_online', 'os_version', 'os_variant'] as const),
-				$expand: { is_of__device_type: { $select: 'slug' as const } },
-			};
-
-			const device = (await exports.get(uuid, deviceOpts)) as PineTypedResult<
-				Device,
-				typeof deviceOpts
-			> &
-				Pick<Device, 'uuid'>;
-
-			device.uuid = uuid;
-			// this will throw an error if the action isn't available
-			exports._checkOsUpdateTarget(device, targetOsVersion);
-
-			const osVersions = await osModel().getAvailableOsVersions(
-				device.is_of__device_type[0].slug,
-			);
-
-			if (
-				!osVersions.some(
-					(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
-				)
-			) {
-				throw new errors.BalenaInvalidParameterError(
-					'targetOsVersion',
-					targetOsVersion,
-				);
-			}
-
-			const osUpdateHelper = await getOsUpdateHelper();
-			return await osUpdateHelper.startOsUpdate(uuid, targetOsVersion);
-		},
+		startOsUpdate,
 
 		/**
 		 * @summary Get the OS update status of a device
