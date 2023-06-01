@@ -202,18 +202,15 @@ const getOsModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { pine, request, pubsub } = deps;
+	const {
+		pine,
+		request,
+		pubsub,
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
+	} = deps;
 	const { apiUrl, isBrowser } = opts;
 
-	const applicationModel = once(() =>
-		(require('./application') as typeof import('./application')).default(
-			deps,
-			opts,
-		),
-	);
-	const deviceTypeModel = once(() =>
-		(require('./device-type') as typeof import('./device-type')).default(deps),
-	);
 	const hupActionHelper = once(
 		() =>
 			(
@@ -481,7 +478,7 @@ const getOsModel = function (
 	 */
 	const _getNormalizedDeviceTypeSlug = authDependentMemoizer(
 		async (deviceTypeSlug: string) => {
-			const dt = await deviceTypeModel().get(deviceTypeSlug, {
+			const dt = await sdkInstance.models.deviceType.get(deviceTypeSlug, {
 				$select: 'slug',
 			});
 			return dt.slug;
@@ -811,7 +808,9 @@ const getOsModel = function (
 		options.network = options.network ?? 'ethernet';
 
 		try {
-			const applicationId = await applicationModel()._getId(slugOrUuidOrId);
+			const applicationId = await sdkInstance.models.application._getId(
+				slugOrUuidOrId,
+			);
 
 			const { body } = await request.send({
 				method: 'POST',

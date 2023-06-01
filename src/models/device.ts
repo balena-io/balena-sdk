@@ -120,26 +120,10 @@ const getDeviceModel = function (
 		sdkInstance,
 	} = deps;
 	const { apiUrl, deviceUrlsBase } = opts;
-
 	const registerDevice = once(() =>
 		(
 			require('balena-register-device') as typeof import('balena-register-device')
 		).getRegisterDevice({ request }),
-	);
-	const applicationModel = once(() =>
-		(require('./application') as typeof import('./application')).default(
-			deps,
-			opts,
-		),
-	);
-	const deviceTypeModel = once(() =>
-		(require('./device-type') as typeof import('./device-type')).default(deps),
-	);
-	const releaseModel = once(() =>
-		(require('./release') as typeof import('./release')).default(deps, opts),
-	);
-	const osModel = once(() =>
-		(require('./os') as typeof import('./os')).default(deps, opts),
 	);
 
 	const { buildDependentResource } =
@@ -210,10 +194,7 @@ const getDeviceModel = function (
 		if (deviceUrlsBase != null) {
 			return deviceUrlsBase;
 		}
-		const configModel = (
-			require('./config') as typeof import('./config')
-		).default(deps, opts);
-		return (await configModel.getAll()).deviceUrlsBase;
+		return (await sdkInstance.models.config.getAll()).deviceUrlsBase;
 	});
 
 	const getOsUpdateHelper = once(async () => {
@@ -494,7 +475,7 @@ const getDeviceModel = function (
 				options = {};
 			}
 
-			const { id } = await applicationModel().get(slugOrUuidOrId, {
+			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
 			return await getAll(
@@ -1163,7 +1144,7 @@ const getDeviceModel = function (
 					},
 				},
 			} as const;
-			const application = (await applicationModel().get(
+			const application = (await sdkInstance.models.application.get(
 				applicationSlugOrUuidOrId,
 				applicationOptions,
 			)) as PineTypedResult<Application, typeof applicationOptions>;
@@ -1189,10 +1170,11 @@ const getDeviceModel = function (
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices) => {
 					for (const device of devices) {
-						const isCompatibleMove = osModel().isArchitectureCompatibleWith(
-							device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
-							appCpuArchSlug,
-						);
+						const isCompatibleMove =
+							sdkInstance.models.os.isArchitectureCompatibleWith(
+								device.is_of__device_type[0].is_of__cpu_architecture[0].slug,
+								appCpuArchSlug,
+							);
 						if (!isCompatibleMove) {
 							throw new errors.BalenaInvalidDeviceType(
 								`Incompatible application: ${applicationSlugOrUuidOrId}`,
@@ -1286,9 +1268,12 @@ const getDeviceModel = function (
 			slugOrUuidOrId: string | number,
 			release?: string | number,
 		): Promise<DeviceState.DeviceStateV3> => {
-			const { uuid } = await applicationModel().get(slugOrUuidOrId, {
-				$select: 'uuid',
-			});
+			const { uuid } = await sdkInstance.models.application.get(
+				slugOrUuidOrId,
+				{
+					$select: 'uuid',
+				},
+			);
 			const { body } = await request.send({
 				url: `/device/v3/fleet/${uuid}/state/?releaseUuid=${release ?? ''}`,
 				baseUrl: apiUrl,
@@ -1372,13 +1357,15 @@ const getDeviceModel = function (
 
 			const [userId, apiKey, application, deviceType] = await Promise.all([
 				sdkInstance.auth.getUserId(),
-				applicationModel().generateProvisioningKey(applicationSlugOrUuidOrId),
-				applicationModel().get(
+				sdkInstance.models.application.generateProvisioningKey(
+					applicationSlugOrUuidOrId,
+				),
+				sdkInstance.models.application.get(
 					applicationSlugOrUuidOrId,
 					applicationOptions,
 				) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
 				typeof deviceTypeSlug === 'string'
-					? (deviceTypeModel().get(deviceTypeSlug, {
+					? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
 							$select: 'slug',
 							$expand: {
 								is_of__cpu_architecture: {
@@ -1391,10 +1378,11 @@ const getDeviceModel = function (
 					: null,
 			]);
 			if (deviceType != null) {
-				const isCompatibleParameter = osModel().isArchitectureCompatibleWith(
-					deviceType.is_of__cpu_architecture[0].slug,
-					application.is_for__device_type[0].is_of__cpu_architecture[0].slug,
-				);
+				const isCompatibleParameter =
+					sdkInstance.models.os.isArchitectureCompatibleWith(
+						deviceType.is_of__cpu_architecture[0].slug,
+						application.is_for__device_type[0].is_of__cpu_architecture[0].slug,
+					);
 				if (!isCompatibleParameter) {
 					throw new errors.BalenaInvalidDeviceType(
 						`Incompatible device type: ${deviceTypeSlug}`,
@@ -2030,7 +2018,7 @@ const getDeviceModel = function (
 					const releaseFilterProperty = isId(fullReleaseHashOrId)
 						? 'id'
 						: 'commit';
-					return await releaseModel().get(fullReleaseHashOrId, {
+					return await sdkInstance.models.release.get(fullReleaseHashOrId, {
 						$top: 1,
 						$select: 'id',
 						$filter: {
@@ -2350,9 +2338,12 @@ const getDeviceModel = function (
 				if (options == null) {
 					options = {};
 				}
-				const { id } = await applicationModel().get(slugOrUuidOrId, {
-					$select: 'id',
-				});
+				const { id } = await sdkInstance.models.application.get(
+					slugOrUuidOrId,
+					{
+						$select: 'id',
+					},
+				);
 				return await tagsModel.getAll(
 					mergePineOptions(
 						{
@@ -2491,9 +2482,12 @@ const getDeviceModel = function (
 					options = {};
 				}
 
-				const { id } = await applicationModel().get(slugOrUuidOrId, {
-					$select: 'id',
-				});
+				const { id } = await sdkInstance.models.application.get(
+					slugOrUuidOrId,
+					{
+						$select: 'id',
+					},
+				);
 				return await configVarModel.getAll(
 					mergePineOptions(
 						{
@@ -2647,9 +2641,12 @@ const getDeviceModel = function (
 					options = {};
 				}
 
-				const { id } = await applicationModel().get(slugOrUuidOrId, {
-					$select: 'id',
-				});
+				const { id } = await sdkInstance.models.application.get(
+					slugOrUuidOrId,
+					{
+						$select: 'id',
+					},
+				);
 				return await envVarModel.getAll(
 					mergePineOptions(
 						{
@@ -2828,9 +2825,12 @@ const getDeviceModel = function (
 					options = {};
 				}
 
-				const { id } = await applicationModel().get(slugOrUuidOrId, {
-					$select: 'id',
-				});
+				const { id } = await sdkInstance.models.application.get(
+					slugOrUuidOrId,
+					{
+						$select: 'id',
+					},
+				);
 				return await pine.get({
 					resource: 'device_service_environment_variable',
 					options: mergePineOptions(
@@ -3151,7 +3151,7 @@ const getDeviceModel = function (
 					...options
 				}: PineOptions<DeviceHistory> & { fromDate?: Date; toDate?: Date } = {},
 			): Promise<DeviceHistory[]> {
-				const { id: applicationId } = await applicationModel().get(
+				const { id: applicationId } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
 						$select: 'id',

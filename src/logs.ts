@@ -53,15 +53,13 @@ export interface LogsOptions {
 }
 
 const getLogs = function (
-	deps: InjectedDependenciesParam,
+	{
+		request,
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
+	}: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { request } = deps;
-
-	const deviceModel = (
-		require('./models/device') as typeof import('./models/device')
-	).default(deps, opts);
-
 	const getLogsFromApi = async function (
 		device: Device,
 		options?: LogsOptions,
@@ -210,7 +208,9 @@ const getLogs = function (
 		): Promise<LogsSubscription> {
 			// TODO: We should consider making this a readable stream.
 
-			const device = await deviceModel.get(uuidOrId, { $select: 'uuid' });
+			const device = await sdkInstance.models.device.get(uuidOrId, {
+				$select: 'uuid',
+			});
 			return subscribeToApiLogs(device, options);
 		},
 
@@ -248,7 +248,9 @@ const getLogs = function (
 			uuidOrId: string | number,
 			options?: LogsOptions,
 		): Promise<LogMessage[]> {
-			const device = await deviceModel.get(uuidOrId, { $select: 'uuid' });
+			const device = await sdkInstance.models.device.get(uuidOrId, {
+				$select: 'uuid',
+			});
 			return await getLogsFromApi(device, options);
 		},
 	};

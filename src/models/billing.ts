@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import once = require('lodash/once');
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 
@@ -140,21 +139,15 @@ export interface PlanChangeOptions {
 }
 
 const getBillingModel = function (
-	deps: InjectedDependenciesParam,
-	opts: InjectedOptionsParam,
+	{
+		request,
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
+	}: InjectedDependenciesParam,
+	{ apiUrl, isBrowser }: InjectedOptionsParam,
 ) {
-	const { request } = deps;
-	const { apiUrl, isBrowser } = opts;
-
-	const organizationModel = once(() =>
-		(require('./organization') as typeof import('./organization')).default(
-			deps,
-			opts,
-		),
-	);
-
 	const getOrgId = async (organization: string | number): Promise<number> => {
-		const { id } = await organizationModel().get(organization, {
+		const { id } = await sdkInstance.models.organization.get(organization, {
 			$select: 'id',
 		});
 		return id;

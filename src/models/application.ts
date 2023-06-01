@@ -57,15 +57,13 @@ const getApplicationModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { request, pine } = deps;
+	const {
+		request,
+		pine,
+		// Do not destructure sub-modules, to allow lazy loading only when needed.
+		sdkInstance,
+	} = deps;
 	const { apiUrl } = opts;
-
-	const deviceTypeModel = once(() =>
-		(require('./device-type') as typeof import('./device-type')).default(deps),
-	);
-	const releaseModel = once(() =>
-		(require('./release') as typeof import('./release')).default(deps, opts),
-	);
 
 	const membershipModel = (
 		require('./application-membership') as typeof import('./application-membership')
@@ -683,7 +681,7 @@ const getApplicationModel = function (
 						},
 					},
 				} as const;
-				const dt = (await deviceTypeModel().get(
+				const dt = (await sdkInstance.models.deviceType.get(
 					deviceType,
 					deviceTypeOptions,
 				)) as PineTypedResult<DeviceType, typeof deviceTypeOptions>;
@@ -1186,7 +1184,7 @@ const getApplicationModel = function (
 			fullReleaseHash: string,
 		): Promise<void> => {
 			const applicationId = await getId(slugOrUuidOrId);
-			const release = await releaseModel().get(fullReleaseHash, {
+			const release = await sdkInstance.models.release.get(fullReleaseHash, {
 				$select: 'id',
 				$top: 1,
 				$filter: {
