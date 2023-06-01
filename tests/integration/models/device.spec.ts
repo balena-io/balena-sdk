@@ -1,3 +1,4 @@
+// tslint:disable-next-line:import-blacklist
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -26,6 +27,7 @@ import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
 } from './tags';
+import type * as tagsHelper from './tags';
 
 const makeRequest = async (url) => {
 	try {
@@ -54,7 +56,7 @@ describe('Device Model', function () {
 
 		describe('given no device [contained scenario]', function () {
 			describe('[read operations]', function () {
-				let ctx = null;
+				let ctx: Mocha.Context;
 
 				before(function () {
 					ctx = this;
@@ -212,7 +214,7 @@ describe('Device Model', function () {
 			describe('[read operations]', function () {
 				givenADevice(before);
 
-				let ctx = null;
+				let ctx: Mocha.Context;
 				before(function () {
 					ctx = this;
 				});
@@ -1707,14 +1709,14 @@ describe('Device Model', function () {
 			describe('balena.models.device.tags', function () {
 				givenADevice(before);
 
-				const appTagTestOptions = {
+				const appTagTestOptions: tagsHelper.Options = {
 					model: balena.models.device.tags,
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'application',
 					uniquePropertyNames: applicationRetrievalFields,
 				};
 
-				const deviceTagTestOptions = {
+				const deviceTagTestOptions: tagsHelper.Options = {
 					model: balena.models.device.tags,
 					modelNamespace: 'balena.models.device.tags',
 					resourceName: 'device',
@@ -3299,9 +3301,7 @@ describe('Device Model', function () {
 	describe('helpers', function () {
 		describe('balena.models.device.getDashboardUrl()', function () {
 			it('should return the respective DashboardUrl when a device uuid is provided', function () {
-				// prettier-ignore
-				const dashboardUrl = (/** @type {string} */ (sdkOpts.apiUrl))
-					.replace(/api/, 'dashboard');
+				const dashboardUrl = sdkOpts.apiUrl!.replace(/api/, 'dashboard');
 				return expect(
 					balena.models.device.getDashboardUrl(
 						'af1150f1b1734c428fb1606a4cddec6c',
@@ -3635,17 +3635,17 @@ describe('Device Model', function () {
 					['Resin OS ', 'prod'],
 					['Resin OS 2.0-beta.8', ''],
 				].forEach(function ([osVersion, osVariant]) {
-					// prettier-ignore
-					const mockDevice = {
-						uuid,
-						is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-						is_online: true,
-						os_version: osVersion,
-						os_variant: osVariant,
-					};
-
 					return expect(() =>
-						_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.prod'),
+						_checkOsUpdateTarget(
+							{
+								uuid,
+								is_of__device_type: [{ slug: 'raspberrypi3' }],
+								is_online: true,
+								os_version: osVersion,
+								os_variant: osVariant,
+							},
+							'2.29.2+rev1.prod',
+						),
 					).to.throw('Invalid current balenaOS version');
 				}));
 
@@ -3655,17 +3655,17 @@ describe('Device Model', function () {
 					['Resin OS 1.30.1', '', '2.5.0+rev1'],
 					['balenaOS 2.26.0+rev1', 'prod', '2.29.2+rev1.prod'],
 				].forEach(function ([osVersion, osVariant, targetOsVersion]) {
-					// prettier-ignore
-					const mockDevice = {
-						uuid,
-						is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-						is_online: false,
-						os_version: osVersion,
-						os_variant: osVariant,
-					};
-
 					return expect(() =>
-						_checkOsUpdateTarget(mockDevice, targetOsVersion),
+						_checkOsUpdateTarget(
+							{
+								uuid,
+								is_of__device_type: [{ slug: 'raspberrypi3' }],
+								is_online: false,
+								os_version: osVersion,
+								os_variant: osVariant,
+							},
+							targetOsVersion,
+						),
 					).to.throw('The device is offline');
 				}));
 
@@ -3681,17 +3681,17 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0', 'prod'],
 					['balenaOS 2.28.0+rev1', 'prod'],
 				].forEach(function ([osVersion, osVariant]) {
-					// prettier-ignore
-					const mockDevice = {
-						uuid,
-						is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-						is_online: true,
-						os_version: osVersion,
-						os_variant: osVariant,
-					};
-
 					return expect(() =>
-						_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.dev'),
+						_checkOsUpdateTarget(
+							{
+								uuid,
+								is_of__device_type: [{ slug: 'raspberrypi3' }],
+								is_online: true,
+								os_version: osVersion,
+								os_variant: osVariant,
+							},
+							'2.29.2+rev1.dev',
+						),
 					).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
@@ -3713,17 +3713,17 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0+rev1', 'dev'],
 					['balenaOS 2.28.0+rev1', 'dev'],
 				].forEach(function ([osVersion, osVariant]) {
-					// prettier-ignore
-					const mockDevice = {
-						uuid,
-						is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-						is_online: true,
-						os_version: osVersion,
-						os_variant: osVariant,
-					};
-
 					return expect(() =>
-						_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.prod'),
+						_checkOsUpdateTarget(
+							{
+								uuid,
+								is_of__device_type: [{ slug: 'raspberrypi3' }],
+								is_online: true,
+								os_version: osVersion,
+								os_variant: osVariant,
+							},
+							'2.29.2+rev1.prod',
+						),
 					).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
@@ -3747,17 +3747,17 @@ describe('Device Model', function () {
 					['Resin OS 2.9.0-multi1+rev1', 'dev'],
 					['balenaOS 2.28.0-beta1.rev1', 'prod'],
 				].forEach(function ([osVersion, osVariant]) {
-					// prettier-ignore
-					const mockDevice = {
-						uuid,
-						is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-						is_online: true,
-						os_version: osVersion,
-						os_variant: osVariant,
-					};
-
 					return expect(() =>
-						_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.prod'),
+						_checkOsUpdateTarget(
+							{
+								uuid,
+								is_of__device_type: [{ slug: 'raspberrypi3' }],
+								is_online: true,
+								os_version: osVersion,
+								os_variant: osVariant,
+							},
+							'2.29.2+rev1.prod',
+						),
 					).to.throw(
 						'Updates cannot be performed on pre-release balenaOS versions',
 					);
@@ -3772,17 +3772,17 @@ describe('Device Model', function () {
 								['Resin OS 1.6.0', ''],
 								['Resin OS 1.7.2', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								// prettier-ignore
-								const mockDevice = {
-									uuid,
-									is_of__device_type:  /** @type [{ slug: string; }] */ ([{ slug: deviceType }]),
-									is_online: true,
-									os_version: osVersion,
-									os_variant: osVariant,
-								};
-
 								return expect(() =>
-									_checkOsUpdateTarget(mockDevice, '1.26.0'),
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceType }],
+											is_online: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'1.26.0',
+									),
 								).to.throw('Current OS version must be >= 1.8.0');
 							}));
 
@@ -3793,17 +3793,17 @@ describe('Device Model', function () {
 								['Resin OS 1.19.0', ''],
 								['Resin OS 1.21.0', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								// prettier-ignore
-								const mockDevice = {
-									uuid,
-									is_of__device_type:  /** @type [{ slug: string; }] */ ([{ slug: deviceType }]),
-									is_online: true,
-									os_version: osVersion,
-									os_variant: osVariant,
-								};
-
 								return expect(() =>
-									_checkOsUpdateTarget(mockDevice, '1.25.0'),
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceType }],
+											is_online: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'1.25.0',
+									),
 								).to.throw('Target OS version must be >= 1.26.0');
 							}));
 
@@ -3814,17 +3814,17 @@ describe('Device Model', function () {
 								['Resin OS 1.19.0', ''],
 								['Resin OS 1.21.0', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								// prettier-ignore
-								const mockDevice = {
-									uuid,
-									is_of__device_type:  /** @type [{ slug: string; }] */ ([{ slug: deviceType }]),
-									is_online: true,
-									os_version: osVersion,
-									os_variant: osVariant,
-								};
-
 								return expect(() =>
-									_checkOsUpdateTarget(mockDevice, '1.28.0'),
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceType }],
+											is_online: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'1.28.0',
+									),
 								).to.not.throw();
 							}));
 					}),
@@ -3838,17 +3838,17 @@ describe('Device Model', function () {
 							['Resin OS 1.6.0', ''],
 							['Resin OS 1.7.2', ''],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.5.0+rev1'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'raspberrypi3' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.5.0+rev1',
+								),
 							).to.throw('Current OS version must be >= 1.8.0');
 						}));
 
@@ -3861,17 +3861,17 @@ describe('Device Model', function () {
 							['Resin OS 1.26.1', ''],
 							['Resin OS 1.30.1', ''],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.5.0+rev1'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'raspberrypi3' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.5.0+rev1',
+								),
 							).to.not.throw();
 						}));
 				});
@@ -3888,17 +3888,17 @@ describe('Device Model', function () {
 							['Resin OS 1.21.0', ''],
 							['Resin OS 1.26.1', ''],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'beaglebone-black' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.5.0+rev1'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'beaglebone-black' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.5.0+rev1',
+								),
 							).to.throw('Current OS version must be >= 1.30.1');
 						}));
 
@@ -3907,17 +3907,17 @@ describe('Device Model', function () {
 							osVersion,
 							osVariant,
 						]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'beaglebone-black' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.5.0+rev1'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'beaglebone-black' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.5.0+rev1',
+								),
 							).to.not.throw();
 						}));
 				});
@@ -3930,17 +3930,17 @@ describe('Device Model', function () {
 							osVersion,
 							osVariant,
 						]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.1.0+rev1.prod'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'raspberrypi3' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.1.0+rev1.prod',
+								),
 							).to.throw('Current OS version must be >= 2.0.0+rev1');
 						}));
 
@@ -3973,17 +3973,17 @@ describe('Device Model', function () {
 							['Resin OS 2.12.1+rev1', 'prod'],
 							['balenaOS 2.26.0+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'raspberrypi3' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.prod'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'raspberrypi3' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.29.2+rev1.prod',
+								),
 							).to.not.throw();
 						}));
 				});
@@ -4025,17 +4025,17 @@ describe('Device Model', function () {
 							['Resin OS 2.6.0+rev1', 'prod'],
 							['Resin OS 2.7.2+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'jetson-tx2' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.prod'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.29.2+rev1.prod',
+								),
 							).to.throw('Current OS version must be >= 2.7.4');
 						}));
 
@@ -4053,17 +4053,17 @@ describe('Device Model', function () {
 							['Resin OS 2.12.1+rev1', 'prod'],
 							['balenaOS 2.26.0+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'jetson-tx2' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.prod'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.29.2+rev1.prod',
+								),
 							).to.not.throw();
 						}));
 
@@ -4073,17 +4073,17 @@ describe('Device Model', function () {
 							['Resin OS 2.9.7+rev2.dev', 'dev'],
 							['balenaOS 2.26.0+rev1.dev', 'dev'],
 						].forEach(function ([osVersion, osVariant]) {
-							// prettier-ignore
-							const mockDevice = {
-								uuid,
-								is_of__device_type: /** @type [{ slug: string; }] */ ([{ slug: 'jetson-tx2' }]),
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							};
-
 							return expect(() =>
-								_checkOsUpdateTarget(mockDevice, '2.29.2+rev1.dev'),
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.29.2+rev1.dev',
+								),
 							).to.not.throw();
 						}));
 				});

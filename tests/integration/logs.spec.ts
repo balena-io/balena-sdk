@@ -96,7 +96,7 @@ describe('Logs', function () {
 			const LOG_SUBSCRIPTION_TIMEOUT = 5000;
 
 			async function getLogLinesAndUnsubscribe(logs) {
-				const lines = [];
+				const lines: string[] = [];
 				try {
 					await new Promise(async function (resolve, reject) {
 						logs.on('line', (line) => lines.push(line));
@@ -176,7 +176,7 @@ describe('Logs', function () {
 				]);
 				const logs = await balena.logs.subscribe(this.uuid, { count: 100 });
 
-				const lines = [];
+				const lines: string[] = [];
 				try {
 					await new Promise((resolve, reject) => {
 						logs.on('line', (line) => lines.push(line));
@@ -219,7 +219,7 @@ describe('Logs', function () {
 				// Unsubscribe before any messages are sent
 				logs.unsubscribe();
 
-				const lines = [];
+				const lines: string[] = [];
 				await new Promise(async (resolve, reject) => {
 					logs.on('line', (line) => lines.push(line));
 					logs.on('error', reject);

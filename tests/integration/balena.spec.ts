@@ -54,7 +54,7 @@ describe('Balena SDK', function () {
 		expect(balena.errors).to.exist);
 
 	describe('interception Hooks', function () {
-		let originalInterceptors = null;
+		let originalInterceptors: typeof balena.interceptors;
 
 		before(function () {
 			originalInterceptors = balena.interceptors.slice();
@@ -165,7 +165,7 @@ describe('Balena SDK', function () {
 
 		describe('version header', function () {
 			const getVersionHeaderResponseInterceptor = function () {
-				var responseInterceptor = function (response) {
+				const responseInterceptor = function (response) {
 					responseInterceptor.callCount++;
 					expect(response.request.headers).to.have.property(
 						'X-Balena-Client',
@@ -180,7 +180,7 @@ describe('Balena SDK', function () {
 			};
 
 			const getVersionHeaderResponseErrorInterceptor = function () {
-				var responseInterceptor = function (err) {
+				const responseInterceptor = function (err) {
 					responseInterceptor.callCount++;
 					expect(err.requestOptions.headers).to.not.have.property(
 						'X-Balena-Client',
