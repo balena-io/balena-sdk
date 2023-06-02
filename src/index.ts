@@ -80,6 +80,7 @@ export type { OrganizationMembershipCreationOptions } from './models/organizatio
 export type { OrganizationInviteOptions } from './models/organization-invite';
 export type {
 	ImgConfigOptions,
+	OsDownloadOptions,
 	OsLines,
 	OsTypes,
 	OsUpdateVersions,
