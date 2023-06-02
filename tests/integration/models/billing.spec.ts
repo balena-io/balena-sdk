@@ -433,10 +433,11 @@ describe('Billing Model', function () {
 					function () {
 						return balena.models.billing
 							.downloadInvoice(this.firstInvoiceNumber, this.initialOrg.id)
-							.then(function (result: Blob) {
+							.then(function (result) {
 								expect(result).to.be.an.instanceof(Blob);
-								expect(result.size).to.not.equal(0);
-								expect(result.type).to.equal('application/pdf');
+								const resultBlob = result as Blob;
+								expect(resultBlob.size).to.not.equal(0);
+								expect(resultBlob.type).to.equal('application/pdf');
 							});
 					},
 				);

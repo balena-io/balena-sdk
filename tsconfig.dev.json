@@ -2,6 +2,7 @@
     "extends": "./tsconfig.js.json",
     "compilerOptions": {
         "resolveJsonModule": true,
+        "noImplicitThis": false,
         "skipLibCheck": true,
     },
     "include": [
