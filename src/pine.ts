@@ -10,7 +10,7 @@ interface BackendParams {
 	apiKey?: string;
 	request: {
 		// TODO: Should be the type of balena-request
-		send: (options: AnyObject) => Promise<{ body: any }>;
+		send: (options: AnyObject & { url: string }) => Promise<{ body: any }>;
 	};
 	auth: import('balena-auth').default;
 }

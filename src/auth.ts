@@ -39,9 +39,9 @@ const getAuth = function (
 		eventName: string,
 		fn: T,
 	): T =>
-		async function () {
+		async function (...innerArgs) {
 			try {
-				return await fn.apply(authBase, arguments);
+				return await fn.apply(authBase, innerArgs);
 			} finally {
 				pubsub.publish(eventName);
 			}

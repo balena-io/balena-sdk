@@ -33,8 +33,14 @@ const getServiceModel = ({
 			resourceName: 'service_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'service',
-			getResourceId: async (id: number): Promise<number> =>
-				(await get(id, { $select: 'id' })).id,
+			async getResourceId(id) {
+				if (typeof id !== 'number') {
+					throw new Error(
+						`Unexpected type for id provided in service varModel getResourceId: ${typeof id}`,
+					);
+				}
+				return (await get(id, { $select: 'id' })).id;
+			},
 		},
 	);
 

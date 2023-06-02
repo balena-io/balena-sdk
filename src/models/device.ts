@@ -144,7 +144,12 @@ const getDeviceModel = function (
 			resourceName: 'device_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId: string | number): Promise<number> {
+			async getResourceId(uuidOrId): Promise<number> {
+				if (typeof uuidOrId !== 'string' && typeof uuidOrId !== 'number') {
+					throw new Error(
+						`Unexpected type for uuidOrId provided in device tagsModel getResourceId: ${typeof uuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
@@ -157,7 +162,12 @@ const getDeviceModel = function (
 			resourceName: 'device_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId: string | number): Promise<number> {
+			async getResourceId(uuidOrId): Promise<number> {
+				if (typeof uuidOrId !== 'string' && typeof uuidOrId !== 'number') {
+					throw new Error(
+						`Unexpected type for uuidOrId provided in device configVarModel getResourceId: ${typeof uuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},
@@ -170,7 +180,12 @@ const getDeviceModel = function (
 			resourceName: 'device_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'device',
-			async getResourceId(uuidOrId: string | number): Promise<number> {
+			async getResourceId(uuidOrId): Promise<number> {
+				if (typeof uuidOrId !== 'string' && typeof uuidOrId !== 'number') {
+					throw new Error(
+						`Unexpected type for uuidOrId provided in device envVarModel getResourceId: ${typeof uuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(uuidOrId, { $select: 'id' });
 				return id;
 			},

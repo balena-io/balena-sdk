@@ -63,7 +63,7 @@ const getReleaseModel = function (
 			resourceName: 'release_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'release',
-			getResourceId: async (commitOrIdOrRawVersion): Promise<number> => {
+			async getResourceId(commitOrIdOrRawVersion) {
 				const { id } = await get(
 					commitOrIdOrRawVersion as
 						| string
