@@ -1,4 +1,32 @@
 - commits:
+    - subject: "tsconfig: Allow noImplicitThis in the tests"
+      hash: 0688fef9932a22d6dc4783f862aee3bf919d753a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tsconfig: Switch to strict compilation to fix the 5.1 errors"
+      hash: d4facc8362966b03fec3120f8d4664d7de512c17
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update TypeScript to 5.1.3
+      hash: f9c9c2be9cdd0e9a293131631b2bbfd932381ccc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.2.3
+  title: ""
+  date: 2023-06-04T11:35:09.276Z
+- commits:
     - subject: Access other models internally via the shared current sdk instance
       hash: 4ea321fa304c47ef8bfa474adbd45a430f6b6b40
       body: ""
