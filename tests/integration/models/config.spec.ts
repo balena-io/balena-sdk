@@ -23,21 +23,21 @@ const REPLACED_STATES = ['PREVIEW', 'EXPERIMENTAL'];
 
 const REPLACED_NAME_SUFFIXES = ['(PREVIEW)', '(EXPERIMENTAL)', '(BETA)'];
 
+type ConfigContext = Mocha.Context & {
+	deviceTypes: BalenaSdk.DeviceTypeJson.DeviceType[];
+};
+
 const itNormalizesDeviceTypes = function () {
-	it('changes old device type states', function (this: Mocha.Context & {
-		deviceTypes: BalenaSdk.DeviceTypeJson.DeviceType[];
-	}) {
-		for (const deviceType of this.deviceTypes) {
+	it('changes old device type states', function (this: Mocha.Context) {
+		for (const deviceType of (this as ConfigContext).deviceTypes) {
 			expect(deviceType.state).to.satisfy((dtState: string) =>
 				_.every(REPLACED_STATES, (replacedState) => dtState !== replacedState),
 			);
 		}
 	});
 
-	it('changes old device type name suffixes', function (this: Mocha.Context & {
-		deviceTypes: BalenaSdk.DeviceTypeJson.DeviceType[];
-	}) {
-		for (const deviceType of this.deviceTypes) {
+	it('changes old device type name suffixes', function (this: Mocha.Context) {
+		for (const deviceType of (this as ConfigContext).deviceTypes) {
 			expect(deviceType.name).to.satisfy((dtName: string) =>
 				_.every(
 					REPLACED_NAME_SUFFIXES,
@@ -47,10 +47,8 @@ const itNormalizesDeviceTypes = function () {
 		}
 	});
 
-	it('properly replaces the names of device types with old states', function (this: Mocha.Context & {
-		deviceTypes: BalenaSdk.DeviceTypeJson.DeviceType[];
-	}) {
-		for (const deviceType of this.deviceTypes) {
+	it('properly replaces the names of device types with old states', function (this: Mocha.Context) {
+		for (const deviceType of (this as ConfigContext).deviceTypes) {
 			if (deviceType.state === 'PREVIEW') {
 				expect(deviceType.name).to.satisfy((dtName: string) =>
 					_.endsWith(dtName, '(ALPHA)'),

@@ -32,16 +32,16 @@ export function batchResourceOperationFactory<
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		options?: TOpts;
-		fn: (items: Array<Item<TOpts>>) => Promise<void>;
 		groupByNavigationPoperty?: undefined;
+		fn: (items: Array<Item<TOpts>>) => Promise<void>;
 	}): Promise<void>;
 	async function batchResourceOperation<
 		TOpts extends PineOptionsStrict<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		options?: TOpts;
-		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 		groupByNavigationPoperty: PineSelectableProps<T>;
+		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 	}): Promise<void>;
 	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
 		uuidOrIdOrArray,
@@ -51,8 +51,10 @@ export function batchResourceOperationFactory<
 	}: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		options?: TOpts;
-		fn: (items: Array<Item<TOpts>>, ownerId?: number) => Promise<void>;
 		groupByNavigationPoperty?: PineSelectableProps<T>;
+		fn:
+			| ((items: Array<Item<TOpts>>) => Promise<void>)
+			| ((items: Array<Item<TOpts>>, ownerId: number) => Promise<void>);
 	}): Promise<void> {
 		if (Array.isArray(uuidOrIdOrArray)) {
 			if (!uuidOrIdOrArray.length) {
@@ -169,7 +171,9 @@ export function batchResourceOperationFactory<
 				associatedItems,
 				ID_CHUNK_SIZE,
 			)) {
-				await fn(chunkedAssociatedItems, associatedResourceId);
+				await (
+					fn as (items: Array<Item<TOpts>>, ownerId?: number) => Promise<void>
+				)(chunkedAssociatedItems, associatedResourceId);
 			}
 		}
 	}

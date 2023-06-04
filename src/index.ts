@@ -289,21 +289,21 @@ export const getSdk = function ($opts?: SdkOptions) {
 		sdkInstance: sdk,
 	};
 
-	Object.keys(sdkTemplate).forEach(function (
-		moduleName: keyof typeof sdkTemplate,
-	) {
-		Object.defineProperty(sdk, moduleName, {
-			enumerable: true,
-			configurable: true,
-			get() {
-				const moduleFactory = sdkTemplate[moduleName]();
-				// We need the delete first as the current property is read-only
-				// and the delete removes that restriction
-				delete this[moduleName];
-				return (this[moduleName] = moduleFactory(deps, opts));
-			},
-		});
-	});
+	(Object.keys(sdkTemplate) as Array<keyof typeof sdkTemplate>).forEach(
+		function (moduleName) {
+			Object.defineProperty(sdk, moduleName, {
+				enumerable: true,
+				configurable: true,
+				get() {
+					const moduleFactory = sdkTemplate[moduleName]();
+					// We need the delete first as the current property is read-only
+					// and the delete removes that restriction
+					delete this[moduleName];
+					return (this[moduleName] = moduleFactory(deps, opts));
+				},
+			});
+		},
+	);
 
 	/**
 	 * @typedef Interceptor

@@ -86,7 +86,15 @@ const getApplicationModel = function (
 			resourceName: 'application_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'application',
-			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+			async getResourceId(slugOrUuidOrId): Promise<number> {
+				if (
+					typeof slugOrUuidOrId !== 'string' &&
+					typeof slugOrUuidOrId !== 'number'
+				) {
+					throw new Error(
+						`Unexpected type for slugOrUuidOrId provided in application tagsModel getResourceId: ${typeof slugOrUuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
@@ -99,7 +107,15 @@ const getApplicationModel = function (
 			resourceName: 'application_config_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+			async getResourceId(slugOrUuidOrId): Promise<number> {
+				if (
+					typeof slugOrUuidOrId !== 'string' &&
+					typeof slugOrUuidOrId !== 'number'
+				) {
+					throw new Error(
+						`Unexpected type for slugOrUuidOrId provided in application configVarModel getResourceId: ${typeof slugOrUuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
@@ -111,7 +127,15 @@ const getApplicationModel = function (
 			resourceName: 'application_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+			async getResourceId(slugOrUuidOrId): Promise<number> {
+				if (
+					typeof slugOrUuidOrId !== 'string' &&
+					typeof slugOrUuidOrId !== 'number'
+				) {
+					throw new Error(
+						`Unexpected type for slugOrUuidOrId provided in application envVarModel getResourceId: ${typeof slugOrUuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},
@@ -123,7 +147,15 @@ const getApplicationModel = function (
 			resourceName: 'build_environment_variable',
 			resourceKeyField: 'name',
 			parentResourceName: 'application',
-			async getResourceId(slugOrUuidOrId: string | number): Promise<number> {
+			async getResourceId(slugOrUuidOrId): Promise<number> {
+				if (
+					typeof slugOrUuidOrId !== 'string' &&
+					typeof slugOrUuidOrId !== 'number'
+				) {
+					throw new Error(
+						`Unexpected type for slugOrUuidOrId provided in application buildVarModel getResourceId: ${typeof slugOrUuidOrId}`,
+					);
+				}
 				const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
 				return id;
 			},

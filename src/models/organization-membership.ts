@@ -59,7 +59,7 @@ const getOrganizationMembershipModel = function (
 			resourceName: 'organization_membership_tag',
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'organization_membership',
-			async getResourceId(membershipId: string | number): Promise<number> {
+			async getResourceId(membershipId): Promise<number> {
 				// @ts-expect-error
 				const membership = await exports.get(membershipId);
 				return membership.id;
