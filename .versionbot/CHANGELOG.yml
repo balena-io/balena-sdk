@@ -1,4 +1,16 @@
 - commits:
+    - subject: "os: Export the OsDownloadOptions type"
+      hash: ccfbb31d225c3dfa1d6ad8f11fc8d475b1a04315
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.3.0
+  title: ""
+  date: 2023-06-05T07:51:40.633Z
+- commits:
     - subject: "tsconfig: Allow noImplicitThis in the tests"
       hash: 0688fef9932a22d6dc4783f862aee3bf919d753a
       body: ""
