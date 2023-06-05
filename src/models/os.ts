@@ -118,7 +118,7 @@ export interface OsUpdateVersions {
 	current: string | undefined;
 }
 
-export interface DownloadConfig
+export interface OsDownloadOptions
 	extends Pick<
 		ImgConfigOptions,
 		| 'developmentMode'
@@ -723,7 +723,7 @@ const getOsModel = function (
 		deviceType,
 		version = 'latest',
 		...restOptions
-	}: DownloadConfig): Promise<BalenaRequestStreamResult> {
+	}: OsDownloadOptions): Promise<BalenaRequestStreamResult> {
 		try {
 			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
