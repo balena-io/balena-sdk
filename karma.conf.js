@@ -32,6 +32,7 @@ module.exports = function (config) {
 		net: false,
 		os: require.resolve('os-browserify'),
 		path: false,
+		querystring: require.resolve('querystring-es3'),
 		stream: require.resolve('stream-browserify'),
 		url: false,
 		util: require.resolve('util'),
