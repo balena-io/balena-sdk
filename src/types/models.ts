@@ -43,6 +43,7 @@ export interface ResourceTypeMap {
 	invitee__is_invited_to__organization: OrganizationInvite;
 	organization: Organization;
 	organization__has_private_access_to__device_type: OrganizationPrivateDeviceTypeAccess;
+	organization_credit_notification: OrganizationCreditNotification;
 	organization_membership: OrganizationMembership;
 	organization_membership_role: OrganizationMembershipRole;
 	organization_membership_tag: OrganizationMembershipTag;
@@ -86,6 +87,18 @@ export interface Organization {
 	organization_membership: ReverseNavigationResource<OrganizationMembership>;
 	owns__team: ReverseNavigationResource<Team>;
 	organization__has_private_access_to__device_type: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
+	organization_credit_notification: ReverseNavigationResource<OrganizationCreditNotification>;
+}
+
+export interface OrganizationCreditNotification {
+	id: number;
+	created_at: string;
+	is_sent_when_below__threshold: number;
+	modified_at: string;
+	was_sent_in__total: number;
+	was_sent_on__date: string | null;
+	organization: NavigationResource<Organization>;
+	owns_credit_notification_for__feature: NavigationResource<Feature>;
 }
 
 export interface Team {
@@ -666,6 +679,7 @@ export interface Feature {
 	title: string;
 	slug: string;
 	billing_code: string | null;
+	organization_credit_notification?: ReverseNavigationResource<OrganizationCreditNotification>;
 }
 
 export interface SupportFeature {
