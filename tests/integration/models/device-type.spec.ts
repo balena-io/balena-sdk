@@ -162,6 +162,38 @@ describe('Device Type model', function () {
 				expect(result).to.eql(instructions);
 			});
 		});
+
+		it('should return an array of strings or a dictionary of arrays of strings', async function () {
+			const dts = await balena.models.deviceType.getAll({
+				$select: ['slug', 'contract'],
+			});
+			for (const dt of dts) {
+				if (!dt.contract) {
+					return;
+				}
+				const instructions = await balena.models.deviceType.getInstructions(
+					dt.contract,
+				);
+				if (instructions == null) {
+					return;
+				}
+				if (Array.isArray(instructions)) {
+					instructions.forEach((instruction) =>
+						expect(instruction).to.be.a('string'),
+					);
+				} else {
+					expect(instructions)
+						.to.be.an('object')
+						.that.has.keys(['Linux', 'MacOS', 'Windows']);
+					for (const osInstructions of Object.values(instructions)) {
+						expect(osInstructions).to.be.an('array');
+						osInstructions.forEach((instruction) =>
+							expect(instruction).to.be.a('string'),
+						);
+					}
+				}
+			}
+		});
 	});
 
 	parallel('balena.models.deviceType.getInstallMethod()', function () {

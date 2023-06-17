@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import type { InjectedDependenciesParam, PineOptions } from '..';
-import { DeviceType } from '../types/models';
-import { Partials, Contract } from '../types/contract';
+import type { DeviceType } from '../types/models';
+import type { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
 import * as errors from 'balena-errors';
 import * as Handlebars from 'handlebars';
@@ -111,7 +111,10 @@ function getInstructionsFromContract(contract: Contract) {
 		...interpolatedDeviceType,
 	});
 
-	return interpolatedHostOS.partials?.[installMethod];
+	return interpolatedHostOS.partials?.[installMethod] as
+		| Record<'Linux' | 'MacOS' | 'Windows', string[]>
+		| string[]
+		| undefined;
 }
 
 const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
@@ -440,7 +443,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 */
 		getInstructions: async (
 			deviceTypeSlugOrContract: string | Contract,
-		): Promise<any | string[]> => {
+		): Promise<Record<'Linux' | 'MacOS' | 'Windows', string[]> | string[]> => {
 			let contract: DeviceType['contract'];
 			if (typeof deviceTypeSlugOrContract === 'string') {
 				({ contract } = await exports.getBySlugOrName(
