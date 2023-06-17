@@ -1,4 +1,32 @@
 - commits:
+    - subject: Fix prettier complaining on windows runners
+      hash: 8d7f2eae237f270b128af35a2dd2da8377ea5092
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "deviceType.getInstructions: Improve the return type"
+      hash: 8339dbc86b295147c5d3054a27ff667920f4ac55
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fix browser tests now failing to find a polyfill for querystring
+      hash: 02b72b0091c092403e684a6ae1ea3f3affcdb2fa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.3.1
+  title: ""
+  date: 2023-06-17T09:13:14.340Z
+- commits:
     - subject: "os: Export the OsDownloadOptions type"
       hash: ccfbb31d225c3dfa1d6ad8f11fc8d475b1a04315
       body: ""
