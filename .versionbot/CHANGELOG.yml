@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add typings for Credits Notifications
+      hash: a1f526da9d3b217a51fe1987d8913c345ed0c996
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 17.4.0
+  title: ""
+  date: 2023-06-19T10:20:57.945Z
+- commits:
     - subject: "util: Simplify the listImagesFromTargetState helper"
       hash: b4efb2c3412020a2a186a9798f4f225bf7cee2d5
       body: ""
