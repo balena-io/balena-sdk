@@ -1,4 +1,16 @@
 - commits:
+    - subject: "util: Simplify the listImagesFromTargetState helper"
+      hash: b4efb2c3412020a2a186a9798f4f225bf7cee2d5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.3.2
+  title: ""
+  date: 2023-06-19T06:20:01.454Z
+- commits:
     - subject: Fix prettier complaining on windows runners
       hash: 8d7f2eae237f270b128af35a2dd2da8377ea5092
       body: ""
