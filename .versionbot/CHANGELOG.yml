@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add `owns__credit_bundle` typing for `Organization`
+      hash: 5260e77117f6eb07e32cb70da8889eb18112d216
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 17.5.0
+  title: ""
+  date: 2023-06-27T17:12:54.385Z
+- commits:
     - subject: Add typings for Credits Notifications
       hash: a1f526da9d3b217a51fe1987d8913c345ed0c996
       body: ""
