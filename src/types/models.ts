@@ -85,6 +85,7 @@ export interface Organization {
 	application: ReverseNavigationResource<Application>;
 	/** includes__organization_membership */
 	organization_membership: ReverseNavigationResource<OrganizationMembership>;
+	owns__credit_bundle: ReverseNavigationResource<CreditBundle>;
 	owns__team: ReverseNavigationResource<Team>;
 	organization__has_private_access_to__device_type: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
 	organization_credit_notification: ReverseNavigationResource<OrganizationCreditNotification>;
