@@ -118,17 +118,6 @@ describe('Application Model', function () {
 					);
 				});
 
-				it('should be rejected if the device type is discontinued', function () {
-					const promise = balena.models.application.create({
-						name: 'FooBar',
-						deviceType: 'edge',
-						organization: ctx.initialOrg.id,
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Discontinued device type: edge',
-					);
-				});
-
 				it('should be rejected if the name has less than four characters', function () {
 					const promise = balena.models.application.create({
 						name: 'Foo',
@@ -284,6 +273,15 @@ describe('Application Model', function () {
 						'directly_accessible',
 					);
 					await expect(promise).to.eventually.have.length(appCount);
+				});
+
+				it('should succeed even if the device type is discontinued', function () {
+					const promise = balena.models.application.create({
+						name: 'FooBar',
+						deviceType: 'edge',
+						organization: ctx.initialOrg.id,
+					});
+					return expect(promise).to.be.fulfilled;
 				});
 			});
 		});
