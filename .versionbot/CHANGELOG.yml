@@ -1,4 +1,16 @@
 - commits:
+    - subject: "application.create: Enable creating fleets with archived device types"
+      hash: 97a267ce844840936a3bffe7d4f317e21cd0f8ad
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 17.6.0
+  title: ""
+  date: 2023-07-05T12:29:10.114Z
+- commits:
     - subject: Add `owns__credit_bundle` typing for `Organization`
       hash: 5260e77117f6eb07e32cb70da8889eb18112d216
       body: ""
