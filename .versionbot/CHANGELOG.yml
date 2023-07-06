@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add typings for the organization.is_frozen computed term
+      hash: 95a4304cf75a6537036764d59d6a7f9c9060d623
+      body: ""
+      footer:
+        Depends-on: https://github.com/balena-io/balena-api/pull/4503
+        depends-on: https://github.com/balena-io/balena-api/pull/4503
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.7.0
+  title: ""
+  date: 2023-07-06T11:02:18.622Z
+- commits:
     - subject: "application.create: Enable creating fleets with archived device types"
       hash: 97a267ce844840936a3bffe7d4f317e21cd0f8ad
       body: ""
