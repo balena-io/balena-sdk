@@ -1,4 +1,16 @@
 - commits:
+    - subject: "deviceType.getBySlugOrName: Use a clearer var name in the docs example"
+      hash: 41f7b823975667c37daf1c541919c20e95a9198b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.7.1
+  title: ""
+  date: 2023-07-09T21:29:32.317Z
+- commits:
     - subject: Add typings for the organization.is_frozen computed term
       hash: 95a4304cf75a6537036764d59d6a7f9c9060d623
       body: ""
