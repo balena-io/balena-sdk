@@ -308,12 +308,12 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * @memberof balena.models.deviceType
 		 *
 		 * @param {String} slugOrName - deviceType slug
-		 * @fulfil {Object} - device manifest
+		 * @fulfil {Object} - device type
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(manifest) {
-		 * 	console.log(manifest);
+		 * balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(deviceType) {
+		 * 	console.log(deviceType);
 		 * });
 		 */
 		getBySlugOrName: async (

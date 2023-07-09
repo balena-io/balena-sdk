@@ -80,6 +80,7 @@ const getConfigModel = function (
 		// there are plans to move this to `resin-device-types` so it
 		// should be a matter of time for this to be removed.
 		deviceTypes.map(function (deviceType) {
+			// TODO: Drop in the next major the `deviceType.name.replace`s
 			if (deviceType.state === 'DISCONTINUED') {
 				deviceType.name = deviceType.name.replace(
 					/(\(PREVIEW|EXPERIMENTAL\))/,

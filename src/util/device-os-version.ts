@@ -2,6 +2,7 @@ import bSemver = require('balena-semver');
 import type * as BalenaSdk from '..';
 import { isProvisioned } from './device';
 
+// TODO: Drop in the next major
 export const normalizeDeviceOsVersion = (
 	device: Partial<
 		Pick<BalenaSdk.Device, 'os_version'> & Parameters<typeof isProvisioned>[0]

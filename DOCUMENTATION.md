@@ -4457,7 +4457,7 @@ balena.models.deviceType.getAllSupported({ $select: ['name', 'slug'] }).then(fun
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get a deviceType by slug or name  
 **Access**: public  
-**Fulfil**: <code>Object</code> - device manifest  
+**Fulfil**: <code>Object</code> - device type  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -4465,8 +4465,8 @@ balena.models.deviceType.getAllSupported({ $select: ['name', 'slug'] }).then(fun
 
 **Example**  
 ```js
-balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(manifest) {
-	console.log(manifest);
+balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(deviceType) {
+	console.log(deviceType);
 });
 ```
 <a name="balena.models.deviceType.getName"></a>
