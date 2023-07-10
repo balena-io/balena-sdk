@@ -280,6 +280,35 @@ const getBillingModel = function (
 		},
 
 		/**
+		 * @summary Remove an organization's billing information
+		 * @name removeBillingInfo
+		 * @public
+		 * @function
+		 * @memberof balena.models.billing
+		 *
+		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
+		 *
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.billing.removeBillingInfo(orgId).then(function() {
+		 * 	console.log("Success");
+		 * });
+		 */
+		removeBillingInfo: async (
+			organization: string | number,
+		): Promise<BillingInfo> => {
+			const orgId = await getOrgId(organization);
+
+			const { body } = await request.send({
+				method: 'DELETE',
+				url: `/billing/v1/account/${orgId}/info`,
+				baseUrl: apiUrl,
+			});
+			return body;
+		},
+
+		/**
 		 * @summary Update the current billing account information
 		 * @name updateAccountInfo
 		 * @public
