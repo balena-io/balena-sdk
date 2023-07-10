@@ -1,4 +1,16 @@
 - commits:
+    - subject: "billing: Add `removeBillingInfo` method for removing billing info"
+      hash: 25d24ccdfe89ecc816ca8781cbfed6dafeda91bc
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 17.8.0
+  title: ""
+  date: 2023-07-10T13:20:21.969Z
+- commits:
     - subject: "deviceType.getBySlugOrName: Use a clearer var name in the docs example"
       hash: 41f7b823975667c37daf1c541919c20e95a9198b
       body: ""
