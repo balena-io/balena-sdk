@@ -28,6 +28,7 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 import type * as tagsHelper from './tags';
+import type * as BalenaSdk from '../../..';
 
 const makeRequest = async (url) => {
 	try {
@@ -2390,92 +2391,101 @@ describe('Device Model', function () {
 
 			describe('balena.models.device.serviceVar', function () {
 				const varModel = balena.models.device.serviceVar;
+				const serviceParams = ['id', 'service_name'] satisfies Array<
+					keyof BalenaSdk.Service
+				>;
 
 				deviceUniqueFields.forEach(function (deviceParam) {
-					it(`can create a variable by ${deviceParam}`, function () {
-						const promise = varModel.set(
-							this.device[deviceParam],
-							this.webService.id,
-							`EDITOR_BY_${deviceParam}`,
-							'vim',
-						);
-						return expect(promise).to.not.be.rejected;
-					});
-
-					it(`...can retrieve a created variable by ${deviceParam}`, async function () {
-						const result = await varModel.get(
-							this.device[deviceParam],
-							this.webService.id,
-							`EDITOR_BY_${deviceParam}`,
-						);
-						return expect(result).to.equal('vim');
-					});
-
-					it(`...can update and retrieve a variable by ${deviceParam}`, async function () {
-						await varModel.set(
-							this.device[deviceParam],
-							this.webService.id,
-							`EDITOR_BY_${deviceParam}`,
-							'emacs',
-						);
-						const result = await varModel.get(
-							this.device[deviceParam],
-							this.webService.id,
-							`EDITOR_BY_${deviceParam}`,
-						);
-						return expect(result).to.equal('emacs');
-					});
-
-					it(`...can delete and then fail to retrieve a variable by ${deviceParam}`, async function () {
-						await varModel.remove(
-							this.device[deviceParam],
-							this.webService.id,
-							`EDITOR_BY_${deviceParam}`,
-						);
-						const result = await varModel.get(
-							this.device[deviceParam],
-							this.webService.id,
-							`EDITOR_BY_${deviceParam}`,
-						);
-						return expect(result).to.equal(undefined);
-					});
-
-					it(`can create and then retrieve multiple variables by ${deviceParam}`, async function () {
-						await Promise.all([
-							varModel.set(
+					serviceParams.forEach(function (serviceParam) {
+						it(`can create a variable by device ${deviceParam} & service ${serviceParam}`, function () {
+							const promise = varModel.set(
 								this.device[deviceParam],
-								this.webService.id,
-								`A_BY_${deviceParam}`,
-								'a',
-							),
-							varModel.set(
+								this.webService[serviceParam],
+								`EDITOR_BY_${deviceParam}_${serviceParam}`,
+								'vim',
+							);
+							return expect(promise).to.not.be.rejected;
+						});
+
+						it(`...can retrieve a created variable by device ${deviceParam} & service ${serviceParam}`, async function () {
+							const result = await varModel.get(
 								this.device[deviceParam],
-								this.dbService.id,
-								`B_BY_${deviceParam}`,
-								'b',
-							),
-						]);
-						const result = await varModel.getAllByDevice(
-							this.device[deviceParam],
-						);
-						expect(_.find(result, { name: `A_BY_${deviceParam}` }))
-							.to.be.an('object')
-							.that.has.property('value', 'a');
-						expect(_.find(result, { name: `B_BY_${deviceParam}` }))
-							.to.be.an('object')
-							.that.has.property('value', 'b');
-						return await Promise.all([
-							varModel.remove(
+								this.webService[serviceParam],
+								`EDITOR_BY_${deviceParam}_${serviceParam}`,
+							);
+							return expect(result).to.equal('vim');
+						});
+
+						it(`...can update and retrieve a variable by device ${deviceParam} & service ${serviceParam}`, async function () {
+							await varModel.set(
 								this.device[deviceParam],
-								this.webService.id,
-								`A_BY_${deviceParam}`,
-							),
-							varModel.remove(
+								this.webService[serviceParam],
+								`EDITOR_BY_${deviceParam}_${serviceParam}`,
+								'emacs',
+							);
+							const result = await varModel.get(
 								this.device[deviceParam],
-								this.dbService.id,
-								`B_BY_${deviceParam}`,
-							),
-						]);
+								this.webService[serviceParam],
+								`EDITOR_BY_${deviceParam}_${serviceParam}`,
+							);
+							return expect(result).to.equal('emacs');
+						});
+
+						it(`...can delete and then fail to retrieve a variable by device ${deviceParam} & service ${serviceParam}`, async function () {
+							await varModel.remove(
+								this.device[deviceParam],
+								this.webService[serviceParam],
+								`EDITOR_BY_${deviceParam}_${serviceParam}`,
+							);
+							const result = await varModel.get(
+								this.device[deviceParam],
+								this.webService[serviceParam],
+								`EDITOR_BY_${deviceParam}_${serviceParam}`,
+							);
+							return expect(result).to.equal(undefined);
+						});
+
+						it(`can create and then retrieve multiple variables by device ${deviceParam} & service ${serviceParam}`, async function () {
+							await Promise.all([
+								varModel.set(
+									this.device[deviceParam],
+									this.webService[serviceParam],
+									`A_BY_${deviceParam}_${serviceParam}`,
+									'a',
+								),
+								varModel.set(
+									this.device[deviceParam],
+									this.dbService.id,
+									`B_BY_${deviceParam}_${serviceParam}`,
+									'b',
+								),
+							]);
+							const result = await varModel.getAllByDevice(
+								this.device[deviceParam],
+							);
+							expect(
+								_.find(result, { name: `A_BY_${deviceParam}_${serviceParam}` }),
+							)
+								.to.be.an('object')
+								.that.has.property('value', 'a');
+							expect(
+								_.find(result, { name: `B_BY_${deviceParam}_${serviceParam}` }),
+							)
+								.to.be.an('object')
+								.that.has.property('value', 'b');
+							return await Promise.all([
+								varModel.remove(
+									this.device[deviceParam],
+									this.webService[serviceParam],
+									`A_BY_${deviceParam}_${serviceParam}`,
+								),
+								varModel.remove(
+									this.device[deviceParam],
+									this.dbService.id,
+									`B_BY_${deviceParam}_${serviceParam}`,
+								),
+							]);
+						});
 					});
 				});
 
