@@ -392,11 +392,11 @@ const sdk = fromSharedOptions();
             * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
         * [.service](#balena.models.service) : <code>object</code>
             * [.var](#balena.models.service.var) : <code>object</code>
-                * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+                * [.getAllByService(serviceIdOrNaturalKey, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
-                * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
-                * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+                * [.get(serviceIdOrNaturalKey, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+                * [.set(serviceIdOrNaturalKey, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+                * [.remove(serviceIdOrNaturalKey, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
         * [.image](#balena.models.image) : <code>object</code>
             * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
@@ -793,11 +793,11 @@ balena.models.device.get(123).catch(function (error) {
         * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
     * [.service](#balena.models.service) : <code>object</code>
         * [.var](#balena.models.service.var) : <code>object</code>
-            * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+            * [.getAllByService(serviceIdOrNaturalKey, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
-            * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
-            * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+            * [.get(serviceIdOrNaturalKey, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+            * [.set(serviceIdOrNaturalKey, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+            * [.remove(serviceIdOrNaturalKey, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
     * [.image](#balena.models.image) : <code>object</code>
         * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
@@ -6008,11 +6008,11 @@ balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'},
 
 * [.service](#balena.models.service) : <code>object</code>
     * [.var](#balena.models.service.var) : <code>object</code>
-        * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+        * [.getAllByService(serviceIdOrNaturalKey, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
-        * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
-        * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+        * [.get(serviceIdOrNaturalKey, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+        * [.set(serviceIdOrNaturalKey, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+        * [.remove(serviceIdOrNaturalKey, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
 
 <a name="balena.models.service.var"></a>
@@ -6021,15 +6021,15 @@ balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'},
 **Kind**: static namespace of [<code>service</code>](#balena.models.service)  
 
 * [.var](#balena.models.service.var) : <code>object</code>
-    * [.getAllByService(id, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
+    * [.getAllByService(serviceIdOrNaturalKey, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(id, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
-    * [.set(id, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
-    * [.remove(id, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
+    * [.get(serviceIdOrNaturalKey, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
+    * [.set(serviceIdOrNaturalKey, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
+    * [.remove(serviceIdOrNaturalKey, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.service.var.getAllByService"></a>
 
-###### var.getAllByService(id, [options]) ⇒ <code>Promise</code>
+###### var.getAllByService(serviceIdOrNaturalKey, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get all variables for a service  
 **Access**: public  
@@ -6037,12 +6037,18 @@ balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'},
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| id | <code>Number</code> |  | service id |
+| serviceIdOrNaturalKey | <code>Number</code> \| <code>Object</code> |  | service id (number) or appliation-service_name pair |
 | [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
 balena.models.service.var.getAllByService(999999).then(function(vars) {
+	console.log(vars);
+});
+```
+**Example**  
+```js
+balena.models.service.var.getAllByService({ application: 'myorganization/myapp', service_name: 'myservice' }).then(function(vars) {
 	console.log(vars);
 });
 ```
@@ -6073,7 +6079,7 @@ balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 ```
 <a name="balena.models.service.var.get"></a>
 
-###### var.get(id, key) ⇒ <code>Promise</code>
+###### var.get(serviceIdOrNaturalKey, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get the value of a specific service variable  
 **Access**: public  
@@ -6081,7 +6087,7 @@ balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>Number</code> | service id |
+| serviceIdOrNaturalKey | <code>Number</code> \| <code>Object</code> | service id (number) or appliation-service_name pair |
 | key | <code>String</code> | variable name |
 
 **Example**  
@@ -6090,16 +6096,22 @@ balena.models.service.var.get(999999, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
+**Example**  
+```js
+balena.models.service.var.get({ application: 'myorganization/myapp', service_name: 'myservice' }, 'VAR').then(function(value) {
+	console.log(value);
+});
+```
 <a name="balena.models.service.var.set"></a>
 
-###### var.set(id, key, value) ⇒ <code>Promise</code>
+###### var.set(serviceIdOrNaturalKey, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Set the value of a specific service variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>Number</code> | service id |
+| serviceIdOrNaturalKey | <code>Number</code> \| <code>Object</code> | service id (number) or appliation-service_name pair |
 | key | <code>String</code> | variable name |
 | value | <code>String</code> | variable value |
 
@@ -6109,21 +6121,33 @@ balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
+**Example**  
+```js
+balena.models.service.var.set({ application: 'myorganization/myapp', service_name: 'myservice' }, 'VAR', 'newvalue').then(function() {
+	...
+});
+```
 <a name="balena.models.service.var.remove"></a>
 
-###### var.remove(id, key) ⇒ <code>Promise</code>
+###### var.remove(serviceIdOrNaturalKey, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Clear the value of a specific service variable  
 **Access**: public  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>Number</code> | service id |
+| serviceIdOrNaturalKey | <code>Number</code> \| <code>Object</code> | service id (number) or appliation-service_name pair |
 | key | <code>String</code> | variable name |
 
 **Example**  
 ```js
 balena.models.service.var.remove(999999, 'VAR').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.service.var.remove({ application: 'myorganization/myapp', service_name: 'myservice' }, 'VAR').then(function() {
 	...
 });
 ```

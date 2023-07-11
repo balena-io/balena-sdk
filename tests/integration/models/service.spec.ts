@@ -10,6 +10,7 @@ import {
 	applicationRetrievalFields,
 } from '../setup';
 import { timeSuite } from '../../util';
+import type * as BalenaSdk from '../../..';
 
 describe('Service Model', function () {
 	timeSuite(before);
@@ -80,78 +81,135 @@ describe('Service Model', function () {
 
 		describe('balena.models.service.var', function () {
 			const varModel = balena.models.service.var;
+			const serviceParams = [
+				'id',
+				'service_name & application id',
+				'service_name & application slug',
+			] as const;
 
-			it('can create a variable', function () {
-				const promise = varModel.set(this.webService.id, 'EDITOR', 'vim');
-				return expect(promise).to.not.be.rejected;
-			});
+			function getParam(
+				service: BalenaSdk.PinePostResult<BalenaSdk.Service>,
+				paramName: (typeof serviceParams)[number],
+			) {
+				if (paramName === 'service_name & application id') {
+					return {
+						application: service.application.__id,
+						service_name: service.service_name,
+					};
+				}
+				if (paramName === 'service_name & application slug') {
+					return {
+						application: this.application.slug,
+						service_name: service.service_name,
+					};
+				}
+				return service[paramName];
+			}
 
-			it('...can retrieve a created variable', function () {
-				return varModel
-					.get(this.webService.id, 'EDITOR')
-					.then((result) => expect(result).to.equal('vim'));
-			});
+			serviceParams.forEach(function (serviceParam) {
+				const serviceParamSlug = serviceParam.replace(/[ &]/g, '_');
 
-			it('...can update and retrieve a variable', function () {
-				return varModel
-					.set(this.webService.id, 'EDITOR', 'emacs')
-					.then(() => {
-						return varModel.get(this.webService.id, 'EDITOR');
-					})
-					.then((result) => expect(result).to.equal('emacs'));
-			});
+				it(`can create a variable by service ${serviceParam}`, async function () {
+					const param = getParam.call(this, this.webService, serviceParam);
+					await varModel.set(
+						param,
+						`EDITOR_${serviceParamSlug}`,
+						`vim_${serviceParamSlug}`,
+					);
+				});
 
-			it('...can delete and then fail to retrieve a variable', function () {
-				return varModel
-					.remove(this.webService.id, 'EDITOR')
-					.then(() => {
-						return varModel.get(this.webService.id, 'EDITOR');
-					})
-					.then((result) => expect(result).to.equal(undefined));
-			});
+				it(`...can retrieve a created variable by service ${serviceParam}`, async function () {
+					const param = getParam.call(this, this.webService, serviceParam);
+					const result = await varModel.get(
+						param,
+						`EDITOR_${serviceParamSlug}`,
+					);
+					expect(result).to.equal(`vim_${serviceParamSlug}`);
+				});
 
-			it('can create and then retrieve multiple variables', function () {
-				return Promise.all([
-					varModel.set(this.webService.id, 'A', 'a'),
-					varModel.set(this.webService.id, 'B', 'b'),
-				])
-					.then(() => {
-						return varModel.getAllByService(this.webService.id);
-					})
-					.then((result) => {
-						expect(_.find(result, { name: 'A' }))
-							.to.be.an('object')
-							.that.has.property('value', 'a');
-						expect(_.find(result, { name: 'B' }))
-							.to.be.an('object')
-							.that.has.property('value', 'b');
-						return Promise.all([
-							varModel.remove(this.webService.id, 'A'),
-							varModel.remove(this.webService.id, 'B'),
-						]);
-					});
-			});
+				it(`...can update and retrieve a variable by service ${serviceParam}`, async function () {
+					const param = getParam.call(this, this.webService, serviceParam);
+					await varModel.set(
+						param,
+						`EDITOR_${serviceParamSlug}`,
+						`emacs_${serviceParamSlug}`,
+					);
+					const result = await varModel.get(
+						param,
+						`EDITOR_${serviceParamSlug}`,
+					);
+					expect(result).to.equal(`emacs_${serviceParamSlug}`);
+				});
 
-			it('can create and then retrieve multiple variables by application', function () {
-				return Promise.all([
-					varModel.set(this.webService.id, 'A_BY_APPLICATION', 'a'),
-					varModel.set(this.webService.id, 'B_BY_APPLICATION', 'b'),
-				])
-					.then(() => {
-						return varModel.getAllByApplication(this.application.id);
-					})
-					.then((result) => {
-						expect(_.find(result, { name: 'A_BY_APPLICATION' }))
-							.to.be.an('object')
-							.that.has.property('value', 'a');
-						expect(_.find(result, { name: 'B_BY_APPLICATION' }))
-							.to.be.an('object')
-							.that.has.property('value', 'b');
-						return Promise.all([
-							varModel.remove(this.webService.id, 'A_BY_APPLICATION'),
-							varModel.remove(this.webService.id, 'B_BY_APPLICATION'),
-						]);
-					});
+				it(`...can delete and then fail to retrieve a variable by service ${serviceParam}`, async function () {
+					const param = getParam.call(this, this.webService, serviceParam);
+					await varModel.remove(param, `EDITOR_${serviceParamSlug}`);
+					const result = await varModel.get(
+						param,
+						`EDITOR_${serviceParamSlug}`,
+					);
+					expect(result).to.equal(undefined);
+				});
+
+				it(`can create and then retrieve multiple variables by service ${serviceParam}`, async function () {
+					const param = getParam.call(this, this.webService, serviceParam);
+					await Promise.all([
+						varModel.set(
+							param,
+							`A_${serviceParamSlug}`,
+							`a_${serviceParamSlug}`,
+						),
+						varModel.set(
+							param,
+							`B_${serviceParamSlug}`,
+							`b_${serviceParamSlug}`,
+						),
+					]);
+					const result = await varModel.getAllByService(param);
+					expect(_.find(result, { name: `A_${serviceParamSlug}` }))
+						.to.be.an('object')
+						.that.has.property('value', `a_${serviceParamSlug}`);
+					expect(_.find(result, { name: `B_${serviceParamSlug}` }))
+						.to.be.an('object')
+						.that.has.property('value', `b_${serviceParamSlug}`);
+					await Promise.all([
+						varModel.remove(param, `A_${serviceParamSlug}`),
+						varModel.remove(param, `B_${serviceParamSlug}`),
+					]);
+				});
+
+				it(`can create and then retrieve multiple variables by application by service ${serviceParam}`, async function () {
+					const param = getParam.call(this, this.webService, serviceParam);
+					await Promise.all([
+						varModel.set(
+							param,
+							`A_BY_APPLICATION_${serviceParamSlug}`,
+							`a_${serviceParamSlug}`,
+						),
+						varModel.set(
+							param,
+							`B_BY_APPLICATION_${serviceParamSlug}`,
+							`b_${serviceParamSlug}`,
+						),
+					]);
+					const result = await varModel.getAllByApplication(
+						this.application.id,
+					);
+					expect(
+						_.find(result, { name: `A_BY_APPLICATION_${serviceParamSlug}` }),
+					)
+						.to.be.an('object')
+						.that.has.property('value', `a_${serviceParamSlug}`);
+					expect(
+						_.find(result, { name: `B_BY_APPLICATION_${serviceParamSlug}` }),
+					)
+						.to.be.an('object')
+						.that.has.property('value', `b_${serviceParamSlug}`);
+					await Promise.all([
+						varModel.remove(param, `A_BY_APPLICATION_${serviceParamSlug}`),
+						varModel.remove(param, `B_BY_APPLICATION_${serviceParamSlug}`),
+					]);
+				});
 			});
 		});
 	});
