@@ -34,6 +34,37 @@ const getServiceModel = ({
 			resourceKeyField: 'name',
 			parentResourceName: 'service',
 			async getResourceId(id) {
+				if (id != null && typeof id === 'object') {
+					if (
+						Object.keys(id).length !== 2 ||
+						!('application' in id) ||
+						!('service_name' in id)
+					) {
+						throw new Error(
+							`Unexpected type for id provided in service varModel getResourceId: ${typeof id}`,
+						);
+					}
+					const alternateServiceKey = id as {
+						application: number | string;
+						service_name: string;
+					};
+
+					const [service] = await getAllByApplication(
+						alternateServiceKey.application,
+						{
+							$select: 'id',
+							$filter: {
+								service_name: alternateServiceKey.service_name,
+							},
+						},
+					);
+					if (service == null) {
+						throw new errors.BalenaServiceNotFound(
+							alternateServiceKey.service_name,
+						);
+					}
+					return service.id;
+				}
 				if (typeof id !== 'number') {
 					throw new Error(
 						`Unexpected type for id provided in service varModel getResourceId: ${typeof id}`,
@@ -58,6 +89,22 @@ const getServiceModel = ({
 		return service;
 	};
 
+	async function getAllByApplication(
+		slugOrUuidOrId: string | number,
+		options: PineOptions<Service> = {},
+	): Promise<Service[]> {
+		const { service } = await sdkInstance.models.application.get(
+			slugOrUuidOrId,
+			{
+				$select: 'service',
+				$expand: {
+					service: options,
+				},
+			},
+		);
+		return service!;
+	}
+
 	const exports = {
 		/**
 		 * @summary Get all services from an application
@@ -81,18 +128,7 @@ const getServiceModel = ({
 		 * 	console.log(services);
 		 * });
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: string | number,
-			options: PineOptions<Service> = {},
-		): Promise<Service[]> {
-			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
-				$select: 'id',
-			});
-			return pine.get({
-				resource: 'service',
-				options: mergePineOptions({ $filter: { application: id } }, options),
-			});
-		},
+		getAllByApplication,
 
 		/**
 		 * @namespace balena.models.service.var
@@ -106,13 +142,18 @@ const getServiceModel = ({
 			 * @function
 			 * @memberof balena.models.service.var
 			 *
-			 * @param {Number} id - service id
+			 * @param {Number|Object} serviceIdOrNaturalKey - service id (number) or appliation-service_name pair
 			 * @param {Object} [options={}] - extra pine options to use
 			 * @fulfil {Object[]} - service variables
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.service.var.getAllByService(999999).then(function(vars) {
+			 * 	console.log(vars);
+			 * });
+			 *
+			 * @example
+			 * balena.models.service.var.getAllByService({ application: 'myorganization/myapp', service_name: 'myservice' }).then(function(vars) {
 			 * 	console.log(vars);
 			 * });
 			 */
@@ -179,13 +220,18 @@ const getServiceModel = ({
 			 * @function
 			 * @memberof balena.models.service.var
 			 *
-			 * @param {Number} id - service id
+			 * @param {Number|Object} serviceIdOrNaturalKey - service id (number) or appliation-service_name pair
 			 * @param {String} key - variable name
 			 * @fulfil {String|undefined} - the variable value (or undefined)
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.service.var.get(999999, 'VAR').then(function(value) {
+			 * 	console.log(value);
+			 * });
+			 *
+			 * @example
+			 * balena.models.service.var.get({ application: 'myorganization/myapp', service_name: 'myservice' }, 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
 			 */
@@ -198,13 +244,18 @@ const getServiceModel = ({
 			 * @function
 			 * @memberof balena.models.service.var
 			 *
-			 * @param {Number} id - service id
+			 * @param {Number|Object} serviceIdOrNaturalKey - service id (number) or appliation-service_name pair
 			 * @param {String} key - variable name
 			 * @param {String} value - variable value
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.service.var.set(999999, 'VAR', 'newvalue').then(function() {
+			 * 	...
+			 * });
+			 *
+			 * @example
+			 * balena.models.service.var.set({ application: 'myorganization/myapp', service_name: 'myservice' }, 'VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
 			 */
@@ -217,12 +268,17 @@ const getServiceModel = ({
 			 * @function
 			 * @memberof balena.models.service.var
 			 *
-			 * @param {Number} id - service id
+			 * @param {Number|Object} serviceIdOrNaturalKey - service id (number) or appliation-service_name pair
 			 * @param {String} key - variable name
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.service.var.remove(999999, 'VAR').then(function() {
+			 * 	...
+			 * });
+			 *
+			 * @example
+			 * balena.models.service.var.remove({ application: 'myorganization/myapp', service_name: 'myservice' }, 'VAR').then(function() {
 			 * 	...
 			 * });
 			 */
