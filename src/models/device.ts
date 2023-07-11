@@ -2886,7 +2886,7 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.serviceVar
 			 *
 			 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-			 * @param {Number} id - service id
+			 * @param {String|Number} serviceNameOrId - service name (string) or id (number)
 			 * @param {String} key - variable name
 			 * @fulfil {String|undefined} - the variable value (or undefined)
 			 * @returns {Promise}
@@ -2897,13 +2897,18 @@ const getDeviceModel = function (
 			 * });
 			 *
 			 * @example
+			 * balena.models.device.serviceVar.get('7cf02a6', 'myservice', 'VAR').then(function(value) {
+			 * 	console.log(value);
+			 * });
+			 *
+			 * @example
 			 * balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
 			 */
 			async get(
 				uuidOrId: string | number,
-				serviceId: number,
+				serviceNameOrId: string | number,
 				key: string,
 			): Promise<string | undefined> {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
@@ -2918,7 +2923,19 @@ const getDeviceModel = function (
 									$expr: {
 										si: {
 											device: deviceId,
-											installs__service: serviceId,
+											installs__service:
+												typeof serviceNameOrId === 'number'
+													? serviceNameOrId
+													: {
+															$any: {
+																$alias: 'is',
+																$expr: {
+																	is: {
+																		service_name: serviceNameOrId,
+																	},
+																},
+															},
+													  },
 										},
 									},
 								},
@@ -2938,13 +2955,19 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.serviceVar
 			 *
 			 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-			 * @param {Number} id - service id
+			 * @param {String|Number} serviceNameOrId - service name (string) or id (number)
 			 * @param {String} key - variable name
 			 * @param {String} value - variable value
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+			 * 	...
+			 * });
+			 *
+			 *
+			 * @example
+			 * balena.models.device.serviceVar.set('7cf02a6', 'myservice', 'VAR', 'override').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -2955,7 +2978,7 @@ const getDeviceModel = function (
 			 */
 			async set(
 				uuidOrId: string | number,
-				serviceId: number,
+				serviceNameOrId: string | number,
 				key: string,
 				value: string,
 			): Promise<void> {
@@ -2986,14 +3009,26 @@ const getDeviceModel = function (
 						$select: 'id',
 						$filter: {
 							device: deviceFilter,
-							installs__service: serviceId,
+							installs__service:
+								typeof serviceNameOrId === 'number'
+									? serviceNameOrId
+									: {
+											$any: {
+												$alias: 's',
+												$expr: {
+													s: {
+														service_name: serviceNameOrId,
+													},
+												},
+											},
+									  },
 						},
 					},
 				});
 
 				const [serviceInstall] = serviceInstalls;
 				if (serviceInstall == null) {
-					throw new errors.BalenaServiceNotFound(serviceId);
+					throw new errors.BalenaServiceNotFound(serviceNameOrId);
 				}
 
 				if (serviceInstalls.length > 1) {
@@ -3020,12 +3055,17 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.serviceVar
 			 *
 			 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-			 * @param {Number} id - service id
+			 * @param {String|Number} serviceNameOrId - service name (string) or id (number)
 			 * @param {String} key - variable name
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+			 * 	...
+			 * });
+			 *
+			 * @example
+			 * balena.models.device.serviceVar.remove('7cf02a6', 'myservice', 'VAR').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -3036,7 +3076,7 @@ const getDeviceModel = function (
 			 */
 			async remove(
 				uuidOrId: string | number,
-				serviceId: number,
+				serviceNameOrId: string | number,
 				key: string,
 			): Promise<void> {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
@@ -3050,7 +3090,19 @@ const getDeviceModel = function (
 									$expr: {
 										si: {
 											device: deviceId,
-											service: serviceId,
+											installs__service:
+												typeof serviceNameOrId === 'number'
+													? serviceNameOrId
+													: {
+															$any: {
+																$alias: 'is',
+																$expr: {
+																	is: {
+																		service_name: serviceNameOrId,
+																	},
+																},
+															},
+													  },
 										},
 									},
 								},

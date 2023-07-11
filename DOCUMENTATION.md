@@ -247,9 +247,9 @@ const sdk = fromSharedOptions();
             * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-                * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
-                * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
-                * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+                * [.get(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+                * [.set(uuidOrId, serviceNameOrId, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+                * [.remove(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
             * [.history](#balena.models.device.history) : <code>object</code>
                 * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
                 * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
@@ -409,6 +409,7 @@ const sdk = fromSharedOptions();
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
             * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
             * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+            * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
             * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
             * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
             * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
@@ -647,9 +648,9 @@ balena.models.device.get(123).catch(function (error) {
         * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-            * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
-            * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
-            * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+            * [.get(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+            * [.set(uuidOrId, serviceNameOrId, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+            * [.remove(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
         * [.history](#balena.models.device.history) : <code>object</code>
             * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
@@ -809,6 +810,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
         * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
         * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+        * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
         * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
         * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
         * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
@@ -2225,9 +2227,9 @@ balena.models.application.revokeSupportAccess(123);
     * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+        * [.get(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+        * [.set(uuidOrId, serviceNameOrId, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+        * [.remove(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
     * [.history](#balena.models.device.history) : <code>object</code>
         * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
@@ -2673,9 +2675,9 @@ balena.models.device.envVar.remove(999999, 'VAR').then(function() {
 * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
     * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.get(uuidOrId, id, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, id, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, id, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
+    * [.get(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
+    * [.set(uuidOrId, serviceNameOrId, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
+    * [.remove(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
 
 <a name="balena.models.device.serviceVar.getAllByDevice"></a>
 
@@ -2729,7 +2731,7 @@ balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) 
 ```
 <a name="balena.models.device.serviceVar.get"></a>
 
-###### serviceVar.get(uuidOrId, id, key) ⇒ <code>Promise</code>
+###### serviceVar.get(uuidOrId, serviceNameOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get the overriden value of a service variable on a device  
 **Access**: public  
@@ -2738,12 +2740,18 @@ balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) 
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| id | <code>Number</code> | service id |
+| serviceNameOrId | <code>String</code> \| <code>Number</code> | service name (string) or id (number) |
 | key | <code>String</code> | variable name |
 
 **Example**  
 ```js
 balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+	console.log(value);
+});
+```
+**Example**  
+```js
+balena.models.device.serviceVar.get('7cf02a6', 'myservice', 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
@@ -2755,7 +2763,7 @@ balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 ```
 <a name="balena.models.device.serviceVar.set"></a>
 
-###### serviceVar.set(uuidOrId, id, key, value) ⇒ <code>Promise</code>
+###### serviceVar.set(uuidOrId, serviceNameOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Set the overriden value of a service variable on a device  
 **Access**: public  
@@ -2763,7 +2771,7 @@ balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| id | <code>Number</code> | service id |
+| serviceNameOrId | <code>String</code> \| <code>Number</code> | service name (string) or id (number) |
 | key | <code>String</code> | variable name |
 | value | <code>String</code> | variable value |
 
@@ -2775,13 +2783,19 @@ balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(func
 ```
 **Example**  
 ```js
+balena.models.device.serviceVar.set('7cf02a6', 'myservice', 'VAR', 'override').then(function() {
+	...
+});
+```
+**Example**  
+```js
 balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(function() {
 	...
 });
 ```
 <a name="balena.models.device.serviceVar.remove"></a>
 
-###### serviceVar.remove(uuidOrId, id, key) ⇒ <code>Promise</code>
+###### serviceVar.remove(uuidOrId, serviceNameOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Clear the overridden value of a service variable on a device  
 **Access**: public  
@@ -2789,12 +2803,18 @@ balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(functio
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-| id | <code>Number</code> | service id |
+| serviceNameOrId | <code>String</code> \| <code>Number</code> | service name (string) or id (number) |
 | key | <code>String</code> | variable name |
 
 **Example**  
 ```js
 balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+	...
+});
+```
+**Example**  
+```js
+balena.models.device.serviceVar.remove('7cf02a6', 'myservice', 'VAR').then(function() {
 	...
 });
 ```
@@ -6238,6 +6258,7 @@ balena.models.creditBundle.create(orgId, featureId, creditsToPurchase).then(func
     * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
     * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
     * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
+    * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
     * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
     * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
     * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
@@ -6316,6 +6337,23 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 ```js
 balena.models.billing.updateBillingInfo(orgId, { token_id: 'xxxxxxx' }).then(function(billingInfo) {
 	console.log(billingInfo);
+});
+```
+<a name="balena.models.billing.removeBillingInfo"></a>
+
+##### billing.removeBillingInfo(organization) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
+**Summary**: Remove an organization's billing information  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+
+**Example**  
+```js
+balena.models.billing.removeBillingInfo(orgId).then(function() {
+	console.log("Success");
 });
 ```
 <a name="balena.models.billing.updateAccountInfo"></a>
