@@ -1,4 +1,20 @@
 - commits:
+    - subject: "service: Allow passing an application-service_name pair as a parameter"
+      hash: e1ad757a224c4bbff06f927644a5f7c3471bbb93
+      body: ""
+      footer:
+        Resolves: "#1361"
+        resolves: "#1361"
+        Change-type: minor
+        change-type: minor
+        See: https://balena.zulipchat.com/#narrow/stream/346007-balena-io.2FbalenaCloud/topic/Using.20serviceName.20as.20param.20for.20service.20var.20methods.20in.20SDK
+        see: https://balena.zulipchat.com/#narrow/stream/346007-balena-io.2FbalenaCloud/topic/Using.20serviceName.20as.20param.20for.20service.20var.20methods.20in.20SDK
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.10.0
+  title: ""
+  date: 2023-07-11T09:01:06.152Z
+- commits:
     - subject: "device.serviceVar: Allow passing a service name as a parameter"
       hash: 705ba70ab6afe287e9b0ee25828ca06968fc055b
       body: ""
