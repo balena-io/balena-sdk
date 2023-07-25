@@ -24,18 +24,23 @@ module.exports = function (config) {
 
 	const karmaConfig = getKarmaConfig(packageJSON);
 	karmaConfig.webpack.resolve.fallback = {
+		// required by: temp in tests
 		constants: false,
+		// required by: mockttp in tests
 		crypto: require.resolve('crypto-browserify'),
+		// required by: mocha.parallel in tests
 		domain: require.resolve('domain-browser'),
-		dns: false,
+		// used conditionally in the tests
 		fs: false,
-		net: false,
+		// required by: ndjson
 		os: require.resolve('os-browserify'),
+		// used conditionally in the tests
 		path: false,
+		// required by: mockttp in tests
 		querystring: require.resolve('querystring-es3'),
+		// required by: balena-request
 		stream: require.resolve('stream-browserify'),
-		url: false,
-		util: require.resolve('util'),
+		// required by: balena-request
 		zlib: require.resolve('browserify-zlib'),
 	};
 	karmaConfig.webpack.plugins = [
