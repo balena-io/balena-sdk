@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update balena-request to 12.0.2
+      hash: 52528a8037f3ba9fc021edb654b1ce2eddbdfd18
+      body: |
+        Update balena-request from 12.0.1 to 12.0.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Make `url` a normal dependency
+              hash: 1598cca9808180f2df2455bd8514b2647ea88f47
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-request-12.0.2
+          title: ""
+          date: 2023-07-25T15:56:21.136Z
+  version: 17.10.2
+  title: ""
+  date: 2023-07-25T16:28:09.722Z
+- commits:
     - subject: Update dependenecies
       hash: b66a841441dd5d89ccf63903f785d69cf78b4c3d
       body: |

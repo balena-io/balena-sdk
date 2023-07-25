@@ -1,6 +1,6 @@
 {
   "name": "balena-sdk",
-  "version": "17.10.1",
+  "version": "17.10.2",
   "description": "The Balena JavaScript SDK",
   "main": "index.js",
   "types": "index.d.ts",
@@ -133,6 +133,6 @@
     "tslib": "^2.1.0"
   },
   "versionist": {
-    "publishedAt": "2023-07-25T10:57:49.288Z"
+    "publishedAt": "2023-07-25T16:28:10.888Z"
   }
 }
