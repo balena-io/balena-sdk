@@ -7,6 +7,8 @@ import {
 	getSdk,
 	sdkOpts,
 	givenLoggedInUser,
+	credentials,
+	givenAnApplication,
 } from './setup';
 import { timeSuite } from '../util';
 
@@ -19,39 +21,42 @@ describe('Balena SDK', function () {
 	const validKeys = ['auth', 'models', 'logs', 'settings', 'version'];
 
 	describe('factory function', function () {
-		describe('given no opts', () =>
+		describe('given no opts', () => {
 			it('should return an object with valid keys', function () {
 				const mockBalena = getSdk();
-				return expect(mockBalena).to.include.keys(validKeys);
-			}));
+				expect(mockBalena).to.include.keys(validKeys);
+			});
+		});
 
-		describe('given empty opts', () =>
+		describe('given empty opts', () => {
 			it('should return an object with valid keys', function () {
 				const mockBalena = getSdk({});
-				return expect(mockBalena).to.include.keys(validKeys);
-			}));
+				expect(mockBalena).to.include.keys(validKeys);
+			});
+		});
 
-		describe('given opts', () =>
+		describe('given opts', () => {
 			it('should return an object with valid keys', function () {
 				const mockBalena = getSdk(sdkOpts);
-				return expect(mockBalena).to.include.keys(validKeys);
-			}));
+				expect(mockBalena).to.include.keys(validKeys);
+			});
+		});
 
-		describe('version', () =>
+		describe('version', () => {
 			it('should match the package.json version', function () {
 				const mockBalena = getSdk();
-				return expect(mockBalena).to.have.property(
-					'version',
-					packageJSON.version,
-				);
-			}));
+				expect(mockBalena).to.have.property('version', packageJSON.version);
+			});
+		});
 	});
 
-	it('should expose a pinejs client instance', () =>
-		expect(balena.pine).to.exist);
+	it('should expose a pinejs client instance', () => {
+		expect(balena.pine).to.exist;
+	});
 
-	it('should expose an balena-errors instance', () =>
-		expect(balena.errors).to.exist);
+	it('should expose an balena-errors instance', () => {
+		expect(balena.errors).to.exist;
+	});
 
 	describe('interception Hooks', function () {
 		let originalInterceptors: typeof balena.interceptors;
@@ -340,36 +345,184 @@ describe('Balena SDK', function () {
 			return expect(root['BALENA_SDK_SHARED_OPTIONS']).to.equal(opts);
 		}));
 
-	describe('fromSharedOptions()', () =>
+	describe('fromSharedOptions()', () => {
 		it('should return an object with valid keys', function () {
 			const mockBalena = balenaSdkExports.fromSharedOptions();
 			return expect(mockBalena).to.include.keys(validKeys);
-		}));
-	describe('constructor options', () =>
-		describe('Given an apiKey', function () {
+		});
+	});
+
+	describe('constructor options', () => {
+		describe('When initializing an SDK instance with an `apiKey` in the options', function () {
 			givenLoggedInUser(before);
 
-			before(function () {
-				return balena.models.apiKey
-					.create('apiKey', 'apiKeyDescription')
-					.then((testApiKey) => {
-						this.testApiKey = testApiKey;
-						expect(this.testApiKey).to.be.a('string');
-						return balena.auth.logout();
-					});
+			before(async function () {
+				const testApiKey = await balena.models.apiKey.create(
+					'apiKey',
+					'apiKeyDescription',
+				);
+				this.testApiKey = testApiKey;
+				expect(this.testApiKey).to.be.a('string');
+				await balena.auth.logout();
 			});
 
-			it('should not be used in API requests', function () {
+			it('should not be used in API requests', async function () {
 				expect(this.testApiKey).to.be.a('string');
-				const testSdkOpts = Object.assign({}, sdkOpts, {
+				const testSdkOpts = {
+					...sdkOpts,
 					apiKey: this.testApiKey,
-				});
+				};
 				const testSdk = getSdk(testSdkOpts);
 				const promise = testSdk.models.apiKey.getAll({ $top: 1 });
-				return expect(promise).to.be.rejected.and.eventually.have.property(
+				await expect(promise).to.be.rejected.and.eventually.have.property(
 					'code',
 					'BalenaNotLoggedIn',
 				);
 			});
-		}));
+		});
+	});
+
+	describe('storage isolation', function () {
+		describe('given a logged in instance', function () {
+			givenLoggedInUser(before);
+			givenAnApplication(before);
+
+			describe('creating an SDK instance with the same options', function () {
+				let testSdk: balenaSdk.BalenaSDK;
+				before(async function () {
+					testSdk = getSdk(sdkOpts);
+				});
+
+				describe('pine queries', async () => {
+					it('should be able to retrieve the user (using the key from the first instance)', async function () {
+						const [user] = await testSdk.pine.get({
+							resource: 'user',
+							options: {
+								$select: 'username',
+								$filter: {
+									username: credentials.username,
+								},
+							},
+						});
+						expect(user)
+							.to.be.an('object')
+							.and.have.property('username', credentials.username);
+					});
+
+					it('should be able to retrieve the application created by the first instance', async function () {
+						const apps = await testSdk.pine.get({
+							resource: 'application',
+							options: {
+								$select: 'id',
+								$filter: {
+									id: this.application.id,
+								},
+							},
+						});
+						expect(apps).to.have.lengthOf(1);
+					});
+				});
+
+				describe('models.application.get', async () => {
+					it('should be able to retrieve the application created by the first instance', async function () {
+						const app = await testSdk.models.application.get(
+							this.application.id,
+							{
+								$select: 'id',
+							},
+						);
+						expect(app)
+							.to.be.an('object')
+							.and.have.property('id', this.application.id);
+					});
+				});
+
+				describe('balena.auth.isLoggedIn()', async () => {
+					it('should return true', async function () {
+						expect(await testSdk.auth.isLoggedIn()).to.equal(true);
+					});
+				});
+
+				describe('balena.auth.getToken()', async () => {
+					it('should return the same key as the first instance', async function () {
+						expect(await testSdk.auth.getToken()).to.equal(
+							await balena.auth.getToken(),
+						);
+					});
+				});
+			});
+
+			describe('creating an SDK instance using dataDirectory: false', function () {
+				let testSdk: balenaSdk.BalenaSDK;
+				before(async function () {
+					testSdk = getSdk({
+						...sdkOpts,
+						dataDirectory: false,
+					});
+				});
+
+				describe('pine queries', async () => {
+					it('should be unauthenticated and not be able to retrieve any user', async function () {
+						await expect(
+							testSdk.pine.get({
+								resource: 'user',
+								options: {
+									$select: 'username',
+									$filter: {
+										username: credentials.username,
+									},
+								},
+							}),
+						).to.be.rejected.and.eventually.have.property(
+							'code',
+							'BalenaNotLoggedIn',
+						);
+					});
+
+					it('should be unauthenticated and not be able to retrieve the application created by the first instance', async function () {
+						const apps = await testSdk.pine.get({
+							resource: 'application',
+							options: {
+								$select: 'id',
+								$filter: {
+									id: this.application.id,
+								},
+							},
+						});
+						expect(apps).to.have.lengthOf(0);
+					});
+				});
+
+				describe('models.application.get', async () => {
+					it('should be able to retrieve the application created by the first instance', async function () {
+						await expect(
+							testSdk.models.application.get(this.application.id, {
+								$select: 'id',
+							}),
+						).to.be.rejected.and.eventually.have.property(
+							'code',
+							'BalenaApplicationNotFound',
+						);
+					});
+				});
+
+				describe('balena.auth.isLoggedIn()', async () => {
+					it('should return false', async function () {
+						expect(await testSdk.auth.isLoggedIn()).to.equal(false);
+					});
+				});
+
+				describe('balena.auth.getToken()', async () => {
+					it('should return no key', async function () {
+						await expect(
+							testSdk.auth.getToken(),
+						).to.be.rejected.and.eventually.have.property(
+							'code',
+							'BalenaNotLoggedIn',
+						);
+					});
+				});
+			});
+		});
+	});
 });
