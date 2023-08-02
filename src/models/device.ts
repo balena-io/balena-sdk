@@ -1261,6 +1261,7 @@ const getDeviceModel = function (
 		 *
 		 * @param {String|Number} uuidOrId - fleet uuid (string) or id (number)
 		 * @param {String} release - (optional) release uuid (default tracked)
+		 * @param {String} [context] - extra access filters, undefined or 'directly_accessible'
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -1282,12 +1283,14 @@ const getDeviceModel = function (
 		getSupervisorTargetStateForApp: async (
 			slugOrUuidOrId: string | number,
 			release?: string | number,
+			context?: 'directly_accessible',
 		): Promise<DeviceState.DeviceStateV3> => {
 			const { uuid } = await sdkInstance.models.application.get(
 				slugOrUuidOrId,
 				{
 					$select: 'uuid',
 				},
+				context,
 			);
 			const { body } = await request.send({
 				url: `/device/v3/fleet/${uuid}/state/?releaseUuid=${release ?? ''}`,
