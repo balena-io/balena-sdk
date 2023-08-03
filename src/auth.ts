@@ -80,7 +80,42 @@ const getAuth = function (
 		return body;
 	};
 
+	type ActorResponse =
+		| {
+				id: number;
+				actorType: 'user';
+				actorTypeId: number;
+				username: string;
+				email: string | null;
+		  }
+		| {
+				id: number;
+				actorType: 'application';
+				actorTypeId: number;
+				slug: string;
+		  }
+		| {
+				id: number;
+				actorType: 'device';
+				actorTypeId: number;
+				uuid: string;
+		  };
+
+	const actorWhoami = async () => {
+		const { body } = await request.send<ActorResponse>({
+			method: 'GET',
+			url: '/actor/v1/whoami',
+			baseUrl: apiUrl,
+		});
+		return body;
+	};
+
 	const memoizedUserWhoami = memoizee(userWhoami, {
+		primitive: true,
+		promise: true,
+	});
+
+	const memoizedActorWhoami = memoizee(actorWhoami, {
 		primitive: true,
 		promise: true,
 	});
@@ -95,6 +130,74 @@ const getAuth = function (
 			throw normalizeAuthError(err);
 		}
 	};
+
+	const getActorDetails = async (noCache = false) => {
+		if (noCache) {
+			memoizedActorWhoami.clear();
+		}
+		try {
+			return await memoizedActorWhoami();
+		} catch (err) {
+			throw normalizeAuthError(err);
+		}
+	};
+
+	/**
+	 * @summary Return current logged in actor id
+	 * @name getActorId
+	 * @public
+	 * @function
+	 * @memberof balena.auth
+	 *
+	 * @description This will only work if you used {@link balena.auth.login} or {@link balena.auth.loginWithToken} to log in.
+	 *
+	 * @fulfil {(Number|undefined)} - actor id if logged in
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.auth.getActorId().then(function(actorId) {
+	 * 	if (!actorId) {
+	 * 		console.log('I\'m not logged in!');
+	 * 	} else {
+	 * 		console.log('My actorId is:', actorId);
+	 * 	}
+	 * });
+	 */
+	async function getActorId(): Promise<number | undefined> {
+		try {
+			const actorDetails = await getActorDetails();
+			return actorDetails?.id;
+		} catch (err) {
+			if (err instanceof errors.BalenaNotLoggedIn) {
+				return;
+			}
+			throw err;
+		}
+	}
+
+	/**
+	 * @summary Return current logged in actor id
+	 * @name getActor
+	 * @public
+	 * @function
+	 * @memberof balena.auth
+	 *
+	 * @description This will only work if you used {@link balena.auth.login} or {@link balena.auth.loginWithToken} to log in.
+	 *
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.auth.getActor().then(function(actor) {
+	 * 	if (!actor) {
+	 * 		console.log('I\'m not logged in!');
+	 * 	} else {
+	 * 		console.log('My actor is:', actor);
+	 * 	}
+	 * });
+	 */
+	async function getActor(): Promise<ActorResponse> {
+		return getActorDetails();
+	}
 
 	/**
 	 * @summary Return current logged in username
@@ -249,7 +352,7 @@ const getAuth = function (
 	 */
 	async function isLoggedIn(): Promise<boolean> {
 		try {
-			await getUserDetails(true);
+			await getActorDetails(true);
 			return true;
 		} catch (err) {
 			if (
@@ -487,6 +590,8 @@ const getAuth = function (
 	return {
 		twoFactor,
 		whoami,
+		getActorId,
+		getActor,
 		authenticate,
 		login,
 		loginWithToken,
