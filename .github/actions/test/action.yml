@@ -12,11 +12,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Node.js 14
+    - name: Setup Node.js 16
       if: ${{ env.os_value == 'ubuntu-20.04' }}
       uses: actions/setup-node@v3
       with:
-        node-version: 14
+        node-version: 16
 
     - name: Setup Node.js lts
       if: ${{ env.os_value != 'ubuntu-20.04' }}
