@@ -116,7 +116,7 @@
     "@types/json-schema": "^7.0.9",
     "@types/node": "^14.0.0",
     "abortcontroller-polyfill": "^1.7.1",
-    "balena-auth": "^5.0.0",
+    "balena-auth": "^5.1.0",
     "balena-errors": "^4.8.0",
     "balena-hup-action-utils": "~5.0.0",
     "balena-register-device": "^8.0.7",
