@@ -1,3 +1,4 @@
+import type { WebResourceFile } from 'balena-request';
 import type {
 	AnyObject,
 	PropsAssignableWithType,
@@ -142,6 +143,14 @@ export type PostResult<T> = SelectResultObject<
 	T,
 	Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<object>>>
 >;
+
+export type WebResource = {
+	filename: string;
+	href: string;
+	content_type?: string;
+	content_disposition?: string;
+	size?: number;
+};
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
 
@@ -379,10 +388,11 @@ export type ODataOptionsStrict<T> = Omit<
 export type ODataOptionsWithFilter<T> = ODataOptions<T> &
 	Required<Pick<ODataOptions<T>, '$filter'>>;
 
+export type ReplaceWebResource<K> = K extends WebResource ? WebResourceFile : K;
 export type SubmitBody<T> = {
 	[k in keyof T]?: T[k] extends AssociatedResource<object>
 		? number | null
-		: T[k];
+		: ReplaceWebResource<T[k]>;
 };
 
 type BaseResourceId =
