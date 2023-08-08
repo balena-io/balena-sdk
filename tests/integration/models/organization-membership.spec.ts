@@ -16,6 +16,7 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 import type * as tagsHelper from './tags';
+import { UserKeyWhoAmIResponse } from '../../../src';
 
 const keyAlternatives = [
 	['id', (member: Pick<BalenaSdk.OrganizationMembership, 'id'>) => member.id],
@@ -43,7 +44,10 @@ describe('Organization Membership Model', function () {
 	let ctx: Mocha.Context;
 	before(async function () {
 		ctx = this;
-		this.username = await balena.auth.whoami();
+		const userInfoResult =
+			(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+		expect(userInfoResult?.actorType).to.be.eq('user');
+		this.username = userInfoResult.username;
 		this.userId = await balena.auth.getUserId();
 		const roles = await balena.pine.get({
 			resource: 'organization_membership_role',

@@ -9,7 +9,14 @@ import {
 	givenLoggedInUser,
 	givenLoggedInUserWithApiKey,
 	loginUserWith2FA,
+	givenLoggedInWithADeviceApiKey,
+	givenLoggedInWithAnApplicationApiKey,
 } from './setup';
+import {
+	UserKeyWhoAmIResponse,
+	DeviceKeyWhoAmIResponse,
+	ApplicationKeyWhoAmIResponse,
+} from '../../src';
 
 describe('SDK authentication', function () {
 	timeSuite(before);
@@ -239,8 +246,16 @@ describe('SDK authentication', function () {
 		});
 
 		describe('balena.auth.whoami()', () => {
-			it('should eventually be the username', async function () {
-				expect(await balena.auth.whoami()).to.equal(credentials.username);
+			it('should eventually be the user whoami response', async function () {
+				const whoamiResult =
+					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				expect(whoamiResult?.actorType).to.equal('user');
+				expect(whoamiResult?.username).to.equal(credentials.username);
+				expect(whoamiResult?.email).to.equal(credentials.email);
+				expect(whoamiResult).to.have.property('id').that.is.a('number');
+				expect(whoamiResult)
+					.to.have.property('actorTypeId')
+					.that.is.a('number');
 			});
 		});
 
@@ -274,7 +289,142 @@ describe('SDK authentication', function () {
 		});
 	});
 
-	describe('when logged in with API key', function () {
+	describe('when logged in with a device API Key', function () {
+		givenLoggedInWithADeviceApiKey(before);
+
+		describe('balena.auth.isLoggedIn()', () => {
+			it('should eventually be true', async function () {
+				expect(await balena.auth.isLoggedIn()).to.be.true;
+			});
+		});
+
+		describe('balena.auth.whoami()', () => {
+			it('should eventually be the device whoami response', async function () {
+				const whoamiResult =
+					(await balena.auth.whoami()) as DeviceKeyWhoAmIResponse;
+				expect(whoamiResult?.actorType).to.equal('device');
+				expect(whoamiResult).to.have.property('uuid').that.is.a('string');
+				expect(whoamiResult).to.have.property('id').that.is.a('number');
+				expect(whoamiResult)
+					.to.have.property('actorTypeId')
+					.that.is.a('number');
+			});
+		});
+
+		describe('balena.auth.getEmail()', () => {
+			it('should be rejected with an error', async function () {
+				const promise = balena.auth.getEmail();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'message',
+					'The authentication credentials in use are not of a user',
+				);
+			});
+		});
+
+		describe('balena.auth.getUserId()', () => {
+			it('should be rejected with an error', async () => {
+				const promise = balena.auth.getUserId();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'message',
+					'The authentication credentials in use are not of a user',
+				);
+			});
+		});
+
+		describe('balena.auth.getUserActorId()', () => {
+			it('should be rejected with an error', async () => {
+				const promise = balena.auth.getUserActorId();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'message',
+					'The authentication credentials in use are not of a user',
+				);
+			});
+		});
+
+		describe('balena.auth.logout()', function () {
+			it('should logout the user', async () => {
+				await balena.auth.logout();
+				expect(await balena.auth.isLoggedIn()).to.be.false;
+			});
+
+			it('...should reset the token on logout', async () => {
+				const promise = balena.auth.getToken();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
+			});
+		});
+	});
+
+	describe('when logged in with an application API Key', function () {
+		givenLoggedInWithAnApplicationApiKey(before);
+
+		describe('balena.auth.isLoggedIn()', () => {
+			it('should eventually be true', async function () {
+				expect(await balena.auth.isLoggedIn()).to.be.true;
+			});
+		});
+
+		describe('balena.auth.whoami()', () => {
+			it('should eventually be the application whoami response', async function () {
+				const whoamiResult =
+					(await balena.auth.whoami()) as ApplicationKeyWhoAmIResponse;
+				expect(whoamiResult?.actorType).to.equal('application');
+				expect(whoamiResult).to.have.property('slug').that.is.a('string');
+				expect(whoamiResult).to.have.property('id').that.is.a('number');
+				expect(whoamiResult)
+					.to.have.property('actorTypeId')
+					.that.is.a('number');
+			});
+		});
+
+		describe('balena.auth.getEmail()', () => {
+			it('should be rejected with an error', async function () {
+				const promise = balena.auth.getEmail();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'message',
+					'The authentication credentials in use are not of a user',
+				);
+			});
+		});
+
+		describe('balena.auth.getUserId()', () => {
+			it('should be rejected with an error', async () => {
+				const promise = balena.auth.getUserId();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'message',
+					'The authentication credentials in use are not of a user',
+				);
+			});
+		});
+
+		describe('balena.auth.getUserActorId()', () => {
+			it('should be rejected with an error', async () => {
+				const promise = balena.auth.getUserActorId();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'message',
+					'The authentication credentials in use are not of a user',
+				);
+			});
+		});
+
+		describe('balena.auth.logout()', function () {
+			it('should logout the user', async () => {
+				await balena.auth.logout();
+				expect(await balena.auth.isLoggedIn()).to.be.false;
+			});
+
+			it('...should reset the token on logout', async () => {
+				const promise = balena.auth.getToken();
+				await expect(promise).to.be.rejected.and.eventually.have.property(
+					'code',
+					'BalenaNotLoggedIn',
+				);
+			});
+		});
+	});
+	describe('when logged in with an user API key', function () {
 		givenLoggedInUserWithApiKey(before);
 
 		describe('balena.auth.isLoggedIn()', () => {
@@ -284,8 +434,16 @@ describe('SDK authentication', function () {
 		});
 
 		describe('balena.auth.whoami()', () => {
-			it('should eventually be the username', async function () {
-				expect(await balena.auth.whoami()).to.equal(credentials.username);
+			it('should eventually be the user whoami response', async function () {
+				const whoamiResult =
+					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				expect(whoamiResult?.actorType).to.equal('user');
+				expect(whoamiResult?.username).to.equal(credentials.username);
+				expect(whoamiResult?.email).to.equal(credentials.email);
+				expect(whoamiResult).to.have.property('id').that.is.a('number');
+				expect(whoamiResult)
+					.to.have.property('actorTypeId')
+					.that.is.a('number');
 			});
 		});
 

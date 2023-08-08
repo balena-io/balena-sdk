@@ -6630,19 +6630,19 @@ balena.auth.loginWithToken(token);
 <a name="balena.auth.whoami"></a>
 
 #### auth.whoami() ⇒ <code>Promise</code>
-This will only work if you used [login](#balena.auth.login) to log in.
+This will only work if you used [login](#balena.auth.login) or [loginWithToken](#balena.auth.loginWithToken) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
-**Summary**: Return current logged in username  
+**Summary**: Return current logged in information  
 **Access**: public  
-**Fulfil**: <code>(String\|undefined)</code> - username, if it exists  
+**Fulfil**: <code>(Object\|undefined)</code> - actor information, if it exists  
 **Example**  
 ```js
-balena.auth.whoami().then(function(username) {
-	if (!username) {
+balena.auth.whoami().then(function(result) {
+	if (!result) {
 		console.log('I\'m not logged in!');
 	} else {
-		console.log('My username is:', username);
+		console.log('My result is:', result);
 	}
 });
 ```

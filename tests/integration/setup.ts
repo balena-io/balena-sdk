@@ -179,7 +179,7 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 	afterFn(() => resetUser());
 }
 
-export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
+export function givenLoggedInUser(beforeFn: Mocha.HookFunction, forceRelogin = false) {
 	beforeFn(async () => {
 		await balena.auth.login({
 			email: credentials.email,
@@ -189,7 +189,16 @@ export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	afterFn(() => resetUser());
+	afterFn(async () => {
+		if (forceRelogin) {
+			await balena.auth.logout();
+			await balena.auth.login({
+				email: credentials.email,
+				password: credentials.password,
+			});
+		}
+		return resetUser();
+	});
 }
 
 export function loginUserWith2FA() {
@@ -348,6 +357,33 @@ export const testDeviceOsInfo = {
 	os_version: 'balenaOS 2.48.0+rev1',
 	supervisor_version: '10.8.0',
 };
+
+export function givenLoggedInWithAnApplicationApiKey(
+	beforeFn: Mocha.HookFunction,
+) {
+	givenLoggedInUser(beforeFn, true);
+	givenAnApplication(beforeFn);
+
+	beforeFn(async function () {
+		const key = await balena.models.application.generateProvisioningKey(
+			this.application.slug,
+		);
+		await balena.auth.logout();
+		await balena.auth.loginWithToken(key);
+	});
+}
+
+export function givenLoggedInWithADeviceApiKey(beforeFn: Mocha.HookFunction) {
+	givenLoggedInUser(beforeFn, true);
+	givenAnApplication(beforeFn);
+	givenADevice(beforeFn);
+
+	beforeFn(async function () {
+		const key = await balena.models.device.generateDeviceKey(this.device.id);
+		await balena.auth.logout();
+		await balena.auth.loginWithToken(key);
+	});
+}
 
 export function givenADevice(
 	beforeFn: Mocha.HookFunction,
