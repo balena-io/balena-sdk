@@ -1,4 +1,43 @@
 - commits:
+    - subject: Add support for creating isolated in-memory instances
+      hash: 74b8d0d74ff820ed544df9a18c4ad4318ed6e5cd
+      body: |
+        Update balena-auth from 5.0.0 to 5.1.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: "Add support for isolated instances by passing dataDirectory: false"
+              hash: 2cc4958bb2916775fecbc258f43b23c46333b661
+              body: ""
+              footer:
+                Depends-on: https://github.com/balena-io-modules/balena-settings-storage/pull/37
+                depends-on: https://github.com/balena-io-modules/balena-settings-storage/pull/37
+                Change-type: minor
+                change-type: minor
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-5.1.0
+          title: ""
+          date: 2023-07-28T15:00:01.134Z
+        - commits:
+            - subject: Add multiple instance isolation tests
+              hash: 0404c937564fe24e0b6ba1cca49db776bcfeaa75
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-5.0.1
+          title: ""
+          date: 2023-07-28T14:03:55.964Z
+  version: 17.11.0
+  title: ""
+  date: 2023-08-08T20:05:03.533Z
+- commits:
     - subject: Update balena-request to 12.0.2
       hash: 52528a8037f3ba9fc021edb654b1ce2eddbdfd18
       body: |
