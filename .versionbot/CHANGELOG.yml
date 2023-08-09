@@ -1,4 +1,24 @@
 - commits:
+    - subject: Fix pointing browser es2018 settings-client to the es2015 one
+      hash: 2d9cca251388643d428704975b406cb9cf0528da
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Point browser bundlers to the appropriate handlebars entrypoint
+      hash: dfc6785549bc7b519476cc08f54a388aeb1c58f7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 17.12.1
+  title: ""
+  date: 2023-08-09T11:55:12.626Z
+- commits:
     - subject: "tests: Reduce the polyfills used in webpack"
       hash: 361957f52c1bf7b5d770eb8098cfc03fbeedbaa1
       body: ""
