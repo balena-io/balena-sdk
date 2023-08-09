@@ -7,7 +7,7 @@
   "browser": {
     "index.js": "./es2015/index.js",
     "es2015/util/settings-client.js": "./es2015/util/settings-client.browser.js",
-    "es2018/util/settings-client.js": "./es2015/util/settings-client.browser.js",
+    "es2018/util/settings-client.js": "./es2018/util/settings-client.browser.js",
     "handlebars": "handlebars/dist/cjs/handlebars.js"
   },
   "homepage": "https://github.com/balena-io/balena-sdk",
