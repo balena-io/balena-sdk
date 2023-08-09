@@ -246,19 +246,11 @@ export const getSdk = function ($opts?: SdkOptions) {
 	 * @memberof balena
 	 */
 
-	let settings: InjectedDependenciesParam['settings'];
-	if (opts.isBrowser) {
-		const { notImplemented } = require('./util') as typeof import('./util');
-		settings = {
-			get: notImplemented,
-			getAll: notImplemented,
-		};
-	} else {
-		settings =
-			require('balena-settings-client') as typeof import('balena-settings-client') as InjectedDependenciesParam['settings'];
-		if (opts.dataDirectory == null) {
-			opts.dataDirectory = settings.get('dataDirectory');
-		}
+	const settings = (
+		require('./util/settings-client') as typeof import('./util/settings-client')
+	).loadSettingsClient(opts);
+	if (!opts.isBrowser && opts.dataDirectory == null) {
+		opts.dataDirectory = settings.get('dataDirectory');
 	}
 
 	if ('apiKey' in opts) {

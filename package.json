@@ -4,7 +4,11 @@
   "description": "The Balena JavaScript SDK",
   "main": "index.js",
   "types": "index.d.ts",
-  "browser": "es2015",
+  "browser": {
+    "index.js": "./es2015/index.js",
+    "es2015/util/settings-client.js": "./es2015/util/settings-client.browser.js",
+    "es2018/util/settings-client.js": "./es2015/util/settings-client.browser.js"
+  },
   "homepage": "https://github.com/balena-io/balena-sdk",
   "repository": {
     "type": "git",
