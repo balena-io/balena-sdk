@@ -312,6 +312,27 @@ const getAuth = function (
 	}
 
 	/**
+	 * @summary Get current logged in actor id
+	 * @name getActorId
+	 * @public
+	 * @function
+	 * @memberof balena.auth
+	 *
+	 * @description This will only work if you used {@link balena.auth.login} or {@link balena.auth.loginWithToken} to log in.
+	 *
+	 * @fulfil {Number} - actor id
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.auth.getActorId().then(function(actorId) {
+	 * 	console.log(actorId);
+	 * });
+	 */
+	async function getActorId(): Promise<number> {
+		return (await getActorDetails()).id;
+	}
+
+	/**
 	 * @summary Get current logged in user's actor id
 	 * @name getUserActorId
 	 * @public
@@ -475,6 +496,7 @@ const getAuth = function (
 		loginWithToken,
 		isLoggedIn,
 		getToken,
+		getActorId,
 		getUserActorId,
 		getUserInfo,
 		logout,

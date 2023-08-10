@@ -430,6 +430,7 @@ const sdk = fromSharedOptions();
         * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
         * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
         * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
+        * [.getActorId()](#balena.auth.getActorId) ⇒ <code>Promise</code>
         * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
         * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
         * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
@@ -6483,6 +6484,7 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
     * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
     * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
     * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
+    * [.getActorId()](#balena.auth.getActorId) ⇒ <code>Promise</code>
     * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
     * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
     * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
@@ -6751,6 +6753,21 @@ This will only work if you used [login](#balena.auth.login) to log in.
 ```js
 balena.auth.getUserInfo().then(function(userInfo) {
 	console.log(userInfo);
+});
+```
+<a name="balena.auth.getActorId"></a>
+
+#### auth.getActorId() ⇒ <code>Promise</code>
+This will only work if you used [login](#balena.auth.login) or [loginWithToken](#balena.auth.loginWithToken) to log in.
+
+**Kind**: static method of [<code>auth</code>](#balena.auth)  
+**Summary**: Get current logged in actor id  
+**Access**: public  
+**Fulfil**: <code>Number</code> - actor id  
+**Example**  
+```js
+balena.auth.getActorId().then(function(actorId) {
+	console.log(actorId);
 });
 ```
 <a name="balena.auth.getUserActorId"></a>
