@@ -46,7 +46,6 @@ import {
 	withSupervisorLockedError,
 } from '../util';
 
-import { normalizeDeviceOsVersion } from '../util/device-os-version';
 import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
@@ -185,15 +184,6 @@ const getApplicationModel = function (
 		}
 	};
 
-	const normalizeApplication = function (application: Application) {
-		if (Array.isArray(application.owns__device)) {
-			application.owns__device.forEach((device) =>
-				normalizeDeviceOsVersion(device),
-			);
-		}
-		return application;
-	};
-
 	const isDirectlyAccessibleByUserFilter = {
 		is_directly_accessible_by__user: {
 			$any: {
@@ -265,7 +255,7 @@ const getApplicationModel = function (
 					options ?? {},
 				),
 			});
-			return apps.map(normalizeApplication);
+			return apps;
 		},
 
 		/**
@@ -365,7 +355,7 @@ const getApplicationModel = function (
 			if (application == null) {
 				throw new errors.BalenaApplicationNotFound(slugOrUuidOrId);
 			}
-			return normalizeApplication(application);
+			return application;
 		},
 
 		/**
@@ -517,7 +507,7 @@ const getApplicationModel = function (
 				throw new errors.BalenaAmbiguousApplication(appName);
 			}
 			const [application] = applications;
-			return normalizeApplication(application);
+			return application;
 		},
 
 		/**
@@ -560,7 +550,7 @@ const getApplicationModel = function (
 			if (application == null) {
 				throw new errors.BalenaApplicationNotFound(`${owner}/${appName}`);
 			}
-			return normalizeApplication(application);
+			return application;
 		},
 
 		/**
