@@ -57,7 +57,6 @@ import {
 import {
 	getDeviceOsSemverWithVariant,
 	ensureVersionCompatibility,
-	normalizeDeviceOsVersion,
 } from '../util/device-os-version';
 import {
 	getCurrentServiceDetailsPineExpand,
@@ -230,13 +229,6 @@ const getDeviceModel = function (
 		}
 	};
 
-	const addExtraInfo = function <
-		T extends Parameters<typeof normalizeDeviceOsVersion>[0],
-	>(device: T) {
-		normalizeDeviceOsVersion(device);
-		return device;
-	};
-
 	const getAppliedConfigVariableValue = async (
 		uuidOrId: string | number,
 		name: string,
@@ -333,7 +325,7 @@ const getDeviceModel = function (
 			resource: 'device',
 			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
 		});
-		return devices.map(addExtraInfo) as Device[];
+		return devices as Device[];
 	}
 
 	async function startOsUpdate(
@@ -638,7 +630,7 @@ const getDeviceModel = function (
 			if (device == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
-			return addExtraInfo(device) as Device;
+			return device as Device;
 		},
 
 		/**
