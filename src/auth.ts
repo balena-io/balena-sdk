@@ -368,34 +368,6 @@ const getAuth = function (
 	}
 
 	/**
-	 * @summary Get current logged in user's email
-	 * @name getEmail
-	 * @public
-	 * @function
-	 * @memberof balena.auth
-	 *
-	 * @description This will only work if you used {@link balena.auth.login} to log in.
-	 *
-	 * @fulfil {String} - user email
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.auth.getEmail().then(function(email) {
-	 * 	console.log(email);
-	 * });
-	 */
-	async function getEmail(): Promise<string | null> {
-		const actor = await getActorDetails();
-
-		if (actor.actorType !== 'user') {
-			throw new Error(
-				'The authentication credentials in use are not of a user',
-			);
-		}
-		return actor.email;
-	}
-
-	/**
 	 * @summary Logout
 	 * @name logout
 	 * @public
@@ -532,7 +504,6 @@ const getAuth = function (
 		getToken,
 		getUserId,
 		getUserActorId,
-		getEmail,
 		getUserInfo,
 		logout,
 		register,

@@ -432,7 +432,6 @@ const sdk = fromSharedOptions();
         * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
         * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
         * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
-        * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
         * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
         * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
         * [.verifyEmail(verificationPayload)](#balena.auth.verifyEmail) ⇒ <code>Promise</code>
@@ -6487,7 +6486,6 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
     * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
     * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
     * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
-    * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
     * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
     * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
     * [.verifyEmail(verificationPayload)](#balena.auth.verifyEmail) ⇒ <code>Promise</code>
@@ -6785,21 +6783,6 @@ This will only work if you used [login](#balena.auth.login) to log in.
 ```js
 balena.auth.getUserActorId().then(function(userActorId) {
 	console.log(userActorId);
-});
-```
-<a name="balena.auth.getEmail"></a>
-
-#### auth.getEmail() ⇒ <code>Promise</code>
-This will only work if you used [login](#balena.auth.login) to log in.
-
-**Kind**: static method of [<code>auth</code>](#balena.auth)  
-**Summary**: Get current logged in user's email  
-**Access**: public  
-**Fulfil**: <code>String</code> - user email  
-**Example**  
-```js
-balena.auth.getEmail().then(function(email) {
-	console.log(email);
 });
 ```
 <a name="balena.auth.logout"></a>
