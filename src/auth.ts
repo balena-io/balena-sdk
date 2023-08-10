@@ -333,35 +333,6 @@ const getAuth = function (
 	}
 
 	/**
-	 * @summary Get current logged in user's actor id
-	 * @name getUserActorId
-	 * @public
-	 * @function
-	 * @memberof balena.auth
-	 *
-	 * @description This will only work if you used {@link balena.auth.login} to log in.
-	 *
-	 * @fulfil {Number} - user id
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.auth.getUserActorId().then(function(userActorId) {
-	 * 	console.log(userActorId);
-	 * });
-	 */
-	async function getUserActorId(): Promise<number> {
-		const { id } = await getUserInfo();
-		const { actor } = (await pine.get({
-			resource: 'user',
-			id,
-			options: {
-				$select: 'actor',
-			},
-		}))!;
-		return actor;
-	}
-
-	/**
 	 * @summary Logout
 	 * @name logout
 	 * @public
@@ -497,7 +468,6 @@ const getAuth = function (
 		isLoggedIn,
 		getToken,
 		getActorId,
-		getUserActorId,
 		getUserInfo,
 		logout,
 		register,

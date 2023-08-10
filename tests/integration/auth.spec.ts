@@ -109,16 +109,6 @@ describe('SDK authentication', function () {
 			});
 		});
 
-		describe('balena.auth.getUserActorId()', () => {
-			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getUserActorId();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
-				);
-			});
-		});
-
 		describe.skip('balena.auth.register()', function () {
 			beforeEach(async () => {
 				await balena.auth.login({
@@ -224,16 +214,6 @@ describe('SDK authentication', function () {
 				);
 			});
 		});
-
-		describe('balena.auth.getUserActorId()', () => {
-			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getUserActorId();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
-				);
-			});
-		});
 	});
 
 	describe('when logged in with credentials', function () {
@@ -272,14 +252,6 @@ describe('SDK authentication', function () {
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
 				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
-			});
-		});
-
-		describe('balena.auth.getUserActorId()', () => {
-			it('should eventually be a user id', async () => {
-				const userId = await balena.auth.getUserActorId();
 				expect(userId).to.be.a('number');
 				expect(userId).to.be.greaterThan(0);
 			});
@@ -330,16 +302,6 @@ describe('SDK authentication', function () {
 				const userId = await balena.auth.getActorId();
 				expect(userId).to.be.a('number');
 				expect(userId).to.be.greaterThan(0);
-			});
-		});
-
-		describe('balena.auth.getUserActorId()', () => {
-			it('should be rejected with an error', async () => {
-				const promise = balena.auth.getUserActorId();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'message',
-					'The authentication credentials in use are not of a user',
-				);
 			});
 		});
 
@@ -399,16 +361,6 @@ describe('SDK authentication', function () {
 			});
 		});
 
-		describe('balena.auth.getUserActorId()', () => {
-			it('should be rejected with an error', async () => {
-				const promise = balena.auth.getUserActorId();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'message',
-					'The authentication credentials in use are not of a user',
-				);
-			});
-		});
-
 		describe('balena.auth.logout()', function () {
 			it('should logout the user', async () => {
 				await balena.auth.logout();
@@ -460,14 +412,6 @@ describe('SDK authentication', function () {
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
 				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
-			});
-		});
-
-		describe('balena.auth.getUserActorId()', () => {
-			it('should eventually be a user id', async () => {
-				const userId = await balena.auth.getUserActorId();
 				expect(userId).to.be.a('number');
 				expect(userId).to.be.greaterThan(0);
 			});

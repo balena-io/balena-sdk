@@ -138,7 +138,7 @@ const getApiKeysModel = function (
 				mergePineOptions(
 					{
 						$filter: {
-							is_of__actor: await sdkInstance.auth.getUserActorId(),
+							is_of__actor: await sdkInstance.auth.getActorId(),
 							// the only way to reason whether it's
 							// a named user api key vs a deprecated user api key
 							// is whether it has a name.

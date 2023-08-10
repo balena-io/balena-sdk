@@ -137,7 +137,7 @@ export async function resetUser() {
 				// only delete named user api keys
 				options: {
 					$filter: {
-						is_of__actor: await balena.auth.getUserActorId(),
+						is_of__actor: await balena.auth.getActorId(),
 						name: {
 							$ne: null,
 						},
