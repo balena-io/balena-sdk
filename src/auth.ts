@@ -312,34 +312,6 @@ const getAuth = function (
 	}
 
 	/**
-	 * @summary Get current logged in user's id
-	 * @name getUserId
-	 * @public
-	 * @function
-	 * @memberof balena.auth
-	 *
-	 * @description This will only work if you used {@link balena.auth.login} to log in.
-	 *
-	 * @fulfil {Number} - user id
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.auth.getUserId().then(function(userId) {
-	 * 	console.log(userId);
-	 * });
-	 */
-	async function getUserId(): Promise<number> {
-		const actor = await getActorDetails();
-
-		if (actor.actorType !== 'user') {
-			throw new Error(
-				'The authentication credentials in use are not of a user',
-			);
-		}
-		return actor.actorTypeId;
-	}
-
-	/**
 	 * @summary Get current logged in user's actor id
 	 * @name getUserActorId
 	 * @public
@@ -357,9 +329,10 @@ const getAuth = function (
 	 * });
 	 */
 	async function getUserActorId(): Promise<number> {
+		const { id } = await getUserInfo();
 		const { actor } = (await pine.get({
 			resource: 'user',
-			id: await getUserId(),
+			id,
 			options: {
 				$select: 'actor',
 			},
@@ -484,7 +457,7 @@ const getAuth = function (
 	 *
 	 */
 	async function requestVerificationEmail() {
-		const id = await getUserId();
+		const { id } = await getUserInfo();
 		await pine.patch({
 			resource: 'user',
 			id,
@@ -502,7 +475,6 @@ const getAuth = function (
 		loginWithToken,
 		isLoggedIn,
 		getToken,
-		getUserId,
 		getUserActorId,
 		getUserInfo,
 		logout,

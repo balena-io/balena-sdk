@@ -265,7 +265,7 @@ describe('Release Model', function () {
 			const testReleaseByField: Dictionary<BalenaSdk.Release> = {};
 
 			before(async function () {
-				const userId = await balena.auth.getUserId();
+				const { id: userId } = await balena.auth.getUserInfo();
 				await Promise.all(
 					uniquePropertyNames.map(async (field, i) => {
 						const fieldKey = getFieldLabel(field);
@@ -633,7 +633,7 @@ describe('Release Model', function () {
 			describe('balena.models.release.getLatestByApplication()', function () {
 				before(async function () {
 					ctx = this;
-					const userId = await balena.auth.getUserId();
+					const { id: userId } = await balena.auth.getUserInfo();
 
 					for (const body of [
 						{
@@ -693,7 +693,7 @@ describe('Release Model', function () {
 		describe('given two releases that share the same commit root', function () {
 			before(async function () {
 				const { application } = this;
-				const userId = await balena.auth.getUserId();
+				const { id: userId } = await balena.auth.getUserInfo();
 				await balena.pine.post({
 					resource: 'release',
 					body: {

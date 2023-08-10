@@ -216,7 +216,7 @@ export function loginPaidUser() {
 }
 
 async function resetInitialOrganization() {
-	const userId = await balena.auth.getUserId();
+	const { id: userId } = await balena.auth.getUserInfo();
 	const initialOrg = await getInitialOrganization();
 	await balena.pine.delete({
 		resource: 'organization_membership',
@@ -495,7 +495,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 	givenAnApplication(beforeFn);
 
 	beforeFn(async function () {
-		const userId = await balena.auth.getUserId();
+		const { id: userId } = await balena.auth.getUserInfo();
 		const oldDate = new Date('2017-01-01').toISOString();
 		const now = new Date().toISOString();
 		const [webService, dbService, [oldRelease, newRelease]] = await Promise.all(
