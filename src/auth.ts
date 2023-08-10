@@ -17,7 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
-import { WhoamiResult } from './types/auth';
+import { UserInfo, WhoamiResult } from './types/auth';
 
 const getAuth = function (
 	deps: InjectedDependenciesParam,
@@ -280,6 +280,38 @@ const getAuth = function (
 	}
 
 	/**
+	 * @summary Get current logged in user's info
+	 * @name getUserInfo
+	 * @public
+	 * @function
+	 * @memberof balena.auth
+	 *
+	 * @description This will only work if you used {@link balena.auth.login} to log in.
+	 *
+	 * @fulfil {Object} - user info
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.auth.getUserInfo().then(function(userInfo) {
+	 * 	console.log(userInfo);
+	 * });
+	 */
+	async function getUserInfo(): Promise<UserInfo> {
+		const actor = await getActorDetails();
+
+		if (actor.actorType !== 'user') {
+			throw new Error(
+				'The authentication credentials in use are not of a user',
+			);
+		}
+		return {
+			id: actor.actorTypeId,
+			email: actor.email,
+			username: actor.username,
+		};
+	}
+
+	/**
 	 * @summary Get current logged in user's id
 	 * @name getUserId
 	 * @public
@@ -501,6 +533,7 @@ const getAuth = function (
 		getUserId,
 		getUserActorId,
 		getEmail,
+		getUserInfo,
 		logout,
 		register,
 		verifyEmail,

@@ -24,3 +24,9 @@ export type WhoamiResult =
 	| UserKeyWhoAmIResponse
 	| ApplicationKeyWhoAmIResponse
 	| DeviceKeyWhoAmIResponse;
+
+export interface UserInfo {
+	id: number;
+	username: string;
+	email: string | null;
+}
