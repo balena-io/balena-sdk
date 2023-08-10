@@ -19,47 +19,14 @@ const expectDeviceTypeArray = function (
 	}
 };
 
-const REPLACED_STATES = ['PREVIEW', 'EXPERIMENTAL'];
-
-const REPLACED_NAME_SUFFIXES = ['(PREVIEW)', '(EXPERIMENTAL)', '(BETA)'];
-
 type ConfigContext = Mocha.Context & {
 	deviceTypes: BalenaSdk.DeviceTypeJson.DeviceType[];
 };
 
 const itNormalizesDeviceTypes = function () {
-	it('changes old device type states', function (this: Mocha.Context) {
+	it('should not have an `instructions` field', function (this: Mocha.Context) {
 		for (const deviceType of (this as ConfigContext).deviceTypes) {
-			expect(deviceType.state).to.satisfy((dtState: string) =>
-				_.every(REPLACED_STATES, (replacedState) => dtState !== replacedState),
-			);
-		}
-	});
-
-	it('changes old device type name suffixes', function (this: Mocha.Context) {
-		for (const deviceType of (this as ConfigContext).deviceTypes) {
-			expect(deviceType.name).to.satisfy((dtName: string) =>
-				_.every(
-					REPLACED_NAME_SUFFIXES,
-					(replacedSuffix) => !_.endsWith(dtName, replacedSuffix),
-				),
-			);
-		}
-	});
-
-	it('properly replaces the names of device types with old states', function (this: Mocha.Context) {
-		for (const deviceType of (this as ConfigContext).deviceTypes) {
-			if (deviceType.state === 'PREVIEW') {
-				expect(deviceType.name).to.satisfy((dtName: string) =>
-					_.endsWith(dtName, '(ALPHA)'),
-				);
-			}
-
-			if (deviceType.state === 'BETA') {
-				expect(deviceType.name).to.satisfy((dtName: string) =>
-					_.endsWith(dtName, '(NEW)'),
-				);
-			}
+			expect(deviceType).to.not.have.property('instructions');
 		}
 	});
 };

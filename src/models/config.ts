@@ -73,28 +73,11 @@ const getConfigModel = function (
 	const { apiUrl } = opts;
 
 	const normalizeDeviceTypes = (
-		deviceTypes: DeviceTypeJson.DeviceType[], // Patch device types to be marked as ALPHA and BETA instead
+		deviceTypes: DeviceTypeJson.DeviceType[],
 	): DeviceTypeJson.DeviceType[] =>
-		// of PREVIEW and EXPERIMENTAL, respectively.
-		// This logic is literally copy and pasted from balena UI, but
-		// there are plans to move this to `resin-device-types` so it
-		// should be a matter of time for this to be removed.
 		deviceTypes.map(function (deviceType) {
-			// TODO: Drop in the next major the `deviceType.name.replace`s
-			if (deviceType.state === 'DISCONTINUED') {
-				deviceType.name = deviceType.name.replace(
-					/(\(PREVIEW|EXPERIMENTAL\))/,
-					'(DISCONTINUED)',
-				);
-			}
-			if (deviceType.state === 'PREVIEW') {
-				deviceType.state = 'ALPHA';
-				deviceType.name = deviceType.name.replace('(PREVIEW)', '(ALPHA)');
-			}
-			if (deviceType.state === 'EXPERIMENTAL') {
-				deviceType.state = 'NEW';
-				deviceType.name = deviceType.name.replace('(EXPERIMENTAL)', '(NEW)');
-			}
+			// Remove the device-type.json instructions to enforce
+			// users to use the contract based ones.
 			delete deviceType.instructions;
 			return deviceType;
 		});

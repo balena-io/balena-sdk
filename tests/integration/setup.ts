@@ -179,7 +179,10 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 	afterFn(() => resetUser());
 }
 
-export function givenLoggedInUser(beforeFn: Mocha.HookFunction, forceRelogin = false) {
+export function givenLoggedInUser(
+	beforeFn: Mocha.HookFunction,
+	forceRelogin = false,
+) {
 	beforeFn(async () => {
 		await balena.auth.login({
 			email: credentials.email,
