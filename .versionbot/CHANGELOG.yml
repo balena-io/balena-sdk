@@ -1,4 +1,88 @@
 - commits:
+    - subject: "**BREAKING**: Remove the device-type.json state & name normalization"
+      hash: 447aa40350186467667d0f534b8fcb163ef8dfcd
+      body: |
+        We should not have any code any more
+        relying on these.
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "**BREAKING**: Drop auth.getUserActorId in favor of auth.getActorId"
+      hash: b82bfb5aaba1db60c8aa2108a26e5887ec25ba12
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otávio Jacobi
+      nested: []
+    - subject: "auth: Add getActorId"
+      hash: 4ee63a51b4f63d05eb5ef00c5da1c3960113d315
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otávio Jacobi
+      nested: []
+    - subject: "**BREAKING**: Drop auth.getUserId in favor of auth.getUserInfo"
+      hash: dfc59eced18c9b08c95e6e76196ca153b6085cbe
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otávio Jacobi
+      nested: []
+    - subject: "**BREAKING**: Drop auth.getEmail in favor of auth.getUserInfo"
+      hash: 84d9eb93022036bb3e0e2491e833592acf4c4f2b
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otávio Jacobi
+      nested: []
+    - subject: "auth: Add getUserInfo"
+      hash: d5c588e987c6d5eca6b9f540a287466db883810e
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otávio Jacobi
+      nested: []
+    - subject: "**BREAKING**: Drop pre-Resin OS v1 device.os_version normalization"
+      hash: 88ab4ebedbada148d2d992086110c07332254db5
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "**BREAKING**: Support non-user API keys in auth.isLoggedIn() & whoami()"
+      hash: 86954863b65506aca8465025c310cca770448a5c
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otávio Jacobi
+      nested: []
+    - subject: "**BREAKING**: Drop support to node < 16"
+      hash: fbf59557e8be2d5822473fba07fbc77b60558c9b
+      body: |
+        Node 14 may well still work with the SDK for
+        quite a while, but we'll no longer actively test
+        against them since they are now
+        characterized as EOL, and it's quite possible
+        that it may stop working entirely in any future
+        release.
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otávio Jacobi
+      nested: []
+  version: 18.0.0
+  title: ""
+  date: 2023-08-17T21:52:28.343Z
+- commits:
     - subject: Fix pointing browser es2018 settings-client to the es2015 one
       hash: 2d9cca251388643d428704975b406cb9cf0528da
       body: ""
