@@ -429,9 +429,8 @@ const sdk = fromSharedOptions();
         * [.loginWithToken(authToken)](#balena.auth.loginWithToken) ⇒ <code>Promise</code>
         * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
         * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
-        * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
-        * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
-        * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
+        * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
+        * [.getActorId()](#balena.auth.getActorId) ⇒ <code>Promise</code>
         * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
         * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
         * [.verifyEmail(verificationPayload)](#balena.auth.verifyEmail) ⇒ <code>Promise</code>
@@ -6483,9 +6482,8 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
     * [.loginWithToken(authToken)](#balena.auth.loginWithToken) ⇒ <code>Promise</code>
     * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
     * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
-    * [.getUserId()](#balena.auth.getUserId) ⇒ <code>Promise</code>
-    * [.getUserActorId()](#balena.auth.getUserActorId) ⇒ <code>Promise</code>
-    * [.getEmail()](#balena.auth.getEmail) ⇒ <code>Promise</code>
+    * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
+    * [.getActorId()](#balena.auth.getActorId) ⇒ <code>Promise</code>
     * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
     * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
     * [.verifyEmail(verificationPayload)](#balena.auth.verifyEmail) ⇒ <code>Promise</code>
@@ -6630,19 +6628,19 @@ balena.auth.loginWithToken(token);
 <a name="balena.auth.whoami"></a>
 
 #### auth.whoami() ⇒ <code>Promise</code>
-This will only work if you used [login](#balena.auth.login) to log in.
+This will only work if you used [login](#balena.auth.login) or [loginWithToken](#balena.auth.loginWithToken) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
-**Summary**: Return current logged in username  
+**Summary**: Return current logged in information  
 **Access**: public  
-**Fulfil**: <code>(String\|undefined)</code> - username, if it exists  
+**Fulfil**: <code>(Object\|undefined)</code> - actor information, if it exists  
 **Example**  
 ```js
-balena.auth.whoami().then(function(username) {
-	if (!username) {
+balena.auth.whoami().then(function(result) {
+	if (!result) {
 		console.log('I\'m not logged in!');
 	} else {
-		console.log('My username is:', username);
+		console.log('My result is:', result);
 	}
 });
 ```
@@ -6740,49 +6738,34 @@ balena.auth.getToken().then(function(token) {
 	console.log(token);
 });
 ```
-<a name="balena.auth.getUserId"></a>
+<a name="balena.auth.getUserInfo"></a>
 
-#### auth.getUserId() ⇒ <code>Promise</code>
+#### auth.getUserInfo() ⇒ <code>Promise</code>
 This will only work if you used [login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
-**Summary**: Get current logged in user's id  
+**Summary**: Get current logged in user's info  
 **Access**: public  
-**Fulfil**: <code>Number</code> - user id  
+**Fulfil**: <code>Object</code> - user info  
 **Example**  
 ```js
-balena.auth.getUserId().then(function(userId) {
-	console.log(userId);
+balena.auth.getUserInfo().then(function(userInfo) {
+	console.log(userInfo);
 });
 ```
-<a name="balena.auth.getUserActorId"></a>
+<a name="balena.auth.getActorId"></a>
 
-#### auth.getUserActorId() ⇒ <code>Promise</code>
-This will only work if you used [login](#balena.auth.login) to log in.
-
-**Kind**: static method of [<code>auth</code>](#balena.auth)  
-**Summary**: Get current logged in user's actor id  
-**Access**: public  
-**Fulfil**: <code>Number</code> - user id  
-**Example**  
-```js
-balena.auth.getUserActorId().then(function(userActorId) {
-	console.log(userActorId);
-});
-```
-<a name="balena.auth.getEmail"></a>
-
-#### auth.getEmail() ⇒ <code>Promise</code>
-This will only work if you used [login](#balena.auth.login) to log in.
+#### auth.getActorId() ⇒ <code>Promise</code>
+This will only work if you used [login](#balena.auth.login) or [loginWithToken](#balena.auth.loginWithToken) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
-**Summary**: Get current logged in user's email  
+**Summary**: Get current logged in actor id  
 **Access**: public  
-**Fulfil**: <code>String</code> - user email  
+**Fulfil**: <code>Number</code> - actor id  
 **Example**  
 ```js
-balena.auth.getEmail().then(function(email) {
-	console.log(email);
+balena.auth.getActorId().then(function(actorId) {
+	console.log(actorId);
 });
 ```
 <a name="balena.auth.logout"></a>

@@ -17,6 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
+import { UserInfo, WhoamiResult } from './types/auth';
 
 const getAuth = function (
 	deps: InjectedDependenciesParam,
@@ -65,62 +66,55 @@ const getAuth = function (
 		opts,
 	);
 
-	interface WhoamiResult {
-		id: number;
-		username: string;
-		email: string;
-	}
-
-	const userWhoami = async () => {
+	const actorWhoami = async () => {
 		const { body } = await request.send<WhoamiResult>({
 			method: 'GET',
-			url: '/user/v1/whoami',
+			url: '/actor/v1/whoami',
 			baseUrl: apiUrl,
 		});
 		return body;
 	};
 
-	const memoizedUserWhoami = memoizee(userWhoami, {
+	const memoizedActorWhoami = memoizee(actorWhoami, {
 		primitive: true,
 		promise: true,
 	});
 
-	const getUserDetails = async (noCache = false) => {
+	const getActorDetails = async (noCache = false) => {
 		if (noCache) {
-			memoizedUserWhoami.clear();
+			memoizedActorWhoami.clear();
 		}
 		try {
-			return await memoizedUserWhoami();
+			return await memoizedActorWhoami();
 		} catch (err) {
 			throw normalizeAuthError(err);
 		}
 	};
 
 	/**
-	 * @summary Return current logged in username
+	 * @summary Return current logged in information
 	 * @name whoami
 	 * @public
 	 * @function
 	 * @memberof balena.auth
 	 *
-	 * @description This will only work if you used {@link balena.auth.login} to log in.
+	 * @description This will only work if you used {@link balena.auth.login} or {@link balena.auth.loginWithToken} to log in.
 	 *
-	 * @fulfil {(String|undefined)} - username, if it exists
+	 * @fulfil {(Object|undefined)} - actor information, if it exists
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.auth.whoami().then(function(username) {
-	 * 	if (!username) {
+	 * balena.auth.whoami().then(function(result) {
+	 * 	if (!result) {
 	 * 		console.log('I\'m not logged in!');
 	 * 	} else {
-	 * 		console.log('My username is:', username);
+	 * 		console.log('My result is:', result);
 	 * 	}
 	 * });
 	 */
-	async function whoami(): Promise<string | undefined> {
+	async function whoami(): Promise<WhoamiResult | undefined> {
 		try {
-			const userDetails = await getUserDetails();
-			return userDetails?.username;
+			return await getActorDetails();
 		} catch (err) {
 			if (err instanceof errors.BalenaNotLoggedIn) {
 				return;
@@ -203,7 +197,7 @@ const getAuth = function (
 		email: string;
 		password: string;
 	}): Promise<void> {
-		memoizedUserWhoami.clear();
+		memoizedActorWhoami.clear();
 		const token = await authenticate(credentials);
 		await auth.setKey(token);
 	}
@@ -224,7 +218,7 @@ const getAuth = function (
 	 * balena.auth.loginWithToken(authToken);
 	 */
 	function loginWithToken(authToken: string): Promise<void> {
-		memoizedUserWhoami.clear();
+		memoizedActorWhoami.clear();
 		return auth.setKey(authToken);
 	}
 
@@ -249,7 +243,7 @@ const getAuth = function (
 	 */
 	async function isLoggedIn(): Promise<boolean> {
 		try {
-			await getUserDetails(true);
+			await getActorDetails(true);
 			return true;
 		} catch (err) {
 			if (
@@ -286,75 +280,56 @@ const getAuth = function (
 	}
 
 	/**
-	 * @summary Get current logged in user's id
-	 * @name getUserId
+	 * @summary Get current logged in user's info
+	 * @name getUserInfo
 	 * @public
 	 * @function
 	 * @memberof balena.auth
 	 *
 	 * @description This will only work if you used {@link balena.auth.login} to log in.
 	 *
-	 * @fulfil {Number} - user id
+	 * @fulfil {Object} - user info
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.auth.getUserId().then(function(userId) {
-	 * 	console.log(userId);
+	 * balena.auth.getUserInfo().then(function(userInfo) {
+	 * 	console.log(userInfo);
 	 * });
 	 */
-	async function getUserId(): Promise<number> {
-		const { id } = await getUserDetails();
-		return id;
+	async function getUserInfo(): Promise<UserInfo> {
+		const actor = await getActorDetails();
+
+		if (actor.actorType !== 'user') {
+			throw new Error(
+				'The authentication credentials in use are not of a user',
+			);
+		}
+		return {
+			id: actor.actorTypeId,
+			email: actor.email,
+			username: actor.username,
+		};
 	}
 
 	/**
-	 * @summary Get current logged in user's actor id
-	 * @name getUserActorId
+	 * @summary Get current logged in actor id
+	 * @name getActorId
 	 * @public
 	 * @function
 	 * @memberof balena.auth
 	 *
-	 * @description This will only work if you used {@link balena.auth.login} to log in.
+	 * @description This will only work if you used {@link balena.auth.login} or {@link balena.auth.loginWithToken} to log in.
 	 *
-	 * @fulfil {Number} - user id
+	 * @fulfil {Number} - actor id
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.auth.getUserActorId().then(function(userActorId) {
-	 * 	console.log(userActorId);
+	 * balena.auth.getActorId().then(function(actorId) {
+	 * 	console.log(actorId);
 	 * });
 	 */
-	async function getUserActorId(): Promise<number> {
-		const { actor } = (await pine.get({
-			resource: 'user',
-			id: await getUserId(),
-			options: {
-				$select: 'actor',
-			},
-		}))!;
-		return actor;
-	}
-
-	/**
-	 * @summary Get current logged in user's email
-	 * @name getEmail
-	 * @public
-	 * @function
-	 * @memberof balena.auth
-	 *
-	 * @description This will only work if you used {@link balena.auth.login} to log in.
-	 *
-	 * @fulfil {String} - user email
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.auth.getEmail().then(function(email) {
-	 * 	console.log(email);
-	 * });
-	 */
-	async function getEmail(): Promise<string> {
-		const { email } = await getUserDetails();
-		return email;
+	async function getActorId(): Promise<number> {
+		return (await getActorDetails()).id;
 	}
 
 	/**
@@ -370,7 +345,7 @@ const getAuth = function (
 	 * balena.auth.logout();
 	 */
 	function logout(): Promise<void> {
-		memoizedUserWhoami.clear();
+		memoizedActorWhoami.clear();
 		return auth.removeKey();
 	}
 
@@ -474,7 +449,7 @@ const getAuth = function (
 	 *
 	 */
 	async function requestVerificationEmail() {
-		const id = await getUserId();
+		const { id } = await getUserInfo();
 		await pine.patch({
 			resource: 'user',
 			id,
@@ -492,9 +467,8 @@ const getAuth = function (
 		loginWithToken,
 		isLoggedIn,
 		getToken,
-		getUserId,
-		getUserActorId,
-		getEmail,
+		getActorId,
+		getUserInfo,
 		logout,
 		register,
 		verifyEmail,

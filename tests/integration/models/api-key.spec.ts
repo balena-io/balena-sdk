@@ -61,7 +61,7 @@ describe('API Key model', function () {
 			it('should retrieve an empty array', async function () {
 				const apiKeys = await balena.models.apiKey.getAll({
 					$filter: {
-						is_of__actor: await balena.auth.getUserActorId(),
+						is_of__actor: await balena.auth.getActorId(),
 						name: { $ne: null },
 					},
 				});
@@ -81,7 +81,7 @@ describe('API Key model', function () {
 			it('should be able to retrieve all api keys created', async function () {
 				const apiKeys = await balena.models.apiKey.getAll({
 					$filter: {
-						is_of__actor: await balena.auth.getUserActorId(),
+						is_of__actor: await balena.auth.getActorId(),
 						name: { $ne: null },
 					},
 				});

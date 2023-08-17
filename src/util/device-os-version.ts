@@ -1,21 +1,5 @@
 import bSemver = require('balena-semver');
 import type * as BalenaSdk from '..';
-import { isProvisioned } from './device';
-
-// TODO: Drop in the next major
-export const normalizeDeviceOsVersion = (
-	device: Partial<
-		Pick<BalenaSdk.Device, 'os_version'> & Parameters<typeof isProvisioned>[0]
-	>,
-) => {
-	if (
-		device.os_version != null &&
-		device.os_version.length === 0 &&
-		isProvisioned(device)
-	) {
-		device.os_version = 'Resin OS 1.0.0-pre';
-	}
-};
 
 export const getDeviceOsSemverWithVariant = ({
 	os_version,

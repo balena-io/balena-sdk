@@ -137,7 +137,7 @@ export async function resetUser() {
 				// only delete named user api keys
 				options: {
 					$filter: {
-						is_of__actor: await balena.auth.getUserActorId(),
+						is_of__actor: await balena.auth.getActorId(),
 						name: {
 							$ne: null,
 						},
@@ -179,7 +179,10 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 	afterFn(() => resetUser());
 }
 
-export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
+export function givenLoggedInUser(
+	beforeFn: Mocha.HookFunction,
+	forceRelogin = false,
+) {
 	beforeFn(async () => {
 		await balena.auth.login({
 			email: credentials.email,
@@ -189,7 +192,16 @@ export function givenLoggedInUser(beforeFn: Mocha.HookFunction) {
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	afterFn(() => resetUser());
+	afterFn(async () => {
+		if (forceRelogin) {
+			await balena.auth.logout();
+			await balena.auth.login({
+				email: credentials.email,
+				password: credentials.password,
+			});
+		}
+		return resetUser();
+	});
 }
 
 export function loginUserWith2FA() {
@@ -207,7 +219,7 @@ export function loginPaidUser() {
 }
 
 async function resetInitialOrganization() {
-	const userId = await balena.auth.getUserId();
+	const { id: userId } = await balena.auth.getUserInfo();
 	const initialOrg = await getInitialOrganization();
 	await balena.pine.delete({
 		resource: 'organization_membership',
@@ -349,6 +361,33 @@ export const testDeviceOsInfo = {
 	supervisor_version: '10.8.0',
 };
 
+export function givenLoggedInWithAnApplicationApiKey(
+	beforeFn: Mocha.HookFunction,
+) {
+	givenLoggedInUser(beforeFn, true);
+	givenAnApplication(beforeFn);
+
+	beforeFn(async function () {
+		const key = await balena.models.application.generateProvisioningKey(
+			this.application.slug,
+		);
+		await balena.auth.logout();
+		await balena.auth.loginWithToken(key);
+	});
+}
+
+export function givenLoggedInWithADeviceApiKey(beforeFn: Mocha.HookFunction) {
+	givenLoggedInUser(beforeFn, true);
+	givenAnApplication(beforeFn);
+	givenADevice(beforeFn);
+
+	beforeFn(async function () {
+		const key = await balena.models.device.generateDeviceKey(this.device.id);
+		await balena.auth.logout();
+		await balena.auth.loginWithToken(key);
+	});
+}
+
 export function givenADevice(
 	beforeFn: Mocha.HookFunction,
 	extraDeviceProps?: BalenaSdk.PineSubmitBody<BalenaSdk.Device>,
@@ -459,7 +498,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 	givenAnApplication(beforeFn);
 
 	beforeFn(async function () {
-		const userId = await balena.auth.getUserId();
+		const { id: userId } = await balena.auth.getUserInfo();
 		const oldDate = new Date('2017-01-01').toISOString();
 		const now = new Date().toISOString();
 		const [webService, dbService, [oldRelease, newRelease]] = await Promise.all(

@@ -43,8 +43,10 @@ describe('Organization Membership Model', function () {
 	let ctx: Mocha.Context;
 	before(async function () {
 		ctx = this;
-		this.username = await balena.auth.whoami();
-		this.userId = await balena.auth.getUserId();
+		const userInfoResult = await balena.auth.getUserInfo();
+		this.username = userInfoResult.username;
+		this.userId = userInfoResult.id;
+
 		const roles = await balena.pine.get({
 			resource: 'organization_membership_role',
 			options: { $select: ['id', 'name'] },

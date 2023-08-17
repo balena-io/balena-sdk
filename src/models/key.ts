@@ -123,7 +123,7 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 		// Avoid ugly whitespaces
 		key = key.trim();
 
-		const userId = await sdkInstance.auth.getUserId();
+		const { id: userId } = await sdkInstance.auth.getUserInfo();
 		return await pine.post({
 			resource: 'user__has__public_key',
 			body: {

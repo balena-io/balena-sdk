@@ -57,7 +57,6 @@ import {
 import {
 	getDeviceOsSemverWithVariant,
 	ensureVersionCompatibility,
-	normalizeDeviceOsVersion,
 } from '../util/device-os-version';
 import {
 	getCurrentServiceDetailsPineExpand,
@@ -230,13 +229,6 @@ const getDeviceModel = function (
 		}
 	};
 
-	const addExtraInfo = function <
-		T extends Parameters<typeof normalizeDeviceOsVersion>[0],
-	>(device: T) {
-		normalizeDeviceOsVersion(device);
-		return device;
-	};
-
 	const getAppliedConfigVariableValue = async (
 		uuidOrId: string | number,
 		name: string,
@@ -333,7 +325,7 @@ const getDeviceModel = function (
 			resource: 'device',
 			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
 		});
-		return devices.map(addExtraInfo) as Device[];
+		return devices as Device[];
 	}
 
 	async function startOsUpdate(
@@ -638,7 +630,7 @@ const getDeviceModel = function (
 			if (device == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
-			return addExtraInfo(device) as Device;
+			return device as Device;
 		},
 
 		/**
@@ -1370,28 +1362,29 @@ const getDeviceModel = function (
 				$expand: { is_for__device_type: deviceTypeOptions },
 			} as const;
 
-			const [userId, apiKey, application, deviceType] = await Promise.all([
-				sdkInstance.auth.getUserId(),
-				sdkInstance.models.application.generateProvisioningKey(
-					applicationSlugOrUuidOrId,
-				),
-				sdkInstance.models.application.get(
-					applicationSlugOrUuidOrId,
-					applicationOptions,
-				) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
-				typeof deviceTypeSlug === 'string'
-					? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
-							$select: 'slug',
-							$expand: {
-								is_of__cpu_architecture: {
-									$select: 'slug',
+			const [{ id: userId }, apiKey, application, deviceType] =
+				await Promise.all([
+					sdkInstance.auth.getUserInfo(),
+					sdkInstance.models.application.generateProvisioningKey(
+						applicationSlugOrUuidOrId,
+					),
+					sdkInstance.models.application.get(
+						applicationSlugOrUuidOrId,
+						applicationOptions,
+					) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
+					typeof deviceTypeSlug === 'string'
+						? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
+								$select: 'slug',
+								$expand: {
+									is_of__cpu_architecture: {
+										$select: 'slug',
+									},
 								},
-							},
-					  }) as Promise<
-							PineTypedResult<DeviceType, typeof deviceTypeOptions>
-					  >)
-					: null,
-			]);
+						  }) as Promise<
+								PineTypedResult<DeviceType, typeof deviceTypeOptions>
+						  >)
+						: null,
+				]);
 			if (deviceType != null) {
 				const isCompatibleParameter =
 					sdkInstance.models.os.isArchitectureCompatibleWith(

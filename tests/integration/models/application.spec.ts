@@ -1122,7 +1122,7 @@ describe('Application Model', function () {
 
 				describe('given two releases', function () {
 					before(async function () {
-						const userId = await balena.auth.getUserId();
+						const { id: userId } = await balena.auth.getUserInfo();
 						this.oldRelease = await balena.pine.post({
 							resource: 'release',
 							body: {
@@ -1350,11 +1350,12 @@ describe('Application Model', function () {
 							[
 								'draft',
 								async function () {
+									const { id: userId } = await balena.auth.getUserInfo();
 									this.testNonLatestRelease = await balena.pine.post({
 										resource: 'release',
 										body: {
 											belongs_to__application: this.application.id,
-											is_created_by__user: await balena.auth.getUserId(),
+											is_created_by__user: userId,
 											commit: 'draft-release-commit',
 											status: 'success',
 											source: 'cloud',
@@ -1368,11 +1369,12 @@ describe('Application Model', function () {
 							[
 								'invalidated',
 								async function () {
+									const { id } = await balena.auth.getUserInfo();
 									this.testNonLatestRelease = await balena.pine.post({
 										resource: 'release',
 										body: {
 											belongs_to__application: this.application.id,
-											is_created_by__user: await balena.auth.getUserId(),
+											is_created_by__user: id,
 											commit: 'invalidated-release-commit',
 											status: 'success',
 											source: 'cloud',
