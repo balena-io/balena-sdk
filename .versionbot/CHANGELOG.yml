@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: bump lint-staged from 13.3.0 to 14.0.0"
+      hash: 59d0bcd099a4fba24ad2c8c9b51c0603241440ee
+      body: >
+        Bumps [lint-staged](https://github.com/okonet/lint-staged) from 13.3.0
+        to 14.0.0.
+
+        - [Release notes](https://github.com/okonet/lint-staged/releases)
+
+        - [Commits](https://github.com/okonet/lint-staged/compare/v13.3.0...v14.0.0)
+
+
+        ---
+
+        updated-dependencies:
+
+        - dependency-name: lint-staged
+          dependency-type: direct:development
+          update-type: version-update:semver-major
+        ...
+      footer:
+        Signed-off-by: dependabot[bot] <support@github.com>
+        signed-off-by: dependabot[bot] <support@github.com>
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.0.2
+  title: ""
+  date: 2023-08-18T16:37:07.261Z
+- commits:
     - subject: Replace dependabot with renovate
       hash: 3cd8b81e1159dc8e0c583e2108ee843c4ba5eaba
       body: ""
