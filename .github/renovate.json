@@ -1,0 +1,11 @@
+{
+	"extends": ["github>balena-io/renovate-config"],
+	"prConcurrentLimit": 1,
+	"packageRules": [
+		{
+			"matchUpdateTypes": ["major", "minor", "patch", "digest"],
+			"automerge": false,
+			"labels": ["renovate", "dependencies", "{{depType}}", "major"]
+		}
+	]
+}
