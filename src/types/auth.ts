@@ -27,6 +27,7 @@ export type WhoamiResult =
 
 export interface UserInfo {
 	id: number;
+	actor: number;
 	username: string;
 	email: string | null;
 }

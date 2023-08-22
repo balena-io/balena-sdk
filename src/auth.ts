@@ -306,6 +306,7 @@ const getAuth = function (
 		}
 		return {
 			id: actor.actorTypeId,
+			actor: actor.id,
 			email: actor.email,
 			username: actor.username,
 		};

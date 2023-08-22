@@ -244,8 +244,10 @@ describe('SDK authentication', function () {
 				const userInfo = await balena.auth.getUserInfo();
 				expect(userInfo.email).to.equal(credentials.email);
 				expect(userInfo.username).to.equal(credentials.username);
-				expect(userInfo.id).to.be.a('number');
-				expect(userInfo.id).to.be.greaterThan(0);
+				const whoamiResult =
+					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				expect(userInfo).to.have.property('id', whoamiResult.actorTypeId);
+				expect(userInfo).to.have.property('actor', whoamiResult.id);
 			});
 		});
 
@@ -404,8 +406,10 @@ describe('SDK authentication', function () {
 				const userInfo = await balena.auth.getUserInfo();
 				expect(userInfo.email).to.equal(credentials.email);
 				expect(userInfo.username).to.equal(credentials.username);
-				expect(userInfo.id).to.be.a('number');
-				expect(userInfo.id).to.be.greaterThan(0);
+				const whoamiResult =
+					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				expect(userInfo).to.have.property('id', whoamiResult.actorTypeId);
+				expect(userInfo).to.have.property('actor', whoamiResult.id);
 			});
 		});
 
