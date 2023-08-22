@@ -1,4 +1,24 @@
 - commits:
+    - subject: Improve the auth.getActorId() tests
+      hash: 2d574ac35a7a259cc85107808835c44d7ec88e71
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "auth.getUserInfo: Add the actor id to the returned values"
+      hash: 76bd5fb7825f05134b5bfa02f67fc96acf79ccaf
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.1.0
+  title: ""
+  date: 2023-08-22T10:41:46.759Z
+- commits:
     - subject: "patch: bump lint-staged from 13.3.0 to 14.0.0"
       hash: 59d0bcd099a4fba24ad2c8c9b51c0603241440ee
       body: >
