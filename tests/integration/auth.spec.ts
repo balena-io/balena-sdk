@@ -253,9 +253,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
@@ -301,9 +301,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
@@ -357,9 +357,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
@@ -415,9 +415,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
