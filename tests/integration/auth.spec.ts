@@ -244,16 +244,18 @@ describe('SDK authentication', function () {
 				const userInfo = await balena.auth.getUserInfo();
 				expect(userInfo.email).to.equal(credentials.email);
 				expect(userInfo.username).to.equal(credentials.username);
-				expect(userInfo.id).to.be.a('number');
-				expect(userInfo.id).to.be.greaterThan(0);
+				const whoamiResult =
+					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				expect(userInfo).to.have.property('id', whoamiResult.actorTypeId);
+				expect(userInfo).to.have.property('actor', whoamiResult.id);
 			});
 		});
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
@@ -299,9 +301,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
@@ -355,9 +357,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
@@ -404,16 +406,18 @@ describe('SDK authentication', function () {
 				const userInfo = await balena.auth.getUserInfo();
 				expect(userInfo.email).to.equal(credentials.email);
 				expect(userInfo.username).to.equal(credentials.username);
-				expect(userInfo.id).to.be.a('number');
-				expect(userInfo.id).to.be.greaterThan(0);
+				const whoamiResult =
+					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				expect(userInfo).to.have.property('id', whoamiResult.actorTypeId);
+				expect(userInfo).to.have.property('actor', whoamiResult.id);
 			});
 		});
 
 		describe('balena.auth.getActorId()', () => {
 			it('should eventually be an actor id', async () => {
-				const userId = await balena.auth.getActorId();
-				expect(userId).to.be.a('number');
-				expect(userId).to.be.greaterThan(0);
+				const actorId = await balena.auth.getActorId();
+				expect(actorId).to.be.a('number');
+				expect(actorId).to.equal((await balena.auth.whoami())?.id);
 			});
 		});
 
