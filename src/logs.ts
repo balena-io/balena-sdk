@@ -79,7 +79,7 @@ const getLogs = function (
 		options ??= {};
 		const emitter = new EventEmitter() as LogsSubscription;
 		const controller = new AbortController();
-		const parser = ndjsonParse();
+		const parser = ndjsonParse({ strict: opts.debug === true });
 
 		request
 			.stream({
