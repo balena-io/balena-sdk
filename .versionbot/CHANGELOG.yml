@@ -1,4 +1,16 @@
 - commits:
+    - subject: "logs: Emit errors when initializing the SDK with debug: true"
+      hash: a9247d6ef2309504746a621877ee6e1df3eaaf7f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.1.1
+  title: ""
+  date: 2023-08-22T16:11:18.789Z
+- commits:
     - subject: Improve the auth.getActorId() tests
       hash: 2d574ac35a7a259cc85107808835c44d7ec88e71
       body: ""
