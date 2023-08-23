@@ -110,8 +110,10 @@ describe('Application Invite Model', function () {
 							},
 						);
 						await expect(promise).to.be.rejected.then((error) => {
-							expect(error).to.have.property('code', 'BalenaRequestError');
-							expect(error).to.have.property('statusCode', 404);
+							expect(error).to.have.property(
+								'code',
+								'BalenaApplicationMembershipRoleNotFound',
+							);
 							expect(error)
 								.to.have.property('message')
 								.that.contains(
