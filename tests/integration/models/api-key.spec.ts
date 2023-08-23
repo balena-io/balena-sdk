@@ -1,5 +1,3 @@
-// tslint:disable-next-line:import-blacklist
-import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {

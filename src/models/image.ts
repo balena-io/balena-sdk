@@ -15,19 +15,11 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type {
-	Image,
-	PineOptions,
-	InjectedDependenciesParam,
-	InjectedOptionsParam,
-} from '..';
+import type { Image, PineOptions, InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
 import { toWritable } from '../util/types';
 
-const getImageModel = function (
-	deps: InjectedDependenciesParam,
-	_opts: InjectedOptionsParam,
-) {
+const getImageModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
 	const exports = {
 		/**

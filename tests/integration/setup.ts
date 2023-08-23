@@ -1,5 +1,3 @@
-// tslint:disable-next-line:import-blacklist
-import * as _ from 'lodash';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -17,7 +15,7 @@ export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 export let balenaSdkExports: typeof BalenaSdk;
 let opts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
-	// tslint:disable-next-line:no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	require('js-polyfills/es6');
 	balenaSdkExports = window.balenaSdk;
 
@@ -28,9 +26,9 @@ if (IS_BROWSER) {
 			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
 	};
 } else {
-	// tslint:disable-next-line:no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	balenaSdkExports = require('../..');
-	// tslint:disable-next-line:no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const settings = require('balena-settings-client');
 
 	const apiUrl = process.env.TEST_API_URL || settings.get('apiUrl');
@@ -42,7 +40,7 @@ if (IS_BROWSER) {
 	};
 }
 
-_.assign(opts, {
+Object.assign(opts, {
 	isBrowser: IS_BROWSER,
 	retries: 3,
 });

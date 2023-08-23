@@ -167,7 +167,7 @@ const getApplicationInviteModel = function (
 				message,
 			};
 			if (roles) {
-				const [{ id: roleId }] = roles;
+				const roleId = roles[0]?.id;
 				// Throw if the user provided a roleName, but we didn't find that role
 				if (!roleId && roleName) {
 					throw new errors.BalenaApplicationMembershipRoleNotFound(roleName);

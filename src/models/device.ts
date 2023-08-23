@@ -119,6 +119,7 @@ const getDeviceModel = function (
 		sdkInstance,
 	} = deps;
 	const { apiUrl, deviceUrlsBase } = opts;
+	/* eslint-disable @typescript-eslint/no-var-requires */
 	const registerDevice = once(() =>
 		(
 			require('balena-register-device') as typeof import('balena-register-device')
@@ -136,6 +137,24 @@ const getDeviceModel = function (
 	const dateUtils = once(
 		() => require('../util/date') as typeof import('../util/date'),
 	);
+
+	const batchDeviceOperation = once(() =>
+		(
+			require('../util/request-batching') as typeof import('../util/request-batching')
+		).batchResourceOperationFactory<Device>({
+			getAll,
+			NotFoundError: errors.BalenaDeviceNotFound,
+			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
+		}),
+	);
+
+	const getOsUpdateHelper = once(async () => {
+		const $deviceUrlsBase = await getDeviceUrlsBase();
+		const { getOsUpdateHelper: _getOsUpdateHelper } =
+			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
+		return _getOsUpdateHelper($deviceUrlsBase, request);
+	});
+	/* eslint-enable @typescript-eslint/no-var-requires */
 
 	const tagsModel = buildDependentResource<DeviceTag>(
 		{ pine },
@@ -191,16 +210,6 @@ const getDeviceModel = function (
 		},
 	);
 
-	const batchDeviceOperation = once(() =>
-		(
-			require('../util/request-batching') as typeof import('../util/request-batching')
-		).batchResourceOperationFactory<Device>({
-			getAll,
-			NotFoundError: errors.BalenaDeviceNotFound,
-			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
-		}),
-	);
-
 	// Infer dashboardUrl from apiUrl if former is undefined
 	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
 
@@ -209,13 +218,6 @@ const getDeviceModel = function (
 			return deviceUrlsBase;
 		}
 		return (await sdkInstance.models.config.getAll()).deviceUrlsBase;
-	});
-
-	const getOsUpdateHelper = once(async () => {
-		const $deviceUrlsBase = await getDeviceUrlsBase();
-		const { getOsUpdateHelper: _getOsUpdateHelper } =
-			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
-		return _getOsUpdateHelper($deviceUrlsBase, request);
 	});
 
 	// Internal method for uuid/id disambiguation
@@ -944,7 +946,8 @@ const getDeviceModel = function (
 					'is_undervolted',
 				],
 			});
-			// @ts-expect-error
+			// TODO: Drop the manual __metadata removal once we bump to the v7 model.
+			// @ts-expect-error __metadata isn't in the pine client typings
 			delete device.__metadata;
 			return device;
 		},

@@ -339,10 +339,10 @@ describe('Balena SDK', function () {
 				typeof window !== 'undefined' && window !== null ? window : global;
 			const opts = { foo: 'bar' };
 
-			// @ts-expect-error
+			// @ts-expect-error we are passing an unknown property
 			balenaSdkExports.setSharedOptions(opts);
 
-			return expect(root['BALENA_SDK_SHARED_OPTIONS']).to.equal(opts);
+			expect(root['BALENA_SDK_SHARED_OPTIONS']).to.equal(opts);
 		}));
 
 	describe('fromSharedOptions()', () => {

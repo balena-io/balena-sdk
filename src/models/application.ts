@@ -63,6 +63,7 @@ const getApplicationModel = function (
 	} = deps;
 	const { apiUrl } = opts;
 
+	/* eslint-disable @typescript-eslint/no-var-requires */
 	const membershipModel = (
 		require('./application-membership') as typeof import('./application-membership')
 	).default(deps, (...args: Parameters<typeof exports.get>) =>
@@ -77,6 +78,17 @@ const getApplicationModel = function (
 
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
+
+	const batchApplicationOperation = once(() =>
+		(
+			require('../util/request-batching') as typeof import('../util/request-batching')
+		).batchResourceOperationFactory<Application>({
+			getAll: exports.getAll,
+			NotFoundError: errors.BalenaApplicationNotFound,
+			AmbiguousResourceError: errors.BalenaAmbiguousApplication,
+		}),
+	);
+	/* eslint-enable @typescript-eslint/no-var-requires */
 
 	const tagsModel = buildDependentResource<ApplicationTag>(
 		{ pine },
@@ -139,6 +151,7 @@ const getApplicationModel = function (
 			},
 		},
 	);
+
 	const buildVarModel = buildDependentResource<BuildVariable>(
 		{ pine },
 		{
@@ -158,16 +171,6 @@ const getApplicationModel = function (
 				return id;
 			},
 		},
-	);
-
-	const batchApplicationOperation = once(() =>
-		(
-			require('../util/request-batching') as typeof import('../util/request-batching')
-		).batchResourceOperationFactory<Application>({
-			getAll: exports.getAll,
-			NotFoundError: errors.BalenaApplicationNotFound,
-			AmbiguousResourceError: errors.BalenaAmbiguousApplication,
-		}),
 	);
 
 	// Infer dashboardUrl from apiUrl if former is undefined

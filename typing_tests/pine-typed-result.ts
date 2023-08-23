@@ -1,15 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
 import type { AnyObject } from '../typings/utils';
 import type * as PineClient from '../typings/pinejs-client-core';
 
-const sdk: BalenaSdk.BalenaSDK = {} as any;
-
-let aAny: any;
-let aNumber: number;
-let aNumberOrUndefined: number | undefined;
-let aString: string;
-let aStringOrUndefined: string | undefined;
+export let aAny: any;
+export let aNumber: number;
+export let aNumberOrUndefined: number | undefined;
+export let aString: string;
+export let aStringOrUndefined: string | undefined;
 
 // This file is in .prettierignore, since otherwise
 // the @ts-expect-error comments would move to the wrong place
@@ -29,14 +28,14 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.belongs_to__application.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
 {
-	type deviceOptionsNoProps = PineClient.TypedResult<BalenaSdk.Device, {}>;
+	type deviceOptionsNoProps = PineClient.TypedResult<BalenaSdk.Device, object>;
 
 	const result: deviceOptionsNoProps = {} as any;
 
@@ -45,9 +44,9 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.belongs_to__application.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -66,9 +65,9 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.belongs_to__application.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -84,11 +83,11 @@ let aStringOrUndefined: string | undefined;
 
 	aNumber = result.id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.belongs_to__application.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -104,11 +103,11 @@ let aStringOrUndefined: string | undefined;
 
 	aNumber = result.belongs_to__application.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -124,11 +123,11 @@ let aStringOrUndefined: string | undefined;
 
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -146,7 +145,7 @@ let aStringOrUndefined: string | undefined;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -162,7 +161,7 @@ let aStringOrUndefined: string | undefined;
 
 	aNumber = result.actor;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -182,9 +181,9 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.belongs_to__application[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -202,13 +201,13 @@ let aStringOrUndefined: string | undefined;
 	aString = result.device_name;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release[0].id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -262,13 +261,13 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.belongs_to__application[0].id;
 	aString = result.belongs_to__application[0].app_name;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.belongs_to__application[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -286,13 +285,13 @@ let aStringOrUndefined: string | undefined;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	aStringOrUndefined = result.should_be_running__release[0]?.commit;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -312,9 +311,9 @@ let aStringOrUndefined: string | undefined;
 	aString = result.device_tag[1].tag_key;
 	aNumber = result.id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
 }
 
@@ -326,7 +325,7 @@ let aStringOrUndefined: string | undefined;
 		{
 			$select: 'belongs_to__application';
 			$expand: {
-				belongs_to__application: {};
+				belongs_to__application: {}; // eslint-disable-line @typescript-eslint/ban-types
 			};
 		}
 	>;
@@ -336,13 +335,13 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.belongs_to__application[0].id;
 	aString = result.belongs_to__application[0].app_name;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.belongs_to__application[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -352,7 +351,7 @@ let aStringOrUndefined: string | undefined;
 		{
 			$select: 'should_be_running__release';
 			$expand: {
-				should_be_running__release: {};
+				should_be_running__release: {}; // eslint-disable-line @typescript-eslint/ban-types
 			};
 		}
 	>;
@@ -362,13 +361,13 @@ let aStringOrUndefined: string | undefined;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	aStringOrUndefined = result.should_be_running__release[0]?.commit;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -379,7 +378,7 @@ let aStringOrUndefined: string | undefined;
 			{
 				$select: 'id';
 				$expand: {
-					device_tag: {};
+					device_tag: {}; // eslint-disable-line @typescript-eslint/ban-types
 				};
 			}
 		>;
@@ -390,9 +389,9 @@ let aStringOrUndefined: string | undefined;
 	aString = result.device_tag[1].tag_key;
 	aNumber = result.id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
 }
 
@@ -416,13 +415,13 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.belongs_to__application[0].app_name;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.belongs_to__application[0].id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.belongs_to__application[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -444,13 +443,13 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aStringOrUndefined = result.should_be_running__release[0]?.commit;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.should_be_running__release[1];
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -471,7 +470,7 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.actor[0].id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.actor[0].created_at;
 }
 
@@ -492,17 +491,17 @@ let aStringOrUndefined: string | undefined;
 
 	aNumber = result.id;
 	// Errors, since it could be an OptionalNavigationResource
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aStringOrUndefined = result.should_be_running__release[0].commit;
 	aStringOrUndefined = result.should_be_running__release[0]?.commit;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	// This also works, since the typings don't know whether this is Navigation or a Reverse Navigation Resounce
 	aAny = result.should_be_running__release[1].commit;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
 
@@ -525,11 +524,11 @@ let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_tag[1].tag_key;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.device_name;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.device_tag[1].id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
 }
 
@@ -538,7 +537,7 @@ let aStringOrUndefined: string | undefined;
 {
 	type deviceOptionsNoProps = PineClient.TypedResult<
 		BalenaSdk.Device,
-		{ $count: {} }
+		{ $count: {} } // eslint-disable-line @typescript-eslint/ban-types
 	>;
 
 	const result: deviceOptionsNoProps = {} as any;
@@ -553,7 +552,7 @@ let aStringOrUndefined: string | undefined;
 			$select: 'id';
 			$expand: {
 				belongs_to__application: {
-					$count: {};
+					$count: {}; // eslint-disable-line @typescript-eslint/ban-types
 				};
 			};
 		}
@@ -572,7 +571,7 @@ let aStringOrUndefined: string | undefined;
 			$select: 'id';
 			$expand: {
 				device_tag: {
-					$count: {};
+					$count: {}; // eslint-disable-line @typescript-eslint/ban-types
 				};
 			};
 		}

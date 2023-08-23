@@ -27,7 +27,10 @@ class PinejsClient extends PinejsClientCore<PinejsClient> {
 	public API_URL: string;
 	public API_VERSION: string;
 
-	constructor(params: Params, public backendParams: BackendParams) {
+	constructor(
+		params: Params,
+		public backendParams: BackendParams,
+	) {
 		super({
 			...params,
 			apiPrefix: url.resolve(
@@ -106,6 +109,6 @@ export const createPinejsClient = (
 	...args: ConstructorParameters<typeof PinejsClient>
 ) => {
 	const pine = new PinejsClient(...args);
-	// @ts-expect-error
+	// @ts-expect-error the SDK's typed pine client differs significantly from the original pine client.
 	return pine as Pine;
 };

@@ -9,7 +9,7 @@ import { Equals, EqualsTrue } from './utils';
 
 export const unkown$selectProps: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$select: ['asdf', 'id', 'app_name', 'id'],
 	};
 
@@ -20,7 +20,7 @@ export const unkown$selectPropsFixed: BalenaSdk.PineOptions<BalenaSdk.Applicatio
 
 export const unkown$selectPropsInside$expand: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$expand: {
 			owns__device: {
 				$select: ['asdf', 'note', 'device_name', 'uuid'],
@@ -31,7 +31,7 @@ export const unkown$selectPropsInside$expand: BalenaSdk.PineOptions<BalenaSdk.Ap
 export const unkown$expandProps: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
 		$expand: {
-			// @ts-expect-error
+			// @ts-expect-error test case
 			asdf: {},
 			owns__device: {
 				$select: ['note', 'device_name', 'uuid'],
@@ -43,7 +43,7 @@ export const unkownODataPropInside$expand: BalenaSdk.PineOptions<BalenaSdk.Appli
 	{
 		$expand: {
 			owns__device: {
-				// @ts-expect-error
+				// @ts-expect-error test case
 				asdf: {},
 				$select: ['note', 'device_name', 'uuid'],
 			},
@@ -64,7 +64,7 @@ export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOpti
 		$expand: {
 			owns__device: {
 				$expand: {
-					// @ts-expect-error
+					// @ts-expect-error test case
 					asdf: {
 						$select: ['asdf'],
 					},
@@ -78,7 +78,7 @@ export const unkown$selectPropInsideNested$expandWith$select: BalenaSdk.PineOpti
 
 export const unkown$selectPropInsideNested$expandWith$select2: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$expand: {
 			owns__device: {
 				$select: ['note', 'device_name', 'uuid'],
@@ -119,7 +119,7 @@ export const unkown$expandPropInArray$expands: BalenaSdk.PineOptions<BalenaSdk.A
 				},
 			},
 			'depends_on__application',
-			// @ts-expect-error
+			// @ts-expect-error test case
 			'asdf',
 		],
 	};
@@ -129,7 +129,7 @@ export const unkownODataPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Appl
 		$expand: [
 			{
 				owns__device: {
-					// @ts-expect-error
+					// @ts-expect-error test case
 					asdf: {},
 					$select: ['note', 'device_name', 'uuid'],
 					$expand: {
@@ -148,7 +148,7 @@ export const unkown$selectPropInArray$expand: BalenaSdk.PineOptions<BalenaSdk.Ap
 		$expand: [
 			{
 				owns__device: {
-					// @ts-expect-error
+					// @ts-expect-error test case
 					$select: ['asdf', 'note', 'device_name', 'uuid'],
 					$expand: {
 						device_environment_variable: {
@@ -168,7 +168,7 @@ export const unkownNested$expandPropInsideArray$expand: BalenaSdk.PineOptions<Ba
 				owns__device: {
 					$select: ['note', 'device_name', 'uuid'],
 					$expand: {
-						// @ts-expect-error
+						// @ts-expect-error test case
 						asdf: {},
 						device_environment_variable: {
 							$select: ['name', 'value'],
@@ -187,7 +187,7 @@ export const unkownNested$expandWith$selectPropInsideArray$expand: BalenaSdk.Pin
 				owns__device: {
 					$select: ['note', 'device_name', 'uuid'],
 					$expand: {
-						// @ts-expect-error
+						// @ts-expect-error test case
 						asdf: {
 							$select: ['id'],
 						},
@@ -207,7 +207,7 @@ export const unkown$selectPropInsideNestedArray$expand: BalenaSdk.PineOptions<Ba
 			{
 				owns__device: {
 					$select: ['note', 'device_name', 'uuid'],
-					// @ts-expect-error
+					// @ts-expect-error test case
 					$expand: {
 						device_environment_variable: {
 							$select: ['name', 'value', 'asdf'],
@@ -224,10 +224,10 @@ export const nestedArray$expandWithManyErrors1: BalenaSdk.PineOptions<BalenaSdk.
 		$expand: [
 			{
 				owns__device: {
-					// @ts-expect-error
+					// @ts-expect-error test case
 					$select: ['asdf', 'note', 'device_name', 'uuid'],
 					$expand: {
-						// @ts-expect-error
+						// @ts-expect-error test case
 						asdf: {
 							$select: ['asdf'],
 						},
@@ -248,7 +248,7 @@ export const nestedArray$expandWithManyErrors2: BalenaSdk.PineOptions<BalenaSdk.
 				owns__device: {
 					$select: ['note', 'device_name', 'uuid'],
 					$expand: {
-						// @ts-expect-error
+						// @ts-expect-error test case
 						asdf: {
 							$select: ['asdf'],
 						},
@@ -289,7 +289,7 @@ export const Nested$expandInArray$expandsFixed: BalenaSdk.PineOptions<BalenaSdk.
 export const invalid$filterPropType: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
 		$filter: {
-			// @ts-expect-error
+			// @ts-expect-error test case
 			id: 'asdf',
 		},
 	};
@@ -297,7 +297,7 @@ export const invalid$filterPropType: BalenaSdk.PineOptions<BalenaSdk.Application
 export const invalid$filterPropType2: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
 		$filter: {
-			// @ts-expect-error
+			// @ts-expect-error test case
 			app_name: 5,
 		},
 	};
@@ -321,7 +321,7 @@ export const unkownPropIn$filter: BalenaSdk.PineOptions<BalenaSdk.Application> =
 			app_name: 'test',
 			slug: null,
 			application_type: 5,
-			// @ts-expect-error
+			// @ts-expect-error test case
 			asdf: 'asdf',
 		},
 	};
@@ -349,7 +349,7 @@ export const unknown$any$filterPropInsideArray$expand: BalenaSdk.PineOptions<Bal
 								$alias: 'dev',
 								$expr: {
 									dev: {
-										// @ts-expect-error
+										// @ts-expect-error test case
 										asdf: 'asdf',
 									},
 								},
@@ -376,7 +376,7 @@ export const unknown$any$filterPropInsideArray$expandPlural: BalenaSdk.PineOptio
 								$expr: {
 									dev: {
 										name: 'name',
-										// @ts-expect-error
+										// @ts-expect-error test case
 										asdf: 'asdf',
 									},
 								},
@@ -438,7 +438,7 @@ export const unknown$filterPropInsideNested$expand: BalenaSdk.PineOptions<Balena
 							$filter: {
 								name: 'name',
 								value: null,
-								// @ts-expect-error
+								// @ts-expect-error test case
 								asdf: 'asdf',
 							},
 						},
@@ -465,7 +465,7 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 								$expr: {
 									dev: {
 										name: 'name',
-										// @ts-expect-error
+										// @ts-expect-error test case
 										asdf: 'asdf',
 									},
 								},
@@ -477,7 +477,7 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 							$filter: {
 								name: 'name',
 								value: null,
-								// @ts-expect-error
+								// @ts-expect-error test case
 								asdf: 'asdf',
 							},
 						},
@@ -490,25 +490,25 @@ export const unknown$filterPropInsideNested$expandWithUnknown$any$filterProp: Ba
 
 export const string$OrderbyWoDirection: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$orderby: 'id',
 	};
 
 export const string$OrderbyWoPropPrefix: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$orderby: 'asc',
 	};
 
 export const string$OrderbyInvalidDirection: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$orderby: 'id ascending',
 	};
 
 export const string$OrderbyInvalidDirectionCase: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		// @ts-expect-error
+		// @ts-expect-error test case
 		$orderby: 'id Asc',
 	};
 
@@ -591,13 +591,13 @@ type ReleaseExpandablePropsExpectation =
 	| 'is_running_on__device'
 	| 'should_be_running_on__device'
 	| 'release_tag';
-// @ts-expect-error
+// @ts-expect-error test case
 
 export const releaseExpandablePropsFailingTest1: Equals<
 	BalenaSdk.PineExpandableProps<BalenaSdk.Release>,
 	Exclude<ReleaseExpandablePropsExpectation, 'release_tag'>
 > = EqualsTrue;
-// @ts-expect-error
+// @ts-expect-error test case
 
 export const releaseExpandablePropsFailingTest2: Equals<
 	BalenaSdk.PineExpandableProps<BalenaSdk.Release>,

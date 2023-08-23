@@ -1,4 +1,4 @@
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';

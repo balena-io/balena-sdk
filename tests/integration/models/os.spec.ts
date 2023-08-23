@@ -1,6 +1,4 @@
 import * as bSemver from 'balena-semver';
-// tslint:disable-next-line:import-blacklist
-import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -31,30 +29,24 @@ const containsVersion = (
 	versions: BalenaSdk.OsVersion[],
 	expected: Partial<BalenaSdk.OsVersion>,
 ) => {
-	const os = _.find(versions, expected);
+	const os = versions.find((v) =>
+		Object.entries(expected).every(([key, value]) => v[key] === value),
+	);
 	expect(os).to.not.be.undefined;
 };
 
 const itShouldClearMethodCacheFactory = <T>(
 	title: string,
 	fn: () => Resolvable<T>,
-	prepareFn?: (result: T) => T,
 ) => {
 	return (stepFn: () => Resolvable<void>) =>
 		it(`should clear the result cache of ${title}`, async function () {
 			const p1 = fn();
-			let result1 = await p1;
+			const result1 = await p1;
 			await stepFn();
 
 			const p2 = fn();
-			let result2 = await p2;
-
-			if (prepareFn) {
-				// @ts-expect-error
-				result1 = prepareFn(result1);
-				// @ts-expect-error
-				result2 = prepareFn(result2);
-			}
+			const result2 = await p2;
 
 			expect(p1).to.not.equal(p2);
 			if (!['string', 'number'].includes(typeof result1)) {
@@ -235,9 +227,8 @@ describe('OS model', function () {
 
 			const variantRegex = /\.(dev|prod)$/;
 			it('should have the correct variant for all non-unified OS releases', async () => {
-				const osVersions = await balena.models.os.getAvailableOsVersions(
-					'fincm3',
-				);
+				const osVersions =
+					await balena.models.os.getAvailableOsVersions('fincm3');
 				expect(osVersions).to.be.an('array');
 				for (const osVersion of osVersions) {
 					const variant = variantRegex.exec(osVersion.raw_version)?.[1];
@@ -248,9 +239,8 @@ describe('OS model', function () {
 			});
 
 			it('should have an empty variant for all unified OS releases', async () => {
-				const osVersions = await balena.models.os.getAvailableOsVersions(
-					'fincm3',
-				);
+				const osVersions =
+					await balena.models.os.getAvailableOsVersions('fincm3');
 				expect(osVersions).to.be.an('array');
 				for (const osVersion of osVersions) {
 					const variant = variantRegex.exec(osVersion.raw_version)?.[1];
@@ -711,10 +701,11 @@ describe('OS model', function () {
 		if (IS_BROWSER) {
 			return;
 		}
-
+		/* eslint-disable @typescript-eslint/no-var-requires */
 		const rindle = require('rindle');
 		const tmp = require('tmp');
 		const fs = require('fs') as typeof import('fs');
+		/* eslint-enable @typescript-eslint/no-var-requires */
 
 		describe('given a valid device slug', function () {
 			it('should contain a valid mime property', () =>
@@ -850,7 +841,7 @@ describe('OS model', function () {
 						expect(recommended).to.be.a('string');
 						expect(versions).to.be.an('array');
 						expect(versions).to.not.have.length(0);
-						_.each(versions, function (v) {
+						versions.forEach(function (v) {
 							expect(v).to.be.a('string');
 							expect(bSemver.gte(v, current)).to.be.true;
 						});
@@ -1080,7 +1071,10 @@ describe('OS model', function () {
 				['armv7hf', 'aarch64'],
 				['aarch64', 'armv5e'],
 			].forEach(function ([deviceArch, appArch]) {
-				it(`should return false when comparing ${deviceArch} and ${appArch} architectures`, () => expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(false));
+				it(`should return false when comparing ${deviceArch} and ${appArch} architectures`, () =>
+					expect(
+						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
+					).to.equal(false));
 			});
 
 			it('should return true when comparing the same architecture slugs', function () {
@@ -1112,7 +1106,10 @@ describe('OS model', function () {
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],
 			].forEach(function ([deviceArch, appArch]) {
-				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () => expect(balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch)).to.equal(true));
+				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () =>
+					expect(
+						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
+					).to.equal(true));
 			});
 		}));
 

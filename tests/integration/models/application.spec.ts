@@ -1,4 +1,4 @@
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -137,7 +137,7 @@ describe('Application Model', function () {
 
 				it('should be rejected if the user did not provide an organization parameter', () =>
 					expect(
-						// @ts-expect-error
+						// @ts-expect-error missing parameter
 						balena.models.application.create({
 							name: 'FooBar',
 							deviceType: 'raspberry-pi',
@@ -524,7 +524,7 @@ describe('Application Model', function () {
 					);
 
 					it('should return false if the application id is undefined', function () {
-						// @ts-expect-error
+						// @ts-expect-error invalid value
 						const promise = balena.models.application.has(undefined);
 						return expect(promise).to.eventually.be.false;
 					});
@@ -566,19 +566,18 @@ describe('Application Model', function () {
 						);
 					});
 					applicationRetrievalFields.forEach((prop) => {
-						it(`should be able to rename an existing application by ${prop}`, function () {
-							return balena.models.application
-								.rename(this.application[prop], 'newApplicationName_' + prop)
-								.then(function () {
-									balena.models.application
-										.get('newApplicationName_' + prop)
-										.then(function (app) {
-											return expect(app).to.have.property(
-												'app_name',
-												'newApplicationName_' + prop,
-											);
-										});
-								});
+						it(`should be able to rename an existing application by ${prop}`, async function () {
+							await balena.models.application.rename(
+								this.application[prop],
+								'newApplicationName_' + prop,
+							);
+							const app = await balena.models.application.get(
+								this.application.id,
+							);
+							expect(app).to.have.property(
+								'app_name',
+								'newApplicationName_' + prop,
+							);
 						});
 					});
 				});
@@ -761,7 +760,7 @@ describe('Application Model', function () {
 
 				it('should throw an error if the expiry time stamp is undefined', function () {
 					return expect(
-						// @ts-expect-error
+						// @ts-expect-error missing parameter
 						balena.models.application.grantSupportAccess(this.application.id),
 					).to.be.rejected;
 				});
@@ -1613,13 +1612,13 @@ describe('Application Model', function () {
 
 			it('should throw when an application id is not a number', () =>
 				expect(() =>
-					// @ts-expect-error
+					// @ts-expect-error invalid parameter
 					balena.models.application.getDashboardUrl('my-app'),
 				).to.throw());
 
 			it('should throw when an application id is not provided', () =>
 				expect(() =>
-					// @ts-expect-error
+					// @ts-expect-error invalid parameter
 					balena.models.application.getDashboardUrl(),
 				).to.throw());
 		}));

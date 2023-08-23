@@ -1,8 +1,8 @@
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import * as bSemver from 'balena-semver';
-import { Application } from '../src';
+import { Application, PineOptions } from '../src';
 
 // HACK: Avoid typescript trying to resolve built es2015 files
 const nodeRequire = require;
@@ -26,15 +26,14 @@ describe('Pine option merging', function () {
 			$filter: { id: 1 },
 			$select: ['id'],
 			$expand: {
-				device: {
+				owns__device: {
 					$select: ['id'],
-					$expand: ['application', 'user'],
+					$expand: ['belongs_to__application', 'belongs_to__user'],
 				},
 			},
 			$top: 1,
 			$skip: 1,
-		};
-		// @ts-expect-error
+		} satisfies PineOptions<Application>;
 		const result = mergePineOptions({}, extras);
 		return expect(result).to.deep.equal(extras);
 	});
@@ -61,7 +60,7 @@ describe('Pine option merging', function () {
 	});
 
 	it('combines filter options with $and', function () {
-		// @ts-expect-error
+		// @ts-expect-error b/c it's not typed
 		const result = mergePineOptions(
 			{ $filter: { id: 1 } },
 			{ $filter: { name: 'MyApp' } },
@@ -242,13 +241,13 @@ describe('Pine option merging', function () {
 	});
 
 	it('rejects any unknown extra options', () =>
-		// @ts-expect-error
+		// @ts-expect-error b/c it's not typed
 		expect(() => mergePineOptions({}, { unknownKey: 'value' })).to.throw(
 			'Unknown pine option: unknownKey',
 		));
 
 	it('ignores any unknown default options', () =>
-		// @ts-expect-error
+		// @ts-expect-error b/c it's not typed
 		expect(() => mergePineOptions({ unknownKey: 'value' }, {})).not.to.throw());
 });
 

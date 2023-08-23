@@ -83,7 +83,7 @@ export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 
 // TODO: Make it so that it also infers the extras param
 export function mergePineOptionsTyped<
-	R extends {},
+	R extends object,
 	P extends Pine.ODataOptionsStrict<R>,
 >(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
 	return mergePineOptions(defaults, extras) as P;
@@ -117,19 +117,19 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 export function mergePineOptions<
-	R extends {},
+	R extends object,
 	TDefault extends Pine.ODataOptions<R>,
 >(
 	defaults: TDefault,
 	extras: Pine.ODataOptions<R> | undefined,
 	replace$selects?: boolean,
 ): TDefault;
-export function mergePineOptions<R extends {}>(
+export function mergePineOptions<R extends object>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,
 	replace$selects?: boolean,
 ): Pine.ODataOptions<R>;
-export function mergePineOptions<R extends {}>(
+export function mergePineOptions<R extends object>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,
 	replace$selects?: boolean,
@@ -175,7 +175,7 @@ export function mergePineOptions<R extends {}>(
 
 	for (const key of passthroughPineOptionKeys) {
 		if (key in extras) {
-			// @ts-expect-error
+			// @ts-expect-error TS doesn't realize that for the same key the values are compatible
 			result[key] = extras[key];
 		}
 	}
@@ -228,7 +228,7 @@ const mergeExpandOptions = <T>(
 
 // Converts a valid expand object in any format into a new object
 // containing (at most) $expand, $filter and $select keys
-const convertExpandToObject = <T extends {}>(
+const convertExpandToObject = <T extends object>(
 	expandOption: Pine.Expand<T> | undefined,
 	cloneIfNeeded = false,
 ): Pine.ResourceExpand<T> => {
@@ -323,6 +323,7 @@ export const limitedMap = <T, U>(
 			try {
 				inFlight++;
 				result[i] = await fn(arr[i], i, arr);
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises
 				runNext();
 			} catch (err) {
 				// Stop any further iterations
@@ -338,6 +339,7 @@ export const limitedMap = <T, U>(
 			}
 		};
 		while (inFlight < concurrency) {
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			runNext();
 		}
 	});

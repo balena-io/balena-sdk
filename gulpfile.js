@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const gulp = require('gulp');
 const gulpMocha = require('gulp-mocha');
 const replace = require('gulp-replace');
@@ -13,7 +14,7 @@ const minify = uglifyComposer(uglifyJs, console);
 const packageJSON = require('./package.json');
 
 const cliOptions = minimist(process.argv.slice(2), {
-	string: 'buildDir',
+	string: 'buildDir', // eslint-disable-line id-denylist
 	default: { buildDir: 'es2015' },
 });
 

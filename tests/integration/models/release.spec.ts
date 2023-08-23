@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import type * as BalenaSdk from '../../..';
 import { delay, timeSuite } from '../../util';
@@ -129,8 +129,9 @@ describe('Release Model', function () {
 					return;
 				}
 				const start = Date.now();
-				while (true) {
-					const imageCount = await balena.pine.get({
+				let imageCount = 0;
+				while (imageCount < TEST_SOURCE_CONTAINER_COUNT * releaseCount) {
+					imageCount = await balena.pine.get({
 						resource: 'image',
 						options: {
 							$count: {

@@ -58,6 +58,7 @@ const getAuth = function (
 	 * @namespace balena.auth.twoFactor
 	 * @memberof balena.auth
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const twoFactor = (require('./2fa') as typeof import('./2fa')).default(
 		{
 			...deps,
@@ -82,7 +83,7 @@ const getAuth = function (
 
 	const getActorDetails = async (noCache = false) => {
 		if (noCache) {
-			memoizedActorWhoami.clear();
+			await memoizedActorWhoami.clear();
 		}
 		try {
 			return await memoizedActorWhoami();
@@ -197,7 +198,7 @@ const getAuth = function (
 		email: string;
 		password: string;
 	}): Promise<void> {
-		memoizedActorWhoami.clear();
+		await memoizedActorWhoami.clear();
 		const token = await authenticate(credentials);
 		await auth.setKey(token);
 	}
@@ -217,8 +218,8 @@ const getAuth = function (
 	 * @example
 	 * balena.auth.loginWithToken(authToken);
 	 */
-	function loginWithToken(authToken: string): Promise<void> {
-		memoizedActorWhoami.clear();
+	async function loginWithToken(authToken: string): Promise<void> {
+		await memoizedActorWhoami.clear();
 		return auth.setKey(authToken);
 	}
 
@@ -345,8 +346,8 @@ const getAuth = function (
 	 * @example
 	 * balena.auth.logout();
 	 */
-	function logout(): Promise<void> {
-		memoizedActorWhoami.clear();
+	async function logout(): Promise<void> {
+		await memoizedActorWhoami.clear();
 		return auth.removeKey();
 	}
 

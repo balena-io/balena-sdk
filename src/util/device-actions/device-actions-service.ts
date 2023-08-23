@@ -26,7 +26,10 @@ const DEVICE_ACTIONS_API_VERSION = 'v1';
 export class DeviceActionsService {
 	private actionsEndpoint: string;
 
-	constructor(deviceUrlsBase: string, private request: BalenaRequest) {
+	constructor(
+		deviceUrlsBase: string,
+		private request: BalenaRequest,
+	) {
 		this.actionsEndpoint = `https://actions.${deviceUrlsBase}/${DEVICE_ACTIONS_API_VERSION}`;
 	}
 

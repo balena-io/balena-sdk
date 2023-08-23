@@ -23,7 +23,7 @@ export type TypeOrDictionary<T> =
 			[key: string]: T;
 	  };
 
-export type IfDefined<T, P> = undefined extends T ? {} : P;
+export type IfDefined<T, P> = undefined extends T ? object : P;
 
 export type Resolvable<R> = R | PromiseLike<R>;
 
@@ -43,4 +43,4 @@ export type ExactlyExtends<T, ExtendsBase> = ExtendsBase extends T
 // TODO: Replace this workaround once TS adds support for this use case.
 // See: https://github.com/microsoft/TypeScript/issues/14829#issuecomment-322267089
 // See: https://github.com/millsp/ts-toolbelt/blob/3859d1819021800b96ed815abf5c300eb7b8f926/src/Function/NoInfer.ts#L27
-export type NoInfer<A extends any> = [A][A extends any ? 0 : never];
+export type NoInfer<A> = [A][A extends any ? 0 : never];

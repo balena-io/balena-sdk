@@ -25,7 +25,7 @@ export function batchResourceOperationFactory<
 	type Item<TOpts> = {
 		id: number;
 		uuid: string;
-	} & (TOpts extends PineOptionsStrict<T> ? PineTypedResult<T, TOpts> : {});
+	} & (TOpts extends PineOptionsStrict<T> ? PineTypedResult<T, TOpts> : object);
 
 	async function batchResourceOperation<
 		TOpts extends PineOptionsStrict<T>,

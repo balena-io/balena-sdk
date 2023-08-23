@@ -1,4 +1,3 @@
-// tslint:disable-next-line:import-blacklist
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
@@ -106,13 +105,15 @@ describe('Application Invite Model', function () {
 							this.application.id,
 							{
 								invitee: TEST_EMAIL,
-								// @ts-expect-error
+								// @ts-expect-error invalid role
 								roleName: UNKNOWN_ROLE,
 							},
 						);
-						expect(promise).to.be.rejected.then((error) => {
-							expect(error).to.have.property('code', 'BalenaRequestError');
-							expect(error).to.have.property('statusCode', 404);
+						await expect(promise).to.be.rejected.then((error) => {
+							expect(error).to.have.property(
+								'code',
+								'BalenaApplicationMembershipRoleNotFound',
+							);
 							expect(error)
 								.to.have.property('message')
 								.that.contains(

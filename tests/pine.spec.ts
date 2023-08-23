@@ -10,7 +10,7 @@ const mockServer = mockttp.getLocal();
 
 let dataDirectory;
 if (!IS_BROWSER) {
-	// tslint:disable-next-line:no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const temp = require('temp').track();
 	dataDirectory = temp.mkdirSync();
 }
@@ -19,7 +19,7 @@ const auth = new BalenaAuth({ dataDirectory });
 const request = getRequest({ auth });
 const apiVersion = 'v6';
 
-const buildPineInstance = (apiUrl: string, extraOpts?: {}) =>
+const buildPineInstance = (apiUrl: string, extraOpts?: object) =>
 	createPinejsClient(
 		{},
 		{
@@ -49,10 +49,10 @@ describe('Pine', function () {
 	describe('given a /user/v1/refresh-token endpoint', function () {
 		beforeEach(async function () {
 			this.pine = buildPineInstance(mockServer.url);
-			mockServer
+			await mockServer
 				.forGet('/user/v1/refresh-token')
 				.thenReply(200, tokens.johndoe.token);
-			mockServer
+			await mockServer
 				.forGet('/foo')
 				.withHeaders({
 					Authorization: `Bearer ${tokens.johndoe.token}`,

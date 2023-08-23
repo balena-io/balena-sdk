@@ -211,12 +211,12 @@ const getOsModel = function (
 	} = deps;
 	const { apiUrl, isBrowser } = opts;
 
-	const hupActionHelper = once(
-		() =>
-			(
-				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
-			).hupActionHelper,
-	);
+	const hupActionHelper = once(() => {
+		const osUpdateUtils =
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils');
+		return osUpdateUtils.hupActionHelper;
+	});
 
 	const authDependentMemoizer = getAuthDependentMemoize(pubsub);
 
@@ -808,9 +808,8 @@ const getOsModel = function (
 		options.network = options.network ?? 'ethernet';
 
 		try {
-			const applicationId = await sdkInstance.models.application._getId(
-				slugOrUuidOrId,
-			);
+			const applicationId =
+				await sdkInstance.models.application._getId(slugOrUuidOrId);
 
 			const { body } = await request.send({
 				method: 'POST',

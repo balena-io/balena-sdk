@@ -1,4 +1,4 @@
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -64,7 +64,7 @@ describe('Application Membership Model', function () {
 				const promise = balena.models.application.membership.create({
 					application: ctx.application.id,
 					username: credentials.member.username,
-					// @ts-expect-error
+					// @ts-expect-error we are passing an invalid value
 					roleName: 'unknown role',
 				});
 				await expect(promise).to.be.rejected.and.eventually.have.property(
