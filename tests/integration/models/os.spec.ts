@@ -8,6 +8,7 @@ import {
 	givenLoggedInUser,
 	IS_BROWSER,
 	applicationRetrievalFields,
+	sdkOpts,
 } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
@@ -1132,9 +1133,18 @@ describe('OS model', function () {
 					dtId,
 					'v12.11.0',
 				);
-				expect(svImage?.image_name).to.equal(
-					'registry2.balena-cloud.com/v2/4ca706e1c624daff7e519b3009746b2c',
+				expect(svImage?.image_name).to.match(
+					/registry2\.[a-z0-9_\-.]+\.[a-z]+\/v2\/[0-9a-f]+/,
 				);
+				if (sdkOpts.apiUrl === 'https://api.balena-cloud.com') {
+					expect(svImage?.image_name).to.equal(
+						'registry2.balena-cloud.com/v2/4ca706e1c624daff7e519b3009746b2c',
+					);
+				} else if (sdkOpts.apiUrl === 'https://api.balena-staging.com') {
+					expect(svImage?.image_name).to.equal(
+						'registry2.balena-staging.com/v2/77fdf484a2f80f5b111e7ebe18759561',
+					);
+				}
 			});
 		}));
 });
