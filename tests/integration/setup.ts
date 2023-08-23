@@ -38,10 +38,8 @@ if (IS_BROWSER) {
 	};
 }
 
-Object.assign(sdkOpts, {
-	isBrowser: IS_BROWSER,
-	retries: 3,
-});
+sdkOpts.isBrowser = IS_BROWSER;
+sdkOpts.requestBatchingChunkSize = 5;
 
 const env = process.env as Dictionary<string>;
 console.log(`Running SDK tests against: ${sdkOpts.apiUrl}`);
