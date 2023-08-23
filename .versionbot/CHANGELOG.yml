@@ -1,4 +1,45 @@
 - commits:
+    - subject: "organization-invite: Fix throwing a typed error when passing an
+        unkonwn role"
+      hash: ff13fd82316f86170ccde6c1c2b0f9b114ed386a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "application-invite: Fix throwing a typed error when passing an unkonwn
+        role"
+      hash: 64cf7302b99fcb530b29848532bca293d44d6835
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Fix bugs that linting surfaced"
+      hash: 8150fb6ff2def8145fa2e105070ae6d92f2e8178
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update @balena/lint to 7.0.1
+      hash: 014c192ba05fb091c506988ac244408185b3d16f
+      body: |
+        Update @balena/lint from 6.1.1 to 7.0.1
+      footer:
+        Depends-on: https://github.com/balena-io-modules/node-balena-lint/pull/85
+        depends-on: https://github.com/balena-io-modules/node-balena-lint/pull/85
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.1.2
+  title: ""
+  date: 2023-08-23T08:22:41.017Z
+- commits:
     - subject: "logs: Emit errors when initializing the SDK with debug: true"
       hash: a9247d6ef2309504746a621877ee6e1df3eaaf7f
       body: ""
