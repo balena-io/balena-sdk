@@ -566,19 +566,18 @@ describe('Application Model', function () {
 						);
 					});
 					applicationRetrievalFields.forEach((prop) => {
-						it(`should be able to rename an existing application by ${prop}`, function () {
-							return balena.models.application
-								.rename(this.application[prop], 'newApplicationName_' + prop)
-								.then(function () {
-									balena.models.application
-										.get('newApplicationName_' + prop)
-										.then(function (app) {
-											return expect(app).to.have.property(
-												'app_name',
-												'newApplicationName_' + prop,
-											);
-										});
-								});
+						it(`should be able to rename an existing application by ${prop}`, async function () {
+							await balena.models.application.rename(
+								this.application[prop],
+								'newApplicationName_' + prop,
+							);
+							const app = await balena.models.application.get(
+								this.application.id,
+							);
+							expect(app).to.have.property(
+								'app_name',
+								'newApplicationName_' + prop,
+							);
 						});
 					});
 				});

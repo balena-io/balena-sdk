@@ -270,7 +270,7 @@ describe('Billing Model', function () {
 
 			givenABillingAccountIt(
 				'should successfully update billing email',
-				function () {
+				async function () {
 					const email = 'hello@balena.io';
 					const promise = balena.models.billing.updateAccountInfo(
 						this.initialOrg.id,
@@ -278,11 +278,11 @@ describe('Billing Model', function () {
 							email,
 						},
 					);
-					expect(promise).to.be.fulfilled;
+					await expect(promise).to.be.fulfilled;
 					const updatedAccountInfo = balena.models.billing.getAccount(
 						this.initialOrg.id,
 					);
-					expect(updatedAccountInfo)
+					await expect(updatedAccountInfo)
 						.to.eventually.have.property('email')
 						.that.equals(email);
 				},

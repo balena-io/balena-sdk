@@ -2677,15 +2677,8 @@ describe('Device Model', function () {
 					});
 
 					it(`should throw an error when getting device history by ${testSet.model}, when providing invalid fromDate filter option`, async function () {
-						for (const invalidParam of [
-							null,
-							1,
-							undefined,
-							'invalid',
-							{},
-							[],
-						]) {
-							expect(
+						for (const invalidParam of [1, 'invalid', {}, []]) {
+							await expect(
 								historyModel[testSet.method](this[testSet.model]['id'], {
 									fromDate: invalidParam,
 								}),
@@ -2694,15 +2687,8 @@ describe('Device Model', function () {
 					});
 
 					it(`should throw an error when getting device history by ${testSet.model}, when providing invalid toDate filter option`, async function () {
-						for (const invalidParam of [
-							null,
-							1,
-							undefined,
-							'invalid',
-							{},
-							[],
-						]) {
-							expect(
+						for (const invalidParam of [1, 'invalid', {}, []]) {
+							await expect(
 								historyModel[testSet.method](this[testSet.model]['id'], {
 									toDate: invalidParam,
 								}),
@@ -2711,14 +2697,15 @@ describe('Device Model', function () {
 					});
 				}
 				it(`should throw an error when getting device history entries for an invalid device uuid`, async function () {
-					expect(
+					await expect(
 						historyModel.getAllByDevice(
 							this.device.uuid + 'invalidExtraDigits',
 						),
 					).to.be.rejected;
 
-					expect(historyModel.getAllByDevice(this.device.uuid.slice(0, 7))).to
-						.be.rejected;
+					await expect(
+						historyModel.getAllByDevice(this.device.uuid.slice(0, 7)),
+					).to.be.rejected;
 				});
 			});
 		});

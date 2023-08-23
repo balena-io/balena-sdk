@@ -106,7 +106,7 @@ describe('Organization Invite Model', function () {
 								roleName: UNKNOWN_ROLE,
 							},
 						);
-						expect(promise).to.be.rejected.then((error) => {
+						await expect(promise).to.be.rejected.then((error) => {
 							expect(error).to.have.property('code', 'BalenaRequestError');
 							expect(error).to.have.property('statusCode', 404);
 							expect(error)
