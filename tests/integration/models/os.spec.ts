@@ -14,9 +14,6 @@ import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 import type { Resolvable } from '../../../typings/utils';
 
-const eventuallyExpectProperty = <T>(promise: Promise<T>, prop: string) =>
-	expect(promise).to.eventually.have.property(prop);
-
 const {
 	_getNormalizedDeviceTypeSlug,
 	_getDownloadSize,
@@ -577,32 +574,34 @@ describe('OS model', function () {
 
 	describe('balena.models.os.getDownloadSize()', function () {
 		parallel('given a valid device slug', function () {
-			it('should eventually be a valid number', function () {
-				const promise = balena.models.os.getDownloadSize('raspberry-pi');
-				return expect(promise).to.eventually.be.a('number');
+			it('should eventually be a valid number', async function () {
+				const downloadSize =
+					await balena.models.os.getDownloadSize('raspberry-pi');
+				expect(downloadSize).be.a('number');
 			});
 
-			it('should eventually be a valid number if passing a device type alias', function () {
-				const promise = balena.models.os.getDownloadSize('raspberrypi');
-				return expect(promise).to.eventually.be.a('number');
+			it('should eventually be a valid number if passing a device type alias', async function () {
+				const downloadSize =
+					await balena.models.os.getDownloadSize('raspberrypi');
+				expect(downloadSize).be.a('number');
 			});
 		});
 
 		parallel('given a specific OS version', function () {
-			it('should get a result for ResinOS v1', function () {
-				const promise = balena.models.os.getDownloadSize(
+			it('should get a result for ResinOS v1', async function () {
+				const downloadSize = await balena.models.os.getDownloadSize(
 					'raspberry-pi',
 					'1.26.1',
 				);
-				return expect(promise).to.eventually.be.a('number');
+				expect(downloadSize).to.be.a('number');
 			});
 
-			it('should get a result for ResinOS v2', function () {
-				const promise = balena.models.os.getDownloadSize(
+			it('should get a result for ResinOS v2', async function () {
+				const downloadSize = await balena.models.os.getDownloadSize(
 					'raspberry-pi',
 					'2.0.6+rev3.prod',
 				);
-				return expect(promise).to.eventually.be.a('number');
+				expect(downloadSize).to.be.a('number');
 			});
 
 			it('should cache the results', () =>
@@ -662,37 +661,39 @@ describe('OS model', function () {
 
 	describe('balena.models.os.getLastModified()', function () {
 		parallel('given a valid device slug', function () {
-			it('should eventually be a valid Date instance', function () {
-				const promise = balena.models.os.getLastModified('raspberry-pi');
-				return expect(promise).to.eventually.be.an.instanceof(Date);
+			it('should eventually be a valid Date instance', async function () {
+				const lastModified =
+					await balena.models.os.getLastModified('raspberry-pi');
+				expect(lastModified).to.be.an.instanceof(Date);
 			});
 
-			it('should eventually be a valid Date instance if passing a device type alias', function () {
-				const promise = balena.models.os.getLastModified('raspberrypi');
-				return expect(promise).to.eventually.be.an.instanceof(Date);
+			it('should eventually be a valid Date instance if passing a device type alias', async function () {
+				const lastModified =
+					await balena.models.os.getLastModified('raspberrypi');
+				expect(lastModified).to.be.an.instanceof(Date);
 			});
 
-			it('should be able to query for a specific version', function () {
-				const promise = balena.models.os.getLastModified(
+			it('should be able to query for a specific version', async function () {
+				const lastModified = await balena.models.os.getLastModified(
 					'raspberrypi',
 					'1.26.1',
 				);
-				return expect(promise).to.eventually.be.an.instanceof(Date);
+				expect(lastModified).to.be.an.instanceof(Date);
 			});
 
-			it('should be able to query for a version containing a plus', function () {
-				const promise = balena.models.os.getLastModified(
+			it('should be able to query for a version containing a plus', async function () {
+				const lastModified = await balena.models.os.getLastModified(
 					'raspberrypi',
 					'2.0.6+rev3.prod',
 				);
-				return expect(promise).to.eventually.be.an.instanceof(Date);
+				expect(lastModified).to.be.an.instanceof(Date);
 			});
 		});
 
 		describe('given an invalid device slug', () =>
-			it('should be rejected with an error message', function () {
+			it('should be rejected with an error message', async function () {
 				const promise = balena.models.os.getLastModified('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith(
+				await expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
 			}));
@@ -874,20 +875,21 @@ describe('OS model', function () {
 			});
 
 			applicationRetrievalFields.forEach((prop) => {
-				it(`should be able to get an application config by ${prop}`, function () {
-					const promise = balena.models.os.getConfig(ctx.application[prop], {
-						version: DEFAULT_OS_VERSION,
-					});
-					return Promise.all([
-						eventuallyExpectProperty(promise, 'applicationId'),
-						eventuallyExpectProperty(promise, 'apiKey'),
-						eventuallyExpectProperty(promise, 'userId'),
-						eventuallyExpectProperty(promise, 'deviceType'),
-						eventuallyExpectProperty(promise, 'apiEndpoint'),
-						eventuallyExpectProperty(promise, 'registryEndpoint'),
-						eventuallyExpectProperty(promise, 'vpnEndpoint'),
-						eventuallyExpectProperty(promise, 'listenPort'),
-					]);
+				it(`should be able to get an application config by ${prop}`, async function () {
+					const config = await balena.models.os.getConfig(
+						ctx.application[prop],
+						{
+							version: DEFAULT_OS_VERSION,
+						},
+					);
+					expect(config).to.have.property('applicationId');
+					expect(config).to.have.property('apiKey');
+					expect(config).to.have.property('userId');
+					expect(config).to.have.property('deviceType');
+					expect(config).to.have.property('apiEndpoint');
+					expect(config).to.have.property('registryEndpoint');
+					expect(config).to.have.property('vpnEndpoint');
+					expect(config).to.have.property('listenPort');
 				});
 			});
 
