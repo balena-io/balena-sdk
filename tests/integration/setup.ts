@@ -13,14 +13,14 @@ chai.use(chaiSamsam);
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 
 export let balenaSdkExports: typeof BalenaSdk;
-let opts: BalenaSdk.SdkOptions;
+export let sdkOpts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	require('js-polyfills/es6');
 	balenaSdkExports = window.balenaSdk;
 
 	const apiUrl = process.env.TEST_API_URL || 'https://api.balena-cloud.com';
-	opts = {
+	sdkOpts = {
 		apiUrl,
 		builderUrl:
 			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
@@ -32,7 +32,7 @@ if (IS_BROWSER) {
 	const settings = require('balena-settings-client');
 
 	const apiUrl = process.env.TEST_API_URL || settings.get('apiUrl');
-	opts = {
+	sdkOpts = {
 		apiUrl,
 		builderUrl:
 			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
@@ -40,13 +40,13 @@ if (IS_BROWSER) {
 	};
 }
 
-Object.assign(opts, {
+Object.assign(sdkOpts, {
 	isBrowser: IS_BROWSER,
 	retries: 3,
 });
 
 const env = process.env as Dictionary<string>;
-console.log(`Running SDK tests against: ${opts.apiUrl}`);
+console.log(`Running SDK tests against: ${sdkOpts.apiUrl}`);
 console.log(`TEST_USERNAME: ${env?.TEST_USERNAME}`);
 
 const buildCredentials = function () {
@@ -106,8 +106,7 @@ const buildCredentials = function () {
 };
 
 export const getSdk = balenaSdkExports.getSdk;
-export { opts as sdkOpts };
-export const balena = getSdk(opts);
+export const balena = getSdk(sdkOpts);
 
 export async function resetUser() {
 	const isLoggedIn = await balena.auth.isLoggedIn();
@@ -163,7 +162,7 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 		const { body } = await balena.request.send({
 			method: 'POST',
 			url: '/api-key/user/full',
-			baseUrl: opts.apiUrl,
+			baseUrl: sdkOpts.apiUrl,
 			body: {
 				name: 'apiKey',
 			},
