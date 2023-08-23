@@ -1,4 +1,65 @@
 - commits:
+    - subject: "tests/os: Refactor some promise tests to async await"
+      hash: dd9959dbd631d7fdaf882a6c696c0e3bb49abe4c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fix os.getSupervisorReleaseByDeviceType test to work on balenaMachine
+      hash: dd7708f520f13a71fb6907cc0b72e7ba3263be39
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update balena-request from 12.0.2 to 12.0.4
+      hash: 31bc401dc11fa2179b3ebb1cf0642c76c39b8783
+      body: |
+        Update balena-request from 12.0.2 to 12.0.4
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Refactor the interceptors to stop using .reduce()
+              hash: bb3ebd421cff85803bc80ead121b83e8ed103499
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-request-12.0.4
+          title: ""
+          date: 2023-08-23T08:22:55.377Z
+        - commits:
+            - subject: Avoid deep imports from balena-auth
+              hash: c11642a930772b968ff736583358d04a0b9321f4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Update balena-auth to 5.1.0
+              hash: d86de07cb9386cc5fe79c01e9ed03d9af664fe4b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-request-12.0.3
+          title: ""
+          date: 2023-08-09T12:18:22.918Z
+  version: 18.1.3
+  title: ""
+  date: 2023-08-23T09:36:03.477Z
+- commits:
     - subject: "organization-invite: Fix throwing a typed error when passing an
         unkonwn role"
       hash: ff13fd82316f86170ccde6c1c2b0f9b114ed386a
