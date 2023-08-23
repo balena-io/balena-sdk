@@ -98,6 +98,7 @@ describe('Logs', function () {
 			async function getLogLinesAndUnsubscribe(logs) {
 				const lines: string[] = [];
 				try {
+					// eslint-disable-next-line no-async-promise-executor
 					await new Promise(async function (resolve, reject) {
 						logs.on('line', (line) => lines.push(line));
 						logs.on('error', reject);
@@ -220,6 +221,7 @@ describe('Logs', function () {
 				logs.unsubscribe();
 
 				const lines: string[] = [];
+				// eslint-disable-next-line no-async-promise-executor
 				await new Promise(async (resolve, reject) => {
 					logs.on('line', (line) => lines.push(line));
 					logs.on('error', reject);

@@ -1,4 +1,3 @@
-// tslint:disable-next-line:import-blacklist
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
@@ -106,7 +105,7 @@ describe('Application Invite Model', function () {
 							this.application.id,
 							{
 								invitee: TEST_EMAIL,
-								// @ts-expect-error
+								// @ts-expect-error invalid role
 								roleName: UNKNOWN_ROLE,
 							},
 						);

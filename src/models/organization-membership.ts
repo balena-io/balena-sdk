@@ -51,6 +51,7 @@ const getOrganizationMembershipModel = function (
 	const { pine } = deps;
 
 	const { buildDependentResource } =
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
 	const tagsModel = buildDependentResource<OrganizationMembershipTag>(
@@ -60,7 +61,11 @@ const getOrganizationMembershipModel = function (
 			resourceKeyField: 'tag_key',
 			parentResourceName: 'organization_membership',
 			async getResourceId(membershipId): Promise<number> {
-				// @ts-expect-error
+				if (typeof membershipId !== 'number') {
+					throw new Error(
+						`Unexpected type for membershipId provided in organization-membership tagsModel getResourceId: ${typeof membershipId}`,
+					);
+				}
 				const membership = await exports.get(membershipId);
 				return membership.id;
 			},

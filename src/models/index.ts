@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/* eslint-disable @typescript-eslint/no-var-requires */
 const modelsTemplate = {
 	/**
 	 * @namespace application
@@ -100,6 +101,7 @@ const modelsTemplate = {
 	 */
 	billing: () => (require('./billing') as typeof import('./billing')).default,
 };
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
 	const models = {} as {

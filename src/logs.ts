@@ -23,7 +23,7 @@ import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 const AbortController: typeof window.AbortController =
 	'AbortController' in globalEnv
 		? globalEnv.AbortController
-		: // tslint:disable-next-line:no-var-requires
+		: // eslint-disable-next-line @typescript-eslint/no-var-requires
 		  require('abortcontroller-polyfill/dist/cjs-ponyfill').AbortController;
 
 export interface BaseLog {

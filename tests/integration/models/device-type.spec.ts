@@ -44,9 +44,8 @@ describe('Device Type model', function () {
 		});
 
 		it(`should get device type by id`, async function () {
-			const deviceType = await balena.models.deviceType.get(
-				RPI2_DEVICE_TYPE_ID,
-			);
+			const deviceType =
+				await balena.models.deviceType.get(RPI2_DEVICE_TYPE_ID);
 			expect(deviceType).to.have.property('id', RPI2_DEVICE_TYPE_ID);
 		});
 	});
@@ -141,9 +140,8 @@ describe('Device Type model', function () {
 			] as const
 		).forEach(([deviceTypeSlug, instructions]) => {
 			it(`should get just the full instructions for installing BalenaOS for ${deviceTypeSlug} with templates strings resolved when passing the slug`, async function () {
-				const result = await balena.models.deviceType.getInstructions(
-					deviceTypeSlug,
-				);
+				const result =
+					await balena.models.deviceType.getInstructions(deviceTypeSlug);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
 				expect(result).to.eql(instructions);
@@ -204,9 +202,8 @@ describe('Device Type model', function () {
 			] as const
 		).forEach(([deviceTypeSlug, installationMethod]) => {
 			it(`should get device type installation method for ${deviceTypeSlug}`, async function () {
-				const result = await balena.models.deviceType.getInstallMethod(
-					deviceTypeSlug,
-				);
+				const result =
+					await balena.models.deviceType.getInstallMethod(deviceTypeSlug);
 				expect(result).to.equal(installationMethod);
 			});
 		});

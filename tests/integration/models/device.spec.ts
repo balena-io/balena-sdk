@@ -1,4 +1,4 @@
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -458,7 +458,7 @@ describe('Device Model', function () {
 					});
 
 					it('should return false if the device id is undefined', async function () {
-						// @ts-expect-error
+						// @ts-expect-error invalid parameter
 						const result = await balena.models.application.has(undefined);
 						expect(result).to.be.false;
 					});
@@ -847,7 +847,7 @@ describe('Device Model', function () {
 
 					it('should throw an error if the expiry time stamp is undefined', function () {
 						return expect(
-							// @ts-expect-error
+							// @ts-expect-error missing parameter
 							balena.models.device.grantSupportAccess(this.device.id),
 						).to.be.rejected;
 					});
@@ -1586,9 +1586,9 @@ describe('Device Model', function () {
 						it('should not be able to start an OS update without providing a targetOsVersion parameter', async function () {
 							const promise =
 								paramType === 'array of uuids'
-									? // @ts-expect-error
+									? // @ts-expect-error missing parameter
 									  balena.models.device.startOsUpdate([this.device.uuid])
-									: // @ts-expect-error
+									: // @ts-expect-error missing parameter
 									  balena.models.device.startOsUpdate(this.device.uuid);
 							await expect(promise).to.be.rejected.and.eventually.have.property(
 								'code',
@@ -1652,7 +1652,7 @@ describe('Device Model', function () {
 						});
 
 						it('should not be able to start an OS update when the target os version is not specified', async function () {
-							// @ts-expect-error
+							// @ts-expect-error missing parameter
 							const promise = balena.models.device.startOsUpdate(
 								paramType === 'array of uuids'
 									? [this.device.uuid]
@@ -2089,7 +2089,7 @@ describe('Device Model', function () {
 				it('should throw when passing an object as a parameter', async function () {
 					const device = await balena.models.device.get(this.device.id);
 					return expect(
-						// @ts-expect-error
+						// @ts-expect-error invalid parameter
 						balena.models.device.getStatus(device),
 					).to.be.rejectedWith(
 						"[object Object] is not a valid value for parameter 'uuidOrId'",
@@ -3323,12 +3323,12 @@ describe('Device Model', function () {
 
 			it('should throw when a device uuid is not a string', () =>
 				expect(() =>
-					// @ts-expect-error
+					// @ts-expect-error invalid parameter
 					balena.models.device.getDashboardUrl(1234567),
 				).to.throw());
 
 			it('should throw when a device uuid is not provided', () =>
-				// @ts-expect-error
+				// @ts-expect-error invalid parameter
 				expect(() => balena.models.device.getDashboardUrl()).to.throw());
 		});
 

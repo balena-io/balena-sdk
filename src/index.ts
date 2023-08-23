@@ -142,6 +142,7 @@ const BALENA_SDK_HAS_USED_SHARED_OPTIONS = 'BALENA_SDK_HAS_USED_SHARED_OPTIONS';
 const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
 
 const sdkTemplate = {
+	/* eslint-disable @typescript-eslint/no-var-requires */
 	auth() {
 		return (require('./auth') as typeof import('./auth')).default;
 	},
@@ -157,6 +158,7 @@ const sdkTemplate = {
 	settings() {
 		return (require('./settings') as typeof import('./settings')).default;
 	},
+	/* eslint-enable @typescript-eslint/no-var-requires */
 };
 
 export type BalenaSDK = {
@@ -208,6 +210,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		...$opts,
 	};
 
+	/* eslint-disable @typescript-eslint/no-var-requires */
 	const version = (
 		require('./util/sdk-version') as typeof import('./util/sdk-version')
 	).default;
@@ -270,6 +273,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 			strict: true,
 		})(request.send);
 	}
+	/* eslint-enable @typescript-eslint/no-var-requires */
 	const pine = createPinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 
@@ -377,6 +381,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		enumerable: true,
 		configurable: true,
 		get() {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
 			const { mergePineOptions } = require('./util') as typeof import('./util');
 			return { mergePineOptions };
 		},

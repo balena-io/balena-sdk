@@ -88,13 +88,10 @@ function getSingleInstallSummary(
 		};
 	}
 
-	const result:
-		| CurrentService &
-				Partial<
-					Pick<ImageInstall, 'installs__image' | 'is_provided_by__release'>
-				> &
-				Partial<Pick<ImageInstall, 'image'>> &
-				WithServiceName = {
+	const result: CurrentService &
+		Partial<Pick<ImageInstall, 'installs__image' | 'is_provided_by__release'>> &
+		Partial<Pick<ImageInstall, 'image'>> &
+		WithServiceName = {
 		...rawData,
 		service_id: service.id,
 		// add this extra property to make grouping the services easier

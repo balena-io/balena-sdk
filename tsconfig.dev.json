@@ -8,7 +8,11 @@
     "include": [
         "typings/**/*",
         "tests/**/*",
+        "typing_tests/**/*",
+        "typings/**/*",
         "src/**/*",
-        "gulpfile.js"
+        ".eslintrc.js",
+        "*.ts",
+        "*.js"
     ]
 }

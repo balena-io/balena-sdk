@@ -20,9 +20,9 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
-export type ConceptTypeNavigationResource<T extends {}> = [T] | number;
-export type NavigationResource<T extends {}> = [T] | PineDeferred;
-export type OptionalNavigationResource<T extends {}> =
+export type ConceptTypeNavigationResource<T extends object> = [T] | number;
+export type NavigationResource<T extends object> = [T] | PineDeferred;
+export type OptionalNavigationResource<T extends object> =
 	| []
 	| [T]
 	| PineDeferred
@@ -33,26 +33,27 @@ export type OptionalNavigationResource<T extends {}> =
  * Selecting is not suggested,
  * in that case it holds a deferred to the original resource.
  */
-export type ReverseNavigationResource<T extends {}> = T[] | undefined;
+export type ReverseNavigationResource<T extends object> = T[] | undefined;
 
-export type AssociatedResource<T extends {}> =
+export type AssociatedResource<T extends object> =
 	| ConceptTypeNavigationResource<T>
 	| NavigationResource<T>
 	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
 
-export type InferAssociatedResourceType<T> = T extends AssociatedResource<{}> &
-	any[]
-	? T[number]
-	: never;
+export type InferAssociatedResourceType<T> =
+	T extends AssociatedResource<object> & any[] ? T[number] : never;
 
 export type SelectableProps<T> =
 	// This allows us to get proper results when T is any/AnyObject, otherwise this returned never
-	PropsOfType<T, ReverseNavigationResource<{}>> extends StringKeyof<T>
+	PropsOfType<T, ReverseNavigationResource<object>> extends StringKeyof<T>
 		? StringKeyof<T>
-		: Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<{}>>>; // This is the normal typed case
+		: Exclude<
+				StringKeyof<T>,
+				PropsOfType<T, ReverseNavigationResource<object>>
+		  >; // This is the normal typed case
 
-export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<{}>> &
+export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<object>> &
 	// TODO: Drop me once Pine unifies ConceptTypeNavigationResource with NavigationResource
 	PropsAssignableWithType<T, [] | [any] | any[]> &
 	string;
@@ -100,7 +101,7 @@ type ExpandedProperty<
 	: never;
 
 export type ExpandResultObject<T, Props extends keyof T> = {
-	[P in Props]: ExpandedProperty<T, P, {}>;
+	[P in Props]: ExpandedProperty<T, P, object>;
 };
 
 type ExpandResourceExpandObject<
@@ -123,7 +124,7 @@ export type TypedExpandResult<
 	? keyof TParams['$expand'] extends ExpandableProps<T>
 		? ExpandResourceExpandObject<T, TParams['$expand']>
 		: never
-	: {};
+	: object;
 
 export type TypedResult<
 	T,
@@ -139,7 +140,7 @@ export type TypedResult<
 
 export type PostResult<T> = SelectResultObject<
 	T,
-	Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<{}>>>
+	Exclude<StringKeyof<T>, PropsOfType<T, ReverseNavigationResource<object>>>
 >;
 
 // based on https://github.com/balena-io/pinejs-client-js/blob/master/core.d.ts
@@ -181,7 +182,7 @@ type OrderBy<T> =
 	  });
 
 type AssociatedResourceFilter<T> = T extends NonNullable<
-	ReverseNavigationResource<{}>
+	ReverseNavigationResource<object>
 >
 	? FilterObj<InferAssociatedResourceType<T>>
 	: FilterObj<InferAssociatedResourceType<T>> | number | null;
@@ -189,7 +190,7 @@ type AssociatedResourceFilter<T> = T extends NonNullable<
 type ResourceObjFilterPropValue<
 	T,
 	k extends keyof T,
-> = T[k] extends AssociatedResource<{}>
+> = T[k] extends AssociatedResource<object>
 	? AssociatedResourceFilter<T[k]>
 	: T[k] | FilterExpressions<T[k]> | null;
 
@@ -202,7 +203,7 @@ type FilterObj<T> = ResourceObjFilter<T> | FilterExpressions<T>;
 type FilterBaseType = string | number | null | boolean | Date;
 type NestedFilter<T> = FilterObj<T> | FilterArray<T> | FilterBaseType;
 
-interface FilterArray<T> extends Array<NestedFilter<T>> {}
+type FilterArray<T> = Array<NestedFilter<T>>;
 
 type FilterOperationValue<T> =
 	| NestedFilter<T>
@@ -379,7 +380,9 @@ export type ODataOptionsWithFilter<T> = ODataOptions<T> &
 	Required<Pick<ODataOptions<T>, '$filter'>>;
 
 export type SubmitBody<T> = {
-	[k in keyof T]?: T[k] extends AssociatedResource<{}> ? number | null : T[k];
+	[k in keyof T]?: T[k] extends AssociatedResource<object>
+		? number | null
+		: T[k];
 };
 
 type BaseResourceId =
@@ -477,7 +480,7 @@ export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
 	pollInterval?: number;
 }
 
-export interface Pine<ResourceTypeMap extends {} = {}> {
+export interface Pine<ResourceTypeMap extends object = object> {
 	apiPrefix: string;
 	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	// Fully typed result overloads
@@ -507,20 +510,20 @@ export interface Pine<ResourceTypeMap extends {} = {}> {
 		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
-	get<T extends {}>(params: ParamsObjWithCount<T>): Promise<number>;
-	get<T extends {}>(params: ParamsObjWithId<T>): Promise<T | undefined>;
-	get<T extends {}>(params: ParamsObj<T>): Promise<T[]>;
-	get<T extends {}, Result>(params: ParamsObj<T>): Promise<Result>;
+	get<T extends object>(params: ParamsObjWithCount<T>): Promise<number>;
+	get<T extends object>(params: ParamsObjWithId<T>): Promise<T | undefined>;
+	get<T extends object>(params: ParamsObj<T>): Promise<T[]>;
+	get<T extends object, Result>(params: ParamsObj<T>): Promise<Result>;
 	post<
 		R extends keyof ResourceTypeMap,
 		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>,
 	>(
 		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>> & {
-			body: {};
+			body: object;
 		},
 	): Promise<PostResult<ResourceTypeMap[P['resource']]>>;
 	post<T>(
-		params: ParamsObj<T> & { body: {} },
+		params: ParamsObj<T> & { body: object },
 	): Promise<PostResult<T & { id: number }>>;
 	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
@@ -583,7 +586,7 @@ export interface Pine<ResourceTypeMap extends {} = {}> {
  * A variant that makes $select mandatory, helping to create
  * requests that explicitly fetch only what your code needs.
  */
-export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
+export type PineStrict<ResourceTypeMap extends object = object> = Omit<
 	Pine,
 	'get' | 'prepare' | 'subscribe'
 > & {
@@ -621,15 +624,17 @@ export type PineStrict<ResourceTypeMap extends {} = {}> = Omit<
 		params: ExactlyExtends<P, ParamsObjStrict<ResourceTypeMap[P['resource']]>>,
 	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
 	// User provided resource type overloads
-	get<T extends {}>(params: ParamsObjWithCount<NoInfer<T>>): Promise<number>;
-	get<T extends {}>(
+	get<T extends object>(
+		params: ParamsObjWithCount<NoInfer<T>>,
+	): Promise<number>;
+	get<T extends object>(
 		params: ParamsObjWithId<NoInfer<T>> & ParamsObjStrict<NoInfer<T>>,
 	): Promise<T | undefined>;
-	get<T extends {}>(params: ParamsObjStrict<NoInfer<T>>): Promise<T[]>;
-	get<T extends {}, Result extends number>(
+	get<T extends object>(params: ParamsObjStrict<NoInfer<T>>): Promise<T[]>;
+	get<T extends object, Result extends number>(
 		params: ParamsObj<NoInfer<T>>,
 	): Promise<Result>;
-	get<T extends {}, Result>(
+	get<T extends object, Result>(
 		params: ParamsObjStrict<NoInfer<T>>,
 	): Promise<Result>;
 

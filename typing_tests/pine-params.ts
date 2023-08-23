@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
 import type { AnyObject } from '../typings/utils';
@@ -7,17 +8,17 @@ const sdk: BalenaSdk.BalenaSDK = {} as any;
 
 const strictPine = sdk.pine as BalenaSdk.PineStrict;
 
-let aAny: any;
-let aNumber: number;
-let aNumberOrUndefined: number | undefined;
-let aString: string;
+export let aAny: any;
+export let aNumber: number;
+export let aNumberOrUndefined: number | undefined;
+export let aString: string;
 
 // This file is in .prettierignore, since otherwise
 // the @ts-expect-error comments would move to the wrong place
 
 // AnyObject pine queries
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get<AnyObject>({
 		resource: 'device',
 		options: {
@@ -29,9 +30,10 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, AnyObject[]> = EqualsTrue;
+	console.log(test);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get<AnyObject>({
 		resource: 'device',
 		id: 1,
@@ -44,11 +46,12 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, AnyObject | undefined> = EqualsTrue;
+	console.log(test);
 })();
 
 // Object level typed result
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get<BalenaSdk.Device>({
 		resource: 'device',
 		options: {
@@ -60,9 +63,10 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, BalenaSdk.Device[]> = EqualsTrue;
+	console.log(test);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get<BalenaSdk.Device>({
 		resource: 'device',
 		id: 1,
@@ -75,9 +79,10 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, BalenaSdk.Device | undefined> = EqualsTrue;
+	console.log(test);
 })();
 
-(async () => {
+await (async () => {
 	const fleetSlug = 'fleetSlug';
 	const maybeRelease: string | null = '1.2.3';
 	const maybeService: string | null = 'main';
@@ -152,11 +157,12 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, BalenaSdk.Image[]> = EqualsTrue;
+	console.log(test);
 })();
 
 // Explicitly providing the result type
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get<BalenaSdk.Device, number>({
 		resource: 'device/$count',
 		options: {
@@ -173,9 +179,10 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, number> = EqualsTrue;
+	console.log(test);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get<BalenaSdk.Device, number>({
 		resource: 'device/$count',
 		id: 1,
@@ -193,11 +200,12 @@ let aString: string;
 		},
 	});
 	const test: Equals<typeof result, number> = EqualsTrue;
+	console.log(test);
 })();
 
 // Fully Typed - auto-inferring result
 
-(async () => {
+await (async () => {
 	const [result] = await sdk.pine.get({
 		resource: 'device',
 	});
@@ -206,19 +214,20 @@ let aString: string;
 	aNumber = result.belongs_to__application.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		id: 1,
 	});
 
 	const checkUndefined: typeof result = undefined;
+	console.log(checkUndefined);
 	if (result === undefined) {
 		throw new Error('Can be undefined');
 	}
@@ -228,13 +237,13 @@ let aString: string;
 	aNumber = result.belongs_to__application.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		id: 1,
@@ -244,6 +253,7 @@ let aString: string;
 	});
 
 	const checkUndefined: typeof result = undefined;
+	console.log(checkUndefined);
 	if (result === undefined) {
 		throw new Error('Can be undefined');
 	}
@@ -251,15 +261,15 @@ let aString: string;
 	aNumber = result.id;
 	aString = result.device_name;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.os_version;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.belongs_to__application;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
 
-(async () => {
+await (async () => {
 	const [result] = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -274,17 +284,17 @@ let aString: string;
 	aNumber = result.belongs_to__application.__id;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.os_version;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.should_be_running__release.__id;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
 
 // $count
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -294,7 +304,7 @@ let aString: string;
 	aNumber = result;
 })();
 
-(async () => {
+await (async () => {
 	const [result] = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -313,13 +323,13 @@ let aString: string;
 	aNumber = result.should_be_running__release;
 	aNumber = result.device_tag[0]?.id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.os_version;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.is_on__release.__id;
 })();
 
-(async () => {
+await (async () => {
 	const [result] = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -338,37 +348,39 @@ let aString: string;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	aNumber = result.device_tag;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.os_version;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.is_on__release.__id;
 })();
 
 // Exceeding properties
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
-		// @ts-expect-error
+		// @ts-expect-error test case
 		missplaced$filter: {},
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 		},
 	});
+	console.log(result);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
-			// @ts-expect-error
+			// @ts-expect-error test case
 			$asdf: {},
 		},
 	});
+	console.log(result);
 })();
 
 // Incorrect properties
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -386,15 +398,16 @@ let aString: string;
 	> = EqualsTrue;
 	// @ts-expect-error - TODO: This should either be never[] or even better the pine.get should error
 	const testTodo: Equals<typeof result, never[]> = EqualsTrue;
+	console.log(test, testTodo);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				// @ts-expect-error
+				// @ts-expect-error test case
 				should_be_running__release: {},
 				asdf: {},
 				device_tag: {
@@ -403,9 +416,10 @@ let aString: string;
 			},
 		},
 	});
+	console.log(result);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -428,9 +442,10 @@ let aString: string;
 			device_name: string;
 		}
 	> = EqualsTrue;
+	console.log(result, test);
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.get({
 		resource: 'device',
 		options: {
@@ -453,9 +468,10 @@ let aString: string;
 			device_name: string;
 		}
 	> = EqualsTrue;
+	console.log(result, test);
 })();
 
-(async () => {
+await (async () => {
 	const fleetSlug = 'fleetSlug';
 	const maybeRelease: string | null = '1.2.3';
 	const result = await sdk.pine.get({
@@ -522,9 +538,10 @@ let aString: string;
 			is_stored_at__image_location: string;
 		}
 	> = EqualsTrue;
+	console.log(result, test);
 })();
 
-(async () => {
+await (async () => {
 	const fleetSlug = 'string';
 	const maybeRelease: string | null = '1.2.3';
 	const maybeService: string | null = 'main';
@@ -609,20 +626,22 @@ let aString: string;
 			is_stored_at__image_location: string;
 		}
 	> = EqualsTrue;
+	console.log(result, test);
 })();
 
 // strictPine
-(async () => {
+await (async () => {
 	const result = await strictPine.get({
 		resource: 'device',
 		options: {
-			// @ts-expect-error
+			// @ts-expect-error test case
 			$select: ['id', 'device_name', 'belongs_to__application', 'asdf'],
 		},
 	});
+	console.log(result);
 })();
 
-(async () => {
+await (async () => {
 	const result = await strictPine.get({
 		resource: 'device',
 		options: {
@@ -636,9 +655,10 @@ let aString: string;
 			},
 		},
 	});
+	console.log(result);
 })();
 
-(async () => {
+await (async () => {
 	const result = await strictPine.get({
 		resource: 'device',
 		options: {
@@ -657,9 +677,10 @@ let aString: string;
 			},
 		},
 	});
+	console.log(result);
 })();
 
-(async () => {
+await (async () => {
 	const [result] = await strictPine.get({
 		resource: 'device',
 		options: {
@@ -680,13 +701,13 @@ let aString: string;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	aNumber = result.device_tag;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.os_version;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.is_on__release.__id;
 })();
 
-(async () => {
+await (async () => {
 	const result = await strictPine.get({
 		resource: 'device',
 		id: 5,
@@ -703,6 +724,7 @@ let aString: string;
 		},
 	});
 	const checkUndefined: typeof result = undefined;
+	console.log(checkUndefined);
 	if (result === undefined) {
 		throw new Error('Can be undefined');
 	}
@@ -713,13 +735,13 @@ let aString: string;
 	aNumberOrUndefined = result.should_be_running__release[0]?.id;
 	aNumber = result.device_tag;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aString = result.os_version;
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aNumber = result.is_on__release.__id;
 })();
 
-(async () => {
+await (async () => {
 	const result = await strictPine.get({
 		resource: 'device',
 		id: 5,
@@ -741,7 +763,7 @@ let aString: string;
 	aNumber = result;
 })();
 
-(async () => {
+await (async () => {
 	const result = await strictPine.get({
 		resource: 'device',
 		id: 5,
@@ -762,18 +784,18 @@ let aString: string;
 })();
 
 // pine.post
-(async () => {
+await (async () => {
 	await sdk.pine.post<BalenaSdk.Application>({
 		resource: 'application',
 		body: {
 			organization: 3,
-			// @ts-expect-error
+			// @ts-expect-error test case
 			asdf: 4,
 		},
 	});
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.post<BalenaSdk.Application>({
 		resource: 'application',
 		body: {
@@ -786,22 +808,22 @@ let aString: string;
 	aNumber = result.organization.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.owns__device;
 })();
 
-(async () => {
-	// @ts-expect-error
+await (async () => {
+	// @ts-expect-error test case
 	await sdk.pine.post<BalenaSdk.Application>({
 		resource: 'application',
 	});
-	// @ts-expect-error
+	// @ts-expect-error test case
 	await sdk.pine.post({
 		resource: 'application',
 	});
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.post({
 		resource: 'application',
 		body: {
@@ -813,11 +835,11 @@ let aString: string;
 	aNumber = result.organization.__id;
 	aNumberOrUndefined = result.should_be_running__release?.__id;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.owns__device;
 })();
 
-(async () => {
+await (async () => {
 	const result = await sdk.pine.post({
 		resource: 'application',
 		body: {
@@ -836,6 +858,6 @@ let aString: string;
 	// TODO: This should error
 	aNumberOrUndefined = result.asdf;
 
-	// @ts-expect-error
+	// @ts-expect-error test case
 	aAny = result.owns__device;
 })();

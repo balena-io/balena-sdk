@@ -1,4 +1,4 @@
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -92,9 +92,8 @@ describe('Config Model', function () {
 
 	parallel('balena.models.config.getDeviceTypeManifestBySlug()', function () {
 		it('should become the manifest if the slug is valid', async () => {
-			const manifest = await balena.models.config.getDeviceTypeManifestBySlug(
-				'raspberry-pi',
-			);
+			const manifest =
+				await balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi');
 			expect(_.isPlainObject(manifest)).to.be.true;
 			expect(manifest.slug).to.exist;
 			expect(manifest.name).to.exist;
@@ -108,9 +107,8 @@ describe('Config Model', function () {
 		});
 
 		it('should become the manifest given a device type alias', async () => {
-			const manifest = await balena.models.config.getDeviceTypeManifestBySlug(
-				'raspberrypi',
-			);
+			const manifest =
+				await balena.models.config.getDeviceTypeManifestBySlug('raspberrypi');
 			return expect(manifest.slug).to.equal('raspberry-pi');
 		});
 	});
@@ -138,9 +136,8 @@ describe('Config Model', function () {
 		});
 
 		it('Fetching config var schema with deviceType', async function () {
-			const result = await balena.models.config.getConfigVarSchema(
-				'raspberry-pi',
-			);
+			const result =
+				await balena.models.config.getConfigVarSchema('raspberry-pi');
 			expect(result).to.be.an('object');
 			expect(result).to.have.property('reservedNames').that.is.an('array');
 			expect(result).to.have.property('reservedNamespaces').that.is.an('array');
