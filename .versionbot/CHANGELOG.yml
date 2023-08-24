@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.2.2
+      hash: be1bb622fc8fc374ef99d0a67db1495accf56ec3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.1.4
+  title: ""
+  date: 2023-08-24T21:36:26.911Z
+- commits:
     - subject: "tests/os: Refactor some promise tests to async await"
       hash: dd9959dbd631d7fdaf882a6c696c0e3bb49abe4c
       body: ""
