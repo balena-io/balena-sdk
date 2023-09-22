@@ -23,7 +23,7 @@ export interface JWTUser {
 	social_service_account?: SocialServiceAccount[];
 }
 
-export interface SocialServiceAccount {
+interface SocialServiceAccount {
 	provider: string;
 	display_name: string;
 }
