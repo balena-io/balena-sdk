@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
 import type { AnyObject } from '../typings/utils';
