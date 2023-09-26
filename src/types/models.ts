@@ -60,6 +60,7 @@ export interface ResourceTypeMap {
 	service_environment_variable: ServiceEnvironmentVariable;
 	service_install: ServiceInstall;
 	service_instance: ServiceInstance;
+	social_service_account: SocialServiceAccount;
 	subscription: Subscription;
 	subscription_addon_discount: SubscriptionAddonDiscount;
 	subscription_prepaid_addon: SubscriptionPrepaidAddon;
@@ -406,7 +407,7 @@ export interface Device {
 	last_vpn_event: string;
 	latitude?: string;
 	local_id?: string;
-	location: string;
+	location?: string;
 	longitude?: string;
 	note: string;
 	os_variant?: string;
@@ -569,6 +570,14 @@ export interface SSHKey {
 	created_at: string;
 
 	user: NavigationResource<User>;
+}
+
+export interface SocialServiceAccount {
+	// TODO: improve the custom pine client rypings to support resources w/o an id field
+	id: undefined;
+	belongs_to__user: NavigationResource<User>;
+	display_name: string | null;
+	provider: string;
 }
 
 export interface ImageInstall {

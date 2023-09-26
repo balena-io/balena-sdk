@@ -20,10 +20,11 @@ export interface JWTUser {
 	twoFactorRequired?: boolean;
 	username: string;
 
+	/** @deprecated User the social_service_account resource */
 	social_service_account?: SocialServiceAccount[];
 }
 
-export interface SocialServiceAccount {
+interface SocialServiceAccount {
 	provider: string;
 	display_name: string;
 }

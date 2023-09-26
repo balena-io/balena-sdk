@@ -15,7 +15,6 @@ export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 export let balenaSdkExports: typeof BalenaSdk;
 export let sdkOpts: BalenaSdk.SdkOptions;
 if (IS_BROWSER) {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	require('js-polyfills/es6');
 	balenaSdkExports = window.balenaSdk;
 
@@ -26,7 +25,6 @@ if (IS_BROWSER) {
 			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
 	};
 } else {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	balenaSdkExports = require('../..');
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const settings = require('balena-settings-client');
