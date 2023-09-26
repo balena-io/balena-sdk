@@ -1,4 +1,34 @@
 - commits:
+    - subject: Update @balena/lint to 7.2.0
+      hash: d8de677a8a4aff9b0a0e0c6220cc84369547f80c
+      body: Update @balena/lint from 7.0.1 to 7.2.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Deprecate the social_service_account property of the JWTUser
+      hash: d2854536a6ad8a1656b61045951629dafa82b3af
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add typings for the social_service_account resource
+      hash: 9d001d6de5264c63af037fb9c628e3df6a143731
+      body: ""
+      footer:
+        Depends-on: https://github.com/balena-io/balena-api/pull/4623
+        depends-on: https://github.com/balena-io/balena-api/pull/4623
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.2.0
+  title: ""
+  date: 2023-09-26T13:23:32.399Z
+- commits:
     - subject: Update TypeScript to 5.2.2
       hash: be1bb622fc8fc374ef99d0a67db1495accf56ec3
       body: ""
