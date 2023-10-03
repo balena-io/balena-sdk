@@ -12,6 +12,7 @@ export interface JWTUser {
 	username?: string;
 	/** @deprecated Use the actualUser field */
 	loginAs?: boolean;
+	/** @deprecated */
 	features?: string[];
 
 	first_name?: string;
