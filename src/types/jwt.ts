@@ -24,7 +24,10 @@ export interface JWTUser {
 	hasPasswordSet?: boolean;
 	must_be_verified?: boolean;
 	is_verified?: boolean;
+
+	/** @deprecated */
 	intercomUserName?: string;
+	/** @deprecated */
 	intercomUserHash?: string;
 
 	/** @deprecated Use the social_service_account resource */
