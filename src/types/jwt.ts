@@ -10,6 +10,7 @@ export interface JWTUser {
 	created_at?: string;
 	/** @deprecated Use the user resource */
 	username?: string;
+	/** @deprecated Use the actualUser field */
 	loginAs?: boolean;
 	features?: string[];
 
