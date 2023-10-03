@@ -1,26 +1,31 @@
 export interface JWTUser {
-	account_type?: string;
+	id: number;
+	jwt_secret: string;
+	authTime?: number;
 	actualUser?: number;
-	company?: string;
-	created_at: string;
-	email?: string;
+	twoFactorRequired?: boolean;
+	permissions?: string[];
+
+	/** @deprecated Use the user resource */
+	created_at?: string;
+	/** @deprecated Use the user resource */
+	username?: string;
+	loginAs?: boolean;
 	features?: string[];
+
 	first_name?: string;
-	hasPasswordSet?: boolean;
+	last_name?: string;
+	email?: string;
+	account_type?: string;
+	company?: string;
 	has_disabled_newsletter?: boolean;
+	hasPasswordSet?: boolean;
 	must_be_verified?: boolean;
 	is_verified?: boolean;
-	id: number;
 	intercomUserName?: string;
 	intercomUserHash?: string;
-	jwt_secret: string;
-	last_name?: string;
-	loginAs?: boolean;
-	permissions?: string[];
-	twoFactorRequired?: boolean;
-	username: string;
 
-	/** @deprecated User the social_service_account resource */
+	/** @deprecated Use the social_service_account resource */
 	social_service_account?: SocialServiceAccount[];
 }
 
