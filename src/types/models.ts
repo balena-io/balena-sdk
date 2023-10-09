@@ -71,6 +71,7 @@ export interface ResourceTypeMap {
 	team_application_access: TeamApplicationAccess;
 	team_membership: TeamMembership;
 	user: User;
+	user_profile: UserProfile;
 	user__has__public_key: SSHKey;
 	user__has_direct_access_to__application: UserHasDirectAccessToApplication;
 	user_application_membership: ApplicationMembership;
@@ -146,6 +147,22 @@ export interface User {
 	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
 	team_membership: ReverseNavigationResource<TeamMembership>;
 	has_direct_access_to__application: ReverseNavigationResource<Application>;
+	user_profile: ReverseNavigationResource<UserProfile>;
+}
+
+export interface UserProfile {
+	id: null;
+	email: string | null;
+	first_name: string | null;
+	last_name: string | null;
+	company: string;
+	account_type: string | null;
+	has_disabled_newsletter: boolean;
+	has_password_set: boolean;
+	must_be_verified: boolean;
+	is_verified: boolean;
+
+	is_of__user: NavigationResource<User>;
 }
 
 export type OrganizationMembershipRoles = 'administrator' | 'member';
