@@ -1,4 +1,58 @@
 - commits:
+    - subject: "jwt: Deprecate the profile fields in favor of the user_profile"
+      hash: 59fd11688780c2b703d036715842ad0615ed8ee1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "jwt: Deprecate the intercom fields"
+      hash: a9a082a397ea52be89f8d8873c426e45cf90a7f7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "jwt: Deprecate the features fields"
+      hash: 709913eeee9e6bc7fd4ce082b268deeac5514a71
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "jwt: Deprecate thw loginAs field"
+      hash: 4925b36356aae7584bf25c3c5478eeba80e43643
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "jwt: Deprecate username & created_at in favor of the user resource"
+      hash: 20179ef6c4bf39bf3a5a1d7d567a3afd80794230
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add typings for the user_profile resource
+      hash: 5e23708bf444c3d315a1754d315945edbb575c36
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Depends-on: https://github.com/balena-io/balena-api/pull/4626
+        depends-on: https://github.com/balena-io/balena-api/pull/4626
+      author: Thodoris Greasidis
+      nested: []
+  version: 18.3.0
+  title: ""
+  date: 2023-10-09T13:07:11.832Z
+- commits:
     - subject: Update @balena/lint to 7.2.0
       hash: d8de677a8a4aff9b0a0e0c6220cc84369547f80c
       body: Update @balena/lint from 7.0.1 to 7.2.0
