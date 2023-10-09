@@ -613,6 +613,7 @@ type UserExpandablePropsExpectation =
 	| 'actor'
 	| 'organization_membership'
 	| 'user_application_membership'
+	| 'user_profile'
 	| 'team_membership'
 	| 'has_direct_access_to__application';
 
