@@ -2,7 +2,6 @@ import 'mjs-mocha';
 import chai from 'chai';
 const { expect } = chai;
 
-// TODO: Make `npm run test:mjs-imports` part of `npm test` once we bump to node 16.
 describe('mjs imports', function () {
 	it('should support using default imports', async function () {
 		await import('./import_default.mjs');
