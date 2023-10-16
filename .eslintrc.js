@@ -4,6 +4,9 @@ module.exports = {
 		project: 'tsconfig.dev.json',
 		sourceType: 'module',
 	},
+	env: {
+		jest: true,
+	},
 	root: true,
 	rules: {
 		'no-restricted-imports': ['error', 'date-fns', 'lodash'],
