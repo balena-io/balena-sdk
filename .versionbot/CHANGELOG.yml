@@ -1,4 +1,54 @@
 - commits:
+    - subject: "**BREAKING**: Drop support to node < 18"
+      hash: 3a31275b20968b5bfcd603eb88af579b31856363
+      body: |-
+        Update balena-request from 12.0.4 to 13.0.0
+        Update balena-register-device from 8.0.7 to 9.0.1
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otávio Jacobi
+      nested:
+        - commits:
+            - subject: Fix balena-request peer dependency
+              hash: 21589a43eea60bf5e601d51bcab7b483e571fe53
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Otávio Jacobi
+              nested: []
+          version: balena-register-device-9.0.1
+          title: ""
+          date: 2023-10-11T18:27:18.967Z
+        - commits:
+            - subject: Drop supoport for node 14 & 16
+              hash: cc8ad72abb414347545498f6eceab01b2fcba71a
+              body: Update balena-request from 12.0.1 to 13.0.0
+              footer:
+                Change-type: major
+                change-type: major
+              author: Otávio Jacobi
+              nested: []
+          version: balena-register-device-9.0.0
+          title: ""
+          date: 2023-10-11T18:16:47.892Z
+        - commits:
+            - subject: Drop support for node 14 & 16
+              hash: c7bdf11c4ce4ea3b885a608d5ce76eeab758d32d
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Otávio Jacobi
+              nested: []
+          version: balena-request-13.0.0
+          title: ""
+          date: 2023-10-11T17:43:03.483Z
+  version: 19.0.0
+  title: ""
+  date: 2023-10-16T16:25:52.595Z
+- commits:
     - subject: "jwt: Deprecate the profile fields in favor of the user_profile"
       hash: 59fd11688780c2b703d036715842ad0615ed8ee1
       body: ""
