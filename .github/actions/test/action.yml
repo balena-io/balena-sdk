@@ -16,7 +16,7 @@ runs:
       if: ${{ env.os_value == 'ubuntu-20.04' }}
       uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 18
 
     - name: Setup Node.js lts
       if: ${{ env.os_value != 'ubuntu-20.04' }}
