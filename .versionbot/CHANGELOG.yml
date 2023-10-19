@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix test workflow to run on node 18
+      hash: 2a7b7c475e3c2f50ebda9331d07fa060d331c37c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+  version: 19.0.1
+  title: ""
+  date: 2023-10-19T12:34:56.447Z
+- commits:
     - subject: "**BREAKING**: Drop support to node < 18"
       hash: 3a31275b20968b5bfcd603eb88af579b31856363
       body: |-
