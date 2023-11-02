@@ -83,6 +83,9 @@ Where the factory method accepts the following options:
 * `builderUrl`, string, *optional* , is the balena builder url. Defaults to `https://builder.balena-cloud.com/`,
 * `deviceUrlsBase`, string, *optional*, is the base balena device API url. Defaults to `balena-devices.com`,
 * `dataDirectory`, string or false, *optional*, *ignored in the browser unless false*, specifies the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. Providing `false` creates an isolated in-memory instance. Defaults to `$HOME/.balena`,
+* `requestLimit`, number.*optional*, the number of requests per `requestLimitInterval` that the SDK should respect.
+* `requestLimitInterval`, number.*optional*, - the timespan that the `requestLimit` should apply to in milliseconds. Defaults to 60000.
+* `retryRateLimitedRequests`, boolean.*optional*, when enabled the sdk will retry requests that are failing with a 429 Too Many Requests status code and that include a numeric Retry-After response header. Defaults to `false`.
 * `isBrowser`, boolean, *optional*, is the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value,
 * `debug`, boolean, *optional*, when set will print some extra debug information.
 
