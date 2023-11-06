@@ -295,6 +295,11 @@ export const groupByMap = <K, V>(entries: V[], iteratee: (item: V) => K) => {
 	return result;
 };
 
+export const delay = (ms: number) =>
+	new Promise<void>((resolve) => {
+		setTimeout(resolve, ms);
+	});
+
 const DEFAULT_CONCURRENCY_LIMIT = 50;
 
 export const limitedMap = <T, U>(
