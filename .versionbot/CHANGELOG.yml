@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add the retryRateLimitedRequests sdk option for retrying after HTTP 429s
+      hash: 25e83b67f6f7c3f20982c97d4e561dd81c37a672
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.1.0
+  title: ""
+  date: 2023-11-06T13:49:10.660Z
+- commits:
     - subject: Fix test workflow to run on node 18
       hash: 2a7b7c475e3c2f50ebda9331d07fa060d331c37c
       body: ""
