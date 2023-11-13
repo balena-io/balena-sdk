@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
+import * as superagent from 'superagent';
 import {
 	balena,
 	credentials,
@@ -98,6 +99,27 @@ describe('Organization model', function () {
 					.that.is.not.equal(ctx.newOrg1.handle);
 				ctx.newOrg2 = org;
 			});
+
+			it('should be able to create an organization with a logo', async function () {
+				const org = await balena.models.organization.create({
+					name: 'org-with-logo',
+					logo_image: new balena.utils.BalenaWebResourceFile(
+						[Buffer.from('this is a test\n')],
+						'orglogo.png',
+					),
+				});
+
+				const fetchedOrg = await balena.models.organization.get(org.id, {
+					$select: ['id', 'logo_image'],
+				});
+				expect(fetchedOrg)
+					.to.have.nested.property('logo_image.href')
+					.that.is.a('string');
+
+				const res = await superagent.get(fetchedOrg.logo_image.href);
+				expect(res.status).to.equal(200);
+				expect(res.headers['content-length']).to.equal('15');
+			});
 		});
 	});
 
@@ -108,7 +130,7 @@ describe('Organization model', function () {
 					$orderby: 'id asc',
 				});
 				expect(orgs).to.be.an('array');
-				expect(orgs).to.have.lengthOf(3);
+				expect(orgs).to.have.lengthOf(4);
 				const [org1, org2, org3] = orgs;
 				expect(org1).to.deep.match(ctx.userInitialOrg);
 				expect(org2).to.deep.match(ctx.newOrg1);

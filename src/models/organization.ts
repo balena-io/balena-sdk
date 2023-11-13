@@ -66,6 +66,31 @@ const getOrganizationModel = function (
 	 * balena.models.organization.create({ name:'MyOrganization' }).then(function(organization) {
 	 * 	console.log(organization);
 	 * });
+	 *
+	 * @example
+	 * balena.models.organization.create({
+	 *   name:'MyOrganization',
+	 *   logo_image: new balena.utils.BalenaWebResourceFile(
+	 *     [fs.readFileSync('./img.jpeg')],
+	 *     'img.jpeg'
+	 *   );
+	 * })
+	 * .then(function(organization) {
+	 *   console.log(organization);
+	 * });
+	 *
+	 * @example
+	 * balena.models.organization.create({
+	 *   name:'MyOrganization',
+	 *   // Only in case File API is avaialable (most browsers and Node 20+)
+	 *   logo_image: new File(
+	 *     imageContent,
+	 *     'img.jpeg'
+	 *   );
+	 * })
+	 * .then(function(organization) {
+	 *   console.log(organization);
+	 * });
 	 */
 	const create = function (
 		organization: BalenaSdk.PineSubmitBody<BalenaSdk.Organization>,

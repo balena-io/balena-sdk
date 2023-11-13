@@ -1,9 +1,12 @@
 import * as errors from 'balena-errors';
 import type * as Pine from '../../typings/pinejs-client-core';
 import type { IfDefined } from '../../typings/utils';
+import type { WebResourceFile } from 'balena-request';
+import * as mime from 'mime';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
+	BalenaWebResourceFile: typeof BalenaWebResourceFile;
 }
 
 export const notImplemented = () => {
@@ -349,3 +352,15 @@ export const limitedMap = <T, U>(
 		}
 	});
 };
+
+export class BalenaWebResourceFile extends Blob implements WebResourceFile {
+	public name: string;
+	constructor(blobParts: BlobPart[], name: string, options?: BlobPropertyBag) {
+		const opts = {
+			...options,
+			type: options?.type ?? mime.getType(name) ?? undefined,
+		};
+		super(blobParts, opts);
+		this.name = name;
+	}
+}

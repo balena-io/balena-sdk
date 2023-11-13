@@ -6,6 +6,7 @@ import type {
 	OptionalNavigationResource,
 	ReverseNavigationResource,
 	ConceptTypeNavigationResource,
+	WebResource,
 } from '../../typings/pinejs-client-core';
 import type { AnyObject } from '../../typings/utils';
 
@@ -84,6 +85,7 @@ export interface Organization {
 	handle: string;
 	has_past_due_invoice_since__date: string | null;
 	is_frozen: boolean;
+	logo_image: WebResource;
 
 	application: ReverseNavigationResource<Application>;
 	/** includes__organization_membership */

@@ -373,22 +373,29 @@ export const getSdk = function ($opts?: SdkOptions) {
 	 * @memberof balena
 	 *
 	 * @description
-	 * The utils instance used internally. This should not be necessary
-	 * in normal usage, but can be useful to handle some specific cases.
+	 * The utils instance offers some convenient features for clients.
 	 *
 	 * @example
 	 * balena.utils.mergePineOptions(
 	 *  { $expand: { device: { $select: ['id'] } } },
 	 *  { $expand: { device: { $select: ['name'] } } },
 	 * );
+	 *
+	 * @example
+	 * // Creating a new WebResourceFile in case 'File' API is not available.
+	 * new balena.utils.BalenaWebResourceFile(
+	 *   [fs.readFileSync('./file.tgz')],
+	 *   'file.tgz'
+	 * );
 	 */
 	Object.defineProperty(sdk, 'utils', {
 		enumerable: true,
 		configurable: true,
 		get() {
-			// eslint-disable-next-line @typescript-eslint/no-var-requires
-			const { mergePineOptions } = require('./util') as typeof import('./util');
-			return { mergePineOptions };
+			const { mergePineOptions, BalenaWebResourceFile } =
+				// eslint-disable-next-line @typescript-eslint/no-var-requires
+				require('./util') as typeof import('./util');
+			return { mergePineOptions, BalenaWebResourceFile };
 		},
 	});
 
