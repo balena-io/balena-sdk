@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add organization logo to organization
+      hash: 251e835ad6fe778024bbe358fa70aa73c8e250b8
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otávio Jacobi
+      nested: []
+  version: 19.2.0
+  title: ""
+  date: 2023-11-13T11:20:58.418Z
+- commits:
     - subject: Add the retryRateLimitedRequests sdk option for retrying after HTTP 429s
       hash: 25e83b67f6f7c3f20982c97d4e561dd81c37a672
       body: ""
