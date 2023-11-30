@@ -8,8 +8,13 @@ import type {
 	PineFilter,
 } from '..';
 
-const ID_CHUNK_SIZE = 200;
-const UUID_CHUNK_SIZE = 50;
+const NUMERIC_ID_CHUNK_SIZE = 200;
+const STRING_ID_CHUNK_SIZE = 50;
+
+export interface ChunkSizeOptions {
+	numericId: number;
+	stringId: number;
+}
 
 export function batchResourceOperationFactory<
 	T extends { id: number; uuid: string },
@@ -17,11 +22,24 @@ export function batchResourceOperationFactory<
 	getAll,
 	NotFoundError,
 	AmbiguousResourceError,
+	chunkSize: chunkSizeParam,
 }: {
 	getAll: (options?: PineOptionsStrict<T>) => Promise<T[]>;
 	NotFoundError: new (id: string | number) => Error;
 	AmbiguousResourceError: new (id: string | number) => Error;
+	chunkSize?: number | Partial<ChunkSizeOptions>;
 }) {
+	const chunkSize =
+		typeof chunkSizeParam === 'number'
+			? {
+					numericId: chunkSizeParam,
+					stringId: chunkSizeParam,
+			  }
+			: {
+					numericId: chunkSizeParam?.numericId ?? NUMERIC_ID_CHUNK_SIZE,
+					stringId: chunkSizeParam?.stringId ?? STRING_ID_CHUNK_SIZE,
+			  };
+
 	type Item<TOpts> = {
 		id: number;
 		uuid: string;
@@ -98,8 +116,8 @@ export function batchResourceOperationFactory<
 		)
 			? [uuidOrIdOrArray]
 			: typeof uuidOrIdOrArray[0] === 'string'
-			? chunk(uuidOrIdOrArray as string[], UUID_CHUNK_SIZE)
-			: chunk(uuidOrIdOrArray as number[], ID_CHUNK_SIZE);
+			  ? chunk(uuidOrIdOrArray as string[], chunkSize.stringId)
+			  : chunk(uuidOrIdOrArray as number[], chunkSize.numericId);
 
 		const items: Array<
 			Item<TOpts> &
@@ -118,12 +136,12 @@ export function batchResourceOperationFactory<
 								id: { $in: uuidOrIdOrArrayChunk as number[] },
 						  }
 					: typeof uuidOrIdOrArrayChunk === 'string'
-					? {
-							uuid: { $startswith: uuidOrIdOrArrayChunk },
-					  }
-					: {
-							id: uuidOrIdOrArrayChunk,
-					  };
+					  ? {
+								uuid: { $startswith: uuidOrIdOrArrayChunk },
+					    }
+					  : {
+								id: uuidOrIdOrArrayChunk,
+					    };
 			const combinedOptions = mergePineOptions(
 				{
 					$select: [
@@ -169,7 +187,7 @@ export function batchResourceOperationFactory<
 		] of itemsByAccosiactedResource.entries()) {
 			for (const chunkedAssociatedItems of chunk(
 				associatedItems,
-				ID_CHUNK_SIZE,
+				chunkSize.numericId,
 			)) {
 				await (
 					fn as (items: Array<Item<TOpts>>, ownerId?: number) => Promise<void>

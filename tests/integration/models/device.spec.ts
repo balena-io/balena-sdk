@@ -2831,7 +2831,10 @@ describe('Device Model', function () {
 			});
 		});
 
-		const BATCH_DEVICE_COUNT = 55;
+		const BATCH_DEVICE_COUNT =
+			typeof sdkOpts.requestBatchingChunkSize === 'number'
+				? Math.ceil(sdkOpts.requestBatchingChunkSize * 1.5)
+				: 55;
 		describe(`given ${BATCH_DEVICE_COUNT} registered offline device`, function () {
 			before(async function () {
 				this.devices = [];

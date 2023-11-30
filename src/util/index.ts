@@ -169,8 +169,8 @@ export function mergePineOptions<R extends object>(
 				...(typeof result.$select === 'string'
 					? [result.$select as Pine.SelectableProps<R>]
 					: Array.isArray(result.$select)
-					? result.$select
-					: []),
+					  ? result.$select
+					  : []),
 				...(extraSelect ?? []),
 			];
 		}
