@@ -1,4 +1,40 @@
 - commits:
+    - subject: "tests: Remove the explicit error checks for non-tarball DWB requests"
+      hash: 0ca96b7440af76a1b7c52899d880dc817cf69278
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Properly cleanup the test orgs"
+      hash: 431acbfa773b271b614c619595abc61f3c6e791c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Reduce the request batching chunk size to speed up tests"
+      hash: d3397cb6fdf6fd7edb4247d0d5980086e9338c1d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add option for configuring the request batching chunk size
+      hash: 94e5d7816ac813e9b8468b73e3d365f735182f4b
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.3.0
+  title: ""
+  date: 2023-11-30T13:54:32.874Z
+- commits:
     - subject: Add organization logo to organization
       hash: 251e835ad6fe778024bbe358fa70aa73c8e250b8
       body: ""
