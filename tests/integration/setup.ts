@@ -248,7 +248,8 @@ const getDeviceType = memoizee(
 	},
 );
 
-const TEST_ORGANIZATION_NAME = 'FooBar sdk test created organization';
+export const TEST_ORGANIZATION_NAME =
+	'balena-sdk created test organization that will be deleted';
 
 async function resetTestOrgs() {
 	const orgs = await balena.pine.get({
@@ -256,7 +257,7 @@ async function resetTestOrgs() {
 		options: {
 			$select: 'id',
 			$filter: {
-				name: TEST_ORGANIZATION_NAME,
+				name: { $startswith: TEST_ORGANIZATION_NAME },
 			},
 		},
 	});

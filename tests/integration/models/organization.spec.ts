@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import * as superagent from 'superagent';
 import {
+	TEST_ORGANIZATION_NAME,
 	balena,
 	credentials,
 	givenLoggedInUser,
@@ -80,7 +81,7 @@ describe('Organization model', function () {
 
 		describe('balena.models.organization.create()', function () {
 			it('should be able to create a new organization', async function () {
-				ctx.testOrg1Name = `testOrg1_${Date.now()}`;
+				ctx.testOrg1Name = `${TEST_ORGANIZATION_NAME}_${Date.now()}`;
 				const org = await balena.models.organization.create({
 					name: ctx.testOrg1Name,
 				});
@@ -102,7 +103,7 @@ describe('Organization model', function () {
 
 			it('should be able to create an organization with a logo', async function () {
 				const org = await balena.models.organization.create({
-					name: 'org-with-logo',
+					name: `${TEST_ORGANIZATION_NAME} with logo`,
 					logo_image: new balena.utils.BalenaWebResourceFile(
 						[Buffer.from('this is a test\n')],
 						'orglogo.png',
