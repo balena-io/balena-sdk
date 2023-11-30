@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.3.2
+      hash: d66ee5c290df275e18bbdcf8bd5cf9475e6db768
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.3.1
+  title: ""
+  date: 2023-11-30T15:10:55.747Z
+- commits:
     - subject: "tests: Remove the explicit error checks for non-tarball DWB requests"
       hash: 0ca96b7440af76a1b7c52899d880dc817cf69278
       body: ""
