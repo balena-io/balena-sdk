@@ -228,13 +228,14 @@ describe('Release Model', function () {
 						ctx.application.id,
 						{ url: 'https://github.com/balena-io-projects/simple-server-node' },
 					);
-					const error = await expect(promise).to.be.rejected;
-					expect(error).to.have.property('code', 'BalenaError');
-					expect(error)
-						.to.have.property('message')
-						.that.contains(
-							'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
-						);
+					await expect(promise).to.be.rejected;
+					// TODO: Re-enable these checks once https://github.com/balena-io/balena-builder/issues/1168 is fixed
+					// expect(error).to.have.property('code', 'BalenaError');
+					// expect(error)
+					// 	.to.have.property('message')
+					// 	.that.contains(
+					// 		'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
+					// 	);
 				});
 			});
 
