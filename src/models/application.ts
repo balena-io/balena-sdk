@@ -86,6 +86,7 @@ const getApplicationModel = function (
 			getAll: exports.getAll,
 			NotFoundError: errors.BalenaApplicationNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousApplication,
+			chunkSize: opts.requestBatchingChunkSize,
 		}),
 	);
 	/* eslint-enable @typescript-eslint/no-var-requires */

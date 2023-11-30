@@ -132,6 +132,12 @@ export interface SdkOptions {
 	requestLimit?: number;
 	requestLimitInterval?: number;
 	retryRateLimitedRequests?: boolean;
+	requestBatchingChunkSize?:
+		| number
+		| {
+				numericId: number;
+				stringId: number;
+		  };
 }
 
 export interface InjectedOptionsParam extends SdkOptions {

@@ -145,6 +145,7 @@ const getDeviceModel = function (
 			getAll,
 			NotFoundError: errors.BalenaDeviceNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
+			chunkSize: opts.requestBatchingChunkSize,
 		}),
 	);
 
