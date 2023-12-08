@@ -1,4 +1,24 @@
 - commits:
+    - subject: "test:fast: Run the tests ignoring any linting errors"
+      hash: 59811c2f19a2044b4a1a0d1068ba90ee1587f9a3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Re-enable the explicit error checks for non-tarball DWB requests"
+      hash: cb7c1a2d842e53255975a91457da00bd7070d8f7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.3.2
+  title: ""
+  date: 2023-12-08T15:49:54.842Z
+- commits:
     - subject: Update TypeScript to 5.3.2
       hash: d66ee5c290df275e18bbdcf8bd5cf9475e6db768
       body: ""
