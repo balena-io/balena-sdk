@@ -109,7 +109,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 						typeof getAllByResourceParam === 'object'
 							? `unique pair ${Object.keys(getAllByResourceParam).join(
 									' & ',
-							  )}: ${Object.values(getAllByResourceParam).join(' & ')}`
+								)}: ${Object.values(getAllByResourceParam).join(' & ')}`
 							: 123456789
 					}`,
 				);

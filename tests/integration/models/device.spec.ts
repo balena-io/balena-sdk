@@ -1555,11 +1555,11 @@ describe('Device Model', function () {
 									? balena.models.device.startOsUpdate(
 											['asdfghjkl'],
 											'2.29.2+rev1.prod',
-									  )
+										)
 									: balena.models.device.startOsUpdate(
 											'asdfghjkl',
 											'2.29.2+rev1.prod',
-									  );
+										);
 							await expect(promise).to.be.rejectedWith(
 								paramType === 'array of uuids'
 									? `Invalid parameter: asdfghjkl is not a valid value for parameter 'uuidOrIdOrArray'`
@@ -1573,11 +1573,11 @@ describe('Device Model', function () {
 									? balena.models.device.startOsUpdate(
 											['asdfghjkld8047d2ae2546389241ea0a'],
 											'2.29.2+rev1.prod',
-									  )
+										)
 									: balena.models.device.startOsUpdate(
 											'asdfghjkld8047d2ae2546389241ea0a',
 											'2.29.2+rev1.prod',
-									  );
+										);
 							await expect(promise).to.be.rejectedWith(
 								'Device not found: asdfghjkld8047d2ae2546389241ea0a',
 							);
@@ -1587,9 +1587,9 @@ describe('Device Model', function () {
 							const promise =
 								paramType === 'array of uuids'
 									? // @ts-expect-error missing parameter
-									  balena.models.device.startOsUpdate([this.device.uuid])
+										balena.models.device.startOsUpdate([this.device.uuid])
 									: // @ts-expect-error missing parameter
-									  balena.models.device.startOsUpdate(this.device.uuid);
+										balena.models.device.startOsUpdate(this.device.uuid);
 							await expect(promise).to.be.rejected.and.eventually.have.property(
 								'code',
 								'BalenaInvalidParameterError',
@@ -1602,11 +1602,11 @@ describe('Device Model', function () {
 									? balena.models.device.startOsUpdate(
 											[this.device.uuid],
 											'2.29.2+rev1.prod',
-									  )
+										)
 									: balena.models.device.startOsUpdate(
 											this.device.uuid,
 											'2.29.2+rev1.prod',
-									  );
+										);
 							await expect(promise).to.be.rejectedWith(
 								`The device is offline: ${this.device.uuid}`,
 							);
@@ -1628,11 +1628,11 @@ describe('Device Model', function () {
 									? balena.models.device.startOsUpdate(
 											[this.device.uuid],
 											'2.29.2+rev1.prod',
-									  )
+										)
 									: balena.models.device.startOsUpdate(
 											this.device.uuid,
 											'2.29.2+rev1.prod',
-									  );
+										);
 							await expect(promise).to.be.rejectedWith(
 								`The current os version of the device is not available: ${this.device.uuid}`,
 							);

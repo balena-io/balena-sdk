@@ -52,7 +52,7 @@ export type SelectableProps<T> =
 		: Exclude<
 				StringKeyof<T>,
 				PropsOfType<T, ReverseNavigationResource<object>>
-		  >; // This is the normal typed case
+			>; // This is the normal typed case
 
 export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<object>> &
 	// TODO: Drop me once Pine unifies ConceptTypeNavigationResource with NavigationResource
@@ -65,10 +65,10 @@ type SelectedProperty<
 > = T[K] extends NavigationResource<any>
 	? PineDeferred
 	: T[K] extends OptionalNavigationResource<any>
-	  ? PineDeferred | null
-	  : T[K] extends ConceptTypeNavigationResource<any>
-	    ? Exclude<T[K], any[]>
-	    : T[K];
+		? PineDeferred | null
+		: T[K] extends ConceptTypeNavigationResource<any>
+			? Exclude<T[K], any[]>
+			: T[K];
 
 type SelectResultObject<T, Props extends keyof T> = {
 	[P in Props]: SelectedProperty<T, P>;
@@ -80,12 +80,12 @@ export type TypedSelectResult<
 > = TParams['$select'] extends keyof T
 	? SelectResultObject<T, TParams['$select']>
 	: TParams['$select'] extends Array<keyof T>
-	  ? SelectResultObject<T, TParams['$select'][number]>
-	  : TParams['$select'] extends '*'
-	    ? SelectResultObject<T, SelectableProps<T>>
-	    : undefined extends TParams['$select']
-	      ? SelectResultObject<T, SelectableProps<T>>
-	      : never;
+		? SelectResultObject<T, TParams['$select'][number]>
+		: TParams['$select'] extends '*'
+			? SelectResultObject<T, SelectableProps<T>>
+			: undefined extends TParams['$select']
+				? SelectResultObject<T, SelectableProps<T>>
+				: never;
 
 type ExpandedProperty<
 	T,
@@ -94,12 +94,12 @@ type ExpandedProperty<
 > = KOpts extends ODataOptionsWithCount<any>
 	? number
 	: T[K] extends NavigationResource<any> | ConceptTypeNavigationResource<any>
-	  ? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
-	  : T[K] extends OptionalNavigationResource<any>
-	    ? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
-	    : T[K] extends ReverseNavigationResource<any>
-	      ? Array<TypedResult<InferAssociatedResourceType<T[K]>, KOpts>>
-	      : never;
+		? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
+		: T[K] extends OptionalNavigationResource<any>
+			? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
+			: T[K] extends ReverseNavigationResource<any>
+				? Array<TypedResult<InferAssociatedResourceType<T[K]>, KOpts>>
+				: never;
 
 export type ExpandResultObject<T, Props extends keyof T> = {
 	[P in Props]: ExpandedProperty<T, P, object>;
@@ -122,10 +122,10 @@ export type TypedExpandResult<
 > = TParams['$expand'] extends ExpandableProps<T>
 	? ExpandResultObject<T, TParams['$expand']>
 	: TParams['$expand'] extends ResourceExpand<T>
-	  ? keyof TParams['$expand'] extends ExpandableProps<T>
+		? keyof TParams['$expand'] extends ExpandableProps<T>
 			? ExpandResourceExpandObject<T, TParams['$expand']>
 			: never
-	  : object;
+		: object;
 
 export type TypedResult<
 	T,
@@ -133,11 +133,11 @@ export type TypedResult<
 > = TParams extends ODataOptionsWithCount<T>
 	? number
 	: TParams extends ODataOptions<T>
-	  ? Omit<TypedSelectResult<T, TParams>, keyof TypedExpandResult<T, TParams>> &
+		? Omit<TypedSelectResult<T, TParams>, keyof TypedExpandResult<T, TParams>> &
 				TypedExpandResult<T, TParams>
-	  : undefined extends TParams
-	    ? TypedSelectResult<T, { $select: '*' }>
-	    : never;
+		: undefined extends TParams
+			? TypedSelectResult<T, { $select: '*' }>
+			: never;
 
 export type PostResult<T> = SelectResultObject<
 	T,

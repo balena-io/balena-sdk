@@ -1384,9 +1384,9 @@ const getDeviceModel = function (
 										$select: 'slug',
 									},
 								},
-						  }) as Promise<
+							}) as Promise<
 								PineTypedResult<DeviceType, typeof deviceTypeOptions>
-						  >)
+							>)
 						: null,
 				]);
 			if (deviceType != null) {
@@ -2932,7 +2932,7 @@ const getDeviceModel = function (
 																	},
 																},
 															},
-													  },
+														},
 										},
 									},
 								},
@@ -3018,7 +3018,7 @@ const getDeviceModel = function (
 													},
 												},
 											},
-									  },
+										},
 						},
 					},
 				});
@@ -3099,7 +3099,7 @@ const getDeviceModel = function (
 																	},
 																},
 															},
-													  },
+														},
 										},
 									},
 								},

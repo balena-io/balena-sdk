@@ -372,7 +372,7 @@ const getOsModel = function (
 								is_invalidated: false,
 								status: 'success',
 							},
-					  }
+						}
 					: undefined,
 			);
 		},
