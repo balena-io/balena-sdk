@@ -1,4 +1,17 @@
 - commits:
+    - subject: "types/Device: Deprecate the non-existent state & status_sort_index
+        properties"
+      hash: 7013d15352906ae815f5cd630086222f5c9853df
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.3.3
+  title: ""
+  date: 2023-12-15T12:02:22.609Z
+- commits:
     - subject: "test:fast: Run the tests ignoring any linting errors"
       hash: 59811c2f19a2044b4a1a0d1068ba90ee1587f9a3
       body: ""
