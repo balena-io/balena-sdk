@@ -1,4 +1,16 @@
 - commits:
+    - subject: "types/Device: Deprecate the non-existent vpn_address property"
+      hash: 0a9d79b71f7c97813831649d18a4bc1703d71307
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+  version: 19.3.4
+  title: ""
+  date: 2023-12-15T13:34:05.193Z
+- commits:
     - subject: "types/Device: Deprecate the non-existent state & status_sort_index
         properties"
       hash: 7013d15352906ae815f5cd630086222f5c9853df
