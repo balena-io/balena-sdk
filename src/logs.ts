@@ -24,7 +24,7 @@ const AbortController: typeof window.AbortController =
 	'AbortController' in globalEnv
 		? globalEnv.AbortController
 		: // eslint-disable-next-line @typescript-eslint/no-var-requires
-		  require('abortcontroller-polyfill/dist/cjs-ponyfill').AbortController;
+			require('abortcontroller-polyfill/dist/cjs-ponyfill').AbortController;
 
 export interface BaseLog {
 	message: string;

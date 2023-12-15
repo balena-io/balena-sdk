@@ -210,7 +210,7 @@ const getApplicationMembershipModel = function (
 													},
 												},
 											},
-									  },
+										},
 						},
 					},
 					options,

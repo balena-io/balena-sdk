@@ -154,7 +154,7 @@ const getOrganizationInviteModel = function (
 									name: roleName,
 								},
 							},
-					  })
+						})
 					: undefined,
 			]);
 			type OrganizationInviteBase = Omit<OrganizationInvite, 'invitee'>;

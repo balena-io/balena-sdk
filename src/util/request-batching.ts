@@ -34,11 +34,11 @@ export function batchResourceOperationFactory<
 			? {
 					numericId: chunkSizeParam,
 					stringId: chunkSizeParam,
-			  }
+				}
 			: {
 					numericId: chunkSizeParam?.numericId ?? NUMERIC_ID_CHUNK_SIZE,
 					stringId: chunkSizeParam?.stringId ?? STRING_ID_CHUNK_SIZE,
-			  };
+				};
 
 	type Item<TOpts> = {
 		id: number;
@@ -116,8 +116,8 @@ export function batchResourceOperationFactory<
 		)
 			? [uuidOrIdOrArray]
 			: typeof uuidOrIdOrArray[0] === 'string'
-			  ? chunk(uuidOrIdOrArray as string[], chunkSize.stringId)
-			  : chunk(uuidOrIdOrArray as number[], chunkSize.numericId);
+				? chunk(uuidOrIdOrArray as string[], chunkSize.stringId)
+				: chunk(uuidOrIdOrArray as number[], chunkSize.numericId);
 
 		const items: Array<
 			Item<TOpts> &
@@ -131,17 +131,17 @@ export function batchResourceOperationFactory<
 					? typeof uuidOrIdOrArrayChunk[0] === 'string'
 						? {
 								uuid: { $in: uuidOrIdOrArrayChunk as string[] },
-						  }
+							}
 						: {
 								id: { $in: uuidOrIdOrArrayChunk as number[] },
-						  }
+							}
 					: typeof uuidOrIdOrArrayChunk === 'string'
-					  ? {
+						? {
 								uuid: { $startswith: uuidOrIdOrArrayChunk },
-					    }
-					  : {
+							}
+						: {
 								id: uuidOrIdOrArrayChunk,
-					    };
+							};
 			const combinedOptions = mergePineOptions(
 				{
 					$select: [

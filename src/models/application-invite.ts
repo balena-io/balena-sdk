@@ -154,7 +154,7 @@ const getApplicationInviteModel = function (
 									name: roleName,
 								},
 							},
-					  })
+						})
 					: undefined,
 			]);
 			type ApplicationInviteBase = Omit<ApplicationInvite, 'invitee'>;

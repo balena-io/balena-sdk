@@ -154,7 +154,7 @@ const getReleaseModel = function (
 						? commitOrIdOrRawVersion
 						: `unique pair ${Object.keys(commitOrIdOrRawVersion).join(
 								' & ',
-						  )}: ${Object.values(commitOrIdOrRawVersion).join(' & ')}`,
+							)}: ${Object.values(commitOrIdOrRawVersion).join(' & ')}`,
 				);
 			}
 

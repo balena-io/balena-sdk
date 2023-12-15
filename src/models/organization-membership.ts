@@ -233,7 +233,7 @@ const getOrganizationMembershipModel = function (
 													},
 												},
 											},
-									  },
+										},
 						},
 					},
 					options,
