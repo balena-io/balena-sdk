@@ -1,4 +1,4 @@
-import formatDistance from 'date-fns/formatDistance';
+import { formatDistance } from 'date-fns/formatDistance';
 import memoizee from 'memoizee';
 
 const now = memoizee(() => new Date(), { maxAge: 1000 });

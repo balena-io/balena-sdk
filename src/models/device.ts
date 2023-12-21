@@ -84,7 +84,7 @@ import type {
 } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
 
-import subDays from 'date-fns/subDays';
+import { subDays } from 'date-fns/subDays';
 
 const MIN_OS_MC = '2.12.0';
 const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
