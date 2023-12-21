@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update date-fns to v3
+      hash: f027a467b4fe45884650d2d8c56ce3a361842a6b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.3.5
+  title: ""
+  date: 2023-12-21T13:16:48.448Z
+- commits:
     - subject: "types/Device: Deprecate the non-existent vpn_address property"
       hash: 0a9d79b71f7c97813831649d18a4bc1703d71307
       body: ""
