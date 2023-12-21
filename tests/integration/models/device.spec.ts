@@ -3,9 +3,9 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import * as superagent from 'superagent';
-import subYears from 'date-fns/subYears';
-import subDays from 'date-fns/subDays';
-import addDays from 'date-fns/addDays';
+import { subYears } from 'date-fns/subYears';
+import { subDays } from 'date-fns/subDays';
+import { addDays } from 'date-fns/addDays';
 
 import {
 	balena,
