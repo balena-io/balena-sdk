@@ -860,24 +860,64 @@ describe('OS model', function () {
 				);
 			}));
 
-		describe('given a valid device slug', () =>
-			it('should return the list of supported hup targets', () =>
-				balena.models.os
-					.getSupportedOsUpdateVersions('raspberrypi3', '2.9.6+rev1.prod')
-					.then(function ({ current, recommended, versions }) {
-						expect(current).to.equal('2.9.6+rev1.prod');
-						expect(recommended).to.be.a('string');
-						expect(versions).to.be.an('array');
-						expect(versions).to.not.have.length(0);
-						versions.forEach(function (v) {
-							expect(v).to.be.a('string');
-							expect(bSemver.gte(v, current)).to.be.true;
-						});
+		describe('given a valid device slug', () => {
+			it('should return the list of supported hup targets', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(recommended).to.be.a('string');
+				expect(versions).to.be.an('array');
+				expect(versions).to.not.have.length(0);
+				versions.forEach(function (v) {
+					expect(v).to.be.a('string');
+					expect(bSemver.gte(v, current)).to.be.true;
+				});
 
-						expect(versions.length > 2).to.be.true;
-						const sortedVersions = versions.slice().sort(bSemver.rcompare);
-						expect(versions).to.deep.equal(sortedVersions);
-					})));
+				expect(versions.length > 2).to.be.true;
+				const sortedVersions = versions.slice().sort(bSemver.rcompare);
+				expect(versions).to.deep.equal(sortedVersions);
+			});
+
+			it('should not include draft OS releases when the respective flag is not used', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(recommended).to.be.a('string');
+				expect(versions).to.be.an('array');
+				expect(versions).to.not.have.length(0);
+
+				const draftVersions = versions.filter(
+					(v) => bSemver.parse(v)?.prerelease.length ?? 0 > 0,
+				);
+				expect(draftVersions).to.have.lengthOf(0);
+			});
+
+			// This relies on the API we are testing against having a newer OS version
+			// that's a draft, like api.balena-cloud.com had at the time of writing this test.
+			it('should include draft OS releases when the respective flag is used', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+						{ includeDraft: true },
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(recommended).to.be.a('string');
+				expect(versions).to.be.an('array');
+				expect(versions).to.not.have.length(0);
+
+				const draftVersions = versions.filter(
+					(v) => bSemver.parse(v)?.prerelease.length ?? 0 > 0,
+				);
+				expect(draftVersions).to.have.length.greaterThan(0);
+			});
+		});
 	});
 
 	describe('when logged in as a user with a single application', function () {

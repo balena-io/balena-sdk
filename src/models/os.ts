@@ -877,6 +877,10 @@ const getOsModel = function (
 	 *
 	 * @param {String} deviceType - device type slug
 	 * @param {String} currentVersion - semver-compatible version for the starting OS version
+	 * @param {Object} [options] - Extra options to filter the OS releases by
+	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
+	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
+	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @fulfil {Object} - the versions information, of the following structure:
 	 * * versions - an array of strings,
 	 * containing exact version numbers that OS update is supported
@@ -893,9 +897,10 @@ const getOsModel = function (
 	const getSupportedOsUpdateVersions = async (
 		deviceType: string,
 		currentVersion: string,
+		options?: { includeDraft?: boolean },
 	): Promise<OsUpdateVersions> => {
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-		const allVersions = (await getAvailableOsVersions(deviceType))
+		const allVersions = (await getAvailableOsVersions(deviceType, options))
 			.filter((v) => v.osType === OsTypes.DEFAULT)
 			.map((v) => v.raw_version);
 		// use bSemver.compare to find the current version in the OS list

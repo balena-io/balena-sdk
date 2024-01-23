@@ -367,7 +367,7 @@ const sdk = fromSharedOptions();
             * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
-            * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
+            * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
             * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.config](#balena.models.config) : <code>object</code>
@@ -774,7 +774,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
-        * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
+        * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
         * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.config](#balena.models.config) : <code>object</code>
@@ -5261,7 +5261,7 @@ balena.models.organization.remove(123);
     * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
-    * [.getSupportedOsUpdateVersions(deviceType, currentVersion)](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
+    * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
     * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
 
@@ -5468,10 +5468,12 @@ balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2
 ```
 <a name="balena.models.os.getSupportedOsUpdateVersions"></a>
 
-##### os.getSupportedOsUpdateVersions(deviceType, currentVersion) ⇒ <code>Promise</code>
+##### os.getSupportedOsUpdateVersions(deviceType, currentVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns the supported OS update targets for the provided device type  
 **Access**: public  
+**Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
+or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
 **Fulfil**: <code>Object</code> - the versions information, of the following structure:
 * versions - an array of strings,
 containing exact version numbers that OS update is supported
@@ -5479,10 +5481,12 @@ containing exact version numbers that OS update is supported
 that is _not_ pre-release, can be `null`
 * current - the provided current version after normalization  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceType | <code>String</code> | device type slug |
-| currentVersion | <code>String</code> | semver-compatible version for the starting OS version |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| deviceType | <code>String</code> |  | device type slug |
+| currentVersion | <code>String</code> |  | semver-compatible version for the starting OS version |
+| [options] | <code>Object</code> |  | Extra options to filter the OS releases by |
+| [options.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
 
 **Example**  
 ```js
