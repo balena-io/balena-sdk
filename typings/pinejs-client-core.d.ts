@@ -59,16 +59,14 @@ export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<object>> &
 	PropsAssignableWithType<T, [] | [any] | any[]> &
 	string;
 
-type SelectedProperty<
-	T,
-	K extends keyof T,
-> = T[K] extends NavigationResource<any>
-	? PineDeferred
-	: T[K] extends OptionalNavigationResource<any>
-		? PineDeferred | null
-		: T[K] extends ConceptTypeNavigationResource<any>
-			? Exclude<T[K], any[]>
-			: T[K];
+type SelectedProperty<T, K extends keyof T> =
+	T[K] extends NavigationResource<any>
+		? PineDeferred
+		: T[K] extends OptionalNavigationResource<any>
+			? PineDeferred | null
+			: T[K] extends ConceptTypeNavigationResource<any>
+				? Exclude<T[K], any[]>
+				: T[K];
 
 type SelectResultObject<T, Props extends keyof T> = {
 	[P in Props]: SelectedProperty<T, P>;
@@ -91,15 +89,16 @@ type ExpandedProperty<
 	T,
 	K extends keyof T,
 	KOpts extends ODataOptions<InferAssociatedResourceType<T[K]>>,
-> = KOpts extends ODataOptionsWithCount<any>
-	? number
-	: T[K] extends NavigationResource<any> | ConceptTypeNavigationResource<any>
-		? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
-		: T[K] extends OptionalNavigationResource<any>
-			? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
-			: T[K] extends ReverseNavigationResource<any>
-				? Array<TypedResult<InferAssociatedResourceType<T[K]>, KOpts>>
-				: never;
+> =
+	KOpts extends ODataOptionsWithCount<any>
+		? number
+		: T[K] extends NavigationResource<any> | ConceptTypeNavigationResource<any>
+			? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
+			: T[K] extends OptionalNavigationResource<any>
+				? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
+				: T[K] extends ReverseNavigationResource<any>
+					? Array<TypedResult<InferAssociatedResourceType<T[K]>, KOpts>>
+					: never;
 
 export type ExpandResultObject<T, Props extends keyof T> = {
 	[P in Props]: ExpandedProperty<T, P, object>;
@@ -116,28 +115,27 @@ type ExpandResourceExpandObject<
 	>;
 };
 
-export type TypedExpandResult<
-	T,
-	TParams extends ODataOptions<T>,
-> = TParams['$expand'] extends ExpandableProps<T>
-	? ExpandResultObject<T, TParams['$expand']>
-	: TParams['$expand'] extends ResourceExpand<T>
-		? keyof TParams['$expand'] extends ExpandableProps<T>
-			? ExpandResourceExpandObject<T, TParams['$expand']>
-			: never
-		: object;
+export type TypedExpandResult<T, TParams extends ODataOptions<T>> =
+	TParams['$expand'] extends ExpandableProps<T>
+		? ExpandResultObject<T, TParams['$expand']>
+		: TParams['$expand'] extends ResourceExpand<T>
+			? keyof TParams['$expand'] extends ExpandableProps<T>
+				? ExpandResourceExpandObject<T, TParams['$expand']>
+				: never
+			: object;
 
-export type TypedResult<
-	T,
-	TParams extends ODataOptions<T> | undefined,
-> = TParams extends ODataOptionsWithCount<T>
-	? number
-	: TParams extends ODataOptions<T>
-		? Omit<TypedSelectResult<T, TParams>, keyof TypedExpandResult<T, TParams>> &
-				TypedExpandResult<T, TParams>
-		: undefined extends TParams
-			? TypedSelectResult<T, { $select: '*' }>
-			: never;
+export type TypedResult<T, TParams extends ODataOptions<T> | undefined> =
+	TParams extends ODataOptionsWithCount<T>
+		? number
+		: TParams extends ODataOptions<T>
+			? Omit<
+					TypedSelectResult<T, TParams>,
+					keyof TypedExpandResult<T, TParams>
+				> &
+					TypedExpandResult<T, TParams>
+			: undefined extends TParams
+				? TypedSelectResult<T, { $select: '*' }>
+				: never;
 
 export type PostResult<T> = SelectResultObject<
 	T,
@@ -190,18 +188,15 @@ type OrderBy<T> =
 			$dir: OrderByDirection;
 	  });
 
-type AssociatedResourceFilter<T> = T extends NonNullable<
-	ReverseNavigationResource<object>
->
-	? FilterObj<InferAssociatedResourceType<T>>
-	: FilterObj<InferAssociatedResourceType<T>> | number | null;
+type AssociatedResourceFilter<T> =
+	T extends NonNullable<ReverseNavigationResource<object>>
+		? FilterObj<InferAssociatedResourceType<T>>
+		: FilterObj<InferAssociatedResourceType<T>> | number | null;
 
-type ResourceObjFilterPropValue<
-	T,
-	k extends keyof T,
-> = T[k] extends AssociatedResource<object>
-	? AssociatedResourceFilter<T[k]>
-	: T[k] | FilterExpressions<T[k]> | null;
+type ResourceObjFilterPropValue<T, k extends keyof T> =
+	T[k] extends AssociatedResource<object>
+		? AssociatedResourceFilter<T[k]>
+		: T[k] | FilterExpressions<T[k]> | null;
 
 type ResourceObjFilter<T> = {
 	[k in keyof T]?: ResourceObjFilterPropValue<T, k>;

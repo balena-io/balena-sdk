@@ -362,27 +362,32 @@ const getOsModel = function (
 	};
 
 	const _memoizedGetAllOsVersions = authDependentMemoizer(
-		async (deviceTypes: string[], listedByDefault: boolean | null) => {
+		async (
+			deviceTypes: string[],
+			filterOptions: 'supported' | 'include_draft' | 'all',
+		) => {
 			return await _getAllOsVersions(
 				deviceTypes,
-				listedByDefault
-					? {
+				filterOptions === 'all'
+					? undefined
+					: {
 							$filter: {
-								is_final: true,
+								...(filterOptions === 'supported' && { is_final: true }),
 								is_invalidated: false,
 								status: 'success',
 							},
-						}
-					: undefined,
+						},
 			);
 		},
 	);
 
 	async function getAvailableOsVersions(
 		deviceType: string,
+		options?: { includeDraft?: boolean },
 	): Promise<OsVersion[]>;
 	async function getAvailableOsVersions(
 		deviceTypes: string[],
+		options?: { includeDraft?: boolean },
 	): Promise<Dictionary<OsVersion[]>>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
@@ -392,6 +397,8 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 *
 	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
+	 * @param {Object} [options] - Extra options to filter the OS releases by
+	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @returns {Promise}
@@ -404,13 +411,14 @@ const getOsModel = function (
 	 */
 	async function getAvailableOsVersions(
 		deviceTypes: string[] | string,
+		options?: { includeDraft?: boolean },
 	): Promise<TypeOrDictionary<OsVersion[]>> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt = await _memoizedGetAllOsVersions(
 			deviceTypes.slice().sort(),
-			true,
+			options?.includeDraft === true ? 'include_draft' : 'supported',
 		);
 		return singleDeviceTypeArg
 			? versionsByDt[singleDeviceTypeArg] ?? []
@@ -460,7 +468,7 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt = (
 			options == null
-				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), null)
+				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), 'all')
 				: await _getAllOsVersions(deviceTypes, options)
 		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
 		return singleDeviceTypeArg
@@ -869,6 +877,10 @@ const getOsModel = function (
 	 *
 	 * @param {String} deviceType - device type slug
 	 * @param {String} currentVersion - semver-compatible version for the starting OS version
+	 * @param {Object} [options] - Extra options to filter the OS releases by
+	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
+	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
+	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @fulfil {Object} - the versions information, of the following structure:
 	 * * versions - an array of strings,
 	 * containing exact version numbers that OS update is supported
@@ -885,9 +897,10 @@ const getOsModel = function (
 	const getSupportedOsUpdateVersions = async (
 		deviceType: string,
 		currentVersion: string,
+		options?: { includeDraft?: boolean },
 	): Promise<OsUpdateVersions> => {
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-		const allVersions = (await getAvailableOsVersions(deviceType))
+		const allVersions = (await getAvailableOsVersions(deviceType, options))
 			.filter((v) => v.osType === OsTypes.DEFAULT)
 			.map((v) => v.raw_version);
 		// use bSemver.compare to find the current version in the OS list

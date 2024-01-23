@@ -350,6 +350,9 @@ const getDeviceModel = function (
 			);
 		}
 
+		const isDraft =
+			(bSemver.parse(targetOsVersion)?.prerelease.length ?? 0) > 0;
+
 		const getDeviceType = memoizee(
 			async (deviceTypeId: number) =>
 				await sdkInstance.models.deviceType.get(deviceTypeId, {
@@ -358,8 +361,10 @@ const getDeviceModel = function (
 			{ primitive: true, promise: true },
 		);
 		const getAvailableOsVersions = memoizee(
-			async (slug: string) =>
-				await sdkInstance.models.os.getAvailableOsVersions(slug),
+			async (slug: string, includeDraft: boolean) =>
+				await sdkInstance.models.os.getAvailableOsVersions(slug, {
+					includeDraft,
+				}),
 			{ primitive: true, promise: true },
 		);
 
@@ -392,7 +397,7 @@ const getDeviceModel = function (
 						targetOsVersion,
 					);
 
-					const osVersions = await getAvailableOsVersions(dt.slug);
+					const osVersions = await getAvailableOsVersions(dt.slug, isDraft);
 
 					if (
 						!osVersions.some(

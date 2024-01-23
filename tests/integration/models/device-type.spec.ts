@@ -115,10 +115,10 @@ describe('Device Type model', function () {
 				[
 					RADXA_ZERO_DEVICE_TYPE_SLUG,
 					[
-						"Use the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom>maskrom mode</a> instructions provided by the vendor and make sure the board's USB2 port is used for provisioning.",
+						'Use the <a href="https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom">maskrom mode</a> instructions provided by the vendor and make sure the board\'s USB2 port is used for provisioning.',
 						'Install on your PC the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools>tools</a> required for flashing.',
 						'Clear eMMC and set it in UMS mode. Make sure to use <a href=https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin>this loader</a> when following the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries>sideloading instructions</a>.',
-						'Write the OS to the internal eMMC storage device. We recommend using <a href=http://www.etcher.io/>Etcher</a>.',
+						'Write the OS to the internal eMMC storage device. We recommend using <a href="http://www.etcher.io">Etcher</a>.',
 						'Once the OS has been written to the eMMC you need to repower your board.',
 					],
 				],
