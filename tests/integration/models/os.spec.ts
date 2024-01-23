@@ -304,6 +304,32 @@ describe('OS model', function () {
 				});
 			});
 
+			it('should not include draft OS versions when the respective flag is not used [string device type argument]', async () => {
+				const versionInfos =
+					await balena.models.os.getAvailableOsVersions('raspberrypi3');
+				expect(versionInfos).to.be.an('array');
+
+				const draftVersions = versionInfos.filter(
+					(v) => bSemver.parse(v.raw_version)?.prerelease.length ?? 0 > 0,
+				);
+				expect(draftVersions).to.have.lengthOf(0);
+			});
+
+			// This relies on the API we are testing against having a newer OS version
+			// that's a draft, like api.balena-cloud.com had at the time of writing this test.
+			it('should include draft OS versions when the respective flag is used [string device type argument]', async () => {
+				const versionInfos = await balena.models.os.getAvailableOsVersions(
+					'raspberrypi3',
+					{ includeDraft: true },
+				);
+				expect(versionInfos).to.be.an('array');
+
+				const draftVersions = versionInfos.filter(
+					(v) => bSemver.parse(v.raw_version)?.prerelease.length ?? 0 > 0,
+				);
+				expect(draftVersions).to.have.length.greaterThan(0);
+			});
+
 			it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
 				const res = await balena.models.os.getAvailableOsVersions(['fincm3']);
 				expect(res).to.be.an('object');

@@ -359,7 +359,7 @@ const sdk = fromSharedOptions();
             * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
             * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
         * [.os](#balena.models.os) : <code>object</code>
-            * [.getAvailableOsVersions(deviceTypes)](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+            * [.getAvailableOsVersions(deviceTypes, [options])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
             * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
@@ -490,8 +490,7 @@ rejects with an error.
 <a name="balena.utils"></a>
 
 ### balena.utils : <code>Object</code>
-The utils instance used internally. This should not be necessary
-in normal usage, but can be useful to handle some specific cases.
+The utils instance offers some convenient features for clients.
 
 **Kind**: static property of [<code>balena</code>](#balena)  
 **Summary**: Balena utils instance  
@@ -501,6 +500,14 @@ in normal usage, but can be useful to handle some specific cases.
 balena.utils.mergePineOptions(
  { $expand: { device: { $select: ['id'] } } },
  { $expand: { device: { $select: ['name'] } } },
+);
+```
+**Example**  
+```js
+// Creating a new WebResourceFile in case 'File' API is not available.
+new balena.utils.BalenaWebResourceFile(
+  [fs.readFileSync('./file.tgz')],
+  'file.tgz'
 );
 ```
 <a name="balena.request"></a>
@@ -759,7 +766,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
         * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
     * [.os](#balena.models.os) : <code>object</code>
-        * [.getAvailableOsVersions(deviceTypes)](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+        * [.getAvailableOsVersions(deviceTypes, [options])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
         * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
@@ -5155,6 +5162,33 @@ balena.models.organization.create({ name:'MyOrganization' }).then(function(organ
 	console.log(organization);
 });
 ```
+**Example**  
+```js
+balena.models.organization.create({
+  name:'MyOrganization',
+  logo_image: new balena.utils.BalenaWebResourceFile(
+    [fs.readFileSync('./img.jpeg')],
+    'img.jpeg'
+  );
+})
+.then(function(organization) {
+  console.log(organization);
+});
+```
+**Example**  
+```js
+balena.models.organization.create({
+  name:'MyOrganization',
+  // Only in case File API is avaialable (most browsers and Node 20+)
+  logo_image: new File(
+    imageContent,
+    'img.jpeg'
+  );
+})
+.then(function(organization) {
+  console.log(organization);
+});
+```
 <a name="balena.models.organization.getAll"></a>
 
 ##### organization.getAll([options]) ⇒ <code>Promise</code>
@@ -5219,7 +5253,7 @@ balena.models.organization.remove(123);
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.os](#balena.models.os) : <code>object</code>
-    * [.getAvailableOsVersions(deviceTypes)](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+    * [.getAvailableOsVersions(deviceTypes, [options])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
     * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
@@ -5233,16 +5267,18 @@ balena.models.organization.remove(123);
 
 <a name="balena.models.os.getAvailableOsVersions"></a>
 
-##### os.getAvailableOsVersions(deviceTypes) ⇒ <code>Promise</code>
+##### os.getAvailableOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the supported OS versions for the provided device type(s)  
 **Access**: public  
 **Fulfil**: <code>Object[]\|Object</code> - An array of OsVersion objects when a single device type slug is provided,
 or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> | device type slug or array of slugs |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> |  | device type slug or array of slugs |
+| [options] | <code>Object</code> |  | Extra options to filter the OS releases by |
+| [options.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
 
 **Example**  
 ```js
