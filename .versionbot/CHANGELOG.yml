@@ -1,4 +1,100 @@
 - commits:
+    - subject: Update the deviceType.getInstructions tests
+      hash: 3fd5f7d88c6fd335e8ada5c9efd64ddd14c9a992
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "os.getSupportedOsUpdateVersions: Add the option to include draft
+        releases"
+      hash: 87b3187274a5f417ab82855029f517dc99a2f503
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Enable OS Updates to pre-release versions of higher base semver
+      hash: 38360a84d29f316d3619d3b899538ccdf71635fc
+      body: |
+        Update balena-hup-action-utils from 5.0.0 to 6.1.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Enable OS Updates to pre-release versions of higher base semver
+              hash: 1b3e83b9519157be1ca9ba7756bba87a08bea04a
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-hup-action-utils-6.1.0
+          title: ""
+          date: 2024-01-04T13:32:14.391Z
+        - commits:
+            - subject: Drop support for TypeScript < 5.3.3
+              hash: 7c3430280b47ea9a17f7bb94df068f2a46bfa975
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Drop support for node < v18
+              hash: b1eb6844578bff03c05c19bbf6436526a69a8b30
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Update dependencies
+              hash: 7413837d3aed9aa54ec5d1e218647f543308b298
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Move the build step from prepare to prepack
+              hash: c4480c214c79f4e07cf3b65944b83d11c9c2e267
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-hup-action-utils-6.0.0
+          title: ""
+          date: 2023-12-20T13:33:03.867Z
+        - commits:
+            - subject: "patch: Update flowzone.yml"
+              hash: 41a90775219e1b7b144069aea545f8f2141c88f7
+              body: ""
+              footer: {}
+              author: Kyle Harding
+              nested: []
+          version: balena-hup-action-utils-5.0.1
+          title: ""
+          date: 2023-07-13T19:00:55.217Z
+    - subject: "os.getAvailableOsVersions: Add the option to include draft releases"
+      hash: b8e795ac01e2e05c6484cfd492ea9dfd5f16f142
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.4.0
+  title: ""
+  date: 2024-01-23T14:37:21.759Z
+- commits:
     - subject: Update date-fns to v3
       hash: f027a467b4fe45884650d2d8c56ce3a361842a6b
       body: ""
