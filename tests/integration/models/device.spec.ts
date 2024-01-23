@@ -3625,6 +3625,9 @@ describe('Device Model', function () {
 		});
 
 		describe('balena.models.device._checkOsUpdateTarget()', function () {
+			// The OS versions in here are not necessarily real and are just picked in a way
+			// to confirm all checks that `device._checkOsUpdateTarget()` is supposed
+			// to be doing are working.
 			const uuid = balena.models.device.generateUniqueKey();
 
 			const { _checkOsUpdateTarget } = balena.models.device;
@@ -3726,40 +3729,6 @@ describe('Device Model', function () {
 						),
 					).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
-					);
-				}));
-
-			it('should throw when the device is running a pre-release version', () =>
-				[
-					['Resin OS 2.0.0-beta.1', ''],
-					['Resin OS 2.0.0-beta.3', ''],
-					['Resin OS 2.0.0-beta11.rev1', ''],
-					['Resin OS 2.0.0-beta.8', ''],
-					['Resin OS 2.0.0-beta.8', 'prod'],
-					['balenaOS 2.0.0-beta12.rev1', 'prod'],
-					['Resin OS 2.0.0-rc1.rev1', ''],
-					['Resin OS 2.0.0-rc1.rev2', 'prod'],
-					['Resin OS 2.0.0-rc1.rev2', ''],
-					['Resin OS 2.0.0-rc6.rev1 (prod)', ''],
-					['Resin OS 2.0.1-beta.4', ''],
-					['Resin OS 2.0.2-beta.2', ''],
-					['Resin OS 2.0.2-beta.7', ''],
-					['Resin OS 2.9.0-multi1+rev1', 'dev'],
-					['balenaOS 2.28.0-beta1.rev1', 'prod'],
-				].forEach(function ([osVersion, osVariant]) {
-					return expect(() =>
-						_checkOsUpdateTarget(
-							{
-								uuid,
-								is_of__device_type: [{ slug: 'raspberrypi3' }],
-								is_online: true,
-								os_version: osVersion,
-								os_variant: osVariant,
-							},
-							'2.29.2+rev1.prod',
-						),
-					).to.throw(
-						'Updates cannot be performed on pre-release balenaOS versions',
 					);
 				}));
 
@@ -3925,7 +3894,7 @@ describe('Device Model', function () {
 
 			describe('v2 -> v2 hup', function () {
 				describe('given a raspberrypi3', function () {
-					it('should throw when current os version is < 2.0.0+rev1', () =>
+					it('should throw when current os version is < 2.0.0+rev1', () => {
 						[['Resin OS 2.0.0.rev0 (prod)', 'prod']].forEach(function ([
 							osVersion,
 							osVariant,
@@ -3942,9 +3911,10 @@ describe('Device Model', function () {
 									'2.1.0+rev1.prod',
 								),
 							).to.throw('Current OS version must be >= 2.0.0+rev1');
-						}));
+						});
+					});
 
-					it('should not throw when it is a valid v2 -> v2 hup', () =>
+					it('should not throw when it is a valid v2 -> v2 hup', () => {
 						[
 							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
 							['Resin OS 2.0.0.rev1 (prod)', ''],
@@ -3985,7 +3955,73 @@ describe('Device Model', function () {
 									'2.29.2+rev1.prod',
 								),
 							).to.not.throw();
-						}));
+						});
+					});
+
+					it('should throw when updating to a pre-release version with an older server', () => {
+						[
+							['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
+							['balenaOS 2.29.2+rev1', 'prod'],
+						].forEach(function ([osVersion, osVariant]) {
+							expect(() =>
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: 'raspberrypi3' }],
+										is_online: true,
+										os_version: osVersion,
+										os_variant: osVariant,
+									},
+									'2.28.0-1704382553234+rev1.prod',
+								),
+							).to.throw('OS downgrades are not allowed');
+						});
+					});
+
+					it('should not throw when updating to a pre-release version with a newer base server', () => {
+						expect(() =>
+							_checkOsUpdateTarget(
+								{
+									uuid,
+									is_of__device_type: [{ slug: 'raspberrypi3' }],
+									is_online: true,
+									os_version: 'balenaOS 2.28.0+rev1',
+									os_variant: 'prod',
+								},
+								'2.29.2-1704382618288+rev1.prod',
+							),
+						).to.not.throw();
+					});
+
+					it('should not throw when updating a device that is running a pre-release version to a version with a newer base server', () => {
+						expect(() =>
+							_checkOsUpdateTarget(
+								{
+									uuid,
+									is_of__device_type: [{ slug: 'raspberrypi3' }],
+									is_online: true,
+									os_version: 'balenaOS 2.28.0-1704382553234',
+									os_variant: 'prod',
+								},
+								'2.29.2+rev1.prod',
+							),
+						).to.not.throw();
+					});
+
+					it('should not throw when updating a device that is running a pre-release version updating to a pre-release version with a newer base server', () => {
+						expect(() =>
+							_checkOsUpdateTarget(
+								{
+									uuid,
+									is_of__device_type: [{ slug: 'raspberrypi3' }],
+									is_online: true,
+									os_version: 'balenaOS 2.28.0-1704382553234',
+									os_variant: 'prod',
+								},
+								'2.29.2-1704382618288+rev1.prod',
+							),
+						).to.not.throw();
+					});
 				});
 
 				describe('given a jetson-tx2', function () {

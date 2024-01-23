@@ -124,7 +124,7 @@
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^5.1.0",
     "balena-errors": "^4.9.0",
-    "balena-hup-action-utils": "~5.0.0",
+    "balena-hup-action-utils": "~6.1.0",
     "balena-register-device": "^9.0.1",
     "balena-request": "^13.2.0",
     "balena-semver": "^2.3.0",
