@@ -85,6 +85,7 @@ export interface Organization {
 	handle: string;
 	has_past_due_invoice_since__date: string | null;
 	is_frozen: boolean;
+	is_using__billing_version: 'v1' | 'v2';
 	logo_image: WebResource;
 
 	application: ReverseNavigationResource<Application>;
