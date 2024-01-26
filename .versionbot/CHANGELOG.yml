@@ -1,4 +1,16 @@
 - commits:
+    - subject: "types: Add the `Organization.is_using__billing_version` property"
+      hash: 4faf4f72da474c0ed117c96516ad2afa6c333bf8
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.5.0
+  title: ""
+  date: 2024-01-26T17:03:18.219Z
+- commits:
     - subject: Update the deviceType.getInstructions tests
       hash: 3fd5f7d88c6fd335e8ada5c9efd64ddd14c9a992
       body: ""
