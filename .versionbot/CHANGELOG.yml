@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update @balena/lint to 7.3.0
+      hash: 936402acd7c546fab9c51a92c21218bd191ed83c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.5.1
+  title: ""
+  date: 2024-02-02T16:41:25.165Z
+- commits:
     - subject: "types: Add the `Organization.is_using__billing_version` property"
       hash: 4faf4f72da474c0ed117c96516ad2afa6c333bf8
       body: ""
