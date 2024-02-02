@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { InjectedDependenciesParam, InjectedOptionsParam } from '.';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const get2fa = function (
 	deps: InjectedDependenciesParam,

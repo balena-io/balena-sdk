@@ -1,4 +1,4 @@
-import { Dictionary } from '../../typings/utils';
+import type { Dictionary } from '../../typings/utils';
 import { balena } from './setup';
 
 export const getInitialOrganization = async () => {

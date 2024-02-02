@@ -12,7 +12,7 @@ import {
 	givenLoggedInWithADeviceApiKey,
 	givenLoggedInWithAnApplicationApiKey,
 } from './setup';
-import {
+import type {
 	UserKeyWhoAmIResponse,
 	DeviceKeyWhoAmIResponse,
 	ApplicationKeyWhoAmIResponse,

@@ -1,6 +1,6 @@
 import type { DeviceOverallStatus } from './device-overall-status';
 export type { DeviceOverallStatus } from './device-overall-status';
-import { Contract } from './contract';
+import type { Contract } from './contract';
 import type {
 	NavigationResource,
 	OptionalNavigationResource,

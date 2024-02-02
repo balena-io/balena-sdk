@@ -1,6 +1,7 @@
 import * as url from 'url';
 import * as errors from 'balena-errors';
-import { AnyObject, Params, PinejsClientCore } from 'pinejs-client-core';
+import type { AnyObject, Params } from 'pinejs-client-core';
+import { PinejsClientCore } from 'pinejs-client-core';
 import type * as PineClient from '../typings/pinejs-client-core';
 import type { ResourceTypeMap } from './types/models';
 

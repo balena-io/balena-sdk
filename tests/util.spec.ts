@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import * as bSemver from 'balena-semver';
-import { Application, PineOptions } from '../src';
+import type { Application, PineOptions } from '../src';
 
 // HACK: Avoid typescript trying to resolve built es2015 files
 const nodeRequire = require;

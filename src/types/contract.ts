@@ -1,4 +1,4 @@
-import { AnyObject, Dictionary } from '../../typings/utils';
+import type { AnyObject, Dictionary } from '../../typings/utils';
 
 export type Partials = Dictionary<string[] | Partials>;
 
