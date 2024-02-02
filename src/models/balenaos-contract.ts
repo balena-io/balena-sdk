@@ -1,5 +1,5 @@
-import { Dictionary } from '../../typings/utils';
-import { Contract } from '../types/contract';
+import type { Dictionary } from '../../typings/utils';
+import type { Contract } from '../types/contract';
 
 // Hardcoded host OS contract, this should be moved to the Yocto build process with meta-balena.
 // Here for initial implementatin and testing purposes

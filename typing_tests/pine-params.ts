@@ -1,7 +1,8 @@
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
 import type { AnyObject } from '../typings/utils';
-import { Compute, Equals, EqualsTrue } from './utils';
+import type { Compute, Equals } from './utils';
+import { EqualsTrue } from './utils';
 
 const sdk: BalenaSdk.BalenaSDK = {} as any;
 

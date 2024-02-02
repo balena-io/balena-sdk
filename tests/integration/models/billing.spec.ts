@@ -1,4 +1,4 @@
-import * as _fs from 'fs';
+import type * as _fs from 'fs';
 // TODO: change this to type-only import once TS 3.8 gets released
 // eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';

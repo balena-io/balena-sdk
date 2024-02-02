@@ -2,7 +2,8 @@
 import type * as BalenaSdk from '..';
 import type * as PineClient from '../typings/pinejs-client-core';
 import type { AnyObject } from '../typings/utils';
-import { Equals, EqualsTrue } from './utils';
+import type { Equals } from './utils';
+import { EqualsTrue } from './utils';
 
 // This file is in .prettierignore, since otherwise
 // the @ts-expect-error comments would move to the wrong place

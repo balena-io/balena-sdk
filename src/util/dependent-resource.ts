@@ -21,7 +21,7 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
 import type { Pine, PineOptions } from '..';
-import { Dictionary } from '../../typings/utils';
+import type { Dictionary } from '../../typings/utils';
 
 interface DependentResource {
 	id: number;

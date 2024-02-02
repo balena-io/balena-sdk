@@ -17,7 +17,7 @@ limitations under the License.
 import { EventEmitter } from 'events';
 import { parse as ndjsonParse } from 'ndjson';
 import { globalEnv } from './util/global-env';
-import { Device } from './types/models';
+import type { Device } from './types/models';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
 
 const AbortController: typeof window.AbortController =

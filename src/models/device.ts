@@ -31,7 +31,7 @@ import type {
 } from '../types/models';
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
-import {
+import type {
 	CurrentServiceWithCommit,
 	DeviceWithServiceDetails,
 } from '../util/device-service-details';

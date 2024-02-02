@@ -20,7 +20,7 @@ import type {
 	PineOptions,
 	PinePostResult,
 } from '..';
-import { SubmitBody } from '../../typings/pinejs-client-core';
+import type { SubmitBody } from '../../typings/pinejs-client-core';
 import { mergePineOptions } from '../util';
 
 const getCreditBundleModel = function ({

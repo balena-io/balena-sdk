@@ -17,7 +17,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
-import { UserInfo, WhoamiResult } from './types/auth';
+import type { UserInfo, WhoamiResult } from './types/auth';
 
 const getAuth = function (
 	deps: InjectedDependenciesParam,
