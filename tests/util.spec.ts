@@ -240,15 +240,17 @@ describe('Pine option merging', function () {
 		});
 	});
 
-	it('rejects any unknown extra options', () =>
+	it('rejects any unknown extra options', () => {
 		// @ts-expect-error b/c it's not typed
 		expect(() => mergePineOptions({}, { unknownKey: 'value' })).to.throw(
 			'Unknown pine option: unknownKey',
-		));
+		);
+	});
 
-	it('ignores any unknown default options', () =>
+	it('ignores any unknown default options', () => {
 		// @ts-expect-error b/c it's not typed
-		expect(() => mergePineOptions({ unknownKey: 'value' }, {})).not.to.throw());
+		expect(() => mergePineOptions({ unknownKey: 'value' }, {})).not.to.throw();
+	});
 });
 
 const itShouldCompareVersionsProperly = function (rcompare) {
@@ -269,8 +271,9 @@ const itShouldCompareVersionsProperly = function (rcompare) {
 		return expect(rcompare('2.0.0+rev1', '2.0.6+rev3.prod')).to.equal(1);
 	});
 
-	it('sorts any rev above no rev', () =>
-		expect(rcompare('2.0.0', '2.0.0+rev1')).to.equal(1));
+	it('sorts any rev above no rev', () => {
+		expect(rcompare('2.0.0', '2.0.0+rev1')).to.equal(1);
+	});
 
 	it('sorts by non-rev build metadata for matching revs', function () {
 		expect(rcompare('2.0.6+rev3.dev', '2.0.0+rev1')).to.equal(-1);
@@ -278,7 +281,7 @@ const itShouldCompareVersionsProperly = function (rcompare) {
 		return expect(rcompare('2.0.0+rev1', '2.0.6+rev3.dev')).to.equal(1);
 	});
 
-	it('correctly sorts a full list', () =>
+	it('correctly sorts a full list', () => {
 		expect(
 			[
 				'1.0.0',
@@ -297,15 +300,18 @@ const itShouldCompareVersionsProperly = function (rcompare) {
 			'2.0.0-rc1+rev5',
 			'1.24.0+rev100',
 			'1.0.0',
-		]));
+		]);
+	});
 };
 
-describe('version comparisons', () =>
-	describe('bSemver.rcompare', () =>
-		itShouldCompareVersionsProperly(bSemver.rcompare)));
+describe('version comparisons', () => {
+	describe('bSemver.rcompare', () => {
+		itShouldCompareVersionsProperly(bSemver.rcompare);
+	});
+});
 
 describe('getDeviceOsSemverWithVariant', function () {
-	it('should not parse invalid semver versions', () =>
+	it('should not parse invalid semver versions', () => {
 		_.forEach(
 			[
 				['Resin OS ', 'dev'],
@@ -320,9 +326,10 @@ describe('getDeviceOsSemverWithVariant', function () {
 					}),
 				).to.equal(null);
 			},
-		));
+		);
+	});
 
-	it('should parse plain os versions w/o variant', () =>
+	it('should parse plain os versions w/o variant', () => {
 		_.forEach(
 			[
 				['Resin OS 1.2.1', '', '1.2.1'],
@@ -348,9 +355,10 @@ describe('getDeviceOsSemverWithVariant', function () {
 					}),
 				).to.equal(expectation);
 			},
-		));
+		);
+	});
 
-	it('should properly combine the plain os version & variant', () =>
+	it('should properly combine the plain os version & variant', () => {
 		_.forEach(
 			[
 				['Resin OS 2.0.0-beta.8', 'prod', '2.0.0-beta.8+prod'],
@@ -398,9 +406,10 @@ describe('getDeviceOsSemverWithVariant', function () {
 					}),
 				).to.equal(expectation);
 			},
-		));
+		);
+	});
 
-	it('should properly parse the os_version with variant suffix w/o os_variant', () =>
+	it('should properly parse the os_version with variant suffix w/o os_variant', () => {
 		_.forEach(
 			[
 				['Resin OS 2.0.0-rc6.rev1 (prod)', '', '2.0.0-rc6.rev1+prod'],
@@ -419,9 +428,10 @@ describe('getDeviceOsSemverWithVariant', function () {
 					}),
 				).to.equal(expectation);
 			},
-		));
+		);
+	});
 
-	it('should properly combine the os_version with variant suffix & os_variant', () =>
+	it('should properly combine the os_version with variant suffix & os_variant', () => {
 		_.forEach(
 			[
 				['Resin OS 2.0.0.rev1 (prod)', 'prod', '2.0.0+rev1.prod'],
@@ -439,5 +449,6 @@ describe('getDeviceOsSemverWithVariant', function () {
 					}),
 				).to.equal(expectation);
 			},
-		));
+		);
+	});
 });
