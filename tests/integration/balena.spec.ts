@@ -97,7 +97,7 @@ describe('Balena SDK', function () {
 				);
 		});
 
-		describe('for request', () =>
+		describe('for request', () => {
 			it('should be able to intercept requests', function () {
 				const requestInterceptor = sinon.mock().returnsArg(0);
 				balena.interceptors.push({ request: requestInterceptor });
@@ -110,9 +110,10 @@ describe('Balena SDK', function () {
 						'Interceptor request hook should be called',
 					),
 				);
-			}));
+			});
+		});
 
-		describe('for requestError', () =>
+		describe('for requestError', () => {
 			it('should intercept request errors from other interceptors', function () {
 				const requestInterceptor = sinon.mock().throws(new Error('rejected'));
 				const requestErrorInterceptor = sinon
@@ -132,9 +133,10 @@ describe('Balena SDK', function () {
 							'Interceptor requestError hook should be called',
 						),
 					);
-			}));
+			});
+		});
 
-		describe('for response', () =>
+		describe('for response', () => {
 			it('should be able to intercept responses', function () {
 				const responseInterceptor = sinon.mock().returnsArg(0);
 				balena.interceptors.push({ response: responseInterceptor });
@@ -146,9 +148,10 @@ describe('Balena SDK', function () {
 						'Interceptor response hook should be called',
 					),
 				);
-			}));
+			});
+		});
 
-		describe('for responseError', () =>
+		describe('for responseError', () => {
 			it('should be able to intercept error responses', function () {
 				let called = false;
 				balena.interceptors.push({
@@ -166,7 +169,8 @@ describe('Balena SDK', function () {
 						'responseError should be called when request fails',
 					),
 				);
-			}));
+			});
+		});
 
 		describe('version header', function () {
 			const getVersionHeaderResponseInterceptor = function () {
@@ -198,7 +202,7 @@ describe('Balena SDK', function () {
 				return responseInterceptor;
 			};
 
-			describe('model requests', () =>
+			describe('model requests', () => {
 				it('should include the version header', function () {
 					const responseInterceptor = getVersionHeaderResponseInterceptor();
 					balena.interceptors.push({ response: responseInterceptor });
@@ -211,9 +215,10 @@ describe('Balena SDK', function () {
 							'Interceptor response hook should be called',
 						),
 					);
-				}));
+				});
+			});
 
-			describe('pine requests', () =>
+			describe('pine requests', () => {
 				it('should include the version header', function () {
 					const responseInterceptor = getVersionHeaderResponseInterceptor();
 					balena.interceptors.push({ response: responseInterceptor });
@@ -228,10 +233,11 @@ describe('Balena SDK', function () {
 							'Interceptor response hook should be called',
 						),
 					);
-				}));
+				});
+			});
 
 			describe('plain requests', function () {
-				describe('with a relative url & without a baseUrl', () =>
+				describe('with a relative url & without a baseUrl', () => {
 					it('should not include the version header', function () {
 						const responseInterceptor =
 							getVersionHeaderResponseErrorInterceptor();
@@ -248,10 +254,11 @@ describe('Balena SDK', function () {
 								'Interceptor response hook should be called',
 							),
 						);
-					}));
+					});
+				});
 
 				describe('with a baseUrl option', function () {
-					describe('to the API', () =>
+					describe('to the API', () => {
 						it('should include the version header', function () {
 							const responseInterceptor = getVersionHeaderResponseInterceptor();
 							balena.interceptors.push({ response: responseInterceptor });
@@ -268,9 +275,10 @@ describe('Balena SDK', function () {
 									'Interceptor response hook should be called',
 								),
 							);
-						}));
+						});
+					});
 
-					describe('to a differnet server', () =>
+					describe('to a different server', () => {
 						it('should not include the version header', function () {
 							const responseInterceptor =
 								getVersionHeaderResponseErrorInterceptor();
@@ -288,11 +296,12 @@ describe('Balena SDK', function () {
 									'Interceptor response hook should be called',
 								),
 							);
-						}));
+						});
+					});
 				});
 
 				describe('with a complete url option', function () {
-					describe('to the API', () =>
+					describe('to the API', () => {
 						it('should include the version header', function () {
 							const responseInterceptor = getVersionHeaderResponseInterceptor();
 							balena.interceptors.push({ response: responseInterceptor });
@@ -308,9 +317,10 @@ describe('Balena SDK', function () {
 									'Interceptor response hook should be called',
 								),
 							);
-						}));
+						});
+					});
 
-					describe('to a differnet server', () =>
+					describe('to a different server', () => {
 						it('should not include the version header', function () {
 							const responseInterceptor =
 								getVersionHeaderResponseErrorInterceptor();
@@ -327,13 +337,14 @@ describe('Balena SDK', function () {
 									'Interceptor response hook should be called',
 								),
 							);
-						}));
+						});
+					});
 				});
 			});
 		});
 	});
 
-	describe('setSharedOptions()', () =>
+	describe('setSharedOptions()', () => {
 		it('should set a global containing shared options', function () {
 			const root =
 				typeof window !== 'undefined' && window !== null ? window : global;
@@ -343,7 +354,8 @@ describe('Balena SDK', function () {
 			balenaSdkExports.setSharedOptions(opts);
 
 			expect(root['BALENA_SDK_SHARED_OPTIONS']).to.equal(opts);
-		}));
+		});
+	});
 
 	describe('fromSharedOptions()', () => {
 		it('should return an object with valid keys', function () {

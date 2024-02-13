@@ -39,17 +39,19 @@ describe('Config Model', function () {
 
 	describe('balena.models.config.getAll()', function () {
 		parallel('', function () {
-			it('should return all the configuration', () =>
-				balena.models.config.getAll().then(function (config) {
+			it('should return all the configuration', () => {
+				return balena.models.config.getAll().then(function (config) {
 					expect(_.isPlainObject(config)).to.be.true;
 					expect(_.isEmpty(config)).to.be.false;
-				}));
+				});
+			});
 
-			it('should include the mixpanel token', () =>
-				balena.models.config.getAll().then(function ({ mixpanelToken }) {
+			it('should include the mixpanel token', () => {
+				return balena.models.config.getAll().then(function ({ mixpanelToken }) {
 					expect(mixpanelToken).to.be.a('string');
 					expect(mixpanelToken).to.equal('balena-main');
-				}));
+				});
+			});
 
 			it('should include the deviceTypes', async function () {
 				const { deviceTypes } = await balena.models.config.getAll();
@@ -160,15 +162,17 @@ describe('Config Model', function () {
 	});
 
 	parallel('balena.models.config.getDeviceOptions()', function () {
-		it('should become the device options', () =>
-			balena.models.config
+		it('should become the device options', () => {
+			return balena.models.config
 				.getDeviceOptions('raspberry-pi')
-				.then((options) => expect(Array.isArray(options)).to.be.true));
+				.then((options) => expect(Array.isArray(options)).to.be.true);
+		});
 
-		it('should become the device options given a device type alias', () =>
-			balena.models.config
+		it('should become the device options given a device type alias', () => {
+			return balena.models.config
 				.getDeviceOptions('raspberrypi')
-				.then((options) => expect(Array.isArray(options)).to.be.true));
+				.then((options) => expect(Array.isArray(options)).to.be.true);
+		});
 
 		it('should reject if device type is invalid', function () {
 			const promise = balena.models.config.getDeviceOptions('foobarbaz');

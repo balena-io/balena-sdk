@@ -135,8 +135,8 @@ describe('Application Model', function () {
 					});
 				});
 
-				it('should be rejected if the user did not provide an organization parameter', () =>
-					expect(
+				it('should be rejected if the user did not provide an organization parameter', () => {
+					return expect(
 						// @ts-expect-error missing parameter
 						balena.models.application.create({
 							name: 'FooBar',
@@ -144,7 +144,8 @@ describe('Application Model', function () {
 						}),
 					).to.be.rejectedWith(
 						"undefined is not a valid value for parameter 'organization'",
-					));
+					);
+				});
 
 				it('should be rejected if the user does not have access to find the organization by handle', function () {
 					const promise = balena.models.application.create({
@@ -186,7 +187,7 @@ describe('Application Model', function () {
 					}),
 				);
 
-				organizationRetrievalFields.forEach((prop) =>
+				organizationRetrievalFields.forEach((prop) => {
 					it(`should be able to create an application using the user's initial organization ${prop}`, async function () {
 						await balena.models.application.create({
 							name: `FooBarByOrg${_.startCase(prop)}`,
@@ -206,8 +207,8 @@ describe('Application Model', function () {
 							'organization[0].id',
 							this.initialOrg.id,
 						);
-					}),
-				);
+					});
+				});
 
 				it('...should be able to create an application w/o providing an application type', function () {
 					return balena.models.application
@@ -446,14 +447,14 @@ describe('Application Model', function () {
 				);
 
 				parallel('balena.models.application.get()', function () {
-					applicationRetrievalFields.forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) => {
 						it(`should be able to get an application by ${prop}`, function () {
 							const promise = balena.models.application.get(
 								ctx.application[prop],
 							);
 							return expect(promise).to.become(ctx.application);
-						}),
-					);
+						});
+					});
 
 					it('should be able to get an application by slug regardless of casing', function () {
 						if (
@@ -502,26 +503,26 @@ describe('Application Model', function () {
 				parallel(
 					'balena.models.application.getDirectlyAccessible()',
 					function () {
-						applicationRetrievalFields.forEach((prop) =>
+						applicationRetrievalFields.forEach((prop) => {
 							it(`should be able to get an application by ${prop}`, function () {
 								const promise = balena.models.application.getDirectlyAccessible(
 									ctx.application[prop],
 								);
 								return expect(promise).to.become(ctx.application);
-							}),
-						);
+							});
+						});
 					},
 				);
 
 				parallel('balena.models.application.has()', function () {
-					applicationRetrievalFields.forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) => {
 						it(`should eventually be true if the application ${prop} exists`, function () {
 							const promise = balena.models.application.has(
 								ctx.application[prop],
 							);
 							return expect(promise).to.eventually.be.true;
-						}),
-					);
+						});
+					});
 
 					it('should return false if the application id is undefined', function () {
 						// @ts-expect-error invalid value
@@ -584,7 +585,7 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.generateApiKey()', function () {
-				applicationRetrievalFields.forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate an API key by ${prop}`, async function () {
 						const apiKey = await balena.models.application.generateApiKey(
 							this.application[prop],
@@ -592,8 +593,8 @@ describe('Application Model', function () {
 
 						expect(apiKey).to.be.a('string');
 						expect(apiKey).to.have.length(32);
-					}),
-				);
+					});
+				});
 
 				it('should be rejected if the application slug does not exist', function () {
 					const promise = balena.models.application.generateApiKey(
@@ -625,7 +626,7 @@ describe('Application Model', function () {
 					return provisioningKeys;
 				};
 
-				applicationRetrievalFields.forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
 							.generateProvisioningKey(this.application[prop])
@@ -633,8 +634,8 @@ describe('Application Model', function () {
 								expect(_.isString(key)).to.be.true;
 								return expect(key).to.have.length(32);
 							});
-					}),
-				);
+					});
+				});
 
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop} with key name as key_${prop}`, async function () {
@@ -1583,7 +1584,7 @@ describe('Application Model', function () {
 				},
 			} as const;
 
-			describe('balena.models.application.getWithDeviceServiceDetails()', () =>
+			describe('balena.models.application.getWithDeviceServiceDetails()', () => {
 				it("should retrieve the application and it's devices along with service details including their commit", function () {
 					return balena.models.application
 						.getWithDeviceServiceDetails(
@@ -1597,11 +1598,12 @@ describe('Application Model', function () {
 								true,
 							);
 						});
-				}));
+				});
+			});
 		});
 	});
 
-	describe('helpers', () =>
+	describe('helpers', () => {
 		describe('balena.models.application.getDashboardUrl()', function () {
 			it('should return the respective DashboardUrl when an application id is provided', function () {
 				const dashboardUrl = sdkOpts.apiUrl!.replace(/api/, 'dashboard');
@@ -1610,18 +1612,21 @@ describe('Application Model', function () {
 				);
 			});
 
-			it('should throw when an application id is not a number', () =>
+			it('should throw when an application id is not a number', () => {
 				expect(() =>
 					// @ts-expect-error invalid parameter
 					balena.models.application.getDashboardUrl('my-app'),
-				).to.throw());
+				).to.throw();
+			});
 
-			it('should throw when an application id is not provided', () =>
+			it('should throw when an application id is not provided', () => {
 				expect(() =>
 					// @ts-expect-error invalid parameter
 					balena.models.application.getDashboardUrl(),
-				).to.throw());
-		}));
+				).to.throw();
+			});
+		});
+	});
 
 	describe('given public apps', function () {
 		let publicApp: Pick<BalenaSdk.Application, 'id' | 'app_name' | 'slug'>;
@@ -1648,21 +1653,21 @@ describe('Application Model', function () {
 
 		describe('when logged in', function () {
 			parallel('balena.models.application.get()', function () {
-				applicationRetrievalFields.forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) => {
 					$it(
 						`should be able to get the public application by ${prop}`,
 						async function () {
 							const app = await balena.models.application.get(publicApp[prop]);
 							expect(app.id).to.equal(publicApp.id);
 						},
-					),
-				);
+					);
+				});
 			});
 
 			parallel(
 				'balena.models.application.get() [directly_accessible]',
 				function () {
-					applicationRetrievalFields.forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) => {
 						$it(
 							`should not return the public application by ${prop}`,
 							async function () {
@@ -1675,15 +1680,15 @@ describe('Application Model', function () {
 									`Application not found: ${publicApp[prop]}`,
 								);
 							},
-						),
-					);
+						);
+					});
 				},
 			);
 
 			parallel(
 				'balena.models.application.getDirectlyAccessible()',
 				function () {
-					applicationRetrievalFields.forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) => {
 						$it(
 							`should not return the public application by ${prop}`,
 							async function () {
@@ -1694,8 +1699,8 @@ describe('Application Model', function () {
 									`Application not found: ${publicApp[prop]}`,
 								);
 							},
-						),
-					);
+						);
+					});
 				},
 			);
 
@@ -1758,7 +1763,7 @@ describe('Application Model', function () {
 		describe('when not being logged in', function () {
 			before(() => balena.auth.logout());
 
-			describe('arbitrary pinejs queries', () =>
+			describe('arbitrary pinejs queries', () => {
 				$it(
 					'should be able to retrieve the available public apps',
 					function () {
@@ -1784,7 +1789,8 @@ describe('Application Model', function () {
 								});
 							});
 					},
-				));
+				);
+			});
 
 			parallel('balena.models.application.get()', function () {
 				applicationRetrievalFields.forEach((prop) => {

@@ -87,14 +87,14 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.getAllByApplication()', function () {
-			applicationRetrievalFields.forEach((prop) =>
+			applicationRetrievalFields.forEach((prop) => {
 				it(`should eventually become an empty array given an application ${prop}`, async () => {
 					const releases = await balena.models.release.getAllByApplication(
 						ctx.application[prop],
 					);
 					expect(releases).to.have.lengthOf(0);
-				}),
-			);
+				});
+			});
 
 			it('should be rejected if the application name does not exist', async () => {
 				const promise =
@@ -438,7 +438,7 @@ describe('Release Model', function () {
 			});
 		});
 
-		describe('balena.models.release.getAllByApplication()', () =>
+		describe('balena.models.release.getAllByApplication()', () => {
 			it('should load both releases', async function () {
 				await balena.models.release
 					.getAllByApplication(this.application.id)
@@ -464,7 +464,8 @@ describe('Release Model', function () {
 							},
 						]);
 					});
-			}));
+			});
+		});
 
 		parallel('balena.models.release.getWithImageDetails()', function () {
 			it('should get the release with associated images attached by id', async () => {
@@ -674,7 +675,7 @@ describe('Release Model', function () {
 				});
 
 				parallel('', function () {
-					applicationRetrievalFields.forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) => {
 						it(`should get the latest release by application ${prop}`, async () => {
 							const release =
 								await balena.models.release.getLatestByApplication(
@@ -686,8 +687,8 @@ describe('Release Model', function () {
 								commit: 'errored-then-fixed-release-commit',
 								belongs_to__application: { __id: ctx.application.id },
 							});
-						}),
-					);
+						});
+					});
 				});
 			});
 		});

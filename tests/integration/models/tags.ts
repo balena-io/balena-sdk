@@ -327,7 +327,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 			});
 		});
 
-		describe(`${modelNamespace}.set()`, () =>
+		describe(`${modelNamespace}.set()`, () => {
 			it('should be able to update a tag without affecting the rest', async function () {
 				await model.set(ctx.resource.id, 'EDITOR', 'emacs');
 				let tags = await getAllByResource(ctx.resource.id);
@@ -337,6 +337,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 				expect(tags[0].value).to.equal('emacs');
 				expect(tags[1].tag_key).to.equal('LANGUAGE');
 				expect(tags[1].value).to.equal('js');
-			}));
+			});
+		});
 	});
 };

@@ -83,20 +83,22 @@ const describeCacheInvalidationChanges = function (
 			describe('balena.auth.logout()', () =>
 				itFnWithStep(() => balena.auth.logout()));
 
-			describe('balena.auth.login()', () =>
+			describe('balena.auth.login()', () => {
 				itFnWithStep(() =>
 					balena.auth.login({
 						email: credentials.email,
 						password: credentials.password,
 					}),
-				));
+				);
+			});
 
-			describe('balena.auth.loginWithToken()', () =>
+			describe('balena.auth.loginWithToken()', () => {
 				itFnWithStep(() =>
 					balena.auth
 						.authenticate(credentials)
 						.then(balena.auth.loginWithToken),
-				));
+				);
+			});
 		});
 
 		describe('when logged in with credentials', function () {
@@ -104,23 +106,26 @@ const describeCacheInvalidationChanges = function (
 
 			afterEach(() => balena.auth.logout());
 
-			describe('balena.auth.logout()', () =>
-				itFnWithStep(() => balena.auth.logout()));
+			describe('balena.auth.logout()', () => {
+				itFnWithStep(() => balena.auth.logout());
+			});
 
-			describe('balena.auth.login()', () =>
+			describe('balena.auth.login()', () => {
 				itFnWithStep(() =>
 					balena.auth.login({
 						email: credentials.email,
 						password: credentials.password,
 					}),
-				));
+				);
+			});
 
-			describe('balena.auth.loginWithToken()', () =>
+			describe('balena.auth.loginWithToken()', () => {
 				itFnWithStep(() =>
 					balena.auth
 						.authenticate(credentials)
 						.then(balena.auth.loginWithToken),
-				));
+				);
+			});
 		});
 	});
 };
@@ -464,72 +469,85 @@ describe('OS model', function () {
 
 		const osVersions = [...esrOsVersions, ...defaultOsVersions];
 
-		it("should support 'latest'", () =>
+		it("should support 'latest'", () => {
 			expect(_getMaxSatisfyingVersion('latest', osVersions)).to.equal(
 				'2021.10.2.prod',
-			));
+			);
+		});
 
-		it("should support 'latest' with among default OS versions", () =>
+		it("should support 'latest' with among default OS versions", () => {
 			expect(_getMaxSatisfyingVersion('latest', defaultOsVersions)).to.equal(
 				'2.85.2+rev3.prod',
-			));
+			);
+		});
 
-		it("should support 'latest' with among esr OS versions", () =>
+		it("should support 'latest' with among esr OS versions", () => {
 			expect(_getMaxSatisfyingVersion('latest', esrOsVersions)).to.equal(
 				'2021.10.2.prod',
-			));
+			);
+		});
 
-		it("should support 'recommended'", () =>
+		it("should support 'recommended'", () => {
 			expect(
 				_getMaxSatisfyingVersion('recommended', defaultOsVersions),
-			).to.equal('2.85.2+rev3.prod'));
+			).to.equal('2.85.2+rev3.prod');
+		});
 
-		it("should support 'default'", () =>
+		it("should support 'default'", () => {
 			expect(_getMaxSatisfyingVersion('default', defaultOsVersions)).to.equal(
 				'2.85.2+rev3.prod',
-			));
+			);
+		});
 
-		it('should support exact version', () =>
+		it('should support exact version', () => {
 			expect(_getMaxSatisfyingVersion('2.73.1+rev1.prod', osVersions)).to.equal(
 				'2.73.1+rev1.prod',
-			));
+			);
+		});
 
-		it('should support stripped version', () =>
+		it('should support stripped version', () => {
 			expect(_getMaxSatisfyingVersion('2.73.1', osVersions)).to.equal(
 				'2.73.1+rev1.prod',
-			));
+			);
+		});
 
-		it('should support exact non-semver version', () =>
+		it('should support exact non-semver version', () => {
 			expect(_getMaxSatisfyingVersion('2.0.0.rev1', osVersions)).to.equal(
 				'2.0.0.rev1.prod',
-			));
+			);
+		});
 
-		it('should return an exact match, if it exists, when given a specific version', () =>
+		it('should return an exact match, if it exists, when given a specific version', () => {
 			// Concern here is that semver says .dev is equivalent to .prod, but
 			// we want provide an exact version and use _exactly_ that version.
 			expect(_getMaxSatisfyingVersion('2.73.1+rev1.dev', osVersions)).to.equal(
 				'2.73.1+rev1.dev',
-			));
+			);
+		});
 
-		it('should return an exact match, if it exists, when given a specific ESR version', () =>
+		it('should return an exact match, if it exists, when given a specific ESR version', () => {
 			expect(_getMaxSatisfyingVersion('2020.07.2.dev', osVersions)).to.equal(
 				'2020.07.2.dev',
-			));
+			);
+		});
 
-		it('should return an equivalent result, if no exact result exists, when given a specific version', () =>
+		it('should return an equivalent result, if no exact result exists, when given a specific version', () => {
 			expect(_getMaxSatisfyingVersion('2.73.1+rev1', osVersions)).to.equal(
 				'2.73.1+rev1.prod',
-			));
+			);
+		});
 
-		it('should support ^ semver ranges in default OS releases', () =>
+		it('should support ^ semver ranges in default OS releases', () => {
 			expect(_getMaxSatisfyingVersion('^2.0.1', osVersions)).to.equal(
 				'2.85.2+rev3.prod',
-			));
+			);
+		});
 
-		it('should support ~ semver ranges in default OS releases', () =>
+		it('should support ~ semver ranges in default OS releases', () => {
 			expect(_getMaxSatisfyingVersion('~2.80.3', osVersions)).to.equal(
 				'2.80.5+rev1.prod',
-			));
+			);
+		});
 
 		it('should support > semver ranges in default OS releases', () => {
 			expect(_getMaxSatisfyingVersion('>2.80.3', defaultOsVersions)).to.equal(
@@ -543,15 +561,17 @@ describe('OS model', function () {
 			);
 		});
 
-		it('should support ^ semver ranges in ESR OS releases', () =>
+		it('should support ^ semver ranges in ESR OS releases', () => {
 			expect(_getMaxSatisfyingVersion('^2020.04.0', osVersions)).to.equal(
 				'2020.07.2.prod',
-			));
+			);
+		});
 
-		it('should support ~ semver ranges in ESR OS releases', () =>
+		it('should support ~ semver ranges in ESR OS releases', () => {
 			expect(_getMaxSatisfyingVersion('~2020.04.0', osVersions)).to.equal(
 				'2020.04.1.prod',
-			));
+			);
+		});
 
 		it('should support > semver ranges in ESR OS releases', () => {
 			expect(_getMaxSatisfyingVersion('>2020.04.0', esrOsVersions)).to.equal(
@@ -565,10 +585,11 @@ describe('OS model', function () {
 			);
 		});
 
-		it('should support non-semver version ranges', () =>
+		it('should support non-semver version ranges', () => {
 			expect(_getMaxSatisfyingVersion('^2020.04.0', osVersions)).to.equal(
 				'2020.07.2.prod',
-			));
+			);
+		});
 
 		it('should drop unsupported exact versions', () => {
 			expect(_getMaxSatisfyingVersion('2.8.8+rev8.prod', osVersions)).to.equal(
@@ -630,31 +651,34 @@ describe('OS model', function () {
 				expect(downloadSize).to.be.a('number');
 			});
 
-			it('should cache the results', () =>
-				balena.models.os
+			it('should cache the results', () => {
+				return balena.models.os
 					.getDownloadSize('raspberry-pi', '1.26.1')
 					.then((result1) =>
 						balena.models.os
 							.getDownloadSize('raspberry-pi', '1.26.1')
 							.then((result2) => expect(result1).to.equal(result2)),
-					));
+					);
+			});
 
-			it('should cache download sizes independently for each version', () =>
-				Promise.all([
+			it('should cache download sizes independently for each version', () => {
+				return Promise.all([
 					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1'),
 					balena.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod'),
 				]).then(function ([os1Size, os2Size]) {
 					expect(os1Size).not.to.equal(os2Size);
-				}));
+				});
+			});
 		});
 
-		describe('given an invalid device slug', () =>
+		describe('given an invalid device slug', () => {
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.getDownloadSize('foo-bar-baz');
 				return expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
-			}));
+			});
+		});
 	});
 
 	describe('balena.models.os._getDownloadSize()', function () {
@@ -716,13 +740,14 @@ describe('OS model', function () {
 			});
 		});
 
-		describe('given an invalid device slug', () =>
+		describe('given an invalid device slug', () => {
 			it('should be rejected with an error message', async function () {
 				const promise = balena.models.os.getLastModified('foo-bar-baz');
 				await expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
-			}));
+			});
+		});
 	});
 
 	describe('balena.models.os.download()', function () {
@@ -736,19 +761,21 @@ describe('OS model', function () {
 		/* eslint-enable @typescript-eslint/no-var-requires */
 
 		describe('given a valid device slug', function () {
-			it('should contain a valid mime property', () =>
-				balena.models.os
+			it('should contain a valid mime property', () => {
+				return balena.models.os
 					.download({ deviceType: 'raspberry-pi' })
 					.then((stream) =>
 						expect(stream.mime).to.equal('application/octet-stream'),
-					));
+					);
+			});
 
-			it('should contain a valid mime property if passing a device type alias', () =>
-				balena.models.os
+			it('should contain a valid mime property if passing a device type alias', () => {
+				return balena.models.os
 					.download({ deviceType: 'raspberrypi' })
 					.then((stream) =>
 						expect(stream.mime).to.equal('application/octet-stream'),
-					));
+					);
+			});
 
 			it('should be able to download the image', function () {
 				const tmpFile = tmp.tmpNameSync();
@@ -762,7 +789,7 @@ describe('OS model', function () {
 			});
 		});
 
-		describe('given an invalid device slug', () =>
+		describe('given an invalid device slug', () => {
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.download({
 					deviceType: 'foo-bar-baz',
@@ -770,11 +797,12 @@ describe('OS model', function () {
 				return expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
-			}));
+			});
+		});
 	});
 
 	describe('balena.models.os.isSupportedOsUpdate()', function () {
-		describe('given an invalid device slug', () =>
+		describe('given an invalid device slug', () => {
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.isSupportedOsUpdate(
 					'foo-bar-baz',
@@ -784,48 +812,57 @@ describe('OS model', function () {
 				return expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
-			}));
+			});
+		});
 
 		describe('given a valid device slug', function () {
-			describe('given a unsupported low starting version number', () =>
-				it('should return false', () =>
-					expect(
+			describe('given a unsupported low starting version number', () => {
+				it('should return false', () => {
+					return expect(
 						balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev0.prod',
 							'2.2.0+rev2.prod',
 						),
-					).to.eventually.equal(false)));
+					).to.eventually.equal(false);
+				});
+			});
 
-			describe('given a unsupported low target version number', () =>
-				it('should return false', () =>
-					expect(
+			describe('given a unsupported low target version number', () => {
+				it('should return false', () => {
+					return expect(
 						balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev1.prod',
 							'2.1.0+rev1.prod',
 						),
-					).to.eventually.equal(false)));
+					).to.eventually.equal(false);
+				});
+			});
 
-			describe('given a dev starting version number', () =>
-				it('should return false', () =>
-					expect(
+			describe('given a dev starting version number', () => {
+				it('should return false', () => {
+					return expect(
 						balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev1.dev',
 							'2.2.0+rev2.prod',
 						),
-					).to.eventually.equal(false)));
+					).to.eventually.equal(false);
+				});
+			});
 
-			describe('given a dev target version number', () =>
-				it('should return false', () =>
-					expect(
+			describe('given a dev target version number', () => {
+				it('should return false', () => {
+					return expect(
 						balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev1.prod',
 							'2.1.0+rev1.dev',
 						),
-					).to.eventually.equal(false)));
+					).to.eventually.equal(false);
+				});
+			});
 
 			describe('given a supported os update path', () => {
 				[
@@ -849,7 +886,7 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os.getSupportedOsUpdateVersions()', function () {
-		describe('given an invalid device slug', () =>
+		describe('given an invalid device slug', () => {
 			it('should be rejected with an error message', function () {
 				const promise = balena.models.os.getSupportedOsUpdateVersions(
 					'foo-bar-baz',
@@ -858,7 +895,8 @@ describe('OS model', function () {
 				return expect(promise).to.be.rejectedWith(
 					'Invalid device type: foo-bar-baz',
 				);
-			}));
+			});
+		});
 
 		describe('given a valid device slug', () => {
 			it('should return the list of supported hup targets', async () => {
@@ -1116,7 +1154,7 @@ describe('OS model', function () {
 		});
 	});
 
-	describe('helpers', () =>
+	describe('helpers', () => {
 		describe('balena.models.os.isArchitectureCompatibleWith()', function () {
 			[
 				['armv7hf', 'i386'],
@@ -1140,10 +1178,11 @@ describe('OS model', function () {
 				['armv7hf', 'aarch64'],
 				['aarch64', 'armv5e'],
 			].forEach(function ([deviceArch, appArch]) {
-				it(`should return false when comparing ${deviceArch} and ${appArch} architectures`, () =>
+				it(`should return false when comparing ${deviceArch} and ${appArch} architectures`, () => {
 					expect(
 						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
-					).to.equal(false));
+					).to.equal(false);
+				});
 			});
 
 			it('should return true when comparing the same architecture slugs', function () {
@@ -1175,14 +1214,16 @@ describe('OS model', function () {
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],
 			].forEach(function ([deviceArch, appArch]) {
-				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () =>
+				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () => {
 					expect(
 						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
-					).to.equal(true));
+					).to.equal(true);
+				});
 			});
-		}));
+		});
+	});
 
-	describe('supervisor', () =>
+	describe('supervisor', () => {
 		describe('balena.models.os.getSupervisorReleaseByDeviceType()', function () {
 			it('should return null if no image was found', async () => {
 				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
@@ -1214,5 +1255,6 @@ describe('OS model', function () {
 					);
 				}
 			});
-		}));
+		});
+	});
 });

@@ -107,7 +107,7 @@ describe('Pine', function () {
 							});
 						});
 
-						describe('given there is an api key', () =>
+						describe('given there is an api key', () => {
 							it('should make the request successfully', async function () {
 								const promise = this.pine._request({
 									baseUrl: this.pine.API_URL,
@@ -115,7 +115,8 @@ describe('Pine', function () {
 									url: '/public_resource',
 								});
 								await expect(promise).to.become({ hello: 'public world' });
-							}));
+							});
+						});
 					});
 
 					describe('given a non-public resource', function () {

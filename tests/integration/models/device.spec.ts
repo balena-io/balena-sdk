@@ -63,21 +63,23 @@ describe('Device Model', function () {
 					ctx = this;
 				});
 
-				describe('balena.models.device.getAllByApplication()', () =>
+				describe('balena.models.device.getAllByApplication()', () => {
 					it('should become an empty array', async function () {
 						const result = await balena.models.device.getAllByApplication(
 							ctx.application.id,
 						);
 						expect(result).to.deep.equal([]);
-					}));
+					});
+				});
 
-				describe('balena.models.device.getAllByOrganization()', () =>
+				describe('balena.models.device.getAllByOrganization()', () => {
 					it('should become an empty array', async function () {
 						const result = await balena.models.device.getAllByOrganization(
 							ctx.initialOrg.id,
 						);
 						expect(result).to.deep.equal([]);
-					}));
+					});
+				});
 
 				parallel('balena.models.device.generateUniqueKey()', function () {
 					it('should generate a valid uuid', function () {
@@ -221,15 +223,15 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getAllByApplication()', function () {
-					applicationRetrievalFields.forEach((prop) =>
+					applicationRetrievalFields.forEach((prop) => {
 						it(`should get the device given the right application ${prop}`, async function () {
 							const devices = await balena.models.device.getAllByApplication(
 								ctx.application[prop],
 							);
 							expect(devices).to.have.length(1);
 							return expect(devices[0].id).to.equal(ctx.device.id);
-						}),
-					);
+						});
+					});
 
 					it('should be rejected if the application slug does not exist', function () {
 						const promise = balena.models.device.getAllByApplication(
@@ -271,15 +273,15 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getAllByOrganization()', function () {
-					organizationRetrievalFields.forEach((prop) =>
+					organizationRetrievalFields.forEach((prop) => {
 						it(`should get the device given the right organization ${prop}`, async function () {
 							const devices = await balena.models.device.getAllByOrganization(
 								ctx.initialOrg[prop],
 							);
 							expect(devices).to.have.length(1);
 							return expect(devices[0].id).to.equal(ctx.device.id);
-						}),
-					);
+						});
+					});
 
 					it('should be rejected if the organization slug does not exist', function () {
 						const promise = balena.models.device.getAllByOrganization(
@@ -542,14 +544,14 @@ describe('Device Model', function () {
 						);
 					});
 
-					deviceUniqueFields.forEach((field) =>
+					deviceUniqueFields.forEach((field) => {
 						it(`should retrieve a empty list of mac addresses by ${field}`, async function () {
 							const result = await balena.models.device.getMACAddresses(
 								ctx.device[field],
 							);
 							expect(result).to.deep.equal([]);
-						}),
-					);
+						});
+					});
 				});
 
 				parallel('balena.models.device.getMetrics()', function () {
@@ -567,7 +569,7 @@ describe('Device Model', function () {
 						);
 					});
 
-					deviceUniqueFields.forEach((field) =>
+					deviceUniqueFields.forEach((field) => {
 						it(`should retrieve an empty device metrics object by ${field}`, async function () {
 							const result = await balena.models.device.getMetrics(
 								ctx.device[field],
@@ -583,8 +585,8 @@ describe('Device Model', function () {
 								cpu_id: null,
 								is_undervolted: false,
 							});
-						}),
-					);
+						});
+					});
 				});
 
 				describe('balena.models.device.getMACAddresses()', function () {
@@ -597,7 +599,7 @@ describe('Device Model', function () {
 					});
 
 					parallel('', function () {
-						deviceUniqueFields.forEach((field) =>
+						deviceUniqueFields.forEach((field) => {
 							it(`should be able to retrieve the device mac addresses by ${field}`, async function () {
 								const result = await balena.models.device.getMACAddresses(
 									ctx.device[field],
@@ -606,8 +608,8 @@ describe('Device Model', function () {
 									'00:11:22:33:44:55',
 									'66:77:88:99:AA:BB',
 								]);
-							}),
-						);
+							});
+						});
 					});
 				});
 
@@ -629,7 +631,7 @@ describe('Device Model', function () {
 					});
 
 					parallel('', function () {
-						deviceUniqueFields.forEach((field) =>
+						deviceUniqueFields.forEach((field) => {
 							it(`should be able to retrieve the device metrics by ${field}`, async function () {
 								const result = await balena.models.device.getMetrics(
 									ctx.device[field],
@@ -645,8 +647,8 @@ describe('Device Model', function () {
 									is_undervolted: true,
 									cpu_id: 'a CPU string',
 								});
-							}),
-						);
+							});
+						});
 					});
 				});
 			});
@@ -1247,7 +1249,7 @@ describe('Device Model', function () {
 					last_connectivity_event: '2019-05-13T16:14',
 				});
 
-				describe('balena.models.device.getLocalModeSupport()', () =>
+				describe('balena.models.device.getLocalModeSupport()', () => {
 					it('should identify the device as not supported', function () {
 						return expect(
 							balena.models.device.getLocalModeSupport(this.device),
@@ -1256,7 +1258,8 @@ describe('Device Model', function () {
 							message:
 								'Local mode is only supported on development OS versions',
 						});
-					}));
+					});
+				});
 
 				describe('balena.models.device.isInLocalMode()', function () {
 					it('should be false by default for a device retrieved by uuid', async function () {
@@ -1303,7 +1306,7 @@ describe('Device Model', function () {
 					last_connectivity_event: '2019-05-13T16:14',
 				});
 
-				describe('balena.models.device.getLocalModeSupport()', () =>
+				describe('balena.models.device.getLocalModeSupport()', () => {
 					it('should identify the device as supported', function () {
 						return expect(
 							balena.models.device.getLocalModeSupport(this.device),
@@ -1311,9 +1314,10 @@ describe('Device Model', function () {
 							supported: true,
 							message: 'Supported',
 						});
-					}));
+					});
+				});
 
-				describe('[mutating operations]', () =>
+				describe('[mutating operations]', () => {
 					deviceUniqueFields.forEach(function (deviceParam) {
 						describe('balena.models.device.isInLocalMode()', function () {
 							it(`should be false by default for a device retrieved by ${deviceParam}`, async function () {
@@ -1377,7 +1381,8 @@ describe('Device Model', function () {
 								);
 							});
 						});
-					}));
+					});
+				});
 			});
 
 			describe('balena.models.device.hasLockOverride()', function () {
@@ -2096,15 +2101,16 @@ describe('Device Model', function () {
 					);
 				});
 
-				describe('Given an inactive device', () =>
-					deviceUniqueFields.forEach((prop) =>
+				describe('Given an inactive device', () => {
+					deviceUniqueFields.forEach((prop) => {
 						it(`should return inactive when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
 							expect(status).to.equal('inactive');
-						}),
-					));
+						});
+					});
+				});
 
 				describe('Given an online device', function () {
 					before(function () {
@@ -2118,14 +2124,14 @@ describe('Device Model', function () {
 						});
 					});
 
-					deviceUniqueFields.forEach((prop) =>
+					deviceUniqueFields.forEach((prop) => {
 						it(`should return idle when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
 							expect(status).to.equal('idle');
-						}),
-					);
+						});
+					});
 				});
 
 				describe('Given an offline device', function () {
@@ -2139,14 +2145,14 @@ describe('Device Model', function () {
 						});
 					});
 
-					deviceUniqueFields.forEach((prop) =>
+					deviceUniqueFields.forEach((prop) => {
 						it(`should return offline when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
 							expect(status).to.equal('offline');
-						}),
-					);
+						});
+					});
 				});
 			});
 		});
@@ -2227,7 +2233,7 @@ describe('Device Model', function () {
 				]);
 			});
 
-			describe('balena.models.device.get()', () =>
+			describe('balena.models.device.get()', () => {
 				it('should be rejected with an error if there is an ambiguation between shorter uuids', async function () {
 					const promise = balena.models.device.get(this.uuidRoot);
 
@@ -2235,9 +2241,10 @@ describe('Device Model', function () {
 						'code',
 						'BalenaAmbiguousDevice',
 					);
-				}));
+				});
+			});
 
-			describe('balena.models.device.has()', () =>
+			describe('balena.models.device.has()', () => {
 				it('should be rejected with an error for an ambiguous shorter uuid', async function () {
 					const promise = balena.models.device.has(this.uuidRoot);
 
@@ -2245,7 +2252,8 @@ describe('Device Model', function () {
 						'code',
 						'BalenaAmbiguousDevice',
 					);
-				}));
+				});
+			});
 		});
 	});
 
@@ -2717,20 +2725,22 @@ describe('Device Model', function () {
 				last_connectivity_event: '2019-05-13T16:14',
 			});
 
-			describe('balena.models.device.getStatus()', () =>
+			describe('balena.models.device.getStatus()', () => {
 				it('should properly retrieve the status', async function () {
 					const status = await balena.models.device.getStatus(this.device.uuid);
 					expect(status).to.equal('updating');
-				}));
+				});
+			});
 
-			describe('balena.models.device.getProgress()', () =>
+			describe('balena.models.device.getProgress()', () => {
 				it('should properly retrieve the progress', async function () {
 					const result = await balena.models.device.getProgress(
 						this.device.uuid,
 					);
 					expect(result).to.be.a('number');
 					expect(result).to.equal(75);
-				}));
+				});
+			});
 		});
 
 		describe('given a newly registered offline device', function () {
@@ -3034,7 +3044,7 @@ describe('Device Model', function () {
 			describe('given a single offline device', function () {
 				givenADevice(before);
 
-				describe('balena.models.device.getWithServiceDetails()', () =>
+				describe('balena.models.device.getWithServiceDetails()', () => {
 					it('should retrieve the current service details', async function () {
 						const deviceDetails =
 							await balena.models.device.getWithServiceDetails(this.device.id);
@@ -3084,7 +3094,8 @@ describe('Device Model', function () {
 								download_progress: null,
 							},
 						]);
-					}));
+					});
+				});
 			});
 		});
 	});
@@ -3154,7 +3165,7 @@ describe('Device Model', function () {
 
 		describe('balena.models.device.move()', function () {
 			describe('when trying to move between applications of the same device type', function () {
-				applicationRetrievalFields.forEach((prop) =>
+				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to move a device by device uuid and application ${prop}`, async function () {
 						await balena.models.device.move(
 							this.deviceInfo.uuid,
@@ -3167,8 +3178,8 @@ describe('Device Model', function () {
 						return expect(applicationName).to.equal(
 							this.applicationSameDT.app_name,
 						);
-					}),
-				);
+					});
+				});
 
 				it('should be able to move a device using shorter uuids', async function () {
 					await balena.models.device.move(
@@ -3311,25 +3322,28 @@ describe('Device Model', function () {
 				);
 			});
 
-			it('should throw when a device uuid is not a string', () =>
+			it('should throw when a device uuid is not a string', () => {
 				expect(() =>
 					// @ts-expect-error invalid parameter
 					balena.models.device.getDashboardUrl(1234567),
-				).to.throw());
+				).to.throw();
+			});
 
-			it('should throw when a device uuid is not provided', () =>
+			it('should throw when a device uuid is not provided', () => {
 				// @ts-expect-error invalid parameter
-				expect(() => balena.models.device.getDashboardUrl()).to.throw());
+				expect(() => balena.models.device.getDashboardUrl()).to.throw();
+			});
 		});
 
 		describe('balena.models.device.lastOnline()', function () {
-			it('should return the string "Connecting..." if the device has no `last_connectivity_event`', () =>
+			it('should return the string "Connecting..." if the device has no `last_connectivity_event`', () => {
 				expect(
 					balena.models.device.lastOnline({
 						last_connectivity_event: null,
 						is_online: false,
 					}),
-				).to.equal('Connecting...'));
+				).to.equal('Connecting...');
+			});
 
 			it('should return the correct time string if the device is online', function () {
 				const mockDevice = {
@@ -3359,7 +3373,7 @@ describe('Device Model', function () {
 		});
 
 		describe('balena.models.device.getLocalModeSupport()', function () {
-			it('should identify a device w/o a supervisor_version as not supported', () =>
+			it('should identify a device w/o a supervisor_version as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3371,9 +3385,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Device is not yet fully provisioned',
-				}));
+				});
+			});
 
-			it('should identify a device w/o a last_connectivity_event as not supported', () =>
+			it('should identify a device w/o a last_connectivity_event as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3385,9 +3400,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Device is not yet fully provisioned',
-				}));
+				});
+			});
 
-			it('should identify a device w/o an os_version as not supported', () =>
+			it('should identify a device w/o an os_version as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3399,9 +3415,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Device OS version does not support local mode',
-				}));
+				});
+			});
 
-			it('should identify a device with an invalid os_version as not supported', () =>
+			it('should identify a device with an invalid os_version as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3413,9 +3430,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Device OS version does not support local mode',
-				}));
+				});
+			});
 
-			it('should identify a device with a v1 OS as not supported', () =>
+			it('should identify a device with a v1 OS as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3427,9 +3445,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Device OS version does not support local mode',
-				}));
+				});
+			});
 
-			it('should identify a device with an old supervisor as not supported', () =>
+			it('should identify a device with an old supervisor as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3441,9 +3460,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Device supervisor version does not support local mode',
-				}));
+				});
+			});
 
-			it('should identify a device w/o an os_variant as not supported', () =>
+			it('should identify a device w/o an os_variant as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3455,9 +3475,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Local mode is only supported on development OS versions',
-				}));
+				});
+			});
 
-			it('should identify a device with a production image as not supported', () =>
+			it('should identify a device with a production image as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3469,9 +3490,10 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: false,
 					message: 'Local mode is only supported on development OS versions',
-				}));
+				});
+			});
 
-			it('should identify a device with a development image as supported', () =>
+			it('should identify a device with a development image as supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
@@ -3483,11 +3505,12 @@ describe('Device Model', function () {
 				).to.deep.equal({
 					supported: true,
 					message: 'Supported',
-				}));
+				});
+			});
 		});
 
 		describe('balena.models.device.getOsVersion()', function () {
-			it('should not parse invalid semver versions', () =>
+			it('should not parse invalid semver versions', () => {
 				_.forEach(
 					[
 						['Resin OS ', 'dev'],
@@ -3502,9 +3525,10 @@ describe('Device Model', function () {
 							}),
 						).to.equal(null);
 					},
-				));
+				);
+			});
 
-			it('should parse plain os versions w/o variant', () =>
+			it('should parse plain os versions w/o variant', () => {
 				_.forEach(
 					[
 						['Resin OS 1.2.1', '', '1.2.1'],
@@ -3530,9 +3554,10 @@ describe('Device Model', function () {
 							}),
 						).to.equal(expectation);
 					},
-				));
+				);
+			});
 
-			it('should properly combine the plain os version & variant', () =>
+			it('should properly combine the plain os version & variant', () => {
 				_.forEach(
 					[
 						['Resin OS 2.0.0-beta.8', 'prod', '2.0.0-beta.8+prod'],
@@ -3580,9 +3605,10 @@ describe('Device Model', function () {
 							}),
 						).to.equal(expectation);
 					},
-				));
+				);
+			});
 
-			it('should properly parse the os_version with variant suffix w/o os_variant', () =>
+			it('should properly parse the os_version with variant suffix w/o os_variant', () => {
 				_.forEach(
 					[
 						['Resin OS 2.0.0-rc6.rev1 (prod)', '', '2.0.0-rc6.rev1+prod'],
@@ -3601,9 +3627,10 @@ describe('Device Model', function () {
 							}),
 						).to.equal(expectation);
 					},
-				));
+				);
+			});
 
-			it('should properly combine the os_version with variant suffix & os_variant', () =>
+			it('should properly combine the os_version with variant suffix & os_variant', () => {
 				_.forEach(
 					[
 						['Resin OS 2.0.0.rev1 (prod)', 'prod', '2.0.0+rev1.prod'],
@@ -3621,7 +3648,8 @@ describe('Device Model', function () {
 							}),
 						).to.equal(expectation);
 					},
-				));
+				);
+			});
 		});
 
 		describe('balena.models.device._checkOsUpdateTarget()', function () {
@@ -3632,7 +3660,7 @@ describe('Device Model', function () {
 
 			const { _checkOsUpdateTarget } = balena.models.device;
 
-			it('should throw when the current os version is invalid', () =>
+			it('should throw when the current os version is invalid', () => {
 				[
 					['Resin OS ', 'dev'],
 					['Resin OS ', 'prod'],
@@ -3650,9 +3678,10 @@ describe('Device Model', function () {
 							'2.29.2+rev1.prod',
 						),
 					).to.throw('Invalid current balenaOS version');
-				}));
+				});
+			});
 
-			it('should throw when the device is offline', () =>
+			it('should throw when the device is offline', () => {
 				[
 					['Resin OS 1.21.0', '', '1.28.0'],
 					['Resin OS 1.30.1', '', '2.5.0+rev1'],
@@ -3670,9 +3699,10 @@ describe('Device Model', function () {
 							targetOsVersion,
 						),
 					).to.throw('The device is offline');
-				}));
+				});
+			});
 
-			it('should throw for upgrades from prod -> dev', () =>
+			it('should throw for upgrades from prod -> dev', () => {
 				[
 					['Resin OS 2.0.0+rev3 (prod)', 'prod'],
 					['Resin OS 2.0.0+rev3 (prod)', ''],
@@ -3698,9 +3728,10 @@ describe('Device Model', function () {
 					).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
-				}));
+				});
+			});
 
-			it('should throw for upgrades from dev -> prod', () =>
+			it('should throw for upgrades from dev -> prod', () => {
 				[
 					['Resin OS 2.0.0+rev3 (dev)', 'dev'],
 					['Resin OS 2.0.0+rev5 (dev)', ''],
@@ -3730,12 +3761,13 @@ describe('Device Model', function () {
 					).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
-				}));
+				});
+			});
 
-			describe('v1 -> v1 hup', () =>
-				['raspberrypi3', 'intel-nuc'].forEach((deviceType) =>
+			describe('v1 -> v1 hup', () => {
+				['raspberrypi3', 'intel-nuc'].forEach((deviceType) => {
 					describe(`given a ${deviceType}`, function () {
-						it('should throw when current os version is < 1.8.0', () =>
+						it('should throw when current os version is < 1.8.0', () => {
 							[
 								['Resin OS 1.2.1', ''],
 								['Resin OS 1.6.0', ''],
@@ -3753,9 +3785,10 @@ describe('Device Model', function () {
 										'1.26.0',
 									),
 								).to.throw('Current OS version must be >= 1.8.0');
-							}));
+							});
+						});
 
-						it('should throw when the target os version is below the min supported v1 version', () =>
+						it('should throw when the target os version is below the min supported v1 version', () => {
 							[
 								['Resin OS 1.8.0', ''],
 								['Resin OS 1.10.0', ''],
@@ -3774,9 +3807,10 @@ describe('Device Model', function () {
 										'1.25.0',
 									),
 								).to.throw('Target OS version must be >= 1.26.0');
-							}));
+							});
+						});
 
-						it('should not throw when it is a valid v1 -> v1 hup', () =>
+						it('should not throw when it is a valid v1 -> v1 hup', () => {
 							[
 								['Resin OS 1.8.0', ''],
 								['Resin OS 1.10.0', ''],
@@ -3795,13 +3829,15 @@ describe('Device Model', function () {
 										'1.28.0',
 									),
 								).to.not.throw();
-							}));
-					}),
-				));
+							});
+						});
+					});
+				});
+			});
 
 			describe('v1 -> v2 hup', function () {
 				describe('given a raspberrypi3', function () {
-					it('should throw when current os version is < 1.8.0', () =>
+					it('should throw when current os version is < 1.8.0', () => {
 						[
 							['Resin OS 1.2.1', ''],
 							['Resin OS 1.6.0', ''],
@@ -3819,9 +3855,10 @@ describe('Device Model', function () {
 									'2.5.0+rev1',
 								),
 							).to.throw('Current OS version must be >= 1.8.0');
-						}));
+						});
+					});
 
-					it('should not throw when it is a valid v1 -> v2 hup', () =>
+					it('should not throw when it is a valid v1 -> v2 hup', () => {
 						[
 							['Resin OS 1.8.0', ''],
 							['Resin OS 1.10.0', ''],
@@ -3842,11 +3879,12 @@ describe('Device Model', function () {
 									'2.5.0+rev1',
 								),
 							).to.not.throw();
-						}));
+						});
+					});
 				});
 
 				describe('given a beaglebone-black', function () {
-					it('should throw when current os version is < 1.30.1', () =>
+					it('should throw when current os version is < 1.30.1', () => {
 						[
 							['Resin OS 1.2.1', ''],
 							['Resin OS 1.6.0', ''],
@@ -3869,9 +3907,10 @@ describe('Device Model', function () {
 									'2.5.0+rev1',
 								),
 							).to.throw('Current OS version must be >= 1.30.1');
-						}));
+						});
+					});
 
-					it('should not throw when it is a valid v1 -> v2 hup', () =>
+					it('should not throw when it is a valid v1 -> v2 hup', () => {
 						[['Resin OS 1.30.1', '']].forEach(function ([
 							osVersion,
 							osVariant,
@@ -3888,7 +3927,8 @@ describe('Device Model', function () {
 									'2.5.0+rev1',
 								),
 							).to.not.throw();
-						}));
+						});
+					});
 				});
 			});
 
@@ -4025,7 +4065,7 @@ describe('Device Model', function () {
 				});
 
 				describe('given a jetson-tx2', function () {
-					it('should throw when current os version is < 2.7.4', () =>
+					it('should throw when current os version is < 2.7.4', () => {
 						[
 							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
 							['Resin OS 2.0.0.rev1 (prod)', ''],
@@ -4073,9 +4113,10 @@ describe('Device Model', function () {
 									'2.29.2+rev1.prod',
 								),
 							).to.throw('Current OS version must be >= 2.7.4');
-						}));
+						});
+					});
 
-					it('should not throw when it is a valid v2 -> v2 prod variant hup', () =>
+					it('should not throw when it is a valid v2 -> v2 prod variant hup', () => {
 						[
 							['Resin OS 2.7.4+rev1', 'prod'],
 							['Resin OS 2.7.4+rev2', 'prod'],
@@ -4101,9 +4142,10 @@ describe('Device Model', function () {
 									'2.29.2+rev1.prod',
 								),
 							).to.not.throw();
-						}));
+						});
+					});
 
-					it('should not throw when it is a valid v2 -> v2 dev variant hup', () =>
+					it('should not throw when it is a valid v2 -> v2 dev variant hup', () => {
 						[
 							['Resin OS 2.7.4+rev1.dev', 'dev'],
 							['Resin OS 2.9.7+rev2.dev', 'dev'],
@@ -4121,7 +4163,8 @@ describe('Device Model', function () {
 									'2.29.2+rev1.dev',
 								),
 							).to.not.throw();
-						}));
+						});
+					});
 				});
 			});
 		});
