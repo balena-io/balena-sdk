@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Reformat describe & it calls to have curly braces"
+      hash: a56364484bb17bc80990a1c070c7a414ba22430f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.5.2
+  title: ""
+  date: 2024-02-13T18:18:40.012Z
+- commits:
     - subject: Update @balena/lint to 7.3.0
       hash: 936402acd7c546fab9c51a92c21218bd191ed83c
       body: ""
