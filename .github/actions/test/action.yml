@@ -13,13 +13,13 @@ runs:
   using: "composite"
   steps:
     - name: Setup Node.js 18
-      if: ${{ env.os_value == 'ubuntu-20.04' }}
+      if: ${{ fromJSON(env.os_value)[0] == 'ubuntu-20.04' }}
       uses: actions/setup-node@v3
       with:
         node-version: 18
 
     - name: Setup Node.js lts
-      if: ${{ env.os_value != 'ubuntu-20.04' }}
+      if: ${{ fromJSON(env.os_value)[0] != 'ubuntu-20.04' }}
       uses: actions/setup-node@v3
       with:
         node-version: lts/*
@@ -36,22 +36,22 @@ runs:
     - name: Run custom node tests
       shell: bash
       run: |
-        # For some reason it seems that env.os_value isn't populated when using windows-2019, so we use `|| 'windows-2019'`
-        echo "OS [${{ env.os_value || 'windows-2019' }}]"
+        # os_value is a JSON array of runner labels but we are only looking at the first element
+        echo "OS: ${{ fromJSON(env.os_value)[0] }}"
         node -v
         npm -v
 
-        export TEST_EMAIL_KEY=${{ format('TEST_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) }}
-        export TEST_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
-        export TEST_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
+        export TEST_EMAIL_KEY=${{ format('TEST_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) }}
+        export TEST_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
         export TEST_PASSWORD=${{ fromJSON(inputs.secrets).TEST_PASSWORD }}
-        export TEST_REGISTER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
-        export TEST_REGISTER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
+        export TEST_REGISTER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_REGISTER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
         export TEST_REGISTER_PASSWORD=${{ fromJSON(inputs.secrets).TEST_REGISTER_PASSWORD }}
-        export TEST_MEMBER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
-        export TEST_MEMBER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[env.os_value || 'windows-2019' ]) ] }}
+        export TEST_MEMBER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_MEMBER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
         export TEST_MEMBER_PASSWORD=${{ fromJSON(inputs.secrets).TEST_MEMBER_PASSWORD }}
-        export TEST_ONLY_ON_ENVIRONMENT=${{ fromJSON('{"windows-2019":"node","ubuntu-20.04":"node","macos-12":"browser"}')[env.os_value || 'windows-2019' ]  }}
+        export TEST_ONLY_ON_ENVIRONMENT=${{ fromJSON('{"windows-2019":"node","ubuntu-20.04":"node","macos-12":"browser"}')[fromJSON(env.os_value)[0]]  }}
         export TEST_2FA_EMAIL=${{ fromJSON(inputs.secrets).TEST_2FA_EMAIL }}
         export TEST_2FA_PASSWORD=${{ fromJSON(inputs.secrets).TEST_2FA_PASSWORD }}
         export TEST_2FA_SECRET=${{ fromJSON(inputs.secrets).TEST_2FA_SECRET }}
