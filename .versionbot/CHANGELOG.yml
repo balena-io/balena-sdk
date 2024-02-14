@@ -1,4 +1,16 @@
 - commits:
+    - subject: Bump balena-request Update balena-request from 13.2.0 to 13.3.0
+      hash: 1330818adde0bc9e9a8e4c4ac9c50548ce5b1d12
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otávio Jacobi
+      nested: []
+  version: 19.5.4
+  title: ""
+  date: 2024-02-14T22:05:55.194Z
+- commits:
     - subject: Replace deprecated flowzone input tests_run_on
       hash: 4b5e586420965a47f9357749a42b4dd9155eb8b4
       body: |
