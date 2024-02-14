@@ -1,4 +1,20 @@
 - commits:
+    - subject: Replace deprecated flowzone input tests_run_on
+      hash: 4b5e586420965a47f9357749a42b4dd9155eb8b4
+      body: |
+        The custom_runs_on array supports multiple runner labels
+        so we need to inspect the first element for our custom action.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 19.5.3
+  title: ""
+  date: 2024-02-14T19:15:23.474Z
+- commits:
     - subject: "tests: Reformat describe & it calls to have curly braces"
       hash: a56364484bb17bc80990a1c070c7a414ba22430f
       body: ""
