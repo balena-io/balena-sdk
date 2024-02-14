@@ -20,4 +20,4 @@ jobs:
       (github.event.pull_request.head.repo.full_name != github.repository && github.event_name == 'pull_request_target')
     secrets: inherit
     with:
-      tests_run_on: '["windows-2019","ubuntu-20.04","macos-12"]'
+      custom_runs_on: '[["windows-2019"],["ubuntu-20.04"],["macos-12"]]'
