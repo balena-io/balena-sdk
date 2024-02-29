@@ -434,7 +434,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	 console.log(instruction);
 		 *  }
 		 *  // Insert the sdcard to the host machine.
-		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.
+		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.
 		 *  // Wait for writing of BalenaOS to complete.
 		 *  // Remove the sdcard from the host machine.
 		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).

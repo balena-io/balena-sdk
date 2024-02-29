@@ -105,7 +105,7 @@ describe('Device Type model', function () {
 					RPI2_DEVICE_TYPE_SLUG,
 					[
 						'Insert the SD card to the host machine.',
-						'Write the balenaOS file you downloaded to the SD card. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
+						'Write the balenaOS file you downloaded to the SD card. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.',
 						'Wait for writing of balenaOS to complete.',
 						'Remove the SD card from the host machine.',
 						'Insert the freshly flashed SD card into the Raspberry Pi 2.',
@@ -126,7 +126,7 @@ describe('Device Type model', function () {
 					'intel-nuc',
 					[
 						'Insert the USB key to the host machine.',
-						'Write the balenaOS file you downloaded to the USB key. We recommend using <a href="http://www.etcher.io/">Etcher</a>.',
+						'Write the balenaOS file you downloaded to the USB key. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.',
 						'Wait for writing of balenaOS to complete.',
 						'Remove the USB key from the host machine.',
 						'Insert the freshly flashed USB key into the Intel NUC.',

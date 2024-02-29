@@ -12,14 +12,14 @@ export const BalenaOS: Contract = {
 		image: [`{{#each deviceType.partials.instructions}}{{{this}}} {{/each}}`],
 		internalFlash: [
 			`{{#each deviceType.partials.connectDevice}}{{{this}}} {{/each}}`,
-			`Write the {{name}} file you downloaded to the {{deviceType.name}}. We recommend using <a href="http://www.etcher.io/">Etcher</a>.`,
+			`Write the {{name}} file you downloaded to the {{deviceType.name}}. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.`,
 			`Wait for writing of {{name}} to complete.`,
 			`{{#each deviceType.partials.disconnectDevice}}{{{this}}} {{/each}}`,
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
 		externalFlash: [
 			`Insert the {{resolveContractAlias deviceType.data.media.altBoot.[0]}} to the host machine.`,
-			`Write the {{name}} file you downloaded to the {{resolveContractAlias deviceType.data.media.altBoot.[0]}}. We recommend using <a href="http://www.etcher.io/">Etcher</a>.`,
+			`Write the {{name}} file you downloaded to the {{resolveContractAlias deviceType.data.media.altBoot.[0]}}. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.`,
 			`Wait for writing of {{name}} to complete.`,
 			`Remove the {{resolveContractAlias deviceType.data.media.altBoot.[0]}} from the host machine.`,
 			`Insert the freshly flashed {{resolveContractAlias deviceType.data.media.altBoot.[0]}} into the {{deviceType.name}}.`,
@@ -32,7 +32,7 @@ export const BalenaOS: Contract = {
 		],
 		externalBoot: [
 			`Insert the {{resolveContractAlias deviceType.data.media.defaultBoot}} to the host machine.`,
-			`Write the {{name}} file you downloaded to the {{resolveContractAlias deviceType.data.media.defaultBoot}}. We recommend using <a href="http://www.etcher.io/">Etcher</a>.`,
+			`Write the {{name}} file you downloaded to the {{resolveContractAlias deviceType.data.media.defaultBoot}}. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.`,
 			`Wait for writing of {{name}} to complete.`,
 			`Remove the {{resolveContractAlias deviceType.data.media.defaultBoot}} from the host machine.`,
 			`Insert the freshly flashed {{resolveContractAlias deviceType.data.media.defaultBoot}} into the {{deviceType.name}}.`,
