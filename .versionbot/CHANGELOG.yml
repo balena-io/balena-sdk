@@ -1,4 +1,27 @@
 - commits:
+    - subject: Update TypeScript to 5.4.2
+      hash: 8fdad04e57436f8315e5607dd6ea6b35fcfad9ce
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "device-type.getInstructions: Convert etcher link to HTTPS"
+      hash: 6a07d9114fb66f376134860118e8ca48aadf9396
+      body: |
+        device-type.getInstructions: Convert etcher link to HTTPS
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 19.5.6
+  title: ""
+  date: 2024-03-07T09:23:31.348Z
+- commits:
     - subject: Update balena-auth to 6.0.1
       hash: ab5c3baf00a0bdec0db8120f129f158dbcb10fb1
       body: |
@@ -707,7 +730,8 @@
 
         - [Release notes](https://github.com/okonet/lint-staged/releases)
 
-        - [Commits](https://github.com/okonet/lint-staged/compare/v13.3.0...v14.0.0)
+        -
+        [Commits](https://github.com/okonet/lint-staged/compare/v13.3.0...v14.0.0)
 
 
         ---
@@ -1504,7 +1528,8 @@
                 Be more lenient with decoding compressed responses, since (very
                 rarely)
 
-                servers send slightly invalid gzip responses that are still accepted
+                servers send slightly invalid gzip responses that are still
+                accepted
 
                 by common browsers.
 
@@ -2675,7 +2700,8 @@
         - getAllByApplication
 
 
-        Changelog-entry: Enable audit logging and reviewing device changes. The SDK defaults to fetch last 7 days of history
+        Changelog-entry: Enable audit logging and reviewing device changes. The
+        SDK defaults to fetch last 7 days of history
       footer:
         Change-type: minor
         change-type: minor
@@ -3030,11 +3056,14 @@
         [catch-uncommitted](https://github.com/resin-io-modules/catch-uncommitted)
         from 1.6.2 to 2.0.0.
 
-        - [Release notes](https://github.com/resin-io-modules/catch-uncommitted/releases)
+        - [Release
+        notes](https://github.com/resin-io-modules/catch-uncommitted/releases)
 
-        - [Changelog](https://github.com/balena-io-modules/catch-uncommitted/blob/master/CHANGELOG.md)
+        -
+        [Changelog](https://github.com/balena-io-modules/catch-uncommitted/blob/master/CHANGELOG.md)
 
-        - [Commits](https://github.com/resin-io-modules/catch-uncommitted/compare/v1.6.2...v2.0.0)
+        -
+        [Commits](https://github.com/resin-io-modules/catch-uncommitted/compare/v1.6.2...v2.0.0)
 
 
         ---
@@ -3837,9 +3866,11 @@
 
         - [Release notes](https://github.com/browserify/browserify/releases)
 
-        - [Changelog](https://github.com/browserify/browserify/blob/master/changelog.markdown)
+        -
+        [Changelog](https://github.com/browserify/browserify/blob/master/changelog.markdown)
 
-        - [Commits](https://github.com/browserify/browserify/compare/14.5.0...v17.0.0)
+        -
+        [Commits](https://github.com/browserify/browserify/compare/14.5.0...v17.0.0)
 
 
         ---
@@ -3866,7 +3897,8 @@
 
         - [Release notes](https://github.com/raszi/node-tmp/releases)
 
-        - [Changelog](https://github.com/raszi/node-tmp/blob/master/CHANGELOG.md)
+        -
+        [Changelog](https://github.com/raszi/node-tmp/blob/master/CHANGELOG.md)
 
         - [Commits](https://github.com/raszi/node-tmp/compare/v0.0.31...v0.2.1)
 
@@ -3986,7 +4018,8 @@
 
         - [Release notes](https://github.com/httptoolkit/mockttp/releases)
 
-        - [Commits](https://github.com/httptoolkit/mockttp/compare/v0.9.1...v2.7.0)
+        -
+        [Commits](https://github.com/httptoolkit/mockttp/compare/v0.9.1...v2.7.0)
 
 
         ---
@@ -4060,7 +4093,8 @@
 
         - [Release notes](https://github.com/visionmedia/superagent/releases)
 
-        - [Changelog](https://github.com/visionmedia/superagent/blob/master/HISTORY.md)
+        -
+        [Changelog](https://github.com/visionmedia/superagent/blob/master/HISTORY.md)
 
         - [Commits](https://github.com/visionmedia/superagent/commits)
 
@@ -4089,7 +4123,8 @@
 
         - [Release notes](https://github.com/motdotla/dotenv/releases)
 
-        - [Changelog](https://github.com/motdotla/dotenv/blob/master/CHANGELOG.md)
+        -
+        [Changelog](https://github.com/motdotla/dotenv/blob/master/CHANGELOG.md)
 
         - [Commits](https://github.com/motdotla/dotenv/compare/v4.0.0...v16.0.0)
 
@@ -5660,7 +5695,8 @@
                 Be more lenient with decoding compressed responses, since (very
                 rarely)
 
-                servers send slightly invalid gzip responses that are still accepted
+                servers send slightly invalid gzip responses that are still
+                accepted
 
                 by common browsers.
 
