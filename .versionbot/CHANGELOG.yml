@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix missing underscore to describes__device property
+      hash: 4aa0829ceaae348803d4fa2712b145df0195e901
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+  version: 19.5.7
+  title: ""
+  date: 2024-03-08T12:46:33.611Z
+- commits:
     - subject: Update TypeScript to 5.4.2
       hash: 8fdad04e57436f8315e5607dd6ea6b35fcfad9ce
       body: ""
