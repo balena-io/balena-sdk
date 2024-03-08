@@ -501,7 +501,7 @@ export interface DeviceType {
 	is_default_for__application: ReverseNavigationResource<Application>;
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
 	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
-	describes_device: ReverseNavigationResource<Device>;
+	describes__device: ReverseNavigationResource<Device>;
 	device_type_alias: ReverseNavigationResource<DeviceTypeAlias>;
 }
 
