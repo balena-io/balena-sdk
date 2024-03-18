@@ -621,8 +621,7 @@ const getApplicationModel = function (
 		 * @memberof balena.models.application
 		 *
 		 * @param {Object} options - application creation parameters
-		 * @param {String} options.name - application name
-		 * @deprecated
+		 * @param {String} options.name - application names
 		 * @param {String} [options.applicationType] - application type slug e.g. microservices
 		 * @param {String} [options.applicationClass] - application class: 'app' | 'fleet' | 'block'
 		 * @param {String} options.deviceType - device type slug
@@ -656,11 +655,11 @@ const getApplicationModel = function (
 			organization,
 		}: {
 			name: string;
-			/** @deprecated */
+			/** @deprecated TODO: drop me in the next major */
 			applicationType?: string;
 			applicationClass?: 'app' | 'fleet' | 'block';
 			deviceType: string;
-			/** @deprecated */
+			/** @deprecated TODO: drop me in the next major */
 			parent?: number | string;
 			organization: number | string;
 		}): Promise<PinePostResult<Application>> {
