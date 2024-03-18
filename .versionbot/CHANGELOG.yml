@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix `application.create` method being wrongly marked as deprecated
+      hash: 166ffa8a3de0a002996bdd30c559a5e6b405d21c
+      body: The intention was to mark `options.applicationType` as deprecated
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+  version: 19.5.8
+  title: ""
+  date: 2024-03-18T12:32:38.508Z
+- commits:
     - subject: Fix missing underscore to describes__device property
       hash: 4aa0829ceaae348803d4fa2712b145df0195e901
       body: ""
