@@ -171,7 +171,7 @@ const getOsAppTags = (
 };
 
 type HostAppTagSet = ReturnType<typeof getOsAppTags>;
-// TODO: Drop this function & just use `release.phase` in the next major
+// TODO: Drop this function & just use `release.phase` once we migrate our OS release process
 const getOsVersionReleaseLine = (
 	phase: Release['phase'],
 	version: string,
@@ -269,8 +269,11 @@ const getOsModel = function (
 			let strippedVersion: string;
 			let variant: string = release.variant;
 			if (releaseSemverObj == null) {
-				// TODO: Drop this `else` once we migrate all version & variant tags to release.semver field
-				/** Ideally 'production' | 'development' | undefined. */
+				/**
+				 * We need a fallback to the deprecated release_tags for the version & variant
+				 * since the versioning format of balenaOS [2019.10.0.dev, 2022.01.0] was non-semver compliant
+				 * and they were not migrated to the release semver fields.
+				 */
 				const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
 				if (typeof fullVariantName === 'string') {
 					// TODO: Drop this once we migrate all variant tags to the release.variant field.
@@ -283,7 +286,8 @@ const getOsModel = function (
 				// Backfill the native release_version field
 				// TODO: This potentially generates an invalid semver and we should be doing
 				// something like `.join(!version.includes('+') ? '+' : '.')`,  but this needs
-				// discussion since otherwise it will break all ESR released as of writing this.
+				// discussion since otherwise it will break all ESR released that used a non-semver compliant
+				// versioning format like "2019.10.0.dev".
 				release.raw_version = [strippedVersion, variant]
 					.filter((x) => !!x)
 					.join('.');
@@ -296,7 +300,7 @@ const getOsModel = function (
 					.filter((x) => !!x)
 					.join('+');
 			}
-			// TODO: Drop this call & just use `release.phase` in the next major
+			// TODO: Drop this call & just use `release.phase` once we migrate our OS release process
 			const line =
 				getOsVersionReleaseLine(release.phase, strippedVersion, appTags) ??
 				undefined;
