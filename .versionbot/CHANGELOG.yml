@@ -1,4 +1,17 @@
 - commits:
+    - subject: "os: Update the comments on why we still need to be using the
+        release_tags"
+      hash: 31cf598ff28f6502d10c0faef01e10330c616956
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.5.9
+  title: ""
+  date: 2024-03-29T10:47:28.067Z
+- commits:
     - subject: Fix `application.create` method being wrongly marked as deprecated
       hash: 166ffa8a3de0a002996bdd30c559a5e6b405d21c
       body: The intention was to mark `options.applicationType` as deprecated
