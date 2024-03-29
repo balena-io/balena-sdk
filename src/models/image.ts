@@ -17,7 +17,6 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import type { Image, PineOptions, InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
-import { toWritable } from '../util/types';
 
 const getImageModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
@@ -41,7 +40,7 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 		 */
 		async get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
 			const baseOptions = {
-				$select: toWritable([
+				$select: [
 					// Select all the interesting fields *except* build_log
 					// (which can be very large)
 					'id',
@@ -55,8 +54,8 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 					'push_timestamp',
 					'start_timestamp',
 					'end_timestamp',
-				] as const),
-			};
+				],
+			} satisfies PineOptions<Image>;
 			const image = await pine.get({
 				resource: 'image',
 				id,

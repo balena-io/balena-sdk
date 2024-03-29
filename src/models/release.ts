@@ -23,7 +23,6 @@ import type {
 	PineTypedResult,
 } from '..';
 import { isId, mergePineOptions } from '../util';
-import { toWritable } from '../util/types';
 import type { Application, ReleaseTag, Release, User } from '../types/models';
 import type { BuilderUrlDeployOptions } from '../util/builder';
 
@@ -222,7 +221,7 @@ const getReleaseModel = function (
 					$select: 'service_name',
 				},
 			},
-		} as const;
+		} satisfies BalenaSdk.PineOptions<BalenaSdk.Image>;
 
 		const baseReleaseOptions = {
 			$expand: {
@@ -235,10 +234,10 @@ const getReleaseModel = function (
 					},
 				},
 				is_created_by__user: {
-					$select: toWritable(['id', 'username'] as const),
+					$select: ['id', 'username'],
 				},
 			},
-		} as const;
+		} satisfies BalenaSdk.PineOptions<BalenaSdk.Release>;
 
 		const rawRelease = (await get(
 			commitOrIdOrRawVersion,
