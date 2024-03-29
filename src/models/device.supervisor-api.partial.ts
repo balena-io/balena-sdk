@@ -19,6 +19,7 @@ import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
 	PineTypedResult,
+	PineOptions,
 } from '..';
 import type { Device } from '../types/models';
 
@@ -29,8 +30,6 @@ import {
 } from '../util';
 
 import { ensureVersionCompatibility } from '../util/device-os-version';
-
-import { toWritable } from '../util/types';
 
 // The min version where /apps API endpoints are implemented is 1.8.0 but we'll
 // be accepting >= 1.8.0-alpha.0 instead. This is a workaround for a published 1.8.0-p1
@@ -150,9 +149,9 @@ export const getSupervisorApiHelper = function (
 			imageId: string;
 		}> => {
 			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
+				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
+			} satisfies PineOptions<Device>;
 
 			const device = (await sdkInstance.models.device.get(
 				uuidOrId,
@@ -232,9 +231,9 @@ export const getSupervisorApiHelper = function (
 			withSupervisorLockedError(async () => {
 				try {
 					const deviceOptions = {
-						$select: toWritable(['id', 'supervisor_version'] as const),
-						$expand: { belongs_to__application: { $select: 'id' as const } },
-					};
+						$select: ['id', 'supervisor_version'],
+						$expand: { belongs_to__application: { $select: 'id' } },
+					} satisfies PineOptions<Device>;
 					const device = (await sdkInstance.models.device.get(
 						uuidOrId,
 						deviceOptions,
@@ -304,9 +303,9 @@ export const getSupervisorApiHelper = function (
 		 */
 		startApplication: async (uuidOrId: string | number): Promise<void> => {
 			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
+				$select: ['id', 'supervisor_version'],
+				$expand: { belongs_to__application: { $select: 'id' } },
+			} satisfies PineOptions<Device>;
 			const device = (await sdkInstance.models.device.get(
 				uuidOrId,
 				deviceOptions,
@@ -358,9 +357,9 @@ export const getSupervisorApiHelper = function (
 		stopApplication: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
 				const deviceOptions = {
-					$select: toWritable(['id', 'supervisor_version'] as const),
-					$expand: { belongs_to__application: { $select: 'id' as const } },
-				};
+					$select: ['id', 'supervisor_version'],
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} satisfies PineOptions<Device>;
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
@@ -643,9 +642,9 @@ export const getSupervisorApiHelper = function (
 			imageId: number,
 		): Promise<void> => {
 			const deviceOptions = {
-				$select: toWritable(['id', 'supervisor_version'] as const),
-				$expand: { belongs_to__application: { $select: 'id' as const } },
-			};
+				$select: ['id', 'supervisor_version'],
+				$expand: { belongs_to__application: { $select: 'id' } },
+			} satisfies PineOptions<Device>;
 			const device = (await sdkInstance.models.device.get(
 				uuidOrId,
 				deviceOptions,
@@ -696,9 +695,9 @@ export const getSupervisorApiHelper = function (
 		stopService: (uuidOrId: string | number, imageId: number): Promise<void> =>
 			withSupervisorLockedError(async () => {
 				const deviceOptions = {
-					$select: toWritable(['id', 'supervisor_version'] as const),
-					$expand: { belongs_to__application: { $select: 'id' as const } },
-				};
+					$select: ['id', 'supervisor_version'],
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} satisfies PineOptions<Device>;
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
@@ -752,9 +751,9 @@ export const getSupervisorApiHelper = function (
 		): Promise<void> =>
 			withSupervisorLockedError(async () => {
 				const deviceOptions = {
-					$select: toWritable(['id', 'supervisor_version'] as const),
-					$expand: { belongs_to__application: { $select: 'id' as const } },
-				};
+					$select: ['id', 'supervisor_version'],
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} satisfies PineOptions<Device>;
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,

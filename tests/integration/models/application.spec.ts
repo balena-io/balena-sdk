@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { toWritable } from '../../../src/util/types';
 import { timeSuite } from '../../util';
 import type * as tagsHelper from './tags';
 
@@ -1575,14 +1574,14 @@ describe('Application Model', function () {
 							image_install: {
 								$expand: {
 									is_provided_by__release: {
-										$select: toWritable(['id', 'commit'] as const),
+										$select: ['id', 'commit'],
 									},
 								},
 							},
 						},
 					},
 				},
-			} as const;
+			} satisfies BalenaSdk.PineOptions<BalenaSdk.Application>;
 
 			describe('balena.models.application.getWithDeviceServiceDetails()', () => {
 				it("should retrieve the application and it's devices along with service details including their commit", function () {

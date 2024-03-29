@@ -5,7 +5,6 @@ import chaiSamsam from 'chai-samsam';
 import memoizee from 'memoizee';
 import type * as BalenaSdk from '../../';
 import type { Dictionary } from '../../typings/utils';
-import { toWritable } from '../../src/util/types';
 import { getInitialOrganization } from './utils';
 chai.use(chaiAsPromised);
 chai.use(chaiSamsam);
@@ -675,13 +674,14 @@ export function givenASupervisorRelease(
 	});
 }
 
-export const organizationRetrievalFields = toWritable([
-	'id',
-	'handle',
-] as const);
-export const applicationRetrievalFields = toWritable([
+export const organizationRetrievalFields = ['id', 'handle'] satisfies Array<
+	keyof BalenaSdk.Organization
+>;
+export const applicationRetrievalFields = [
 	'id',
 	'slug',
 	'uuid',
-] as const);
-export const deviceUniqueFields = toWritable(['id', 'uuid'] as const);
+] satisfies Array<keyof BalenaSdk.Application>;
+export const deviceUniqueFields = ['id', 'uuid'] satisfies Array<
+	keyof BalenaSdk.Device
+>;

@@ -43,7 +43,6 @@ import type {
 	PineTypedResult,
 } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
-import { toWritable } from '../util/types';
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
 const ESR_NEXT_TAG_NAME = 'esr-next';
@@ -68,19 +67,13 @@ export enum OsVariant {
 export type OsLines = 'next' | 'current' | 'sunset' | 'outdated' | undefined;
 
 const baseReleasePineOptions = {
-	$select: toWritable([
-		'id',
-		'known_issue_list',
-		'raw_version',
-		'variant',
-		'phase',
-	] as const),
+	$select: ['id', 'known_issue_list', 'raw_version', 'variant', 'phase'],
 	$expand: {
 		release_tag: {
-			$select: toWritable(['tag_key', 'value'] as const),
+			$select: ['tag_key', 'value'],
 		},
 	},
-};
+} satisfies PineOptions<Release>;
 
 export interface OsVersion
 	extends PineTypedResult<Release, typeof baseReleasePineOptions> {
