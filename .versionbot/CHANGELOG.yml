@@ -1,4 +1,16 @@
 - commits:
+    - subject: Drop the toWritable helper in favor of TypeScript's satisfies
+      hash: 4463a5c1afa9afed0189a40ddf0cdb6037bf7ba7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.5.10
+  title: ""
+  date: 2024-03-29T16:05:02.584Z
+- commits:
     - subject: "os: Update the comments on why we still need to be using the
         release_tags"
       hash: 31cf598ff28f6502d10c0faef01e10330c616956
