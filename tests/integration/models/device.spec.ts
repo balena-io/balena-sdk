@@ -29,6 +29,7 @@ import {
 } from './tags';
 import type * as tagsHelper from './tags';
 import type * as BalenaSdk from '../../..';
+import { deviceStatusAdapter } from '../utils';
 
 const makeRequest = async (url) => {
 	try {
@@ -2129,7 +2130,7 @@ describe('Device Model', function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
-							expect(status).to.equal('idle');
+							expect(deviceStatusAdapter(status)).to.equal('idle');
 						});
 					});
 				});
@@ -2168,6 +2169,9 @@ describe('Device Model', function () {
 					const device = await balena.models.device.get(this.device.uuid, {
 						$select: ['overall_status', 'overall_progress'],
 					});
+					device.overall_status = deviceStatusAdapter(
+						device.overall_status,
+					) as BalenaSdk.DeviceOverallStatus;
 					return expect(device).to.deep.match({
 						overall_status: 'idle',
 						overall_progress: null,

@@ -8,4 +8,7 @@ export enum DeviceOverallStatus {
 	ORDERED = 'ordered',
 	PREPARING = 'preparing',
 	SHIPPED = 'shipped',
+	OPERATIONAL = 'operational',
+	DISCONNECTED = 'disconnected',
+	REDUCED_FUNCTIONALITY = 'reduced-functionality',
 }
