@@ -17,6 +17,7 @@ import {
 	sdkOpts,
 	applicationRetrievalFields,
 	organizationRetrievalFields,
+	TEST_APPLICATION_NAME_PREFIX,
 } from '../setup';
 
 import {
@@ -96,7 +97,7 @@ describe('Application Model', function () {
 			parallel('[read operations]', function () {
 				it('should be rejected if the application type is invalid', function () {
 					const promise = balena.models.application.create({
-						name: 'FooBar',
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 						applicationType: 'non-existing',
 						deviceType: 'raspberry-pi',
 						organization: ctx.initialOrg.id,
@@ -108,7 +109,7 @@ describe('Application Model', function () {
 
 				it('should be rejected if the device type is invalid', function () {
 					const promise = balena.models.application.create({
-						name: 'FooBar',
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 						deviceType: 'foobarbaz',
 						organization: ctx.initialOrg.id,
 					});
@@ -138,7 +139,7 @@ describe('Application Model', function () {
 					return expect(
 						// @ts-expect-error missing parameter
 						balena.models.application.create({
-							name: 'FooBar',
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 							deviceType: 'raspberry-pi',
 						}),
 					).to.be.rejectedWith(
@@ -148,7 +149,7 @@ describe('Application Model', function () {
 
 				it('should be rejected if the user does not have access to find the organization by handle', function () {
 					const promise = balena.models.application.create({
-						name: 'FooBar',
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 						deviceType: 'raspberry-pi',
 						// add some extra invalid characters to the organization's handle just to be sure
 						organization: 'balena-test-non-existing-organization-handle-!@#',
@@ -160,7 +161,7 @@ describe('Application Model', function () {
 
 				it('should be rejected if the user does not have access to find the organization by id', function () {
 					const promise = balena.models.application.create({
-						name: 'FooBar',
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 						deviceType: 'raspberry-pi',
 						// This test will fail if org 1 adds the SDK's test user as a member...
 						organization: 1,
@@ -181,7 +182,9 @@ describe('Application Model', function () {
 					balena.pine.delete({
 						resource: 'application',
 						options: {
-							$filter: { 1: 1 },
+							$filter: {
+								app_name: { $startswith: TEST_APPLICATION_NAME_PREFIX },
+							},
 						},
 					}),
 				);
@@ -189,7 +192,7 @@ describe('Application Model', function () {
 				organizationRetrievalFields.forEach((prop) => {
 					it(`should be able to create an application using the user's initial organization ${prop}`, async function () {
 						await balena.models.application.create({
-							name: `FooBarByOrg${_.startCase(prop)}`,
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarByOrg${_.startCase(prop)}`,
 							deviceType: 'raspberrypi',
 							organization: this.initialOrg[prop],
 						});
@@ -212,7 +215,7 @@ describe('Application Model', function () {
 				it('...should be able to create an application w/o providing an application type', function () {
 					return balena.models.application
 						.create({
-							name: 'FooBarNoAppType',
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarNoAppType`,
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
 						})
@@ -228,7 +231,7 @@ describe('Application Model', function () {
 				it('...should be able to create an application with a specific application type', function () {
 					return balena.models.application
 						.create({
-							name: 'FooBarWithAppType',
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarWithAppType`,
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
 						})
@@ -263,7 +266,7 @@ describe('Application Model', function () {
 
 				it('...should be able to create an application using a device type alias', async function () {
 					await balena.models.application.create({
-						name: 'FooBarDeviceTypeAlias',
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarDeviceTypeAlias`,
 						deviceType: 'raspberrypi',
 						organization: this.initialOrg.id,
 					});
@@ -277,7 +280,7 @@ describe('Application Model', function () {
 
 				it('should succeed even if the device type is discontinued', function () {
 					const promise = balena.models.application.create({
-						name: 'FooBar',
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 						deviceType: 'edge',
 						organization: ctx.initialOrg.id,
 					});
@@ -291,10 +294,10 @@ describe('Application Model', function () {
 		describe('balena.models.application.remove()', function () {
 			it('should be rejected if the application slug does not exist', function () {
 				const promise = balena.models.application.remove(
-					`${this.initialOrg.handle}/helloworldapp`,
+					`${this.initialOrg.handle}/${TEST_APPLICATION_NAME_PREFIX}_helloworldapp`,
 				);
 				return expect(promise).to.be.rejectedWith(
-					`Application not found: ${this.initialOrg.handle}/helloworldapp`,
+					`Application not found: ${this.initialOrg.handle}/${TEST_APPLICATION_NAME_PREFIX}_helloworldapp`,
 				);
 			});
 
@@ -343,7 +346,7 @@ describe('Application Model', function () {
 				describe('balena.models.application.create()', function () {
 					it('should reject if trying to create an app with the same name', function () {
 						const promise = balena.models.application.create({
-							name: 'FooBar',
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 							deviceType: 'beaglebone-black',
 							organization: this.initialOrg.id,
 						});
@@ -368,13 +371,15 @@ describe('Application Model', function () {
 
 				describe('balena.models.application.getAppByName()', function () {
 					it('should find the created application', async function () {
-						const app = await balena.models.application.getAppByName('FooBar');
+						const app = await balena.models.application.getAppByName(
+							`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
+						);
 						expect(app.id).to.equal(ctx.application.id);
 					});
 
 					it('should find the created application [directly_accessible]', async function () {
 						const app = await balena.models.application.getAppByName(
-							'FooBar',
+							`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 							{},
 							'directly_accessible',
 						);
@@ -385,7 +390,10 @@ describe('Application Model', function () {
 				parallel('balena.models.application.getAppByOwner()', function () {
 					it('should find the created application', function () {
 						return balena.models.application
-							.getAppByOwner('FooBar', ctx.initialOrg.handle)
+							.getAppByOwner(
+								`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
+								ctx.initialOrg.handle,
+							)
 							.then((application) => {
 								return expect(application.id).to.equal(ctx.application.id);
 							});
@@ -393,11 +401,11 @@ describe('Application Model', function () {
 
 					it('should not find the created application with a different organization handle', function () {
 						const promise = balena.models.application.getAppByOwner(
-							'FooBar',
+							`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 							'test_org_handle',
 						);
 						return expect(promise).to.eventually.be.rejectedWith(
-							'Application not found: test_org_handle/foobar',
+							`Application not found: test_org_handle/${TEST_APPLICATION_NAME_PREFIX}_foobar`,
 						);
 					});
 				});

@@ -112,33 +112,35 @@ export async function resetUser() {
 		balena.pine.delete({
 			resource: 'application',
 			options: {
-				$filter: { 1: 1 },
+				$filter: {
+					app_name: { $startswith: TEST_APPLICATION_NAME_PREFIX },
+				},
 			},
 		}),
 
 		balena.pine.delete({
 			resource: 'user__has__public_key',
 			options: {
-				$filter: { 1: 1 },
+				$filter: {
+					title: {
+						$startswith: TEST_KEY_NAME_PREFIX,
+					},
+				},
 			},
 		}),
 
-		balena.pine
-			.delete<BalenaSdk.ApiKey>({
-				resource: 'api_key',
-				// only delete named user api keys
-				options: {
-					$filter: {
-						is_of__actor: await balena.auth.getActorId(),
-						name: {
-							$ne: null,
-						},
+		balena.pine.delete<BalenaSdk.ApiKey>({
+			resource: 'api_key',
+			// only delete named user api keys
+			options: {
+				$filter: {
+					is_of__actor: await balena.auth.getActorId(),
+					name: {
+						$startswith: TEST_KEY_NAME_PREFIX,
 					},
 				},
-			})
-			.catch((err) =>
-				console.log(`[resetUser] Error while deleting api keys:`, err.message),
-			),
+			},
+		}),
 
 		resetInitialOrganization(),
 
@@ -159,7 +161,7 @@ export function givenLoggedInUserWithApiKey(beforeFn: Mocha.HookFunction) {
 			url: '/api-key/user/full',
 			baseUrl: sdkOpts.apiUrl,
 			body: {
-				name: 'apiKey',
+				name: `${TEST_KEY_NAME_PREFIX}_apiKey`,
 			},
 		});
 		await balena.auth.logout();
@@ -245,8 +247,12 @@ const getDeviceType = memoizee(
 	},
 );
 
+export const TEST_APPLICATION_NAME_PREFIX =
+	'balena_sdk_created_test_application_that_will_be_deleted';
 export const TEST_ORGANIZATION_NAME =
 	'balena-sdk created test organization that will be deleted';
+export const TEST_KEY_NAME_PREFIX =
+	'balena_sdk_created_test_key_that_will_be_deleted';
 
 async function resetTestOrgs() {
 	const orgs = await balena.pine.get({
@@ -306,7 +312,7 @@ export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 
 	beforeFn(async function () {
 		const application = await balena.models.application.create({
-			name: 'FooBar',
+			name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 			deviceType: 'raspberry-pi',
 			organization: this.initialOrg.id,
 		});
@@ -334,19 +340,13 @@ export function givenAnApplication(beforeFn: Mocha.HookFunction) {
 		await balena.pine.delete({
 			resource: 'application',
 			options: {
-				$filter: { 1: 1 },
+				$filter: {
+					app_name: { $startswith: TEST_APPLICATION_NAME_PREFIX },
+				},
 			},
 		});
 	});
 }
-
-const resetDevices = () =>
-	balena.pine.delete({
-		resource: 'device',
-		options: {
-			$filter: { 1: 1 },
-		},
-	});
 
 export const testDeviceOsInfo = {
 	os_variant: 'prod',
@@ -477,7 +477,12 @@ export function givenADevice(
 	});
 
 	const afterFn = beforeFn === beforeEach ? afterEach : after;
-	afterFn(resetDevices);
+	afterFn(async function () {
+		await balena.pine.delete({
+			resource: 'device',
+			id: this.device.id,
+		});
+	});
 }
 
 export function givenMulticontainerApplicationWithADevice(

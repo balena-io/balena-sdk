@@ -9,6 +9,7 @@ import {
 	givenLoggedInUser,
 	credentials,
 	givenAnApplication,
+	TEST_KEY_NAME_PREFIX,
 } from './setup';
 import { timeSuite } from '../util';
 
@@ -370,7 +371,7 @@ describe('Balena SDK', function () {
 
 			before(async function () {
 				const testApiKey = await balena.models.apiKey.create(
-					'apiKey',
+					`${TEST_KEY_NAME_PREFIX}_apiKey`,
 					'apiKeyDescription',
 				);
 				this.testApiKey = testApiKey;
