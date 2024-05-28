@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Make the cleanups more precise"
+      hash: 05f8575d8789c1ebd7a590749909e01f8f536438
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.5.11
+  title: ""
+  date: 2024-05-28T07:07:52.253Z
+- commits:
     - subject: Drop the toWritable helper in favor of TypeScript's satisfies
       hash: 4463a5c1afa9afed0189a40ddf0cdb6037bf7ba7
       body: ""
