@@ -5,6 +5,7 @@ import {
 	givenAnApplication,
 	givenADevice,
 	givenLoggedInUser,
+	TEST_KEY_NAME_PREFIX,
 } from '../setup';
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
@@ -17,13 +18,15 @@ describe('API Key model', function () {
 
 		parallel('', function () {
 			it('should be able to create a new api key', async function () {
-				const key = await balena.models.apiKey.create('apiKey');
+				const key = await balena.models.apiKey.create(
+					`${TEST_KEY_NAME_PREFIX}_apiKey`,
+				);
 				expect(key).to.be.a('string');
 			});
 
 			it('should be able to create a new api key with description', async function () {
 				const key = await balena.models.apiKey.create(
-					'apiKey2',
+					`${TEST_KEY_NAME_PREFIX}_apiKey2`,
 					'apiKeyDescription',
 				);
 				expect(key).to.be.a('string');
@@ -32,7 +35,7 @@ describe('API Key model', function () {
 			it('should be able to create a new api key with expiry-date', async function () {
 				const tomorrowDate = new Date(Date.now() + 86400000).toISOString(); // one day in future
 				const key = await balena.models.apiKey.create(
-					'apiKeyWithExpiry',
+					`${TEST_KEY_NAME_PREFIX}_apiKeyWithExpiry`,
 					'apiKeyDescription',
 					tomorrowDate,
 				);
@@ -42,7 +45,7 @@ describe('API Key model', function () {
 
 				expect(userKeys).to.be.an('array');
 				const userKeyWithExpiry = userKeys.filter(
-					(elem) => elem.name === 'apiKeyWithExpiry',
+					(elem) => elem.name === `${TEST_KEY_NAME_PREFIX}_apiKeyWithExpiry`,
 				);
 				expect(userKeyWithExpiry).to.not.be.empty;
 				expect(userKeyWithExpiry[0])
@@ -71,8 +74,11 @@ describe('API Key model', function () {
 		describe('given two named api keys', function () {
 			before(() =>
 				Promise.all([
-					balena.models.apiKey.create('apiKey1'),
-					balena.models.apiKey.create('apiKey2', 'apiKey2Description'),
+					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`),
+					balena.models.apiKey.create(
+						`${TEST_KEY_NAME_PREFIX}_apiKey2`,
+						'apiKey2Description',
+					),
 				]),
 			);
 
@@ -86,11 +92,11 @@ describe('API Key model', function () {
 				expect(apiKeys).to.be.an('array');
 				assertDeepMatchAndLength(apiKeys, [
 					{
-						name: 'apiKey1',
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
 						description: null,
 					},
 					{
-						name: 'apiKey2',
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey2`,
 						description: 'apiKey2Description',
 					},
 				]);
@@ -116,8 +122,11 @@ describe('API Key model', function () {
 		describe('given two named api keys', function () {
 			before(() =>
 				Promise.all([
-					balena.models.apiKey.create('apiKey1'),
-					balena.models.apiKey.create('apiKey2', 'apiKey2Description'),
+					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`),
+					balena.models.apiKey.create(
+						`${TEST_KEY_NAME_PREFIX}_apiKey2`,
+						'apiKey2Description',
+					),
 				]),
 			);
 
@@ -126,11 +135,11 @@ describe('API Key model', function () {
 				expect(apiKeys).to.be.an('array');
 				assertDeepMatchAndLength(apiKeys, [
 					{
-						name: 'apiKey1',
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
 						description: null,
 					},
 					{
-						name: 'apiKey2',
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey2`,
 						description: 'apiKey2Description',
 					},
 				]);
@@ -161,11 +170,11 @@ describe('API Key model', function () {
 
 		before(async function () {
 			await balena.models.apiKey.create(
-				'apiKeyToBeUpdated',
+				`${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated`,
 				'apiKeyDescriptionToBeUpdated',
 			);
 			const [apiKey] = await balena.models.apiKey.getAll({
-				$filter: { name: 'apiKeyToBeUpdated' },
+				$filter: { name: `${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated` },
 			});
 			ctx.namedUserApiKey = apiKey;
 

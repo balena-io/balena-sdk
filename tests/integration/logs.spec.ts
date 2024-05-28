@@ -37,15 +37,6 @@ describe('Logs', function () {
 			this.deviceApiKey = registrationInfo.api_key;
 		});
 
-		after(function () {
-			return balena.pine.delete({
-				resource: 'device',
-				options: {
-					$filter: { 1: 1 },
-				},
-			});
-		});
-
 		describe('balena.logs.history()', function () {
 			it('should successfully load historical logs', async function () {
 				await sendLogMessages(this.uuid, this.deviceApiKey, [

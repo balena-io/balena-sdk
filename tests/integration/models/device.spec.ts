@@ -21,6 +21,7 @@ import {
 	applicationRetrievalFields,
 	organizationRetrievalFields,
 	testDeviceOsInfo,
+	TEST_APPLICATION_NAME_PREFIX,
 } from '../setup';
 import { timeSuite } from '../../util';
 import {
@@ -3109,22 +3110,22 @@ describe('Device Model', function () {
 				applicationIncompatibleDT,
 			] = await Promise.all([
 				balena.models.application.create({
-					name: 'FooBar',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
-					name: 'BarBaz',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_BarBaz`,
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
-					name: 'BazFoo',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_BazFoo`,
 					deviceType: 'raspberry-pi2',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
-					name: 'BarBazNuc',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_BarBazNuc`,
 					deviceType: 'intel-nuc',
 					organization: this.initialOrg.id,
 				}),
@@ -3226,17 +3227,17 @@ describe('Device Model', function () {
 		before(async function () {
 			const apps = await Promise.all([
 				balena.models.application.create({
-					name: 'FooBarArmv6',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarArmv6`,
 					deviceType: 'raspberry-pi',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
-					name: 'FooBar32',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar32`,
 					deviceType: 'raspberrypi3',
 					organization: this.initialOrg.id,
 				}),
 				balena.models.application.create({
-					name: 'BarBaz64',
+					name: `${TEST_APPLICATION_NAME_PREFIX}_BarBaz64`,
 					deviceType: 'raspberrypi3-64',
 					organization: this.initialOrg.id,
 				}),

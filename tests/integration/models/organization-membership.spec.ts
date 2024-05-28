@@ -445,7 +445,9 @@ describe('Organization Membership Model', function () {
 					await balena.pine.delete({
 						resource: 'organization_membership_tag',
 						options: {
-							$filter: { 1: 1 },
+							$filter: {
+								organization_membership: this.organization.id,
+							},
 						},
 					});
 				});

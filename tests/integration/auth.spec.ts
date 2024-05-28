@@ -11,6 +11,7 @@ import {
 	loginUserWith2FA,
 	givenLoggedInWithADeviceApiKey,
 	givenLoggedInWithAnApplicationApiKey,
+	TEST_KEY_NAME_PREFIX,
 } from './setup';
 import type {
 	UserKeyWhoAmIResponse,
@@ -82,7 +83,9 @@ describe('SDK authentication', function () {
 			it('should be able to login with an API Key', async () => {
 				const token = await balena.auth.authenticate(credentials);
 				await balena.auth.loginWithToken(token);
-				const apiKey = await balena.models.apiKey.create('apiKey');
+				const apiKey = await balena.models.apiKey.create(
+					`${TEST_KEY_NAME_PREFIX}_apiKey`,
+				);
 				await balena.auth.logout();
 				await balena.auth.loginWithToken(apiKey);
 				expect(await balena.auth.getToken()).to.be.a('string');

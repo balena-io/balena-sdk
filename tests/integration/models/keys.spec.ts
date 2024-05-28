@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import PUBLIC_KEY from '../../data/public-key';
-import { balena, givenLoggedInUser } from '../setup';
+import { TEST_KEY_NAME_PREFIX, balena, givenLoggedInUser } from '../setup';
 import { timeSuite } from '../../util';
 
 describe('Key Model', function () {
@@ -22,22 +22,25 @@ describe('Key Model', function () {
 			it('should be able to create a key', function () {
 				const key = PUBLIC_KEY;
 				return balena.models.key
-					.create('MyKey', key)
+					.create(`${TEST_KEY_NAME_PREFIX} MyKey`, key)
 					.then(() => balena.models.key.getAll())
 					.then(function (keys) {
 						expect(keys).to.have.length(1);
 						expect(keys[0].public_key).to.equal(key.replace(/\n/g, ''));
-						expect(keys[0].title).to.equal('MyKey');
+						expect(keys[0].title).to.equal(`${TEST_KEY_NAME_PREFIX} MyKey`);
 					});
 			});
 
 			it('should be able to create a key from a non trimmed string', async function () {
 				const key = PUBLIC_KEY;
-				await balena.models.key.create('MyOtherKey', `    ${key}    `);
+				await balena.models.key.create(
+					`${TEST_KEY_NAME_PREFIX} MyOtherKey`,
+					`    ${key}    `,
+				);
 				const keys = await balena.models.key.getAll();
 				expect(keys).to.have.length(1);
 				expect(keys[0].public_key).to.equal(key.replace(/\n/g, ''));
-				expect(keys[0].title).to.equal('MyOtherKey');
+				expect(keys[0].title).to.equal(`${TEST_KEY_NAME_PREFIX} MyOtherKey`);
 			});
 		});
 	});
@@ -48,7 +51,10 @@ describe('Key Model', function () {
 		let ctx: Mocha.Context;
 		before(async function () {
 			ctx = this;
-			this.key = await balena.models.key.create('MyKey', PUBLIC_KEY);
+			this.key = await balena.models.key.create(
+				`${TEST_KEY_NAME_PREFIX} MyKey`,
+				PUBLIC_KEY,
+			);
 		});
 
 		parallel('balena.models.key.getAll()', () => {
@@ -58,7 +64,7 @@ describe('Key Model', function () {
 					expect(keys[0].public_key).to.equal(
 						ctx.key.public_key.replace(/\n/g, ''),
 					);
-					expect(keys[0].title).to.equal('MyKey');
+					expect(keys[0].title).to.equal(`${TEST_KEY_NAME_PREFIX} MyKey`);
 				});
 			});
 
@@ -77,7 +83,7 @@ describe('Key Model', function () {
 					expect(key.public_key).to.equal(
 						ctx.key.public_key.replace(/\n/g, ''),
 					);
-					expect(key.title).to.equal('MyKey');
+					expect(key.title).to.equal(`${TEST_KEY_NAME_PREFIX} MyKey`);
 				});
 			});
 
