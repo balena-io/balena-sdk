@@ -82,6 +82,14 @@ const modelsTemplate = {
 	service: () => (require('./service') as typeof import('./service')).default,
 
 	/**
+	 * @namespace identity_provider
+	 * @memberof balena.models
+	 */
+	identityProvider: () =>
+		(require('./identity-provider') as typeof import('./identity-provider'))
+			.default,
+
+	/**
 	 * @namespace image
 	 * @memberof balena.models
 	 */
