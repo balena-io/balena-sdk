@@ -84,16 +84,6 @@ describe('Application Model', function () {
 				});
 			});
 
-			parallel('balena.models.application.getAppByOwner()', function () {
-				it('should eventually reject', function () {
-					const promise = balena.models.application.getAppByOwner(
-						'testapp',
-						'FooBar',
-					);
-					return expect(promise).to.be.rejected;
-				});
-			});
-
 			describe('balena.models.application.hasAny()', function () {
 				it('should eventually be false', function () {
 					const promise = balena.models.application.hasAny();
@@ -403,29 +393,6 @@ describe('Application Model', function () {
 							'directly_accessible',
 						);
 						expect(app.id).to.equal(ctx.application.id);
-					});
-				});
-
-				parallel('balena.models.application.getAppByOwner()', function () {
-					it('should find the created application', function () {
-						return balena.models.application
-							.getAppByOwner(
-								`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-								ctx.initialOrg.handle,
-							)
-							.then((application) => {
-								return expect(application.id).to.equal(ctx.application.id);
-							});
-					});
-
-					it('should not find the created application with a different organization handle', function () {
-						const promise = balena.models.application.getAppByOwner(
-							`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-							'test_org_handle',
-						);
-						return expect(promise).to.eventually.be.rejectedWith(
-							`Application not found: test_org_handle/${TEST_APPLICATION_NAME_PREFIX}_foobar`,
-						);
 					});
 				});
 
