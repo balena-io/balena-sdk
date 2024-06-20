@@ -206,7 +206,7 @@ const sdk = fromSharedOptions();
             * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
             * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-            * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+            * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
             * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
             * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
@@ -613,7 +613,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
         * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-        * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+        * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
         * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
         * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
@@ -868,7 +868,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
     * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-    * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+    * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
     * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
     * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
@@ -1738,7 +1738,9 @@ balena.models.application.getAppByName('MyApp').then(function(application) {
 ```
 <a name="balena.models.application.getAppByOwner"></a>
 
-##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
+##### ~~application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application using the appname and the handle of the owning organization  
 **Access**: public  

@@ -517,6 +517,7 @@ const getApplicationModel = function (
 		/**
 		 * @summary Get a single application using the appname and the handle of the owning organization
 		 * @name getAppByOwner
+		 * @deprecated
 		 * @public
 		 * @function
 		 * @memberof balena.models.application
