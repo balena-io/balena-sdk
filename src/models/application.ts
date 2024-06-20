@@ -285,6 +285,48 @@ const getApplicationModel = function (
 		},
 
 		/**
+		 * @summary Get all applications of an organization
+		 * @name getAllByOrganization
+		 * @public
+		 * @function
+		 * @memberof balena.models.application
+		 *
+		 * @param {Number|String} orgHandleOrId - organization handle (string) or id (number)
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - applications
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.application.getAllByOrganization().then(function(applications) {
+		 * 	console.log(applications);
+		 * });
+		 */
+		async getAllByOrganization(
+			orgHandleOrId: number | string,
+			options?: PineOptions<Application>,
+		): Promise<Application[]> {
+			const { id: orgId } = await sdkInstance.models.organization.get(
+				orgHandleOrId,
+				{
+					$select: 'id',
+				},
+			);
+			const apps = await pine.get({
+				resource: 'application',
+				options: mergePineOptions(
+					{
+						$filter: {
+							organization: orgId,
+						},
+						$orderby: 'app_name asc',
+					},
+					options ?? {},
+				),
+			});
+			return apps;
+		},
+
+		/**
 		 * @summary Get a single application
 		 * @name get
 		 * @public
@@ -517,6 +559,7 @@ const getApplicationModel = function (
 		/**
 		 * @summary Get a single application using the appname and the handle of the owning organization
 		 * @name getAppByOwner
+		 * @deprecated
 		 * @public
 		 * @function
 		 * @memberof balena.models.application

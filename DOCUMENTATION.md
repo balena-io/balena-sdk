@@ -202,14 +202,15 @@ const sdk = fromSharedOptions();
             * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
             * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
             * [.getAllDirectlyAccessible([options])](#balena.models.application.getAllDirectlyAccessible) ⇒ <code>Promise</code>
+            * [.getAllByOrganization(orgHandleOrId, [options])](#balena.models.application.getAllByOrganization) ⇒ <code>Promise</code>
             * [.get(slugOrUuidOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
             * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
             * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-            * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+            * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
             * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
-            * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
+            * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
             * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
             * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
             * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
@@ -609,14 +610,15 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
         * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
         * [.getAllDirectlyAccessible([options])](#balena.models.application.getAllDirectlyAccessible) ⇒ <code>Promise</code>
+        * [.getAllByOrganization(orgHandleOrId, [options])](#balena.models.application.getAllByOrganization) ⇒ <code>Promise</code>
         * [.get(slugOrUuidOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
         * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
         * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-        * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+        * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
         * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
-        * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
+        * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
         * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
         * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
         * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
@@ -864,14 +866,15 @@ balena.models.device.get(123).catch(function (error) {
     * [.getDashboardUrl(id)](#balena.models.application.getDashboardUrl) ⇒ <code>String</code>
     * [.getAll([options], [context])](#balena.models.application.getAll) ⇒ <code>Promise</code>
     * [.getAllDirectlyAccessible([options])](#balena.models.application.getAllDirectlyAccessible) ⇒ <code>Promise</code>
+    * [.getAllByOrganization(orgHandleOrId, [options])](#balena.models.application.getAllByOrganization) ⇒ <code>Promise</code>
     * [.get(slugOrUuidOrId, [options], [context])](#balena.models.application.get) ⇒ <code>Promise</code>
     * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
     * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-    * [.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>
+    * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
     * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
-    * ~~[.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>~~
+    * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
     * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
     * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
     * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
@@ -1628,6 +1631,25 @@ balena.models.application.getAllDirectlyAccessible().then(function(applications)
 	console.log(applications);
 });
 ```
+<a name="balena.models.application.getAllByOrganization"></a>
+
+##### application.getAllByOrganization(orgHandleOrId, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>application</code>](#balena.models.application)  
+**Summary**: Get all applications of an organization  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - applications  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| orgHandleOrId | <code>Number</code> \| <code>String</code> |  | organization handle (string) or id (number) |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.application.getAllByOrganization().then(function(applications) {
+	console.log(applications);
+});
+```
 <a name="balena.models.application.get"></a>
 
 ##### application.get(slugOrUuidOrId, [options], [context]) ⇒ <code>Promise</code>
@@ -1738,7 +1760,9 @@ balena.models.application.getAppByName('MyApp').then(function(application) {
 ```
 <a name="balena.models.application.getAppByOwner"></a>
 
-##### application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>
+##### ~~application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Get a single application using the appname and the handle of the owning organization  
 **Access**: public  
@@ -1795,9 +1819,7 @@ balena.models.application.hasAny().then(function(hasAny) {
 ```
 <a name="balena.models.application.create"></a>
 
-##### ~~application.create(options) ⇒ <code>Promise</code>~~
-***Deprecated***
-
+##### application.create(options) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Create an application  
 **Access**: public  
@@ -1806,7 +1828,7 @@ balena.models.application.hasAny().then(function(hasAny) {
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | application creation parameters |
-| options.name | <code>String</code> | application name |
+| options.name | <code>String</code> | application names |
 | [options.applicationType] | <code>String</code> | application type slug e.g. microservices |
 | [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
@@ -4574,7 +4596,7 @@ balena.models.deviceType.getInstructions('raspberry-pi').then(function(instructi
 	 console.log(instruction);
  }
  // Insert the sdcard to the host machine.
- // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="http://www.etcher.io/">Etcher</a>.
+ // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.
  // Wait for writing of BalenaOS to complete.
  // Remove the sdcard from the host machine.
  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
