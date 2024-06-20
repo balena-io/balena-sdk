@@ -76,8 +76,6 @@ export interface OsVersion
 	basedOnVersion?: string;
 	osType: string;
 	line?: OsLines;
-	/** @deprecated */
-	isRecommended?: boolean;
 }
 
 export interface ImgConfigOptions {
@@ -319,22 +317,6 @@ const getOsModel = function (
 		// transform version sets
 		Object.keys(osVersionsByDeviceType).forEach((deviceType) => {
 			osVersionsByDeviceType[deviceType].sort(sortVersions);
-
-			// TODO: Drop in next major
-			// Note: the recommended version settings might come from the server in the future, for now we just set it to the latest version for each os type.
-			const recommendedPerOsType: Dictionary<boolean> = {};
-			osVersionsByDeviceType[deviceType].forEach((version) => {
-				if (!recommendedPerOsType[version.osType]) {
-					if (
-						version.variant !== 'dev' &&
-						!version.known_issue_list &&
-						!bSemver.prerelease(version.raw_version)
-					) {
-						version.isRecommended = true;
-						recommendedPerOsType[version.osType] = true;
-					}
-				}
-			});
 		});
 
 		return osVersionsByDeviceType;
@@ -528,6 +510,18 @@ const getOsModel = function (
 		return vNormalized;
 	};
 
+	const findRecommendedOsVersion = (
+		osReleases: Array<
+			Pick<OsVersion, 'raw_version' | 'known_issue_list' | 'variant'>
+		>,
+	) =>
+		osReleases.find(
+			(r) =>
+				r.variant !== 'dev' &&
+				!r.known_issue_list &&
+				!bSemver.prerelease(r.raw_version),
+		);
+
 	/**
 	 * @summary Get the max OS version satisfying the given range.
 	 * @description Utility method exported for testability.
@@ -538,10 +532,12 @@ const getOsModel = function (
 	 */
 	const _getMaxSatisfyingVersion = function (
 		versionOrRange: string,
-		osVersions: Array<Pick<OsVersion, 'raw_version' | 'isRecommended'>>,
+		osVersions: Array<
+			Pick<OsVersion, 'raw_version' | 'known_issue_list' | 'variant'>
+		>,
 	) {
 		if (versionOrRange === 'recommended') {
-			return osVersions.find((v) => v.isRecommended)?.raw_version;
+			return findRecommendedOsVersion(osVersions)?.raw_version;
 		}
 
 		if (versionOrRange === 'latest') {
@@ -549,7 +545,7 @@ const getOsModel = function (
 		}
 
 		if (versionOrRange === 'default') {
-			return (osVersions.find((v) => v.isRecommended) ?? osVersions[0])
+			return (findRecommendedOsVersion(osVersions) ?? osVersions[0])
 				?.raw_version;
 		}
 
@@ -725,7 +721,7 @@ const getOsModel = function (
 				const versions = (await getAvailableOsVersions(slug)).filter(
 					(v) => v.osType === OsTypes.DEFAULT,
 				);
-				version = (versions.find((v) => v.isRecommended) ?? versions[0])
+				version = (findRecommendedOsVersion(versions) ?? versions[0])
 					?.raw_version;
 			} else {
 				version = normalizeVersion(version);

@@ -427,7 +427,6 @@ describe('OS model', function () {
 		const esrOsVersions = [
 			{
 				raw_version: '2021.10.2.prod',
-				isRecommended: true,
 			},
 			{ raw_version: '2021.10.2.dev' },
 			{ raw_version: '2021.07.1.prod' },
@@ -450,7 +449,6 @@ describe('OS model', function () {
 		const defaultOsVersions = [
 			{
 				raw_version: '2.85.2+rev3.prod',
-				isRecommended: true,
 			},
 			{ raw_version: '2.85.2+rev3.dev' },
 			{ raw_version: '2.83.10+rev1.prod' },
