@@ -1,3 +1,4 @@
+import type { DeviceOverallStatus } from '../..';
 import type { Dictionary } from '../../typings/utils';
 import { balena } from './setup';
 
@@ -43,4 +44,17 @@ export const getParam = <T>(
 	}
 
 	return resource[field];
+};
+
+export const deviceStatusAdapter = (status: DeviceOverallStatus | string) => {
+	switch (status) {
+		case 'operational':
+			return 'idle';
+		case 'reduced-functionality':
+			return 'idle';
+		case 'disconnected':
+			return 'offline';
+		default:
+			return status;
+	}
 };
