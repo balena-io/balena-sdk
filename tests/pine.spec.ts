@@ -17,7 +17,7 @@ if (!IS_BROWSER) {
 
 const auth = new BalenaAuth({ dataDirectory });
 const request = getRequest({ auth });
-const apiVersion = 'v6';
+const apiVersion = 'v7';
 
 const buildPineInstance = (apiUrl: string, extraOpts?: object) =>
 	createPinejsClient(

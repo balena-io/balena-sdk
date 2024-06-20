@@ -14,7 +14,7 @@ import {
 import { timeSuite } from '../util';
 
 const DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/';
-const apiVersion = 'v6';
+const apiVersion = 'v7';
 
 describe('Balena SDK', function () {
 	timeSuite(before);

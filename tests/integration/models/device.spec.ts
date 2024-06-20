@@ -2938,7 +2938,7 @@ describe('Device Model', function () {
 							this.devices.map(async (d) => {
 								const device = await balena.models.device.get(d.id);
 								expect(
-									device.should_be_managed_by__supervisor_release,
+									device.should_be_managed_by__release,
 								).to.have.deep.property('__id', this.supervisorRelease.id);
 							}),
 						);
@@ -2972,9 +2972,10 @@ describe('Device Model', function () {
 						this.supervisorRelease.supervisor_version,
 					);
 					const device = await balena.models.device.get(this.device.id);
-					expect(
-						device.should_be_managed_by__supervisor_release,
-					).to.have.deep.property('__id', this.supervisorRelease.id);
+					expect(device.should_be_managed_by__release).to.have.deep.property(
+						'__id',
+						this.supervisorRelease.id,
+					);
 				});
 
 				it('should set the device to a specific supervisor release, using the device id & supervisor release id', async function () {
@@ -2983,9 +2984,10 @@ describe('Device Model', function () {
 						this.supervisorRelease.id,
 					);
 					const device = await balena.models.device.get(this.device.id);
-					expect(
-						device.should_be_managed_by__supervisor_release,
-					).to.have.deep.property('__id', this.supervisorRelease.id);
+					expect(device.should_be_managed_by__release).to.have.deep.property(
+						'__id',
+						this.supervisorRelease.id,
+					);
 				});
 
 				it('should fail to set the device to a specific non-existent supervisor release', async function () {
