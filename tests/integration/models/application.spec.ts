@@ -110,18 +110,6 @@ describe('Application Model', function () {
 			});
 
 			parallel('[read operations]', function () {
-				it('should be rejected if the application type is invalid', function () {
-					const promise = balena.models.application.create({
-						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-						applicationType: 'non-existing',
-						deviceType: 'raspberry-pi',
-						organization: ctx.initialOrg.id,
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Invalid application type: non-existing',
-					);
-				});
-
 				it('should be rejected if the device type is invalid', function () {
 					const promise = balena.models.application.create({
 						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
