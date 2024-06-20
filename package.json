@@ -110,7 +110,7 @@
     "tmp": "^0.2.1",
     "ts-node": "^10.9.1",
     "ts-toolbelt": "^9.6.0",
-    "typescript": "^5.4.2",
+    "typescript": "^5.5.2",
     "uglify-js": "^3.14.1",
     "util": "^0.12.4",
     "vinyl-buffer": "^1.0.1",
