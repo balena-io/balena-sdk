@@ -947,6 +947,99 @@ const getOsModel = function (
 		);
 	};
 
+	/**
+	 * @summary Returns the Releases of the supervisor for the CPU Architecture
+	 * @name getSupervisorReleasesForCpuArchitecture
+	 * @public
+	 * @function
+	 * @memberof balena.models.os
+	 *
+	 * @param {String} cpuArchitectureSlug - The slug for the CPU Architecture
+	 * @param {Object} [options={}] - extra pine options to use
+	 * @returns {Promise<String>} - An array of Release objects that can be used to manage a device as supervisors.
+	 *
+	 * @example
+	 * const result = balena.models.os.getSupervisorReleasesForCpuArchitecture('aarch64');
+	 */
+	const getSupervisorReleasesForCpuArchitecture = async <
+		TP extends PineOptions<Release> | undefined,
+	>(
+		cpuArchitectureSlug: string,
+		options?: TP,
+	): Promise<
+		Array<
+			ExtendedPineTypedResult<
+				Release,
+				Pick<Release, 'id' | 'raw_version' | 'known_issue_list'>,
+				TP
+			>
+		>
+	> => {
+		const results = await pine.get({
+			resource: 'release',
+			options: mergePineOptionsTyped(
+				{
+					$select: ['id', 'raw_version', 'known_issue_list'],
+					$filter: {
+						status: 'success' as const,
+						is_final: true,
+						is_invalidated: false,
+						semver_major: { $gt: 0 },
+						belongs_to__application: {
+							$any: {
+								$alias: 'a',
+								$expr: {
+									$and: [
+										{ a: { slug: { $startswith: 'balena_os/' } } },
+										{ a: { slug: { $endswith: '-supervisor' } } },
+									],
+									a: {
+										is_public: true,
+										is_host: false,
+										is_for__device_type: {
+											$any: {
+												$alias: 'dt',
+												$expr: {
+													dt: {
+														is_of__cpu_architecture: {
+															$any: {
+																$alias: 'c',
+																$expr: {
+																	c: {
+																		slug: cpuArchitectureSlug,
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					$orderby: [
+						{ semver_major: 'desc' },
+						{ semver_minor: 'desc' },
+						{ semver_patch: 'desc' },
+						{ revision: 'desc' },
+					],
+				},
+				options,
+			),
+		});
+
+		return results as Array<
+			ExtendedPineTypedResult<
+				Release,
+				Pick<Release, 'id' | 'raw_version' | 'known_issue_list'>,
+				TP
+			>
+		>;
+	};
+
 	return {
 		// Cast the exported types for internal methods so `@types/memoizee` can be a dev depenency.
 		_getNormalizedDeviceTypeSlug: _getNormalizedDeviceTypeSlug as (
@@ -969,6 +1062,7 @@ const getOsModel = function (
 		isSupportedOsUpdate,
 		getSupportedOsUpdateVersions,
 		isArchitectureCompatibleWith,
+		getSupervisorReleasesForCpuArchitecture,
 	};
 };
 
