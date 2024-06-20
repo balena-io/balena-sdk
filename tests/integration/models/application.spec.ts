@@ -32,6 +32,12 @@ describe('Application Model', function () {
 
 	describe('given no applications', function () {
 		describe('[read operations]', function () {
+			let ctx: Mocha.Context;
+
+			before(function () {
+				ctx = this;
+			});
+
 			parallel('balena.models.application.getAll()', function () {
 				it('should include public apps', async function () {
 					const applications = await balena.models.application.getAll();
@@ -58,6 +64,15 @@ describe('Application Model', function () {
 					});
 				},
 			);
+
+			parallel('balena.models.application.getAllByOrganization()', function () {
+				it('should eventually become an empty array of accessible apps', async function () {
+					const apps = await balena.models.application.getAllByOrganization(
+						ctx.initialOrg.handle,
+					);
+					expect(apps).to.deep.equal([]);
+				});
+			});
 
 			parallel('balena.models.application.getAppByName()', function () {
 				it('should eventually reject', async function () {
@@ -452,6 +467,17 @@ describe('Application Model', function () {
 						});
 					},
 				);
+
+				organizationRetrievalFields.forEach((prop) => {
+					it('should eventually become an array containing the application', async function () {
+						const applications =
+							await balena.models.application.getAllByOrganization(
+								ctx.initialOrg[prop],
+							);
+						expect(applications).to.have.length(1);
+						expect(applications[0].id).to.equal(ctx.application.id);
+					});
+				});
 
 				parallel('balena.models.application.get()', function () {
 					applicationRetrievalFields.forEach((prop) => {
