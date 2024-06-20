@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.5.2
+      hash: ff4e969971edff98f6b8201c6e2729698093bf2a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.6.1
+  title: ""
+  date: 2024-06-20T22:20:08.200Z
+- commits:
     - subject: Add the application.getAllByOrganization() method
       hash: 134132bc40136aee44eef597e3f1669ea498bca3
       body: ""
