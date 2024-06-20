@@ -557,50 +557,6 @@ const getApplicationModel = function (
 		},
 
 		/**
-		 * @summary Get a single application using the appname and the handle of the owning organization
-		 * @name getAppByOwner
-		 * @deprecated
-		 * @public
-		 * @function
-		 * @memberof balena.models.application
-		 *
-		 * @param {String} appName - application name
-		 * @param {String} owner - The handle of the owning organization
-		 * @param {Object} [options={}] - extra pine options to use
-		 * @fulfil {Object} - application
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.application.getAppByOwner('myorganization/myapp', 'MyOrg').then(function(application) {
-		 * 	console.log(application);
-		 * });
-		 */
-		async getAppByOwner(
-			appName: string,
-			owner: string,
-			options?: PineOptions<Application>,
-		): Promise<Application> {
-			if (options == null) {
-				options = {};
-			}
-
-			appName = appName.toLowerCase();
-			owner = owner.toLowerCase();
-
-			const application = await pine.get({
-				resource: 'application',
-				id: {
-					slug: `${owner}/${appName}`,
-				},
-				options,
-			});
-			if (application == null) {
-				throw new errors.BalenaApplicationNotFound(`${owner}/${appName}`);
-			}
-			return application;
-		},
-
-		/**
 		 * @summary Check if an application exists
 		 * @name has
 		 * @public
