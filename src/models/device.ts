@@ -952,9 +952,6 @@ const getDeviceModel = function (
 					'is_undervolted',
 				],
 			});
-			// TODO: Drop the manual __metadata removal once we bump to the v7 model.
-			// @ts-expect-error __metadata isn't in the pine client typings
-			delete device.__metadata;
 			return device;
 		},
 
@@ -1944,10 +1941,10 @@ const getDeviceModel = function (
 		isTrackingApplicationRelease: async (
 			uuidOrId: string | number,
 		): Promise<boolean> => {
-			const { should_be_running__release } = await exports.get(uuidOrId, {
-				$select: 'should_be_running__release',
+			const { is_pinned_on__release } = await exports.get(uuidOrId, {
+				$select: 'is_pinned_on__release',
 			});
-			return !should_be_running__release;
+			return !is_pinned_on__release;
 		},
 
 		/**
@@ -1977,7 +1974,7 @@ const getDeviceModel = function (
 			const deviceOptions = {
 				$select: 'id',
 				$expand: {
-					should_be_running__release: {
+					is_pinned_on__release: {
 						$select: 'commit',
 					},
 					belongs_to__application: {
@@ -1987,13 +1984,13 @@ const getDeviceModel = function (
 				},
 			} as const;
 
-			const { should_be_running__release, belongs_to__application } =
+			const { is_pinned_on__release, belongs_to__application } =
 				(await exports.get(uuidOrId, deviceOptions)) as PineTypedResult<
 					Device,
 					typeof deviceOptions
 				>;
-			if (should_be_running__release.length > 0) {
-				return should_be_running__release[0]!.commit;
+			if (is_pinned_on__release.length > 0) {
+				return is_pinned_on__release[0]!.commit;
 			}
 			const targetRelease =
 				belongs_to__application[0].should_be_running__release[0];
@@ -2061,7 +2058,7 @@ const getDeviceModel = function (
 							},
 						},
 						body: {
-							should_be_running__release: release.id,
+							is_pinned_on__release: release.id,
 						},
 					});
 				},
@@ -2089,7 +2086,7 @@ const getDeviceModel = function (
 			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
 			await set(uuidOrIdOrArray, {
-				should_be_running__release: null,
+				is_pinned_on__release: null,
 			});
 		},
 
@@ -2183,7 +2180,7 @@ const getDeviceModel = function (
 										},
 									},
 									body: {
-										should_be_managed_by__supervisor_release: release.id,
+										should_be_managed_by__release: release.id,
 									},
 								});
 							},

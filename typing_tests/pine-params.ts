@@ -212,10 +212,10 @@ await (async () => {
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
@@ -235,10 +235,10 @@ await (async () => {
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
@@ -275,19 +275,19 @@ await (async () => {
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {},
+				is_pinned_on__release: {},
 			},
 		},
 	});
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 
 	// @ts-expect-error test case
 	aString = result.os_version;
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 })();
@@ -310,7 +310,7 @@ await (async () => {
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {
+				is_pinned_on__release: {
 					$count: {},
 				},
 				device_tag: {},
@@ -320,7 +320,7 @@ await (async () => {
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumber = result.should_be_running__release;
+	aNumber = result.is_pinned_on__release;
 	aNumber = result.device_tag[0]?.id;
 
 	// @ts-expect-error test case
@@ -335,7 +335,7 @@ await (async () => {
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {},
+				is_pinned_on__release: {},
 				device_tag: {
 					$count: {},
 				},
@@ -345,7 +345,7 @@ await (async () => {
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	aNumber = result.device_tag;
 
 	// @ts-expect-error test case
@@ -408,7 +408,7 @@ await (async () => {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
 				// @ts-expect-error test case
-				should_be_running__release: {},
+				is_pinned_on__release: {},
 				asdf: {},
 				device_tag: {
 					$count: {},
@@ -648,7 +648,7 @@ await (async () => {
 			// @ts-expect-error b/c the expand doesn't have a $select, bad placing though.
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {},
+				is_pinned_on__release: {},
 				device_tag: {
 					$count: {},
 				},
@@ -665,7 +665,7 @@ await (async () => {
 			// @ts-expect-error b/c asdf is not an expandable prop, bad placing though.
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {
+				is_pinned_on__release: {
 					$select: 'id',
 				},
 				asdf: {
@@ -686,7 +686,7 @@ await (async () => {
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {
+				is_pinned_on__release: {
 					$select: 'id',
 				},
 				device_tag: {
@@ -698,7 +698,7 @@ await (async () => {
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	aNumber = result.device_tag;
 
 	// @ts-expect-error test case
@@ -714,7 +714,7 @@ await (async () => {
 		options: {
 			$select: ['id', 'device_name', 'belongs_to__application'],
 			$expand: {
-				should_be_running__release: {
+				is_pinned_on__release: {
 					$select: 'id',
 				},
 				device_tag: {
@@ -732,7 +732,7 @@ await (async () => {
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	aNumber = result.device_tag;
 
 	// @ts-expect-error test case

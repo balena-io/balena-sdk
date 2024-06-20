@@ -25,10 +25,10 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -41,10 +41,10 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -62,10 +62,10 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -85,7 +85,7 @@ export let aStringOrUndefined: string | undefined;
 	// @ts-expect-error test case
 	aNumber = result.belongs_to__application.__id;
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -103,7 +103,7 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.belongs_to__application.__id;
 
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release;
+	aAny = result.is_pinned_on__release;
 	// @ts-expect-error test case
 	aNumber = result.id;
 	// @ts-expect-error test case
@@ -114,16 +114,16 @@ export let aStringOrUndefined: string | undefined;
 	type deviceOptionsSelectRelease = PineClient.TypedResult<
 		BalenaSdk.Device,
 		{
-			$select: 'should_be_running__release';
+			$select: 'is_pinned_on__release';
 		}
 	>;
 
 	const result: deviceOptionsSelectRelease = {} as any;
 
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
 	aNumber = result.id;
 	// @ts-expect-error test case
@@ -190,7 +190,7 @@ export let aStringOrUndefined: string | undefined;
 	type deviceOptionsExpandNavigationResourceString = PineClient.TypedResult<
 		BalenaSdk.Device,
 		{
-			$expand: 'should_be_running__release';
+			$expand: 'is_pinned_on__release';
 		}
 	>;
 
@@ -198,14 +198,14 @@ export let aStringOrUndefined: string | undefined;
 
 	aNumber = result.id;
 	aString = result.device_name;
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release[0].id;
+	aAny = result.is_pinned_on__release[0].id;
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release.__id;
+	aAny = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release[1];
+	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -241,7 +241,7 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.belongs_to__application.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 }
 
 // $expand w $select
@@ -274,22 +274,22 @@ export let aStringOrUndefined: string | undefined;
 	type deviceOptionsExpandNavigationResourceString = PineClient.TypedResult<
 		BalenaSdk.Device,
 		{
-			$select: 'should_be_running__release';
-			$expand: 'should_be_running__release';
+			$select: 'is_pinned_on__release';
+			$expand: 'is_pinned_on__release';
 		}
 	>;
 
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
-	aStringOrUndefined = result.should_be_running__release[0]?.commit;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
+	aStringOrUndefined = result.is_pinned_on__release[0]?.commit;
 
 	// @ts-expect-error test case
 	aNumber = result.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release[1];
+	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -313,7 +313,7 @@ export let aStringOrUndefined: string | undefined;
 	// @ts-expect-error test case
 	aString = result.device_name;
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 }
 
 // empty $expand object
@@ -348,24 +348,24 @@ export let aStringOrUndefined: string | undefined;
 	type deviceOptionsExpandNavigationResourceString = PineClient.TypedResult<
 		BalenaSdk.Device,
 		{
-			$select: 'should_be_running__release';
+			$select: 'is_pinned_on__release';
 			$expand: {
-				should_be_running__release: {}; // eslint-disable-line @typescript-eslint/ban-types
+				is_pinned_on__release: {}; // eslint-disable-line @typescript-eslint/ban-types
 			};
 		}
 	>;
 
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
-	aStringOrUndefined = result.should_be_running__release[0]?.commit;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
+	aStringOrUndefined = result.is_pinned_on__release[0]?.commit;
 
 	// @ts-expect-error test case
 	aNumber = result.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release[1];
+	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -391,7 +391,7 @@ export let aStringOrUndefined: string | undefined;
 	// @ts-expect-error test case
 	aString = result.device_name;
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 }
 
 // $expand object w/ nested options
@@ -430,7 +430,7 @@ export let aStringOrUndefined: string | undefined;
 		{
 			$select: 'id';
 			$expand: {
-				should_be_running__release: {
+				is_pinned_on__release: {
 					$select: 'commit';
 				};
 			};
@@ -440,14 +440,14 @@ export let aStringOrUndefined: string | undefined;
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
 	aNumber = result.id;
-	aStringOrUndefined = result.should_be_running__release[0]?.commit;
+	aStringOrUndefined = result.is_pinned_on__release[0]?.commit;
 
 	// @ts-expect-error test case
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
 	// @ts-expect-error test case
-	aAny = result.should_be_running__release[1];
+	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -479,7 +479,7 @@ export let aStringOrUndefined: string | undefined;
 		{
 			$select: 'id';
 			$expand: {
-				should_be_running__release: {
+				is_pinned_on__release: {
 					$select: 'commit';
 				};
 			};
@@ -491,12 +491,12 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	// Errors, since it could be an OptionalNavigationResource
 	// @ts-expect-error test case
-	aStringOrUndefined = result.should_be_running__release[0].commit;
-	aStringOrUndefined = result.should_be_running__release[0]?.commit;
+	aStringOrUndefined = result.is_pinned_on__release[0].commit;
+	aStringOrUndefined = result.is_pinned_on__release[0]?.commit;
 	// @ts-expect-error test case
-	aNumberOrUndefined = result.should_be_running__release[0]?.id;
+	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	// This also works, since the typings don't know whether this is Navigation or a Reverse Navigation Resounce
-	aAny = result.should_be_running__release[1].commit;
+	aAny = result.is_pinned_on__release[1].commit;
 
 	// @ts-expect-error test case
 	aString = result.device_name;
@@ -528,7 +528,7 @@ export let aStringOrUndefined: string | undefined;
 	// @ts-expect-error test case
 	aNumber = result.device_tag[1].id;
 	// @ts-expect-error test case
-	aNumber = result.should_be_running__release.__id;
+	aNumber = result.is_pinned_on__release.__id;
 }
 
 // $count

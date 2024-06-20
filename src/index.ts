@@ -90,7 +90,6 @@ export type {
 	OsTypes,
 	OsUpdateVersions,
 	OsVersion,
-	OsVersionsByDeviceType,
 } from './models/os';
 export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
@@ -217,7 +216,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		isBrowser: typeof window !== 'undefined' && window !== null,
 		// API version is configurable but only do so if you know what you're doing,
 		// as the SDK is directly tied to a specific version.
-		apiVersion: 'v6',
+		apiVersion: 'v7',
 		...$opts,
 	};
 
