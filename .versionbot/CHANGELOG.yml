@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add the application.getAllByOrganization() method
+      hash: 134132bc40136aee44eef597e3f1669ea498bca3
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Deprecate the application.getAppByOwner() method
+      hash: 85048417e3280434ad7f33008ed147cb3ae766c6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.6.0
+  title: ""
+  date: 2024-06-20T21:05:52.683Z
+- commits:
     - subject: "tests: Make the cleanups more precise"
       hash: 05f8575d8789c1ebd7a590749909e01f8f536438
       body: ""
