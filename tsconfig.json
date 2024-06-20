@@ -10,7 +10,7 @@
         "noUnusedParameters": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "target": "es2015",
+        "target": "es2017",
         "lib": [
             "dom",
             "es2019"

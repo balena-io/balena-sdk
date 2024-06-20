@@ -4,14 +4,14 @@ import { expect } from 'chai';
 import * as bSemver from 'balena-semver';
 import type { Application, PineOptions } from '../src';
 
-// HACK: Avoid typescript trying to resolve built es2015 files
+// HACK: Avoid typescript trying to resolve built es2017 files
 const nodeRequire = require;
 
 const { mergePineOptions } = nodeRequire(
-	'../es2015/util',
+	'../es2017/util',
 ) as typeof import('../src/util');
 const { getDeviceOsSemverWithVariant } = nodeRequire(
-	'../es2015/util/device-os-version',
+	'../es2017/util/device-os-version',
 ) as typeof import('../src/util/device-os-version');
 
 describe('Pine option merging', function () {

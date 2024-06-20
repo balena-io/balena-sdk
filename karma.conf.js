@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const _ = require('lodash');
 const getKarmaConfig = require('balena-config-karma');
 const packageJSON = require('./package.json');
 
-const BROWSER_BUNDLE = 'es2015/balena-browser.min.js';
+const BROWSER_BUNDLE = 'es2017/balena-browser.min.js';
 
 module.exports = function (config) {
 	require('dotenv').config();
@@ -63,7 +64,7 @@ module.exports = function (config) {
 	// do not pre-process the browser build
 	karmaConfig.preprocessors = _.omitBy(
 		karmaConfig.preprocessors,
-		(_value, key) => key.startsWith('es2015/') || key.startsWith('es2018/'),
+		(_value, key) => key.startsWith('es2017/') || key.startsWith('es2018/'),
 	);
 	karmaConfig.client = {
 		mocha: {
