@@ -5,8 +5,8 @@
   "main": "index.js",
   "types": "index.d.ts",
   "browser": {
-    "index.js": "./es2015/index.js",
-    "es2015/util/settings-client.js": "./es2015/util/settings-client.browser.js",
+    "index.js": "./es2017/index.js",
+    "es2017/util/settings-client.js": "./es2017/util/settings-client.browser.js",
     "es2018/util/settings-client.js": "./es2018/util/settings-client.browser.js",
     "handlebars": "handlebars/dist/cjs/handlebars.js"
   },
@@ -16,7 +16,7 @@
     "url": "git://github.com/balena-io/balena-sdk.git"
   },
   "files": [
-    "es2015/",
+    "es2017/",
     "es2018/",
     "typings/",
     "index.js",
@@ -35,8 +35,8 @@
     "test": "tests"
   },
   "scripts": {
-    "clean": "rimraf es2015 es2018",
-    "test:fast": "npm run lint-fix; npm run build-es2015:fast && npm run test:node",
+    "clean": "rimraf es2017 es2018",
+    "test:fast": "npm run lint-fix; npm run build-es2017:fast && npm run test:node",
     "test": "([ \"$GITHUB_WORKFLOW\" = 'Flowzone' ] && [ \"$GITHUB_JOB\" = 'npm_test' ] && echo \"Skipping 'npm test' in flowzone in favor of the custom test action!\") || (npm run build && npm run test:all)",
     "test:all": "npm run test:ts-compatibility && npm run test:dev && npm run test:ts-js && npm run test:typings && npm run test:mjs-imports && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
@@ -46,11 +46,11 @@
     "test:ts-compatibility": "npx -p typescript@~5.0.2 tsc --noEmit --project ./tsconfig.dist.json",
     "test:typings": "tsc --project ./typing_tests/tsconfig.json",
     "test:mjs-imports": "node mjs_tests/index.mjs",
-    "build-es2015:fast": "rimraf es2015 && tsc --target es2015 --outDir es2015 && gulp inject-version --buildDir es2015",
-    "build-es2015": "npm run build-es2015:fast && gulp pack-browser --buildDir es2015",
+    "build-es2017:fast": "rimraf es2017 && tsc --target es2017 --outDir es2017 && gulp inject-version --buildDir es2017",
+    "build-es2017": "npm run build-es2017:fast && gulp pack-browser --buildDir es2017",
     "build-es2018": "rimraf es2018 && tsc --target es2018 --outDir es2018 && gulp inject-version --buildDir es2018 && gulp pack-browser --buildDir es2018",
-    "build": "npm run lint && npm run build-es2015 && npm run build-es2018 && npm run docs",
-    "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs --files \"es2015/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
+    "build": "npm run lint && npm run build-es2017 && npm run build-es2018 && npm run docs",
+    "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs --files \"es2017/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "lint": "balena-lint -e js -e ts typing_tests typings src tests mjs_tests gulpfile.js",
     "lint-fix": "balena-lint -e js -e ts --fix typing_tests typings src tests mjs_tests gulpfile.js",

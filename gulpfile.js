@@ -15,7 +15,7 @@ const packageJSON = require('./package.json');
 
 const cliOptions = minimist(process.argv.slice(2), {
 	string: 'buildDir', // eslint-disable-line id-denylist
-	default: { buildDir: 'es2015' },
+	default: { buildDir: 'es2017' },
 });
 
 const OPTIONS = {
