@@ -85,11 +85,6 @@ export interface OsVersion
 	isRecommended?: boolean;
 }
 
-/** @deprecated */
-export interface OsVersionsByDeviceType {
-	[deviceTypeSlug: string]: OsVersion[];
-}
-
 export interface ImgConfigOptions {
 	network?: 'ethernet' | 'wifi';
 	appUpdatePollInterval?: number;
