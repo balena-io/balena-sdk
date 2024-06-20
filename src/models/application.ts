@@ -621,10 +621,8 @@ const getApplicationModel = function (
 		 *
 		 * @param {Object} options - application creation parameters
 		 * @param {String} options.name - application names
-		 * @param {String} [options.applicationType] - application type slug e.g. microservices
 		 * @param {String} [options.applicationClass] - application class: 'app' | 'fleet' | 'block'
 		 * @param {String} options.deviceType - device type slug
-		 * @param {(Number|String)} [options.parent] - parent application name or id
 		 * @param {(String|Number)} options.organization - handle (string) or id (number) of the organization that the application will belong to or null
 		 *
 		 * @fulfil {Object} - application
@@ -647,19 +645,13 @@ const getApplicationModel = function (
 		 */
 		async create({
 			name,
-			applicationType,
 			applicationClass,
 			deviceType,
-			parent,
 			organization,
 		}: {
 			name: string;
-			/** @deprecated TODO: drop me in the next major */
-			applicationType?: string;
 			applicationClass?: 'app' | 'fleet' | 'block';
 			deviceType: string;
-			/** @deprecated TODO: drop me in the next major */
-			parent?: number | string;
 			organization: number | string;
 		}): Promise<PinePostResult<Application>> {
 			if (organization == null) {
@@ -668,29 +660,6 @@ const getApplicationModel = function (
 					organization,
 				);
 			}
-
-			const applicationTypePromise = !applicationType
-				? undefined
-				: pine
-						.get({
-							resource: 'application_type',
-							id: {
-								slug: applicationType,
-							},
-							options: {
-								$select: 'id',
-							},
-						})
-						.then(function (appType) {
-							if (!appType) {
-								throw new Error(`Invalid application type: ${applicationType}`);
-							}
-							return appType.id;
-						});
-
-			const parentAppPromise = parent
-				? exports.get(parent, { $select: ['id'] })
-				: undefined;
 
 			const deviceTypeIdPromise = (async () => {
 				const dt = await sdkInstance.models.deviceType.get(deviceType, {
@@ -716,29 +685,14 @@ const getApplicationModel = function (
 					return org.id;
 				});
 
-			const [
-				deviceTypeId,
-				applicationTypeId,
-				parentApplication,
-				organizationId,
-			] = await Promise.all([
+			const [deviceTypeId, organizationId] = await Promise.all([
 				deviceTypeIdPromise,
-				applicationTypePromise,
-				parentAppPromise,
 				organizationPromise,
 			]);
 			const body: SubmitBody<Application> = {
 				app_name: name,
 				is_for__device_type: deviceTypeId,
 			};
-
-			if (parentApplication) {
-				body.depends_on__application = parentApplication.id;
-			}
-
-			if (applicationTypeId) {
-				body.application_type = applicationTypeId;
-			}
 
 			if (organizationId) {
 				body.organization = organizationId;
