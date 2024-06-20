@@ -8,7 +8,6 @@ import {
 	givenLoggedInUser,
 	IS_BROWSER,
 	applicationRetrievalFields,
-	sdkOpts,
 } from '../setup';
 import { timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
@@ -1221,41 +1220,6 @@ describe('OS model', function () {
 						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
 					).to.equal(true);
 				});
-			});
-		});
-	});
-
-	describe('supervisor', () => {
-		describe('balena.models.os.getSupervisorReleaseByDeviceType()', function () {
-			it('should return null if no image was found', async () => {
-				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
-					1,
-					'v999.99.99',
-				);
-				expect(svImage).to.equal(null);
-			});
-
-			it('should return the right string when asking for raspberrypi4-64 and v12.11.0', async () => {
-				const dtId: number = await balena.models.deviceType
-					.get('raspberrypi4-64')
-					.then((res) => res.id);
-
-				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
-					dtId,
-					'v12.11.0',
-				);
-				expect(svImage?.image_name).to.match(
-					/registry2\.[a-z0-9_\-.]+\.[a-z]+\/v2\/[0-9a-f]+/,
-				);
-				if (sdkOpts.apiUrl === 'https://api.balena-cloud.com') {
-					expect(svImage?.image_name).to.equal(
-						'registry2.balena-cloud.com/v2/4ca706e1c624daff7e519b3009746b2c',
-					);
-				} else if (sdkOpts.apiUrl === 'https://api.balena-staging.com') {
-					expect(svImage?.image_name).to.equal(
-						'registry2.balena-staging.com/v2/77fdf484a2f80f5b111e7ebe18759561',
-					);
-				}
 			});
 		});
 	});
