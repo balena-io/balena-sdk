@@ -952,9 +952,6 @@ const getDeviceModel = function (
 					'is_undervolted',
 				],
 			});
-			// TODO: Drop the manual __metadata removal once we bump to the v7 model.
-			// @ts-expect-error __metadata isn't in the pine client typings
-			delete device.__metadata;
 			return device;
 		},
 

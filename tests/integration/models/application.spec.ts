@@ -1508,11 +1508,7 @@ describe('Application Model', function () {
 			if (expectCommit == null) {
 				expectCommit = false;
 			}
-			const omittedFields = [
-				'owns__device',
-				'should_be_running__release',
-				'__metadata',
-			];
+			const omittedFields = ['owns__device', 'should_be_running__release'];
 
 			expect(_.omit(application, omittedFields)).to.deep.equal(
 				_.omit(this.application, omittedFields),
