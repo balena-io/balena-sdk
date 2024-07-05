@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add identity provider & saml account model typing
+      hash: b62bf0543af2fb93888f6e10754791bf29405835
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otavio Jacobi
+      nested: []
+  version: 19.7.0
+  title: ""
+  date: 2024-07-05T20:36:20.020Z
+- commits:
     - subject: Update TypeScript to 5.5.2
       hash: ff4e969971edff98f6b8201c6e2729698093bf2a
       body: ""
