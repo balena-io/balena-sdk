@@ -39,6 +39,8 @@ export interface ResourceTypeMap {
 	gateway_download: GatewayDownload;
 	image: Image;
 	image_install: ImageInstall;
+	identity_provider: IdentityProvider;
+	identity_provider_membership: IdentityProviderMembership;
 	invitee: Invitee;
 	invitee__is_invited_to__application: ApplicationInvite;
 	invitee__is_invited_to__organization: OrganizationInvite;
@@ -57,6 +59,7 @@ export interface ResourceTypeMap {
 	recovery_two_factor: RecoveryTwoFactor;
 	release: Release;
 	release_tag: ReleaseTag;
+	saml_account: SamlAccount;
 	service: Service;
 	service_environment_variable: ServiceEnvironmentVariable;
 	service_install: ServiceInstall;
@@ -95,6 +98,7 @@ export interface Organization {
 	owns__team: ReverseNavigationResource<Team>;
 	organization__has_private_access_to__device_type: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
 	organization_credit_notification: ReverseNavigationResource<OrganizationCreditNotification>;
+	identity_provider_membership: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
 export interface OrganizationCreditNotification {
@@ -561,6 +565,32 @@ export interface Service {
 	is_built_by__image: ReverseNavigationResource<Image>;
 	service_environment_variable: ReverseNavigationResource<ServiceEnvironmentVariable>;
 	device_service_environment_variable: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
+}
+
+export interface IdentityProvider {
+	id: number;
+	sso_identifier: string;
+	entry_point: string;
+	issuer: string;
+	certificate: string;
+	requires_signed_authn_response: boolean;
+	manages__saml_account: ReverseNavigationResource<SamlAccount>;
+	identity_provider_membership: ReverseNavigationResource<IdentityProviderMembership>;
+}
+
+export interface SamlAccount {
+	id: number;
+	belongs_to__user: NavigationResource<User>;
+	was_generated_by__identity_provider: NavigationResource<IdentityProvider>;
+	remote_id: string;
+	display_name: string | null;
+}
+
+export interface IdentityProviderMembership {
+	is_authorized_by__identity_provider: NavigationResource<IdentityProvider>;
+	id: number;
+	grants_access_to__team: OptionalNavigationResource<Team>;
+	authorizes__organization: NavigationResource<Organization>;
 }
 
 export interface Image {
