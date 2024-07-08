@@ -43,7 +43,7 @@
     "test:browser": "mockttp -c karma start",
     "test:dev": "tsc --noEmit --project ./tsconfig.dev.json",
     "test:ts-js": "tsc --noEmit --project ./tsconfig.js.json",
-    "test:ts-compatibility": "npx -p typescript@~5.0.2 tsc --noEmit --project ./tsconfig.dist.json",
+    "test:ts-compatibility": "npx -p typescript@~5.5.2 tsc --noEmit --project ./tsconfig.dist.json",
     "test:typings": "tsc --project ./typing_tests/tsconfig.json",
     "test:mjs-imports": "node mjs_tests/index.mjs",
     "build-es2017:fast": "rimraf es2017 && tsc --target es2017 --outDir es2017 && gulp inject-version --buildDir es2017",

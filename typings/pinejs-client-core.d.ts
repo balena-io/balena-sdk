@@ -6,7 +6,6 @@ import type {
 	StringKeyof,
 	Dictionary,
 	ExactlyExtends,
-	NoInfer,
 } from './utils';
 
 export interface WithId {
