@@ -41,6 +41,7 @@ import * as url from 'url';
 
 import once = require('lodash/once');
 import groupBy = require('lodash/groupBy');
+import { TokenType } from 'balena-auth';
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
@@ -115,6 +116,7 @@ const getDeviceModel = function (
 	const {
 		pine,
 		request,
+		auth,
 		// Do not destructure sub-modules, to allow lazy loading only when needed.
 		sdkInstance,
 	} = deps;
@@ -1374,9 +1376,19 @@ const getDeviceModel = function (
 			const [{ id: userId }, apiKey, application, deviceType] =
 				await Promise.all([
 					sdkInstance.auth.getUserInfo(),
-					sdkInstance.models.application.generateProvisioningKey(
-						applicationSlugOrUuidOrId,
-					),
+					(async () => {
+						// The API's /device/register endpoint requires an API key
+						// so when the SDK is authenticated with a JWT we have to generate
+						// a provisioning API key, otherwise when the SDK is authenticated
+						// with an API key, we use that directly.
+						const tokenType = await auth.getType();
+						if (tokenType === TokenType.APIKey) {
+							return sdkInstance.auth.getToken();
+						}
+						return await sdkInstance.models.application.generateProvisioningKey(
+							applicationSlugOrUuidOrId,
+						);
+					})(),
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,
 						applicationOptions,
