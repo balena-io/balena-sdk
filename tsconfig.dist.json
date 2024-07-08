@@ -1,6 +1,7 @@
 {
 	"extends": "./tsconfig.json",
 	"include": [
-		"typings/**/*.d.ts"
+		"typings/*.d.ts",
+		"es2018/**/*"
 	]
 }
