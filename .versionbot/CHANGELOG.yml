@@ -1,4 +1,98 @@
 - commits:
+    - subject: Limit pinejs-client-core to ~6.14.0, to fix errors in older TypeScript
+      hash: 75e3cc19a323718d2a97c260d732b51541a029e1
+      body: |
+        Update pinejs-client-core from 6.12.0 to 6.14.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Respect the Retry-After header when clients define the
+                getRetryAfterHeader option
+              hash: 04f146bbe2127f4bc140ce7c7e9d9d78f62e00dd
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.14.0
+          title: ""
+          date: 2023-12-05T13:05:12.092Z
+        - commits:
+            - subject: Add support for $duration
+              hash: 05edeeea86147ac49dd864ae6e0b46ffc73f6fc4
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.13.0
+          title: ""
+          date: 2023-07-11T13:16:05.245Z
+        - commits:
+            - subject: Avoid an unnecessary function creation on each get() call
+              hash: 782e43ef40a22fa4c8e0f3d64917b03e07c77522
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.12.4
+          title: ""
+          date: 2023-05-09T13:11:13.136Z
+        - commits:
+            - subject: "CI: Convert tests to TypeScript"
+              hash: 683efba924728fc57cbb9a43b7b65f124903661e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Josh Bowling
+              nested: []
+          version: pinejs-client-js-6.12.3
+          title: ""
+          date: 2022-12-28T09:32:01.282Z
+        - commits:
+            - subject: "Fix `$orderby: { a: { $count: ... }, $dir: 'asc' }` typings"
+              hash: c62fb38c7cafa840aa799e112d96a7448e02a824
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.12.2
+          title: ""
+          date: 2022-11-18T10:22:54.685Z
+        - commits:
+            - subject: Update TypeScript to 4.9.3
+              hash: e41e987dd08a02f8805f345fa6c3e50c71f9d517
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-6.12.1
+          title: ""
+          date: 2022-11-15T22:41:19.258Z
+    - subject: Fix the TypeScript incompatibility test
+      hash: 0932c3229d566cefc27480a7ebc1e10e669007e3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.7.1
+  title: ""
+  date: 2024-07-08T09:46:28.959Z
+- commits:
     - subject: Add identity provider & saml account model typing
       hash: b62bf0543af2fb93888f6e10754791bf29405835
       body: ""
