@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update balena-request from 13.3.1 to 13.3.2
+      hash: c971b26e942dfbf65a87f3d0f680ef03b08dedd4
+      body: |
+        Update balena-request from 13.3.1 to 13.3.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Fix always following redirects when followRedirect = false
+              hash: 34db7e138eabfcfcfd822133b391c738d01de323
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-request-13.3.2
+          title: ""
+          date: 2024-07-12T09:16:13.529Z
+  version: 19.7.2
+  title: ""
+  date: 2024-07-12T09:52:37.233Z
+- commits:
     - subject: Limit pinejs-client-core to ~6.14.0, to fix errors in older TypeScript
       hash: 75e3cc19a323718d2a97c260d732b51541a029e1
       body: |
