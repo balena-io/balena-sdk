@@ -403,17 +403,17 @@ type ResourceAlternateKey<T> = SubmitBody<T>;
 type ResourceId<T> = BaseResourceId | ResourceAlternateKey<T>;
 
 export interface ParamsObj<T> {
-	resource?: string;
-	body?: SubmitBody<T>;
-	id?: ResourceId<T>;
-	options?: ODataOptions<T>;
-
 	apiPrefix?: string;
 	method?: ODataMethod;
+	resource?: string;
+	id?: ResourceId<T>;
 	url?: string;
+	body?: SubmitBody<T>;
 	passthrough?: AnyObject;
 	passthroughByMethod?: { [method in ODataMethod]: AnyObject };
+	options?: ODataOptions<T>;
 	customOptions?: AnyObject;
+	retry?: RetryParameters;
 }
 
 export interface ParamsObjWithId<T> extends ParamsObj<T> {
@@ -472,6 +472,26 @@ declare class Poll<T> {
 	destroy(): void;
 	private restartTimeout;
 }
+declare const validParams: readonly [
+	'apiPrefix',
+	'passthrough',
+	'passthroughByMethod',
+	'retry',
+];
+export type RetryParametersObj = {
+	canRetry?: (err: any) => boolean;
+	onRetry?: (
+		prevErr: any,
+		delayMs: number,
+		attempt: number,
+		maxAttempts: number,
+	) => void;
+	getRetryAfterHeader?: (err: unknown) => string | undefined;
+	minDelayMs?: number;
+	maxDelayMs?: number;
+	maxAttempts?: number;
+};
+export type RetryParameters = RetryParametersObj | false;
 export interface SubscribeParams<T> extends ParamsObj<T> {
 	method?: 'GET';
 	pollInterval?: number;
@@ -485,9 +505,19 @@ export interface SubscribeParamsWithId<T> extends ParamsObjWithId<T> {
 	pollInterval?: number;
 }
 
+export type ConstructorParams = Pick<
+	ParamsObj<unknown>,
+	(typeof validParams)[number]
+>;
+
 export interface Pine<ResourceTypeMap extends object = object> {
 	apiPrefix: string;
-	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
+	passthrough: AnyObject;
+	passthroughByMethod: AnyObject;
+	backendParams?: AnyObject;
+	retry: RetryParameters;
+	clone(params: string | ConstructorParams, backendParams?: AnyObject): this;
+
 	// Fully typed result overloads
 	get<
 		R extends keyof ResourceTypeMap,
@@ -519,6 +549,8 @@ export interface Pine<ResourceTypeMap extends object = object> {
 	get<T extends object>(params: ParamsObjWithId<T>): Promise<T | undefined>;
 	get<T extends object>(params: ParamsObj<T>): Promise<T[]>;
 	get<T extends object, Result>(params: ParamsObj<T>): Promise<Result>;
+
+	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	post<
 		R extends keyof ResourceTypeMap,
 		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>,
@@ -530,9 +562,9 @@ export interface Pine<ResourceTypeMap extends object = object> {
 	post<T>(
 		params: ParamsObj<T> & { body: object },
 	): Promise<PostResult<T & { id: number }>>;
-	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
-	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
+	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
 	getOrCreate<T>(params: GetOrCreateParams<T>): Promise<T>;
+	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
 
 	prepare<T extends Dictionary<ParameterAlias>, R>(
 		params: ParamsObjWithCount<R> & {
@@ -559,6 +591,12 @@ export interface Pine<ResourceTypeMap extends object = object> {
 			method: 'PATCH' | 'DELETE';
 		},
 	): PreparedFn<T, Promise<'OK'>, R>;
+
+	compile<R extends keyof ResourceTypeMap>(
+		params: {
+			resource: NonNullable<ParamsObj<R>>;
+		} & ParamsObj<R>,
+	): string;
 
 	subscribe<T>(
 		params: SubscribeParamsWithCount<T> & {
