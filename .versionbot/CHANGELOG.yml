@@ -1,4 +1,16 @@
 - commits:
+    - subject: "pinejs-client-core: Add some missing methods to the custom typings"
+      hash: f052451b60e479124e8a9f494fd9855dcddb4677
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.7.3
+  title: ""
+  date: 2024-07-12T20:52:36.803Z
+- commits:
     - subject: Update balena-request from 13.3.1 to 13.3.2
       hash: c971b26e942dfbf65a87f3d0f680ef03b08dedd4
       body: |
