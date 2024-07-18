@@ -4,6 +4,10 @@ import parallel from 'mocha.parallel';
 import { balena } from './integration/setup';
 import type * as BalenaSdk from '..';
 
+export function assertExists(v: unknown): asserts v is NonNullable<typeof v> {
+	expect(v).to.exist;
+}
+
 export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
 	[a, b].forEach((target) =>
 		expect(target).to.have.property('length').that.is.a('number'),

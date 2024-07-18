@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenLoggedInUser } from '../setup';
-import { timeSuite } from '../../util';
+import { assertExists, timeSuite } from '../../util';
 
 const RPI2_DEVICE_TYPE_NAME = 'Raspberry Pi 2';
 const RPI2_DEVICE_TYPE_SLUG = 'raspberry-pi2';
@@ -152,9 +152,8 @@ describe('Device Type model', function () {
 					deviceTypeSlug,
 					{ $select: 'contract' },
 				);
-				const result = await balena.models.deviceType.getInstructions(
-					contract!,
-				);
+				assertExists(contract);
+				const result = await balena.models.deviceType.getInstructions(contract);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
 				expect(result).to.eql(instructions);
