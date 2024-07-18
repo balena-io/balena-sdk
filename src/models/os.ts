@@ -687,6 +687,7 @@ const getOsModel = function (
 				},
 				baseUrl: apiUrl,
 			});
+			// TODO: Drop the ! on the next major
 			return new Date(response.headers.get('last-modified')!);
 		} catch (err) {
 			if (isNotFoundResponse(err)) {

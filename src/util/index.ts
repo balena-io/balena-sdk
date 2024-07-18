@@ -157,7 +157,7 @@ export function mergePineOptions<R extends object>(
 			Array.isArray(extras.$select) ||
 			extras.$select === '*'
 				? // TS should be able to infer this
-					(extras.$select as Array<Pine.SelectableProps<R>> | '*' | undefined)
+					(extras.$select as '*')
 				: [extras.$select];
 
 		if (replace$selects) {
