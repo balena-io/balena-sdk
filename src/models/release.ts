@@ -227,10 +227,7 @@ const getReleaseModel = function (
 			$expand: {
 				release_image: {
 					$expand: {
-						image: mergePineOptions(
-							baseImageOptions,
-							options.image,
-						) as typeof baseImageOptions,
+						image: mergePineOptions(baseImageOptions, options.image),
 					},
 				},
 				is_created_by__user: {

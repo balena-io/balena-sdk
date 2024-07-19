@@ -92,12 +92,12 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 					// NOTE: This test only works if the dictionary properties are in order by scope, i.e. application -> release instead of release -> application
 					for (let i = 0; i < properties.length; i++) {
 						if (i < properties.length - 1) {
-							const resource = resources?.[properties[i][0] as string];
-							getAllByResourceParam[properties[i][1] as string] =
+							const resource = resources?.[properties[i][0]];
+							getAllByResourceParam[properties[i][1]] =
 								(typeof resource === 'object' ? resource.__id : resource) ??
 								'123456789';
 						} else {
-							getAllByResourceParam[properties[i][1] as string] = '123456789';
+							getAllByResourceParam[properties[i][1]] = '123456789';
 						}
 					}
 				} else {

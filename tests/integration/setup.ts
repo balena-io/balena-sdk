@@ -420,7 +420,7 @@ export function givenADevice(
 		const device = await balena.models.device.get(deviceInfo.uuid);
 		this.device = device;
 
-		if (!this.currentRelease || !this.currentRelease.commit) {
+		if (!this.currentRelease?.commit) {
 			return;
 		}
 

@@ -65,7 +65,7 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 					// TODO: Mark the build_log as explicitRead in the next API model version
 					// so that we can remove this & the explicit property selection from here.
 					true,
-				) as typeof baseOptions,
+				),
 			});
 			if (image == null) {
 				throw new errors.BalenaImageNotFound(id);

@@ -1591,7 +1591,7 @@ describe('Application Model', function () {
 				return balena.models.application
 					.getWithDeviceServiceDetails(this.application.id)
 					.then((applicationDetails) => {
-						return itShouldBeAnApplicationWithDeviceServiceDetails.call(
+						itShouldBeAnApplicationWithDeviceServiceDetails.call(
 							this,
 							applicationDetails,
 							true,
@@ -1625,7 +1625,7 @@ describe('Application Model', function () {
 							extraServiceDetailOptions,
 						)
 						.then((applicationDetails) => {
-							return itShouldBeAnApplicationWithDeviceServiceDetails.call(
+							itShouldBeAnApplicationWithDeviceServiceDetails.call(
 								this,
 								applicationDetails,
 								true,

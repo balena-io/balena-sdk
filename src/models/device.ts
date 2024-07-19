@@ -212,7 +212,7 @@ const getDeviceModel = function (
 	);
 
 	// Infer dashboardUrl from apiUrl if former is undefined
-	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
+	const dashboardUrl = opts.dashboardUrl ?? apiUrl.replace(/api/, 'dashboard');
 
 	const getDeviceUrlsBase = once(async function () {
 		if (deviceUrlsBase != null) {
@@ -1413,7 +1413,7 @@ const getDeviceModel = function (
 				uuid,
 				deviceType: (deviceType ?? application.is_for__device_type[0]).slug,
 				provisioningApiKey: apiKey,
-				apiEndpoint: apiUrl!,
+				apiEndpoint: apiUrl,
 			});
 		},
 
@@ -1601,7 +1601,7 @@ const getDeviceModel = function (
 			];
 			const device = await exports.get(uuidOrId, { $select: selectedProps });
 			checkLocalModeSupported(device);
-			return await exports.configVar.set(device.id, LOCAL_MODE_ENV_VAR, '1');
+			await exports.configVar.set(device.id, LOCAL_MODE_ENV_VAR, '1');
 		},
 
 		/**

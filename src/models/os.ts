@@ -418,7 +418,7 @@ const getOsModel = function (
 			options?.includeDraft === true ? 'include_draft' : 'supported',
 		);
 		return singleDeviceTypeArg
-			? versionsByDt[singleDeviceTypeArg] ?? []
+			? (versionsByDt[singleDeviceTypeArg] ?? [])
 			: versionsByDt;
 	}
 
@@ -469,7 +469,7 @@ const getOsModel = function (
 				: await _getAllOsVersions(deviceTypes, options)
 		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
 		return singleDeviceTypeArg
-			? versionsByDt[singleDeviceTypeArg] ?? []
+			? (versionsByDt[singleDeviceTypeArg] ?? [])
 			: versionsByDt;
 	}
 
@@ -530,7 +530,7 @@ const getOsModel = function (
 		if (v === 'latest') {
 			return v;
 		}
-		const vNormalized = v[0] === 'v' ? v.substring(1) : v;
+		const vNormalized = v.startsWith('v') ? v.substring(1) : v;
 		// We still don't want to allow `balenaOS` prefixes, which balena-semver allows.
 		if (!bSemver.valid(vNormalized) || !/^\d/.test(vNormalized)) {
 			throw new Error(`Invalid semver version: ${v}`);
@@ -596,7 +596,7 @@ const getOsModel = function (
 	 */
 	const getDownloadSize = async function (
 		deviceType: string,
-		version: string = 'latest',
+		version = 'latest',
 	): Promise<number> {
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		return await _getDownloadSize(deviceType, version);
@@ -636,7 +636,7 @@ const getOsModel = function (
 	 */
 	const getMaxSatisfyingVersion = async function (
 		deviceType: string,
-		versionOrRange: string = 'latest',
+		versionOrRange = 'latest',
 		osType?: 'default' | 'esr',
 	): Promise<string | null> {
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
@@ -673,7 +673,7 @@ const getOsModel = function (
 	 */
 	const getLastModified = async function (
 		deviceType: string,
-		version: string = 'latest',
+		version = 'latest',
 	): Promise<Date> {
 		try {
 			deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
@@ -687,6 +687,7 @@ const getOsModel = function (
 				},
 				baseUrl: apiUrl,
 			});
+			// TODO: Drop the ! on the next major
 			return new Date(response.headers.get('last-modified')!);
 		} catch (err) {
 			if (isNotFoundResponse(err)) {

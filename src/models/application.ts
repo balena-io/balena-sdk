@@ -175,7 +175,7 @@ const getApplicationModel = function (
 	);
 
 	// Infer dashboardUrl from apiUrl if former is undefined
-	const dashboardUrl = opts.dashboardUrl ?? apiUrl!.replace(/api/, 'dashboard');
+	const dashboardUrl = opts.dashboardUrl ?? apiUrl.replace(/api/, 'dashboard');
 
 	// Internal method for name/id disambiguation
 	// Note that this throws an exception for missing names, but not missing ids
@@ -493,7 +493,7 @@ const getApplicationModel = function (
 			)) as Application & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			};
-			if (app && app.owns__device) {
+			if (app?.owns__device) {
 				app.owns__device = app.owns__device.map((d) =>
 					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
 				);

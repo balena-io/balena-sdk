@@ -64,7 +64,7 @@
     "node": ">=18.0"
   },
   "devDependencies": {
-    "@balena/lint": "^7.3.0",
+    "@balena/lint": "^8.2.7",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",
     "@types/lodash": "^4.14.195",

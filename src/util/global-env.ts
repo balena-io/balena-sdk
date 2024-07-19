@@ -1,7 +1,7 @@
 import type { SdkOptions } from '..';
 
 // If we can't guarantee global state, don't fake it: fail instead.
-let globalEnv: (typeof window | typeof self | typeof global) & {
+let globalEnv: typeof global & {
 	BALENA_SDK_SHARED_OPTIONS?: SdkOptions;
 	BALENA_SDK_HAS_USED_SHARED_OPTIONS?: boolean;
 	BALENA_SDK_HAS_SET_SHARED_OPTIONS?: boolean;
