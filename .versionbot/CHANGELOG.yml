@@ -1,4 +1,24 @@
 - commits:
+    - subject: Update @balena/lint to 8.2.7
+      hash: 47ba44ce8a4f14423ccdb587659e12077b704620
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Lint fixes for latest types
+      hash: e01c1f549b32c4ca3c1008d077ff7f5f404611d8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.7.4
+  title: ""
+  date: 2024-07-19T13:58:25.685Z
+- commits:
     - subject: "pinejs-client-core: Add some missing methods to the custom typings"
       hash: f052451b60e479124e8a9f494fd9855dcddb4677
       body: ""
