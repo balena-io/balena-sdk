@@ -697,16 +697,18 @@ describe('OS model', function () {
 	});
 
 	describe('balena.models.os._clearDeviceTypesAndOsVersionCaches()', function () {
-		itShouldClear.getDeviceTypesCache(() =>
-			_clearDeviceTypesAndOsVersionCaches(),
-		);
-		itShouldClear.getDownloadSizeCache(() =>
-			_clearDeviceTypesAndOsVersionCaches(),
-		);
-		itShouldClear.getAllOsVersions(() => _clearDeviceTypesAndOsVersionCaches());
-		itShouldClear.getAvailableOsVersions(() =>
-			_clearDeviceTypesAndOsVersionCaches(),
-		);
+		itShouldClear.getDeviceTypesCache(() => {
+			_clearDeviceTypesAndOsVersionCaches();
+		});
+		itShouldClear.getDownloadSizeCache(() => {
+			_clearDeviceTypesAndOsVersionCaches();
+		});
+		itShouldClear.getAllOsVersions(() => {
+			_clearDeviceTypesAndOsVersionCaches();
+		});
+		itShouldClear.getAvailableOsVersions(() => {
+			_clearDeviceTypesAndOsVersionCaches();
+		});
 	});
 
 	describe('balena.models.os.getLastModified()', function () {
@@ -1209,7 +1211,7 @@ describe('OS model', function () {
 				).to.equal(true);
 			});
 
-			return [
+			[
 				['aarch64', 'armv7hf'],
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],

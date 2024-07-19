@@ -147,7 +147,7 @@ export function buildDependentResource<T extends DependentResource>(
 		): Promise<void> {
 			const parentId = await getResourceId(parentParam);
 			await pine.delete({
-				resource: `${resourceName}`,
+				resource: resourceName,
 				options: {
 					$filter: {
 						[parentResourceName]: parentId,

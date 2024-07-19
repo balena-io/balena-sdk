@@ -3667,7 +3667,7 @@ describe('Device Model', function () {
 					['Resin OS ', 'prod'],
 					['Resin OS 2.0-beta.8', ''],
 				].forEach(function ([osVersion, osVariant]) {
-					return expect(() =>
+					return expect(() => {
 						_checkOsUpdateTarget(
 							{
 								uuid,
@@ -3677,8 +3677,8 @@ describe('Device Model', function () {
 								os_variant: osVariant,
 							},
 							'2.29.2+rev1.prod',
-						),
-					).to.throw('Invalid current balenaOS version');
+						);
+					}).to.throw('Invalid current balenaOS version');
 				});
 			});
 
@@ -3688,7 +3688,7 @@ describe('Device Model', function () {
 					['Resin OS 1.30.1', '', '2.5.0+rev1'],
 					['balenaOS 2.26.0+rev1', 'prod', '2.29.2+rev1.prod'],
 				].forEach(function ([osVersion, osVariant, targetOsVersion]) {
-					return expect(() =>
+					return expect(() => {
 						_checkOsUpdateTarget(
 							{
 								uuid,
@@ -3698,8 +3698,8 @@ describe('Device Model', function () {
 								os_variant: osVariant,
 							},
 							targetOsVersion,
-						),
-					).to.throw('The device is offline');
+						);
+					}).to.throw('The device is offline');
 				});
 			});
 
@@ -3715,7 +3715,7 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0', 'prod'],
 					['balenaOS 2.28.0+rev1', 'prod'],
 				].forEach(function ([osVersion, osVariant]) {
-					return expect(() =>
+					return expect(() => {
 						_checkOsUpdateTarget(
 							{
 								uuid,
@@ -3725,8 +3725,8 @@ describe('Device Model', function () {
 								os_variant: osVariant,
 							},
 							'2.29.2+rev1.dev',
-						),
-					).to.throw(
+						);
+					}).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
 				});
@@ -3748,7 +3748,7 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0+rev1', 'dev'],
 					['balenaOS 2.28.0+rev1', 'dev'],
 				].forEach(function ([osVersion, osVariant]) {
-					return expect(() =>
+					return expect(() => {
 						_checkOsUpdateTarget(
 							{
 								uuid,
@@ -3758,8 +3758,8 @@ describe('Device Model', function () {
 								os_variant: osVariant,
 							},
 							'2.29.2+rev1.prod',
-						),
-					).to.throw(
+						);
+					}).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
 				});
@@ -3774,7 +3774,7 @@ describe('Device Model', function () {
 								['Resin OS 1.6.0', ''],
 								['Resin OS 1.7.2', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								return expect(() =>
+								return expect(() => {
 									_checkOsUpdateTarget(
 										{
 											uuid,
@@ -3784,8 +3784,8 @@ describe('Device Model', function () {
 											os_variant: osVariant,
 										},
 										'1.26.0',
-									),
-								).to.throw('Current OS version must be >= 1.8.0');
+									);
+								}).to.throw('Current OS version must be >= 1.8.0');
 							});
 						});
 
@@ -3796,7 +3796,7 @@ describe('Device Model', function () {
 								['Resin OS 1.19.0', ''],
 								['Resin OS 1.21.0', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								return expect(() =>
+								return expect(() => {
 									_checkOsUpdateTarget(
 										{
 											uuid,
@@ -3806,8 +3806,8 @@ describe('Device Model', function () {
 											os_variant: osVariant,
 										},
 										'1.25.0',
-									),
-								).to.throw('Target OS version must be >= 1.26.0');
+									);
+								}).to.throw('Target OS version must be >= 1.26.0');
 							});
 						});
 
@@ -3818,7 +3818,7 @@ describe('Device Model', function () {
 								['Resin OS 1.19.0', ''],
 								['Resin OS 1.21.0', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								return expect(() =>
+								return expect(() => {
 									_checkOsUpdateTarget(
 										{
 											uuid,
@@ -3828,8 +3828,8 @@ describe('Device Model', function () {
 											os_variant: osVariant,
 										},
 										'1.28.0',
-									),
-								).to.not.throw();
+									);
+								}).to.not.throw();
 							});
 						});
 					});
@@ -3844,7 +3844,7 @@ describe('Device Model', function () {
 							['Resin OS 1.6.0', ''],
 							['Resin OS 1.7.2', ''],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -3854,8 +3854,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.5.0+rev1',
-								),
-							).to.throw('Current OS version must be >= 1.8.0');
+								);
+							}).to.throw('Current OS version must be >= 1.8.0');
 						});
 					});
 
@@ -3868,7 +3868,7 @@ describe('Device Model', function () {
 							['Resin OS 1.26.1', ''],
 							['Resin OS 1.30.1', ''],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -3878,8 +3878,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.5.0+rev1',
-								),
-							).to.not.throw();
+								);
+							}).to.not.throw();
 						});
 					});
 				});
@@ -3896,7 +3896,7 @@ describe('Device Model', function () {
 							['Resin OS 1.21.0', ''],
 							['Resin OS 1.26.1', ''],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -3906,8 +3906,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.5.0+rev1',
-								),
-							).to.throw('Current OS version must be >= 1.30.1');
+								);
+							}).to.throw('Current OS version must be >= 1.30.1');
 						});
 					});
 
@@ -3916,7 +3916,7 @@ describe('Device Model', function () {
 							osVersion,
 							osVariant,
 						]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -3926,8 +3926,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.5.0+rev1',
-								),
-							).to.not.throw();
+								);
+							}).to.not.throw();
 						});
 					});
 				});
@@ -3940,7 +3940,7 @@ describe('Device Model', function () {
 							osVersion,
 							osVariant,
 						]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -3950,8 +3950,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.1.0+rev1.prod',
-								),
-							).to.throw('Current OS version must be >= 2.0.0+rev1');
+								);
+							}).to.throw('Current OS version must be >= 2.0.0+rev1');
 						});
 					});
 
@@ -3984,7 +3984,7 @@ describe('Device Model', function () {
 							['Resin OS 2.12.1+rev1', 'prod'],
 							['balenaOS 2.26.0+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -3994,8 +3994,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.29.2+rev1.prod',
-								),
-							).to.not.throw();
+								);
+							}).to.not.throw();
 						});
 					});
 
@@ -4004,7 +4004,7 @@ describe('Device Model', function () {
 							['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
 							['balenaOS 2.29.2+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							expect(() =>
+							expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -4014,13 +4014,13 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.28.0-1704382553234+rev1.prod',
-								),
-							).to.throw('OS downgrades are not allowed');
+								);
+							}).to.throw('OS downgrades are not allowed');
 						});
 					});
 
 					it('should not throw when updating to a pre-release version with a newer base server', () => {
-						expect(() =>
+						expect(() => {
 							_checkOsUpdateTarget(
 								{
 									uuid,
@@ -4030,12 +4030,12 @@ describe('Device Model', function () {
 									os_variant: 'prod',
 								},
 								'2.29.2-1704382618288+rev1.prod',
-							),
-						).to.not.throw();
+							);
+						}).to.not.throw();
 					});
 
 					it('should not throw when updating a device that is running a pre-release version to a version with a newer base server', () => {
-						expect(() =>
+						expect(() => {
 							_checkOsUpdateTarget(
 								{
 									uuid,
@@ -4045,12 +4045,12 @@ describe('Device Model', function () {
 									os_variant: 'prod',
 								},
 								'2.29.2+rev1.prod',
-							),
-						).to.not.throw();
+							);
+						}).to.not.throw();
 					});
 
 					it('should not throw when updating a device that is running a pre-release version updating to a pre-release version with a newer base server', () => {
-						expect(() =>
+						expect(() => {
 							_checkOsUpdateTarget(
 								{
 									uuid,
@@ -4060,8 +4060,8 @@ describe('Device Model', function () {
 									os_variant: 'prod',
 								},
 								'2.29.2-1704382618288+rev1.prod',
-							),
-						).to.not.throw();
+							);
+						}).to.not.throw();
 					});
 				});
 
@@ -4102,7 +4102,7 @@ describe('Device Model', function () {
 							['Resin OS 2.6.0+rev1', 'prod'],
 							['Resin OS 2.7.2+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -4112,8 +4112,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.29.2+rev1.prod',
-								),
-							).to.throw('Current OS version must be >= 2.7.4');
+								);
+							}).to.throw('Current OS version must be >= 2.7.4');
 						});
 					});
 
@@ -4131,7 +4131,7 @@ describe('Device Model', function () {
 							['Resin OS 2.12.1+rev1', 'prod'],
 							['balenaOS 2.26.0+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -4141,8 +4141,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.29.2+rev1.prod',
-								),
-							).to.not.throw();
+								);
+							}).to.not.throw();
 						});
 					});
 
@@ -4152,7 +4152,7 @@ describe('Device Model', function () {
 							['Resin OS 2.9.7+rev2.dev', 'dev'],
 							['balenaOS 2.26.0+rev1.dev', 'dev'],
 						].forEach(function ([osVersion, osVariant]) {
-							return expect(() =>
+							return expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
@@ -4162,8 +4162,8 @@ describe('Device Model', function () {
 										os_variant: osVariant,
 									},
 									'2.29.2+rev1.dev',
-								),
-							).to.not.throw();
+								);
+							}).to.not.throw();
 						});
 					});
 				});

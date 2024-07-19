@@ -76,9 +76,9 @@ describe('Config Model', function () {
 
 	describe('balena.models.config.getDeviceTypes()', function () {
 		it('should become the device types', function () {
-			return balena.models.config
-				.getDeviceTypes()
-				.then((deviceTypes) => expectDeviceTypeArray(deviceTypes));
+			return balena.models.config.getDeviceTypes().then((deviceTypes) => {
+				expectDeviceTypeArray(deviceTypes);
+			});
 		});
 
 		describe('device type normalization', function () {

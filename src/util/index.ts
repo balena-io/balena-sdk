@@ -89,7 +89,7 @@ export function mergePineOptionsTyped<
 	R extends object,
 	P extends Pine.ODataOptionsStrict<R>,
 >(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
-	return mergePineOptions(defaults, extras) as P;
+	return mergePineOptions(defaults, extras);
 }
 
 export type ExtendedPineTypedResult<
@@ -273,7 +273,7 @@ const convertExpandToObject = <T extends object>(
 	}
 
 	if (cloneIfNeeded) {
-		return { ...(expandOption as Pine.ResourceExpand<T>) };
+		return { ...expandOption };
 	}
 
 	return expandOption;
@@ -331,8 +331,8 @@ export const limitedMap = <T, U>(
 			try {
 				inFlight++;
 				result[i] = await fn(arr[i], i, arr);
-				// eslint-disable-next-line @typescript-eslint/no-floating-promises
-				runNext();
+
+				void runNext();
 			} catch (err) {
 				// Stop any further iterations
 				idx = arr.length;
@@ -347,8 +347,7 @@ export const limitedMap = <T, U>(
 			}
 		};
 		while (inFlight < concurrency) {
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
-			runNext();
+			void runNext();
 		}
 	});
 };

@@ -266,7 +266,7 @@ describe('Application Membership Model', function () {
 				username: ctx.username,
 			});
 			// @ts-expect-error Fix the return types of all create methods to be fully typed
-			ctx.userId = membership!.user.__id;
+			ctx.userId = membership.user.__id;
 		});
 
 		after(async function () {

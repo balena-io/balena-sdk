@@ -452,7 +452,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 						$select: 'contract',
 					},
 				));
-				if (!contract || !contract.partials) {
+				if (!contract?.partials) {
 					throw new Error(
 						`Instruction partials not defined for ${deviceTypeSlugOrContract}`,
 					);
