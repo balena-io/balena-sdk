@@ -10,6 +10,7 @@ chai.use(chaiAsPromised);
 chai.use(chaiSamsam);
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
+export const apiVersion = 'v7';
 
 export let balenaSdkExports: typeof BalenaSdk;
 export let sdkOpts: BalenaSdk.SdkOptions;

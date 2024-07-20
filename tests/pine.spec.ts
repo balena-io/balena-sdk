@@ -2,7 +2,7 @@ import BalenaAuth from 'balena-auth';
 import { getRequest } from 'balena-request';
 import * as mockttp from 'mockttp';
 import { expect } from 'chai';
-import { IS_BROWSER } from './integration/setup';
+import { IS_BROWSER, apiVersion } from './integration/setup';
 import tokens from './data/tokens';
 import { createPinejsClient } from '../src/pine';
 
@@ -17,7 +17,6 @@ if (!IS_BROWSER) {
 
 const auth = new BalenaAuth({ dataDirectory });
 const request = getRequest({ auth });
-const apiVersion = 'v6';
 
 const buildPineInstance = (apiUrl: string, extraOpts?: object) =>
 	createPinejsClient(
