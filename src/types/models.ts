@@ -445,13 +445,7 @@ export interface Device {
 	os_version: string | null;
 	provisioning_progress?: number;
 	provisioning_state: string;
-	// TODO: Drop in next major
-	/** @deprecated */
-	state?: { key: string; name: string };
 	status: string;
-	// TODO: Drop in next major
-	/** @deprecated */
-	status_sort_index?: number;
 	supervisor_version: string;
 	uuid: string;
 	// TODO: Drop when we bump to api v7
