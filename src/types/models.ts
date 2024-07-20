@@ -470,15 +470,11 @@ export interface Device {
 	is_running__release: OptionalNavigationResource<Release>;
 	should_be_running__release: OptionalNavigationResource<Release>;
 	is_managed_by__service_instance: OptionalNavigationResource<ServiceInstance>;
-	/** @deprecated */
-	is_managed_by__device: OptionalNavigationResource<Device>;
 	should_be_managed_by__supervisor_release: OptionalNavigationResource<SupervisorRelease>;
 
 	device_config_variable: ReverseNavigationResource<DeviceVariable>;
 	device_environment_variable: ReverseNavigationResource<DeviceVariable>;
 	device_tag: ReverseNavigationResource<DeviceTag>;
-	/** @deprecated */
-	manages__device: ReverseNavigationResource<Device>;
 	service_install: ReverseNavigationResource<ServiceInstall>;
 	image_install: ReverseNavigationResource<ImageInstall>;
 }
