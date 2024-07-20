@@ -592,7 +592,7 @@ type ReleaseExpandablePropsExpectation =
 	| 'should_operate__device'
 	| 'should_manage__device'
 	| 'is_running_on__device'
-	| 'should_be_running_on__device'
+	| 'is_pinned_to__device'
 	| 'release_tag';
 // @ts-expect-error test case
 
