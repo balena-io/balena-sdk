@@ -40,7 +40,6 @@ import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 import * as url from 'url';
 
 import once = require('lodash/once');
-import groupBy = require('lodash/groupBy');
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
@@ -52,6 +51,7 @@ import {
 	mergePineOptions,
 	treatAsMissingDevice,
 	limitedMap,
+	groupByMap,
 } from '../util';
 
 import {
@@ -2119,29 +2119,20 @@ const getDeviceModel = function (
 		): Promise<void> => {
 			const releaseFilterProperty = isId(supervisorVersionOrId)
 				? 'id'
-				: 'supervisor_version';
+				: 'raw_version';
 			const getRelease = memoizee(
-				async (deviceTypeSlug: string) => {
-					const [supervisorRelease] = await pine.get({
-						resource: 'supervisor_release',
-						options: {
-							$top: 1,
-							$select: 'id',
-							$filter: {
-								[releaseFilterProperty]: supervisorVersionOrId,
-								is_for__device_type: {
-									$any: {
-										$alias: 'dt',
-										$expr: {
-											dt: {
-												slug: deviceTypeSlug,
-											},
-										},
-									},
+				async (cpuArchId: number) => {
+					const [supervisorRelease] =
+						await sdkInstance.models.os.getSupervisorReleasesForCpuArchitecture(
+							cpuArchId,
+							{
+								$top: 1,
+								$select: 'id',
+								$filter: {
+									[releaseFilterProperty]: supervisorVersionOrId,
 								},
 							},
-						},
-					});
+						);
 					if (supervisorRelease == null) {
 						throw new errors.BalenaReleaseNotFound(supervisorVersionOrId);
 					}
@@ -2153,7 +2144,9 @@ const getDeviceModel = function (
 				uuidOrIdOrArray,
 				options: {
 					$select: ['id', 'supervisor_version', 'os_version'],
-					$expand: { is_of__device_type: { $select: 'slug' } },
+					$expand: {
+						is_of__device_type: { $select: 'is_of__cpu_architecture' },
+					},
 				},
 				fn: async (devices) => {
 					devices.forEach((device) => {
@@ -2164,14 +2157,15 @@ const getDeviceModel = function (
 						);
 						ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
 					});
-					const devicesByDeviceType = groupBy(
+					const devicesByDeviceType = groupByMap(
 						devices,
-						(device) => device.is_of__device_type[0].slug,
+						(device) =>
+							device.is_of__device_type[0].is_of__cpu_architecture.__id,
 					);
 					await Promise.all(
-						Object.entries(devicesByDeviceType).map(
-							async ([dt, devicesOfType]) => {
-								const release = await getRelease(dt);
+						[...devicesByDeviceType.entries()].map(
+							async ([cpuArchId, devicesOfType]) => {
+								const release = await getRelease(cpuArchId);
 								await pine.patch<Device>({
 									resource: 'device',
 									options: {

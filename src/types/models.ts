@@ -66,7 +66,6 @@ export interface ResourceTypeMap {
 	subscription: Subscription;
 	subscription_addon_discount: SubscriptionAddonDiscount;
 	subscription_prepaid_addon: SubscriptionPrepaidAddon;
-	supervisor_release: SupervisorRelease;
 	support_feature: SupportFeature;
 	support_tier: SupportTier;
 	team: Team;
@@ -529,17 +528,6 @@ export interface OrganizationPrivateDeviceTypeAccess {
 	id: number;
 	organization: NavigationResource<Organization>;
 	has_private_access_to__device_type: NavigationResource<DeviceType>;
-}
-
-export interface SupervisorRelease {
-	created_at: string;
-	id: number;
-	supervisor_version: string;
-	image_name: string;
-	is_public: boolean;
-	note?: string;
-
-	is_for__device_type: NavigationResource<DeviceType>;
 }
 
 export interface ServiceInstance {
