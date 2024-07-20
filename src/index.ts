@@ -216,7 +216,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		isBrowser: typeof window !== 'undefined' && window !== null,
 		// API version is configurable but only do so if you know what you're doing,
 		// as the SDK is directly tied to a specific version.
-		apiVersion: 'v6',
+		apiVersion: 'v7',
 		...$opts,
 	};
 
