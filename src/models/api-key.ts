@@ -185,7 +185,7 @@ const getApiKeysModel = function (
 				mergePineOptions(
 					{
 						$filter: {
-							is_of__actor: actor,
+							is_of__actor: actor.__id,
 						},
 					},
 					options,
@@ -227,7 +227,7 @@ const getApiKeysModel = function (
 				options: mergePineOptions(
 					{
 						$filter: {
-							is_of__actor: actor,
+							is_of__actor: actor.__id,
 						},
 						$orderby: 'name asc',
 					},

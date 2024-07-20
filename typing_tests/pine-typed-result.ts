@@ -158,7 +158,7 @@ export let aStringOrUndefined: string | undefined;
 
 	const result: deviceOptionsSelectActor = {} as any;
 
-	aNumber = result.actor;
+	aNumber = result.actor.__id;
 
 	// @ts-expect-error test case
 	aAny = result.device_tag;
