@@ -469,7 +469,7 @@ export interface Device {
 	belongs_to__application: NavigationResource<Application>;
 	belongs_to__user: OptionalNavigationResource<User>;
 	is_running__release: OptionalNavigationResource<Release>;
-	should_be_running__release: OptionalNavigationResource<Release>;
+	is_pinned_on__release: OptionalNavigationResource<Release>;
 	is_managed_by__service_instance: OptionalNavigationResource<ServiceInstance>;
 	should_be_operated_by__release: OptionalNavigationResource<Release>;
 	should_be_managed_by__release: OptionalNavigationResource<Release>;
