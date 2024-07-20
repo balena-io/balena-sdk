@@ -36,7 +36,7 @@
   },
   "scripts": {
     "clean": "rimraf es2015 es2018",
-    "test:fast": "npm run lint:fix; npm run build-es2015:fast && npm run test:node",
+    "test:fast": "npm run lint-fix; npm run build-es2015:fast && npm run test:node",
     "test": "([ \"$GITHUB_WORKFLOW\" = 'Flowzone' ] && [ \"$GITHUB_JOB\" = 'npm_test' ] && echo \"Skipping 'npm test' in flowzone in favor of the custom test action!\") || (npm run build && npm run test:all)",
     "test:all": "npm run test:ts-compatibility && npm run test:dev && npm run test:ts-js && npm run test:typings && npm run test:mjs-imports && npm run test:node && npm run test:browser",
     "test:node": "gulp test",
@@ -53,7 +53,7 @@
     "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs --files \"es2015/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "lint": "balena-lint -e js -e ts typing_tests typings src tests mjs_tests gulpfile.js",
-    "lint:fix": "balena-lint -e js -e ts --fix typing_tests typings src tests mjs_tests gulpfile.js",
+    "lint-fix": "balena-lint -e js -e ts --fix typing_tests typings src tests mjs_tests gulpfile.js",
     "prepack": "npm run build",
     "watch": "npm run build && watch \"npm run lint\" \"src\" \"tests\"",
     "prepare": "husky install"
