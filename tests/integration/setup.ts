@@ -384,7 +384,10 @@ export function givenLoggedInWithADeviceApiKey(beforeFn: Mocha.HookFunction) {
 
 export function givenADevice(
 	beforeFn: Mocha.HookFunction,
-	extraDeviceProps?: BalenaSdk.PineSubmitBody<BalenaSdk.Device>,
+	{
+		api_heartbeat_state,
+		...extraDeviceProps
+	}: BalenaSdk.PineSubmitBody<BalenaSdk.Device> = {},
 ) {
 	beforeFn(async function () {
 		const uuid = balena.models.device.generateUniqueKey();
@@ -406,7 +409,7 @@ export function givenADevice(
 				},
 			});
 		}
-		if (extraDeviceProps) {
+		if (Object.keys(extraDeviceProps).length > 0) {
 			await balena.pine.patch<BalenaSdk.Device>({
 				resource: 'device',
 				body: extraDeviceProps,
@@ -415,6 +418,18 @@ export function givenADevice(
 						uuid: deviceInfo.uuid,
 					},
 				},
+			});
+		}
+		if (api_heartbeat_state != null) {
+			if (api_heartbeat_state !== 'online') {
+				throw new Error(
+					`Mocking the device's api_heartbeat_state only supports using the 'online' state`,
+				);
+			}
+			await balena.request.send({
+				url: `/device/v3/${deviceInfo.uuid}/state`,
+				baseUrl: sdkOpts.apiUrl,
+				apiKey: deviceInfo.api_key,
 			});
 		}
 

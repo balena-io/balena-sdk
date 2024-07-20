@@ -2113,7 +2113,7 @@ describe('Device Model', function () {
 					});
 				});
 
-				describe('Given an online device', function () {
+				describe('Given a vpn only online device', function () {
 					before(function () {
 						return balena.pine.patch({
 							resource: 'device',
@@ -2126,11 +2126,11 @@ describe('Device Model', function () {
 					});
 
 					deviceUniqueFields.forEach((prop) => {
-						it(`should return idle when retrieving by ${prop}`, async function () {
+						it(`should return reduced-functionality when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
-							expect(status).to.equal('idle');
+							expect(status).to.equal('reduced-functionality');
 						});
 					});
 				});
@@ -2147,18 +2147,18 @@ describe('Device Model', function () {
 					});
 
 					deviceUniqueFields.forEach((prop) => {
-						it(`should return offline when retrieving by ${prop}`, async function () {
+						it(`should return disconnected when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
-							expect(status).to.equal('offline');
+							expect(status).to.equal('disconnected');
 						});
 					});
 				});
 			});
 		});
 
-		describe('given an online device', function () {
+		describe('given a vpn only online device', function () {
 			givenADevice(before, {
 				is_online: true,
 				...testDeviceOsInfo,
@@ -2170,7 +2170,7 @@ describe('Device Model', function () {
 						$select: ['overall_status', 'overall_progress'],
 					});
 					return expect(device).to.deep.match({
-						overall_status: 'idle',
+						overall_status: 'reduced-functionality',
 						overall_progress: null,
 					});
 				});
@@ -2724,6 +2724,7 @@ describe('Device Model', function () {
 				is_online: true,
 				...testDeviceOsInfo,
 				last_connectivity_event: '2019-05-13T16:14',
+				api_heartbeat_state: 'online',
 			});
 
 			describe('balena.models.device.getStatus()', () => {
