@@ -401,6 +401,7 @@ export interface Release {
 	should_be_running_on__application: ReverseNavigationResource<Application>;
 	is_running_on__device: ReverseNavigationResource<Device>;
 	should_be_running_on__device: ReverseNavigationResource<Device>;
+	should_operate__device: ReverseNavigationResource<Device>;
 	should_manage__device: ReverseNavigationResource<Device>;
 	release_tag: ReverseNavigationResource<ReleaseTag>;
 }
@@ -470,6 +471,7 @@ export interface Device {
 	is_running__release: OptionalNavigationResource<Release>;
 	should_be_running__release: OptionalNavigationResource<Release>;
 	is_managed_by__service_instance: OptionalNavigationResource<ServiceInstance>;
+	should_be_operated_by__release: OptionalNavigationResource<Release>;
 	should_be_managed_by__release: OptionalNavigationResource<Release>;
 
 	device_config_variable: ReverseNavigationResource<DeviceVariable>;

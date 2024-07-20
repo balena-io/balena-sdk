@@ -589,6 +589,7 @@ type ReleaseExpandablePropsExpectation =
 	| 'contains__image'
 	| 'release_image'
 	| 'should_be_running_on__application'
+	| 'should_operate__device'
 	| 'should_manage__device'
 	| 'is_running_on__device'
 	| 'should_be_running_on__device'
