@@ -400,7 +400,7 @@ export interface Release {
 	release_image: ReverseNavigationResource<ReleaseImage>;
 	should_be_running_on__application: ReverseNavigationResource<Application>;
 	is_running_on__device: ReverseNavigationResource<Device>;
-	should_be_running_on__device: ReverseNavigationResource<Device>;
+	is_pinned_to__device: ReverseNavigationResource<Device>;
 	should_operate__device: ReverseNavigationResource<Device>;
 	should_manage__device: ReverseNavigationResource<Device>;
 	release_tag: ReverseNavigationResource<ReleaseTag>;
