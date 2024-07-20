@@ -35,8 +35,6 @@ export interface ResourceTypeMap {
 	device_type: DeviceType;
 	device_type_alias: DeviceTypeAlias;
 	feature: Feature;
-	/** @deprecated */
-	gateway_download: GatewayDownload;
 	image: Image;
 	image_install: ImageInstall;
 	identity_provider: IdentityProvider;
@@ -492,8 +490,6 @@ export interface Device {
 	manages__device: ReverseNavigationResource<Device>;
 	service_install: ReverseNavigationResource<ServiceInstall>;
 	image_install: ReverseNavigationResource<ImageInstall>;
-	/** @deprecated */
-	gateway_download: ReverseNavigationResource<GatewayDownload>;
 }
 
 export interface CpuArchitecture {
@@ -656,16 +652,6 @@ export interface ImageInstall {
 	installs__image: NavigationResource<Image>;
 	device: NavigationResource<Device>;
 	is_provided_by__release: NavigationResource<Release>;
-}
-
-/** @deprecated */
-export interface GatewayDownload {
-	id: number;
-	download_progress: number;
-	status: string;
-
-	image: NavigationResource<Image>;
-	is_downloaded_by__device: NavigationResource<Device>;
 }
 
 export interface ServiceInstall {
