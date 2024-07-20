@@ -171,7 +171,7 @@ Before submitting a PR, please make sure that you
 * ran the lint script on the modified files
 
 ```
-$ npm run lint:fix
+$ npm run lint-fix
 ```
 
 * include tests and that they pass
