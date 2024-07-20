@@ -448,9 +448,6 @@ export interface Device {
 	status: string;
 	supervisor_version: string;
 	uuid: string;
-	// TODO: Drop when we bump to api v7
-	/** @deprecated */
-	vpn_address?: string | null;
 	api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 	memory_usage: number | null;
 	memory_total: number | null;
