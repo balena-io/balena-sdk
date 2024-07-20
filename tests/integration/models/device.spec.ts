@@ -2906,17 +2906,10 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {
+				givenASupervisorRelease(before, '11.12.3');
+
 				before(async function () {
-					const [oldSupervisorRelease] = await balena.pine.get({
-						resource: 'supervisor_release',
-						options: {
-							$select: 'id',
-							$filter: {
-								supervisor_version: 'v11.12.3',
-								is_for__device_type: this.application.is_for__device_type.__id,
-							},
-						},
-					});
+					const oldSupervisorRelease = this.supervisorRelease;
 					// Set all devices to a supervisor release so that the service installs are already set.
 					// We shouldn't need to do this.
 					for (const d of this.devices) {
@@ -2926,9 +2919,9 @@ describe('Device Model', function () {
 						);
 					}
 				});
-				givenASupervisorRelease(before, 'v11.12.4');
+				givenASupervisorRelease(before, '11.12.4');
 
-				['supervisor_version', 'id'].forEach((svReleaseProp) => {
+				['raw_version', 'id'].forEach((svReleaseProp) => {
 					it(`should set the batch of devices to a specific supervisor release using the supervisor releases's ${svReleaseProp}`, async function () {
 						await balena.models.device.setSupervisorRelease(
 							this.devices.map((d) => d.id),
@@ -2969,7 +2962,7 @@ describe('Device Model', function () {
 				it('should set the device to a specific supervisor release, using the device id & target version', async function () {
 					await balena.models.device.setSupervisorRelease(
 						this.device.id,
-						this.supervisorRelease.supervisor_version,
+						this.supervisorRelease.raw_version,
 					);
 					const device = await balena.models.device.get(this.device.id);
 					expect(device.should_be_managed_by__release).to.have.deep.property(
