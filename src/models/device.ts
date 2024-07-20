@@ -2180,7 +2180,7 @@ const getDeviceModel = function (
 										},
 									},
 									body: {
-										should_be_managed_by__supervisor_release: release.id,
+										should_be_managed_by__release: release.id,
 									},
 								});
 							},
