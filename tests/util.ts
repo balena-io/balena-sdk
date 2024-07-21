@@ -34,9 +34,13 @@ export const describeExpandAssertions = <T extends object>(
 				const [result] = await balena.pine.get<T>({
 					...params,
 					options: {
+						$select: 'id',
 						...params.options,
 						$expand: {
-							[key]: expand[key],
+							[key]: {
+								$select: 'id',
+								...expand[key],
+							},
 						},
 					},
 				} as typeof params);
