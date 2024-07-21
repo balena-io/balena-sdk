@@ -1097,7 +1097,10 @@ describe('OS model', function () {
 				const provisioningKeys =
 					await balena.models.apiKey.getProvisioningApiKeysByApplication(
 						ctx.application.id,
-						{ $filter: { name: provisioningKeyName } },
+						{
+							$select: 'name',
+							$filter: { name: provisioningKeyName },
+						},
 					);
 
 				expect(provisioningKeys).to.be.an('array');
@@ -1126,7 +1129,10 @@ describe('OS model', function () {
 				const provisioningKeys =
 					await balena.models.apiKey.getProvisioningApiKeysByApplication(
 						ctx.application.id,
-						{ $filter: { expiry_date: provisioningKeyExpiryDate } },
+						{
+							$select: 'expiry_date',
+							$filter: { expiry_date: provisioningKeyExpiryDate },
+						},
 					);
 
 				expect(provisioningKeys).to.be.an('array');
