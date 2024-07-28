@@ -1,4 +1,15 @@
 - commits:
+    - subject: Switch to new custom syntax
+      hash: d3a158cb958dbc13a78abc4fb6f03ba3d4699773
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 19.7.5
+  title: ""
+  date: 2024-07-28T21:12:51.790Z
+- commits:
     - subject: Update @balena/lint to 8.2.7
       hash: 47ba44ce8a4f14423ccdb587659e12077b704620
       body: ""
