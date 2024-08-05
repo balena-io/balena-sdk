@@ -664,7 +664,8 @@ const getApplicationModel = function (
 		 * @memberof balena.models.application
 		 *
 		 * @param {Object} options - application creation parameters
-		 * @param {String} options.name - application names
+		 * @param {String} options.name - application name
+		 * @param {String} [options.uuid] - application uuid
 		 * @param {String} [options.applicationType] - application type slug e.g. microservices
 		 * @param {String} [options.applicationClass] - application class: 'app' | 'fleet' | 'block'
 		 * @param {String} options.deviceType - device type slug
@@ -691,6 +692,7 @@ const getApplicationModel = function (
 		 */
 		async create({
 			name,
+			uuid,
 			applicationType,
 			applicationClass,
 			deviceType,
@@ -698,6 +700,7 @@ const getApplicationModel = function (
 			organization,
 		}: {
 			name: string;
+			uuid?: string;
 			/** @deprecated TODO: drop me in the next major */
 			applicationType?: string;
 			applicationClass?: 'app' | 'fleet' | 'block';
@@ -773,6 +776,7 @@ const getApplicationModel = function (
 			]);
 			const body: SubmitBody<Application> = {
 				app_name: name,
+				uuid,
 				is_for__device_type: deviceTypeId,
 			};
 

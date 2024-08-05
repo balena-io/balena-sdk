@@ -1828,7 +1828,8 @@ balena.models.application.hasAny().then(function(hasAny) {
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | application creation parameters |
-| options.name | <code>String</code> | application names |
+| options.name | <code>String</code> | application name |
+| [options.uuid] | <code>String</code> | application uuid |
 | [options.applicationType] | <code>String</code> | application type slug e.g. microservices |
 | [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
