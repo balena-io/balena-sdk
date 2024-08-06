@@ -1,4 +1,18 @@
 - commits:
+    - subject: "application.create: Allow specifying the uuid of the new application"
+      hash: 1b70afddb3126406eefafa72116655bd252c45af
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Two.20supervisors/near/456618269
+        see: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Two.20supervisors/near/456618269
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.8.0
+  title: ""
+  date: 2024-08-06T11:36:00.011Z
+- commits:
     - subject: Switch to new custom syntax
       hash: d3a158cb958dbc13a78abc4fb6f03ba3d4699773
       body: ""
