@@ -243,6 +243,22 @@ describe('Application Model', function () {
 						});
 				});
 
+				it('...should be able to create an application and specify a custom uuid', async function () {
+					const uuid = balena.models.device.generateUniqueKey();
+					const app = await balena.models.application.create({
+						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarCustomUuid`,
+						uuid,
+						deviceType: 'raspberry-pi',
+						organization: this.initialOrg.id,
+					});
+					expect(app).to.have.property('uuid', uuid);
+					const apps = await balena.models.application.getAll(
+						{},
+						'directly_accessible',
+					);
+					expect(apps).to.have.length(appCount);
+				});
+
 				it('...should be able to create an application with a specific application type', function () {
 					return balena.models.application
 						.create({
