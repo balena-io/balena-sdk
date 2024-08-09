@@ -14,8 +14,8 @@ import {
 	givenASupervisorRelease,
 	givenAnApplication,
 	givenLoggedInUser,
+	givenLoggedInUserWithApiKey,
 	givenMulticontainerApplication,
-	givenInitialOrganization,
 	sdkOpts,
 	IS_BROWSER,
 	applicationRetrievalFields,
@@ -51,170 +51,187 @@ const makeRequest = async (url) => {
 describe('Device Model', function () {
 	timeSuite(before);
 	givenLoggedInUser(before);
-	givenInitialOrganization(before);
 
-	describe('given an application', function () {
-		givenAnApplication(before);
+	(
+		[
+			['user credentials'],
+			['a user api key', () => givenLoggedInUserWithApiKey(before)],
+		] as const
+	).forEach(([titlePart, loginFn]) => {
+		describe(`given an application and an sdk instance authenticated with ${titlePart}`, function () {
+			if (loginFn != null) {
+				loginFn();
+			}
+			givenAnApplication(before);
+			describe('given no device [contained scenario]', function () {
+				describe('[read operations]', function () {
+					let ctx: Mocha.Context;
 
-		describe('given no device [contained scenario]', function () {
-			describe('[read operations]', function () {
-				let ctx: Mocha.Context;
-
-				before(function () {
-					ctx = this;
-				});
-
-				describe('balena.models.device.getAllByApplication()', () => {
-					it('should become an empty array', async function () {
-						const result = await balena.models.device.getAllByApplication(
-							ctx.application.id,
-						);
-						expect(result).to.deep.equal([]);
-					});
-				});
-
-				describe('balena.models.device.getAllByOrganization()', () => {
-					it('should become an empty array', async function () {
-						const result = await balena.models.device.getAllByOrganization(
-							ctx.initialOrg.id,
-						);
-						expect(result).to.deep.equal([]);
-					});
-				});
-
-				parallel('balena.models.device.generateUniqueKey()', function () {
-					it('should generate a valid uuid', function () {
-						const uuid = balena.models.device.generateUniqueKey();
-
-						expect(uuid).to.be.a('string');
-						expect(uuid).to.have.length(32);
-						return expect(uuid).to.match(/^[a-z0-9]{32}$/);
+					before(function () {
+						ctx = this;
 					});
 
-					it('should generate different uuids', function () {
-						const one = balena.models.device.generateUniqueKey();
-						const two = balena.models.device.generateUniqueKey();
-						const three = balena.models.device.generateUniqueKey();
-
-						expect(one).to.not.equal(two);
-						return expect(two).to.not.equal(three);
-					});
-				});
-			});
-
-			describe('balena.models.device.register()', function () {
-				it(`should be rejected if the application slug does not exist`, async function () {
-					const uuid = balena.models.device.generateUniqueKey();
-					const promise = balena.models.device.register(
-						`${this.initialOrg.handle}/helloworldapp`,
-						uuid,
-					);
-					await expect(promise).to.be.rejectedWith(
-						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
-					);
-				});
-
-				it('should be rejected if the application id does not exist', async function () {
-					const uuid = balena.models.device.generateUniqueKey();
-					const promise = balena.models.device.register(999999, uuid);
-					await expect(promise).to.be.rejectedWith(
-						'Application not found: 999999',
-					);
-				});
-
-				it('should be rejected if the provided device type does not exist', async function () {
-					const uuid = balena.models.device.generateUniqueKey();
-					const promise = balena.models.device.register(
-						this.application.id,
-						uuid,
-						'foobarbaz',
-					);
-					await expect(promise).to.be.rejectedWith(
-						'Invalid device type: foobarbaz',
-					);
-				});
-
-				it('should be rejected when providing a device type incompatible with the application', async function () {
-					const uuid = balena.models.device.generateUniqueKey();
-					const promise = balena.models.device.register(
-						this.application.id,
-						uuid,
-						'intel-nuc',
-					);
-					await expect(promise).to.be.rejectedWith(
-						`Incompatible device type: intel-nuc`,
-					);
-				});
-
-				describe('[mutating operations]', function () {
-					after(async function () {
-						await balena.pine.delete({
-							resource: 'device',
-							options: {
-								$filter: {
-									belongs_to__application: this.application.id,
-								},
-							},
-						});
-					});
-
-					applicationRetrievalFields.forEach((prop, i) => {
-						it(`should be able to register a device to a valid application ${prop}`, async function () {
-							const uuid = balena.models.device.generateUniqueKey();
-							await balena.models.device.register(this.application[prop], uuid);
-							const apps = await balena.models.device.getAllByApplication(
-								this.application.slug,
+					describe('balena.models.device.getAllByApplication()', () => {
+						it('should become an empty array', async function () {
+							const result = await balena.models.device.getAllByApplication(
+								ctx.application.id,
 							);
-							expect(apps).to.have.length(i + 1);
+							expect(result).to.deep.equal([]);
 						});
 					});
 
-					it('should become valid device registration info', async function () {
-						const uuid = balena.models.device.generateUniqueKey();
-						const deviceInfo = await balena.models.device.register(
-							this.application.id,
-							uuid,
-						);
-						expect(deviceInfo.uuid).to.equal(uuid);
-						expect(deviceInfo.api_key).to.be.a('string');
+					describe('balena.models.device.getAllByOrganization()', () => {
+						it('should become an empty array', async function () {
+							const result = await balena.models.device.getAllByOrganization(
+								ctx.initialOrg.id,
+							);
+							expect(result).to.deep.equal([]);
+						});
 					});
 
-					it(`should be able to register a device with a different device type than the application`, async function () {
-						const compatibleDeviceTypeSlug = 'raspberrypi3';
-						const application = await balena.models.application.get(
-							this.application.id,
-							{
-								$select: 'is_for__device_type',
-								$expand: { is_for__device_type: { $select: 'slug' } },
-							},
-						);
-						expect(application)
-							.to.have.nested.property('is_for__device_type[0].slug')
-							.that.is.not.equal(compatibleDeviceTypeSlug);
+					parallel('balena.models.device.generateUniqueKey()', function () {
+						it('should generate a valid uuid', function () {
+							const uuid = balena.models.device.generateUniqueKey();
 
+							expect(uuid).to.be.a('string');
+							expect(uuid).to.have.length(32);
+							return expect(uuid).to.match(/^[a-z0-9]{32}$/);
+						});
+
+						it('should generate different uuids', function () {
+							const one = balena.models.device.generateUniqueKey();
+							const two = balena.models.device.generateUniqueKey();
+							const three = balena.models.device.generateUniqueKey();
+
+							expect(one).to.not.equal(two);
+							return expect(two).to.not.equal(three);
+						});
+					});
+				});
+
+				describe('balena.models.device.register()', function () {
+					it(`should be rejected if the application slug does not exist`, async function () {
 						const uuid = balena.models.device.generateUniqueKey();
-						const deviceInfo = await balena.models.device.register(
+						const promise = balena.models.device.register(
+							`${this.initialOrg.handle}/helloworldapp`,
+							uuid,
+						);
+						await expect(promise).to.be.rejectedWith(
+							`Application not found: ${this.initialOrg.handle}/helloworldapp`,
+						);
+					});
+
+					it('should be rejected if the application id does not exist', async function () {
+						const uuid = balena.models.device.generateUniqueKey();
+						const promise = balena.models.device.register(999999, uuid);
+						await expect(promise).to.be.rejectedWith(
+							'Application not found: 999999',
+						);
+					});
+
+					it('should be rejected if the provided device type does not exist', async function () {
+						const uuid = balena.models.device.generateUniqueKey();
+						const promise = balena.models.device.register(
 							this.application.id,
 							uuid,
-							compatibleDeviceTypeSlug,
+							'foobarbaz',
 						);
-						expect(deviceInfo.uuid).to.equal(uuid);
-						expect(deviceInfo.api_key).to.be.a('string');
-						const device = await balena.models.device.get(uuid, {
-							$select: 'uuid',
-							$expand: { is_of__device_type: { $select: 'slug' } },
+						await expect(promise).to.be.rejectedWith(
+							'Invalid device type: foobarbaz',
+						);
+					});
+
+					it('should be rejected when providing a device type incompatible with the application', async function () {
+						const uuid = balena.models.device.generateUniqueKey();
+						const promise = balena.models.device.register(
+							this.application.id,
+							uuid,
+							'intel-nuc',
+						);
+						await expect(promise).to.be.rejectedWith(
+							`Incompatible device type: intel-nuc`,
+						);
+					});
+
+					describe('[mutating operations]', function () {
+						after(async function () {
+							await balena.pine.delete({
+								resource: 'device',
+								options: {
+									$filter: {
+										belongs_to__application: this.application.id,
+									},
+								},
+							});
 						});
-						expect(device).to.have.property('uuid', uuid);
-						expect(device).to.have.nested.property(
-							'is_of__device_type[0].slug',
-							compatibleDeviceTypeSlug,
-						);
+
+						applicationRetrievalFields.forEach((prop, i) => {
+							it(`should be able to register a device to a valid application ${prop}`, async function () {
+								const uuid = balena.models.device.generateUniqueKey();
+								await balena.models.device.register(
+									this.application[prop],
+									uuid,
+								);
+								const apps = await balena.models.device.getAllByApplication(
+									this.application.slug,
+								);
+								expect(apps).to.have.length(i + 1);
+							});
+						});
+
+						it('should become valid device registration info', async function () {
+							const uuid = balena.models.device.generateUniqueKey();
+							const deviceInfo = await balena.models.device.register(
+								this.application.id,
+								uuid,
+							);
+							expect(deviceInfo.uuid).to.equal(uuid);
+							expect(deviceInfo.api_key).to.be.a('string');
+						});
+
+						it(`should be able to register a device with a different device type than the application`, async function () {
+							const compatibleDeviceTypeSlug = 'raspberrypi3';
+							const application = await balena.models.application.get(
+								this.application.id,
+								{
+									$select: 'is_for__device_type',
+									$expand: { is_for__device_type: { $select: 'slug' } },
+								},
+							);
+							expect(application)
+								.to.have.nested.property('is_for__device_type[0].slug')
+								.that.is.not.equal(compatibleDeviceTypeSlug);
+
+							const uuid = balena.models.device.generateUniqueKey();
+							const deviceInfo = await balena.models.device.register(
+								this.application.id,
+								uuid,
+								compatibleDeviceTypeSlug,
+							);
+							expect(deviceInfo.uuid).to.equal(uuid);
+							expect(deviceInfo.api_key).to.be.a('string');
+							const device = await balena.models.device.get(uuid, {
+								$select: 'uuid',
+								$expand: { is_of__device_type: { $select: 'slug' } },
+							});
+							expect(device).to.have.property('uuid', uuid);
+							expect(device).to.have.nested.property(
+								'is_of__device_type[0].slug',
+								compatibleDeviceTypeSlug,
+							);
+						});
 					});
 				});
 			});
 		});
+	});
+
+	describe('given an application', function () {
+		givenAnApplication(before);
 
 		describe('given a single offline device', function () {
+			givenAnApplication(before);
+
 			describe('[read operations]', function () {
 				givenADevice(before);
 
