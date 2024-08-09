@@ -10,6 +10,7 @@ chai.use(chaiAsPromised);
 chai.use(chaiSamsam);
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
+export const apiVersion = 'v7';
 
 export let balenaSdkExports: typeof BalenaSdk;
 export let sdkOpts: BalenaSdk.SdkOptions;
@@ -663,19 +664,31 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 
 export function givenASupervisorRelease(
 	beforeFn: Mocha.HookFunction,
-	version = 'v11.12.4',
+	version = '11.12.4',
 ) {
 	beforeFn(async function () {
-		const supervisorRelease = await balena.pine.get({
-			resource: 'supervisor_release',
-			options: {
-				$filter: {
-					supervisor_version: version,
-					is_for__device_type: this.application.is_for__device_type.__id,
+		const dt = await balena.models.deviceType.get(
+			this.application.is_for__device_type.__id,
+			{
+				$select: 'id',
+				$expand: {
+					is_of__cpu_architecture: {
+						$select: 'slug',
+					},
 				},
 			},
-		});
-		this.supervisorRelease = supervisorRelease[0];
+		);
+		const [supervisorRelease] =
+			await balena.models.os.getSupervisorReleasesForCpuArchitecture(
+				dt.is_of__cpu_architecture[0].slug,
+				{
+					$select: ['id', 'raw_version'],
+					$filter: {
+						raw_version: version,
+					},
+				},
+			);
+		this.supervisorRelease = supervisorRelease;
 	});
 }
 

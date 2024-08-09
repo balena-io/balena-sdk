@@ -6,7 +6,6 @@ import type {
 	StringKeyof,
 	Dictionary,
 	ExactlyExtends,
-	NoInfer,
 } from './utils';
 
 export interface WithId {
@@ -21,7 +20,8 @@ export interface PineDeferred {
  * When not selected-out holds a deferred.
  * When expanded hold an array with a single element.
  */
-export type ConceptTypeNavigationResource<T extends object> = [T] | number;
+export type ConceptTypeNavigationResource<T extends object> =
+	NavigationResource<T>;
 export type NavigationResource<T extends object> = [T] | PineDeferred;
 export type OptionalNavigationResource<T extends object> =
 	| []

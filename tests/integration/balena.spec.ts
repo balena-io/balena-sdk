@@ -10,11 +10,11 @@ import {
 	credentials,
 	givenAnApplication,
 	TEST_KEY_NAME_PREFIX,
+	apiVersion,
 } from './setup';
 import { timeSuite } from '../util';
 
 const DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/';
-const apiVersion = 'v6';
 
 describe('Balena SDK', function () {
 	timeSuite(before);

@@ -40,7 +40,6 @@ import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 import * as url from 'url';
 
 import once = require('lodash/once');
-import groupBy = require('lodash/groupBy');
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
@@ -52,6 +51,7 @@ import {
 	mergePineOptions,
 	treatAsMissingDevice,
 	limitedMap,
+	groupByMap,
 } from '../util';
 
 import {
@@ -952,9 +952,6 @@ const getDeviceModel = function (
 					'is_undervolted',
 				],
 			});
-			// TODO: Drop the manual __metadata removal once we bump to the v7 model.
-			// @ts-expect-error __metadata isn't in the pine client typings
-			delete device.__metadata;
 			return device;
 		},
 
@@ -1944,10 +1941,10 @@ const getDeviceModel = function (
 		isTrackingApplicationRelease: async (
 			uuidOrId: string | number,
 		): Promise<boolean> => {
-			const { should_be_running__release } = await exports.get(uuidOrId, {
-				$select: 'should_be_running__release',
+			const { is_pinned_on__release } = await exports.get(uuidOrId, {
+				$select: 'is_pinned_on__release',
 			});
-			return !should_be_running__release;
+			return !is_pinned_on__release;
 		},
 
 		/**
@@ -1977,7 +1974,7 @@ const getDeviceModel = function (
 			const deviceOptions = {
 				$select: 'id',
 				$expand: {
-					should_be_running__release: {
+					is_pinned_on__release: {
 						$select: 'commit',
 					},
 					belongs_to__application: {
@@ -1987,13 +1984,13 @@ const getDeviceModel = function (
 				},
 			} as const;
 
-			const { should_be_running__release, belongs_to__application } =
+			const { is_pinned_on__release, belongs_to__application } =
 				(await exports.get(uuidOrId, deviceOptions)) as PineTypedResult<
 					Device,
 					typeof deviceOptions
 				>;
-			if (should_be_running__release.length > 0) {
-				return should_be_running__release[0]!.commit;
+			if (is_pinned_on__release.length > 0) {
+				return is_pinned_on__release[0]!.commit;
 			}
 			const targetRelease =
 				belongs_to__application[0].should_be_running__release[0];
@@ -2061,7 +2058,7 @@ const getDeviceModel = function (
 							},
 						},
 						body: {
-							should_be_running__release: release.id,
+							is_pinned_on__release: release.id,
 						},
 					});
 				},
@@ -2089,7 +2086,7 @@ const getDeviceModel = function (
 			uuidOrIdOrArray: string | string[] | number | number[],
 		): Promise<void> => {
 			await set(uuidOrIdOrArray, {
-				should_be_running__release: null,
+				is_pinned_on__release: null,
 			});
 		},
 
@@ -2122,29 +2119,20 @@ const getDeviceModel = function (
 		): Promise<void> => {
 			const releaseFilterProperty = isId(supervisorVersionOrId)
 				? 'id'
-				: 'supervisor_version';
+				: 'raw_version';
 			const getRelease = memoizee(
-				async (deviceTypeSlug: string) => {
-					const [supervisorRelease] = await pine.get({
-						resource: 'supervisor_release',
-						options: {
-							$top: 1,
-							$select: 'id',
-							$filter: {
-								[releaseFilterProperty]: supervisorVersionOrId,
-								is_for__device_type: {
-									$any: {
-										$alias: 'dt',
-										$expr: {
-											dt: {
-												slug: deviceTypeSlug,
-											},
-										},
-									},
+				async (cpuArchId: number) => {
+					const [supervisorRelease] =
+						await sdkInstance.models.os.getSupervisorReleasesForCpuArchitecture(
+							cpuArchId,
+							{
+								$top: 1,
+								$select: 'id',
+								$filter: {
+									[releaseFilterProperty]: supervisorVersionOrId,
 								},
 							},
-						},
-					});
+						);
 					if (supervisorRelease == null) {
 						throw new errors.BalenaReleaseNotFound(supervisorVersionOrId);
 					}
@@ -2156,7 +2144,9 @@ const getDeviceModel = function (
 				uuidOrIdOrArray,
 				options: {
 					$select: ['id', 'supervisor_version', 'os_version'],
-					$expand: { is_of__device_type: { $select: 'slug' } },
+					$expand: {
+						is_of__device_type: { $select: 'is_of__cpu_architecture' },
+					},
 				},
 				fn: async (devices) => {
 					devices.forEach((device) => {
@@ -2167,14 +2157,15 @@ const getDeviceModel = function (
 						);
 						ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
 					});
-					const devicesByDeviceType = groupBy(
+					const devicesByDeviceType = groupByMap(
 						devices,
-						(device) => device.is_of__device_type[0].slug,
+						(device) =>
+							device.is_of__device_type[0].is_of__cpu_architecture.__id,
 					);
 					await Promise.all(
-						Object.entries(devicesByDeviceType).map(
-							async ([dt, devicesOfType]) => {
-								const release = await getRelease(dt);
+						[...devicesByDeviceType.entries()].map(
+							async ([cpuArchId, devicesOfType]) => {
+								const release = await getRelease(cpuArchId);
 								await pine.patch<Device>({
 									resource: 'device',
 									options: {
@@ -2183,7 +2174,7 @@ const getDeviceModel = function (
 										},
 									},
 									body: {
-										should_be_managed_by__supervisor_release: release.id,
+										should_be_managed_by__release: release.id,
 									},
 								});
 							},

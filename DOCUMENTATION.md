@@ -207,7 +207,6 @@ const sdk = fromSharedOptions();
             * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
             * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
             * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-            * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
             * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
             * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
             * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
@@ -370,7 +369,7 @@ const sdk = fromSharedOptions();
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-            * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
+            * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.config](#balena.models.config) : <code>object</code>
             * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
             * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -615,7 +614,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
         * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
         * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-        * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
         * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
         * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
         * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
@@ -778,7 +776,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-        * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.config](#balena.models.config) : <code>object</code>
         * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
         * ~~[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code>~~
@@ -871,7 +869,6 @@ balena.models.device.get(123).catch(function (error) {
     * [.getDirectlyAccessible(slugOrUuidOrId, [options])](#balena.models.application.getDirectlyAccessible) ⇒ <code>Promise</code>
     * [.getWithDeviceServiceDetails(slugOrUuidOrId, [options])](#balena.models.application.getWithDeviceServiceDetails) ⇒ <code>Promise</code>
     * [.getAppByName(appName, [options], [context])](#balena.models.application.getAppByName) ⇒ <code>Promise</code>
-    * ~~[.getAppByOwner(appName, owner, [options])](#balena.models.application.getAppByOwner) ⇒ <code>Promise</code>~~
     * [.has(slugOrUuidOrId)](#balena.models.application.has) ⇒ <code>Promise</code>
     * [.hasAny()](#balena.models.application.hasAny) ⇒ <code>Promise</code>
     * [.create(options)](#balena.models.application.create) ⇒ <code>Promise</code>
@@ -1758,28 +1755,6 @@ balena.models.application.getAppByName('MyApp').then(function(application) {
 	console.log(application);
 });
 ```
-<a name="balena.models.application.getAppByOwner"></a>
-
-##### ~~application.getAppByOwner(appName, owner, [options]) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Get a single application using the appname and the handle of the owning organization  
-**Access**: public  
-**Fulfil**: <code>Object</code> - application  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| appName | <code>String</code> |  | application name |
-| owner | <code>String</code> |  | The handle of the owning organization |
-| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
-
-**Example**  
-```js
-balena.models.application.getAppByOwner('myorganization/myapp', 'MyOrg').then(function(application) {
-	console.log(application);
-});
-```
 <a name="balena.models.application.has"></a>
 
 ##### application.has(slugOrUuidOrId) ⇒ <code>Promise</code>
@@ -1830,10 +1805,8 @@ balena.models.application.hasAny().then(function(hasAny) {
 | options | <code>Object</code> | application creation parameters |
 | options.name | <code>String</code> | application name |
 | [options.uuid] | <code>String</code> | application uuid |
-| [options.applicationType] | <code>String</code> | application type slug e.g. microservices |
 | [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
-| [options.parent] | <code>Number</code> \| <code>String</code> | parent application name or id |
 | options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
 
 **Example**  
@@ -5286,7 +5259,7 @@ balena.models.organization.remove(123);
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-    * [.getSupervisorImageForDeviceType(deviceTypeId, version)](#balena.models.os.getSupervisorImageForDeviceType) ⇒ <code>Promise.&lt;String&gt;</code>
+    * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
 
 <a name="balena.models.os.getAvailableOsVersions"></a>
 
@@ -5539,23 +5512,45 @@ console.log(result1);
 const result2 = balena.models.os.isArchitectureCompatibleWith('armv7hf', 'amd64');
 console.log(result2);
 ```
-<a name="balena.models.os.getSupervisorImageForDeviceType"></a>
+<a name="balena.models.os.getSupervisorReleasesForCpuArchitecture"></a>
 
-##### os.getSupervisorImageForDeviceType(deviceTypeId, version) ⇒ <code>Promise.&lt;String&gt;</code>
+##### os.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options]) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
-**Summary**: Returns image name for a specific supervisor version for a Device Type  
-**Returns**: <code>Promise.&lt;String&gt;</code> - - Docker image name for the Supervisor version and arch  
+**Summary**: Returns the Releases of the supervisor for the CPU Architecture  
+**Returns**: <code>Promise.&lt;String&gt;</code> - - An array of Release objects that can be used to manage a device as supervisors.  
 **Access**: public  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceTypeId | <code>Number</code> | The Id for the Device Type |
-| version | <code>String</code> | The semver version string for the supervisor |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| cpuArchitectureSlugOrId | <code>String</code> \| <code>Number</code> |  | The slug (string) or id (number) for the CPU Architecture |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
 
 **Example**  
 ```js
-const result = balena.models.os.getSupervisorImageForDT(60, 'v12.11.0').then(result => console.log(result))
-// 60 would be raspberrypi4-64 on balena-cloud
+const results = balena.models.os.getSupervisorReleasesForCpuArchitecture('aarch64');
+
+const [result] = balena.models.os.getSupervisorReleasesForCpuArchitecture(
+	'aarch64',
+	{ $filter: { raw_version: '12.11.0' } },
+);
+
+const [result] = balena.models.os.getSupervisorReleasesForCpuArchitecture(
+	'aarch64',
+	{
+			$select: ['id', 'raw_version', 'known_issue_list', 'created_at', 'contract'],
+			$expand: {
+				release_image: {
+					$select: 'id',
+					$expand: {
+						image: {
+							$select: 'is_stored_at__image_location',
+						},
+					},
+				},
+			},
+		$filter: { raw_version: '12.11.0' }
+	},
+);
 ```
 <a name="balena.models.config"></a>
 
