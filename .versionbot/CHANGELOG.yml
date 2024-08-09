@@ -1,4 +1,16 @@
 - commits:
+    - subject: "types: Extend the InvoinceInfo states"
+      hash: 4aca85ef61ba55c0f3b4266b7c751f2764638a62
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 19.9.0
+  title: ""
+  date: 2024-08-09T11:08:18.908Z
+- commits:
     - subject: "application.create: Allow specifying the uuid of the new application"
       hash: 1b70afddb3126406eefafa72116655bd252c45af
       body: ""
