@@ -120,6 +120,22 @@ export interface BillingPlanBillingInfo {
 	}>;
 }
 
+type BillingV1InvoiceState =
+	| 'pending'
+	| 'paid'
+	| 'failed'
+	| 'past_due'
+	| 'open'
+	| 'closed'
+	| 'voided'
+	| 'processing';
+type BillingV2InvoiceState =
+	| 'draft'
+	| 'open'
+	| 'paid'
+	| 'uncollectible'
+	| 'void';
+
 export interface InvoiceInfo {
 	closed_at: string;
 	created_at: string;
@@ -129,7 +145,7 @@ export interface InvoiceInfo {
 	subtotal_in_cents: string;
 	total_in_cents: string;
 	uuid: string;
-	state: 'pending' | 'paid' | 'failed' | 'past_due';
+	state: BillingV1InvoiceState | BillingV2InvoiceState;
 }
 
 export interface PlanChangeOptions {
