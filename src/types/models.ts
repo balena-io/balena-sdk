@@ -588,7 +588,7 @@ export interface Image {
 	start_timestamp?: string | null;
 	end_timestamp?: string | null;
 	push_timestamp?: string | null;
-	image_size?: number | null;
+	image_size?: string | null;
 	dockerfile: string;
 	error_message?: string | null;
 	is_a_build_of__service: NavigationResource<Service>;
