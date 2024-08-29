@@ -474,6 +474,9 @@ export interface Device {
 	should_be_operated_by__release: OptionalNavigationResource<Release>;
 	should_be_managed_by__release: OptionalNavigationResource<Release>;
 
+	/** This is a computed term that works like: `device.is_pinned_on__release ?? device.belongs_to__application[0].should_be_running__release` */
+	should_be_running__release: OptionalNavigationResource<Release>;
+
 	device_config_variable: ReverseNavigationResource<DeviceVariable>;
 	device_environment_variable: ReverseNavigationResource<DeviceVariable>;
 	device_tag: ReverseNavigationResource<DeviceTag>;
