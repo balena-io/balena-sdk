@@ -178,15 +178,6 @@ describe('Release Model', function () {
 				// since otherwise the release or application delete would fail with a DB error.
 				// See: https://www.flowdock.com/app/rulemotion/resin-devops/threads/wOEEiorvtaeCtuGc4KVO0YpAy-f
 				await waitForImagesToBeCreated(this.application.id, releaseIds.length);
-
-				await balena.pine.delete({
-					resource: 'release',
-					options: {
-						$filter: {
-							belongs_to__application: this.application.id,
-						},
-					},
-				});
 			});
 
 			parallel('[read operations]', function () {
