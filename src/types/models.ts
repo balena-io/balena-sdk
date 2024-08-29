@@ -422,6 +422,15 @@ export interface Device {
 	is_accessible_by_support_until__date: string | null;
 	is_connected_to_vpn: boolean;
 	is_locked_until__date: string;
+	update_status:
+		| 'rejected'
+		| 'downloading'
+		| 'downloaded'
+		| 'applying changes'
+		| 'aborted'
+		| 'done'
+		| null;
+	last_update_status_event: string | null;
 	is_web_accessible: boolean;
 	is_active: boolean;
 	/** This is a computed term */
