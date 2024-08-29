@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add typing for `update_status` and `last_update_status_event` in the
+        Device resource
+      hash: 1fc60a8c660e933153946bd500f1c1080ca9aad1
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Andrea Rosci
+      nested: []
+  version: 19.10.0
+  title: ""
+  date: 2024-08-29T16:18:04.828Z
+- commits:
     - subject: "types: Extend the InvoinceInfo states"
       hash: 4aca85ef61ba55c0f3b4266b7c751f2764638a62
       body: ""
