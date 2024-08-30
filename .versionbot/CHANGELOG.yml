@@ -1,4 +1,24 @@
 - commits:
+    - subject: "tests: Enable the retryRateLimitedRequests option"
+      hash: 7814bbaa9e1afb76f8eb7b3309881b45069af036
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add the computed device.should_be_running__release field
+      hash: 4a4eb8b0f8856098639bed629736e158ebf2042b
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.1.0
+  title: ""
+  date: 2024-08-30T10:30:28.455Z
+- commits:
     - subject: "tests: Simplify the release.createFromUrl() test cleanup"
       hash: 402d5140c8078a430577ba2691ed67db8c5fb3f0
       body: ""
