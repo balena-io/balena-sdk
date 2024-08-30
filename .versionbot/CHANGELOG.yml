@@ -1,4 +1,458 @@
 - commits:
+    - subject: "tests: Simplify the release.createFromUrl() test cleanup"
+      hash: 402d5140c8078a430577ba2691ed67db8c5fb3f0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Lint & type fixes & improvements
+      hash: 1b31fcb380507ccc9f38f79b23f1aea7236b2d9a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Add missing $selects to make the queries faster"
+      hash: bd081110f94fe2fcf7f121f8222400316d323303
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Change image.image_size to string | null"
+      hash: 3dbd30152a09e1df7af8e59e4bd12dcd75ed442b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Replace device.overall_status offline & idle with
+        disconnected, reduced-functionality & operational"
+      hash: 39585b6a0444728f3290e2a9031efa76b7485fa4
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Change user, application & device actor, to return a
+        deferred property when selected"
+      hash: f3072049103f602d6f43b3d05e8c9bdc835615f1
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Replace the release.should_be_running_on__device with
+        is_pinned_to__device"
+      hash: 4f89e4e0678ae23b95660a7c7da75e416f1e14fc
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Replace the device.should_be_running__release with
+        is_pinned_on__release"
+      hash: 2aac67528718e8af3ce5a0ee862a67253e1ec141
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Add the device.should_be_operated_by__release property"
+      hash: 95f32464f52a91595729fb920887f039164d0ccd
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Drop the supervisor_release resource"
+      hash: be246f9da80b909f0a10698dcc2635b0ec2e93d1
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Replace device.should_be_managed_by__supervisor_release with
+        should_be_managed_by__release"
+      hash: 3934ae218a695e1d7075768cfe00b4d9090d5a82
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Drop the device.is_managed_by__device, manages__device
+        properties"
+      hash: 33c9a234fc874af215f33f7b223d342ed2ef9067
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Drop the device.vpn_address property"
+      hash: 6557e2a24cdc6f66068527b9776a81b99e9c51af
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Drop the device state & status_sort_index sdk-only property
+        typings"
+      hash: 085362d94b4c4c2b199bfeaa0cebaed6a41158d2
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "v7 model: Drop the gateway_download resource"
+      hash: 2f4474bb78e9dc36d20fbec16c45fa8d92aa3cda
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "[BREAKING]: Update all API queries to use the v7 model"
+      hash: d8cf966539b6971e9de12b7aef0f52d026a4bd89
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "[BREAKING]: Drop the application.getAppByOwner method"
+      hash: 4cdf1b41adcba23dd96ff70f3246494f0be9e2c7
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Add the os.getSupervisorReleasesForCpuArchitecture() method
+      hash: 477e2c6d464d1a018033a9829c032063901be907
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "[BREAKING]: Drop the os.getSupervisorReleaseByDeviceType method"
+      hash: 6d45fba7edd930ea10e218e08105c4d299fe709c
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "[BREAKING]: application.create: Drop the applicationType & parent
+        parameters"
+      hash: 98fb9ae9736601fc119fd6f610ed76cc8cd75cb0
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop the unused OsVersionsByDeviceType type
+      hash: bc5d286c6ccc1577b5a33bae54cd37244b1acf89
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop the no longer needed __metadata property handling
+      hash: 7af2b8afd48ac89912265a3ddcffcbfdd77a5827
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update pinejs-client-core to 6.15.0
+      hash: 0ae7db2ab522184f506b4b24bb94b9147da8ef73
+      body: |
+        Update pinejs-client-core from 6.14.0 to 6.15.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Add support for using model specific typings
+              hash: 1077e19ef18cc4cede4d6401496a016fef459150
+              body: >
+                This requires passing the model typings when creating the
+                pinejs-client
+
+                instance and will mean that any usage after that will be type
+                checked
+
+                to limit to resources/properties that exist on the model. This
+                covers
+
+                almost all usage but there are some cases we cannot cover as we
+                would
+
+                need typescript support for partial inference of generics, eg
+                for
+
+                lambdas, or to make major changes to the querying interface.
+
+                This work should also be fully backwards compatible such that if
+                you do
+
+                not provide model typings then all typings should continue to
+                work as
+
+                previously
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.15.0
+          title: ""
+          date: 2024-06-14T10:45:40.382Z
+        - commits:
+            - subject: Deprecate passing `url` to helper functions
+              hash: 5ad1d4a417e2631d70acf7192b7132366a77be3b
+              body: >
+                The intention is that these are use as helpers functions to
+                build the
+
+                url from an object and so passing a `url` directly is not really
+                the
+
+                intent and interferes with improving the typings for the
+                intended case.
+
+                It is still possible to pass urls directly to the `request`
+                function if
+
+                it is essential but the true answer is to support building those
+                urls,
+
+                and using `prepare` if it is necessary
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.13
+          title: ""
+          date: 2024-06-12T13:09:45.863Z
+        - commits:
+            - subject: Type `upsert` and `getOrCreate` as not accepting a `url`
+              hash: f5261feec2d9fd45bb52885d0aed9482f743df5a
+              body: >
+                This is because they are not designed to support using a `url`
+                and are
+
+                likely to break in very weird and unexpected ways, and as such
+                removing
+
+                it from the typing should reduce potential for surprising errors
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.12
+          title: ""
+          date: 2024-06-12T11:12:46.444Z
+        - commits:
+            - subject: Include comments in generated output so that jsdoc is available
+              hash: 0a20be620a68b92ef95ce735eeebe3de0d754b7f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.11
+          title: ""
+          date: 2024-06-11T15:00:11.283Z
+        - commits:
+            - subject: "Tests: improve typing of tests"
+              hash: d970b64c9400e11ee55c29f16fe489c45b16a957
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.10
+          title: ""
+          date: 2024-06-11T01:32:26.832Z
+        - commits:
+            - subject: Add `$filter` to nested `$count` typings
+              hash: 2774bd0e8b03d6d204df41c2d4ebf3a9d039057e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.9
+          title: ""
+          date: 2024-06-10T15:33:59.941Z
+        - commits:
+            - subject: "Tests: remove unnecessary/unintended returns"
+              hash: b51e379e6a5b1c6cbc5cb83d6dcf537bc6776b05
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.8
+          title: ""
+          date: 2024-06-10T13:36:27.251Z
+        - commits:
+            - subject: Fix using top level $count downstream
+              hash: 03553a4d582ac8354bf2adc47fbe63fefb587042
+              body: >
+                It's unclear why this doesn't cause typing issues within
+
+                pinejs-client-core itself but it does fail when using it
+                downstream
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.7
+          title: ""
+          date: 2024-06-06T13:32:31.757Z
+        - commits:
+            - subject: Type $count/$any/$all as needing to be nested in a navigation property
+              hash: 278681eeed59a175159446ec9e036e9f66f879dc
+              body: |
+                eg `$filter: { references__resource: { $any: { ... } } }`
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.6
+          title: ""
+          date: 2024-05-28T17:39:25.074Z
+        - commits:
+            - subject: Use readonly arrays for typings for better compatibility with `as
+                const`
+              hash: aef91ea270e4110ef11a8ee76929acc7e8804b36
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.5
+          title: ""
+          date: 2024-05-28T15:11:57.306Z
+        - commits:
+            - subject: Deprecate the generic `PinejsClient` typing in favor of using `this`
+                for `.clone` typing
+              hash: 010c949c91a1765bec8050140fa35367a8279950
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.4
+          title: ""
+          date: 2024-05-08T01:05:08.480Z
+        - commits:
+            - subject: Update dev dependencies
+              hash: 4042a5be6e35d26f3db74309a5c3e5e3948cb75c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.3
+          title: ""
+          date: 2024-04-17T15:47:43.685Z
+        - commits:
+            - subject: Improve typings
+              hash: 45240b18c41f7558bed64fb2e5689d58b7742f51
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.2
+          title: ""
+          date: 2024-03-04T16:18:00.230Z
+        - commits:
+            - subject: Update dependencies
+              hash: 4e982dab1dcd6d786e4224b695aa2801c283b9f7
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-6.14.1
+          title: ""
+          date: 2024-03-04T16:05:19.595Z
+    - subject: "[BREAKING]: Stop actively supporting TypeScript versions older than
+        the current latest"
+      hash: 15366a6381b48843eea9bc0993b7133bcfa0825e
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Bump minimum supported Typescript version to v5.5.2
+      hash: 0bba30a51f59168ea4f710f81cedbeac39ab59c1
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Thodoris Greasidis
+        signed-off-by: Thodoris Greasidis
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "[BREAKING]: Update the es2015 build target & output folder to es2017"
+      hash: 5a1791a2d94911d7f7566d03f401bb9f1028cf00
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "package.json: Rename the lint:fix npm script to lint-fix"
+      hash: 43b58f0b304bd7f332175cecfa6cc1d19f2a5c65
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.0.0
+  title: ""
+  date: 2024-08-30T06:55:50.986Z
+- commits:
     - subject: Add typing for `update_status` and `last_update_status_event` in the
         Device resource
       hash: 1fc60a8c660e933153946bd500f1c1080ca9aad1
