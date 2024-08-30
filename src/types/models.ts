@@ -11,7 +11,6 @@ import type {
 import type { AnyObject } from '../../typings/utils';
 
 type JsonType = AnyObject;
-type JsonTypeString = string;
 
 export interface ResourceTypeMap {
 	actor: Actor;
@@ -363,7 +362,7 @@ export interface Release {
 	created_at: string;
 	commit: string;
 	composition: JsonType | null;
-	contract: JsonTypeString | null;
+	contract: JsonType | null;
 	status: ReleaseStatus;
 	source: string;
 	build_log: string | null;
