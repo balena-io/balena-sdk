@@ -1,4 +1,16 @@
 - commits:
+    - subject: "typing: Fix the release.contract to be a JsonType instead of a string"
+      hash: 2755ba925a65d3b3ed28489481b7200b23e38445
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.1.1
+  title: ""
+  date: 2024-08-30T19:16:09.264Z
+- commits:
     - subject: "tests: Enable the retryRateLimitedRequests option"
       hash: 7814bbaa9e1afb76f8eb7b3309881b45069af036
       body: ""
