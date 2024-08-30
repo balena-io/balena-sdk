@@ -13,33 +13,31 @@ export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 export const apiVersion = 'v7';
 
 export let balenaSdkExports: typeof BalenaSdk;
-export let sdkOpts: BalenaSdk.SdkOptions;
+export const sdkOpts: BalenaSdk.SdkOptions = {
+	isBrowser: IS_BROWSER,
+	requestBatchingChunkSize: 5,
+	retryRateLimitedRequests: true,
+};
 if (IS_BROWSER) {
 	require('js-polyfills/es6');
 	balenaSdkExports = window.balenaSdk;
 
-	const apiUrl = process.env.TEST_API_URL || 'https://api.balena-cloud.com';
-	sdkOpts = {
-		apiUrl,
-		builderUrl:
-			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
-	};
+	sdkOpts.apiUrl = process.env.TEST_API_URL || 'https://api.balena-cloud.com';
 } else {
 	balenaSdkExports = require('../..');
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const settings = require('balena-settings-client');
 
-	const apiUrl = process.env.TEST_API_URL || settings.get('apiUrl');
-	sdkOpts = {
-		apiUrl,
-		builderUrl:
-			process.env.TEST_BUILDER_URL || apiUrl.replace('api.', 'builder.'),
-		dataDirectory: settings.get('dataDirectory'),
-	};
+	sdkOpts.apiUrl = process.env.TEST_API_URL || settings.get('apiUrl');
+	sdkOpts.dataDirectory = settings.get('dataDirectory');
 }
 
-sdkOpts.isBrowser = IS_BROWSER;
-sdkOpts.requestBatchingChunkSize = 5;
+if (sdkOpts.apiUrl == null) {
+	throw new Error(`sdkOpts.apiUrl was not defined: ${sdkOpts.apiUrl}`);
+}
+
+sdkOpts.builderUrl =
+	process.env.TEST_BUILDER_URL || sdkOpts.apiUrl.replace('api.', 'builder.');
 
 const env = process.env as Dictionary<string>;
 console.log(`Running SDK tests against: ${sdkOpts.apiUrl}`);

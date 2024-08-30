@@ -461,6 +461,7 @@ const getDeviceModel = function (
 		 * you have to explicitly define them in a `$select` in the extra options:
 		 * * `overall_status`
 		 * * `overall_progress`
+		 * * `should_be_running__release`
 		 *
 		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
@@ -511,6 +512,7 @@ const getDeviceModel = function (
 		 * you have to explicitly define them in a `$select` in the extra options:
 		 * * `overall_status`
 		 * * `overall_progress`
+		 * * `should_be_running__release`
 		 *
 		 * @param {String|Number} handleOrId - organization handle (string) or id (number).
 		 * @param {Object} [options={}] - extra pine options to use
@@ -577,6 +579,7 @@ const getDeviceModel = function (
 		 * you have to explicitly define them in a `$select` in the extra options:
 		 * * `overall_status`
 		 * * `overall_progress`
+		 * * `should_be_running__release`
 		 *
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		 * @param {Object} [options={}] - extra pine options to use
@@ -1974,29 +1977,17 @@ const getDeviceModel = function (
 			const deviceOptions = {
 				$select: 'id',
 				$expand: {
-					is_pinned_on__release: {
+					should_be_running__release: {
 						$select: 'commit',
-					},
-					belongs_to__application: {
-						$select: 'id',
-						$expand: { should_be_running__release: { $select: 'commit' } },
 					},
 				},
 			} as const;
 
-			const { is_pinned_on__release, belongs_to__application } =
-				(await exports.get(uuidOrId, deviceOptions)) as PineTypedResult<
-					Device,
-					typeof deviceOptions
-				>;
-			if (is_pinned_on__release.length > 0) {
-				return is_pinned_on__release[0]!.commit;
-			}
-			const targetRelease =
-				belongs_to__application[0].should_be_running__release[0];
-			if (targetRelease) {
-				return targetRelease.commit;
-			}
+			const { should_be_running__release } = (await exports.get(
+				uuidOrId,
+				deviceOptions,
+			)) as PineTypedResult<Device, typeof deviceOptions>;
+			return should_be_running__release[0]?.commit;
 		},
 
 		/**
