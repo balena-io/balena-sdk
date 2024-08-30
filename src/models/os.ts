@@ -30,12 +30,7 @@ import type {
 	ResolvableReturnType,
 	TypeOrDictionary,
 } from '../../typings/utils';
-import type {
-	ResourceTagBase,
-	ApplicationTag,
-	Release,
-	SupervisorRelease,
-} from '../types/models';
+import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
 import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
@@ -83,11 +78,6 @@ export interface OsVersion
 	line?: OsLines;
 	/** @deprecated */
 	isRecommended?: boolean;
-}
-
-/** @deprecated */
-export interface OsVersionsByDeviceType {
-	[deviceTypeSlug: string]: OsVersion[];
 }
 
 export interface ImgConfigOptions {
@@ -954,37 +944,122 @@ const getOsModel = function (
 	};
 
 	/**
-	 * @summary Returns image name for a specific supervisor version for a Device Type
-	 * @name getSupervisorImageForDeviceType
+	 * @summary Returns the Releases of the supervisor for the CPU Architecture
+	 * @name getSupervisorReleasesForCpuArchitecture
 	 * @public
 	 * @function
 	 * @memberof balena.models.os
 	 *
-	 * @param {Number} deviceTypeId - The Id for the Device Type
-	 * @param {String} version - The semver version string for the supervisor
-	 * @returns {Promise<String>} - Docker image name for the Supervisor version and arch
+	 * @param {String|Number} cpuArchitectureSlugOrId - The slug (string) or id (number) for the CPU Architecture
+	 * @param {Object} [options={}] - extra pine options to use
+	 * @returns {Promise<String>} - An array of Release objects that can be used to manage a device as supervisors.
 	 *
 	 * @example
-	 * const result = balena.models.os.getSupervisorImageForDT(60, 'v12.11.0').then(result => console.log(result))
-	 * // 60 would be raspberrypi4-64 on balena-cloud
+	 * const results = balena.models.os.getSupervisorReleasesForCpuArchitecture('aarch64');
 	 *
+	 * const [result] = balena.models.os.getSupervisorReleasesForCpuArchitecture(
+	 * 	'aarch64',
+	 * 	{ $filter: { raw_version: '12.11.0' } },
+	 * );
+	 *
+	 * const [result] = balena.models.os.getSupervisorReleasesForCpuArchitecture(
+	 * 	'aarch64',
+	 * 	{
+	 * 			$select: ['id', 'raw_version', 'known_issue_list', 'created_at', 'contract'],
+	 * 			$expand: {
+	 * 				release_image: {
+	 * 					$select: 'id',
+	 * 					$expand: {
+	 * 						image: {
+	 * 							$select: 'is_stored_at__image_location',
+	 * 						},
+	 * 					},
+	 * 				},
+	 * 			},
+	 * 		$filter: { raw_version: '12.11.0' }
+	 * 	},
+	 * );
 	 */
-	const getSupervisorReleaseByDeviceType = async (
-		deviceTypeId: number,
-		version: string,
-	): Promise<SupervisorRelease | null> => {
-		const results: any = await pine.get<SupervisorRelease>({
-			resource: 'supervisor_release',
-			options: {
-				$top: 1,
-				$filter: {
-					is_for__device_type: deviceTypeId,
-					supervisor_version: version,
+	const getSupervisorReleasesForCpuArchitecture = async <
+		TP extends PineOptions<Release> | undefined,
+	>(
+		cpuArchitectureSlugOrId: string | number,
+		options?: TP,
+	): Promise<
+		Array<
+			ExtendedPineTypedResult<
+				Release,
+				Pick<Release, 'id' | 'raw_version' | 'known_issue_list'>,
+				TP
+			>
+		>
+	> => {
+		const results = await pine.get({
+			resource: 'release',
+			options: mergePineOptionsTyped(
+				{
+					$select: ['id', 'raw_version', 'known_issue_list'],
+					$filter: {
+						status: 'success' as const,
+						is_final: true,
+						is_invalidated: false,
+						semver_major: { $gt: 0 },
+						belongs_to__application: {
+							$any: {
+								$alias: 'a',
+								$expr: {
+									$and: [
+										{ a: { slug: { $startswith: 'balena_os/' } } },
+										{ a: { slug: { $endswith: '-supervisor' } } },
+									],
+									a: {
+										is_public: true,
+										is_host: false,
+										is_for__device_type: {
+											$any: {
+												$alias: 'dt',
+												$expr: {
+													dt: {
+														is_of__cpu_architecture:
+															typeof cpuArchitectureSlugOrId === 'number'
+																? cpuArchitectureSlugOrId
+																: {
+																		$any: {
+																			$alias: 'c',
+																			$expr: {
+																				c: {
+																					slug: cpuArchitectureSlugOrId,
+																				},
+																			},
+																		},
+																	},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					$orderby: [
+						{ semver_major: 'desc' },
+						{ semver_minor: 'desc' },
+						{ semver_patch: 'desc' },
+						{ revision: 'desc' },
+					],
 				},
-			},
+				options,
+			),
 		});
 
-		return results?.[0] ?? null;
+		return results as Array<
+			ExtendedPineTypedResult<
+				Release,
+				Pick<Release, 'id' | 'raw_version' | 'known_issue_list'>,
+				TP
+			>
+		>;
 	};
 
 	return {
@@ -1009,7 +1084,7 @@ const getOsModel = function (
 		isSupportedOsUpdate,
 		getSupportedOsUpdateVersions,
 		isArchitectureCompatibleWith,
-		getSupervisorReleaseByDeviceType,
+		getSupervisorReleasesForCpuArchitecture,
 	};
 };
 

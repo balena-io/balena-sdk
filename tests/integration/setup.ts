@@ -10,6 +10,7 @@ chai.use(chaiAsPromised);
 chai.use(chaiSamsam);
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
+export const apiVersion = 'v7';
 
 export let balenaSdkExports: typeof BalenaSdk;
 export let sdkOpts: BalenaSdk.SdkOptions;
@@ -383,7 +384,10 @@ export function givenLoggedInWithADeviceApiKey(beforeFn: Mocha.HookFunction) {
 
 export function givenADevice(
 	beforeFn: Mocha.HookFunction,
-	extraDeviceProps?: BalenaSdk.PineSubmitBody<BalenaSdk.Device>,
+	{
+		api_heartbeat_state,
+		...extraDeviceProps
+	}: BalenaSdk.PineSubmitBody<BalenaSdk.Device> = {},
 ) {
 	beforeFn(async function () {
 		const uuid = balena.models.device.generateUniqueKey();
@@ -405,7 +409,7 @@ export function givenADevice(
 				},
 			});
 		}
-		if (extraDeviceProps) {
+		if (Object.keys(extraDeviceProps).length > 0) {
 			await balena.pine.patch<BalenaSdk.Device>({
 				resource: 'device',
 				body: extraDeviceProps,
@@ -414,6 +418,18 @@ export function givenADevice(
 						uuid: deviceInfo.uuid,
 					},
 				},
+			});
+		}
+		if (api_heartbeat_state != null) {
+			if (api_heartbeat_state !== 'online') {
+				throw new Error(
+					`Mocking the device's api_heartbeat_state only supports using the 'online' state`,
+				);
+			}
+			await balena.request.send({
+				url: `/device/v3/${deviceInfo.uuid}/state`,
+				baseUrl: sdkOpts.apiUrl,
+				apiKey: deviceInfo.api_key,
 			});
 		}
 
@@ -663,19 +679,31 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 
 export function givenASupervisorRelease(
 	beforeFn: Mocha.HookFunction,
-	version = 'v11.12.4',
+	version = '11.12.4',
 ) {
 	beforeFn(async function () {
-		const supervisorRelease = await balena.pine.get({
-			resource: 'supervisor_release',
-			options: {
-				$filter: {
-					supervisor_version: version,
-					is_for__device_type: this.application.is_for__device_type.__id,
+		const dt = await balena.models.deviceType.get(
+			this.application.is_for__device_type.__id,
+			{
+				$select: 'id',
+				$expand: {
+					is_of__cpu_architecture: {
+						$select: 'slug',
+					},
 				},
 			},
-		});
-		this.supervisorRelease = supervisorRelease[0];
+		);
+		const [supervisorRelease] =
+			await balena.models.os.getSupervisorReleasesForCpuArchitecture(
+				dt.is_of__cpu_architecture[0].slug,
+				{
+					$select: ['id', 'raw_version'],
+					$filter: {
+						raw_version: version,
+					},
+				},
+			);
+		this.supervisorRelease = supervisorRelease;
 	});
 }
 

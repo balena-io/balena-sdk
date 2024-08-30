@@ -1097,7 +1097,10 @@ describe('OS model', function () {
 				const provisioningKeys =
 					await balena.models.apiKey.getProvisioningApiKeysByApplication(
 						ctx.application.id,
-						{ $filter: { name: provisioningKeyName } },
+						{
+							$select: 'name',
+							$filter: { name: provisioningKeyName },
+						},
 					);
 
 				expect(provisioningKeys).to.be.an('array');
@@ -1126,7 +1129,10 @@ describe('OS model', function () {
 				const provisioningKeys =
 					await balena.models.apiKey.getProvisioningApiKeysByApplication(
 						ctx.application.id,
-						{ $filter: { expiry_date: provisioningKeyExpiryDate } },
+						{
+							$select: 'expiry_date',
+							$filter: { expiry_date: provisioningKeyExpiryDate },
+						},
 					);
 
 				expect(provisioningKeys).to.be.an('array');
@@ -1226,33 +1232,70 @@ describe('OS model', function () {
 	});
 
 	describe('supervisor', () => {
-		describe('balena.models.os.getSupervisorReleaseByDeviceType()', function () {
-			it('should return null if no image was found', async () => {
-				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
-					1,
-					'v999.99.99',
+		describe('balena.models.os.getSupervisorReleasesForCpuArchitecture()', function () {
+			it('should return an empty array if no image was found', async () => {
+				const svRelease =
+					await balena.models.os.getSupervisorReleasesForCpuArchitecture(
+						'notACpuArch',
+					);
+				expect(svRelease).to.deep.equal([]);
+			});
+
+			it('should by default include the id, semver and known_issue_list', async () => {
+				const dt = await balena.models.deviceType.get('raspberrypi4-64', {
+					$select: 'slug',
+					$expand: { is_of__cpu_architecture: { $select: 'slug' } },
+				});
+
+				const svReleases =
+					await balena.models.os.getSupervisorReleasesForCpuArchitecture(
+						dt.is_of__cpu_architecture[0].slug,
+					);
+				expect(svReleases).to.have.property('length').that.is.greaterThan(0);
+				const [svRelease] = svReleases;
+				expect(Object.keys(svRelease).sort()).to.deep.equal(
+					['id', 'raw_version', 'known_issue_list'].sort(),
 				);
-				expect(svImage).to.equal(null);
 			});
 
 			it('should return the right string when asking for raspberrypi4-64 and v12.11.0', async () => {
-				const dtId: number = await balena.models.deviceType
-					.get('raspberrypi4-64')
-					.then((res) => res.id);
+				const dt = await balena.models.deviceType.get('raspberrypi4-64', {
+					$select: 'slug',
+					$expand: { is_of__cpu_architecture: { $select: 'slug' } },
+				});
 
-				const svImage = await balena.models.os.getSupervisorReleaseByDeviceType(
-					dtId,
-					'v12.11.0',
-				);
-				expect(svImage?.image_name).to.match(
+				const svReleases =
+					await balena.models.os.getSupervisorReleasesForCpuArchitecture(
+						dt.is_of__cpu_architecture[0].slug,
+						{
+							$select: 'id',
+							$expand: {
+								release_image: {
+									$select: 'id',
+									$expand: {
+										image: {
+											$select: 'is_stored_at__image_location',
+										},
+									},
+								},
+							},
+							$filter: { raw_version: '12.11.0' },
+						},
+					);
+
+				expect(svReleases).to.have.lengthOf(1);
+				const [svRelease] = svReleases;
+				const imageLocation =
+					svRelease.release_image[0].image[0].is_stored_at__image_location;
+				expect(imageLocation).to.match(
 					/registry2\.[a-z0-9_\-.]+\.[a-z]+\/v2\/[0-9a-f]+/,
 				);
 				if (sdkOpts.apiUrl === 'https://api.balena-cloud.com') {
-					expect(svImage?.image_name).to.equal(
+					expect(imageLocation).to.equal(
 						'registry2.balena-cloud.com/v2/4ca706e1c624daff7e519b3009746b2c',
 					);
 				} else if (sdkOpts.apiUrl === 'https://api.balena-staging.com') {
-					expect(svImage?.image_name).to.equal(
+					expect(imageLocation).to.equal(
 						'registry2.balena-staging.com/v2/77fdf484a2f80f5b111e7ebe18759561',
 					);
 				}

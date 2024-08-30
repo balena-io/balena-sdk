@@ -2113,7 +2113,7 @@ describe('Device Model', function () {
 					});
 				});
 
-				describe('Given an online device', function () {
+				describe('Given a vpn only online device', function () {
 					before(function () {
 						return balena.pine.patch({
 							resource: 'device',
@@ -2126,11 +2126,11 @@ describe('Device Model', function () {
 					});
 
 					deviceUniqueFields.forEach((prop) => {
-						it(`should return idle when retrieving by ${prop}`, async function () {
+						it(`should return reduced-functionality when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
-							expect(status).to.equal('idle');
+							expect(status).to.equal('reduced-functionality');
 						});
 					});
 				});
@@ -2147,18 +2147,18 @@ describe('Device Model', function () {
 					});
 
 					deviceUniqueFields.forEach((prop) => {
-						it(`should return offline when retrieving by ${prop}`, async function () {
+						it(`should return disconnected when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
-							expect(status).to.equal('offline');
+							expect(status).to.equal('disconnected');
 						});
 					});
 				});
 			});
 		});
 
-		describe('given an online device', function () {
+		describe('given a vpn only online device', function () {
 			givenADevice(before, {
 				is_online: true,
 				...testDeviceOsInfo,
@@ -2170,7 +2170,7 @@ describe('Device Model', function () {
 						$select: ['overall_status', 'overall_progress'],
 					});
 					return expect(device).to.deep.match({
-						overall_status: 'idle',
+						overall_status: 'reduced-functionality',
 						overall_progress: null,
 					});
 				});
@@ -2724,6 +2724,7 @@ describe('Device Model', function () {
 				is_online: true,
 				...testDeviceOsInfo,
 				last_connectivity_event: '2019-05-13T16:14',
+				api_heartbeat_state: 'online',
 			});
 
 			describe('balena.models.device.getStatus()', () => {
@@ -2906,17 +2907,10 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.setSupervisorRelease()', function () {
+				givenASupervisorRelease(before, '11.12.3');
+
 				before(async function () {
-					const [oldSupervisorRelease] = await balena.pine.get({
-						resource: 'supervisor_release',
-						options: {
-							$select: 'id',
-							$filter: {
-								supervisor_version: 'v11.12.3',
-								is_for__device_type: this.application.is_for__device_type.__id,
-							},
-						},
-					});
+					const oldSupervisorRelease = this.supervisorRelease;
 					// Set all devices to a supervisor release so that the service installs are already set.
 					// We shouldn't need to do this.
 					for (const d of this.devices) {
@@ -2926,9 +2920,9 @@ describe('Device Model', function () {
 						);
 					}
 				});
-				givenASupervisorRelease(before, 'v11.12.4');
+				givenASupervisorRelease(before, '11.12.4');
 
-				['supervisor_version', 'id'].forEach((svReleaseProp) => {
+				['raw_version', 'id'].forEach((svReleaseProp) => {
 					it(`should set the batch of devices to a specific supervisor release using the supervisor releases's ${svReleaseProp}`, async function () {
 						await balena.models.device.setSupervisorRelease(
 							this.devices.map((d) => d.id),
@@ -2938,7 +2932,7 @@ describe('Device Model', function () {
 							this.devices.map(async (d) => {
 								const device = await balena.models.device.get(d.id);
 								expect(
-									device.should_be_managed_by__supervisor_release,
+									device.should_be_managed_by__release,
 								).to.have.deep.property('__id', this.supervisorRelease.id);
 							}),
 						);
@@ -2969,12 +2963,13 @@ describe('Device Model', function () {
 				it('should set the device to a specific supervisor release, using the device id & target version', async function () {
 					await balena.models.device.setSupervisorRelease(
 						this.device.id,
-						this.supervisorRelease.supervisor_version,
+						this.supervisorRelease.raw_version,
 					);
 					const device = await balena.models.device.get(this.device.id);
-					expect(
-						device.should_be_managed_by__supervisor_release,
-					).to.have.deep.property('__id', this.supervisorRelease.id);
+					expect(device.should_be_managed_by__release).to.have.deep.property(
+						'__id',
+						this.supervisorRelease.id,
+					);
 				});
 
 				it('should set the device to a specific supervisor release, using the device id & supervisor release id', async function () {
@@ -2983,9 +2978,10 @@ describe('Device Model', function () {
 						this.supervisorRelease.id,
 					);
 					const device = await balena.models.device.get(this.device.id);
-					expect(
-						device.should_be_managed_by__supervisor_release,
-					).to.have.deep.property('__id', this.supervisorRelease.id);
+					expect(device.should_be_managed_by__release).to.have.deep.property(
+						'__id',
+						this.supervisorRelease.id,
+					);
 				});
 
 				it('should fail to set the device to a specific non-existent supervisor release', async function () {

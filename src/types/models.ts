@@ -35,8 +35,6 @@ export interface ResourceTypeMap {
 	device_type: DeviceType;
 	device_type_alias: DeviceTypeAlias;
 	feature: Feature;
-	/** @deprecated */
-	gateway_download: GatewayDownload;
 	image: Image;
 	image_install: ImageInstall;
 	identity_provider: IdentityProvider;
@@ -68,7 +66,6 @@ export interface ResourceTypeMap {
 	subscription: Subscription;
 	subscription_addon_discount: SubscriptionAddonDiscount;
 	subscription_prepaid_addon: SubscriptionPrepaidAddon;
-	supervisor_release: SupervisorRelease;
 	support_feature: SupportFeature;
 	support_tier: SupportTier;
 	team: Team;
@@ -403,7 +400,9 @@ export interface Release {
 	release_image: ReverseNavigationResource<ReleaseImage>;
 	should_be_running_on__application: ReverseNavigationResource<Application>;
 	is_running_on__device: ReverseNavigationResource<Device>;
-	should_be_running_on__device: ReverseNavigationResource<Device>;
+	is_pinned_to__device: ReverseNavigationResource<Device>;
+	should_operate__device: ReverseNavigationResource<Device>;
+	should_manage__device: ReverseNavigationResource<Device>;
 	release_tag: ReverseNavigationResource<ReleaseTag>;
 }
 
@@ -447,18 +446,9 @@ export interface Device {
 	os_version: string | null;
 	provisioning_progress?: number;
 	provisioning_state: string;
-	// TODO: Drop in next major
-	/** @deprecated */
-	state?: { key: string; name: string };
 	status: string;
-	// TODO: Drop in next major
-	/** @deprecated */
-	status_sort_index?: number;
 	supervisor_version: string;
 	uuid: string;
-	// TODO: Drop when we bump to api v7
-	/** @deprecated */
-	vpn_address?: string | null;
 	api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 	memory_usage: number | null;
 	memory_total: number | null;
@@ -479,21 +469,16 @@ export interface Device {
 	belongs_to__application: NavigationResource<Application>;
 	belongs_to__user: OptionalNavigationResource<User>;
 	is_running__release: OptionalNavigationResource<Release>;
-	should_be_running__release: OptionalNavigationResource<Release>;
+	is_pinned_on__release: OptionalNavigationResource<Release>;
 	is_managed_by__service_instance: OptionalNavigationResource<ServiceInstance>;
-	/** @deprecated */
-	is_managed_by__device: OptionalNavigationResource<Device>;
-	should_be_managed_by__supervisor_release: OptionalNavigationResource<SupervisorRelease>;
+	should_be_operated_by__release: OptionalNavigationResource<Release>;
+	should_be_managed_by__release: OptionalNavigationResource<Release>;
 
 	device_config_variable: ReverseNavigationResource<DeviceVariable>;
 	device_environment_variable: ReverseNavigationResource<DeviceVariable>;
 	device_tag: ReverseNavigationResource<DeviceTag>;
-	/** @deprecated */
-	manages__device: ReverseNavigationResource<Device>;
 	service_install: ReverseNavigationResource<ServiceInstall>;
 	image_install: ReverseNavigationResource<ImageInstall>;
-	/** @deprecated */
-	gateway_download: ReverseNavigationResource<GatewayDownload>;
 }
 
 export interface CpuArchitecture {
@@ -545,17 +530,6 @@ export interface OrganizationPrivateDeviceTypeAccess {
 	id: number;
 	organization: NavigationResource<Organization>;
 	has_private_access_to__device_type: NavigationResource<DeviceType>;
-}
-
-export interface SupervisorRelease {
-	created_at: string;
-	id: number;
-	supervisor_version: string;
-	image_name: string;
-	is_public: boolean;
-	note?: string;
-
-	is_for__device_type: NavigationResource<DeviceType>;
 }
 
 export interface ServiceInstance {
@@ -614,7 +588,7 @@ export interface Image {
 	start_timestamp?: string | null;
 	end_timestamp?: string | null;
 	push_timestamp?: string | null;
-	image_size?: number | null;
+	image_size?: string | null;
 	dockerfile: string;
 	error_message?: string | null;
 	is_a_build_of__service: NavigationResource<Service>;
@@ -656,16 +630,6 @@ export interface ImageInstall {
 	installs__image: NavigationResource<Image>;
 	device: NavigationResource<Device>;
 	is_provided_by__release: NavigationResource<Release>;
-}
-
-/** @deprecated */
-export interface GatewayDownload {
-	id: number;
-	download_progress: number;
-	status: string;
-
-	image: NavigationResource<Image>;
-	is_downloaded_by__device: NavigationResource<Device>;
 }
 
 export interface ServiceInstall {

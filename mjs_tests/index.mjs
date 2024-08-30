@@ -18,8 +18,8 @@ describe('mjs imports', function () {
 		describe(`${titlePart} imports`, function () {
 			it('should include all exported methods', async function () {
 				const sdkExports = await loader();
-				const es2015Build = await import('../es2015/index.js');
-				Object.keys(es2015Build)
+				const es2017Build = await import('../es2017/index.js');
+				Object.keys(es2017Build)
 					.filter(
 						(exportedKey) =>
 							exportedKey !== 'default' && !exportedKey.startsWith('__'),

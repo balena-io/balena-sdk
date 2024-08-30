@@ -84,16 +84,6 @@ describe('Application Model', function () {
 				});
 			});
 
-			parallel('balena.models.application.getAppByOwner()', function () {
-				it('should eventually reject', function () {
-					const promise = balena.models.application.getAppByOwner(
-						'testapp',
-						'FooBar',
-					);
-					return expect(promise).to.be.rejected;
-				});
-			});
-
 			describe('balena.models.application.hasAny()', function () {
 				it('should eventually be false', function () {
 					const promise = balena.models.application.hasAny();
@@ -110,18 +100,6 @@ describe('Application Model', function () {
 			});
 
 			parallel('[read operations]', function () {
-				it('should be rejected if the application type is invalid', function () {
-					const promise = balena.models.application.create({
-						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-						applicationType: 'non-existing',
-						deviceType: 'raspberry-pi',
-						organization: ctx.initialOrg.id,
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Invalid application type: non-existing',
-					);
-				});
-
 				it('should be rejected if the device type is invalid', function () {
 					const promise = balena.models.application.create({
 						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
@@ -415,29 +393,6 @@ describe('Application Model', function () {
 							'directly_accessible',
 						);
 						expect(app.id).to.equal(ctx.application.id);
-					});
-				});
-
-				parallel('balena.models.application.getAppByOwner()', function () {
-					it('should find the created application', function () {
-						return balena.models.application
-							.getAppByOwner(
-								`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-								ctx.initialOrg.handle,
-							)
-							.then((application) => {
-								return expect(application.id).to.equal(ctx.application.id);
-							});
-					});
-
-					it('should not find the created application with a different organization handle', function () {
-						const promise = balena.models.application.getAppByOwner(
-							`${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-							'test_org_handle',
-						);
-						return expect(promise).to.eventually.be.rejectedWith(
-							`Application not found: test_org_handle/${TEST_APPLICATION_NAME_PREFIX}_foobar`,
-						);
 					});
 				});
 
@@ -1508,11 +1463,7 @@ describe('Application Model', function () {
 			if (expectCommit == null) {
 				expectCommit = false;
 			}
-			const omittedFields = [
-				'owns__device',
-				'should_be_running__release',
-				'__metadata',
-			];
+			const omittedFields = ['owns__device', 'should_be_running__release'];
 
 			expect(_.omit(application, omittedFields)).to.deep.equal(
 				_.omit(this.application, omittedFields),
