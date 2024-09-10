@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.6.2
+      hash: cdfd0bc823283c79f115aa3abcf7fb41f0a077af
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.1.2
+  title: ""
+  date: 2024-09-10T09:22:55.523Z
+- commits:
     - subject: "typing: Fix the release.contract to be a JsonType instead of a string"
       hash: 2755ba925a65d3b3ed28489481b7200b23e38445
       body: ""
