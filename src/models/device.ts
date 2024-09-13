@@ -1898,7 +1898,7 @@ const getDeviceModel = function (
 
 			const { timeSince } = dateUtils();
 			if (device.is_online) {
-				return `Online (for ${timeSince(lce, false)})`;
+				return `Connected (for ${timeSince(lce, false)})`;
 			}
 
 			return timeSince(lce);

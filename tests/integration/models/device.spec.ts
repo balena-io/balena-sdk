@@ -3351,7 +3351,7 @@ describe('Device Model', function () {
 				};
 
 				return expect(balena.models.device.lastOnline(mockDevice)).to.equal(
-					'Online (for 5 minutes)',
+					'Connected (for 5 minutes)',
 				);
 			});
 
