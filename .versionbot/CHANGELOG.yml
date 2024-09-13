@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update `lastOnline` function to return "Connected" instead of "Online"
+      hash: c0c22e4b60c3160a8e6f9573cddbaf623a105f3f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+  version: 20.1.3
+  title: ""
+  date: 2024-09-13T10:12:20.051Z
+- commits:
     - subject: Update TypeScript to 5.6.2
       hash: cdfd0bc823283c79f115aa3abcf7fb41f0a077af
       body: ""
