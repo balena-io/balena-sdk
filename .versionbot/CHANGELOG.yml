@@ -1,4 +1,17 @@
 - commits:
+    - subject: Fix the device.setSupervisorRelease docs to not include a v prefix for
+        the version
+      hash: e7cb91eeb1dce94ce67f9742a37d3c48a93c63a3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.1.4
+  title: ""
+  date: 2024-09-19T16:06:30.497Z
+- commits:
     - subject: Update `lastOnline` function to return "Connected" instead of "Online"
       hash: c0c22e4b60c3160a8e6f9573cddbaf623a105f3f
       body: ""
