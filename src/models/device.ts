@@ -2091,16 +2091,16 @@ const getDeviceModel = function (
 		 * @description Configures the device to run a particular supervisor release.
 		 *
 		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
-		 * @param {String|Number} supervisorVersionOrId - the version of a released supervisor (string) or id (number)
+		 * @param {String|Number} supervisorVersionOrId - the raw version of a supervisor release (string) or id (number)
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.setSupervisorRelease('7cf02a6', 'v10.8.0').then(function() {
+		 * balena.models.device.setSupervisorRelease('7cf02a6', '10.8.0').then(function() {
 		 * 	...
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.setSupervisorRelease(123, 'v11.4.14').then(function() {
+		 * balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 		 * 	...
 		 * });
 		 */
