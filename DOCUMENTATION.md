@@ -2929,6 +2929,7 @@ In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
 * `overall_status`
 * `overall_progress`
+* `should_be_running__release`
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by application  
@@ -2966,6 +2967,7 @@ In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
 * `overall_status`
 * `overall_progress`
+* `should_be_running__release`
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get all devices by organization  
@@ -3003,6 +3005,7 @@ In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
 * `overall_status`
 * `overall_progress`
+* `should_be_running__release`
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a single device  
@@ -3998,17 +4001,17 @@ Configures the device to run a particular supervisor release.
 | Param | Type | Description |
 | --- | --- | --- |
 | uuidOrIdOrArray | <code>String</code> \| <code>Array.&lt;String&gt;</code> \| <code>Number</code> \| <code>Array.&lt;Number&gt;</code> | device uuid (string) or id (number) or array of full uuids or ids |
-| supervisorVersionOrId | <code>String</code> \| <code>Number</code> | the version of a released supervisor (string) or id (number) |
+| supervisorVersionOrId | <code>String</code> \| <code>Number</code> | the raw version of a supervisor release (string) or id (number) |
 
 **Example**  
 ```js
-balena.models.device.setSupervisorRelease('7cf02a6', 'v10.8.0').then(function() {
+balena.models.device.setSupervisorRelease('7cf02a6', '10.8.0').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-balena.models.device.setSupervisorRelease(123, 'v11.4.14').then(function() {
+balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 	...
 });
 ```
