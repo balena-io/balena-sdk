@@ -34,6 +34,8 @@ export interface Config {
 	mixpanelToken?: string;
 	intercomAppId?: string;
 	recurlyPublicKey?: string;
+	stripePublicKey?: string;
+	freezeBillingVersions?: string[];
 	/** @deprecated Will be removed in a future API version. */
 	deviceTypes?: DeviceTypeJson.DeviceType[];
 	DEVICE_ONLINE_ICON: string;
