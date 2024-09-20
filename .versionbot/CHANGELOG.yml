@@ -1,4 +1,16 @@
 - commits:
+    - subject: "typings: Add missing billing properties in Config"
+      hash: f482fb930f52c3a2ee9f3e9446237454b68af946
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.2.0
+  title: ""
+  date: 2024-09-20T08:47:01.746Z
+- commits:
     - subject: Fix the device.setSupervisorRelease docs to not include a v prefix for
         the version
       hash: e7cb91eeb1dce94ce67f9742a37d3c48a93c63a3
