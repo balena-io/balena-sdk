@@ -50,7 +50,13 @@ module.exports = function (config) {
 			process: 'process/browser',
 			Buffer: ['buffer', 'Buffer'],
 		}),
-		new getKarmaConfig.webpack.EnvironmentPlugin(envVars),
+		new getKarmaConfig.webpack.DefinePlugin({
+			// The key needs to match how @balena/env-parsing references the env, since webpack replaces
+			// those references on build time.
+			'process.env': Object.fromEntries(
+				envVars.map((v) => [v, JSON.stringify(process.env[v])]),
+			),
+		}),
 	];
 	karmaConfig.webpack.module.rules.push({
 		test: /\.m?js/,
@@ -79,7 +85,8 @@ module.exports = function (config) {
 		'tests/**/*.spec.ts',
 	];
 
-	const { TEST_ONLY_ON_ENVIRONMENT } = process.env;
+	const { optionalVar } = require('@balena/env-parsing');
+	const TEST_ONLY_ON_ENVIRONMENT = optionalVar('TEST_ONLY_ON_ENVIRONMENT');
 	if (TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT !== 'browser') {
 		console.log(
 			`TEST_ONLY_ON_ENVIRONMENT is set to ${TEST_ONLY_ON_ENVIRONMENT}`,

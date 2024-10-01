@@ -63,6 +63,7 @@
     "node": ">=18.0"
   },
   "devDependencies": {
+    "@balena/env-parsing": "^1.2.0",
     "@balena/lint": "^9.0.1",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",

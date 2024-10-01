@@ -1,10 +1,10 @@
+import { optionalVar, requiredVar } from '@balena/env-parsing';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiSamsam from 'chai-samsam';
 import memoizee from 'memoizee';
 import type * as BalenaSdk from '../../';
-import type { Dictionary } from '../../typings/utils';
 import { getInitialOrganization } from './utils';
 chai.use(chaiAsPromised);
 chai.use(chaiSamsam);
@@ -23,14 +23,14 @@ if (IS_BROWSER) {
 	require('js-polyfills/es6');
 	balenaSdkExports = window.balenaSdk;
 
-	sdkOpts.apiUrl = process.env.TEST_API_URL ?? 'https://api.balena-cloud.com';
+	sdkOpts.apiUrl = optionalVar('TEST_API_URL', 'https://api.balena-cloud.com');
 } else {
 	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	balenaSdkExports = require('../..');
 	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	const settings = require('balena-settings-client');
 
-	sdkOpts.apiUrl = process.env.TEST_API_URL ?? settings.get('apiUrl');
+	sdkOpts.apiUrl = optionalVar('TEST_API_URL', settings.get('apiUrl'));
 	sdkOpts.dataDirectory = settings.get('dataDirectory');
 }
 
@@ -38,65 +38,58 @@ if (sdkOpts.apiUrl == null) {
 	throw new Error(`sdkOpts.apiUrl was not defined: ${sdkOpts.apiUrl}`);
 }
 
-sdkOpts.builderUrl =
-	process.env.TEST_BUILDER_URL ?? sdkOpts.apiUrl.replace('api.', 'builder.');
+sdkOpts.builderUrl = optionalVar(
+	'TEST_BUILDER_URL',
+	sdkOpts.apiUrl.replace('api.', 'builder.'),
+);
 
-const env = process.env as Dictionary<string>;
 console.log(`Running SDK tests against: ${sdkOpts.apiUrl}`);
-console.log(`TEST_USERNAME: ${env?.TEST_USERNAME}`);
+console.log(`TEST_USERNAME: ${optionalVar('TEST_USERNAME')}`);
 
 const buildCredentials = function () {
-	if (!env) {
-		throw new Error('Missing environment object?!');
-	}
-
 	const creds = {
-		email: env.TEST_EMAIL,
-		password: env.TEST_PASSWORD,
-		username: env.TEST_USERNAME,
+		email: requiredVar('TEST_EMAIL'),
+		password: requiredVar('TEST_PASSWORD'),
+		username: requiredVar('TEST_USERNAME'),
 		member: {
-			email: env.TEST_MEMBER_EMAIL,
-			password: env.TEST_MEMBER_PASSWORD,
-			username: env.TEST_MEMBER_USERNAME,
+			email: requiredVar('TEST_MEMBER_EMAIL'),
+			password: requiredVar('TEST_MEMBER_PASSWORD'),
+			username: requiredVar('TEST_MEMBER_USERNAME'),
 		},
-		paid: {
-			email: env.TEST_PAID_EMAIL,
-			password: env.TEST_PAID_PASSWORD,
-		},
+		// require either none or all to be set
+		paid:
+			optionalVar(['TEST_PAID_EMAIL', 'TEST_PAID_PASSWORD']) != null
+				? {
+						email: requiredVar('TEST_PAID_EMAIL'),
+						password: requiredVar('TEST_PAID_PASSWORD'),
+					}
+				: null,
 		register: {
-			email: env.TEST_REGISTER_EMAIL,
-			password: env.TEST_REGISTER_PASSWORD,
-			username: env.TEST_REGISTER_USERNAME,
+			email: requiredVar('TEST_REGISTER_EMAIL'),
+			password: requiredVar('TEST_REGISTER_PASSWORD'),
+			username: requiredVar('TEST_REGISTER_USERNAME'),
 		},
-		twoFactor: {
-			email: env.TEST_2FA_EMAIL,
-			password: env.TEST_2FA_PASSWORD,
-			secret: env.TEST_2FA_SECRET,
-		},
+		twoFactor:
+			// require either none or all to be set
+			optionalVar(['TEST_2FA_EMAIL', 'TEST_2FA_PASSWORD', 'TEST_2FA_SECRET']) !=
+			null
+				? {
+						email: requiredVar('TEST_2FA_EMAIL'),
+						password: requiredVar('TEST_2FA_PASSWORD'),
+						secret: requiredVar('TEST_2FA_SECRET'),
+					}
+				: null,
 	};
 	if (
 		// TODO: this should include the paid account eventually as well
-		![creds.email, creds.register.email].every(
-			(email) => email == null || email.includes('+testsdk'),
+		![creds.email, creds.register.email].every((email) =>
+			email.includes('+testsdk'),
 		)
 	) {
 		throw new Error(
 			'Missing environment credentials, all emails must include `+testsdk` to avoid accidental deletion',
 		);
 	}
-
-	['', 'member', 'register'].forEach((path) => {
-		const credsSet = path ? creds[path] : creds;
-		['email', 'password', 'username'].forEach((prop) => {
-			if (credsSet[prop] == null) {
-				throw new Error(
-					`Missing environment credentials for ${['creds', path, prop]
-						.filter((x) => x)
-						.join('.')}`,
-				);
-			}
-		});
-	});
 
 	return creds;
 };
@@ -199,14 +192,20 @@ export function givenLoggedInUser(
 	});
 }
 
-export function loginUserWith2FA() {
+export async function loginUserWith2FA() {
+	if (credentials.twoFactor == null) {
+		throw new Error('Missing TEST_2FA credentials');
+	}
 	return balena.auth.login({
 		email: credentials.twoFactor.email,
 		password: credentials.twoFactor.password,
 	});
 }
 
-export function loginPaidUser() {
+export async function loginPaidUser() {
+	if (credentials.paid == null) {
+		throw new Error('Missing TEST_PAID credentials');
+	}
 	return balena.auth.login({
 		email: credentials.paid.email,
 		password: credentials.paid.password,
