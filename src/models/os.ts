@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as bSemver from 'balena-semver';
-import once = require('lodash/once');
+import once from 'lodash/once';
 
 import {
 	isNotFoundResponse,

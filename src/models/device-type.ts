@@ -20,7 +20,7 @@ import type { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
 import * as errors from 'balena-errors';
 import * as Handlebars from 'handlebars';
-import cloneDeep = require('lodash/cloneDeep');
+import cloneDeep from 'lodash/cloneDeep';
 
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
 import {

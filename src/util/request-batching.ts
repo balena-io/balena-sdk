@@ -1,5 +1,5 @@
 import * as errors from 'balena-errors';
-import chunk = require('lodash/chunk');
+import chunk from 'lodash/chunk';
 import { groupByMap, mergePineOptions } from '.';
 import type {
 	PineOptionsStrict,

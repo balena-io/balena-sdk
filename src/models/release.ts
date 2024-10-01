@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import once = require('lodash/once');
+import once from 'lodash/once';
 import type * as BalenaSdk from '..';
 import type {
 	InjectedDependenciesParam,

@@ -1,4 +1,4 @@
-import bSemver = require('balena-semver');
+import * as bSemver from 'balena-semver';
 import type * as BalenaSdk from '..';
 import type { AtLeast } from '../../typings/utils';
 import { isProvisioned } from './device';

@@ -1,4 +1,4 @@
-import bSemver = require('balena-semver');
+import * as bSemver from 'balena-semver';
 import type * as BalenaSdk from '..';
 
 export const getDeviceOsSemverWithVariant = ({
