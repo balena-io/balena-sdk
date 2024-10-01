@@ -379,7 +379,7 @@ describe('Release Model', function () {
 		parallel('balena.models.release.get()', function () {
 			it('should get the requested release by id', async () => {
 				const release = await balena.models.release.get(ctx.currentRelease.id);
-				await expect(release).to.deep.match({
+				expect(release).to.deep.match({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -392,7 +392,7 @@ describe('Release Model', function () {
 				const release = await balena.models.release.get(
 					ctx.currentRelease.commit,
 				);
-				await expect(release).to.deep.match({
+				expect(release).to.deep.match({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -405,7 +405,7 @@ describe('Release Model', function () {
 				const release = await balena.models.release.get(
 					ctx.currentRelease.commit.slice(0, 7),
 				);
-				await expect(release).to.deep.match({
+				expect(release).to.deep.match({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -419,7 +419,7 @@ describe('Release Model', function () {
 					application: ctx.application.id,
 					rawVersion: ctx.currentRelease.raw_version,
 				});
-				await expect(release).to.deep.match({
+				expect(release).to.deep.match({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -473,7 +473,7 @@ describe('Release Model', function () {
 					},
 				});
 
-				await expect(release.images[0]).to.not.have.property('build_log');
+				expect(release.images[0]).to.not.have.property('build_log');
 			});
 
 			it('should get the release with associated images attached by commit', async () => {

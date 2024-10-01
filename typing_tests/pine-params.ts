@@ -30,7 +30,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, AnyObject[]> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 await (async () => {
@@ -46,7 +46,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, AnyObject | undefined> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 // Object level typed result
@@ -63,7 +63,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, BalenaSdk.Device[]> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 await (async () => {
@@ -79,7 +79,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, BalenaSdk.Device | undefined> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 await (async () => {
@@ -157,7 +157,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, BalenaSdk.Image[]> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 // Explicitly providing the result type
@@ -179,7 +179,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, number> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 await (async () => {
@@ -200,7 +200,7 @@ await (async () => {
 		},
 	});
 	const test: Equals<typeof result, number> = EqualsTrue;
-	console.log(test);
+	console.log(result, test);
 })();
 
 // Fully Typed - auto-inferring result
@@ -398,7 +398,7 @@ await (async () => {
 	> = EqualsTrue;
 	// @ts-expect-error - TODO: This should either be never[] or even better the pine.get should error
 	const testTodo: Equals<typeof result, never[]> = EqualsTrue;
-	console.log(test, testTodo);
+	console.log(test, result, testTodo);
 })();
 
 await (async () => {

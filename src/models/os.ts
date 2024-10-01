@@ -196,7 +196,7 @@ const getOsModel = function (
 
 	const hupActionHelper = once(() => {
 		const osUpdateUtils =
-			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			// eslint-disable-next-line @typescript-eslint/no-require-imports
 			require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils');
 		return osUpdateUtils.hupActionHelper;
 	});
@@ -345,7 +345,7 @@ const getOsModel = function (
 		options?: PineOptions<Release>,
 	): Promise<Dictionary<OsVersion[]>> => {
 		const hostapps = await _getOsVersions(deviceTypes, options);
-		return await _transformHostApps(hostapps);
+		return _transformHostApps(hostapps);
 	};
 
 	const _memoizedGetAllOsVersions = authDependentMemoizer(

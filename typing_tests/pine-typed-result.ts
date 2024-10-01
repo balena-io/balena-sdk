@@ -324,7 +324,7 @@ export let aStringOrUndefined: string | undefined;
 		{
 			$select: 'belongs_to__application';
 			$expand: {
-				belongs_to__application: {}; // eslint-disable-line @typescript-eslint/ban-types
+				belongs_to__application: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
 			};
 		}
 	>;
@@ -350,7 +350,7 @@ export let aStringOrUndefined: string | undefined;
 		{
 			$select: 'is_pinned_on__release';
 			$expand: {
-				is_pinned_on__release: {}; // eslint-disable-line @typescript-eslint/ban-types
+				is_pinned_on__release: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
 			};
 		}
 	>;
@@ -377,7 +377,7 @@ export let aStringOrUndefined: string | undefined;
 			{
 				$select: 'id';
 				$expand: {
-					device_tag: {}; // eslint-disable-line @typescript-eslint/ban-types
+					device_tag: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
 				};
 			}
 		>;
@@ -536,7 +536,7 @@ export let aStringOrUndefined: string | undefined;
 {
 	type deviceOptionsNoProps = PineClient.TypedResult<
 		BalenaSdk.Device,
-		{ $count: {} } // eslint-disable-line @typescript-eslint/ban-types
+		{ $count: {} } // eslint-disable-line @typescript-eslint/no-empty-object-type
 	>;
 
 	const result: deviceOptionsNoProps = {} as any;
@@ -551,7 +551,7 @@ export let aStringOrUndefined: string | undefined;
 			$select: 'id';
 			$expand: {
 				belongs_to__application: {
-					$count: {}; // eslint-disable-line @typescript-eslint/ban-types
+					$count: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
 				};
 			};
 		}
@@ -570,7 +570,7 @@ export let aStringOrUndefined: string | undefined;
 			$select: 'id';
 			$expand: {
 				device_tag: {
-					$count: {}; // eslint-disable-line @typescript-eslint/ban-types
+					$count: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
 				};
 			};
 		}

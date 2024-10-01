@@ -186,7 +186,7 @@ describe('Logs', function () {
 								await delay(LOG_SUBSCRIPTION_TIMEOUT);
 								resolve(null);
 							} catch (err) {
-								reject(err);
+								reject(err as Error);
 							}
 						});
 					});

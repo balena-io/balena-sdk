@@ -441,11 +441,11 @@ describe('Billing Model', function () {
 					},
 				);
 			} else {
-				/* eslint-disable @typescript-eslint/no-var-requires */
+				/* eslint-disable @typescript-eslint/no-require-imports */
 				const rindle = require('rindle');
 				const tmp = require('tmp');
 				const fs = require('fs') as typeof _fs;
-				/* eslint-enable @typescript-eslint/no-var-requires */
+				/* eslint-enable @typescript-eslint/no-require-imports */
 
 				givenABillingAccountIt(
 					'should be able to download an invoice on node',

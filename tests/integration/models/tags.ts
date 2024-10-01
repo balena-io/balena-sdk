@@ -61,7 +61,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 		this.resource = opts.resourceProvider();
 		// used for tag creation in beforeEach
 		this.setTagResource = (
-			opts.setTagResourceProvider || opts.resourceProvider
+			opts.setTagResourceProvider ?? opts.resourceProvider
 		)();
 		ctx = this;
 	});

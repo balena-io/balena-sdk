@@ -48,7 +48,7 @@
     "build-es2017:fast": "rimraf es2017 && tsc --target es2017 --outDir es2017 && gulp inject-version --buildDir es2017",
     "build-es2017": "npm run build-es2017:fast && gulp pack-browser --buildDir es2017",
     "build-es2018": "rimraf es2018 && tsc --target es2018 --outDir es2018 && gulp inject-version --buildDir es2018 && gulp pack-browser --buildDir es2018",
-    "build": "npm run lint && npm run build-es2017 && npm run build-es2018 && npm run docs",
+    "build": "npm run clean && npm run build-es2017 && npm run lint && npm run build-es2018 && npm run docs",
     "docs": "jsdoc2md --template doc/DOCUMENTATION.hbs --files \"es2017/**/!(balena-browser*.js)\" > DOCUMENTATION.md",
     "ci": "npm test && catch-uncommitted",
     "lint": "balena-lint -e js -e ts typing_tests typings src tests mjs_tests gulpfile.js",
@@ -63,7 +63,7 @@
     "node": ">=18.0"
   },
   "devDependencies": {
-    "@balena/lint": "^8.2.7",
+    "@balena/lint": "^9.0.1",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",
     "@types/lodash": "^4.14.195",

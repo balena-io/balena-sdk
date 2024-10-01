@@ -10,7 +10,7 @@ const mockServer = mockttp.getLocal();
 
 let dataDirectory;
 if (!IS_BROWSER) {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	const temp = require('temp').track();
 	dataDirectory = temp.mkdirSync();
 }

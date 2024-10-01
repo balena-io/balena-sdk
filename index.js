@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const esVersion = require('@balena/es-version').get(['es2017', 'es2018']);
 const sdkBuild = require('./' + esVersion);
 module.exports = sdkBuild;
