@@ -457,7 +457,7 @@ describe('SDK authentication', function () {
 	});
 
 	describe('given a user with 2FA', function () {
-		const has2FAAccount = credentials.twoFactor.email != null;
+		const has2FAAccount = credentials.twoFactor != null;
 
 		const given2FAUserIt = (description, testFn) => {
 			const $it = has2FAAccount ? it : it.skip;
@@ -481,6 +481,9 @@ describe('SDK authentication', function () {
 				expect(await balena.auth.twoFactor.isPassed()).to.be.false;
 			});
 			given2FAUserIt('should be true when 2FA is passed', async () => {
+				if (credentials.twoFactor == null) {
+					throw new Error('Missing TEST_2FA credentials');
+				}
 				const code = authenticator.generate(credentials.twoFactor.secret);
 				await balena.auth.twoFactor.challenge(code);
 				expect(await balena.auth.twoFactor.isPassed()).to.be.true;
