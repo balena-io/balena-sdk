@@ -79,7 +79,8 @@ module.exports = function (config) {
 		'tests/**/*.spec.ts',
 	];
 
-	const { TEST_ONLY_ON_ENVIRONMENT } = process.env;
+	const { optionalVar } = require('@balena/env-parsing');
+	const TEST_ONLY_ON_ENVIRONMENT = optionalVar('TEST_ONLY_ON_ENVIRONMENT');
 	if (TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT !== 'browser') {
 		console.log(
 			`TEST_ONLY_ON_ENVIRONMENT is set to ${TEST_ONLY_ON_ENVIRONMENT}`,

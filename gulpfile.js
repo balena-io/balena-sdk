@@ -8,6 +8,7 @@ const uglifyComposer = require('gulp-uglify/composer');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const minimist = require('minimist');
+const { optionalVar } = require('@balena/env-parsing');
 
 const minify = uglifyComposer(uglifyJs, console);
 
@@ -36,7 +37,7 @@ const OPTIONS = {
 gulp.task('test', function (cb) {
 	require('dotenv').config();
 
-	const { TEST_ONLY_ON_ENVIRONMENT } = process.env;
+	const TEST_ONLY_ON_ENVIRONMENT = optionalVar('TEST_ONLY_ON_ENVIRONMENT');
 	if (TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT !== 'node') {
 		console.log(
 			`TEST_ONLY_ON_ENVIRONMENT is set to ${TEST_ONLY_ON_ENVIRONMENT}`,
