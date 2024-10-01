@@ -34,7 +34,7 @@ import type {
 
 import * as url from 'url';
 
-import once = require('lodash/once');
+import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
 import {

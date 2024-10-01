@@ -65,7 +65,7 @@ export interface GaConfig {
 	id: string;
 }
 
-import union = require('lodash/union');
+import union from 'lodash/union';
 
 const getConfigModel = function (
 	deps: InjectedDependenciesParam,
