@@ -1,4 +1,16 @@
 - commits:
+    - subject: Replace top level require calls to import...from
+      hash: 866954771ab918ace62f10f8ed52e1884705180d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.2.1
+  title: ""
+  date: 2024-10-01T14:34:53.217Z
+- commits:
     - subject: "typings: Add missing billing properties in Config"
       hash: f482fb930f52c3a2ee9f3e9446237454b68af946
       body: ""
