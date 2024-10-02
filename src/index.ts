@@ -152,7 +152,7 @@ const BALENA_SDK_HAS_USED_SHARED_OPTIONS = 'BALENA_SDK_HAS_USED_SHARED_OPTIONS';
 const BALENA_SDK_HAS_SET_SHARED_OPTIONS = 'BALENA_SDK_HAS_SET_SHARED_OPTIONS';
 
 const sdkTemplate = {
-	/* eslint-disable @typescript-eslint/no-var-requires */
+	/* eslint-disable @typescript-eslint/no-require-imports */
 	auth() {
 		return (require('./auth') as typeof import('./auth')).default;
 	},
@@ -168,7 +168,7 @@ const sdkTemplate = {
 	settings() {
 		return (require('./settings') as typeof import('./settings')).default;
 	},
-	/* eslint-enable @typescript-eslint/no-var-requires */
+	/* eslint-enable @typescript-eslint/no-require-imports */
 };
 
 export type BalenaSDK = {
@@ -220,7 +220,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		...$opts,
 	};
 
-	/* eslint-disable @typescript-eslint/no-var-requires */
+	/* eslint-disable @typescript-eslint/no-require-imports */
 	const version = (
 		require('./util/sdk-version') as typeof import('./util/sdk-version')
 	).default;
@@ -283,7 +283,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 			strict: true,
 		})(request.send);
 	}
-	/* eslint-enable @typescript-eslint/no-var-requires */
+	/* eslint-enable @typescript-eslint/no-require-imports */
 	const pine = createPinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 
@@ -398,7 +398,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		configurable: true,
 		get() {
 			const { mergePineOptions, BalenaWebResourceFile } =
-				// eslint-disable-next-line @typescript-eslint/no-var-requires
+				// eslint-disable-next-line @typescript-eslint/no-require-imports
 				require('./util') as typeof import('./util');
 			return { mergePineOptions, BalenaWebResourceFile };
 		},
@@ -452,7 +452,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 					throw error;
 				}
 
-				// eslint-disable-next-line @typescript-eslint/no-var-requires
+				// eslint-disable-next-line @typescript-eslint/no-require-imports
 				const { delay } = require('./util') as typeof import('./util');
 				await delay(retryAfter * 1000);
 

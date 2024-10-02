@@ -58,7 +58,7 @@ const getAuth = function (
 	 * @namespace balena.auth.twoFactor
 	 * @memberof balena.auth
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	const twoFactor = (require('./2fa') as typeof import('./2fa')).default(
 		{
 			...deps,

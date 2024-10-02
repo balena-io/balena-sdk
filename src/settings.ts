@@ -34,6 +34,7 @@ const getSettings = function ({ settings }: InjectedDependenciesParam) {
 		 * 	console.log(apiUrl);
 		 * });
 		 */
+		// eslint-disable-next-line @typescript-eslint/require-await -- we return a promise for future proofing
 		get: async (key: string): Promise<string> => settings.get(key),
 
 		/**
@@ -51,6 +52,7 @@ const getSettings = function ({ settings }: InjectedDependenciesParam) {
 		 * 	console.log(settings);
 		 * });
 		 */
+		// eslint-disable-next-line @typescript-eslint/require-await -- we return a promise for future proofing
 		getAll: async (): Promise<{ [key: string]: string }> => settings.getAll(),
 	};
 

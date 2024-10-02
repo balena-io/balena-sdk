@@ -402,11 +402,11 @@ describe('Balena SDK', function () {
 
 			describe('creating an SDK instance with the same options', function () {
 				let testSdk: balenaSdk.BalenaSDK;
-				before(async function () {
+				before(function () {
 					testSdk = getSdk(sdkOpts);
 				});
 
-				describe('pine queries', async () => {
+				describe('pine queries', () => {
 					it('should be able to retrieve the user (using the key from the first instance)', async function () {
 						const [user] = await testSdk.pine.get({
 							resource: 'user',
@@ -436,7 +436,7 @@ describe('Balena SDK', function () {
 					});
 				});
 
-				describe('models.application.get', async () => {
+				describe('models.application.get', () => {
 					it('should be able to retrieve the application created by the first instance', async function () {
 						const app = await testSdk.models.application.get(
 							this.application.id,
@@ -450,13 +450,13 @@ describe('Balena SDK', function () {
 					});
 				});
 
-				describe('balena.auth.isLoggedIn()', async () => {
+				describe('balena.auth.isLoggedIn()', () => {
 					it('should return true', async function () {
 						expect(await testSdk.auth.isLoggedIn()).to.equal(true);
 					});
 				});
 
-				describe('balena.auth.getToken()', async () => {
+				describe('balena.auth.getToken()', () => {
 					it('should return the same key as the first instance', async function () {
 						expect(await testSdk.auth.getToken()).to.equal(
 							await balena.auth.getToken(),
@@ -467,14 +467,14 @@ describe('Balena SDK', function () {
 
 			describe('creating an SDK instance using dataDirectory: false', function () {
 				let testSdk: balenaSdk.BalenaSDK;
-				before(async function () {
+				before(function () {
 					testSdk = getSdk({
 						...sdkOpts,
 						dataDirectory: false,
 					});
 				});
 
-				describe('pine queries', async () => {
+				describe('pine queries', () => {
 					it('should be unauthenticated and not be able to retrieve any user', async function () {
 						await expect(
 							testSdk.pine.get({
@@ -506,7 +506,7 @@ describe('Balena SDK', function () {
 					});
 				});
 
-				describe('models.application.get', async () => {
+				describe('models.application.get', () => {
 					it('should be able to retrieve the application created by the first instance', async function () {
 						await expect(
 							testSdk.models.application.get(this.application.id, {
@@ -519,13 +519,13 @@ describe('Balena SDK', function () {
 					});
 				});
 
-				describe('balena.auth.isLoggedIn()', async () => {
+				describe('balena.auth.isLoggedIn()', () => {
 					it('should return false', async function () {
 						expect(await testSdk.auth.isLoggedIn()).to.equal(false);
 					});
 				});
 
-				describe('balena.auth.getToken()', async () => {
+				describe('balena.auth.getToken()', () => {
 					it('should return no key', async function () {
 						await expect(
 							testSdk.auth.getToken(),

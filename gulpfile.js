@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const gulp = require('gulp');
 const gulpMocha = require('gulp-mocha');
 const replace = require('gulp-replace');

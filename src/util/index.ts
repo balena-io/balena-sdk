@@ -65,7 +65,7 @@ export const treatAsMissingOrganization = (
 	err: Error,
 ) => {
 	const replacementErr = new errors.BalenaOrganizationNotFound(handleOrId);
-	replacementErr.stack = err.stack || '';
+	replacementErr.stack = err.stack ?? '';
 	throw replacementErr;
 };
 
@@ -74,13 +74,13 @@ export const treatAsMissingApplication = (
 	err: Error,
 ) => {
 	const replacementErr = new errors.BalenaApplicationNotFound(slugOrUuidOrId);
-	replacementErr.stack = err.stack || '';
+	replacementErr.stack = err.stack ?? '';
 	throw replacementErr;
 };
 
 export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
 	const replacementErr = new errors.BalenaDeviceNotFound(uuidOrId);
-	replacementErr.stack = err.stack || '';
+	replacementErr.stack = err.stack ?? '';
 	throw replacementErr;
 };
 
@@ -264,7 +264,7 @@ const convertExpandToObject = <T extends object>(
 		const expandRelationshipOptions = expandOption[expandKey];
 
 		// TOOD: Consider dropping in the next major
-		const unknownPineOption = Object.keys(expandRelationshipOptions || {}).find(
+		const unknownPineOption = Object.keys(expandRelationshipOptions ?? {}).find(
 			(key) => !knownPineOptionKeys.has(key),
 		);
 		if (unknownPineOption != null) {
@@ -338,7 +338,7 @@ export const limitedMap = <T, U>(
 				idx = arr.length;
 				// Clear the results so far for gc
 				result.length = 0;
-				reject(err);
+				reject(err as Error);
 			} finally {
 				inFlight--;
 				if (inFlight === 0) {

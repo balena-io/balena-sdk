@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const _ = require('lodash');
 const getKarmaConfig = require('balena-config-karma');
 const packageJSON = require('./package.json');

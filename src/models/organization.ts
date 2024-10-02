@@ -31,7 +31,7 @@ const getOrganizationModel = function (
 ) {
 	const { pine } = deps;
 
-	/* eslint-disable @typescript-eslint/no-var-requires */
+	/* eslint-disable @typescript-eslint/no-require-imports */
 	const membershipModel = (
 		require('./organization-membership') as typeof import('./organization-membership')
 	).default(deps, (...args: Parameters<typeof get>) => get(...args));
@@ -39,7 +39,7 @@ const getOrganizationModel = function (
 	const inviteModel = (
 		require('./organization-invite') as typeof import('./organization-invite')
 	).default(deps, opts, (...args: Parameters<typeof get>) => get(...args));
-	/* eslint-enable @typescript-eslint/no-var-requires */
+	/* eslint-enable @typescript-eslint/no-require-imports */
 
 	const getId = async (handleOrId: string | number) => {
 		const { id } = await get(handleOrId, { $select: 'id' });

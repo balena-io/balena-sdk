@@ -59,7 +59,7 @@ describe('Config Model', function () {
 					this.skip();
 					return;
 				}
-				await expectDeviceTypeArray(deviceTypes);
+				expectDeviceTypeArray(deviceTypes);
 			});
 		});
 

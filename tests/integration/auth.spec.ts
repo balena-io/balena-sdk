@@ -62,7 +62,7 @@ describe('SDK authentication', function () {
 			});
 		});
 
-		describe('balena.auth.getToken()', async () => {
+		describe('balena.auth.getToken()', () => {
 			it('should be rejected', async function () {
 				const promise = balena.auth.getToken();
 				await expect(promise).to.be.rejected.and.eventually.have.property(
@@ -72,7 +72,7 @@ describe('SDK authentication', function () {
 			});
 		});
 
-		describe('balena.auth.loginWithToken()', async function () {
+		describe('balena.auth.loginWithToken()', function () {
 			it('should be able to login with a session token', async () => {
 				await balena.auth.loginWithToken(
 					await balena.auth.authenticate(credentials),

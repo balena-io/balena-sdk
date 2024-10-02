@@ -63,7 +63,7 @@ const getApplicationModel = function (
 	} = deps;
 	const { apiUrl } = opts;
 
-	/* eslint-disable @typescript-eslint/no-var-requires */
+	/* eslint-disable @typescript-eslint/no-require-imports */
 	const membershipModel = (
 		require('./application-membership') as typeof import('./application-membership')
 	).default(deps, (...args: Parameters<typeof exports.get>) =>
@@ -89,7 +89,7 @@ const getApplicationModel = function (
 			chunkSize: opts.requestBatchingChunkSize,
 		}),
 	);
-	/* eslint-enable @typescript-eslint/no-var-requires */
+	/* eslint-enable @typescript-eslint/no-require-imports */
 
 	const tagsModel = buildDependentResource<ApplicationTag>(
 		{ pine },

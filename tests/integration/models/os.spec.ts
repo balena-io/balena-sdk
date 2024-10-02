@@ -756,11 +756,11 @@ describe('OS model', function () {
 		if (IS_BROWSER) {
 			return;
 		}
-		/* eslint-disable @typescript-eslint/no-var-requires */
+		/* eslint-disable @typescript-eslint/no-require-imports */
 		const rindle = require('rindle');
 		const tmp = require('tmp');
 		const fs = require('fs') as typeof import('fs');
-		/* eslint-enable @typescript-eslint/no-var-requires */
+		/* eslint-enable @typescript-eslint/no-require-imports */
 
 		describe('given a valid device slug', function () {
 			it('should contain a valid mime property', () => {

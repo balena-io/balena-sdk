@@ -119,7 +119,7 @@ const getDeviceModel = function (
 		sdkInstance,
 	} = deps;
 	const { apiUrl, deviceUrlsBase } = opts;
-	/* eslint-disable @typescript-eslint/no-var-requires */
+	/* eslint-disable @typescript-eslint/no-require-imports */
 	const registerDevice = once(() =>
 		(
 			require('balena-register-device') as typeof import('balena-register-device')
@@ -155,7 +155,7 @@ const getDeviceModel = function (
 			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
 		return _getOsUpdateHelper($deviceUrlsBase, request);
 	});
-	/* eslint-enable @typescript-eslint/no-var-requires */
+	/* eslint-enable @typescript-eslint/no-require-imports */
 
 	const tagsModel = buildDependentResource<DeviceTag>(
 		{ pine },
@@ -2234,7 +2234,7 @@ const getDeviceModel = function (
 				getDeviceOsSemverWithVariant({
 					os_version,
 					os_variant,
-				}) || os_version;
+				}) ?? os_version;
 
 			// if the os_version couldn't be parsed
 			// rely on getHUPActionType to throw an error

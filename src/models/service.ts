@@ -25,7 +25,7 @@ const getServiceModel = ({
 	sdkInstance,
 }: InjectedDependenciesParam) => {
 	const { buildDependentResource } =
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
 	const varModel = buildDependentResource<ServiceEnvironmentVariable>(
