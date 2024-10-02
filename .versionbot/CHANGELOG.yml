@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update @balena/lint to v9
+      hash: 8a2762a85743aaed925ddbe7063e470a83a63340
+      body: |
+        Update @balena/lint from 8.2.7 to 9.0.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.2.2
+  title: ""
+  date: 2024-10-02T08:05:00.197Z
+- commits:
     - subject: Replace top level require calls to import...from
       hash: 866954771ab918ace62f10f8ed52e1884705180d
       body: ""
