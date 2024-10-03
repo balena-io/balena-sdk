@@ -149,12 +149,17 @@ const getDeviceModel = function (
 		}),
 	);
 
-	const getOsUpdateHelper = once(async () => {
+	const getOsUpdateHelper = async (deviceActionsApiVersion: 'v1' | 'v2') => {
 		const $deviceUrlsBase = await getDeviceUrlsBase();
-		const { getOsUpdateHelper: _getOsUpdateHelper } =
-			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
-		return _getOsUpdateHelper($deviceUrlsBase, request);
-	});
+		const _getOsUpdateHelper = (
+			await import('../util/device-actions/os-update')
+		).getOsUpdateHelper;
+		return _getOsUpdateHelper(
+			$deviceUrlsBase,
+			deviceActionsApiVersion,
+			request,
+		);
+	};
 	/* eslint-enable @typescript-eslint/no-require-imports */
 
 	const tagsModel = buildDependentResource<DeviceTag>(
@@ -334,14 +339,17 @@ const getDeviceModel = function (
 	async function startOsUpdate(
 		uuidOrUuids: string,
 		targetOsVersion: string,
+		options?: { runDetached?: boolean },
 	): Promise<OsUpdateActionResult>;
 	async function startOsUpdate(
 		uuidOrUuids: string[],
 		targetOsVersion: string,
+		options?: { runDetached?: boolean },
 	): Promise<Dictionary<OsUpdateActionResult>>;
 	async function startOsUpdate(
 		uuidOrUuids: string | string[],
 		targetOsVersion: string,
+		options: { runDetached?: boolean } = { runDetached: false },
 	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
 		if (!targetOsVersion) {
 			throw new errors.BalenaInvalidParameterError(
@@ -368,7 +376,14 @@ const getDeviceModel = function (
 			{ primitive: true, promise: true },
 		);
 
-		const osUpdateHelper = await getOsUpdateHelper();
+		// This switches between the v1 and v2 device actions API, v2 is the new API endpoint
+		// that enables detached HUP whilst v1 is the original API endpoint tracks HUP progress.
+		// Hence, getOsUpdateStatus is only available in v1 as well.
+		const osUpdateHelper =
+			options.runDetached === true
+				? await getOsUpdateHelper('v2')
+				: await getOsUpdateHelper('v1');
+
 		const results: Dictionary<
 			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
 		> = {};
@@ -2262,6 +2277,10 @@ const getDeviceModel = function (
 		 * Unsupported (unpublished) version will result in rejection.
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
 		 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
+		 * @param {Object} [options] - options
+		 * @param {Boolean} [options.runDetached] - run the update in detached mode.
+		 * Default behaviour is runDetached=true which will enable more reliable updates. runDetached=false is DEPRECATED and
+		 * will be removed in a future release.
 		 * @fulfil {Object} - action response
 		 * @returns {Promise}
 		 *
@@ -2273,7 +2292,7 @@ const getDeviceModel = function (
 		startOsUpdate,
 
 		/**
-		 * @summary Get the OS update status of a device
+		 * @summary (Deprecated) Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.
 		 * @name getOsUpdateStatus
 		 * @public
 		 * @function
@@ -2290,8 +2309,14 @@ const getDeviceModel = function (
 		 */
 		getOsUpdateStatus: async (uuid: string): Promise<OsUpdateActionResult> => {
 			try {
-				const osUpdateHelper = await getOsUpdateHelper();
-				return await osUpdateHelper.getOsUpdateStatus(uuid);
+				const osUpdateHelper = await getOsUpdateHelper('v1');
+				const result = await osUpdateHelper.getOsUpdateStatus?.(uuid);
+
+				if (result === undefined) {
+					return { status: 'error' } as OsUpdateActionResult;
+				}
+
+				return result;
 			} catch (err) {
 				if (err.statusCode !== 400) {
 					throw err;
