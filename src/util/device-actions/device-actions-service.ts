@@ -21,16 +21,15 @@ interface GetActionStatusParams {
 	extraOptions?: any;
 }
 
-const DEVICE_ACTIONS_API_VERSION = 'v1';
-
 export class DeviceActionsService {
 	private actionsEndpoint: string;
 
 	constructor(
 		deviceUrlsBase: string,
+		deviceActionsApiVersion: 'v1' | 'v2',
 		private request: BalenaRequest,
 	) {
-		this.actionsEndpoint = `https://actions.${deviceUrlsBase}/${DEVICE_ACTIONS_API_VERSION}`;
+		this.actionsEndpoint = `https://actions.${deviceUrlsBase}/${deviceActionsApiVersion}`;
 	}
 
 	public startAction = <T>({
