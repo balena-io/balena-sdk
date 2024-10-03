@@ -149,12 +149,19 @@ const getDeviceModel = function (
 		}),
 	);
 
-	const getOsUpdateHelper = once(async () => {
-		const $deviceUrlsBase = await getDeviceUrlsBase();
-		const { getOsUpdateHelper: _getOsUpdateHelper } =
-			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
-		return _getOsUpdateHelper($deviceUrlsBase, request);
-	});
+	const getOsUpdateHelper = once(
+		async (deviceActionsApiVersion: 'v1' | 'v2') => {
+			const $deviceUrlsBase = await getDeviceUrlsBase();
+			const _getOsUpdateHelper = (
+				await import('../util/device-actions/os-update')
+			).getOsUpdateHelper;
+			return _getOsUpdateHelper(
+				$deviceUrlsBase,
+				deviceActionsApiVersion,
+				request,
+			);
+		},
+	);
 	/* eslint-enable @typescript-eslint/no-require-imports */
 
 	const tagsModel = buildDependentResource<DeviceTag>(
@@ -334,14 +341,17 @@ const getDeviceModel = function (
 	async function startOsUpdate(
 		uuidOrUuids: string,
 		targetOsVersion: string,
+		options?: { runDetached?: boolean },
 	): Promise<OsUpdateActionResult>;
 	async function startOsUpdate(
 		uuidOrUuids: string[],
 		targetOsVersion: string,
+		options?: { runDetached?: boolean },
 	): Promise<Dictionary<OsUpdateActionResult>>;
 	async function startOsUpdate(
 		uuidOrUuids: string | string[],
 		targetOsVersion: string,
+		options: { runDetached?: boolean } = { runDetached: false },
 	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
 		if (!targetOsVersion) {
 			throw new errors.BalenaInvalidParameterError(
@@ -368,7 +378,11 @@ const getDeviceModel = function (
 			{ primitive: true, promise: true },
 		);
 
-		const osUpdateHelper = await getOsUpdateHelper();
+		const osUpdateHelper =
+			options.runDetached === true
+				? await getOsUpdateHelper('v2')
+				: await getOsUpdateHelper('v1');
+
 		const results: Dictionary<
 			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
 		> = {};
@@ -2290,8 +2304,14 @@ const getDeviceModel = function (
 		 */
 		getOsUpdateStatus: async (uuid: string): Promise<OsUpdateActionResult> => {
 			try {
-				const osUpdateHelper = await getOsUpdateHelper();
-				return await osUpdateHelper.getOsUpdateStatus(uuid);
+				const osUpdateHelper = await getOsUpdateHelper('v1');
+				const result = await osUpdateHelper.getOsUpdateStatus?.(uuid);
+
+				if (result === undefined) {
+					return { status: 'error' } as OsUpdateActionResult;
+				}
+
+				return result;
 			} catch (err) {
 				if (err.statusCode !== 400) {
 					throw err;
