@@ -5,7 +5,13 @@ const OS_UPDATE_ACTION_NAME = 'resinhup';
 
 // See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
 export interface OsUpdateActionResult {
-	status: 'idle' | 'in_progress' | 'done' | 'error' | 'configuring';
+	status:
+		| 'idle'
+		| 'in_progress'
+		| 'done'
+		| 'error'
+		| 'configuring'
+		| 'triggered';
 	parameters?: {
 		target_version: string;
 	};
@@ -15,10 +21,12 @@ export interface OsUpdateActionResult {
 
 export const getOsUpdateHelper = function (
 	deviceUrlsBase: string,
+	deviceActionsApiVersion: 'v1' | 'v2',
 	request: BalenaRequest,
 ) {
 	const deviceActionsService = new DeviceActionsService(
 		deviceUrlsBase,
+		deviceActionsApiVersion,
 		request,
 	);
 
@@ -40,8 +48,12 @@ export const getOsUpdateHelper = function (
 		});
 	};
 
-	return {
-		startOsUpdate,
-		getOsUpdateStatus,
-	};
+	if (deviceActionsApiVersion === 'v2') {
+		return { startOsUpdate };
+	} else {
+		return {
+			startOsUpdate,
+			getOsUpdateStatus,
+		};
+	}
 };
