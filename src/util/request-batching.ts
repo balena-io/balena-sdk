@@ -49,6 +49,7 @@ export function batchResourceOperationFactory<
 		TOpts extends PineOptionsStrict<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
+		parameterName?: string;
 		options?: TOpts;
 		groupByNavigationPoperty?: undefined;
 		fn: (items: Array<Item<TOpts>>) => Promise<void>;
@@ -57,27 +58,36 @@ export function batchResourceOperationFactory<
 		TOpts extends PineOptionsStrict<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
+		parameterName?: string;
 		options?: TOpts;
 		groupByNavigationPoperty: PineSelectableProps<T>;
 		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 	}): Promise<void>;
 	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
 		uuidOrIdOrArray,
+		parameterName = 'uuidOrIdOrArray',
 		options,
 		groupByNavigationPoperty,
 		fn,
 	}: {
 		uuidOrIdOrArray: number | number[] | string | string[];
+		parameterName?: string;
 		options?: TOpts;
 		groupByNavigationPoperty?: PineSelectableProps<T>;
 		fn:
 			| ((items: Array<Item<TOpts>>) => Promise<void>)
 			| ((items: Array<Item<TOpts>>, ownerId: number) => Promise<void>);
 	}): Promise<void> {
+		if (uuidOrIdOrArray === '') {
+			throw new errors.BalenaInvalidParameterError(
+				parameterName,
+				uuidOrIdOrArray,
+			);
+		}
 		if (Array.isArray(uuidOrIdOrArray)) {
 			if (!uuidOrIdOrArray.length) {
 				throw new errors.BalenaInvalidParameterError(
-					'uuidOrIdOrArray',
+					parameterName,
 					uuidOrIdOrArray,
 				);
 			}

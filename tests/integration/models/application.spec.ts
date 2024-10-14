@@ -319,6 +319,10 @@ describe('Application Model', function () {
 
 			describe('[mutating operations]', function () {
 				givenAnApplication(beforeEach);
+				it('should be rejected when an empty string is provided', async function () {
+					const promise = balena.models.application.remove('');
+					await expect(promise).to.be.rejectedWith(`Application not found: `);
+				});
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to remove an existing application by ${prop}`, function () {
 						return balena.models.application

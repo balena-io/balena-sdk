@@ -401,6 +401,13 @@ describe('Release Model', function () {
 				});
 			});
 
+			it('should be rejected when an empty string is provided', async function () {
+				const promise = balena.models.release.get('');
+				await expect(promise).to.be.rejectedWith(
+					`Invalid parameter:  is not a valid value for parameter 'commitOrIdOrRawVersion'`,
+				);
+			});
+
 			it('should get the requested release by shorter commit', async () => {
 				const release = await balena.models.release.get(
 					ctx.currentRelease.commit.slice(0, 7),

@@ -111,6 +111,12 @@ const getReleaseModel = function (
 		if (commitOrIdOrRawVersion == null) {
 			throw new errors.BalenaReleaseNotFound(commitOrIdOrRawVersion);
 		}
+		if (commitOrIdOrRawVersion === '') {
+			throw new errors.BalenaInvalidParameterError(
+				'commitOrIdOrRawVersion',
+				commitOrIdOrRawVersion,
+			);
+		}
 
 		if (isId(commitOrIdOrRawVersion)) {
 			const release = await pine.get({

@@ -612,6 +612,9 @@ const getDeviceModel = function (
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
+			if (uuidOrId === '') {
+				throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+			}
 
 			let device;
 			const isPotentiallyFullUuid = isFullUuid(uuidOrId);
