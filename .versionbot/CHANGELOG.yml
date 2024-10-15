@@ -1,4 +1,17 @@
 - commits:
+    - subject: Throw an invalid parameter error when an empty string is provided as a
+        uuid parameter
+      hash: 103b64b1563861f8393e88d3ca658a3c20cc1ec3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.2.3
+  title: ""
+  date: 2024-10-15T06:25:14.503Z
+- commits:
     - subject: Update @balena/lint to v9
       hash: 8a2762a85743aaed925ddbe7063e470a83a63340
       body: |
