@@ -348,6 +348,13 @@ describe('Device Model', function () {
 						);
 					});
 
+					it('should be rejected when an empty string is provided', async function () {
+						const promise = balena.models.device.get('');
+						await expect(promise).to.be.rejectedWith(
+							`Invalid parameter:  is not a valid value for parameter 'uuidOrId'`,
+						);
+					});
+
 					it('should be able to use a shorter uuid', async function () {
 						const device = await balena.models.device.get(
 							ctx.device.uuid.slice(0, 8),
@@ -1029,6 +1036,13 @@ describe('Device Model', function () {
 							this.application.id,
 						);
 						return expect(devices).to.deep.equal([]);
+					});
+
+					it('should be rejected when an empty string is provided', async function () {
+						const promise = balena.models.device.remove('');
+						await expect(promise).to.be.rejectedWith(
+							`Invalid parameter:  is not a valid value for parameter 'uuidOrIdOrArray'`,
+						);
 					});
 
 					it('should be able to remove the device using a shorter uuid', async function () {
