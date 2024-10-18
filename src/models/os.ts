@@ -133,7 +133,7 @@ const archCompatibilityMap: Partial<Dictionary<string[]>> = {
 
 const tagsToDictionary = (
 	tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
-): Dictionary<string> => {
+): Partial<Dictionary<string>> => {
 	const result: Dictionary<string> = {};
 	for (const { tag_key, value } of tags) {
 		result[tag_key] = value;
@@ -243,13 +243,14 @@ const getOsModel = function (
 		appTags: HostAppTagSet,
 	) => {
 		const OsVariantNames = Object.keys(OsVariant);
-		return releases.map((release): OsVersion => {
+		const results: OsVersion[] = [];
+		for (const release of releases) {
 			const tagMap = tagsToDictionary(release.release_tag);
 			const releaseSemverObj = !release.raw_version.startsWith('0.0.0')
 				? bSemver.parse(release.raw_version)
 				: null;
 
-			let strippedVersion: string;
+			let strippedVersion: string | undefined;
 			let variant: string = release.variant;
 			if (releaseSemverObj == null) {
 				/**
@@ -257,7 +258,7 @@ const getOsModel = function (
 				 * since the versioning format of balenaOS [2019.10.0.dev, 2022.01.0] was non-semver compliant
 				 * and they were not migrated to the release semver fields.
 				 */
-				const fullVariantName = tagMap[VARIANT_TAG_NAME] as string | undefined;
+				const fullVariantName = tagMap[VARIANT_TAG_NAME];
 				if (typeof fullVariantName === 'string') {
 					// TODO: Drop this once we migrate all variant tags to the release.variant field.
 					variant = OsVariantNames.includes(fullVariantName)
@@ -265,7 +266,10 @@ const getOsModel = function (
 						: fullVariantName;
 				}
 
-				strippedVersion = tagMap[VERSION_TAG_NAME] ?? '';
+				strippedVersion = tagMap[VERSION_TAG_NAME];
+				if (strippedVersion == null) {
+					continue;
+				}
 				// Backfill the native release_version field
 				// TODO: This potentially generates an invalid semver and we should be doing
 				// something like `.join(!version.includes('+') ? '+' : '.')`,  but this needs
@@ -288,7 +292,7 @@ const getOsModel = function (
 				getOsVersionReleaseLine(release.phase, strippedVersion, appTags) ??
 				undefined;
 
-			return {
+			results.push({
 				...release,
 				// TODO: Drop the explicit assignment once the variant field of all OS releases is backfilled.
 				variant,
@@ -296,8 +300,9 @@ const getOsModel = function (
 				line,
 				strippedVersion,
 				basedOnVersion: tagMap[BASED_ON_VERSION_TAG_NAME] ?? strippedVersion,
-			};
-		});
+			});
+		}
+		return results;
 	};
 
 	const _transformHostApps = (apps: HostAppInfo[]) => {
