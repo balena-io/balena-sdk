@@ -1,4 +1,16 @@
 - commits:
+    - subject: "os: Stop returning legacy OS Releases with an empty raw_version"
+      hash: ac110edf8d28e8ee23383971c28448298f6057b8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.2.4
+  title: ""
+  date: 2024-10-18T12:32:38.175Z
+- commits:
     - subject: Throw an invalid parameter error when an empty string is provided as a
         uuid parameter
       hash: 103b64b1563861f8393e88d3ca658a3c20cc1ec3
