@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-node action to v4
+      hash: a6b8658fbe7e8c3a0fa92c82d2b3b215b5b9a6cc
+      body: |
+        Update actions/setup-node from 3 to 4
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 20.2.6
+  title: ""
+  date: 2024-10-21T20:52:44.488Z
+- commits:
     - subject: Pin actions/setup-node action to 1a4442c
       hash: a8dbb8f6c24b8e36368eb550050154435ca0fd4e
       body: |
