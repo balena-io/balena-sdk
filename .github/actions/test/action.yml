@@ -14,13 +14,13 @@ runs:
   steps:
     - name: Setup Node.js 18
       if: ${{ fromJSON(env.os_value)[0] == 'ubuntu-20.04' }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
       with:
         node-version: 18
 
     - name: Setup Node.js lts
       if: ${{ fromJSON(env.os_value)[0] != 'ubuntu-20.04' }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
       with:
         node-version: lts/*
 
