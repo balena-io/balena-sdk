@@ -1,4 +1,17 @@
 - commits:
+    - subject: Pin actions/setup-node action to 1a4442c
+      hash: a8dbb8f6c24b8e36368eb550050154435ca0fd4e
+      body: |
+        Update actions/setup-node
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 20.2.5
+  title: ""
+  date: 2024-10-21T14:14:47.594Z
+- commits:
     - subject: "os: Stop returning legacy OS Releases with an empty raw_version"
       hash: ac110edf8d28e8ee23383971c28448298f6057b8
       body: ""
