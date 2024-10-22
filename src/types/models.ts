@@ -101,9 +101,6 @@ export interface OrganizationCreditNotification {
 	id: number;
 	created_at: string;
 	is_sent_when_below__threshold: number;
-	modified_at: string;
-	was_sent_in__total: number;
-	was_sent_on__date: string | null;
 	organization: NavigationResource<Organization>;
 	owns_credit_notification_for__feature: NavigationResource<Feature>;
 }
@@ -130,8 +127,6 @@ export interface RecoveryTwoFactor {
 
 export interface Actor {
 	id: number;
-	created_at: string;
-	modified_at: string;
 
 	is_of__user?: OptionalNavigationResource<User>;
 	is_of__application?: OptionalNavigationResource<Application>;
@@ -251,7 +246,8 @@ export interface UserHasDirectAccessToApplication {
 }
 
 export interface PublicOrganization {
-	id: number;
+	// TODO: improve the custom pine client rypings to support resources w/o an id field
+	id: undefined;
 	name: string;
 	handle: string;
 }
@@ -268,15 +264,12 @@ export interface PublicDevice {
 
 export interface Invitee {
 	id: number;
-	created_at: string;
 	email: string;
 }
 
 export interface ApplicationInvite {
 	id: number;
 	message?: string;
-	created_at: string;
-	invitationToken: string;
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__application: NavigationResource<Application>;
@@ -285,8 +278,6 @@ export interface ApplicationInvite {
 export interface OrganizationInvite {
 	id: number;
 	message?: string;
-	created_at: string;
-	invitationToken: string;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__organization: NavigationResource<Organization>;
@@ -512,8 +503,6 @@ export interface DeviceTypeAlias {
 }
 
 export interface DeviceFamily {
-	created_at: string;
-	modified_at: string;
 	id: number;
 	slug: string;
 	name: string;
@@ -521,8 +510,6 @@ export interface DeviceFamily {
 }
 
 export interface DeviceManufacturer {
-	created_at: string;
-	modified_at: string;
 	id: number;
 	slug: string;
 	name: string;
@@ -536,10 +523,7 @@ export interface OrganizationPrivateDeviceTypeAccess {
 
 export interface ServiceInstance {
 	id: number;
-	created_at: string;
-	service_type: string;
 	ip_address: string;
-	last_heartbeat: string;
 }
 
 export interface Service {
@@ -636,7 +620,6 @@ export interface ImageInstall {
 
 export interface ServiceInstall {
 	id: number;
-	should_be_running: boolean;
 	device: NavigationResource<Device>;
 	/** service */
 	installs__service: NavigationResource<Service>;
