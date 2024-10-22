@@ -1,3 +1,5 @@
+import type * as Model from './v7-model';
+
 import type { DeviceOverallStatus } from './device-overall-status';
 export type { DeviceOverallStatus } from './device-overall-status';
 import type { Contract } from './contract';
@@ -77,7 +79,18 @@ export interface ResourceTypeMap {
 	user_application_membership: ApplicationMembership;
 }
 
-export interface Organization {
+export interface Organization
+	extends Pick<
+		Model.Organization['Read'],
+		| 'id'
+		| 'created_at'
+		| 'name'
+		| 'handle'
+		| 'has_past_due_invoice_since__date'
+		| 'is_frozen'
+		| 'is_using__billing_version'
+		| 'logo_image'
+	> {
 	id: number;
 	created_at: string;
 	name: string;
@@ -97,7 +110,11 @@ export interface Organization {
 	identity_provider_membership?: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
-export interface OrganizationCreditNotification {
+export interface OrganizationCreditNotification
+	extends Pick<
+		Model.OrganizationCreditNotification['Read'],
+		'id' | 'created_at' | 'is_sent_when_below__threshold'
+	> {
 	id: number;
 	created_at: string;
 	is_sent_when_below__threshold: number;
@@ -105,7 +122,8 @@ export interface OrganizationCreditNotification {
 	owns_credit_notification_for__feature: NavigationResource<Feature>;
 }
 
-export interface Team {
+export interface Team
+	extends Pick<Model.Team['Read'], 'id' | 'created_at' | 'name'> {
 	id: number;
 	created_at: string;
 	name: string;
@@ -118,14 +136,15 @@ export interface Team {
 	team_application_access?: ReverseNavigationResource<TeamApplicationAccess>;
 }
 
-export interface RecoveryTwoFactor {
+export interface RecoveryTwoFactor
+	extends Pick<Model.RecoveryTwoFactor['Read'], 'id' | 'used_timestamp'> {
 	id: number;
 	used_timestamp: string | null;
 
 	belongs_to__user: NavigationResource<User>;
 }
 
-export interface Actor {
+export interface Actor extends Pick<Model.Actor['Read'], 'id'> {
 	id: number;
 
 	is_of__user?: OptionalNavigationResource<User>;
@@ -135,7 +154,8 @@ export interface Actor {
 	api_key?: OptionalNavigationResource<ApiKey>;
 }
 
-export interface User {
+export interface User
+	extends Pick<Model.User['Read'], 'id' | 'created_at' | 'username'> {
 	id: number;
 	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
@@ -149,7 +169,20 @@ export interface User {
 	owns__saml_account?: ReverseNavigationResource<SamlAccount>;
 }
 
-export interface UserProfile {
+export interface UserProfile
+	extends Pick<
+		Model.UserProfile['Read'],
+		| 'id'
+		| 'email'
+		| 'first_name'
+		| 'last_name'
+		| 'company'
+		| 'account_type'
+		| 'has_disabled_newsletter'
+		| 'has_password_set'
+		| 'must_be_verified'
+		| 'is_verified'
+	> {
 	id: number;
 	email: string | null;
 	first_name: string | null;
@@ -166,12 +199,17 @@ export interface UserProfile {
 
 export type OrganizationMembershipRoles = 'administrator' | 'member';
 
-export interface OrganizationMembershipRole {
+export interface OrganizationMembershipRole
+	extends Pick<Model.OrganizationMembershipRole['Read'], 'id' | 'name'> {
 	id: number;
 	name: OrganizationMembershipRoles;
 }
 
-export interface OrganizationMembership {
+export interface OrganizationMembership
+	extends Pick<
+		Model.OrganizationMembership['Read'],
+		'id' | 'created_at' | 'effective_seat_role'
+	> {
 	id: number;
 	created_at: string;
 
@@ -184,7 +222,8 @@ export interface OrganizationMembership {
 	organization_membership_tag?: ReverseNavigationResource<OrganizationMembershipTag>;
 }
 
-export interface TeamMembership {
+export interface TeamMembership
+	extends Pick<Model.TeamMembership['Read'], 'id' | 'created_at'> {
 	id: number;
 	created_at: string;
 
@@ -193,7 +232,11 @@ export interface TeamMembership {
 	is_member_of__team: NavigationResource<Team>;
 }
 
-export interface ApiKey {
+export interface ApiKey
+	extends Pick<
+		Model.ApiKey['Read'],
+		'id' | 'created_at' | 'name' | 'description' | 'expiry_date'
+	> {
 	id: number;
 	created_at: string;
 	name: string;
@@ -203,7 +246,23 @@ export interface ApiKey {
 	is_of__actor: NavigationResource<Actor>;
 }
 
-export interface Application {
+export interface Application
+	extends Pick<
+		Model.Application['Read'],
+		| 'id'
+		| 'created_at'
+		| 'app_name'
+		| 'slug'
+		| 'uuid'
+		| 'is_accessible_by_support_until__date'
+		| 'is_host'
+		| 'should_track_latest_release'
+		| 'is_public'
+		| 'is_of__class'
+		| 'is_archived'
+		| 'is_discoverable'
+		| 'is_stored_at__repository_url'
+	> {
 	id: number;
 	created_at: string;
 	app_name: string;
@@ -240,17 +299,23 @@ export interface Application {
 	can_use__application_as_host?: ReverseNavigationResource<ApplicationHostedOnApplication>;
 }
 
-export interface UserHasDirectAccessToApplication {
+export interface UserHasDirectAccessToApplication
+	extends Pick<Model.UserHasDirectAccessToApplication['Read'], never> {
 	user: NavigationResource<User>;
 	has_direct_access_to__application: NavigationResource<Application>;
 }
 
-export interface PublicOrganization {
+export interface PublicOrganization
+	extends Pick<Model.PublicOrganization['Read'], 'name' | 'handle'> {
 	name: string;
 	handle: string;
 }
 
-export interface PublicDevice {
+export interface PublicDevice
+	extends Pick<
+		Model.PublicDevice['Read'],
+		'latitude' | 'longitude' | 'was_recently_online'
+	> {
 	latitude: string;
 	longitude: string;
 	belongs_to__application: NavigationResource<Application>;
@@ -258,12 +323,16 @@ export interface PublicDevice {
 	was_recently_online: boolean;
 }
 
-export interface Invitee {
+export interface Invitee extends Pick<Model.Invitee['Read'], 'id' | 'email'> {
 	id: number;
 	email: string;
 }
 
-export interface ApplicationInvite {
+export interface ApplicationInvite
+	extends Pick<
+		Model.InviteeIsInvitedToApplication['Read'],
+		'id' | 'message' | 'invitee'
+	> {
 	id: number;
 	message: string | null;
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
@@ -271,7 +340,8 @@ export interface ApplicationInvite {
 	is_invited_to__application: NavigationResource<Application>;
 }
 
-export interface OrganizationInvite {
+export interface OrganizationInvite
+	extends Pick<Model.InviteeIsInvitedToOrganization['Read'], 'id' | 'message'> {
 	id: number;
 	message: string | null;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
@@ -279,7 +349,21 @@ export interface OrganizationInvite {
 	is_invited_to__organization: NavigationResource<Organization>;
 }
 
-export interface ApplicationType {
+export interface ApplicationType
+	extends Pick<
+		Model.ApplicationType['Read'],
+		| 'id'
+		| 'name'
+		| 'slug'
+		| 'description'
+		| 'supports_gateway_mode'
+		| 'supports_multicontainer'
+		| 'supports_web_url'
+		| 'is_legacy'
+		| 'requires_payment'
+		| 'needs__os_version_range'
+		| 'maximum_device_count'
+	> {
 	id: number;
 	name: string;
 	slug: string;
@@ -294,19 +378,22 @@ export interface ApplicationType {
 	maximum_device_count: number | null;
 }
 
-export interface ApplicationHostedOnApplication {
+export interface ApplicationHostedOnApplication
+	extends Pick<Model.ApplicationCanUseApplicationAsHost['Read'], never> {
 	application: NavigationResource<Application>;
 	can_use__application_as_host: NavigationResource<Application>;
 }
 
 export type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
 
-export interface ApplicationMembershipRole {
+export interface ApplicationMembershipRole
+	extends Pick<Model.ApplicationMembershipRole['Read'], 'id' | 'name'> {
 	id: number;
 	name: ApplicationMembershipRoles;
 }
 
-export interface ApplicationMembership {
+export interface ApplicationMembership
+	extends Pick<Model.UserIsMemberOfApplication['Read'], 'id'> {
 	id: number;
 	user: NavigationResource<User>;
 	/** application */
@@ -314,7 +401,8 @@ export interface ApplicationMembership {
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 }
 
-export interface TeamApplicationAccess {
+export interface TeamApplicationAccess
+	extends Pick<Model.TeamApplicationAccess['Read'], 'id'> {
 	id: number;
 	team: NavigationResource<Team>;
 	/** application */
@@ -342,7 +430,39 @@ export interface ReleaseVersion {
 	prerelease: ReadonlyArray<string | number>;
 }
 
-export interface Release {
+export interface Release
+	extends Pick<
+		Model.Release['Read'],
+		| 'id'
+		| 'created_at'
+		| 'commit'
+		// | 'composition'
+		| 'contract'
+		| 'status'
+		| 'source'
+		| 'build_log'
+		| 'is_invalidated'
+		| 'start_timestamp'
+		| 'update_timestamp'
+		| 'end_timestamp'
+		| 'phase'
+		| 'release_version'
+		| 'semver'
+		| 'semver_major'
+		| 'semver_minor'
+		| 'semver_patch'
+		| 'semver_prerelease'
+		| 'semver_build'
+		| 'variant'
+		| 'revision'
+		| 'known_issue_list'
+		| 'raw_version'
+		// | 'version'
+		| 'is_final'
+		| 'is_finalized_at__date'
+		| 'note'
+		| 'invalidation_reason'
+	> {
 	id: number;
 	created_at: string;
 	commit: string;
@@ -390,7 +510,55 @@ export interface Release {
 	release_tag?: ReverseNavigationResource<ReleaseTag>;
 }
 
-export interface Device {
+export interface Device
+	extends Pick<
+		Model.Device['Read'],
+		| 'id'
+		| 'created_at'
+		| 'modified_at'
+		| 'custom_latitude'
+		| 'custom_longitude'
+		| 'device_name'
+		| 'download_progress'
+		| 'ip_address'
+		| 'public_address'
+		| 'mac_address'
+		| 'is_accessible_by_support_until__date'
+		| 'is_connected_to_vpn'
+		| 'is_locked_until__date'
+		| 'update_status'
+		| 'last_update_status_event'
+		| 'is_web_accessible'
+		| 'is_active'
+		| 'is_frozen'
+		| 'is_online'
+		| 'last_connectivity_event'
+		| 'last_vpn_event'
+		| 'latitude'
+		| 'local_id'
+		| 'location'
+		| 'longitude'
+		| 'note'
+		| 'os_variant'
+		| 'os_version'
+		| 'provisioning_progress'
+		| 'provisioning_state'
+		| 'status'
+		| 'supervisor_version'
+		| 'uuid'
+		| 'api_heartbeat_state'
+		| 'memory_usage'
+		| 'memory_total'
+		| 'storage_block_device'
+		| 'storage_usage'
+		| 'storage_total'
+		| 'cpu_usage'
+		| 'cpu_temp'
+		| 'cpu_id'
+		| 'is_undervolted'
+		| 'overall_status'
+		| 'overall_progress'
+	> {
 	id: number;
 	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
@@ -468,14 +636,19 @@ export interface Device {
 	image_install?: ReverseNavigationResource<ImageInstall>;
 }
 
-export interface CpuArchitecture {
+export interface CpuArchitecture
+	extends Pick<Model.CpuArchitecture['Read'], 'id' | 'slug'> {
 	id: number;
 	slug: string;
 
 	is_supported_by__device_type?: ReverseNavigationResource<CpuArchitecture>;
 }
 
-export interface DeviceType {
+export interface DeviceType
+	extends Pick<
+		Model.DeviceType['Read'],
+		'id' | 'slug' | 'name' | 'is_private' | 'logo' // | 'contract'
+	> {
 	id: number;
 	slug: string;
 	name: string;
@@ -490,37 +663,46 @@ export interface DeviceType {
 	device_type_alias?: ReverseNavigationResource<DeviceTypeAlias>;
 }
 
-export interface DeviceTypeAlias {
+export interface DeviceTypeAlias
+	extends Pick<
+		Model.DeviceTypeAlias['Read'],
+		'id' | 'is_referenced_by__alias'
+	> {
 	id: number;
 	is_referenced_by__alias: string;
 	references__device_type: NavigationResource<DeviceType>;
 }
 
-export interface DeviceFamily {
+export interface DeviceFamily
+	extends Pick<Model.DeviceFamily['Read'], 'id' | 'slug' | 'name'> {
 	id: number;
 	slug: string;
 	name: string;
 	is_manufactured_by__device_manufacturer: OptionalNavigationResource<DeviceManufacturer>;
 }
 
-export interface DeviceManufacturer {
+export interface DeviceManufacturer
+	extends Pick<Model.DeviceManufacturer['Read'], 'id' | 'slug' | 'name'> {
 	id: number;
 	slug: string;
 	name: string;
 }
 
-export interface OrganizationPrivateDeviceTypeAccess {
+export interface OrganizationPrivateDeviceTypeAccess
+	extends Pick<Model.OrganizationHasPrivateAccessToDeviceType['Read'], 'id'> {
 	id: number;
 	organization: NavigationResource<Organization>;
 	has_private_access_to__device_type: NavigationResource<DeviceType>;
 }
 
-export interface ServiceInstance {
+export interface ServiceInstance
+	extends Pick<Model.ServiceInstance['Read'], 'id' | 'ip_address'> {
 	id: number;
 	ip_address: string;
 }
 
-export interface Service {
+export interface Service
+	extends Pick<Model.Service['Read'], 'id' | 'created_at' | 'service_name'> {
 	id: number;
 	created_at: string;
 	service_name: string;
@@ -530,7 +712,16 @@ export interface Service {
 	device_service_environment_variable?: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
-export interface IdentityProvider {
+export interface IdentityProvider
+	extends Pick<
+		Model.IdentityProvider['Read'],
+		| 'id'
+		| 'sso_identifier'
+		| 'entry_point'
+		| 'issuer'
+		| 'certificate'
+		| 'requires_signed_authn_response'
+	> {
 	id: number;
 	sso_identifier: string;
 	entry_point: string;
@@ -541,7 +732,8 @@ export interface IdentityProvider {
 	identity_provider_membership?: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
-export interface SamlAccount {
+export interface SamlAccount
+	extends Pick<Model.SamlAccount['Read'], 'id' | 'remote_id' | 'display_name'> {
 	id: number;
 	belongs_to__user: NavigationResource<User>;
 	was_generated_by__identity_provider: NavigationResource<IdentityProvider>;
@@ -549,14 +741,32 @@ export interface SamlAccount {
 	display_name: string | null;
 }
 
-export interface IdentityProviderMembership {
+export interface IdentityProviderMembership
+	extends Pick<Model.IdentityProviderMembership['Read'], 'id'> {
 	is_authorized_by__identity_provider: NavigationResource<IdentityProvider>;
 	id: number;
 	grants_access_to__team: OptionalNavigationResource<Team>;
 	authorizes__organization: NavigationResource<Organization>;
 }
 
-export interface Image {
+export interface Image
+	extends Pick<
+		Model.Image['Read'],
+		| 'id'
+		| 'created_at'
+		| 'build_log'
+		// | 'contract'
+		| 'content_hash'
+		| 'project_type'
+		| 'status'
+		| 'is_stored_at__image_location'
+		| 'start_timestamp'
+		| 'end_timestamp'
+		| 'push_timestamp'
+		| 'image_size'
+		| 'dockerfile'
+		| 'error_message'
+	> {
 	id: number;
 	created_at: string;
 	build_log: string | null;
@@ -575,14 +785,19 @@ export interface Image {
 	release_image?: ReverseNavigationResource<ReleaseImage>;
 }
 
-export interface ReleaseImage {
+export interface ReleaseImage
+	extends Pick<Model.ImageIsPartOfRelease['Read'], 'id' | 'created_at'> {
 	id: number;
 	created_at: string;
 	image: NavigationResource<Image>;
 	is_part_of__release: NavigationResource<Release>;
 }
 
-export interface SSHKey {
+export interface SSHKey
+	extends Pick<
+		Model.UserHasPublicKey['Read'],
+		'title' | 'public_key' | 'id' | 'created_at'
+	> {
 	title: string;
 	public_key: string;
 	id: number;
@@ -591,13 +806,21 @@ export interface SSHKey {
 	user: NavigationResource<User>;
 }
 
-export interface SocialServiceAccount {
+export interface SocialServiceAccount
+	extends Pick<
+		Model.SocialServiceAccount['Read'],
+		'display_name' | 'provider'
+	> {
 	belongs_to__user: NavigationResource<User>;
 	display_name: string | null;
 	provider: string;
 }
 
-export interface ImageInstall {
+export interface ImageInstall
+	extends Pick<
+		Model.ImageInstall['Read'],
+		'id' | 'download_progress' | 'status' | 'install_date'
+	> {
 	id: number;
 	download_progress: number | null;
 	status: string;
@@ -610,7 +833,8 @@ export interface ImageInstall {
 	is_provided_by__release: NavigationResource<Release>;
 }
 
-export interface ServiceInstall {
+export interface ServiceInstall
+	extends Pick<Model.ServiceInstall['Read'], 'id'> {
 	id: number;
 	device: NavigationResource<Device>;
 	/** service */
@@ -620,56 +844,108 @@ export interface ServiceInstall {
 	device_service_environment_variable?: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
-export interface EnvironmentVariableBase {
+export interface EnvironmentVariableBase
+	extends Pick<
+		Model.DeviceServiceEnvironmentVariable['Read'] &
+			Model.ServiceEnvironmentVariable['Read'] &
+			Model.DeviceEnvironmentVariable['Read'] &
+			Model.ApplicationEnvironmentVariable['Read'] &
+			Model.BuildEnvironmentVariable['Read'],
+		'id' | 'name' | 'value'
+	> {
 	id: number;
 	name: string;
 	value: string;
 }
 
 export interface DeviceServiceEnvironmentVariable
-	extends EnvironmentVariableBase {
+	extends Pick<
+		Model.DeviceServiceEnvironmentVariable['Read'],
+		'id' | 'name' | 'value'
+	> {
 	service_install: NavigationResource<ServiceInstall>;
 }
 
-export interface ServiceEnvironmentVariable extends EnvironmentVariableBase {
+export interface ServiceEnvironmentVariable
+	extends Pick<
+		Model.ServiceEnvironmentVariable['Read'],
+		'id' | 'name' | 'value'
+	> {
 	service: NavigationResource<Service>;
 }
 
-export interface DeviceVariable extends EnvironmentVariableBase {
+export interface DeviceVariable
+	extends Pick<
+		Model.DeviceEnvironmentVariable['Read'],
+		'id' | 'name' | 'value'
+	> {
 	device: NavigationResource<Device>;
 }
 
-export interface ApplicationVariable extends EnvironmentVariableBase {
+export interface ApplicationVariable
+	extends Pick<
+		Model.ApplicationEnvironmentVariable['Read'],
+		'id' | 'name' | 'value'
+	> {
 	application: NavigationResource<Application>;
 }
 
-export interface BuildVariable extends EnvironmentVariableBase {
+export interface BuildVariable
+	extends Pick<
+		Model.BuildEnvironmentVariable['Read'],
+		'id' | 'name' | 'value'
+	> {
 	application: NavigationResource<Application>;
 }
 
-export interface ResourceTagBase {
+export interface ResourceTagBase
+	extends Pick<
+		Model.ApplicationTag['Read'] &
+			Model.DeviceTag['Read'] &
+			Model.OrganizationMembershipTag['Read'] &
+			Model.ReleaseTag['Read'],
+		'id' | 'tag_key' | 'value'
+	> {
 	id: number;
 	tag_key: string;
 	value: string;
 }
 
-export interface ApplicationTag extends ResourceTagBase {
+export interface ApplicationTag
+	extends Pick<Model.ApplicationTag['Read'], 'id' | 'tag_key' | 'value'> {
 	application: NavigationResource<Application>;
 }
 
-export interface DeviceTag extends ResourceTagBase {
+export interface DeviceTag
+	extends Pick<Model.DeviceTag['Read'], 'id' | 'tag_key' | 'value'> {
 	device: NavigationResource<Device>;
 }
 
-export interface OrganizationMembershipTag extends ResourceTagBase {
+export interface OrganizationMembershipTag
+	extends Pick<
+		Model.OrganizationMembershipTag['Read'],
+		'id' | 'tag_key' | 'value'
+	> {
 	organization_membership: NavigationResource<OrganizationMembership>;
 }
 
-export interface ReleaseTag extends ResourceTagBase {
+export interface ReleaseTag
+	extends Pick<Model.ReleaseTag['Read'], 'id' | 'tag_key' | 'value'> {
 	release: NavigationResource<Release>;
 }
 
-export interface CreditBundle {
+export interface CreditBundle
+	extends Pick<
+		Model.CreditBundle['Read'],
+		| 'id'
+		| 'created_at'
+		| 'original_quantity'
+		| 'total_balance'
+		| 'total_cost'
+		| 'payment_status'
+		| 'is_associated_with__invoice_id'
+		| 'error_message'
+	> {
 	id: number;
 	created_at: string;
 	is_created_by__user: OptionalNavigationResource<User>;
@@ -691,7 +967,11 @@ export interface CreditBundle {
 
 // Billing model
 
-export interface Feature {
+export interface Feature
+	extends Pick<
+		Model.Feature['Read'],
+		'id' | 'title' | 'slug' | 'billing_code'
+	> {
 	id: number;
 	title: string;
 	slug: string;
@@ -699,13 +979,18 @@ export interface Feature {
 	organization_credit_notification?: ReverseNavigationResource<OrganizationCreditNotification>;
 }
 
-export interface SupportFeature {
+export interface SupportFeature
+	extends Pick<Model.SupportFeature['Read'], 'id'> {
 	id: number;
 	feature: ConceptTypeNavigationResource<Feature>;
 	support_tier: NavigationResource<SupportTier>;
 }
 
-export interface SupportTier {
+export interface SupportTier
+	extends Pick<
+		Model.SupportTier['Read'],
+		'id' | 'title' | 'slug' | 'includes_private_support' | 'includes__SLA'
+	> {
 	id: number;
 	title: string;
 	slug: string;
@@ -713,7 +998,19 @@ export interface SupportTier {
 	includes__SLA: string | null;
 }
 
-export interface Plan {
+export interface Plan
+	extends Pick<
+		Model.Plan['Read'],
+		| 'id'
+		| 'title'
+		| 'billing_code'
+		| 'monthly_price'
+		| 'annual_price'
+		| 'can_self_serve'
+		| 'is_legacy'
+		| 'is_valid_from__date'
+		| 'is_valid_until__date'
+	> {
 	id: number;
 	title: string;
 	billing_code: string | null;
@@ -729,7 +1026,11 @@ export interface Plan {
 	plan__has__discount_code?: ReverseNavigationResource<PlanDiscountCode>;
 }
 
-export interface PlanAddon {
+export interface PlanAddon
+	extends Pick<
+		Model.PlanAddon['Read'],
+		'id' | 'base_price' | 'can_self_serve' | 'bills_dynamically'
+	> {
 	id: number;
 	base_price: number;
 	can_self_serve: boolean;
@@ -738,13 +1039,15 @@ export interface PlanAddon {
 	offers__feature: NavigationResource<Feature>;
 }
 
-export interface PlanDiscountCode {
+export interface PlanDiscountCode
+	extends Pick<Model.PlanHasDiscountCode['Read'], 'id' | 'discount_code'> {
 	id: number;
 	discount_code: string;
 	plan: NavigationResource<Plan>;
 }
 
-export interface PlanFeature {
+export interface PlanFeature
+	extends Pick<Model.PlanFeature['Read'], 'id' | 'quantity'> {
 	id: number;
 	quantity: number;
 	provides__feature: NavigationResource<Feature>;
@@ -760,7 +1063,17 @@ export type SubscriptionBillingCycle =
 	| 'quadrennial'
 	| 'quinquennial';
 
-export interface Subscription {
+export interface Subscription
+	extends Pick<
+		Model.Subscription['Read'],
+		| 'id'
+		| 'starts_on__date'
+		| 'ends_on__date'
+		| 'discount_percentage'
+		| 'billing_cycle'
+		| 'origin'
+		| 'is_active'
+	> {
 	id: number;
 	starts_on__date: string;
 	ends_on__date: string | null;
@@ -775,7 +1088,15 @@ export interface Subscription {
 	subscription_prepaid_addon?: ReverseNavigationResource<SubscriptionPrepaidAddon>;
 }
 
-export interface SubscriptionPrepaidAddon {
+export interface SubscriptionPrepaidAddon
+	extends Pick<
+		Model.SubscriptionPrepaidAddon['Read'],
+		| 'id'
+		| 'discount_percentage'
+		| 'quantity'
+		| 'starts_on__date'
+		| 'expires_on__date'
+	> {
 	id: number;
 	discount_percentage: number;
 	quantity: number;
@@ -786,13 +1107,28 @@ export interface SubscriptionPrepaidAddon {
 	is_for__subscription: NavigationResource<Subscription>;
 }
 
-export interface SubscriptionAddonDiscount {
+export interface SubscriptionAddonDiscount
+	extends Pick<
+		Model.SubscriptionDiscountsPlanAddon['Read'],
+		'id' | 'discount_percentage'
+	> {
 	id: number;
 	discount_percentage: number;
 	discounts__plan_addon: NavigationResource<PlanAddon>;
 }
 
-export interface DeviceHistory {
+export interface DeviceHistory
+	extends Pick<
+		Model.DeviceHistory['Read'],
+		| 'created_at'
+		| 'id'
+		| 'end_timestamp'
+		| 'uuid'
+		| 'is_active'
+		| 'os_version'
+		| 'os_variant'
+		| 'supervisor_version'
+	> {
 	created_at: string;
 	id: number;
 	end_timestamp: string | null;
