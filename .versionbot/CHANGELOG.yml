@@ -1,4 +1,17 @@
 - commits:
+    - subject: Correct SupportFeature feature typing to be a
+        ConceptTypeNavigationResource
+      hash: 78a19dad572aa630da59d19a12ee9b0b41a7e37b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.2.8
+  title: ""
+  date: 2024-10-23T23:09:28.036Z
+- commits:
     - subject: Remove non-existent properties from model typings
       hash: b515c0ec49820a0f44525a7e5e57dcd5f0796479
       body: ""
