@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove non-existent properties from model typings
+      hash: b515c0ec49820a0f44525a7e5e57dcd5f0796479
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.2.7
+  title: ""
+  date: 2024-10-23T17:08:50.944Z
+- commits:
     - subject: Update actions/setup-node action to v4
       hash: a6b8658fbe7e8c3a0fa92c82d2b3b215b5b9a6cc
       body: |
