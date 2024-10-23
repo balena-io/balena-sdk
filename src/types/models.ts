@@ -709,7 +709,7 @@ export interface Feature {
 
 export interface SupportFeature {
 	id: number;
-	feature: number;
+	feature: ConceptTypeNavigationResource<Feature>;
 	support_tier: NavigationResource<SupportTier>;
 }
 
