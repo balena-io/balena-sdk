@@ -223,7 +223,6 @@ export let aStringOrUndefined: string | undefined;
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumber = result.actor[0].id;
-	aString = result.actor[0].created_at;
 }
 
 {
