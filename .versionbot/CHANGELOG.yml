@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Typings: fix some id typings to the correct typing"
+      hash: 16694153c87a2c74e67e17e1e98ca8c90f1b11e4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.2.10
+  title: ""
+  date: 2024-10-24T18:32:44.139Z
+- commits:
     - subject: "Typings: release status and update_timestamp cannot be null"
       hash: 12ca6024cf3694b9efa6371fe5f9aa8faed27b4c
       body: ""
