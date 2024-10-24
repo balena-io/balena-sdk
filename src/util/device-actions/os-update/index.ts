@@ -21,19 +21,22 @@ export interface OsUpdateActionResult {
 
 export const getOsUpdateHelper = function (
 	deviceUrlsBase: string,
-	deviceActionsApiVersion: 'v1' | 'v2',
 	request: BalenaRequest,
 ) {
 	const deviceActionsService = new DeviceActionsService(
 		deviceUrlsBase,
-		deviceActionsApiVersion,
 		request,
 	);
 
-	const startOsUpdate = (uuid: string, targetOsVersion: string) => {
+	const startOsUpdate = (
+		uuid: string,
+		targetOsVersion: string,
+		deviceActionsApiVersion: 'v1' | 'v2',
+	) => {
 		return deviceActionsService.startAction<OsUpdateActionResult>({
 			uuid,
 			actionName: OS_UPDATE_ACTION_NAME,
+			deviceActionsApiVersion,
 			params: {
 				target_version: targetOsVersion,
 			},
@@ -48,12 +51,8 @@ export const getOsUpdateHelper = function (
 		});
 	};
 
-	if (deviceActionsApiVersion === 'v2') {
-		return { startOsUpdate };
-	} else {
-		return {
-			startOsUpdate,
-			getOsUpdateStatus,
-		};
-	}
+	return {
+		startOsUpdate,
+		getOsUpdateStatus,
+	};
 };
