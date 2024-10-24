@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Typings: release status and update_timestamp cannot be null"
+      hash: 12ca6024cf3694b9efa6371fe5f9aa8faed27b4c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.2.9
+  title: ""
+  date: 2024-10-24T07:20:01.116Z
+- commits:
     - subject: Correct SupportFeature feature typing to be a
         ConceptTypeNavigationResource
       hash: 78a19dad572aa630da59d19a12ee9b0b41a7e37b
