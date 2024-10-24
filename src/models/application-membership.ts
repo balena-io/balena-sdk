@@ -53,7 +53,7 @@ const getApplicationMembershipModel = function (
 		const role = await pine.get({
 			resource: 'application_membership_role',
 			id: {
-				name: roleName,
+				name: roleName as ApplicationMembershipRoles,
 			},
 			options: {
 				$select: 'id',

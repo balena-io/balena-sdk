@@ -149,7 +149,7 @@ export interface User {
 }
 
 export interface UserProfile {
-	id: null;
+	id: number;
 	email: string | null;
 	first_name: string | null;
 	last_name: string | null;
@@ -240,21 +240,16 @@ export interface Application {
 }
 
 export interface UserHasDirectAccessToApplication {
-	id: number;
 	user: NavigationResource<User>;
 	has_direct_access_to__application: NavigationResource<Application>;
 }
 
 export interface PublicOrganization {
-	// TODO: improve the custom pine client rypings to support resources w/o an id field
-	id: undefined;
 	name: string;
 	handle: string;
 }
 
 export interface PublicDevice {
-	// TODO: improve the custom pine client rypings to support resources w/o an id field
-	id: undefined;
 	latitude: string;
 	longitude: string;
 	belongs_to__application: NavigationResource<Application>;
@@ -299,7 +294,6 @@ export interface ApplicationType {
 }
 
 export interface ApplicationHostedOnApplication {
-	id: null;
 	application: NavigationResource<Application>;
 	can_use__application_as_host: NavigationResource<Application>;
 }
@@ -597,8 +591,6 @@ export interface SSHKey {
 }
 
 export interface SocialServiceAccount {
-	// TODO: improve the custom pine client rypings to support resources w/o an id field
-	id: undefined;
 	belongs_to__user: NavigationResource<User>;
 	display_name: string | null;
 	provider: string;
