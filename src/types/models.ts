@@ -335,8 +335,7 @@ export type ReleaseStatus =
 	| 'local'
 	| 'running'
 	| 'success'
-	| 'timeout'
-	| null;
+	| 'timeout';
 
 export interface ReleaseVersion {
 	raw: string;
@@ -359,7 +358,7 @@ export interface Release {
 	build_log: string | null;
 	is_invalidated: boolean;
 	start_timestamp: string;
-	update_timestamp: string | null;
+	update_timestamp: string;
 	end_timestamp: string | null;
 	phase: 'next' | 'current' | 'sunset' | 'end-of-life' | null;
 	/** @deprecated */
