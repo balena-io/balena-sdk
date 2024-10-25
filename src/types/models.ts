@@ -264,7 +264,7 @@ export interface Invitee {
 
 export interface ApplicationInvite {
 	id: number;
-	message?: string;
+	message: string | null;
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__application: NavigationResource<Application>;
@@ -272,7 +272,7 @@ export interface ApplicationInvite {
 
 export interface OrganizationInvite {
 	id: number;
-	message?: string;
+	message: string | null;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__organization: NavigationResource<Organization>;
@@ -394,10 +394,10 @@ export interface Device {
 	actor: ConceptTypeNavigationResource<Actor>;
 	created_at: string;
 	modified_at: string;
-	custom_latitude?: string;
-	custom_longitude?: string;
+	custom_latitude: string | null;
+	custom_longitude: string | null;
 	device_name: string;
-	download_progress?: number;
+	download_progress: number | null;
 	ip_address: string | null;
 	public_address: string | null;
 	mac_address: string | null;
@@ -420,14 +420,14 @@ export interface Device {
 	is_online: boolean;
 	last_connectivity_event: string | null;
 	last_vpn_event: string;
-	latitude?: string;
-	local_id?: string;
-	location?: string;
-	longitude?: string;
+	latitude: string | null;
+	local_id: string | null;
+	location: string | null;
+	longitude: string | null;
 	note: string;
-	os_variant?: string;
+	os_variant: string | null;
 	os_version: string | null;
-	provisioning_progress?: number;
+	provisioning_progress: number | null;
 	provisioning_state: string;
 	status: string;
 	supervisor_version: string;
@@ -558,18 +558,18 @@ export interface IdentityProviderMembership {
 export interface Image {
 	id: number;
 	created_at: string;
-	build_log: string;
+	build_log: string | null;
 	contract: Contract | null;
-	content_hash?: string | null;
-	project_type?: string | null;
+	content_hash: string | null;
+	project_type: string | null;
 	status: string;
 	is_stored_at__image_location: string;
-	start_timestamp?: string | null;
-	end_timestamp?: string | null;
-	push_timestamp?: string | null;
-	image_size?: string | null;
+	start_timestamp: string;
+	end_timestamp: string | null;
+	push_timestamp: string | null;
+	image_size: string | null;
 	dockerfile: string;
-	error_message?: string | null;
+	error_message: string | null;
 	is_a_build_of__service: NavigationResource<Service>;
 	release_image?: ReverseNavigationResource<ReleaseImage>;
 }
@@ -709,7 +709,7 @@ export interface SupportTier {
 	title: string;
 	slug: string;
 	includes_private_support: boolean;
-	includes__SLA?: string;
+	includes__SLA: string | null;
 }
 
 export interface Plan {

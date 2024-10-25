@@ -81,7 +81,7 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 		 * @memberof balena.models.image
 		 *
 		 * @param {Number} id - image id
-		 * @fulfil {string} - logs
+		 * @fulfil {string | null} - logs
 		 * @returns {Promise}
 		 *
 		 * @example
@@ -89,7 +89,7 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(logs);
 		 * });
 		 */
-		getLogs: async (id: number): Promise<string> => {
+		getLogs: async (id: number): Promise<string | null> => {
 			const { build_log } = await exports.get(id, { $select: 'build_log' });
 			return build_log;
 		},
