@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add option for detached HUP on startOsUpdate
+      hash: 8923df61f159f7a99cb430fa3e918f874bfee399
+      body: |
+        This will call the v2 actions endpoint for resinhup
+        which runs a detached version of HUP that increases
+        HUP reliability on slow networks but will offer
+        no status updates such as in_progress.
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: jaomaloy
+      nested: []
+  version: 20.3.0
+  title: ""
+  date: 2024-10-25T15:02:10.377Z
+- commits:
     - subject: "Typings: fix some id typings to the correct typing"
       hash: 16694153c87a2c74e67e17e1e98ca8c90f1b11e4
       body: ""
