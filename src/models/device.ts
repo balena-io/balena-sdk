@@ -151,8 +151,9 @@ const getDeviceModel = function (
 
 	const getOsUpdateHelper = once(async () => {
 		const $deviceUrlsBase = await getDeviceUrlsBase();
-		const { getOsUpdateHelper: _getOsUpdateHelper } =
-			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update');
+		const _getOsUpdateHelper = (
+			await import('../util/device-actions/os-update')
+		).getOsUpdateHelper;
 		return _getOsUpdateHelper($deviceUrlsBase, request);
 	});
 	/* eslint-enable @typescript-eslint/no-require-imports */
@@ -334,14 +335,17 @@ const getDeviceModel = function (
 	async function startOsUpdate(
 		uuidOrUuids: string,
 		targetOsVersion: string,
+		options?: { runDetached?: boolean },
 	): Promise<OsUpdateActionResult>;
 	async function startOsUpdate(
 		uuidOrUuids: string[],
 		targetOsVersion: string,
+		options?: { runDetached?: boolean },
 	): Promise<Dictionary<OsUpdateActionResult>>;
 	async function startOsUpdate(
 		uuidOrUuids: string | string[],
 		targetOsVersion: string,
+		options: { runDetached?: boolean } = { runDetached: false },
 	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
 		if (!targetOsVersion) {
 			throw new errors.BalenaInvalidParameterError(
@@ -369,6 +373,7 @@ const getDeviceModel = function (
 		);
 
 		const osUpdateHelper = await getOsUpdateHelper();
+
 		const results: Dictionary<
 			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
 		> = {};
@@ -410,10 +415,13 @@ const getDeviceModel = function (
 						);
 					}
 				}
+
+				// use the v2 device actions api for detached updates
 				await limitedMap(devices, async (device) => {
 					results[device.uuid] = await osUpdateHelper.startOsUpdate(
 						device.uuid,
 						targetOsVersion,
+						options.runDetached === true ? 'v2' : 'v1',
 					);
 				});
 			},
@@ -2262,6 +2270,10 @@ const getDeviceModel = function (
 		 * Unsupported (unpublished) version will result in rejection.
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
 		 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
+		 * @param {Object} [options] - options
+		 * @param {Boolean} [options.runDetached] - run the update in detached mode.
+		 * Default behaviour is runDetached=false but is DEPRECATED and will be removed in a future release. Use runDetached=true
+		 * for more reliable updates.
 		 * @fulfil {Object} - action response
 		 * @returns {Promise}
 		 *
@@ -2273,7 +2285,8 @@ const getDeviceModel = function (
 		startOsUpdate,
 
 		/**
-		 * @summary Get the OS update status of a device
+		 * @deprecated
+		 * @summary Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.
 		 * @name getOsUpdateStatus
 		 * @public
 		 * @function

@@ -3,6 +3,7 @@ import type { BalenaRequest } from 'balena-request';
 interface MakeActionRequestParams {
 	uuid: string;
 	actionNameOrId: string | number;
+	deviceActionsApiVersion: 'v1' | 'v2';
 	params?: any;
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 	extraOptions: any;
@@ -11,6 +12,7 @@ interface MakeActionRequestParams {
 interface StartActionParams {
 	uuid: string;
 	actionName: string;
+	deviceActionsApiVersion: 'v1' | 'v2';
 	params: any;
 	extraOptions?: any;
 }
@@ -21,8 +23,6 @@ interface GetActionStatusParams {
 	extraOptions?: any;
 }
 
-const DEVICE_ACTIONS_API_VERSION = 'v1';
-
 export class DeviceActionsService {
 	private actionsEndpoint: string;
 
@@ -30,12 +30,13 @@ export class DeviceActionsService {
 		deviceUrlsBase: string,
 		private request: BalenaRequest,
 	) {
-		this.actionsEndpoint = `https://actions.${deviceUrlsBase}/${DEVICE_ACTIONS_API_VERSION}`;
+		this.actionsEndpoint = `https://actions.${deviceUrlsBase}`;
 	}
 
 	public startAction = <T>({
 		uuid,
 		actionName,
+		deviceActionsApiVersion,
 		params,
 		extraOptions,
 	}: StartActionParams) =>
@@ -43,6 +44,7 @@ export class DeviceActionsService {
 			method: 'POST',
 			uuid,
 			actionNameOrId: actionName,
+			deviceActionsApiVersion,
 			params,
 			extraOptions,
 		});
@@ -55,6 +57,7 @@ export class DeviceActionsService {
 		this.makeActionRequest<T>({
 			method: 'GET',
 			uuid,
+			deviceActionsApiVersion: 'v1',
 			actionNameOrId: actionId,
 			extraOptions,
 		});
@@ -63,6 +66,7 @@ export class DeviceActionsService {
 		method,
 		uuid,
 		actionNameOrId,
+		deviceActionsApiVersion,
 		params,
 		extraOptions,
 	}: MakeActionRequestParams): Promise<T> => {
@@ -70,7 +74,7 @@ export class DeviceActionsService {
 
 		const { body } = await this.request.send<T>({
 			method,
-			url: `${this.actionsEndpoint}/${uuid}/${actionNameOrId}`,
+			url: `${this.actionsEndpoint}/${deviceActionsApiVersion}/${uuid}/${actionNameOrId}`,
 			body: data,
 			...extraOptions,
 		});

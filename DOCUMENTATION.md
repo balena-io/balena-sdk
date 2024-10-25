@@ -301,8 +301,8 @@ const sdk = fromSharedOptions();
             * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
             * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
-            * [.startOsUpdate(uuidOrUuids, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-            * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+            * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
+            * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
@@ -708,8 +708,8 @@ balena.models.device.get(123).catch(function (error) {
         * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
         * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
-        * [.startOsUpdate(uuidOrUuids, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-        * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+        * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
+        * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
@@ -2283,8 +2283,8 @@ balena.models.application.revokeSupportAccess(123);
     * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
     * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
-    * [.startOsUpdate(uuidOrUuids, targetOsVersion)](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-    * [.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>
+    * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
+    * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
@@ -4017,7 +4017,7 @@ balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 ```
 <a name="balena.models.device.startOsUpdate"></a>
 
-##### device.startOsUpdate(uuidOrUuids, targetOsVersion) ⇒ <code>Promise</code>
+##### device.startOsUpdate(uuidOrUuids, targetOsVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Start an OS update on a device  
 **Access**: public  
@@ -4027,6 +4027,8 @@ balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 | --- | --- | --- |
 | uuidOrUuids | <code>String</code> \| <code>Array.&lt;String&gt;</code> | full device uuid or array of full uuids |
 | targetOsVersion | <code>String</code> | semver-compatible version for the target device Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number, a "prod" variant and greater than the one running on the device. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
+| [options] | <code>Object</code> | options |
+| [options.runDetached] | <code>Boolean</code> | run the update in detached mode. Default behaviour is runDetached=false but is DEPRECATED and will be removed in a future release. Use runDetached=true for more reliable updates. |
 
 **Example**  
 ```js
@@ -4036,9 +4038,11 @@ balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+r
 ```
 <a name="balena.models.device.getOsUpdateStatus"></a>
 
-##### device.getOsUpdateStatus(uuid) ⇒ <code>Promise</code>
+##### ~~device.getOsUpdateStatus(uuid) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get the OS update status of a device  
+**Summary**: Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.  
 **Access**: public  
 **Fulfil**: <code>Object</code> - action response  
 
