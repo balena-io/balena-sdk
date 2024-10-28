@@ -1,4 +1,17 @@
 - commits:
+    - subject: Simplify the custom pinejs-client typings after the Concept type
+        unification
+      hash: d5f61b0c58506f46aa728c326b0eeaeb7de285f5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.3.1
+  title: ""
+  date: 2024-10-28T13:04:09.729Z
+- commits:
     - subject: Add option for detached HUP on startOsUpdate
       hash: 8923df61f159f7a99cb430fa3e918f874bfee399
       body: |
