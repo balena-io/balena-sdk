@@ -1,4 +1,17 @@
 - commits:
+    - subject: "Typings: remove optionality from any property that is expanded"
+      hash: c0c68e15cd7176f414f62d792f6557325332a2c2
+      body: |
+        By expanding them we are explicitly requesting them to be included
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.3.2
+  title: ""
+  date: 2024-10-28T16:13:20.853Z
+- commits:
     - subject: Simplify the custom pinejs-client typings after the Concept type
         unification
       hash: d5f61b0c58506f46aa728c326b0eeaeb7de285f5
