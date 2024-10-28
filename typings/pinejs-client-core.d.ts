@@ -95,14 +95,14 @@ type ExpandedProperty<
 					: never;
 
 export type ExpandResultObject<T, Props extends keyof T> = {
-	[P in Props]: ExpandedProperty<T, P, object>;
+	[P in Props]-?: ExpandedProperty<T, P, object>;
 };
 
 type ExpandResourceExpandObject<
 	T,
 	TResourceExpand extends ResourceExpand<T>,
 > = {
-	[P in keyof TResourceExpand]: ExpandedProperty<
+	[P in keyof TResourceExpand]-?: ExpandedProperty<
 		T,
 		P extends keyof T ? P : never,
 		Exclude<TResourceExpand[P], undefined>
