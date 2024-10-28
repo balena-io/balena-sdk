@@ -46,7 +46,14 @@ export type InferAssociatedResourceType<T> =
 export type SelectableProps<T> =
 	// This allows us to get proper results when T is any/AnyObject, otherwise this returned never
 	PropsOfType<T, ReverseNavigationResource<object>> extends StringKeyof<T>
-		? StringKeyof<T>
+		? StringKeyof<T> extends PropsOfType<T, ReverseNavigationResource<object>>
+			? // If all of the properties match the reverse navigation resource, return all properties as we assume we're in an `any`/`AnyObject` case
+				StringKeyof<T>
+			: // Otherwise return only the properties that are not reverse navigation resources
+				Exclude<
+					StringKeyof<T>,
+					PropsOfType<T, ReverseNavigationResource<object>>
+				>
 		: Exclude<
 				StringKeyof<T>,
 				PropsOfType<T, ReverseNavigationResource<object>>
@@ -95,14 +102,14 @@ type ExpandedProperty<
 					: never;
 
 export type ExpandResultObject<T, Props extends keyof T> = {
-	[P in Props]: ExpandedProperty<T, P, object>;
+	[P in Props]-?: ExpandedProperty<T, P, object>;
 };
 
 type ExpandResourceExpandObject<
 	T,
 	TResourceExpand extends ResourceExpand<T>,
 > = {
-	[P in keyof TResourceExpand]: ExpandedProperty<
+	[P in keyof TResourceExpand]-?: ExpandedProperty<
 		T,
 		P extends keyof T ? P : never,
 		Exclude<TResourceExpand[P], undefined>

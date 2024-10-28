@@ -250,7 +250,7 @@ await (async () => {
 		options: {
 			$select: ['id', 'device_name'],
 		},
-	});
+	} as const);
 
 	const checkUndefined: typeof result = undefined;
 	console.log(checkUndefined);

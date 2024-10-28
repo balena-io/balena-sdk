@@ -87,14 +87,14 @@ export interface Organization {
 	is_using__billing_version: 'v1' | 'v2';
 	logo_image: WebResource;
 
-	application: ReverseNavigationResource<Application>;
+	application?: ReverseNavigationResource<Application>;
 	/** includes__organization_membership */
-	organization_membership: ReverseNavigationResource<OrganizationMembership>;
-	owns__credit_bundle: ReverseNavigationResource<CreditBundle>;
-	owns__team: ReverseNavigationResource<Team>;
-	organization__has_private_access_to__device_type: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
-	organization_credit_notification: ReverseNavigationResource<OrganizationCreditNotification>;
-	identity_provider_membership: ReverseNavigationResource<IdentityProviderMembership>;
+	organization_membership?: ReverseNavigationResource<OrganizationMembership>;
+	owns__credit_bundle?: ReverseNavigationResource<CreditBundle>;
+	owns__team?: ReverseNavigationResource<Team>;
+	organization__has_private_access_to__device_type?: ReverseNavigationResource<OrganizationPrivateDeviceTypeAccess>;
+	organization_credit_notification?: ReverseNavigationResource<OrganizationCreditNotification>;
+	identity_provider_membership?: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
 export interface OrganizationCreditNotification {
@@ -113,9 +113,9 @@ export interface Team {
 	belongs_to__organization: NavigationResource<Organization>;
 
 	/** includes__user */
-	team_membership: ReverseNavigationResource<TeamMembership>;
+	team_membership?: ReverseNavigationResource<TeamMembership>;
 	/** grants_access_to__application */
-	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
+	team_application_access?: ReverseNavigationResource<TeamApplicationAccess>;
 }
 
 export interface RecoveryTwoFactor {
@@ -141,11 +141,11 @@ export interface User {
 	created_at: string;
 	username: string;
 
-	organization_membership: ReverseNavigationResource<OrganizationMembership>;
-	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
-	team_membership: ReverseNavigationResource<TeamMembership>;
-	has_direct_access_to__application: ReverseNavigationResource<Application>;
-	user_profile: ReverseNavigationResource<UserProfile>;
+	organization_membership?: ReverseNavigationResource<OrganizationMembership>;
+	user_application_membership?: ReverseNavigationResource<ApplicationMembership>;
+	team_membership?: ReverseNavigationResource<TeamMembership>;
+	has_direct_access_to__application?: ReverseNavigationResource<Application>;
+	user_profile?: ReverseNavigationResource<UserProfile>;
 }
 
 export interface UserProfile {
@@ -180,7 +180,7 @@ export interface OrganizationMembership {
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
 	effective_seat_role: string;
 
-	organization_membership_tag: ReverseNavigationResource<OrganizationMembershipTag>;
+	organization_membership_tag?: ReverseNavigationResource<OrganizationMembershipTag>;
 }
 
 export interface TeamMembership {
@@ -224,19 +224,19 @@ export interface Application {
 	organization: NavigationResource<Organization>;
 	should_be_running__release: OptionalNavigationResource<Release>;
 
-	application_config_variable: ReverseNavigationResource<ApplicationVariable>;
-	application_environment_variable: ReverseNavigationResource<ApplicationVariable>;
-	build_environment_variable: ReverseNavigationResource<BuildVariable>;
-	application_tag: ReverseNavigationResource<ApplicationTag>;
-	owns__device: ReverseNavigationResource<Device>;
-	owns__public_device: ReverseNavigationResource<PublicDevice>;
-	owns__release: ReverseNavigationResource<Release>;
-	service: ReverseNavigationResource<Service>;
-	is_depended_on_by__application: ReverseNavigationResource<Application>;
-	is_directly_accessible_by__user: ReverseNavigationResource<User>;
-	user_application_membership: ReverseNavigationResource<ApplicationMembership>;
-	team_application_access: ReverseNavigationResource<TeamApplicationAccess>;
-	can_use__application_as_host: ReverseNavigationResource<ApplicationHostedOnApplication>;
+	application_config_variable?: ReverseNavigationResource<ApplicationVariable>;
+	application_environment_variable?: ReverseNavigationResource<ApplicationVariable>;
+	build_environment_variable?: ReverseNavigationResource<BuildVariable>;
+	application_tag?: ReverseNavigationResource<ApplicationTag>;
+	owns__device?: ReverseNavigationResource<Device>;
+	owns__public_device?: ReverseNavigationResource<PublicDevice>;
+	owns__release?: ReverseNavigationResource<Release>;
+	service?: ReverseNavigationResource<Service>;
+	is_depended_on_by__application?: ReverseNavigationResource<Application>;
+	is_directly_accessible_by__user?: ReverseNavigationResource<User>;
+	user_application_membership?: ReverseNavigationResource<ApplicationMembership>;
+	team_application_access?: ReverseNavigationResource<TeamApplicationAccess>;
+	can_use__application_as_host?: ReverseNavigationResource<ApplicationHostedOnApplication>;
 }
 
 export interface UserHasDirectAccessToApplication {
@@ -379,14 +379,14 @@ export interface Release {
 	belongs_to__application: NavigationResource<Application>;
 
 	/** @deprecated Prefer using the Term Form "release_image" property */
-	contains__image: ReverseNavigationResource<ReleaseImage>;
-	release_image: ReverseNavigationResource<ReleaseImage>;
-	should_be_running_on__application: ReverseNavigationResource<Application>;
-	is_running_on__device: ReverseNavigationResource<Device>;
-	is_pinned_to__device: ReverseNavigationResource<Device>;
-	should_operate__device: ReverseNavigationResource<Device>;
-	should_manage__device: ReverseNavigationResource<Device>;
-	release_tag: ReverseNavigationResource<ReleaseTag>;
+	contains__image?: ReverseNavigationResource<ReleaseImage>;
+	release_image?: ReverseNavigationResource<ReleaseImage>;
+	should_be_running_on__application?: ReverseNavigationResource<Application>;
+	is_running_on__device?: ReverseNavigationResource<Device>;
+	is_pinned_to__device?: ReverseNavigationResource<Device>;
+	should_operate__device?: ReverseNavigationResource<Device>;
+	should_manage__device?: ReverseNavigationResource<Device>;
+	release_tag?: ReverseNavigationResource<ReleaseTag>;
 }
 
 export interface Device {
@@ -460,18 +460,18 @@ export interface Device {
 	/** This is a computed term that works like: `device.is_pinned_on__release ?? device.belongs_to__application[0].should_be_running__release` */
 	should_be_running__release: OptionalNavigationResource<Release>;
 
-	device_config_variable: ReverseNavigationResource<DeviceVariable>;
-	device_environment_variable: ReverseNavigationResource<DeviceVariable>;
-	device_tag: ReverseNavigationResource<DeviceTag>;
-	service_install: ReverseNavigationResource<ServiceInstall>;
-	image_install: ReverseNavigationResource<ImageInstall>;
+	device_config_variable?: ReverseNavigationResource<DeviceVariable>;
+	device_environment_variable?: ReverseNavigationResource<DeviceVariable>;
+	device_tag?: ReverseNavigationResource<DeviceTag>;
+	service_install?: ReverseNavigationResource<ServiceInstall>;
+	image_install?: ReverseNavigationResource<ImageInstall>;
 }
 
 export interface CpuArchitecture {
 	id: number;
 	slug: string;
 
-	is_supported_by__device_type: ReverseNavigationResource<CpuArchitecture>;
+	is_supported_by__device_type?: ReverseNavigationResource<CpuArchitecture>;
 }
 
 export interface DeviceType {
@@ -482,11 +482,11 @@ export interface DeviceType {
 	logo: string | null;
 	contract: Contract | null;
 	belongs_to__device_family: OptionalNavigationResource<DeviceFamily>;
-	is_default_for__application: ReverseNavigationResource<Application>;
+	is_default_for__application?: ReverseNavigationResource<Application>;
 	is_of__cpu_architecture: NavigationResource<CpuArchitecture>;
-	is_accessible_privately_by__organization: ReverseNavigationResource<Organization>;
-	describes__device: ReverseNavigationResource<Device>;
-	device_type_alias: ReverseNavigationResource<DeviceTypeAlias>;
+	is_accessible_privately_by__organization?: ReverseNavigationResource<Organization>;
+	describes__device?: ReverseNavigationResource<Device>;
+	device_type_alias?: ReverseNavigationResource<DeviceTypeAlias>;
 }
 
 export interface DeviceTypeAlias {
@@ -524,9 +524,9 @@ export interface Service {
 	created_at: string;
 	service_name: string;
 	application: NavigationResource<Application>;
-	is_built_by__image: ReverseNavigationResource<Image>;
-	service_environment_variable: ReverseNavigationResource<ServiceEnvironmentVariable>;
-	device_service_environment_variable: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
+	is_built_by__image?: ReverseNavigationResource<Image>;
+	service_environment_variable?: ReverseNavigationResource<ServiceEnvironmentVariable>;
+	device_service_environment_variable?: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
 export interface IdentityProvider {
@@ -536,8 +536,8 @@ export interface IdentityProvider {
 	issuer: string;
 	certificate: string;
 	requires_signed_authn_response: boolean;
-	manages__saml_account: ReverseNavigationResource<SamlAccount>;
-	identity_provider_membership: ReverseNavigationResource<IdentityProviderMembership>;
+	manages__saml_account?: ReverseNavigationResource<SamlAccount>;
+	identity_provider_membership?: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
 export interface SamlAccount {
@@ -571,7 +571,7 @@ export interface Image {
 	dockerfile: string;
 	error_message?: string | null;
 	is_a_build_of__service: NavigationResource<Service>;
-	release_image: ReverseNavigationResource<ReleaseImage>;
+	release_image?: ReverseNavigationResource<ReleaseImage>;
 }
 
 export interface ReleaseImage {
@@ -616,7 +616,7 @@ export interface ServiceInstall {
 	installs__service: NavigationResource<Service>;
 	application: NavigationResource<Application>;
 
-	device_service_environment_variable: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
+	device_service_environment_variable?: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
 export interface EnvironmentVariableBase {
@@ -723,9 +723,9 @@ export interface Plan {
 	is_valid_from__date: string | null;
 	is_valid_until__date: string | null;
 
-	plan_feature: ReverseNavigationResource<PlanFeature>;
-	offers__plan_addon: ReverseNavigationResource<PlanAddon>;
-	plan__has__discount_code: ReverseNavigationResource<PlanDiscountCode>;
+	plan_feature?: ReverseNavigationResource<PlanFeature>;
+	offers__plan_addon?: ReverseNavigationResource<PlanAddon>;
+	plan__has__discount_code?: ReverseNavigationResource<PlanDiscountCode>;
 }
 
 export interface PlanAddon {
@@ -770,8 +770,8 @@ export interface Subscription {
 
 	is_for__organization: NavigationResource<Organization>;
 	is_for__plan: NavigationResource<Plan>;
-	subscription_addon_discount: ReverseNavigationResource<SubscriptionAddonDiscount>;
-	subscription_prepaid_addon: ReverseNavigationResource<SubscriptionPrepaidAddon>;
+	subscription_addon_discount?: ReverseNavigationResource<SubscriptionAddonDiscount>;
+	subscription_prepaid_addon?: ReverseNavigationResource<SubscriptionPrepaidAddon>;
 }
 
 export interface SubscriptionPrepaidAddon {
