@@ -1,7 +1,6 @@
 import type { WebResourceFile } from 'balena-request';
 import type {
 	AnyObject,
-	PropsAssignableWithType,
 	PropsOfType,
 	StringKeyof,
 	Dictionary,
@@ -37,7 +36,6 @@ export type OptionalNavigationResource<T extends object> =
 export type ReverseNavigationResource<T extends object> = T[] | undefined;
 
 export type AssociatedResource<T extends object> =
-	| ConceptTypeNavigationResource<T>
 	| NavigationResource<T>
 	| OptionalNavigationResource<T>
 	| ReverseNavigationResource<T>;
@@ -55,8 +53,6 @@ export type SelectableProps<T> =
 			>; // This is the normal typed case
 
 export type ExpandableProps<T> = PropsOfType<T, AssociatedResource<object>> &
-	// TODO: Drop me once Pine unifies ConceptTypeNavigationResource with NavigationResource
-	PropsAssignableWithType<T, [] | [any] | any[]> &
 	string;
 
 type SelectedProperty<T, K extends keyof T> =
@@ -64,9 +60,7 @@ type SelectedProperty<T, K extends keyof T> =
 		? PineDeferred
 		: T[K] extends OptionalNavigationResource<any>
 			? PineDeferred | null
-			: T[K] extends ConceptTypeNavigationResource<any>
-				? Exclude<T[K], any[]>
-				: T[K];
+			: T[K];
 
 type SelectResultObject<T, Props extends keyof T> = {
 	[P in Props]: SelectedProperty<T, P>;
@@ -92,7 +86,7 @@ type ExpandedProperty<
 > =
 	KOpts extends ODataOptionsWithCount<any>
 		? number
-		: T[K] extends NavigationResource<any> | ConceptTypeNavigationResource<any>
+		: T[K] extends NavigationResource<any>
 			? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>]
 			: T[K] extends OptionalNavigationResource<any>
 				? [TypedResult<InferAssociatedResourceType<T[K]>, KOpts>] | []
