@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Use @balena/env-parsing"
+      hash: 7ad05ea4a0ef09828eccd1148f8056f6e7ef3b19
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.3.4
+  title: ""
+  date: 2024-10-31T20:44:31.751Z
+- commits:
     - subject: "typing_tests: Target es2017 to fix compilation after recent
         @types/node changes"
       hash: 33ef25ab038ee0431acf517811dba45a3c742044
