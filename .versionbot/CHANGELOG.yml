@@ -1,4 +1,17 @@
 - commits:
+    - subject: "typing_tests: Target es2017 to fix compilation after recent
+        @types/node changes"
+      hash: 33ef25ab038ee0431acf517811dba45a3c742044
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.3.3
+  title: ""
+  date: 2024-10-31T19:07:33.067Z
+- commits:
     - subject: "Typings: remove optionality from any property that is expanded"
       hash: c0c68e15cd7176f414f62d792f6557325332a2c2
       body: |
