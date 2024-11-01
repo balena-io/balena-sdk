@@ -97,7 +97,7 @@ const getServiceModel = ({
 		const { service } = await sdkInstance.models.application.get(
 			slugOrUuidOrId,
 			{
-				$select: 'service',
+				$select: 'id',
 				$expand: {
 					service: options,
 				},
