@@ -1,4 +1,17 @@
 - commits:
+    - subject: "Typings: mark all `ReverseNavigationResource` as optional as they are
+        when not expanded"
+      hash: df9a18985a020b8fd766640edc47015f89336dfa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.3.5
+  title: ""
+  date: 2024-11-01T14:41:57.799Z
+- commits:
     - subject: "tests: Use @balena/env-parsing"
       hash: 7ad05ea4a0ef09828eccd1148f8056f6e7ef3b19
       body: ""
