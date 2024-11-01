@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Typings: Fix types for nullable model properties"
+      hash: 0420c53e9e5c41e1a67ba391bbf5632f41f1a6bd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.3.6
+  title: ""
+  date: 2024-11-01T15:24:21.824Z
+- commits:
     - subject: "Typings: mark all `ReverseNavigationResource` as optional as they are
         when not expanded"
       hash: df9a18985a020b8fd766640edc47015f89336dfa
