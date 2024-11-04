@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-node digest to 39370e3
+      hash: 185e79ec4a2fdeecabc1c3f8281060d42a442bff
+      body: |
+        Update actions/setup-node
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 20.3.7
+  title: ""
+  date: 2024-11-04T12:21:56.339Z
+- commits:
     - subject: "Typings: Fix types for nullable model properties"
       hash: 0420c53e9e5c41e1a67ba391bbf5632f41f1a6bd
       body: ""
