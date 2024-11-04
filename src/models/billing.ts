@@ -84,6 +84,7 @@ export interface BankAccountBillingInfo extends BillingInfo {
 export interface TokenBillingSubmitInfo {
 	token_id: string;
 	'g-recaptcha-response'?: string;
+	token_type?: 'payment_method' | 'setup_intent';
 }
 
 export interface BillingPlanInfo {
@@ -269,6 +270,46 @@ const getBillingModel = function (
 		},
 
 		/**
+		 * @summary Create a Stripe setup intent required for setting billing information
+		 * @name createSetupIntent
+		 * @public
+		 * @function
+		 * @memberof balena.models.billing
+		 *
+		 * @param {Object} setupIntentParams - an object containing the parameters for the setup intent creation
+		 * @param {(String|Number)} extraParams.organization - handle (string) or id (number) of the target organization.
+		 * @param {(String|undefined)} [extraParams.'g-recaptcha-response'] - the captcha response
+		 *
+		 * @fulfil {Object} - partial stripe setup intent object
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.billing.createSetupIntent(orgId).then(function(setupIntent) {
+		 * 	console.log(setupIntent);
+		 * });
+		 */
+		createSetupIntent: async ({
+			organization,
+			...extraParams
+		}: {
+			organization: string | number;
+			'g-recaptcha-response'?: string;
+		}): Promise<{
+			id: string;
+			client_secret: string;
+		}> => {
+			const orgId = await getOrgId(organization);
+
+			const { body } = await request.send({
+				method: 'POST',
+				url: `/billing/v1/account/${orgId}/setup-intent`,
+				baseUrl: apiUrl,
+				body: extraParams,
+			});
+			return body;
+		},
+
+		/**
 		 * @summary Update the current billing information
 		 * @name updateBillingInfo
 		 * @public
@@ -280,6 +321,7 @@ const getBillingModel = function (
 		 *
 		 * @param {String} billingInfo.token_id - the token id generated for the billing info form
 		 * @param {(String|undefined)} [billingInfo.'g-recaptcha-response'] - the captcha response
+		 * @param {(String|undefined)} [billingInfo.token_type] - token type
 		 * @fulfil {Object} - billing information
 		 * @returns {Promise}
 		 *
