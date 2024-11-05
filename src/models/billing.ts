@@ -38,7 +38,12 @@ export interface BillingAccountInfo {
 	address: BillingAccountAddressInfo;
 }
 
-export type BillingInfoType = 'bank_account' | 'credit_card' | 'paypal';
+export type BillingInfoType =
+	| 'bank_account'
+	| 'credit_card'
+	| 'paypal'
+	| 'link'
+	| 'cashapp';
 
 export interface BillingInfo {
 	full_name: string;
