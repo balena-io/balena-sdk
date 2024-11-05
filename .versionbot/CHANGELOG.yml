@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Billing: Add link and cashapp as payment types"
+      hash: f1a7cd06a11ade4b72e34c50abd9b3887ce71051
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Josh Bowling
+      nested: []
+  version: 20.4.0
+  title: ""
+  date: 2024-11-05T07:53:15.262Z
+- commits:
     - subject: Update actions/setup-node digest to 39370e3
       hash: 185e79ec4a2fdeecabc1c3f8281060d42a442bff
       body: |
