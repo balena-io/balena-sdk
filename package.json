@@ -65,7 +65,7 @@
   "devDependencies": {
     "@balena/env-parsing": "^1.2.0",
     "@balena/lint": "^9.0.1",
-    "@types/chai": "^4.3.0",
+    "@types/chai": "^5.0.0",
     "@types/chai-as-promised": "^7.1.4",
     "@types/lodash": "^4.14.195",
     "@types/memoizee": "^0.4.7",
@@ -78,7 +78,7 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "catch-uncommitted": "^2.0.0",
-    "chai": "^4.3.6",
+    "chai": "^5.0.0",
     "chai-as-promised": "^7.1.1",
     "chai-samsam": "0.0.2",
     "constants-browserify": "^1.0.0",
