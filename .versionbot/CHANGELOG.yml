@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add `owns__saml_account` property to `User` interface
+      hash: 0716213e8007b1928c682ec03244cc202554fa77
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 20.5.0
+  title: ""
+  date: 2024-11-11T17:10:43.368Z
+- commits:
     - subject: "Billing: Add link and cashapp as payment types"
       hash: f1a7cd06a11ade4b72e34c50abd9b3887ce71051
       body: ""
