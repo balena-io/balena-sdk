@@ -6275,7 +6275,7 @@ balena.models.image.get(123).then(function(image) {
 **Kind**: static method of [<code>image</code>](#balena.models.image)  
 **Summary**: Get the logs for an image  
 **Access**: public  
-**Fulfil**: <code>string</code> - logs  
+**Fulfil**: <code>string \| null</code> - logs  
 
 | Param | Type | Description |
 | --- | --- | --- |
