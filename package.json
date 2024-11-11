@@ -120,7 +120,7 @@
   "dependencies": {
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
-    "@types/node": "^18.19.50",
+    "@types/node": "^22.0.0",
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^6.0.1",
     "balena-errors": "^4.9.0",
