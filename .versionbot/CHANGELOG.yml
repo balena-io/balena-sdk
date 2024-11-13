@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Billing: Add card, SEPA and ACH as payment types"
+      hash: 6dce6e4055981a17c41b912abe0a2205ec8944a6
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.6.0
+  title: ""
+  date: 2024-11-13T07:45:26.344Z
+- commits:
     - subject: Add `owns__saml_account` property to `User` interface
       hash: 0716213e8007b1928c682ec03244cc202554fa77
       body: ""
