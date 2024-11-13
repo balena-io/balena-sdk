@@ -42,8 +42,11 @@ export type BillingInfoType =
 	| 'bank_account'
 	| 'credit_card'
 	| 'paypal'
+	| 'card'
 	| 'link'
-	| 'cashapp';
+	| 'cashapp'
+	| 'sepa_debit'
+	| 'us_bank_account';
 
 export interface BillingInfo {
 	full_name: string;
