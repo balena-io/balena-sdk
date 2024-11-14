@@ -37,7 +37,7 @@ type ResourceKey =
 
 export interface OrganizationMembershipCreationOptions {
 	organization: string | number;
-	username: string;
+	email: string;
 	roleName?: OrganizationMembershipRoles;
 }
 
@@ -252,20 +252,20 @@ const getOrganizationMembershipModel = function (
 		 *
 		 * @param {Object} options - membership creation parameters
 		 * @param {String|Number} options.organization - organization handle (string), or id (number)
-		 * @param {String} options.username - the username of the balena user that will become a member
+		 * @param {String} options.email - the email of the balena user that will become a member
 		 * @param {String} [options.roleName="member"] - the role name to be granted to the membership
 		 *
 		 * @fulfil {Object} - organization membership
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.organization.membership.create({ organization: "myorg", username: "user123", roleName: "member" }).then(function(membership) {
+		 * balena.models.organization.membership.create({ organization: "myorg", email: "user123@gmail.com", roleName: "member" }).then(function(membership) {
 		 * 	console.log(membership);
 		 * });
 		 */
 		async create({
 			organization,
-			username,
+			email,
 			roleName,
 		}: OrganizationMembershipCreationOptions): Promise<
 			PinePostResult<OrganizationMembership>
@@ -276,10 +276,10 @@ const getOrganizationMembershipModel = function (
 			]);
 			type OrganizationMembershipBase = Omit<OrganizationMembership, 'user'>;
 			type OrganizationMembershipPostBody = OrganizationMembershipBase & {
-				username: string;
+				email: string;
 			};
 			const body: PineSubmitBody<OrganizationMembershipPostBody> = {
-				username,
+				email,
 				is_member_of__organization: id,
 			};
 			if (roleName) {

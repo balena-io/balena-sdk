@@ -36,7 +36,7 @@ type ResourceKey =
 
 export interface ApplicationMembershipCreationOptions {
 	application: string | number;
-	username: string;
+	email: string;
 	roleName?: ApplicationMembershipRoles;
 }
 
@@ -229,20 +229,20 @@ const getApplicationMembershipModel = function (
 		 *
 		 * @param {Object} options - membership creation parameters
 		 * @param {String|Number} options.application - application handle (string), or id (number)
-		 * @param {String} options.username - the username of the balena user that will become a member
+		 * @param {String} options.email - the email of the balena user that will become a member
 		 * @param {String} [options.roleName="member"] - the role name to be granted to the membership
 		 *
 		 * @fulfil {Object} - application membership
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.membership.create({ application: "myApp", username: "user123", roleName: "member" }).then(function(membership) {
+		 * balena.models.application.membership.create({ application: "myApp", email: "user123@gmail.com", roleName: "member" }).then(function(membership) {
 		 * 	console.log(membership);
 		 * });
 		 */
 		async create({
 			application,
-			username,
+			email,
 			roleName,
 		}: ApplicationMembershipCreationOptions): Promise<
 			PinePostResult<ApplicationMembership>
@@ -253,10 +253,10 @@ const getApplicationMembershipModel = function (
 			]);
 			type ApplicationMembershipBase = Omit<ApplicationMembership, 'user'>;
 			type ApplicationMembershipPostBody = ApplicationMembershipBase & {
-				username: string;
+				email: string;
 			};
 			const body: PineSubmitBody<ApplicationMembershipPostBody> = {
-				username,
+				email,
 				is_member_of__application: id,
 			};
 			if (roleName) {

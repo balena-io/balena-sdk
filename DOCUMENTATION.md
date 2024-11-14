@@ -1394,12 +1394,12 @@ This method adds a user to an application by their usename.
 | --- | --- | --- | --- |
 | options | <code>Object</code> |  | membership creation parameters |
 | options.application | <code>String</code> \| <code>Number</code> |  | application handle (string), or id (number) |
-| options.username | <code>String</code> |  | the username of the balena user that will become a member |
+| options.email | <code>String</code> |  | the email of the balena user that will become a member |
 | [options.roleName] | <code>String</code> | <code>&quot;member&quot;</code> | the role name to be granted to the membership |
 
 **Example**  
 ```js
-balena.models.application.membership.create({ application: "myApp", username: "user123", roleName: "member" }).then(function(membership) {
+balena.models.application.membership.create({ application: "myApp", email: "user123@gmail.com", roleName: "member" }).then(function(membership) {
 	console.log(membership);
 });
 ```
@@ -4968,12 +4968,12 @@ This method adds a user to an organization by their usename.
 | --- | --- | --- | --- |
 | options | <code>Object</code> |  | membership creation parameters |
 | options.organization | <code>String</code> \| <code>Number</code> |  | organization handle (string), or id (number) |
-| options.username | <code>String</code> |  | the username of the balena user that will become a member |
+| options.email | <code>String</code> |  | the email of the balena user that will become a member |
 | [options.roleName] | <code>String</code> | <code>&quot;member&quot;</code> | the role name to be granted to the membership |
 
 **Example**  
 ```js
-balena.models.organization.membership.create({ organization: "myorg", username: "user123", roleName: "member" }).then(function(membership) {
+balena.models.organization.membership.create({ organization: "myorg", email: "user123@gmail.com", roleName: "member" }).then(function(membership) {
 	console.log(membership);
 });
 ```

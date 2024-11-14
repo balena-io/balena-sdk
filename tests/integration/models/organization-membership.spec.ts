@@ -189,7 +189,7 @@ describe('Organization Membership Model', function () {
 				it(`should not be able to add a new member to the organization usign a wrong role name`, async function () {
 					const promise = balena.models.organization.membership.create({
 						organization: ctx.organization.id,
-						username: credentials.member.username,
+						email: credentials.member.email,
 						// @ts-expect-error invalid value
 						roleName: 'unknown role',
 					});
@@ -208,7 +208,7 @@ describe('Organization Membership Model', function () {
 					it(`should not be able to add a new member when using an not existing organization ${field}`, async function () {
 						const promise = balena.models.organization.membership.create({
 							organization: randomOrdInfo[field],
-							username: credentials.member.username,
+							email: credentials.member.email,
 							roleName: 'member',
 						});
 						await expect(promise).to.be.rejected.and.eventually.have.property(
@@ -230,7 +230,7 @@ describe('Organization Membership Model', function () {
 					it(`should be able to add a new member to the organization by ${field}`, async function () {
 						membership = await balena.models.organization.membership.create({
 							organization: this.organization[field],
-							username: credentials.member.username,
+							email: credentials.member.email,
 						});
 
 						expect(membership)
@@ -243,7 +243,7 @@ describe('Organization Membership Model', function () {
 				it(`should be able to add a new member to the organization without providing a role`, async function () {
 					membership = await balena.models.organization.membership.create({
 						organization: this.organization.id,
-						username: credentials.member.username,
+						email: credentials.member.email,
 					});
 
 					expect(membership)
@@ -256,7 +256,7 @@ describe('Organization Membership Model', function () {
 					it(`should be able to add a new member to the organization with a given role [${roleName}]`, async function () {
 						membership = await balena.models.organization.membership.create({
 							organization: this.organization.id,
-							username: credentials.member.username,
+							email: credentials.member.email,
 							roleName,
 						});
 
@@ -276,7 +276,7 @@ describe('Organization Membership Model', function () {
 			beforeEach(async function () {
 				membership = await balena.models.organization.membership.create({
 					organization: this.organization.id,
-					username: credentials.member.username,
+					email: credentials.member.email,
 				});
 			});
 
@@ -310,7 +310,7 @@ describe('Organization Membership Model', function () {
 				});
 				membership = await balena.models.organization.membership.create({
 					organization: testOrg.id,
-					username: credentials.member.username,
+					email: credentials.member.email,
 					roleName: 'administrator',
 				});
 			});

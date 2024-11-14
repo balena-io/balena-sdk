@@ -63,7 +63,7 @@ describe('Application Membership Model', function () {
 			it(`should not be able to add a new member to the application using a wrong role name`, async function () {
 				const promise = balena.models.application.membership.create({
 					application: ctx.application.id,
-					username: credentials.member.username,
+					email: credentials.member.email,
 					// @ts-expect-error we are passing an invalid value
 					roleName: 'unknown role',
 				});
@@ -85,7 +85,7 @@ describe('Application Membership Model', function () {
 				it(`should not be able to add a new member when using an not existing application ${field}`, async function () {
 					const promise = balena.models.application.membership.create({
 						application: randomOrdInfo[field],
-						username: credentials.member.username,
+						email: credentials.member.email,
 						roleName: 'developer',
 					});
 					await expect(promise).to.be.rejected.and.eventually.have.property(
@@ -105,7 +105,7 @@ describe('Application Membership Model', function () {
 				it(`should be able to add a new member to the application by ${field}`, async function () {
 					membership = await balena.models.application.membership.create({
 						application: this.application[field],
-						username: credentials.member.username,
+						email: credentials.member.email,
 					});
 
 					expect(membership)
@@ -118,7 +118,7 @@ describe('Application Membership Model', function () {
 			it(`should be able to add a new member to the application without providing a role`, async function () {
 				membership = await balena.models.application.membership.create({
 					application: this.application.id,
-					username: credentials.member.username,
+					email: credentials.member.email,
 				});
 
 				expect(membership)
@@ -131,7 +131,7 @@ describe('Application Membership Model', function () {
 				it(`should be able to add a new member to the application with a given role [${roleName}]`, async function () {
 					membership = await balena.models.application.membership.create({
 						application: this.application.id,
-						username: credentials.member.username,
+						email: credentials.member.email,
 						roleName,
 					});
 
@@ -149,7 +149,7 @@ describe('Application Membership Model', function () {
 		beforeEach(async function () {
 			membership = await balena.models.application.membership.create({
 				application: this.application.id,
-				username: credentials.member.username,
+				email: credentials.member.email,
 			});
 		});
 
@@ -175,7 +175,7 @@ describe('Application Membership Model', function () {
 		before(async function () {
 			membership = await balena.models.application.membership.create({
 				application: this.application.id,
-				username: credentials.member.username,
+				email: credentials.member.email,
 				roleName: 'developer',
 			});
 		});
@@ -260,10 +260,10 @@ describe('Application Membership Model', function () {
 	describe('given a membership [read operations]', function () {
 		let membership: BalenaSdk.ApplicationMembership | undefined;
 		before(async function () {
-			ctx.username = credentials.member.username;
+			ctx.email = credentials.member.email;
 			membership = await balena.models.application.membership.create({
 				application: ctx.application.id,
-				username: ctx.username,
+				email: ctx.email,
 			});
 			// @ts-expect-error Fix the return types of all create methods to be fully typed
 			ctx.userId = membership.user.__id;
