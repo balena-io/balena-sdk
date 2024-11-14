@@ -57,7 +57,7 @@
     "watch": "npm run build && watch \"npm run lint\" \"src\" \"tests\"",
     "prepare": "husky install"
   },
-  "author": "Juan Cruz Viotti <juan@balena.io>",
+  "author": "Balena Ltd. <hello@balena.io>",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=18.0"
