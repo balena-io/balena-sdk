@@ -556,7 +556,7 @@ describe('Application Model', function () {
 				it('should be rejected if the application slug does not exist', function () {
 					const promise = balena.models.application.rename(
 						`${this.initialOrg.handle}/helloworldapp`,
-						'newAppName',
+						`${TEST_APPLICATION_NAME_PREFIX}_newAppName`,
 					);
 					return expect(promise).to.be.rejectedWith(
 						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
@@ -576,17 +576,18 @@ describe('Application Model', function () {
 					});
 					applicationRetrievalFields.forEach((prop) => {
 						it(`should be able to rename an existing application by ${prop}`, async function () {
+							const newApplicationName = `${TEST_APPLICATION_NAME_PREFIX}_newApplicationName_${prop}`;
 							await balena.models.application.rename(
 								this.application[prop],
-								'newApplicationName_' + prop,
+								newApplicationName,
 							);
 							const app = await balena.models.application.get(
 								this.application.id,
+								{
+									$select: 'app_name',
+								},
 							);
-							expect(app).to.have.property(
-								'app_name',
-								'newApplicationName_' + prop,
-							);
+							expect(app).to.have.property('app_name', newApplicationName);
 						});
 					});
 				});

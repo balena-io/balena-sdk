@@ -8,6 +8,7 @@ import {
 	givenInitialOrganization,
 	givenLoggedInUser,
 	organizationRetrievalFields,
+	TEST_ORGANIZATION_NAME,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
 import { assertDeepMatchAndLength, timeSuite } from '../../util';
@@ -296,17 +297,26 @@ describe('Organization Membership Model', function () {
 			});
 		});
 
-		describe('given an administrator organization membership [contained scenario]', function () {
+		describe('given an organization with an administrator organization membership [contained scenario]', function () {
+			const testOrg1Name = `${TEST_ORGANIZATION_NAME}_org_member_tests_${Date.now()}`;
+			let testOrg: BalenaSdk.PinePostResult<BalenaSdk.Organization> | undefined;
 			let membership:
 				| BalenaSdk.OrganizationMembership
 				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
 				| undefined;
 			before(async function () {
+				testOrg = await balena.models.organization.create({
+					name: testOrg1Name,
+				});
 				membership = await balena.models.organization.membership.create({
-					organization: this.organization.id,
+					organization: testOrg.id,
 					username: credentials.member.username,
 					roleName: 'administrator',
 				});
+			});
+
+			after(async function () {
+				await balena.models.organization.remove(testOrg!.id);
 			});
 
 			describe('balena.models.organization.membership.changeRole()', function () {
@@ -355,7 +365,7 @@ describe('Organization Membership Model', function () {
 						);
 						expect(membership).to.have.nested.property(
 							'is_member_of__organization[0].id',
-							this.organization.id,
+							testOrg!.id,
 						);
 						expect(membership).to.have.nested.property(
 							'organization_membership_role[0].name',
@@ -386,7 +396,7 @@ describe('Organization Membership Model', function () {
 				it(`should not be able to remove the last membership of the organization`, async function () {
 					const [lastAdminMembership] =
 						await balena.models.organization.membership.getAllByOrganization(
-							this.organization.id,
+							testOrg!.id,
 							{
 								$select: 'id',
 								$filter: { user: this.userId },
