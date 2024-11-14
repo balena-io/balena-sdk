@@ -83,7 +83,7 @@
     "chai-samsam": "0.0.2",
     "constants-browserify": "^1.0.0",
     "crypto-browserify": "^3.12.0",
-    "domain-browser": "^4.22.0",
+    "domain-browser": "^5.0.0",
     "dotenv": "^16.0.0",
     "gulp": "^4.0.2",
     "gulp-mocha": "^8.0.0",
