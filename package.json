@@ -135,7 +135,7 @@
     "memoizee": "^0.4.15",
     "mime": "^3.0.0",
     "ndjson": "^2.0.0",
-    "p-throttle": "^4.1.1",
+    "p-throttle": "^6.0.0",
     "pinejs-client-core": "^6.15.0",
     "tslib": "^2.1.0"
   },
