@@ -1,4 +1,25 @@
 - commits:
+    - subject: "tests: Use a name prefix in the application rename tests"
+      hash: e409d81195e91f3504f3652b5c09e49a0c03d879
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Support concurrent runs of the last org administrator removal
+        test"
+      hash: 2c41c28c7e7dd454956babc0874bf61aee90b790
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.6.1
+  title: ""
+  date: 2024-11-14T16:38:55.624Z
+- commits:
     - subject: "Billing: Add card, SEPA and ACH as payment types"
       hash: 6dce6e4055981a17c41b912abe0a2205ec8944a6
       body: ""
