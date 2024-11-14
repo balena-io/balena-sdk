@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency lint-staged to v15
+      hash: cd4bf5b44128ac99898e63420ff7c37ba6494b12
+      body: |
+        Update lint-staged from 14.0.1 to 15.2.10
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 20.6.2
+  title: ""
+  date: 2024-11-14T19:23:13.715Z
+- commits:
     - subject: "tests: Use a name prefix in the application rename tests"
       hash: e409d81195e91f3504f3652b5c09e49a0c03d879
       body: ""
