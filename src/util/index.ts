@@ -2,7 +2,7 @@ import * as errors from 'balena-errors';
 import type * as Pine from '../../typings/pinejs-client-core';
 import type { IfDefined } from '../../typings/utils';
 import type { WebResourceFile } from 'balena-request';
-import * as mime from 'mime';
+import mime from 'mime';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
