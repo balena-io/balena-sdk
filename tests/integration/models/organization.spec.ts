@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import * as superagent from 'superagent';
 import {
 	TEST_ORGANIZATION_NAME,
 	balena,
@@ -117,9 +116,13 @@ describe('Organization model', function () {
 					.to.have.nested.property('logo_image.href')
 					.that.is.a('string');
 
-				const res = await superagent.get(fetchedOrg.logo_image.href);
+				const res = await balena.request.send({
+					url: fetchedOrg.logo_image.href,
+					sendToken: false,
+					refreshToken: false,
+				});
 				expect(res.status).to.equal(200);
-				expect(res.headers['content-length']).to.equal('15');
+				expect(res.headers.get('content-length')).to.equal('15');
 			});
 		});
 	});
