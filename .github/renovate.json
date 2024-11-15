@@ -2,5 +2,15 @@
 	"extends": ["github>balena-io/renovate-config"],
 	"prConcurrentLimit": 1,
 	"prHourlyLimit": 1,
-	"rebasewhen": "automerge"
+	"rebasewhen": "automerge",
+	"packageRules": [
+		{
+			"matchPackageNames": ["balena-hup-action-utils"],
+			"matchUpdateTypes": [
+				"major",
+				"minor"
+			],
+			"enabled": false
+		}
+	]
 }
