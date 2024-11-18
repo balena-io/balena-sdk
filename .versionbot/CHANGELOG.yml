@@ -1,4 +1,68 @@
 - commits:
+    - subject: "flowzone: Update windows, ubuntu & macos runners to `-latest`"
+      hash: 56405a28befcefbe8cd6c1fc5ef236886f2cc4de
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/actions/runner-images/issues/10721
+        see: https://github.com/actions/runner-images/issues/10721
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Stop using supertest in favor of balena-request"
+      hash: a6e3eaf3053d9fb60bb66d3cc43ad6b54419ce59
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update dependency sinon to v19
+      hash: 0687e14770b6de834e6f6a1ab1ceff55f0ddf667
+      body: |
+        Update sinon from 15.2.0 to 19.0.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+    - subject: "renovate: Block updating majors & minors of balena-hup-action-utils"
+      hash: 545bf72477886850d42c7c671165ef52fd7394db
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "renovate: Drop the custom rule for majors in favor of the global
+        setting"
+      hash: aed1092558279e4ab9598c6d607995e38ed5b7d4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "renovate: Set prHourlyLimit to 1"
+      hash: 8a71533456311e9cdb1200670eb8d0add4a6ad10
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "renovate: Avoid rebasing failing PRs"
+      hash: 71008cc8dbb90dc524539612bdeea58808ab6554
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.6.3
+  title: ""
+  date: 2024-11-18T15:57:10.157Z
+- commits:
     - subject: Update dependency lint-staged to v15
       hash: cd4bf5b44128ac99898e63420ff7c37ba6494b12
       body: |
