@@ -13,13 +13,13 @@ runs:
   using: "composite"
   steps:
     - name: Setup Node.js 18
-      if: ${{ fromJSON(env.os_value)[0] == 'ubuntu-20.04' }}
+      if: ${{ fromJSON(env.os_value)[0] == 'ubuntu-latest' }}
       uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
       with:
         node-version: 18
 
     - name: Setup Node.js lts
-      if: ${{ fromJSON(env.os_value)[0] != 'ubuntu-20.04' }}
+      if: ${{ fromJSON(env.os_value)[0] != 'ubuntu-latest' }}
       uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
       with:
         node-version: lts/*
@@ -41,17 +41,17 @@ runs:
         node -v
         npm -v
 
-        export TEST_EMAIL_KEY=${{ format('TEST_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) }}
-        export TEST_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
-        export TEST_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_EMAIL_KEY=${{ format('TEST_EMAIL{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) }}
+        export TEST_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_EMAIL{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_USERNAME{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
         export TEST_PASSWORD=${{ fromJSON(inputs.secrets).TEST_PASSWORD }}
-        export TEST_REGISTER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
-        export TEST_REGISTER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_REGISTER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_EMAIL{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_REGISTER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_REGISTER_USERNAME{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
         export TEST_REGISTER_PASSWORD=${{ fromJSON(inputs.secrets).TEST_REGISTER_PASSWORD }}
-        export TEST_MEMBER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_EMAIL{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
-        export TEST_MEMBER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_USERNAME{0}', fromJSON('{"windows-2019":"","ubuntu-20.04":"_1","macos-12":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_MEMBER_EMAIL=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_EMAIL{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
+        export TEST_MEMBER_USERNAME=${{ fromJSON(inputs.secrets)[ format('TEST_MEMBER_USERNAME{0}', fromJSON('{"windows-latest":"","ubuntu-latest":"_1","macos-latest":"_2"}')[fromJSON(env.os_value)[0]]) ] }}
         export TEST_MEMBER_PASSWORD=${{ fromJSON(inputs.secrets).TEST_MEMBER_PASSWORD }}
-        export TEST_ONLY_ON_ENVIRONMENT=${{ fromJSON('{"windows-2019":"node","ubuntu-20.04":"node","macos-12":"browser"}')[fromJSON(env.os_value)[0]]  }}
+        export TEST_ONLY_ON_ENVIRONMENT=${{ fromJSON('{"windows-latest":"node","ubuntu-latest":"node","macos-latest":"browser"}')[fromJSON(env.os_value)[0]]  }}
         export TEST_2FA_EMAIL=${{ fromJSON(inputs.secrets).TEST_2FA_EMAIL }}
         export TEST_2FA_PASSWORD=${{ fromJSON(inputs.secrets).TEST_2FA_PASSWORD }}
         export TEST_2FA_SECRET=${{ fromJSON(inputs.secrets).TEST_2FA_SECRET }}

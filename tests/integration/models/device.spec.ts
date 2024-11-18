@@ -2,7 +2,6 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import * as superagent from 'superagent';
 import { subYears } from 'date-fns/subYears';
 import { subDays } from 'date-fns/subDays';
 import { addDays } from 'date-fns/addDays';
@@ -33,17 +32,21 @@ import type * as BalenaSdk from '../../..';
 
 const makeRequest = async (url) => {
 	try {
-		const res = await superagent.get(url);
+		const res = await balena.request.send({
+			url,
+			sendToken: false,
+			refreshToken: false,
+		});
 		return {
-			status: res.status,
+			status: res.statusCode,
 			isError: false,
-			response: res.text,
+			response: res.body,
 		};
 	} catch (err) {
 		return {
-			status: err.status,
+			status: err.statusCode,
 			isError: true,
-			response: err.response?.text,
+			response: err.body,
 		};
 	}
 };

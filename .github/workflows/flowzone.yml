@@ -22,5 +22,5 @@ jobs:
     with:
       custom_test_matrix: >
         {
-          "os": [["windows-2019"],["ubuntu-20.04"],["macos-12"]]
+          "os": [["windows-latest"],["ubuntu-latest"],["macos-latest"]]
         }
