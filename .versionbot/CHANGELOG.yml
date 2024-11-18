@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update author
+      hash: 60b984b6f293cbcbf00b6ef73806e59241dc3da8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+  version: 20.6.4
+  title: ""
+  date: 2024-11-18T19:43:02.010Z
+- commits:
     - subject: "flowzone: Update windows, ubuntu & macos runners to `-latest`"
       hash: 56405a28befcefbe8cd6c1fc5ef236886f2cc4de
       body: ""
