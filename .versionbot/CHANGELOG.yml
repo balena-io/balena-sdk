@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency gulp-mocha to v9
+      hash: bea70f23f3faa05b492b0c656d42990c137798d8
+      body: |
+        Update gulp-mocha from 8.0.0 to 9.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 20.6.6
+  title: ""
+  date: 2024-11-19T18:51:01.008Z
+- commits:
     - subject: Update dependency jsdoc-to-markdown to v9
       hash: 5fa1b9f88e1a0d33d98936c1033445a315cb76c0
       body: |
