@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency husky to v9
+      hash: e54f9dc1dcd03d88437b905677e36bbdd515d9dd
+      body: |
+        Update husky from 8.0.3 to 9.1.6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 20.6.7
+  title: ""
+  date: 2024-11-19T19:34:02.326Z
+- commits:
     - subject: Update dependency gulp-mocha to v9
       hash: bea70f23f3faa05b492b0c656d42990c137798d8
       body: |
