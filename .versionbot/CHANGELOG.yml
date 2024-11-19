@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency jsdoc-to-markdown to v9
+      hash: 5fa1b9f88e1a0d33d98936c1033445a315cb76c0
+      body: |
+        Update jsdoc-to-markdown from 8.0.3 to 9.0.5
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 20.6.5
+  title: ""
+  date: 2024-11-19T15:36:07.348Z
+- commits:
     - subject: Update author
       hash: 60b984b6f293cbcbf00b6ef73806e59241dc3da8
       body: ""
@@ -1941,20 +1954,13 @@
 - commits:
     - subject: "patch: bump lint-staged from 13.3.0 to 14.0.0"
       hash: 59d0bcd099a4fba24ad2c8c9b51c0603241440ee
-      body: >
-        Bumps [lint-staged](https://github.com/okonet/lint-staged) from 13.3.0
-        to 14.0.0.
-
+      body: |
+        Bumps [lint-staged](https://github.com/okonet/lint-staged) from 13.3.0 to 14.0.0.
         - [Release notes](https://github.com/okonet/lint-staged/releases)
-
-        -
-        [Commits](https://github.com/okonet/lint-staged/compare/v13.3.0...v14.0.0)
-
+        - [Commits](https://github.com/okonet/lint-staged/compare/v13.3.0...v14.0.0)
 
         ---
-
         updated-dependencies:
-
         - dependency-name: lint-staged
           dependency-type: direct:development
           update-type: version-update:semver-major
@@ -4268,25 +4274,14 @@
 - commits:
     - subject: "patch: bump catch-uncommitted from 1.6.2 to 2.0.0"
       hash: eef2f8ef1abec6fe825a55c37a771070a3efb94a
-      body: >
-        Bumps
-        [catch-uncommitted](https://github.com/resin-io-modules/catch-uncommitted)
-        from 1.6.2 to 2.0.0.
-
-        - [Release
-        notes](https://github.com/resin-io-modules/catch-uncommitted/releases)
-
-        -
-        [Changelog](https://github.com/balena-io-modules/catch-uncommitted/blob/master/CHANGELOG.md)
-
-        -
-        [Commits](https://github.com/resin-io-modules/catch-uncommitted/compare/v1.6.2...v2.0.0)
-
+      body: |
+        Bumps [catch-uncommitted](https://github.com/resin-io-modules/catch-uncommitted) from 1.6.2 to 2.0.0.
+        - [Release notes](https://github.com/resin-io-modules/catch-uncommitted/releases)
+        - [Changelog](https://github.com/balena-io-modules/catch-uncommitted/blob/master/CHANGELOG.md)
+        - [Commits](https://github.com/resin-io-modules/catch-uncommitted/compare/v1.6.2...v2.0.0)
 
         ---
-
         updated-dependencies:
-
         - dependency-name: catch-uncommitted
           dependency-type: direct:development
           update-type: version-update:semver-major
@@ -5077,23 +5072,14 @@
 - commits:
     - subject: "patch: bump browserify from 14.5.0 to 17.0.0"
       hash: 2ee532e8dcc3eda0c54296f468f7f9a9e637071a
-      body: >
-        Bumps [browserify](https://github.com/browserify/browserify) from 14.5.0
-        to 17.0.0.
-
+      body: |
+        Bumps [browserify](https://github.com/browserify/browserify) from 14.5.0 to 17.0.0.
         - [Release notes](https://github.com/browserify/browserify/releases)
-
-        -
-        [Changelog](https://github.com/browserify/browserify/blob/master/changelog.markdown)
-
-        -
-        [Commits](https://github.com/browserify/browserify/compare/14.5.0...v17.0.0)
-
+        - [Changelog](https://github.com/browserify/browserify/blob/master/changelog.markdown)
+        - [Commits](https://github.com/browserify/browserify/compare/14.5.0...v17.0.0)
 
         ---
-
         updated-dependencies:
-
         - dependency-name: browserify
           dependency-type: direct:development
           update-type: version-update:semver-major
@@ -5229,20 +5215,13 @@
 - commits:
     - subject: "patch: bump mockttp from 0.9.1 to 2.7.0"
       hash: fa44187e4e510171666f046d6a3a658f59956fd4
-      body: >-
-        Bumps [mockttp](https://github.com/httptoolkit/mockttp) from 0.9.1 to
-        2.7.0.
-
+      body: |-
+        Bumps [mockttp](https://github.com/httptoolkit/mockttp) from 0.9.1 to 2.7.0.
         - [Release notes](https://github.com/httptoolkit/mockttp/releases)
-
-        -
-        [Commits](https://github.com/httptoolkit/mockttp/compare/v0.9.1...v2.7.0)
-
+        - [Commits](https://github.com/httptoolkit/mockttp/compare/v0.9.1...v2.7.0)
 
         ---
-
         updated-dependencies:
-
         - dependency-name: mockttp
           dependency-type: direct:development
           update-type: version-update:semver-major
@@ -5304,22 +5283,14 @@
       nested: []
     - subject: "patch: bump superagent from 3.8.3 to 7.1.2"
       hash: ae3974af1965386bf236b7ae295e4a9ecc285f0c
-      body: >
-        Bumps [superagent](https://github.com/visionmedia/superagent) from 3.8.3
-        to 7.1.2.
-
+      body: |
+        Bumps [superagent](https://github.com/visionmedia/superagent) from 3.8.3 to 7.1.2.
         - [Release notes](https://github.com/visionmedia/superagent/releases)
-
-        -
-        [Changelog](https://github.com/visionmedia/superagent/blob/master/HISTORY.md)
-
+        - [Changelog](https://github.com/visionmedia/superagent/blob/master/HISTORY.md)
         - [Commits](https://github.com/visionmedia/superagent/commits)
 
-
         ---
-
         updated-dependencies:
-
         - dependency-name: superagent
           dependency-type: direct:development
           update-type: version-update:semver-major
