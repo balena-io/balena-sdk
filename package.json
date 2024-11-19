@@ -86,7 +86,7 @@
     "domain-browser": "^4.22.0",
     "dotenv": "^16.0.0",
     "gulp": "^4.0.2",
-    "gulp-mocha": "^8.0.0",
+    "gulp-mocha": "^9.0.0",
     "gulp-replace": "^1.0.0",
     "gulp-uglify": "^3.0.2",
     "husky": "^8.0.3",
