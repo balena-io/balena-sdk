@@ -91,7 +91,7 @@
     "gulp-uglify": "^3.0.2",
     "husky": "^8.0.3",
     "js-polyfills": "^0.1.43",
-    "jsdoc-to-markdown": "^8.0.0",
+    "jsdoc-to-markdown": "^9.0.0",
     "karma": "^6.3.17",
     "lint-staged": "^15.0.0",
     "mjs-mocha": "^3.0.0",
