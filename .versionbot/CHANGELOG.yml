@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Update Jetson provisioning instructions to use Jetson Flash tool"
+      hash: 9507e1a28bee86a9efcac45c8f7a0626f3c932b9
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 20.6.8
+  title: ""
+  date: 2024-11-20T14:33:50.890Z
+- commits:
     - subject: Update dependency husky to v9
       hash: e54f9dc1dcd03d88437b905677e36bbdd515d9dd
       body: |
