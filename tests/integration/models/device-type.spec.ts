@@ -137,6 +137,12 @@ describe('Device Type model', function () {
 						'Power up the Intel NUC to boot the device.',
 					],
 				],
+				[
+					'jetson-nano',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+				],
 			] as const
 		).forEach(([deviceTypeSlug, instructions]) => {
 			it(`should get just the full instructions for installing BalenaOS for ${deviceTypeSlug} with templates strings resolved when passing the slug`, async function () {

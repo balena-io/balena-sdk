@@ -39,11 +39,7 @@ export const BalenaOS: Contract = {
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
 		jetsonFlash: [
-			`Put the device in recovery mode and connect to the host computer via USB`,
-			`{{#if deviceType.partials.jetsonNotes}}{{#each deviceType.partials.jetsonNotes}}{{{this}}} {{/each}}{{/if}}`,
-			`Unzip the {{name}} image and use the <a href="https://github.com/balena-os/jetson-flash">Jetson Flash tool</a> to flash the {{deviceType.name}}.`,
-			`Wait for writing of {{name}} to complete.`,
-			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
+			`To provision {{deviceType.name}}, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/{{deviceType.slug}}.md">Jetson Flash tool</a> to make the process more streamlined.`,
 		],
 		usbMassStorage: [
 			`{{#each deviceType.partials.instructions}}{{{this}}} 
