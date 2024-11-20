@@ -105,6 +105,8 @@ export type DeviceMetrics = Pick<
 >;
 
 const DEFAULT_DAYS_OF_REQUESTED_HISTORY = 7;
+const SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION = 'vTODO';
+const SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION_ESR = 'vTODO-ESR';
 
 const getDeviceModel = function (
 	deps: InjectedDependenciesParam,
@@ -377,8 +379,12 @@ const getDeviceModel = function (
 			groupByNavigationPoperty: 'is_of__device_type',
 			fn: async (devices, deviceTypeId) => {
 				const dt = await getDeviceType(deviceTypeId);
+				const toPinOSRelease = new Map<string, number>();
 				for (const device of devices) {
-					// this will throw an error if the action isn't available
+					// Validate current device type, OS version, and OS variant.
+					// Ensure target OS version is newer than current OS version.
+					// Also ensure device is online if we're using the actions
+					// proxy which requires a connection to the device.
 					exports._checkOsUpdateTarget(
 						{
 							...device,
@@ -387,27 +393,65 @@ const getDeviceModel = function (
 						targetOsVersion,
 					);
 
+					// Validate target OS version is available for the device type.
 					const osVersions = await getAvailableOsVersions(dt.slug, isDraft);
 
-					if (
-						!osVersions.some(
-							(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
-						)
-					) {
+					// Find target OS release
+					const targetRelease = osVersions.find(
+						(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
+					);
+
+					if (!targetRelease) {
 						throw new errors.BalenaInvalidParameterError(
 							'targetOsVersion',
 							targetOsVersion,
 						);
 					}
+
+					// Mark device to skip action proxy based HUP
+					// if target OS version >= SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION
+					if (
+						// Non-ESR comparison
+						bSemver.compare(
+							targetOsVersion,
+							SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION,
+						) >= 0 ||
+						// ESR comparison
+						bSemver.compare(
+							targetOsVersion,
+							SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION_ESR,
+						) >= 0
+					) {
+						toPinOSRelease.set(device.uuid, targetRelease.id);
+					}
 				}
 
-				// use the v2 device actions api for detached updates
+				// Trigger OS update via actions proxy, or pin device to target OS release
+				// if current OS version >= SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION
 				await limitedMap(devices, async (device) => {
-					results[device.uuid] = await osUpdateHelper.startOsUpdate(
-						device.uuid,
-						targetOsVersion,
-						options.runDetached === true ? 'v2' : 'v1',
-					);
+					const targetReleaseId = toPinOSRelease.get(device.uuid);
+					if (targetReleaseId) {
+						// Pin device to target OS release and let Supervisor manage HUP
+						await sdkInstance.pine.patch({
+							resource: 'device',
+							id: device.id,
+							body: {
+								should_be_operated_by__release: targetReleaseId,
+							},
+						});
+
+						results[device.uuid] = {
+							status: 'pinned',
+						};
+					} else {
+						// Use actions proxy for HUP
+						results[device.uuid] = await osUpdateHelper.startOsUpdate(
+							device.uuid,
+							targetOsVersion,
+							// use the v2 device actions api for detached updates
+							options.runDetached === true ? 'v2' : 'v1',
+						);
+					}
 				});
 			},
 		});
@@ -2171,7 +2215,7 @@ const getDeviceModel = function (
 		 * @param {Object} device - A device object
 		 * @param {String} targetOsVersion - semver-compatible version for the target device
 		 * @throws Exception if update isn't supported
-		 * @returns {void}
+		 * @returns {String} current OS version in semver format
 		 */
 		_checkOsUpdateTarget(
 			{
@@ -2184,18 +2228,21 @@ const getDeviceModel = function (
 				is_of__device_type: [Pick<DeviceType, 'slug'>];
 			},
 			targetOsVersion: string,
-		) {
+		): string {
 			if (!uuid) {
 				throw new Error('The uuid of the device is not available');
-			}
-
-			if (!is_online) {
-				throw new Error(`The device is offline: ${uuid}`);
 			}
 
 			if (!os_version) {
 				throw new Error(
 					`The current os version of the device is not available: ${uuid}`,
+				);
+			}
+
+			// Error if the property is missing
+			if (os_variant === undefined) {
+				throw new Error(
+					`The os variant of the device is not available: ${uuid}`,
 				);
 			}
 
@@ -2206,28 +2253,41 @@ const getDeviceModel = function (
 				);
 			}
 
-			// error the property is missing
-			if (os_variant === undefined) {
-				throw new Error(
-					`The os variant of the device is not available: ${uuid}`,
-				);
-			}
-
 			const currentOsVersion =
 				getDeviceOsSemverWithVariant({
 					os_version,
 					os_variant,
 				}) ?? os_version;
 
-			// if the os_version couldn't be parsed
-			// rely on getHUPActionType to throw an error
+			// Validate target OS version is newer than current OS version
+			if (bSemver.compare(currentOsVersion, targetOsVersion) >= 0) {
+				throw new Error('OS downgrades are not allowed');
+			}
 
-			// this will throw an error if the action isn't available
-			hupActionHelper().getHUPActionType(
-				deviceType,
-				currentOsVersion,
-				targetOsVersion,
-			);
+			// If the os_version couldn't be parsed, rely on getHUPActionType to
+			// throw an error if <SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION.
+			// Otherwise, just continue as as we should allow pinning from an
+			// invalid current OS version to a valid target OS version (assuming
+			// target OS version is valid).
+			if (
+				!bSemver.gte(currentOsVersion, SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION)
+			) {
+				// It only matters that the device is online if we're
+				// HUP-ing using the actions proxy which requires a
+				// connection to the device.
+				if (!is_online) {
+					throw new Error(`The device is offline: ${uuid}`);
+				}
+
+				// This will throw an error if the action isn't available
+				hupActionHelper().getHUPActionType(
+					deviceType,
+					currentOsVersion,
+					targetOsVersion,
+				);
+			}
+
+			return currentOsVersion;
 		},
 
 		/**

@@ -11,7 +11,9 @@ export interface OsUpdateActionResult {
 		| 'done'
 		| 'error'
 		| 'configuring'
-		| 'triggered';
+		| 'triggered'
+		// Only used for OS >= vTODO which supports Supervisor managed HUP.
+		| 'pinned';
 	parameters?: {
 		target_version: string;
 	};
