@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.7.2
+      hash: ade474de4deb556fcf268d566243e3f4153ed508
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.6.9
+  title: ""
+  date: 2024-11-23T18:28:09.645Z
+- commits:
     - subject: "patch: Update Jetson provisioning instructions to use Jetson Flash tool"
       hash: 9507e1a28bee86a9efcac45c8f7a0626f3c932b9
       body: ""
