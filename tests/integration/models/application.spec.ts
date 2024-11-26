@@ -593,35 +593,6 @@ describe('Application Model', function () {
 				});
 			});
 
-			describe('balena.models.application.generateApiKey()', function () {
-				applicationRetrievalFields.forEach((prop) => {
-					it(`should be able to generate an API key by ${prop}`, async function () {
-						const apiKey = await balena.models.application.generateApiKey(
-							this.application[prop],
-						);
-
-						expect(apiKey).to.be.a('string');
-						expect(apiKey).to.have.length(32);
-					});
-				});
-
-				it('should be rejected if the application slug does not exist', function () {
-					const promise = balena.models.application.generateApiKey(
-						`${this.initialOrg.handle}/helloworldapp`,
-					);
-					return expect(promise).to.be.rejectedWith(
-						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
-					);
-				});
-
-				it('should be rejected if the application id does not exist', function () {
-					const promise = balena.models.application.generateApiKey(999999);
-					return expect(promise).to.be.rejectedWith(
-						'Application not found: 999999',
-					);
-				});
-			});
-
 			describe('balena.models.application.generateProvisioningKey()', function () {
 				const getProvisioningKeys = async function (appNameOrSlug, options?) {
 					const provisioningKeys =

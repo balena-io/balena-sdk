@@ -835,46 +835,6 @@ const getApplicationModel = function (
 			}),
 
 		/**
-		 * @summary Generate an API key for a specific application
-		 * @name generateApiKey
-		 * @public
-		 * @function
-		 * @memberof balena.models.application
-		 * @deprecated
-		 * @description
-		 * Generally you shouldn't use this method: if you're provisioning a recent BalenaOS
-		 * version (2.4.0+) then generateProvisioningKey should work just as well, but
-		 * be more secure.
-		 *
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-		 * @fulfil {String} - api key
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.application.generateApiKey('myorganization/myapp').then(function(apiKey) {
-		 * 	console.log(apiKey);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.generateApiKey(123).then(function(apiKey) {
-		 * 	console.log(apiKey);
-		 * });
-		 */
-		generateApiKey: async (
-			slugOrUuidOrId: string | number,
-		): Promise<string> => {
-			// Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
-			// doesn't exist. TODO: Can use getId once https://github.com/balena-io/balena-api/issues/110 is resolved
-			const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
-			const { body } = await request.send({
-				method: 'POST',
-				url: `/application/${id}/generate-api-key`,
-				baseUrl: apiUrl,
-			});
-			return body;
-		},
-
-		/**
 		 * @summary Generate a device provisioning key for a specific application
 		 * @name generateProvisioningKey
 		 * @public
