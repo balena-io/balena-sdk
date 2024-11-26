@@ -23,8 +23,6 @@ export interface DeviceType {
 			command: string;
 		}>;
 	};
-	/** @deprecated Use the DeviceType.contract.data.led */
-	supportsBlink?: boolean;
 	yocto: {
 		fstype?: string;
 		deployArtifact: string;
