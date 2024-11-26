@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Fix rebaseWhen option typo"
+      hash: 823577dabde12cca106016fd368e59d0cd31e4a6
+      body: ""
+      footer:
+        Resolves: https://github.com/balena-io/balena-sdk/issues/1496
+        resolves: https://github.com/balena-io/balena-sdk/issues/1496
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.6.10
+  title: ""
+  date: 2024-11-26T22:30:53.175Z
+- commits:
     - subject: Update TypeScript to 5.7.2
       hash: ade474de4deb556fcf268d566243e3f4153ed508
       body: ""
