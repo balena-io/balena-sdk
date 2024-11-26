@@ -225,7 +225,7 @@ const getApplicationMembershipModel = function (
 		 * @function
 		 * @memberof balena.models.application.membership
 		 *
-		 * @description This method adds a user to an application by their usename.
+		 * @description This method adds a user to an application by their username.
 		 *
 		 * @param {Object} options - membership creation parameters
 		 * @param {String|Number} options.application - application handle (string), or id (number)

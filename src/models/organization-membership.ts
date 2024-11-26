@@ -248,7 +248,9 @@ const getOrganizationMembershipModel = function (
 		 * @function
 		 * @memberof balena.models.organization.membership
 		 *
+		 * @deprecated use balena.models.organization.invite.create instead
 		 * @description This method adds a user to an organization by their usename.
+		 * WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
 		 *
 		 * @param {Object} options - membership creation parameters
 		 * @param {String|Number} options.organization - organization handle (string), or id (number)

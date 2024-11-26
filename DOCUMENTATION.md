@@ -345,7 +345,7 @@ const sdk = fromSharedOptions();
                 * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
                 * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
                 * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-                * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+                * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
                 * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
                 * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.organization.invite) : <code>object</code>
@@ -752,7 +752,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
             * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-            * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+            * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
             * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
             * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.organization.invite) : <code>object</code>
@@ -1383,7 +1383,7 @@ balena.models.application.membership.getAllByUser(123).then(function(memberships
 <a name="balena.models.application.membership.create"></a>
 
 ###### membership.create(options) ⇒ <code>Promise</code>
-This method adds a user to an application by their usename.
+This method adds a user to an application by their username.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
 **Summary**: Creates a new membership for an application  
@@ -1527,7 +1527,7 @@ This method invites a user by their email to an application.
 | --- | --- | --- | --- |
 | slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | options | <code>Object</code> |  | invite creation parameters |
-| options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
+| options.invitee | <code>String</code> |  | the email of the invitee |
 | [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
 | [message] | <code>String</code> | <code></code> | the message to send along with the invite |
 
@@ -4852,7 +4852,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
         * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
         * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-        * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+        * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
         * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
         * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.organization.invite) : <code>object</code>
@@ -4875,7 +4875,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
     * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
     * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
     * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-    * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+    * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
     * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
     * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
 
@@ -4956,8 +4956,11 @@ balena.models.organization.membership.getAllByUser(123).then(function(membership
 ```
 <a name="balena.models.organization.membership.create"></a>
 
-###### membership.create(options) ⇒ <code>Promise</code>
+###### ~~membership.create(options) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 This method adds a user to an organization by their usename.
+WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
 **Summary**: Creates a new membership for an organization  
@@ -5101,7 +5104,7 @@ This method invites a user by their email to an organization.
 | --- | --- | --- | --- |
 | handleOrId | <code>String</code> \| <code>Number</code> |  | organization handle (string), or id (number) |
 | options | <code>Object</code> |  | invite creation parameters |
-| options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
+| options.invitee | <code>String</code> |  | the email of the invitee |
 | [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
 | [message] | <code>String</code> | <code></code> | the message to send along with the invite |
 
