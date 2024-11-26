@@ -345,7 +345,7 @@ const sdk = fromSharedOptions();
                 * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
                 * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
                 * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-                * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+                * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
                 * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
                 * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
             * [.invite](#balena.models.organization.invite) : <code>object</code>
@@ -752,7 +752,7 @@ balena.models.device.get(123).catch(function (error) {
             * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
             * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
             * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-            * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+            * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
             * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
             * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
         * [.invite](#balena.models.organization.invite) : <code>object</code>
@@ -4852,7 +4852,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
         * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
         * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
         * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-        * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+        * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
         * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
         * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
     * [.invite](#balena.models.organization.invite) : <code>object</code>
@@ -4875,7 +4875,7 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
     * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
     * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
     * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-    * [.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>
+    * ~~[.create(options)](#balena.models.organization.membership.create) ⇒ <code>Promise</code>~~
     * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
     * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
 
@@ -4956,8 +4956,11 @@ balena.models.organization.membership.getAllByUser(123).then(function(membership
 ```
 <a name="balena.models.organization.membership.create"></a>
 
-###### membership.create(options) ⇒ <code>Promise</code>
+###### ~~membership.create(options) ⇒ <code>Promise</code>~~
+***Deprecated***
+
 This method adds a user to an organization by their usename.
+WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
 **Summary**: Creates a new membership for an organization  
