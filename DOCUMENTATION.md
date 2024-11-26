@@ -1383,7 +1383,7 @@ balena.models.application.membership.getAllByUser(123).then(function(memberships
 <a name="balena.models.application.membership.create"></a>
 
 ###### membership.create(options) ⇒ <code>Promise</code>
-This method adds a user to an application by their usename.
+This method adds a user to an application by their username.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.application.membership)  
 **Summary**: Creates a new membership for an application  
