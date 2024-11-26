@@ -1,4 +1,35 @@
 - commits:
+    - subject: Fix `organization.invite.create` and `application.invite.create`
+        descriptions incorrectly saying usernames can be used for the `invitee`
+        option
+      hash: b0f9e23dc9ff99a6d5d5c7a231a6d871e6d78413
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+    - subject: Deprecate `organization.membership.create` in favor of
+        `organization.invite.create`
+      hash: f87ee9f158fae22269be2a8426ecaaae600190ea
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+    - subject: Fix typo in `application.membership.create` description
+      hash: c446c0bd2e9c3880c84b4cbb64b60e0685bca0dd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+  version: 20.6.11
+  title: ""
+  date: 2024-11-26T23:38:54.200Z
+- commits:
     - subject: "renovate: Fix rebaseWhen option typo"
       hash: 823577dabde12cca106016fd368e59d0cd31e4a6
       body: ""
