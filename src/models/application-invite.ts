@@ -126,7 +126,7 @@ const getApplicationInviteModel = function (
 		 *
 		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} options - invite creation parameters
-		 * @param {String} options.invitee - the email/balena_username of the invitee
+		 * @param {String} options.invitee - the email of the invitee
 		 * @param {String} [options.roleName="developer"] - the role name to be granted to the invitee
 		 * @param {String} [message=null] - the message to send along with the invite
 		 *

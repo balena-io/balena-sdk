@@ -1527,7 +1527,7 @@ This method invites a user by their email to an application.
 | --- | --- | --- | --- |
 | slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
 | options | <code>Object</code> |  | invite creation parameters |
-| options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
+| options.invitee | <code>String</code> |  | the email of the invitee |
 | [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
 | [message] | <code>String</code> | <code></code> | the message to send along with the invite |
 
@@ -5104,7 +5104,7 @@ This method invites a user by their email to an organization.
 | --- | --- | --- | --- |
 | handleOrId | <code>String</code> \| <code>Number</code> |  | organization handle (string), or id (number) |
 | options | <code>Object</code> |  | invite creation parameters |
-| options.invitee | <code>String</code> |  | the email/balena_username of the invitee |
+| options.invitee | <code>String</code> |  | the email of the invitee |
 | [options.roleName] | <code>String</code> | <code>&quot;developer&quot;</code> | the role name to be granted to the invitee |
 | [message] | <code>String</code> | <code></code> | the message to send along with the invite |
 
