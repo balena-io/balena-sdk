@@ -14,8 +14,6 @@ export interface DeviceType {
 
 	isDependent?: boolean;
 	imageDownloadAlerts?: DeviceTypeDownloadAlert[];
-	/** @deprecated Use the balena.models.deviceType.getInstructions() */
-	instructions?: string[] | DeviceTypeInstructions;
 	gettingStartedLink?: string | DeviceTypeGettingStartedLink;
 	stateInstructions?: { [key: string]: string[] };
 	options?: DeviceTypeOptions[];
