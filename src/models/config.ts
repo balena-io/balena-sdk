@@ -69,8 +69,13 @@ const getConfigModel = function (
 	const { request } = deps;
 	const { apiUrl } = opts;
 
+	// TODO: Drop when `instructions` is no longer returned by the `/config` and `/device-types/v1` endpoints
 	const normalizeDeviceTypes = (
-		deviceTypes: DeviceTypeJson.DeviceType[],
+		deviceTypes: Array<
+			DeviceTypeJson.DeviceType & {
+				instructions?: string[] | DeviceTypeJson.DeviceTypeInstructions;
+			}
+		>,
 	): DeviceTypeJson.DeviceType[] =>
 		deviceTypes.map(function (deviceType) {
 			// Remove the device-type.json instructions to enforce
