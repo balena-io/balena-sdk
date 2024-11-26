@@ -25,11 +25,6 @@ export interface Config {
 	deviceUrlsBase: string;
 	adminUrl: string;
 	gitServerUrl: string;
-	/** @deprecated */
-	pubnub?: {
-		subscribe_key: string;
-		publish_key: string;
-	};
 	ga?: GaConfig;
 	mixpanelToken?: string;
 	intercomAppId?: string;
