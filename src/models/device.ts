@@ -152,7 +152,7 @@ const getDeviceModel = function (
 	const getOsUpdateHelper = once(async () => {
 		const $deviceUrlsBase = await getDeviceUrlsBase();
 		const _getOsUpdateHelper = (
-			await import('../util/device-actions/os-update')
+			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update')
 		).getOsUpdateHelper;
 		return _getOsUpdateHelper($deviceUrlsBase, request);
 	});
