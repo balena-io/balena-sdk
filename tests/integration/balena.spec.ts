@@ -162,7 +162,9 @@ describe('Balena SDK', function () {
 					},
 				});
 
-				const promise = balena.models.device.reboot(999999);
+				const promise = balena.request.send({
+					url: 'example.com',
+				});
 
 				return expect(promise).to.be.rejected.then(() =>
 					expect(called).to.equal(

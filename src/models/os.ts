@@ -20,7 +20,6 @@ import once from 'lodash/once';
 import {
 	isNotFoundResponse,
 	onlyIf,
-	treatAsMissingApplication,
 	mergePineOptionsTyped,
 	type ExtendedPineTypedResult,
 } from '../util';
@@ -791,26 +790,22 @@ const getOsModel = function (
 
 		options.network = options.network ?? 'ethernet';
 
-		try {
-			const applicationId =
-				await sdkInstance.models.application._getId(slugOrUuidOrId);
+		const applicationId = (
+			await sdkInstance.models.application.get(slugOrUuidOrId, {
+				$select: 'id',
+			})
+		).id;
 
-			const { body } = await request.send({
-				method: 'POST',
-				url: '/download-config',
-				baseUrl: apiUrl,
-				body: {
-					...options,
-					appId: applicationId,
-				},
-			});
-			return body;
-		} catch (err) {
-			if (isNotFoundResponse(err)) {
-				treatAsMissingApplication(slugOrUuidOrId, err);
-			}
-			throw err;
-		}
+		const { body } = await request.send({
+			method: 'POST',
+			url: '/download-config',
+			baseUrl: apiUrl,
+			body: {
+				...options,
+				appId: applicationId,
+			},
+		});
+		return body;
 	};
 
 	/**

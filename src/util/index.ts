@@ -52,38 +52,6 @@ export const isUnauthorizedResponse = (err: Error) =>
 export const isNotFoundResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 404);
 
-export const isNoDeviceForKeyResponse = (err: Error) =>
-	isBalenaRequestErrorResponseWithCode(err, 500) &&
-	err.body === 'No device found to associate with the api key';
-
-export const isNoApplicationForKeyResponse = (err: Error) =>
-	isBalenaRequestErrorResponseWithCode(err, 500) &&
-	err.body === 'No application found to associate with the api key';
-
-export const treatAsMissingOrganization = (
-	handleOrId: string | number,
-	err: Error,
-) => {
-	const replacementErr = new errors.BalenaOrganizationNotFound(handleOrId);
-	replacementErr.stack = err.stack ?? '';
-	throw replacementErr;
-};
-
-export const treatAsMissingApplication = (
-	slugOrUuidOrId: string | number,
-	err: Error,
-) => {
-	const replacementErr = new errors.BalenaApplicationNotFound(slugOrUuidOrId);
-	replacementErr.stack = err.stack ?? '';
-	throw replacementErr;
-};
-
-export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
-	const replacementErr = new errors.BalenaDeviceNotFound(uuidOrId);
-	replacementErr.stack = err.stack ?? '';
-	throw replacementErr;
-};
-
 // TODO: Make it so that it also infers the extras param
 export function mergePineOptionsTyped<
 	R extends object,
