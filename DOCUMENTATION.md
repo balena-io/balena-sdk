@@ -323,7 +323,7 @@ const sdk = fromSharedOptions();
             * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
             * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
-            * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+            * [.create(name, expiryDate, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
             * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
             * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
@@ -726,7 +726,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
         * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
-        * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+        * [.create(name, expiryDate, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
         * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
         * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
@@ -4462,7 +4462,7 @@ balena.models.deviceType.getInstallMethod('raspberry-pi').then(function(method) 
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.apiKey](#balena.models.apiKey) : <code>object</code>
-    * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+    * [.create(name, expiryDate, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
     * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
     * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
@@ -4472,7 +4472,7 @@ balena.models.deviceType.getInstallMethod('raspberry-pi').then(function(method) 
 
 <a name="balena.models.apiKey.create"></a>
 
-##### apiKey.create(name, [description]) ⇒ <code>Promise</code>
+##### apiKey.create(name, expiryDate, [description]) ⇒ <code>Promise</code>
 This method registers a new api key for the current user with the name given.
 
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
@@ -4483,17 +4483,18 @@ This method registers a new api key for the current user with the name given.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | <code>String</code> |  | the API key name |
+| expiryDate | <code>String</code> |  | the API key expiry date |
 | [description] | <code>String</code> | <code></code> | the API key description |
 
 **Example**  
 ```js
-balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
+balena.models.apiKey.create(apiKeyName, 2030-10-12).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
+balena.models.apiKey.create(apiKeyName, 2030-10-12, apiKeyDescription).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```

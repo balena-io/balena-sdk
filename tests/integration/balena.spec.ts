@@ -372,6 +372,7 @@ describe('Balena SDK', function () {
 			before(async function () {
 				const testApiKey = await balena.models.apiKey.create(
 					`${TEST_KEY_NAME_PREFIX}_apiKey`,
+					null,
 					'apiKeyDescription',
 				);
 				this.testApiKey = testApiKey;

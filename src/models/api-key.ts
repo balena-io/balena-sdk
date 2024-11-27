@@ -39,38 +39,37 @@ const getApiKeysModel = function (
 		 * @description This method registers a new api key for the current user with the name given.
 		 *
 		 * @param {String} name - the API key name
+		 * @param {String} expiryDate - the API key expiry date
 		 * @param {String} [description=null] - the API key description
 		 *
 		 * @fulfil {String} - API key
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
+		 * balena.models.apiKey.create(apiKeyName, 2030-10-12).then(function(apiKey) {
 		 * 	console.log(apiKey);
 		 * });
 		 *
 		 * @example
-		 * balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
+		 * balena.models.apiKey.create(apiKeyName, 2030-10-12, apiKeyDescription).then(function(apiKey) {
 		 * 	console.log(apiKey);
 		 * });
 		 */
 		async create(
 			name: string,
+			expiryDate: string | null,
 			description: string | null = null,
-			expiryDate: string | null = null,
 		): Promise<string> {
 			const apiKeyBody: {
 				name: string;
+				expiryDate: string | null;
 				description?: string | null;
-				expiryDate?: string | null;
 			} = {
 				name,
+				expiryDate,
 			};
 			if (typeof description === 'string' && !!description) {
 				apiKeyBody.description = description;
-			}
-			if (typeof expiryDate === 'string' && !!expiryDate) {
-				apiKeyBody.expiryDate = expiryDate;
 			}
 			try {
 				const { body } = await request.send({

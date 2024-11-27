@@ -85,6 +85,7 @@ describe('SDK authentication', function () {
 				await balena.auth.loginWithToken(token);
 				const apiKey = await balena.models.apiKey.create(
 					`${TEST_KEY_NAME_PREFIX}_apiKey`,
+					null,
 				);
 				await balena.auth.logout();
 				await balena.auth.loginWithToken(apiKey);
