@@ -22,11 +22,7 @@ import type {
 } from '..';
 import type { Device } from '../types/models';
 
-import {
-	isNotFoundResponse,
-	treatAsMissingDevice,
-	withSupervisorLockedError,
-} from '../util';
+import { withSupervisorLockedError } from '../util';
 
 import { ensureVersionCompatibility } from '../util/device-os-version';
 
@@ -67,9 +63,6 @@ export const getSupervisorApiHelper = function (
 		sdkInstance,
 	} = deps;
 	const { apiUrl } = opts;
-
-	const getId = (uuidOrId: string | number) =>
-		sdkInstance.models.device._getId(uuidOrId);
 
 	const exports = {
 		/**
@@ -166,37 +159,30 @@ export const getSupervisorApiHelper = function (
 		 */
 		restartApplication: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				try {
-					const deviceOptions = {
-						$select: ['id', 'supervisor_version'],
-						$expand: { belongs_to__application: { $select: 'id' } },
-					} satisfies PineOptions<Device>;
-					const device = (await sdkInstance.models.device.get(
-						uuidOrId,
-						deviceOptions,
-					)) as PineTypedResult<Device, typeof deviceOptions>;
+				const deviceOptions = {
+					$select: ['id', 'supervisor_version'],
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} satisfies PineOptions<Device>;
+				const device = (await sdkInstance.models.device.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
 
-					const appId = device.belongs_to__application[0].id;
-					const { body } = await request.send({
-						method: 'POST',
-						url: `/supervisor/v1/restart`,
-						baseUrl: apiUrl,
-						body: {
-							deviceId: device.id,
+				const appId = device.belongs_to__application[0].id;
+				const { body } = await request.send({
+					method: 'POST',
+					url: `/supervisor/v1/restart`,
+					baseUrl: apiUrl,
+					body: {
+						deviceId: device.id,
+						appId,
+						data: {
 							appId,
-							data: {
-								appId,
-							},
 						},
-						timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-					});
-					return body;
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingDevice(uuidOrId, err);
-					}
-					throw err;
-				}
+					},
+					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
+				});
+				return body;
 			}),
 
 		/**
@@ -226,26 +212,21 @@ export const getSupervisorApiHelper = function (
 					options = {};
 				}
 
-				try {
-					const deviceId = await getId(uuidOrId);
-					const { body } = await request.send({
-						method: 'POST',
-						url: '/supervisor/v1/reboot',
-						baseUrl: apiUrl,
-						body: {
-							deviceId,
-							data: {
-								force: Boolean(options?.force),
-							},
+				const deviceId = (
+					await sdkInstance.models.device.get(uuidOrId, { $select: 'id' })
+				).id;
+				const { body } = await request.send({
+					method: 'POST',
+					url: '/supervisor/v1/reboot',
+					baseUrl: apiUrl,
+					body: {
+						deviceId,
+						data: {
+							force: Boolean(options?.force),
 						},
-					});
-					return body;
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingDevice(uuidOrId, err);
-					}
-					throw err;
-				}
+					},
+				});
+				return body;
 			}),
 
 		/**
