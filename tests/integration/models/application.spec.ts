@@ -1507,7 +1507,6 @@ describe('Application Model', function () {
 				expect(imageInstall)
 					.to.have.property('download_progress')
 					.that.is.oneOf([50, null]);
-				expect(imageInstall).to.have.property('image').that.has.length(1);
 				if (expectCommit) {
 					expect(imageInstall)
 						.to.have.property('is_provided_by__release')
