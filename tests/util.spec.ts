@@ -240,13 +240,6 @@ describe('Pine option merging', function () {
 		});
 	});
 
-	it('rejects any unknown extra options', () => {
-		// @ts-expect-error b/c it's not typed
-		expect(() => mergePineOptions({}, { unknownKey: 'value' })).to.throw(
-			'Unknown pine option: unknownKey',
-		);
-	});
-
 	it('ignores any unknown default options', () => {
 		// @ts-expect-error b/c it's not typed
 		expect(() => mergePineOptions({ unknownKey: 'value' }, {})).not.to.throw();
