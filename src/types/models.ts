@@ -285,8 +285,6 @@ export interface ApplicationType {
 	name: string;
 	slug: string;
 	description: string | null;
-	/** @deprecated */
-	supports_gateway_mode: boolean;
 	supports_multicontainer: boolean;
 	supports_web_url: boolean;
 	is_legacy: boolean;
