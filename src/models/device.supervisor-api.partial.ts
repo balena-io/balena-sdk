@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import * as bSemver from 'balena-semver';
 import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
@@ -176,20 +175,6 @@ export const getSupervisorApiHelper = function (
 						uuidOrId,
 						deviceOptions,
 					)) as PineTypedResult<Device, typeof deviceOptions>;
-					// TODO: Drop this once we drop support for ResinOS v2.11.0.
-					if (
-						!bSemver.valid(device.supervisor_version) ||
-						bSemver.lt(device.supervisor_version, '7.0.0')
-					) {
-						return (
-							await request.send({
-								method: 'POST',
-								url: `/device/${device.id}/restart`,
-								baseUrl: apiUrl,
-								timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-							})
-						).body;
-					}
 
 					const appId = device.belongs_to__application[0].id;
 					const { body } = await request.send({
