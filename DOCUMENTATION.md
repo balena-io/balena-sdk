@@ -3987,7 +3987,7 @@ balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 | uuidOrUuids | <code>String</code> \| <code>Array.&lt;String&gt;</code> | full device uuid or array of full uuids |
 | targetOsVersion | <code>String</code> | semver-compatible version for the target device Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number, a "prod" variant and greater than the one running on the device. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
 | [options] | <code>Object</code> | options |
-| [options.runDetached] | <code>Boolean</code> | run the update in detached mode. Default behaviour is runDetached=false but is DEPRECATED and will be removed in a future release. Use runDetached=true for more reliable updates. |
+| [options.runDetached] | <code>Boolean</code> | run the update in detached mode. True by default |
 
 **Example**  
 ```js
