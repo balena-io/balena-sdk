@@ -41,7 +41,7 @@ export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
 				},
 			},
 			$expand: {
-				image: {
+				installs__image: {
 					$select: ['id'],
 					$expand: {
 						is_a_build_of__service: {
@@ -68,7 +68,7 @@ interface WithServiceName {
 function getSingleInstallSummary(
 	rawData: ImageInstall,
 ): CurrentService & WithServiceName {
-	const image = (rawData.image as Image[])[0];
+	const image = (rawData.installs__image as Image[])[0];
 	const service = (image.is_a_build_of__service as Service[])[0];
 
 	let releaseInfo: {
@@ -90,7 +90,6 @@ function getSingleInstallSummary(
 
 	const result: CurrentService &
 		Partial<Pick<ImageInstall, 'installs__image' | 'is_provided_by__release'>> &
-		Partial<Pick<ImageInstall, 'image'>> &
 		WithServiceName = {
 		...rawData,
 		service_id: service.id,
@@ -100,8 +99,6 @@ function getSingleInstallSummary(
 		...releaseInfo,
 	};
 
-	// prefer over omit for performance reasons
-	delete result.image;
 	if ('installs__image' in result) {
 		delete result.installs__image;
 	}
