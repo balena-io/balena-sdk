@@ -215,60 +215,6 @@ export const getSupervisorApiHelper = function (
 			}),
 
 		/**
-		 * @summary Stop application on device
-		 * @name stopApplication
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @description
-		 * This is not supported on multicontainer devices, and will be removed in a future major release
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {String} - application container id
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
-		 * 	console.log(containerId);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.stopApplication(123).then(function(containerId) {
-		 * 	console.log(containerId);
-		 * });
-		 */
-		stopApplication: (uuidOrId: string | number): Promise<void> =>
-			withSupervisorLockedError(async () => {
-				const deviceOptions = {
-					$select: ['id', 'supervisor_version'],
-					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
-				const device = (await sdkInstance.models.device.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
-				ensureVersionCompatibility(
-					device.supervisor_version,
-					MIN_SUPERVISOR_APPS_API,
-					'supervisor',
-				);
-				const appId = device.belongs_to__application[0].id;
-				const { body } = await request.send({
-					method: 'POST',
-					url: `/supervisor/v1/apps/${appId}/stop`,
-					baseUrl: apiUrl,
-					body: {
-						deviceId: device.id,
-						appId,
-					},
-					timeout: CONTAINER_ACTION_ENDPOINT_TIMEOUT,
-				});
-				return body.containerId;
-			}),
-
-		/**
 		 * @summary Reboot device
 		 * @name reboot
 		 * @public
