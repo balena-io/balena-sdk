@@ -115,68 +115,6 @@ export const getSupervisorApiHelper = function (
 		},
 
 		/**
-		 * @summary Get application container information
-		 * @name getApplicationInfo
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @deprecated
-		 * @description
-		 * This is not supported on multicontainer devices, and will be removed in a future major release
-		 *
-		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {Object} - application info
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
-		 * 	console.log(appInfo);
-		 * });
-		 *
-		 * @example
-		 * balena.models.device.getApplicationInfo(123).then(function(appInfo) {
-		 * 	console.log(appInfo);
-		 * });
-		 */
-		getApplicationInfo: async (
-			uuidOrId: string | number,
-		): Promise<{
-			appId: string;
-			commit: string;
-			containerId: string;
-			env: { [key: string]: string | number };
-			imageId: string;
-		}> => {
-			const deviceOptions = {
-				$select: ['id', 'supervisor_version'],
-				$expand: { belongs_to__application: { $select: 'id' } },
-			} satisfies PineOptions<Device>;
-
-			const device = (await sdkInstance.models.device.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
-			ensureVersionCompatibility(
-				device.supervisor_version,
-				MIN_SUPERVISOR_APPS_API,
-				'supervisor',
-			);
-			const appId = device.belongs_to__application[0].id;
-			const { body } = await request.send({
-				method: 'POST',
-				url: `/supervisor/v1/apps/${appId}`,
-				baseUrl: apiUrl,
-				body: {
-					deviceId: device.id,
-					appId,
-					method: 'GET',
-				},
-			});
-			return body;
-		},
-
-		/**
 		 * @summary Identify device
 		 * @name identify
 		 * @public
