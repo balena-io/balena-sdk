@@ -43,16 +43,7 @@ export const getOsUpdateHelper = function (
 		});
 	};
 
-	const getOsUpdateStatus = (uuid: string) => {
-		return deviceActionsService.getActionStatus<OsUpdateActionResult>({
-			uuid,
-			// TODO: this is an assumption recorded here: https://github.com/resin-io/resin-proxy/issues/51#issuecomment-274087973
-			actionId: OS_UPDATE_ACTION_NAME,
-		});
-	};
-
 	return {
 		startOsUpdate,
-		getOsUpdateStatus,
 	};
 };
