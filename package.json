@@ -61,7 +61,7 @@
   "author": "Balena Ltd. <hello@balena.io>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18.0"
+    "node": "^20.12.0 || >= 22.0.0"
   },
   "devDependencies": {
     "@balena/env-parsing": "^1.2.0",
@@ -119,7 +119,7 @@
   "dependencies": {
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
-    "@types/node": "^18.19.50",
+    "@types/node": "^20.17.8",
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^6.0.1",
     "balena-errors": "^4.9.0",
