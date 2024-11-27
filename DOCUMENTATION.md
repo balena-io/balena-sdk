@@ -406,6 +406,7 @@ const sdk = fromSharedOptions();
             * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
             * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+            * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
             * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
             * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
             * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -810,6 +811,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
         * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+        * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
         * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
         * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
         * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -4870,7 +4872,7 @@ balena.models.organization.membership.getAllByUser(123).then(function(membership
 <a name="balena.models.organization.membership.create"></a>
 
 ###### ~~membership.create(options) ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.organization.invite.create instead***
 
 This method adds a user to an organization by their usename.
 WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
@@ -5503,7 +5505,7 @@ balena.models.config.getAll().then(function(config) {
 <a name="balena.models.config.getDeviceTypes"></a>
 
 ##### ~~config.getDeviceTypes() ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.deviceType.getAll***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get device types  
@@ -5518,7 +5520,7 @@ balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 <a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
 
 ##### ~~config.getDeviceTypeManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.deviceType.getBySlugOrName***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get a device type manifest by slug  
@@ -6262,6 +6264,7 @@ balena.models.creditBundle.create(orgId, featureId, creditsToPurchase).then(func
     * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
     * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
     * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+    * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
     * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
     * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
     * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -6323,6 +6326,26 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
+<a name="balena.models.billing.createSetupIntent"></a>
+
+##### billing.createSetupIntent(setupIntentParams) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
+**Summary**: Create a Stripe setup intent required for setting billing information  
+**Access**: public  
+**Fulfil**: <code>Object</code> - partial stripe setup intent object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| setupIntentParams | <code>Object</code> | an object containing the parameters for the setup intent creation |
+| extraParams.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+| [extraParams.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
+
+**Example**  
+```js
+balena.models.billing.createSetupIntent(orgId).then(function(setupIntent) {
+	console.log(setupIntent);
+});
+```
 <a name="balena.models.billing.updateBillingInfo"></a>
 
 ##### billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Promise</code>
@@ -6337,6 +6360,7 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 | billingInfo | <code>Object</code> | an object containing a billing info token_id |
 | billingInfo.token_id | <code>String</code> | the token id generated for the billing info form |
 | [billingInfo.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
+| [billingInfo.token_type] | <code>String</code> \| <code>undefined</code> | token type |
 
 **Example**  
 ```js
