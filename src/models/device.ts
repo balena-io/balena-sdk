@@ -46,10 +46,8 @@ import memoizee from 'memoizee';
 
 import {
 	isId,
-	isNoDeviceForKeyResponse,
 	isFullUuid,
 	mergePineOptions,
-	treatAsMissingDevice,
 	limitedMap,
 	groupByMap,
 } from '../util';
@@ -221,17 +219,6 @@ const getDeviceModel = function (
 		}
 		return (await sdkInstance.models.config.getAll()).deviceUrlsBase;
 	});
-
-	// Internal method for uuid/id disambiguation
-	// Note that this throws an exception for missing uuids, but not missing ids
-	const getId = async (uuidOrId: string | number) => {
-		if (isId(uuidOrId)) {
-			return uuidOrId;
-		} else {
-			const { id } = await exports.get(uuidOrId, { $select: 'id' });
-			return id;
-		}
-	};
 
 	const getAppliedConfigVariableValue = async (
 		uuidOrId: string | number,
@@ -433,7 +420,6 @@ const getDeviceModel = function (
 	}
 
 	const exports = {
-		_getId: getId,
 		OverallStatus,
 		/**
 		 * @summary Get Dashboard URL for a specific device
@@ -1456,25 +1442,20 @@ const getDeviceModel = function (
 			keyDescription?: string,
 			keyExpiryDate?: string,
 		): Promise<string> => {
-			try {
-				const deviceId = await getId(uuidOrId);
-				const { body } = await request.send({
-					method: 'POST',
-					url: `/api-key/device/${deviceId}/device-key`,
-					baseUrl: apiUrl,
-					body: {
-						name: keyName,
-						description: keyDescription,
-						expiryDate: keyExpiryDate,
-					},
-				});
-				return body;
-			} catch (err) {
-				if (isNoDeviceForKeyResponse(err)) {
-					treatAsMissingDevice(uuidOrId, err);
-				}
-				throw err;
-			}
+			const deviceId = (
+				await sdkInstance.models.device.get(uuidOrId, { $select: 'id' })
+			).id;
+			const { body } = await request.send({
+				method: 'POST',
+				url: `/api-key/device/${deviceId}/device-key`,
+				baseUrl: apiUrl,
+				body: {
+					name: keyName,
+					description: keyDescription,
+					expiryDate: keyExpiryDate,
+				},
+			});
+			return body;
 		},
 
 		/**
