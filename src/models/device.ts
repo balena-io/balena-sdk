@@ -345,7 +345,7 @@ const getDeviceModel = function (
 	async function startOsUpdate(
 		uuidOrUuids: string | string[],
 		targetOsVersion: string,
-		options: { runDetached?: boolean } = { runDetached: false },
+		options: { runDetached?: boolean } = { runDetached: true },
 	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
 		if (!targetOsVersion) {
 			throw new errors.BalenaInvalidParameterError(
@@ -2271,9 +2271,7 @@ const getDeviceModel = function (
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
 		 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
 		 * @param {Object} [options] - options
-		 * @param {Boolean} [options.runDetached] - run the update in detached mode.
-		 * Default behaviour is runDetached=false but is DEPRECATED and will be removed in a future release. Use runDetached=true
-		 * for more reliable updates.
+		 * @param {Boolean} [options.runDetached] - run the update in detached mode. True by default
 		 * @fulfil {Object} - action response
 		 * @returns {Promise}
 		 *
