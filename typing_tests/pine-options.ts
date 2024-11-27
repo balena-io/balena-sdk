@@ -515,7 +515,7 @@ export const string$OrderbyInvalidDirectionCase: BalenaSdk.PineOptions<BalenaSdk
 
 export const string$OrderbyInvalidNestedPropertyPath: BalenaSdk.PineOptions<BalenaSdk.Organization> =
 	{
-		// TODO: This should error
+		// @ts-expect-error test case
 		$orderby: 'application_type/wrong_property asc',
 	};
 
@@ -988,5 +988,6 @@ export const string$OrderbyDesc: BalenaSdk.PineOptions<BalenaSdk.Application> =
 
 export const string$OrderbyNestedProp: BalenaSdk.PineOptions<BalenaSdk.Organization> =
 	{
+		// @ts-expect-error test case
 		$orderby: 'application_type/slug asc',
 	};
