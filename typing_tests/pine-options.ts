@@ -586,7 +586,6 @@ export const appOptionsEValid20: BalenaSdk.PineOptions<BalenaSdk.Application> =
 type ReleaseExpandablePropsExpectation =
 	| 'is_created_by__user'
 	| 'belongs_to__application'
-	| 'contains__image'
 	| 'release_image'
 	| 'should_be_running_on__application'
 	| 'should_operate__device'
