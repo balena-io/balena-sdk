@@ -2,6 +2,7 @@
   "name": "balena-sdk",
   "version": "20.6.11",
   "description": "The Balena JavaScript SDK",
+  "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",
   "browser": {

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "node16",
         "declaration": true,
         "outDir": "build",
         "removeComments": false,
@@ -15,7 +15,6 @@
             "dom",
             "es2019"
         ],
-        "moduleResolution": "node",
         "esModuleInterop": true,
         "allowJs": true,
         "importHelpers": true
