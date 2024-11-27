@@ -39,10 +39,7 @@ import * as errors from 'balena-errors';
 
 import {
 	isId,
-	isNoApplicationForKeyResponse,
-	isNotFoundResponse,
 	mergePineOptions,
-	treatAsMissingApplication,
 	withSupervisorLockedError,
 } from '../util';
 
@@ -732,18 +729,11 @@ const getApplicationModel = function (
 			slugOrUuidOrIdOrIds: string | number | number[],
 		): Promise<void> => {
 			if (typeof slugOrUuidOrIdOrIds === 'string') {
-				try {
-					const applicationId = await getId(slugOrUuidOrIdOrIds);
+				const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrIdOrIds)).id;
 					await pine.delete({
 						resource: 'application',
 						id: applicationId,
 					});
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingApplication(slugOrUuidOrIdOrIds, err);
-					}
-					throw err;
-				}
 				return;
 			}
 			await batchApplicationOperation()({
@@ -783,8 +773,7 @@ const getApplicationModel = function (
 			slugOrUuidOrId: string | number,
 			newAppName: string,
 		): Promise<void> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
+			const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
 				await pine.patch({
 					resource: 'application',
 					id: applicationId,
@@ -792,12 +781,6 @@ const getApplicationModel = function (
 						app_name: newAppName,
 					},
 				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
 		},
 
 		/**
@@ -818,20 +801,13 @@ const getApplicationModel = function (
 		 */
 		restart: (slugOrUuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				try {
-					const applicationId = await getId(slugOrUuidOrId);
+				const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
 
 					await request.send({
 						method: 'POST',
 						url: `/application/${applicationId}/restart`,
 						baseUrl: apiUrl,
 					});
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingApplication(slugOrUuidOrId, err);
-					}
-					throw err;
-				}
 			}),
 
 		/**
@@ -869,8 +845,7 @@ const getApplicationModel = function (
 			keyDescription?: string,
 			keyExpiryDate?: string,
 		): Promise<string> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
+				const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
 				const { body } = await request.send({
 					method: 'POST',
 					url: '/api-key/v1/',
@@ -885,12 +860,6 @@ const getApplicationModel = function (
 					},
 				});
 				return body;
-			} catch (err) {
-				if (isNoApplicationForKeyResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
 		},
 
 		/**
@@ -1318,19 +1287,12 @@ const getApplicationModel = function (
 				);
 			}
 
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
+			const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
 				await pine.patch({
 					resource: 'application',
 					id: applicationId,
 					body: { is_accessible_by_support_until__date: expiryTimestamp },
 				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
 		},
 
 		/**
@@ -1352,19 +1314,12 @@ const getApplicationModel = function (
 		revokeSupportAccess: async (
 			slugOrUuidOrId: string | number,
 		): Promise<void> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
+			const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
 				await pine.patch({
 					resource: 'application',
 					id: applicationId,
 					body: { is_accessible_by_support_until__date: null },
 				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
 		},
 
 		/**
