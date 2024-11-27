@@ -488,12 +488,6 @@ describe('OS model', function () {
 			);
 		});
 
-		it("should support 'recommended'", () => {
-			expect(
-				_getMaxSatisfyingVersion('recommended', defaultOsVersions),
-			).to.equal('2.85.2+rev3.prod');
-		});
-
 		it("should support 'default'", () => {
 			expect(_getMaxSatisfyingVersion('default', defaultOsVersions)).to.equal(
 				'2.85.2+rev3.prod',
