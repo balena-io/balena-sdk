@@ -2285,41 +2285,6 @@ const getDeviceModel = function (
 		startOsUpdate,
 
 		/**
-		 * @deprecated
-		 * @summary Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.
-		 * @name getOsUpdateStatus
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String} uuid - full device uuid
-		 * @fulfil {Object} - action response
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
-		 * 	console.log(result.status);
-		 * });
-		 */
-		getOsUpdateStatus: async (uuid: string): Promise<OsUpdateActionResult> => {
-			try {
-				const osUpdateHelper = await getOsUpdateHelper();
-				return await osUpdateHelper.getOsUpdateStatus(uuid);
-			} catch (err) {
-				if (err.statusCode !== 400) {
-					throw err;
-				}
-
-				// as an attempt to reduce the requests for this method
-				// check whether the device exists only when the request rejects
-				// so that it's rejected with the appropriate BalenaDeviceNotFound error
-				await exports.get(uuid, { $select: 'id' });
-				// if the device exists, then re-throw the original error
-				throw err;
-			}
-		},
-
-		/**
 		 * @namespace balena.models.device.tags
 		 * @memberof balena.models.device
 		 */

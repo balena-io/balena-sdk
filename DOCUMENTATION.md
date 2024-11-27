@@ -301,7 +301,6 @@ const sdk = fromSharedOptions();
             * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-            * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
@@ -708,7 +707,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-        * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
@@ -2253,7 +2251,6 @@ balena.models.application.revokeSupportAccess(123);
     * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-    * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
@@ -4001,26 +3998,6 @@ balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 **Example**  
 ```js
 balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
-	console.log(result.status);
-});
-```
-<a name="balena.models.device.getOsUpdateStatus"></a>
-
-##### ~~device.getOsUpdateStatus(uuid) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.  
-**Access**: public  
-**Fulfil**: <code>Object</code> - action response  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuid | <code>String</code> | full device uuid |
-
-**Example**  
-```js
-balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
 	console.log(result.status);
 });
 ```
