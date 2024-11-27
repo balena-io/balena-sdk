@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import * as errors from 'balena-errors';
-import type { JSONSchema6 } from 'json-schema';
+import type { JSONSchema7 } from 'json-schema';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import type * as DeviceTypeJson from '../types/device-type-json';
 
@@ -39,7 +39,7 @@ export interface Config {
 	supportedSocialProviders: string[];
 }
 
-export type ConfigVarSchema = JSONSchema6 & {
+export type ConfigVarSchema = JSONSchema7 & {
 	will_reboot?: boolean;
 	warning?: string;
 };
