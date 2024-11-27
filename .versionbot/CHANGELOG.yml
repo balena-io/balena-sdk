@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tsconfig: Switch module to node16"
+      hash: 24b8b04e0371736e7089b18c1e7cd96f5b93d083
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.6.12
+  title: ""
+  date: 2024-11-27T17:30:38.689Z
+- commits:
     - subject: Fix `organization.invite.create` and `application.invite.create`
         descriptions incorrectly saying usernames can be used for the `invitee`
         option
