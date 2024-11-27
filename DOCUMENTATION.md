@@ -304,7 +304,6 @@ const sdk = fromSharedOptions();
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-            * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
             * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
@@ -710,7 +709,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-        * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
         * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
@@ -2254,7 +2252,6 @@ balena.models.application.revokeSupportAccess(123);
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-    * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
     * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
@@ -4063,34 +4060,6 @@ balena.models.device.restartApplication('7cf02a6');
 **Example**  
 ```js
 balena.models.device.restartApplication(123);
-```
-<a name="balena.models.device.startApplication"></a>
-
-##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Start application on device  
-**Access**: public  
-**Fulfil**: <code>String</code> - application container id  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.startApplication('7cf02a6').then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.startApplication(123).then(function(containerId) {
-	console.log(containerId);
-});
 ```
 <a name="balena.models.device.stopApplication"></a>
 
