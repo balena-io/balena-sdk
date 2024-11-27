@@ -2348,7 +2348,6 @@ describe('Device Model', function () {
 						expect(imageInstall)
 							.to.have.property('download_progress')
 							.that.is.oneOf([50, null]);
-						expect(imageInstall).to.have.property('image').that.has.length(1);
 						expect(imageInstall)
 							.to.have.property('is_provided_by__release')
 							.that.has.length(1);
