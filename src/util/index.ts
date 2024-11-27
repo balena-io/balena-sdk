@@ -113,20 +113,14 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 export function mergePineOptions<
 	R extends object,
 	TDefault extends Pine.ODataOptions<R>,
->(
-	defaults: TDefault,
-	extras: Pine.ODataOptions<R> | undefined,
-	replace$selects?: boolean,
-): TDefault;
+>(defaults: TDefault, extras: Pine.ODataOptions<R> | undefined): TDefault;
 export function mergePineOptions<R extends object>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,
-	replace$selects?: boolean,
 ): Pine.ODataOptions<R>;
 export function mergePineOptions<R extends object>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,
-	replace$selects?: boolean,
 ): Pine.ODataOptions<R> {
 	if (!extras) {
 		return defaults;
@@ -143,9 +137,7 @@ export function mergePineOptions<R extends object>(
 					(extras.$select as '*')
 				: [extras.$select];
 
-		if (replace$selects) {
-			result.$select = extraSelect;
-		} else if (extraSelect === '*') {
+		if (extraSelect === '*') {
 			result.$select = '*';
 		} else {
 			result.$select = [
@@ -176,11 +168,7 @@ export function mergePineOptions<R extends object>(
 	}
 
 	if (extras.$expand != null) {
-		result.$expand = mergeExpandOptions(
-			defaults.$expand,
-			extras.$expand,
-			replace$selects,
-		);
+		result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
 	}
 
 	return result;
@@ -189,7 +177,6 @@ export function mergePineOptions<R extends object>(
 const mergeExpandOptions = <T>(
 	defaultExpand: Pine.Expand<T> | undefined,
 	extraExpand: Pine.Expand<T> | undefined,
-	replace$selects?: boolean,
 ): Pine.Expand<T> | undefined => {
 	if (defaultExpand == null) {
 		return extraExpand;
@@ -205,7 +192,6 @@ const mergeExpandOptions = <T>(
 		$defaultExpand[expandKey] = mergePineOptions(
 			$defaultExpand[expandKey] ?? {},
 			$extraExpand[expandKey],
-			replace$selects,
 		);
 	}
 
