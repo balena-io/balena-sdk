@@ -646,7 +646,7 @@ const getOsModel = function (
 	const getLastModified = async function (
 		deviceType: string,
 		version = 'latest',
-	): Promise<Date> {
+	): Promise<Date | null> {
 		try {
 			deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 			version = normalizeVersion(version);
@@ -659,8 +659,9 @@ const getOsModel = function (
 				},
 				baseUrl: apiUrl,
 			});
-			// TODO: Drop the ! on the next major
-			return new Date(response.headers.get('last-modified')!);
+
+			const lastModified = response.headers.get('last-modified');
+			return lastModified != null ? new Date(lastModified) : lastModified;
 		} catch (err) {
 			if (isNotFoundResponse(err)) {
 				throw new Error('No such version for the device type');
