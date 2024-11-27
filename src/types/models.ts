@@ -376,8 +376,6 @@ export interface Release {
 	is_created_by__user: OptionalNavigationResource<User>;
 	belongs_to__application: NavigationResource<Application>;
 
-	/** @deprecated Prefer using the Term Form "release_image" property */
-	contains__image?: ReverseNavigationResource<ReleaseImage>;
 	release_image?: ReverseNavigationResource<ReleaseImage>;
 	should_be_running_on__application?: ReverseNavigationResource<Application>;
 	is_running_on__device?: ReverseNavigationResource<Device>;
