@@ -303,7 +303,6 @@ const sdk = fromSharedOptions();
             * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-            * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
             * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
@@ -711,7 +710,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-        * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
         * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
@@ -2257,7 +2255,6 @@ balena.models.application.revokeSupportAccess(123);
     * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
     * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-    * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
     * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
@@ -4047,34 +4044,6 @@ balena.models.device.ping('7cf02a6');
 **Example**  
 ```js
 balena.models.device.ping(123);
-```
-<a name="balena.models.device.getApplicationInfo"></a>
-
-##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get application container information  
-**Access**: public  
-**Fulfil**: <code>Object</code> - application info  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
-	console.log(appInfo);
-});
-```
-**Example**  
-```js
-balena.models.device.getApplicationInfo(123).then(function(appInfo) {
-	console.log(appInfo);
-});
 ```
 <a name="balena.models.device.identify"></a>
 
