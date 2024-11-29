@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Billing: Add createSetupIntent function"
+      hash: 979f2f656af0b6a571815ed876a7a5d238563df1
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Josh Bowling
+      nested: []
+  version: 20.7.0
+  title: ""
+  date: 2024-11-29T09:12:40.570Z
+- commits:
     - subject: "tsconfig: Switch module to node16"
       hash: 24b8b04e0371736e7089b18c1e7cd96f5b93d083
       body: ""
