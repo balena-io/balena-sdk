@@ -1,4 +1,178 @@
 - commits:
+    - subject: "typings_tests: Switch tsconfig module to node16"
+      hash: 2c7c1f3a5230139d27b6d5e7b8b8ba210ccaf304
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update dependency pinejs-client-core to v7
+      hash: 616b5fcdbdccd7453d74d989d0498e8e4aa187be
+      body: |
+        Update pinejs-client-core from 6.15.11 to 7.2.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Export `OptionsToResponse` type helper
+              hash: ae97930264fb22bc8d441bec282c29a90cabbb23
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.2.0
+          title: ""
+          date: 2024-09-13T12:26:09.581Z
+        - commits:
+            - subject: Switch tsconfig module resolution to Node16
+              hash: 2c6b45dd7d8d64ae74b9f9efff50de12614780e4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.1.5
+          title: ""
+          date: 2024-09-13T12:13:12.995Z
+        - commits:
+            - subject: Update TypeScript to 5.6.2
+              hash: b85e599b860e9d79a9c86c5d290380fe9733467b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: pinejs-client-js-7.1.4
+          title: ""
+          date: 2024-09-10T08:58:55.245Z
+        - commits:
+            - subject: Improve `upsert` typings
+              hash: 33512bfad45a77bb7390f2d98cf450d39b2f3d7f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.1.3
+          title: ""
+          date: 2024-09-05T16:35:32.010Z
+        - commits:
+            - subject: Improve `getOrCreate` typings
+              hash: edbf05ae07a15a060b0d7ea4d7e536dc55f6ff17
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.1.2
+          title: ""
+          date: 2024-09-05T13:47:03.150Z
+        - commits:
+            - subject: Improve typings for `subscribe` function
+              hash: cd9acce6e18846cefe717634db1da1c88d6dd17b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Fix typing for subscribe `on('data')` method
+              hash: 384156969e4d16a3aa7188cb364d6cba109e3421
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.1.1
+          title: ""
+          date: 2024-09-04T09:08:38.523Z
+        - commits:
+            - subject: Deprecate `prepare` without expected parameter aliases
+              hash: bf7cd7f196e911e2de7cd954b2edaa702b81853c
+              body: |
+                This will allow for removing a lot of overloads
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Add the option to list expected parameter aliases when preparing a
+                query
+              hash: 7a53f56dd3af5ec0b83b5fbf8e399e6e1dc2daa4
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.1.0
+          title: ""
+          date: 2024-09-02T15:52:18.777Z
+        - commits:
+            - subject: "Fix typings for `request` method when using `method: 'GET'`"
+              hash: 51bf4f2e8651409f856fadd5f37fda2290a53e26
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.0.3
+          title: ""
+          date: 2024-08-30T14:37:00.134Z
+        - commits:
+            - subject: Reduce overloads for `get` by improving `OptionsToResponse` type helper
+              hash: e4e0c2808fb20166603bad5386ef887cf3296d4a
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.0.2
+          title: ""
+          date: 2024-08-30T13:52:19.618Z
+        - commits:
+            - subject: Change `ExpandPropsOf` and `ExpandToResponse` helpers to check the
+                common case first
+              hash: e5404a23a30d250046c911c397e8562340651324
+              body: >
+                This reduces the amount of work typescript has to do in the
+                common case
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: pinejs-client-js-7.0.1
+          title: ""
+          date: 2024-08-29T17:40:29.011Z
+        - commits:
+            - subject: Update @balena/abstract-sql-to-typescript to v4
+              hash: 426e6203633723324d03049df0d7d77b12002cb8
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Josh Bowling
+              nested: []
+          version: pinejs-client-js-7.0.0
+          title: ""
+          date: 2024-08-13T14:04:06.643Z
+  version: 20.7.2
+  title: ""
+  date: 2024-12-02T19:47:42.015Z
+- commits:
     - subject: "tests: Improve stability of release.createFromUrl()'s cleanup"
       hash: f2156bca657536e6e032cc17ed9d6ae22153e996
       body: ""
