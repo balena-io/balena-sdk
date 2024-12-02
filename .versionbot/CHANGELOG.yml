@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Improve stability of release.createFromUrl()'s cleanup"
+      hash: f2156bca657536e6e032cc17ed9d6ae22153e996
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.7.1
+  title: ""
+  date: 2024-12-02T19:13:53.286Z
+- commits:
     - subject: "Billing: Add createSetupIntent function"
       hash: 979f2f656af0b6a571815ed876a7a5d238563df1
       body: ""
