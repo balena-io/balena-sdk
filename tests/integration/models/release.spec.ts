@@ -129,19 +129,19 @@ describe('Release Model', function () {
 					return;
 				}
 				const start = Date.now();
-				let imageCount = 0;
-				while (imageCount < TEST_SOURCE_CONTAINER_COUNT * releaseCount) {
-					imageCount = await balena.pine.get({
-						resource: 'image',
+				let releaseImageCount = 0;
+				while (releaseImageCount < TEST_SOURCE_CONTAINER_COUNT * releaseCount) {
+					releaseImageCount = await balena.pine.get({
+						resource: 'release_image',
 						options: {
 							$count: {
 								$filter: {
-									is_a_build_of__service: {
+									is_part_of__release: {
 										$any: {
-											$alias: 's',
+											$alias: 'r',
 											$expr: {
-												s: {
-													application: appId,
+												r: {
+													belongs_to__application: appId,
 												},
 											},
 										},
@@ -150,7 +150,11 @@ describe('Release Model', function () {
 							},
 						},
 					});
-					if (imageCount === TEST_SOURCE_CONTAINER_COUNT * releaseCount) {
+
+					if (
+						releaseImageCount ===
+						TEST_SOURCE_CONTAINER_COUNT * releaseCount
+					) {
 						break;
 					}
 					// don't wait more than 30 seconds
