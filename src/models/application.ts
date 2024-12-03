@@ -825,34 +825,40 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-		 * @param {String} [keyName] - Provisioning key name
-		 * @param {String} [keyDescription] - Description for provisioning key
-		 * @param {String} [keyExpiryDate] - Expiry Date for provisioning key
+		 * @param {Object} generateProvisioningKeyParams - an object containing the parameters for the provisioning key generation
+		 * @param {String|Number} generateProvisioningKeyParams.slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+		 * @param {String} generateProvisioningKeyParams.keyExpiryDate - Expiry Date for provisioning key
+		 * @param {String} [generateProvisioningKeyParams.keyName] - Provisioning key name
+		 * @param {String} [generateProvisioningKeyParams.keyDescription] - Description for provisioning key
 		 * @fulfil {String} - device provisioning key
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey('myorganization/myapp').then(function(key) {
+		 * balena.models.application.generateProvisioningKey({slugOrUuidOrId: 'myorganization/myapp', keyExpiryDate: '2030-10-12'}).then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123).then(function(key) {
+		 * balena.models.application.generateProvisioningKey({slugOrUuidOrId: 123, keyExpiryDate: '2030-10-12'}).then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
+		 * balena.models.application.generateProvisioningKey({slugOrUuidOrId: 123, keyExpiryDate: '2030-10-12', keyName: 'api key name', keyDescription: 'api key long description'}).then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 */
-		generateProvisioningKey: async (
-			slugOrUuidOrId: string | number,
-			keyName?: string,
-			keyDescription?: string,
-			keyExpiryDate?: string,
-		): Promise<string> => {
+		generateProvisioningKey: async ({
+			slugOrUuidOrId,
+			keyExpiryDate,
+			keyName,
+			keyDescription,
+		}: {
+			slugOrUuidOrId: string | number;
+			keyExpiryDate: string | null;
+			keyName?: string;
+			keyDescription?: string;
+		}): Promise<string> => {
 			const applicationId = (
 				await sdkInstance.models.application.get(slugOrUuidOrId, {
 					$select: 'id',

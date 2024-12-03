@@ -181,9 +181,10 @@ describe('API Key model', function () {
 			});
 			ctx.namedUserApiKey = apiKey;
 
-			await balena.models.application.generateProvisioningKey(
-				this.application.id,
-			);
+			await balena.models.application.generateProvisioningKey({
+				slugOrUuidOrId: this.application.id,
+				keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+			});
 
 			await balena.models.device.generateDeviceKey(this.device.id);
 		});
