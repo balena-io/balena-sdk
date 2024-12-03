@@ -609,7 +609,10 @@ describe('Application Model', function () {
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
-							.generateProvisioningKey(this.application[prop])
+							.generateProvisioningKey(
+								this.application[prop],
+								new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+							)
 							.then(function (key) {
 								expect(_.isString(key)).to.be.true;
 								return expect(key).to.have.length(32);
@@ -625,6 +628,7 @@ describe('Application Model', function () {
 
 						const key = await balena.models.application.generateProvisioningKey(
 							this.application[prop],
+							new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 							`key_${prop}`,
 						);
 
@@ -654,6 +658,7 @@ describe('Application Model', function () {
 
 						const key = await balena.models.application.generateProvisioningKey(
 							this.application[prop],
+							new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 							`key_${prop}`,
 							`Provisioning key generated with name key_${prop}`,
 						);
@@ -682,11 +687,14 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
+						const oneHourDate = new Date(
+							Date.now() + 1000 * 60 * 60,
+						).toISOString();
 						const key = await balena.models.application.generateProvisioningKey(
 							this.application[prop],
+							oneHourDate,
 							`key_${prop}`,
 							`Provisioning key generated with name key_${prop}`,
-							'2030-01-01',
 						);
 
 						expect(key).to.be.a('string');
@@ -705,13 +713,14 @@ describe('Application Model', function () {
 						expect(provisionKeys[0]).to.have.property('expiry_date');
 						expect(provisionKeys[0])
 							.to.have.property('expiry_date')
-							.to.be.equal('2030-01-01T00:00:00.000Z');
+							.to.be.equal(oneHourDate);
 					});
 				});
 
 				it('should be rejected if the application slug does not exist', function () {
 					const promise = balena.models.application.generateProvisioningKey(
 						`${this.initialOrg.handle}/helloworldapp`,
+						new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 					);
 					return expect(promise).to.be.rejectedWith(
 						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
@@ -719,8 +728,10 @@ describe('Application Model', function () {
 				});
 
 				it('should be rejected if the application id does not exist', function () {
-					const promise =
-						balena.models.application.generateProvisioningKey(999999);
+					const promise = balena.models.application.generateProvisioningKey(
+						999999,
+						new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					);
 					return expect(promise).to.be.rejectedWith(
 						'Application not found: 999999',
 					);

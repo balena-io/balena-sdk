@@ -183,6 +183,7 @@ describe('API Key model', function () {
 
 			await balena.models.application.generateProvisioningKey(
 				this.application.id,
+				new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 			);
 
 			await balena.models.device.generateDeviceKey(this.device.id);

@@ -1373,6 +1373,10 @@ const getDeviceModel = function (
 					sdkInstance.auth.getUserInfo(),
 					sdkInstance.models.application.generateProvisioningKey(
 						applicationSlugOrUuidOrId,
+						// Use 10 minute expiry date as we will immediately use the provisioning key to create a device and then not need it
+						new Date(Date.now() + 1000 * 60 * 10).toISOString(),
+						undefined,
+						'Created by SDK to register a device',
 					),
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,
