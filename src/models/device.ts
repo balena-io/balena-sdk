@@ -1371,9 +1371,12 @@ const getDeviceModel = function (
 			const [{ id: userId }, apiKey, application, deviceType] =
 				await Promise.all([
 					sdkInstance.auth.getUserInfo(),
-					sdkInstance.models.application.generateProvisioningKey(
-						applicationSlugOrUuidOrId,
-					),
+					sdkInstance.models.application.generateProvisioningKey({
+						slugOrUuidOrId: applicationSlugOrUuidOrId,
+						// Use 10 minute expiry date as we will immediately use the provisioning key to create a device and then not need it
+						keyExpiryDate: new Date(Date.now() + 1000 * 60 * 10).toISOString(),
+						keyDescription: 'Created by SDK to register a device',
+					}),
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,
 						applicationOptions,
