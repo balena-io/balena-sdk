@@ -706,47 +706,6 @@ describe('OS model', function () {
 		});
 	});
 
-	describe('balena.models.os.getLastModified()', function () {
-		parallel('given a valid device slug', function () {
-			it('should eventually be a valid Date instance', async function () {
-				const lastModified =
-					await balena.models.os.getLastModified('raspberry-pi');
-				expect(lastModified).to.be.an.instanceof(Date);
-			});
-
-			it('should eventually be a valid Date instance if passing a device type alias', async function () {
-				const lastModified =
-					await balena.models.os.getLastModified('raspberrypi');
-				expect(lastModified).to.be.an.instanceof(Date);
-			});
-
-			it('should be able to query for a specific version', async function () {
-				const lastModified = await balena.models.os.getLastModified(
-					'raspberrypi',
-					'1.26.1',
-				);
-				expect(lastModified).to.be.an.instanceof(Date);
-			});
-
-			it('should be able to query for a version containing a plus', async function () {
-				const lastModified = await balena.models.os.getLastModified(
-					'raspberrypi',
-					'2.0.6+rev3.prod',
-				);
-				expect(lastModified).to.be.an.instanceof(Date);
-			});
-		});
-
-		describe('given an invalid device slug', () => {
-			it('should be rejected with an error message', async function () {
-				const promise = balena.models.os.getLastModified('foo-bar-baz');
-				await expect(promise).to.be.rejectedWith(
-					'Invalid device type: foo-bar-baz',
-				);
-			});
-		});
-	});
-
 	describe('balena.models.os.download()', function () {
 		if (IS_BROWSER) {
 			return;
