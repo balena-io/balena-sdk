@@ -358,7 +358,6 @@ const sdk = fromSharedOptions();
             * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-            * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
@@ -762,7 +761,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-        * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
@@ -5121,7 +5119,6 @@ balena.models.organization.remove(123);
     * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-    * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
     * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
@@ -5218,29 +5215,6 @@ balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 ```js
 balena.models.os.getMaxSatisfyingVersion('raspberry-pi', '^2.11.0').then(function(version) {
 	console.log(version);
-});
-```
-<a name="balena.models.os.getLastModified"></a>
-
-##### os.getLastModified(deviceType, [version]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#balena.models.os)  
-**Summary**: Get the OS image last modified date  
-**Access**: public  
-**Fulfil**: <code>Date</code> - last modified date  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceType | <code>String</code> | device type slug |
-| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest'. Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
-
-**Example**  
-```js
-balena.models.os.getLastModified('raspberry-pi').then(function(date) {
-	console.log('The raspberry-pi image was last modified in ' + date);
-});
-
-balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
-	console.log('The raspberry-pi image was last modified in ' + date);
 });
 ```
 <a name="balena.models.os.download"></a>
