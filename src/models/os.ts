@@ -621,56 +621,6 @@ const getOsModel = function (
 	};
 
 	/**
-	 * @summary Get the OS image last modified date
-	 * @name getLastModified
-	 * @public
-	 * @function
-	 * @memberof balena.models.os
-	 *
-	 * @param {String} deviceType - device type slug
-	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'.
-	 * Unsupported (unpublished) version will result in rejection.
-	 * The version **must** be the exact version number.
-	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
-	 * @fulfil {Date} - last modified date
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.models.os.getLastModified('raspberry-pi').then(function(date) {
-	 * 	console.log('The raspberry-pi image was last modified in ' + date);
-	 * });
-	 *
-	 * balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
-	 * 	console.log('The raspberry-pi image was last modified in ' + date);
-	 * });
-	 */
-	const getLastModified = async function (
-		deviceType: string,
-		version = 'latest',
-	): Promise<Date> {
-		try {
-			deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-			version = normalizeVersion(version);
-			const response = await request.send({
-				method: 'HEAD',
-				url: '/download',
-				qs: {
-					deviceType,
-					version,
-				},
-				baseUrl: apiUrl,
-			});
-			// TODO: Drop the ! on the next major
-			return new Date(response.headers.get('last-modified')!);
-		} catch (err) {
-			if (isNotFoundResponse(err)) {
-				throw new Error('No such version for the device type');
-			}
-			throw err;
-		}
-	};
-
-	/**
 	 * @summary Download an OS image
 	 * @name download
 	 * @public
@@ -1102,7 +1052,6 @@ const getOsModel = function (
 		getAvailableOsVersions,
 		getMaxSatisfyingVersion,
 		getDownloadSize,
-		getLastModified,
 		download,
 		getConfig,
 		isSupportedOsUpdate,
