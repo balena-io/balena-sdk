@@ -609,7 +609,7 @@ describe('Application Model', function () {
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
-							.generateProvisioningKey(this.application[prop])
+							.generateProvisioningKey(this.application[prop], null)
 							.then(function (key) {
 								expect(_.isString(key)).to.be.true;
 								return expect(key).to.have.length(32);
@@ -625,6 +625,7 @@ describe('Application Model', function () {
 
 						const key = await balena.models.application.generateProvisioningKey(
 							this.application[prop],
+							null,
 							`key_${prop}`,
 						);
 
@@ -654,6 +655,7 @@ describe('Application Model', function () {
 
 						const key = await balena.models.application.generateProvisioningKey(
 							this.application[prop],
+							null,
 							`key_${prop}`,
 							`Provisioning key generated with name key_${prop}`,
 						);
@@ -684,9 +686,9 @@ describe('Application Model', function () {
 
 						const key = await balena.models.application.generateProvisioningKey(
 							this.application[prop],
+							'2030-01-01',
 							`key_${prop}`,
 							`Provisioning key generated with name key_${prop}`,
-							'2030-01-01',
 						);
 
 						expect(key).to.be.a('string');
@@ -712,6 +714,7 @@ describe('Application Model', function () {
 				it('should be rejected if the application slug does not exist', function () {
 					const promise = balena.models.application.generateProvisioningKey(
 						`${this.initialOrg.handle}/helloworldapp`,
+						null,
 					);
 					return expect(promise).to.be.rejectedWith(
 						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
@@ -719,8 +722,10 @@ describe('Application Model', function () {
 				});
 
 				it('should be rejected if the application id does not exist', function () {
-					const promise =
-						balena.models.application.generateProvisioningKey(999999);
+					const promise = balena.models.application.generateProvisioningKey(
+						999999,
+						null,
+					);
 					return expect(promise).to.be.rejectedWith(
 						'Application not found: 999999',
 					);

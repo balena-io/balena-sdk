@@ -213,7 +213,7 @@ const sdk = fromSharedOptions();
             * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
             * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
             * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-            * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+            * [.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
             * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
@@ -616,7 +616,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
         * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
         * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-        * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+        * [.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
         * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
@@ -867,7 +867,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
     * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
     * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-    * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+    * [.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
     * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
@@ -1878,7 +1878,7 @@ balena.models.application.restart(123);
 ```
 <a name="balena.models.application.generateProvisioningKey"></a>
 
-##### application.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate]) ⇒ <code>Promise</code>
+##### application.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Generate a device provisioning key for a specific application  
 **Access**: public  
@@ -1887,25 +1887,25 @@ balena.models.application.restart(123);
 | Param | Type | Description |
 | --- | --- | --- |
 | slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
+| keyExpiryDate | <code>String</code> | Expiry Date for provisioning key |
 | [keyName] | <code>String</code> | Provisioning key name |
 | [keyDescription] | <code>String</code> | Description for provisioning key |
-| [keyExpiryDate] | <code>String</code> | Expiry Date for provisioning key |
 
 **Example**  
 ```js
-balena.models.application.generateProvisioningKey('myorganization/myapp').then(function(key) {
+balena.models.application.generateProvisioningKey('myorganization/myapp', '2030-10-12').then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-balena.models.application.generateProvisioningKey(123).then(function(key) {
+balena.models.application.generateProvisioningKey(123, '2030-10-12').then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
+balena.models.application.generateProvisioningKey(123, '2030-10-12', 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
 	console.log(key);
 });
 ```

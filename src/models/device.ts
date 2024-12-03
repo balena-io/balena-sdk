@@ -1373,6 +1373,7 @@ const getDeviceModel = function (
 					sdkInstance.auth.getUserInfo(),
 					sdkInstance.models.application.generateProvisioningKey(
 						applicationSlugOrUuidOrId,
+						new Date(Date.now() + 1000 * 60 * 10).toISOString(),
 					),
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,

@@ -37,11 +37,7 @@ import * as url from 'url';
 import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
-import {
-	isId,
-	mergePineOptions,
-	withSupervisorLockedError,
-} from '../util';
+import { isId, mergePineOptions, withSupervisorLockedError } from '../util';
 
 import {
 	getCurrentServiceDetailsPineExpand,
@@ -729,11 +725,13 @@ const getApplicationModel = function (
 			slugOrUuidOrIdOrIds: string | number | number[],
 		): Promise<void> => {
 			if (typeof slugOrUuidOrIdOrIds === 'string') {
-				const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrIdOrIds)).id;
-					await pine.delete({
-						resource: 'application',
-						id: applicationId,
-					});
+				const applicationId = (
+					await sdkInstance.models.application.get(slugOrUuidOrIdOrIds)
+				).id;
+				await pine.delete({
+					resource: 'application',
+					id: applicationId,
+				});
 				return;
 			}
 			await batchApplicationOperation()({
@@ -773,14 +771,16 @@ const getApplicationModel = function (
 			slugOrUuidOrId: string | number,
 			newAppName: string,
 		): Promise<void> => {
-			const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
-				await pine.patch({
-					resource: 'application',
-					id: applicationId,
-					body: {
-						app_name: newAppName,
-					},
-				});
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId)
+			).id;
+			await pine.patch({
+				resource: 'application',
+				id: applicationId,
+				body: {
+					app_name: newAppName,
+				},
+			});
 		},
 
 		/**
@@ -801,13 +801,15 @@ const getApplicationModel = function (
 		 */
 		restart: (slugOrUuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
+				const applicationId = (
+					await sdkInstance.models.application.get(slugOrUuidOrId)
+				).id;
 
-					await request.send({
-						method: 'POST',
-						url: `/application/${applicationId}/restart`,
-						baseUrl: apiUrl,
-					});
+				await request.send({
+					method: 'POST',
+					url: `/application/${applicationId}/restart`,
+					baseUrl: apiUrl,
+				});
 			}),
 
 		/**
@@ -818,48 +820,50 @@ const getApplicationModel = function (
 		 * @memberof balena.models.application
 		 *
 		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+		 * @param {String} keyExpiryDate - Expiry Date for provisioning key
 		 * @param {String} [keyName] - Provisioning key name
 		 * @param {String} [keyDescription] - Description for provisioning key
-		 * @param {String} [keyExpiryDate] - Expiry Date for provisioning key
 		 * @fulfil {String} - device provisioning key
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey('myorganization/myapp').then(function(key) {
+		 * balena.models.application.generateProvisioningKey('myorganization/myapp', '2030-10-12').then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123).then(function(key) {
+		 * balena.models.application.generateProvisioningKey(123, '2030-10-12').then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
+		 * balena.models.application.generateProvisioningKey(123, '2030-10-12', 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 */
 		generateProvisioningKey: async (
 			slugOrUuidOrId: string | number,
+			keyExpiryDate: string | null,
 			keyName?: string,
 			keyDescription?: string,
-			keyExpiryDate?: string,
 		): Promise<string> => {
-				const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
-				const { body } = await request.send({
-					method: 'POST',
-					url: '/api-key/v1/',
-					baseUrl: apiUrl,
-					body: {
-						actorType: 'application',
-						actorTypeId: applicationId,
-						roles: ['provisioning-api-key'],
-						name: keyName,
-						description: keyDescription,
-						expiryDate: keyExpiryDate,
-					},
-				});
-				return body;
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId)
+			).id;
+			const { body } = await request.send({
+				method: 'POST',
+				url: '/api-key/v1/',
+				baseUrl: apiUrl,
+				body: {
+					actorType: 'application',
+					actorTypeId: applicationId,
+					roles: ['provisioning-api-key'],
+					name: keyName,
+					description: keyDescription,
+					expiryDate: keyExpiryDate,
+				},
+			});
+			return body;
 		},
 
 		/**
@@ -1287,12 +1291,14 @@ const getApplicationModel = function (
 				);
 			}
 
-			const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
-				await pine.patch({
-					resource: 'application',
-					id: applicationId,
-					body: { is_accessible_by_support_until__date: expiryTimestamp },
-				});
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId)
+			).id;
+			await pine.patch({
+				resource: 'application',
+				id: applicationId,
+				body: { is_accessible_by_support_until__date: expiryTimestamp },
+			});
 		},
 
 		/**
@@ -1314,12 +1320,14 @@ const getApplicationModel = function (
 		revokeSupportAccess: async (
 			slugOrUuidOrId: string | number,
 		): Promise<void> => {
-			const applicationId = (await sdkInstance.models.application.get(slugOrUuidOrId)).id;
-				await pine.patch({
-					resource: 'application',
-					id: applicationId,
-					body: { is_accessible_by_support_until__date: null },
-				});
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId)
+			).id;
+			await pine.patch({
+				resource: 'application',
+				id: applicationId,
+				body: { is_accessible_by_support_until__date: null },
+			});
 		},
 
 		/**

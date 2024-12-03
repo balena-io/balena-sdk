@@ -177,6 +177,7 @@ describe('API Key model', function () {
 
 			await balena.models.application.generateProvisioningKey(
 				this.application.id,
+				null,
 			);
 
 			await balena.models.device.generateDeviceKey(this.device.id);
