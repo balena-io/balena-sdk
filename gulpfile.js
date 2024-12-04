@@ -74,6 +74,8 @@ gulp.task('pack-browser', function () {
 		.exclude('path')
 		.exclude('balena-settings-client')
 		.exclude('node-localstorage')
+		.exclude('formdata-node')
+		.exclude('form-data-encoder')
 		.bundle();
 
 	return bundle
