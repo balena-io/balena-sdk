@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update balena-request to 14.0.1 that no longer requires a zlib polyfill
+        on browser builds
+      hash: 386ea3ed54604fa0273a04c63bce58f1a77c30e7
+      body: |
+        Update balena-request from 14.0.0 to 14.0.1
+      footer:
+        Depends-on: https://github.com/balena-io-modules/balena-request/pull/189
+        depends-on: https://github.com/balena-io-modules/balena-request/pull/189
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Avoid requiring some node dependencies using the package.json browser
+                field
+              hash: 739b173c101e5a73c1423dd79e213d4da86117a4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-request-14.0.1
+          title: ""
+          date: 2024-12-05T18:43:12.772Z
+  version: 20.7.5
+  title: ""
+  date: 2024-12-05T20:19:15.931Z
+- commits:
     - subject: Add `provisioningKeyDescription` property to `ImgConfigOptions` typing
       hash: bd96a5df9f56e6b5134953313a938077a369248a
       body: ""
