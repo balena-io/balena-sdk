@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add `provisioningKeyDescription` property to `ImgConfigOptions` typing
+      hash: bd96a5df9f56e6b5134953313a938077a369248a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 20.7.4
+  title: ""
+  date: 2024-12-05T19:34:52.638Z
+- commits:
     - subject: Update balena-request to 14.x
       hash: 49deb382bbe4907697e935f8ff1d8141dcf79a63
       body: |
