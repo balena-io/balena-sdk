@@ -1,4 +1,101 @@
 - commits:
+    - subject: Update balena-request to 14.x
+      hash: 49deb382bbe4907697e935f8ff1d8141dcf79a63
+      body: |
+        Update balena-request from 13.3.2 to 14.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested:
+        - commits:
+            - subject: Switch tsconfig module to Node16
+              hash: 87bd6d494fc65c3fbcef83655bc65651c671782f
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Pagan Gazzard
+              nested: []
+            - subject: Update form-data-encoder to 4.x and formdata-node to 6.x
+              hash: 676f92a98921e912a7f7bb0f8b1d42f1cb9f9268
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Pagan Gazzard
+              nested: []
+            - subject: Update tsconfig target to es2017
+              hash: b9a06f235143dacd9daa35e8a6e88df8f1cb1013
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Pagan Gazzard
+              nested: []
+            - subject: Set `type` to `commonjs` in package.json
+              hash: e5184c777fd5c5d473bb9fe78b3bbf5399fd6b2d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-request-14.0.0
+          title: ""
+          date: 2024-12-04T16:40:30.923Z
+        - commits:
+            - subject: "Tests: Convert to typescript"
+              hash: 2697961c510380f62735cf0a3e9a2c2224e70545
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-request-13.3.4
+          title: ""
+          date: 2024-12-04T16:10:07.343Z
+        - commits:
+            - subject: "Tests: add missing @types/temp dependency"
+              hash: 2698e0be2a764268831bf2388c82fabeeac542a4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: "Tests: remove bluebird dependency"
+              hash: 461710c7c2e7b76e7141ae920e668bf93620e745
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: "Tests: remove rindle dependency"
+              hash: 27fca4510937b79cf796be5985ff251d0cd33ece
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Update `author` in package.json
+              hash: b7d09e73d66a2253b672fabae3b4f1d5c111247d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-request-13.3.3
+          title: ""
+          date: 2024-12-03T15:23:02.553Z
+  version: 20.7.3
+  title: ""
+  date: 2024-12-05T18:58:20.341Z
+- commits:
     - subject: "typings_tests: Switch tsconfig module to node16"
       hash: 2c7c1f3a5230139d27b6d5e7b8b8ba210ccaf304
       body: ""
