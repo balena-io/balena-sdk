@@ -85,6 +85,7 @@ export interface ImgConfigOptions {
 	appUpdatePollInterval?: number;
 	provisioningKeyName?: string;
 	provisioningKeyExpiryDate?: string;
+	provisioningKeyDescription?: string;
 	wifiKey?: string;
 	wifiSsid?: string;
 	ip?: string;
