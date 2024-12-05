@@ -41,8 +41,10 @@ module.exports = function (config) {
 		querystring: require.resolve('querystring-es3'),
 		// required by: balena-request
 		stream: require.resolve('stream-browserify'),
-		// required by: balena-request
-		zlib: require.resolve('browserify-zlib'),
+		// required by tmp that we use in tests, but not when running on a browser
+		vm: false,
+		// required by mockttp -> http-encoding
+		zlib: false,
 	};
 	karmaConfig.webpack.plugins = [
 		new getKarmaConfig.webpack.ProvidePlugin({
