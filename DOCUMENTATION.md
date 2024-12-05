@@ -213,8 +213,7 @@ const sdk = fromSharedOptions();
             * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
             * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
             * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-            * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-            * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+            * [.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
             * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
             * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
             * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
@@ -302,13 +301,9 @@ const sdk = fromSharedOptions();
             * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
             * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-            * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-            * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
             * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-            * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
-            * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
             * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
             * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
             * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
@@ -328,7 +323,7 @@ const sdk = fromSharedOptions();
             * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
             * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
         * [.apiKey](#balena.models.apiKey) : <code>object</code>
-            * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+            * [.create(name, expiryDate, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
             * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
             * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
             * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
@@ -363,7 +358,6 @@ const sdk = fromSharedOptions();
             * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-            * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
             * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
@@ -409,6 +403,7 @@ const sdk = fromSharedOptions();
             * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
             * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+            * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
             * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
             * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
             * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -620,8 +615,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
         * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
         * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-        * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-        * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+        * [.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
         * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
         * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
         * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
@@ -709,13 +703,9 @@ balena.models.device.get(123).catch(function (error) {
         * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
         * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-        * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-        * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
         * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-        * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
-        * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
         * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
         * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
         * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
@@ -735,7 +725,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
         * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
     * [.apiKey](#balena.models.apiKey) : <code>object</code>
-        * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+        * [.create(name, expiryDate, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
         * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
         * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
         * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
@@ -770,7 +760,6 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-        * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
         * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
@@ -816,6 +805,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
         * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+        * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
         * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
         * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
         * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -875,8 +865,7 @@ balena.models.device.get(123).catch(function (error) {
     * [.remove(slugOrUuidOrIdOrIds)](#balena.models.application.remove) ⇒ <code>Promise</code>
     * [.rename(slugOrUuidOrId, newName)](#balena.models.application.rename) ⇒ <code>Promise</code>
     * [.restart(slugOrUuidOrId)](#balena.models.application.restart) ⇒ <code>Promise</code>
-    * ~~[.generateApiKey(slugOrUuidOrId)](#balena.models.application.generateApiKey) ⇒ <code>Promise</code>~~
-    * [.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
+    * [.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription])](#balena.models.application.generateProvisioningKey) ⇒ <code>Promise</code>
     * [.purge(appId)](#balena.models.application.purge) ⇒ <code>Promise</code>
     * [.shutdown(appId, [options])](#balena.models.application.shutdown) ⇒ <code>Promise</code>
     * [.reboot(appId, [options])](#balena.models.application.reboot) ⇒ <code>Promise</code>
@@ -1885,39 +1874,9 @@ balena.models.application.restart('myorganization/myapp');
 ```js
 balena.models.application.restart(123);
 ```
-<a name="balena.models.application.generateApiKey"></a>
-
-##### ~~application.generateApiKey(slugOrUuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-Generally you shouldn't use this method: if you're provisioning a recent BalenaOS
-version (2.4.0+) then generateProvisioningKey should work just as well, but
-be more secure.
-
-**Kind**: static method of [<code>application</code>](#balena.models.application)  
-**Summary**: Generate an API key for a specific application  
-**Access**: public  
-**Fulfil**: <code>String</code> - api key  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.application.generateApiKey('myorganization/myapp').then(function(apiKey) {
-	console.log(apiKey);
-});
-```
-**Example**  
-```js
-balena.models.application.generateApiKey(123).then(function(apiKey) {
-	console.log(apiKey);
-});
-```
 <a name="balena.models.application.generateProvisioningKey"></a>
 
-##### application.generateProvisioningKey(slugOrUuidOrId, [keyName], [keyDescription], [keyExpiryDate]) ⇒ <code>Promise</code>
+##### application.generateProvisioningKey(slugOrUuidOrId, keyExpiryDate, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>application</code>](#balena.models.application)  
 **Summary**: Generate a device provisioning key for a specific application  
 **Access**: public  
@@ -1926,25 +1885,25 @@ balena.models.application.generateApiKey(123).then(function(apiKey) {
 | Param | Type | Description |
 | --- | --- | --- |
 | slugOrUuidOrId | <code>String</code> \| <code>Number</code> | application slug (string), uuid (string) or id (number) |
+| keyExpiryDate | <code>String</code> | Expiry Date for provisioning key |
 | [keyName] | <code>String</code> | Provisioning key name |
 | [keyDescription] | <code>String</code> | Description for provisioning key |
-| [keyExpiryDate] | <code>String</code> | Expiry Date for provisioning key |
 
 **Example**  
 ```js
-balena.models.application.generateProvisioningKey('myorganization/myapp').then(function(key) {
+balena.models.application.generateProvisioningKey('myorganization/myapp', '2030-10-12').then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-balena.models.application.generateProvisioningKey(123).then(function(key) {
+balena.models.application.generateProvisioningKey(123, '2030-10-12').then(function(key) {
 	console.log(key);
 });
 ```
 **Example**  
 ```js
-balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
+balena.models.application.generateProvisioningKey(123, '2030-10-12', 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
 	console.log(key);
 });
 ```
@@ -2284,13 +2243,9 @@ balena.models.application.revokeSupportAccess(123);
     * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
     * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-    * ~~[.getOsUpdateStatus(uuid)](#balena.models.device.getOsUpdateStatus) ⇒ <code>Promise</code>~~
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-    * ~~[.getApplicationInfo(uuidOrId)](#balena.models.device.getApplicationInfo) ⇒ <code>Promise</code>~~
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
     * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-    * ~~[.startApplication(uuidOrId)](#balena.models.device.startApplication) ⇒ <code>Promise</code>~~
-    * ~~[.stopApplication(uuidOrId)](#balena.models.device.stopApplication) ⇒ <code>Promise</code>~~
     * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
     * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
     * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
@@ -4028,31 +3983,11 @@ balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
 | uuidOrUuids | <code>String</code> \| <code>Array.&lt;String&gt;</code> | full device uuid or array of full uuids |
 | targetOsVersion | <code>String</code> | semver-compatible version for the target device Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number, a "prod" variant and greater than the one running on the device. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
 | [options] | <code>Object</code> | options |
-| [options.runDetached] | <code>Boolean</code> | run the update in detached mode. Default behaviour is runDetached=false but is DEPRECATED and will be removed in a future release. Use runDetached=true for more reliable updates. |
+| [options.runDetached] | <code>Boolean</code> | run the update in detached mode. True by default |
 
 **Example**  
 ```js
 balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
-	console.log(result.status);
-});
-```
-<a name="balena.models.device.getOsUpdateStatus"></a>
-
-##### ~~device.getOsUpdateStatus(uuid) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.  
-**Access**: public  
-**Fulfil**: <code>Object</code> - action response  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuid | <code>String</code> | full device uuid |
-
-**Example**  
-```js
-balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
 	console.log(result.status);
 });
 ```
@@ -4076,34 +4011,6 @@ balena.models.device.ping('7cf02a6');
 **Example**  
 ```js
 balena.models.device.ping(123);
-```
-<a name="balena.models.device.getApplicationInfo"></a>
-
-##### ~~device.getApplicationInfo(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Get application container information  
-**Access**: public  
-**Fulfil**: <code>Object</code> - application info  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.getApplicationInfo('7cf02a6').then(function(appInfo) {
-	console.log(appInfo);
-});
-```
-**Example**  
-```js
-balena.models.device.getApplicationInfo(123).then(function(appInfo) {
-	console.log(appInfo);
-});
 ```
 <a name="balena.models.device.identify"></a>
 
@@ -4146,62 +4053,6 @@ balena.models.device.restartApplication('7cf02a6');
 **Example**  
 ```js
 balena.models.device.restartApplication(123);
-```
-<a name="balena.models.device.startApplication"></a>
-
-##### ~~device.startApplication(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Start application on device  
-**Access**: public  
-**Fulfil**: <code>String</code> - application container id  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.startApplication('7cf02a6').then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.startApplication(123).then(function(containerId) {
-	console.log(containerId);
-});
-```
-<a name="balena.models.device.stopApplication"></a>
-
-##### ~~device.stopApplication(uuidOrId) ⇒ <code>Promise</code>~~
-***Deprecated***
-
-This is not supported on multicontainer devices, and will be removed in a future major release
-
-**Kind**: static method of [<code>device</code>](#balena.models.device)  
-**Summary**: Stop application on device  
-**Access**: public  
-**Fulfil**: <code>String</code> - application container id  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| uuidOrId | <code>String</code> \| <code>Number</code> | device uuid (string) or id (number) |
-
-**Example**  
-```js
-balena.models.device.stopApplication('7cf02a6').then(function(containerId) {
-	console.log(containerId);
-});
-```
-**Example**  
-```js
-balena.models.device.stopApplication(123).then(function(containerId) {
-	console.log(containerId);
-});
 ```
 <a name="balena.models.device.reboot"></a>
 
@@ -4609,7 +4460,7 @@ balena.models.deviceType.getInstallMethod('raspberry-pi').then(function(method) 
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.apiKey](#balena.models.apiKey) : <code>object</code>
-    * [.create(name, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
+    * [.create(name, expiryDate, [description])](#balena.models.apiKey.create) ⇒ <code>Promise</code>
     * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
     * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
     * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
@@ -4619,7 +4470,7 @@ balena.models.deviceType.getInstallMethod('raspberry-pi').then(function(method) 
 
 <a name="balena.models.apiKey.create"></a>
 
-##### apiKey.create(name, [description]) ⇒ <code>Promise</code>
+##### apiKey.create(name, expiryDate, [description]) ⇒ <code>Promise</code>
 This method registers a new api key for the current user with the name given.
 
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
@@ -4630,17 +4481,18 @@ This method registers a new api key for the current user with the name given.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | <code>String</code> |  | the API key name |
+| expiryDate | <code>String</code> |  | the API key expiry date |
 | [description] | <code>String</code> | <code></code> | the API key description |
 
 **Example**  
 ```js
-balena.models.apiKey.create(apiKeyName).then(function(apiKey) {
+balena.models.apiKey.create(apiKeyName, 2030-10-12).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
 **Example**  
 ```js
-balena.models.apiKey.create(apiKeyName, apiKeyDescription).then(function(apiKey) {
+balena.models.apiKey.create(apiKeyName, 2030-10-12, apiKeyDescription).then(function(apiKey) {
 	console.log(apiKey);
 });
 ```
@@ -4957,7 +4809,7 @@ balena.models.organization.membership.getAllByUser(123).then(function(membership
 <a name="balena.models.organization.membership.create"></a>
 
 ###### ~~membership.create(options) ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.organization.invite.create instead***
 
 This method adds a user to an organization by their usename.
 WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
@@ -5263,7 +5115,6 @@ balena.models.organization.remove(123);
     * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-    * [.getLastModified(deviceType, [version])](#balena.models.os.getLastModified) ⇒ <code>Promise</code>
     * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
@@ -5359,29 +5210,6 @@ balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 ```js
 balena.models.os.getMaxSatisfyingVersion('raspberry-pi', '^2.11.0').then(function(version) {
 	console.log(version);
-});
-```
-<a name="balena.models.os.getLastModified"></a>
-
-##### os.getLastModified(deviceType, [version]) ⇒ <code>Promise</code>
-**Kind**: static method of [<code>os</code>](#balena.models.os)  
-**Summary**: Get the OS image last modified date  
-**Access**: public  
-**Fulfil**: <code>Date</code> - last modified date  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceType | <code>String</code> | device type slug |
-| [version] | <code>String</code> | semver-compatible version or 'latest', defaults to 'latest'. Unsupported (unpublished) version will result in rejection. The version **must** be the exact version number. To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`. |
-
-**Example**  
-```js
-balena.models.os.getLastModified('raspberry-pi').then(function(date) {
-	console.log('The raspberry-pi image was last modified in ' + date);
-});
-
-balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
-	console.log('The raspberry-pi image was last modified in ' + date);
 });
 ```
 <a name="balena.models.os.download"></a>
@@ -5590,7 +5418,7 @@ balena.models.config.getAll().then(function(config) {
 <a name="balena.models.config.getDeviceTypes"></a>
 
 ##### ~~config.getDeviceTypes() ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.deviceType.getAll***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get device types  
@@ -5605,7 +5433,7 @@ balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 <a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
 
 ##### ~~config.getDeviceTypeManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.deviceType.getBySlugOrName***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get a device type manifest by slug  
@@ -6349,6 +6177,7 @@ balena.models.creditBundle.create(orgId, featureId, creditsToPurchase).then(func
     * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
     * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
     * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+    * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
     * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
     * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
     * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -6410,6 +6239,26 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
+<a name="balena.models.billing.createSetupIntent"></a>
+
+##### billing.createSetupIntent(setupIntentParams) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
+**Summary**: Create a Stripe setup intent required for setting billing information  
+**Access**: public  
+**Fulfil**: <code>Object</code> - partial stripe setup intent object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| setupIntentParams | <code>Object</code> | an object containing the parameters for the setup intent creation |
+| extraParams.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+| [extraParams.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
+
+**Example**  
+```js
+balena.models.billing.createSetupIntent(orgId).then(function(setupIntent) {
+	console.log(setupIntent);
+});
+```
 <a name="balena.models.billing.updateBillingInfo"></a>
 
 ##### billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Promise</code>
@@ -6424,6 +6273,7 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 | billingInfo | <code>Object</code> | an object containing a billing info token_id |
 | billingInfo.token_id | <code>String</code> | the token id generated for the billing info form |
 | [billingInfo.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
+| [billingInfo.token_type] | <code>String</code> \| <code>undefined</code> | token type |
 
 **Example**  
 ```js
