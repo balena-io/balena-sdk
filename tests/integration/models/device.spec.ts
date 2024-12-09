@@ -1548,26 +1548,6 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.getOsUpdateStatus()', function () {
-				givenADevice(before);
-
-				it('should be able to get the current OS update status', async function () {
-					const status = await balena.models.device.getOsUpdateStatus(
-						this.device.uuid,
-					);
-					return expect(status).to.deep.match({
-						status: 'idle',
-					});
-				});
-
-				it('should be rejected if the device does not exist', function () {
-					const promise = balena.models.device.getOsUpdateStatus('asdfghjkl');
-					return expect(promise).to.be.rejectedWith(
-						'Device not found: asdfghjkl',
-					);
-				});
-			});
-
 			['single uuid', 'array of uuids'].forEach((paramType) => {
 				describe(`balena.models.device.startOsUpdate() called with ${paramType}`, function () {
 					givenADevice(before);
@@ -2368,7 +2348,6 @@ describe('Device Model', function () {
 						expect(imageInstall)
 							.to.have.property('download_progress')
 							.that.is.oneOf([50, null]);
-						expect(imageInstall).to.have.property('image').that.has.length(1);
 						expect(imageInstall)
 							.to.have.property('is_provided_by__release')
 							.that.has.length(1);

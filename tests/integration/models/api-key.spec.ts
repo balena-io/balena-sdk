@@ -18,39 +18,33 @@ describe('API Key model', function () {
 
 		parallel('', function () {
 			it('should be able to create a new api key', async function () {
+				const tomorrowDate = new Date(
+					Date.now() + 1000 * 60 * 60 * 24,
+				).toISOString();
 				const key = await balena.models.apiKey.create(
 					`${TEST_KEY_NAME_PREFIX}_apiKey`,
-				);
-				expect(key).to.be.a('string');
-			});
-
-			it('should be able to create a new api key with description', async function () {
-				const key = await balena.models.apiKey.create(
-					`${TEST_KEY_NAME_PREFIX}_apiKey2`,
-					'apiKeyDescription',
-				);
-				expect(key).to.be.a('string');
-			});
-
-			it('should be able to create a new api key with expiry-date', async function () {
-				const tomorrowDate = new Date(Date.now() + 86400000).toISOString(); // one day in future
-				const key = await balena.models.apiKey.create(
-					`${TEST_KEY_NAME_PREFIX}_apiKeyWithExpiry`,
-					'apiKeyDescription',
 					tomorrowDate,
 				);
 				expect(key).to.be.a('string');
-
 				const userKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
 
 				expect(userKeys).to.be.an('array');
 				const userKeyWithExpiry = userKeys.filter(
-					(elem) => elem.name === `${TEST_KEY_NAME_PREFIX}_apiKeyWithExpiry`,
+					(elem) => elem.name === `${TEST_KEY_NAME_PREFIX}_apiKey`,
 				);
 				expect(userKeyWithExpiry).to.not.be.empty;
 				expect(userKeyWithExpiry[0])
 					.to.have.property('expiry_date')
 					.to.be.equal(tomorrowDate);
+			});
+
+			it('should be able to create a new api key with description', async function () {
+				const key = await balena.models.apiKey.create(
+					`${TEST_KEY_NAME_PREFIX}_apiKey2`,
+					null,
+					'apiKeyDescription',
+				);
+				expect(key).to.be.a('string');
 			});
 		});
 	});
@@ -74,9 +68,10 @@ describe('API Key model', function () {
 		describe('given two named api keys', function () {
 			before(() =>
 				Promise.all([
-					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`),
+					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`, null),
 					balena.models.apiKey.create(
 						`${TEST_KEY_NAME_PREFIX}_apiKey2`,
+						null,
 						'apiKey2Description',
 					),
 				]),
@@ -122,9 +117,10 @@ describe('API Key model', function () {
 		describe('given two named api keys', function () {
 			before(() =>
 				Promise.all([
-					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`),
+					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`, null),
 					balena.models.apiKey.create(
 						`${TEST_KEY_NAME_PREFIX}_apiKey2`,
+						null,
 						'apiKey2Description',
 					),
 				]),
@@ -171,6 +167,7 @@ describe('API Key model', function () {
 		before(async function () {
 			await balena.models.apiKey.create(
 				`${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated`,
+				null,
 				'apiKeyDescriptionToBeUpdated',
 			);
 			const [apiKey] = await balena.models.apiKey.getAll({
@@ -180,6 +177,7 @@ describe('API Key model', function () {
 
 			await balena.models.application.generateProvisioningKey(
 				this.application.id,
+				null,
 			);
 
 			await balena.models.device.generateDeviceKey(this.device.id);
