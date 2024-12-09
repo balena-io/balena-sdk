@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update `balena-hup-action-utils`
+      hash: 337d18269c2156bcf7d6ccb679260136cff68140
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+  version: 20.7.6
+  title: ""
+  date: 2024-12-09T14:23:31.833Z
+- commits:
     - subject: Update balena-request to 14.0.1 that no longer requires a zlib polyfill
         on browser builds
       hash: 386ea3ed54604fa0273a04c63bce58f1a77c30e7
