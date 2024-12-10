@@ -1,8 +1,16 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import { balena, givenInitialOrganization, givenLoggedInUser } from '../setup';
-import { timeSuite } from '../../util';
-import { assertDeepMatchAndLength } from '../../util';
+import {
+	balena,
+	givenInitialOrganization,
+	givenLoggedInUser,
+	credentials,
+	organizationRetrievalFields,
+} from '../setup';
+import { timeSuite, assertDeepMatchAndLength } from '../../util';
+import type * as BalenaSdk from '../../..';
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my org on balenaCloud';
 const TEST_ROLE = 'member';
@@ -116,6 +124,96 @@ describe('Organization Invite Model', function () {
 								.that.contains(
 									`Organization membership role not found: ${UNKNOWN_ROLE}`,
 								);
+						});
+					});
+				});
+
+				parallel('[read operations]', function () {
+					const randomOrdInfo = {
+						id: Math.floor(Date.now() / 1000),
+						handle: `random_sdk_test_org_handle_${Math.floor(Date.now() / 1000)}`,
+					};
+
+					for (const field of organizationRetrievalFields) {
+						it(`should not be able to invite a new member when using an not existing organization ${field}`, async function () {
+							const promise = balena.models.organization.invite.create(
+								randomOrdInfo[field],
+								{
+									invitee: credentials.member.email,
+									roleName: 'member',
+								},
+							);
+							await expect(promise).to.be.rejected.and.eventually.have.property(
+								'code',
+								'BalenaOrganizationNotFound',
+							);
+						});
+					}
+				});
+
+				describe('[mutating operations]', function () {
+					let membership:
+						| BalenaSdk.PinePostResult<BalenaSdk.OrganizationInvite>
+						| undefined;
+					before(async function () {
+						const roles = await balena.pine.get({
+							resource: 'organization_membership_role',
+							options: { $select: ['id', 'name'] },
+						});
+						this.orgRoleMap = _.keyBy(roles, 'name');
+						roles.forEach((role) => {
+							expect(role).to.be.an('object');
+							expect(role).to.have.property('id').that.is.a('number');
+						});
+						this.orgMemberRole = this.orgRoleMap['member'];
+					});
+					afterEach(async function () {
+						await balena.models.organization.invite.revoke(membership!.id);
+					});
+					for (const field of organizationRetrievalFields) {
+						it(`should be able to invite a new member to the organization by ${field}`, async function () {
+							membership = await balena.models.organization.invite.create(
+								this.organization[field],
+								{
+									invitee: credentials.member.email,
+								},
+							);
+
+							expect(membership)
+								.to.be.an('object')
+								.that.has.nested.property('organization_membership_role.__id')
+								.that.equals(this.orgMemberRole.id);
+						});
+					}
+
+					it(`should be able to invite a new member to the organization without providing a role`, async function () {
+						membership = await balena.models.organization.invite.create(
+							this.organization.id,
+							{
+								invitee: credentials.member.email,
+							},
+						);
+
+						expect(membership)
+							.to.be.an('object')
+							.that.has.nested.property('organization_membership_role.__id')
+							.that.equals(this.orgMemberRole.id);
+					});
+
+					(['member', 'administrator'] as const).forEach(function (roleName) {
+						it(`should be able to invite a new member to the organization with a given role [${roleName}]`, async function () {
+							membership = await balena.models.organization.invite.create(
+								this.organization.id,
+								{
+									invitee: credentials.member.email,
+									roleName,
+								},
+							);
+
+							expect(membership)
+								.to.be.an('object')
+								.that.has.nested.property('organization_membership_role.__id')
+								.that.equals(this.orgRoleMap[roleName].id);
 						});
 					});
 				});
