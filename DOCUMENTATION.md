@@ -367,6 +367,7 @@ const sdk = fromSharedOptions();
             * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
             * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
             * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
+            * [.getOsUpdateType(deviceType, currentVersion, targetVersion)](#balena.models.os.getOsUpdateType) ⇒ <code>Promise</code>
             * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
             * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
             * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
@@ -409,6 +410,7 @@ const sdk = fromSharedOptions();
             * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
             * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
             * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+            * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
             * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
             * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
             * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -774,6 +776,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
         * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
         * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
+        * [.getOsUpdateType(deviceType, currentVersion, targetVersion)](#balena.models.os.getOsUpdateType) ⇒ <code>Promise</code>
         * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
         * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
         * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
@@ -816,6 +819,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
         * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
         * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+        * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
         * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
         * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
         * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -4957,7 +4961,7 @@ balena.models.organization.membership.getAllByUser(123).then(function(membership
 <a name="balena.models.organization.membership.create"></a>
 
 ###### ~~membership.create(options) ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.organization.invite.create instead***
 
 This method adds a user to an organization by their usename.
 WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
@@ -5267,6 +5271,7 @@ balena.models.organization.remove(123);
     * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
     * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
     * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
+    * [.getOsUpdateType(deviceType, currentVersion, targetVersion)](#balena.models.os.getOsUpdateType) ⇒ <code>Promise</code>
     * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
     * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
     * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
@@ -5472,6 +5477,36 @@ balena.models.os.isSupportedOsUpgrade('raspberry-pi', '2.9.6+rev2.prod', '2.29.2
 	console.log(isSupported);
 });
 ```
+<a name="balena.models.os.getOsUpdateType"></a>
+
+##### os.getOsUpdateType(deviceType, currentVersion, targetVersion) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>os</code>](#balena.models.os)  
+**Summary**: Returns the OS update type based on device type, current and target balenaOS versions  
+**Access**: public  
+**Fulfil**: <code>String</code> - Currently available types are:
+  - resinhup11
+  - resinhup12
+  - balenahup
+	 - takeover
+
+ Throws error in any of these cases:
+  - Current or target versions are invalid
+  - Current or target versions do not match in dev/prod type
+  - Current and target versions imply a downgrade operation
+  - Action is not supported by device type  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>String</code> | device type slug |
+| currentVersion | <code>String</code> | semver-compatible version for the starting OS version |
+| targetVersion | <code>String</code> | semver-compatible version for the target OS version |
+
+**Example**  
+```js
+balena.models.os.getOsUpdateType('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(osUpdateType) {
+	console.log(osUpdateType);
+});
+```
 <a name="balena.models.os.getSupportedOsUpdateVersions"></a>
 
 ##### os.getSupportedOsUpdateVersions(deviceType, currentVersion, [options]) ⇒ <code>Promise</code>
@@ -5590,7 +5625,7 @@ balena.models.config.getAll().then(function(config) {
 <a name="balena.models.config.getDeviceTypes"></a>
 
 ##### ~~config.getDeviceTypes() ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.deviceType.getAll***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get device types  
@@ -5605,7 +5640,7 @@ balena.models.config.getDeviceTypes().then(function(deviceTypes) {
 <a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
 
 ##### ~~config.getDeviceTypeManifestBySlug(slugOrName) ⇒ <code>Promise</code>~~
-***Deprecated***
+***use balena.models.deviceType.getBySlugOrName***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get a device type manifest by slug  
@@ -6349,6 +6384,7 @@ balena.models.creditBundle.create(orgId, featureId, creditsToPurchase).then(func
     * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
     * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
     * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
+    * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
     * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
     * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
     * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
@@ -6410,6 +6446,26 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 	console.log(billingInfo);
 });
 ```
+<a name="balena.models.billing.createSetupIntent"></a>
+
+##### billing.createSetupIntent(setupIntentParams) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>billing</code>](#balena.models.billing)  
+**Summary**: Create a Stripe setup intent required for setting billing information  
+**Access**: public  
+**Fulfil**: <code>Object</code> - partial stripe setup intent object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| setupIntentParams | <code>Object</code> | an object containing the parameters for the setup intent creation |
+| extraParams.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
+| [extraParams.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
+
+**Example**  
+```js
+balena.models.billing.createSetupIntent(orgId).then(function(setupIntent) {
+	console.log(setupIntent);
+});
+```
 <a name="balena.models.billing.updateBillingInfo"></a>
 
 ##### billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Promise</code>
@@ -6424,6 +6480,7 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 | billingInfo | <code>Object</code> | an object containing a billing info token_id |
 | billingInfo.token_id | <code>String</code> | the token id generated for the billing info form |
 | [billingInfo.'g-recaptcha-response'] | <code>String</code> \| <code>undefined</code> | the captcha response |
+| [billingInfo.token_type] | <code>String</code> \| <code>undefined</code> | token type |
 
 **Example**  
 ```js
