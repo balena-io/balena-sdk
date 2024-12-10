@@ -213,13 +213,25 @@ export async function loginPaidUser() {
 }
 
 async function resetInitialOrganization() {
-	const { id: userId } = await balena.auth.getUserInfo();
 	const initialOrg = await getInitialOrganization();
 	await balena.pine.delete({
 		resource: 'organization_membership',
 		options: {
 			$filter: {
-				user: { $ne: userId },
+				$not: {
+					user: {
+						$any: {
+							$alias: 'u',
+							$expr: {
+								u: {
+									username: {
+										$in: [credentials.username, credentials.member.username],
+									},
+								},
+							},
+						},
+					},
+				},
 				is_member_of__organization: initialOrg.id,
 			},
 		},

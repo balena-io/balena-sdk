@@ -124,7 +124,7 @@ contain the string `+testsdk` to avoid accidental deletion**
 
 - `TEST_MEMBER_EMAIL`: The email of the account for the membership tests.
 - `TEST_MEMBER_PASSWORD`: The password of the account for the membership tests.
-- `TEST_MEMBER_USERNAME`: The username of the account for the membership tests.
+- `TEST_MEMBER_USERNAME`: The username of the account for the membership tests. This user should be added to the `TEST_USERNAME` user's initial organization.
 
 You also have to provide the following environment variables from an account that doesn't yet exist:
 
