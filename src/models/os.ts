@@ -863,6 +863,47 @@ const getOsModel = function (
 	};
 
 	/**
+	 * @summary Returns the OS update type based on device type, current and target balenaOS versions
+	 * @name getOsUpdateType
+	 * @public
+	 * @function
+	 * @memberof balena.models.os
+	 *
+	 * @param {String} deviceType - device type slug
+	 * @param {String} currentVersion - semver-compatible version for the starting OS version
+	 * @param {String} targetVersion - semver-compatible version for the target OS version
+	 * @fulfil {String} - Currently available types are:
+	 *   - resinhup11
+	 *   - resinhup12
+	 *   - balenahup
+	 * 	 - takeover
+	 *
+	 *  Throws error in any of these cases:
+	 *   - Current or target versions are invalid
+	 *   - Current or target versions do not match in dev/prod type
+	 *   - Current and target versions imply a downgrade operation
+	 *   - Action is not supported by device type
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.os.getOsUpdateType('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(osUpdateType) {
+	 * 	console.log(osUpdateType);
+	 * });
+	 */
+	const getOsUpdateType = async (
+		deviceType: string,
+		currentVersion: string,
+		targetVersion: string,
+	): Promise<string> => {
+		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
+		return hupActionHelper().getHUPActionType(
+			deviceType,
+			currentVersion,
+			targetVersion,
+		);
+	};
+
+	/**
 	 * @summary Returns the supported OS update targets for the provided device type
 	 * @name getSupportedOsUpdateVersions
 	 * @public
@@ -1088,6 +1129,7 @@ const getOsModel = function (
 		download,
 		getConfig,
 		isSupportedOsUpdate,
+		getOsUpdateType,
 		getSupportedOsUpdateVersions,
 		isArchitectureCompatibleWith,
 		getSupervisorReleasesForCpuArchitecture,
