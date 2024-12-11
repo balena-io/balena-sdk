@@ -1,4 +1,17 @@
 - commits:
+    - subject: "`os`: Add `getOsUpdateType` method for getting the OS update type for
+        a device type from one OS version to another"
+      hash: 64aee7ec180c24a372652025f4c0fadf67e96844
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: myarmolinsky
+      nested: []
+  version: 20.8.0
+  title: ""
+  date: 2024-12-11T16:39:35.788Z
+- commits:
     - subject: Update `balena-hup-action-utils`
       hash: 337d18269c2156bcf7d6ccb679260136cff68140
       body: ""
