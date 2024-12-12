@@ -363,6 +363,7 @@ export function givenLoggedInWithAnApplicationApiKey(
 	beforeFn(async function () {
 		const key = await balena.models.application.generateProvisioningKey(
 			this.application.slug,
+			new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 		);
 		await balena.auth.logout();
 		await balena.auth.loginWithToken(key);

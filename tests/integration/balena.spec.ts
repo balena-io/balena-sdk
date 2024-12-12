@@ -162,7 +162,9 @@ describe('Balena SDK', function () {
 					},
 				});
 
-				const promise = balena.models.device.reboot(999999);
+				const promise = balena.request.send({
+					url: 'example.com',
+				});
 
 				return expect(promise).to.be.rejected.then(() =>
 					expect(called).to.equal(
@@ -372,6 +374,7 @@ describe('Balena SDK', function () {
 			before(async function () {
 				const testApiKey = await balena.models.apiKey.create(
 					`${TEST_KEY_NAME_PREFIX}_apiKey`,
+					new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 					'apiKeyDescription',
 				);
 				this.testApiKey = testApiKey;

@@ -7,7 +7,6 @@ import {
 	credentials,
 	givenInitialOrganization,
 	givenLoggedInUser,
-	organizationRetrievalFields,
 	TEST_ORGANIZATION_NAME,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
@@ -180,105 +179,11 @@ describe('Organization Membership Model', function () {
 			});
 		});
 
-		describe('balena.models.organization.membership.create()', function () {
-			before(function () {
-				ctx = this;
-			});
-
-			parallel('[read operations]', function () {
-				it(`should not be able to add a new member to the organization usign a wrong role name`, async function () {
-					const promise = balena.models.organization.membership.create({
-						organization: ctx.organization.id,
-						username: credentials.member.username,
-						// @ts-expect-error invalid value
-						roleName: 'unknown role',
-					});
-					await expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaOrganizationMembershipRoleNotFound',
-					);
-				});
-
-				const randomOrdInfo = {
-					id: Math.floor(Date.now() / 1000),
-					handle: `random_sdk_test_org_handle_${Math.floor(Date.now() / 1000)}`,
-				};
-
-				organizationRetrievalFields.forEach((field) => {
-					it(`should not be able to add a new member when using an not existing organization ${field}`, async function () {
-						const promise = balena.models.organization.membership.create({
-							organization: randomOrdInfo[field],
-							username: credentials.member.username,
-							roleName: 'member',
-						});
-						await expect(promise).to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaOrganizationNotFound',
-						);
-					});
-				});
-			});
-
-			describe('[mutating operations]', function () {
-				let membership:
-					| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
-					| undefined;
-				afterEach(async function () {
-					await balena.models.organization.membership.remove(membership!.id);
-				});
-				organizationRetrievalFields.forEach(function (field) {
-					it(`should be able to add a new member to the organization by ${field}`, async function () {
-						membership = await balena.models.organization.membership.create({
-							organization: this.organization[field],
-							username: credentials.member.username,
-						});
-
-						expect(membership)
-							.to.be.an('object')
-							.that.has.nested.property('organization_membership_role.__id')
-							.that.equals(this.orgMemberRole.id);
-					});
-				});
-
-				it(`should be able to add a new member to the organization without providing a role`, async function () {
-					membership = await balena.models.organization.membership.create({
-						organization: this.organization.id,
-						username: credentials.member.username,
-					});
-
-					expect(membership)
-						.to.be.an('object')
-						.that.has.nested.property('organization_membership_role.__id')
-						.that.equals(this.orgMemberRole.id);
-				});
-
-				(['member', 'administrator'] as const).forEach(function (roleName) {
-					it(`should be able to add a new member to the organization with a given role [${roleName}]`, async function () {
-						membership = await balena.models.organization.membership.create({
-							organization: this.organization.id,
-							username: credentials.member.username,
-							roleName,
-						});
-
-						expect(membership)
-							.to.be.an('object')
-							.that.has.nested.property('organization_membership_role.__id')
-							.that.equals(this.orgRoleMap[roleName].id);
-					});
-				});
-			});
-		});
-
-		describe('given a member organization membership [contained scenario]', function () {
+		// TODO: re-add this test in the future, we need to add a second user that is a member of the organization from the start
+		describe.skip('given a member organization membership [contained scenario]', function () {
 			let membership:
 				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
 				| undefined;
-			beforeEach(async function () {
-				membership = await balena.models.organization.membership.create({
-					organization: this.organization.id,
-					username: credentials.member.username,
-				});
-			});
 
 			describe('balena.models.organization.membership.remove()', function () {
 				keyAlternatives.forEach(([title, keyGetter]) => {
@@ -297,7 +202,8 @@ describe('Organization Membership Model', function () {
 			});
 		});
 
-		describe('given an organization with an administrator organization membership [contained scenario]', function () {
+		// TODO: re-add this test in the future, we need to add a second user that is a member of the organization from the start
+		describe.skip('given an organization with an administrator organization membership [contained scenario]', function () {
 			const testOrg1Name = `${TEST_ORGANIZATION_NAME}_org_member_tests_${Date.now()}`;
 			let testOrg: BalenaSdk.PinePostResult<BalenaSdk.Organization> | undefined;
 			let membership:
@@ -307,11 +213,6 @@ describe('Organization Membership Model', function () {
 			before(async function () {
 				testOrg = await balena.models.organization.create({
 					name: testOrg1Name,
-				});
-				membership = await balena.models.organization.membership.create({
-					organization: testOrg.id,
-					username: credentials.member.username,
-					roleName: 'administrator',
 				});
 			});
 
