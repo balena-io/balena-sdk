@@ -866,7 +866,7 @@ const getApplicationModel = function (
 			).id;
 			const { body } = await request.send({
 				method: 'POST',
-				url: '/api-key/v1/',
+				url: '/api-key/v2/',
 				baseUrl: apiUrl,
 				body: {
 					actorType: 'application',
