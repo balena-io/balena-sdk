@@ -117,6 +117,7 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
+    "@balena/abstract-sql-to-typescript": "^5.0.1",
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
     "@types/node": "^18.19.50",
