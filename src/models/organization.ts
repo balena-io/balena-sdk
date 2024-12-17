@@ -18,18 +18,13 @@ import * as errors from 'balena-errors';
 
 import type * as BalenaSdk from '..';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
-import {
-	isId,
-	isNotFoundResponse,
-	mergePineOptions,
-	treatAsMissingOrganization,
-} from '../util';
+import { isId, mergePineOptions } from '../util';
 
 const getOrganizationModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 ) {
-	const { pine } = deps;
+	const { pine, sdkInstance } = deps;
 
 	/* eslint-disable @typescript-eslint/no-require-imports */
 	const membershipModel = (
@@ -40,11 +35,6 @@ const getOrganizationModel = function (
 		require('./organization-invite') as typeof import('./organization-invite')
 	).default(deps, opts, (...args: Parameters<typeof get>) => get(...args));
 	/* eslint-enable @typescript-eslint/no-require-imports */
-
-	const getId = async (handleOrId: string | number) => {
-		const { id } = await get(handleOrId, { $select: 'id' });
-		return id;
-	};
 
 	/**
 	 * @summary Creates a new organization
@@ -186,18 +176,13 @@ const getOrganizationModel = function (
 	 * balena.models.organization.remove(123);
 	 */
 	const remove = async function (handleOrId: string | number): Promise<void> {
-		try {
-			const id = await getId(handleOrId);
-			await pine.delete<BalenaSdk.Organization>({
-				resource: 'organization',
-				id,
-			});
-		} catch (err) {
-			if (isNotFoundResponse(err)) {
-				treatAsMissingOrganization(handleOrId, err);
-			}
-			throw err;
-		}
+		const id = (
+			await sdkInstance.models.organization.get(handleOrId, { $select: 'id' })
+		).id;
+		await pine.delete<BalenaSdk.Organization>({
+			resource: 'organization',
+			id,
+		});
 	};
 
 	return {
