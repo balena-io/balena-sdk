@@ -1,4 +1,17 @@
 - commits:
+    - subject: "tests: Add a prefix in the name of the auto-generated config.json api
+        keys"
+      hash: 1f23281a42eed2bfa1ebaeb498882a302c54114c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.8.1
+  title: ""
+  date: 2024-12-17T17:10:47.129Z
+- commits:
     - subject: "`os`: Add `getOsUpdateType` method for getting the OS update type for
         a device type from one OS version to another"
       hash: 64aee7ec180c24a372652025f4c0fadf67e96844
