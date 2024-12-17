@@ -435,7 +435,48 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 *  }
 		 *  // Insert the sdcard to the host machine.
 		 *  // Write the BalenaOS file you downloaded to the sdcard. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.
-		 *  // Wait for writing of BalenaOS to complete.
+		 *  // Wait for writing of BalenaOS to complete.` {
+  "slug": "jetson-orin-nano-devkit-nvme",
+  "version": "1",
+  "type": "hw.device-type",
+  "aliases": [],
+  "name": "Nvidia Jetson Orin Nano 8GB (SD) Devkit NVME",
+  "assets": {
+    "logo": {
+      "url": "./jetson-orin-nano-devkit-nvme.svg",
+      "name": "logo"
+    }
+  },
+  "data": {
+    "arch": "aarch64",
+    "hdmi": true,
+    "led": false,
+    "connectivity": {
+      "bluetooth": true,
+      "wifi": true
+    },
+    "storage": {
+      "internal": true
+    },
+    "media": {
+      "defaultBoot": "internal",
+      "altBoot": ["usb_mass_storage"]
+    },
+    "is_private": false
+  },
+  "partials": {
+    "instructions": [
+        "For balenaOS versions v6.1.16 and newer, please ensure your device is running UEFI firmware version 36.3. Check and update the <a href=\"https://docs.balena.io/learn/develop/hardware/jetson-orin#provisioning-jetson-orin\">firmware version</a> before proceeding.",
+        "For balenaOS versions older than v6.1.16, please refer to the <a href=\"https://github.com/balena-os/jetson-flash?tab=readme-ov-file\">{{name}} legacy flashing</a> guide."
+    ],
+    "bootDeviceExternal": [
+        "Insert a NVME drive in the Devkit and power up the {{name}}."
+    ],
+    "flashIndicator": ["power LED is off"],
+    "bootDevice": ["Power up the {{name}}. If you have a display or a debug UART cable connected to the device, a progress bar will show up while the UEFI firmware is updated. Please do not interrupt this process by turning off power or rebooting the device."]
+  }
+}
+	`
 		 *  // Remove the sdcard from the host machine.
 		 *  // Insert the freshly flashed sdcard into the Raspberry Pi (v1 / Zero / Zero W).
 		 *  // Connect power to the Raspberry Pi (v1 / Zero / Zero W) to boot the device.
@@ -452,6 +493,49 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 						$select: 'contract',
 					},
 				));
+				if (contract!.slug === 'jetson-orin-nano-devkit-nvme') {
+					contract = {
+  "slug": "jetson-orin-nano-devkit-nvme",
+  "version": "1",
+  "type": "hw.device-type",
+  "aliases": [],
+  "name": "Nvidia Jetson Orin Nano 8GB (SD) Devkit NVME",
+  "assets": {
+    "logo": {
+      "url": "./jetson-orin-nano-devkit-nvme.svg",
+      "name": "logo"
+    }
+  },
+  "data": {
+    "arch": "aarch64",
+    "hdmi": true,
+    "led": false,
+    "connectivity": {
+      "bluetooth": true,
+      "wifi": true
+    },
+    "storage": {
+      "internal": true
+    },
+    "media": {
+      "defaultBoot": "internal",
+      "altBoot": ["usb_mass_storage"]
+    },
+    "is_private": false
+  },
+  "partials": {
+    "instructions": [
+        "For balenaOS versions v6.1.16 and newer, please ensure your device is running UEFI firmware version 36.3. Check and update the <a href=\"https://docs.balena.io/learn/develop/hardware/jetson-orin#provisioning-jetson-orin\">firmware version</a> before proceeding.",
+        "For balenaOS versions older than v6.1.16, please refer to the <a href=\"https://github.com/balena-os/jetson-flash?tab=readme-ov-file\">{{name}} legacy flashing</a> guide."
+    ],
+    "bootDeviceExternal": [
+        "Insert a NVME drive in the Devkit and power up the {{name}}."
+    ],
+    "flashIndicator": ["power LED is off"],
+    "bootDevice": ["Power up the {{name}}. If you have a display or a debug UART cable connected to the device, a progress bar will show up while the UEFI firmware is updated. Please do not interrupt this process by turning off power or rebooting the device."]
+  }
+}
+				}
 				if (!contract?.partials) {
 					throw new Error(
 						`Instruction partials not defined for ${deviceTypeSlugOrContract}`,

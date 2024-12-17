@@ -138,7 +138,7 @@ describe('Device Type model', function () {
 					],
 				],
 				[
-					'jetson-nano',
+					'jetson-orin-nano-devkit-nvme',
 					[
 						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
 					],
