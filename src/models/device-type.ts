@@ -525,7 +525,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 						},
 						partials: {
 							instructions: [
-								'For balenaOS versions v6.1.16 and newer, please ensure your device is running UEFI firmware version 36.3. Check and update the <a href="https://docs.balena.io/learn/develop/hardware/jetson-orin#provisioning-jetson-orin">firmware version</a> before proceeding.',
+								'BROOO THIS IS NEW. For balenaOS versions v6.1.16 and newer, please ensure your device is running UEFI firmware version 36.3. Check and update the <a href="https://docs.balena.io/learn/develop/hardware/jetson-orin#provisioning-jetson-orin">firmware version</a> before proceeding.',
 								'For balenaOS versions older than v6.1.16, please refer to the <a href="https://github.com/balena-os/jetson-flash?tab=readme-ov-file">{{name}} legacy flashing</a> guide.',
 							],
 							bootDeviceExternal: [

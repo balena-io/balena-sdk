@@ -142,6 +142,22 @@ describe('Device Type model', function () {
 					[
 						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
 					],
+					'jetson-agx-orin-devkit-64gb',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-orin-nano-seeed-j3010',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-orin-nx-xavier-nx-devkit',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-orin-nx-seeed-j4012',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
 				],
 			] as const
 		).forEach(([deviceTypeSlug, instructions]) => {
