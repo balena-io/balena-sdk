@@ -138,7 +138,23 @@ describe('Device Type model', function () {
 					],
 				],
 				[
-					'jetson-nano',
+					'jetson-orin-nano-devkit-nvme',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-agx-orin-devkit-64gb',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-orin-nano-seeed-j3010',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-orin-nx-xavier-nx-devkit',
+					[
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+					],
+					'jetson-orin-nx-seeed-j4012',
 					[
 						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
 					],
@@ -150,6 +166,7 @@ describe('Device Type model', function () {
 					await balena.models.deviceType.getInstructions(deviceTypeSlug);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
+				console.log(result);
 				expect(result).to.eql(instructions);
 			});
 
@@ -162,6 +179,7 @@ describe('Device Type model', function () {
 				const result = await balena.models.deviceType.getInstructions(contract);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
+				console.log(result);
 				expect(result).to.eql(instructions);
 			});
 		});
