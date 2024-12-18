@@ -150,6 +150,7 @@ describe('Device Type model', function () {
 					await balena.models.deviceType.getInstructions(deviceTypeSlug);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
+				console.log(result);
 				expect(result).to.eql(instructions);
 			});
 
@@ -162,6 +163,7 @@ describe('Device Type model', function () {
 				const result = await balena.models.deviceType.getInstructions(contract);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
+				console.log(result);
 				expect(result).to.eql(instructions);
 			});
 		});
