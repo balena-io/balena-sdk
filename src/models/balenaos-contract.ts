@@ -18,6 +18,7 @@ export const BalenaOS: Contract = {
 			`{{{deviceType.partials.bootDevice}}} to boot the device.`,
 		],
 		externalFlash: [
+			`{{#each deviceType.partials.instructions}}{{{this}}} {{/each}}`,
 			`Insert the {{resolveContractAlias deviceType.data.media.altBoot.[0]}} to the host machine.`,
 			`Write the {{name}} file you downloaded to the {{resolveContractAlias deviceType.data.media.altBoot.[0]}}. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.`,
 			`Wait for writing of {{name}} to complete.`,
