@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Add a prefix to the name used in the api key update tests"
+      hash: 1a57b06e09653fcd20adfc7b05a8196b9f7a13a6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.8.2
+  title: ""
+  date: 2025-01-03T12:03:58.241Z
+- commits:
     - subject: "tests: Add a prefix in the name of the auto-generated config.json api
         keys"
       hash: 1f23281a42eed2bfa1ebaeb498882a302c54114c
